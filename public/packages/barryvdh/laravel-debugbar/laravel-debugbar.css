@@ -5,14 +5,11 @@ div.phpdebugbar {
 
 div.phpdebugbar-header {
     background: #efefef url(laravel-icon.png) no-repeat 4px 3px;
-    background-size: 20px;
     line-height: 17px;
 }
 a.phpdebugbar-restore-btn {
     background: #efefef url(laravel-icon.png) no-repeat 5px 3px;
-    background-size: 20px;
     width: 16px;
-    border-right-color: #ccc;
 }
 
 div.phpdebugbar-header > div > * {
@@ -33,33 +30,4 @@ dl.phpdebugbar-widgets-kvlist dt{
 
 dl.phpdebugbar-widgets-kvlist dd {
     margin-left: 210px;
-}
-
-ul.phpdebugbar-widgets-timeline li span.phpdebugbar-widgets-value {
-    height: 20px;
-    top: 0;
-    background-color: #f4645f;
-}
-
-ul.phpdebugbar-widgets-timeline li span.phpdebugbar-widgets-label {
-    top: 2px;
-}
-
-div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter {
-    background-color: #f4645f;
-}
-
-a.phpdebugbar-tab.phpdebugbar-active {
-    background: #f4645f;
-    color: #fff;
-}
-
-a.phpdebugbar-tab.phpdebugbar-active span.phpdebugbar-badge {
-    background-color: white;
-    color: #f4645f;
-}
-
-a.phpdebugbar-tab span.phpdebugbar-badge {
-    background: #f4645f;
-    color: #fff;
 }

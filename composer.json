@@ -25,7 +25,7 @@
         "grumpydictator/gchart": "dev-master"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "dev-master",
+        "barryvdh/laravel-debugbar": "1.*",
         "barryvdh/laravel-ide-helper": "1.*"
     },
     "autoload": {
