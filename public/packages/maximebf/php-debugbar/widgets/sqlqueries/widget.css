@@ -1,0 +1,82 @@
+div.phpdebugbar-widgets-sqlqueries .phpdebugbar-widgets-status {
+  font-family: monospace;
+  padding: 6px 6px;
+  border-bottom: 1px solid #ddd;
+  font-weight: bold;
+  color: #555;
+  background: #fafafa;
+}
+
+div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-error {
+  color: red;
+}
+
+div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-duration,
+div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-memory,
+div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-row-count,
+div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-stmt-id {
+  float: right;
+  margin-left: 8px;
+  color: #888;
+}
+div.phpdebugbar-widgets-sqlqueries div.phpdebugbar-widgets-status span.phpdebugbar-widgets-duration,
+div.phpdebugbar-widgets-sqlqueries div.phpdebugbar-widgets-status span.phpdebugbar-widgets-memory,
+div.phpdebugbar-widgets-sqlqueries div.phpdebugbar-widgets-status span.phpdebugbar-widgets-row-count,
+div.phpdebugbar-widgets-sqlqueries div.phpdebugbar-widgets-status span.phpdebugbar-widgets-stmt-id {
+  color: #555;
+}
+div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-duration:before,
+div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-memory:before,
+div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-row-count:before,
+div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-stmt-id:before {
+  font-family: FontAwesome;
+  margin-right: 4px;
+  font-size: 12px;
+}
+div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-duration:before {
+  content: "\f017";
+}
+div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-memory:before {
+  content: "\f085";
+}
+div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-row-count:before {
+  content: "\f0ce";
+}
+div.phpdebugbar-widgets-sqlqueries span.phpdebugbar-widgets-stmt-id:before {
+  content: "\f08d";
+}
+div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params {
+  display: none;
+  width: 70%;
+  margin: 10px;
+  border: 1px solid #ddd;
+  font-family: monospace;
+  border-collapse: collapse;
+}
+  div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params td {
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  div.phpdebugbar-widgets-sqlqueries table.phpdebugbar-widgets-params .phpdebugbar-widgets-name {
+    width: 20%;
+    font-weight: bold;
+  }
+
+div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item span.phpdebugbar-widgets-error {
+  display: block;
+  font-weight: bold;
+}
+
+code.phpdebugbar-widgets-sql {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-sql-duplicate {
+  background-color: #ffd;
+}
+
+div.phpdebugbar-widgets-sqlqueries li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-sql-duplicate:hover {
+  background-color: #ffc;
+}
