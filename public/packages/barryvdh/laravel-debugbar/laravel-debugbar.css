@@ -1,0 +1,65 @@
+div.phpdebugbar {
+    font-size: 13px;
+    font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+}
+
+div.phpdebugbar-header {
+    background: #efefef url(laravel-icon.png) no-repeat 4px 3px;
+    background-size: 20px;
+    line-height: 17px;
+}
+a.phpdebugbar-restore-btn {
+    background: #efefef url(laravel-icon.png) no-repeat 5px 3px;
+    background-size: 20px;
+    width: 16px;
+    border-right-color: #ccc;
+}
+
+div.phpdebugbar-header > div > * {
+    font-size: 13px;
+}
+
+div.phpdebugbar-header .phpdebugbar-tab {
+    padding: 5px 6px;
+}
+
+div.phpdebugbar .phpdebugbar-header select{
+    padding: 1px 0;
+}
+
+dl.phpdebugbar-widgets-kvlist dt{
+    width: 200px;
+}
+
+dl.phpdebugbar-widgets-kvlist dd {
+    margin-left: 210px;
+}
+
+ul.phpdebugbar-widgets-timeline li span.phpdebugbar-widgets-value {
+    height: 20px;
+    top: 0;
+    background-color: #f4645f;
+}
+
+ul.phpdebugbar-widgets-timeline li span.phpdebugbar-widgets-label {
+    top: 2px;
+}
+
+div.phpdebugbar-widgets-messages div.phpdebugbar-widgets-toolbar a.phpdebugbar-widgets-filter {
+    background-color: #f4645f;
+}
+
+a.phpdebugbar-tab.phpdebugbar-active {
+    background: #f4645f;
+    color: #fff;
+}
+
+a.phpdebugbar-tab.phpdebugbar-active span.phpdebugbar-badge {
+    background-color: white;
+    color: #f4645f;
+}
+
+a.phpdebugbar-tab span.phpdebugbar-badge {
+    background: #f4645f;
+    color: #fff;
+}

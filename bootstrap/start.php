@@ -24,11 +24,11 @@ $app = new Illuminate\Foundation\Application;
 |
 */
 
-$env = $app->detectEnvironment(array(
+$env = $app->detectEnvironment(function() {
+        // Default to production if LARAVEL_ENV is not set
+        return getenv('LARAVEL_ENV') ?: 'production';
+    });
 
-	'local' => array('homestead'),
-
-));
 
 /*
 |--------------------------------------------------------------------------
