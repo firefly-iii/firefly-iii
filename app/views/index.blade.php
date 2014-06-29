@@ -3,6 +3,9 @@
     <title>Bla bla</title>
 </head>
 <body>
-Bla bla
+{{App::environment()}}
+@if(Auth::check())
+logged in!
+@endif
 </body>
 </html>
