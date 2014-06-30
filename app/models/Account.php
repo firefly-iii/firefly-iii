@@ -1,8 +1,13 @@
 <?php
 
 
-class Account extends Eloquent
+class Account extends Elegant
 {
+
+    public static $rules
+        = [
+            'name'        => 'required|between:100,100',
+        ];
 
     public function accountType()
     {

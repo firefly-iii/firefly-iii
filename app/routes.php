@@ -17,8 +17,10 @@ Route::get('/verify/{verification}',['uses' => 'UserController@verify','as' => '
 Route::get('/reset/{reset}',['uses' => 'UserController@reset','as' => 'reset','before' => 'guest']);
 Route::get('/logout',['uses' => 'UserController@logout','as' => 'logout','before' => 'auth']);
 Route::get('/remindme',['uses' => 'UserController@remindme','as' => 'remindme','before' => 'guest']);
-
-
 Route::post('/login',['uses' => 'UserController@postLogin','before' => 'csrf|guest']);
 Route::post('/register',['uses' => 'UserController@postRegister','before' => 'csrf|guest']);
 Route::post('/remindme',['uses' => 'UserController@postRemindme','before' => 'csrf|guest']);
+
+// accountcontroller
+Route::get('/accounts/create',['uses' => 'AccountController@create','as' => 'accounts.create','before' => 'auth']);
+Route::post('/accounts/store',['uses' => 'AccountController@store','as' => 'accounts.store','before' => 'csrf|auth']);
