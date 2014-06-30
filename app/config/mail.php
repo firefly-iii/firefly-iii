@@ -2,12 +2,12 @@
 
 return [
     'driver'     => 'smtp',
-    'host'       => 'smtp.gmail.com',
+    'host'       => '',
     'port'       => 587,
-    'from'       => ['address' => 'nder.firefly@gmail.com', 'name' => 'Firefly V'],
+    'from'       => ['address' => '', 'name' => 'Firefly V'],
     'encryption' => 'tls',
-    'username'   => 'nder.firefly@gmail.com',
-    'password'   => 'bzQj252LqefJnorN28dLzph7oNclXNEV986mjX',
+    'username'   => '',
+    'password'   => '',
     'sendmail'   => '/usr/sbin/sendmail -bs',
     'pretend'    => false,
 ];
