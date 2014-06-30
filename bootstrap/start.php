@@ -11,6 +11,28 @@
 |
 */
 
+
+if (!function_exists('mf')) {
+    function mf($n, $coloured = false)
+    {
+
+        $n = floatval($n);
+        $n = round($n, 2);
+        $string = number_format($n, 2, ',', '.');
+
+        if ($coloured === true && $n === 0.0) {
+            return '<span style="color:#999">&#128; ' . $string . '</span>';
+        }
+        if ($coloured === true && $n > 0) {
+            return '<span class="text-success">&#128; ' . $string . '</span>';
+        }
+        if ($coloured === true && $n < 0) {
+            return '<span class="text-danger">&#128; ' . $string . '</span>';
+        }
+        return '&#128; ' . $string;
+    }
+}
+
 $app = new Illuminate\Foundation\Application;
 
 /*
@@ -24,10 +46,12 @@ $app = new Illuminate\Foundation\Application;
 |
 */
 
-$env = $app->detectEnvironment(function() {
+$env = $app->detectEnvironment(
+    function () {
         // Default to production if LARAVEL_ENV is not set
-        return getenv('LARAVEL_ENV') ?: 'production';
-    });
+        return getenv('LARAVEL_ENV') ? : 'production';
+    }
+);
 
 
 /*
@@ -41,7 +65,7 @@ $env = $app->detectEnvironment(function() {
 |
 */
 
-$app->bindInstallPaths(require __DIR__.'/paths.php');
+$app->bindInstallPaths(require __DIR__ . '/paths.php');
 
 /*
 |--------------------------------------------------------------------------
@@ -54,10 +78,10 @@ $app->bindInstallPaths(require __DIR__.'/paths.php');
 |
 */
 
-$framework = $app['path.base'].
-                 '/vendor/laravel/framework/src';
+$framework = $app['path.base'] .
+    '/vendor/laravel/framework/src';
 
-require $framework.'/Illuminate/Foundation/start.php';
+require $framework . '/Illuminate/Foundation/start.php';
 
 /*
 |--------------------------------------------------------------------------

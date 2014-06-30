@@ -42,7 +42,10 @@ return [
     ],
 </pre>
         <p>
-            Refresh this page; when the connection is valid this page will refresh.
+            This page will disappear when the connection is valid.
+        </p>
+        <p>
+            Current error: <code>{{$error or ''}}</code>
         </p>
     </div>
 </div>

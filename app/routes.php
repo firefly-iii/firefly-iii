@@ -6,6 +6,9 @@ Route::get('/start', ['uses' => 'HomeController@start','as' => 'start','before' 
 
 // migration controller:
 Route::get('/migrate/index', ['uses' => 'MigrationController@index','as' => 'migrate.index', 'before' => 'auth']);
+Route::get('/migrate/select-user', ['uses' => 'MigrationController@selectUser','as' => 'migrate.select-user', 'before' => 'auth']);
+Route::post('/migrate/select-user', ['uses' => 'MigrationController@postSelectUser','before' => 'csrf|auth']);
+Route::get('/migrate/migrate/{userID}', ['uses' => 'MigrationController@migrate','as' => 'migrate.migrate', 'before' => 'auth']);
 
 // login, register, logout:
 Route::get('/login',['uses' => 'UserController@login','as' => 'login','before' => 'guest']);
