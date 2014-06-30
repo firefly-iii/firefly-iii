@@ -37,4 +37,21 @@ class EmailHelper implements EmailHelperInterface
         );
     }
 
+    public function sendResetVerification(\User $user)
+    {
+        $reset = \Str::random(32);
+        $user->reset = $reset;
+        $user->save();
+        $email = $user->email;
+
+        $data = ['reset' => $reset];
+        \Mail::send(
+            ['emails.user.remindme-html', 'emails.user.remindme-text'], $data, function ($message) use ($email) {
+                $message->to($email, $email)->subject('Forgot your password?');
+            }
+        );
+
+
+    }
+
 } 

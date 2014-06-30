@@ -41,4 +41,13 @@ class EloquentUserRepository implements UserRepositoryInterface
         return \User::where('verification', $verification)->first();
     }
 
+    public function findByReset($reset)
+    {
+        return \User::where('reset', $reset)->first();
+    }
+    public function findByEmail($email)
+    {
+        return \User::where('email', $email)->first();
+    }
+
 }
