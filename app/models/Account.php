@@ -6,7 +6,8 @@ class Account extends Elegant
 
     public static $rules
         = [
-            'name'        => 'required|between:100,100',
+            'name'        => 'required|between:1,100',
+            'user_id' => 'required|exists:users,id'
         ];
 
     public function accountType()
