@@ -2,7 +2,7 @@
 
 return [
     'driver'     => 'smtp',
-    'host'       => '',
+    'host'       => ';',
     'port'       => 587,
     'from'       => ['address' => '', 'name' => 'Firefly V'],
     'encryption' => 'tls',

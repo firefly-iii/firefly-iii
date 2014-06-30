@@ -4,12 +4,15 @@
 class Elegant extends Eloquent
 {
     public static $rules = [];
+    public $validator;
 
     public function isValid()
     {
-        return Validator::make(
+        $validator = Validator::make(
             $this->toArray(),
             $this::$rules
-        )->passes();
+        );
+        $this->validator = $validator;
+        return $validator->passes();
     }
 } 

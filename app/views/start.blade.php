@@ -23,7 +23,7 @@
             Click the link below to create your first account, and get started with Firefly.
         </p>
         <p>
-            <a href="#" class="btn btn-info">Start with a new account</a>
+            <a href="{{route('accounts.create')}}" class="btn btn-info">Start with a new account</a>
         </p>
     </div>
 
