@@ -10,8 +10,7 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <h2>Accounts</h2>
-        <div id="accounts">
-        </div>
+        <canvas id="myChart" width="1100" height="300"></canvas>
         <p><small>[settings]</small></p>
     </div>
 </div>
@@ -26,4 +25,6 @@
 </div>
 @stop
 @section('scripts')
+<script src="assets/javascript/Chart.min.js"></script>
+<script src="assets/javascript/index.js"></script>
 @stop
