@@ -33,4 +33,8 @@ class User extends Elegant implements UserInterface, RemindableInterface
      */
     protected $hidden = array('password', 'remember_token');
 
+    public function accounts() {
+        return $this->hasMany('Account');
+    }
+
 }

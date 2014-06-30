@@ -22,13 +22,10 @@ class UserController extends BaseController
     {
         if (!$this->user->auth()) {
             $rememberMe = Input::get('remember_me') == '1';
-            $result = [];
             $data = [
-                'email' => Input::get('email'),
+                'email'    => Input::get('email'),
                 'password' => Input::get('password')
             ];
-
-
             if (Auth::attempt($data, $rememberMe)) {
                 return Redirect::route('index');
             }
@@ -62,6 +59,33 @@ class UserController extends BaseController
         return View::make('user.register');
     }
 
+    public function logout()
+    {
+        Auth::logout();
+        return Redirect::route('index');
+    }
+
+    public function remindme()
+    {
+        return View::make('user.remindme');
+    }
+
+    public function postRemindme()
+    {
+        $user = $this->user->findByEmail(Input::get('email'));
+        if ($user) {
+            if (Config::get('auth.verify_reset') === true) {
+                $this->email->sendResetVerification($user);
+            }
+            if (Config::get('auth.verify_reset') === false) {
+                $this->email->sendPasswordMail($user);
+            }
+        }
+        Session::flash('error', 'No good!');
+        return View::make('user.remindme');
+
+    }
+
     public function verify($verification)
     {
         $user = $this->user->findByVerification($verification);
@@ -70,6 +94,15 @@ class UserController extends BaseController
             return View::make('user.registered');
         }
         return View::make('error')->with('message', 'Yo no hablo verification code!');
+    }
+    public function reset($reset)
+    {
+        $user = $this->user->findByReset($reset);
+        if ($user) {
+            $this->email->sendPasswordMail($user);
+            return View::make('user.registered');
+        }
+        return View::make('error')->with('message', 'Yo no hablo reset code!');
     }
 
 } 

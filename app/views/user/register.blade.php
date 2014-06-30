@@ -33,7 +33,7 @@
             <a href="{{route('login')}}" class="btn btn-default">Back to login form</a>
         </p>
         <p>
-            <a href="#" class="btn btn-default">Reset password</a>
+            <a href="{{route('remindme')}}" class="btn btn-default">Reset password</a>
         </p>
 
     </div>
