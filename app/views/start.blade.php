@@ -18,7 +18,7 @@
 
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-12">
-        <h2>Start anew</h2>
+        <h2>Start fresh</h2>
         <p>
             Click the link below to create your first account, and get started with Firefly.
         </p>

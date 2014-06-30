@@ -9,7 +9,7 @@ return [
         'table'  => 'password_reminders',
         'expire' => 60,
     ],
-    'verify_mail' => true,
+    'verify_mail' => false,
     'verify_reset' => true,
     'allow_register' => true
 
