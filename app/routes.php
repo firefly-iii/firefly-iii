@@ -2,13 +2,6 @@
 
 // basic home views:
 Route::get('/', ['uses' => 'HomeController@index','as' => 'index','before' => 'auth']);
-Route::get('/start', ['uses' => 'HomeController@start','as' => 'start','before' => 'auth']);
-
-// migration controller:
-//Route::get('/migrate/index', ['uses' => 'MigrationController@index','as' => 'migrate.index', 'before' => 'auth']);
-//Route::get('/migrate/select-user', ['uses' => 'MigrationController@selectUser','as' => 'migrate.select-user', 'before' => 'auth']);
-//Route::post('/migrate/select-user', ['uses' => 'MigrationController@postSelectUser','before' => 'csrf|auth']);
-//Route::get('/migrate/migrate/{userID}', ['uses' => 'MigrationController@migrate','as' => 'migrate.migrate', 'before' => 'auth']);
 
 // login, register, logout:
 Route::get('/login',['uses' => 'UserController@login','as' => 'login','before' => 'guest']);
@@ -21,6 +14,7 @@ Route::post('/login',['uses' => 'UserController@postLogin','before' => 'csrf|gue
 Route::post('/register',['uses' => 'UserController@postRegister','before' => 'csrf|guest']);
 Route::post('/remindme',['uses' => 'UserController@postRemindme','before' => 'csrf|guest']);
 
-// accountcontroller
-Route::get('/accounts/create',['uses' => 'AccountController@create','as' => 'accounts.create','before' => 'auth']);
-Route::post('/accounts/store',['uses' => 'AccountController@store','as' => 'accounts.store','before' => 'csrf|auth']);
+// profile (after login / logout)
+Route::get('/profile',['uses' => 'ProfileController@index','as' => 'profile','before' => 'auth']);
+Route::get('/profile/change-password',['uses' => 'ProfileController@changePassword','as' => 'change-password','before' => 'auth']);
+Route::post('/profile/change-password',['uses' => 'ProfileController@postChangePassword','before' => 'csrf|auth']);
