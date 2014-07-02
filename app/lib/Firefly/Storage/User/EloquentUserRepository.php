@@ -9,10 +9,10 @@ class EloquentUserRepository implements UserRepositoryInterface
     {
     }
 
-    public function register()
+    public function register($array)
     {
         $user = new \User;
-        $user->email = \Input::get('email');
+        $user->email = $array['emai'];
         $user->migrated = 0;
         $user->verification = \Str::random(32);
         $user->password = \Hash::make(\Str::random(12));
@@ -26,11 +26,11 @@ class EloquentUserRepository implements UserRepositoryInterface
         return $user;
     }
 
-    public function auth()
+    public function auth($array)
     {
-        $user = \User::where('email', \Input::get('email'))->first();
+        $user = \User::where('email', $array['email'])->first();
         if (!is_null($user)) {
-            if (\Hash::check(\Input::get('password'), $user->password)) {
+            if (\Hash::check($array['password'], $user->password)) {
             }
         }
         return false;
@@ -45,6 +45,7 @@ class EloquentUserRepository implements UserRepositoryInterface
     {
         return \User::where('reset', $reset)->first();
     }
+
     public function findByEmail($email)
     {
         return \User::where('email', $email)->first();
