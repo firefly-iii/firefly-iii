@@ -2,6 +2,7 @@
 
 class MigrationController extends BaseController
 {
+    /*
     public function index()
     {
         // check if database connection is present.
@@ -19,7 +20,7 @@ class MigrationController extends BaseController
             return View::make('migrate.index')->with('error', $error);
         }
 
-        return Redirect::route('migrate.select-user');
+        return Redirect::route('migrate.upload');
 
 
     }
@@ -47,7 +48,6 @@ class MigrationController extends BaseController
             return View::make('error')->with('message', 'No such user!');
         }
     }
-
     public function migrate($userID)
     {
         // import the data.
@@ -424,4 +424,5 @@ class MigrationController extends BaseController
 
         return View::make('migrate.result')->with('messages', $messages);
     }
+    */
 }
