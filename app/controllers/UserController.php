@@ -20,15 +20,13 @@ class UserController extends BaseController
 
     public function postLogin()
     {
-        if (!$this->user->auth()) {
-            $rememberMe = Input::get('remember_me') == '1';
-            $data = [
-                'email'    => Input::get('email'),
-                'password' => Input::get('password')
-            ];
-            if (Auth::attempt($data, $rememberMe)) {
-                return Redirect::route('index');
-            }
+        $rememberMe = Input::get('remember_me') == '1';
+        $data = [
+            'email'    => Input::get('email'),
+            'password' => Input::get('password')
+        ];
+        if (Auth::attempt($data, $rememberMe)) {
+            return Redirect::route('index');
         }
         Session::flash('error', 'No good!');
         return View::make('user.login');
@@ -47,7 +45,7 @@ class UserController extends BaseController
         if (Config::get('auth.allow_register') !== true) {
             return App::abort(404);
         }
-        $user = $this->user->register();
+        $user = $this->user->register(Input::all());
         if ($user) {
             if (Config::get('auth.verify_mail') === true) {
                 $this->email->sendVerificationMail($user);
@@ -95,6 +93,7 @@ class UserController extends BaseController
         }
         return View::make('error')->with('message', 'Yo no hablo verification code!');
     }
+
     public function reset($reset)
     {
         $user = $this->user->findByReset($reset);
@@ -105,4 +104,4 @@ class UserController extends BaseController
         return View::make('error')->with('message', 'Yo no hablo reset code!');
     }
 
-} 
+}
