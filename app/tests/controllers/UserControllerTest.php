@@ -30,6 +30,17 @@ class UserControllerTest extends TestCase
         $data = ['email' => 'bla@bla.nl', 'password' => 'xxxx','remember_me' => '1'];
         Auth::shouldReceive('attempt')->once()->andReturn(true);
         $this->call('POST', '/login', $data);
+        $this->assertSessionHas('success');
+        $this->assertRedirectedToRoute('index');
+    }
+
+    public function testPostFalseLogin()
+    {
+        $data = ['email' => 'bla@bla.nl', 'password' => 'xxxx','remember_me' => '1'];
+        Auth::shouldReceive('attempt')->once()->andReturn(false);
+        View::shouldReceive('make')->with('user.login')->once();
+        $this->call('POST', '/login', $data);
+        $this->assertSessionHas('error');
     }
 
     public function tearDown()

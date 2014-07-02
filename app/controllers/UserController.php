@@ -26,6 +26,7 @@ class UserController extends BaseController
             'password' => Input::get('password')
         ];
         if (Auth::attempt($data, $rememberMe)) {
+            Session::flash('success', 'Logged in!');
             return Redirect::route('index');
         }
         Session::flash('error', 'No good!');
@@ -35,7 +36,7 @@ class UserController extends BaseController
     public function register()
     {
         if (Config::get('auth.allow_register') !== true) {
-            return App::abort(404);
+            App::abort(404);
         }
         return View::make('user.register');
     }
@@ -43,7 +44,7 @@ class UserController extends BaseController
     public function postRegister()
     {
         if (Config::get('auth.allow_register') !== true) {
-            return App::abort(404);
+            App::abort(404);
         }
         $user = $this->user->register(Input::all());
         if ($user) {
