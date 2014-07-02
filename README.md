@@ -30,3 +30,6 @@ Firefly III will feature:
 ## Not changed
 
 - Firefly will not encrypt the content of the (MySQL) tables. Old versions of Firefly had this capability but it sucks when searching, sorting and organizing entries.
+
+## Current state
+I barely have the basics up and running and I'm already running behind on test coverage. I _do_ have some good ideas about user configuration and preferences which was a huge pain in the butt with the previous Firefly.
