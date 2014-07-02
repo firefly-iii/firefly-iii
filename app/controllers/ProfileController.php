@@ -17,6 +17,7 @@ class ProfileController extends BaseController
     {
 
         // old, new1, new2
+        /** @noinspection PhpUndefinedFieldInspection */
         if (!Hash::check(Input::get('old'), Auth::user()->password)) {
             Session::flash('error', 'Invalid current password!');
             return View::make('profile.change-password');
@@ -37,7 +38,9 @@ class ProfileController extends BaseController
 
         // update the user with the new password.
         $password = Hash::make(Input::get('new1'));
+        /** @noinspection PhpUndefinedFieldInspection */
         Auth::user()->password = $password;
+        /** @noinspection PhpUndefinedMethodInspection */
         Auth::user()->save();
         Session::flash('success', 'Password changed!');
         return Redirect::route('profile');
