@@ -19,6 +19,7 @@
 </head>
 <body>
 <div class="container">
+    @include('partials.menu')
     @include('partials.flashes')
     @yield('content')
 </div>
