@@ -27,7 +27,8 @@
     "require-dev": {
         "barryvdh/laravel-debugbar": "1.*",
         "barryvdh/laravel-ide-helper": "1.*",
-        "mockery/mockery": "dev-master"
+        "mockery/mockery": "dev-master",
+        "satooshi/php-coveralls": "dev-master"
     },
     "autoload": {
         "classmap": [
