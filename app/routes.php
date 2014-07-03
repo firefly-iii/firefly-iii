@@ -18,3 +18,7 @@ Route::post('/remindme',['uses' => 'UserController@postRemindme','before' => 'cs
 Route::get('/profile',['uses' => 'ProfileController@index','as' => 'profile','before' => 'auth']);
 Route::get('/profile/change-password',['uses' => 'ProfileController@changePassword','as' => 'change-password','before' => 'auth']);
 Route::post('/profile/change-password',['uses' => 'ProfileController@postChangePassword','before' => 'csrf|auth']);
+
+// migrate controller:
+Route::get('/migrate',['uses' => 'MigrationController@index','as' => 'migrate','before' => 'auth']);
+Route::post('/migrate',['uses' => 'MigrationController@postIndex','before' => 'csrf|auth']);
