@@ -1,8 +1,16 @@
 <?php
 
 
-class Transaction extends Eloquent
+class Transaction extends Elegant
 {
+    public static $rules
+        = [
+            'account_id'             => 'numeric|required|exists:accounts,id',
+            'transaction_journal_id' => 'numeric|required|exists:transaction_journals,id',
+            'description'            => 'between:1,255',
+            'amount'                 => 'required|between:-65536,65536',
+        ];
+
 
     public function account()
     {

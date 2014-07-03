@@ -3,50 +3,25 @@
 <div class="row">
     <div class="col-lg-8 col-md-8 col-sm-12">
         <h1>Firefly<br/>
-            <small>Migration instructions</small>
+            <small>Migration</small>
         </h1>
         <ol>
-            <li>Open <code>app/config/database.php</code></li>
-            <li>Fill in the <code>old-firefly</code> connection records.</li>
-            <li>Refresh this page.</li>
+            <li>Upload <code>firefly-export-****-**-**.json</code></li>
+            <li>Wait..</li>
+            <li>Done!</li>
         </ol>
+
         <p>
-            It should look something like this:
+            &nbsp;
         </p>
-<pre>
-return [
-    'fetch'       => PDO::FETCH_CLASS,
-    'default'     => 'mysql',
-    'connections' => [
-        'mysql'  => [
-            'driver'    => 'mysql',
-            'host'      => 'localhost',
-            'database'  => '(current database)',
-            'username'  => '',
-            'password'  => '',
-            'charset'   => 'utf8',
-            'collation' => 'utf8_unicode_ci',
-            'prefix'    => '',
-        ],
-        <strong>
-        'old-firefly'  => [
-            'driver'    => 'mysql',
-            'host'      => 'localhost',
-            'database'  => '(previous database)',
-            'username'  => '',
-            'password'  => '',
-            'charset'   => 'utf8',
-            'collation' => 'utf8_unicode_ci',
-            'prefix'    => '',
-        ],</strong>
-    ],
-</pre>
-        <p>
-            This page will disappear when the connection is valid.
-        </p>
-        <p>
-            Current error: <code>{{$error or ''}}</code>
-        </p>
+        {{Form::open(['files' => true])}}
+            <div class="form-group">
+                <label for="exportFile">Export file</label>
+                <input name="exportFile" type="file" id="exportFile">
+                <p class="help-block">Upload the export file here.</p>
+            </div>
+            <button type="submit" class="btn btn-info">Import</button>
+        {{Form::close()}}
     </div>
 </div>
 

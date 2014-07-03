@@ -19,6 +19,7 @@ class CreateTransactionJournalsTable extends Migration {
             $table->integer('transaction_type_id')->unsigned();
             $table->integer('transaction_currency_id')->unsigned();
             $table->string('description',255)->nullable();
+            $table->boolean('completed');
             $table->date('date');
 
             // connect transaction journals to transaction types
