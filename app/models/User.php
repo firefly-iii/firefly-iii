@@ -20,8 +20,8 @@ class User extends Elegant implements UserInterface, RemindableInterface
 
     public static $rules
         = [
-            'email'        => 'email|unique:users,email',
-            'migrated'     => 'numeric|between:0,1',
+            'email'        => 'required|email|unique:users,email',
+            'migrated'     => 'required|numeric|between:0,1',
             'password'     => 'between:60,60',
             'verification' => 'between:32,32',
         ];
