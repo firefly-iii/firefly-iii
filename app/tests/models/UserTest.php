@@ -1,0 +1,45 @@
+<?php
+
+class UserTest extends TestCase
+{
+    /**
+     * Default preparation for each test
+     */
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->prepareForTests();
+    }
+
+    /**
+     * Migrate the database
+     */
+    private function prepareForTests()
+    {
+        Artisan::call('migrate');
+    }
+
+    /**
+     * Username is required
+     */
+    public function testUsernameIsRequired()
+    {
+        // Create a new User
+        $user = new User;
+        $user->migrated = 0;
+        $user->password = Str::random(60);
+
+        // User should not save
+        $this->assertFalse($user->isValid());
+
+        // Save the errors
+        $errors = $user->validator->messages()->all();
+//        // There should be 1 error
+        $this->assertCount(1, $errors);
+
+//        // The username error should be set
+        $this->assertEquals($errors[0], "The email field is required.");
+    }
+
+} 

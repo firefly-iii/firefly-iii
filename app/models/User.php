@@ -22,7 +22,7 @@ class User extends Elegant implements UserInterface, RemindableInterface
         = [
             'email'        => 'required|email|unique:users,email',
             'migrated'     => 'required|numeric|between:0,1',
-            'password'     => 'between:60,60',
+            'password'     => 'required|between:60,60',
             'verification' => 'between:32,32',
         ];
 
@@ -31,7 +31,7 @@ class User extends Elegant implements UserInterface, RemindableInterface
      *
      * @var array
      */
-    protected $hidden = array('password', 'remember_token');
+    protected $hidden = array('remember_token');
 
     public function accounts() {
         return $this->hasMany('Account');
