@@ -1,6 +1,6 @@
 <?php
 
-
+use \Illuminate\Database\Eloquent\Model as Eloquent;
 class Elegant extends Eloquent
 {
     public static $rules = [];

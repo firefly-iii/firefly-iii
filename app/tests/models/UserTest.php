@@ -42,4 +42,37 @@ class UserTest extends TestCase
         $this->assertEquals($errors[0], "The email field is required.");
     }
 
+    /**
+     * Test accounts
+     */
+    public function testUserAccounts()
+    {
+        // Create a new User
+        $user = new User;
+        $user->email = 'bla';
+        $user->password = 'bla';
+        $user->migrated = 0;
+        $user->save();
+
+        // account type:
+        $at = new AccountType;
+        $at->description = 'Bla';
+        $at->save();
+
+
+        $account = new Account;
+        $account->name = 'bla';
+        $account->active = 1;
+        $account->accountType()->associate($at);
+        $account->user()->associate($user);
+
+        $account->save();
+
+
+
+        $this->assertCount(1,$user->accounts()->get());
+
+
+    }
+
 } 
