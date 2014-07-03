@@ -75,9 +75,11 @@ class UserController extends BaseController
         if ($user) {
             if (Config::get('auth.verify_reset') === true) {
                 $this->email->sendResetVerification($user);
+                return View::make('user.verification-pending');
             }
             if (Config::get('auth.verify_reset') === false) {
                 $this->email->sendPasswordMail($user);
+                return View::make('user.registered');
             }
         }
         Session::flash('error', 'No good!');
