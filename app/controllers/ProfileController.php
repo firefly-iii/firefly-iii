@@ -1,7 +1,13 @@
 <?php
 
+use Firefly\Storage\User\UserRepositoryInterface as URI;
+
 class ProfileController extends BaseController
 {
+
+    public function __construct(URI $user) {
+        $this->user = $user;
+    }
 
     public function index()
     {
@@ -37,11 +43,8 @@ class ProfileController extends BaseController
         }
 
         // update the user with the new password.
-        $password = Hash::make(Input::get('new1'));
-        /** @noinspection PhpUndefinedFieldInspection */
-        Auth::user()->password = $password;
-        /** @noinspection PhpUndefinedMethodInspection */
-        Auth::user()->save();
+        $this->user->updatePassword(Auth::user(),Input::get('new1'));
+
         Session::flash('success', 'Password changed!');
         return Redirect::route('profile');
     }
