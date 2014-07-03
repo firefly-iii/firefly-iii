@@ -17,6 +17,7 @@ class UserControllerTest extends TestCase
         $this->call('GET', '/login');
 
         // test
+        $this->assertResponseOk();
     }
 
     public function testPostLogin()
@@ -94,14 +95,7 @@ class UserControllerTest extends TestCase
 
     }
 
-    public function mock($class)
-    {
-        $mock = Mockery::mock($class);
 
-        $this->app->instance($class, $mock);
-
-        return $mock;
-    }
 
     /**
      * Register and verify FAILED:

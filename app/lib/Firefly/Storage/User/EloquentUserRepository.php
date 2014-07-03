@@ -51,4 +51,14 @@ class EloquentUserRepository implements UserRepositoryInterface
         return \User::where('email', $email)->first();
     }
 
+    public function updatePassword(\User $user, $password)
+    {
+        $password = \Hash::make($password);
+        /** @noinspection PhpUndefinedFieldInspection */
+        $user->password = $password;
+        /** @noinspection PhpUndefinedMethodInspection */
+        $user->save();
+        return true;
+    }
+
 }

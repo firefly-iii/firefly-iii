@@ -15,5 +15,7 @@ interface UserRepositoryInterface
 
     public function findByEmail($email);
 
+    public function updatePassword(\User $user,$password);
+
 
 } 
