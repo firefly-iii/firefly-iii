@@ -2,7 +2,8 @@
 
 //use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
 
-class AccountController extends \BaseController {
+class AccountController extends \BaseController
+{
 
 //    public function __construct(ARI $accounts) {
 //        $this->accounts = $accounts;
@@ -19,18 +20,15 @@ class AccountController extends \BaseController {
 //	}
 //
 //
-//	/**
-//	 * Show the form for creating a new resource.
-//	 *
-//	 * @return Response
-//	 */
-//	public function create()
-//	{
-//		if($this->accounts->count() == 0) {
-//            return View::make('accounts.create-first-time');
-//        }
-//        return View::make('accounts');
-//	}
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
+    public function create()
+    {
+        return View::make('accounts.create');
+    }
 //
 //
 //	/**
