@@ -15,4 +15,6 @@ interface MigrationHelperInterface
 
     public function validFile();
 
+    public function migrate();
+
 } 

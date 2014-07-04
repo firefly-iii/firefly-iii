@@ -1,24 +1,51 @@
 <?php
 
-// basic home views:
-Route::get('/', ['uses' => 'HomeController@index','as' => 'index','before' => 'auth']);
+// protected routes:
+Route::group(['before' => 'auth'], function () {
 
-// login, register, logout:
-Route::get('/login',['uses' => 'UserController@login','as' => 'login','before' => 'guest']);
-Route::get('/register',['uses' => 'UserController@register','as' => 'register','before' => 'guest']);
-Route::get('/verify/{verification}',['uses' => 'UserController@verify','as' => 'verify','before' => 'guest']);
-Route::get('/reset/{reset}',['uses' => 'UserController@reset','as' => 'reset','before' => 'guest']);
-Route::get('/logout',['uses' => 'UserController@logout','as' => 'logout','before' => 'auth']);
-Route::get('/remindme',['uses' => 'UserController@remindme','as' => 'remindme','before' => 'guest']);
-Route::post('/login',['uses' => 'UserController@postLogin','before' => 'csrf|guest']);
-Route::post('/register',['uses' => 'UserController@postRegister','before' => 'csrf|guest']);
-Route::post('/remindme',['uses' => 'UserController@postRemindme','before' => 'csrf|guest']);
+        // home controller
+        Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
 
-// profile (after login / logout)
-Route::get('/profile',['uses' => 'ProfileController@index','as' => 'profile','before' => 'auth']);
-Route::get('/profile/change-password',['uses' => 'ProfileController@changePassword','as' => 'change-password','before' => 'auth']);
-Route::post('/profile/change-password',['uses' => 'ProfileController@postChangePassword','before' => 'csrf|auth']);
+        // user controller
+        Route::get('/logout', ['uses' => 'UserController@logout', 'as' => 'logout']);
 
-// migrate controller:
-Route::get('/migrate',['uses' => 'MigrationController@index','as' => 'migrate','before' => 'auth']);
-Route::post('/migrate',['uses' => 'MigrationController@postIndex','before' => 'csrf|auth']);
+        //profile controller
+        Route::get('/profile', ['uses' => 'ProfileController@index', 'as' => 'profile']);
+        Route::get('/profile/change-password',['uses' => 'ProfileController@changePassword', 'as' => 'change-password']);
+
+        // migration controller
+        Route::get('/migrate', ['uses' => 'MigrationController@index', 'as' => 'migrate']);
+    }
+);
+
+// protected + csrf routes
+Route::group(['before' => 'csrf|auth'], function () {
+        // profile controller
+        Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword']);
+
+        // migration controller
+        Route::post('/migrate', ['uses' => 'MigrationController@postIndex']);
+
+    }
+);
+
+// guest routes:
+Route::group(['before' => 'csrf|auth'], function () {
+        // user controller
+        Route::get('/login', ['uses' => 'UserController@login', 'as' => 'login']);
+        Route::get('/register', ['uses' => 'UserController@register', 'as' => 'register']);
+        Route::get('/verify/{verification}', ['uses' => 'UserController@verify', 'as' => 'verify']);
+        Route::get('/reset/{reset}', ['uses' => 'UserController@reset', 'as' => 'reset']);
+        Route::get('/remindme', ['uses' => 'UserController@remindme', 'as' => 'remindme']);
+    }
+);
+
+// guest + csrf routes:
+Route::group(['before' => 'csrf|guest'], function () {
+
+        // user controller
+        Route::post('/login', ['uses' => 'UserController@postLogin']);
+        Route::post('/register', ['uses' => 'UserController@postRegister']);
+        Route::post('/remindme', ['uses' => 'UserController@postRemindme']);
+    }
+);

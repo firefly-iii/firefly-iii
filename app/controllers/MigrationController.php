@@ -30,6 +30,8 @@ class MigrationController extends BaseController
             if (!$this->migration->validFile()) {
                 return View::make('error')->with('message', 'Invalid JSON content.');
             }
+            $this->migration->migrate();
+            return 'busy!';
         }
 
         // then, start migrating!
