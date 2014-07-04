@@ -36,7 +36,7 @@ class UserController extends BaseController
     public function register()
     {
         if (Config::get('auth.allow_register') !== true) {
-            App::abort(404);
+            return View::make('error')->with('message', 'Not possible');
         }
         return View::make('user.register');
     }
@@ -44,7 +44,7 @@ class UserController extends BaseController
     public function postRegister()
     {
         if (Config::get('auth.allow_register') !== true) {
-            App::abort(404);
+            return View::make('error')->with('message', 'Not possible');
         }
         $user = $this->user->register(Input::all());
         if ($user) {
@@ -72,18 +72,16 @@ class UserController extends BaseController
     public function postRemindme()
     {
         $user = $this->user->findByEmail(Input::get('email'));
-        if ($user) {
-            if (Config::get('auth.verify_reset') === true) {
-                $this->email->sendResetVerification($user);
-                return View::make('user.verification-pending');
-            }
-            if (Config::get('auth.verify_reset') === false) {
-                $this->email->sendPasswordMail($user);
-                return View::make('user.registered');
-            }
+        if (!$user) {
+            Session::flash('error', 'No good!');
+            return View::make('user.remindme');
         }
-        Session::flash('error', 'No good!');
-        return View::make('user.remindme');
+        if (Config::get('auth.verify_reset') === true) {
+            $this->email->sendResetVerification($user);
+            return View::make('user.verification-pending');
+        }
+        $this->email->sendPasswordMail($user);
+        return View::make('user.registered');
 
     }
 
