@@ -57,16 +57,14 @@ class UserControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
-    /**
-     * @expectedException Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     */
     public function testRegisterNotAllowed()
     {
         // no mock for config! :(
         Config::set('auth.allow_register', false);
         // test
         $this->call('GET', '/register');
-        $this->assertResponseStatus(404);
+        $this->assertResponseStatus(200);
+        $this->assertViewHas('message','Not possible');
     }
 
     /**
@@ -191,12 +189,9 @@ class UserControllerTest extends TestCase
 
         $this->call('POST', '/remindme');
         $this->assertResponseOk();
-        $this->assertSessionHas('error');
+        $this->assertSessionHas('error','No good!');
     }
 
-    /**
-     * @expectedException Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     */
     public function testPostRegisterNotAllowed()
     {
         // no mock for config! :(
@@ -211,7 +206,8 @@ class UserControllerTest extends TestCase
 
         // test
         $this->call('POST', '/register', $data);
-        $this->assertResponseStatus(404);
+        $this->assertResponseStatus(200);
+        $this->assertViewHas('message','Not possible');
 
     }
 
