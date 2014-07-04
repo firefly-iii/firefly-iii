@@ -4,7 +4,7 @@ return [
     'driver'     => 'smtp',
     'host'       => '',
     'port'       => 587,
-    'from'       => ['address' => '', 'name' => 'Firefly V'],
+    'from'       => ['address' => '', 'name' => 'Firefly III'],
     'encryption' => 'tls',
     'username'   => '',
     'password'   => '',
