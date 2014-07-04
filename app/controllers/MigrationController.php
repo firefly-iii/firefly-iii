@@ -1,7 +1,94 @@
 <?php
 
+use Firefly\Helper\Migration\MigrationHelperInterface as MHI;
+
 class MigrationController extends BaseController
 {
+    protected $migration;
+
+    public function __construct(MHI $migration)
+    {
+        $this->migration = $migration;
+
+    }
+
+    public function index()
+    {
+        return View::make('migrate.index');
+    }
+
+    public function postIndex()
+    {
+        if (Input::hasFile('exportFile')) {
+
+            // get content:
+            $file = Input::file('exportFile');
+            $path = $file->getRealPath();
+
+            $this->migration->loadFile($path);
+
+            if (!$this->migration->validFile()) {
+                return View::make('error')->with('message', 'Invalid JSON content.');
+            }
+        }
+
+        // then, start migrating!
+
+
+//
+//
+//            // map old and new id's.
+//            $map = [
+//                'accounts'      => [],
+//                'beneficiaries' => [],
+//            ];
+//
+//            // get the account types we need
+//            $beneficiaryAT = AccountType::where('description', 'Beneficiary account')->first();
+//
+//            // save all accounts:
+//            foreach ($JSON->accounts as $entry) {
+//                // create account:
+//                if ($entry->openingbalance == 0) {
+//                    $account = $this->accounts->store(['name' => $entry->name]);
+//                } else {
+//                    $account = $this->accounts->storeWithInitialBalance(
+//                        ['name' => $entry->name],
+//                        new Carbon($entry->openingbalancedate),
+//                        floatval($entry->openingbalance)
+//                    );
+//                }
+//                $map['accounts'][$entry->id] = $account->id;
+//            }
+//            unset($entry);
+//
+//            // save all components:
+//            foreach ($JSON->components as $entry) {
+//                switch ($entry->type->type) {
+//                    case 'beneficiary':
+//                        // create new account for beneficiary:
+//                        $account = $this->accounts->store(['name' => $entry->name]);
+//                        $map['beneficiaries'][$entry->id] = $account;
+//                        break;
+//                    case 'category':
+//                        // create new component for category:
+////                        $account = $this->accounts->store(['name' => $entry->name]);
+////                        $map['beneficiaries'][$entry->id] = $account;
+//                        break;
+//                }
+//            }
+//            unset($JSON->accounts);
+//
+//
+//            var_dump($JSON);
+//            var_dump($map);
+//
+//            exit;
+//        }
+//
+        return View::make('error')->with('message', 'No file found.');
+    }
+
     /*
     public function index()
     {
