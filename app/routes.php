@@ -30,7 +30,7 @@ Route::group(['before' => 'csrf|auth'], function () {
 );
 
 // guest routes:
-Route::group(['before' => 'csrf|auth'], function () {
+Route::group(['before' => 'guest'], function () {
         // user controller
         Route::get('/login', ['uses' => 'UserController@login', 'as' => 'login']);
         Route::get('/register', ['uses' => 'UserController@register', 'as' => 'register']);

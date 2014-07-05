@@ -6,11 +6,11 @@ class EmailHelper implements EmailHelperInterface
     public function sendVerificationMail(\User $user)
     {
 
-        $verification = \Str::random(32);
-        $user->verification = $verification;
+        $reset = \Str::random(32);
+        $user->reset = $reset;
         $user->save();
         $email = $user->email;
-        $data = ['verification' => $verification];
+        $data = ['reset' => $reset];
 
         \Mail::send(
             ['emails.user.verify-html', 'emails.user.verify-text'], $data, function ($message) use ($email) {
@@ -24,7 +24,7 @@ class EmailHelper implements EmailHelperInterface
 
         $password = \Str::random(12);
         $user->password = \Hash::make($password);
-        $user->verification = \Str::random(32); // new one.
+        $user->reset = \Str::random(32); // new one.
         $user->save();
         $email = $user->email;
 

@@ -9,7 +9,7 @@
 namespace Firefly\Storage\TransactionJournal;
 
 
-class EloquentTransactionJournalRepository implements TransactionJournalInterface
+class EloquentTransactionJournalRepository implements TransactionJournalRepositoryInterface
 {
 
     public function createSimpleJournal(\Account $from, \Account $to, $description, $amount, \Carbon\Carbon $date)
@@ -45,6 +45,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalInterfac
         $toAT = $to->accountType->description;
         $fromAT = $from->accountType->description;
 
+        $journalType = null;
 
         switch (true) {
             // is withdrawal from one of your own accounts:
@@ -66,8 +67,17 @@ class EloquentTransactionJournalRepository implements TransactionJournalInterfac
                 $journalType = \TransactionType::where('type', 'Deposit')->first();
                 break;
         }
+        if (is_null($journalType)) {
+            \Log::error('Could not figure out transacion type!');
+            throw new \Firefly\Exception\FireflyException('Could not figure out transaction type.');
+        }
+
         // always the same currency:
         $currency = \TransactionCurrency::where('code', 'EUR')->first();
+        if (is_null($currency)) {
+            \Log::error('No currency for journal!');
+            throw new \Firefly\Exception\FireflyException('No currency for journal!');
+        }
 
         // new journal:
         $journal = new \TransactionJournal();
@@ -77,7 +87,9 @@ class EloquentTransactionJournalRepository implements TransactionJournalInterfac
         $journal->description = $description;
         $journal->date = $date;
         if (!$journal->isValid()) {
-            return false;
+            \Log::error('Cannot create valid journal.');
+            \Log::error('Errors: ' . print_r($journal->validator->messages()->all(), true));
+            throw new \Firefly\Exception\FireflyException('Cannot create valid journal.');
         }
         $journal->save();
 
@@ -88,7 +100,9 @@ class EloquentTransactionJournalRepository implements TransactionJournalInterfac
         $fromTransaction->description = null;
         $fromTransaction->amount = $amountFrom;
         if (!$fromTransaction->isValid()) {
-            return false;
+            \Log::error('Cannot create valid transaction (from) for journal #' . $journal->id);
+            \Log::error('Errors: ' . print_r($fromTransaction->validator->messages()->all(), true));
+            throw new \Firefly\Exception\FireflyException('Cannot create valid transaction (from).');
         }
         $fromTransaction->save();
 
@@ -98,14 +112,17 @@ class EloquentTransactionJournalRepository implements TransactionJournalInterfac
         $toTransaction->description = null;
         $toTransaction->amount = $amountTo;
         if (!$toTransaction->isValid()) {
-            return false;
+            if (!$toTransaction->isValid()) {
+                \Log::error('Cannot create valid transaction (to) for journal #' . $journal->id);
+                \Log::error('Errors: ' . print_r($toTransaction->validator->messages()->all(), true));
+                throw new \Firefly\Exception\FireflyException('Cannot create valid transaction (to).');
+            }
         }
         $toTransaction->save();
 
         $journal->completed = true;
         $journal->save();
         return;
-
 
 
         echo 'saved!';

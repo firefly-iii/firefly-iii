@@ -3,6 +3,8 @@
 
 namespace Firefly\Storage\Account;
 
+use Firefly\Helper\MigrationException;
+
 class EloquentAccountRepository implements AccountRepositoryInterface
 {
     public $validator;
@@ -28,11 +30,17 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         $initial->user()->associate(\Auth::user());
         $initial->name = $data['name'] . ' initial balance';
         $initial->active = 0;
-        $initial->save();
+        try {
+            $initial->save();
+        } catch (\Illuminate\Database\QueryException $e) {
+            \Log::error('DB ERROR: ' . $e->getMessage());
+            throw new FireflyException('Could not save counterbalance account for ' . $data['name']);
+        }
 
         // create new transaction journal (and transactions):
-        /** @var \Firefly\Storage\TransactionJournal\TransactionJournalInterface $transactionJournal */
-        $transactionJournal = \App::make('Firefly\Storage\TransactionJournal\TransactionJournalInterface');
+        /** @var \Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface $transactionJournal */
+        $transactionJournal = \App::make('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
+
         $transactionJournal->createSimpleJournal(
             $initial, $account, 'Initial Balance for ' . $data['name'], $amount, $date
         );
@@ -54,7 +62,13 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         $account->user()->associate(\Auth::user());
         $account->name = $data['name'];
         $account->active = isset($data['active']) ? $data['active'] : 1;
-        $account->save();
+        try {
+            $account->save();
+        } catch (\Illuminate\Database\QueryException $e) {
+            \Log::error('DB ERROR: ' . $e->getMessage());
+            throw new \Firefly\Exception\FireflyException('Could not save account ' . $data['name']);
+        }
+
         return $account;
     }
 

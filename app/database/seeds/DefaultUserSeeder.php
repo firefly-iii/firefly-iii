@@ -16,7 +16,6 @@ class DefaultUserSeeder extends Seeder
             [
                 'email'          => 's@nder.be',
                 'password'       => Hash::make('sander'),
-                'verification'   => null,
                 'reset'          => null,
                 'remember_token' => null,
                 'migrated'       => false

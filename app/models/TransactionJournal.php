@@ -10,6 +10,7 @@ class TransactionJournal extends Elegant
             'transaction_currency_id' => 'required|exists:transaction_currencies,id',
             'description'             => 'between:1,255',
             'date'                    => 'date',
+            'completed'               => 'required|between:0,1'
         ];
 
     public function transactionType()
