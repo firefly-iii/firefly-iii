@@ -9,7 +9,7 @@
     Hi!
 </p>
 <p>
-    To verify your registration, please <a href="{{route('verify',$verification)}}">verify your e-mail address</a>.
+    To verify your registration, please <a href="{{route('reset',$reset)}}">verify your e-mail address</a>.
 </p>
 <p>
     Cya!

@@ -21,8 +21,12 @@ class StorageServiceProvider extends ServiceProvider
             'Firefly\Storage\Account\EloquentAccountRepository'
         );
         $this->app->bind(
-            'Firefly\Storage\TransactionJournal\TransactionJournalInterface',
+            'Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface',
             'Firefly\Storage\TransactionJournal\EloquentTransactionJournalRepository'
+        );
+        $this->app->bind(
+            'Firefly\Storage\Component\ComponentRepositoryInterface',
+            'Firefly\Storage\Component\EloquentComponentRepository'
         );
     }
 

@@ -15,6 +15,12 @@ class HelperServiceProvider extends ServiceProvider
             'Firefly\Helper\Email\EmailHelperInterface',
             'Firefly\Helper\Email\EmailHelper'
         );
+
+        // migration:
+        $this->app->bind(
+            'Firefly\Helper\Migration\MigrationHelperInterface',
+            'Firefly\Helper\Migration\MigrationHelper'
+        );
     }
 
 }

@@ -14,12 +14,12 @@ class EloquentUserRepository implements UserRepositoryInterface
         $user = new \User;
         $user->email = isset($array['email']) ? $array['email'] : null;
         $user->migrated = 0;
-        $user->verification = \Str::random(32);
+        $user->reset = \Str::random(32);
         $user->password = \Hash::make(\Str::random(12));
 
         if (!$user->isValid()) {
             \Log::error('Invalid user');
-            \Session::flash('error', 'Input invalid, please try again.');
+            \Session::flash('error', 'Input invalid, please try again: ' . $user->validator->messages()->first());
             return false;
         }
         $user->save();
@@ -34,11 +34,6 @@ class EloquentUserRepository implements UserRepositoryInterface
             }
         }
         return false;
-    }
-
-    public function findByVerification($verification)
-    {
-        return \User::where('verification', $verification)->first();
     }
 
     public function findByReset($reset)
