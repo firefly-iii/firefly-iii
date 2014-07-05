@@ -9,6 +9,8 @@ interface AccountRepositoryInterface
 
     public function count();
 
+    public function get();
+
     public function store($data);
     public function storeWithInitialBalance($data,\Carbon\Carbon $date, $amount = 0);
 

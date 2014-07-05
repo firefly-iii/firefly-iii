@@ -13,6 +13,10 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     {
     }
 
+    public function get() {
+        return \Auth::user()->accounts()->get();
+    }
+
     public function count()
     {
         return \Auth::user()->accounts()->count();

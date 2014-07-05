@@ -18,18 +18,13 @@ class CreateComponentsTable extends Migration {
 			$table->timestamps();
             $table->string('name',50);
             $table->integer('user_id')->unsigned();
-            $table->integer('component_type_id')->unsigned();
+            $table->string('class',20);
 
             // connect components to users
             $table->foreign('user_id')
                 ->references('id')->on('users')
                 ->onDelete('cascade');
-
-            // connect components to component types
-            $table->foreign('component_type_id')
-                ->references('id')->on('component_types')
-                ->onDelete('cascade');
-		});
+        });
 	}
 
 	/**

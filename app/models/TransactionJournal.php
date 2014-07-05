@@ -28,6 +28,21 @@ class TransactionJournal extends Elegant
         return $this->hasMany('Transaction');
     }
 
+    public function components()
+    {
+        return $this->belongsToMany('Component');
+    }
+
+    public function budgets()
+    {
+        return $this->belongsToMany('Budget','component_transaction_journal','transaction_journal_id','component_id');
+    }
+
+    public function categories()
+    {
+        return $this->belongsToMany('Category','component_transaction_journal','transaction_journal_id','component_id');
+    }
+
     public function getDates()
     {
         return array('created_at', 'updated_at', 'date');

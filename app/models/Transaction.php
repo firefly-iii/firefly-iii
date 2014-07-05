@@ -26,4 +26,13 @@ class Transaction extends Elegant
     {
         return $this->belongsToMany('Component');
     }
+
+    public function budgets()
+    {
+        return $this->belongsToMany('Budget');
+    }
+    public function categories()
+    {
+        return $this->belongsToMany('Category');
+    }
 } 
