@@ -211,34 +211,6 @@ class UserControllerTest extends TestCase
 
     }
 
-    public function testVerification()
-    {
-
-        $repository = $this->mock('Firefly\Storage\User\UserRepositoryInterface');
-        $email = $this->mock('Firefly\Helper\Email\EmailHelper');
-
-        $repository->shouldReceive('findByVerification')->once()->andReturn(new User);
-        $email->shouldReceive('sendPasswordMail')->once()->andReturn(true);
-
-        // test
-        $crawler = $this->client->request('GET', '/verify/blabla');
-        $this->assertTrue($this->client->getResponse()->isOk());
-        $this->assertCount(1, $crawler->filter('h1:contains("Password sent")'));
-
-    }
-
-    public function testVerificationFails()
-    {
-        $repository = $this->mock('Firefly\Storage\User\UserRepositoryInterface');
-        $repository->shouldReceive('findByVerification')->once()->andReturn(null);
-
-        // test
-        $crawler = $this->client->request('GET', '/verify/blabla');
-        $this->assertTrue($this->client->getResponse()->isOk());
-        $this->assertCount(1, $crawler->filter('h1:contains("Error")'));
-        $this->assertViewHas('message');
-    }
-
     public function testReset()
     {
 

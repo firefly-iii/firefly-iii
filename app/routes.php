@@ -15,16 +15,22 @@ Route::group(['before' => 'auth'], function () {
 
         // migration controller
         Route::get('/migrate', ['uses' => 'MigrationController@index', 'as' => 'migrate']);
+
+        // account controller:
+        Route::get('/accounts/create', ['uses' => 'AccountController@create', 'as' => 'accounts.create']);
     }
 );
 
-// protected + csrf routes
+// protected + csrf routes (POST)
 Route::group(['before' => 'csrf|auth'], function () {
         // profile controller
         Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword']);
 
         // migration controller
         Route::post('/migrate', ['uses' => 'MigrationController@postIndex']);
+
+        // account controller:
+        Route::get('/accounts/store', ['uses' => 'AccountController@store', 'as' => 'accounts.store']);
 
     }
 );

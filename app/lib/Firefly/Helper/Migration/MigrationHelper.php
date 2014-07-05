@@ -49,9 +49,18 @@ class MigrationHelper implements MigrationHelperInterface
         \DB::beginTransaction();
 
         try {
+            // create cash account:
+            $this->_createCashAccount();
+
             $this->_importAccounts();
             $this->_importComponents();
-            $this->_importPiggybanks();
+            //$this->_importPiggybanks();
+
+            // create transactions:
+            $this->_importTransactions();
+
+            // create transfers:
+            $this->_importTransfers();
 
 
         } catch (\Firefly\Exception\FireflyException $e) {
@@ -64,6 +73,15 @@ class MigrationHelper implements MigrationHelperInterface
         \DB::commit();
         \Log::info('Done!');
         return true;
+    }
+
+    protected function _createCashAccount()
+    {
+        $cashAT = \AccountType::where('description', 'Cash account')->first();
+        /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accounts */
+        $accounts = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
+        $cash = $accounts->store(['name' => 'Cash account', 'account_type' => $cashAT, 'active' => false]);
+        $this->map['cash'] = $cash;
     }
 
     protected function _importAccounts()
@@ -83,7 +101,7 @@ class MigrationHelper implements MigrationHelperInterface
                     floatval($entry->openingbalance)
                 );
             }
-            $this->map['accounts'][$entry->id] = $account->id;
+            $this->map['accounts'][$entry->id] = $account;
             \Log::info('Imported account "' . $entry->name . '" with balance ' . $entry->openingbalance);
         }
     }
@@ -91,35 +109,22 @@ class MigrationHelper implements MigrationHelperInterface
     protected function _importComponents()
     {
         $beneficiaryAT = \AccountType::where('description', 'Beneficiary account')->first();
-        $budgetType = \ComponentType::where('type', 'budget')->first();
-        $categoryType = \ComponentType::where('type', 'category')->first();
         foreach ($this->JSON->components as $entry) {
             switch ($entry->type->type) {
                 case 'beneficiary':
                     $beneficiary = $this->_importBeneficiary($entry, $beneficiaryAT);
-                    $this->map['accounts'][$entry->id] = $beneficiary->id;
+                    $this->map['accounts'][$entry->id] = $beneficiary;
                     break;
                 case 'category':
-                    $component = $this->_importComponent($entry, $categoryType);
-                    $this->map['components'][$entry->id] = $component->id;
+                    $component = $this->_importCategory($entry);
+                    $this->map['categories'][$entry->id] = $component;
                     break;
                 case 'budget':
-                    $component = $this->_importComponent($entry, $budgetType);
-                    $this->map['components'][$entry->id] = $component->id;
+                    $component = $this->_importBudget($entry);
+                    $this->map['budgets'][$entry->id] = $component;
                     break;
             }
 
-        }
-    }
-
-    protected function _importPiggybanks() {
-
-        /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accounts */
-        $accounts = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
-
-        // get type for piggy:
-        $piggyAT = \AccountType::where('description', 'Piggy bank')->first();
-        foreach($this->JSON->piggybanks as $piggyBank) {
         }
     }
 
@@ -135,10 +140,98 @@ class MigrationHelper implements MigrationHelperInterface
         );
     }
 
-    protected function _importComponent($component, \ComponentType $type)
+    protected function _importCategory($component)
     {
         /** @var \Firefly\Storage\Component\ComponentRepositoryInterface $components */
         $components = \App::make('Firefly\Storage\Component\ComponentRepositoryInterface');
-        return $components->store(['name' => $component->name, 'component_type' => $type]);
+        return $components->store(['name' => $component->name, 'class' => 'Category']);
+    }
+
+    protected function _importBudget($component)
+    {
+        /** @var \Firefly\Storage\Component\ComponentRepositoryInterface $components */
+        $components = \App::make('Firefly\Storage\Component\ComponentRepositoryInterface');
+        return $components->store(['name' => $component->name, 'class' => 'Budget']);
+    }
+
+    protected function _importTransactions()
+    {
+
+        /** @var \Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface $journals */
+        $journals = \App::make('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
+
+        // loop component_transaction to find beneficiaries, categories and budgets:
+        $beneficiaries = [];
+        $categories = [];
+        $budgets = [];
+        foreach ($this->JSON->component_transaction as $entry) {
+            // beneficiaries
+            if (isset($this->map['accounts'][$entry->component_id])) {
+                $beneficiaries[$entry->transaction_id] = $this->map['accounts'][$entry->component_id];
+            }
+
+            // categories
+            if (isset($this->map['categories'][$entry->component_id])) {
+                $categories[$entry->transaction_id] = $this->map['categories'][$entry->component_id];
+            }
+
+            // budgets:
+            if (isset($this->map['budgets'][$entry->component_id])) {
+                $budgets[$entry->transaction_id] = $this->map['budgets'][$entry->component_id];
+            }
+        }
+
+        foreach ($this->JSON->transactions as $entry) {
+            $id = $entry->id;
+
+            // to properly save the amount, do it times -1:
+            $amount = $entry->amount * -1;
+
+            /** @var \Account $fromAccount */
+            $fromAccount = isset($this->map['accounts'][$entry->account_id])
+                ? $this->map['accounts'][$entry->account_id] : false;
+
+            /** @var \Account $toAccount */
+            $toAccount = isset($beneficiaries[$entry->id]) ? $beneficiaries[$entry->id] : $this->map['cash'];
+
+            $date = new \Carbon\Carbon($entry->date);
+            $journal = $journals->createSimpleJournal($fromAccount, $toAccount, $entry->description, $amount, $date);
+
+            // save budgets and categories, on the journal
+            if(isset($budgets[$entry->id])) {
+                $budget = $budgets[$entry->id];
+                $journal->budgets()->save($budget);
+            }
+            if(isset($categories[$entry->id])) {
+                $category = $categories[$entry->id];
+                $journal->categories()->save($category);
+            }
+
+        }
+    }
+
+    protected function _importTransfers()
+    {
+        /** @var \Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface $journals */
+        $journals = \App::make('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
+
+        foreach ($this->JSON->transfers as $entry) {
+            $id = $entry->id;
+
+            // to properly save the amount, do it times 1 (?):
+            $amount = $entry->amount * -1;
+
+            /** @var \Account $fromAccount */
+            $fromAccount = isset($this->map['accounts'][$entry->accountfrom_id])
+                ? $this->map['accounts'][$entry->accountto_id] : false;
+
+            /** @var \Account $toAccount */
+            $toAccount = isset($this->map['accounts'][$entry->accountto_id])
+                ? $this->map['accounts'][$entry->accountfrom_id] : false;
+
+            $date = new \Carbon\Carbon($entry->date);
+            $journals->createSimpleJournal($fromAccount, $toAccount, $entry->description, $amount, $date);
+
+        }
     }
 }

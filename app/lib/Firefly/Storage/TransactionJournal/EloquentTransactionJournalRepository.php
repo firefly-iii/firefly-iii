@@ -15,7 +15,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
     public function createSimpleJournal(\Account $from, \Account $to, $description, $amount, \Carbon\Carbon $date)
     {
 
-
+        \Log::debug('Creating tranaction "'.$description.'".');
         /*
          * We're building this thinking the money goes from A to B.
          * If the amount is negative however, the money still goes
@@ -67,6 +67,10 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
                 $journalType = \TransactionType::where('type', 'Deposit')->first();
                 break;
         }
+
+        // some debug information:
+        \Log::debug($journalType->type.': AccountFrom "'.$from->name.'" will gain/lose '.$amountFrom.' and AccountTo "'.$to->name.'" will gain/lose '.$amountTo);
+
         if (is_null($journalType)) {
             \Log::error('Could not figure out transacion type!');
             throw new \Firefly\Exception\FireflyException('Could not figure out transaction type.');
@@ -122,10 +126,6 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
 
         $journal->completed = true;
         $journal->save();
-        return;
-
-
-        echo 'saved!';
-
+        return $journal;
     }
 } 

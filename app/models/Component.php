@@ -1,8 +1,12 @@
 <?php
 
 
-class Component extends Elegant
+class Component extends Firefly\Database\SingleTableInheritanceEntity
 {
+
+    protected $table = 'components';
+    protected $subclassField = 'class';
+
     public static $rules
         = [
             'user_id'           => 'exists:users,id|required',
@@ -11,14 +15,13 @@ class Component extends Elegant
         ];
 
 
-    public function componentType()
-    {
-        return $this->belongsTo('ComponentType');
-    }
-
     public function transactions()
     {
         return $this->belongsToMany('Transaction');
+    }
+    public function transactionjournals()
+    {
+        return $this->belongsToMany('TransactionJournal');
     }
 
     public function user()

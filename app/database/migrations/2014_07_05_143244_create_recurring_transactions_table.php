@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateComponentTypesTable extends Migration {
+class CreateRecurringTransactionsTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,11 +12,10 @@ class CreateComponentTypesTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('component_types', function(Blueprint $table)
+		Schema::create('recurringtransactions', function(Blueprint $table)
 		{
 			$table->increments('id');
 			$table->timestamps();
-            $table->string('type',50);
 		});
 	}
 
@@ -27,7 +26,7 @@ class CreateComponentTypesTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('component_types');
+		Schema::drop('recurringtransactions');
 	}
 
 }

@@ -11,6 +11,9 @@ class HomeController extends BaseController {
 	public function index()
 	{
         $count = $this->accounts->count();
+
+        // build the home screen:
+
 		return View::make('index')->with('count',$count);
 	}
 }
