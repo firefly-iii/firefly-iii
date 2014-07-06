@@ -43,23 +43,26 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         $journalType = null;
 
         switch (true) {
-            // is withdrawal from one of your own accounts:
-            case ($fromAT == 'Default account'):
-                $journalType = \TransactionType::where('type', 'Withdrawal')->first();
+            case ($from->transactions()->count() == 0 && $to->transactions()->count() == 0):
+                $journalType = \TransactionType::where('type', 'Opening balance')->first();
                 break;
+
             // both are yours:
             case ($fromAT == 'Default account' && $toAT == 'Default account'):
                 // determin transaction type. If both accounts are new, it's an initial
                 // balance transfer.
                 $journalType = \TransactionType::where('type', 'Transfer')->first();
                 break;
-            case ($from->transactions()->count() == 0 && $to->transactions()->count() == 0):
-                $journalType = \TransactionType::where('type', 'Opening balance')->first();
+            case ($amount < 0):
+                $journalType = \TransactionType::where('type', 'Deposit')->first();
                 break;
-            default:
-                // is deposit into one of your own accounts:
+            // is deposit into one of your own accounts:
             case ($toAT == 'Default account'):
                 $journalType = \TransactionType::where('type', 'Deposit')->first();
+                break;
+            // is withdrawal from one of your own accounts:
+            case ($fromAT == 'Default account'):
+                $journalType = \TransactionType::where('type', 'Withdrawal')->first();
                 break;
         }
 
@@ -126,4 +129,33 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         $journal->save();
         return $journal;
     }
-} 
+
+    public function get()
+    {
+
+    }
+
+    public function getByAccount(\Account $account, $count = 25)
+    {
+        $accountID = $account->id;
+        $query = \TransactionJournal::
+            with(
+                [
+                    'transactions',
+                    'transactioncurrency',
+                    'transactiontype'
+                ]
+            )
+            ->take($count)
+            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+            ->where('accounts.id', $accountID)
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.id', 'DESC')
+            ->take($count)
+            ->get(['transaction_journals.*']);
+        return $query;
+    }
+
+
+}

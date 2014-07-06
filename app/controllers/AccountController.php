@@ -5,28 +5,31 @@ use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
 class AccountController extends \BaseController
 {
 
-    public function __construct(ARI $accounts) {
+    public function __construct(ARI $accounts)
+    {
         $this->accounts = $accounts;
 
         View::share('menu', 'accounts');
     }
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function index()
+    {
         $all = $this->accounts->get();
         $list = [
-            'personal' => [],
+            'personal'      => [],
             'beneficiaries' => [],
-            'initial' => [],
-            'cash' => []
+            'initial'       => [],
+            'cash'          => []
         ];
 
-        foreach($all as $account) {
-            switch($account->accounttype->description) {
+        foreach ($all as $account) {
+            // @codeCoverageIgnoreStart
+            switch ($account->accounttype->description) {
                 case 'Default account':
                     $list['personal'][] = $account;
                     break;
@@ -41,10 +44,11 @@ class AccountController extends \BaseController
                     break;
 
             }
+            // @codeCoverageIgnoreEnd
         }
 
-        return View::make('accounts.index')->with('accounts',$list);
-	}
+        return View::make('accounts.index')->with('accounts', $list);
+    }
 //
 //
     /**
@@ -73,16 +77,17 @@ class AccountController extends \BaseController
 //	}
 //
 //
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  Account  $account
-	 * @return Response
-	 */
-	public function show(Account $account)
-	{
+    /**
+     * Display the specified resource.
+     *
+     * @param  int $id
+     *
+     * @return Response
+     */
+    public function show($id)
+    {
 
-	}
+    }
 //
 //
 //	/**

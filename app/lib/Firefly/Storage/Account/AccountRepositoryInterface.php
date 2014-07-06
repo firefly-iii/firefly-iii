@@ -10,6 +10,7 @@ interface AccountRepositoryInterface
     public function count();
 
     public function get();
+    public function find($id);
     public function getByIds($ids);
     public function getDefault();
     public function getActiveDefault();

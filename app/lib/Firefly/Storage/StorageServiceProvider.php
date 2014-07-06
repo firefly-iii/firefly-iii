@@ -10,11 +10,16 @@ class StorageServiceProvider extends ServiceProvider
     // Triggered automatically by Laravel
     public function register()
     {
-        // storage:
         $this->app->bind(
             'Firefly\Storage\User\UserRepositoryInterface',
             'Firefly\Storage\User\EloquentUserRepository'
         );
+        $this->app->bind(
+            'Firefly\Storage\Transaction\TransactionRepositoryInterface',
+            'Firefly\Storage\Transaction\EloquentTransactionRepository'
+        );
+
+
 
         $this->app->bind(
             'Firefly\Storage\Account\AccountRepositoryInterface',
@@ -24,6 +29,7 @@ class StorageServiceProvider extends ServiceProvider
             'Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface',
             'Firefly\Storage\TransactionJournal\EloquentTransactionJournalRepository'
         );
+
         $this->app->bind(
             'Firefly\Storage\Component\ComponentRepositoryInterface',
             'Firefly\Storage\Component\EloquentComponentRepository'
