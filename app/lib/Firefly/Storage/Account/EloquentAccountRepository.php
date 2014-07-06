@@ -16,6 +16,11 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         return \Auth::user()->accounts()->with('accounttype')->get();
     }
 
+    public function find($id)
+    {
+        return \Auth::user()->accounts()->where('id', $id)->first();
+    }
+
     public function getByIds($ids)
     {
         return \Auth::user()->accounts()->with('accounttype')->whereIn('id', $ids)->get();

@@ -32,9 +32,11 @@
         </p>
     </div>
 @else
+    <!-- ACCOUNTS -->
     <div class="row" style="border-top:1px #eee solid;">
     @foreach($accounts as $index => $account)
         <div class="col-lg-6">
+            <h4>{{{$account->name}}} chart</h4>
             <div id="chart_{{{$account->id}}}" data-id="{{{$account->id}}}" class="homeChart" data-title="{{{$account->name}}}"></div>
             <p>
                 Go to <a href="#" title="Overview for {{{$account->name}}}">{{{$account->name}}}</a>
@@ -42,11 +44,23 @@
 
         </div>
         @if($index % 2 == 1)
-        </div><div class="row" style="border-top:1px #eee solid;">
+        </div><div class="row">
         @endif
     @endforeach
     </div>
 
+    <!-- TRANSACTIONS -->
+    <div class="row">
+        @foreach($accounts as $index => $account)
+        <div class="col-lg-6">
+            <h4>{{$account->name}}</h4>
+            @include('transactions.journals',['journals' => $account->transactionList])
+        </div>
+        @if($index % 2 == 1)
+    </div><div class="row" style="border-top:1px #eee solid;">
+        @endif
+        @endforeach
+    </div>
 
 @endif
 

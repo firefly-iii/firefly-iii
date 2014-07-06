@@ -1,14 +1,4 @@
 <?php
-Route::bind('account', function ($value, $route) {
-        if(Auth::user()) {
-            return Auth::user()->accounts()->find($value);
-        } else {
-            return null;
-        }
-    });
-
-
-
 // protected routes:
 Route::group(['before' => 'auth'], function () {
 

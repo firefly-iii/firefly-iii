@@ -6,6 +6,8 @@ use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
 class ChartController extends BaseController
 {
 
+    protected $accounts;
+
     public function __construct(ARI $accounts)
     {
         $this->accounts = $accounts;
@@ -14,7 +16,7 @@ class ChartController extends BaseController
     /**
      * Show home charts.
      */
-    public function home(Account $account = null)
+    public function home($account = null)
     {
         // chart
         $chart = App::make('gchart');
@@ -45,9 +47,13 @@ class ChartController extends BaseController
                 $chart->addRowArray($row);
             }
         } else {
+            $account = $this->accounts->find($account);
+            if (is_null($account)) {
+                return View::make('error')->with('message', 'No account found.');
+            }
             $chart->addColumn($account->name, 'number');
             while ($current <= $today) {
-                $row = [clone $current,$account->balance(clone $current)];
+                $row = [clone $current, $account->balance(clone $current)];
                 $current->addDay();
                 $chart->addRowArray($row);
             }

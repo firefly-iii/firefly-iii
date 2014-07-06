@@ -7,6 +7,33 @@ class AccountControllerTest extends TestCase
         parent::setUp();
     }
 
+    public function testIndex() {
+
+        $list = [
+            'personal' => [],
+            'beneficiaries' => [],
+            'initial' => [],
+            'cash' => []
+        ];
+
+
+        // mock:
+        View::shouldReceive('share');
+        View::shouldReceive('make')->with('accounts.index')->once()->andReturn(\Mockery::self())
+            ->shouldReceive('with')->once()->with('accounts',$list);
+
+        // mock account repository:
+        $accounts = $this->mock('Firefly\Storage\Account\AccountRepositoryInterface');
+        $accounts->shouldReceive('get')->andReturn([]);
+
+        // call
+        $this->call('GET', '/accounts');
+
+        // test
+        $this->assertResponseOk();
+
+    }
+
     public function testCreate()
     {
         // mock:
@@ -22,8 +49,14 @@ class AccountControllerTest extends TestCase
 
     public function testShow()
     {
+        // mock account repository:
+        $accounts = $this->mock('Firefly\Storage\Account\AccountRepositoryInterface');
+        $accounts->shouldReceive('get')->with(1)->andReturn([]);
 
-        // the route filters on accounts using Eloquent, maybe fix that instead?
-        $this->assertTrue(true);
+        // call
+        $this->call('GET', '/accounts/1');
+
+        // test
+        $this->assertResponseOk();
     }
 }
