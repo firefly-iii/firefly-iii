@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 03/07/14
- * Time: 21:34
- */
 
 namespace Firefly\Helper\Migration;
 

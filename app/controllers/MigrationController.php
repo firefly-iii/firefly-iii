@@ -9,6 +9,7 @@ class MigrationController extends BaseController
     public function __construct(MHI $migration)
     {
         $this->migration = $migration;
+        View::share('menu', 'home');
 
     }
 

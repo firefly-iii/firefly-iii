@@ -13,7 +13,7 @@
 
 
 if (!function_exists('mf')) {
-    function mf($n, $coloured = false)
+    function mf($n, $coloured = true)
     {
 
         $n = floatval($n);

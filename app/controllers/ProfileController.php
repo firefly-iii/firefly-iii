@@ -7,6 +7,7 @@ class ProfileController extends BaseController
 
     public function __construct(URI $user) {
         $this->user = $user;
+        View::share('menu', 'home');
     }
 
     public function index()

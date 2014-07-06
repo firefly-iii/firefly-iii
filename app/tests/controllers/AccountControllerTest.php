@@ -1,5 +1,7 @@
 <?php
-class AccountControllerTest extends TestCase {
+
+class AccountControllerTest extends TestCase
+{
     public function setUp()
     {
         parent::setUp();
@@ -8,6 +10,7 @@ class AccountControllerTest extends TestCase {
     public function testCreate()
     {
         // mock:
+        View::shouldReceive('share');
         View::shouldReceive('make')->with('accounts.create');
 
         // call
@@ -15,5 +18,12 @@ class AccountControllerTest extends TestCase {
 
         // test
         $this->assertResponseOk();
+    }
+
+    public function testShow()
+    {
+
+        // the route filters on accounts using Eloquent, maybe fix that instead?
+        $this->assertTrue(true);
     }
 }
