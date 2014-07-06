@@ -4,7 +4,6 @@
     <div class="col-lg-12 col-md-12 col-sm-12">
         <h1>Firefly
             @if($count > 0)
-            <br/>
             <small>What's playing?</small>
             @endif
         </h1>
@@ -33,10 +32,27 @@
         </p>
     </div>
 @else
+    <div class="row" style="border-top:1px #eee solid;">
+    @foreach($accounts as $index => $account)
+        <div class="col-lg-6">
+            <div id="chart_{{{$account->id}}}" data-id="{{{$account->id}}}" class="homeChart" data-title="{{{$account->name}}}"></div>
+            <p>
+                Go to <a href="#" title="Overview for {{{$account->name}}}">{{{$account->name}}}</a>
+            </p>
+
+        </div>
+        @if($index % 2 == 1)
+        </div><div class="row" style="border-top:1px #eee solid;">
+        @endif
+    @endforeach
+    </div>
 
 
 @endif
 
 @stop
 @section('scripts')
+    <script src="https://www.google.com/jsapi"></script>
+    <script src="assets/javascript/charts.js"></script>
+    <script src="assets/javascript/index.js"></script>
 @stop

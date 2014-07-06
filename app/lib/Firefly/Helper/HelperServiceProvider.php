@@ -21,6 +21,12 @@ class HelperServiceProvider extends ServiceProvider
             'Firefly\Helper\Migration\MigrationHelperInterface',
             'Firefly\Helper\Migration\MigrationHelper'
         );
+
+        // settings:
+        $this->app->bind(
+            'Firefly\Helper\Preferences\PreferencesHelperInterface',
+            'Firefly\Helper\Preferences\PreferencesHelper'
+        );
     }
 
 }

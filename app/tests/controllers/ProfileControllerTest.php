@@ -6,6 +6,7 @@ class ProfileControllerTest extends TestCase
     public function testIndex()
     {
         // mock:
+        View::shouldReceive('share');
         View::shouldReceive('make')->with('profile.index');
 
         // call
@@ -18,6 +19,7 @@ class ProfileControllerTest extends TestCase
     public function testChangePassword()
     {
         // mock:
+        View::shouldReceive('share');
         View::shouldReceive('make')->with('profile.change-password');
 
         // call

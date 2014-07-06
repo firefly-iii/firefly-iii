@@ -68,10 +68,7 @@ class UserTest extends TestCase
 
         $account->save();
 
-
-
         $this->assertCount(1,$user->accounts()->get());
-
 
     }
 

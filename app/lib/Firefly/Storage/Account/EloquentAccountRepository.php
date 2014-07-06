@@ -3,8 +3,6 @@
 
 namespace Firefly\Storage\Account;
 
-use Firefly\Helper\MigrationException;
-
 class EloquentAccountRepository implements AccountRepositoryInterface
 {
     public $validator;
@@ -13,8 +11,30 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     {
     }
 
-    public function get() {
-        return \Auth::user()->accounts()->get();
+    public function get()
+    {
+        return \Auth::user()->accounts()->with('accounttype')->get();
+    }
+
+    public function getByIds($ids)
+    {
+        return \Auth::user()->accounts()->with('accounttype')->whereIn('id', $ids)->get();
+    }
+
+    public function getDefault()
+    {
+        return \Auth::user()->accounts()->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+            ->where('account_types.description', 'Default account')
+
+            ->get(['accounts.*']);
+    }
+
+    public function getActiveDefault()
+    {
+        return \Auth::user()->accounts()->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+            ->where('account_types.description', 'Default account')->where('accounts.active', 1)
+
+            ->get(['accounts.*']);
     }
 
     public function count()

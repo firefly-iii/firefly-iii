@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 03/07/14
- * Time: 15:24
- */
+
 
 namespace Firefly\Storage\TransactionJournal;
 
@@ -15,7 +10,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
     public function createSimpleJournal(\Account $from, \Account $to, $description, $amount, \Carbon\Carbon $date)
     {
 
-        \Log::debug('Creating tranaction "'.$description.'".');
+        \Log::debug('Creating tranaction "' . $description . '".');
         /*
          * We're building this thinking the money goes from A to B.
          * If the amount is negative however, the money still goes
@@ -69,7 +64,10 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         }
 
         // some debug information:
-        \Log::debug($journalType->type.': AccountFrom "'.$from->name.'" will gain/lose '.$amountFrom.' and AccountTo "'.$to->name.'" will gain/lose '.$amountTo);
+        \Log::debug(
+            $journalType->type . ': AccountFrom "' . $from->name . '" will gain/lose ' . $amountFrom
+            . ' and AccountTo "' . $to->name . '" will gain/lose ' . $amountTo
+        );
 
         if (is_null($journalType)) {
             \Log::error('Could not figure out transacion type!');

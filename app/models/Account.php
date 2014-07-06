@@ -6,7 +6,7 @@ class Account extends Elegant
 
     public static $rules
         = [
-            'name'        => 'required|between:1,100',
+            'name'    => 'required|between:1,100',
             'user_id' => 'required|exists:users,id'
         ];
 
@@ -15,16 +15,10 @@ class Account extends Elegant
         return $this->belongsTo('AccountType');
     }
 
-    public function transactions()
-    {
-        return $this->hasMany('Transaction');
-    }
-
     public function user()
     {
         return $this->belongsTo('User');
     }
-
 
     /**
      * Get an accounts current balance.
@@ -36,7 +30,15 @@ class Account extends Elegant
     public function balance(\Carbon\Carbon $date = null)
     {
         $date = is_null($date) ? new \Carbon\Carbon : $date;
-        return floatval($this->transactions()->sum('amount'));
+
+        return $this->transactions()
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount');
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany('Transaction');
     }
 
 } 

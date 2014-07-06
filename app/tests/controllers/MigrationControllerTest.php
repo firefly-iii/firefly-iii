@@ -10,6 +10,7 @@ class MigrationControllerTest extends TestCase
     public function testIndex()
     {
         // mock:
+        View::shouldReceive('share');
         View::shouldReceive('make')->with('migrate.index');
 
         // call
