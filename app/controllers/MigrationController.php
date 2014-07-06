@@ -20,7 +20,6 @@ class MigrationController extends BaseController
 
     public function postIndex()
     {
-        // @codeCoverageIgnoreStart
         if (Input::hasFile('exportFile')) {
 
             // get content:
@@ -37,6 +36,5 @@ class MigrationController extends BaseController
         } else {
             return View::make('error')->with('message', 'No file selected');
         }
-        // @codeCoverageIgnoreEnd
     }
 }

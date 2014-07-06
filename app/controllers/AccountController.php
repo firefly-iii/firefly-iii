@@ -28,7 +28,6 @@ class AccountController extends \BaseController
         ];
 
         foreach ($all as $account) {
-            // @codeCoverageIgnoreStart
             switch ($account->accounttype->description) {
                 case 'Default account':
                     $list['personal'][] = $account;
@@ -44,7 +43,6 @@ class AccountController extends \BaseController
                     break;
 
             }
-            // @codeCoverageIgnoreEnd
         }
 
         return View::make('accounts.index')->with('accounts', $list);
