@@ -26,8 +26,10 @@ class AccountController extends \BaseController
             'initial'       => [],
             'cash'          => []
         ];
+        $total = $all->count();
 
         foreach ($all as $account) {
+
             switch ($account->accounttype->description) {
                 case 'Default account':
                     $list['personal'][] = $account;
@@ -45,7 +47,7 @@ class AccountController extends \BaseController
             }
         }
 
-        return View::make('accounts.index')->with('accounts', $list);
+        return View::make('accounts.index')->with('accounts', $list)->with('total',$total);
     }
 //
 //
