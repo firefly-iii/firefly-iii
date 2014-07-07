@@ -7,19 +7,6 @@ function chartCallback() {
 
 function drawAccountChart() {
 
-    var opt = {
-        curveType: 'function',
-        legend: {
-            position: 'none'
-        },
-        chartArea: {
-            left: 50,
-            top: 10,
-            width: '90%',
-            height: 180
-        },
-        height: 230
-    };
 
     $.each($('.homeChart'), function (i, v) {
         var obj = $(v);
@@ -29,8 +16,25 @@ function drawAccountChart() {
         var URL = 'chart/home/' + accountID;
         console.log('URL: ' + URL);
 
+
+        var opt = {
+            curveType: 'function',
+            legend: {
+                position: 'none'
+            },
+            chartArea: {
+                left: 50,
+                top: 10,
+                width: '90%',
+                height: 180
+            },
+            height: 230,
+            lineWidth: 1
+        };
+
+
         // draw it!
-        drawChart('#' + holderID,URL, opt);
+        drawChart('#' + holderID, URL, opt);
     });
 
     //var URL = 'chart/home';
