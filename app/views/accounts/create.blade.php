@@ -2,7 +2,7 @@
 @section('content')
 <div class="row">
     <div class="col-lg-8 col-md-8 col-sm-12">
-        <h1>Firefly<br/>
+        <h1>Firefly
             <small>Add a new account</small>
         </h1>
         <p class="lead">
@@ -15,7 +15,7 @@
             a positive balance).
         </p>
         <p>
-            Your first account should be a checking or savings account. Enter its name and if relevant
+            If this is your first account, it should be a checking or savings account. Enter its name and if relevant
             the current balance. Check your bank statements for the last current balance you can find.
         </p>
         {{Form::open(['class' => 'form-horizontal','url' => route('accounts.store')])}}
