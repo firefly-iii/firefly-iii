@@ -6,7 +6,7 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
 
         // chart controller
-        Route::get('/chart/home/{account?}', ['uses' => 'ChartController@home', 'as' => 'chart.home']);
+        Route::get('/chart/home/account/{account?}', ['uses' => 'ChartController@homeAccount', 'as' => 'chart.home']);
 
         // preferences controller
         Route::get('/preferences', ['uses' => 'PreferencesController@index', 'as' => 'preferences']);

@@ -32,8 +32,11 @@
         </p>
     </div>
 @else
+
+
+
     <!-- ACCOUNTS -->
-    <div class="row" style="border-top:1px #eee solid;">
+    <div class="row">
     @foreach($accounts as $index => $account)
         <div class="col-lg-6">
             <h4>{{{$account->name}}} chart</h4>
@@ -61,6 +64,32 @@
         @endif
         @endforeach
     </div>
+
+
+    <!-- week / month / year navigation -->
+    <div class="row">
+        <div class="col-lg-2 col-sm-6 col-md-2">
+            <a href="#" class="btn btn-default btn-xs">Previous [period]</a>
+        </div>
+
+        <div class="col-lg-offset-8 col-lg-2 col-sm-6 col-md-offset-8 col-md-2" style="text-align: right;">
+            <a href="#" class="btn btn-default btn-xs">Next [period]</a>
+        </div>
+    </div>
+
+    <!-- Beneficiaries, categories and budget pie charts: -->
+    <div class="row">
+        <div class="col-lg-4 col-sm-6 col-md-6">
+            <h4>Beneficiaries</h4>
+        </div>
+        <div class="col-lg-4 col-sm-6 col-md-6">
+            <h4>Categories</h4>
+        </div>
+        <div class="col-lg-4 col-sm-6 col-md-6">
+            <h4>Budgets</h4>
+        </div>
+    </div>
+
 
 @endif
 
