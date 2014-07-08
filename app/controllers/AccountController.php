@@ -20,6 +20,8 @@ class AccountController extends \BaseController
     public function index()
     {
         $all = $this->accounts->get();
+
+
         $list = [
             'personal'      => [],
             'beneficiaries' => [],

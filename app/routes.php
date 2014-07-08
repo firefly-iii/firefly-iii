@@ -23,6 +23,10 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/accounts/create', ['uses' => 'AccountController@create', 'as' => 'accounts.create']);
         Route::get('/accounts/{account}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
 
+        // transaction controller:
+        Route::get('/transactions/add/withdrawal', ['uses' => 'TransactionController@createWithdrawal', 'as' => 'transactions.withdrawal']);
+        Route::get('/transactions/add/deposit', ['uses' => 'TransactionController@createDeposit', 'as' => 'transactions.deposit']);
+        Route::get('/transactions/add/transfer', ['uses' => 'TransactionController@createTransfer', 'as' => 'transactions.transfer']);
         // migration controller
         Route::get('/migrate', ['uses' => 'MigrationController@index', 'as' => 'migrate']);
 
@@ -54,6 +58,9 @@ Route::group(['before' => 'guest'], function () {
         Route::get('/verify/{verification}', ['uses' => 'UserController@verify', 'as' => 'verify']);
         Route::get('/reset/{reset}', ['uses' => 'UserController@reset', 'as' => 'reset']);
         Route::get('/remindme', ['uses' => 'UserController@remindme', 'as' => 'remindme']);
+
+        // dev import route:
+        Route::get('/dev',['uses' => 'MigrationController@dev']);
     }
 );
 

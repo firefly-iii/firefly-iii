@@ -13,6 +13,20 @@ class MigrationController extends BaseController
 
     }
 
+    public function dev() {
+        $file = Config::get('dev.import');
+        if(file_exists($file)) {
+            $user = User::find(1);
+            Auth::login($user);
+            /** @var Firefly\Helper\Migration\MigrationHelperInterface $migration */
+            $migration = App::make('Firefly\Helper\Migration\MigrationHelperInterface');
+            $migration->loadFile($file);
+            if ($migration->validFile()) {
+                $migration->migrate();
+            }
+        }
+    }
+
     public function index()
     {
         return View::make('migrate.index');
