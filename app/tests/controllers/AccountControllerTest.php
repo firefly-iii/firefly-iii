@@ -1,32 +1,69 @@
 <?php
 
+use Mockery as m;
+
 class AccountControllerTest extends TestCase
 {
     public function setUp()
     {
         parent::setUp();
+        Artisan::call('migrate');
+        Artisan::call('db:seed');
     }
 
     public function testIndex()
     {
+        // mock account type(s):
+        $personal = $this->mock('AccountType');
+        $personal->shouldReceive('getAttribute','description')->andReturn('Default account');
+
+        $bene = $this->mock('AccountType');
+        $bene->shouldReceive('getAttribute','description')->andReturn('Beneficiary account');
+
+        $initial = $this->mock('AccountType');
+        $initial->shouldReceive('getAttribute','description')->andReturn('Initial balance account');
+
+        $cash = $this->mock('AccountType');
+        $cash->shouldReceive('getAttribute','description')->andReturn('Cash account');
+
+
+
+        // mock account(s)
+        $one = $this->mock('Account');
+        $one->shouldReceive('getAttribute')->andReturn($personal);
+
+        $two = $this->mock('Account');
+        $two->shouldReceive('getAttribute')->andReturn($bene);
+
+        $three = $this->mock('Account');
+        $three->shouldReceive('getAttribute')->andReturn($initial);
+
+        $four = $this->mock('Account');
+        $four->shouldReceive('getAttribute')->andReturn($cash);
+        $c = new \Illuminate\Database\Eloquent\Collection([$one,$two,$three,$four]);
+
+        // mock account repository:
+        $accounts = $this->mock('Firefly\Storage\Account\AccountRepositoryInterface');
+        $accounts->shouldReceive('get')->andReturn($c);
+
+
+
+
 
         $list = [
-            'personal'      => [],
-            'beneficiaries' => [],
-            'initial'       => [],
-            'cash'          => []
+            'personal'      => [$one],
+            'beneficiaries' => [$two],
+            'initial'       => [$three],
+            'cash'          => [$four]
         ];
-
 
         // mock:
         View::shouldReceive('share');
         View::shouldReceive('make')->with('accounts.index')->once()->andReturn(\Mockery::self())
-            ->shouldReceive('with')->once()->with('accounts', $list)->andReturn(\Mockery::self())
-            ->shouldReceive('with')->once()->with('total', 0)->andReturn(\Mockery::self());
+            ->shouldReceive('with')->once()->with('accounts',$list)->andReturn(\Mockery::self())
+            ->shouldReceive('with')->once()->with('total', 4)->andReturn(\Mockery::self());
 
-        // mock account repository:
-        $accounts = $this->mock('Firefly\Storage\Account\AccountRepositoryInterface');
-        $accounts->shouldReceive('get')->andReturn([]);
+
 
         // call
         $this->call('GET', '/accounts');

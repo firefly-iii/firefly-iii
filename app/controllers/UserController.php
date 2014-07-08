@@ -26,15 +26,7 @@ class UserController extends BaseController
      */
     public function login()
     {
-//        $user = User::find(1);
-//        Auth::login($user);
-//        /** @var Firefly\Helper\Migration\MigrationHelperInterface $migration */
-//        $migration = App::make('Firefly\Helper\Migration\MigrationHelperInterface');
-//        $file = '/Library/WebServer/Documents/projects/firefly-iii/app/storage/firefly-export-2014-07-06.json';
-//        $migration->loadFile($file);
-//        if($migration->validFile()) {
-//            $migration->migrate();
-//        }
+
 
 
         return View::make('user.login');
