@@ -13,7 +13,7 @@ class ChartControllerTest extends TestCase
     {
         // mock preference:
         $pref = $this->mock('Preference');
-        $pref->shouldReceive('getAttribute','data')->andReturn('week');
+        $pref->shouldReceive('getAttribute', 'data')->andReturn('week');
 
         // mock preferences helper:
         $preferences = $this->mock('Firefly\Helper\Preferences\PreferencesHelperInterface');
@@ -69,7 +69,7 @@ class ChartControllerTest extends TestCase
 
         // mock preference:
         $pref = $this->mock('Preference');
-        $pref->shouldReceive('getAttribute','data')->andReturn('week');
+        $pref->shouldReceive('getAttribute', 'data')->andReturn('week');
 
         // mock preferences helper:
         $preferences = $this->mock('Firefly\Helper\Preferences\PreferencesHelperInterface');
@@ -79,7 +79,7 @@ class ChartControllerTest extends TestCase
         $toolkit = $this->mock('Firefly\Helper\Toolkit\ToolkitInterface');
         $toolkit->shouldReceive('getDateRange')->andReturn(null);
 
-                // mock account repository:
+        // mock account repository:
         $accounts = $this->mock('Firefly\Storage\Account\AccountRepositoryInterface');
         $accounts->shouldReceive('find')->with(1)->andReturn($account);
 
@@ -111,7 +111,7 @@ class ChartControllerTest extends TestCase
 
         // mock preference:
         $pref = $this->mock('Preference');
-        $pref->shouldReceive('getAttribute','data')->andReturn('week');
+        $pref->shouldReceive('getAttribute', 'data')->andReturn('week');
 
         // mock preferences helper:
         $preferences = $this->mock('Firefly\Helper\Preferences\PreferencesHelperInterface');
