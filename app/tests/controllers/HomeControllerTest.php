@@ -39,6 +39,16 @@ class HomeControllerTest extends TestCase
     }
 
     public function testIndexWithAccount() {
+
+        // mock Account
+        $account = $this->mock('Account');
+        $account->shouldReceive('setAttribute')->with('transactionList',[]);
+
+        // mock account repository
+        $accounts = $this->mock('Firefly\Storage\Account\AccountRepositoryInterface');
+        $accounts->shouldReceive('count')->andReturn(0);
+        $accounts->shouldReceive('getByIds')->andReturn([$account]);
+
         // mock:
         View::shouldReceive('share');
         View::shouldReceive('make')->with('index')->once()->andReturn(\Mockery::self())
@@ -46,21 +56,17 @@ class HomeControllerTest extends TestCase
             ->with('count', 0)
             ->andReturn(Mockery::self())
             ->shouldReceive('with')->once() // another 'with' parameter.
-            ->with('accounts',[])
+            ->with('accounts',[$account])
             ->andReturn(Mockery::self())
         ;
-        Auth::shouldReceive('check')->andReturn(true);
 
-        // mock Account
-        $account = $this->mock('Account');
 
-        // mock account repository
-        $accounts = $this->mock('Firefly\Storage\Account\AccountRepositoryInterface');
-        $accounts->shouldReceive('count')->andReturn(0);
-        $accounts->shouldReceive('getByIds')->andReturn([$account]);
+
+        // mock transaction journal
+        $tj = $this->mock('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
+        $tj->shouldReceive('getByAccount')->with($account,10)->andReturn([]);
 
         // mock preferences helper:
-        // mock preference:
         $pref = $this->mock('Preference');
         $pref->shouldReceive('getAttribute', 'data')->andReturn([1]);
 
