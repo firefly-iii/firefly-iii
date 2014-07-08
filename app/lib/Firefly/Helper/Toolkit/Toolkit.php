@@ -3,7 +3,7 @@
 namespace Firefly\Helper\Toolkit;
 
 
-class Toolkit
+class Toolkit implements ToolkitInterface
 {
 
     /**
