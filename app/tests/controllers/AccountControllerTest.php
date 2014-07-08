@@ -7,20 +7,22 @@ class AccountControllerTest extends TestCase
         parent::setUp();
     }
 
-    public function testIndex() {
+    public function testIndex()
+    {
 
         $list = [
-            'personal' => [],
+            'personal'      => [],
             'beneficiaries' => [],
-            'initial' => [],
-            'cash' => []
+            'initial'       => [],
+            'cash'          => []
         ];
 
 
         // mock:
         View::shouldReceive('share');
         View::shouldReceive('make')->with('accounts.index')->once()->andReturn(\Mockery::self())
-            ->shouldReceive('with')->once()->with('accounts',$list);
+            ->shouldReceive('with')->once()->with('accounts', $list)->andReturn(\Mockery::self())
+            ->shouldReceive('with')->once()->with('total', 0)->andReturn(\Mockery::self());
 
         // mock account repository:
         $accounts = $this->mock('Firefly\Storage\Account\AccountRepositoryInterface');
@@ -58,5 +60,11 @@ class AccountControllerTest extends TestCase
 
         // test
         $this->assertResponseOk();
+    }
+
+
+    public function tearDown()
+    {
+        Mockery::close();
     }
 }

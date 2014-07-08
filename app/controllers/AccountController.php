@@ -26,7 +26,7 @@ class AccountController extends \BaseController
             'initial'       => [],
             'cash'          => []
         ];
-        $total = $all->count();
+        $total = count($all);
 
         foreach ($all as $account) {
 

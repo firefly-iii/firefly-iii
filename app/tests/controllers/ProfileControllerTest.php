@@ -140,4 +140,9 @@ class ProfileControllerTest extends TestCase
         $this->assertSessionHas('success', 'Password changed!');
     }
 
+    public function tearDown()
+    {
+        Mockery::close();
+    }
+
 } 
