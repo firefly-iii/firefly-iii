@@ -38,6 +38,44 @@ class HomeControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    public function testIndexWithAccount() {
+        // mock:
+        View::shouldReceive('share');
+        View::shouldReceive('make')->with('index')->once()->andReturn(\Mockery::self())
+            ->shouldReceive('with')->once()         // Pass a 'with' parameter
+            ->with('count', 0)
+            ->andReturn(Mockery::self())
+            ->shouldReceive('with')->once() // another 'with' parameter.
+            ->with('accounts',[])
+            ->andReturn(Mockery::self())
+        ;
+        Auth::shouldReceive('check')->andReturn(true);
+
+        // mock Account
+        $account = $this->mock('Account');
+
+        // mock account repository
+        $accounts = $this->mock('Firefly\Storage\Account\AccountRepositoryInterface');
+        $accounts->shouldReceive('count')->andReturn(0);
+        $accounts->shouldReceive('getByIds')->andReturn([$account]);
+
+        // mock preferences helper:
+        // mock preference:
+        $pref = $this->mock('Preference');
+        $pref->shouldReceive('getAttribute', 'data')->andReturn([1]);
+
+
+        $preferences = $this->mock('Firefly\Helper\Preferences\PreferencesHelperInterface');
+        $preferences->shouldReceive('get')->with('frontpageAccounts',[])->andReturn($pref)->once();
+        $preferences->shouldReceive('get')->with('viewRange', 'week')->once()->andReturn('week');
+
+        // call
+        $this->call('GET', '/');
+
+        // test
+        $this->assertResponseOk();
+    }
+
     public function tearDown()
     {
         Mockery::close();
