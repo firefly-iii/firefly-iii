@@ -19,4 +19,9 @@ class MigrationControllerTest extends TestCase
         // test
         $this->assertResponseOk();
     }
+
+    public function tearDown()
+    {
+        Mockery::close();
+    }
 }

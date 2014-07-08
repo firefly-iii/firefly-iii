@@ -29,6 +29,7 @@ class HomeControllerTest extends TestCase
         // mock preferences helper:
         $preferences = $this->mock('Firefly\Helper\Preferences\PreferencesHelperInterface');
         $preferences->shouldReceive('get')->with('frontpageAccounts',[])->andReturn(new \Preference)->once();
+        $preferences->shouldReceive('get')->with('viewRange', 'week')->once()->andReturn('week');
 
         // call
         $this->call('GET', '/');
@@ -37,4 +38,8 @@ class HomeControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    public function tearDown()
+    {
+        Mockery::close();
+    }
 } 
