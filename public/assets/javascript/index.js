@@ -13,7 +13,7 @@ function drawAccountChart() {
         var accountID = obj.data('id').toString();
         var holderID = $(v).attr('id').toString();
         console.log('AccountID: ' + accountID + ', ' + 'holderID ' + holderID);
-        var URL = 'chart/home/' + accountID;
+        var URL = 'chart/home/account/' + accountID;
         console.log('URL: ' + URL);
 
 
