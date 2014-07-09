@@ -18,6 +18,14 @@ class User extends Elegant implements UserInterface, RemindableInterface
             'password' => 'required|between:60,60',
             'reset'    => 'between:32,32',
         ];
+
+    public static $factory
+        = [
+            'email'    => 'email',
+            'password' => 'string',
+            'migrated' => '0'
+
+        ];
     /**
      * The database table used by the model.
      *

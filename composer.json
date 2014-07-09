@@ -28,7 +28,8 @@
         "barryvdh/laravel-debugbar": "1.*",
         "barryvdh/laravel-ide-helper": "1.*",
         "mockery/mockery": "dev-master",
-        "satooshi/php-coveralls": "dev-master"
+        "satooshi/php-coveralls": "dev-master",
+        "zizaco/factory-muff": "dev-master"
     },
     "autoload": {
         "classmap": [

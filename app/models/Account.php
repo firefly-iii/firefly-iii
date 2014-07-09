@@ -6,8 +6,19 @@ class Account extends Elegant
 
     public static $rules
         = [
-            'name'    => 'required|between:1,100',
-            'user_id' => 'required|exists:users,id'
+            'name'            => 'required|between:1,100',
+            'user_id'         => 'required|exists:users,id',
+            'account_type_id' => 'required|exists:account_types,id',
+            'active'          => 'required|between:0,1|numeric'
+
+        ];
+
+    public static $factory
+        = [
+            'name'            => 'string',
+            'user_id'         => 'factory|User',
+            'account_type_id' => 'factory|AccountType',
+            'active'          => '1'
         ];
 
     public function accountType()

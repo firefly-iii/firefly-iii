@@ -9,6 +9,12 @@ class Preference extends Elegant
             'data'    => 'required'
         ];
 
+    public static $factory = [
+        'user_id' => 'factory|User',
+        'name' => 'string',
+        'data' => 'string'
+    ];
+
     public function user()
     {
         return $this->belongsTo('User');
