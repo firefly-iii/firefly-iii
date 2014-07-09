@@ -11,6 +11,13 @@ class Transaction extends Elegant
             'amount'                 => 'required|between:-65536,65536',
         ];
 
+    public static $factory
+        = [
+            'account_id'             => 'factory|Account',
+            'transaction_journal_id' => 'factory|TransactionJournal',
+            'description'            => 'string',
+            'amount'                 => 'integer:5'
+        ];
 
     public function account()
     {
@@ -31,6 +38,7 @@ class Transaction extends Elegant
     {
         return $this->belongsToMany('Budget');
     }
+
     public function categories()
     {
         return $this->belongsToMany('Category');
