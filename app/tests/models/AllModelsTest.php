@@ -35,9 +35,14 @@ class AllModelsTest extends TestCase
 
         $account->user()->associate($user);
         $pref->user()->associate($user);
+        $user->accounts()->save($account);
+        $user->preferences()->save($pref);
 
         $this->assertEquals($account->user_id, $user->id);
         $this->assertEquals($pref->user_id,$user->id);
+
+        $this->assertCount(1, $user->accounts()->get());
+        $this->assertCount(1, $user->preferences()->get());
 
 
         $this->assertTrue(true);
@@ -49,6 +54,7 @@ class AllModelsTest extends TestCase
      */
     public function testUserAccounts()
     {
+
         $this->assertTrue(true);
 
     }
@@ -82,6 +88,22 @@ class AllModelsTest extends TestCase
 
         $this->assertEquals($tj->transaction_type_id,$tj->transactionType()->first()->id);
         $this->assertEquals($tj->transaction_currency_id,$tj->transactionCurrency()->first()->id);
+
+    }
+
+    public function testTransactions() {
+        $transaction = FactoryMuff::create('Transaction');
+
+        $budget = FactoryMuff::create('Budget');
+        $category = FactoryMuff::create('Category');
+
+        $transaction->components()->save($budget);
+        $transaction->components()->save($category);
+
+        $this->assertCount(2,$transaction->components()->get());
+        $this->assertCount(1,$transaction->budgets()->get());
+        $this->assertCount(1,$transaction->categories()->get());
+
 
     }
 } 

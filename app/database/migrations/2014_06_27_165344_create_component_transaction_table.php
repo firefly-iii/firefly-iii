@@ -15,7 +15,6 @@ class CreateComponentTransactionTable extends Migration {
 		Schema::create('component_transaction', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->timestamps();
             $table->integer('component_id')->unsigned();
             $table->integer('transaction_id')->unsigned();
 
