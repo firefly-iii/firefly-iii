@@ -1,7 +1,10 @@
 firefly-iii
 ===========
 
-Firefly Mark III is a new version of Firefly built upon best practices and lessons learned 
+[![Build Status](https://travis-ci.org/JC5/firefly-iii.svg?branch=master)](https://travis-ci.org/JC5/firefly-iii)
+[![Coverage Status](https://coveralls.io/repos/JC5/firefly-iii/badge.png?branch=master)](https://coveralls.io/r/JC5/firefly-iii?branch=master)
+
+Firefly Mark III is a new version of Firefly built upon best practices and lessons learned
 from building Firefly. It's Mark III since the original Firefly never made it outside of my
 laptop and Firefly II is live.
 
