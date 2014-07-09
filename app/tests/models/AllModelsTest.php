@@ -86,24 +86,89 @@ class AllModelsTest extends TestCase
 
         $this->assertCount(3,$tj->transactions()->get());
 
+        $this->assertTrue($tj->isValid());
+
         $this->assertEquals($tj->transaction_type_id,$tj->transactionType()->first()->id);
         $this->assertEquals($tj->transaction_currency_id,$tj->transactionCurrency()->first()->id);
 
+    }
+
+    public function testTransactionJournalScope() {
+        $tj = FactoryMuff::create('TransactionJournal');
+        $tj->date = new \Carbon\Carbon('2012-01-02');
+
+        $set = $tj->after(new \Carbon\Carbon)->before(new \Carbon\Carbon)->get();
+        $this->assertCount(0,$set);
+    }
+
+    public function testTransactionType() {
+        $j1 = FactoryMuff::create('TransactionJournal');
+        $j2 = FactoryMuff::create('TransactionJournal');
+
+        $type = FactoryMuff::create('TransactionType');
+        $type->transactionjournals()->save($j1);
+        $type->transactionjournals()->save($j2);
+
+        $this->assertCount(2,$type->transactionjournals()->get());
+
+    }
+
+    public function testTransactionCurrency() {
+        $j1 = FactoryMuff::create('TransactionJournal');
+        $j2 = FactoryMuff::create('TransactionJournal');
+
+        $currency = FactoryMuff::create('TransactionCurrency');
+        $currency->transactionjournals()->save($j1);
+        $currency->transactionjournals()->save($j2);
+
+        $this->assertCount(2,$currency->transactionjournals()->get());
+
+    }
+
+    public function testAccountTypes() {
+        $type = FactoryMuff::create('AccountType');
+        $a1 = FactoryMuff::create('Account');
+        $a2 = FactoryMuff::create('Account');
+
+        $type->accounts()->save($a1);
+        $type->accounts()->save($a2);
+
+        $this->assertCount(2,$type->accounts()->get());
     }
 
     public function testTransactions() {
         $transaction = FactoryMuff::create('Transaction');
 
         $budget = FactoryMuff::create('Budget');
+        $account = FactoryMuff::create('Account');
         $category = FactoryMuff::create('Category');
+        $journal = FactoryMuff::create('TransactionJournal');
 
         $transaction->components()->save($budget);
         $transaction->components()->save($category);
+        $transaction->account()->associate($account);
+        $transaction->transactionjournal()->associate($journal);
 
+        $this->assertCount(1,$transaction->transactionjournal()->get());
+        $this->assertCount(1,$transaction->account()->get());
         $this->assertCount(2,$transaction->components()->get());
         $this->assertCount(1,$transaction->budgets()->get());
         $this->assertCount(1,$transaction->categories()->get());
 
+    }
 
+    public function testComponents() {
+        $component = FactoryMuff::create('Component');
+        $user = FactoryMuff::create('User');
+        $transaction = FactoryMuff::create('Transaction');
+
+        $journal = FactoryMuff::create('TransactionJournal');
+        $component->transactionjournals()->save($journal);
+        $component->user()->associate($user);
+        $component->transactions()->save($transaction);
+
+        $this->assertCount(1,$component->transactionjournals()->get());
+        $this->assertCount(1,$component->user()->get());
+        $this->assertCount(1,$component->transactions()->get());
     }
 } 
