@@ -6,4 +6,8 @@ class TransactionType extends Eloquent {
         return $this->hasMany('TransactionJournal');
     }
 
+    public static $factory = [
+        'type' => 'string'
+    ];
+
 } 

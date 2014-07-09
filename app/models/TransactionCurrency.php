@@ -1,9 +1,16 @@
 <?php
 
 
-class TransactionCurrency extends Eloquent {
+class TransactionCurrency extends Eloquent
+{
 
-    public function transactionJournals() {
+    public static $factory
+        = [
+            'code' => 'string'
+        ];
+
+    public function transactionJournals()
+    {
         return $this->hasMany('TransactionJournal');
     }
 

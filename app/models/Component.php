@@ -14,6 +14,11 @@ class Component extends Firefly\Database\SingleTableInheritanceEntity
     protected $table = 'components';
     protected $subclassField = 'class';
 
+    public static $factory = [
+        'name' => 'string',
+        'user_id' => 'factory|User',
+    ];
+
     public function transactions()
     {
         return $this->belongsToMany('Transaction');
