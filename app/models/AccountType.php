@@ -1,10 +1,16 @@
 <?php
 
 
-class AccountType extends Eloquent {
+class AccountType extends Eloquent
+{
 
-    public function accounts() {
+    public static $factory
+        = [
+            'description' => 'string'
+        ];
+
+    public function accounts()
+    {
         return $this->hasMany('Account');
     }
-
 } 
