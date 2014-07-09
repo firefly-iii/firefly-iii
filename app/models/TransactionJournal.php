@@ -48,4 +48,11 @@ class TransactionJournal extends Elegant
         return array('created_at', 'updated_at', 'date');
     }
 
+    public function scopeAfter($query, \Carbon\Carbon $date) {
+        return $query->where('date','>=',$date->format('Y-m-d'));
+    }
+    public function scopeBefore($query, \Carbon\Carbon $date) {
+        return $query->where('date','<=',$date->format('Y-m-d'));
+    }
+
 } 

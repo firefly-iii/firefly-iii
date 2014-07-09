@@ -81,14 +81,18 @@
     <div class="row">
         <div class="col-lg-4 col-sm-6 col-md-6">
             <h4>Beneficiaries</h4>
+            <div id="beneficiaryChart"></div>
         </div>
         <div class="col-lg-4 col-sm-6 col-md-6">
             <h4>Categories</h4>
+            <div id="categoryChart"></div>
         </div>
         <div class="col-lg-4 col-sm-6 col-md-6">
             <h4>Budgets</h4>
+            <div id="budgetChart"></div>
         </div>
     </div>
+    <br /><br /><br /><br /><br />
 
 
 @endif

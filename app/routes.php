@@ -7,6 +7,9 @@ Route::group(['before' => 'auth'], function () {
 
         // chart controller
         Route::get('/chart/home/account/{account?}', ['uses' => 'ChartController@homeAccount', 'as' => 'chart.home']);
+        Route::get('/chart/home/budgets', ['uses' => 'ChartController@homeBudgets', 'as' => 'chart.budgets']);
+        Route::get('/chart/home/beneficiaries', ['uses' => 'ChartController@homeBeneficiaries', 'as' => 'chart.beneficiaries']);
+        Route::get('/chart/home/categories', ['uses' => 'ChartController@homeCategories', 'as' => 'chart.categories']);
 
         // preferences controller
         Route::get('/preferences', ['uses' => 'PreferencesController@index', 'as' => 'preferences']);
