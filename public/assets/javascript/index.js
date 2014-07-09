@@ -3,6 +3,7 @@ google.setOnLoadCallback(chartCallback);
 
 function chartCallback() {
     drawAccountChart();
+    drawExtraCharts();
 }
 
 function drawAccountChart() {
@@ -34,9 +35,26 @@ function drawAccountChart() {
 
 
         // draw it!
-        drawChart('#' + holderID, URL, opt);
+        drawChart('#' + holderID, URL, 'LineChart', opt);
     });
 
     //var URL = 'chart/home';
     //drawChart('#chart',URL,opt);
+}
+
+function drawExtraCharts() {
+
+    var opt = {
+        legend: {
+            position: 'none'
+        },
+        chartArea: {
+            width: 300,
+            height: 300
+        },
+    };
+
+    drawChart('#budgetChart', 'chart/home/budgets', 'PieChart', opt);
+    drawChart('#categoryChart', 'chart/home/categories','PieChart', opt);
+    drawChart('#beneficiaryChart', 'chart/home/beneficiaries','PieChart', opt);
 }

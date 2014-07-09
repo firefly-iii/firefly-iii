@@ -135,6 +135,99 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
 
     }
 
+    public function homeBudgetChart(\Carbon\Carbon $start, \Carbon\Carbon $end)
+    {
+        return $this->homeComponentChart($start, $end, 'Budget');
+    }
+
+    public function homeComponentChart(\Carbon\Carbon $start, \Carbon\Carbon $end, $chartType)
+    {
+
+        // lets make this simple.
+        $types = [];
+        foreach (\TransactionType::whereIn('type', ['Deposit', 'Withdrawal'])->get() as $t) {
+            $types[] = $t->id;
+        }
+        unset($t);
+
+        // get all journals, partly filtered:
+        $journals = \TransactionJournal::
+            with(
+                ['components'         => function ($q) use ($chartType) {
+                        $q->where('class', $chartType);
+                    }, 'transactions' => function ($q) {
+                        $q->where('amount', '>', 0);
+                    }]
+            )
+            ->after($start)->before($end)
+            ->whereIn('transaction_type_id', $types)
+            ->get(['transaction_journals.*']);
+        unset($types);
+
+
+        foreach ($journals as $journal) {
+            // has to be one:
+            $transaction = $journal->transactions[0];
+            $amount = floatval($transaction->amount);
+
+
+            // MIGHT be one:
+            $budget = isset($journal->components[0]) ? $journal->components[0] : null;
+            if (!is_null($budget)) {
+                $name = $budget->name;
+            } else {
+                $name = '(no budget)';
+            }
+            $result[$name] = isset($result[$name]) ? $result[$name] + $amount : $amount;
+
+        }
+        unset($journal, $transaction, $budget, $name, $amount);
+        return $result;
+    }
+
+    public function homeCategoryChart(\Carbon\Carbon $start, \Carbon\Carbon $end)
+    {
+        return $this->homeComponentChart($start, $end, 'Category');
+    }
+
+    public function homeBeneficiaryChart(\Carbon\Carbon $start, \Carbon\Carbon $end)
+    {
+        $result = [];
+
+        // lets make this simple.
+        $types = [];
+        foreach (\TransactionType::whereIn('type', ['Deposit', 'Withdrawal'])->get() as $t) {
+            $types[] = $t->id;
+        }
+        unset($t);
+
+        // account type we want to see:
+        $accountType = \AccountType::where('description', 'Beneficiary account')->first();
+        $accountTypeID = $accountType->id;
+
+        // get all journals, partly filtered:
+        $journals = \TransactionJournal::
+            with(
+                ['transactions', 'transactions.account' => function ($q) use ($accountTypeID) {
+                        $q->where('account_type_id', $accountTypeID);
+                    }]
+            )
+            ->after($start)->before($end)
+            ->whereIn('transaction_type_id', $types)
+            ->get(['transaction_journals.*']);
+        foreach ($journals as $journal) {
+            foreach ($journal->transactions as $t) {
+                if (!is_null($t->account)) {
+                    $name = $t->account->name;
+                    $amount = floatval($t->amount) < 0 ? floatval($t->amount) * -1 : floatval($t->amount);
+
+                    $result[$name] = isset($result[$name]) ? $result[$name]+$amount : $amount;
+                }
+            }
+        }
+        return $result;
+    }
+
     public function getByAccount(\Account $account, $count = 25)
     {
         $accountID = $account->id;
