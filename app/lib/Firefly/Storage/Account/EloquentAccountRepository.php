@@ -16,6 +16,16 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         return \Auth::user()->accounts()->with('accounttype')->get();
     }
 
+    public function getBeneficiaries() {
+        $list = \Auth::user()->accounts()->leftJoin(
+            'account_types', 'account_types.id', '=', 'accounts.account_type_id'
+        )
+            ->where('account_types.description', 'Beneficiary account')->where('accounts.active', 1)
+
+            ->get(['accounts.*']);
+        return $list;
+    }
+
     public function find($id)
     {
         return \Auth::user()->accounts()->where('id', $id)->first();
@@ -40,6 +50,21 @@ class EloquentAccountRepository implements AccountRepositoryInterface
             ->where('account_types.description', 'Default account')->where('accounts.active', 1)
 
             ->get(['accounts.*']);
+    }
+
+    public function  getActiveDefaultAsSelectList()
+    {
+        $list = \Auth::user()->accounts()->leftJoin(
+            'account_types', 'account_types.id', '=', 'accounts.account_type_id'
+        )
+            ->where('account_types.description', 'Default account')->where('accounts.active', 1)
+
+            ->get(['accounts.*']);
+        $return = [];
+        foreach ($list as $entry) {
+            $return[intval($entry->id)] = $entry->name;
+        }
+        return $return;
     }
 
     public function count()

@@ -1,6 +1,6 @@
 <table class="table table-bordered table-striped">
     <tr>
-        <th style="width:25px;">&nbsp;</th>
+        <th>&nbsp;</th>
         <th style="width:30%;">Name</th>
         <th>Current balance</th>
     </tr>

@@ -13,9 +13,14 @@ class EloquentComponentRepository implements ComponentRepositoryInterface
 
     public function count()
     {
-        return \Auth::user()->accounts()->count();
+        return \Auth::user()->components()->count();
 
     }
+
+    public function get() {
+        die('no impl');
+    }
+
 
 
     public function store($data)

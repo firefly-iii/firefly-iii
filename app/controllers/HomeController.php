@@ -20,10 +20,6 @@ class HomeController extends BaseController
 
     public function index()
     {
-        // get preferred viewing range
-        $viewRange = $this->preferences->get('viewRange','week');
-
-
         // get list setting:
         $pref = $this->preferences->get('frontpageAccounts', []);
 

@@ -42,9 +42,9 @@ class Account extends Elegant
     {
         $date = is_null($date) ? new \Carbon\Carbon : $date;
 
-        return $this->transactions()
+        return floatval($this->transactions()
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount');
+            ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount'));
     }
 
     public function transactions()
