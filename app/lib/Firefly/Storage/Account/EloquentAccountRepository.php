@@ -129,6 +129,9 @@ class EloquentAccountRepository implements AccountRepositoryInterface
 
     public function createOrFindBeneficiary($name)
     {
+        if (is_null($name) || strlen($name) == 0) {
+            return null;
+        }
         $type = \AccountType::where('description', 'Beneficiary account')->first();
         return $this->createOrFind($name, $type);
     }
@@ -149,6 +152,14 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     public function findByName($name)
     {
         return \Auth::user()->accounts()->where('name', 'like', '%' . $name . '%')->first();
+    }
+
+    public function getCashAccount()
+    {
+        $type = \AccountType::where('description','Cash account')->first();
+        $cash = \Auth::user()->accounts()->where('account_type_id',$type->id)->first();
+        return $cash;
+
     }
 
 }
