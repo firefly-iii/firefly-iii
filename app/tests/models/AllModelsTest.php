@@ -193,5 +193,8 @@ class AllModelsTest extends TestCase
         $this->assertCount(1, $component->user()->get());
         $this->assertCount(1, $component->transactions()->get());
     }
-
+    public function tearDown()
+    {
+        Mockery::close();
+    }
 }

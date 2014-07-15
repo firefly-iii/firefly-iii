@@ -168,4 +168,8 @@ class ChartControllerTest extends TestCase
         // test
         $this->assertResponseOk();
     }
+    public function tearDown()
+    {
+        Mockery::close();
+    }
 }
