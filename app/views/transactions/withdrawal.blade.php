@@ -26,21 +26,21 @@
         <h4>Mandatory fields</h4>
 
         <div class="form-group">
-            <label for="account" class="col-sm-4 control-label">Description</label>
+            <label for="description" class="col-sm-4 control-label">Description</label>
             <div class="col-sm-8">
                 <input type="text" name="description" value="{{{Input::old('description')}}}" autocomplete="off" class="form-control" placeholder="Description" />
             </div>
         </div>
 
         <div class="form-group">
-            <label for="account" class="col-sm-4 control-label">Account</label>
+            <label for="account_id" class="col-sm-4 control-label">Account</label>
             <div class="col-sm-8">
                 {{Form::select('account_id',$accounts,Input::old('account_id'),['class' => 'form-control'])}}
             </div>
         </div>
 
         <div class="form-group">
-            <label for="account" class="col-sm-4 control-label">Beneficiary</label>
+            <label for="beneficiary" class="col-sm-4 control-label">Beneficiary</label>
             <div class="col-sm-8">
                 <input type="text" name="beneficiary" value="{{{Input::old('beneficiary')}}}" autocomplete="off" class="form-control" placeholder="Beneficiary" />
                 <span class="help-block">This field will auto-complete your existing beneficiaries (if any), but you can type freely to create new ones.</span>
@@ -50,21 +50,21 @@
 
 
         <div class="form-group">
-            <label for="account" class="col-sm-4 control-label">Amount spent</label>
+            <label for="amount" class="col-sm-4 control-label">Amount spent</label>
             <div class="col-sm-8">
-                <input type="number" min="0.01" step="any" class="form-control" />
+                <input type="number" name="amount" min="0.01" step="any" class="form-control" />
             </div>
         </div>
 
         <div class="form-group">
-            <label for="account" class="col-sm-4 control-label">Date</label>
+            <label for="date" class="col-sm-4 control-label">Date</label>
             <div class="col-sm-8">
-                <input type="date" class="form-control" />
+                <input type="date" name="date" value="{{Input::old('date') ?: date('Y-m-d')}}" class="form-control" />
             </div>
         </div>
 
         <div class="form-group">
-            <label for="account" class="col-sm-4 control-label">&nbsp;</label>
+            <label for="submit" class="col-sm-4 control-label">&nbsp;</label>
             <div class="col-sm-8">
                 <input type="submit" name="submit" value="Create withdrawal" class="btn btn-info" />
             </div>
@@ -75,17 +75,15 @@
         <h4>Optional fields</h4>
 
         <div class="form-group">
-            <label for="account" class="col-sm-4 control-label">Budget</label>
+            <label for="budget_id" class="col-sm-4 control-label">Budget</label>
             <div class="col-sm-8">
-                <select class="form-control">
-                    <option>1</option>
-                </select>
+                {{Form::select('budget_id',$budgets,Input::old('budget_id') ?: 0,['class' => 'form-control'])}}
                 <span class="help-block">Select one of your budgets to make this transaction a part of it.</span>
             </div>
         </div>
 
         <div class="form-group">
-            <label for="account" class="col-sm-4 control-label">Category</label>
+            <label for="category" class="col-sm-4 control-label">Category</label>
             <div class="col-sm-8">
                 <input type="text" name="category"  value="" autocomplete="off" class="form-control" placeholder="Category" />
                 <span class="help-block">Add more fine-grained information to this transaction by entering a category.

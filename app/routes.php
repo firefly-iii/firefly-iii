@@ -55,6 +55,11 @@ Route::group(['before' => 'csrf|auth'], function () {
         // account controller:
         Route::get('/accounts/store', ['uses' => 'AccountController@store', 'as' => 'accounts.store']);
 
+        // transaction controller:
+        Route::post('/transactions/add/withdrawal', ['uses' => 'TransactionController@postCreateWithdrawal']);
+        Route::post('/transactions/add/deposit', ['uses' => 'TransactionController@postCreateDeposit']);
+        Route::post('/transactions/add/transfer', ['uses' => 'TransactionController@postCreateTransfer']);
+
     }
 );
 
