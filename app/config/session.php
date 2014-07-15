@@ -8,7 +8,7 @@ return [
     'connection'      => null,
     'table'           => 'sessions',
     'lottery'         => array(2, 100),
-    'cookie'          => 'laravel_session',
+    'cookie'          => 'firefly_session',
     'path'            => '/',
     'domain'          => null,
     'secure'          => false,
