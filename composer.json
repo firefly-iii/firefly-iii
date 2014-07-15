@@ -1,14 +1,14 @@
 {
-    "name": "grumpydictator/firefly",
-    "description": "A web-application to manage your finances.",
+    "name": "grumpydictator/firefly-iii",
+    "description": "A web-application to manage your finances. This version will replace grumpydictator/firefly when it's finished.",
     "license": "MIT",
     "keywords": ["finance", "finances", "manager", "euro", "laravel", "money", "financials", "budgets", "transactions", "transfers", "management"],
-    "homepage": "https://github.com/JC5/firefly-v",
+    "homepage": "https://github.com/JC5/firefly-iii",
     "php": ">=5.4.0",
     "type": "project",
     "authors": [
         {
-            "name": "James Cole",
+            "name": "Sander Dorigo",
             "email": "thegrumpydictator@gmail.com",
             "homepage": "https://github.com/JC5",
             "role": "Developer"
@@ -16,8 +16,8 @@
     ],
     "support": {
         "email": "thegrumpydictator@gmail.com",
-        "issues": "https://github.com/JC5/firefly-v/issues?state=open",
-        "source": "https://github.com/JC5/firefly-v"
+        "issues": "https://github.com/JC5/firefly-iii/issues?state=open",
+        "source": "https://github.com/JC5/firefly-iii"
 
     },
     "require": {
