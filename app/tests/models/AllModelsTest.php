@@ -1,6 +1,6 @@
 <?php
 
-use \League\FactoryMuffin\Facade\FactoryMuffinin;
+use \League\FactoryMuffin\Facade\FactoryMuffin;
 
 class AllModelsTest extends TestCase
 {
