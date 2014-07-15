@@ -16,7 +16,8 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         return \Auth::user()->accounts()->with('accounttype')->get();
     }
 
-    public function getBeneficiaries() {
+    public function getBeneficiaries()
+    {
         $list = \Auth::user()->accounts()->leftJoin(
             'account_types', 'account_types.id', '=', 'accounts.account_type_id'
         )
@@ -124,6 +125,30 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         }
 
         return $account;
+    }
+
+    public function createOrFindBeneficiary($name)
+    {
+        $type = \AccountType::where('description', 'Beneficiary account')->first();
+        return $this->createOrFind($name, $type);
+    }
+
+    public function createOrFind($name, \AccountType $type)
+    {
+        $beneficiary = $this->findByName($name);
+        if (!$beneficiary) {
+            $data = [
+                'name'         => $name,
+                'account_type' => $type
+            ];
+            return $this->store($data);
+        }
+        return $beneficiary;
+    }
+
+    public function findByName($name)
+    {
+        return \Auth::user()->accounts()->where('name', 'like', '%' . $name . '%')->first();
     }
 
 }

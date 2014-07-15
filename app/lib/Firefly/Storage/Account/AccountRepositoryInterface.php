@@ -15,6 +15,8 @@ interface AccountRepositoryInterface
 
     public function find($id);
 
+    public function findByName($name);
+
     public function getByIds($ids);
 
     public function getDefault();
@@ -26,5 +28,9 @@ interface AccountRepositoryInterface
     public function store($data);
 
     public function storeWithInitialBalance($data, \Carbon\Carbon $date, $amount = 0);
+
+    public function createOrFindBeneficiary($name);
+
+    public function createOrFind($name, \AccountType $type);
 
 } 
