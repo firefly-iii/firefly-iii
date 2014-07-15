@@ -26,6 +26,11 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/accounts/create', ['uses' => 'AccountController@create', 'as' => 'accounts.create']);
         Route::get('/accounts/{account}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
 
+        // JSON controller:
+        Route::get('/json/beneficiaries', ['uses' => 'JsonController@beneficiaries', 'as' => 'json.beneficiaries']);
+        Route::get('/json/categories', ['uses' => 'JsonController@categories', 'as' => 'json.categories']);
+
+
         // transaction controller:
         Route::get('/transactions/add/withdrawal', ['uses' => 'TransactionController@createWithdrawal', 'as' => 'transactions.withdrawal']);
         Route::get('/transactions/add/deposit', ['uses' => 'TransactionController@createDeposit', 'as' => 'transactions.deposit']);
