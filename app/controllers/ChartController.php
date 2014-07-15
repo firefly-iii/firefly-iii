@@ -19,11 +19,16 @@ class ChartController extends BaseController
     /**
      * Show home charts.
      */
-    public function homeAccount($account = null)
+    public function homeAccount($id = null)
     {
         list($start, $end) = tk::getDateRange();
         $current = clone $start;
         $return = [];
+        $account = null;
+
+        if(!is_null($id)) {
+            $account = $this->accounts->find($id);
+        }
 
         if (is_null($account)) {
             $accounts = $this->accounts->getActiveDefault();
@@ -40,13 +45,7 @@ class ChartController extends BaseController
                 $current->addDay();
             }
         } else {
-            // do something experimental:
-            $account = $this->accounts->find($account);
-            if (is_null($account)) {
-                return View::make('error')->with('message', 'No account found.');
-            }
             $return[0] = ['name' => $account->name, 'data' => []];
-
 
             while ($current <= $end) {
 

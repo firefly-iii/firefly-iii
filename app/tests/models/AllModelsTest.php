@@ -1,6 +1,6 @@
 <?php
 
-use Zizaco\FactoryMuff\Facade\FactoryMuff;
+use \League\FactoryMuffin\Facade\FactoryMuffinin;
 
 class AllModelsTest extends TestCase
 {
@@ -29,14 +29,14 @@ class AllModelsTest extends TestCase
      */
     public function testUser()
     {
-        $user = FactoryMuff::create('User');
-        $pref = FactoryMuff::create('Preference');
-        $account = FactoryMuff::create('Account');
+        $user = FactoryMuffin::create('User');
+        $pref = FactoryMuffin::create('Preference');
+        $account = FactoryMuffin::create('Account');
 
         // some more stuff:
-        $component = FactoryMuff::create('Component');
-        $budget = FactoryMuff::create('Budget');
-        $category = FactoryMuff::create('Category');
+        $component = FactoryMuffin::create('Component');
+        $budget = FactoryMuffin::create('Budget');
+        $category = FactoryMuffin::create('Category');
 
         $account->user()->associate($user);
         $pref->user()->associate($user);
@@ -80,18 +80,18 @@ class AllModelsTest extends TestCase
 
     public function testTransactionJournals()
     {
-        $tj = FactoryMuff::create('TransactionJournal');
+        $tj = FactoryMuffin::create('TransactionJournal');
 
-        $t1 = FactoryMuff::create('Transaction');
-        $t2 = FactoryMuff::create('Transaction');
-        $t3 = FactoryMuff::create('Transaction');
+        $t1 = FactoryMuffin::create('Transaction');
+        $t2 = FactoryMuffin::create('Transaction');
+        $t3 = FactoryMuffin::create('Transaction');
 
         $tj->transactions()->save($t1);
         $tj->transactions()->save($t2);
         $tj->transactions()->save($t3);
 
-        $budget = FactoryMuff::create('Budget');
-        $category = FactoryMuff::create('Category');
+        $budget = FactoryMuffin::create('Budget');
+        $category = FactoryMuffin::create('Category');
 
         $tj->components()->save($budget);
         $tj->components()->save($category);
@@ -102,7 +102,7 @@ class AllModelsTest extends TestCase
 
         $this->assertCount(3, $tj->transactions()->get());
 
-        $this->assertTrue($tj->isValid());
+        $this->assertTrue($tj->validate());
 
         $this->assertEquals($tj->transaction_type_id, $tj->transactionType()->first()->id);
         $this->assertEquals($tj->transaction_currency_id, $tj->transactionCurrency()->first()->id);
@@ -111,7 +111,7 @@ class AllModelsTest extends TestCase
 
     public function testTransactionJournalScope()
     {
-        $tj = FactoryMuff::create('TransactionJournal');
+        $tj = FactoryMuffin::create('TransactionJournal');
         $tj->date = new \Carbon\Carbon('2012-01-02');
 
         $set = $tj->after(new \Carbon\Carbon)->before(new \Carbon\Carbon)->get();
@@ -120,10 +120,10 @@ class AllModelsTest extends TestCase
 
     public function testTransactionType()
     {
-        $j1 = FactoryMuff::create('TransactionJournal');
-        $j2 = FactoryMuff::create('TransactionJournal');
+        $j1 = FactoryMuffin::create('TransactionJournal');
+        $j2 = FactoryMuffin::create('TransactionJournal');
 
-        $type = FactoryMuff::create('TransactionType');
+        $type = FactoryMuffin::create('TransactionType');
         $type->transactionjournals()->save($j1);
         $type->transactionjournals()->save($j2);
 
@@ -133,10 +133,10 @@ class AllModelsTest extends TestCase
 
     public function testTransactionCurrency()
     {
-        $j1 = FactoryMuff::create('TransactionJournal');
-        $j2 = FactoryMuff::create('TransactionJournal');
+        $j1 = FactoryMuffin::create('TransactionJournal');
+        $j2 = FactoryMuffin::create('TransactionJournal');
 
-        $currency = FactoryMuff::create('TransactionCurrency');
+        $currency = FactoryMuffin::create('TransactionCurrency');
         $currency->transactionjournals()->save($j1);
         $currency->transactionjournals()->save($j2);
 
@@ -146,9 +146,9 @@ class AllModelsTest extends TestCase
 
     public function testAccountTypes()
     {
-        $type = FactoryMuff::create('AccountType');
-        $a1 = FactoryMuff::create('Account');
-        $a2 = FactoryMuff::create('Account');
+        $type = FactoryMuffin::create('AccountType');
+        $a1 = FactoryMuffin::create('Account');
+        $a2 = FactoryMuffin::create('Account');
 
         $type->accounts()->save($a1);
         $type->accounts()->save($a2);
@@ -158,12 +158,12 @@ class AllModelsTest extends TestCase
 
     public function testTransactions()
     {
-        $transaction = FactoryMuff::create('Transaction');
+        $transaction = FactoryMuffin::create('Transaction');
 
-        $budget = FactoryMuff::create('Budget');
-        $account = FactoryMuff::create('Account');
-        $category = FactoryMuff::create('Category');
-        $journal = FactoryMuff::create('TransactionJournal');
+        $budget = FactoryMuffin::create('Budget');
+        $account = FactoryMuffin::create('Account');
+        $category = FactoryMuffin::create('Category');
+        $journal = FactoryMuffin::create('TransactionJournal');
 
         $transaction->components()->save($budget);
         $transaction->components()->save($category);
@@ -180,11 +180,11 @@ class AllModelsTest extends TestCase
 
     public function testComponents()
     {
-        $component = FactoryMuff::create('Component');
-        $user = FactoryMuff::create('User');
-        $transaction = FactoryMuff::create('Transaction');
+        $component = FactoryMuffin::create('Component');
+        $user = FactoryMuffin::create('User');
+        $transaction = FactoryMuffin::create('Transaction');
 
-        $journal = FactoryMuff::create('TransactionJournal');
+        $journal = FactoryMuffin::create('TransactionJournal');
         $component->transactionjournals()->save($journal);
         $component->user()->associate($user);
         $component->transactions()->save($transaction);

@@ -17,9 +17,9 @@ class EloquentUserRepository implements UserRepositoryInterface
         $user->reset = \Str::random(32);
         $user->password = \Hash::make(\Str::random(12));
 
-        if (!$user->isValid()) {
+        if (!$user->save()) {
             \Log::error('Invalid user');
-            \Session::flash('error', 'Input invalid, please try again: ' . $user->validator->messages()->first());
+            \Session::flash('error', 'Input invalid, please try again: ' . $user->errors()->first());
             return false;
         }
         $user->save();

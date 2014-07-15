@@ -61,15 +61,17 @@ class TransactionController extends BaseController
 
         // create journal
         /** @var \TransactionJournal $journal */
-        $journal = $this->tj->createSimpleJournal($account,$beneficiary,$description,$amount,$date);
-
-        var_dump($journal);
+        $journal = $this->tj->createSimpleJournal($account, $beneficiary, $description, $amount, $date);
 
         // attach bud/cat (?)
-        $journal->budgets()->save($budget);
-        $journal->categories()->save($category);
+        if (!is_null($budget)) {
+            $journal->budgets()->save($budget);
+        }
+        if (!is_null($category)) {
+            $journal->categories()->save($category);
+        }
 
-        Session::flash('success','Transaction saved');
+        Session::flash('success', 'Transaction saved');
         return Redirect::route('index');
     }
 

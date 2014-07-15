@@ -1,9 +1,11 @@
 <?php
 
+
+
 namespace Firefly\Database;
 
 
-abstract class SingleTableInheritanceEntity extends \Elegant
+abstract class SingleTableInheritanceEntity extends \LaravelBook\Ardent\Ardent
 {
     /**
      * The field that stores the subclass
@@ -13,6 +15,7 @@ abstract class SingleTableInheritanceEntity extends \Elegant
     protected $subclassField = null;
     /**
      * must be overridden and set to true in subclasses
+     *
      * @var bool
      */
     protected $isSubclass = false;
@@ -67,12 +70,16 @@ abstract class SingleTableInheritanceEntity extends \Elegant
     }
 
     // ensure that the subclass field is assigned on save
-
-    public function save(array $options = array())
-    {
+    public function save(
+        array $rules = array(),
+        array $customMessages = array(),
+        array $options = array(),
+        \Closure $beforeSave = null,
+        \Closure $afterSave = null
+    ) {
         if ($this->subclassField) {
             $this->attributes[$this->subclassField] = get_class($this);
         }
-        return parent::save($options);
+        return parent::save($rules, $customMessages, $options, $beforeSave, $afterSave);
     }
 } 

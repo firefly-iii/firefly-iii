@@ -1,19 +1,23 @@
 <?php
 
-class Preference extends Elegant
+use LaravelBook\Ardent\Ardent;
+
+
+class Preference extends Ardent
 {
     public static $rules
         = [
-            'user_id' => 'required|exists:user,id',
+            'user_id' => 'required|exists:users,id',
             'name'    => 'required|between:1,255',
             'data'    => 'required'
         ];
 
-    public static $factory = [
-        'user_id' => 'factory|User',
-        'name' => 'string',
-        'data' => 'string'
-    ];
+    public static $factory
+        = [
+            'user_id' => 'factory|User',
+            'name'    => 'string',
+            'data'    => 'string'
+        ];
 
     public function user()
     {

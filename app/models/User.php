@@ -4,8 +4,10 @@ use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\UserTrait;
+use LaravelBook\Ardent\Ardent;
 
-class User extends Elegant implements UserInterface, RemindableInterface
+
+class User extends Ardent implements UserInterface, RemindableInterface
 {
 
     use UserTrait, RemindableTrait;
@@ -22,7 +24,7 @@ class User extends Elegant implements UserInterface, RemindableInterface
     public static $factory
         = [
             'email'    => 'email',
-            'password' => 'string',
+            'password' => 'string|60',
             'migrated' => '0'
 
         ];
