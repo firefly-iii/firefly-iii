@@ -49,7 +49,7 @@ class AccountController extends \BaseController
             }
         }
 
-        return View::make('accounts.index')->with('accounts', $list)->with('total',$total);
+        return View::make('accounts.index')->with('accounts', $list)->with('total', $total);
     }
 //
 //
@@ -126,6 +126,8 @@ class AccountController extends \BaseController
 //	{
 //		//
 //	}
+
+
 
 
 }

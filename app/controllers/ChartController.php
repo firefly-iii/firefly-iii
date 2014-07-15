@@ -23,45 +23,39 @@ class ChartController extends BaseController
     {
         list($start, $end) = tk::getDateRange();
         $current = clone $start;
-
-        // chart
-        $chart = App::make('gchart');
-        $chart->addColumn('Day of the month', 'date');
-
+        $return = [];
 
         if (is_null($account)) {
-            // get accounts:
             $accounts = $this->accounts->getActiveDefault();
 
-            foreach ($accounts as $account) {
-                $chart->addColumn($account->name, 'number');
+            foreach ($accounts as $index => $account) {
+                $return[] = ['name' => $account->name, 'data' => []];
             }
-
             while ($current <= $end) {
-                $row = [clone $current];
 
                 // loop accounts:
-                foreach ($accounts as $account) {
-                    $row[] = $account->balance(clone $current);
+                foreach ($accounts as $index => $account) {
+                    $return[$index]['data'][] = [$current->timestamp * 1000, $account->balance(clone $current)];
                 }
                 $current->addDay();
-                $chart->addRowArray($row);
             }
         } else {
+            // do something experimental:
             $account = $this->accounts->find($account);
             if (is_null($account)) {
                 return View::make('error')->with('message', 'No account found.');
             }
-            $chart->addColumn($account->name, 'number');
-            while ($current <= $end) {
-                $row = [clone $current, $account->balance(clone $current)];
-                $current->addDay();
-                $chart->addRowArray($row);
-            }
-        }
+            $return[0] = ['name' => $account->name, 'data' => []];
 
-        $chart->generate();
-        return $chart->getData();
+
+            while ($current <= $end) {
+
+                $return[0]['data'][] = [$current->timestamp * 1000, $account->balance(clone $current)];
+                $current->addDay();
+            }
+
+        }
+        return Response::json($return);
     }
 
     /**
@@ -70,18 +64,18 @@ class ChartController extends BaseController
     public function homeBudgets()
     {
         list($start, $end) = tk::getDateRange();
+        $data = [
+            'type' => 'pie',
+            'name' => 'Expense: ',
+            'data' => []
+        ];
 
         $result = $this->journals->homeBudgetChart($start, $end);
 
-        // create a chart:
-        $chart = App::make('gchart');
-        $chart->addColumn('Budget', 'string');
-        $chart->addColumn('Amount', 'number');
         foreach ($result as $name => $amount) {
-            $chart->addRow($name, $amount);
+            $data['data'][] = [$name, $amount];
         }
-        $chart->generate();
-        return Response::json($chart->getData());
+        return Response::json([$data]);
 
     }
 
@@ -93,16 +87,16 @@ class ChartController extends BaseController
         list($start, $end) = tk::getDateRange();
 
         $result = $this->journals->homeCategoryChart($start, $end);
+        $data = [
+            'type' => 'pie',
+            'name' => 'Amount: ',
+            'data' => []
+        ];
 
-        // create a chart:
-        $chart = App::make('gchart');
-        $chart->addColumn('Category', 'string');
-        $chart->addColumn('Amount', 'number');
         foreach ($result as $name => $amount) {
-            $chart->addRow($name, $amount);
+            $data['data'][] = [$name, $amount];
         }
-        $chart->generate();
-        return Response::json($chart->getData());
+        return Response::json([$data]);
 
     }
 
@@ -112,18 +106,18 @@ class ChartController extends BaseController
     public function homeBeneficiaries()
     {
         list($start, $end) = tk::getDateRange();
+        $data = [
+            'type' => 'pie',
+            'name' => 'Amount: ',
+            'data' => []
+        ];
 
         $result = $this->journals->homeBeneficiaryChart($start, $end);
 
-        // create a chart:
-        $chart = App::make('gchart');
-        $chart->addColumn('Beneficiary', 'string');
-        $chart->addColumn('Amount', 'number');
         foreach ($result as $name => $amount) {
-            $chart->addRow($name, $amount);
+            $data['data'][] = [$name, $amount];
         }
-        $chart->generate();
-        return Response::json($chart->getData());
+        return Response::json([$data]);
 
     }
 } 

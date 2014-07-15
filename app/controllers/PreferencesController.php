@@ -20,18 +20,31 @@ class PreferencesController extends BaseController
     {
         $accounts = $this->accounts->getDefault();
 
+        $viewRange = $this->preferences->get('viewRange','1M');
+        $viewRangeValue = $viewRange->data;
+
         // pref:
         $frontpage = $this->preferences->get('frontpageAccounts', []);
-        return View::make('preferences.index')->with('accounts', $accounts)->with('frontpageAccounts', $frontpage);
+        return View::make('preferences.index')->with('accounts', $accounts)->with('frontpageAccounts', $frontpage)->with('viewRange',$viewRangeValue);
     }
 
     public function postIndex()
     {
+
+        // frontpage accounts
         $frontpageAccounts = [];
         foreach(Input::get('frontpageAccounts') as $id) {
             $frontpageAccounts[] = intval($id);
         }
         $this->preferences->set('frontpageAccounts',$frontpageAccounts);
+
+        // view range:
+        $this->preferences->set('viewRange',Input::get('viewRange'));
+        // forget session values:
+        Session::forget('start');
+        Session::forget('end');
+        Session::forget('range');
+
         Session::flash('success', 'Preferences saved!');
         return Redirect::route('preferences');
     }

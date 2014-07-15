@@ -145,7 +145,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
 
         // lets make this simple.
         $types = [];
-        foreach (\TransactionType::whereIn('type', ['Deposit', 'Withdrawal'])->get() as $t) {
+        foreach (\TransactionType::whereIn('type', ['Withdrawal'])->get() as $t) {
             $types[] = $t->id;
         }
         unset($t);
@@ -163,6 +163,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
             ->whereIn('transaction_type_id', $types)
             ->get(['transaction_journals.*']);
         unset($types);
+        $result = [];
 
 
         foreach ($journals as $journal) {
@@ -196,7 +197,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
 
         // lets make this simple.
         $types = [];
-        foreach (\TransactionType::whereIn('type', ['Deposit', 'Withdrawal'])->get() as $t) {
+        foreach (\TransactionType::whereIn('type', ['Withdrawal'])->get() as $t) {
             $types[] = $t->id;
         }
         unset($t);
