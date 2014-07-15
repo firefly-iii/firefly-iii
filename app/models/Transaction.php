@@ -1,14 +1,16 @@
 <?php
 
+use LaravelBook\Ardent\Ardent;
 
-class Transaction extends Elegant
+
+class Transaction extends Ardent
 {
     public static $rules
         = [
             'account_id'             => 'numeric|required|exists:accounts,id',
             'transaction_journal_id' => 'numeric|required|exists:transaction_journals,id',
             'description'            => 'between:1,255',
-            'amount'                 => 'required|between:-65536,65536',
+            'amount'                 => 'required|between:-65536,65536|not_in:0,0.00',
         ];
 
     public static $factory

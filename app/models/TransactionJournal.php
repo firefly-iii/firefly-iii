@@ -1,15 +1,17 @@
 <?php
 
+use LaravelBook\Ardent\Ardent;
 
-class TransactionJournal extends Elegant
+
+class TransactionJournal extends Ardent
 {
 
     public static $rules
         = [
             'transaction_type_id'     => 'required|exists:transaction_types,id',
             'transaction_currency_id' => 'required|exists:transaction_currencies,id',
-            'description'             => 'between:1,255',
-            'date'                    => 'date',
+            'description'             => 'required|between:1,255',
+            'date'                    => 'required|date',
             'completed'               => 'required|between:0,1'
         ];
 

@@ -22,14 +22,15 @@
     },
     "require": {
         "laravel/framework": "4.2.*",
-        "grumpydictator/gchart": "dev-master"
+        "laravelbook/ardent": "dev-master"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "1.*",
         "barryvdh/laravel-ide-helper": "1.*",
         "mockery/mockery": "dev-master",
         "satooshi/php-coveralls": "dev-master",
-        "zizaco/factory-muff": "dev-master"
+        "zizaco/factory-muff": "dev-master",
+        "doctrine/dbal": "2.4.*"
     },
     "autoload": {
         "classmap": [

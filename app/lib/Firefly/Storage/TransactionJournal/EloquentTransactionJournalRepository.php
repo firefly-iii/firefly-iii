@@ -91,9 +91,9 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         $journal->completed = false;
         $journal->description = $description;
         $journal->date = $date;
-        if (!$journal->isValid()) {
+        if (!$journal->save()) {
             \Log::error('Cannot create valid journal.');
-            \Log::error('Errors: ' . print_r($journal->validator->messages()->all(), true));
+            \Log::error('Errors: ' . print_r($journal->errors()->all(), true));
             throw new \Firefly\Exception\FireflyException('Cannot create valid journal.');
         }
         $journal->save();
@@ -104,9 +104,9 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         $fromTransaction->transactionJournal()->associate($journal);
         $fromTransaction->description = null;
         $fromTransaction->amount = $amountFrom;
-        if (!$fromTransaction->isValid()) {
+        if (!$fromTransaction->save()) {
             \Log::error('Cannot create valid transaction (from) for journal #' . $journal->id);
-            \Log::error('Errors: ' . print_r($fromTransaction->validator->messages()->all(), true));
+            \Log::error('Errors: ' . print_r($fromTransaction->errors()->all(), true));
             throw new \Firefly\Exception\FireflyException('Cannot create valid transaction (from).');
         }
         $fromTransaction->save();
@@ -116,12 +116,10 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         $toTransaction->transactionJournal()->associate($journal);
         $toTransaction->description = null;
         $toTransaction->amount = $amountTo;
-        if (!$toTransaction->isValid()) {
-            if (!$toTransaction->isValid()) {
-                \Log::error('Cannot create valid transaction (to) for journal #' . $journal->id);
-                \Log::error('Errors: ' . print_r($toTransaction->validator->messages()->all(), true));
-                throw new \Firefly\Exception\FireflyException('Cannot create valid transaction (to).');
-            }
+        if (!$toTransaction->save()) {
+            \Log::error('Cannot create valid transaction (to) for journal #' . $journal->id);
+            \Log::error('Errors: ' . print_r($toTransaction->errors()->all(), true));
+            throw new \Firefly\Exception\FireflyException('Cannot create valid transaction (to).');
         }
         $toTransaction->save();
 
@@ -222,7 +220,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
                     $name = $t->account->name;
                     $amount = floatval($t->amount) < 0 ? floatval($t->amount) * -1 : floatval($t->amount);
 
-                    $result[$name] = isset($result[$name]) ? $result[$name]+$amount : $amount;
+                    $result[$name] = isset($result[$name]) ? $result[$name] + $amount : $amount;
                 }
             }
         }

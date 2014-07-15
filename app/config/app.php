@@ -36,7 +36,6 @@ return [
         'Illuminate\Validation\ValidationServiceProvider',
         'Illuminate\View\ViewServiceProvider',
         'Illuminate\Workbench\WorkbenchServiceProvider',
-        'Grumpydictator\Gchart\GchartServiceProvider',
         'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
         'Barryvdh\Debugbar\ServiceProvider',
         'Firefly\Storage\StorageServiceProvider',
