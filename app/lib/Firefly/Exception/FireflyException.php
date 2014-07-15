@@ -3,6 +3,7 @@
 namespace Firefly\Exception;
 
 
-class FireflyException extends \Exception {
+class FireflyException extends \Exception
+{
 
 } 

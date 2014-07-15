@@ -4,36 +4,45 @@ use Firefly\Helper\Toolkit\Toolkit as tk;
 use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
 use Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface as TJRI;
 
+/**
+ * Class ChartController
+ */
 class ChartController extends BaseController
 {
 
-    protected $accounts;
-    protected $journals;
+    protected $_accounts;
+    protected $_journals;
 
+    /**
+     * @param ARI  $accounts
+     * @param TJRI $journals
+     */
     public function __construct(ARI $accounts, TJRI $journals)
     {
-        $this->accounts = $accounts;
-        $this->journals = $journals;
+        $this->_accounts = $accounts;
+        $this->_journals = $journals;
     }
 
     /**
-     * Show home charts.
+     * @param null $accountId
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function homeAccount($id = null)
+    public function homeAccount($accountId = null)
     {
         list($start, $end) = tk::getDateRange();
         $current = clone $start;
         $return = [];
         $account = null;
 
-        if(!is_null($id)) {
-            $account = $this->accounts->find($id);
+        if (!is_null($accountId)) {
+            $account = $this->_accounts->find($accountId);
         }
 
         if (is_null($account)) {
-            $accounts = $this->accounts->getActiveDefault();
+            $accounts = $this->_accounts->getActiveDefault();
 
-            foreach ($accounts as $index => $account) {
+            foreach ($accounts as $account) {
                 $return[] = ['name' => $account->name, 'data' => []];
             }
             while ($current <= $end) {
@@ -69,7 +78,7 @@ class ChartController extends BaseController
             'data' => []
         ];
 
-        $result = $this->journals->homeBudgetChart($start, $end);
+        $result = $this->_journals->homeBudgetChart($start, $end);
 
         foreach ($result as $name => $amount) {
             $data['data'][] = [$name, $amount];
@@ -85,7 +94,7 @@ class ChartController extends BaseController
     {
         list($start, $end) = tk::getDateRange();
 
-        $result = $this->journals->homeCategoryChart($start, $end);
+        $result = $this->_journals->homeCategoryChart($start, $end);
         $data = [
             'type' => 'pie',
             'name' => 'Amount: ',
@@ -111,7 +120,7 @@ class ChartController extends BaseController
             'data' => []
         ];
 
-        $result = $this->journals->homeBeneficiaryChart($start, $end);
+        $result = $this->_journals->homeBeneficiaryChart($start, $end);
 
         foreach ($result as $name => $amount) {
             $data['data'][] = [$name, $amount];

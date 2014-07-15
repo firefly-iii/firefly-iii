@@ -2,21 +2,33 @@
 
 use Firefly\Helper\Migration\MigrationHelperInterface as MHI;
 
+/**
+ * Class MigrationController
+ */
 class MigrationController extends BaseController
 {
-    protected $migration;
+    protected $_migration;
 
+    /**
+     * @param MHI $migration
+     */
     public function __construct(MHI $migration)
     {
-        $this->migration = $migration;
+        $this->_migration = $migration;
         View::share('menu', 'home');
 
     }
 
-    public function dev() {
+    /**
+     * Dev method
+     */
+    public function dev()
+    {
         $file = Config::get('dev.import');
-        if(file_exists($file)) {
+        if (file_exists($file)) {
             $user = User::find(1);
+
+            /** @noinspection PhpParamsInspection */
             Auth::login($user);
             /** @var Firefly\Helper\Migration\MigrationHelperInterface $migration */
             $migration = App::make('Firefly\Helper\Migration\MigrationHelperInterface');
@@ -27,11 +39,17 @@ class MigrationController extends BaseController
         }
     }
 
+    /**
+     * @return \Illuminate\View\View
+     */
     public function index()
     {
         return View::make('migrate.index');
     }
 
+    /**
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function postIndex()
     {
         if (Input::hasFile('exportFile')) {
@@ -40,12 +58,12 @@ class MigrationController extends BaseController
             $file = Input::file('exportFile');
             $path = $file->getRealPath();
 
-            $this->migration->loadFile($path);
+            $this->_migration->loadFile($path);
 
-            if (!$this->migration->validFile()) {
+            if (!$this->_migration->validFile()) {
                 return View::make('error')->with('message', 'Invalid JSON content.');
             }
-            $this->migration->migrate();
+            $this->_migration->migrate();
             return Redirect::route('index');
         } else {
             return View::make('error')->with('message', 'No file selected');

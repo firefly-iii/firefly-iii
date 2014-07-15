@@ -192,11 +192,11 @@ class MigrationHelper implements MigrationHelperInterface
             $journal = $journals->createSimpleJournal($fromAccount, $toAccount, $entry->description, $amount, $date);
 
             // save budgets and categories, on the journal
-            if(isset($budgets[$entry->id])) {
+            if (isset($budgets[$entry->id])) {
                 $budget = $budgets[$entry->id];
                 $journal->budgets()->save($budget);
             }
-            if(isset($categories[$entry->id])) {
+            if (isset($categories[$entry->id])) {
                 $category = $categories[$entry->id];
                 $journal->categories()->save($category);
             }

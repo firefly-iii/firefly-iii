@@ -3,6 +3,36 @@
 use LaravelBook\Ardent\Ardent;
 
 
+/**
+ * TransactionJournal
+ *
+ * @property integer $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property integer $transaction_type_id
+ * @property integer $transaction_currency_id
+ * @property string $description
+ * @property boolean $completed
+ * @property \Carbon\Carbon $date
+ * @property-read \TransactionType $transactionType
+ * @property-read \TransactionCurrency $transactionCurrency
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Transaction[] $transactions
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Component[] $components
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *             'Budget[] $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *             'Category[] $categories
+ * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereCreatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereUpdatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereTransactionTypeId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereTransactionCurrencyId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereDescription($value) 
+ * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereCompleted($value) 
+ * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereDate($value) 
+ * @method static \TransactionJournal after($date) 
+ * @method static \TransactionJournal before($date) 
+ */
 class TransactionJournal extends Ardent
 {
 

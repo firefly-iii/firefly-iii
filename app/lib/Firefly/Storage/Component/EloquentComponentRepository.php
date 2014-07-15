@@ -17,10 +17,10 @@ class EloquentComponentRepository implements ComponentRepositoryInterface
 
     }
 
-    public function get() {
+    public function get()
+    {
         die('no impl');
     }
-
 
 
     public function store($data)

@@ -3,6 +3,29 @@
 use LaravelBook\Ardent\Ardent;
 
 
+/**
+ * Transaction
+ *
+ * @property integer $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property integer $account_id
+ * @property integer $transaction_journal_id
+ * @property string $description
+ * @property float $amount
+ * @property-read \Account $account
+ * @property-read \TransactionJournal $transactionJournal
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Component[] $components
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Budget[] $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Category[] $categories
+ * @method static \Illuminate\Database\Query\Builder|\Transaction whereId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Transaction whereCreatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Transaction whereUpdatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Transaction whereAccountId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Transaction whereTransactionJournalId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Transaction whereDescription($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Transaction whereAmount($value) 
+ */
 class Transaction extends Ardent
 {
     public static $rules

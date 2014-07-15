@@ -3,37 +3,47 @@ use Firefly\Helper\Preferences\PreferencesHelperInterface as PHI;
 use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
 use Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface as TJRI;
 
-
+/**
+ * Class HomeController
+ */
 class HomeController extends BaseController
 {
-    protected $accounts;
-    protected $preferences;
-    protected $tj;
+    protected $_accounts;
+    protected $_preferences;
+    protected $_journal;
 
-    public function __construct(ARI $accounts, PHI $preferences, TJRI $tj)
+    /**
+     * @param ARI  $accounts
+     * @param PHI  $preferences
+     * @param TJRI $journal
+     */
+    public function __construct(ARI $accounts, PHI $preferences, TJRI $journal)
     {
-        $this->accounts = $accounts;
-        $this->preferences = $preferences;
-        $this->tj = $tj;
+        $this->_accounts = $accounts;
+        $this->_preferences = $preferences;
+        $this->_journal = $journal;
         View::share('menu', 'home');
     }
 
+    /**
+     * @return $this|\Illuminate\View\View
+     */
     public function index()
     {
         // get list setting:
-        $pref = $this->preferences->get('frontpageAccounts', []);
+        $pref = $this->_preferences->get('frontpageAccounts', []);
 
         // get the accounts to display on the home screen:
-        $count = $this->accounts->count();
+        $count = $this->_accounts->count();
         if ($pref->data == []) {
-            $list = $this->accounts->getActiveDefault();
+            $list = $this->_accounts->getActiveDefault();
         } else {
-            $list = $this->accounts->getByIds($pref->data);
+            $list = $this->_accounts->getByIds($pref->data);
         }
 
         // get transactions for each account:
         foreach ($list as $account) {
-            $account->transactionList = $this->tj->getByAccount($account,10);
+            $account->transactionList = $this->_journal->getByAccount($account, 10);
         }
 
 

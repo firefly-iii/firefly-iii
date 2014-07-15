@@ -3,6 +3,9 @@
 use Firefly\Helper\Email\EmailHelperInterface as EHI;
 use Firefly\Storage\User\UserRepositoryInterface as URI;
 
+/**
+ * Class UserController
+ */
 class UserController extends BaseController
 {
 

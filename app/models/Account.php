@@ -1,6 +1,27 @@
 <?php
 use LaravelBook\Ardent\Ardent as Ardent;
 
+/**
+ * Account
+ *
+ * @property integer $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property integer $user_id
+ * @property integer $account_type_id
+ * @property string $name
+ * @property boolean $active
+ * @property-read \AccountType $accountType
+ * @property-read \User $user
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Transaction[] $transactions
+ * @method static \Illuminate\Database\Query\Builder|\Account whereId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Account whereCreatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Account whereUpdatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Account whereUserId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Account whereAccountTypeId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Account whereName($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Account whereActive($value) 
+ */
 class Account extends Ardent
 {
 
