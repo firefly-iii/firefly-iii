@@ -17,6 +17,8 @@ interface AccountRepositoryInterface
 
     public function findByName($name);
 
+    public function getCashAccount();
+
     public function getByIds($ids);
 
     public function getDefault();

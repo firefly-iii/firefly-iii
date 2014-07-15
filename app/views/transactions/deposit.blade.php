@@ -3,7 +3,7 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <h1>Firefly
-            <small>Add a new withdrawal</small>
+            <small>Add a new deposit</small>
         </h1>
     </div>
 </div>
@@ -14,7 +14,7 @@
             account <em>A</em> to account <em>B</em>.
         </p>
         <p class="text-info">
-            A withdrawal is when you spend money on something, moving an amount to a <em>beneficiary</em>.
+            A deposit is when you earn money, moving an amount from a beneficiary into your own account.
         </p>
     </div>
 </div>
@@ -32,18 +32,20 @@
             </div>
         </div>
 
+
+
         <div class="form-group">
-            <label for="account_id" class="col-sm-4 control-label">Account</label>
+            <label for="beneficiary" class="col-sm-4 control-label">Beneficiary (payer)</label>
             <div class="col-sm-8">
-                {{Form::select('account_id',$accounts,Input::old('account_id'),['class' => 'form-control'])}}
+                <input type="text" name="beneficiary" value="{{{Input::old('beneficiary')}}}" autocomplete="off" class="form-control" placeholder="Beneficiary" />
+                <span class="help-block">This field will auto-complete your existing beneficiaries (if any), but you can type freely to create new ones.</span>
             </div>
         </div>
 
         <div class="form-group">
-            <label for="beneficiary" class="col-sm-4 control-label">Beneficiary</label>
+            <label for="account_id" class="col-sm-4 control-label">Account</label>
             <div class="col-sm-8">
-                <input type="text" name="beneficiary" value="{{{Input::old('beneficiary')}}}" autocomplete="off" class="form-control" placeholder="Beneficiary" />
-                <span class="help-block">This field will auto-complete your existing beneficiaries (if any), but you can type freely to create new ones.</span>
+                {{Form::select('account_id',$accounts,Input::old('account_id'),['class' => 'form-control'])}}
             </div>
         </div>
 
@@ -66,21 +68,13 @@
         <div class="form-group">
             <label for="submit" class="col-sm-4 control-label">&nbsp;</label>
             <div class="col-sm-8">
-                <input type="submit" name="submit" value="Create withdrawal" class="btn btn-info" />
+                <input type="submit" name="submit" value="Create deposit" class="btn btn-info" />
             </div>
         </div>
 
     </div>
     <div class="col-lg-6 col-md-12 col-sm-12">
         <h4>Optional fields</h4>
-
-        <div class="form-group">
-            <label for="budget_id" class="col-sm-4 control-label">Budget</label>
-            <div class="col-sm-8">
-                {{Form::select('budget_id',$budgets,Input::old('budget_id') ?: 0,['class' => 'form-control'])}}
-                <span class="help-block">Select one of your budgets to make this transaction a part of it.</span>
-            </div>
-        </div>
 
         <div class="form-group">
             <label for="category" class="col-sm-4 control-label">Category</label>

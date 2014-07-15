@@ -4,6 +4,8 @@
 namespace Firefly\Storage\TransactionJournal;
 
 
+use Firefly\Exception\FireflyException;
+
 class EloquentTransactionJournalRepository implements TransactionJournalRepositoryInterface
 {
 
@@ -35,6 +37,18 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         // amounts:
         $amountFrom = $amount * -1;
         $amountTo = $amount;
+
+        if(round(floatval($amount),2) == 0.00) {
+            \Log::error('Transaction will never save: amount = 0');
+            \Session::flash('error','The amount should not be empty or zero.');
+            throw new \Firefly\Exception\FireflyException('Could not figure out transaction type.');
+        }
+        // same account:
+        if($from->id == $to->id) {
+            \Log::error('Accounts cannot be equal');
+            \Session::flash('error','Select two different accounts.');
+            throw new \Firefly\Exception\FireflyException('Select two different accounts.');
+        }
 
         // account types for both:
         $toAT = $to->accountType->description;
@@ -94,6 +108,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         if (!$journal->save()) {
             \Log::error('Cannot create valid journal.');
             \Log::error('Errors: ' . print_r($journal->errors()->all(), true));
+            \Session::flash('error','Could not create journal: ' . $journal->errors()->first());
             throw new \Firefly\Exception\FireflyException('Cannot create valid journal.');
         }
         $journal->save();
@@ -158,6 +173,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
                     }]
             )
             ->after($start)->before($end)
+            ->where('completed',1)
             ->whereIn('transaction_type_id', $types)
             ->get(['transaction_journals.*']);
         unset($types);
@@ -166,6 +182,9 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
 
         foreach ($journals as $journal) {
             // has to be one:
+            if(!isset($journal->transactions[0])) {
+                throw new FireflyException('Journal #'.$journal->id.' has ' . count($journal->transactions).' transactions!');
+            }
             $transaction = $journal->transactions[0];
             $amount = floatval($transaction->amount);
 
