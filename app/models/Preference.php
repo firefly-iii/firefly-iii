@@ -25,6 +25,7 @@ class Preference extends Elegant
         $this->attributes['data'] = json_encode($value);
     }
 
+    //
     public function getDataAttribute($value)
     {
         return json_decode($value);

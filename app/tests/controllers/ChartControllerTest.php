@@ -13,11 +13,11 @@ class ChartControllerTest extends TestCase
     {
         // mock preference:
         $pref = $this->mock('Preference');
-        $pref->shouldReceive('getAttribute', 'data')->andReturn('week');
+        $pref->shouldReceive('getAttribute', 'data')->andReturn('1M');
 
         // mock preferences helper:
         $preferences = $this->mock('Firefly\Helper\Preferences\PreferencesHelperInterface');
-        $preferences->shouldReceive('get')->with('viewRange', 'week')->once()->andReturn($pref);
+        $preferences->shouldReceive('get')->with('viewRange', '1M')->once()->andReturn($pref);
 
         // mock toolkit:
         $toolkit = $this->mock('Firefly\Helper\Toolkit\ToolkitInterface');
@@ -73,7 +73,7 @@ class ChartControllerTest extends TestCase
 
         // mock preferences helper:
         $preferences = $this->mock('Firefly\Helper\Preferences\PreferencesHelperInterface');
-        $preferences->shouldReceive('get')->with('viewRange', 'week')->once()->andReturn($pref);
+        $preferences->shouldReceive('get')->with('viewRange', '1M')->once()->andReturn($pref);
 
         // mock toolkit:
         $toolkit = $this->mock('Firefly\Helper\Toolkit\ToolkitInterface');
@@ -111,11 +111,11 @@ class ChartControllerTest extends TestCase
 
         // mock preference:
         $pref = $this->mock('Preference');
-        $pref->shouldReceive('getAttribute', 'data')->andReturn('week');
+        $pref->shouldReceive('getAttribute', 'data')->andReturn('1M');
 
         // mock preferences helper:
         $preferences = $this->mock('Firefly\Helper\Preferences\PreferencesHelperInterface');
-        $preferences->shouldReceive('get')->with('viewRange', 'week')->once()->andReturn($pref);
+        $preferences->shouldReceive('get')->with('viewRange', '1M')->once()->andReturn($pref);
 
         // mock toolkit:
         $toolkit = $this->mock('Firefly\Helper\Toolkit\ToolkitInterface');
@@ -153,7 +153,7 @@ class ChartControllerTest extends TestCase
 
         // mock preferences helper:
         $preferences = $this->mock('Firefly\Helper\Preferences\PreferencesHelperInterface');
-        $preferences->shouldReceive('get')->with('viewRange', 'week')->once()->andReturn($pref);
+        $preferences->shouldReceive('get')->with('viewRange', '1M')->once()->andReturn($pref);
 
 
         // call
@@ -183,7 +183,7 @@ class ChartControllerTest extends TestCase
 
         // mock preferences helper:
         $preferences = $this->mock('Firefly\Helper\Preferences\PreferencesHelperInterface');
-        $preferences->shouldReceive('get')->with('viewRange', 'week')->once()->andReturn($pref);
+        $preferences->shouldReceive('get')->with('viewRange', '1M')->once()->andReturn($pref);
 
 
         // call
@@ -213,7 +213,7 @@ class ChartControllerTest extends TestCase
 
         // mock preferences helper:
         $preferences = $this->mock('Firefly\Helper\Preferences\PreferencesHelperInterface');
-        $preferences->shouldReceive('get')->with('viewRange', 'week')->once()->andReturn($pref);
+        $preferences->shouldReceive('get')->with('viewRange', '1M')->once()->andReturn($pref);
 
 
         // call

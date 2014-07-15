@@ -26,10 +26,8 @@ class HomeControllerTest extends TestCase
         $accounts->shouldReceive('count')->andReturn(0);
         $accounts->shouldReceive('getActiveDefault')->andReturn([]);
 
-        // mock preferences helper:
         $preferences = $this->mock('Firefly\Helper\Preferences\PreferencesHelperInterface');
         $preferences->shouldReceive('get')->with('frontpageAccounts',[])->andReturn(new \Preference)->once();
-        $preferences->shouldReceive('get')->with('viewRange', 'week')->once()->andReturn('week');
 
         // call
         $this->call('GET', '/');
@@ -73,7 +71,6 @@ class HomeControllerTest extends TestCase
 
         $preferences = $this->mock('Firefly\Helper\Preferences\PreferencesHelperInterface');
         $preferences->shouldReceive('get')->with('frontpageAccounts',[])->andReturn($pref)->once();
-        $preferences->shouldReceive('get')->with('viewRange', 'week')->once()->andReturn('week');
 
         // call
         $this->call('GET', '/');
