@@ -34,6 +34,15 @@ class StorageServiceProvider extends ServiceProvider
             'Firefly\Storage\Component\ComponentRepositoryInterface',
             'Firefly\Storage\Component\EloquentComponentRepository'
         );
+
+        $this->app->bind(
+            'Firefly\Storage\Budget\BudgetRepositoryInterface',
+            'Firefly\Storage\Budget\EloquentBudgetRepository'
+        );
+        $this->app->bind(
+            'Firefly\Storage\Category\CategoryRepositoryInterface',
+            'Firefly\Storage\Category\EloquentCategoryRepository'
+        );
     }
 
 }

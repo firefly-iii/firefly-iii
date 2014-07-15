@@ -49,4 +49,19 @@ class User extends Elegant implements UserInterface, RemindableInterface
         return $this->hasMany('Preference');
     }
 
+    public function components()
+    {
+        return $this->hasMany('Component');
+    }
+
+    public function budgets()
+    {
+        return $this->hasMany('Budget');
+    }
+
+    public function categories()
+    {
+        return $this->hasMany('Category');
+    }
+
 }
