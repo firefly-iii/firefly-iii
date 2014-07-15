@@ -5,19 +5,28 @@ use Firefly\Storage\Budget\BudgetRepositoryInterface as Bud;
 use Firefly\Storage\Category\CategoryRepositoryInterface as Cat;
 use Firefly\Storage\Component\ComponentRepositoryInterface as CRI;
 
+/**
+ * Class JsonController
+ */
 class JsonController extends BaseController
 {
-    protected $accounts;
-    protected $components;
-    protected $categories;
-    protected $budgets;
+    protected $_accounts;
+    protected $_components;
+    protected $_categories;
+    protected $_budgets;
 
+    /**
+     * @param ARI $accounts
+     * @param CRI $components
+     * @param Cat $categories
+     * @param Bud $budgets
+     */
     public function __construct(ARI $accounts, CRI $components, Cat $categories, Bud $budgets)
     {
-        $this->components = $components;
-        $this->accounts = $accounts;
-        $this->categories = $categories;
-        $this->budgets = $budgets;
+        $this->_components = $components;
+        $this->_accounts = $accounts;
+        $this->_categories = $categories;
+        $this->_budgets = $budgets;
     }
 
     /**
@@ -25,7 +34,7 @@ class JsonController extends BaseController
      */
     public function beneficiaries()
     {
-        $list = $this->accounts->getBeneficiaries();
+        $list = $this->_accounts->getBeneficiaries();
         $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;
@@ -40,7 +49,7 @@ class JsonController extends BaseController
      */
     public function categories()
     {
-        $list = $this->categories->get();
+        $list = $this->_categories->get();
         $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;

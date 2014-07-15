@@ -2,9 +2,15 @@
 
 use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
 
+/**
+ * Class AccountController
+ */
 class AccountController extends \BaseController
 {
 
+    /**
+     * @param ARI $accounts
+     */
     public function __construct(ARI $accounts)
     {
         $this->accounts = $accounts;
@@ -82,11 +88,11 @@ class AccountController extends \BaseController
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param  int $accountId
      *
      * @return Response
      */
-    public function show($id)
+    public function show($accountId)
     {
 
     }
@@ -126,8 +132,6 @@ class AccountController extends \BaseController
 //	{
 //		//
 //	}
-
-
 
 
 }

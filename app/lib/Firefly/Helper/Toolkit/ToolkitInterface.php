@@ -3,7 +3,8 @@
 namespace Firefly\Helper\Toolkit;
 
 
-interface ToolkitInterface {
+interface ToolkitInterface
+{
     public static function getDateRange();
 
 } 

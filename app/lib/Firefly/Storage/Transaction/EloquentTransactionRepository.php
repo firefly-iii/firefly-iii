@@ -3,6 +3,7 @@
 namespace Firefly\Storage\Transaction;
 
 
-class EloquentTransactionRepository implements TransactionRepositoryInterface {
+class EloquentTransactionRepository implements TransactionRepositoryInterface
+{
 
 }

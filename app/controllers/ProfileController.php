@@ -2,24 +2,41 @@
 
 use Firefly\Storage\User\UserRepositoryInterface as URI;
 
+/**
+ * Class ProfileController
+ */
 class ProfileController extends BaseController
 {
 
-    public function __construct(URI $user) {
+    /**
+     * @param URI $user
+     */
+    public function __construct(URI $user)
+    {
         $this->user = $user;
         View::share('menu', 'home');
     }
 
+    /**
+     * @return \Illuminate\View\View
+     *
+     */
     public function index()
     {
         return View::make('profile.index');
     }
 
+    /**
+     * @return \Illuminate\View\View
+     */
     public function changePassword()
     {
         return View::make('profile.change-password');
     }
 
+    /**
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function postChangePassword()
     {
 
@@ -44,7 +61,8 @@ class ProfileController extends BaseController
         }
 
         // update the user with the new password.
-        $this->user->updatePassword(Auth::user(),Input::get('new1'));
+        /** @noinspection PhpParamsInspection */
+        $this->user->updatePassword(Auth::user(), Input::get('new1'));
 
         Session::flash('success', 'Password changed!');
         return Redirect::route('profile');

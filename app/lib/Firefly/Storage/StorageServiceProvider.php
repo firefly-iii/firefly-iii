@@ -20,7 +20,6 @@ class StorageServiceProvider extends ServiceProvider
         );
 
 
-
         $this->app->bind(
             'Firefly\Storage\Account\AccountRepositoryInterface',
             'Firefly\Storage\Account\EloquentAccountRepository'

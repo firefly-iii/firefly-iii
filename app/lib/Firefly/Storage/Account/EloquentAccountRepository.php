@@ -156,8 +156,8 @@ class EloquentAccountRepository implements AccountRepositoryInterface
 
     public function getCashAccount()
     {
-        $type = \AccountType::where('description','Cash account')->first();
-        $cash = \Auth::user()->accounts()->where('account_type_id',$type->id)->first();
+        $type = \AccountType::where('description', 'Cash account')->first();
+        $cash = \Auth::user()->accounts()->where('account_type_id', $type->id)->first();
         return $cash;
 
     }

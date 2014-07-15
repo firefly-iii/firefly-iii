@@ -1,7 +1,10 @@
 <?php
 
-class ComponentsController extends BaseController {
+/**
+ * Class ComponentsController
+ */
+class ComponentsController extends BaseController
+{
 
 
-
-} 
+}
