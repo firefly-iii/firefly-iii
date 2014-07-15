@@ -1,6 +1,6 @@
 <?php
 
-use \League\FactoryMuffin\Facade\FactoryMuffin;
+use League\FactoryMuffin\Facade\FactoryMuffin;
 
 class AllModelsTest extends TestCase
 {
@@ -54,7 +54,7 @@ class AllModelsTest extends TestCase
 
         // test pref?
         $pref->data = 'Blabla';
-        $this->assertEquals($pref->data,'Blabla');
+        $this->assertEquals($pref->data, 'Blabla');
 
         $this->assertCount(1, $user->accounts()->get());
         $this->assertCount(1, $user->preferences()->get());
@@ -152,8 +152,19 @@ class AllModelsTest extends TestCase
 
         $type->accounts()->save($a1);
         $type->accounts()->save($a2);
+        $a1->accounttype()->associate($type);
+
+        $this->assertEquals($a1->account_type_id, $type->id);
 
         $this->assertCount(2, $type->accounts()->get());
+    }
+
+    public function testBalance()
+    {
+        $account = FactoryMuffin::create('Account');
+
+        $this->assertEquals(0.0, $account->balance());
+
     }
 
     public function testTransactions()
@@ -170,6 +181,10 @@ class AllModelsTest extends TestCase
         $transaction->account()->associate($account);
         $transaction->transactionjournal()->associate($journal);
 
+        $account->transactions()->save($transaction);
+
+
+        $this->assertEquals($transaction->account_id, $account->id);
         $this->assertCount(1, $transaction->transactionjournal()->get());
         $this->assertCount(1, $transaction->account()->get());
         $this->assertCount(2, $transaction->components()->get());
@@ -193,6 +208,7 @@ class AllModelsTest extends TestCase
         $this->assertCount(1, $component->user()->get());
         $this->assertCount(1, $component->transactions()->get());
     }
+
     public function tearDown()
     {
         Mockery::close();
