@@ -4,6 +4,11 @@ firefly-iii
 [![Build Status](https://travis-ci.org/JC5/firefly-iii.svg?branch=master)](https://travis-ci.org/JC5/firefly-iii)
 [![Coverage Status](https://coveralls.io/repos/JC5/firefly-iii/badge.png?branch=master)](https://coveralls.io/r/JC5/firefly-iii?branch=master)
 
+[![Latest Stable Version](https://poser.pugx.org/grumpydictator/firefly-iii/v/stable.svg)](https://packagist.org/packages/grumpydictator/firefly-iii)
+[![Total Downloads](https://poser.pugx.org/grumpydictator/firefly-iii/downloads.svg)](https://packagist.org/packages/grumpydictator/firefly-iii)
+[![Latest Unstable Version](https://poser.pugx.org/grumpydictator/firefly-iii/v/unstable.svg)](https://packagist.org/packages/grumpydictator/firefly-iii)
+[![License](https://poser.pugx.org/grumpydictator/firefly-iii/license.svg)](https://packagist.org/packages/grumpydictator/firefly-iii)
+
 Firefly Mark III is a new version of Firefly built upon best practices and lessons learned
 from building [Firefly](https://github.com/JC5/Firefly). It's Mark III since the original Firefly never made it outside of my
 laptop and [Firefly II](https://github.com/JC5/Firefly) is live.
