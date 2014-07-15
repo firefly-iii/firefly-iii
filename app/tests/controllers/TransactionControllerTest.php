@@ -90,7 +90,7 @@ class TransactionControllerTest extends TestCase
         $tj = $this->mock('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
         $tj->shouldReceive('createSimpleJournal')->once()->andReturn($journal);
 
-        $tj->shouldReceive('createSimpleJournal')->with($account, $beneficiary, $data['description'], $data['amount'], new \Carbon\Carbon($data['date']))->once()->andReturn($journal);
+//        $tj->shouldReceive('createSimpleJournal')->with($account, $beneficiary, $data['description'], $data['amount'], new \Carbon\Carbon($data['date']))->once()->andReturn($journal);
 
         // call
         $this->call('POST', '/transactions/add/withdrawal', $data);
@@ -98,5 +98,8 @@ class TransactionControllerTest extends TestCase
         // test
         $this->assertRedirectedToRoute('index');
     }
-
+    public function tearDown()
+    {
+        Mockery::close();
+    }
 } 

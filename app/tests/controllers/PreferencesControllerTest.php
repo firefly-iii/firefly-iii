@@ -57,4 +57,8 @@ class PreferencesControllerTest extends TestCase
         $this->assertSessionHas('success');
         $this->assertRedirectedToRoute('preferences');
     }
+    public function tearDown()
+    {
+        Mockery::close();
+    }
 } 
