@@ -35,6 +35,9 @@ class MigrationController extends BaseController
             $migration->loadFile($file);
             if ($migration->validFile()) {
                 $migration->migrate();
+            } else {
+                echo 'Invalid file.';
+                exit();
             }
         }
     }

@@ -20,7 +20,7 @@
             @endif
 
         </td>
-        <td><a href="#">{{{$journal->description}}}</a></td>
+        <td><a href="{{route('transactions.show',$journal->id)}}">{{{$journal->description}}}</a></td>
         <td>{{$journal->date->format('jS M Y')}}</td>
         <td>
             @foreach($journal->transactions as $t)

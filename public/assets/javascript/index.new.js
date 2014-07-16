@@ -16,16 +16,37 @@ $(function () {
                 title: {
                     text: obj.data('title')
                 },
+                yAxis: {
+                    title: {
+                        text: 'Balance (€)'
+                    },
+                    formatter: function () {
+                        return '$' + Highcharts.numberFormat(this.y, 0);
+                    }
+                },
 
                 xAxis: {
-                    type: 'datetime'
+                    floor: 0,
+                    type: 'datetime',
+                    dateTimeLabelFormats: {
+                        month: '%e %b',
+                        year: '%b'
+                    },
+                    title: {
+                        text: 'Date'
+                    }
                 },
                 tooltip: {
-                    valuePrefix: '€ '
+                    valuePrefix: '€ ',
+                    formatter: function () {
+                        return '€ ' + Highcharts.numberFormat(this.y, 2);
+                    }
                 },
                 plotOptions: {
 
                     line: {
+                        negativeColor: '#FF0000',
+                        threshold: 0,
                         lineWidth: 1,
                         marker: {
                             radius: 2

@@ -16,6 +16,7 @@ class CreateTransactionJournalsTable extends Migration {
 		{
 			$table->increments('id');
 			$table->timestamps();
+            $table->integer('user_id')->unsigned();
             $table->integer('transaction_type_id')->unsigned();
             $table->integer('transaction_currency_id')->unsigned();
             $table->string('description',255)->nullable();
@@ -30,6 +31,11 @@ class CreateTransactionJournalsTable extends Migration {
             // connect transaction journals to transaction currencies
             $table->foreign('transaction_currency_id')
                 ->references('id')->on('transaction_currencies')
+                ->onDelete('cascade');
+
+            // connect users
+            $table->foreign('user_id')
+                ->references('id')->on('users')
                 ->onDelete('cascade');
 		});
 	}

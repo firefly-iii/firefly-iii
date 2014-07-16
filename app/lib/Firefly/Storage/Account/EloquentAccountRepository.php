@@ -13,7 +13,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
 
     public function get()
     {
-        return \Auth::user()->accounts()->with('accounttype')->get();
+        return \Auth::user()->accounts()->with('accounttype')->orderBy('name','ASC')->get();
     }
 
     public function getBeneficiaries()
@@ -23,7 +23,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         )
             ->where('account_types.description', 'Beneficiary account')->where('accounts.active', 1)
 
-            ->get(['accounts.*']);
+            ->orderBy('accounts.name','ASC')->get(['accounts.*']);
         return $list;
     }
 
@@ -34,7 +34,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
 
     public function getByIds($ids)
     {
-        return \Auth::user()->accounts()->with('accounttype')->whereIn('id', $ids)->get();
+        return \Auth::user()->accounts()->with('accounttype')->whereIn('id', $ids)->orderBy('name','ASC')->get();
     }
 
     public function getDefault()
@@ -42,7 +42,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         return \Auth::user()->accounts()->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
             ->where('account_types.description', 'Default account')
 
-            ->get(['accounts.*']);
+            ->orderBy('accounts.name','ASC')->get(['accounts.*']);
     }
 
     public function getActiveDefault()
@@ -60,7 +60,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         )
             ->where('account_types.description', 'Default account')->where('accounts.active', 1)
 
-            ->get(['accounts.*']);
+            ->orderBy('accounts.name','ASC')->get(['accounts.*']);
         $return = [];
         foreach ($list as $entry) {
             $return[intval($entry->id)] = $entry->name;
