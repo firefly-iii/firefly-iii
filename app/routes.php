@@ -32,9 +32,13 @@ Route::group(['before' => 'auth'], function () {
 
 
         // transaction controller:
-        Route::get('/transactions/add/withdrawal', ['uses' => 'TransactionController@createWithdrawal', 'as' => 'transactions.withdrawal']);
-        Route::get('/transactions/add/deposit', ['uses' => 'TransactionController@createDeposit', 'as' => 'transactions.deposit']);
-        Route::get('/transactions/add/transfer', ['uses' => 'TransactionController@createTransfer', 'as' => 'transactions.transfer']);
+          Route::get('/transactions/create/{what}', ['uses' => 'TransactionController@create', 'as' => 'transactions.create'])
+            ->where(['what' => 'withdrawal|deposit|transfer']);
+
+
+        Route::get('/transaction/show/{id}',['uses' => 'TransactionController@show','as' => 'transactions.show']);
+        Route::get('/transaction/edit/{id}',['uses' => 'TransactionController@edit','as' => 'transactions.edit']);
+        Route::get('/transaction/delete/{id}',['uses' => 'TransactionController@delete','as' => 'transactions.delete']);
         // migration controller
         Route::get('/migrate', ['uses' => 'MigrationController@index', 'as' => 'migrate']);
 
@@ -56,9 +60,9 @@ Route::group(['before' => 'csrf|auth'], function () {
         Route::get('/accounts/store', ['uses' => 'AccountController@store', 'as' => 'accounts.store']);
 
         // transaction controller:
-        Route::post('/transactions/add/withdrawal', ['uses' => 'TransactionController@postCreateWithdrawal']);
-        Route::post('/transactions/add/deposit', ['uses' => 'TransactionController@postCreateDeposit']);
-        Route::post('/transactions/add/transfer', ['uses' => 'TransactionController@postCreateTransfer']);
+        Route::post('/transactions/store/{what}', ['uses' => 'TransactionController@store', 'as' => 'transactions.store'])
+            ->where(['what' => 'withdrawal|deposit|transfer']);
+        Route::post('/transaction/update/{id}',['uses' => 'TransactionController@update','as' => 'transactions.update']);
 
     }
 );

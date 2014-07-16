@@ -12,9 +12,10 @@ class DefaultUserSeeder extends Seeder
                 'password'       => Hash::make('sander'),
                 'reset'          => null,
                 'remember_token' => null,
-                'migrated'       => false
+                'migrated'       => 0
             ]
         );
+
     }
 
 } 

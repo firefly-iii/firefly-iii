@@ -18,10 +18,9 @@
                         <button name="range" value="3M" class="btn btn-default @if($r=='3M') btn-info @endif btn-sm" type="submit">3M</button>
                         <button name="range" value="6M" class="btn btn-default @if($r=='6M') btn-info @endif btn-sm" type="submit">6M</button>
                     </span>
-                    <input value="{{Session::get('start')->format('Y-m-d')}}" name="start" type="date" style="width:15%;" class="form-control input-sm">
-                    <input value="{{Session::get('end')->format('Y-m-d')}}" name="end" type="date" style="width:15%;" class="form-control input-sm">
+                    <input value="{{Session::get('start')->format('Y-m-d')}}" name="start" type="date" style="width:15%;border-right:0;" class="form-control input-sm">
+                    <input value="{{Session::get('end')->format('Y-m-d')}}" name="end" type="date" style="width:15%;border-right:0;" class="form-control input-sm">
                     <button class="btn btn-default btn-sm @if($r=='custom') btn-info @endif"  type="submit" name="range" value="custom">Custom</button>
-
                 </div>
         </form>
 

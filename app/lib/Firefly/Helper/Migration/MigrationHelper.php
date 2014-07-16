@@ -74,7 +74,8 @@ class MigrationHelper implements MigrationHelperInterface
         $cashAT = \AccountType::where('description', 'Cash account')->first();
         /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accounts */
         $accounts = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
-        $cash = $accounts->store(['name' => 'Cash account', 'account_type' => $cashAT, 'active' => false]);
+        $cash = $accounts->store(['name' => 'Cash account', 'account_type' => $cashAT, 'active' => 0]);
+        \Log::info('Created cash account (#'.$cash->id.')');
         $this->map['cash'] = $cash;
     }
 

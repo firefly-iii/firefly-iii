@@ -34,26 +34,7 @@ class TransactionController extends BaseController
         View::share('menu', 'home');
     }
 
-    /**
-     * @return $this|\Illuminate\View\View
-     */
-    public function createWithdrawal()
-    {
-
-        // get accounts with names and id's.
-        $accounts = $this->_accounts->getActiveDefaultAsSelectList();
-
-        $budgets = $this->_budgets->getAsSelectList();
-
-        $budgets[0] = '(no budget)';
-
-        return View::make('transactions.withdrawal')->with('accounts', $accounts)->with('budgets', $budgets);
-    }
-
-    /**
-     * @return $this|\Illuminate\View\View
-     */
-    public function createDeposit()
+    public function create($what)
     {
         // get accounts with names and id's.
         $accounts = $this->_accounts->getActiveDefaultAsSelectList();
@@ -62,38 +43,39 @@ class TransactionController extends BaseController
 
         $budgets[0] = '(no budget)';
 
-        return View::make('transactions.deposit')->with('accounts', $accounts)->with('budgets', $budgets);
-
+        return View::make('transactions.create')->with('accounts', $accounts)->with('budgets', $budgets)->with(
+            'what', $what
+        );
     }
 
-    /**
-     * @return $this|\Illuminate\View\View
-     */
-    public function createTransfer()
+    public function store($what)
     {
-        // get accounts with names and id's.
-        $accounts = $this->_accounts->getActiveDefaultAsSelectList();
+        // $fromAccount and $toAccount are found
+        // depending on the $what
 
-        $budgets = $this->_budgets->getAsSelectList();
+        $fromAccount = null;
+        $toAccount = null;
 
-        $budgets[0] = '(no budget)';
-
-        return View::make('transactions.transfer')->with('accounts', $accounts)->with('budgets', $budgets);
-
-    }
-
-    /**
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postCreateWithdrawal()
-    {
-
-        // create or find beneficiary:
-        $beneficiary = $this->_accounts->createOrFindBeneficiary(Input::get('beneficiary'));
-
-        // fall back to cash account if empty:
-        if (is_null($beneficiary)) {
-            $beneficiary = $this->_accounts->getCashAccount();
+        switch ($what) {
+            case 'withdrawal':
+                $fromAccount = $this->_accounts->find(intval(Input::get('account_id')));
+                $toAccount = $this->_accounts->createOrFindBeneficiary(Input::get('beneficiary'));
+                break;
+            case 'deposit':
+                $fromAccount = $this->_accounts->createOrFindBeneficiary(Input::get('beneficiary'));
+                $toAccount = $this->_accounts->find(intval(Input::get('account_id')));
+                break;
+            case 'transfer':
+                $fromAccount = $this->_accounts->find(intval(Input::get('account_from_id')));
+                $toAccount = $this->_accounts->find(intval(Input::get('account_to_id')));
+                break;
+        }
+        // fall back to cash if necessary:
+        if (is_null($fromAccount)) {
+            $fromAccount = $this->_accounts->getCashAccount();
+        }
+        if (is_null($toAccount)) {
+            $toAccount = $this->_accounts->getCashAccount();
         }
 
         // create or find category:
@@ -101,9 +83,6 @@ class TransactionController extends BaseController
 
         // find budget:
         $budget = $this->_budgets->find(intval(Input::get('budget_id')));
-
-        // find account:
-        $account = $this->_accounts->find(intval(Input::get('account_id')));
 
         // find amount & description:
         $description = trim(Input::get('description'));
@@ -113,9 +92,9 @@ class TransactionController extends BaseController
         // create journal
         /** @var \TransactionJournal $journal */
         try {
-            $journal = $this->_journal->createSimpleJournal($account, $beneficiary, $description, $amount, $date);
+            $journal = $this->_journal->createSimpleJournal($fromAccount, $toAccount, $description, $amount, $date);
         } catch (\Firefly\Exception\FireflyException $e) {
-            return Redirect::route('transactions.withdrawal')->withInput();
+            return Redirect::route('transactions.create', $what)->withInput();
         }
 
         // attach bud/cat (?)
@@ -128,80 +107,27 @@ class TransactionController extends BaseController
 
         Session::flash('success', 'Transaction saved');
         return Redirect::route('index');
+
+
     }
 
-    /**
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postCreateDeposit()
+    public function show($journalId)
     {
-        // create or find beneficiary:
-        $beneficiary = $this->_accounts->createOrFindBeneficiary(Input::get('beneficiary'));
-
-        // fall back to cash account if empty:
-        if (is_null($beneficiary)) {
-            $beneficiary = $this->_accounts->getCashAccount();
+        $journal = $this->_journal->find($journalId);
+        if ($journal) {
+            return View::make('transactions.show')->with('journal', $journal);
         }
-
-        // create or find category:
-        $category = $this->_categories->createOrFind(Input::get('category'));
-
-        // find account:
-        $account = $this->_accounts->find(intval(Input::get('account_id')));
-
-        // find amount & description:
-        $description = trim(Input::get('description'));
-        $amount = floatval(Input::get('amount'));
-        $date = new \Carbon\Carbon(Input::get('date'));
-
-        // create journal
-        /** @var \TransactionJournal $journal */
-        try {
-            $journal = $this->_journal->createSimpleJournal($beneficiary, $account, $description, $amount, $date);
-        } catch (\Firefly\Exception\FireflyException $e) {
-            return Redirect::route('transactions.deposit')->withInput();
-        }
-
-        if (!is_null($category)) {
-            $journal->categories()->save($category);
-        }
-
-        Session::flash('success', 'Transaction saved');
-        return Redirect::route('index');
+        return View::make('error')->with('message', 'Invalid journal');
     }
 
-    /**
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postCreateTransfer()
+    public function edit($journalId)
     {
-        // create or find category:
-        $category = $this->_categories->createOrFind(Input::get('category'));
-
-        // find account to:
-        $toAccount = $this->_accounts->find(intval(Input::get('account_to_id')));
-
-        // find account from
-        $from = $this->_accounts->find(intval(Input::get('account_from_id')));
-
-        // find amount & description:
-        $description = trim(Input::get('description'));
-        $amount = floatval(Input::get('amount'));
-        $date = new \Carbon\Carbon(Input::get('date'));
-
-        // create journal
-        /** @var \TransactionJournal $journal */
-        try {
-            $journal = $this->_journal->createSimpleJournal($from, $toAccount, $description, $amount, $date);
-        } catch (\Firefly\Exception\FireflyException $e) {
-            return Redirect::route('transactions.transfer')->withInput();
+        $journal = $this->_journal->find($journalId);
+        if ($journal) {
+            $accounts = $this->_accounts->getActiveDefaultAsSelectList();
+            return View::make('transactions.edit')->with('journal', $journal)->with('accounts', $accounts);
         }
-        if (!is_null($category)) {
-            $journal->categories()->save($category);
-        }
-
-        Session::flash('success', 'Transaction saved');
-        return Redirect::route('index');
+        return View::make('error')->with('message', 'Invalid journal');
     }
 
 } 

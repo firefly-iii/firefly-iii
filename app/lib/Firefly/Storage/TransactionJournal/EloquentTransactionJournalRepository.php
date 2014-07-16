@@ -9,32 +9,52 @@ use Firefly\Exception\FireflyException;
 class EloquentTransactionJournalRepository implements TransactionJournalRepositoryInterface
 {
 
+    public function find($journalId)
+    {
+        return \Auth::user()->transactionjournals()->with(
+            ['transactions', 'transactioncurrency', 'transactiontype', 'components', 'transactions.account',
+             'transactions.account.accounttype']
+        )
+            ->where('id', $journalId)->first();
+    }
+    /*
+
+             *
+             */
+
+    /**
+     *
+     * We're building this thinking the money goes from A to B.
+     * If the amount is negative however, the money still goes
+     * from A to B but the balances are reversed.
+     *
+     * Aka:
+     *
+     * Amount = 200
+     * A loses 200 (-200).  * -1
+     * B gains 200 (200).    * 1
+     *
+     * Final balance: -200 for A, 200 for B.
+     *
+     * When the amount is negative:
+     *
+     * Amount = -200
+     * A gains 200 (200). * -1
+     * B loses 200 (-200). * 1
+     *
+     * @param \Account       $from
+     * @param \Account       $to
+     * @param                $description
+     * @param                $amount
+     * @param \Carbon\Carbon $date
+     *
+     * @return \TransactionJournal
+     * @throws \Firefly\Exception\FireflyException
+     */
     public function createSimpleJournal(\Account $from, \Account $to, $description, $amount, \Carbon\Carbon $date)
     {
-
         \Log::debug('Creating tranaction "' . $description . '".');
-        /*
-         * We're building this thinking the money goes from A to B.
-         * If the amount is negative however, the money still goes
-         * from A to B but the balances are reversed.
-         *
-         * Aka:
-         *
-         * Amount = 200
-         * A loses 200 (-200).  * -1
-         * B gains 200 (200).    * 1
-         *
-         * Final balance: -200 for A, 200 for B.
-         *
-         * When the amount is negative:
-         *
-         * Amount = -200
-         * A gains 200 (200). * -1
-         * B loses 200 (-200). * 1
-         *
-         */
 
-        // amounts:
         $amountFrom = $amount * -1;
         $amountTo = $amount;
 
@@ -61,10 +81,8 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
                 $journalType = \TransactionType::where('type', 'Opening balance')->first();
                 break;
 
-            // both are yours:
-            case ($fromAT == 'Default account' && $toAT == 'Default account'):
-                // determin transaction type. If both accounts are new, it's an initial
-                // balance transfer.
+            case ($fromAT == 'Default account' && $toAT == 'Default account'): // both are yours:
+                // determin transaction type. If both accounts are new, it's an initial balance transfer.
                 $journalType = \TransactionType::where('type', 'Transfer')->first();
                 break;
             case ($amount < 0):
@@ -102,6 +120,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         $journal = new \TransactionJournal();
         $journal->transactionType()->associate($journalType);
         $journal->transactionCurrency()->associate($currency);
+        $journal->user()->associate(\Auth::user());
         $journal->completed = false;
         $journal->description = $description;
         $journal->date = $date;
@@ -184,7 +203,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
             // has to be one:
             if (!isset($journal->transactions[0])) {
                 throw new FireflyException('Journal #' . $journal->id . ' has ' . count($journal->transactions)
-                . ' transactions!');
+                    . ' transactions!');
             }
             $transaction = $journal->transactions[0];
             $amount = floatval($transaction->amount);
@@ -201,6 +220,10 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
 
         }
         unset($journal, $transaction, $budget, $name, $amount);
+
+        // sort
+        arsort($result);
+
         return $result;
     }
 
@@ -233,6 +256,8 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
             )
             ->after($start)->before($end)
             ->whereIn('transaction_type_id', $types)
+            ->orderBy('date', 'DESC')
+            ->orderBy('id', 'DESC')
             ->get(['transaction_journals.*']);
         foreach ($journals as $journal) {
             foreach ($journal->transactions as $t) {
@@ -244,6 +269,10 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
                 }
             }
         }
+        // sort result:
+        arsort($result);
+
+
         return $result;
     }
 

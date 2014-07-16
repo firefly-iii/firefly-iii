@@ -9,6 +9,8 @@ interface TransactionJournalRepositoryInterface
 
     public function get();
 
+    public function find($journalId);
+
     public function getByAccount(\Account $account, $count = 25);
 
     public function homeBudgetChart(\Carbon\Carbon $start, \Carbon\Carbon $end);

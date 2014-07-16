@@ -28,7 +28,10 @@ class TransactionControllerTest extends TestCase
 
         $set = [0 => '(no budget)'];
         View::shouldReceive('share');
-        View::shouldReceive('make')->with('transactions.withdrawal')->andReturn(\Mockery::self())
+        View::shouldReceive('make')->with('transactions.create')->andReturn(\Mockery::self())
+            ->shouldReceive('with')->once()
+            ->with('what','withdrawal')
+            ->andReturn(Mockery::self())
             ->shouldReceive('with')->once()
             ->with('accounts', [])
             ->andReturn(Mockery::self())
@@ -45,7 +48,7 @@ class TransactionControllerTest extends TestCase
 
 
         // call
-        $this->call('GET', '/transactions/add/withdrawal');
+        $this->call('GET', '/transactions/create/withdrawal');
 
         // test
         $this->assertResponseOk();
@@ -56,7 +59,11 @@ class TransactionControllerTest extends TestCase
 
         $set = [0 => '(no budget)'];
         View::shouldReceive('share');
-        View::shouldReceive('make')->with('transactions.deposit')->andReturn(\Mockery::self())
+        View::shouldReceive('make')->with('transactions.create')->andReturn(\Mockery::self())
+            ->shouldReceive('with')->once()
+            ->with('what','deposit')
+            ->andReturn(Mockery::self())
+
             ->shouldReceive('with')->once()
             ->with('accounts', [])
             ->andReturn(Mockery::self())
@@ -73,7 +80,7 @@ class TransactionControllerTest extends TestCase
 
 
         // call
-        $this->call('GET', '/transactions/add/deposit');
+        $this->call('GET', '/transactions/create/deposit');
 
         // test
         $this->assertResponseOk();
@@ -84,7 +91,10 @@ class TransactionControllerTest extends TestCase
 
         $set = [0 => '(no budget)'];
         View::shouldReceive('share');
-        View::shouldReceive('make')->with('transactions.transfer')->andReturn(\Mockery::self())
+        View::shouldReceive('make')->with('transactions.create')->andReturn(\Mockery::self())
+            ->shouldReceive('with')->once()
+            ->with('what', 'transfer')
+            ->andReturn(Mockery::self())
             ->shouldReceive('with')->once()
             ->with('accounts', [])
             ->andReturn(Mockery::self())
@@ -101,7 +111,7 @@ class TransactionControllerTest extends TestCase
 
 
         // call
-        $this->call('GET', '/transactions/add/transfer');
+        $this->call('GET', '/transactions/create/transfer');
 
         // test
         $this->assertResponseOk();
@@ -148,7 +158,7 @@ class TransactionControllerTest extends TestCase
         $tj->shouldReceive('createSimpleJournal')->once()->andReturn($journal);
 
         // call
-        $this->call('POST', '/transactions/add/withdrawal', $data);
+        $this->call('POST', '/transactions/store/withdrawal', $data);
 
         // test
         $this->assertRedirectedToRoute('index');
@@ -186,8 +196,13 @@ class TransactionControllerTest extends TestCase
         $tj = $this->mock('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
         $tj->shouldReceive('createSimpleJournal')->once()->andReturn($journal);
 
+        // mock budget repository
+        $budgets = $this->mock('Firefly\Storage\Budget\BudgetRepositoryInterface');
+        $budgets->shouldReceive('createOrFind')->with('')->andReturn(null);
+        $budgets->shouldReceive('find')->andReturn(null);
+
         // call
-        $this->call('POST', '/transactions/add/deposit', $data);
+        $this->call('POST', '/transactions/store/deposit', $data);
 
         // test
         $this->assertRedirectedToRoute('index');
@@ -225,8 +240,13 @@ class TransactionControllerTest extends TestCase
         $tj = $this->mock('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
         $tj->shouldReceive('createSimpleJournal')->once()->andReturn($journal);
 
+        // mock budget repository
+        $budgets = $this->mock('Firefly\Storage\Budget\BudgetRepositoryInterface');
+        $budgets->shouldReceive('createOrFind')->with('')->andReturn(null);
+        $budgets->shouldReceive('find')->andReturn(null);
+
         // call
-        $this->call('POST', '/transactions/add/transfer', $data);
+        $this->call('POST', '/transactions/store/transfer', $data);
 
         // test
         $this->assertRedirectedToRoute('index');
@@ -273,7 +293,7 @@ class TransactionControllerTest extends TestCase
         $tj->shouldReceive('createSimpleJournal')->once()->andReturn($journal);
 
         // call
-        $this->call('POST', '/transactions/add/withdrawal', $data);
+        $this->call('POST', '/transactions/store/withdrawal', $data);
 
         // test
         $this->assertRedirectedToRoute('index');
@@ -320,7 +340,7 @@ class TransactionControllerTest extends TestCase
         $tj->shouldReceive('createSimpleJournal')->once()->andReturn($journal);
 
         // call
-        $this->call('POST', '/transactions/add/deposit', $data);
+        $this->call('POST', '/transactions/store/deposit', $data);
 
         // test
         $this->assertRedirectedToRoute('index');
@@ -370,10 +390,10 @@ class TransactionControllerTest extends TestCase
         $tj->shouldReceive('createSimpleJournal')->andThrow('Firefly\Exception\FireflyException');
 
         // call
-        $this->call('POST', '/transactions/add/withdrawal', $data);
+        $this->call('POST', '/transactions/store/withdrawal', $data);
 
         // test
-        $this->assertRedirectedToRoute('transactions.withdrawal');
+        $this->assertRedirectedToRoute('transactions.create',['what' => 'withdrawal']);
     }
 
     /**
@@ -420,10 +440,10 @@ class TransactionControllerTest extends TestCase
         $tj->shouldReceive('createSimpleJournal')->andThrow('Firefly\Exception\FireflyException');
 
         // call
-        $this->call('POST', '/transactions/add/deposit', $data);
+        $this->call('POST', '/transactions/store/deposit', $data);
 
         // test
-        $this->assertRedirectedToRoute('transactions.deposit');
+        $this->assertRedirectedToRoute('transactions.create',['what' => 'deposit']);
     }
 
     /**
@@ -455,15 +475,20 @@ class TransactionControllerTest extends TestCase
         $categories = $this->mock('Firefly\Storage\Category\CategoryRepositoryInterface');
         $categories->shouldReceive('createOrFind')->with($category->name)->andReturn($category);
 
+        // mock budget repository
+        $budgets = $this->mock('Firefly\Storage\Budget\BudgetRepositoryInterface');
+        $budgets->shouldReceive('createOrFind')->with('')->andReturn(null);
+        $budgets->shouldReceive('find')->andReturn(null);
+
         // mock transaction journal:
         $tj = $this->mock('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
         $tj->shouldReceive('createSimpleJournal')->andThrow('Firefly\Exception\FireflyException');
 
         // call
-        $this->call('POST', '/transactions/add/transfer', $data);
+        $this->call('POST', '/transactions/store/transfer', $data);
 
         // test
-        $this->assertRedirectedToRoute('transactions.transfer');
+        $this->assertRedirectedToRoute('transactions.create',['what' => 'transfer']);
     }
 
     public function tearDown()
