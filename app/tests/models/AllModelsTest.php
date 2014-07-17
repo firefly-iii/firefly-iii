@@ -85,6 +85,7 @@ class AllModelsTest extends TestCase
         $t1 = FactoryMuffin::create('Transaction');
         $t2 = FactoryMuffin::create('Transaction');
         $t3 = FactoryMuffin::create('Transaction');
+        $user = FactoryMuffin::create('User');
 
         $tj->transactions()->save($t1);
         $tj->transactions()->save($t2);
@@ -95,10 +96,13 @@ class AllModelsTest extends TestCase
 
         $tj->components()->save($budget);
         $tj->components()->save($category);
+        $user->transactionjournals()->save($tj);
 
         $this->assertCount(2, $tj->components()->get());
         $this->assertCount(1, $tj->budgets()->get());
         $this->assertCount(1, $tj->categories()->get());
+        $this->assertCount(1, $user->transactionjournals()->get());
+
 
         $this->assertCount(3, $tj->transactions()->get());
 

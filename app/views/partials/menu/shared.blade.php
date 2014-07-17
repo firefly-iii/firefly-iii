@@ -11,7 +11,7 @@
     </li>
 </ul>
 
-
+@if(\Auth::user() && \Auth::check())
 <ul class="nav navbar-nav navbar-right">
     <li @if($r=='preferences')class="active"@endif><a href="{{route('preferences')}}"><span class="glyphicon glyphicon-cog"></span> Preferences</a></li>
     <li class="dropdown">
@@ -23,3 +23,4 @@
         </ul>
     </li>
 </ul>
+@endif
