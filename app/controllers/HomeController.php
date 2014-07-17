@@ -30,24 +30,10 @@ class HomeController extends BaseController
      */
     public function index()
     {
-        // get list setting:
-        $pref = $this->_preferences->get('frontpageAccounts', []);
-
         // get the accounts to display on the home screen:
         $count = $this->_accounts->count();
-        if ($pref->data == []) {
-            $list = $this->_accounts->getActiveDefault();
-        } else {
-            $list = $this->_accounts->getByIds($pref->data);
-        }
-
-        // get transactions for each account:
-        foreach ($list as $account) {
-            $account->transactionList = $this->_journal->getByAccount($account, 10);
-        }
-
 
         // build the home screen:
-        return View::make('index')->with('count', $count)->with('accounts', $list);
+        return View::make('index')->with('count', $count);
     }
 }

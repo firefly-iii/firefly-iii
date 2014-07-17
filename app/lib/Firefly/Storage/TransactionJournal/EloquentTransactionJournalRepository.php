@@ -167,14 +167,28 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
 
     }
 
-    public function homeBudgetChart(\Carbon\Carbon $start, \Carbon\Carbon $end)
+    public function getByAccount(\Account $account, $count = 25)
     {
-        return $this->homeComponentChart($start, $end, 'Budget');
+        $accountID = $account->id;
+        $query = \Auth::user()->transactionjournals()->with(
+            [
+                'transactions',
+                'transactioncurrency',
+                'transactiontype'
+            ]
+        )
+            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+            ->where('accounts.id', $accountID)
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.id', 'DESC')
+            ->take($count)
+            ->get(['transaction_journals.*']);
+        return $query;
     }
 
-    public function homeComponentChart(\Carbon\Carbon $start, \Carbon\Carbon $end, $chartType)
+    public function getByDateRange(\Carbon\Carbon $start, \Carbon\Carbon $end)
     {
-
         // lets make this simple.
         $types = [];
         foreach (\TransactionType::whereIn('type', ['Withdrawal'])->get() as $t) {
@@ -185,9 +199,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         // get all journals, partly filtered:
         $journals = \TransactionJournal::
             with(
-                ['components'         => function ($q) use ($chartType) {
-                        $q->where('class', $chartType);
-                    }, 'transactions' => function ($q) {
+                ['components', 'transactions' => function ($q) {
                         $q->where('amount', '>', 0);
                     }]
             )
@@ -196,104 +208,27 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
             ->whereIn('transaction_type_id', $types)
             ->get(['transaction_journals.*']);
         unset($types);
-        $result = [];
-
-
-        foreach ($journals as $journal) {
-            // has to be one:
-            if (!isset($journal->transactions[0])) {
-                throw new FireflyException('Journal #' . $journal->id . ' has ' . count($journal->transactions)
-                    . ' transactions!');
-            }
-            $transaction = $journal->transactions[0];
-            $amount = floatval($transaction->amount);
-
-
-            // MIGHT be one:
-            $budget = isset($journal->components[0]) ? $journal->components[0] : null;
-            if (!is_null($budget)) {
-                $name = $budget->name;
-            } else {
-                $name = '(no budget)';
-            }
-            $result[$name] = isset($result[$name]) ? $result[$name] + $amount : $amount;
-
-        }
-        unset($journal, $transaction, $budget, $name, $amount);
-
-        // sort
-        arsort($result);
-
-        return $result;
+        return $journals;
     }
 
-    public function homeCategoryChart(\Carbon\Carbon $start, \Carbon\Carbon $end)
-    {
-        return $this->homeComponentChart($start, $end, 'Category');
-    }
-
-    public function homeBeneficiaryChart(\Carbon\Carbon $start, \Carbon\Carbon $end)
-    {
-        $result = [];
-
-        // lets make this simple.
-        $types = [];
-        foreach (\TransactionType::whereIn('type', ['Withdrawal'])->get() as $t) {
-            $types[] = $t->id;
-        }
-        unset($t);
-
-        // account type we want to see:
-        $accountType = \AccountType::where('description', 'Beneficiary account')->first();
-        $accountTypeID = $accountType->id;
-
-        // get all journals, partly filtered:
-        $journals = \TransactionJournal::
-            with(
-                ['transactions', 'transactions.account' => function ($q) use ($accountTypeID) {
-                        $q->where('account_type_id', $accountTypeID);
-                    }]
-            )
-            ->after($start)->before($end)
-            ->whereIn('transaction_type_id', $types)
-            ->orderBy('date', 'DESC')
-            ->orderBy('id', 'DESC')
-            ->get(['transaction_journals.*']);
-        foreach ($journals as $journal) {
-            foreach ($journal->transactions as $t) {
-                if (!is_null($t->account)) {
-                    $name = $t->account->name;
-                    $amount = floatval($t->amount) < 0 ? floatval($t->amount) * -1 : floatval($t->amount);
-
-                    $result[$name] = isset($result[$name]) ? $result[$name] + $amount : $amount;
-                }
-            }
-        }
-        // sort result:
-        arsort($result);
-
-
-        return $result;
-    }
-
-    public function getByAccount(\Account $account, $count = 25)
+    public function getByAccountAndDate(\Account $account, \Carbon\Carbon $date)
     {
         $accountID = $account->id;
-        $query = \TransactionJournal::
-            with(
-                [
-                    'transactions',
-                    'transactioncurrency',
-                    'transactiontype'
-                ]
-            )
-            ->take($count)
+        $query = \Auth::user()->transactionjournals()->with(
+            [
+                'transactions',
+                'transactions.account',
+                'transactioncurrency',
+                'transactiontype'
+            ]
+        )
+            ->distinct()
             ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-            ->where('accounts.id', $accountID)
+            ->where('transactions.account_id', $accountID)
+            ->where('transaction_journals.date', $date->format('Y-m-d'))
             ->orderBy('transaction_journals.date', 'DESC')
             ->orderBy('transaction_journals.id', 'DESC')
-            ->take($count)
             ->get(['transaction_journals.*']);
         return $query;
     }

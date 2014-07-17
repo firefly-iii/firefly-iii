@@ -42,6 +42,10 @@ class Component extends Firefly\Database\SingleTableInheritanceEntity
         return $this->belongsToMany('Transaction');
     }
 
+    public function limits() {
+        return $this->belongsTo('Limit');
+    }
+
     public function transactionjournals()
     {
         return $this->belongsToMany('TransactionJournal');

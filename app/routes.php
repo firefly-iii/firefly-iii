@@ -7,9 +7,9 @@ Route::group(['before' => 'auth'], function () {
 
         // chart controller
         Route::get('/chart/home/account/{account?}', ['uses' => 'ChartController@homeAccount', 'as' => 'chart.home']);
-        Route::get('/chart/home/budgets', ['uses' => 'ChartController@homeBudgets', 'as' => 'chart.budgets']);
-        Route::get('/chart/home/beneficiaries', ['uses' => 'ChartController@homeBeneficiaries', 'as' => 'chart.beneficiaries']);
         Route::get('/chart/home/categories', ['uses' => 'ChartController@homeCategories', 'as' => 'chart.categories']);
+        Route::get('/chart/home/info/{account}/{day}/{month}/{year}', ['uses' => 'ChartController@homeAccountInfo', 'as' => 'chart.info']);
+
 
         // preferences controller
         Route::get('/preferences', ['uses' => 'PreferencesController@index', 'as' => 'preferences']);
@@ -25,6 +25,9 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/accounts', ['uses' => 'AccountController@index', 'as' => 'accounts.index']);
         Route::get('/accounts/create', ['uses' => 'AccountController@create', 'as' => 'accounts.create']);
         Route::get('/accounts/{account}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
+
+        // budget controller
+        Route::get('/bugets',['uses' => 'BudgetController@index','as' => 'budgets.index']);
 
         // JSON controller:
         Route::get('/json/beneficiaries', ['uses' => 'JsonController@beneficiaries', 'as' => 'json.beneficiaries']);

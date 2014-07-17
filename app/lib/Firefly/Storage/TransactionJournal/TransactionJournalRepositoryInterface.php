@@ -13,12 +13,8 @@ interface TransactionJournalRepositoryInterface
 
     public function getByAccount(\Account $account, $count = 25);
 
-    public function homeBudgetChart(\Carbon\Carbon $start, \Carbon\Carbon $end);
+    public function getByAccountAndDate(\Account $account, \Carbon\Carbon $date);
 
-    public function homeCategoryChart(\Carbon\Carbon $start, \Carbon\Carbon $end);
-
-    public function homeBeneficiaryChart(\Carbon\Carbon $start, \Carbon\Carbon $end);
-
-    public function homeComponentChart(\Carbon\Carbon $start, \Carbon\Carbon $end, $chartType);
+    public function getByDateRange(\Carbon\Carbon $start, \Carbon\Carbon $end);
 
 }
