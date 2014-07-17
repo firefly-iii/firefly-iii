@@ -97,6 +97,9 @@ class AllModelsTest extends TestCase
         $tj->components()->save($budget);
         $tj->components()->save($category);
         $user->transactionjournals()->save($tj);
+        $tj->user()->associate($user);
+
+        $this->assertEquals($tj->user_id, $user->id);
 
         $this->assertCount(2, $tj->components()->get());
         $this->assertCount(1, $tj->budgets()->get());
