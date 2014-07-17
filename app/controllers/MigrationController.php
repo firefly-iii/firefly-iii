@@ -40,6 +40,8 @@ class MigrationController extends BaseController
                 exit();
             }
         }
+        echo '<a href="'.route('index').'">home</a>';
+        exit();
     }
 
     /**

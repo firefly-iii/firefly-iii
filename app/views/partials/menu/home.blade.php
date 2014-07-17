@@ -21,8 +21,8 @@ $r = Route::current()->getName();
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Go to...<span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="{{route('accounts.index')}}">Accounts</a></li>
-                        <li><a href="#">Another action</a></li>
+                        <li><a href="{{route('accounts.index')}}"><span class="glyphicon glyphicon-inbox"></span> Accounts</a></li>
+                        <li><a href="{{route('budgets.index')}}"><span class="glyphicon glyphicon-euro"></span> Budgets</a></li>
                         <li><a href="#">Something else here</a></li>
                         <li class="divider"></li>
                         <li><a href="#">Separated link</a></li>

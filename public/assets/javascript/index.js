@@ -1,60 +1,149 @@
-google.load('visualization', '1.0', {'packages': ['corechart']});
-google.setOnLoadCallback(chartCallback);
-
-function chartCallback() {
-    drawAccountChart();
-    drawExtraCharts();
-}
-
-function drawAccountChart() {
+var accountChart;
+$(function () {
 
 
-    $.each($('.homeChart'), function (i, v) {
-        var obj = $(v);
-        var accountID = obj.data('id').toString();
-        var holderID = $(v).attr('id').toString();
-        console.log('AccountID: ' + accountID + ', ' + 'holderID ' + holderID);
-        var URL = 'chart/home/account/' + accountID;
-        console.log('URL: ' + URL);
-
-
-        var opt = {
-            curveType: 'function',
-            legend: {
-                position: 'none'
+    /**
+     * get data from controller for home charts:
+     */
+    $.getJSON('chart/home/account').success(function (data) {
+        var options = {
+            chart: {
+                renderTo: 'chart',
+                type: 'line'
             },
-            chartArea: {
-                left: 50,
-                top: 10,
-                width: '90%',
-                height: 180
+
+            series: data,
+            title: {
+                text: 'All accounts'
             },
-            height: 230,
-            lineWidth: 1
+            yAxis: {
+                formatter: function () {
+                    return '$' + Highcharts.numberFormat(this.y, 0);
+                }
+            },
+
+            xAxis: {
+                floor: 0,
+                type: 'datetime',
+                dateTimeLabelFormats: {
+                    day: '%e %b',
+                    year: '%b'
+                },
+                title: {
+                    text: 'Date'
+                }
+            },
+            tooltip: {
+                shared: true,
+                crosshairs: false,
+                formatter: function () {
+                    var str = '<span style="font-size:80%;">' + Highcharts.dateFormat("%A, %e %B", this.x) + '</span><br />';
+                    for (x in this.points) {
+                        var point = this.points[x];
+                        var colour = point.point.pointAttr[''].fill;
+                        str += '<span style="color:' + colour + '">' + point.series.name + '</span>: € ' + Highcharts.numberFormat(point.y, 2) + '<br />';
+                    }
+                    //console.log();
+                    return str;
+                    return '<span style="font-size:80%;">' + this.series.name + ' on ' + Highcharts.dateFormat("%e %B", this.x) + ':</span><br /> € ' + Highcharts.numberFormat(this.y, 2);
+                }
+            },
+            plotOptions: {
+                line: {
+                    shadow: true
+                },
+                series: {
+                    cursor: 'pointer',
+                    negativeColor: '#FF0000',
+                    threshold: 0,
+                    lineWidth: 1,
+                    marker: {
+                        radius: 2
+                    },
+                    point: {
+                        events: {
+                            click: function (e) {
+                                hs.htmlExpand(null, {
+                                        src: 'chart/home/info/' + this.series.name + '/' + Highcharts.dateFormat("%d/%m/%Y", this.x),
+                                        pageOrigin: {
+                                            x: e.pageX,
+                                            y: e.pageY
+                                        },
+                                        objectType: 'ajax',
+                                        headingText: this.series.name,
+                                        width: 250
+                                    }
+                                )
+                                ;
+                            }
+                        }
+                    }
+                }
+            },
+            credits: {
+                enabled: false
+            }
         };
-
-
-        // draw it!
-        drawChart('#' + holderID, URL, 'LineChart', opt);
+        $('#chart').highcharts(options);
     });
 
-    //var URL = 'chart/home';
-    //drawChart('#chart',URL,opt);
-}
+    /**
+     * Get chart data for categories chart:
+     */
+    $.getJSON('chart/home/categories').success(function (data) {
+        $('#categories').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Expenses for each categorie'
+            },
+            credits: {
+                enabled: false
+            },
+            xAxis: {
+                type: 'category',
+                labels: {
+                    rotation: -45,
+                    style: {
+                        fontSize: '12px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Expense (€)'
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                pointFormat: 'Total expense: <strong>€ {point.y:.2f}</strong>',
+            },
+            plotOptions: {
+                column: {
+                    cursor: 'pointer'
+                }
+            },
+            series: [
+                {
+                    name: 'Population',
+                    data: data,
 
-function drawExtraCharts() {
+                    events: {
+                        click: function (e) {
+                            alert('klik!');
+                        }
+                    },
+                    dataLabels: {
+                        enabled: false
+                    }
+                }
+            ]
+        });
+    });
 
-    var opt = {
-        legend: {
-            position: 'none'
-        },
-        chartArea: {
-            width: 300,
-            height: 300
-        },
-    };
-
-    drawChart('#budgetChart', 'chart/home/budgets', 'PieChart', opt);
-    drawChart('#categoryChart', 'chart/home/categories','PieChart', opt);
-    drawChart('#beneficiaryChart', 'chart/home/beneficiaries','PieChart', opt);
-}
+});
