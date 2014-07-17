@@ -491,6 +491,68 @@ class TransactionControllerTest extends TestCase
         $this->assertRedirectedToRoute('transactions.create',['what' => 'transfer']);
     }
 
+    public function testShow() {
+        $journal = FactoryMuffin::create('TransactionJournal');
+
+        // mock transaction journal:
+        $tj = $this->mock('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
+        $tj->shouldReceive('find')->with($journal->id)->andReturn($journal);
+
+
+
+        // call
+        $this->call('GET', '/transaction/show/' . $journal->id);
+
+        // test
+        $this->assertResponseOk();
+    }
+
+    public function testShowError() {
+
+        // mock transaction journal:
+        $tj = $this->mock('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
+        $tj->shouldReceive('find')->with(1)->andReturn(null);
+
+        // call
+        $this->call('GET', '/transaction/show/1');
+
+        // test
+        $this->assertResponseOk();
+        $this->assertViewHas('message');
+    }
+
+    public function testEdit() {
+        $journal = FactoryMuffin::create('TransactionJournal');
+
+        // mock transaction journal:
+        $tj = $this->mock('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
+        $tj->shouldReceive('find')->with($journal->id)->andReturn($journal);
+
+        // mock account repository
+        $accounts = $this->mock('Firefly\Storage\Account\AccountRepositoryInterface');
+        $accounts->shouldReceive('getActiveDefaultAsSelectList')->andReturn([]);
+
+
+
+        // call
+        $this->call('GET', '/transaction/edit/' . $journal->id);
+
+        // test
+        $this->assertResponseOk();
+    }
+
+    public function testEditError() {
+        // mock transaction journal:
+        $tj = $this->mock('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
+        $tj->shouldReceive('find')->with(1)->andReturn(null);
+
+        // call
+        $this->call('GET', '/transaction/edit/1');
+
+        // test
+        $this->assertResponseOk();
+    }
+
     public function tearDown()
     {
         Mockery::close();
