@@ -23,6 +23,9 @@ class HomeController extends BaseController
         $this->_preferences = $preferences;
         $this->_journal = $journal;
         View::share('menu', 'home');
+
+
+
     }
 
     /**
@@ -30,10 +33,28 @@ class HomeController extends BaseController
      */
     public function index()
     {
-        // get the accounts to display on the home screen:
+        // count, maybe we need some introductionary text to show:
         $count = $this->_accounts->count();
 
+
+        // get the preference for the home accounts to show:
+        $frontpage = $this->_preferences->get('frontpageAccounts', []);
+
+        $accounts = $this->_accounts->getByIds($frontpage->data);
+
+        $transactions = [];
+        foreach($accounts as $account) {
+            $transactions[] = [$this->_journal->getByAccount($account,15),$account];
+        }
+
+        if(count($transactions) % 2 == 0) {
+            $transactions = array_chunk($transactions, 2);
+        } elseif(count($transactions) == 1) {
+            $transactions = array_chunk($transactions, 3);
+        } else {
+            $transactions = array_chunk($transactions, 3);
+        }
         // build the home screen:
-        return View::make('index')->with('count', $count);
+        return View::make('index')->with('count', $count)->with('transactions',$transactions);
     }
 }

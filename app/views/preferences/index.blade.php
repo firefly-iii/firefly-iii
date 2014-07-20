@@ -5,7 +5,6 @@
         <h1>Firefly
             <small>Preferences</small>
         </h1>
-
     </div>
 </div>
 

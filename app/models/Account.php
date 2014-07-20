@@ -14,13 +14,13 @@ use LaravelBook\Ardent\Ardent as Ardent;
  * @property-read \AccountType $accountType
  * @property-read \User $user
  * @property-read \Illuminate\Database\Eloquent\Collection|\Transaction[] $transactions
- * @method static \Illuminate\Database\Query\Builder|\Account whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Account whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Account whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Account whereUserId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Account whereAccountTypeId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Account whereName($value) 
- * @method static \Illuminate\Database\Query\Builder|\Account whereActive($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Account whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Account whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Account whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Account whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Account whereAccountTypeId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Account whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\Account whereActive($value)
  */
 class Account extends Ardent
 {

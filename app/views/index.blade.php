@@ -7,6 +7,7 @@
             <small>What's playing?</small>
             @endif
         </h1>
+        @if($count > 0)
         <form role="form" class="form-horizontal">
                 <div class="input-group">
 
@@ -23,6 +24,7 @@
                     <button class="btn btn-default btn-sm @if($r=='custom') btn-info @endif"  type="submit" name="range" value="custom">Custom</button>
                 </div>
         </form>
+        @endif
 
     </div>
 </div>
@@ -60,11 +62,34 @@
         </div>
     </div>
 
+    <!-- TRANSACTIONS -->
+    @if(count($transactions) > 0)
+    @foreach($transactions as $set)
+    <div class="row">
+        <?php $split = 12 / count($set); ?>
+        @foreach($set as $data)
+        <div class="col-lg-{{$split}} col-md-{{$split}}">
+            <h4>{{{$data[1]->name}}}</h4>
+            @include('transactions.journals',['transactions' => $data[0],'account' => $data[1]])
+        </div>
+        @endforeach
+    </div>
+    @endforeach
+    @endif
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div id="categories"></div>
         </div>
     </div>
+
+
 
 @endif
 

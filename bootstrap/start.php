@@ -94,4 +94,8 @@ require $framework . '/Illuminate/Foundation/start.php';
 |
 */
 
+// do something with events:
+Event::subscribe('Firefly\Trigger\Limits\EloquentLimitTrigger');
+
+
 return $app;

@@ -7,6 +7,7 @@ App::before(
         if (Auth::check()) {
             \Firefly\Helper\Toolkit\Toolkit::getDateRange();
         }
+        Event::fire('app.before');
     }
 );
 
