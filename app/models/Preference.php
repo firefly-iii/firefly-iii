@@ -13,12 +13,12 @@ use LaravelBook\Ardent\Ardent;
  * @property string $name
  * @property string $data
  * @property-read \User $user
- * @method static \Illuminate\Database\Query\Builder|\Preference whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Preference whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Preference whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Preference whereUserId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Preference whereName($value) 
- * @method static \Illuminate\Database\Query\Builder|\Preference whereData($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Preference whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Preference whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Preference whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Preference whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Preference whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\Preference whereData($value)
  */
 class Preference extends Ardent
 {

@@ -23,14 +23,15 @@ use LaravelBook\Ardent\Ardent;
  * @property-read \Illuminate\Database\Eloquent\Collection|\Component[] $components
  * @property-read \Illuminate\Database\Eloquent\Collection|\Budget[] $budgets
  * @property-read \Illuminate\Database\Eloquent\Collection|\Category[] $categories
- * @method static \Illuminate\Database\Query\Builder|\User whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\User whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\User whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\User whereEmail($value) 
- * @method static \Illuminate\Database\Query\Builder|\User wherePassword($value) 
- * @method static \Illuminate\Database\Query\Builder|\User whereReset($value) 
- * @method static \Illuminate\Database\Query\Builder|\User whereRememberToken($value) 
- * @method static \Illuminate\Database\Query\Builder|\User whereMigrated($value) 
+ * @method static \Illuminate\Database\Query\Builder|\User whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\User whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\User whereEmail($value)
+ * @method static \Illuminate\Database\Query\Builder|\User wherePassword($value)
+ * @method static \Illuminate\Database\Query\Builder|\User whereReset($value)
+ * @method static \Illuminate\Database\Query\Builder|\User whereRememberToken($value)
+ * @method static \Illuminate\Database\Query\Builder|\User whereMigrated($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\TransactionJournal[] $transactionjournals
  */
 class User extends Ardent implements UserInterface, RemindableInterface
 {

@@ -5,7 +5,7 @@
         <th>Date</th>
         <th>Amount</th>
     </tr>
-@foreach($account->transactionList as $journal)
+@foreach($transactions as $journal)
     <tr>
 
         <td>

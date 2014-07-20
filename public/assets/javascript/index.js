@@ -70,7 +70,7 @@ $(function () {
                                             y: e.pageY
                                         },
                                         objectType: 'ajax',
-                                        headingText: this.series.name,
+                                        headingText: '<a href="#">' + this.series.name + '</a>',
                                         width: 250
                                     }
                                 )
@@ -145,5 +145,9 @@ $(function () {
             ]
         });
     });
+
+    /**
+     * Get chart data for budget charts.
+     */
 
 });

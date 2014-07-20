@@ -3,6 +3,8 @@
 namespace Firefly\Helper\Migration;
 
 
+use Firefly\Helper\MigrationException;
+
 class MigrationHelper implements MigrationHelperInterface
 {
     protected $path;
@@ -56,6 +58,9 @@ class MigrationHelper implements MigrationHelperInterface
             // create transfers:
             $this->_importTransfers();
 
+            // create limits:
+            $this->_importLimits();
+
 
         } catch (\Firefly\Exception\FireflyException $e) {
             \DB::rollBack();
@@ -75,7 +80,7 @@ class MigrationHelper implements MigrationHelperInterface
         /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accounts */
         $accounts = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
         $cash = $accounts->store(['name' => 'Cash account', 'account_type' => $cashAT, 'active' => 0]);
-        \Log::info('Created cash account (#'.$cash->id.')');
+        \Log::info('Created cash account (#' . $cash->id . ')');
         $this->map['cash'] = $cash;
     }
 
@@ -147,6 +152,39 @@ class MigrationHelper implements MigrationHelperInterface
         /** @var \Firefly\Storage\Component\ComponentRepositoryInterface $components */
         $components = \App::make('Firefly\Storage\Component\ComponentRepositoryInterface');
         return $components->store(['name' => $component->name, 'class' => 'Budget']);
+    }
+
+    protected function _importLimits()
+    {
+        \Log::info('Importing limits');
+        foreach ($this->JSON->limits as $entry) {
+            \Log::debug(
+                'Now at #' . $entry->id . ': EUR ' . $entry->amount . ' for month ' . $entry->date
+                . ' and componentID: ' . $entry->component_id
+            );
+            $budget = isset($this->map['budgets'][$entry->component_id]) ? $this->map['budgets'][$entry->component_id]
+                : null;
+            if (!is_null($budget)) {
+                \Log::debug('Found budget for this limit: #' . $budget->id . ', ' . $budget->name);
+
+                $limit = new \Limit;
+                $limit->budget()->associate($budget);
+                $limit->startdate = new \Carbon\Carbon($entry->date);
+                $limit->amount = floatval($entry->amount);
+                $limit->repeats = 0;
+                $limit->repeat_freq = 'monthly';
+                if (!$limit->save()) {
+                    \Log::error('MigrationException!');
+                    throw new MigrationException('Importing limits failed: ' . $limit->errors()->first());
+                }
+            } else {
+                \Log::warning('No budget for this limit!');
+            }
+
+
+            // create repeat thing should not be necessary.
+
+        }
     }
 
     protected function _importTransactions()

@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLimitsTable extends Migration {
+class CreateLimitRepeatTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,19 +12,20 @@ class CreateLimitsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('limits', function(Blueprint $table)
+		Schema::create('limit_repetitions', function(Blueprint $table)
 		{
 			$table->increments('id');
 			$table->timestamps();
-            $table->integer('component_id')->unsigned();
+            $table->integer('limit_id')->unsigned();
             $table->date('startdate');
+            $table->date('enddate');
             $table->decimal('amount',10,2);
-            $table->boolean('repeats');
-            $table->enum('repeat_freq', ['daily', 'weekly','monthly','quarterly','half-year','yearly']);
 
-            // connect component
-            $table->foreign('component_id')
-                ->references('id')->on('components')
+            $table->unique(['limit_id','startdate','enddate']);
+
+            // connect limit
+            $table->foreign('limit_id')
+                ->references('id')->on('limits')
                 ->onDelete('cascade');
 		});
 	}
@@ -36,7 +37,7 @@ class CreateLimitsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('limits');
+		Schema::drop('limit_repetitions');
 	}
 
 }

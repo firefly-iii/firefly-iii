@@ -35,6 +35,11 @@ class StorageServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            'Firefly\Storage\Limit\LimitRepositoryInterface',
+            'Firefly\Storage\Limit\EloquentLimitRepository'
+        );
+
+        $this->app->bind(
             'Firefly\Storage\Budget\BudgetRepositoryInterface',
             'Firefly\Storage\Budget\EloquentBudgetRepository'
         );

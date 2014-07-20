@@ -26,8 +26,13 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/accounts/create', ['uses' => 'AccountController@create', 'as' => 'accounts.create']);
         Route::get('/accounts/{account}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
 
-        // budget controller
-        Route::get('/bugets',['uses' => 'BudgetController@index','as' => 'budgets.index']);
+        // budget controller:
+        Route::get('/budgets',['uses' => 'BudgetController@index','as' => 'budgets.index']);
+        Route::get('/budget/create',['uses' => 'BudgetController@create', 'as' => 'budgets.create']);
+        Route::get('/budget/show/{id}',['uses' => 'BudgetController@show', 'as' => 'budgets.show']);
+
+        // limit controller:
+        Route::get('/budgets/limits/create/{id?}',['uses' => 'LimitController@create','as' => 'budgets.limits.create']);
 
         // JSON controller:
         Route::get('/json/beneficiaries', ['uses' => 'JsonController@beneficiaries', 'as' => 'json.beneficiaries']);
@@ -53,6 +58,9 @@ Route::group(['before' => 'csrf|auth'], function () {
         // profile controller
         Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword']);
 
+        // budget controller:
+        Route::post('/budget/store',['uses' => 'BudgetController@store', 'as' => 'budgets.store']);
+
         // migration controller
         Route::post('/migrate', ['uses' => 'MigrationController@postIndex']);
 
@@ -61,6 +69,9 @@ Route::group(['before' => 'csrf|auth'], function () {
 
         // account controller:
         Route::get('/accounts/store', ['uses' => 'AccountController@store', 'as' => 'accounts.store']);
+
+        // limit controller:
+        Route::post('/limits/store', ['uses' => 'LimitController@store', 'as' => 'limits.store']);
 
         // transaction controller:
         Route::post('/transactions/store/{what}', ['uses' => 'TransactionController@store', 'as' => 'transactions.store'])
@@ -81,6 +92,7 @@ Route::group(['before' => 'guest'], function () {
 
         // dev import route:
         Route::get('/dev',['uses' => 'MigrationController@dev']);
+        Route::get('/limit',['uses' => 'MigrationController@limit']);
     }
 );
 

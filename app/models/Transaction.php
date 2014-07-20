@@ -18,13 +18,13 @@ use LaravelBook\Ardent\Ardent;
  * @property-read \Illuminate\Database\Eloquent\Collection|\Component[] $components
  * @property-read \Illuminate\Database\Eloquent\Collection|\Budget[] $budgets
  * @property-read \Illuminate\Database\Eloquent\Collection|\Category[] $categories
- * @method static \Illuminate\Database\Query\Builder|\Transaction whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Transaction whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Transaction whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Transaction whereAccountId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Transaction whereTransactionJournalId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Transaction whereDescription($value) 
- * @method static \Illuminate\Database\Query\Builder|\Transaction whereAmount($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Transaction whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Transaction whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Transaction whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Transaction whereAccountId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Transaction whereTransactionJournalId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Transaction whereDescription($value)
+ * @method static \Illuminate\Database\Query\Builder|\Transaction whereAmount($value)
  */
 class Transaction extends Ardent
 {
