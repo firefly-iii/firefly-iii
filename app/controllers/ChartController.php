@@ -132,12 +132,13 @@ class ChartController extends BaseController
         return View::make('charts.info')->with('rows', $result)->with('sum', $sum);
     }
 
-    public function homeCategories() {
+    public function homeCategories()
+    {
         list($start, $end) = tk::getDateRange();
         $account = null;
         $result = [];
         // grab all transaction journals in this period:
-        $journals = $this->_journals->getByDateRange($start,$end);
+        $journals = $this->_journals->getByDateRange($start, $end);
 
         $result = [];
         foreach ($journals as $journal) {
@@ -163,10 +164,9 @@ class ChartController extends BaseController
         arsort($result);
         $chartData = [
         ];
-        foreach($result as $name => $value) {
+        foreach ($result as $name => $value) {
             $chartData[] = [$name, $value];
         }
-
 
 
         return Response::json($chartData);
