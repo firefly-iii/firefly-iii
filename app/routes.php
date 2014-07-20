@@ -27,12 +27,13 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/accounts/{account}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
 
         // budget controller:
-        Route::get('/budgets',['uses' => 'BudgetController@index','as' => 'budgets.index']);
+        Route::get('/budgets/{group?}',['uses' => 'BudgetController@index','as' => 'budgets.index']);
         Route::get('/budget/create',['uses' => 'BudgetController@create', 'as' => 'budgets.create']);
         Route::get('/budget/show/{id}',['uses' => 'BudgetController@show', 'as' => 'budgets.show']);
 
         // limit controller:
         Route::get('/budgets/limits/create/{id?}',['uses' => 'LimitController@create','as' => 'budgets.limits.create']);
+        Route::get('/budgets/limits/delete/{id?}',['uses' => 'LimitController@delete','as' => 'budgets.limits.delete']);
 
         // JSON controller:
         Route::get('/json/beneficiaries', ['uses' => 'JsonController@beneficiaries', 'as' => 'json.beneficiaries']);
@@ -71,7 +72,7 @@ Route::group(['before' => 'csrf|auth'], function () {
         Route::get('/accounts/store', ['uses' => 'AccountController@store', 'as' => 'accounts.store']);
 
         // limit controller:
-        Route::post('/limits/store', ['uses' => 'LimitController@store', 'as' => 'limits.store']);
+        Route::post('/limits/store', ['uses' => 'LimitController@store', 'as' => 'budgets.limits.store']);
 
         // transaction controller:
         Route::post('/transactions/store/{what}', ['uses' => 'TransactionController@store', 'as' => 'transactions.store'])

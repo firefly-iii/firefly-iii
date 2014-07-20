@@ -13,13 +13,54 @@ class BudgetController extends BaseController
         View::share('menu', 'budgets');
     }
 
-    public function index()
+    public function index($group = null)
     {
-        $budgets = $this->_budgets->get();
-        $today = new \Carbon\Carbon;
+
+        $opts = ['date', 'budget'];
+        $group = in_array($group, $opts) ? $group : 'date';
+
+        switch ($group) {
+            case 'date':
+                // get a list of dates by getting all repetitions:
+                $budgets = $this->_budgets->get();
+                $reps = [];
+                foreach ($budgets as $budget) {
+                    foreach ($budget->limits as $limit) {
+                        foreach ($limit->limitrepetitions as $rep) {
+
+                            $monthOrder = $rep->startdate->format('Y-m');
+                            $month = $rep->startdate->format('F Y');
+                            $reps[$monthOrder] = isset($reps[$monthOrder]) ? $reps[$monthOrder] : ['date' => $month];
+
+                        }
+                    }
+                }
+                // put all the budgets under their respective date:
+                foreach ($budgets as $budget) {
+                    foreach ($budget->limits as $limit) {
+                        foreach ($limit->limitrepetitions as $rep) {
+                            $month = $rep->startdate->format('Y-m');
+                            $reps[$month]['limitrepetitions'][] = $rep;
+                        }
+                    }
+                }
+                krsort($reps);
+
+                return View::make('budgets.index')->with('group', $group)->with('reps',$reps);
 
 
-        return View::make('budgets.index')->with('budgets', $budgets)->with('today', $today);
+                break;
+            case 'budget':
+                $budgets = $this->_budgets->get();
+                $today = new \Carbon\Carbon;
+                return View::make('budgets.index')->with('budgets', $budgets)->with('today', $today)->with(
+                    'group', $group
+                );
+
+                break;
+        }
+
+
     }
 
     public function create()

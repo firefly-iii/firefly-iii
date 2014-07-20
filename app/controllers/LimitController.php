@@ -39,7 +39,7 @@ class LimitController extends BaseController
     {
         // find a limit with these properties, as we might already have one:
         $limit = $this->_limits->store(Input::all());
-        if($limit->id) {
+        if ($limit->id) {
             return Redirect::route('budgets.index');
         } else {
             return Redirect::route('budgets.limits.create')->withInput();
