@@ -1,6 +1,6 @@
 <?php
 
-use \League\FactoryMuffin\Facade\FactoryMuffin;
+use League\FactoryMuffin\Facade\FactoryMuffin;
 
 class ChartControllerTest extends TestCase
 {
@@ -16,10 +16,14 @@ class ChartControllerTest extends TestCase
         // mock preference:
         $pref = $this->mock('Preference');
         $pref->shouldReceive('getAttribute', 'data')->andReturn('1M');
+        $pref2 = $this->mock('Preference');
+        $pref2->shouldReceive('getAttribute', 'data')->andReturn([]);
 
         // mock preferences helper:
         $preferences = $this->mock('Firefly\Helper\Preferences\PreferencesHelperInterface');
         $preferences->shouldReceive('get')->with('viewRange', '1M')->once()->andReturn($pref);
+        $preferences->shouldReceive('get')->with('frontpageAccounts', [])->once()->andReturn($pref2);
+
 
         // mock toolkit:
         $toolkit = $this->mock('Firefly\Helper\Toolkit\ToolkitInterface');
@@ -34,6 +38,7 @@ class ChartControllerTest extends TestCase
         $one = $this->mock('Account');
         $one->shouldReceive('getAttribute')->andReturn($personal);
         $one->shouldReceive('balance')->andReturn(0);
+        $one->shouldReceive('predict')->andReturn(null);
 
         // collection:
         $c = new \Illuminate\Database\Eloquent\Collection([$one]);
@@ -79,57 +84,24 @@ class ChartControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
-    public function testhomeBudgets()
-    {
-        // mock preference:
-        $pref = $this->mock('Preference');
-        $pref->shouldReceive('getAttribute', 'data')->andReturn('week');
-
-        $start = new \Carbon\Carbon;
-        $end = new \Carbon\Carbon;
-
-        // mock transaction journal
-        $tj = $this->mock('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
-        $tj->shouldReceive('homeBudgetChart')->andReturn(['entry' => 30]);
-
-        // mock toolkit:
-        $toolkit = $this->mock('Firefly\Helper\Toolkit\ToolkitInterface');
-        $toolkit->shouldReceive('getDateRange')->andReturn([$start, $end]);
-
-
-        // mock preferences helper:
-        $preferences = $this->mock('Firefly\Helper\Preferences\PreferencesHelperInterface');
-        $preferences->shouldReceive('get')->with('viewRange', '1M')->once()->andReturn($pref);
-
-
-        // call
-        $this->call('GET', '/chart/home/budgets');
-
-        // test
-        $this->assertResponseOk();
-    }
-
     public function testhomeCategories()
     {
-        // mock preference:
-        $pref = $this->mock('Preference');
-        $pref->shouldReceive('getAttribute', 'data')->andReturn('week');
-
         $start = new \Carbon\Carbon;
         $end = new \Carbon\Carbon;
 
-        // mock transaction journal
-        $tj = $this->mock('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
-        $tj->shouldReceive('homeCategoryChart')->andReturn(['entry' => 30]);
+        $toolkit = $this->mock('Firefly\Helper\Toolkit\ToolkitInterface');
+        $toolkit->shouldReceive('getDateRange')->andReturn(null);
 
         // mock toolkit:
-        $toolkit = $this->mock('Firefly\Helper\Toolkit\ToolkitInterface');
-        $toolkit->shouldReceive('getDateRange')->andReturn([$start, $end]);
+//        $class = $this->getMockClass('Foo', array('baz'));
+//        $toolkit = $this->mock('Firefly\Helper\Toolkit\ToolkitInterface');
+//        $toolkit::static  ->shouldReceive('getDateRange')->once()->andReturn([$start, $end]);
 
+//        // mock transaction journal
+//        $tj = $this->mock('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
+//        $tj->shouldReceive('getByDateRange')->with($start, $end)->andReturn([]);
+//
 
-        // mock preferences helper:
-        $preferences = $this->mock('Firefly\Helper\Preferences\PreferencesHelperInterface');
-        $preferences->shouldReceive('get')->with('viewRange', '1M')->once()->andReturn($pref);
 
 
         // call
@@ -139,35 +111,6 @@ class ChartControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
-    public function testhomeBeneficiaries()
-    {
-        // mock preference:
-        $pref = $this->mock('Preference');
-        $pref->shouldReceive('getAttribute', 'data')->andReturn('week');
-
-        $start = new \Carbon\Carbon;
-        $end = new \Carbon\Carbon;
-
-        // mock transaction journal
-        $tj = $this->mock('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
-        $tj->shouldReceive('homeBeneficiaryChart')->andReturn(['entry' => 30]);
-
-        // mock toolkit:
-        $toolkit = $this->mock('Firefly\Helper\Toolkit\ToolkitInterface');
-        $toolkit->shouldReceive('getDateRange')->andReturn([$start, $end]);
-
-
-        // mock preferences helper:
-        $preferences = $this->mock('Firefly\Helper\Preferences\PreferencesHelperInterface');
-        $preferences->shouldReceive('get')->with('viewRange', '1M')->once()->andReturn($pref);
-
-
-        // call
-        $this->call('GET', '/chart/home/beneficiaries');
-
-        // test
-        $this->assertResponseOk();
-    }
     public function tearDown()
     {
         Mockery::close();
