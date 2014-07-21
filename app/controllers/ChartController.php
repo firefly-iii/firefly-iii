@@ -13,17 +13,19 @@ class ChartController extends BaseController
 
     protected $_accounts;
     protected $_journals;
+    protected $_tk;
     protected $_preferences;
 
     /**
      * @param ARI  $accounts
      * @param TJRI $journals
      */
-    public function __construct(ARI $accounts, TJRI $journals, PHI $preferences)
+    public function __construct(ARI $accounts, TJRI $journals, PHI $preferences, tk $toolkit)
     {
         $this->_accounts = $accounts;
         $this->_journals = $journals;
         $this->_preferences = $preferences;
+        $this->_tk = $toolkit;
     }
 
     /**
@@ -33,7 +35,7 @@ class ChartController extends BaseController
      */
     public function homeAccount($accountId = null)
     {
-        list($start, $end) = tk::getDateRange();
+        list($start, $end) = $this->_tk->getDateRange();
         $current = clone $start;
         $return = [];
         $account = null;
@@ -134,7 +136,7 @@ class ChartController extends BaseController
 
     public function homeCategories()
     {
-        list($start, $end) = tk::getDateRange();
+        list($start, $end) =$this->_tk->getDateRange();
         $account = null;
         $result = [];
         // grab all transaction journals in this period:
