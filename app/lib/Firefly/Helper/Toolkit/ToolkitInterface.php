@@ -5,6 +5,6 @@ namespace Firefly\Helper\Toolkit;
 
 interface ToolkitInterface
 {
-    public static function getDateRange();
+    public function getDateRange();
 
 } 

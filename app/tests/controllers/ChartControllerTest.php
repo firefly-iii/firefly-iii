@@ -89,18 +89,26 @@ class ChartControllerTest extends TestCase
         $start = new \Carbon\Carbon;
         $end = new \Carbon\Carbon;
 
+
+
+        // mock toolkit
         $toolkit = $this->mock('Firefly\Helper\Toolkit\ToolkitInterface');
-        $toolkit->shouldReceive('getDateRange')->andReturn(null);
-
-        // mock toolkit:
-//        $class = $this->getMockClass('Foo', array('baz'));
-//        $toolkit = $this->mock('Firefly\Helper\Toolkit\ToolkitInterface');
-//        $toolkit::static  ->shouldReceive('getDateRange')->once()->andReturn([$start, $end]);
-
-//        // mock transaction journal
-//        $tj = $this->mock('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
-//        $tj->shouldReceive('getByDateRange')->with($start, $end)->andReturn([]);
+        $toolkit->shouldReceive('getDateRange')->andReturn([$start, $end]);
 //
+//        // mock preference?
+//        $preferences = $this->mock('Firefly\Helper\Preferences\PreferencesHelperInterface');
+//        $preferences->shouldReceive('get')->with('viewRange', '1M')->once()->andReturn($pref);
+//
+//
+//        // mock toolkit:
+////        $class = $this->getMockClass('Foo', array('baz'));
+////        $toolkit = $this->mock('Firefly\Helper\Toolkit\ToolkitInterface');
+////        $toolkit::static  ->shouldReceive('getDateRange')->once()->andReturn([$start, $end]);
+//
+////        // mock transaction journal
+////        $tj = $this->mock('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
+////        $tj->shouldReceive('getByDateRange')->with($start, $end)->andReturn([]);
+////
 
 
 

@@ -14,7 +14,7 @@ class Toolkit implements ToolkitInterface
      *
      * $start is always the past, $end is 'now' or at least later.
      */
-    public static function getDateRange()
+    public function getDateRange()
     {
         $preferences = \App::make('Firefly\Helper\Preferences\PreferencesHelperInterface');
         $viewRange = $preferences->get('viewRange', '1M');
