@@ -89,6 +89,9 @@ class ChartControllerTest extends TestCase
         $start = new \Carbon\Carbon;
         $end = new \Carbon\Carbon;
 
+        // mock preferences & pref:
+        $pref = $this->mock('Preference');
+        $pref->shouldReceive('getAttribute', 'data')->andReturn([]);
 
 
         // mock toolkit
@@ -96,8 +99,8 @@ class ChartControllerTest extends TestCase
         $toolkit->shouldReceive('getDateRange')->andReturn([$start, $end]);
 //
 //        // mock preference?
-//        $preferences = $this->mock('Firefly\Helper\Preferences\PreferencesHelperInterface');
-//        $preferences->shouldReceive('get')->with('viewRange', '1M')->once()->andReturn($pref);
+        $preferences = $this->mock('Firefly\Helper\Preferences\PreferencesHelperInterface');
+        $preferences->shouldReceive('get')->with('viewRange', '1M')->once()->andReturn($pref);
 //
 //
 //        // mock toolkit:
@@ -109,7 +112,6 @@ class ChartControllerTest extends TestCase
 ////        $tj = $this->mock('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
 ////        $tj->shouldReceive('getByDateRange')->with($start, $end)->andReturn([]);
 ////
-
 
 
         // call
