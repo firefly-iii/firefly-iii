@@ -39,8 +39,13 @@ class HomeController extends BaseController
 
         // get the preference for the home accounts to show:
         $frontpage = $this->_preferences->get('frontpageAccounts', []);
+        if($frontpage->data == []) {
+            $accounts = $this->_accounts->getActiveDefault();
+        } else {
+            $accounts = $this->_accounts->getByIds($frontpage->data);
+        }
 
-        $accounts = $this->_accounts->getByIds($frontpage->data);
+
 
         $transactions = [];
         foreach($accounts as $account) {
