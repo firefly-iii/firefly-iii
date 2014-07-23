@@ -12,4 +12,6 @@ interface BudgetRepositoryInterface
 
     public function find($id);
 
+    public function getWithRepetitionsInPeriod(\Carbon\Carbon $date, $range);
+
 } 

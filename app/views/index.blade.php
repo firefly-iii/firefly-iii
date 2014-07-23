@@ -77,9 +77,36 @@
     @endforeach
     @endif
 
+
+
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-
+            <h4>Budgets</h4>
+            <table class="table table-bordered">
+            @foreach($budgets as $budget)
+            <tr>
+                <td>
+                    <a href="{{route('budgets.show',$budget->id)}}">{{{$budget->name}}}</a>
+                </td>
+                @if($budget->count == 0)
+                <td colspan="2">
+                    <em>No budget set for this period.</em>
+                </td>
+                @else
+                    @foreach($budget->limits as $limit)
+                    @foreach($limit->limitrepetitions as $rep)
+                        <td>
+                            {{mf($rep->amount)}}
+                        </td>
+                    <td>
+                        {{mf($rep->left())}}
+                    </td>
+                    @endforeach
+                    @endforeach
+                @endif
+            </tr>
+            @endforeach
+            </table>
         </div>
     </div>
 
