@@ -18,7 +18,7 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
         return $return;
     }
 
-    public function create($data)
+    public function store($data)
     {
         $budget = new \Budget;
         $budget->name = $data['name'];

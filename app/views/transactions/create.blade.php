@@ -119,14 +119,6 @@
             </div>
         </div>
 
-        <!-- ALWAYS SHOW SUBMit -->
-        <div class="form-group">
-            <label for="submit" class="col-sm-4 control-label">&nbsp;</label>
-            <div class="col-sm-8">
-                <input type="submit" name="submit" value="Create {{$what}}" class="btn btn-info" />
-            </div>
-        </div>
-
     </div>
     <div class="col-lg-6 col-md-12 col-sm-12">
         <h4>Optional fields</h4>
@@ -154,8 +146,31 @@
         </div>
 
     </div>
+</div>
 
-
+<div class="row">
+    <div class="col-lg-6">
+        <!-- add another after this one? -->
+        <div class="form-group">
+            <label for="submit" class="col-sm-4 control-label">&nbsp;</label>
+            <div class="col-sm-8">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" value="1" name="create">
+                        Create another (return to this form)
+                    </label>
+                </div>
+            </div>
+        </div>
+        <!-- ALWAYS SHOW SUBMit -->
+        <div class="form-group">
+            <label for="submit" class="col-sm-4 control-label">&nbsp;</label>
+            <div class="col-sm-8">
+                <input type="submit" name="submit" value="Create {{$what}}" class="btn btn-info" />
+            </div>
+        </div>
+    </div>
+</div>
 
 @stop
 @section('scripts')

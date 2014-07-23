@@ -5,25 +5,25 @@ use LaravelBook\Ardent\Ardent as Ardent;
 /**
  * Limit
  *
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $component_id
- * @property \Carbon\Carbon $startdate
- * @property float $amount
- * @property boolean $repeats
- * @property string $repeat_freq
- * @property-read \Component $component
- * @property-read \Budget $budget
+ * @property integer                                                          $id
+ * @property \Carbon\Carbon                                                   $created_at
+ * @property \Carbon\Carbon                                                   $updated_at
+ * @property integer                                                          $component_id
+ * @property \Carbon\Carbon                                                   $startdate
+ * @property float                                                            $amount
+ * @property boolean                                                          $repeats
+ * @property string                                                           $repeat_freq
+ * @property-read \Component                                                  $component
+ * @property-read \Budget                                                     $budget
  * @property-read \Illuminate\Database\Eloquent\Collection|\LimitRepetition[] $limitrepetitions
- * @method static \Illuminate\Database\Query\Builder|\Limit whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereComponentId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereStartdate($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereAmount($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereRepeats($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereRepeatFreq($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Limit whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Limit whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Limit whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Limit whereComponentId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Limit whereStartdate($value)
+ * @method static \Illuminate\Database\Query\Builder|\Limit whereAmount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Limit whereRepeats($value)
+ * @method static \Illuminate\Database\Query\Builder|\Limit whereRepeatFreq($value)
  */
 class Limit extends Ardent
 {
@@ -38,17 +38,23 @@ class Limit extends Ardent
 
         ];
 
-    public static $factory
-        = [
+    public static function factory()
+    {
+        $start = new Carbon\Carbon;
+        $start->startOfMonth();
+
+        return [
             'component_id' => 'factory|Budget',
-            'startdate'    => 'date',
-            'enddate'      => 'date',
-            'amount'       => '100'
+            'startdate'    => $start,
+            'amount'       => '100',
+            'repeats'      => 0,
+            'repeat_freq'  => 'monthly'
         ];
+    }
 
     public function component()
     {
-        return $this->belongsTo('Component','component_id');
+        return $this->belongsTo('Component', 'component_id');
     }
 
     public function budget()
@@ -56,7 +62,8 @@ class Limit extends Ardent
         return $this->belongsTo('Budget', 'component_id');
     }
 
-    public function limitrepetitions() {
+    public function limitrepetitions()
+    {
         return $this->hasMany('LimitRepetition');
     }
 

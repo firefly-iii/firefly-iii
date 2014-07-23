@@ -2,7 +2,11 @@
 
 namespace Firefly\Helper\Toolkit;
 
-
+/**
+ * Class Toolkit
+ *
+ * @package Firefly\Helper\Toolkit
+ */
 class Toolkit implements ToolkitInterface
 {
 
@@ -16,6 +20,7 @@ class Toolkit implements ToolkitInterface
      */
     public function getDateRange()
     {
+        \Log::debug('Should be mocked!');
         $preferences = \App::make('Firefly\Helper\Preferences\PreferencesHelperInterface');
         $viewRange = $preferences->get('viewRange', '1M');
 

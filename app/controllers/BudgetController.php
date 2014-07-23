@@ -87,7 +87,7 @@ class BudgetController extends BaseController
             'repeats'     => intval(Input::get('repeats'))
         ];
 
-        $budget = $this->_budgets->create($data);
+        $this->_budgets->store($data);
         Session::flash('success', 'Budget created!');
         return Redirect::route('budgets.index');
     }
@@ -106,31 +106,29 @@ class BudgetController extends BaseController
             $return[$month][] = $entry;
 
         }
+        $str = '';
 
         foreach ($return as $month => $set) {
-            echo '<h1>' . $month . '</h1>';
+            $str .= '<h1>' . $month . '</h1>';
             /** @var \TransactionJournal $tj */
             $sum = 0;
             foreach ($set as $tj) {
-                echo '#' . $tj->id . ' ' . $tj->description . ': ';
+                $str .= '#' . $tj->id . ' ' . $tj->description . ': ';
 
                 foreach ($tj->transactions as $index => $t) {
-                    echo $t->amount . ', ';
+                    $str .= $t->amount . ', ';
                     if ($index == 0) {
                         $sum += $t->amount;
 
                     }
                 }
-                echo '<br>';
+                $str .= '<br>';
 
             }
-            echo 'sum: ' . $sum . '<br><br>';
+            $str .= 'sum: ' . $sum . '<br><br>';
         }
 
-
-        exit;
-
-        return View::make('budgets.show');
+        return $str;
 
 
     }

@@ -27,8 +27,8 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/accounts/{account}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
 
         // budget controller:
-        Route::get('/budgets/{group?}',['uses' => 'BudgetController@index','as' => 'budgets.index']);
         Route::get('/budget/create',['uses' => 'BudgetController@create', 'as' => 'budgets.create']);
+        Route::get('/budgets/{group?}',['uses' => 'BudgetController@index','as' => 'budgets.index']);
         Route::get('/budget/show/{id}',['uses' => 'BudgetController@show', 'as' => 'budgets.show']);
 
         // limit controller:
