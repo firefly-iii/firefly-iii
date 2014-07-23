@@ -31,13 +31,19 @@ class LimitRepetition extends Ardent
             'amount'    => 'numeric|required|min:0.01',
         ];
 
-    public static $factory
-        = [
+    public static function factory()
+    {
+        $start = new \Carbon\Carbon;
+        $start->startOfMonth();
+        $end = clone $start;
+        $end->endOfMonth();
+        return [
             'limit_id'  => 'factory|Limit',
-            'startdate' => 'date',
-            'enddate'   => 'date',
-            'amount'    => 'integer'
+            'startdate' => $start,
+            'enddate'   => $end,
+            'amount'    => 100
         ];
+    }
 
     public function limit()
     {

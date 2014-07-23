@@ -27,6 +27,11 @@ class HelperServiceProvider extends ServiceProvider
             'Firefly\Helper\Preferences\PreferencesHelperInterface',
             'Firefly\Helper\Preferences\PreferencesHelper'
         );
+        // settings:
+        $this->app->bind(
+            'Firefly\Helper\Toolkit\ToolkitInterface',
+            'Firefly\Helper\Toolkit\Toolkit'
+        );
     }
 
 }

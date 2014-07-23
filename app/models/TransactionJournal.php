@@ -32,13 +32,13 @@ use LaravelBook\Ardent\Ardent;
  * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereDate($value)
  * @method static \TransactionJournal after($date)
  * @method static \TransactionJournal before($date)
- * @property integer $user_id
- * @property-read \User $user
+ * @property integer                                                      $user_id
+ * @property-read \User                                                   $user
  * @property-read \Illuminate\Database\Eloquent\Collection|\
  *             'Budget[] $budgets
  * @property-read \Illuminate\Database\Eloquent\Collection|\
  *             'Category[] $categories
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereUserId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereUserId($value)
  */
 class TransactionJournal extends Ardent
 {
@@ -52,15 +52,18 @@ class TransactionJournal extends Ardent
             'completed'               => 'required|between:0,1'
         ];
 
-    public static $factory
-        = [
+    public static function factory()
+    {
+        $date = new \Carbon\Carbon;
+        return [
             'transaction_type_id'     => 'factory|TransactionType',
             'transaction_currency_id' => 'factory|TransactionCurrency',
             'description'             => 'string',
             'completed'               => '1',
             'user_id'                 => 'factory|User',
-            'date'                    => 'date|Y-m-d'
+            'date'                    => $date
         ];
+    }
 
     public function transactionType()
     {

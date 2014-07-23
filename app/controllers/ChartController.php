@@ -1,7 +1,8 @@
 <?php
 
+use Firefly\Exception\FireflyException;
 use Firefly\Helper\Preferences\PreferencesHelperInterface as PHI;
-use Firefly\Helper\Toolkit\Toolkit as tk;
+use Firefly\Helper\Toolkit\ToolkitInterface as tk;
 use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
 use Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface as TJRI;
 
@@ -36,6 +37,7 @@ class ChartController extends BaseController
     public function homeAccount($accountId = null)
     {
         list($start, $end) = $this->_tk->getDateRange();
+        \Log::debug('Start is (cannot clone?): ' . $start);
         $current = clone $start;
         $return = [];
         $account = null;
@@ -73,8 +75,10 @@ class ChartController extends BaseController
             }
         } else {
             $return[0] = ['name' => $account->name, 'id' => $account->id, 'data' => []];
-
+            \Log::debug('Start is: '.$start);
+            \Log::debug('End is: '.$end);
             while ($current <= $end) {
+                \Log::debug('Current: ' . $current.' is smaller or equal to ' . $end);
                 if ($current > $today) {
                     $return[0]['data'][] = [$current->timestamp * 1000, $account->predict(clone $current)];
                 } else {
