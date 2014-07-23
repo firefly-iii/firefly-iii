@@ -46,7 +46,7 @@ class BudgetController extends BaseController
                 }
                 krsort($reps);
 
-                return View::make('budgets.index')->with('group', $group)->with('reps',$reps);
+                return View::make('budgets.index')->with('group', $group)->with('reps', $reps);
 
 
                 break;
@@ -132,5 +132,6 @@ class BudgetController extends BaseController
 
 
     }
+
 
 } 

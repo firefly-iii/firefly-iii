@@ -41,10 +41,7 @@ Route::group(['before' => 'auth'], function () {
 
 
         // transaction controller:
-          Route::get('/transactions/create/{what}', ['uses' => 'TransactionController@create', 'as' => 'transactions.create'])
-            ->where(['what' => 'withdrawal|deposit|transfer']);
-
-
+          Route::get('/transactions/create/{what}', ['uses' => 'TransactionController@create', 'as' => 'transactions.create'])->where(['what' => 'withdrawal|deposit|transfer']);
         Route::get('/transaction/show/{id}',['uses' => 'TransactionController@show','as' => 'transactions.show']);
         Route::get('/transaction/edit/{id}',['uses' => 'TransactionController@edit','as' => 'transactions.edit']);
         Route::get('/transaction/delete/{id}',['uses' => 'TransactionController@delete','as' => 'transactions.delete']);
@@ -73,6 +70,7 @@ Route::group(['before' => 'csrf|auth'], function () {
 
         // limit controller:
         Route::post('/limits/store', ['uses' => 'LimitController@store', 'as' => 'budgets.limits.store']);
+        Route::post('/budgets/limits/destroy/{id?}',['uses' => 'LimitController@destroy','as' => 'budgets.limits.destroy']);
 
         // transaction controller:
         Route::post('/transactions/store/{what}', ['uses' => 'TransactionController@store', 'as' => 'transactions.store'])

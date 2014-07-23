@@ -46,4 +46,30 @@ class LimitController extends BaseController
         }
     }
 
+    public function delete($limitId)
+    {
+        $limit = $this->_limits->find($limitId);
+
+
+        if ($limit) {
+            return View::make('limits.delete')->with('limit', $limit);
+        } else {
+            return View::make('error')->with('message', 'No such limit!');
+        }
+    }
+
+    public function destroy($limitId)
+    {
+        $limit = $this->_limits->find($limitId);
+
+
+        if ($limit) {
+            $limit->delete();
+            return Redirect::route('budgets.index');
+        } else {
+            return View::make('error')->with('message', 'No such limit!');
+        }
+    }
+
+
 } 
