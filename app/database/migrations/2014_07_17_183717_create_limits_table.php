@@ -22,6 +22,8 @@ class CreateLimitsTable extends Migration {
             $table->boolean('repeats');
             $table->enum('repeat_freq', ['daily', 'weekly','monthly','quarterly','half-year','yearly']);
 
+            $table->unique(['component_id','startdate','repeat_freq']);
+
             // connect component
             $table->foreign('component_id')
                 ->references('id')->on('components')

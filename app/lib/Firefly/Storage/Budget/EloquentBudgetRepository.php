@@ -18,6 +18,35 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
         return $return;
     }
 
+    public function getWithRepetitionsInPeriod(\Carbon\Carbon $date, $range)
+    {
+
+        /** @var \Firefly\Helper\Toolkit\ToolkitInterface $toolkit */
+        $toolkit = \App::make('Firefly\Helper\Toolkit\ToolkitInterface');
+        $dates = $toolkit->getDateRange();
+        $start = $dates[0];
+        $result = [];
+
+
+        $set = \Auth::user()->budgets()->with(
+            ['limits'                        => function ($q) use ($date) {
+                    $q->orderBy('limits.startdate', 'ASC');
+//                    $q->where('startdate',$date->format('Y-m-d'));
+                }, 'limits.limitrepetitions' => function ($q) use ($date) {
+                    $q->orderBy('limit_repetitions.startdate', 'ASC');
+                    $q->where('startdate',$date->format('Y-m-d'));
+                }]
+        )->orderBy('name', 'ASC')->get();
+
+        foreach ($set as $budget) {
+            $budget->count = 0;
+            foreach($budget->limits as $limit) {
+                $budget->count += count($limit->limitrepetitions);
+            }
+        }
+        return $set;
+    }
+
     public function store($data)
     {
         $budget = new \Budget;
@@ -67,10 +96,10 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
     public function get()
     {
         return \Auth::user()->budgets()->with(
-            ['limits' => function ($q) {
-                    $q->orderBy('limits.startdate','ASC');
+            ['limits'                        => function ($q) {
+                    $q->orderBy('limits.startdate', 'ASC');
                 }, 'limits.limitrepetitions' => function ($q) {
-                        $q->orderBy('limit_repetitions.startdate','ASC');
+                    $q->orderBy('limit_repetitions.startdate', 'ASC');
                 }]
         )->orderBy('name', 'ASC')->get();
     }

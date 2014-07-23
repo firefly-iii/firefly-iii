@@ -173,9 +173,9 @@ class MigrationHelper implements MigrationHelperInterface
                 $limit->amount = floatval($entry->amount);
                 $limit->repeats = 0;
                 $limit->repeat_freq = 'monthly';
-                if (!$limit->save()) {
-                    \Log::error('MigrationException!');
-                    throw new MigrationException('Importing limits failed: ' . $limit->errors()->first());
+                try {
+                    $limit->save();
+                } catch (\Exception $e) {
                 }
             } else {
                 \Log::warning('No budget for this limit!');
