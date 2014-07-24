@@ -36,8 +36,7 @@ class ChartController extends BaseController
      */
     public function homeAccount($accountId = null)
     {
-        list($start, $end) = $this->_tk->getDateRange();
-        \Log::debug('Start is (cannot clone?): ' . $start);
+        list($start, $end) = $this->_tk->getDateRangeDates();
         $current = clone $start;
         $return = [];
         $account = null;
@@ -75,10 +74,7 @@ class ChartController extends BaseController
             }
         } else {
             $return[0] = ['name' => $account->name, 'id' => $account->id, 'data' => []];
-            \Log::debug('Start is: '.$start);
-            \Log::debug('End is: '.$end);
             while ($current <= $end) {
-                \Log::debug('Current: ' . $current.' is smaller or equal to ' . $end);
                 if ($current > $today) {
                     $return[0]['data'][] = [$current->timestamp * 1000, $account->predict(clone $current)];
                 } else {
@@ -88,21 +84,6 @@ class ChartController extends BaseController
                 $current->addDay();
             }
         }
-//        // add an error bar as experiment:
-//        foreach($return as $index => $serie) {
-//            $err = [
-//                'type' => 'errorbar',
-//                'name' => $serie['name'].' pred',
-//                'linkedTo' => $serie['id'],
-//                'data' => []
-//            ];
-//            foreach($serie['data'] as $entry) {
-//                $err['data'][] = [$entry[0],10,300];
-//            }
-//            $return[] = $err;
-//        }
-
-
         return Response::json($return);
     }
 
@@ -140,7 +121,7 @@ class ChartController extends BaseController
 
     public function homeCategories()
     {
-        list($start, $end) =$this->_tk->getDateRange();
+        list($start, $end) =$this->_tk->getDateRangeDates();
         $account = null;
         $result = [];
         // grab all transaction journals in this period:

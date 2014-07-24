@@ -1,47 +1,6 @@
 @extends('layouts.default')
 @section('content')
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly
-            @if($count > 0)
-            <small>What's playing?</small>
-            @endif
-        </h1>
-        @if($count > 0)
-        <form role="form" class="form-horizontal">
-            <div class="input-group">
-
-                <?php $r = Session::get('range', '1M'); ?>
-                <span class="input-group-btn input-group-btn">
-                        <button name="range" value="1D" class="btn btn-default @if($r=='1D') btn-info @endif btn-sm"
-                                type="submit">1D
-                        </button>
-                        <button name="range" value="1W" class="btn btn-default @if($r=='1W') btn-info @endif btn-sm"
-                                type="submit">1W
-                        </button>
-                        <button name="range" value="1M" class="btn btn-default @if($r=='1M') btn-info @endif btn-sm"
-                                type="submit">1M
-                        </button>
-                        <button name="range" value="3M" class="btn btn-default @if($r=='3M') btn-info @endif btn-sm"
-                                type="submit">3M
-                        </button>
-                        <button name="range" value="6M" class="btn btn-default @if($r=='6M') btn-info @endif btn-sm"
-                                type="submit">6M
-                        </button>
-                    </span>
-                <input value="{{Session::get('start')->format('Y-m-d')}}" name="start" type="date"
-                       style="width:15%;border-right:0;" class="form-control input-sm">
-                <input value="{{Session::get('end')->format('Y-m-d')}}" name="end" type="date"
-                       style="width:15%;border-right:0;" class="form-control input-sm">
-                <button class="btn btn-default btn-sm @if($r=='custom') btn-info @endif" type="submit" name="range"
-                        value="custom">Custom
-                </button>
-            </div>
-        </form>
-        @endif
-
-    </div>
-</div>
+@include('partials.date_nav')
 @if($count == 0)
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
@@ -101,7 +60,8 @@
             <h5><a href="{{route('budgets.show',$budget->id)}}">{{{$budget->name}}}</a></h5>
             @if($budget->count == 0)
             <p>
-                <small><em>No budget set for this period.</em></small>
+                <a href="{{route('budgets.limits.create',[$budget->id])}}?startdate={{\Session::get('start')->format('Y-m-d')}}&amp;repeat_freq={{\Config::get('firefly.range_to_repeat_freq.' . \Session::get('range'))}}" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-envelope"></span> Add a new envelope</a>
+
             </p>
             @else
             @foreach($budget->limits as $limit)

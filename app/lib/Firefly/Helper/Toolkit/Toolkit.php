@@ -37,9 +37,23 @@ class Toolkit implements ToolkitInterface
         }
 
         // switch $range, update range or something:
+        $start = \Session::has('start') ? \Session::get('start') : new \Carbon\Carbon();
+        $end = \Session::has('end') ? \Session::get('end') : new \Carbon\Carbon();
         $today = new \Carbon\Carbon;
-        $start = clone $today;
-        $end = clone $today;
+        \Log::debug('Start: ' . $start.' ('.\Session::has('start').')');
+        \Log::debug('End: ' . $end);
+
+        // see if we have to do a prev / next thing:
+        $doPrev = false;
+        $doNext = false;
+        if (\Input::get('action') == 'prev') {
+            $doPrev = true;
+        }
+        if (\Input::get('action') == 'next') {
+            $doNext = true;
+        }
+
+
         switch ($range) {
             case 'custom':
                 // when range is custom AND input, we ignore $today
@@ -53,27 +67,75 @@ class Toolkit implements ToolkitInterface
                 break;
             case '1D':
                 $start->startOfDay();
+                $end = clone $start;
                 $end->endOfDay();
+                if ($doNext) {
+                    $start->addDay();
+                    $end->addDay();
+                }
+                if ($doPrev) {
+                    $start->subDay();
+                    $end->subDay();
+                }
                 break;
             case '1W':
                 $start->startOfWeek();
+                $end = clone $start;
                 $end->endOfWeek();
+                if ($doNext) {
+                    $start->addWeek();
+                    $end->addWeek();
+                }
+                if ($doPrev) {
+                    $start->subWeek();
+                    $end->subWeek();
+                }
                 break;
             case '1M':
                 $start->startOfMonth();
+                $end = clone $start;
                 $end->endOfMonth();
+                if ($doNext) {
+                    $start->addMonth();
+                    $end->addMonth();
+                }
+                if ($doPrev) {
+                    $start->subMonth();
+                    \Log::debug('1M prev. Before: ' . $end);
+                    $end->startOfMonth()->subMonth()->endOfMonth();
+                    \Log::debug('1M prev. After: ' . $end);
+                }
                 break;
             case '3M':
                 $start->firstOfQuarter();
+                $end = clone $start;
                 $end->lastOfQuarter();
+                if ($doNext) {
+                    $start->addMonths(3)->firstOfQuarter();
+                    $end->addMonths(6)->lastOfQuarter();
+                }
+                if ($doPrev) {
+                    $start->subMonths(3)->firstOfQuarter();
+                    $end->subMonths(3)->lastOfQuarter();
+                }
                 break;
             case '6M':
                 if (intval($today->format('m')) >= 7) {
                     $start->startOfYear()->addMonths(6);
+                    $end = clone $start;
                     $end->endOfYear();
                 } else {
                     $start->startOfYear();
+                    $end = clone $start;
                     $end->startOfYear()->addMonths(6);
+                }
+                if ($doNext) {
+                    $start->addMonths(6);
+                    $end->addMonths(6);
+                }
+                if ($doPrev) {
+                    $start->subMonths(6);
+                    $end->subMonths(6);
                 }
                 break;
         }
@@ -81,11 +143,18 @@ class Toolkit implements ToolkitInterface
         \Session::put('start', $start);
         \Session::put('end', $end);
         \Session::put('range', $range);
+        if ($doPrev || $doNext) {
+            return \Redirect::route('index');
 
-        // and return:
-        return [$start, $end];
+        }
+        return;
 
 
+    }
+
+    public function getDateRangeDates()
+    {
+        return [\Session::get('start'), \Session::get('end')];
     }
 
 } 

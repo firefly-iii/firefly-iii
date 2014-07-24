@@ -23,7 +23,7 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
 
         /** @var \Firefly\Helper\Toolkit\ToolkitInterface $toolkit */
         $toolkit = \App::make('Firefly\Helper\Toolkit\ToolkitInterface');
-        $dates = $toolkit->getDateRange();
+        $dates = $toolkit->getDateRangeDates();
         $start = $dates[0];
         $result = [];
 

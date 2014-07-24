@@ -1,4 +1,3 @@
-var accountChart;
 $(function () {
 
 

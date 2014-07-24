@@ -4,6 +4,7 @@ Route::group(['before' => 'auth'], function () {
 
         // home controller
         Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
+        Route::get('/flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
 
         // chart controller
         Route::get('/chart/home/account/{account?}', ['uses' => 'ChartController@homeAccount', 'as' => 'chart.home']);
@@ -28,7 +29,8 @@ Route::group(['before' => 'auth'], function () {
 
         // budget controller:
         Route::get('/budget/create',['uses' => 'BudgetController@create', 'as' => 'budgets.create']);
-        Route::get('/budgets/{group?}',['uses' => 'BudgetController@index','as' => 'budgets.index']);
+        Route::get('/budgets',['uses' => 'BudgetController@indexByDate','as' => 'budgets.index']);
+        Route::get('/budgets/budget',['uses' => 'BudgetController@indexByBudget','as' => 'budgets.index.budget']);
         Route::get('/budget/show/{id}',['uses' => 'BudgetController@show', 'as' => 'budgets.show']);
 
         // limit controller:
