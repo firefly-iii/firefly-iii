@@ -25,23 +25,11 @@ class EloquentLimitTrigger
         // get todays date.
 
         foreach ($budgets as $budget) {
-            \Log::debug(
-                'Now checking the ' . count($budget->limits) . ' limits in ' . $budget->name . ' (#' . $budget->id
-                . ').'
-            );
             // loop limits:
             foreach ($budget->limits as $limit) {
-                \Log::debug(
-                    'Now at limit #' . $limit->id . ', which has ' . count($limit->limitrepetitions) . ' reps already'
-                );
-                \Log::debug(
-                    'More: Amount: ' . $limit->amount . ', repeat: ' . $limit->repeats . ', freq: '
-                    . $limit->repeat_freq
-                );
                 // should have a repetition, at the very least
                 // for the period it starts (startdate and onwards).
                 if (count($limit->limitrepetitions) == 0) {
-                    \Log::debug('No reps, create one.');
                     // create such a repetition:
                     $repetition = new \LimitRepetition();
                     $start = clone $limit->startdate;
@@ -73,7 +61,6 @@ class EloquentLimitTrigger
                     $repetition->enddate = $end;
                     $repetition->amount = $limit->amount;
                     $repetition->limit()->associate($limit);
-                    \Log::debug('Created single rep for non-repeating limit, from ' . $start . ' until ' . $end);
 
                     try {
                         $repetition->save();
@@ -163,7 +150,6 @@ class EloquentLimitTrigger
                     }
                 }
             }
-            \Log::debug('Done checking the budget!');
         }
     }
 

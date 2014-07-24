@@ -34,13 +34,31 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
 //                    $q->where('startdate',$date->format('Y-m-d'));
                 }, 'limits.limitrepetitions' => function ($q) use ($date) {
                     $q->orderBy('limit_repetitions.startdate', 'ASC');
-                    $q->where('startdate',$date->format('Y-m-d'));
+                    $q->where('startdate', $date->format('Y-m-d'));
                 }]
         )->orderBy('name', 'ASC')->get();
 
         foreach ($set as $budget) {
             $budget->count = 0;
-            foreach($budget->limits as $limit) {
+            foreach ($budget->limits as $limit) {
+                /** @var $rep \LimitRepetition */
+                foreach ($limit->limitrepetitions as $rep) {
+                    $rep->left = $rep->left();
+                    // overspent:
+                    if ($rep->left < 0) {
+                        $rep->spent = ($rep->left * -1) + $rep->amount;
+                        $rep->overspent = $rep->left * -1;
+                        $total = $rep->spent + $rep->overspent;
+                        $rep->spent_pct = round(($rep->spent / $total) * 100);
+                        $rep->overspent_pct = 100 - $rep->spent_pct;
+                    } else {
+                        $rep->spent = $rep->amount - $rep->left;
+                        $rep->spent_pct = round(($rep->spent / $rep->amount) * 100);
+                        $rep->left_pct = 100 - $rep->spent_pct;
+
+
+                    }
+                }
                 $budget->count += count($limit->limitrepetitions);
             }
         }

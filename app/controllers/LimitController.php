@@ -35,6 +35,51 @@ class LimitController extends BaseController
         );
     }
 
+    public function edit($limitId = null)
+    {
+        $limit = $this->_limits->find($limitId);
+        $budgets = $this->_budgets->getAsSelectList();
+
+        $periods = [
+            'weekly'    => 'A week',
+            'monthly'   => 'A month',
+            'quarterly' => 'A quarter',
+            'half-year' => 'Six months',
+            'yearly'    => 'A year',
+        ];
+
+
+        if ($limit) {
+            return View::make('limits.edit')->with('limit', $limit)->with('budgets', $budgets)->
+                with('periods',$periods);
+        }
+
+    }
+
+    public function update($limitId = null)
+    {
+        /** @var \Limit $limit */
+        $limit = $this->_limits->find($limitId);
+        if($limit) {
+            $limit->startdate = new \Carbon\Carbon(Input::get('date'));
+            $limit->repeat_freq = Input::get('period');
+            $limit->repeats = !is_null(Input::get('repeats')) && Input::get('repeats') == '1' ? 1 : 0;
+            $limit->amount = floatval(Input::get('amount'));
+            if(!$limit->save()) {
+                Session::flash('error','Could not save new limit: ' . $limit->errors()->first());
+                return Redirect::route('budgets.limits.edit',$limit->id)->withInput();
+            } else {
+                Session::flash('success','Limit saved!');
+                foreach($limit->limitrepetitions()->get() as $rep) {
+                    $rep->delete();
+                }
+                return Redirect::route('budgets.index');
+            }
+        }
+        return View::make('error')->with('message','No limit!');
+
+    }
+
     public function store()
     {
         // find a limit with these properties, as we might already have one:

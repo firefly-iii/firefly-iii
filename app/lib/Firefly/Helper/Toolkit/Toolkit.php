@@ -20,7 +20,6 @@ class Toolkit implements ToolkitInterface
      */
     public function getDateRange()
     {
-        \Log::debug('Should be mocked!');
         $preferences = \App::make('Firefly\Helper\Preferences\PreferencesHelperInterface');
         $viewRange = $preferences->get('viewRange', '1M');
 

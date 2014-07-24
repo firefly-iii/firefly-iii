@@ -11,7 +11,7 @@ interface TransactionJournalRepositoryInterface
 
     public function find($journalId);
 
-    public function getByAccount(\Account $account, $count = 25);
+    public function getByAccountInDateRange(\Account $account, $count = 25,\Carbon\Carbon $start, \Carbon\Carbon $end);
 
     public function getByAccountAndDate(\Account $account, \Carbon\Carbon $date);
 

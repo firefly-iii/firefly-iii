@@ -14,7 +14,9 @@ class EloquentLimitRepository implements LimitRepositoryInterface
 
     public function find($limitId)
     {
-        return \Limit::with('limitrepetitions')->where('limits.id', $limitId)->leftJoin('components', 'components.id', '=', 'limits.component_id')
+        return \Limit::with('limitrepetitions')->where('limits.id', $limitId)->leftJoin(
+            'components', 'components.id', '=', 'limits.component_id'
+        )
             ->where('components.user_id', \Auth::user()->id)->first(['limits.*']);
     }
 

@@ -34,6 +34,7 @@ Route::group(['before' => 'auth'], function () {
         // limit controller:
         Route::get('/budgets/limits/create/{id?}',['uses' => 'LimitController@create','as' => 'budgets.limits.create']);
         Route::get('/budgets/limits/delete/{id?}',['uses' => 'LimitController@delete','as' => 'budgets.limits.delete']);
+        Route::get('/budgets/limits/edit/{id?}',['uses' => 'LimitController@edit','as' => 'budgets.limits.edit']);
 
         // JSON controller:
         Route::get('/json/beneficiaries', ['uses' => 'JsonController@beneficiaries', 'as' => 'json.beneficiaries']);
@@ -41,7 +42,7 @@ Route::group(['before' => 'auth'], function () {
 
 
         // transaction controller:
-          Route::get('/transactions/create/{what}', ['uses' => 'TransactionController@create', 'as' => 'transactions.create'])->where(['what' => 'withdrawal|deposit|transfer']);
+        Route::get('/transactions/create/{what}', ['uses' => 'TransactionController@create', 'as' => 'transactions.create'])->where(['what' => 'withdrawal|deposit|transfer']);
         Route::get('/transaction/show/{id}',['uses' => 'TransactionController@show','as' => 'transactions.show']);
         Route::get('/transaction/edit/{id}',['uses' => 'TransactionController@edit','as' => 'transactions.edit']);
         Route::get('/transaction/delete/{id}',['uses' => 'TransactionController@delete','as' => 'transactions.delete']);
@@ -69,8 +70,9 @@ Route::group(['before' => 'csrf|auth'], function () {
         Route::get('/accounts/store', ['uses' => 'AccountController@store', 'as' => 'accounts.store']);
 
         // limit controller:
-        Route::post('/limits/store', ['uses' => 'LimitController@store', 'as' => 'budgets.limits.store']);
+        Route::post('/budgets/limits/store', ['uses' => 'LimitController@store', 'as' => 'budgets.limits.store']);
         Route::post('/budgets/limits/destroy/{id?}',['uses' => 'LimitController@destroy','as' => 'budgets.limits.destroy']);
+        Route::post('/budgets/limits/update/{id?}',['uses' => 'LimitController@update','as' => 'budgets.limits.update']);
 
         // transaction controller:
         Route::post('/transactions/store/{what}', ['uses' => 'TransactionController@store', 'as' => 'transactions.store'])

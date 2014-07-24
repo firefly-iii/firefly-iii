@@ -1,9 +1,9 @@
 <table class="table table-bordered table-striped table-condensed">
     <tr>
-        <th>&nbsp;</th>
-        <th>Description</th>
-        <th>Date</th>
-        <th>Amount</th>
+        <th><small>&nbsp;</small></th>
+        <th><small>Description</small></th>
+        <th style="min-width:100px;"><small>Date</small></th>
+        <th style="min-width:80px;"><small>Amount</small></th>
     </tr>
 @foreach($transactions as $journal)
     <tr>
@@ -20,14 +20,15 @@
             @endif
 
         </td>
-        <td><a href="{{route('transactions.show',$journal->id)}}">{{{$journal->description}}}</a></td>
-        <td>{{$journal->date->format('jS M Y')}}</td>
-        <td>
+        <td><small><a href="{{route('transactions.show',$journal->id)}}">{{{$journal->description}}}</a></small></td>
+        <td><small>{{$journal->date->format('jS M Y')}}</small></td>
+        <td><small>
             @foreach($journal->transactions as $t)
                 @if($t->account_id == $account->id)
                     {{mf($t->amount)}}
                 @endif
             @endforeach
+            </small>
         </td>
     </tr>
 @endforeach
