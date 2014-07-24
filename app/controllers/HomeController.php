@@ -1,9 +1,9 @@
 <?php
 use Firefly\Helper\Preferences\PreferencesHelperInterface as PHI;
-use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
-use Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface as TJRI;
 use Firefly\Helper\Toolkit\ToolkitInterface as Toolkit;
+use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
 use Firefly\Storage\Budget\BudgetRepositoryInterface as BRI;
+use Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface as TJRI;
 
 /**
  * Class HomeController
@@ -17,8 +17,8 @@ class HomeController extends BaseController
     protected $_tk;
 
     /**
-     * @param ARI  $accounts
-     * @param PHI  $preferences
+     * @param ARI $accounts
+     * @param PHI $preferences
      * @param TJRI $journal
      */
     public function __construct(ARI $accounts, PHI $preferences, TJRI $journal, Toolkit $toolkit, BRI $budgets)
@@ -40,6 +40,7 @@ class HomeController extends BaseController
     {
         // count, maybe we need some introducing text to show:
         $count = $this->_accounts->count();
+        list($start, $end) = $this->_tk->getDateRange();
 
 
         // get the preference for the home accounts to show:
@@ -53,11 +54,11 @@ class HomeController extends BaseController
 
         // get the budgets for this period:
         $dates = $this->_tk->getDateRange();
-        $budgets = $this->_budgets->getWithRepetitionsInPeriod($dates[0],\Session::get('range'));
+        $budgets = $this->_budgets->getWithRepetitionsInPeriod($dates[0], \Session::get('range'));
 
         $transactions = [];
         foreach ($accounts as $account) {
-            $transactions[] = [$this->_journal->getByAccount($account, 15), $account];
+            $transactions[] = [$this->_journal->getByAccountInDateRange($account, 15, $start, $end), $account];
         }
 
         if (count($transactions) % 2 == 0) {
@@ -68,6 +69,8 @@ class HomeController extends BaseController
             $transactions = array_chunk($transactions, 3);
         }
         // build the home screen:
-        return View::make('index')->with('count', $count)->with('transactions', $transactions)->with('budgets',$budgets);
+        return View::make('index')->with('count', $count)->with('transactions', $transactions)->with(
+            'budgets', $budgets
+        );
     }
 }

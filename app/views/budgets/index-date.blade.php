@@ -13,6 +13,7 @@
             <tr>
                 <td>
                     <a href="{{route('budgets.show',$rep->limit->budget->id)}}">{{{$rep->limit->budget->name}}}</a>
+
                 </td>
                 <td>
                     <span class="label label-primary">
@@ -30,10 +31,15 @@
                 @endif
                 </td>
                 <td>
-                    <a href="{{route('budgets.limits.delete',$rep->limit->id)}}" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                    <div class="btn-group">
+                        <a href="{{route('budgets.limits.edit',$rep->limit->id)}}" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="{{route('budgets.limits.delete',$rep->limit->id)}}" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                    </div>
                     @if($rep->limit->repeats == 1)
                         <span class="label label-warning">auto repeats</span>
                     @endif
+                    <a href="{{route('budgets.limits.create',$rep->limit->budget->id)}}" class="btn btn-default btn-xs"><span
+                            class="glyphicon-plus-sign glyphicon"></span> Add another limit</a>
                 </td>
             </tr>
 @endforeach
