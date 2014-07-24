@@ -17,8 +17,8 @@ class HomeController extends BaseController
     protected $_tk;
 
     /**
-     * @param ARI $accounts
-     * @param PHI $preferences
+     * @param ARI  $accounts
+     * @param PHI  $preferences
      * @param TJRI $journal
      */
     public function __construct(ARI $accounts, PHI $preferences, TJRI $journal, Toolkit $toolkit, BRI $budgets)
@@ -40,7 +40,7 @@ class HomeController extends BaseController
     {
         // count, maybe we need some introducing text to show:
         $count = $this->_accounts->count();
-        list($start, $end) = $this->_tk->getDateRange();
+        list($start, $end) = $this->_tk->getDateRangeDates();
 
 
         // get the preference for the home accounts to show:
@@ -53,12 +53,14 @@ class HomeController extends BaseController
 
 
         // get the budgets for this period:
-        $dates = $this->_tk->getDateRange();
-        $budgets = $this->_budgets->getWithRepetitionsInPeriod($dates[0], \Session::get('range'));
+        $budgets = $this->_budgets->getWithRepetitionsInPeriod($start, \Session::get('range'));
 
         $transactions = [];
         foreach ($accounts as $account) {
-            $transactions[] = [$this->_journal->getByAccountInDateRange($account, 15, $start, $end), $account];
+            $set = $this->_journal->getByAccountInDateRange($account, 15, $start, $end);
+            if (count($set) > 0) {
+                $transactions[] = [$set, $account];
+            }
         }
 
         if (count($transactions) % 2 == 0) {
@@ -72,5 +74,11 @@ class HomeController extends BaseController
         return View::make('index')->with('count', $count)->with('transactions', $transactions)->with(
             'budgets', $budgets
         );
+    }
+
+    public function flush()
+    {
+        Cache::flush();
+        return Redirect::route('index');
     }
 }

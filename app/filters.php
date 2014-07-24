@@ -4,11 +4,12 @@
 
 App::before(
     function ($request) {
+        Event::fire('app.before');
         if (Auth::check()) {
             $toolkit = App::make('Firefly\Helper\Toolkit\ToolkitInterface');
-            $toolkit->getDateRange();
+            return $toolkit->getDateRange();
         }
-        Event::fire('app.before');
+
     }
 );
 

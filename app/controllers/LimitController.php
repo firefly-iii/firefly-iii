@@ -19,20 +19,16 @@ class LimitController extends BaseController
 
     public function create($budgetId = null)
     {
-        $periods = [
-            'weekly'    => 'A week',
-            'monthly'   => 'A month',
-            'quarterly' => 'A quarter',
-            'half-year' => 'Six months',
-            'yearly'    => 'A year',
+        $periods = \Config::get('firefly.periods_to_text');
+        $prefilled = [
+            'startdate'   => Input::get('startdate') ? : date('Y-m-d'),
+            'repeat_freq' => Input::get('repeat_freq') ? : 'monthly'
         ];
 
-        $budget = $this->_budgets->find($budgetId);
-        $budget_id = is_null($budget) ? null : $budget->id;
         $budgets = $this->_budgets->getAsSelectList();
-        return View::make('limits.create')->with('budgets', $budgets)->with('budget_id', $budget_id)->with(
+        return View::make('limits.create')->with('budgets', $budgets)->with('budget_id', $budgetId)->with(
             'periods', $periods
-        );
+        )->with('prefilled', $prefilled);
     }
 
     public function edit($limitId = null)
@@ -50,8 +46,9 @@ class LimitController extends BaseController
 
 
         if ($limit) {
-            return View::make('limits.edit')->with('limit', $limit)->with('budgets', $budgets)->
-                with('periods',$periods);
+            return View::make('limits.edit')->with('limit', $limit)->with('budgets', $budgets)->with(
+                'periods', $periods
+            );
         }
 
     }
@@ -60,23 +57,23 @@ class LimitController extends BaseController
     {
         /** @var \Limit $limit */
         $limit = $this->_limits->find($limitId);
-        if($limit) {
+        if ($limit) {
             $limit->startdate = new \Carbon\Carbon(Input::get('date'));
             $limit->repeat_freq = Input::get('period');
             $limit->repeats = !is_null(Input::get('repeats')) && Input::get('repeats') == '1' ? 1 : 0;
             $limit->amount = floatval(Input::get('amount'));
-            if(!$limit->save()) {
-                Session::flash('error','Could not save new limit: ' . $limit->errors()->first());
-                return Redirect::route('budgets.limits.edit',$limit->id)->withInput();
+            if (!$limit->save()) {
+                Session::flash('error', 'Could not save new limit: ' . $limit->errors()->first());
+                return Redirect::route('budgets.limits.edit', $limit->id)->withInput();
             } else {
-                Session::flash('success','Limit saved!');
-                foreach($limit->limitrepetitions()->get() as $rep) {
+                Session::flash('success', 'Limit saved!');
+                foreach ($limit->limitrepetitions()->get() as $rep) {
                     $rep->delete();
                 }
                 return Redirect::route('budgets.index');
             }
         }
-        return View::make('error')->with('message','No limit!');
+        return View::make('error')->with('message', 'No limit!');
 
     }
 

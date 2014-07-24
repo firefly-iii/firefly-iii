@@ -1,3 +1,24 @@
+@extends('layouts.default')
+@section('content')
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <h1>Firefly
+            <small>Budgets and limits</small>
+        </h1>
+        <p class="text-info">
+            These are your budgets and if set, their "limits". Firefly uses an "<a
+                href="http://en.wikipedia.org/wiki/Envelope_System" class="text-success">envelope system</a>" for your
+            budgets,
+            which means that for each period of time (for example a month) a virtual "envelope" can be created
+            containing a certain amount of money. Money spent within a budget is removed from the envelope.
+        </p>
+        <p>
+            <a class="btn btn-default" href ="{{route('budgets.index.budget')}}"><span class="glyphicon glyphicon-indent-left"></span> Group by budget</a>
+            <a class="btn btn-default" href ="{{route('budgets.limits.create')}}"><span class="glyphicon glyphicon-plus-sign"></span> Create a limit</a>
+        </p>
+    </div>
+</div>
+
 @foreach($reps as $date => $data)
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
@@ -47,3 +68,5 @@
 </div>
 </div>
 @endforeach
+
+@stop

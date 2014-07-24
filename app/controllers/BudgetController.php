@@ -13,67 +13,57 @@ class BudgetController extends BaseController
         View::share('menu', 'budgets');
     }
 
-    public function index($group = null)
+    public function indexByDate()
     {
-
-        $opts = ['date', 'budget'];
-        $group = in_array($group, $opts) ? $group : 'date';
-
-        switch ($group) {
-            case 'date':
-                // get a list of dates by getting all repetitions:
-                $budgets = $this->_budgets->get();
-                $reps = [];
-                foreach ($budgets as $budget) {
-                    foreach ($budget->limits as $limit) {
-                        foreach ($limit->limitrepetitions as $rep) {
-
-                            $monthOrder = $rep->startdate->format('Y-m');
-                            $month = $rep->startdate->format('F Y');
-                            $reps[$monthOrder] = isset($reps[$monthOrder]) ? $reps[$monthOrder] : ['date' => $month];
-
-                        }
-                    }
+        // get a list of dates by getting all repetitions:
+        $budgets = $this->_budgets->get();
+        $reps = [];
+        foreach ($budgets as $budget) {
+            foreach ($budget->limits as $limit) {
+                $dateFormats = \Config::get('firefly.date_formats_by_period.' . $limit->repeat_freq);
+                if(is_null($dateFormats)) {
+                    die('No date formats for ' . $limit->repeat_freq);
                 }
-                // put all the budgets under their respective date:
-                foreach ($budgets as $budget) {
-                    foreach ($budget->limits as $limit) {
-                        foreach ($limit->limitrepetitions as $rep) {
-                            $month = $rep->startdate->format('Y-m');
-                            $reps[$month]['limitrepetitions'][] = $rep;
-                        }
-                    }
+
+                foreach ($limit->limitrepetitions as $rep) {
+                    $periodOrder = $rep->startdate->format($dateFormats['group_date']);
+                    $period = $rep->startdate->format($dateFormats['display_date']);
+                    $reps[$periodOrder] = isset($reps[$periodOrder]) ? $reps[$periodOrder] : ['date' => $period];
+
                 }
-                krsort($reps);
-
-                return View::make('budgets.index')->with('group', $group)->with('reps', $reps);
-
-
-                break;
-            case 'budget':
-                $budgets = $this->_budgets->get();
-                $today = new \Carbon\Carbon;
-                return View::make('budgets.index')->with('budgets', $budgets)->with('today', $today)->with(
-                    'group', $group
-                );
-
-                break;
+            }
         }
+        // put all the budgets under their respective date:
+        foreach ($budgets as $budget) {
+            foreach ($budget->limits as $limit) {
+                $dateFormats = \Config::get('firefly.date_formats_by_period.' . $limit->repeat_freq);
+                if(is_null($dateFormats)) {
+                    die('No date formats for ' . $limit->repeat_freq);
+                }
+                foreach ($limit->limitrepetitions as $rep) {
 
+                    $month = $rep->startdate->format($dateFormats['group_date']);
+                    $reps[$month]['limitrepetitions'][] = $rep;
+                }
+            }
+        }
+        krsort($reps);
+
+        return View::make('budgets.indexByDate')->with('reps', $reps);
+
+    }
+
+    public function indexByBudget()
+    {
+        $budgets = $this->_budgets->get();
+        $today = new \Carbon\Carbon;
+        return View::make('budgets.indexByBudget')->with('budgets', $budgets)->with('today', $today);
 
     }
 
     public function create()
     {
-
-        $periods = [
-            'weekly'    => 'A week',
-            'monthly'   => 'A month',
-            'quarterly' => 'A quarter',
-            'half-year' => 'Six months',
-            'yearly'    => 'A year',
-        ];
-
+        $periods = \Config::get('firefly.periods_to_text');
         return View::make('budgets.create')->with('periods', $periods);
     }
 
@@ -92,8 +82,15 @@ class BudgetController extends BaseController
         return Redirect::route('budgets.index');
     }
 
+    /**
+     * TODO actual view, actual content.
+     * @param $budgetId
+     *
+     * @return string
+     */
     public function show($budgetId)
     {
+        /** @var \Budget $budget */
         $budget = $this->_budgets->find($budgetId);
 
         $list = $budget->transactionjournals()->get();
@@ -102,7 +99,6 @@ class BudgetController extends BaseController
         foreach ($list as $entry) {
             $month = $entry->date->format('F Y');
             $return[$month] = isset($return[$month]) ? $return[$month] : [];
-
             $return[$month][] = $entry;
 
         }

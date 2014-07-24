@@ -3,7 +3,7 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <h1>Firefly
-            <small>Set a limit to a budget</small>
+            <small>Create an envelope for a budget</small>
         </h1>
         <p class="text-info">
             Firefly uses an "<a href="http://en.wikipedia.org/wiki/Envelope_System" class="text-success">envelope
@@ -41,7 +41,7 @@
         <div class="form-group">
             {{ Form::label('startdate', 'Start date', ['class' => 'col-sm-3 control-label'])}}
             <div class="col-sm-9">
-                <input type="date" name="startdate" value="{{Input::old('startdate') ?: date('Y-m-d')}}"
+                <input type="date" name="startdate" value="{{Input::old('startdate') ?: $prefilled['startdate']}}"
                        class="form-control"/>
                 <span class="help-block">This date indicates when the envelope "starts". The date you select
                 here will correct itself to the nearest [period] you select below.</span>
@@ -52,7 +52,7 @@
             <label for="period" class="col-sm-3 control-label">Spending period</label>
 
             <div class="col-sm-9">
-                {{Form::select('period',$periods,Input::old('period') ?: 'monthly',['class' => 'form-control'])}}
+                {{Form::select('period',$periods,Input::old('period') ?: $prefilled['repeat_freq'],['class' => 'form-control'])}}
                 <span class="help-block">How long will the envelope last? A week, a month, or even longer?</span>
             </div>
         </div>
