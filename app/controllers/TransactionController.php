@@ -111,6 +111,11 @@ class TransactionController extends BaseController
 
     }
 
+    public function index() {
+        $transactions = $this->_journal->paginate(25);
+        return View::make('transactions.index')->with('transactions',$transactions);
+    }
+
     public function show($journalId)
     {
         $journal = $this->_journal->find($journalId);

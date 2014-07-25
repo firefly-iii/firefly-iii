@@ -48,6 +48,7 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/transaction/show/{id}',['uses' => 'TransactionController@show','as' => 'transactions.show']);
         Route::get('/transaction/edit/{id}',['uses' => 'TransactionController@edit','as' => 'transactions.edit']);
         Route::get('/transaction/delete/{id}',['uses' => 'TransactionController@delete','as' => 'transactions.delete']);
+        Route::get('/transactions/index',['uses' => 'TransactionController@index','as' => 'transactions.index']);
         // migration controller
         Route::get('/migrate', ['uses' => 'MigrationController@index', 'as' => 'migrate']);
 

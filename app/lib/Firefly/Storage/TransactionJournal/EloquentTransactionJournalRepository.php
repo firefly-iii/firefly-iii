@@ -4,8 +4,6 @@
 namespace Firefly\Storage\TransactionJournal;
 
 
-use Firefly\Exception\FireflyException;
-
 class EloquentTransactionJournalRepository implements TransactionJournalRepositoryInterface
 {
 
@@ -167,7 +165,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
 
     }
 
-    public function getByAccountInDateRange(\Account $account, $count = 25,\Carbon\Carbon $start, \Carbon\Carbon $end)
+    public function getByAccountInDateRange(\Account $account, $count = 25, \Carbon\Carbon $start, \Carbon\Carbon $end)
     {
         $accountID = $account->id;
         $query = \Auth::user()->transactionjournals()->with(
@@ -180,12 +178,32 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
             ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
             ->where('accounts.id', $accountID)
-            ->where('date','>=',$start->format('Y-m-d'))
-            ->where('date','<=',$end->format('Y-m-d'))
+            ->where('date', '>=', $start->format('Y-m-d'))
+            ->where('date', '<=', $end->format('Y-m-d'))
             ->orderBy('transaction_journals.date', 'DESC')
             ->orderBy('transaction_journals.id', 'DESC')
             ->take($count)
             ->get(['transaction_journals.*']);
+        return $query;
+    }
+
+    public function paginate($count = 25)
+    {
+        $query = \Auth::user()->transactionjournals()->with(
+            [
+                'transactions' => function ($q) {
+                        return $q->orderBy('amount', 'ASC');
+                    },
+                'transactions.account',
+                'transactions.account.accounttype',
+                'transactioncurrency',
+                'transactiontype'
+            ]
+        )
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.id', 'DESC')
+            ->take($count)
+            ->paginate($count);
         return $query;
     }
 

@@ -23,7 +23,7 @@ $r = Route::current()->getName();
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="{{route('accounts.index')}}"><span class="glyphicon glyphicon-inbox"></span> Accounts</a></li>
                         <li><a href="{{route('budgets.index')}}"><span class="glyphicon glyphicon-euro"></span> Budgets</a></li>
-                        <li><a href="#">Something else here</a></li>
+                        <li><a href="{{route('transactions.index')}}"><span class="glyphicon glyphicon-list-alt"></span> Transactions</a></li>
                         <li class="divider"></li>
                         <li><a href="#">Separated link</a></li>
                         <li class="divider"></li>

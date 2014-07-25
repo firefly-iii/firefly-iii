@@ -11,10 +11,12 @@ interface TransactionJournalRepositoryInterface
 
     public function find($journalId);
 
-    public function getByAccountInDateRange(\Account $account, $count = 25,\Carbon\Carbon $start, \Carbon\Carbon $end);
+    public function getByAccountInDateRange(\Account $account, $count = 25, \Carbon\Carbon $start, \Carbon\Carbon $end);
 
     public function getByAccountAndDate(\Account $account, \Carbon\Carbon $date);
 
     public function getByDateRange(\Carbon\Carbon $start, \Carbon\Carbon $end);
+
+    public function paginate($count = 25);
 
 }
