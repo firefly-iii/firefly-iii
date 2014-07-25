@@ -65,50 +65,10 @@
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
             <h4>Budgets</h4>
-            @foreach($budgets as $budget)
-            <h5><a href="{{route('budgets.show',$budget->id)}}">{{{$budget->name}}}</a>
-            @if($budget->count > 0)
-                @foreach($budget->limits as $limit)
-                @foreach($limit->limitrepetitions as $rep)
-            <small>{{mf($rep->amount,false)}}</small>
-                @endforeach
-                @endforeach
-            @endif
-            </h5>
-            @if($budget->count == 0)
-            <p>
-                <a href="{{route('budgets.limits.create',[$budget->id])}}?startdate={{\Session::get('start')->format('Y-m-d')}}&amp;repeat_freq={{\Config::get('firefly.range_to_repeat_freq.' . \Session::get('range'))}}" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-envelope"></span> Add a new envelope</a>
 
-            </p>
-            @else
-            @foreach($budget->limits as $limit)
-            @foreach($limit->limitrepetitions as $rep)
-            @if($rep->left() < 0)
-            <!-- bar to display when over budget -->
-            <div class="progress progress-striped">
-                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{$rep->spent_pct}}" aria-valuemin="0"
-                     aria-valuemax="100" style="width: {{$rep->spent_pct}}%;min-width:30px;">{{mf($rep->amount,false)}}</div>
-                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{$rep->overspent_pct}}" aria-valuemin="0"
-                         aria-valuemax="100" style="width: {{$rep->overspent_pct}}%;min-width:30px;">{{mf($rep->overspent,false)}}
-                </div>
+            <div id="budgets">
+
             </div>
-            @else
-            <!-- bar to display when UNDER budget -->
-            <div class="progress progress-striped">
-                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{$rep->spent_pct}}" aria-valuemin="0"
-                     aria-valuemax="100" style="width: {{$rep->spent_pct}}%;min-width:80px;">{{mf($rep->spent,false)}}
-                     </div>
-                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{$rep->left_pct}}" aria-valuemin="0"
-                     aria-valuemax="100" style="width: {{$rep->left_pct}}%;min-width:30px;">{{mf($rep->left,false)}}
-                </div>
-                </div>
-            @endif
-
-
-            @endforeach
-            @endforeach
-            @endif
-            @endforeach
         </div>
     </div>
 

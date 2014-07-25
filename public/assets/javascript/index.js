@@ -20,6 +20,10 @@ $(function () {
                     return '$' + Highcharts.numberFormat(this.y, 0);
                 }
             },
+            subtitle: {
+                text: '<a href="#">View more</a>',
+                useHTML: true
+            },
 
             xAxis: {
                 floor: 0,
@@ -97,6 +101,10 @@ $(function () {
             title: {
                 text: 'Expenses for each categorie'
             },
+            subtitle: {
+                text: '<a href="#">View more</a>',
+                useHTML: true
+            },
             credits: {
                 enabled: false
             },
@@ -148,5 +156,85 @@ $(function () {
     /**
      * Get chart data for budget charts.
      */
+    $.getJSON('chart/home/budgets').success(function (data) {
+        $('#budgets').highcharts({
+            chart: {
+                type: 'bar'
+            },
+            title: {
+                text: 'Budgets and spending'
+            },
+            subtitle: {
+                text: '<a href="#">View more</a>',
+                useHTML: true
+            },
+            xAxis: {
+                categories: data.labels,
+                title: {
+                    text: null
+                },
+                labels: {
+                    style: {
+                        fontSize: '11px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Amount (€)',
+                    align: 'high'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                formatter: function() {return '€ ' + Highcharts.numberFormat(this.y,2);}
+            },
+            plotOptions: {
+                bar: {
+                    dataLabels: {
+                        enabled: true,
+                    }
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'top',
+                x: -40,
+                y: 100,
+                floating: true,
+                borderWidth: 1,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor || '#FFFFFF'),
+                shadow: true
+            },
+            credits: {
+                enabled: false
+            },
+            series: data.series
+//                [
+//                {
+//                    name: 'Budget in X',
+//                    data: [107, 31, 635, 203, 2]
+//                },
+//                {
+//                    name: 'Expense in X',
+//                    data: [107, 31, 635, 203, 2]
+//                },
+//                {
+//                    name: 'Budget now',
+//                    data: [133, 156, 947, 408, 6]
+//                },
+//                {
+//                    name: 'Expense now',
+//                    data: [973, 914, 454, 732, 34]
+//                }
+//            ]
+        });
+    });
+
 
 });

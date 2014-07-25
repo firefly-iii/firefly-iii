@@ -43,6 +43,8 @@ class TransactionController extends BaseController
 
         $budgets[0] = '(no budget)';
 
+
+
         return View::make('transactions.create')->with('accounts', $accounts)->with('budgets', $budgets)->with(
             'what', $what
         );
@@ -106,14 +108,23 @@ class TransactionController extends BaseController
         }
 
         Session::flash('success', 'Transaction saved');
-        return Redirect::route('index');
+
+        if(Input::get('create') == '1') {
+            return Redirect::route('transactions.create',$what)->withInput();
+        } else {
+            return Redirect::route('index');
+        }
+
+
+
 
 
     }
 
-    public function index() {
+    public function index()
+    {
         $transactions = $this->_journal->paginate(25);
-        return View::make('transactions.index')->with('transactions',$transactions);
+        return View::make('transactions.index')->with('transactions', $transactions);
     }
 
     public function show($journalId)
