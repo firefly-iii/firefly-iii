@@ -2,17 +2,27 @@
 
 use Firefly\Storage\Budget\BudgetRepositoryInterface as BRI;
 
+/**
+ * Class BudgetController
+ */
 class BudgetController extends BaseController
 {
 
     protected $_budgets;
 
+    /**
+     * @param BRI $budgets
+     */
     public function __construct(BRI $budgets)
     {
         $this->_budgets = $budgets;
         View::share('menu', 'budgets');
     }
 
+    /**
+     * @return $this|\Illuminate\View\View
+     * @throws Firefly\Exception\FireflyException
+     */
     public function indexByDate()
     {
         // get a list of dates by getting all repetitions:
@@ -21,8 +31,8 @@ class BudgetController extends BaseController
         foreach ($budgets as $budget) {
             foreach ($budget->limits as $limit) {
                 $dateFormats = \Config::get('firefly.date_formats_by_period.' . $limit->repeat_freq);
-                if(is_null($dateFormats)) {
-                    die('No date formats for ' . $limit->repeat_freq);
+                if (is_null($dateFormats)) {
+                    throw new \Firefly\Exception\FireflyException('No date formats for ' . $limit->repeat_freq);
                 }
 
                 foreach ($limit->limitrepetitions as $rep) {
@@ -37,9 +47,6 @@ class BudgetController extends BaseController
         foreach ($budgets as $budget) {
             foreach ($budget->limits as $limit) {
                 $dateFormats = \Config::get('firefly.date_formats_by_period.' . $limit->repeat_freq);
-                if(is_null($dateFormats)) {
-                    die('No date formats for ' . $limit->repeat_freq);
-                }
                 foreach ($limit->limitrepetitions as $rep) {
 
                     $month = $rep->startdate->format($dateFormats['group_date']);
@@ -53,6 +60,9 @@ class BudgetController extends BaseController
 
     }
 
+    /**
+     * @return $this|\Illuminate\View\View
+     */
     public function indexByBudget()
     {
         $budgets = $this->_budgets->get();
@@ -61,12 +71,18 @@ class BudgetController extends BaseController
 
     }
 
+    /**
+     * @return $this|\Illuminate\View\View
+     */
     public function create()
     {
         $periods = \Config::get('firefly.periods_to_text');
         return View::make('budgets.create')->with('periods', $periods);
     }
 
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store()
     {
 
@@ -84,6 +100,7 @@ class BudgetController extends BaseController
 
     /**
      * TODO actual view, actual content.
+     *
      * @param $budgetId
      *
      * @return string

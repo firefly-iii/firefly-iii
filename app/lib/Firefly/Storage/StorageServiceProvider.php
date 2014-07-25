@@ -3,11 +3,18 @@ namespace Firefly\Storage;
 
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Class StorageServiceProvider
+ *
+ * @package Firefly\Storage
+ */
 class StorageServiceProvider extends ServiceProvider
 {
 
 
-    // Triggered automatically by Laravel
+    /**
+     * Triggered automatically by Laravel
+     */
     public function register()
     {
         $this->app->bind(

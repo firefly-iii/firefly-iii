@@ -181,7 +181,7 @@ class ChartControllerTest extends TestCase
     {
         $account = FactoryMuffin::create('Account');
         $second = FactoryMuffin::create('Account');
-        $date = \Carbon\Carbon::createFromDate('2012','01','01');
+        $date = \Carbon\Carbon::createFromDate('2012', '01', '01');
         $transaction = FactoryMuffin::create('Transaction');
         $transaction->account()->associate($second);
         $journal = FactoryMuffin::create('TransactionJournal');
@@ -196,13 +196,8 @@ class ChartControllerTest extends TestCase
         $tj->shouldReceive('getByAccountAndDate')->once()->andReturn([$journal]);
 
 
-
-
-
-
-
         // call
-        $this->call('GET', '/chart/home/info/'.$account->name.'/'.$date->format('d/m/Y'));
+        $this->call('GET', '/chart/home/info/' . $account->name . '/' . $date->format('d/m/Y'));
 
         // test
         $this->assertResponseOk();

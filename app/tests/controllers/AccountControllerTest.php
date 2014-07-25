@@ -15,17 +15,16 @@ class AccountControllerTest extends TestCase
     {
         // mock account type(s):
         $personal = $this->mock('AccountType');
-        $personal->shouldReceive('getAttribute','description')->andReturn('Default account');
+        $personal->shouldReceive('getAttribute', 'description')->andReturn('Default account');
 
         $bene = $this->mock('AccountType');
-        $bene->shouldReceive('getAttribute','description')->andReturn('Beneficiary account');
+        $bene->shouldReceive('getAttribute', 'description')->andReturn('Beneficiary account');
 
         $initial = $this->mock('AccountType');
-        $initial->shouldReceive('getAttribute','description')->andReturn('Initial balance account');
+        $initial->shouldReceive('getAttribute', 'description')->andReturn('Initial balance account');
 
         $cash = $this->mock('AccountType');
-        $cash->shouldReceive('getAttribute','description')->andReturn('Cash account');
-
+        $cash->shouldReceive('getAttribute', 'description')->andReturn('Cash account');
 
 
         // mock account(s)
@@ -40,14 +39,11 @@ class AccountControllerTest extends TestCase
 
         $four = $this->mock('Account');
         $four->shouldReceive('getAttribute')->andReturn($cash);
-        $c = new \Illuminate\Database\Eloquent\Collection([$one,$two,$three,$four]);
+        $c = new \Illuminate\Database\Eloquent\Collection([$one, $two, $three, $four]);
 
         // mock account repository:
         $accounts = $this->mock('Firefly\Storage\Account\AccountRepositoryInterface');
         $accounts->shouldReceive('get')->andReturn($c);
-
-
-
 
 
         $list = [
@@ -60,9 +56,8 @@ class AccountControllerTest extends TestCase
         // mock:
         View::shouldReceive('share');
         View::shouldReceive('make')->with('accounts.index')->once()->andReturn(\Mockery::self())
-            ->shouldReceive('with')->once()->with('accounts',$list)->andReturn(\Mockery::self())
+            ->shouldReceive('with')->once()->with('accounts', $list)->andReturn(\Mockery::self())
             ->shouldReceive('with')->once()->with('total', 4)->andReturn(\Mockery::self());
-
 
 
         // call

@@ -1,12 +1,14 @@
 <?php
 
-class JsonControllerTest extends TestCase {
+class JsonControllerTest extends TestCase
+{
     public function setUp()
     {
         parent::setUp();
     }
 
-    public function testBeneficiaries() {
+    public function testBeneficiaries()
+    {
 
         $obj = new stdClass;
         $obj->name = 'Bla bla';
@@ -22,7 +24,8 @@ class JsonControllerTest extends TestCase {
 
     }
 
-    public function testCategories() {
+    public function testCategories()
+    {
         $obj = new stdClass;
         $obj->name = 'Bla bla';
 
@@ -35,6 +38,7 @@ class JsonControllerTest extends TestCase {
         // test
         $this->assertResponseOk();
     }
+
     public function tearDown()
     {
         Mockery::close();

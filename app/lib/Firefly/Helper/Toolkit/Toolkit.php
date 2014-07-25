@@ -2,6 +2,8 @@
 
 namespace Firefly\Helper\Toolkit;
 
+use Carbon\Carbon;
+
 /**
  * Class Toolkit
  *
@@ -37,10 +39,10 @@ class Toolkit implements ToolkitInterface
         }
 
         // switch $range, update range or something:
-        $start = \Session::has('start') ? \Session::get('start') : new \Carbon\Carbon();
-        $end = \Session::has('end') ? \Session::get('end') : new \Carbon\Carbon();
-        $today = new \Carbon\Carbon;
-        \Log::debug('Start: ' . $start.' ('.\Session::has('start').')');
+        $start = \Session::has('start') ? \Session::get('start') : new Carbon;
+        $end = \Session::has('end') ? \Session::get('end') : new Carbon;
+        $today = new Carbon;
+        \Log::debug('Start: ' . $start . ' (' . \Session::has('start') . ')');
         \Log::debug('End: ' . $end);
 
         // see if we have to do a prev / next thing:
@@ -58,8 +60,8 @@ class Toolkit implements ToolkitInterface
             case 'custom':
                 // when range is custom AND input, we ignore $today
                 if (\Input::get('start') && \Input::get('end')) {
-                    $start = new \Carbon\Carbon(\Input::get('start'));
-                    $end = new \Carbon\Carbon(\Input::get('end'));
+                    $start = new Carbon(\Input::get('start'));
+                    $end = new Carbon(\Input::get('end'));
                 } else {
                     $start = \Session::get('start');
                     $end = \Session::get('end');
@@ -147,11 +149,14 @@ class Toolkit implements ToolkitInterface
             return \Redirect::route('index');
 
         }
-        return;
+        return null;
 
 
     }
 
+    /**
+     * @return array
+     */
     public function getDateRangeDates()
     {
         return [\Session::get('start'), \Session::get('end')];

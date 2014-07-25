@@ -3,19 +3,33 @@
 namespace Firefly\Helper\Migration;
 
 
-use Firefly\Helper\MigrationException;
+use Carbon\Carbon;
+use Firefly\Exception\FireflyException;
 
+/**
+ * Class MigrationHelper
+ *
+ * @package Firefly\Helper\Migration
+ */
 class MigrationHelper implements MigrationHelperInterface
 {
     protected $path;
     protected $JSON;
     protected $map = [];
 
+    /**
+     * @param $path
+     *
+     * @return mixed|void
+     */
     public function loadFile($path)
     {
         $this->path = $path;
     }
 
+    /**
+     * @return bool
+     */
     public function validFile()
     {
         // file does not exist:
@@ -39,6 +53,9 @@ class MigrationHelper implements MigrationHelperInterface
         return true;
     }
 
+    /**
+     * @return bool
+     */
     public function migrate()
     {
         \Log::info('Start of migration.');
@@ -62,7 +79,7 @@ class MigrationHelper implements MigrationHelperInterface
             $this->_importLimits();
 
 
-        } catch (\Firefly\Exception\FireflyException $e) {
+        } catch (FireflyException $e) {
             \DB::rollBack();
             \Log::error('Rollback because of error!');
             \Log::error($e->getMessage());
@@ -74,6 +91,9 @@ class MigrationHelper implements MigrationHelperInterface
         return true;
     }
 
+    /**
+     *
+     */
     protected function _createCashAccount()
     {
         $cashAT = \AccountType::where('description', 'Cash account')->first();
@@ -84,6 +104,9 @@ class MigrationHelper implements MigrationHelperInterface
         $this->map['cash'] = $cash;
     }
 
+    /**
+     *
+     */
     protected function _importAccounts()
     {
 
@@ -97,7 +120,7 @@ class MigrationHelper implements MigrationHelperInterface
             } else {
                 $account = $accounts->storeWithInitialBalance(
                     ['name' => $entry->name],
-                    new \Carbon\Carbon($entry->openingbalancedate),
+                    new Carbon($entry->openingbalancedate),
                     floatval($entry->openingbalance)
                 );
             }
@@ -106,6 +129,9 @@ class MigrationHelper implements MigrationHelperInterface
         }
     }
 
+    /**
+     *
+     */
     protected function _importComponents()
     {
         $beneficiaryAT = \AccountType::where('description', 'Beneficiary account')->first();
@@ -128,6 +154,12 @@ class MigrationHelper implements MigrationHelperInterface
         }
     }
 
+    /**
+     * @param              $component
+     * @param \AccountType $beneficiaryAT
+     *
+     * @return mixed
+     */
     protected function _importBeneficiary($component, \AccountType $beneficiaryAT)
     {
         /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accounts */
@@ -140,6 +172,11 @@ class MigrationHelper implements MigrationHelperInterface
         );
     }
 
+    /**
+     * @param $component
+     *
+     * @return mixed
+     */
     protected function _importCategory($component)
     {
         /** @var \Firefly\Storage\Component\ComponentRepositoryInterface $components */
@@ -147,6 +184,11 @@ class MigrationHelper implements MigrationHelperInterface
         return $components->store(['name' => $component->name, 'class' => 'Category']);
     }
 
+    /**
+     * @param $component
+     *
+     * @return mixed
+     */
     protected function _importBudget($component)
     {
         /** @var \Firefly\Storage\Component\ComponentRepositoryInterface $components */
@@ -154,39 +196,9 @@ class MigrationHelper implements MigrationHelperInterface
         return $components->store(['name' => $component->name, 'class' => 'Budget']);
     }
 
-    protected function _importLimits()
-    {
-        \Log::info('Importing limits');
-        foreach ($this->JSON->limits as $entry) {
-            \Log::debug(
-                'Now at #' . $entry->id . ': EUR ' . $entry->amount . ' for month ' . $entry->date
-                . ' and componentID: ' . $entry->component_id
-            );
-            $budget = isset($this->map['budgets'][$entry->component_id]) ? $this->map['budgets'][$entry->component_id]
-                : null;
-            if (!is_null($budget)) {
-                \Log::debug('Found budget for this limit: #' . $budget->id . ', ' . $budget->name);
-
-                $limit = new \Limit;
-                $limit->budget()->associate($budget);
-                $limit->startdate = new \Carbon\Carbon($entry->date);
-                $limit->amount = floatval($entry->amount);
-                $limit->repeats = 0;
-                $limit->repeat_freq = 'monthly';
-                try {
-                    $limit->save();
-                } catch (\Exception $e) {
-                }
-            } else {
-                \Log::warning('No budget for this limit!');
-            }
-
-
-            // create repeat thing should not be necessary.
-
-        }
-    }
-
+    /**
+     *
+     */
     protected function _importTransactions()
     {
 
@@ -215,7 +227,6 @@ class MigrationHelper implements MigrationHelperInterface
         }
 
         foreach ($this->JSON->transactions as $entry) {
-            $id = $entry->id;
 
             // to properly save the amount, do it times -1:
             $amount = $entry->amount * -1;
@@ -227,7 +238,7 @@ class MigrationHelper implements MigrationHelperInterface
             /** @var \Account $toAccount */
             $toAccount = isset($beneficiaries[$entry->id]) ? $beneficiaries[$entry->id] : $this->map['cash'];
 
-            $date = new \Carbon\Carbon($entry->date);
+            $date = new Carbon($entry->date);
             $journal = $journals->createSimpleJournal($fromAccount, $toAccount, $entry->description, $amount, $date);
 
             // save budgets and categories, on the journal
@@ -243,13 +254,15 @@ class MigrationHelper implements MigrationHelperInterface
         }
     }
 
+    /**
+     *
+     */
     protected function _importTransfers()
     {
         /** @var \Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface $journals */
         $journals = \App::make('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
 
         foreach ($this->JSON->transfers as $entry) {
-            $id = $entry->id;
 
             // to properly save the amount, do it times 1 (?):
             $amount = $entry->amount * -1;
@@ -262,8 +275,44 @@ class MigrationHelper implements MigrationHelperInterface
             $toAccount = isset($this->map['accounts'][$entry->accountto_id])
                 ? $this->map['accounts'][$entry->accountfrom_id] : false;
 
-            $date = new \Carbon\Carbon($entry->date);
+            $date = new Carbon($entry->date);
             $journals->createSimpleJournal($fromAccount, $toAccount, $entry->description, $amount, $date);
+
+        }
+    }
+
+    /**
+     *
+     */
+    protected function _importLimits()
+    {
+        \Log::info('Importing limits');
+        foreach ($this->JSON->limits as $entry) {
+            \Log::debug(
+                'Now at #' . $entry->id . ': EUR ' . $entry->amount . ' for month ' . $entry->date
+                . ' and componentID: ' . $entry->component_id
+            );
+            $budget = isset($this->map['budgets'][$entry->component_id]) ? $this->map['budgets'][$entry->component_id]
+                : null;
+            if (!is_null($budget)) {
+                \Log::debug('Found budget for this limit: #' . $budget->id . ', ' . $budget->name);
+
+                $limit = new \Limit;
+                $limit->budget()->associate($budget);
+                $limit->startdate = new Carbon($entry->date);
+                $limit->amount = floatval($entry->amount);
+                $limit->repeats = 0;
+                $limit->repeat_freq = 'monthly';
+                try {
+                    $limit->save();
+                } catch (\Exception $e) {
+                }
+            } else {
+                \Log::warning('No budget for this limit!');
+            }
+
+
+            // create repeat thing should not be necessary.
 
         }
     }

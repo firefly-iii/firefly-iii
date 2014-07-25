@@ -1,17 +1,24 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 20/07/14
- * Time: 13:43
- */
 
 namespace Firefly\Storage\Limit;
 
 
+use Carbon\Carbon;
+
+/**
+ * Class EloquentLimitRepository
+ *
+ * @package Firefly\Storage\Limit
+ */
 class EloquentLimitRepository implements LimitRepositoryInterface
 {
 
+
+    /**
+     * @param $limitId
+     *
+     * @return mixed
+     */
     public function find($limitId)
     {
         return \Limit::with('limitrepetitions')->where('limits.id', $limitId)->leftJoin(
@@ -20,6 +27,11 @@ class EloquentLimitRepository implements LimitRepositoryInterface
             ->where('components.user_id', \Auth::user()->id)->first(['limits.*']);
     }
 
+    /**
+     * @param $data
+     *
+     * @return \Limit
+     */
     public function store($data)
     {
         $budget = \Budget::find($data['budget_id']);
@@ -28,7 +40,7 @@ class EloquentLimitRepository implements LimitRepositoryInterface
             return new \Limit;
         }
         // set the date to the correct start period:
-        $date = new \Carbon\Carbon($data['startdate']);
+        $date = new Carbon($data['startdate']);
         switch ($data['period']) {
             case 'daily':
                 $date->startOfDay();
@@ -79,10 +91,15 @@ class EloquentLimitRepository implements LimitRepositoryInterface
         return $limit;
     }
 
-    public function getTJByBudgetAndDateRange(\Budget $budget, \Carbon\Carbon $start, \Carbon\Carbon $end)
+    /**
+     * @param \Budget $budget
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return mixed
+     */
+    public function getTJByBudgetAndDateRange(\Budget $budget, Carbon $start, Carbon $end)
     {
-        $type = \TransactionType::where('type', 'Withdrawal')->first();
-
         $result = $budget->transactionjournals()->after($start)->before($end)->get();
 
         return $result;

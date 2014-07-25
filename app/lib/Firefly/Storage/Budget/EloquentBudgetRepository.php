@@ -2,10 +2,19 @@
 
 namespace Firefly\Storage\Budget;
 
+use Carbon\Carbon;
 
+/**
+ * Class EloquentBudgetRepository
+ *
+ * @package Firefly\Storage\Budget
+ */
 class EloquentBudgetRepository implements BudgetRepositoryInterface
 {
 
+    /**
+     * @return array|mixed
+     */
     public function getAsSelectList()
     {
         $list = \Auth::user()->budgets()->with(
@@ -18,20 +27,18 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
         return $return;
     }
 
-    public function getWithRepetitionsInPeriod(\Carbon\Carbon $date, $range)
+    /**
+     * @param Carbon $date
+     * @param        $range
+     *
+     * @return mixed
+     */
+    public function getWithRepetitionsInPeriod(Carbon $date, $range)
     {
-
-        /** @var \Firefly\Helper\Toolkit\ToolkitInterface $toolkit */
-        $toolkit = \App::make('Firefly\Helper\Toolkit\ToolkitInterface');
-        $dates = $toolkit->getDateRangeDates();
-        $start = $dates[0];
-        $result = [];
-
 
         $set = \Auth::user()->budgets()->with(
             ['limits'                        => function ($q) use ($date) {
                     $q->orderBy('limits.startdate', 'ASC');
-//                    $q->where('startdate',$date->format('Y-m-d'));
                 }, 'limits.limitrepetitions' => function ($q) use ($date) {
                     $q->orderBy('limit_repetitions.startdate', 'ASC');
                     $q->where('startdate', $date->format('Y-m-d'));
@@ -65,6 +72,11 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
         return $set;
     }
 
+    /**
+     * @param $data
+     *
+     * @return \Budget|mixed
+     */
     public function store($data)
     {
         $budget = new \Budget;
@@ -76,7 +88,7 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
         if ($data['amount'] > 0) {
             $limit = new \Limit;
             $limit->budget()->associate($budget);
-            $startDate = new \Carbon\Carbon;
+            $startDate = new Carbon;
             switch ($data['repeat_freq']) {
                 case 'daily':
                     $startDate->startOfDay();
@@ -111,6 +123,10 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
         return $budget;
     }
 
+
+    /**
+     * @return mixed
+     */
     public function get()
     {
         return \Auth::user()->budgets()->with(
@@ -122,10 +138,15 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
         )->orderBy('name', 'ASC')->get();
     }
 
-    public function find($id)
+    /**
+     * @param $budgetId
+     *
+     * @return mixed
+     */
+    public function find($budgetId)
     {
 
-        return \Auth::user()->budgets()->find($id);
+        return \Auth::user()->budgets()->find($budgetId);
     }
 
 } 

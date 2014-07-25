@@ -19,9 +19,13 @@ class ChartController extends BaseController
     protected $_preferences;
     protected $_budgets;
 
+
     /**
      * @param ARI  $accounts
      * @param TJRI $journals
+     * @param PHI  $preferences
+     * @param tk   $toolkit
+     * @param BRI  $budgets
      */
     public function __construct(ARI $accounts, TJRI $journals, PHI $preferences, tk $toolkit, BRI $budgets)
     {
@@ -42,13 +46,9 @@ class ChartController extends BaseController
         list($start, $end) = $this->_tk->getDateRangeDates();
         $current = clone $start;
         $return = [];
-        $account = null;
-        $today = new Carbon\Carbon;
 
-        if (!is_null($accountId)) {
-            /** @var \Account $account */
-            $account = $this->_accounts->find($accountId);
-        }
+        $account = !is_null($accountId) ? $this->_accounts->find($accountId) : null;
+        $today = new Carbon\Carbon;
 
         if (is_null($account)) {
 
@@ -65,8 +65,6 @@ class ChartController extends BaseController
             while ($current <= $end) {
                 // loop accounts:
                 foreach ($accounts as $index => $account) {
-
-
                     if ($current > $today) {
                         $return[$index]['data'][] = [$current->timestamp * 1000, $account->predict(clone $current)];
                     } else {
@@ -97,6 +95,8 @@ class ChartController extends BaseController
      * @param $day
      * @param $month
      * @param $year
+     *
+     * @return $this|\Illuminate\View\View
      */
     public function homeAccountInfo($name, $day, $month, $year)
     {
@@ -122,15 +122,17 @@ class ChartController extends BaseController
         return View::make('charts.info')->with('rows', $result)->with('sum', $sum);
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     * @throws Firefly\Exception\FireflyException
+     */
     public function homeCategories()
     {
         list($start, $end) = $this->_tk->getDateRangeDates();
-        $account = null;
         $result = [];
         // grab all transaction journals in this period:
         $journals = $this->_journals->getByDateRange($start, $end);
 
-        $result = [];
         foreach ($journals as $journal) {
             // has to be one:
 
@@ -163,16 +165,20 @@ class ChartController extends BaseController
 
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     * @throws Firefly\Exception\FireflyException
+     */
     public function homeBudgets()
     {
         // grab all budgets in the time period, like the index does:
         // get the budgets for this period:
         $data = [];
 
-        list($start, $end) = $this->_tk->getDateRangeDates();
+        list($start) = $this->_tk->getDateRangeDates();
         $budgets = $this->_budgets->getWithRepetitionsInPeriod($start, \Session::get('range'));
 
-        $repeatFreq = Config::get('firefly.range_to_repeat_freq.'.Session::get('range'));
+        $repeatFreq = Config::get('firefly.range_to_repeat_freq.' . Session::get('range'));
 
         $dateFormats = Config::get('firefly.date_formats_by_period.' . $repeatFreq);
         if (is_null($dateFormats)) {
@@ -210,8 +216,5 @@ class ChartController extends BaseController
 
         }
         return Response::json($data);
-        echo '<pre>';
-        print_r($data);
-
     }
 }

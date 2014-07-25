@@ -4,8 +4,14 @@
 
 namespace Firefly\Database;
 
+use LaravelBook\Ardent\Ardent;
 
-abstract class SingleTableInheritanceEntity extends \LaravelBook\Ardent\Ardent
+/**
+ * Class SingleTableInheritanceEntity
+ *
+ * @package Firefly\Database
+ */
+abstract class SingleTableInheritanceEntity extends Ardent
 {
     /**
      * The field that stores the subclass
@@ -20,15 +26,26 @@ abstract class SingleTableInheritanceEntity extends \LaravelBook\Ardent\Ardent
      */
     protected $isSubclass = false;
 
-    public function newFromBuilder($attributes = array())
+    /**
+     * @param array $attributes
+     *
+     * @return \Illuminate\Database\Eloquent\Model|static
+     */
+    public function newFromBuilder($attributes = [])
     {
-        $instance = $this->mapData((array)$attributes)->newInstance(array(), true);
+        $instance = $this->mapData((array)$attributes)->newInstance([], true);
         $instance->setRawAttributes((array)$attributes, true);
         return $instance;
     }
 
-    // if no subclass is defined, function as normal
 
+    /**
+     * if no subclass is defined, function as normal
+     *
+     * @param array $attributes
+     *
+     * @return \Illuminate\Database\Eloquent\Model|static
+     */
     public function mapData(array $attributes)
     {
         if (!$this->subclassField) {
@@ -38,9 +55,16 @@ abstract class SingleTableInheritanceEntity extends \LaravelBook\Ardent\Ardent
         return new $attributes[$this->subclassField];
     }
 
-    // instead of using $this->newInstance(), call
-    // newInstance() on the object from mapData
 
+    /**
+     *
+     * instead of using $this->newInstance(), call
+     * newInstance() on the object from mapData
+     *
+     * @param bool $excludeDeleted
+     *
+     * @return \Illuminate\Database\Eloquent\Builder|static
+     */
     public function newQuery($excludeDeleted = true)
     {
         // If using Laravel 4.0.x then use the following commented version of this command
@@ -64,16 +88,29 @@ abstract class SingleTableInheritanceEntity extends \LaravelBook\Ardent\Ardent
         return $builder;
     }
 
+    /**
+     * @return bool
+     */
     public function isSubclass()
     {
         return $this->isSubclass;
     }
 
-    // ensure that the subclass field is assigned on save
+    /**
+     * ensure that the subclass field is assigned on save
+     *
+     * @param array    $rules
+     * @param array    $customMessages
+     * @param array    $options
+     * @param callable $beforeSave
+     * @param callable $afterSave
+     *
+     * @return bool
+     */
     public function save(
-        array $rules = array(),
-        array $customMessages = array(),
-        array $options = array(),
+        array $rules = [],
+        array $customMessages = [],
+        array $options = [],
         \Closure $beforeSave = null,
         \Closure $afterSave = null
     ) {

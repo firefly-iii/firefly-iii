@@ -2,6 +2,10 @@
 
 namespace Firefly\Trigger\Limits;
 
+use Carbon\Carbon;
+use Illuminate\Database\QueryException;
+use Illuminate\Events\Dispatcher;
+
 /**
  * Class EloquentLimitTrigger
  *
@@ -64,14 +68,14 @@ class EloquentLimitTrigger
 
                     try {
                         $repetition->save();
-                    } catch (\Illuminate\Database\QueryException $e) {
+                    } catch (QueryException $e) {
                         // do nothing
                         \Log::error($e->getMessage());
                     }
                 } else {
                     // there are limits already, do they
                     // fall into the range surrounding today?
-                    $today = new \Carbon\Carbon;
+                    $today = new Carbon;
                     $today->addMonths(2);
                     if ($limit->repeats == 1 && $today >= $limit->startdate) {
 
@@ -141,7 +145,7 @@ class EloquentLimitTrigger
                                 $repetition->limit()->associate($limit);
                                 try {
                                     $repetition->save();
-                                } catch (\Illuminate\Database\QueryException $e) {
+                                } catch (QueryException $e) {
                                     // do nothing
                                     \Log::error($e->getMessage());
                                 }
@@ -153,7 +157,10 @@ class EloquentLimitTrigger
         }
     }
 
-    public function subscribe(\Illuminate\Events\Dispatcher $events)
+    /**
+     * @param Dispatcher $events
+     */
+    public function subscribe(Dispatcher $events)
     {
         $events->listen('app.before', 'Firefly\Trigger\Limits\EloquentLimitTrigger@updateLimitRepetitions');
 

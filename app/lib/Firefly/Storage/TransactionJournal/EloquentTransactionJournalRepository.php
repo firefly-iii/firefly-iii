@@ -3,10 +3,22 @@
 
 namespace Firefly\Storage\TransactionJournal;
 
+use Carbon\Carbon;
+use Firefly\Exception\FireflyException;
 
+/**
+ * Class EloquentTransactionJournalRepository
+ *
+ * @package Firefly\Storage\TransactionJournal
+ */
 class EloquentTransactionJournalRepository implements TransactionJournalRepositoryInterface
 {
 
+    /**
+     * @param $journalId
+     *
+     * @return mixed
+     */
     public function find($journalId)
     {
         return \Auth::user()->transactionjournals()->with(
@@ -41,7 +53,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
      * B loses 200 (-200). * 1
      *
      * @param \Account       $from
-     * @param \Account       $to
+     * @param \Account       $toAccount
      * @param                $description
      * @param                $amount
      * @param \Carbon\Carbon $date
@@ -49,7 +61,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
      * @return \TransactionJournal
      * @throws \Firefly\Exception\FireflyException
      */
-    public function createSimpleJournal(\Account $from, \Account $to, $description, $amount, \Carbon\Carbon $date)
+    public function createSimpleJournal(\Account $from, \Account $toAccount, $description, $amount, Carbon $date)
     {
         \Log::debug('Creating tranaction "' . $description . '".');
 
@@ -59,23 +71,23 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         if (round(floatval($amount), 2) == 0.00) {
             \Log::error('Transaction will never save: amount = 0');
             \Session::flash('error', 'The amount should not be empty or zero.');
-            throw new \Firefly\Exception\FireflyException('Could not figure out transaction type.');
+            throw new FireflyException('Could not figure out transaction type.');
         }
         // same account:
-        if ($from->id == $to->id) {
+        if ($from->id == $toAccount->id) {
             \Log::error('Accounts cannot be equal');
             \Session::flash('error', 'Select two different accounts.');
-            throw new \Firefly\Exception\FireflyException('Select two different accounts.');
+            throw new FireflyException('Select two different accounts.');
         }
 
         // account types for both:
-        $toAT = $to->accountType->description;
+        $toAT = $toAccount->accountType->description;
         $fromAT = $from->accountType->description;
 
         $journalType = null;
 
         switch (true) {
-            case ($from->transactions()->count() == 0 && $to->transactions()->count() == 0):
+            case ($from->transactions()->count() == 0 && $toAccount->transactions()->count() == 0):
                 $journalType = \TransactionType::where('type', 'Opening balance')->first();
                 break;
 
@@ -99,19 +111,19 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         // some debug information:
         \Log::debug(
             $journalType->type . ': AccountFrom "' . $from->name . '" will gain/lose ' . $amountFrom
-            . ' and AccountTo "' . $to->name . '" will gain/lose ' . $amountTo
+            . ' and AccountTo "' . $toAccount->name . '" will gain/lose ' . $amountTo
         );
 
         if (is_null($journalType)) {
             \Log::error('Could not figure out transacion type!');
-            throw new \Firefly\Exception\FireflyException('Could not figure out transaction type.');
+            throw new FireflyException('Could not figure out transaction type.');
         }
 
         // always the same currency:
         $currency = \TransactionCurrency::where('code', 'EUR')->first();
         if (is_null($currency)) {
             \Log::error('No currency for journal!');
-            throw new \Firefly\Exception\FireflyException('No currency for journal!');
+            throw new FireflyException('No currency for journal!');
         }
 
         // new journal:
@@ -126,7 +138,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
             \Log::error('Cannot create valid journal.');
             \Log::error('Errors: ' . print_r($journal->errors()->all(), true));
             \Session::flash('error', 'Could not create journal: ' . $journal->errors()->first());
-            throw new \Firefly\Exception\FireflyException('Cannot create valid journal.');
+            throw new FireflyException('Cannot create valid journal.');
         }
         $journal->save();
 
@@ -139,19 +151,19 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         if (!$fromTransaction->save()) {
             \Log::error('Cannot create valid transaction (from) for journal #' . $journal->id);
             \Log::error('Errors: ' . print_r($fromTransaction->errors()->all(), true));
-            throw new \Firefly\Exception\FireflyException('Cannot create valid transaction (from).');
+            throw new FireflyException('Cannot create valid transaction (from).');
         }
         $fromTransaction->save();
 
         $toTransaction = new \Transaction;
-        $toTransaction->account()->associate($to);
+        $toTransaction->account()->associate($toAccount);
         $toTransaction->transactionJournal()->associate($journal);
         $toTransaction->description = null;
         $toTransaction->amount = $amountTo;
         if (!$toTransaction->save()) {
             \Log::error('Cannot create valid transaction (to) for journal #' . $journal->id);
             \Log::error('Errors: ' . print_r($toTransaction->errors()->all(), true));
-            throw new \Firefly\Exception\FireflyException('Cannot create valid transaction (to).');
+            throw new FireflyException('Cannot create valid transaction (to).');
         }
         $toTransaction->save();
 
@@ -160,12 +172,23 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         return $journal;
     }
 
+    /**
+     *
+     */
     public function get()
     {
 
     }
 
-    public function getByAccountInDateRange(\Account $account, $count = 25, \Carbon\Carbon $start, \Carbon\Carbon $end)
+    /**
+     * @param \Account $account
+     * @param int      $count
+     * @param Carbon   $start
+     * @param Carbon   $end
+     *
+     * @return mixed
+     */
+    public function getByAccountInDateRange(\Account $account, $count = 25, Carbon $start, Carbon $end)
     {
         $accountID = $account->id;
         $query = \Auth::user()->transactionjournals()->with(
@@ -187,6 +210,11 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         return $query;
     }
 
+    /**
+     * @param int $count
+     *
+     * @return mixed
+     */
     public function paginate($count = 25)
     {
         $query = \Auth::user()->transactionjournals()->with(
@@ -207,7 +235,13 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         return $query;
     }
 
-    public function getByDateRange(\Carbon\Carbon $start, \Carbon\Carbon $end)
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return mixed
+     */
+    public function getByDateRange(Carbon $start, Carbon $end)
     {
         // lets make this simple.
         $types = [];
@@ -231,7 +265,13 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         return $journals;
     }
 
-    public function getByAccountAndDate(\Account $account, \Carbon\Carbon $date)
+    /**
+     * @param \Account $account
+     * @param Carbon   $date
+     *
+     * @return mixed
+     */
+    public function getByAccountAndDate(\Account $account, Carbon $date)
     {
         $accountID = $account->id;
         $query = \Auth::user()->transactionjournals()->with(
