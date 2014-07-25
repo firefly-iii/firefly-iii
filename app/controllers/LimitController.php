@@ -3,12 +3,19 @@
 use Firefly\Storage\Budget\BudgetRepositoryInterface as BRI;
 use Firefly\Storage\Limit\LimitRepositoryInterface as LRI;
 
+/**
+ * Class LimitController
+ */
 class LimitController extends BaseController
 {
 
     protected $_budgets;
     protected $_limits;
 
+    /**
+     * @param BRI $budgets
+     * @param LRI $limits
+     */
     public function __construct(BRI $budgets, LRI $limits)
     {
         $this->_budgets = $budgets;
@@ -17,6 +24,11 @@ class LimitController extends BaseController
 
     }
 
+    /**
+     * @param null $budgetId
+     *
+     * @return $this|\Illuminate\View\View
+     */
     public function create($budgetId = null)
     {
         $periods = \Config::get('firefly.periods_to_text');
@@ -31,6 +43,11 @@ class LimitController extends BaseController
         )->with('prefilled', $prefilled);
     }
 
+    /**
+     * @param null $limitId
+     *
+     * @return $this|\Illuminate\View\View
+     */
     public function edit($limitId = null)
     {
         $limit = $this->_limits->find($limitId);
@@ -50,9 +67,15 @@ class LimitController extends BaseController
                 'periods', $periods
             );
         }
+        return View::make('error')->with('message', 'No such limit.');
 
     }
 
+    /**
+     * @param null $limitId
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function update($limitId = null)
     {
         /** @var \Limit $limit */
@@ -77,6 +100,9 @@ class LimitController extends BaseController
 
     }
 
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store()
     {
         // find a limit with these properties, as we might already have one:
@@ -88,6 +114,11 @@ class LimitController extends BaseController
         }
     }
 
+    /**
+     * @param $limitId
+     *
+     * @return $this|\Illuminate\View\View
+     */
     public function delete($limitId)
     {
         $limit = $this->_limits->find($limitId);
@@ -100,6 +131,11 @@ class LimitController extends BaseController
         }
     }
 
+    /**
+     * @param $limitId
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function destroy($limitId)
     {
         $limit = $this->_limits->find($limitId);

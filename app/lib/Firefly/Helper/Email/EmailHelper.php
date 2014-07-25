@@ -1,8 +1,18 @@
 <?php
 namespace Firefly\Helper\Email;
 
+/**
+ * Class EmailHelper
+ *
+ * @package Firefly\Helper\Email
+ */
 class EmailHelper implements EmailHelperInterface
 {
+    /**
+     * @param \User $user
+     *
+     * @return mixed|void
+     */
     public function sendVerificationMail(\User $user)
     {
 
@@ -19,6 +29,11 @@ class EmailHelper implements EmailHelperInterface
         );
     }
 
+    /**
+     * @param \User $user
+     *
+     * @return mixed|void
+     */
     public function sendPasswordMail(\User $user)
     {
 
@@ -37,6 +52,11 @@ class EmailHelper implements EmailHelperInterface
         );
     }
 
+    /**
+     * @param \User $user
+     *
+     * @return mixed|void
+     */
     public function sendResetVerification(\User $user)
     {
         $reset = \Str::random(32);

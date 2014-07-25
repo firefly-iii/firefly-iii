@@ -1,7 +1,8 @@
 <?php
 
 
-use \League\FactoryMuffin\Facade\FactoryMuffin;
+use League\FactoryMuffin\Facade\FactoryMuffin;
+
 /**
  * Class BudgetControllerTest
  */
@@ -24,7 +25,6 @@ class BudgetControllerTest extends TestCase
         $budget->limits()->save($limit);
 
 
-
         // mock budget repository:
         $budgets = $this->mock('Firefly\Storage\Budget\BudgetRepositoryInterface');
         $budgets->shouldReceive('get')->once()->andReturn([$budget]);
@@ -44,7 +44,6 @@ class BudgetControllerTest extends TestCase
         $rep = FactoryMuffin::create('LimitRepetition');
         $limit->limitrepetitions()->save($rep);
         $budget->limits()->save($limit);
-
 
 
         // mock budget repository:
@@ -70,10 +69,10 @@ class BudgetControllerTest extends TestCase
     public function testStore()
     {
         $data = [
-            'name'        => 'X',
-            'amount'      => 100,
-            'period' => 'monthly',
-            'repeats'     => 0
+            'name'    => 'X',
+            'amount'  => 100,
+            'period'  => 'monthly',
+            'repeats' => 0
         ];
         $return = $data;
         $return['repeat_freq'] = 'monthly';
@@ -84,7 +83,7 @@ class BudgetControllerTest extends TestCase
         $budgets->shouldReceive('store')->with($return)->once()->andReturn(true);
 
         // call
-        $this->call('POST', '/budget/store',$data);
+        $this->call('POST', '/budget/store', $data);
 
         // test
         $this->assertResponseStatus(302);
@@ -106,7 +105,7 @@ class BudgetControllerTest extends TestCase
 
 
         // call
-        $this->call('GET', '/budget/show/'.$budget->id);
+        $this->call('GET', '/budget/show/' . $budget->id);
 
         // test
         $this->assertResponseOk();

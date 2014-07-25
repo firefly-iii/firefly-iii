@@ -3,12 +3,25 @@
 
 namespace Firefly\Storage\User;
 
+/**
+ * Class EloquentUserRepository
+ *
+ * @package Firefly\Storage\User
+ */
 class EloquentUserRepository implements UserRepositoryInterface
 {
+    /**
+     *
+     */
     public function __construct()
     {
     }
 
+    /**
+     * @param $array
+     *
+     * @return bool|\User
+     */
     public function register($array)
     {
         $user = new \User;
@@ -26,6 +39,11 @@ class EloquentUserRepository implements UserRepositoryInterface
         return $user;
     }
 
+    /**
+     * @param $array
+     *
+     * @return bool
+     */
     public function auth($array)
     {
         $user = \User::where('email', $array['email'])->first();
@@ -36,16 +54,32 @@ class EloquentUserRepository implements UserRepositoryInterface
         return false;
     }
 
+    /**
+     * @param $reset
+     *
+     * @return mixed
+     */
     public function findByReset($reset)
     {
         return \User::where('reset', $reset)->first();
     }
 
+    /**
+     * @param $email
+     *
+     * @return mixed
+     */
     public function findByEmail($email)
     {
         return \User::where('email', $email)->first();
     }
 
+    /**
+     * @param \User $user
+     * @param       $password
+     *
+     * @return bool
+     */
     public function updatePassword(\User $user, $password)
     {
         $password = \Hash::make($password);

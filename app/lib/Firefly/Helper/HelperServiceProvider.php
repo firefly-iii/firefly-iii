@@ -3,11 +3,18 @@ namespace Firefly\Helper;
 
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Class HelperServiceProvider
+ *
+ * @package Firefly\Helper
+ */
 class HelperServiceProvider extends ServiceProvider
 {
 
 
-    // Triggered automatically by Laravel
+    /**
+     * Triggered automatically by Laravel
+     */
     public function register()
     {
         // mail:

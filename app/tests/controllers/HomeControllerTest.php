@@ -71,7 +71,7 @@ class HomeControllerTest extends TestCase
 
         // mock transaction journal repository:
         $tj = $this->mock('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
-        $tj->shouldReceive('getByAccount')->with($account,15)->andReturn([]);
+        $tj->shouldReceive('getByAccount')->with($account, 15)->andReturn([]);
 
         // mock preferences & pref:
         $pref = $this->mock('Preference');

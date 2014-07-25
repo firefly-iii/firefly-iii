@@ -3,19 +3,37 @@
 
 namespace Firefly\Storage\Account;
 
+use Carbon\Carbon;
+use Firefly\Exception\FireflyException;
+use Illuminate\Database\QueryException;
+
+/**
+ * Class EloquentAccountRepository
+ *
+ * @package Firefly\Storage\Account
+ */
 class EloquentAccountRepository implements AccountRepositoryInterface
 {
     public $validator;
 
+    /**
+     *
+     */
     public function __construct()
     {
     }
 
+    /**
+     * @return mixed
+     */
     public function get()
     {
         return \Auth::user()->accounts()->with('accounttype')->orderBy('name', 'ASC')->get();
     }
 
+    /**
+     * @return mixed
+     */
     public function getBeneficiaries()
     {
         $list = \Auth::user()->accounts()->leftJoin(
@@ -27,11 +45,21 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         return $list;
     }
 
-    public function find($id)
+    /**
+     * @param $accountId
+     *
+     * @return mixed
+     */
+    public function find($accountId)
     {
-        return \Auth::user()->accounts()->where('id', $id)->first();
+        return \Auth::user()->accounts()->where('id', $accountId)->first();
     }
 
+    /**
+     * @param $ids
+     *
+     * @return array|mixed
+     */
     public function getByIds($ids)
     {
         if (count($ids) > 0) {
@@ -41,6 +69,9 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         }
     }
 
+    /**
+     * @return mixed
+     */
     public function getDefault()
     {
         return \Auth::user()->accounts()->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
@@ -49,6 +80,9 @@ class EloquentAccountRepository implements AccountRepositoryInterface
             ->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
     }
 
+    /**
+     * @return mixed
+     */
     public function getActiveDefault()
     {
         return \Auth::user()->accounts()->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
@@ -57,6 +91,9 @@ class EloquentAccountRepository implements AccountRepositoryInterface
             ->get(['accounts.*']);
     }
 
+    /**
+     * @return array|mixed
+     */
     public function  getActiveDefaultAsSelectList()
     {
         $list = \Auth::user()->accounts()->leftJoin(
@@ -72,13 +109,24 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         return $return;
     }
 
+    /**
+     * @return mixed
+     */
     public function count()
     {
         return \Auth::user()->accounts()->count();
 
     }
 
-    public function storeWithInitialBalance($data, \Carbon\Carbon $date, $amount = 0)
+    /**
+     * @param        $data
+     * @param Carbon $date
+     * @param int    $amount
+     *
+     * @return \Account|mixed
+     * @throws \Firefly\Exception\FireflyException
+     */
+    public function storeWithInitialBalance($data, Carbon $date, $amount = 0)
     {
 
         $account = $this->store($data);
@@ -91,7 +139,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         $initial->active = 0;
         try {
             $initial->save();
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (QueryException $e) {
             \Log::error('DB ERROR: ' . $e->getMessage());
             throw new FireflyException('Could not save counterbalance account for ' . $data['name']);
         }
@@ -110,6 +158,12 @@ class EloquentAccountRepository implements AccountRepositoryInterface
 
     }
 
+    /**
+     * @param $data
+     *
+     * @return \Account|mixed
+     * @throws \Firefly\Exception\FireflyException
+     */
     public function store($data)
     {
         $defaultAT = \AccountType::where('description', 'Default account')->first();
@@ -123,14 +177,19 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         $account->active = isset($data['active']) ? $data['active'] : 1;
         try {
             $account->save();
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (QueryException $e) {
             \Log::error('DB ERROR: ' . $e->getMessage());
-            throw new \Firefly\Exception\FireflyException('Could not save account ' . $data['name']);
+            throw new FireflyException('Could not save account ' . $data['name']);
         }
 
         return $account;
     }
 
+    /**
+     * @param $name
+     *
+     * @return \Account|mixed|null
+     */
     public function createOrFindBeneficiary($name)
     {
         if (is_null($name) || strlen($name) == 0) {
@@ -140,6 +199,12 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         return $this->createOrFind($name, $type);
     }
 
+    /**
+     * @param              $name
+     * @param \AccountType $type
+     *
+     * @return \Account|mixed
+     */
     public function createOrFind($name, \AccountType $type)
     {
         $beneficiary = $this->findByName($name);
@@ -153,11 +218,19 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         return $beneficiary;
     }
 
+    /**
+     * @param $name
+     *
+     * @return mixed
+     */
     public function findByName($name)
     {
         return \Auth::user()->accounts()->where('name', 'like', '%' . $name . '%')->first();
     }
 
+    /**
+     * @return mixed
+     */
     public function getCashAccount()
     {
         $type = \AccountType::where('description', 'Cash account')->first();

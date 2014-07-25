@@ -30,7 +30,7 @@ class TransactionControllerTest extends TestCase
         View::shouldReceive('share');
         View::shouldReceive('make')->with('transactions.create')->andReturn(\Mockery::self())
             ->shouldReceive('with')->once()
-            ->with('what','withdrawal')
+            ->with('what', 'withdrawal')
             ->andReturn(Mockery::self())
             ->shouldReceive('with')->once()
             ->with('accounts', [])
@@ -61,7 +61,7 @@ class TransactionControllerTest extends TestCase
         View::shouldReceive('share');
         View::shouldReceive('make')->with('transactions.create')->andReturn(\Mockery::self())
             ->shouldReceive('with')->once()
-            ->with('what','deposit')
+            ->with('what', 'deposit')
             ->andReturn(Mockery::self())
 
             ->shouldReceive('with')->once()
@@ -393,7 +393,7 @@ class TransactionControllerTest extends TestCase
         $this->call('POST', '/transactions/store/withdrawal', $data);
 
         // test
-        $this->assertRedirectedToRoute('transactions.create',['what' => 'withdrawal']);
+        $this->assertRedirectedToRoute('transactions.create', ['what' => 'withdrawal']);
     }
 
     /**
@@ -443,7 +443,7 @@ class TransactionControllerTest extends TestCase
         $this->call('POST', '/transactions/store/deposit', $data);
 
         // test
-        $this->assertRedirectedToRoute('transactions.create',['what' => 'deposit']);
+        $this->assertRedirectedToRoute('transactions.create', ['what' => 'deposit']);
     }
 
     /**
@@ -488,16 +488,16 @@ class TransactionControllerTest extends TestCase
         $this->call('POST', '/transactions/store/transfer', $data);
 
         // test
-        $this->assertRedirectedToRoute('transactions.create',['what' => 'transfer']);
+        $this->assertRedirectedToRoute('transactions.create', ['what' => 'transfer']);
     }
 
-    public function testShow() {
+    public function testShow()
+    {
         $journal = FactoryMuffin::create('TransactionJournal');
 
         // mock transaction journal:
         $tj = $this->mock('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
         $tj->shouldReceive('find')->with($journal->id)->andReturn($journal);
-
 
 
         // call
@@ -507,7 +507,8 @@ class TransactionControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
-    public function testShowError() {
+    public function testShowError()
+    {
 
         // mock transaction journal:
         $tj = $this->mock('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
@@ -521,7 +522,8 @@ class TransactionControllerTest extends TestCase
         $this->assertViewHas('message');
     }
 
-    public function testEdit() {
+    public function testEdit()
+    {
         $journal = FactoryMuffin::create('TransactionJournal');
 
         // mock transaction journal:
@@ -533,7 +535,6 @@ class TransactionControllerTest extends TestCase
         $accounts->shouldReceive('getActiveDefaultAsSelectList')->andReturn([]);
 
 
-
         // call
         $this->call('GET', '/transaction/edit/' . $journal->id);
 
@@ -541,7 +542,8 @@ class TransactionControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
-    public function testEditError() {
+    public function testEditError()
+    {
         // mock transaction journal:
         $tj = $this->mock('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
         $tj->shouldReceive('find')->with(1)->andReturn(null);

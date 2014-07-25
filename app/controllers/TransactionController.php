@@ -34,6 +34,11 @@ class TransactionController extends BaseController
         View::share('menu', 'home');
     }
 
+    /**
+     * @param $what
+     *
+     * @return $this|\Illuminate\View\View
+     */
     public function create($what)
     {
         // get accounts with names and id's.
@@ -44,12 +49,16 @@ class TransactionController extends BaseController
         $budgets[0] = '(no budget)';
 
 
-
         return View::make('transactions.create')->with('accounts', $accounts)->with('budgets', $budgets)->with(
             'what', $what
         );
     }
 
+    /**
+     * @param $what
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store($what)
     {
         // $fromAccount and $toAccount are found
@@ -73,12 +82,8 @@ class TransactionController extends BaseController
                 break;
         }
         // fall back to cash if necessary:
-        if (is_null($fromAccount)) {
-            $fromAccount = $this->_accounts->getCashAccount();
-        }
-        if (is_null($toAccount)) {
-            $toAccount = $this->_accounts->getCashAccount();
-        }
+        $fromAccount = is_null($fromAccount) ? $fromAccount = $this->_accounts->getCashAccount() : $fromAccount;
+        $toAccount = is_null($toAccount) ? $toAccount = $this->_accounts->getCashAccount() : $toAccount;
 
         // create or find category:
         $category = $this->_categories->createOrFind(Input::get('category'));
@@ -109,24 +114,29 @@ class TransactionController extends BaseController
 
         Session::flash('success', 'Transaction saved');
 
-        if(Input::get('create') == '1') {
-            return Redirect::route('transactions.create',$what)->withInput();
+        if (Input::get('create') == '1') {
+            return Redirect::route('transactions.create', $what)->withInput();
         } else {
             return Redirect::route('index');
         }
 
 
-
-
-
     }
 
+    /**
+     * @return $this|\Illuminate\View\View
+     */
     public function index()
     {
         $transactions = $this->_journal->paginate(25);
         return View::make('transactions.index')->with('transactions', $transactions);
     }
 
+    /**
+     * @param $journalId
+     *
+     * @return $this|\Illuminate\View\View
+     */
     public function show($journalId)
     {
         $journal = $this->_journal->find($journalId);
@@ -136,6 +146,11 @@ class TransactionController extends BaseController
         return View::make('error')->with('message', 'Invalid journal');
     }
 
+    /**
+     * @param $journalId
+     *
+     * @return $this|\Illuminate\View\View
+     */
     public function edit($journalId)
     {
         $journal = $this->_journal->find($journalId);

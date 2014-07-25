@@ -94,7 +94,7 @@ class AccountController extends \BaseController
      */
     public function show($accountId)
     {
-
+        return $accountId;
     }
 //
 //

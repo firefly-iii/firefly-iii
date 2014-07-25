@@ -64,7 +64,7 @@ class UserControllerTest extends TestCase
         // test
         $this->call('GET', '/register');
         $this->assertResponseStatus(200);
-        $this->assertViewHas('message','Not possible');
+        $this->assertViewHas('message', 'Not possible');
     }
 
     /**
@@ -92,7 +92,6 @@ class UserControllerTest extends TestCase
         $this->assertCount(1, $crawler->filter('h1:contains("Verification pending")'));
 
     }
-
 
 
     /**
@@ -189,7 +188,7 @@ class UserControllerTest extends TestCase
 
         $this->call('POST', '/remindme');
         $this->assertResponseOk();
-        $this->assertSessionHas('error','No good!');
+        $this->assertSessionHas('error', 'No good!');
     }
 
     public function testPostRegisterNotAllowed()
@@ -207,7 +206,7 @@ class UserControllerTest extends TestCase
         // test
         $this->call('POST', '/register', $data);
         $this->assertResponseStatus(200);
-        $this->assertViewHas('message','Not possible');
+        $this->assertViewHas('message', 'Not possible');
 
     }
 
