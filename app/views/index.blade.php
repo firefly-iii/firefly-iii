@@ -44,8 +44,17 @@
         <?php $split = 12 / count($set); ?>
         @foreach($set as $data)
         <div class="col-lg-{{$split}} col-md-{{$split}}">
-            <h4>{{{$data[1]->name}}}</h4>
-            @include('transactions.journals',['transactions' => $data[0],'account' => $data[1]])
+            <h4>
+                <a href="{{route('accounts.show',$data[1]->id)}}?range={{Config::get('firefly.range_to_text.'.Session::get('range'))}}&amp;startdate={{Session::get('start')->format('Y-m-d')}}">{{{$data[1]->name}}}</a>
+            </h4>
+
+            @include('transactions.journals-small',['transactions' => $data[0],'account' => $data[1]])
+            <div class="btn-group btn-group-xs">
+                <a class="btn btn-default" href="{{route('transactions.create','withdrawal')}}?account={{$data[1]->id}}"><span class="glyphicon glyphicon-arrow-left" title="Withdrawal"></span> Add withdrawal</a>
+                <a class="btn btn-default" href="{{route('transactions.create','deposit')}}?account={{$data[1]->id}}"><span class="glyphicon glyphicon-arrow-right" title="Deposit"></span> Add deposit</a>
+                <a class="btn btn-default" href="{{route('transactions.create','transfer')}}?account={{$data[1]->id}}"><span class="glyphicon glyphicon-resize-full" title="Transfer"></span> Add transfer</a>
+            </div>
+
         </div>
         @endforeach
     </div>
@@ -57,7 +66,15 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <h4>Budgets</h4>
             @foreach($budgets as $budget)
-            <h5><a href="{{route('budgets.show',$budget->id)}}">{{{$budget->name}}}</a></h5>
+            <h5><a href="{{route('budgets.show',$budget->id)}}">{{{$budget->name}}}</a>
+            @if($budget->count > 0)
+                @foreach($budget->limits as $limit)
+                @foreach($limit->limitrepetitions as $rep)
+            <small>{{mf($rep->amount,false)}}</small>
+                @endforeach
+                @endforeach
+            @endif
+            </h5>
             @if($budget->count == 0)
             <p>
                 <a href="{{route('budgets.limits.create',[$budget->id])}}?startdate={{\Session::get('start')->format('Y-m-d')}}&amp;repeat_freq={{\Config::get('firefly.range_to_repeat_freq.' . \Session::get('range'))}}" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-envelope"></span> Add a new envelope</a>
