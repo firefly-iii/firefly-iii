@@ -4,6 +4,7 @@ use Firefly\Exception\FireflyException;
 use Firefly\Helper\Preferences\PreferencesHelperInterface as PHI;
 use Firefly\Helper\Toolkit\ToolkitInterface as tk;
 use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
+use Firefly\Storage\Budget\BudgetRepositoryInterface as BRI;
 use Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface as TJRI;
 
 /**
@@ -16,17 +17,19 @@ class ChartController extends BaseController
     protected $_journals;
     protected $_tk;
     protected $_preferences;
+    protected $_budgets;
 
     /**
      * @param ARI  $accounts
      * @param TJRI $journals
      */
-    public function __construct(ARI $accounts, TJRI $journals, PHI $preferences, tk $toolkit)
+    public function __construct(ARI $accounts, TJRI $journals, PHI $preferences, tk $toolkit, BRI $budgets)
     {
         $this->_accounts = $accounts;
         $this->_journals = $journals;
         $this->_preferences = $preferences;
         $this->_tk = $toolkit;
+        $this->_budgets = $budgets;
     }
 
     /**
@@ -121,7 +124,7 @@ class ChartController extends BaseController
 
     public function homeCategories()
     {
-        list($start, $end) =$this->_tk->getDateRangeDates();
+        list($start, $end) = $this->_tk->getDateRangeDates();
         $account = null;
         $result = [];
         // grab all transaction journals in this period:
@@ -157,6 +160,58 @@ class ChartController extends BaseController
 
 
         return Response::json($chartData);
+
+    }
+
+    public function homeBudgets()
+    {
+        // grab all budgets in the time period, like the index does:
+        // get the budgets for this period:
+        $data = [];
+
+        list($start, $end) = $this->_tk->getDateRangeDates();
+        $budgets = $this->_budgets->getWithRepetitionsInPeriod($start, \Session::get('range'));
+
+        $repeatFreq = Config::get('firefly.range_to_repeat_freq.'.Session::get('range'));
+
+        $dateFormats = Config::get('firefly.date_formats_by_period.' . $repeatFreq);
+        if (is_null($dateFormats)) {
+            throw new FireflyException('No date formats for ' . \Session::get('range'));
+        }
+
+
+        $limitInPeriod = 'Envelope for ' . $start->format($dateFormats['display_date']);
+        $spentInPeriod = 'Spent in ' . $start->format($dateFormats['display_date']);
+
+        $data['series'] = [
+            [
+                'name' => $limitInPeriod,
+                'data' => []
+            ],
+            [
+                'name' => $spentInPeriod,
+                'data' => []
+            ],
+        ];
+
+
+        foreach ($budgets as $budget) {
+            if ($budget->count > 0) {
+                $data['labels'][] = wordwrap($budget->name, 12, "<br>");
+            }
+            foreach ($budget->limits as $limit) {
+                foreach ($limit->limitrepetitions as $rep) {
+                    //0: envelope for period:
+                    $data['series'][0]['data'][] = floatval($rep->amount);
+                    $data['series'][1]['data'][] = $rep->spent;
+                }
+            }
+
+
+        }
+        return Response::json($data);
+        echo '<pre>';
+        print_r($data);
 
     }
 }

@@ -53,7 +53,7 @@
                 @endif
             </label>
             <div class="col-sm-8">
-                {{Form::select('account_id',$accounts,Input::old('account_id'),['class' => 'form-control'])}}
+                {{Form::select('account_id',$accounts,Input::old('account_id') ?: Input::get('account'),['class' => 'form-control'])}}
             </div>
         </div>
         @endif
@@ -107,7 +107,7 @@
                 @endif
             </label>
             <div class="col-sm-8">
-                <input type="number" name="amount" min="0.01" value="{{Input::old('amount') or 0}}" step="any" class="form-control" />
+                <input type="number" name="amount" min="0.01" value="{{Input::old('amount')}}" step="any" class="form-control" />
             </div>
         </div>
 
@@ -123,7 +123,7 @@
     <div class="col-lg-6 col-md-12 col-sm-12">
         <h4>Optional fields</h4>
 
-        <!-- ONLY WHEN CREATING A WITHDRAWAL -->
+        <!-- BUDGET ONLY WHEN CREATING A WITHDRAWAL -->
         @if($what == 'withdrawal')
         <div class="form-group">
             <label for="budget_id" class="col-sm-4 control-label">Budget</label>
@@ -133,11 +133,11 @@
             </div>
         </div>
         @endif
-
+        <!-- CATEGORY ALWAYS -->
         <div class="form-group">
             <label for="category" class="col-sm-4 control-label">Category</label>
             <div class="col-sm-8">
-                <input type="text" name="category"  value="" autocomplete="off" class="form-control" placeholder="Category" />
+                <input type="text" name="category"  value="{{Input::old('category')}}" autocomplete="off" class="form-control" placeholder="Category" />
                 <span class="help-block">Add more fine-grained information to this transaction by entering a category.
                 Like the beneficiary-field, this field will auto-complete existing categories but can also be used
                     to create new ones.
@@ -156,7 +156,7 @@
             <div class="col-sm-8">
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" value="1" name="create">
+                        <input type="checkbox" value="1" name="create" @if(Input::old('create') == '1') checked @endif>
                         Create another (return to this form)
                     </label>
                 </div>
