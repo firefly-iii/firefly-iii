@@ -8,12 +8,14 @@ use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
 class AccountController extends \BaseController
 {
 
+    protected $_accounts;
+
     /**
      * @param ARI $accounts
      */
     public function __construct(ARI $accounts)
     {
-        $this->accounts = $accounts;
+        $this->_accounts = $accounts;
 
         View::share('menu', 'accounts');
     }
@@ -25,7 +27,7 @@ class AccountController extends \BaseController
      */
     public function index()
     {
-        $all = $this->accounts->get();
+        $all = $this->_accounts->get();
 
 
         $list = [
@@ -68,23 +70,38 @@ class AccountController extends \BaseController
     {
         return View::make('accounts.create');
     }
-//
-//
-//	/**
-//	 * Store a newly created resource in storage.
-//	 *
-//	 * @return Response
-//	 */
-//	public function store()
-//	{
-//        $account = $this->accounts->store();
-//        if($account === false) {
-//            Session::flash('error','Could not create account with provided information');
-//            return Redirect::route('accounts.create')->withInput()->withErrors($this->accounts->validator);
-//        }
-//	}
-//
-//
+
+    public function store()
+    {
+
+        $account = $this->_accounts->store(Input::all());
+
+        if (!$account->id) {
+            // did not save, return with error:
+            Session::flash('error', 'Could not save the new account. Please check the form.');
+            return View::make('accounts.create')->withErrors($account->errors());
+        } else {
+            // saved! return to wherever.
+            Session::flash('success', 'Account "' . $account->name . '" created!');
+            if (Input::get('create') == '1') {
+                return Redirect::route('accounts.create')->withInput();
+            } else {
+                return Redirect::route('accounts.index');
+            }
+        }
+    }
+
+    public function edit($accountId)
+    {
+        $account = $this->_accounts->find($accountId);
+
+        if ($account) {
+            // find the initial balance transaction, if any:
+            $openingBalance = $this->_accounts->findOpeningBalanceTransaction($account);
+            return View::make('accounts.edit')->with('account', $account)->with('openingBalance',$openingBalance);
+        }
+    }
+
     /**
      * Display the specified resource.
      *
@@ -94,44 +111,44 @@ class AccountController extends \BaseController
      */
     public function show($accountId)
     {
-        return $accountId;
+        $account = $this->_accounts->find($accountId);
+        return View::make('accounts.show')->with('account',$account);
     }
-//
-//
-//	/**
-//	 * Show the form for editing the specified resource.
-//	 *
-//	 * @param  int  $id
-//	 * @return Response
-//	 */
-//	public function edit($id)
-//	{
-//		//
-//	}
-//
-//
-//	/**
-//	 * Update the specified resource in storage.
-//	 *
-//	 * @param  int  $id
-//	 * @return Response
-//	 */
-//	public function update($id)
-//	{
-//		//
-//	}
-//
-//
-//	/**
-//	 * Remove the specified resource from storage.
-//	 *
-//	 * @param  int  $id
-//	 * @return Response
-//	 */
-//	public function destroy($id)
-//	{
-//		//
-//	}
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @return Response
+     */
+    public function update()
+    {
+        $account = $this->_accounts->update(Input::all());
+        Session::flash('success','Account "'.$account->name.'" updated.');
+        return Redirect::route('accounts.index');
+    }
+
+    public function delete($accountId) {
+        $account = $this->_accounts->find($accountId);
+        if($account) {
+            return View::make('accounts.delete')->with('account',$account);
+        }
+    }
+
+    /**
+     * @param $accountId
+     */
+    public function destroy()
+	{
+        $result = $this->_accounts->destroy(Input::get('id'));
+        if($result === true) {
+            Session::flash('success','The account was deleted.');
+            return Redirect::route('accounts.index');
+        } else {
+            Session::flash('danger','Could not delete the account. Check the logs to be sure.');
+            return Redirect::route('accounts.index');
+        }
+
+	}
 
 
 }

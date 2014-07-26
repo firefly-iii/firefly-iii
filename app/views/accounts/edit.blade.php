@@ -3,27 +3,17 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <h1>Firefly
-            <small>Add a new personal account</small>
+            <small>Edit "{{{$account->name}}}"</small>
         </h1>
         <p class="lead">
             Accounts are the record holders for transactions and transfers. Money moves
             from one account to another.
         </p>
-
-        <p class="text-info">
-            In a double-entry bookkeeping system (such as this one) there is a "from" account and a "to"
-            account, even when money is created from thin air (such as interest, or when new accounts already have
-            a positive balance).
-        </p>
-
-        <p class="text-info"><span class="text-danger">This form creates personal accounts only.</span>
-            If this is your first account, it should be a checking or savings account. Enter its name and if relevant
-            the current balance. Check your bank statements for the last current balance you can find.
-        </p>
     </div>
 </div>
 
-{{Form::open(['class' => 'form-horizontal','route' => 'accounts.store'])}}
+{{Form::model($account, ['class' => 'form-horizontal','url' => route('accounts.update')])}}
+{{Form::hidden('id',$account->id)}}
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-12">
         <h4>Mandatory fields</h4>
@@ -36,7 +26,7 @@
                 <p class="text-danger">{{$errors->first('name')}}</p>
                 @else
                 <span
-                    class="help-block">Use something descriptive such as "checking account" or "My Bank Main Account".</span>
+                    class="help-block">Use something descriptive such as "checking account" or "Albert Heijn".</span>
                 @endif
 
             </div>
@@ -44,6 +34,7 @@
 
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12">
+        @if($account->accounttype->description == 'Default account')
         <h4>Optional fields</h4>
 
         <div class="form-group">
@@ -51,8 +42,12 @@
             <div class="col-sm-8">
                 <div class="input-group">
                     <span class="input-group-addon">&euro;</span>
-                    {{Form::input('number','openingbalance', Input::old('openingbalance'), ['step' => 'any', 'class' =>
-                    'form-control'])}}
+                    @if(!is_null($openingBalance))
+                        {{Form::input('number','openingbalance', Input::old('openingbalance') ?: $openingBalance->transactions[1]->amount, ['step' => 'any', 'class' => 'form-control'])}}
+                    @else
+                        {{Form::input('number','openingbalance', Input::old('openingbalance'), ['step' => 'any', 'class' => 'form-control'])}}
+                    @endif
+
                 </div>
 
                 @if($errors->has('openingbalance'))
@@ -65,8 +60,11 @@
         <div class="form-group">
             {{ Form::label('openingbalancedate', 'Opening balance date', ['class' => 'col-sm-4 control-label'])}}
             <div class="col-sm-8">
-                {{ Form::input('date','openingbalancedate', Input::old('openingbalancedate') ?: date('Y-m-d'), ['class'
-                => 'form-control']) }}
+                @if(!is_null($openingBalance))
+                    {{ Form::input('date','openingbalancedate', Input::old('openingbalancedate') ?: $openingBalance->date->format('Y-m-d'), ['class' => 'form-control']) }}
+                @else
+                    {{ Form::input('date','openingbalancedate', Input::old('openingbalancedate') ?: date('Y-m-d'), ['class' => 'form-control']) }}
+                @endif
                 @if($errors->has('openingbalancedate'))
                 <p class="text-danger">{{$errors->first('openingbalancedate')}}</p>
                 @else
@@ -74,6 +72,7 @@
                 @endif
             </div>
         </div>
+        @endif
 
     </div>
 
@@ -82,23 +81,9 @@
 
 <div class="row">
     <div class="col-lg-6">
-
-        <!-- add another after this one? -->
-        <div class="form-group">
-            <label for="create" class="col-sm-4 control-label">&nbsp;</label>
-            <div class="col-sm-8">
-                <div class="checkbox">
-                    <label>
-                        {{Form::checkbox('create',1,Input::old('create') == '1')}}
-                        Create another (return to this form)
-                    </label>
-                </div>
-            </div>
-        </div>
-
         <div class="form-group">
             <div class="col-sm-offset-4 col-sm-8">
-                <button type="submit" class="btn btn-default btn-success">Create the account</button>
+                <button type="submit" class="btn btn-default btn-success">Update {{{$account->name}}}</button>
             </div>
         </div>
     </div>

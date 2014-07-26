@@ -22,7 +22,9 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
     public function find($journalId)
     {
         return \Auth::user()->transactionjournals()->with(
-            ['transactions', 'transactioncurrency', 'transactiontype', 'components', 'transactions.account',
+            ['transactions' => function ($q) {
+                    return $q->orderBy('amount', 'ASC');
+                }, 'transactioncurrency', 'transactiontype', 'components', 'transactions.account',
              'transactions.account.accounttype']
         )
             ->where('id', $journalId)->first();

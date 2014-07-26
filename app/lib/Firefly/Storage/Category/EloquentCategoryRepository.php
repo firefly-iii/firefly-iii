@@ -40,6 +40,9 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
      */
     public function findByName($name)
     {
+        if($name == '') {
+            return null;
+        }
         return \Auth::user()->categories()->where('name', 'LIKE', '%' . $name . '%')->first();
 
     }

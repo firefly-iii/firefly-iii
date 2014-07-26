@@ -49,7 +49,15 @@
                 <a href="#">{{{$journal->transactions[1]->account->name}}}</a>
             @endif
         </td>
-        <td>Edit / delete</td>
+        <td>
+            <div class="btn-group btn-group-xs">
+            <a href="{{route('transactions.edit',$journal->id)}}" class="btn btn-default">
+                <span class="glyphicon glyphicon-pencil"></span>
+                <a href="{{route('transactions.delete',$journal->id)}}" class="btn btn-danger">
+                    <span class="glyphicon glyphicon-trash"></span>
+            </a>
+            </div>
+            </td>
     </tr>
     @endforeach
 </table>
