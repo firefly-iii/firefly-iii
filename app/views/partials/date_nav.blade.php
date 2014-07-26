@@ -1,12 +1,6 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly
-            @if($count > 0)
-            <small>What's playing?</small>
-            @endif
-        </h1>
-        @if($count > 0)
-        <form role="form" method="GET">
+        <form role="form" method="GET" action="{{Request::url()}}">
         <?php $r = Session::get('range', '1M'); ?>
         <div class="row">
             <div class="col-lg-2">
@@ -55,7 +49,6 @@
         </form>
 
 
-        @endif
 
     </div>
 </div>

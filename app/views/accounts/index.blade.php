@@ -5,8 +5,10 @@
         <h1>Firefly
             <small>Accounts</small>
         </h1>
-        <h2>Index</h2>
-        <p style="width:50%;" class="text-info">
+        <p class="lead">
+            Accounts are the record holders for transactions and transfers. Money moves from one account to another.
+        </p>
+        <p class="text-info">
             In a double-entry bookkeeping system almost <em>everything</em> is an account. Your own personal
             bank accounts are representated as accounts (naturally), but the stores you buy stuff at are also
             represented as accounts. Likewise, if you have a job, your salary is drawn from their account.

@@ -27,6 +27,8 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/accounts', ['uses' => 'AccountController@index', 'as' => 'accounts.index']);
         Route::get('/accounts/create', ['uses' => 'AccountController@create', 'as' => 'accounts.create']);
         Route::get('/accounts/{account}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
+        Route::get('/accounts/{account}/edit', ['uses' => 'AccountController@edit', 'as' => 'accounts.edit']);
+        Route::get('/accounts/{account}/delete', ['uses' => 'AccountController@delete', 'as' => 'accounts.delete']);
 
         // budget controller:
         Route::get('/budget/create',['uses' => 'BudgetController@create', 'as' => 'budgets.create']);
@@ -71,7 +73,9 @@ Route::group(['before' => 'csrf|auth'], function () {
         Route::post('/preferences', ['uses' => 'PreferencesController@postIndex']);
 
         // account controller:
-        Route::get('/accounts/store', ['uses' => 'AccountController@store', 'as' => 'accounts.store']);
+        Route::post('/accounts/store', ['uses' => 'AccountController@store', 'as' => 'accounts.store']);
+        Route::post('/accounts/update', ['uses' => 'AccountController@update', 'as' => 'accounts.update']);
+        Route::post('/accounts/destroy', ['uses' => 'AccountController@destroy', 'as' => 'accounts.destroy']);
 
         // limit controller:
         Route::post('/budgets/limits/store', ['uses' => 'LimitController@store', 'as' => 'budgets.limits.store']);

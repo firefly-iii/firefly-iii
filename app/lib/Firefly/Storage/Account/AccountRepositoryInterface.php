@@ -60,6 +60,13 @@ interface AccountRepositoryInterface
     public function getDefault();
 
     /**
+     * @param \Account $account
+     *
+     * @return mixed
+     */
+    public function findOpeningBalanceTransaction(\Account $account);
+
+    /**
      * @return mixed
      */
     public function getActiveDefault();
@@ -72,18 +79,25 @@ interface AccountRepositoryInterface
     /**
      * @param $data
      *
-     * @return mixed
+     * @return \Account
      */
     public function store($data);
 
     /**
-     * @param        $data
-     * @param Carbon $date
-     * @param int    $amount
+     * @param $accountId
      *
-     * @return mixed
+     * @return bool
      */
-    public function storeWithInitialBalance($data, Carbon $date, $amount = 0);
+    public function destroy($accountId);
+
+
+    /**
+     * @param $data
+     *
+     * @return \Account
+     */
+    public function update($data);
+
 
     /**
      * @param $name

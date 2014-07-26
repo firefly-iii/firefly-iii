@@ -1,6 +1,17 @@
 @extends('layouts.default')
 @section('content')
-@include('partials.date_nav')
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <h1>Firefly
+            @if($count > 0)
+            <small>What's playing?</small>
+            @endif
+        </h1>
+    </div>
+</div>
+@if($count > 0)
+    @include('partials.date_nav')
+@endif
 @if($count == 0)
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
@@ -66,9 +77,10 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <h4>Budgets</h4>
 
-            <div id="budgets">
-
-            </div>
+            <div id="budgets"></div>
+            <p>
+                <a class="btn btn-default btn-xs" href ="{{route('budgets.limits.create')}}?startdate={{Session::get('start')->format('Y-m-d')}}"><span class="glyphicon glyphicon-plus-sign"></span> Create a limit</a>
+            </p>
         </div>
     </div>
 

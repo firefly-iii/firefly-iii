@@ -208,8 +208,11 @@ class ChartController extends BaseController
             foreach ($budget->limits as $limit) {
                 foreach ($limit->limitrepetitions as $rep) {
                     //0: envelope for period:
-                    $data['series'][0]['data'][] = floatval($rep->amount);
-                    $data['series'][1]['data'][] = $rep->spent;
+                    $amount = floatval($rep->amount);
+                    $spent = $rep->spent;
+                    $color = $spent > $amount ? '#FF0000' : null;
+                    $data['series'][0]['data'][] = $amount;
+                    $data['series'][1]['data'][] = ['y' => $rep->spent, 'color' => $color];
                 }
             }
 

@@ -112,7 +112,7 @@ class TransactionController extends BaseController
             $journal->categories()->save($category);
         }
 
-        Session::flash('success', 'Transaction saved');
+        Session::flash('success', 'Transaction "' . $description . '" saved');
 
         if (Input::get('create') == '1') {
             return Redirect::route('transactions.create', $what)->withInput();
@@ -153,12 +153,127 @@ class TransactionController extends BaseController
      */
     public function edit($journalId)
     {
+        // get journal:
         $journal = $this->_journal->find($journalId);
+
         if ($journal) {
+            // type is useful for display:
+            $what = strtolower($journal->transactiontype->type);
+
+            // some lists prefilled:
+            $budgets = $this->_budgets->getAsSelectList();
+            $budgets[0] = '(no budget)';
             $accounts = $this->_accounts->getActiveDefaultAsSelectList();
-            return View::make('transactions.edit')->with('journal', $journal)->with('accounts', $accounts);
+
+            // data to properly display form:
+            $data = [
+                'date'      => $journal->date->format('Y-m-d'),
+                'category'  => '',
+                'budget_id' => 0
+            ];
+            $category = $journal->categories()->first();
+            if (!is_null($category)) {
+                $data['category'] = $category->name;
+            }
+            switch ($journal->transactiontype->type) {
+                case 'Withdrawal':
+                    $data['account_id'] = $journal->transactions[0]->account->id;
+                    $data['beneficiary'] = $journal->transactions[1]->account->name;
+                    $data['amount'] = floatval($journal->transactions[1]->amount);
+                    $budget = $journal->budgets()->first();
+                    if (!is_null($budget)) {
+                        $data['budget_id'] = $budget->id;
+                    }
+                    break;
+                case 'Deposit':
+                    $data['account_id'] = $journal->transactions[1]->account->id;
+                    $data['beneficiary'] = $journal->transactions[0]->account->name;
+                    $data['amount'] = floatval($journal->transactions[1]->amount);
+                    break;
+                case 'Transfer':
+                    $data['account_from_id'] = $journal->transactions[1]->account->id;
+                    $data['account_to_id'] = $journal->transactions[0]->account->id;
+                    $data['amount'] = floatval($journal->transactions[1]->amount);
+                    break;
+            }
+            return View::make('transactions.edit')->with('journal', $journal)->with('accounts', $accounts)->with(
+                'what', $what
+            )->with('budgets', $budgets)->with('data', $data);
         }
         return View::make('error')->with('message', 'Invalid journal');
+    }
+
+    public function update($journalId)
+    {
+
+        // get journal:
+        $journal = $this->_journal->find($journalId);
+
+        if ($journal) {
+            // update basics first:
+            $journal->description = Input::get('description');
+            $journal->date = Input::get('date');
+            $amount = floatval(Input::get('amount'));
+
+            // remove previous category, if any:
+            if (!is_null($journal->categories()->first())) {
+                $journal->categories()->detach($journal->categories()->first()->id);
+            }
+            // remove previous budget, if any:
+            if (!is_null($journal->budgets()->first())) {
+                $journal->budgets()->detach($journal->budgets()->first()->id);
+            }
+
+            // get the category:
+            $category = $this->_categories->findByName(Input::get('category'));
+            if (!is_null($category)) {
+                $journal->categories()->attach($category);
+            }
+            // update the amounts:
+            $journal->transactions[0]->amount = $amount * -1;
+            $journal->transactions[1]->amount = $amount;
+
+            // switch on type to properly change things:
+            switch ($journal->transactiontype->type) {
+                case 'Withdrawal':
+                    // means transaction[0] is the users account.
+                    $account = $this->_accounts->find(Input::get('account_id'));
+                    $beneficiary = $this->_accounts->findByName(Input::get('beneficiary'));
+                    $journal->transactions[0]->account()->associate($account);
+                    $journal->transactions[1]->account()->associate($beneficiary);
+
+
+                    // do budget:
+                    $budget = $this->_budgets->find(Input::get('budget_id'));
+                    $journal->budgets()->attach($budget);
+
+                    break;
+                case 'Deposit':
+                    // means transaction[0] is the beneficiary.
+                    $account = $this->_accounts->find(Input::get('account_id'));
+                    $beneficiary = $this->_accounts->findByName(Input::get('beneficiary'));
+                    $journal->transactions[0]->account()->associate($beneficiary);
+                    $journal->transactions[1]->account()->associate($account);
+                    break;
+                case 'Transfer':
+                    // means transaction[0] is account that sent the money (from).
+                    $fromAccount = $this->_accounts->find(Input::get('account_from_id'));
+                    $toAccount = $this->_accounts->find(Input::get('account_to_id'));
+                    $journal->transactions[0]->account()->associate($fromAccount);
+                    $journal->transactions[1]->account()->associate($toAccount);
+                    break;
+                default:
+                    throw new \Firefly\Exception\FireflyException('Cannot edit this!');
+                    break;
+            }
+
+            $journal->transactions[0]->save();
+            $journal->transactions[1]->save();
+            $journal->save();
+            return Redirect::route('transactions.edit', $journal->id);
+        }
+
+
     }
 
 } 

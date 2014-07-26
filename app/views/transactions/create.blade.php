@@ -171,6 +171,7 @@
         </div>
     </div>
 </div>
+{{Form::close()}}
 
 @stop
 @section('scripts')

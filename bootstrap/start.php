@@ -12,6 +12,7 @@
 */
 
 
+
 if (!function_exists('mf')) {
     function mf($n, $coloured = true)
     {
@@ -34,6 +35,8 @@ if (!function_exists('mf')) {
 }
 
 $app = new Illuminate\Foundation\Application;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -83,6 +86,8 @@ $framework = $app['path.base'] .
 
 require $framework . '/Illuminate/Foundation/start.php';
 
+Event::subscribe('Firefly\Helper\Form\FormTrigger');
+
 /*
 |--------------------------------------------------------------------------
 | Return The Application
@@ -96,6 +101,12 @@ require $framework . '/Illuminate/Foundation/start.php';
 
 // do something with events:
 Event::subscribe('Firefly\Trigger\Limits\EloquentLimitTrigger');
+
+App::booted(function() {
+        $forms = new \Firefly\Helper\Form\FormTrigger;
+        $forms->registerFormExtensions();
+    }
+);
 
 
 return $app;
