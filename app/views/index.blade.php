@@ -95,12 +95,8 @@
 
     @stop
     @section('scripts')
-    <script src="assets/javascript/highcharts.js"></script>
-    <script src="assets/javascript/highcharts-more.js"></script>
-    <script src="assets/javascript/highslide-full.min.js"></script>
-    <script src="assets/javascript/highslide.config.js"></script>
-    <script src="assets/javascript/index.js"></script>
+    <?php echo javascript_include_tag('index'); ?>
     @stop
     @section('styles')
-    <link href="assets/css/highslide.css" rel="stylesheet">
+    <?php echo stylesheet_link_tag('index'); ?>
     @stop

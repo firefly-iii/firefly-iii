@@ -3,6 +3,7 @@
 namespace Firefly\Helper\Toolkit;
 
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 /**
  * Class Toolkit
@@ -13,15 +14,14 @@ class Toolkit implements ToolkitInterface
 {
 
     /**
-     * Based on the preference 'viewRange' and other variables I have not yet thought of,
-     * this method will return a date range that defines the 'current' period of time.
+     * @param Request $request
      *
-     * ie. the current week or month.
-     *
-     * $start is always the past, $end is 'now' or at least later.
+     * @return \Illuminate\Http\RedirectResponse|mixed|null
      */
-    public function getDateRange()
+    public function getDateRange(Request $request)
     {
+
+
         $preferences = \App::make('Firefly\Helper\Preferences\PreferencesHelperInterface');
         $viewRange = $preferences->get('viewRange', '1M');
 
@@ -146,7 +146,7 @@ class Toolkit implements ToolkitInterface
         \Session::put('end', $end);
         \Session::put('range', $range);
         if ($doPrev || $doNext) {
-            return \Redirect::route('index');
+            return \Redirect::to($request->url());
 
         }
         return null;

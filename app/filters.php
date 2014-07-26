@@ -7,7 +7,7 @@ App::before(
         Event::fire('app.before');
         if (Auth::check()) {
             $toolkit = App::make('Firefly\Helper\Toolkit\ToolkitInterface');
-            return $toolkit->getDateRange();
+            return $toolkit->getDateRange($request);
         }
 
     }

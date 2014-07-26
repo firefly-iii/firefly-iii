@@ -106,7 +106,6 @@ class ChartController extends BaseController
         if ($account) {
             $date = \Carbon\Carbon::createFromDate($year, $month, $day);
             $journals = $this->_journals->getByAccountAndDate($account, $date);
-
             // loop all journals:
             foreach ($journals as $journal) {
                 foreach ($journal->transactions as $transaction) {

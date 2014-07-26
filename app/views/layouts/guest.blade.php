@@ -7,8 +7,7 @@
     <base href="{{URL::route('index')}}/">
     <title>Firefly</title>
 
-    <!-- Bootstrap -->
-    <link href="assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <?php echo stylesheet_link_tag(); ?>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

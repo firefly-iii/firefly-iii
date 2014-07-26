@@ -3,8 +3,6 @@
 
 namespace Firefly\Storage\Account;
 
-use Carbon\Carbon;
-
 /**
  * Interface AccountRepositoryInterface
  *
@@ -19,14 +17,26 @@ interface AccountRepositoryInterface
     public function count();
 
     /**
+     * @param              $name
+     * @param \AccountType $type
+     *
      * @return mixed
      */
-    public function get();
+    public function createOrFind($name, \AccountType $type);
 
     /**
+     * @param $name
+     *
      * @return mixed
      */
-    public function getBeneficiaries();
+    public function createOrFindBeneficiary($name);
+
+    /**
+     * @param $accountId
+     *
+     * @return bool
+     */
+    public function destroy($accountId);
 
     /**
      * @param $accountId
@@ -45,26 +55,7 @@ interface AccountRepositoryInterface
     /**
      * @return mixed
      */
-    public function getCashAccount();
-
-    /**
-     * @param $ids
-     *
-     * @return mixed
-     */
-    public function getByIds($ids);
-
-    /**
-     * @return mixed
-     */
-    public function getDefault();
-
-    /**
-     * @param \Account $account
-     *
-     * @return mixed
-     */
-    public function findOpeningBalanceTransaction(\Account $account);
+    public function get();
 
     /**
      * @return mixed
@@ -77,6 +68,28 @@ interface AccountRepositoryInterface
     public function getActiveDefaultAsSelectList();
 
     /**
+     * @return mixed
+     */
+    public function getBeneficiaries();
+
+    /**
+     * @param $ids
+     *
+     * @return mixed
+     */
+    public function getByIds($ids);
+
+    /**
+     * @return mixed
+     */
+    public function getCashAccount();
+
+    /**
+     * @return mixed
+     */
+    public function getDefault();
+
+    /**
      * @param $data
      *
      * @return \Account
@@ -84,34 +97,10 @@ interface AccountRepositoryInterface
     public function store($data);
 
     /**
-     * @param $accountId
-     *
-     * @return bool
-     */
-    public function destroy($accountId);
-
-
-    /**
      * @param $data
      *
      * @return \Account
      */
     public function update($data);
-
-
-    /**
-     * @param $name
-     *
-     * @return mixed
-     */
-    public function createOrFindBeneficiary($name);
-
-    /**
-     * @param              $name
-     * @param \AccountType $type
-     *
-     * @return mixed
-     */
-    public function createOrFind($name, \AccountType $type);
 
 } 

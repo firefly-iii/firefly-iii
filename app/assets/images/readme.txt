@@ -1,0 +1,1 @@
+If you place an image here called foobar.png then you can access that image by going to http://<hostname>/assets/foobar.png

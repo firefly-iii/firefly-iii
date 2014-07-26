@@ -39,6 +39,14 @@ use LaravelBook\Ardent\Ardent;
  * @property-read \Illuminate\Database\Eloquent\Collection|\
  *             'Category[] $categories
  * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereUserId($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *             'Budget[] $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *             'Category[] $categories
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *             'Budget[] $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *             'Category[] $categories
  */
 class TransactionJournal extends Ardent
 {

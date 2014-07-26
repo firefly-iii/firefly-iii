@@ -17,7 +17,6 @@
 </div>
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        @if($total > 0)
             <h3>Your accounts</h3>
             <p style="width:50%;" class="text-info">
                 These are your personal accounts.
@@ -45,9 +44,6 @@
                 personal accounts) it gets added or drawn from this account.
             </p>
         @include('accounts.list',['accounts' => $accounts['cash']])
-        @else
-            <a href="{{route('accounts.create')}}" class="btn btn-lg btn-info">Create a new account</a>
-        @endif
     </div>
 </div>
 
