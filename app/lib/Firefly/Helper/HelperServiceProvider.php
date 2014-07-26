@@ -17,6 +17,12 @@ class HelperServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        // controllers:
+        $this->app->bind(
+            'Firefly\Helper\Controllers\AccountInterface',
+            'Firefly\Helper\Controllers\Account'
+        );
+
         // mail:
         $this->app->bind(
             'Firefly\Helper\Email\EmailHelperInterface',

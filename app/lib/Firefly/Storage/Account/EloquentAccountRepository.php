@@ -265,25 +265,6 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @param \Account $account
-     *
-     * @return mixed|void
-     */
-    public function findOpeningBalanceTransaction(\Account $account)
-    {
-        $transactionType = \TransactionType::where('type', 'Opening balance')->first();
-        $journal = \TransactionJournal::
-            with(
-                ['transactions' => function ($q) {
-                        $q->orderBy('amount', 'ASC');
-                    }]
-            )->where('transaction_type_id', $transactionType->id)
-            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->where('transactions.account_id', $account->id)->first(['transaction_journals.*']);
-        return $journal;
-    }
-
-    /**
      * @return mixed
      */
     public function getCashAccount()

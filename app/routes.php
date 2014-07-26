@@ -1,4 +1,12 @@
 <?php
+
+// models:
+Route::bind('account', function($value, $route)
+    {
+        return Account::where('id', $value)->where('user_id',Auth::user()->id)->first();
+    });
+
+
 // protected routes:
 Route::group(['before' => 'auth'], function () {
 
@@ -10,7 +18,7 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/chart/home/account/{account?}', ['uses' => 'ChartController@homeAccount', 'as' => 'chart.home']);
         Route::get('/chart/home/categories', ['uses' => 'ChartController@homeCategories', 'as' => 'chart.categories']);
         Route::get('/chart/home/budgets', ['uses' => 'ChartController@homeBudgets', 'as' => 'chart.budgets']);
-        Route::get('/chart/home/info/{account}/{day}/{month}/{year}', ['uses' => 'ChartController@homeAccountInfo', 'as' => 'chart.info']);
+        Route::get('/chart/home/info/{accountname}/{day}/{month}/{year}', ['uses' => 'ChartController@homeAccountInfo', 'as' => 'chart.info']);
 
 
         // preferences controller

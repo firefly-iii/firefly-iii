@@ -2,6 +2,7 @@
 
 namespace Firefly\Helper\Toolkit;
 
+use Illuminate\Http\Request;
 /**
  * Interface ToolkitInterface
  *
@@ -12,7 +13,7 @@ interface ToolkitInterface
     /**
      * @return mixed
      */
-    public function getDateRange();
+    public function getDateRange(Request $request);
 
     /**
      * @return mixed
