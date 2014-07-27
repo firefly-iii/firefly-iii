@@ -23,8 +23,9 @@
         </p>
 
         <div class="btn-group">
-            <a class="btn btn-default" href ="{{route('budgets.index')}}"><span class="glyphicon glyphicon-th"></span> Group budgets by date</a>
-            <a class="btn btn-default" href ="{{route('budgets.limits.create')}}"><span class="glyphicon glyphicon-plus-sign"></span> Create a new envelope</a>
+            <a class="btn btn-default" href ="{{route('budgets.index')}}"><span class="glyphicon glyphicon-indent-left"></span> Group by date</a>
+            <a class="btn btn-default" href ="{{route('budgets.create')}}?from=budget"><span class="glyphicon glyphicon-plus-sign"></span> Create a new budget</a>
+            <a class="btn btn-default" href ="{{route('budgets.limits.create')}}?from=budget"><span class="glyphicon glyphicon-plus-sign"></span> Create a new envelope</a>
         </div>
         </p>
     </div>
@@ -98,7 +99,7 @@
                     @endforeach
                     <p style="margin-top:5px;">
                         <a href="{{route('budgets.limits.create',$budget->id)}}" class="btn btn-default btn-xs"><span
-                                class="glyphicon-plus-sign glyphicon"></span> Add another limit</a>
+                                class="glyphicon-plus-sign glyphicon"></span> Add another envelope</a>
                     </p>
                 </td>
                 <td>

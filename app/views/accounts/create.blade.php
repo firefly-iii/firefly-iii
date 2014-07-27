@@ -5,6 +5,7 @@
         <h1>Firefly
             <small>Add a new personal account</small>
         </h1>
+
         <p class="lead">
             Accounts are the record holders for transactions and transfers. Money moves
             from one account to another.
@@ -35,8 +36,7 @@
                 @if($errors->has('name'))
                 <p class="text-danger">{{$errors->first('name')}}</p>
                 @else
-                <span
-                    class="help-block">Use something descriptive such as "checking account" or "My Bank Main Account".</span>
+                <span class="help-block">Use something descriptive such as "checking account" or "My Bank Main Account".</span>
                 @endif
 
             </div>
@@ -51,8 +51,7 @@
             <div class="col-sm-8">
                 <div class="input-group">
                     <span class="input-group-addon">&euro;</span>
-                    {{Form::input('number','openingbalance', Input::old('openingbalance'), ['step' => 'any', 'class' =>
-                    'form-control'])}}
+                    {{Form::input('number','openingbalance', Input::old('openingbalance'), ['step' => 'any', 'class' => 'form-control'])}}
                 </div>
 
                 @if($errors->has('openingbalance'))

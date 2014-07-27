@@ -20,7 +20,7 @@ $r = Route::current()->getName();
                 <li @if($r=='index')class="active"@endif><a href="{{route('index')}}">Home</a></li>
                 <li @if($r=='budgets.index')class="active"@endif><a href="{{route('budgets.index')}}">Budgets</a></li>
                 <li @if($r=='budgets.create')class="active"@endif><a href="{{route('budgets.create')}}"><span class="glyphicon glyphicon-plus"></span> Create budget</a></li>
-                <li @if($r=='budgets.limits.create')class="active"@endif><a href="{{route('budgets.limits.create')}}"><span class="glyphicon glyphicon-plus"></span> Set limit</a></li>
+                <li @if($r=='budgets.limits.create')class="active"@endif><a href="{{route('budgets.limits.create')}}"><span class="glyphicon glyphicon-plus"></span> Create envelope</a></li>
             </ul>
             @include('partials.menu.shared')
         </div><!-- /.navbar-collapse -->
