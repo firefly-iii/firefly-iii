@@ -37,17 +37,13 @@ class LimitRepetition extends Ardent
         $start->startOfMonth();
         $end = clone $start;
         $end->endOfMonth();
+
         return [
             'limit_id'  => 'factory|Limit',
             'startdate' => $start,
             'enddate'   => $end,
             'amount'    => 100
         ];
-    }
-
-    public function limit()
-    {
-        return $this->belongsTo('Limit');
     }
 
     public function getDates()
@@ -60,10 +56,6 @@ class LimitRepetition extends Ardent
      */
     public function left()
     {
-        $key = 'limit-rep-left-' . $this->id;
-        if (Cache::has($key)) {
-            return Cache::get($key);
-        }
         $left = floatval($this->amount);
 
         // budget:
@@ -80,10 +72,13 @@ class LimitRepetition extends Ardent
                 }
             }
         }
-        Cache::forever($key, $left);
-
 
         return $left;
+    }
+
+    public function limit()
+    {
+        return $this->belongsTo('Limit');
     }
 
 

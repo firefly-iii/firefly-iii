@@ -51,13 +51,11 @@ class AccountController extends \BaseController
         $result = $this->_repository->destroy(Input::get('id'));
         if ($result === true) {
             Session::flash('success', 'The account was deleted.');
-
-            return Redirect::route('accounts.index');
         } else {
-            Session::flash('danger', 'Could not delete the account. Check the logs to be sure.');
-
-            return Redirect::route('accounts.index');
+            Session::flash('error', 'Could not delete the account. Check the logs to be sure.');
         }
+        return Redirect::route('accounts.index');
+
 
     }
 
@@ -93,7 +91,9 @@ class AccountController extends \BaseController
      */
     public function show(Account $account)
     {
-        return View::make('accounts.show')->with('account', $account);
+        $show = $this->_accounts->show($account, 40);
+
+        return View::make('accounts.show')->with('account', $account)->with('show',$show);
     }
 
     /**

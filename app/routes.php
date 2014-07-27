@@ -3,8 +3,23 @@
 // models:
 Route::bind('account', function($value, $route)
     {
-        return Account::where('id', $value)->where('user_id',Auth::user()->id)->first();
+        if(Auth::check()) {
+            return Account::
+                where('id', $value)->
+                where('user_id',Auth::user()->id)->first();
+        }
+        return null;
     });
+Route::bind('budget', function($value, $route)
+    {
+        if(Auth::check()) {
+            return Budget::
+                where('id', $value)->
+                where('user_id',Auth::user()->id)->first();
+        }
+        return null;
+    });
+
 
 
 // protected routes:
@@ -15,7 +30,7 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
 
         // chart controller
-        Route::get('/chart/home/account/{account?}', ['uses' => 'ChartController@homeAccount', 'as' => 'chart.home']);
+        Route::get('/chart/home/account/{accountname?}', ['uses' => 'ChartController@homeAccount', 'as' => 'chart.home']);
         Route::get('/chart/home/categories', ['uses' => 'ChartController@homeCategories', 'as' => 'chart.categories']);
         Route::get('/chart/home/budgets', ['uses' => 'ChartController@homeBudgets', 'as' => 'chart.budgets']);
         Route::get('/chart/home/info/{accountname}/{day}/{month}/{year}', ['uses' => 'ChartController@homeAccountInfo', 'as' => 'chart.info']);
@@ -42,7 +57,9 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/budget/create',['uses' => 'BudgetController@create', 'as' => 'budgets.create']);
         Route::get('/budgets',['uses' => 'BudgetController@indexByDate','as' => 'budgets.index']);
         Route::get('/budgets/budget',['uses' => 'BudgetController@indexByBudget','as' => 'budgets.index.budget']);
-        Route::get('/budget/show/{id}',['uses' => 'BudgetController@show', 'as' => 'budgets.show']);
+        Route::get('/budget/show/{budget}',['uses' => 'BudgetController@show', 'as' => 'budgets.show']);
+        Route::get('/budget/edit/{budget}',['uses' => 'BudgetController@edit', 'as' => 'budgets.edit']);
+        Route::get('/budget/delete/{budget}',['uses' => 'BudgetController@delete', 'as' => 'budgets.delete']);
 
         // limit controller:
         Route::get('/budgets/limits/create/{id?}',['uses' => 'LimitController@create','as' => 'budgets.limits.create']);

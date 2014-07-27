@@ -100,7 +100,7 @@ class EloquentLimitRepository implements LimitRepositoryInterface
      */
     public function getTJByBudgetAndDateRange(\Budget $budget, Carbon $start, Carbon $end)
     {
-        $result = $budget->transactionjournals()->after($start)->before($end)->get();
+        $result = $budget->transactionjournals()->with('transactions')->after($start)->before($end)->get();
 
         return $result;
 

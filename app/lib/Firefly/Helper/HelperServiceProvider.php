@@ -23,6 +23,11 @@ class HelperServiceProvider extends ServiceProvider
             'Firefly\Helper\Controllers\Account'
         );
 
+        $this->app->bind(
+            'Firefly\Helper\Controllers\BudgetInterface',
+            'Firefly\Helper\Controllers\Budget'
+        );
+
         // mail:
         $this->app->bind(
             'Firefly\Helper\Email\EmailHelperInterface',

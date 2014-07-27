@@ -48,8 +48,3 @@
 </div>
 
 @stop
-@section('scripts')
-    <script src="https://www.google.com/jsapi"></script>
-<!--    <script src="assets/javascript/charts.js"></script>-->
-<!--    <script src="assets/javascript/index.js"></script>-->
-@stop

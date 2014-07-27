@@ -3,18 +3,29 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <h1>Firefly
-            <small>Budgets and limits</small>
+            <small>Budgets and envelopes</small>
         </h1>
+        <p class="lead">Use budgets to organize and limit your expenses.</p>
+
         <p class="text-info">
-            These are your budgets and if set, their "limits". Firefly uses an "<a
-                href="http://en.wikipedia.org/wiki/Envelope_System" class="text-success">envelope system</a>" for your
-            budgets,
-            which means that for each period of time (for example a month) a virtual "envelope" can be created
-            containing a certain amount of money. Money spent within a budget is removed from the envelope.
+            Budgets are groups of expenses that reappear every [period]*. Examples could be "groceries", "bills" or
+            "drinks with friends". The table below lists all of the budgets you have, if any.
+            <a href="http://dictionary.reference.com/browse/budget">By definition</a>, budgets are an estimated amount
+            of money, ie. € 400,-. Such an estimation can change over time but <em>should</em> always be set. Budgets
+            without an actual budget are fairly pointless.
         </p>
-        <p>
-            <a class="btn btn-default" href ="{{route('budgets.index')}}"><span class="glyphicon glyphicon-th"></span> Group by date</a>
-            <a class="btn btn-default" href ="{{route('budgets.limits.create')}}"><span class="glyphicon glyphicon-plus-sign"></span> Create a limit</a>
+        <p class="text-info">
+            Use this page to create or change budgets and the estimated amount of money you think is wise. Pages further ahead
+            will explain what an "envelope" is in the context of budgeting.
+        </p>
+        <p class="text-info">
+            * <small>Every month, week, year, etc.</small>
+        </p>
+
+        <div class="btn-group">
+            <a class="btn btn-default" href ="{{route('budgets.index')}}"><span class="glyphicon glyphicon-th"></span> Group budgets by date</a>
+            <a class="btn btn-default" href ="{{route('budgets.limits.create')}}"><span class="glyphicon glyphicon-plus-sign"></span> Create a new envelope</a>
+        </div>
         </p>
     </div>
 </div>
@@ -24,7 +35,7 @@
             <tr>
                 <th>Budget</th>
                 <th>Current envelope(s)</th>
-                <th>&nbsp;</th>
+                <th>Update budget</th>
             </tr>
             @foreach($budgets as $budget)
             <tr>
@@ -50,14 +61,14 @@
                                 {{mf($rep->amount,false)}}</span>
                         </div>
                         <div class="col-sm-2">
-                            @if($rep->left() < 0)
+                            @if($rep->left < 0)
                             <span class="label label-danger">
                                 <span class="glyphicon glyphicon-envelope"></span>
-                                {{mf($rep->left(),false)}}</span>
+                                {{mf($rep->left,false)}}</span>
                             @else
                             <span class="label label-success">
                                 <span class="glyphicon glyphicon-envelope"></span>
-                                {{mf($rep->left(),false)}}</span>
+                                {{mf($rep->left,false)}}</span>
                             @endif
                         </div>
                         <div class="col-sm-3">
@@ -75,10 +86,12 @@
                         </div>
                         @endif
                         <div class="col-sm-2 @if($limit->repeats == 0) col-sm-offset-2 @endif">
-                            <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
-                            @if($limit->repeats == 0 || ($limit->repeats == 1 && $index == 0))
-                            <a href="#" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
-                            @endif
+                            <div class="btn-group btn-group-xs">
+                                <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
+                                @if($limit->repeats == 0 || ($limit->repeats == 1 && $index == 0))
+                                <a href="#" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                                @endif
+                            </div>
                         </div>
                     </div>
                     @endforeach
