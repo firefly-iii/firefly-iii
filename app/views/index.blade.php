@@ -56,7 +56,7 @@
         @foreach($set as $data)
         <div class="col-lg-{{$split}} col-md-{{$split}}">
             <h4>
-                <a href="{{route('accounts.show',$data[1]->id)}}?range={{Config::get('firefly.range_to_text.'.Session::get('range'))}}&amp;startdate={{Session::get('start')->format('Y-m-d')}}">{{{$data[1]->name}}}</a>
+                <a href="{{route('accounts.show',$data[1]->id)}}">{{{$data[1]->name}}}</a>
             </h4>
 
             @include('transactions.journals-small',['transactions' => $data[0],'account' => $data[1]])

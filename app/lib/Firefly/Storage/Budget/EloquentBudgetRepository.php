@@ -13,6 +13,40 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
 {
 
     /**
+     * @param $budgetId
+     *
+     * @return mixed
+     */
+    public function find($budgetId)
+    {
+
+        return \Auth::user()->budgets()->find($budgetId);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function get()
+    {
+        $set = \Auth::user()->budgets()->with(
+            ['limits'                        => function ($q) {
+                    $q->orderBy('limits.startdate', 'ASC');
+                }, 'limits.limitrepetitions' => function ($q) {
+                    $q->orderBy('limit_repetitions.startdate', 'ASC');
+                }]
+        )->orderBy('name', 'ASC')->get();
+        foreach ($set as $budget) {
+            foreach ($budget->limits as $limit) {
+                foreach ($limit->limitrepetitions as $rep) {
+                    $rep->left = $rep->left();
+                }
+            }
+        }
+
+        return $set;
+    }
+
+    /**
      * @return array|mixed
      */
     public function getAsSelectList()
@@ -24,6 +58,7 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
         foreach ($list as $entry) {
             $return[intval($entry->id)] = $entry->name;
         }
+
         return $return;
     }
 
@@ -69,6 +104,7 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
                 $budget->count += count($limit->limitrepetitions);
             }
         }
+
         return $set;
     }
 
@@ -121,32 +157,6 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
 
 
         return $budget;
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function get()
-    {
-        return \Auth::user()->budgets()->with(
-            ['limits'                        => function ($q) {
-                    $q->orderBy('limits.startdate', 'ASC');
-                }, 'limits.limitrepetitions' => function ($q) {
-                    $q->orderBy('limit_repetitions.startdate', 'ASC');
-                }]
-        )->orderBy('name', 'ASC')->get();
-    }
-
-    /**
-     * @param $budgetId
-     *
-     * @return mixed
-     */
-    public function find($budgetId)
-    {
-
-        return \Auth::user()->budgets()->find($budgetId);
     }
 
 } 

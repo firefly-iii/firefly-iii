@@ -28,4 +28,12 @@ interface AccountInterface
      */
     public function openingBalanceTransaction(\Account $account);
 
+    /**
+     * @param \Account $account
+     * @param          $perPage
+     *
+     * @return mixed
+     */
+    public function show(\Account $account, $perPage);
+
 } 
