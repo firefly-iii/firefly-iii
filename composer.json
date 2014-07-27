@@ -22,15 +22,15 @@
     },
     "require": {
         "laravel/framework": "4.2.*",
-        "laravelbook/ardent": "dev-master",
-        "codesleeve/asset-pipeline": "dev-master"
+        "laravelbook/ardent": "~2.4",
+        "codesleeve/asset-pipeline": "~2.0"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "1.*",
-        "barryvdh/laravel-ide-helper": "1.*",
-        "mockery/mockery": "dev-master",
-        "satooshi/php-coveralls": "dev-master",
-        "zizaco/factory-muff": "dev-master",
+        "barryvdh/laravel-debugbar": "~1.6",
+        "barryvdh/laravel-ide-helper": "~1.9",
+        "mockery/mockery": "~0.9",
+        "satooshi/php-coveralls": "~0.6",
+        "league/factory-muffin": "~1.5",
         "doctrine/dbal": "2.4.*"
     },
     "autoload": {
@@ -61,6 +61,5 @@
     },
     "config": {
         "preferred-install": "dist"
-    },
-    "minimum-stability": "stable"
+    }
 }
