@@ -21,10 +21,11 @@
         <p class="text-info">
             * <small>Every month, week, year, etc.</small>
         </p>
-        <p>
-            <a class="btn btn-default" href ="{{route('budgets.index.budget')}}"><span class="glyphicon glyphicon-indent-left"></span> Group by budget</a>
-            <a class="btn btn-default" href ="{{route('budgets.limits.create')}}"><span class="glyphicon glyphicon-plus-sign"></span> Create an envelope</a>
-        </p>
+        <div class="btn-group">
+            <a class="btn btn-default" href ="{{route('budgets.index.budget')}}"><span class="glyphicon glyphicon-tasks"></span> Group by budget</a>
+            <a class="btn btn-default" href ="{{route('budgets.create')}}?from=date"><span class="glyphicon glyphicon-plus-sign"></span> Create a new budget</a>
+            <a class="btn btn-default" href ="{{route('budgets.limits.create')}}?from=date"><span class="glyphicon glyphicon-plus-sign"></span> Create a new envelope</a>
+        </div>
     </div>
 </div>
 
@@ -34,7 +35,7 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <h3><a href="#transactions-in-this-period">{{$entry['date']}}</a>
-             <a class="btn btn-default btn-xs" href ="{{route('budgets.limits.create')}}#date-and-budget-selected"><span class="glyphicon glyphicon-plus-sign"></span> Create an envelope for {{$entry['date']}}</a>
+             <a class="btn btn-default btn-xs" href ="{{route('budgets.limits.create')}}#date-and-budget-selected"><span class="glyphicon glyphicon-plus-sign"></span> Create a new envelope for {{$entry['date']}}</a>
             </h3>
         <table class="table table-bordered table-striped">
             <tr>

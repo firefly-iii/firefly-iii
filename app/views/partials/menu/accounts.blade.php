@@ -19,7 +19,7 @@ $r = Route::current()->getName();
             <ul class="nav navbar-nav">
                 <li @if($r=='index')class="active"@endif><a href="{{route('index')}}">Home</a></li>
                 <li @if($r=='accounts.index')class="active"@endif><a href="{{route('accounts.index')}}">Accounts</a></li>
-                <li @if($r=='accounts.create')class="active"@endif><a href="{{route('accounts.create')}}"><span class="glyphicon glyphicon-plus"></span> Create</a></li>
+                <li @if($r=='accounts.create')class="active"@endif><a href="{{route('accounts.create')}}"><span class="glyphicon glyphicon-plus"></span> Create account</a></li>
             </ul>
             @include('partials.menu.shared')
         </div><!-- /.navbar-collapse -->

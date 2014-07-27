@@ -1,8 +1,9 @@
 <?php
 
+use Carbon\Carbon;
 use Firefly\Helper\Controllers\BudgetInterface as BI;
 use Firefly\Storage\Budget\BudgetRepositoryInterface as BRI;
-use Carbon\Carbon;
+
 /**
  * Class BudgetController
  */
@@ -66,44 +67,44 @@ class BudgetController extends BaseController
      *
      * @return string
      */
-    public function show($budgetId)
+    public function show(Budget $budget)
     {
-        /** @var \Budget $budget */
-        $budget = $this->_budgets->find($budgetId);
-
-        $list = $budget->transactionjournals()->get();
-        $return = [];
-        /** @var \TransactionJournal $entry */
-        foreach ($list as $entry) {
-            $month = $entry->date->format('F Y');
-            $return[$month] = isset($return[$month]) ? $return[$month] : [];
-            $return[$month][] = $entry;
-
-        }
-        $str = '';
-
-        foreach ($return as $month => $set) {
-            $str .= '<h1>' . $month . '</h1>';
-            /** @var \TransactionJournal $tj */
-            $sum = 0;
-            foreach ($set as $tj) {
-                $str .= '#' . $tj->id . ' ' . $tj->description . ': ';
-
-                foreach ($tj->transactions as $index => $t) {
-                    $str .= $t->amount . ', ';
-                    if ($index == 0) {
-                        $sum += $t->amount;
-
-                    }
-                }
-                $str .= '<br>';
-
-            }
-            $str .= 'sum: ' . $sum . '<br><br>';
-        }
-
-        return $str;
-
+        return $budget->id;
+//        /** @var \Budget $budget */
+//        $budget = $this->_budgets->find($budgetId);
+//
+//        $list = $budget->transactionjournals()->get();
+//        $return = [];
+//        /** @var \TransactionJournal $entry */
+//        foreach ($list as $entry) {
+//            $month = $entry->date->format('F Y');
+//            $return[$month] = isset($return[$month]) ? $return[$month] : [];
+//            $return[$month][] = $entry;
+//
+//        }
+//        $str = '';
+//
+//        foreach ($return as $month => $set) {
+//            $str .= '<h1>' . $month . '</h1>';
+//            /** @var \TransactionJournal $tj */
+//            $sum = 0;
+//            foreach ($set as $tj) {
+//                $str .= '#' . $tj->id . ' ' . $tj->description . ': ';
+//
+//                foreach ($tj->transactions as $index => $t) {
+//                    $str .= $t->amount . ', ';
+//                    if ($index == 0) {
+//                        $sum += $t->amount;
+//
+//                    }
+//                }
+//                $str .= '<br>';
+//
+//            }
+//            $str .= 'sum: ' . $sum . '<br><br>';
+//        }
+//
+//        return $str;
 
     }
 
@@ -113,17 +114,25 @@ class BudgetController extends BaseController
     public function store()
     {
 
-        $data = [
-            'name'        => Input::get('name'),
-            'amount'      => floatval(Input::get('amount')),
-            'repeat_freq' => Input::get('period'),
-            'repeats'     => intval(Input::get('repeats'))
-        ];
+        $budget = $this->_repository->store(Input::all());
+        if ($budget->id) {
+            Session::flash('success', 'Budget created!');
 
-        $this->_budgets->store($data);
-        Session::flash('success', 'Budget created!');
+            if (Input::get('create') == '1') {
+                return Redirect::route('budgets.create', ['from' => Input::get('from')]);
+            }
 
-        return Redirect::route('budgets.index');
+            if (Input::get('from') == 'date') {
+                return Redirect::route('budgets.index');
+            } else {
+                return Redirect::route('budgets.index.budget');
+            }
+        } else {
+            Session::flash('error', 'Could not save the new budget');
+
+            return Redirect::route('budgets.create')->withInput();
+        }
+
     }
 
 

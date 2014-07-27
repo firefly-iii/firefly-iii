@@ -121,7 +121,7 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
         $budget->save();
 
         // if limit, create limit (repetition itself will be picked up elsewhere).
-        if ($data['amount'] > 0) {
+        if (floatval($data['amount']) > 0) {
             $limit = new \Limit;
             $limit->budget()->associate($budget);
             $startDate = new Carbon;
@@ -152,10 +152,13 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
             $limit->amount = $data['amount'];
             $limit->repeats = $data['repeats'];
             $limit->repeat_freq = $data['repeat_freq'];
-            $limit->save();
+            if ($limit->validate()) {
+                $limit->save();
+            }
         }
-
-
+        if($budget->validate()) {
+            $budget->save();
+        }
         return $budget;
     }
 
