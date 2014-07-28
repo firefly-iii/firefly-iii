@@ -17,11 +17,11 @@ class HomeController extends BaseController
     protected $_tk;
 
     /**
-     * @param ARI     $accounts
-     * @param PHI     $preferences
-     * @param TJRI    $journal
+     * @param ARI $accounts
+     * @param PHI $preferences
+     * @param TJRI $journal
      * @param Toolkit $toolkit
-     * @param BRI     $budgets
+     * @param BRI $budgets
      */
     public function __construct(ARI $accounts, PHI $preferences, TJRI $journal, Toolkit $toolkit, BRI $budgets)
     {

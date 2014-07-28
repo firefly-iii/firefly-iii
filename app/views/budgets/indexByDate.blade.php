@@ -48,8 +48,8 @@
             <tr>
                 <td>
                     <div class="btn-group">
-                        <a title="Edit budget {{{$repetition->limit->budget->name}}}" href="{{route('budgets.edit',$repetition->limit->budget->id)}}" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-pencil"></span></a>
-                        <a title="Delete budget {{{$repetition->limit->budget->name}}}" href="{{route('budgets.delete',$repetition->limit->budget->id)}}" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                        <a title="Edit budget {{{$repetition->limit->budget->name}}}" href="{{route('budgets.edit',$repetition->limit->budget->id)}}?from=date" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-pencil"></span></a>
+                        <a title="Delete budget {{{$repetition->limit->budget->name}}}" href="{{route('budgets.delete',$repetition->limit->budget->id)}}?from=date" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
                     </div>
                 </td>
                 <td>

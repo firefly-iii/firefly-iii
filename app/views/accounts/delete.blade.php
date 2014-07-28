@@ -11,10 +11,10 @@
     </div>
 </div>
 
-{{Form::model($account, ['class' => 'form-horizontal','url' => route('accounts.destroy')])}}
+{{Form::open(['class' => 'form-horizontal','url' => route('accounts.destroy')])}}
 {{Form::hidden('id',$account->id)}}
 <div class="row">
-    <div class="col-lg-6 col-md-6 col-sm-12">
+    <div class="col-lg-12 col-md-12 col-sm-12">
         @if($account->transactions()->count() > 0)
         <p class="text-info">
 

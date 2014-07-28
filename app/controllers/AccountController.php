@@ -14,7 +14,7 @@ class AccountController extends \BaseController
 
     /**
      * @param ARI $repository
-     * @param AI  $accounts
+     * @param AI $accounts
      */
     public function __construct(ARI $repository, AI $accounts)
     {
@@ -93,7 +93,7 @@ class AccountController extends \BaseController
     {
         $show = $this->_accounts->show($account, 40);
 
-        return View::make('accounts.show')->with('account', $account)->with('show',$show);
+        return View::make('accounts.show')->with('account', $account)->with('show', $show);
     }
 
     /**

@@ -74,11 +74,7 @@
                         </div>
                         <div class="col-sm-3">
                             <small>
-                                @if($limit->repeat_freq == 'monthly')
-                                {{$rep->startdate->format('F Y')}}
-                                @else
-                                NO FORMAT
-                                @endif
+                                CLOSURE TODO
                             </small>
                         </div>
                         @if($limit->repeats == 1)
@@ -104,8 +100,8 @@
                 </td>
                 <td>
                     <div class="btn-group btn-group-sm">
-                        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
-                        <a href="#" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                        <a href="{{route('budgets.edit',$budget->id)}}?from=budget" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="{{route('budgets.delete',$budget->id)}}?from=budget" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
 
                     </div>
                 </td>
