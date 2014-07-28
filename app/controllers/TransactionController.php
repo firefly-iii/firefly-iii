@@ -18,9 +18,9 @@ class TransactionController extends BaseController
     protected $_journal;
 
     /**
-     * @param ARI  $accounts
-     * @param Bud  $budgets
-     * @param Cat  $categories
+     * @param ARI $accounts
+     * @param Bud $budgets
+     * @param Cat $categories
      * @param TJRI $journal
      */
     public function __construct(ARI $accounts, Bud $budgets, Cat $categories, TJRI $journal)
@@ -167,8 +167,8 @@ class TransactionController extends BaseController
 
             // data to properly display form:
             $data = [
-                'date'      => $journal->date->format('Y-m-d'),
-                'category'  => '',
+                'date' => $journal->date->format('Y-m-d'),
+                'category' => '',
                 'budget_id' => 0
             ];
             $category = $journal->categories()->first();

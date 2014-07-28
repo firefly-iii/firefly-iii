@@ -42,7 +42,7 @@ class UserController extends BaseController
     {
         $rememberMe = Input::get('remember_me') == '1';
         $data = [
-            'email'    => Input::get('email'),
+            'email' => Input::get('email'),
             'password' => Input::get('password')
         ];
         if (Auth::attempt($data, $rememberMe)) {

@@ -29,7 +29,7 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
     public function get()
     {
         $set = \Auth::user()->budgets()->with(
-            ['limits'                        => function ($q) {
+            ['limits' => function ($q) {
                     $q->orderBy('limits.startdate', 'ASC');
                 }, 'limits.limitrepetitions' => function ($q) {
                     $q->orderBy('limit_repetitions.startdate', 'ASC');
@@ -44,6 +44,31 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
         }
 
         return $set;
+    }
+
+    /**
+     * @param $data
+     * @return mixed
+     */
+    public function update($data) {
+        $budget = $this->find($data['id']);
+        if ($budget) {
+            // update account accordingly:
+            $budget->name = $data['name'];
+            if ($budget->validate()) {
+                $budget->save();
+            }
+        }
+        return $budget;
+    }
+
+    public function destroy($budgetId) {
+        $budget = $this->find($budgetId);
+        if($budget) {
+            $budget->delete();
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -72,7 +97,7 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
     {
 
         $set = \Auth::user()->budgets()->with(
-            ['limits'                        => function ($q) use ($date) {
+            ['limits' => function ($q) use ($date) {
                     $q->orderBy('limits.startdate', 'ASC');
                 }, 'limits.limitrepetitions' => function ($q) use ($date) {
                     $q->orderBy('limit_repetitions.startdate', 'ASC');
@@ -156,7 +181,7 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
                 $limit->save();
             }
         }
-        if($budget->validate()) {
+        if ($budget->validate()) {
             $budget->save();
         }
         return $budget;

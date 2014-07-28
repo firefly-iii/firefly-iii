@@ -34,6 +34,10 @@ return [
         'weekly'  => [
             'group_date'   => 'Y-W',
             'display_date' => '\W\e\e\k W, Y'
+        ],
+        'quarterly' => [
+            'group_date' => 'Y-m',
+                'display_date' => '\T\O\D\O \C\L\O\S\U\R\E m-Y'
         ]
     ]
 ];

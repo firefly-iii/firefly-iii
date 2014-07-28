@@ -54,12 +54,12 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/accounts/{account}/delete', ['uses' => 'AccountController@delete', 'as' => 'accounts.delete']);
 
         // budget controller:
-        Route::get('/budget/create',['uses' => 'BudgetController@create', 'as' => 'budgets.create']);
+        Route::get('/budgets/create',['uses' => 'BudgetController@create', 'as' => 'budgets.create']);
         Route::get('/budgets',['uses' => 'BudgetController@indexByDate','as' => 'budgets.index']);
         Route::get('/budgets/budget',['uses' => 'BudgetController@indexByBudget','as' => 'budgets.index.budget']);
-        Route::get('/budget/show/{budget}',['uses' => 'BudgetController@show', 'as' => 'budgets.show']);
-        Route::get('/budget/edit/{budget}',['uses' => 'BudgetController@edit', 'as' => 'budgets.edit']);
-        Route::get('/budget/delete/{budget}',['uses' => 'BudgetController@delete', 'as' => 'budgets.delete']);
+        Route::get('/budgets/show/{budget}',['uses' => 'BudgetController@show', 'as' => 'budgets.show']);
+        Route::get('/budgets/edit/{budget}',['uses' => 'BudgetController@edit', 'as' => 'budgets.edit']);
+        Route::get('/budgets/delete/{budget}',['uses' => 'BudgetController@delete', 'as' => 'budgets.delete']);
 
         // limit controller:
         Route::get('/budgets/limits/create/{id?}',['uses' => 'LimitController@create','as' => 'budgets.limits.create']);
@@ -89,7 +89,9 @@ Route::group(['before' => 'csrf|auth'], function () {
         Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword']);
 
         // budget controller:
-        Route::post('/budget/store',['uses' => 'BudgetController@store', 'as' => 'budgets.store']);
+        Route::post('/budgets/store',['uses' => 'BudgetController@store', 'as' => 'budgets.store']);
+        Route::post('/budgets/update', ['uses' => 'BudgetController@update', 'as' => 'budgets.update']);
+        Route::post('/budgets/destroy', ['uses' => 'BudgetController@destroy', 'as' => 'budgets.destroy']);
 
         // migration controller
         Route::post('/migrate', ['uses' => 'MigrationController@postIndex']);

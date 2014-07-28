@@ -13,8 +13,10 @@ class BudgetController extends BaseController
     protected $_budgets;
     protected $_repository;
 
+
     /**
-     * @param BRI $budgets
+     * @param BI $budgets
+     * @param BRI $repository
      */
     public function __construct(BI $budgets, BRI $repository)
     {
@@ -60,12 +62,52 @@ class BudgetController extends BaseController
 
     }
 
+    public function edit(Budget $budget)
+    {
+        return View::make('budgets.edit')->with('budget', $budget);
+
+    }
+
+    public function update()
+    {
+        $budget = $this->_repository->update(Input::all());
+        Session::flash('success', 'Budget "' . $budget->name . '" updated.');
+
+        if (Input::get('from') == 'date') {
+            return Redirect::route('budgets.index');
+        } else {
+            return Redirect::route('budgets.index.budget');
+        }
+
+        return Redirect::route('budgets.index');
+    }
+
+    public function delete(Budget $budget)
+    {
+        return View::make('budgets.delete')->with('budget', $budget);
+    }
+
+    public function destroy()
+    {
+        $result = $this->_repository->destroy(Input::get('id'));
+        if ($result === true) {
+            Session::flash('success', 'The budget was deleted.');
+            if (Input::get('from') == 'date') {
+                return Redirect::route('budgets.index');
+            } else {
+                return Redirect::route('budgets.index.budget');
+            }
+        } else {
+            Session::flash('error', 'Could not delete the budget. Check the logs to be sure.');
+        }
+        return Redirect::route('budgets.index');
+
+    }
+
     /**
-     * TODO actual view, actual content.
+     * @param Budget $budget
      *
-     * @param $budgetId
-     *
-     * @return string
+     * @return int
      */
     public function show(Budget $budget)
     {

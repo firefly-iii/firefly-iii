@@ -21,11 +21,11 @@ class ChartController extends BaseController
 
 
     /**
-     * @param ARI  $accounts
+     * @param ARI $accounts
      * @param TJRI $journals
-     * @param PHI  $preferences
-     * @param tk   $toolkit
-     * @param BRI  $budgets
+     * @param PHI $preferences
+     * @param tk $toolkit
+     * @param BRI $budgets
      */
     public function __construct(ARI $accounts, TJRI $journals, PHI $preferences, tk $toolkit, BRI $budgets)
     {

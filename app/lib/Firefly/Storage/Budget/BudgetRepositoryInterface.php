@@ -23,10 +23,22 @@ interface BudgetRepositoryInterface
 
     /**
      * @param $data
+     * @return mixed
+     */
+    public function update($data);
+
+    /**
+     * @param $data
      *
      * @return mixed
      */
     public function store($data);
+
+    /**
+     * @param $data
+     * @return mixed
+     */
+    public function destroy($data);
 
     /**
      * @param $budgetId
