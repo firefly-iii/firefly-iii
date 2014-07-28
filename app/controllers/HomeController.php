@@ -17,11 +17,11 @@ class HomeController extends BaseController
     protected $_tk;
 
     /**
-     * @param ARI $accounts
-     * @param PHI $preferences
-     * @param TJRI $journal
+     * @param ARI     $accounts
+     * @param PHI     $preferences
+     * @param TJRI    $journal
      * @param Toolkit $toolkit
-     * @param BRI $budgets
+     * @param BRI     $budgets
      */
     public function __construct(ARI $accounts, PHI $preferences, TJRI $journal, Toolkit $toolkit, BRI $budgets)
     {
@@ -72,6 +72,7 @@ class HomeController extends BaseController
         } else {
             $transactions = array_chunk($transactions, 3);
         }
+
         // build the home screen:
         return View::make('index')->with('count', $count)->with('transactions', $transactions)->with(
             'budgets', $budgets
@@ -84,6 +85,7 @@ class HomeController extends BaseController
     public function flush()
     {
         Cache::flush();
+
         return Redirect::route('index');
     }
 }

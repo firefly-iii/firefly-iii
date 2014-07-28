@@ -39,6 +39,7 @@ class MigrationController extends BaseController
                 throw new \Firefly\Exception\FireflyException('Invalid file.');
             }
         }
+
         return '<a href="' . route('index') . '">home</a>';
     }
 
@@ -67,6 +68,7 @@ class MigrationController extends BaseController
                 return View::make('error')->with('message', 'Invalid JSON content.');
             }
             $this->_migration->migrate();
+
             return Redirect::route('index');
         } else {
             return View::make('error')->with('message', 'No file selected');

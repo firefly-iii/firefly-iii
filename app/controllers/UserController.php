@@ -42,14 +42,16 @@ class UserController extends BaseController
     {
         $rememberMe = Input::get('remember_me') == '1';
         $data = [
-            'email' => Input::get('email'),
+            'email'    => Input::get('email'),
             'password' => Input::get('password')
         ];
         if (Auth::attempt($data, $rememberMe)) {
             Session::flash('success', 'Logged in!');
+
             return Redirect::route('index');
         }
         Session::flash('error', 'No good!');
+
         return View::make('user.login');
     }
 
@@ -63,6 +65,7 @@ class UserController extends BaseController
         if (Config::get('auth.allow_register') !== true) {
             return View::make('error')->with('message', 'Not possible');
         }
+
         return View::make('user.register');
     }
 
@@ -85,11 +88,14 @@ class UserController extends BaseController
         if ($user) {
             if (Config::get('auth.verify_mail') === true) {
                 $this->email->sendVerificationMail($user);
+
                 return View::make('user.verification-pending');
             }
             $this->email->sendPasswordMail($user);
+
             return View::make('user.registered');
         }
+
         return View::make('user.register');
     }
 
@@ -102,6 +108,7 @@ class UserController extends BaseController
     {
         Auth::logout();
         Session::flush();
+
         return Redirect::route('index');
     }
 
@@ -126,13 +133,16 @@ class UserController extends BaseController
         $user = $this->user->findByEmail(Input::get('email'));
         if (!$user) {
             Session::flash('error', 'No good!');
+
             return View::make('user.remindme');
         }
         if (Config::get('auth.verify_reset') === true) {
             $this->email->sendResetVerification($user);
+
             return View::make('user.verification-pending');
         }
         $this->email->sendPasswordMail($user);
+
         return View::make('user.registered');
 
     }
@@ -149,8 +159,10 @@ class UserController extends BaseController
         $user = $this->user->findByReset($reset);
         if ($user) {
             $this->email->sendPasswordMail($user);
+
             return View::make('user.registered');
         }
+
         return View::make('error')->with('message', 'Yo no hablo reset code!');
     }
 
