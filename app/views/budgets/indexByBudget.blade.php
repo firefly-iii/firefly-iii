@@ -74,7 +74,7 @@
                         </div>
                         <div class="col-sm-3">
                             <small>
-                                CLOSURE TODO
+                                {{$rep->periodShow()}}
                             </small>
                         </div>
                         @if($limit->repeats == 1)
@@ -94,7 +94,7 @@
                     @endforeach
                     @endforeach
                     <p style="margin-top:5px;">
-                        <a href="{{route('budgets.limits.create',$budget->id)}}" class="btn btn-default btn-xs"><span
+                        <a href="{{route('budgets.limits.create',$budget->id)}}?from=budget" class="btn btn-default btn-xs"><span
                                 class="glyphicon-plus-sign glyphicon"></span> Add another envelope</a>
                     </p>
                 </td>

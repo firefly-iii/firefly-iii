@@ -21,11 +21,11 @@ class ChartController extends BaseController
 
 
     /**
-     * @param ARI $accounts
+     * @param ARI  $accounts
      * @param TJRI $journals
-     * @param PHI $preferences
-     * @param tk $toolkit
-     * @param BRI $budgets
+     * @param PHI  $preferences
+     * @param tk   $toolkit
+     * @param BRI  $budgets
      */
     public function __construct(ARI $accounts, TJRI $journals, PHI $preferences, tk $toolkit, BRI $budgets)
     {
@@ -85,6 +85,7 @@ class ChartController extends BaseController
                 $current->addDay();
             }
         }
+
         return Response::json($return);
     }
 
@@ -118,6 +119,7 @@ class ChartController extends BaseController
                 }
             }
         }
+
         return View::make('charts.info')->with('rows', $result)->with('sum', $sum);
     }
 
@@ -179,14 +181,9 @@ class ChartController extends BaseController
 
         $repeatFreq = Config::get('firefly.range_to_repeat_freq.' . Session::get('range'));
 
-        $dateFormats = Config::get('firefly.date_formats_by_period.' . $repeatFreq);
-        if (is_null($dateFormats)) {
-            throw new FireflyException('No date formats for ' . \Session::get('range'));
-        }
 
-
-        $limitInPeriod = 'Envelope for ' . $start->format($dateFormats['display_date']);
-        $spentInPeriod = 'Spent in ' . $start->format($dateFormats['display_date']);
+        $limitInPeriod = 'Envelope for XXX';
+        $spentInPeriod = 'Spent in XXX';
 
         $data['series'] = [
             [
@@ -217,6 +214,7 @@ class ChartController extends BaseController
 
 
         }
+
         return Response::json($data);
     }
 }

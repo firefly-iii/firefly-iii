@@ -14,7 +14,7 @@ class AccountController extends \BaseController
 
     /**
      * @param ARI $repository
-     * @param AI $accounts
+     * @param AI  $accounts
      */
     public function __construct(ARI $repository, AI $accounts)
     {
@@ -54,6 +54,7 @@ class AccountController extends \BaseController
         } else {
             Session::flash('error', 'Could not delete the account. Check the logs to be sure.');
         }
+
         return Redirect::route('accounts.index');
 
 

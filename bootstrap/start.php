@@ -1,17 +1,7 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Create The Application
-|--------------------------------------------------------------------------
-|
-| The first thing we will do is create a new Laravel application instance
-| which serves as the "glue" for all the components of Laravel, and is
-| the IoC container for the system binding all of the various parts.
-|
-*/
-
-
+use Carbon\Carbon;
+use Firefly\Exception\FireflyException;
 
 if (!function_exists('mf')) {
     function mf($n, $coloured = true)
@@ -30,12 +20,13 @@ if (!function_exists('mf')) {
         if ($coloured === true && $n < 0) {
             return '<span class="text-danger">&#128; ' . $string . '</span>';
         }
+
         return '&#128; ' . $string;
     }
 }
 
-$app = new Illuminate\Foundation\Application;
 
+$app = new Illuminate\Foundation\Application;
 
 
 /*
@@ -102,7 +93,8 @@ Event::subscribe('Firefly\Helper\Form\FormTrigger');
 // do something with events:
 Event::subscribe('Firefly\Trigger\Limits\EloquentLimitTrigger');
 
-App::booted(function() {
+App::booted(
+    function () {
         $forms = new \Firefly\Helper\Form\FormTrigger;
         $forms->registerFormExtensions();
     }

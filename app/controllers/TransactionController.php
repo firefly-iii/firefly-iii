@@ -18,9 +18,9 @@ class TransactionController extends BaseController
     protected $_journal;
 
     /**
-     * @param ARI $accounts
-     * @param Bud $budgets
-     * @param Cat $categories
+     * @param ARI  $accounts
+     * @param Bud  $budgets
+     * @param Cat  $categories
      * @param TJRI $journal
      */
     public function __construct(ARI $accounts, Bud $budgets, Cat $categories, TJRI $journal)
@@ -129,6 +129,7 @@ class TransactionController extends BaseController
     public function index()
     {
         $transactions = $this->_journal->paginate(25);
+
         return View::make('transactions.index')->with('transactions', $transactions);
     }
 
@@ -143,6 +144,7 @@ class TransactionController extends BaseController
         if ($journal) {
             return View::make('transactions.show')->with('journal', $journal);
         }
+
         return View::make('error')->with('message', 'Invalid journal');
     }
 
@@ -167,8 +169,8 @@ class TransactionController extends BaseController
 
             // data to properly display form:
             $data = [
-                'date' => $journal->date->format('Y-m-d'),
-                'category' => '',
+                'date'      => $journal->date->format('Y-m-d'),
+                'category'  => '',
                 'budget_id' => 0
             ];
             $category = $journal->categories()->first();
@@ -196,10 +198,12 @@ class TransactionController extends BaseController
                     $data['amount'] = floatval($journal->transactions[1]->amount);
                     break;
             }
+
             return View::make('transactions.edit')->with('journal', $journal)->with('accounts', $accounts)->with(
                 'what', $what
             )->with('budgets', $budgets)->with('data', $data);
         }
+
         return View::make('error')->with('message', 'Invalid journal');
     }
 
@@ -270,6 +274,7 @@ class TransactionController extends BaseController
             $journal->transactions[0]->save();
             $journal->transactions[1]->save();
             $journal->save();
+
             return Redirect::route('transactions.edit', $journal->id);
         }
 

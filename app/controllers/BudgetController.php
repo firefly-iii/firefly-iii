@@ -15,7 +15,7 @@ class BudgetController extends BaseController
 
 
     /**
-     * @param BI $budgets
+     * @param BI  $budgets
      * @param BRI $repository
      */
     public function __construct(BI $budgets, BRI $repository)
@@ -33,6 +33,35 @@ class BudgetController extends BaseController
         $periods = \Config::get('firefly.periods_to_text');
 
         return View::make('budgets.create')->with('periods', $periods);
+    }
+
+    public function delete(Budget $budget)
+    {
+        return View::make('budgets.delete')->with('budget', $budget);
+    }
+
+    public function destroy()
+    {
+        $result = $this->_repository->destroy(Input::get('id'));
+        if ($result === true) {
+            Session::flash('success', 'The budget was deleted.');
+            if (Input::get('from') == 'date') {
+                return Redirect::route('budgets.index');
+            } else {
+                return Redirect::route('budgets.index.budget');
+            }
+        } else {
+            Session::flash('error', 'Could not delete the budget. Check the logs to be sure.');
+        }
+
+        return Redirect::route('budgets.index');
+
+    }
+
+    public function edit(Budget $budget)
+    {
+        return View::make('budgets.edit')->with('budget', $budget);
+
     }
 
     /**
@@ -62,48 +91,6 @@ class BudgetController extends BaseController
 
     }
 
-    public function edit(Budget $budget)
-    {
-        return View::make('budgets.edit')->with('budget', $budget);
-
-    }
-
-    public function update()
-    {
-        $budget = $this->_repository->update(Input::all());
-        Session::flash('success', 'Budget "' . $budget->name . '" updated.');
-
-        if (Input::get('from') == 'date') {
-            return Redirect::route('budgets.index');
-        } else {
-            return Redirect::route('budgets.index.budget');
-        }
-
-        return Redirect::route('budgets.index');
-    }
-
-    public function delete(Budget $budget)
-    {
-        return View::make('budgets.delete')->with('budget', $budget);
-    }
-
-    public function destroy()
-    {
-        $result = $this->_repository->destroy(Input::get('id'));
-        if ($result === true) {
-            Session::flash('success', 'The budget was deleted.');
-            if (Input::get('from') == 'date') {
-                return Redirect::route('budgets.index');
-            } else {
-                return Redirect::route('budgets.index.budget');
-            }
-        } else {
-            Session::flash('error', 'Could not delete the budget. Check the logs to be sure.');
-        }
-        return Redirect::route('budgets.index');
-
-    }
-
     /**
      * @param Budget $budget
      *
@@ -111,43 +98,26 @@ class BudgetController extends BaseController
      */
     public function show(Budget $budget)
     {
-        return $budget->id;
-//        /** @var \Budget $budget */
-//        $budget = $this->_budgets->find($budgetId);
-//
-//        $list = $budget->transactionjournals()->get();
-//        $return = [];
-//        /** @var \TransactionJournal $entry */
-//        foreach ($list as $entry) {
-//            $month = $entry->date->format('F Y');
-//            $return[$month] = isset($return[$month]) ? $return[$month] : [];
-//            $return[$month][] = $entry;
-//
-//        }
-//        $str = '';
-//
-//        foreach ($return as $month => $set) {
-//            $str .= '<h1>' . $month . '</h1>';
-//            /** @var \TransactionJournal $tj */
-//            $sum = 0;
-//            foreach ($set as $tj) {
-//                $str .= '#' . $tj->id . ' ' . $tj->description . ': ';
-//
-//                foreach ($tj->transactions as $index => $t) {
-//                    $str .= $t->amount . ', ';
-//                    if ($index == 0) {
-//                        $sum += $t->amount;
-//
-//                    }
-//                }
-//                $str .= '<br>';
-//
-//            }
-//            $str .= 'sum: ' . $sum . '<br><br>';
-//        }
-//
-//        return $str;
+        $filters = [];
 
+        if (!is_null(Input::get('rep'))) {
+            $repetitionId = intval(Input::get('rep'));
+            $repetitions = $this->_budgets->organizeRepetition($budget, $repetitionId);
+            $filters[] = $repetitions[0]['limit'];
+            $filters[] = $repetitions[0]['limitrepetition'];
+        } else {
+            if (Input::get('noenvelope') == 'true') {
+                $repetitions = $this->_budgets->outsideRepetitions($budget);
+                $filters[] = 'no_envelope';
+            } else {
+                // grab all limit repetitions, order them, show them:
+                $repetitions = $this->_budgets->organizeRepetitions($budget);
+            }
+        }
+
+        return View::make('budgets.show')->with('budget', $budget)->with('repetitions', $repetitions)->with(
+            'filters', $filters
+        );
     }
 
     /**
@@ -175,6 +145,20 @@ class BudgetController extends BaseController
             return Redirect::route('budgets.create')->withInput();
         }
 
+    }
+
+    public function update()
+    {
+        $budget = $this->_repository->update(Input::all());
+        Session::flash('success', 'Budget "' . $budget->name . '" updated.');
+
+        if (Input::get('from') == 'date') {
+            return Redirect::route('budgets.index');
+        } else {
+            return Redirect::route('budgets.index.budget');
+        }
+
+        return Redirect::route('budgets.index');
     }
 
 

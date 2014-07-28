@@ -35,6 +35,7 @@ class PreferencesController extends BaseController
 
         // pref:
         $frontpage = $this->_preferences->get('frontpageAccounts', []);
+
         return View::make('preferences.index')->with('accounts', $accounts)->with('frontpageAccounts', $frontpage)
             ->with('viewRange', $viewRangeValue);
     }
@@ -60,6 +61,7 @@ class PreferencesController extends BaseController
         Session::forget('range');
 
         Session::flash('success', 'Preferences saved!');
+
         return Redirect::route('preferences');
     }
 

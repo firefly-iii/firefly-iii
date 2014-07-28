@@ -1,4 +1,6 @@
 <?php
+use Carbon\Carbon;
+
 return [
     'index_periods'          => '1D', '1W', '1M', '3M', '6M', 'custom',
     'budget_periods'         => 'daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly',
@@ -25,19 +27,4 @@ return [
         '6M'     => 'half-year',
         'custom' => 'monthly'
     ],
-
-    'date_formats_by_period' => [
-        'monthly' => [
-            'group_date'   => 'Y-m',
-            'display_date' => 'F Y'
-        ],
-        'weekly'  => [
-            'group_date'   => 'Y-W',
-            'display_date' => '\W\e\e\k W, Y'
-        ],
-        'quarterly' => [
-            'group_date' => 'Y-m',
-                'display_date' => '\T\O\D\O \C\L\O\S\U\R\E m-Y'
-        ]
-    ]
 ];

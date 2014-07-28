@@ -33,11 +33,12 @@ class LimitController extends BaseController
     {
         $periods = \Config::get('firefly.periods_to_text');
         $prefilled = [
-            'startdate' => Input::get('startdate') ? : date('Y-m-d'),
+            'startdate'   => Input::get('startdate') ? : date('Y-m-d'),
             'repeat_freq' => Input::get('repeat_freq') ? : 'monthly'
         ];
 
         $budgets = $this->_budgets->getAsSelectList();
+
         return View::make('limits.create')->with('budgets', $budgets)->with('budget_id', $budgetId)->with(
             'periods', $periods
         )->with('prefilled', $prefilled);
@@ -54,11 +55,11 @@ class LimitController extends BaseController
         $budgets = $this->_budgets->getAsSelectList();
 
         $periods = [
-            'weekly' => 'A week',
-            'monthly' => 'A month',
+            'weekly'    => 'A week',
+            'monthly'   => 'A month',
             'quarterly' => 'A quarter',
             'half-year' => 'Six months',
-            'yearly' => 'A year',
+            'yearly'    => 'A year',
         ];
 
 
@@ -67,6 +68,7 @@ class LimitController extends BaseController
                 'periods', $periods
             );
         }
+
         return View::make('error')->with('message', 'No such limit.');
 
     }
@@ -87,15 +89,18 @@ class LimitController extends BaseController
             $limit->amount = floatval(Input::get('amount'));
             if (!$limit->save()) {
                 Session::flash('error', 'Could not save new limit: ' . $limit->errors()->first());
+
                 return Redirect::route('budgets.limits.edit', $limit->id)->withInput();
             } else {
                 Session::flash('success', 'Limit saved!');
                 foreach ($limit->limitrepetitions()->get() as $rep) {
                     $rep->delete();
                 }
+
                 return Redirect::route('budgets.index');
             }
         }
+
         return View::make('error')->with('message', 'No limit!');
 
     }
@@ -143,6 +148,7 @@ class LimitController extends BaseController
 
         if ($limit) {
             $limit->delete();
+
             return Redirect::route('budgets.index');
         } else {
             return View::make('error')->with('message', 'No such limit!');
