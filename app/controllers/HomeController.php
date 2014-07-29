@@ -54,9 +54,6 @@ class HomeController extends BaseController
         }
 
 
-        // get the budgets for this period:
-        $budgets = $this->_budgets->getWithRepetitionsInPeriod($start, \Session::get('range'));
-
         $transactions = [];
         foreach ($accounts as $account) {
             $set = $this->_journal->getByAccountInDateRange($account, 15, $start, $end);
@@ -74,9 +71,7 @@ class HomeController extends BaseController
         }
 
         // build the home screen:
-        return View::make('index')->with('count', $count)->with('transactions', $transactions)->with(
-            'budgets', $budgets
-        );
+        return View::make('index')->with('count', $count)->with('transactions', $transactions);
     }
 
     /**
