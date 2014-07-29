@@ -81,14 +81,14 @@
         <div class="form-group">
             <label for="account_from_id" class="col-sm-4 control-label">Account from</label>
             <div class="col-sm-8">
-                {{Form::select('account_to_id',$accounts,Input::old('account_from_id'),['class' => 'form-control'])}}
+                {{Form::select('account_from_id',$accounts,Input::old('account_from_id'),['class' => 'form-control'])}}
             </div>
         </div>
 
         <div class="form-group">
             <label for="account_to_id" class="col-sm-4 control-label">Account to</label>
             <div class="col-sm-8">
-                {{Form::select('account_from_id',$accounts,Input::old('account_to_id'),['class' => 'form-control'])}}
+                {{Form::select('account_to_id',$accounts,Input::old('account_to_id'),['class' => 'form-control'])}}
             </div>
         </div>
         @endif
