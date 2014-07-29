@@ -23,6 +23,7 @@ interface BudgetRepositoryInterface
 
     /**
      * @param $data
+     *
      * @return mixed
      */
     public function update($data);
@@ -36,6 +37,7 @@ interface BudgetRepositoryInterface
 
     /**
      * @param $data
+     *
      * @return mixed
      */
     public function destroy($data);

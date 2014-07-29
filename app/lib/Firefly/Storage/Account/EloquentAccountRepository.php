@@ -22,48 +22,86 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     /**
      * @return mixed
      */
+    public function count()
+    {
+        return \Auth::user()->accounts()->count();
+
+    }
+
+    /**
+     * @param              $name
+     * @param \AccountType $type
+     *
+     * @return \Account|mixed
+     */
+    public function createOrFind($name, \AccountType $type)
+    {
+        $beneficiary = $this->findByName($name);
+        if (!$beneficiary) {
+            $data = [
+                'name'         => $name,
+                'account_type' => $type
+            ];
+
+            return $this->store($data);
+        }
+
+        return $beneficiary;
+    }
+
+    /**
+     * @param $name
+     *
+     * @return \Account|mixed|null
+     */
+    public function createOrFindBeneficiary($name)
+    {
+        if (is_null($name) || strlen($name) == 0) {
+            return null;
+        }
+        $type = \AccountType::where('description', 'Beneficiary account')->first();
+
+        return $this->createOrFind($name, $type);
+    }
+
+    public function destroy($accountId)
+    {
+        $account = $this->find($accountId);
+        if ($account) {
+            $account->delete();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $accountId
+     *
+     * @return mixed
+     */
+    public function find($accountId)
+    {
+        return \Auth::user()->accounts()->where('id', $accountId)->first();
+    }
+
+    /**
+     * @param $name
+     *
+     * @return mixed
+     */
+    public function findByName($name)
+    {
+        return \Auth::user()->accounts()->where('name', 'like', '%' . $name . '%')->first();
+    }
+
+    /**
+     * @return mixed
+     */
     public function get()
     {
         return \Auth::user()->accounts()->with('accounttype')->orderBy('name', 'ASC')->get();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBeneficiaries()
-    {
-        $list = \Auth::user()->accounts()->leftJoin(
-            'account_types', 'account_types.id', '=', 'accounts.account_type_id'
-        )
-            ->where('account_types.description', 'Beneficiary account')->where('accounts.active', 1)
-
-            ->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
-        return $list;
-    }
-
-    /**
-     * @param $ids
-     *
-     * @return array|mixed
-     */
-    public function getByIds($ids)
-    {
-        if (count($ids) > 0) {
-            return \Auth::user()->accounts()->with('accounttype')->whereIn('id', $ids)->orderBy('name', 'ASC')->get();
-        } else {
-            return [];
-        }
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDefault()
-    {
-        return \Auth::user()->accounts()->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-            ->where('account_types.description', 'Default account')
-
-            ->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
     }
 
     /**
@@ -92,59 +130,60 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         foreach ($list as $entry) {
             $return[intval($entry->id)] = $entry->name;
         }
+
         return $return;
     }
 
     /**
      * @return mixed
      */
-    public function count()
+    public function getBeneficiaries()
     {
-        return \Auth::user()->accounts()->count();
+        $list = \Auth::user()->accounts()->leftJoin(
+            'account_types', 'account_types.id', '=', 'accounts.account_type_id'
+        )
+            ->where('account_types.description', 'Beneficiary account')->where('accounts.active', 1)
 
+            ->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
+
+        return $list;
     }
 
     /**
-     * @param $name
+     * @param $ids
      *
-     * @return \Account|mixed|null
+     * @return array|mixed
      */
-    public function createOrFindBeneficiary($name)
+    public function getByIds(array $ids)
     {
-        if (is_null($name) || strlen($name) == 0) {
-            return null;
+        if (count($ids) > 0) {
+            return \Auth::user()->accounts()->with('accounttype')->whereIn('id', $ids)->orderBy('name', 'ASC')->get();
+        } else {
+            return $this->getActiveDefault();
         }
-        $type = \AccountType::where('description', 'Beneficiary account')->first();
-        return $this->createOrFind($name, $type);
     }
 
     /**
-     * @param              $name
-     * @param \AccountType $type
-     *
-     * @return \Account|mixed
-     */
-    public function createOrFind($name, \AccountType $type)
-    {
-        $beneficiary = $this->findByName($name);
-        if (!$beneficiary) {
-            $data = [
-                'name' => $name,
-                'account_type' => $type
-            ];
-            return $this->store($data);
-        }
-        return $beneficiary;
-    }
-
-    /**
-     * @param $name
-     *
      * @return mixed
      */
-    public function findByName($name)
+    public function getCashAccount()
     {
-        return \Auth::user()->accounts()->where('name', 'like', '%' . $name . '%')->first();
+        $type = \AccountType::where('description', 'Cash account')->first();
+        $cash = \Auth::user()->accounts()->where('account_type_id', $type->id)->first();
+
+        return $cash;
+
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefault()
+    {
+        return \Auth::user()->accounts()->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+            ->where('account_types.description', 'Default account')
+
+            ->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
     }
 
     /**
@@ -184,6 +223,35 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @param $data
+     *
+     * @return \Account|void
+     */
+    public function update($data)
+    {
+        $account = $this->find($data['id']);
+        if ($account) {
+            // update account accordingly:
+            $account->name = $data['name'];
+            if ($account->validate()) {
+                $account->save();
+            }
+            // update initial balance if necessary:
+            if ($account->accounttype->description == 'Default account') {
+                $journal = $this->findOpeningBalanceTransaction($account);
+                $journal->date = new Carbon($data['openingbalancedate']);
+                $journal->transactions[0]->amount = floatval($data['openingbalance']) * -1;
+                $journal->transactions[1]->amount = floatval($data['openingbalance']);
+                $journal->transactions[0]->save();
+                $journal->transactions[1]->save();
+                $journal->save();
+            }
+        }
+
+        return $account;
+    }
+
+    /**
      * @param \Account $account
      * @param int      $amount
      * @param Carbon   $date
@@ -212,67 +280,11 @@ class EloquentAccountRepository implements AccountRepositoryInterface
             $transactionJournal->createSimpleJournal(
                 $initial, $account, 'Initial Balance for ' . $account->name, $amount, $date
             );
+
             return true;
         }
+
         return false;
-    }
-
-    /**
-     * @param $data
-     *
-     * @return \Account|void
-     */
-    public function update($data)
-    {
-        $account = $this->find($data['id']);
-        if ($account) {
-            // update account accordingly:
-            $account->name = $data['name'];
-            if ($account->validate()) {
-                $account->save();
-            }
-            // update initial balance if necessary:
-            if ($account->accounttype->description == 'Default account') {
-                $journal = $this->findOpeningBalanceTransaction($account);
-                $journal->date = new Carbon($data['openingbalancedate']);
-                $journal->transactions[0]->amount = floatval($data['openingbalance']) * -1;
-                $journal->transactions[1]->amount = floatval($data['openingbalance']);
-                $journal->transactions[0]->save();
-                $journal->transactions[1]->save();
-                $journal->save();
-            }
-        }
-        return $account;
-    }
-
-    public function destroy($accountId) {
-        $account = $this->find($accountId);
-        if($account) {
-            $account->delete();
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * @param $accountId
-     *
-     * @return mixed
-     */
-    public function find($accountId)
-    {
-        return \Auth::user()->accounts()->where('id', $accountId)->first();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCashAccount()
-    {
-        $type = \AccountType::where('description', 'Cash account')->first();
-        $cash = \Auth::user()->accounts()->where('account_type_id', $type->id)->first();
-        return $cash;
-
     }
 
 }

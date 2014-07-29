@@ -37,6 +37,7 @@ class EloquentLimitRepository implements LimitRepositoryInterface
         $budget = \Budget::find($data['budget_id']);
         if (is_null($budget)) {
             \Session::flash('error', 'No such budget.');
+
             return new \Limit;
         }
         // set the date to the correct start period:
@@ -76,6 +77,7 @@ class EloquentLimitRepository implements LimitRepositoryInterface
             )->count();
         if ($count > 0) {
             \Session::flash('error', 'There already is an entry for these parameters.');
+
             return new \Limit;
         }
         // create new limit:
@@ -88,6 +90,7 @@ class EloquentLimitRepository implements LimitRepositoryInterface
         if (!$limit->save()) {
             Session::flash('error', 'Could not save: ' . $limit->errors()->first());
         }
+
         return $limit;
     }
 

@@ -214,7 +214,8 @@ class Budget implements BudgetInterface
         }
         $paginator = \Paginator::make($items, $totalItems, $perPage);
         $result = [0 => ['date'     => 'Not in an envelope', 'limit' => null, 'paginated' => true,
-                           'journals' => $paginator]];
+                         'journals' => $paginator]];
+
         return $result;
     }
 }

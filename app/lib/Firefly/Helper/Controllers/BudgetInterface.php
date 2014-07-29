@@ -1,12 +1,15 @@
 <?php
 namespace Firefly\Helper\Controllers;
+
 use Illuminate\Database\Eloquent\Collection;
+
 /**
  * Interface BudgetInterface
  *
  * @package Firefly\Helper\Controllers
  */
-interface BudgetInterface {
+interface BudgetInterface
+{
 
     /**
      * @param Collection $budgets

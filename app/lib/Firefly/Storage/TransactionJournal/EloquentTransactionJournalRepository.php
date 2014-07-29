@@ -171,6 +171,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
 
         $journal->completed = true;
         $journal->save();
+
         return $journal;
     }
 
@@ -209,6 +210,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
             ->orderBy('transaction_journals.id', 'DESC')
             ->take($count)
             ->get(['transaction_journals.*']);
+
         return $query;
     }
 
@@ -234,6 +236,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
             ->orderBy('transaction_journals.id', 'DESC')
             ->take($count)
             ->paginate($count);
+
         return $query;
     }
 
@@ -245,26 +248,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
      */
     public function getByDateRange(Carbon $start, Carbon $end)
     {
-        // lets make this simple.
-        $types = [];
-        foreach (\TransactionType::whereIn('type', ['Withdrawal'])->get() as $t) {
-            $types[] = $t->id;
-        }
-        unset($t);
-
-        // get all journals, partly filtered:
-        $journals = \TransactionJournal::
-            with(
-                ['components', 'transactions' => function ($q) {
-                        $q->where('amount', '>', 0);
-                    }]
-            )
-            ->after($start)->before($end)
-            ->where('completed', 1)
-            ->whereIn('transaction_type_id', $types)
-            ->get(['transaction_journals.*']);
-        unset($types);
-        return $journals;
+        die('no impl');
     }
 
     /**
@@ -292,6 +276,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
             ->orderBy('transaction_journals.date', 'DESC')
             ->orderBy('transaction_journals.id', 'DESC')
             ->get(['transaction_journals.*']);
+
         return $query;
     }
 

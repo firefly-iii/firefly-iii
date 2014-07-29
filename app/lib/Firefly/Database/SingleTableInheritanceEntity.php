@@ -35,6 +35,7 @@ abstract class SingleTableInheritanceEntity extends Ardent
     {
         $instance = $this->mapData((array)$attributes)->newInstance([], true);
         $instance->setRawAttributes((array)$attributes, true);
+
         return $instance;
     }
 
@@ -117,6 +118,7 @@ abstract class SingleTableInheritanceEntity extends Ardent
         if ($this->subclassField) {
             $this->attributes[$this->subclassField] = get_class($this);
         }
+
         return parent::save($rules, $customMessages, $options, $beforeSave, $afterSave);
     }
 } 
