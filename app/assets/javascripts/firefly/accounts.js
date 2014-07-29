@@ -10,9 +10,9 @@ if($('#chart').length == 1) {
                 type: 'line'
             },
 
-            series: data,
+            series: data.series,
             title: {
-                text: 'BETTER TITLE HERE'
+                text: data.chart_title
             },
             yAxis: {
                 formatter: function () {
@@ -20,7 +20,7 @@ if($('#chart').length == 1) {
                 }
             },
             subtitle: {
-                text: '<a href="#">View more</a>',
+                text: data.subtitle,
                 useHTML: true
             },
 

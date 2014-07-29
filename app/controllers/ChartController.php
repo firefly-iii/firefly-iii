@@ -1,11 +1,6 @@
 <?php
 
-use Firefly\Exception\FireflyException;
-use Firefly\Helper\Preferences\PreferencesHelperInterface as PHI;
-use Firefly\Helper\Toolkit\ToolkitInterface as tk;
-use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
-use Firefly\Storage\Budget\BudgetRepositoryInterface as BRI;
-use Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface as TJRI;
+use Firefly\Helper\Controllers\ChartInterface;
 
 /**
  * Class ChartController
@@ -13,80 +8,31 @@ use Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface as 
 class ChartController extends BaseController
 {
 
-    protected $_accounts;
-    protected $_journals;
-    protected $_tk;
-    protected $_preferences;
-    protected $_budgets;
+    protected $_chart;
 
 
     /**
-     * @param ARI  $accounts
-     * @param TJRI $journals
-     * @param PHI  $preferences
-     * @param tk   $toolkit
-     * @param BRI  $budgets
+     * @param ChartInterface $chart
      */
-    public function __construct(ARI $accounts, TJRI $journals, PHI $preferences, tk $toolkit, BRI $budgets)
+    public function __construct(ChartInterface $chart)
     {
-        $this->_accounts = $accounts;
-        $this->_journals = $journals;
-        $this->_preferences = $preferences;
-        $this->_tk = $toolkit;
-        $this->_budgets = $budgets;
+        $this->_chart = $chart;
     }
 
     /**
-     * @param null $accountId
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @param Account $account
+     * @return mixed
      */
-    public function homeAccount($accountId = null)
+    public function homeAccount(Account $account = null)
     {
-        list($start, $end) = $this->_tk->getDateRangeDates();
-        $current = clone $start;
-        $return = [];
 
-        $account = !is_null($accountId) ? $this->_accounts->find($accountId) : null;
-        $today = new Carbon\Carbon;
 
-        if (is_null($account)) {
-
-            $pref = $this->_preferences->get('frontpageAccounts', []);
-            if ($pref->data == []) {
-                $accounts = $this->_accounts->getActiveDefault();
-            } else {
-                $accounts = $this->_accounts->getByIds($pref->data);
-            }
-            foreach ($accounts as $account) {
-                $return[] = ['name' => $account->name, 'id' => 'acc-' . $account->id, 'data' => []];
-
-            }
-            while ($current <= $end) {
-                // loop accounts:
-                foreach ($accounts as $index => $account) {
-                    if ($current > $today) {
-                        $return[$index]['data'][] = [$current->timestamp * 1000, $account->predict(clone $current)];
-                    } else {
-                        $return[$index]['data'][] = [$current->timestamp * 1000, $account->balance(clone $current)];
-                    }
-                }
-                $current->addDay();
-            }
+        if (!is_null($account)) {
+            $data = $this->_chart->account($account);
         } else {
-            $return[0] = ['name' => $account->name, 'id' => $account->id, 'data' => []];
-            while ($current <= $end) {
-                if ($current > $today) {
-                    $return[0]['data'][] = [$current->timestamp * 1000, $account->predict(clone $current)];
-                } else {
-                    $return[0]['data'][] = [$current->timestamp * 1000, $account->balance(clone $current)];
-                }
-
-                $current->addDay();
-            }
+            $data = $this->_chart->accounts();
         }
-
-        return Response::json($return);
+        return Response::json($data);
     }
 
     /**

@@ -30,7 +30,7 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
 
         // chart controller
-        Route::get('/chart/home/account/{accountname?}', ['uses' => 'ChartController@homeAccount', 'as' => 'chart.home']);
+        Route::get('/chart/home/account/{account?}', ['uses' => 'ChartController@homeAccount', 'as' => 'chart.home']);
         Route::get('/chart/home/categories', ['uses' => 'ChartController@homeCategories', 'as' => 'chart.categories']);
         Route::get('/chart/home/budgets', ['uses' => 'ChartController@homeBudgets', 'as' => 'chart.budgets']);
         Route::get('/chart/home/info/{accountname}/{day}/{month}/{year}', ['uses' => 'ChartController@homeAccountInfo', 'as' => 'chart.info']);

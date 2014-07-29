@@ -11,9 +11,9 @@ $(function () {
                 type: 'line'
             },
 
-            series: data,
+            series: data.series,
             title: {
-                text: 'All accounts'
+                text: data.chart_title
             },
             yAxis: {
                 formatter: function () {
@@ -21,7 +21,7 @@ $(function () {
                 }
             },
             subtitle: {
-                text: '<a href="#">View more</a>',
+                text: data.subtitle,
                 useHTML: true
             },
 

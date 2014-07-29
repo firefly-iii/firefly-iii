@@ -22,6 +22,10 @@ class HelperServiceProvider extends ServiceProvider
             'Firefly\Helper\Controllers\AccountInterface',
             'Firefly\Helper\Controllers\Account'
         );
+        $this->app->bind(
+            'Firefly\Helper\Controllers\ChartInterface',
+            'Firefly\Helper\Controllers\Chart'
+        );
 
         $this->app->bind(
             'Firefly\Helper\Controllers\BudgetInterface',
