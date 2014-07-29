@@ -28,6 +28,7 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
         if (!$category) {
             return $this->store($name);
         }
+
         return $category;
 
 
@@ -40,9 +41,10 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
      */
     public function findByName($name)
     {
-        if($name == '') {
+        if ($name == '') {
             return null;
         }
+
         return \Auth::user()->categories()->where('name', 'LIKE', '%' . $name . '%')->first();
 
     }
@@ -58,6 +60,7 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
         $category->name = $name;
         $category->user()->associate(\Auth::user());
         $category->save();
+
         return $category;
     }
 

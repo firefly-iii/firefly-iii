@@ -3,6 +3,7 @@
 namespace Firefly\Helper\Toolkit;
 
 use Illuminate\Http\Request;
+
 /**
  * Interface ToolkitInterface
  *

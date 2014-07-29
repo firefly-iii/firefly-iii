@@ -127,8 +127,8 @@ class Account implements AccountInterface
         // statistics
         $stats['period']['in'] = floatval(
             \Transaction::where('account_id', $account->id)->where('amount', '>', 0)->leftJoin(
-                    'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-                )->leftJoin(
+                'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
+            )->leftJoin(
                     'transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id'
                 )->whereIn('transaction_types.type', ['Deposit', 'Withdrawal'])->where(
                     'transaction_journals.date', '>=', $start->format('Y-m-d')
@@ -138,8 +138,8 @@ class Account implements AccountInterface
 
         $stats['period']['out'] = floatval(
             \Transaction::where('account_id', $account->id)->where('amount', '<', 0)->leftJoin(
-                    'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-                )->leftJoin(
+                'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
+            )->leftJoin(
                     'transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id'
                 )->whereIn('transaction_types.type', ['Deposit', 'Withdrawal'])->where(
                     'transaction_journals.date', '>=', $start->format('Y-m-d')
@@ -149,8 +149,8 @@ class Account implements AccountInterface
 
         $stats['period']['t_in'] = floatval(
             \Transaction::where('account_id', $account->id)->where('amount', '>', 0)->leftJoin(
-                    'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-                )->leftJoin(
+                'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
+            )->leftJoin(
                     'transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id'
                 )->where('transaction_types.type', 'Transfer')->where(
                     'transaction_journals.date', '>=', $start->format('Y-m-d')
@@ -159,8 +159,8 @@ class Account implements AccountInterface
 
         $stats['period']['t_out'] = floatval(
             \Transaction::where('account_id', $account->id)->where('amount', '<', 0)->leftJoin(
-                    'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-                )->leftJoin(
+                'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
+            )->leftJoin(
                     'transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id'
                 )->where('transaction_types.type', 'Transfer')->where(
                     'transaction_journals.date', '>=', $start->format('Y-m-d')

@@ -35,6 +35,7 @@ class MigrationHelper implements MigrationHelperInterface
         // file does not exist:
         if (!file_exists($this->path)) {
             \Log::error('Migration file ' . $this->path . ' does not exist!');
+
             return false;
         }
 
@@ -50,6 +51,7 @@ class MigrationHelper implements MigrationHelperInterface
             return false;
         }
         \Log::info('Migration file ' . $this->path . ' is valid!');
+
         return true;
     }
 
@@ -83,11 +85,13 @@ class MigrationHelper implements MigrationHelperInterface
             \DB::rollBack();
             \Log::error('Rollback because of error!');
             \Log::error($e->getMessage());
+
             return false;
         }
 
         \DB::commit();
         \Log::info('Done!');
+
         return true;
     }
 
@@ -164,6 +168,7 @@ class MigrationHelper implements MigrationHelperInterface
     {
         /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accounts */
         $accounts = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
+
         return $accounts->store(
             [
                 'name'         => $component->name,
@@ -181,6 +186,7 @@ class MigrationHelper implements MigrationHelperInterface
     {
         /** @var \Firefly\Storage\Component\ComponentRepositoryInterface $components */
         $components = \App::make('Firefly\Storage\Component\ComponentRepositoryInterface');
+
         return $components->store(['name' => $component->name, 'class' => 'Category']);
     }
 
@@ -193,6 +199,7 @@ class MigrationHelper implements MigrationHelperInterface
     {
         /** @var \Firefly\Storage\Component\ComponentRepositoryInterface $components */
         $components = \App::make('Firefly\Storage\Component\ComponentRepositoryInterface');
+
         return $components->store(['name' => $component->name, 'class' => 'Budget']);
     }
 

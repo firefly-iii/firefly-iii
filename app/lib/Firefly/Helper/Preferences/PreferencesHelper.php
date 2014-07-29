@@ -28,6 +28,7 @@ class PreferencesHelper implements PreferencesHelperInterface
             // create preference, return that:
             return $this->set($name, $default);
         }
+
         return null;
 
     }

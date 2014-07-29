@@ -33,9 +33,11 @@ class EloquentUserRepository implements UserRepositoryInterface
         if (!$user->save()) {
             \Log::error('Invalid user');
             \Session::flash('error', 'Input invalid, please try again: ' . $user->errors()->first());
+
             return false;
         }
         $user->save();
+
         return $user;
     }
 
@@ -51,6 +53,7 @@ class EloquentUserRepository implements UserRepositoryInterface
             if (\Hash::check($array['password'], $user->password)) {
             }
         }
+
         return false;
     }
 
@@ -87,6 +90,7 @@ class EloquentUserRepository implements UserRepositoryInterface
         $user->password = $password;
         /** @noinspection PhpUndefinedMethodInspection */
         $user->save();
+
         return true;
     }
 

@@ -149,6 +149,7 @@ class Toolkit implements ToolkitInterface
             return \Redirect::to($request->url());
 
         }
+
         return null;
 
 

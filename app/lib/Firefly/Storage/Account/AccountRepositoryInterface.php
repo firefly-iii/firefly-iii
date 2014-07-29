@@ -77,7 +77,7 @@ interface AccountRepositoryInterface
      *
      * @return mixed
      */
-    public function getByIds($ids);
+    public function getByIds(array $ids);
 
     /**
      * @return mixed

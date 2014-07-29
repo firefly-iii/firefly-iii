@@ -29,7 +29,7 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
     public function get()
     {
         $set = \Auth::user()->budgets()->with(
-            ['limits' => function ($q) {
+            ['limits'                        => function ($q) {
                     $q->orderBy('limits.startdate', 'ASC');
                 }, 'limits.limitrepetitions' => function ($q) {
                     $q->orderBy('limit_repetitions.startdate', 'ASC');
@@ -48,9 +48,11 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
 
     /**
      * @param $data
+     *
      * @return mixed
      */
-    public function update($data) {
+    public function update($data)
+    {
         $budget = $this->find($data['id']);
         if ($budget) {
             // update account accordingly:
@@ -59,15 +61,19 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
                 $budget->save();
             }
         }
+
         return $budget;
     }
 
-    public function destroy($budgetId) {
+    public function destroy($budgetId)
+    {
         $budget = $this->find($budgetId);
-        if($budget) {
+        if ($budget) {
             $budget->delete();
+
             return true;
         }
+
         return false;
     }
 
@@ -96,41 +102,8 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
     public function getWithRepetitionsInPeriod(Carbon $date, $range)
     {
 
-        $set = \Auth::user()->budgets()->with(
-            ['limits' => function ($q) use ($date) {
-                    $q->orderBy('limits.startdate', 'ASC');
-                }, 'limits.limitrepetitions' => function ($q) use ($date) {
-                    $q->orderBy('limit_repetitions.startdate', 'ASC');
-                    $q->where('startdate', $date->format('Y-m-d'));
-                }]
-        )->orderBy('name', 'ASC')->get();
 
-        foreach ($set as $budget) {
-            $budget->count = 0;
-            foreach ($budget->limits as $limit) {
-                /** @var $rep \LimitRepetition */
-                foreach ($limit->limitrepetitions as $rep) {
-                    $rep->left = $rep->left();
-                    // overspent:
-                    if ($rep->left < 0) {
-                        $rep->spent = ($rep->left * -1) + $rep->amount;
-                        $rep->overspent = $rep->left * -1;
-                        $total = $rep->spent + $rep->overspent;
-                        $rep->spent_pct = round(($rep->spent / $total) * 100);
-                        $rep->overspent_pct = 100 - $rep->spent_pct;
-                    } else {
-                        $rep->spent = $rep->amount - $rep->left;
-                        $rep->spent_pct = round(($rep->spent / $rep->amount) * 100);
-                        $rep->left_pct = 100 - $rep->spent_pct;
-
-
-                    }
-                }
-                $budget->count += count($limit->limitrepetitions);
-            }
-        }
-
-        return $set;
+        //return $set;
     }
 
     /**
@@ -184,6 +157,7 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
         if ($budget->validate()) {
             $budget->save();
         }
+
         return $budget;
     }
 
