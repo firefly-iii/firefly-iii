@@ -43,15 +43,97 @@ class TransactionController extends BaseController
     {
         // get accounts with names and id's.
         $accounts = $this->_accounts->getActiveDefaultAsSelectList();
-
         $budgets = $this->_budgets->getAsSelectList();
-
         $budgets[0] = '(no budget)';
 
 
         return View::make('transactions.create')->with('accounts', $accounts)->with('budgets', $budgets)->with(
             'what', $what
         );
+    }
+
+    /**
+     * @param $journalId
+     *
+     * @return $this|\Illuminate\View\View
+     */
+    public function edit($journalId)
+    {
+        // get journal:
+        $journal = $this->_journal->find($journalId);
+
+        if ($journal) {
+            // type is useful for display:
+            $what = strtolower($journal->transactiontype->type);
+
+            // some lists prefilled:
+            $budgets = $this->_budgets->getAsSelectList();
+            $budgets[0] = '(no budget)';
+            $accounts = $this->_accounts->getActiveDefaultAsSelectList();
+
+            // data to properly display form:
+            $data = [
+                'date'      => $journal->date->format('Y-m-d'),
+                'category'  => '',
+                'budget_id' => 0
+            ];
+            $category = $journal->categories()->first();
+            if (!is_null($category)) {
+                $data['category'] = $category->name;
+            }
+            switch ($journal->transactiontype->type) {
+                case 'Withdrawal':
+                    $data['account_id'] = $journal->transactions[0]->account->id;
+                    $data['beneficiary'] = $journal->transactions[1]->account->name;
+                    $data['amount'] = floatval($journal->transactions[1]->amount);
+                    $budget = $journal->budgets()->first();
+                    if (!is_null($budget)) {
+                        $data['budget_id'] = $budget->id;
+                    }
+                    break;
+                case 'Deposit':
+                    $data['account_id'] = $journal->transactions[1]->account->id;
+                    $data['beneficiary'] = $journal->transactions[0]->account->name;
+                    $data['amount'] = floatval($journal->transactions[1]->amount);
+                    break;
+                case 'Transfer':
+                    $data['account_from_id'] = $journal->transactions[1]->account->id;
+                    $data['account_to_id'] = $journal->transactions[0]->account->id;
+                    $data['amount'] = floatval($journal->transactions[1]->amount);
+                    break;
+            }
+
+            return View::make('transactions.edit')->with('journal', $journal)->with('accounts', $accounts)->with(
+                'what', $what
+            )->with('budgets', $budgets)->with('data', $data);
+        }
+
+        return View::make('error')->with('message', 'Invalid journal');
+    }
+
+    /**
+     * @return $this|\Illuminate\View\View
+     */
+    public function index()
+    {
+        $transactions = $this->_journal->paginate(25);
+
+        return View::make('transactions.index')->with('transactions', $transactions);
+    }
+
+    /**
+     * @param $journalId
+     *
+     * @return $this|\Illuminate\View\View
+     */
+    public function show($journalId)
+    {
+        $journal = $this->_journal->find($journalId);
+        if ($journal) {
+            return View::make('transactions.show')->with('journal', $journal);
+        }
+
+        return View::make('error')->with('message', 'Invalid journal');
     }
 
     /**
@@ -121,90 +203,6 @@ class TransactionController extends BaseController
         }
 
 
-    }
-
-    /**
-     * @return $this|\Illuminate\View\View
-     */
-    public function index()
-    {
-        $transactions = $this->_journal->paginate(25);
-
-        return View::make('transactions.index')->with('transactions', $transactions);
-    }
-
-    /**
-     * @param $journalId
-     *
-     * @return $this|\Illuminate\View\View
-     */
-    public function show($journalId)
-    {
-        $journal = $this->_journal->find($journalId);
-        if ($journal) {
-            return View::make('transactions.show')->with('journal', $journal);
-        }
-
-        return View::make('error')->with('message', 'Invalid journal');
-    }
-
-    /**
-     * @param $journalId
-     *
-     * @return $this|\Illuminate\View\View
-     */
-    public function edit($journalId)
-    {
-        // get journal:
-        $journal = $this->_journal->find($journalId);
-
-        if ($journal) {
-            // type is useful for display:
-            $what = strtolower($journal->transactiontype->type);
-
-            // some lists prefilled:
-            $budgets = $this->_budgets->getAsSelectList();
-            $budgets[0] = '(no budget)';
-            $accounts = $this->_accounts->getActiveDefaultAsSelectList();
-
-            // data to properly display form:
-            $data = [
-                'date'      => $journal->date->format('Y-m-d'),
-                'category'  => '',
-                'budget_id' => 0
-            ];
-            $category = $journal->categories()->first();
-            if (!is_null($category)) {
-                $data['category'] = $category->name;
-            }
-            switch ($journal->transactiontype->type) {
-                case 'Withdrawal':
-                    $data['account_id'] = $journal->transactions[0]->account->id;
-                    $data['beneficiary'] = $journal->transactions[1]->account->name;
-                    $data['amount'] = floatval($journal->transactions[1]->amount);
-                    $budget = $journal->budgets()->first();
-                    if (!is_null($budget)) {
-                        $data['budget_id'] = $budget->id;
-                    }
-                    break;
-                case 'Deposit':
-                    $data['account_id'] = $journal->transactions[1]->account->id;
-                    $data['beneficiary'] = $journal->transactions[0]->account->name;
-                    $data['amount'] = floatval($journal->transactions[1]->amount);
-                    break;
-                case 'Transfer':
-                    $data['account_from_id'] = $journal->transactions[1]->account->id;
-                    $data['account_to_id'] = $journal->transactions[0]->account->id;
-                    $data['amount'] = floatval($journal->transactions[1]->amount);
-                    break;
-            }
-
-            return View::make('transactions.edit')->with('journal', $journal)->with('accounts', $accounts)->with(
-                'what', $what
-            )->with('budgets', $budgets)->with('data', $data);
-        }
-
-        return View::make('error')->with('message', 'Invalid journal');
     }
 
     public function update($journalId)
