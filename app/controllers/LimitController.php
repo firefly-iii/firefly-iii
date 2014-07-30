@@ -29,19 +29,42 @@ class LimitController extends BaseController
      *
      * @return $this|\Illuminate\View\View
      */
-    public function create($budgetId = null)
+    public function create(\Budget $budget = null)
     {
         $periods = \Config::get('firefly.periods_to_text');
         $prefilled = [
             'startdate'   => Input::get('startdate') ? : date('Y-m-d'),
-            'repeat_freq' => Input::get('repeat_freq') ? : 'monthly'
+            'repeat_freq' => Input::get('repeat_freq') ? : 'monthly',
+            'budget_id'   => $budget ? $budget->id : null
         ];
 
         $budgets = $this->_budgets->getAsSelectList();
 
-        return View::make('limits.create')->with('budgets', $budgets)->with('budget_id', $budgetId)->with(
+        return View::make('limits.create')->with('budgets', $budgets)->with(
             'periods', $periods
         )->with('prefilled', $prefilled);
+    }
+
+    public function delete(\Limit $limit)
+    {
+        return View::make('limits.delete')->with('limit', $limit);
+    }
+
+    public function destroy($limitId)
+    {
+        $limit = $this->_limits->find($limitId);
+
+
+
+
+
+        if ($limit) {
+            $limit->delete();
+
+            return Redirect::route('budgets.index');
+        } else {
+            return View::make('error')->with('message', 'No such limit!');
+        }
     }
 
     /**
@@ -49,28 +72,32 @@ class LimitController extends BaseController
      *
      * @return $this|\Illuminate\View\View
      */
-    public function edit($limitId = null)
+    public function edit(Limit $limit)
     {
-        $limit = $this->_limits->find($limitId);
         $budgets = $this->_budgets->getAsSelectList();
+        $periods = \Config::get('firefly.periods_to_text');
 
-        $periods = [
-            'weekly'    => 'A week',
-            'monthly'   => 'A month',
-            'quarterly' => 'A quarter',
-            'half-year' => 'Six months',
-            'yearly'    => 'A year',
-        ];
+        return View::make('limits.edit')->with('limit', $limit)->with('budgets', $budgets)->with(
+            'periods', $periods
+        );
+    }
 
+    public function store(Budget $budget = null)
+    {
 
-        if ($limit) {
-            return View::make('limits.edit')->with('limit', $limit)->with('budgets', $budgets)->with(
-                'periods', $periods
-            );
+        // find a limit with these properties, as we might already have one:
+        $limit = $this->_limits->store(Input::all());
+        if ($limit->id) {
+            if (Input::get('from') == 'date') {
+                return Redirect::route('budgets.index');
+            } else {
+                return Redirect::route('budgets.index.budget');
+            }
+        } else {
+            $budgetId = $budget ? $budget->id : null;
+
+            return Redirect::route('budgets.limits.create', [$budgetId, 'from' => Input::get('from')])->withInput();
         }
-
-        return View::make('error')->with('message', 'No such limit.');
-
     }
 
     /**
@@ -90,69 +117,22 @@ class LimitController extends BaseController
             if (!$limit->save()) {
                 Session::flash('error', 'Could not save new limit: ' . $limit->errors()->first());
 
-                return Redirect::route('budgets.limits.edit', $limit->id)->withInput();
+                return Redirect::route('budgets.limits.edit', [$limit->id, 'from' => Input::get('from')])->withInput();
             } else {
                 Session::flash('success', 'Limit saved!');
                 foreach ($limit->limitrepetitions()->get() as $rep) {
                     $rep->delete();
                 }
-
-                return Redirect::route('budgets.index');
+                if (Input::get('from') == 'date') {
+                    return Redirect::route('budgets.index');
+                } else {
+                    return Redirect::route('budgets.index.budget');
+                }
             }
         }
 
         return View::make('error')->with('message', 'No limit!');
 
-    }
-
-    /**
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function store()
-    {
-        // find a limit with these properties, as we might already have one:
-        $limit = $this->_limits->store(Input::all());
-        if ($limit->id) {
-            return Redirect::route('budgets.index');
-        } else {
-            return Redirect::route('budgets.limits.create')->withInput();
-        }
-    }
-
-    /**
-     * @param $limitId
-     *
-     * @return $this|\Illuminate\View\View
-     */
-    public function delete($limitId)
-    {
-        $limit = $this->_limits->find($limitId);
-
-
-        if ($limit) {
-            return View::make('limits.delete')->with('limit', $limit);
-        } else {
-            return View::make('error')->with('message', 'No such limit!');
-        }
-    }
-
-    /**
-     * @param $limitId
-     *
-     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
-     */
-    public function destroy($limitId)
-    {
-        $limit = $this->_limits->find($limitId);
-
-
-        if ($limit) {
-            $limit->delete();
-
-            return Redirect::route('budgets.index');
-        } else {
-            return View::make('error')->with('message', 'No such limit!');
-        }
     }
 
 

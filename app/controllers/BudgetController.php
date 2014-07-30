@@ -82,6 +82,7 @@ class BudgetController extends BaseController
      */
     public function indexByDate()
     {
+        Event::fire('budgets.change');
         // get a list of dates by getting all repetitions:
         $set = $this->_repository->get();
         $budgets = $this->_budgets->organizeByDate($set);

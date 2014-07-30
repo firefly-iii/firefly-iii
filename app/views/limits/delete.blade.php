@@ -3,9 +3,18 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <h1>Firefly
-            <small>Delete limit</small>
+            <small>Delete envelope</small>
         </h1>
+        <p class="lead">Remember that deleting something is permanent.</p>
+        <p class="text-info">
+            This form allows you to delete the envelope for budget {{{$limit->budget->name}}}, with a content of
+            {{mf($limit->amount,false)}}
+            @if($limit->repeats == 0)
+                in {{$limit->limitrepetitions[0]->startdate->format('M Y')}} ({{$limit->repeat_freq}}).
+            @endif
+        </p>
     </div>
+
 </div>
 
 {{Form::open(['class' => 'form-horizontal','url' => route('budgets.limits.destroy',$limit->id)])}}
@@ -13,7 +22,7 @@
 <div class="row">
     <div class="col-lg-12">
         <p class="text-info">
-            Destroying a limit (an envelope) does not remove any transactions from the budget.
+            Destroying an envelope does not remove any transactions from the budget.
         </p>
         <p class="text-danger">
             Are you sure?
@@ -21,7 +30,12 @@
 
         <div class="form-group">
             <div class="col-sm-8">
-                <input type="submit" name="submit" value="Remove limit" class="btn btn-danger" />
+                <input type="submit" name="submit" value="Remove envelope" class="btn btn-danger" />
+                @if(Input::get('from') == 'date')
+                <a href="{{route('budgets.index')}}" class="btn-default btn">Cancel</a>
+                @else
+                <a href="{{route('budgets.index.budget')}}" class="btn-default btn">Cancel</a>
+                @endif
             </div>
         </div>
 
@@ -29,11 +43,6 @@
 </div>
 
 
-{{Form::open()}}
+{{Form::close()}}
 
-
-@stop
-@section('scripts')
-<script type="text/javascript" src="assets/javascript/moment.min.js"></script>
-<script type="text/javascript" src="assets/javascript/limits.js"></script>
 @stop

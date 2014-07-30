@@ -74,8 +74,8 @@
                 </td>
                 <td>
                     <div class="btn-group">
-                        <a title="Edit envelope for {{{$repetition->limit->budget->name}}} in {{$entry['date']}}" href="{{route('budgets.limits.edit',$repetition->limit->id)}}" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-pencil"></span></a>
-                        <a title="Delete envelope for {{{$repetition->limit->budget->name}}} in {{$entry['date']}}" href="{{route('budgets.limits.delete',$repetition->limit->id)}}" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                        <a title="Edit envelope for {{{$repetition->limit->budget->name}}} in {{$entry['date']}}" href="{{route('budgets.limits.edit',$repetition->limit->id)}}?from=date" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-pencil"></span></a>
+                        <a title="Delete envelope for {{{$repetition->limit->budget->name}}} in {{$entry['date']}}" href="{{route('budgets.limits.delete',$repetition->limit->id)}}?from=date" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
                     </div>
                     @if($repetition->limit->repeats == 1)
                         <span class="label label-warning">auto repeats</span>

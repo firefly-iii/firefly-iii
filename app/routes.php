@@ -30,6 +30,18 @@ Route::bind('category', function($value, $route)
     return null;
 });
 
+Route::bind('limit', function($value, $route)
+    {
+        if(Auth::check()) {
+            return Limit::
+                where('limits.id', $value)->
+                leftJoin('components','components.id','=','limits.component_id')->
+                where('components.class','Budget')->
+                where('components.user_id',Auth::user()->id)->first();
+        }
+        return null;
+    });
+
 
 // protected routes:
 Route::group(['before' => 'auth'], function () {
@@ -79,9 +91,9 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/budgets/delete/{budget}',['uses' => 'BudgetController@delete', 'as' => 'budgets.delete']);
 
         // limit controller:
-        Route::get('/budgets/limits/create/{id?}',['uses' => 'LimitController@create','as' => 'budgets.limits.create']);
-        Route::get('/budgets/limits/delete/{id?}',['uses' => 'LimitController@delete','as' => 'budgets.limits.delete']);
-        Route::get('/budgets/limits/edit/{id?}',['uses' => 'LimitController@edit','as' => 'budgets.limits.edit']);
+        Route::get('/budgets/limits/create/{budget?}',['uses' => 'LimitController@create','as' => 'budgets.limits.create']);
+        Route::get('/budgets/limits/delete/{limit}',['uses' => 'LimitController@delete','as' => 'budgets.limits.delete']);
+        Route::get('/budgets/limits/edit/{limit}',['uses' => 'LimitController@edit','as' => 'budgets.limits.edit']);
 
         // JSON controller:
         Route::get('/json/beneficiaries', ['uses' => 'JsonController@beneficiaries', 'as' => 'json.beneficiaries']);
@@ -106,7 +118,7 @@ Route::group(['before' => 'csrf|auth'], function () {
         Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword']);
 
         // budget controller:
-        Route::post('/budgets/store',['uses' => 'BudgetController@store', 'as' => 'budgets.store']);
+        Route::post('/budgets/store/{budget}',['uses' => 'BudgetController@store', 'as' => 'budgets.store']);
         Route::post('/budgets/update', ['uses' => 'BudgetController@update', 'as' => 'budgets.update']);
         Route::post('/budgets/destroy', ['uses' => 'BudgetController@destroy', 'as' => 'budgets.destroy']);
 
@@ -127,7 +139,7 @@ Route::group(['before' => 'csrf|auth'], function () {
         Route::post('/accounts/destroy', ['uses' => 'AccountController@destroy', 'as' => 'accounts.destroy']);
 
         // limit controller:
-        Route::post('/budgets/limits/store', ['uses' => 'LimitController@store', 'as' => 'budgets.limits.store']);
+        Route::post('/budgets/limits/store/{budget?}', ['uses' => 'LimitController@store', 'as' => 'budgets.limits.store']);
         Route::post('/budgets/limits/destroy/{id?}',['uses' => 'LimitController@destroy','as' => 'budgets.limits.destroy']);
         Route::post('/budgets/limits/update/{id?}',['uses' => 'LimitController@update','as' => 'budgets.limits.update']);
 
