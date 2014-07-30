@@ -14,7 +14,12 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
      */
     public function get()
     {
-        return \Auth::user()->categories()->orderBy('name','ASC')->get();
+        return \Auth::user()->categories()->orderBy('name', 'ASC')->get();
+    }
+
+    public function find($categoryId)
+    {
+        return \Auth::user()->categories()->find($categoryId);
     }
 
     /**
@@ -26,7 +31,7 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
     {
         $category = $this->findByName($name);
         if (!$category) {
-            return $this->store($name);
+            return $this->store(['name' => $name]);
         }
 
         return $category;
@@ -54,14 +59,39 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
      *
      * @return \Category|mixed
      */
-    public function store($name)
+    public function store($data)
     {
-        $category = new \Category();
-        $category->name = $name;
+        $category = new \Category;
+        $category->name = $data['name'];
+
         $category->user()->associate(\Auth::user());
         $category->save();
+        return $category;
+    }
+
+    public function update($data)
+    {
+        $category = $this->find($data['id']);
+        if ($category) {
+            // update account accordingly:
+            $category->name = $data['name'];
+            if ($category->validate()) {
+                $category->save();
+            }
+        }
 
         return $category;
     }
 
+    public function destroy($categoryId)
+    {
+        $category = $this->find($categoryId);
+        if ($category) {
+            $category->delete();
+
+            return true;
+        }
+
+        return false;
+    }
 } 

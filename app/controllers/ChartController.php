@@ -111,4 +111,20 @@ class ChartController extends BaseController
 
 
     }
+    public function categoryShowChart(Category $category) {
+        $start = Session::get('start');
+        $end = Session::get('end');
+        $range = Session::get('range');
+
+        $serie = $this->_chart->categoryShowChart($category, $range, $start, $end);
+        $data = [
+            'chart_title' => $category->name,
+            'subtitle' => '<a href="' . route('categories.show', [$category->id]) . '">View more</a>',
+            'series' => $serie
+        ];
+        return Response::json($data);
+
+
+
+    }
 }

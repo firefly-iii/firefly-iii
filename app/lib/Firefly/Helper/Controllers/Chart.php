@@ -36,7 +36,7 @@ class Chart implements ChartInterface
     {
         $result = [
             'rows' => [],
-            'sum'  => 0
+            'sum' => 0
         ];
         if ($account) {
             // get journals in range:
@@ -85,7 +85,7 @@ class Chart implements ChartInterface
         $data = [];
 
         $budgets = \Auth::user()->budgets()->with(
-            ['limits'                        => function ($q) {
+            ['limits' => function ($q) {
                     $q->orderBy('limits.startdate', 'ASC');
                 }, 'limits.limitrepetitions' => function ($q) use ($start) {
                     $q->orderBy('limit_repetitions.startdate', 'ASC');
@@ -154,6 +154,136 @@ class Chart implements ChartInterface
         return $data;
     }
 
+    public function categoryShowChart(\Category $category, $range, Carbon $start, Carbon $end)
+    {
+        $data = ['name' => $category->name . ' per ' . $range, 'data' => []];
+        // go back twelve periods. Skip if empty.
+        $beginning = clone $start;
+        switch ($range) {
+            default:
+                throw new FireflyException('No beginning for range ' . $range);
+                break;
+            case '1D':
+                $beginning->subDays(12);
+                break;
+            case '1W':
+                $beginning->subWeeks(12);
+                break;
+            case '1M':
+                $beginning->subYear();
+                break;
+            case '3M':
+                $beginning->subYears(3);
+                break;
+            case '6M':
+                $beginning->subYears(6);
+                break;
+        }
+        // loop over the periods:
+        while ($beginning <= $start) {
+            // increment currentEnd to fit beginning:
+            $currentEnd = clone $beginning;
+            // increase beginning for next round:
+            switch ($range) {
+                default:
+                    throw new FireflyException('No currentEnd incremental for range ' . $range);
+                    break;
+                case '1D':
+                    break;
+                case '1W':
+                    $currentEnd->addWeek()->subDay();
+                    break;
+                case '1M':
+                    $currentEnd->addMonth()->subDay();
+                    break;
+                case '3M':
+                    $currentEnd->addMonths(3)->subDay();
+                    break;
+                case '6M':
+                    $currentEnd->addMonths(6)->subDay();
+
+            }
+
+            // now format the current range:
+            $title = '';
+            switch ($range) {
+                default:
+                    throw new \Firefly\Exception\FireflyException('No date formats for frequency "' . $range . '"!');
+                    break;
+                case '1D':
+                    $title = $beginning->format('j F Y');
+                    break;
+                case '1W':
+                    $title = $beginning->format('\W\e\e\k W, Y');
+                    break;
+                case '1M':
+                    $title = $beginning->format('F Y');
+                    break;
+                case '3M':
+                case '6M':
+                    $title = $beginning->format('M Y') . ' - ' . $currentEnd->format('M Y');
+                    break;
+                case 'yearly':
+//                    return $this->startdate->format('Y');
+                    break;
+            }
+
+            // get sum for current range:
+            $journals = \TransactionJournal::
+                with(
+                    ['transactions' => function ($q) {
+                            $q->where('amount', '>', 0);
+                        }]
+                )
+                ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                ->where('transaction_types.type', 'Withdrawal')
+                ->leftJoin('component_transaction_journal', 'component_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                ->leftJoin('components', 'components.id', '=', 'component_transaction_journal.component_id')
+                ->where('components.id', '=', $category->id)
+                //->leftJoin()
+                ->after($beginning)->before($currentEnd)
+                ->where('completed', 1)
+                ->get(['transaction_journals.*']);
+            $currentSum = 0;
+            foreach ($journals as $journal) {
+                if (!isset($journal->transactions[0])) {
+                    throw new FireflyException('Journal #' . $journal->id . ' has ' . count($journal->transactions)
+                        . ' transactions!');
+                }
+                $transaction = $journal->transactions[0];
+                $amount = floatval($transaction->amount);
+                $currentSum += $amount;
+
+            }
+            $data['data'][] = [$title, $currentSum];
+
+            // increase beginning for next round:
+            switch ($range) {
+                default:
+                    throw new FireflyException('No incremental for range ' . $range);
+                    break;
+                case '1D':
+                    $beginning->addDay();
+                    break;
+                case '1W':
+                    $beginning->addWeek();
+                    break;
+                case '1M':
+                    $beginning->addMonth();
+                    break;
+                case '3M':
+                    $beginning->addMonths(3);
+                    break;
+                case '6M':
+                    $beginning->addMonths(6);
+                    break;
+            }
+        }
+        return $data;
+
+
+    }
+
     public function categories(Carbon $start, Carbon $end)
     {
 
@@ -192,25 +322,13 @@ class Chart implements ChartInterface
 
         // sort
         arsort($result);
-        $chartData = [
-        ];
+        $chartData = [];
         foreach ($result as $name => $value) {
             $chartData[] = [$name, $value];
         }
 
 
         return $chartData;
-    }
-
-    public function accountXX(\Account $account)
-    {
-        $data = [
-            'chart_title' => $account->name,
-            'subtitle'    => '<a href="' . route('accounts.show', [$account->id]) . '">View more</a>',
-            'series'      => [$this->_account($account)]
-        ];
-
-        return $data;
     }
 
 }
