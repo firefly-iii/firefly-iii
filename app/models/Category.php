@@ -18,7 +18,7 @@
  * @method static \Illuminate\Database\Query\Builder|\Category whereName($value)
  * @method static \Illuminate\Database\Query\Builder|\Category whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|\Category whereClass($value)
- * @property-read \Limit $limits
+ * @property-read \Limit                                                         $limits
  */
 class Category extends Component
 {

@@ -18,7 +18,7 @@
  * @method static \Illuminate\Database\Query\Builder|\Budget whereName($value)
  * @method static \Illuminate\Database\Query\Builder|\Budget whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|\Budget whereClass($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\Limit[] $limits
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Limit[]              $limits
  */
 class Budget extends Component
 {
@@ -35,8 +35,9 @@ class Budget extends Component
         return $this->hasMany('Limit', 'component_id');
     }
 
-    public function transactionjournals() {
-        return $this->belongsToMany('TransactionJournal','component_transaction_journal','component_id');
+    public function transactionjournals()
+    {
+        return $this->belongsToMany('TransactionJournal', 'component_transaction_journal', 'component_id');
     }
 
 } 

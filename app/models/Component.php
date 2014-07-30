@@ -19,7 +19,7 @@
  * @method static \Illuminate\Database\Query\Builder|\Component whereName($value)
  * @method static \Illuminate\Database\Query\Builder|\Component whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|\Component whereClass($value)
- * @property-read \Limit $limits
+ * @property-read \Limit                                                         $limits
  */
 class Component extends Firefly\Database\SingleTableInheritanceEntity
 {

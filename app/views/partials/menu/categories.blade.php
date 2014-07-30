@@ -18,19 +18,8 @@ $r = Route::current()->getName();
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li @if($r=='index')class="active"@endif><a href="{{route('index')}}">Home</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Go to...<span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="{{route('accounts.index')}}"><span class="glyphicon glyphicon-inbox"></span> Accounts</a></li>
-                        <li><a href="{{route('budgets.index')}}"><span class="glyphicon glyphicon-euro"></span> Budgets</a></li>
-                        <li><a href="{{route('categories.index')}}"><span class="glyphicon glyphicon-tags"></span> Categories</a></li>
-                        <li><a href="{{route('transactions.index')}}"><span class="glyphicon glyphicon-list-alt"></span> Transactions</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">Separated link</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">One more separated link</a></li>
-                    </ul>
-                </li>
+                <li @if($r=='categories.index')class="active"@endif><a href="{{route('categories.index')}}">Categories</a></li>
+                <li @if($r=='categories.create')class="active"@endif><a href="{{route('categories.create')}}"><span class="glyphicon glyphicon-plus"></span> Create category</a></li>
             </ul>
             @include('partials.menu.shared')
         </div><!-- /.navbar-collapse -->

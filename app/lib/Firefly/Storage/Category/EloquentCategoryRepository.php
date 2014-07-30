@@ -14,7 +14,7 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
      */
     public function get()
     {
-        return \Auth::user()->categories()->get();
+        return \Auth::user()->categories()->orderBy('name','ASC')->get();
     }
 
     /**

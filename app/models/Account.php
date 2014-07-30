@@ -4,15 +4,15 @@ use LaravelBook\Ardent\Ardent as Ardent;
 /**
  * Account
  *
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $user_id
- * @property integer $account_type_id
- * @property string $name
- * @property boolean $active
- * @property-read \AccountType $accountType
- * @property-read \User $user
+ * @property integer                                                      $id
+ * @property \Carbon\Carbon                                               $created_at
+ * @property \Carbon\Carbon                                               $updated_at
+ * @property integer                                                      $user_id
+ * @property integer                                                      $account_type_id
+ * @property string                                                       $name
+ * @property boolean                                                      $active
+ * @property-read \AccountType                                            $accountType
+ * @property-read \User                                                   $user
  * @property-read \Illuminate\Database\Eloquent\Collection|\Transaction[] $transactions
  * @method static \Illuminate\Database\Query\Builder|\Account whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Account whereCreatedAt($value)
@@ -92,7 +92,8 @@ class Account extends Ardent
         );
     }
 
-    public function predict(\Carbon\Carbon $date) {
+    public function predict(\Carbon\Carbon $date)
+    {
         return null;
     }
 
