@@ -63,6 +63,7 @@ class TransactionJournal extends Ardent
     public static function factory()
     {
         $date = new \Carbon\Carbon;
+
         return [
             'transaction_type_id'     => 'factory|TransactionType',
             'transaction_currency_id' => 'factory|TransactionCurrency',

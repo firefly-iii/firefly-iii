@@ -35,6 +35,13 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/chart/home/budgets', ['uses' => 'ChartController@homeBudgets', 'as' => 'chart.budgets']);
         Route::get('/chart/home/info/{accountname}/{day}/{month}/{year}', ['uses' => 'ChartController@homeAccountInfo', 'as' => 'chart.info']);
 
+        // Categories controller:
+        Route::get('/categories',['uses' => 'CategoryController@index','as' => 'categories.index']);
+        Route::get('/categories/create',['uses' => 'CategoryController@create','as' => 'categories.create']);
+        Route::get('/categories/show/{category}',['uses' => 'CategoryController@show','as' => 'categories.show']);
+        Route::get('/categories/edit/{category}',['uses' => 'CategoryController@edit','as' => 'categories.edit']);
+        Route::get('/categories/delete/{category}',['uses' => 'CategoryController@delete','as' => 'categories.delete']);
+
 
         // preferences controller
         Route::get('/preferences', ['uses' => 'PreferencesController@index', 'as' => 'preferences']);
@@ -54,8 +61,8 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/accounts/{account}/delete', ['uses' => 'AccountController@delete', 'as' => 'accounts.delete']);
 
         // budget controller:
-        Route::get('/budgets/create',['uses' => 'BudgetController@create', 'as' => 'budgets.create']);
         Route::get('/budgets',['uses' => 'BudgetController@indexByDate','as' => 'budgets.index']);
+        Route::get('/budgets/create',['uses' => 'BudgetController@create', 'as' => 'budgets.create']);
         Route::get('/budgets/budget',['uses' => 'BudgetController@indexByBudget','as' => 'budgets.index.budget']);
         Route::get('/budgets/show/{budget}',['uses' => 'BudgetController@show', 'as' => 'budgets.show']);
         Route::get('/budgets/edit/{budget}',['uses' => 'BudgetController@edit', 'as' => 'budgets.edit']);
