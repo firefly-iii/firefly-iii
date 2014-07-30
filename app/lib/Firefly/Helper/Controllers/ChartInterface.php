@@ -21,4 +21,6 @@ interface ChartInterface
     public function budgets(Carbon $start);
 
     public function accountDailySummary(\Account $account, Carbon $date);
+
+    public function categoryShowChart(\Category $category, $range, Carbon $start, Carbon $end);
 }

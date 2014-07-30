@@ -32,13 +32,6 @@
     @include('partials.flashes')
     @yield('content')
 </div>
-
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<!--
-<script src="assets/bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="assets/javascript/bootstrap3-typeahead.min.js"></script>
-
--->
 <?php echo javascript_include_tag(); ?>
 @yield('scripts')
 </body>

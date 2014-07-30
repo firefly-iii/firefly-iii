@@ -20,6 +20,15 @@ Route::bind('budget', function($value, $route)
         return null;
     });
 
+Route::bind('category', function($value, $route)
+{
+    if(Auth::check()) {
+        return Category::
+            where('id', $value)->
+            where('user_id',Auth::user()->id)->first();
+    }
+    return null;
+});
 
 
 // protected routes:
@@ -34,6 +43,7 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/chart/home/categories', ['uses' => 'ChartController@homeCategories', 'as' => 'chart.categories']);
         Route::get('/chart/home/budgets', ['uses' => 'ChartController@homeBudgets', 'as' => 'chart.budgets']);
         Route::get('/chart/home/info/{accountname}/{day}/{month}/{year}', ['uses' => 'ChartController@homeAccountInfo', 'as' => 'chart.info']);
+        Route::get('/chart/categories/show/{category}', ['uses' => 'ChartController@categoryShowChart','as' => 'chart.showcategory']);
 
         // Categories controller:
         Route::get('/categories',['uses' => 'CategoryController@index','as' => 'categories.index']);
@@ -99,6 +109,11 @@ Route::group(['before' => 'csrf|auth'], function () {
         Route::post('/budgets/store',['uses' => 'BudgetController@store', 'as' => 'budgets.store']);
         Route::post('/budgets/update', ['uses' => 'BudgetController@update', 'as' => 'budgets.update']);
         Route::post('/budgets/destroy', ['uses' => 'BudgetController@destroy', 'as' => 'budgets.destroy']);
+
+        // category controller
+        Route::post('/categories/store',['uses' => 'CategoryController@store', 'as' => 'categories.store']);
+        Route::post('/categories/update', ['uses' => 'CategoryController@update', 'as' => 'categories.update']);
+        Route::post('/categories/destroy', ['uses' => 'CategoryController@destroy', 'as' => 'categories.destroy']);
 
         // migration controller
         Route::post('/migrate', ['uses' => 'MigrationController@postIndex']);

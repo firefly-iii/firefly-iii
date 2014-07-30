@@ -29,4 +29,9 @@ class Category extends Component
             'class'   => 'Category'
         ];
     protected $isSubclass = true;
+
+    public function transactionjournals()
+    {
+        return $this->belongsToMany('TransactionJournal', 'component_transaction_journal', 'component_id');
+    }
 } 

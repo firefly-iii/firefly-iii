@@ -158,7 +158,6 @@ class BudgetController extends BaseController
             return Redirect::route('budgets.index.budget');
         }
 
-        return Redirect::route('budgets.index');
     }
 
 

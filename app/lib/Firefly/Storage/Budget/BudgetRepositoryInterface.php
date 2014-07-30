@@ -40,7 +40,7 @@ interface BudgetRepositoryInterface
      *
      * @return mixed
      */
-    public function destroy($data);
+    public function destroy($budgetId);
 
     /**
      * @param $budgetId
