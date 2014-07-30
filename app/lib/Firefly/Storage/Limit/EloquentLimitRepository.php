@@ -88,7 +88,7 @@ class EloquentLimitRepository implements LimitRepositoryInterface
         $limit->repeats = isset($data['repeats']) ? intval($data['repeats']) : 0;
         $limit->repeat_freq = $data['period'];
         if (!$limit->save()) {
-            Session::flash('error', 'Could not save: ' . $limit->errors()->first());
+            \Session::flash('error', 'Could not save: ' . $limit->errors()->first());
         }
 
         return $limit;

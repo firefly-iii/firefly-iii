@@ -101,7 +101,7 @@ class LimitRepetition extends Ardent
                 return $this->startdate->format('Ymd') . '-5';
                 break;
             case 'weekly':
-                return $this->startdate->format('Ymd') . '4';
+                return $this->startdate->format('Ymd') . '-4';
                 break;
             case 'monthly':
                 return $this->startdate->format('Ymd') . '-3';

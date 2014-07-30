@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+use Illuminate\Database\QueryException;
 use LaravelBook\Ardent\Ardent as Ardent;
 
 /**
@@ -52,14 +54,63 @@ class Limit extends Ardent
         ];
     }
 
+    public function budget()
+    {
+        return $this->belongsTo('Budget', 'component_id');
+    }
+
     public function component()
     {
         return $this->belongsTo('Component', 'component_id');
     }
 
-    public function budget()
+    public function createRepetition(Carbon $start)
     {
-        return $this->belongsTo('Budget', 'component_id');
+
+        $end = clone $start;
+        // go to end:
+        switch ($this->repeat_freq) {
+            case 'daily':
+                $end->addDay();
+                break;
+            case 'weekly':
+                $end->addWeek();
+                break;
+            case 'monthly':
+                $end->addMonth();
+                break;
+            case 'quarterly':
+                $end->addMonths(3);
+                break;
+            case 'half-year':
+                $end->addMonths(6);
+                break;
+            case 'yearly':
+                $end->addYear();
+                break;
+        }
+        $end->subDay();
+        $count = $this->limitrepetitions()->where('startdate', $start->format('Y-m-d'))->where(
+            'enddate', $start->format('Y-m-d')
+        )->count();
+
+        if ($count == 0) {
+
+            $repetition = new \LimitRepetition();
+            $repetition->startdate = $start;
+            $repetition->enddate = $end;
+            $repetition->amount = $this->amount;
+            $repetition->limit()->associate($this);
+
+            try {
+                $repetition->save();
+                \Log::debug('Created new repetition with id #' . $repetition->id);
+            } catch (QueryException $e) {
+                // do nothing
+                \Log::error('Trying to save new Limitrepetition failed!');
+                \Log::error($e->getMessage());
+            }
+        }
     }
 
     public function limitrepetitions()
