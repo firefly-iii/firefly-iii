@@ -24,11 +24,12 @@ $r = Route::current()->getName();
                         <li><a href="{{route('accounts.index')}}"><span class="glyphicon glyphicon-inbox"></span> Accounts</a></li>
                         <li><a href="{{route('budgets.index')}}"><span class="glyphicon glyphicon-euro"></span> Budgets</a></li>
                         <li><a href="{{route('categories.index')}}"><span class="glyphicon glyphicon-tags"></span> Categories</a></li>
+
+                        <li class="divider"></li>
                         <li><a href="{{route('transactions.index')}}"><span class="glyphicon glyphicon-list-alt"></span> Transactions</a></li>
+
                         <li class="divider"></li>
-                        <li><a href="#">Separated link</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">One more separated link</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-save"></span> Piggy banks</a></li>
                     </ul>
                 </li>
             </ul>
