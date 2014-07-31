@@ -37,7 +37,7 @@ Route::bind('limit', function($value, $route)
                 where('limits.id', $value)->
                 leftJoin('components','components.id','=','limits.component_id')->
                 where('components.class','Budget')->
-                where('components.user_id',Auth::user()->id)->first();
+                where('components.user_id',Auth::user()->id)->first(['limits.*']);
         }
         return null;
     });
