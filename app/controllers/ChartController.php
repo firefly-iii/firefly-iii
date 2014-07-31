@@ -34,6 +34,10 @@ class ChartController extends BaseController
         $start = Session::get('start');
         $end = Session::get('end');
 
+        \Log::debug('Draw home account chart.');
+        \Log::debug('From: '.$start.' ('.$start->timezone.')');
+        \Log::debug('Until: '.$end);
+
         if (is_null($account)) {
             // get, depending on preferences:
             /** @var  \Firefly\Helper\Preferences\PreferencesHelperInterface $prefs */
@@ -59,6 +63,7 @@ class ChartController extends BaseController
         ];
 
         foreach ($accounts as $account) {
+            \Log::debug('Now building series for ' . $account->name);
             $data['series'][] = $this->_chart->account($account, $start, $end);
         }
 
