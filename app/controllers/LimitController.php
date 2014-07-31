@@ -33,9 +33,9 @@ class LimitController extends BaseController
     {
         $periods = \Config::get('firefly.periods_to_text');
         $prefilled = [
-            'startdate'   => Input::get('startdate') ? : date('Y-m-d'),
+            'startdate' => Input::get('startdate') ? : date('Y-m-d'),
             'repeat_freq' => Input::get('repeat_freq') ? : 'monthly',
-            'budget_id'   => $budget ? $budget->id : null
+            'budget_id' => $budget ? $budget->id : null
         ];
 
         $budgets = $this->_budgets->getAsSelectList();
@@ -55,13 +55,14 @@ class LimitController extends BaseController
         $limit = $this->_limits->find($limitId);
 
 
-
-
-
         if ($limit) {
             $limit->delete();
 
-            return Redirect::route('budgets.index');
+            if (Input::get('from') == 'date') {
+                return Redirect::route('budgets.index');
+            } else {
+                return Redirect::route('budgets.index.budget');
+            }
         } else {
             return View::make('error')->with('message', 'No such limit!');
         }

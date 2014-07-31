@@ -84,9 +84,9 @@
                         @endif
                         <div class="col-sm-2 @if($limit->repeats == 0) col-sm-offset-2 @endif">
                             <div class="btn-group btn-group-xs">
-                                <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
+                                <a href="{{route('budgets.limits.edit',$limit->id)}}?from=budget" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
                                 @if($limit->repeats == 0 || ($limit->repeats == 1 && $index == 0))
-                                <a href="#" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                                <a href="{{route('budgets.limits.delete',$limit->id)}}?from=budget" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
                                 @endif
                             </div>
                         </div>
