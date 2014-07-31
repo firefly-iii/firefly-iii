@@ -180,7 +180,13 @@ class Chart implements ChartInterface
             case '6M':
                 $beginning->subYears(6);
                 break;
+            case 'custom':
+                $diff = $start->diff($end);
+                $days = $diff->days;
+                $beginning->subDays(12 * $days);
+                break;
         }
+
         // loop over the periods:
         while ($beginning <= $start) {
             // increment currentEnd to fit beginning:
@@ -203,8 +209,16 @@ class Chart implements ChartInterface
                     break;
                 case '6M':
                     $currentEnd->addMonths(6)->subDay();
-
+                    break;
+                case 'custom':
+                    $diff = $start->diff($end);
+                    $days = $diff->days;
+                    $days = $days == 1 ? 2 : $days;
+                    $currentEnd->addDays($days)->subDay();
+                    break;
             }
+
+
 
             // now format the current range:
             $title = '';
@@ -225,10 +239,14 @@ class Chart implements ChartInterface
                 case '6M':
                     $title = $beginning->format('M Y') . ' - ' . $currentEnd->format('M Y');
                     break;
+                case 'custom':
+                    $title = $beginning->format('d-m-Y').' - '.$currentEnd->format('d-m-Y');
+                    break;
                 case 'yearly':
 //                    return $this->startdate->format('Y');
                     break;
             }
+
 
             // get sum for current range:
             $journals = \TransactionJournal::
@@ -279,6 +297,13 @@ class Chart implements ChartInterface
                 case '6M':
                     $beginning->addMonths(6);
                     break;
+                case 'custom':
+                    $diff = $start->diff($end);
+                    $days = $diff->days;
+
+                    $beginning->addDays($days);
+                    break;
+
             }
         }
         return $data;
