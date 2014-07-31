@@ -64,6 +64,10 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/categories/edit/{category}',['uses' => 'CategoryController@edit','as' => 'categories.edit']);
         Route::get('/categories/delete/{category}',['uses' => 'CategoryController@delete','as' => 'categories.delete']);
 
+        // piggy bank controller
+        Route::get('/piggybanks',['uses' => 'PiggybankController@index','as' => 'piggybanks.index']);
+        Route::get('/piggybanks/create', ['uses' => 'PiggybankController@create','as' => 'piggybanks.create']);
+
 
         // preferences controller
         Route::get('/preferences', ['uses' => 'PreferencesController@index', 'as' => 'preferences']);
@@ -89,6 +93,7 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/budgets/show/{budget}',['uses' => 'BudgetController@show', 'as' => 'budgets.show']);
         Route::get('/budgets/edit/{budget}',['uses' => 'BudgetController@edit', 'as' => 'budgets.edit']);
         Route::get('/budgets/delete/{budget}',['uses' => 'BudgetController@delete', 'as' => 'budgets.delete']);
+
 
         // limit controller:
         Route::get('/budgets/limits/create/{budget?}',['uses' => 'LimitController@create','as' => 'budgets.limits.create']);
@@ -129,6 +134,11 @@ Route::group(['before' => 'csrf|auth'], function () {
 
         // migration controller
         Route::post('/migrate', ['uses' => 'MigrationController@postIndex']);
+
+        // piggy bank controller
+        Route::post('/piggybanks/store',['uses' => 'PiggybankController@store','as' => 'piggybanks.store']);
+
+
 
         // preferences controller
         Route::post('/preferences', ['uses' => 'PreferencesController@postIndex']);
