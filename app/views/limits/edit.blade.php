@@ -94,6 +94,22 @@
         </div>
 
     </div>
+    @if($limit->repeats == 1)
+    <div class="col-lg-6 col-md-6 col-sm-12">
+        <h4>Auto repeating</h4>
+        <p class="text-info">
+            This envelope is set to repeat itself; creating a new period whenever the previous period
+            has passed. If you change this envelope, you'll also change the following (automatically created)
+            envelopes.
+            {{$limit->limitrepetitions()->count() }}
+        </p>
+        <ul>
+            @foreach($limit->limitrepetitions()->orderBy('startdate','DESC')->get() as $rep)
+            <li>Evenlope for {{$rep->periodShow()}}, {{mf($rep->amount,false)}}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
 </div>
 
 {{Form::close()}}

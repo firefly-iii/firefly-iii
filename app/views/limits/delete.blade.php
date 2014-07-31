@@ -6,13 +6,7 @@
             <small>Delete envelope</small>
         </h1>
         <p class="lead">Remember that deleting something is permanent.</p>
-        <p class="text-info">
-            This form allows you to delete the envelope for budget {{{$limit->budget->name}}}, with a content of
-            {{mf($limit->amount,false)}}
-            @if($limit->repeats == 0)
-                in {{$limit->limitrepetitions[0]->startdate->format('M Y')}} ({{$limit->repeat_freq}}).
-            @endif
-        </p>
+
     </div>
 
 </div>
@@ -20,7 +14,15 @@
 {{Form::open(['class' => 'form-horizontal','url' => route('budgets.limits.destroy',$limit->id)])}}
 
 <div class="row">
-    <div class="col-lg-12">
+    <div class="col-lg-6">
+        <h4>&nbsp;</h4>
+        <p class="text-info">
+            This form allows you to delete the envelope for budget {{{$limit->budget->name}}}, with a content of
+            {{mf($limit->amount,false)}}
+            @if($limit->repeats == 0)
+            in {{$limit->limitrepetitions[0]->startdate->format('M Y')}} ({{$limit->repeat_freq}}).
+            @endif
+        </p>
         <p class="text-info">
             Destroying an envelope does not remove any transactions from the budget.
         </p>
@@ -38,8 +40,23 @@
                 @endif
             </div>
         </div>
-
     </div>
+    @if($limit->repeats == 1)
+    <div class="col-lg-6 col-md-6 col-sm-12">
+        <h4>Auto repeating</h4>
+        <p class="text-info">
+            This envelope is set to repeat itself; creating a new period whenever the previous period
+            has passed. If you change this envelope, you'll also change the following (automatically created)
+            envelopes.
+            {{$limit->limitrepetitions()->count() }}
+        </p>
+        <ul>
+            @foreach($limit->limitrepetitions()->orderBy('startdate','DESC')->get() as $rep)
+            <li>Evenlope for {{$rep->periodShow()}}, {{mf($rep->amount,false)}}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
 </div>
 
 
