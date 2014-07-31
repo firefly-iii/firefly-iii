@@ -29,7 +29,7 @@ $r = Route::current()->getName();
                         <li><a href="{{route('transactions.index')}}"><span class="glyphicon glyphicon-list-alt"></span> Transactions</a></li>
 
                         <li class="divider"></li>
-                        <li><a href="#"><span class="glyphicon glyphicon-save"></span> Piggy banks</a></li>
+                        <li><a href="{{route('piggybanks.index')}}"><span class="glyphicon glyphicon-save"></span> Piggy banks</a></li>
                     </ul>
                 </li>
             </ul>

@@ -26,6 +26,11 @@ class StorageServiceProvider extends ServiceProvider
             'Firefly\Storage\Transaction\EloquentTransactionRepository'
         );
 
+        $this->app->bind(
+            'Firefly\Storage\Piggybank\PiggybankRepositoryInterface',
+            'Firefly\Storage\Piggybank\EloquentPiggybankRepository'
+        );
+
 
 
 
