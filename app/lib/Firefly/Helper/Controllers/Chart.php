@@ -19,7 +19,9 @@ class Chart implements ChartInterface
         $current = clone $start;
         $today = new Carbon;
         $return = ['name' => $account->name, 'id' => $account->id, 'data' => []];
+
         while ($current <= $end) {
+            \Log::debug('Now at day: '  . $current . '('.$current->timestamp.'), ('.($current->timestamp * 1000).') ');
             if ($current > $today) {
                 $return['data'][] = [$current->timestamp * 1000, $account->predict(clone $current)];
             } else {
