@@ -38,6 +38,9 @@ class PiggybankController extends BaseController
     public function edit()
     {
     }
+    public function updateAmount(Piggybank $piggybank) {
+        $this->_repository->updateAmount($piggybank,Input::get('amount'));
+    }
 
     public function index()
     {
@@ -45,21 +48,27 @@ class PiggybankController extends BaseController
         $piggybanks = $this->_repository->get();
         $accounts = [];
         // get accounts:
-        foreach($piggybanks as $piggyBank) {
+        foreach ($piggybanks as $piggyBank) {
             $account = $piggyBank->account;
+            $piggyBank->pct = round(($piggyBank->amount / $piggyBank->target) * 100, 2) . '%';
             $id = $account->id;
-            if(!isset($accounts[$id])) {
+            if (!isset($accounts[$id])) {
                 $account->balance = $account->balance();
-                $account->left = $account->balance;
+                $account->left = $account->balance - $piggyBank->amount;
             } else {
+                echo $account->left.'-';
+                echo '('.$piggyBank->amount.')';
                 $account->left -= $piggyBank->amount;
+                echo $account->left;
+
             }
             $accounts[$id] = $account;
         }
 
 
-
-        return View::make('piggybanks.index')->with('count', $count)->with('accounts',$accounts)->with('piggybanks',$piggybanks);
+        return View::make('piggybanks.index')->with('count', $count)->with('accounts', $accounts)->with(
+            'piggybanks', $piggybanks
+        );
     }
 
     public function show()
@@ -69,11 +78,13 @@ class PiggybankController extends BaseController
     public function store()
     {
         $piggyBank = $this->_repository->store(Input::all());
-        if(!$piggyBank->id) {
-            Session::flash('error','Could not save piggy bank: ' . $piggyBank->errors()->first());
+        if (!$piggyBank->id) {
+            Session::flash('error', 'Could not save piggy bank: ' . $piggyBank->errors()->first());
+
             return Redirect::route('piggybanks.create')->withInput();
         } else {
-            Session::flash('success','New piggy bank created!');
+            Session::flash('success', 'New piggy bank created!');
+
             return Redirect::route('piggybanks.index');
         }
 

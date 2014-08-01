@@ -15,4 +15,6 @@ interface PiggybankRepositoryInterface
     public function count();
     public function store($data);
     public function get();
+
+    public function updateAmount(\Piggybank $piggyBank, $amount);
 } 

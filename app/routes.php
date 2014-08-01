@@ -42,6 +42,17 @@ Route::bind('limit', function($value, $route)
         return null;
     });
 
+Route::bind('piggybank', function($value, $route)
+    {
+        if(Auth::check()) {
+            return Piggybank::
+                where('piggybanks.id', $value)->
+                leftJoin('accounts','accounts.id','=','piggybanks.account_id')->
+                where('accounts.user_id',Auth::user()->id)->first(['piggybanks.*']);
+        }
+        return null;
+    });
+
 
 // protected routes:
 Route::group(['before' => 'auth'], function () {
@@ -67,6 +78,7 @@ Route::group(['before' => 'auth'], function () {
         // piggy bank controller
         Route::get('/piggybanks',['uses' => 'PiggybankController@index','as' => 'piggybanks.index']);
         Route::get('/piggybanks/create', ['uses' => 'PiggybankController@create','as' => 'piggybanks.create']);
+        Route::post('/piggybanks/updateAmount/{piggybank}',['uses' => 'PiggybankController@updateAmount','as' => 'piggybanks.updateAmount']);
 
 
         // preferences controller
@@ -137,6 +149,7 @@ Route::group(['before' => 'csrf|auth'], function () {
 
         // piggy bank controller
         Route::post('/piggybanks/store',['uses' => 'PiggybankController@store','as' => 'piggybanks.store']);
+
 
 
 
