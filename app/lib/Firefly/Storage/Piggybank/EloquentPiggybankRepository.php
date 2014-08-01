@@ -32,6 +32,13 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
             'accounts.user_id', \Auth::user()->id
         )->get(['piggybanks.*']);
     }
+    public function updateAmount(\Piggybank $piggyBank, $amount) {
+        $piggyBank->amount = floatval($amount);
+        if($piggyBank->validate()) {
+            $piggyBank->save();
+        }
+
+    }
 
     public function store($data)
     {

@@ -32,8 +32,8 @@
             @foreach($accounts as $account)
             <tr>
                 <td>{{{$account->name}}}</td>
-                <td>{{mf($account->balance())}}</td>
-                <td>{{mf($account->left)}}</td>
+                <td>{{mf($account->balance)}}</td>
+                <td id="account_{{$account->id}}_left">{{mf($account->left)}}</td>
             </tr>
             @endforeach
         </table>
@@ -49,8 +49,8 @@
         <table class="table table-bordered">
             <tr>
                 <td style="width:10%;"><span id="piggy_{{$piggybank->id}}_amount">{{mf($piggybank->amount,false)}}</span></td>
-                <td><input type="range" name="piggy_{{$piggybank->id}}" min="1" max="{{$piggybank->target}}" step="any" value="{{$piggybank->amount}}" /></td>
-                <td>Y</td>
+                <td><input type="range" data-account="{{$piggybank->account_id}}" name="piggy_{{$piggybank->id}}" min="0" max="{{$piggybank->target}}" step="any" value="{{$piggybank->amount}}" /></td>
+                <td style="width: 10%;"><span id="piggy_{{$piggybank->id}}_pct">{{$piggybank->pct}}</span></td>
             </tr>
         </table>
         @endforeach
@@ -66,5 +66,14 @@
 @endif
 @stop
 @section('scripts')
+<script type="text/javascript">
+var accountBalances = [];
+var accountLeft = [];
+@foreach($accounts as $account)
+    accountBalances[{{$account->id}}] = {{$account->balance()}};
+    accountLeft[{{$account->id}}] = {{$account->left}};
+@endforeach
+</script>
+
 <?php echo javascript_include_tag('piggybanks'); ?>
 @stop
