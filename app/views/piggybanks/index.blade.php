@@ -32,8 +32,8 @@
             @foreach($accounts as $account)
             <tr>
                 <td>{{{$account->name}}}</td>
-                <td>{{mf($account->balance)}}</td>
-                <td id="account_{{$account->id}}_left">{{mf($account->left)}}</td>
+                <td id="account_{{$account->id}}_total" data-raw="{{$account->balance}}">{{mf($account->balance)}}</td>
+                <td id="account_{{$account->id}}_left" data-raw="{{$account->left}}">{{mf($account->left)}}</td>
             </tr>
             @endforeach
         </table>
@@ -48,7 +48,12 @@
         <h4>{{{$piggybank->name}}} <small>{{mf($piggybank->target)}}</small></h4>
         <table class="table table-bordered">
             <tr>
-                <td style="width:10%;"><span id="piggy_{{$piggybank->id}}_amount">{{mf($piggybank->amount,false)}}</span></td>
+                <td style="width:15%;">
+                    <div class="input-group">
+                        <span class="input-group-addon">&euro;</span>
+                    <input class="form-control"  type="number" data-piggy="{{$piggybank->id}}" data-account="{{$piggybank->account_id}}" step="any" min="0" max="{{$piggybank->target}}" id="piggy_{{$piggybank->id}}_amount" value="{{$piggybank->amount}}" />
+                        </div>
+                </td>
                 <td><input type="range" data-account="{{$piggybank->account_id}}" name="piggy_{{$piggybank->id}}" min="0" max="{{$piggybank->target}}" step="any" value="{{$piggybank->amount}}" /></td>
                 <td style="width: 10%;"><span id="piggy_{{$piggybank->id}}_pct">{{$piggybank->pct}}</span></td>
             </tr>

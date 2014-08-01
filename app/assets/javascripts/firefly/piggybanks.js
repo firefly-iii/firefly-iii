@@ -1,7 +1,8 @@
 $(function () {
 
-    $('input[type="range"]').on('input', inputAmount);
-    $('input[type="range"]').on('change', changeAmount);
+    $('input[type="range"]').on('input', inputRange);
+    $('input[type="range"]').on('change', updateAmount);
+    $('input[type="number"]').on('input',inputNumber);
 
 });
 
@@ -10,38 +11,78 @@ $(function () {
  * @param e
  * @returns {boolean}
  */
-function inputAmount(e) {
-//    var target = $(e.target);
-//    var piggyBankId = target.attr('name').substring(6);
-//    var accountId = target.data('account');
-//    var value = target.val();
-//
-//    // update all accounts and return false if we're going overboard.
-//    var updateResult = updateAccounts(accountId);
-//    if(!updateResult) {
-//        return false;
-//    }
-//
-//    // new value for amount in piggy bank, formatted:
-//    valueFormatted = '€ ' + (Math.round(value * 100) / 100).toFixed(2);
-//    var valueId = 'piggy_' + piggyBankId + '_amount';
-//    $('#' + valueId).text(valueFormatted);
+function inputRange(e) {
+    var target = $(e.target);
+    var piggyBankId = target.attr('name').substring(6);
+    var accountId = target.data('account');
+    var value = parseFloat(target.val());
+
+    var leftInAccount = leftInAccounts(accountId);
+
+    if(leftInAccount <= 0) {
+        value = parseFloat($('#piggy_'+piggyBankId+'_amount').val());
+        target.val(parseFloat(value));
+    }
+    var valueId = 'piggy_' + piggyBankId + '_amount';
+    $('#' + valueId).val(value.toFixed(2));
 //
 //    // new percentage for amount in piggy bank, formatted.
-//    var pctId = 'piggy_' + piggyBankId + '_pct';
-//    percentage = Math.round((value / parseFloat(target.attr('max'))) * 100) + '%'; //Math.round((value / parseFloat(target.attr('total'))) * 100) + '%';
-//    $('#' + pctId).text(percentage);
+    var pctId = 'piggy_' + piggyBankId + '_pct';
+    percentage = Math.round((value / parseFloat(target.attr('max'))) * 100) + '%'; //Math.round((value / parseFloat(target.attr('total'))) * 100) + '%';
+    $('#' + pctId).text(percentage);
+
+    // update the bar accordingly.
+
 
     return true;
 }
 
-function changeAmount(e) {
+function inputNumber(e) {
+    var target = $(e.target);
+    var amount = parseFloat(target.val());
+    var piggyBankId = target.data('piggy');
+    var accountId = target.data('account');
+    var leftInAccount = leftInAccounts(accountId);
+
+    if(leftInAccount <= 0) {
+        amount = parseFloat($('#piggy_'+piggyBankId+'_amount').val());
+    } else {
+        // do something!
+    }
+    target.val(amount);
+    console.log('SERVER');
+    $('input[name="piggy_'+piggyBankId+'"]').val(amount);
+    $.post('piggybanks/updateAmount/' + piggyBankId, {amount: amount});
+}
+
+
+function updateAmount(e) {
     var target = $(e.target);
     var piggyBankId = target.attr('name').substring(6);
     var accountId = target.data('account');
     var value = target.val();
-
+    console.log('SERVER');
     $.post('piggybanks/updateAmount/' + piggyBankId, {amount: value});
+
+
+}
+
+function leftInAccounts(accountId) {
+    // get the total:
+    var total = parseFloat($('#account_'+accountId+'_total').data('raw'));
+
+    // sub all piggy banks:
+    var inPiggies = 0;
+    $('input[type="range"]').each(function(i,v) {
+        var p = $(v);
+        if(parseInt(p.data('account')) == accountId) {
+            inPiggies += parseFloat(p.val());
+        }
+    });
+    var left = total - inPiggies;
+    console.log('LEFT: ' + left);
+    // return amount left:
+    return left;
 
 
 }

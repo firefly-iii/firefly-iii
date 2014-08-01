@@ -50,16 +50,13 @@ class PiggybankController extends BaseController
         // get accounts:
         foreach ($piggybanks as $piggyBank) {
             $account = $piggyBank->account;
-            $piggyBank->pct = round(($piggyBank->amount / $piggyBank->target) * 100, 2) . '%';
+            $piggyBank->pct = round(($piggyBank->amount / $piggyBank->target) * 100, 0) . '%';
             $id = $account->id;
             if (!isset($accounts[$id])) {
                 $account->balance = $account->balance();
                 $account->left = $account->balance - $piggyBank->amount;
             } else {
-                echo $account->left.'-';
-                echo '('.$piggyBank->amount.')';
                 $account->left -= $piggyBank->amount;
-                echo $account->left;
 
             }
             $accounts[$id] = $account;
