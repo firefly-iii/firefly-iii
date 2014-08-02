@@ -9,9 +9,8 @@
     </div>
 </div>
 
-{{Form::open(['class' => 'form-horizontal','url' => route('budgets.update')])}}
+{{Form::open(['class' => 'form-horizontal','url' => route('budgets.update',$budget->id)])}}
 
-{{Form::hidden('id',$budget->id)}}
 {{Form::hidden('from',e(Input::get('from')))}}
 
 <div class="row">

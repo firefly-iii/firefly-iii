@@ -12,9 +12,18 @@ use Carbon\Carbon;
 interface BudgetRepositoryInterface
 {
     /**
+     * @param $data
+     *
      * @return mixed
      */
-    public function getAsSelectList();
+    public function destroy(\Budget $budget);
+
+    /**
+     * @param $budgetId
+     *
+     * @return mixed
+     */
+    public function find($budgetId);
 
     /**
      * @return mixed
@@ -22,11 +31,17 @@ interface BudgetRepositoryInterface
     public function get();
 
     /**
-     * @param $data
+     * @return mixed
+     */
+    public function getAsSelectList();
+
+    /**
+     * @param Carbon $date
+     * @param        $range
      *
      * @return mixed
      */
-    public function update($data);
+    public function getWithRepetitionsInPeriod(Carbon $date, $range);
 
     /**
      * @param $data
@@ -40,21 +55,6 @@ interface BudgetRepositoryInterface
      *
      * @return mixed
      */
-    public function destroy($budgetId);
-
-    /**
-     * @param $budgetId
-     *
-     * @return mixed
-     */
-    public function find($budgetId);
-
-    /**
-     * @param Carbon $date
-     * @param        $range
-     *
-     * @return mixed
-     */
-    public function getWithRepetitionsInPeriod(Carbon $date, $range);
+    public function update(\Budget $budget, $data);
 
 } 
