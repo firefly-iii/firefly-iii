@@ -11,8 +11,7 @@
     </div>
 </div>
 
-{{Form::open(['class' => 'form-horizontal','url' => route('budgets.destroy')])}}
-{{Form::hidden('id',$budget->id)}}
+{{Form::open(['class' => 'form-horizontal','url' => route('budgets.destroy',$budget->id)])}}
 {{Form::hidden('from',e(Input::get('from')))}}
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">

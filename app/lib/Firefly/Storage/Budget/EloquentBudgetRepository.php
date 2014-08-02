@@ -12,6 +12,13 @@ use Carbon\Carbon;
 class EloquentBudgetRepository implements BudgetRepositoryInterface
 {
 
+    public function destroy(\Budget $budget)
+    {
+        $budget->delete();
+
+        return true;
+    }
+
     /**
      * @param $budgetId
      *
@@ -44,37 +51,6 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
         }
 
         return $set;
-    }
-
-    /**
-     * @param $data
-     *
-     * @return mixed
-     */
-    public function update($data)
-    {
-        $budget = $this->find($data['id']);
-        if ($budget) {
-            // update account accordingly:
-            $budget->name = $data['name'];
-            if ($budget->validate()) {
-                $budget->save();
-            }
-        }
-
-        return $budget;
-    }
-
-    public function destroy($budgetId)
-    {
-        $budget = $this->find($budgetId);
-        if ($budget) {
-            $budget->delete();
-
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -154,6 +130,22 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
                 $limit->save();
             }
         }
+        if ($budget->validate()) {
+            $budget->save();
+        }
+
+        return $budget;
+    }
+
+    /**
+     * @param $data
+     *
+     * @return mixed
+     */
+    public function update(\Budget $budget, $data)
+    {
+        // update account accordingly:
+        $budget->name = $data['name'];
         if ($budget->validate()) {
             $budget->save();
         }

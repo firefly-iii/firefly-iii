@@ -13,7 +13,6 @@ class BudgetController extends BaseController
     protected $_budgets;
     protected $_repository;
 
-
     /**
      * @param BI  $budgets
      * @param BRI $repository
@@ -40,9 +39,10 @@ class BudgetController extends BaseController
         return View::make('budgets.delete')->with('budget', $budget);
     }
 
-    public function destroy()
+    public function destroy(Budget $budget)
     {
-        $result = $this->_repository->destroy(Input::get('id'));
+        $result = $this->_repository->destroy($budget);
+        Event::fire('budgets.change');
         if ($result === true) {
             Session::flash('success', 'The budget was deleted.');
             if (Input::get('from') == 'date') {
@@ -82,7 +82,6 @@ class BudgetController extends BaseController
      */
     public function indexByDate()
     {
-        Event::fire('budgets.change');
         // get a list of dates by getting all repetitions:
         $set = $this->_repository->get();
         $budgets = $this->_budgets->organizeByDate($set);
@@ -129,6 +128,7 @@ class BudgetController extends BaseController
 
         $budget = $this->_repository->store(Input::all());
         if ($budget->id) {
+            Event::fire('budgets.change');
             Session::flash('success', 'Budget created!');
 
             if (Input::get('create') == '1') {
@@ -143,20 +143,26 @@ class BudgetController extends BaseController
         } else {
             Session::flash('error', 'Could not save the new budget');
 
-            return Redirect::route('budgets.create')->withInput();
+            return Redirect::route('budgets.create')->withInput()->withErrors($budget->errors());
         }
 
     }
 
-    public function update()
+    public function update(Budget $budget)
     {
-        $budget = $this->_repository->update(Input::all());
-        Session::flash('success', 'Budget "' . $budget->name . '" updated.');
+        $budget = $this->_repository->update($budget, Input::all());
+        if ($budget->validate()) {
+            Session::flash('success', 'Budget "' . $budget->name . '" updated.');
 
-        if (Input::get('from') == 'date') {
-            return Redirect::route('budgets.index');
+            if (Input::get('from') == 'date') {
+                return Redirect::route('budgets.index');
+            } else {
+                return Redirect::route('budgets.index.budget');
+            }
         } else {
-            return Redirect::route('budgets.index.budget');
+            Session::flash('error', 'Could not update budget: ' . $budget->errors()->first());
+
+            return Redirect::route('budgets.edit', $budget->id)->withInput()->withErrors($budget->errors());
         }
 
     }

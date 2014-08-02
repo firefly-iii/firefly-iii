@@ -74,6 +74,13 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/accounts/{account}/edit', ['uses' => 'AccountController@edit', 'as' => 'accounts.edit']);
         Route::get('/accounts/{account}/delete', ['uses' => 'AccountController@delete', 'as' => 'accounts.delete']);
 
+        // budget controller:
+        Route::get('/budgets',['uses' => 'BudgetController@indexByDate','as' => 'budgets.index']);
+        Route::get('/budgets/create',['uses' => 'BudgetController@create', 'as' => 'budgets.create']);
+        Route::get('/budgets/budget',['uses' => 'BudgetController@indexByBudget','as' => 'budgets.index.budget']);
+        Route::get('/budgets/show/{budget}',['uses' => 'BudgetController@show', 'as' => 'budgets.show']);
+        Route::get('/budgets/edit/{budget}',['uses' => 'BudgetController@edit', 'as' => 'budgets.edit']);
+        Route::get('/budgets/delete/{budget}',['uses' => 'BudgetController@delete', 'as' => 'budgets.delete']);
 
         // home controller
         Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
@@ -113,13 +120,6 @@ Route::group(['before' => 'auth'], function () {
 
 
 
-        // budget controller:
-        Route::get('/budgets',['uses' => 'BudgetController@indexByDate','as' => 'budgets.index']);
-        Route::get('/budgets/create',['uses' => 'BudgetController@create', 'as' => 'budgets.create']);
-        Route::get('/budgets/budget',['uses' => 'BudgetController@indexByBudget','as' => 'budgets.index.budget']);
-        Route::get('/budgets/show/{budget}',['uses' => 'BudgetController@show', 'as' => 'budgets.show']);
-        Route::get('/budgets/edit/{budget}',['uses' => 'BudgetController@edit', 'as' => 'budgets.edit']);
-        Route::get('/budgets/delete/{budget}',['uses' => 'BudgetController@delete', 'as' => 'budgets.delete']);
 
 
         // limit controller:
@@ -152,14 +152,16 @@ Route::group(['before' => 'csrf|auth'], function () {
         Route::post('/accounts/update/{account}', ['uses' => 'AccountController@update', 'as' => 'accounts.update']);
         Route::post('/accounts/destroy/{account}', ['uses' => 'AccountController@destroy', 'as' => 'accounts.destroy']);
 
+        // budget controller:
+        Route::post('/budgets/store',['uses' => 'BudgetController@store', 'as' => 'budgets.store']);
+        Route::post('/budgets/update/{budget}', ['uses' => 'BudgetController@update', 'as' => 'budgets.update']);
+        Route::post('/budgets/destroy/{budget}', ['uses' => 'BudgetController@destroy', 'as' => 'budgets.destroy']);
+
 
         // profile controller
         Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword']);
 
-        // budget controller:
-        Route::post('/budgets/store/{budget}',['uses' => 'BudgetController@store', 'as' => 'budgets.store']);
-        Route::post('/budgets/update', ['uses' => 'BudgetController@update', 'as' => 'budgets.update']);
-        Route::post('/budgets/destroy', ['uses' => 'BudgetController@destroy', 'as' => 'budgets.destroy']);
+
 
         // category controller
         Route::post('/categories/store',['uses' => 'CategoryController@store', 'as' => 'categories.store']);
