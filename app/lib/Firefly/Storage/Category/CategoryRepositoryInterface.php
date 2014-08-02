@@ -38,13 +38,13 @@ interface CategoryRepositoryInterface
      */
     public function store($data);
 
-    public function update($data);
+    public function update($category, $data);
 
     /**
      * @param $data
      *
      * @return mixed
      */
-    public function destroy($categoryId);
+    public function destroy($category);
 
 } 

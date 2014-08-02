@@ -9,6 +9,7 @@ use Firefly\Storage\Category\CategoryRepositoryInterface as CRI;
 class CategoryController extends BaseController
 {
     protected $_repository;
+    protected $_category;
 
     public function __construct(CRI $repository, CI $category)
     {
@@ -27,9 +28,9 @@ class CategoryController extends BaseController
         return View::make('categories.delete')->with('category', $category);
     }
 
-    public function destroy()
+    public function destroy(Category $category)
     {
-        $result = $this->_repository->destroy(Input::get('id'));
+        $result = $this->_repository->destroy($category);
         if ($result === true) {
             Session::flash('success', 'The category was deleted.');
         } else {
@@ -80,12 +81,19 @@ class CategoryController extends BaseController
         }
     }
 
-    public function update()
+    public function update(Category $category)
     {
-        $category = $this->_repository->update(Input::all());
-        Session::flash('success', 'Category "' . $category->name . '" updated.');
+        $category = $this->_repository->update($category, Input::all());
+        if($category->validate()) {
+            Session::flash('success', 'Category "' . $category->name . '" updated.');
+            return Redirect::route('categories.index');
+        } else {
+            Session::flash('success', 'Could not update category "' . $category->name . '".');
+            return Redirect::route('categories.edit')->withErrors($category->errors())->withInput();
+        }
 
-        return Redirect::route('categories.index');
+
+
     }
 
 

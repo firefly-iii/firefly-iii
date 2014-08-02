@@ -9,9 +9,8 @@
     </div>
 </div>
 
-{{Form::open(['class' => 'form-horizontal','url' => route('categories.update')])}}
+{{Form::open(['class' => 'form-horizontal','url' => route('categories.update',$category->id)])}}
 
-{{Form::hidden('id',$category->id)}}
 
 <div class="row">
     <div class="col-lg-6 col-md-12 col-sm-6">
