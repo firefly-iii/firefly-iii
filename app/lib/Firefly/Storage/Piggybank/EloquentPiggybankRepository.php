@@ -23,7 +23,7 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
     {
         return \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(
             'accounts.user_id', \Auth::user()->id
-        )->where('piggybanks.id', $piggyBankId)->first('piggybanks.*');
+        )->where('piggybanks.id', $piggyBankId)->first(['piggybanks.*']);
     }
 
     public function get()
@@ -31,13 +31,6 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
         return \Piggybank::with('account')->leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(
             'accounts.user_id', \Auth::user()->id
         )->get(['piggybanks.*']);
-    }
-    public function updateAmount(\Piggybank $piggyBank, $amount) {
-        $piggyBank->amount = floatval($amount);
-        if($piggyBank->validate()) {
-            $piggyBank->save();
-        }
-
     }
 
     public function store($data)
@@ -61,5 +54,32 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
         }
 
         return $piggyBank;
+    }
+
+    public function update($data)
+    {
+        $piggyBank = $this->find($data['id']);
+        if ($piggyBank) {
+            $accounts = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
+            $account = $accounts->find($data['account_id']);
+            // update piggybank accordingly:
+            $piggyBank->name = $data['name'];
+            $piggyBank->target = floatval($data['target']);
+            $piggyBank->account()->associate($account);
+            if ($piggyBank->validate()) {
+                $piggyBank->save();
+            }
+        }
+
+        return $piggyBank;
+    }
+
+    public function updateAmount(\Piggybank $piggyBank, $amount)
+    {
+        $piggyBank->amount = floatval($amount);
+        if ($piggyBank->validate()) {
+            $piggyBank->save();
+        }
+
     }
 }

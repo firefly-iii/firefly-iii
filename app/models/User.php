@@ -32,6 +32,7 @@ use LaravelBook\Ardent\Ardent;
  * @method static \Illuminate\Database\Query\Builder|\User whereRememberToken($value)
  * @method static \Illuminate\Database\Query\Builder|\User whereMigrated($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\TransactionJournal[] $transactionjournals
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Piggybank[] $piggybanks
  */
 class User extends Ardent implements UserInterface, RemindableInterface
 {
@@ -72,7 +73,8 @@ class User extends Ardent implements UserInterface, RemindableInterface
         return $this->hasMany('Account');
     }
 
-    public function piggybanks() {
+    public function piggybanks()
+    {
         return $this->hasMany('Piggybank');
     }
 

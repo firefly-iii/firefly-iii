@@ -28,12 +28,14 @@
                 <th>Account</th>
                 <th>Current balance</th>
                 <th>Left for (other) piggy banks</th>
+                <th>Total target</th>
             </tr>
             @foreach($accounts as $account)
             <tr>
                 <td>{{{$account->name}}}</td>
                 <td id="account_{{$account->id}}_total" data-raw="{{$account->balance}}">{{mf($account->balance)}}</td>
                 <td id="account_{{$account->id}}_left" data-raw="{{$account->left}}">{{mf($account->left)}}</td>
+                <td>{{mf($account->total)}}</td>
             </tr>
             @endforeach
         </table>
@@ -46,6 +48,11 @@
 
         @foreach($piggybanks as $piggybank)
         <h4>{{{$piggybank->name}}} <small>{{mf($piggybank->target)}}</small></h4>
+        @if(!is_null($piggybank->targetdate))
+        <p>
+            Target date: {{$piggybank->targetdate->format('jS F Y')}}
+        </p>
+        @endif
         <table class="table table-bordered">
             <tr>
                 <td style="width:15%;">
@@ -56,6 +63,12 @@
                 </td>
                 <td><input type="range" data-account="{{$piggybank->account_id}}" name="piggy_{{$piggybank->id}}" min="0" max="{{$piggybank->target}}" step="any" value="{{$piggybank->amount}}" /></td>
                 <td style="width: 10%;"><span id="piggy_{{$piggybank->id}}_pct">{{$piggybank->pct}}</span></td>
+                <td style="width:8%;">
+                    <div class="btn-group btn-group-xs">
+                        <a href="{{route('piggybanks.edit',$piggybank->id)}}" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="{{route('piggybanks.delete',$piggybank->id)}}" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span></a>
+                    </div>
+                </td>
             </tr>
         </table>
         @endforeach

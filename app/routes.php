@@ -30,6 +30,16 @@ Route::bind('category', function($value, $route)
     return null;
 });
 
+Route::bind('tj', function($value, $route)
+    {
+        if(Auth::check()) {
+            return TransactionJournal::
+                where('id', $value)->
+                where('user_id',Auth::user()->id)->first();
+        }
+        return null;
+    });
+
 Route::bind('limit', function($value, $route)
     {
         if(Auth::check()) {
@@ -78,6 +88,8 @@ Route::group(['before' => 'auth'], function () {
         // piggy bank controller
         Route::get('/piggybanks',['uses' => 'PiggybankController@index','as' => 'piggybanks.index']);
         Route::get('/piggybanks/create', ['uses' => 'PiggybankController@create','as' => 'piggybanks.create']);
+        Route::get('/piggybanks/edit/{piggybank}', ['uses' => 'PiggybankController@edit','as' => 'piggybanks.edit']);
+        Route::get('/piggybanks/delete/{piggybank}', ['uses' => 'PiggybankController@delete','as' => 'piggybanks.delete']);
         Route::post('/piggybanks/updateAmount/{piggybank}',['uses' => 'PiggybankController@updateAmount','as' => 'piggybanks.updateAmount']);
 
 
@@ -119,10 +131,11 @@ Route::group(['before' => 'auth'], function () {
 
         // transaction controller:
         Route::get('/transactions/create/{what}', ['uses' => 'TransactionController@create', 'as' => 'transactions.create'])->where(['what' => 'withdrawal|deposit|transfer']);
-        Route::get('/transaction/show/{id}',['uses' => 'TransactionController@show','as' => 'transactions.show']);
-        Route::get('/transaction/edit/{id}',['uses' => 'TransactionController@edit','as' => 'transactions.edit']);
-        Route::get('/transaction/delete/{id}',['uses' => 'TransactionController@delete','as' => 'transactions.delete']);
+        Route::get('/transaction/show/{tj}',['uses' => 'TransactionController@show','as' => 'transactions.show']);
+        Route::get('/transaction/edit/{tj}',['uses' => 'TransactionController@edit','as' => 'transactions.edit']);
+        Route::get('/transaction/delete/{tj}',['uses' => 'TransactionController@delete','as' => 'transactions.delete']);
         Route::get('/transactions/index',['uses' => 'TransactionController@index','as' => 'transactions.index']);
+
         // migration controller
         Route::get('/migrate', ['uses' => 'MigrationController@index', 'as' => 'migrate']);
 
@@ -149,7 +162,8 @@ Route::group(['before' => 'csrf|auth'], function () {
 
         // piggy bank controller
         Route::post('/piggybanks/store',['uses' => 'PiggybankController@store','as' => 'piggybanks.store']);
-
+        Route::post('/piggybanks/update', ['uses' => 'PiggybankController@update','as' => 'piggybanks.update']);
+        Route::post('/piggybanks/destroy/{piggybank}', ['uses' => 'PiggybankController@destroy','as' => 'piggybanks.destroy']);
 
 
 
@@ -169,7 +183,8 @@ Route::group(['before' => 'csrf|auth'], function () {
         // transaction controller:
         Route::post('/transactions/store/{what}', ['uses' => 'TransactionController@store', 'as' => 'transactions.store'])
             ->where(['what' => 'withdrawal|deposit|transfer']);
-        Route::post('/transaction/update/{id}',['uses' => 'TransactionController@update','as' => 'transactions.update']);
+        Route::post('/transaction/update/{tj}',['uses' => 'TransactionController@update','as' => 'transactions.update']);
+        Route::post('/transaction/destroy/{tj}',['uses' => 'TransactionController@destroy','as' => 'transactions.destroy']);
 
     }
 );

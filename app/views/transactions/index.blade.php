@@ -1,6 +1,8 @@
 @extends('layouts.default')
 @section('content')
-Bla bla TODO
+
+@include('paginated.transactions')
+
 
 @stop
 

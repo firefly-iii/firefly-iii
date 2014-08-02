@@ -15,26 +15,6 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
 {
 
     /**
-     * @param $journalId
-     *
-     * @return mixed
-     */
-    public function find($journalId)
-    {
-        return \Auth::user()->transactionjournals()->with(
-            ['transactions' => function ($q) {
-                    return $q->orderBy('amount', 'ASC');
-                }, 'transactioncurrency', 'transactiontype', 'components', 'transactions.account',
-             'transactions.account.accounttype']
-        )
-            ->where('id', $journalId)->first();
-    }
-    /*
-
-             *
-             */
-
-    /**
      *
      * We're building this thinking the money goes from A to B.
      * If the amount is negative however, the money still goes
@@ -66,20 +46,24 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
     public function createSimpleJournal(\Account $from, \Account $toAccount, $description, $amount, Carbon $date)
     {
         \Log::debug('Creating tranaction "' . $description . '".');
+        $journal = new \TransactionJournal;
 
         $amountFrom = $amount * -1;
         $amountTo = $amount;
 
         if (round(floatval($amount), 2) == 0.00) {
             \Log::error('Transaction will never save: amount = 0');
-            \Session::flash('error', 'The amount should not be empty or zero.');
-            throw new FireflyException('Could not figure out transaction type.');
+            $journal->errors()->add('amount', 'Amount must not be zero.');
+
+            return $journal;
         }
         // same account:
         if ($from->id == $toAccount->id) {
             \Log::error('Accounts cannot be equal');
-            \Session::flash('error', 'Select two different accounts.');
-            throw new FireflyException('Select two different accounts.');
+            $journal->errors()->add('account_id', 'Must be different accounts.');
+            $journal->errors()->add('account_from_id', 'Must be different accounts.');
+
+            return $journal;
         }
 
         // account types for both:
@@ -129,18 +113,15 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         }
 
         // new journal:
-        $journal = new \TransactionJournal();
+
         $journal->transactionType()->associate($journalType);
         $journal->transactionCurrency()->associate($currency);
         $journal->user()->associate(\Auth::user());
         $journal->completed = false;
         $journal->description = $description;
         $journal->date = $date;
-        if (!$journal->save()) {
-            \Log::error('Cannot create valid journal.');
-            \Log::error('Errors: ' . print_r($journal->errors()->all(), true));
-            \Session::flash('error', 'Could not create journal: ' . $journal->errors()->first());
-            throw new FireflyException('Cannot create valid journal.');
+        if (!$journal->validate()) {
+            return $journal;
         }
         $journal->save();
 
@@ -150,7 +131,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         $fromTransaction->transactionJournal()->associate($journal);
         $fromTransaction->description = null;
         $fromTransaction->amount = $amountFrom;
-        if (!$fromTransaction->save()) {
+        if (!$fromTransaction->validate()) {
             \Log::error('Cannot create valid transaction (from) for journal #' . $journal->id);
             \Log::error('Errors: ' . print_r($fromTransaction->errors()->all(), true));
             throw new FireflyException('Cannot create valid transaction (from).');
@@ -162,7 +143,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         $toTransaction->transactionJournal()->associate($journal);
         $toTransaction->description = null;
         $toTransaction->amount = $amountTo;
-        if (!$toTransaction->save()) {
+        if (!$toTransaction->validate()) {
             \Log::error('Cannot create valid transaction (to) for journal #' . $journal->id);
             \Log::error('Errors: ' . print_r($toTransaction->errors()->all(), true));
             throw new FireflyException('Cannot create valid transaction (to).');
@@ -174,6 +155,26 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
 
         return $journal;
     }
+    /*
+
+             *
+             */
+
+    /**
+     * @param $journalId
+     *
+     * @return mixed
+     */
+    public function find($journalId)
+    {
+        return \Auth::user()->transactionjournals()->with(
+            ['transactions' => function ($q) {
+                    return $q->orderBy('amount', 'ASC');
+                }, 'transactioncurrency', 'transactiontype', 'components', 'transactions.account',
+             'transactions.account.accounttype']
+        )
+            ->where('id', $journalId)->first();
+    }
 
     /**
      *
@@ -181,6 +182,35 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
     public function get()
     {
 
+    }
+
+    /**
+     * @param \Account $account
+     * @param Carbon   $date
+     *
+     * @return mixed
+     */
+    public function getByAccountAndDate(\Account $account, Carbon $date)
+    {
+        $accountID = $account->id;
+        $query = \Auth::user()->transactionjournals()->with(
+            [
+                'transactions',
+                'transactions.account',
+                'transactioncurrency',
+                'transactiontype'
+            ]
+        )
+            ->distinct()
+            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+            ->where('transactions.account_id', $accountID)
+            ->where('transaction_journals.date', $date->format('Y-m-d'))
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.id', 'DESC')
+            ->get(['transaction_journals.*']);
+
+        return $query;
     }
 
     /**
@@ -215,6 +245,17 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
     }
 
     /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return mixed
+     */
+    public function getByDateRange(Carbon $start, Carbon $end)
+    {
+        die('no impl');
+    }
+
+    /**
      * @param int $count
      *
      * @return mixed
@@ -234,50 +275,154 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         )
             ->orderBy('transaction_journals.date', 'DESC')
             ->orderBy('transaction_journals.id', 'DESC')
-            ->take($count)
             ->paginate($count);
 
         return $query;
     }
 
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return mixed
-     */
-    public function getByDateRange(Carbon $start, Carbon $end)
+    public function store($what, $data)
     {
-        die('no impl');
+        // $fromAccount and $toAccount are found
+        // depending on the $what
+
+        $fromAccount = null;
+        $toAccount = null;
+
+        /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accountRepository */
+        $accountRepository = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
+
+        /** @var \Firefly\Storage\Category\CategoryRepositoryInterface $catRepository */
+        $catRepository = \App::make('Firefly\Storage\Category\CategoryRepositoryInterface');
+
+        /** @var \Firefly\Storage\Budget\BudgetRepositoryInterface $budRepository */
+        $budRepository = \App::make('Firefly\Storage\Budget\BudgetRepositoryInterface');
+
+
+        switch ($what) {
+            case 'withdrawal':
+                $fromAccount = $accountRepository->find(intval($data['account_id']));
+                $toAccount = $accountRepository->createOrFindBeneficiary($data['beneficiary']);
+                break;
+            case 'deposit':
+                $fromAccount = $accountRepository->createOrFindBeneficiary($data['beneficiary']);
+                $toAccount = $accountRepository->find(intval($data['account_id']));
+                break;
+            case 'transfer':
+                $fromAccount = $accountRepository->find(intval($data['account_from_id']));
+                $toAccount = $accountRepository->find(intval($data['account_to_id']));
+                break;
+        }
+        // fall back to cash if necessary:
+        $fromAccount = is_null($fromAccount) ? $fromAccount = $accountRepository->getCashAccount() : $fromAccount;
+        $toAccount = is_null($toAccount) ? $toAccount = $accountRepository->getCashAccount() : $toAccount;
+
+        // create or find category:
+        $category = isset($data['category']) ? $catRepository->createOrFind($data['category']) : null;
+
+        // find budget:
+        $budget = isset($data['budget_id']) ? $budRepository->find(intval($data['budget_id'])) : null;
+//
+//        // find amount & description:
+        $description = trim($data['description']);
+        $amount = floatval($data['amount']);
+        $date = new \Carbon\Carbon($data['date']);
+
+        // try to create a journal:
+        $transactionJournal = $this->createSimpleJournal($fromAccount, $toAccount, $description, $amount, $date);
+        if (!$transactionJournal->id || $transactionJournal->completed == 0) {
+            return $transactionJournal;
+        }
+
+        // attach:
+        if (!is_null($budget)) {
+            $transactionJournal->budgets()->save($budget);
+        }
+        if (!is_null($category)) {
+            $transactionJournal->categories()->save($category);
+        }
+
+        return $transactionJournal;
     }
 
-    /**
-     * @param \Account $account
-     * @param Carbon   $date
-     *
-     * @return mixed
-     */
-    public function getByAccountAndDate(\Account $account, Carbon $date)
+    public function update(\TransactionJournal $journal, $data)
     {
-        $accountID = $account->id;
-        $query = \Auth::user()->transactionjournals()->with(
-            [
-                'transactions',
-                'transactions.account',
-                'transactioncurrency',
-                'transactiontype'
-            ]
-        )
-            ->distinct()
-            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-            ->where('transactions.account_id', $accountID)
-            ->where('transaction_journals.date', $date->format('Y-m-d'))
-            ->orderBy('transaction_journals.date', 'DESC')
-            ->orderBy('transaction_journals.id', 'DESC')
-            ->get(['transaction_journals.*']);
+        /** @var \Firefly\Storage\Category\CategoryRepositoryInterface $catRepository */
+        $catRepository = \App::make('Firefly\Storage\Category\CategoryRepositoryInterface');
 
-        return $query;
+        /** @var \Firefly\Storage\Budget\BudgetRepositoryInterface $budgetRepository */
+        $budRepository = \App::make('Firefly\Storage\Budget\BudgetRepositoryInterface');
+
+        /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accountRepository */
+        $accountRepository = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
+
+
+        // update basics first:
+        $journal->description = $data['description'];
+        $journal->date = $data['date'];
+        $amount = floatval($data['amount']);
+
+        // remove previous category, if any:
+        if (!is_null($journal->categories()->first())) {
+            $journal->categories()->detach($journal->categories()->first()->id);
+        }
+        // remove previous budget, if any:
+        if (!is_null($journal->budgets()->first())) {
+            $journal->budgets()->detach($journal->budgets()->first()->id);
+        }
+
+
+        $category = isset($data['category']) ? $catRepository->findByName($data['category']) : null;
+        if (!is_null($category)) {
+            $journal->categories()->attach($category);
+        }
+        // update the amounts:
+        /** @var \Transaction $transaction */
+        $transactions = $journal->transactions()->orderBy('amount', 'ASC')->get();
+        $transactions[0]->amount = $amount;
+        $transactions[1]->amount = $amount;
+
+        // switch on type to properly change things:
+        switch ($journal->transactiontype->type) {
+            case 'Withdrawal':
+                // means transaction[0] is the users account.
+                $account = $accountRepository->find($data['account_id']);
+                $beneficiary = $accountRepository->findByName($data['beneficiary']);
+                $transactions[0]->account()->associate($account);
+                $transactions[1]->account()->associate($beneficiary);
+
+                // do budget:
+                $budget = $budRepository->find($data['budget_id']);
+                $journal->budgets()->attach($budget);
+
+                break;
+            case 'Deposit':
+                // means transaction[0] is the beneficiary.
+                $account = $accountRepository->find($data['account_id']);
+                $beneficiary = $accountRepository->findByName($data['beneficiary']);
+                $journal->transactions[0]->account()->associate($beneficiary);
+                $journal->transactions[1]->account()->associate($account);
+                break;
+            case 'Transfer':
+                // means transaction[0] is account that sent the money (from).
+                $fromAccount = $accountRepository->find($data['account_from_id']);
+                $toAccount = $accountRepository->find($data['account_to_id']);
+                $journal->transactions[0]->account()->associate($fromAccount);
+                $journal->transactions[1]->account()->associate($toAccount);
+                break;
+            default:
+                throw new \Firefly\Exception\FireflyException('Cannot edit this!');
+                break;
+        }
+
+        $transactions[0]->save();
+        $transactions[1]->save();
+        if ($journal->validate()) {
+            $journal->save();
+        }
+
+        return $journal;
+
+
     }
 
 

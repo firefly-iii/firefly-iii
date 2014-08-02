@@ -27,19 +27,24 @@ class PiggybankController extends BaseController
         return View::make('piggybanks.create')->with('accounts', $accounts);
     }
 
-    public function delete()
+    public function delete(Piggybank $piggyBank)
     {
+        return View::make('piggybanks.delete')->with('piggybank', $piggyBank);
     }
 
-    public function destroy()
+    public function destroy(Piggybank $piggyBank)
     {
+        $piggyBank->delete();
+        Session::flash('success', 'Piggy bank deleted.');
+
+        return Redirect::route('piggybanks.index');
     }
 
-    public function edit()
+    public function edit(Piggybank $piggyBank)
     {
-    }
-    public function updateAmount(Piggybank $piggybank) {
-        $this->_repository->updateAmount($piggybank,Input::get('amount'));
+        $accounts = $this->_accounts->getActiveDefaultAsSelectList();
+
+        return View::make('piggybanks.edit')->with('piggybank', $piggyBank)->with('accounts', $accounts);
     }
 
     public function index()
@@ -55,8 +60,10 @@ class PiggybankController extends BaseController
             if (!isset($accounts[$id])) {
                 $account->balance = $account->balance();
                 $account->left = $account->balance - $piggyBank->amount;
+                $account->total = $piggyBank->target;
             } else {
                 $account->left -= $piggyBank->amount;
+                $account->total += $piggyBank->target;
 
             }
             $accounts[$id] = $account;
@@ -80,7 +87,12 @@ class PiggybankController extends BaseController
 
             return Redirect::route('piggybanks.create')->withInput();
         } else {
-            Session::flash('success', 'New piggy bank created!');
+            Session::flash('success', 'New piggy bank "' . $piggyBank->name . '" created!');
+
+
+            if (Input::get('create') == '1') {
+                return Redirect::route('piggybanks.create')->withInput();
+            }
 
             return Redirect::route('piggybanks.index');
         }
@@ -89,5 +101,15 @@ class PiggybankController extends BaseController
 
     public function update()
     {
+
+        $piggyBank = $this->_repository->update(Input::all());
+        Session::flash('success', 'Piggy bank "' . $piggyBank->name . '" updated.');
+
+        return Redirect::route('piggybanks.index');
+    }
+
+    public function updateAmount(Piggybank $piggybank)
+    {
+        $this->_repository->updateAmount($piggybank, Input::get('amount'));
     }
 }

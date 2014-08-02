@@ -1,6 +1,7 @@
 <?php
 
-class RecurringController extends BaseController {
+class RecurringController extends BaseController
+{
     public function create()
     {
     }
