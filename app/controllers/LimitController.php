@@ -33,9 +33,9 @@ class LimitController extends BaseController
     {
         $periods = \Config::get('firefly.periods_to_text');
         $prefilled = [
-            'startdate' => Input::get('startdate') ? : date('Y-m-d'),
+            'startdate'   => Input::get('startdate') ? : date('Y-m-d'),
             'repeat_freq' => Input::get('repeat_freq') ? : 'monthly',
-            'budget_id' => $budget ? $budget->id : null
+            'budget_id'   => $budget ? $budget->id : null
         ];
 
         $budgets = $this->_budgets->getAsSelectList();

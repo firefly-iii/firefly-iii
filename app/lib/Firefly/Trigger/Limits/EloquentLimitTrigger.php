@@ -46,14 +46,14 @@ class EloquentLimitTrigger
                 if ($limit->repeats == 0) {
                     $limit->createRepetition($limit->startdate);
                 }
-                if($limit->repeats == 1) {
+                if ($limit->repeats == 1) {
                     $start = $limit->startdate;
                     $end = new Carbon;
 
                     // repeat for period:
                     $current = clone $start;
-                    \Log::debug('Create repeating limit for #'.$limit->id.' starting on ' . $current);
-                    while($current <= $end) {
+                    \Log::debug('Create repeating limit for #' . $limit->id . ' starting on ' . $current);
+                    while ($current <= $end) {
                         \Log::debug('Current is now: ' . $current);
                         $limit->createRepetition(clone $current);
                         // switch period, add time:
@@ -128,10 +128,10 @@ class EloquentLimitTrigger
 //                        }
 //
 //                    }
-                }
-
             }
+
         }
+    }
 
 //
 //

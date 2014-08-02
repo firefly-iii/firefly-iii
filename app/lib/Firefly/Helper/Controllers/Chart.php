@@ -21,7 +21,9 @@ class Chart implements ChartInterface
         $return = ['name' => $account->name, 'id' => $account->id, 'data' => []];
 
         while ($current <= $end) {
-            \Log::debug('Now at day: '  . $current . '('.$current->timestamp.'), ('.($current->timestamp * 1000).') ');
+            \Log::debug(
+                'Now at day: ' . $current . '(' . $current->timestamp . '), (' . ($current->timestamp * 1000) . ') '
+            );
             if ($current > $today) {
                 $return['data'][] = [$current->timestamp * 1000, $account->predict(clone $current)];
             } else {
@@ -38,7 +40,7 @@ class Chart implements ChartInterface
     {
         $result = [
             'rows' => [],
-            'sum' => 0
+            'sum'  => 0
         ];
         if ($account) {
             // get journals in range:
@@ -219,7 +221,6 @@ class Chart implements ChartInterface
             }
 
 
-
             // now format the current range:
             $title = '';
             switch ($range) {
@@ -240,7 +241,7 @@ class Chart implements ChartInterface
                     $title = $beginning->format('M Y') . ' - ' . $currentEnd->format('M Y');
                     break;
                 case 'custom':
-                    $title = $beginning->format('d-m-Y').' - '.$currentEnd->format('d-m-Y');
+                    $title = $beginning->format('d-m-Y') . ' - ' . $currentEnd->format('d-m-Y');
                     break;
                 case 'yearly':
 //                    return $this->startdate->format('Y');
@@ -257,7 +258,10 @@ class Chart implements ChartInterface
                 )
                 ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
                 ->where('transaction_types.type', 'Withdrawal')
-                ->leftJoin('component_transaction_journal', 'component_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                ->leftJoin(
+                    'component_transaction_journal', 'component_transaction_journal.transaction_journal_id', '=',
+                    'transaction_journals.id'
+                )
                 ->leftJoin('components', 'components.id', '=', 'component_transaction_journal.component_id')
                 ->where('components.id', '=', $category->id)
                 //->leftJoin()
@@ -306,6 +310,7 @@ class Chart implements ChartInterface
 
             }
         }
+
         return $data;
 
 

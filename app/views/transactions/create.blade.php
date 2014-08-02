@@ -82,6 +82,9 @@
             <label for="account_from_id" class="col-sm-4 control-label">Account from</label>
             <div class="col-sm-8">
                 {{Form::select('account_from_id',$accounts,Input::old('account_from_id'),['class' => 'form-control'])}}
+                @if($errors->has('account_from_id'))
+                <p class="text-danger">{{$errors->first('account_from_id')}}</p>
+                @endif
             </div>
         </div>
 
@@ -89,6 +92,9 @@
             <label for="account_to_id" class="col-sm-4 control-label">Account to</label>
             <div class="col-sm-8">
                 {{Form::select('account_to_id',$accounts,Input::old('account_to_id'),['class' => 'form-control'])}}
+                @if($errors->has('account_to_id'))
+                <p class="text-danger">{{$errors->first('account_to_id')}}</p>
+                @endif
             </div>
         </div>
         @endif
@@ -108,6 +114,9 @@
             </label>
             <div class="col-sm-8">
                 <input type="number" name="amount" min="0.01" value="{{Input::old('amount')}}" step="any" class="form-control" />
+                @if($errors->has('amount'))
+                    <p class="text-danger">{{$errors->first('amount')}}</p>
+                @endif
             </div>
         </div>
 

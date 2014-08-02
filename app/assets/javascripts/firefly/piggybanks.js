@@ -15,24 +15,21 @@ function inputRange(e) {
     var target = $(e.target);
     var piggyBankId = target.attr('name').substring(6);
     var accountId = target.data('account');
-    var value = parseFloat(target.val());
+    var amount = parseFloat(target.val());
 
-    var leftInAccount = leftInAccounts(accountId);
 
-    if(leftInAccount <= 0) {
-        value = parseFloat($('#piggy_'+piggyBankId+'_amount').val());
-        target.val(parseFloat(value));
-    }
-    var valueId = 'piggy_' + piggyBankId + '_amount';
-    $('#' + valueId).val(value.toFixed(2));
+
 //
-//    // new percentage for amount in piggy bank, formatted.
+    // new percentage for amount in piggy bank, formatted.
     var pctId = 'piggy_' + piggyBankId + '_pct';
-    percentage = Math.round((value / parseFloat(target.attr('max'))) * 100) + '%'; //Math.round((value / parseFloat(target.attr('total'))) * 100) + '%';
+    percentage = Math.round((amount / parseFloat(target.attr('max'))) * 100) + '%'; //Math.round((value / parseFloat(target.attr('total'))) * 100) + '%';
     $('#' + pctId).text(percentage);
 
-    // update the bar accordingly.
+    // new value for number input:
+    var valueId = 'piggy_' + piggyBankId + '_amount';
+    $('#' + valueId).val(amount.toFixed(2));
 
+    leftInAccounts(accountId);
 
     return true;
 }
@@ -42,27 +39,27 @@ function inputNumber(e) {
     var amount = parseFloat(target.val());
     var piggyBankId = target.data('piggy');
     var accountId = target.data('account');
-    var leftInAccount = leftInAccounts(accountId);
 
-    if(leftInAccount <= 0) {
-        amount = parseFloat($('#piggy_'+piggyBankId+'_amount').val());
-    } else {
-        // do something!
-    }
+
+    // update amount in range input:
     target.val(amount);
-    console.log('SERVER');
     $('input[name="piggy_'+piggyBankId+'"]').val(amount);
+    console.log('SERVER: ' + amount);
     $.post('piggybanks/updateAmount/' + piggyBankId, {amount: amount});
+
+    leftInAccounts(accountId);
 }
 
 
 function updateAmount(e) {
+
+    // update amount on server:
     var target = $(e.target);
     var piggyBankId = target.attr('name').substring(6);
     var accountId = target.data('account');
-    var value = target.val();
-    console.log('SERVER');
-    $.post('piggybanks/updateAmount/' + piggyBankId, {amount: value});
+    var amount = target.val();
+    console.log('SERVER: ' + amount);
+    $.post('piggybanks/updateAmount/' + piggyBankId, {amount: amount});
 
 
 }
@@ -80,7 +77,11 @@ function leftInAccounts(accountId) {
         }
     });
     var left = total - inPiggies;
-    console.log('LEFT: ' + left);
+
+    // set amount left:
+    leftFormatted = '€ ' + left.toFixed(2);
+    $('#account_'+accountId+'_left').text(leftFormatted);
+
     // return amount left:
     return left;
 

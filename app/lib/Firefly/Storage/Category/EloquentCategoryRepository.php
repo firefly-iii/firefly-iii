@@ -66,6 +66,7 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
 
         $category->user()->associate(\Auth::user());
         $category->save();
+
         return $category;
     }
 

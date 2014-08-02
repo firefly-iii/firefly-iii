@@ -1,7 +1,7 @@
 <?php
 
-use Firefly\Storage\Category\CategoryRepositoryInterface as CRI;
 use Firefly\Helper\Controllers\CategoryInterface as CI;
+use Firefly\Storage\Category\CategoryRepositoryInterface as CRI;
 
 /**
  * Class CategoryController
@@ -35,6 +35,7 @@ class CategoryController extends BaseController
         } else {
             Session::flash('error', 'Could not delete the category. Check the logs to be sure.');
         }
+
         return Redirect::route('categories.index');
     }
 
@@ -46,6 +47,7 @@ class CategoryController extends BaseController
     public function index()
     {
         $categories = $this->_repository->get();
+
         return View::make('categories.index')->with('categories', $categories);
     }
 
@@ -57,7 +59,7 @@ class CategoryController extends BaseController
 
         $journals = $this->_category->journalsInRange($category, $start, $end);
 
-        return View::make('categories.show')->with('category', $category)->with('journals',$journals);
+        return View::make('categories.show')->with('category', $category)->with('journals', $journals);
     }
 
     public function store()
@@ -69,9 +71,11 @@ class CategoryController extends BaseController
             if (Input::get('create') == '1') {
                 return Redirect::route('categories.create');
             }
+
             return Redirect::route('categories.index');
         } else {
             Session::flash('error', 'Could not save the new category!');
+
             return Redirect::route('categories.create')->withInput();
         }
     }

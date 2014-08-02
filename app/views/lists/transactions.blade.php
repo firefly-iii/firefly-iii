@@ -28,10 +28,10 @@
         <td>
             @foreach($journal->components as $component)
             @if($component->class == 'Budget')
-            <a href="#budget-overview"><span class="glyphicon glyphicon-tasks" title="Budget: {{{$component->name}}}"></span></a>
+            <a href="#budget-overview-in-month"><span class="glyphicon glyphicon-tasks" title="Budget: {{{$component->name}}}"></span></a>
             @endif
             @if($component->class == 'Category')
-            <a href="#category-overview"><span class="glyphicon glyphicon-tag" title="Category: {{{$component->name}}}"></span></a>
+            <a href="#category-overview-in-month"><span class="glyphicon glyphicon-tag" title="Category: {{{$component->name}}}"></span></a>
             @endif
             @endforeach
         </td>

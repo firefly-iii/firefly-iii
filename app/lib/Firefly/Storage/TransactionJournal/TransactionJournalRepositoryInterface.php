@@ -27,6 +27,10 @@ interface TransactionJournalRepositoryInterface
      */
     public function get();
 
+    public function store($what, $data);
+
+    public function update(\TransactionJournal $journal, $data);
+
     /**
      * @param $journalId
      *

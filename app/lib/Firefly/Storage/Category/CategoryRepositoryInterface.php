@@ -14,6 +14,7 @@ interface CategoryRepositoryInterface
      * @return mixed
      */
     public function get();
+
     public function find($categoryId);
 
     /**
