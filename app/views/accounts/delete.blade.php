@@ -11,13 +11,11 @@
     </div>
 </div>
 
-{{Form::open(['class' => 'form-horizontal','url' => route('accounts.destroy')])}}
-{{Form::hidden('id',$account->id)}}
+{{Form::open(['class' => 'form-horizontal','url' => route('accounts.destroy',$account->id)])}}
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         @if($account->transactions()->count() > 0)
         <p class="text-info">
-
             Account "{{{$account->name}}}" still has {{$account->transactions()->count()}} transaction(s) associated to it.
             These will be deleted as well.
         </p>

@@ -64,16 +64,17 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         return $this->createOrFind($name, $type);
     }
 
-    public function destroy($accountId)
+    public function destroy(\Account $account)
     {
-        $account = $this->find($accountId);
-        if ($account) {
-            $account->delete();
+        $account->delete();
 
-            return true;
-        }
+        /**
+         *
+         * TODO
+         * Also delete: initial balance, initial balance account, and transactions
+         */
 
-        return false;
+        return true;
     }
 
     /**
@@ -227,24 +228,31 @@ class EloquentAccountRepository implements AccountRepositoryInterface
      *
      * @return \Account|void
      */
-    public function update($data)
+    public function update(\Account $account, $data)
     {
-        $account = $this->find($data['id']);
-        if ($account) {
-            // update account accordingly:
-            $account->name = $data['name'];
-            if ($account->validate()) {
-                $account->save();
-            }
-            // update initial balance if necessary:
+        // update account accordingly:
+        $account->name = $data['name'];
+        if ($account->validate()) {
+            $account->save();
+        }
+        // update initial balance if necessary:
+        if (floatval($data['openingbalance']) != 0) {
+
+            /** @var \Firefly\Helper\Controllers\AccountInterface $interface */
+            $interface = \App::make('Firefly\Helper\Controllers\AccountInterface');
+
             if ($account->accounttype->description == 'Default account') {
-                $journal = $this->findOpeningBalanceTransaction($account);
-                $journal->date = new Carbon($data['openingbalancedate']);
-                $journal->transactions[0]->amount = floatval($data['openingbalance']) * -1;
-                $journal->transactions[1]->amount = floatval($data['openingbalance']);
-                $journal->transactions[0]->save();
-                $journal->transactions[1]->save();
-                $journal->save();
+
+
+                $journal = $interface->openingBalanceTransaction($account);
+                if ($journal) {
+                    $journal->date = new Carbon($data['openingbalancedate']);
+                    $journal->transactions[0]->amount = floatval($data['openingbalance']) * -1;
+                    $journal->transactions[1]->amount = floatval($data['openingbalance']);
+                    $journal->transactions[0]->save();
+                    $journal->transactions[1]->save();
+                    $journal->save();
+                }
             }
         }
 

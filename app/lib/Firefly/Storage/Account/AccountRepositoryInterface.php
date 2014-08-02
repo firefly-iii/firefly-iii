@@ -32,11 +32,11 @@ interface AccountRepositoryInterface
     public function createOrFindBeneficiary($name);
 
     /**
-     * @param $accountId
+     * @param \Account $account
      *
-     * @return bool
+     * @return mixed
      */
-    public function destroy($accountId);
+    public function destroy(\Account $account);
 
     /**
      * @param $accountId
@@ -97,10 +97,11 @@ interface AccountRepositoryInterface
     public function store($data);
 
     /**
-     * @param $data
+     * @param \Account $account
+     * @param          $data
      *
-     * @return \Account
+     * @return mixed
      */
-    public function update($data);
+    public function update(\Account $account, $data);
 
 } 

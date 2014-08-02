@@ -12,8 +12,7 @@
     </div>
 </div>
 
-{{Form::model($account, ['class' => 'form-horizontal','url' => route('accounts.update')])}}
-{{Form::hidden('id',$account->id)}}
+{{Form::model($account, ['class' => 'form-horizontal','url' => route('accounts.update',$account->id)])}}
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-12">
         <h4>Mandatory fields</h4>

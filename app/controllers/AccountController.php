@@ -24,9 +24,7 @@ class AccountController extends \BaseController
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
+     * @return \Illuminate\View\View
      */
     public function create()
     {
@@ -44,19 +42,20 @@ class AccountController extends \BaseController
     }
 
     /**
+     * @param Account $account
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy()
+    public function destroy(Account $account)
     {
-        $result = $this->_repository->destroy(Input::get('id'));
+        $result = $this->_repository->destroy($account);
         if ($result === true) {
             Session::flash('success', 'The account was deleted.');
         } else {
-            Session::flash('error', 'Could not delete the account. Check the logs to be sure.');
+            Session::flash('error', 'Could not delete the account.');
         }
 
         return Redirect::route('accounts.index');
-
 
     }
 
@@ -73,9 +72,7 @@ class AccountController extends \BaseController
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return Response
+     * @return \Illuminate\View\View
      */
     public function index()
     {
@@ -98,7 +95,7 @@ class AccountController extends \BaseController
     }
 
     /**
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store()
     {
@@ -109,7 +106,7 @@ class AccountController extends \BaseController
             // did not save, return with error:
             Session::flash('error', 'Could not save the new account. Please check the form.');
 
-            return View::make('accounts.create')->withErrors($account->errors());
+            return Redirect::route('accounts.create')->withErrors($account->errors())->withInput();
         } else {
             // saved! return to wherever.
             Session::flash('success', 'Account "' . $account->name . '" created!');
@@ -122,16 +119,22 @@ class AccountController extends \BaseController
     }
 
     /**
-     * Update the specified resource in storage.
+     * @param Account $account
      *
-     * @return Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update()
+    public function update(Account $account)
     {
-        $account = $this->_repository->update(Input::all());
-        Session::flash('success', 'Account "' . $account->name . '" updated.');
+        $account = $this->_repository->update($account, Input::all());
+        if ($account->validate()) {
+            Session::flash('success', 'Account "' . $account->name . '" updated.');
 
-        return Redirect::route('accounts.index');
+            return Redirect::route('accounts.index');
+        } else {
+            Session::flash('error', 'Could not update account: ' . $account->errors()->first());
+
+            return Redirect::route('accounts.edit', $account->id)->withInput()->withErrors($account->errors());
+        }
     }
 
 

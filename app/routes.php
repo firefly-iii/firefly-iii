@@ -67,6 +67,14 @@ Route::bind('piggybank', function($value, $route)
 // protected routes:
 Route::group(['before' => 'auth'], function () {
 
+        // account controller:
+        Route::get('/accounts', ['uses' => 'AccountController@index', 'as' => 'accounts.index']);
+        Route::get('/accounts/create', ['uses' => 'AccountController@create', 'as' => 'accounts.create']);
+        Route::get('/accounts/{account}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
+        Route::get('/accounts/{account}/edit', ['uses' => 'AccountController@edit', 'as' => 'accounts.edit']);
+        Route::get('/accounts/{account}/delete', ['uses' => 'AccountController@delete', 'as' => 'accounts.delete']);
+
+
         // home controller
         Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
         Route::get('/flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
@@ -103,12 +111,7 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/profile', ['uses' => 'ProfileController@index', 'as' => 'profile']);
         Route::get('/profile/change-password',['uses' => 'ProfileController@changePassword', 'as' => 'change-password']);
 
-        // account controller:
-        Route::get('/accounts', ['uses' => 'AccountController@index', 'as' => 'accounts.index']);
-        Route::get('/accounts/create', ['uses' => 'AccountController@create', 'as' => 'accounts.create']);
-        Route::get('/accounts/{account}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
-        Route::get('/accounts/{account}/edit', ['uses' => 'AccountController@edit', 'as' => 'accounts.edit']);
-        Route::get('/accounts/{account}/delete', ['uses' => 'AccountController@delete', 'as' => 'accounts.delete']);
+
 
         // budget controller:
         Route::get('/budgets',['uses' => 'BudgetController@indexByDate','as' => 'budgets.index']);
@@ -144,6 +147,12 @@ Route::group(['before' => 'auth'], function () {
 
 // protected + csrf routes (POST)
 Route::group(['before' => 'csrf|auth'], function () {
+        // account controller:
+        Route::post('/accounts/store', ['uses' => 'AccountController@store', 'as' => 'accounts.store']);
+        Route::post('/accounts/update/{account}', ['uses' => 'AccountController@update', 'as' => 'accounts.update']);
+        Route::post('/accounts/destroy/{account}', ['uses' => 'AccountController@destroy', 'as' => 'accounts.destroy']);
+
+
         // profile controller
         Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword']);
 
@@ -170,10 +179,6 @@ Route::group(['before' => 'csrf|auth'], function () {
         // preferences controller
         Route::post('/preferences', ['uses' => 'PreferencesController@postIndex']);
 
-        // account controller:
-        Route::post('/accounts/store', ['uses' => 'AccountController@store', 'as' => 'accounts.store']);
-        Route::post('/accounts/update', ['uses' => 'AccountController@update', 'as' => 'accounts.update']);
-        Route::post('/accounts/destroy', ['uses' => 'AccountController@destroy', 'as' => 'accounts.destroy']);
 
         // limit controller:
         Route::post('/budgets/limits/store/{budget?}', ['uses' => 'LimitController@store', 'as' => 'budgets.limits.store']);
