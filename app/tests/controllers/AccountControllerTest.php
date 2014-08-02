@@ -1,14 +1,19 @@
 <?php
 
-use Mockery as m;
-use \League\FactoryMuffin\Facade\FactoryMuffin as f;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Mockery as m;
+use Zizaco\FactoryMuff\Facade\FactoryMuff as f;
 
+/**
+ * Class AccountControllerTest
+ */
 class AccountControllerTest extends TestCase
 {
     protected $_repository;
     protected $_user;
     protected $_accounts;
+
     public function setUp()
     {
         parent::setUp();
@@ -16,8 +21,8 @@ class AccountControllerTest extends TestCase
         Artisan::call('db:seed');
         $this->_repository = $this->mock('Firefly\Storage\Account\AccountRepositoryInterface');
         $this->_accounts = $this->mock('Firefly\Helper\Controllers\AccountInterface');
-        $this->_user = m::mock('User','Eloquent');
-        $this->app->instance('User', $this->_user);
+        $this->_user = m::mock('User', 'Eloquent');
+//        $this->app->instance('User', $this->_user);
 
     }
 
@@ -37,21 +42,28 @@ class AccountControllerTest extends TestCase
     {
 
         $account = f::create('Account');
+
+        // for successful binding:
         Auth::shouldReceive('user')->andReturn($this->_user);
         Auth::shouldReceive('check')->andReturn(true);
         $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($account->user_id);
-        $this->_user->shouldReceive('getAttribute')->with('email')->once()->andReturn($account->email);
+        $this->_user->shouldReceive('getAttribute')->with('email')->once()->andReturn('some@email');
 
-        $this->action('GET', 'AccountController@delete',$account->id);
+        $this->action('GET', 'AccountController@delete', $account->id);
         $this->assertResponseOk();
     }
 
     public function testDestroy()
     {
         $account = f::create('Account');
+
+        // for successful binding:
         Auth::shouldReceive('user')->andReturn($this->_user);
-        $this->_repository->shouldReceive('destroy')->once()->with("")->andReturn(true);
-        $this->action('POST', 'AccountController@destroy',$account->id);
+        Auth::shouldReceive('check')->andReturn(true);
+        $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($account->user_id);
+        $this->_repository->shouldReceive('destroy')->once()->andReturn(true);
+
+        $this->action('POST', 'AccountController@destroy', $account->id);
         $this->assertRedirectedToRoute('accounts.index');
         $this->assertSessionHas('success');
     }
@@ -59,8 +71,14 @@ class AccountControllerTest extends TestCase
     public function testDestroyFails()
     {
         $account = f::create('Account');
-        $this->_repository->shouldReceive('destroy')->once()->with("")->andReturn(false);
-        $this->action('POST', 'AccountController@destroy',$account->id);
+
+        // for successful binding:
+        Auth::shouldReceive('user')->andReturn($this->_user);
+        Auth::shouldReceive('check')->andReturn(true);
+        $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($account->user_id);
+        $this->_repository->shouldReceive('destroy')->once()->andReturn(false);
+
+        $this->action('POST', 'AccountController@destroy', $account->id);
         $this->assertRedirectedToRoute('accounts.index');
         $this->assertSessionHas('error');
     }
@@ -69,13 +87,20 @@ class AccountControllerTest extends TestCase
     {
         $account = f::create('Account');
 
+        // for successful binding.
         Auth::shouldReceive('user')->andReturn($this->_user);
         Auth::shouldReceive('check')->andReturn(true);
         $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($account->user_id);
-        $this->_user->shouldReceive('getAttribute')->with('email')->once()->andReturn($account->email);
+        $this->_user->shouldReceive('getAttribute')->with('email')->once()->andReturn('some@email');
+
+
+//        Auth::shouldReceive('user')->andReturn($this->_user);
+//        Auth::shouldReceive('check')->andReturn(true);
+//        $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($account->user_id);
+//        $this->_user->shouldReceive('getAttribute')->with('email')->once()->andReturn($account->email);
         $this->_accounts->shouldReceive('openingBalanceTransaction')->once()->andReturn(null);
 
-        $this->action('GET', 'AccountController@edit',$account->id);
+        $this->action('GET', 'AccountController@edit', $account->id);
         $this->assertResponseOk();
     }
 
@@ -102,20 +127,97 @@ class AccountControllerTest extends TestCase
     {
         $account = f::create('Account');
 
+        // for successful binding.
         Auth::shouldReceive('user')->andReturn($this->_user);
         Auth::shouldReceive('check')->andReturn(true);
         $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($account->user_id);
         $this->_user->shouldReceive('getAttribute')->with('email')->once()->andReturn($account->email);
-        $this->_accounts->shouldReceive('paginate')->with($account,40)->once()->andReturn();
+        $this->session(['start' => new Carbon, 'end' => new Carbon]);
 
-        $this->action('GET', 'AccountController@show',$account->id);
+        // some more mockery
+        $paginator = \Paginator::make([], 0, 10);
+
+        $data = [
+            'statistics' => [
+                'period'     => [
+                    'in'     => 0,
+                    'out'    => 0,
+                    'diff'   => 0,
+                    't_in'   => 0,
+                    't_out'  => 0,
+                    't_diff' => 0
+                ],
+                'categories' => [],
+                'budgets'    => [],
+                'accounts'   => []
+            ],
+            'journals'   => $paginator,
+        ];
+
+        $this->_accounts->shouldReceive('show')->once()->andReturn($data);
+
+        //$this->_user->shouldReceive('getAttribute')->with('email')->once()->andReturn('some@email');
+
+//        Auth::shouldReceive('user')->andReturn($this->_user);
+//        Auth::shouldReceive('check')->andReturn(true);
+//        $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($account->user_id);
+//        $this->_user->shouldReceive('getAttribute')->with('email')->once()->andReturn($account->email);
+//        $this->_accounts->shouldReceive('paginate')->with($account,40)->once()->andReturn();
+
+        $this->action('GET', 'AccountController@show', $account->id);
         $this->assertResponseOk();
     }
 
     public function testStore()
     {
-//        $this->action('POST', 'AccountController@store');
-//        $this->assertResponseOk();
+        $account = f::create('Account');
+        $this->_repository->shouldReceive('store')->andReturn($account);
+        $this->action('POST', 'AccountController@store');
+        $this->assertRedirectedToRoute('accounts.index');
+    }
+    public function testStoreRecreate()
+    {
+        $account = f::create('Account');
+        $this->_repository->shouldReceive('store')->andReturn($account);
+        $this->action('POST', 'AccountController@store',['create' => '1']);
+        $this->assertRedirectedToRoute('accounts.create');
+    }
+
+    public function testStoreFails()
+    {
+        $account = f::create('Account');
+        unset($account->id);
+        $this->_repository->shouldReceive('store')->andReturn($account);
+        $this->action('POST', 'AccountController@store');
+        $this->assertRedirectedToRoute('accounts.create');
+    }
+
+    public function testUpdate()
+    {
+        $account = f::create('Account');
+        // for successful binding.
+        Auth::shouldReceive('user')->andReturn($this->_user);
+        Auth::shouldReceive('check')->andReturn(true);
+        $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($account->user_id);
+        $this->_repository->shouldReceive('update')->andReturn($account);
+
+        $this->action('POST', 'AccountController@update',$account->id);
+        $this->assertRedirectedToRoute('accounts.index');
+
+    }
+    public function testUpdateFails()
+    {
+        $account = f::create('Account');
+        unset($account->name);
+        // for successful binding.
+        Auth::shouldReceive('user')->andReturn($this->_user);
+        Auth::shouldReceive('check')->andReturn(true);
+        $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($account->user_id);
+        $this->_repository->shouldReceive('update')->andReturn($account);
+
+        $this->action('POST', 'AccountController@update',$account->id);
+        $this->assertRedirectedToRoute('accounts.edit',$account->id);
+
     }
 
 
@@ -204,7 +306,5 @@ class AccountControllerTest extends TestCase
 ////    }
 ////
 
-    public function testUpdate()
-    {
-    }
+
 }
