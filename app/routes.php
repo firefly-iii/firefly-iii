@@ -82,6 +82,13 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/budgets/edit/{budget}',['uses' => 'BudgetController@edit', 'as' => 'budgets.edit']);
         Route::get('/budgets/delete/{budget}',['uses' => 'BudgetController@delete', 'as' => 'budgets.delete']);
 
+        // category controller:
+        Route::get('/categories',['uses' => 'CategoryController@index','as' => 'categories.index']);
+        Route::get('/categories/create',['uses' => 'CategoryController@create','as' => 'categories.create']);
+        Route::get('/categories/show/{category}',['uses' => 'CategoryController@show','as' => 'categories.show']);
+        Route::get('/categories/edit/{category}',['uses' => 'CategoryController@edit','as' => 'categories.edit']);
+        Route::get('/categories/delete/{category}',['uses' => 'CategoryController@delete','as' => 'categories.delete']);
+
         // home controller
         Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
         Route::get('/flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
@@ -94,11 +101,7 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/chart/categories/show/{category}', ['uses' => 'ChartController@categoryShowChart','as' => 'chart.showcategory']);
 
         // Categories controller:
-        Route::get('/categories',['uses' => 'CategoryController@index','as' => 'categories.index']);
-        Route::get('/categories/create',['uses' => 'CategoryController@create','as' => 'categories.create']);
-        Route::get('/categories/show/{category}',['uses' => 'CategoryController@show','as' => 'categories.show']);
-        Route::get('/categories/edit/{category}',['uses' => 'CategoryController@edit','as' => 'categories.edit']);
-        Route::get('/categories/delete/{category}',['uses' => 'CategoryController@delete','as' => 'categories.delete']);
+
 
         // piggy bank controller
         Route::get('/piggybanks',['uses' => 'PiggybankController@index','as' => 'piggybanks.index']);
@@ -157,16 +160,17 @@ Route::group(['before' => 'csrf|auth'], function () {
         Route::post('/budgets/update/{budget}', ['uses' => 'BudgetController@update', 'as' => 'budgets.update']);
         Route::post('/budgets/destroy/{budget}', ['uses' => 'BudgetController@destroy', 'as' => 'budgets.destroy']);
 
+        // category controller
+        Route::post('/categories/store',['uses' => 'CategoryController@store', 'as' => 'categories.store']);
+        Route::post('/categories/update/{category}', ['uses' => 'CategoryController@update', 'as' => 'categories.update']);
+        Route::post('/categories/destroy/{category}', ['uses' => 'CategoryController@destroy', 'as' => 'categories.destroy']);
 
         // profile controller
         Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword']);
 
 
 
-        // category controller
-        Route::post('/categories/store',['uses' => 'CategoryController@store', 'as' => 'categories.store']);
-        Route::post('/categories/update', ['uses' => 'CategoryController@update', 'as' => 'categories.update']);
-        Route::post('/categories/destroy', ['uses' => 'CategoryController@destroy', 'as' => 'categories.destroy']);
+
 
         // migration controller
         Route::post('/migrate', ['uses' => 'MigrationController@postIndex']);

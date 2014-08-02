@@ -11,8 +11,7 @@
     </div>
 </div>
 
-{{Form::open(['class' => 'form-horizontal','url' => route('categories.destroy')])}}
-{{Form::hidden('id',$category->id)}}
+{{Form::open(['class' => 'form-horizontal','url' => route('categories.destroy',$category->id)])}}
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         @if($category->transactionjournals()->count() > 0)

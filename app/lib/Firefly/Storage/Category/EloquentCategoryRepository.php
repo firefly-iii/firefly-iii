@@ -10,19 +10,6 @@ namespace Firefly\Storage\Category;
 class EloquentCategoryRepository implements CategoryRepositoryInterface
 {
     /**
-     * @return mixed
-     */
-    public function get()
-    {
-        return \Auth::user()->categories()->orderBy('name', 'ASC')->get();
-    }
-
-    public function find($categoryId)
-    {
-        return \Auth::user()->categories()->find($categoryId);
-    }
-
-    /**
      * @param $name
      *
      * @return \Category|mixed
@@ -37,6 +24,18 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
         return $category;
 
 
+    }
+
+    public function destroy($category)
+    {
+        $category->delete();
+
+        return true;
+    }
+
+    public function find($categoryId)
+    {
+        return \Auth::user()->categories()->find($categoryId);
     }
 
     /**
@@ -55,6 +54,14 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
+     * @return mixed
+     */
+    public function get()
+    {
+        return \Auth::user()->categories()->orderBy('name', 'ASC')->get();
+    }
+
+    /**
      * @param $name
      *
      * @return \Category|mixed
@@ -70,29 +77,14 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
         return $category;
     }
 
-    public function update($data)
+    public function update($category, $data)
     {
-        $category = $this->find($data['id']);
-        if ($category) {
-            // update account accordingly:
-            $category->name = $data['name'];
-            if ($category->validate()) {
-                $category->save();
-            }
+        // update account accordingly:
+        $category->name = $data['name'];
+        if ($category->validate()) {
+            $category->save();
         }
 
         return $category;
-    }
-
-    public function destroy($categoryId)
-    {
-        $category = $this->find($categoryId);
-        if ($category) {
-            $category->delete();
-
-            return true;
-        }
-
-        return false;
     }
 } 
