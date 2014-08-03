@@ -66,8 +66,15 @@ class Chart implements ChartInterface
                 foreach ($journal->transactions as $transaction) {
                     $name = $transaction->account->name;
                     if ($transaction->account->id != $account->id) {
-                        $result['rows'][$name] = isset($result[$name]) ? $result[$name] + floatval($transaction->amount)
-                            : floatval($transaction->amount);
+                        if (!isset($result['rows'][$name])) {
+                            $result['rows'][$name] = [
+                                'name'   => $name,
+                                'id'     => $transaction->account->id,
+                                'amount' => floatval($transaction->amount)
+                            ];
+                        } else {
+                            $result['rows'][$name]['amount'] += floatval($transaction->amount);
+                        }
                         $result['sum'] += floatval($transaction->amount);
                     }
                 }
@@ -89,7 +96,7 @@ class Chart implements ChartInterface
         $data = [];
 
         $budgets = \Auth::user()->budgets()->with(
-            ['limits' => function ($q) {
+            ['limits'                        => function ($q) {
                     $q->orderBy('limits.startdate', 'ASC');
                 }, 'limits.limitrepetitions' => function ($q) use ($start) {
                     $q->orderBy('limit_repetitions.startdate', 'ASC');
@@ -101,7 +108,11 @@ class Chart implements ChartInterface
             $budget->count = 0;
             foreach ($budget->limits as $limit) {
                 /** @var $rep \LimitRepetition */
-                foreach ($limit->limitrepetitions as $rep) {
+                foreach ($limit->limitrepetitions as $index => $rep) {
+                    if ($index == 0) {
+                        $limitInPeriod = 'Envelope for ' . $rep->periodShow();
+                        $spentInPeriod = 'Spent in ' . $rep->periodShow();
+                    }
                     $rep->left = $rep->left();
                     // overspent:
                     if ($rep->left < 0) {
@@ -122,8 +133,6 @@ class Chart implements ChartInterface
             }
         }
 
-        $limitInPeriod = 'Envelope for XXX';
-        $spentInPeriod = 'Spent in XXX';
 
         $data['series'] = [
             [
@@ -147,8 +156,8 @@ class Chart implements ChartInterface
                     $amount = floatval($rep->amount);
                     $spent = $rep->spent;
                     $color = $spent > $amount ? '#FF0000' : null;
-                    $data['series'][0]['data'][] = $amount;
-                    $data['series'][1]['data'][] = ['y' => $rep->spent, 'color' => $color];
+                    $data['series'][0]['data'][] = ['y' => $amount, 'id' => 'def'];
+                    $data['series'][1]['data'][] = ['y' => $rep->spent, 'color' => $color, 'id' => 'abc'];
                 }
             }
 
@@ -156,6 +165,53 @@ class Chart implements ChartInterface
         }
 
         return $data;
+    }
+
+    public function categories(Carbon $start, Carbon $end)
+    {
+
+        $result = [];
+        // grab all transaction journals in this period:
+        $journals = \TransactionJournal::
+            with(
+                ['components', 'transactions' => function ($q) {
+                        $q->where('amount', '>', 0);
+                    }]
+            )
+            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+            ->where('transaction_types.type', 'Withdrawal')
+            ->after($start)->before($end)
+            ->where('completed', 1)
+            ->get(['transaction_journals.*']);
+        foreach ($journals as $journal) {
+            // has to be one:
+
+            if (!isset($journal->transactions[0])) {
+                throw new FireflyException('Journal #' . $journal->id . ' has ' . count($journal->transactions)
+                    . ' transactions!');
+            }
+            $transaction = $journal->transactions[0];
+            $amount = floatval($transaction->amount);
+
+            // get budget from journal:
+            $category = $journal->categories()->first();
+            $categoryName = is_null($category) ? '(no category)' : $category->name;
+
+            $result[$categoryName] = isset($result[$categoryName]) ? $result[$categoryName] + floatval($amount)
+                : $amount;
+
+        }
+        unset($journal, $transaction, $category, $amount);
+
+        // sort
+        arsort($result);
+        $chartData = [];
+        foreach ($result as $name => $value) {
+            $chartData[] = [$name, $value];
+        }
+
+
+        return $chartData;
     }
 
     public function categoryShowChart(\Category $category, $range, Carbon $start, Carbon $end)
@@ -314,53 +370,6 @@ class Chart implements ChartInterface
         return $data;
 
 
-    }
-
-    public function categories(Carbon $start, Carbon $end)
-    {
-
-        $result = [];
-        // grab all transaction journals in this period:
-        $journals = \TransactionJournal::
-            with(
-                ['components', 'transactions' => function ($q) {
-                        $q->where('amount', '>', 0);
-                    }]
-            )
-            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->where('transaction_types.type', 'Withdrawal')
-            ->after($start)->before($end)
-            ->where('completed', 1)
-            ->get(['transaction_journals.*']);
-        foreach ($journals as $journal) {
-            // has to be one:
-
-            if (!isset($journal->transactions[0])) {
-                throw new FireflyException('Journal #' . $journal->id . ' has ' . count($journal->transactions)
-                    . ' transactions!');
-            }
-            $transaction = $journal->transactions[0];
-            $amount = floatval($transaction->amount);
-
-            // get budget from journal:
-            $category = $journal->categories()->first();
-            $categoryName = is_null($category) ? '(no category)' : $category->name;
-
-            $result[$categoryName] = isset($result[$categoryName]) ? $result[$categoryName] + floatval($amount)
-                : $amount;
-
-        }
-        unset($journal, $transaction, $category, $amount);
-
-        // sort
-        arsort($result);
-        $chartData = [];
-        foreach ($result as $name => $value) {
-            $chartData[] = [$name, $value];
-        }
-
-
-        return $chartData;
     }
 
 }

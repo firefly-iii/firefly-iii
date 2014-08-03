@@ -10,6 +10,16 @@ Route::bind('account', function($value, $route)
         }
         return null;
     });
+
+Route::bind('accountname', function($value, $route)
+    {
+        if(Auth::check()) {
+            return Account::
+                where('name', $value)->
+                where('user_id',Auth::user()->id)->first();
+        }
+        return null;
+    });
 Route::bind('budget', function($value, $route)
     {
         if(Auth::check()) {
@@ -89,16 +99,18 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/categories/edit/{category}',['uses' => 'CategoryController@edit','as' => 'categories.edit']);
         Route::get('/categories/delete/{category}',['uses' => 'CategoryController@delete','as' => 'categories.delete']);
 
-        // home controller
-        Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
-        Route::get('/flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
-
         // chart controller
         Route::get('/chart/home/account/{account?}', ['uses' => 'ChartController@homeAccount', 'as' => 'chart.home']);
         Route::get('/chart/home/categories', ['uses' => 'ChartController@homeCategories', 'as' => 'chart.categories']);
         Route::get('/chart/home/budgets', ['uses' => 'ChartController@homeBudgets', 'as' => 'chart.budgets']);
         Route::get('/chart/home/info/{accountname}/{day}/{month}/{year}', ['uses' => 'ChartController@homeAccountInfo', 'as' => 'chart.info']);
         Route::get('/chart/categories/show/{category}', ['uses' => 'ChartController@categoryShowChart','as' => 'chart.showcategory']);
+
+        // home controller
+        Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
+        Route::get('/flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
+
+
 
         // Categories controller:
 

@@ -3,10 +3,10 @@
         <th>Total</th>
         <th>{{mf($sum*-1)}}</th>
     </tr>
-    @foreach($rows as $name => $amount)
+    @foreach($rows as $name => $entry)
     <tr>
-        <td><a href="#">{{{$name}}}</a></td>
-        <td>{{mf($amount*-1)}}</td>
+        <td><a href="{{route('accounts.show',$entry['id'])}}">{{{$name}}}</a></td>
+        <td>{{mf($entry['amount']*-1)}}</td>
     </tr>
     @endforeach
 </table>
