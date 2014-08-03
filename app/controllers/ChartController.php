@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Firefly\Helper\Controllers\ChartInterface;
 use Firefly\Storage\Account\AccountRepositoryInterface;
 
@@ -20,6 +21,24 @@ class ChartController extends BaseController
     {
         $this->_chart = $chart;
         $this->_accounts = $accounts;
+    }
+
+    public function categoryShowChart(Category $category)
+    {
+        $start = Session::get('start');
+        $end = Session::get('end');
+        $range = Session::get('range');
+
+        $serie = $this->_chart->categoryShowChart($category, $range, $start, $end);
+        $data = [
+            'chart_title' => $category->name,
+            'subtitle'    => '<a href="' . route('categories.show', [$category->id]) . '">View more</a>',
+            'series'      => $serie
+        ];
+
+        return Response::json($data);
+
+
     }
 
     /**
@@ -70,28 +89,15 @@ class ChartController extends BaseController
         return Response::json($data);
     }
 
-    /**
-     * Return some beneficiary info for an account and a date.
-     *
-     * @param $name
-     * @param $day
-     * @param $month
-     * @param $year
-     *
-     * @return $this|\Illuminate\View\View
-     */
-    public function homeAccountInfo($name, $day, $month, $year)
+    public function homeAccountInfo(Account $account, $day, $month, $year)
     {
 
-        $account = $this->_accounts->findByName($name);
         $date = Carbon::createFromDate($year, $month, $day);
-        if ($account) {
-            $result = $this->_chart->accountDailySummary($account, $date);
+        $result = $this->_chart->accountDailySummary($account, $date);
 
-            return View::make('charts.info')->with('rows', $result['rows'])->with('sum', $result['sum']);
-        } else {
-            return View::make('error')->with('message', 'No account!');
-        }
+        return View::make('charts.info')->with('rows', $result['rows'])->with('sum', $result['sum'])->with(
+            'account', $account
+        );
     }
 
     /**
@@ -113,24 +119,6 @@ class ChartController extends BaseController
         $end = Session::get('end');
 
         return Response::json($this->_chart->categories($start, $end));
-
-
-    }
-
-    public function categoryShowChart(Category $category)
-    {
-        $start = Session::get('start');
-        $end = Session::get('end');
-        $range = Session::get('range');
-
-        $serie = $this->_chart->categoryShowChart($category, $range, $start, $end);
-        $data = [
-            'chart_title' => $category->name,
-            'subtitle'    => '<a href="' . route('categories.show', [$category->id]) . '">View more</a>',
-            'series'      => $serie
-        ];
-
-        return Response::json($data);
 
 
     }

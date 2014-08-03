@@ -48,7 +48,6 @@ $(function () {
                     }
                     //console.log();
                     return str;
-                    return '<span style="font-size:80%;">' + this.series.name + ' on ' + Highcharts.dateFormat("%e %B", this.x) + ':</span><br /> € ' + Highcharts.numberFormat(this.y, 2);
                 }
             },
             plotOptions: {
@@ -73,7 +72,7 @@ $(function () {
                                             y: e.pageY
                                         },
                                         objectType: 'ajax',
-                                        headingText: '<a href="#">' + this.series.name + '</a>',
+                                        headingText: '<a href="accounts/show/' + this.series.id + '">' + this.series.name + '</a>',
                                         width: 250
                                     }
                                 )
@@ -102,7 +101,7 @@ $(function () {
                 text: 'Expenses for each categorie'
             },
             subtitle: {
-                text: '<a href="#">View more</a>',
+                text: '<a href="categories/index">View more</a>',
                 useHTML: true
             },
             credits: {
@@ -191,13 +190,24 @@ $(function () {
                 }
             },
             tooltip: {
-                formatter: function() {return '€ ' + Highcharts.numberFormat(this.y,2);}
+                formatter: function () {
+                    return false;
+                    return '€ ' + Highcharts.numberFormat(this.y, 2);
+                }
             },
             plotOptions: {
                 bar: {
+                    cursor: 'pointer',
+                    events: {
+                        click: function(e) {
+                            alert('klik!!');
+                        }
+                    },
                     dataLabels: {
                         enabled: true,
-                        formatter: function() {return '€ ' + Highcharts.numberFormat(this.y,2);}
+                        formatter: function () {
+                            return '€ ' + Highcharts.numberFormat(this.y, 2);
+                        }
                     }
                 }
             },
