@@ -42,7 +42,7 @@ class User extends Ardent implements UserInterface, RemindableInterface
 
     public static $rules
         = [
-            'email'    => 'required|email|unique:users,email',
+            'email'    => 'required|email',
             'migrated' => 'required|numeric|between:0,1',
             'password' => 'required|between:60,60',
             'reset'    => 'between:32,32',

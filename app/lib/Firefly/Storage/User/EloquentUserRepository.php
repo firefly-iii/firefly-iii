@@ -89,6 +89,12 @@ class EloquentUserRepository implements UserRepositoryInterface
         /** @noinspection PhpUndefinedFieldInspection */
         $user->password = $password;
         /** @noinspection PhpUndefinedMethodInspection */
+        if($user->validate()) {
+            $user->save();
+        } else {
+            var_dump($user->errors()->all());
+            exit;
+        }
         $user->save();
 
         return true;
