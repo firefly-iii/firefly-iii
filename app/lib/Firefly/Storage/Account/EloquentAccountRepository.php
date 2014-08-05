@@ -34,10 +34,11 @@ class EloquentAccountRepository implements AccountRepositoryInterface
      *
      * @return \Account|mixed
      */
-    public function createOrFind($name, \AccountType $type)
+    public function createOrFind($name, \AccountType $type = null)
     {
-        $beneficiary = $this->findByName($name);
-        if (!$beneficiary) {
+
+        $account = $this->findByName($name, $type);
+        if (!$account) {
             $data = [
                 'name'         => $name,
                 'account_type' => $type
@@ -46,7 +47,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
             return $this->store($data);
         }
 
-        return $beneficiary;
+        return $account;
     }
 
     /**
@@ -92,9 +93,10 @@ class EloquentAccountRepository implements AccountRepositoryInterface
      *
      * @return mixed
      */
-    public function findByName($name)
+    public function findByName($name, \AccountType $type = null)
     {
-        return \Auth::user()->accounts()->where('name', 'like', '%' . $name . '%')->first();
+        $type = is_null($type) ? \AccountType::where('description', 'Default account')->first() : $type;
+        return \Auth::user()->accounts()->where('account_type_id',$type->id)->where('name', 'like', '%' . $name . '%')->first();
     }
 
     /**
