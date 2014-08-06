@@ -67,7 +67,7 @@ class ChartController extends BaseController
         }
         // loop and get array data.
 
-        $url = count($accounts) == 1
+        $url = count($accounts) == 1 && is_array($accounts)
             ? '<a href="' . route('accounts.show', [$account->id]) . '">View more</a>'
             :
             '<a href="' . route('accounts.index') . '">View more</a>';

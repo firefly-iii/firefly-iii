@@ -42,7 +42,7 @@ class User extends Ardent implements UserInterface, RemindableInterface
 
     public static $rules
         = [
-            'email'    => 'required|email',
+            'email'    => 'required|email|unique:users,email',
             'migrated' => 'required|numeric|between:0,1',
             'password' => 'required|between:60,60',
             'reset'    => 'between:32,32',
@@ -66,7 +66,7 @@ class User extends Ardent implements UserInterface, RemindableInterface
      *
      * @var array
      */
-    protected $hidden = array('remember_token');
+    protected $hidden = ['remember_token'];
 
     public function accounts()
     {
