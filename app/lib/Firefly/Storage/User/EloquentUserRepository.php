@@ -20,30 +20,6 @@ class EloquentUserRepository implements UserRepositoryInterface
     /**
      * @param $array
      *
-     * @return bool|\User
-     */
-    public function register($array)
-    {
-        $user = new \User;
-        $user->email = isset($array['email']) ? $array['email'] : null;
-        $user->migrated = 0;
-        $user->reset = \Str::random(32);
-        $user->password = \Hash::make(\Str::random(12));
-
-        if (!$user->save()) {
-            \Log::error('Invalid user');
-            \Session::flash('error', 'Input invalid, please try again: ' . $user->errors()->first());
-
-            return false;
-        }
-        $user->save();
-
-        return $user;
-    }
-
-    /**
-     * @param $array
-     *
      * @return bool
      */
     public function auth($array)
@@ -58,6 +34,16 @@ class EloquentUserRepository implements UserRepositoryInterface
     }
 
     /**
+     * @param $email
+     *
+     * @return mixed
+     */
+    public function findByEmail($email)
+    {
+        return \User::where('email', $email)->first();
+    }
+
+    /**
      * @param $reset
      *
      * @return mixed
@@ -68,13 +54,26 @@ class EloquentUserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param $email
+     * @param $array
      *
-     * @return mixed
+     * @return bool|\User
      */
-    public function findByEmail($email)
+    public function register($array)
     {
-        return \User::where('email', $email)->first();
+        $user = new \User;
+        $user->email = isset($array['email']) ? $array['email'] : null;
+        $user->migrated = 0;
+        $user->reset = \Str::random(32);
+        $user->password = \Hash::make(\Str::random(12));
+
+        if (!$user->save()) {
+            \Log::error('Invalid user');
+            \Session::flash('error', 'Input invalid, please try again: ' . $user->errors()->first());
+            return false;
+        }
+        $user->save();
+
+        return $user;
     }
 
     /**
@@ -89,13 +88,7 @@ class EloquentUserRepository implements UserRepositoryInterface
         /** @noinspection PhpUndefinedFieldInspection */
         $user->password = $password;
         /** @noinspection PhpUndefinedMethodInspection */
-        if($user->validate()) {
-            $user->save();
-        } else {
-            var_dump($user->errors()->all());
-            exit;
-        }
-        $user->save();
+        $user->forceSave();
 
         return true;
     }

@@ -12,10 +12,20 @@ class CreateRecurringTransactionsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('recurringtransactions', function(Blueprint $table)
+		Schema::create('recurring_transactions', function(Blueprint $table)
 		{
 			$table->increments('id');
 			$table->timestamps();
+            $table->integer('user_id')->unsigned();
+            $table->string('name',50);
+            $table->decimal('amount_max',10,2);
+            $table->decimal('amount_min',10,2);
+            $table->boolean('active');
+            $table->enum('repeat_freq', ['daily', 'weekly','monthly','quarterly','half-year','yearly']);
+
+            $table->unique(['user_id','name']);
+
+
 		});
 	}
 
@@ -26,7 +36,7 @@ class CreateRecurringTransactionsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('recurringtransactions');
+		Schema::drop('recurring_transactions');
 	}
 
 }

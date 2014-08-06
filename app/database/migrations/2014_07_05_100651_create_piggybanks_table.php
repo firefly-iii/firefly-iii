@@ -19,7 +19,7 @@ class CreatePiggybanksTable extends Migration
                 $table->timestamps();
                 $table->integer('account_id')->unsigned();
                 $table->date('targetdate')->nullable();
-                $table->string('name', 500);
+                $table->string('name', 100);
                 $table->decimal('amount', 10, 2);
                 $table->decimal('target', 10, 2)->nullable();
                 $table->integer('order')->unsigned();
@@ -28,6 +28,7 @@ class CreatePiggybanksTable extends Migration
                 $table->foreign('account_id')
                     ->references('id')->on('accounts')
                     ->onDelete('cascade');
+                $table->unique(['account_id','name']);
 
             }
         );
