@@ -31,6 +31,11 @@ class StorageServiceProvider extends ServiceProvider
             'Firefly\Storage\Piggybank\EloquentPiggybankRepository'
         );
 
+        $this->app->bind(
+            'Firefly\Storage\RecurringTransaction\RecurringTransactionRepositoryInterface',
+            'Firefly\Storage\RecurringTransaction\EloquentRecurringTransactionRepository'
+        );
+
 
         $this->app->bind(
             'Firefly\Storage\Account\AccountRepositoryInterface',

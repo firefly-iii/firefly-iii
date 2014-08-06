@@ -27,6 +27,7 @@ $r = Route::current()->getName();
 
                         <li class="divider"></li>
                         <li><a href="{{route('transactions.index')}}"><span class="glyphicon glyphicon-list-alt"></span> Transactions</a></li>
+                        <li><a href="{{route('recurring.index')}}"><span class="glyphicon glyphicon-refresh"></span> Recurring transactions</a></li>
 
                         <li class="divider"></li>
                         <li><a href="{{route('piggybanks.index')}}"><span class="glyphicon glyphicon-save"></span> Piggy banks</a></li>

@@ -1,7 +1,15 @@
 <?php
 
+use Firefly\Storage\RecurringTransaction\RecurringTransactionRepositoryInterface as RTR;
+
 class RecurringController extends BaseController
 {
+    protected $_repository;
+    public function __construct(RTR $repository)
+    {
+        $this->_repository = $repository;
+        View::share('menu', 'home');
+    }
     public function create()
     {
     }
@@ -20,6 +28,8 @@ class RecurringController extends BaseController
 
     public function index()
     {
+        $list = $this->_repository->get();
+        return View::make('recurring.index');
     }
 
     public function show()

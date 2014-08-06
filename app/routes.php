@@ -110,10 +110,14 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
         Route::get('/flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
 
+        // JSON controller:
+        Route::get('/json/beneficiaries', ['uses' => 'JsonController@beneficiaries', 'as' => 'json.beneficiaries']);
+        Route::get('/json/categories', ['uses' => 'JsonController@categories', 'as' => 'json.categories']);
 
-
-        // Categories controller:
-
+        // limit controller:
+        Route::get('/budgets/limits/create/{budget?}',['uses' => 'LimitController@create','as' => 'budgets.limits.create']);
+        Route::get('/budgets/limits/delete/{limit}',['uses' => 'LimitController@delete','as' => 'budgets.limits.delete']);
+        Route::get('/budgets/limits/edit/{limit}',['uses' => 'LimitController@edit','as' => 'budgets.limits.edit']);
 
         // piggy bank controller
         Route::get('/piggybanks',['uses' => 'PiggybankController@index','as' => 'piggybanks.index']);
@@ -126,26 +130,12 @@ Route::group(['before' => 'auth'], function () {
         // preferences controller
         Route::get('/preferences', ['uses' => 'PreferencesController@index', 'as' => 'preferences']);
 
-        // user controller
-        Route::get('/logout', ['uses' => 'UserController@logout', 'as' => 'logout']);
-
         //profile controller
         Route::get('/profile', ['uses' => 'ProfileController@index', 'as' => 'profile']);
         Route::get('/profile/change-password',['uses' => 'ProfileController@changePassword', 'as' => 'change-password']);
 
-
-
-
-
-        // limit controller:
-        Route::get('/budgets/limits/create/{budget?}',['uses' => 'LimitController@create','as' => 'budgets.limits.create']);
-        Route::get('/budgets/limits/delete/{limit}',['uses' => 'LimitController@delete','as' => 'budgets.limits.delete']);
-        Route::get('/budgets/limits/edit/{limit}',['uses' => 'LimitController@edit','as' => 'budgets.limits.edit']);
-
-        // JSON controller:
-        Route::get('/json/beneficiaries', ['uses' => 'JsonController@beneficiaries', 'as' => 'json.beneficiaries']);
-        Route::get('/json/categories', ['uses' => 'JsonController@categories', 'as' => 'json.categories']);
-
+        // recurring transactions controller
+        Route::get('/recurring',['uses' => 'RecurringController@index', 'as' => 'recurring.index']);
 
         // transaction controller:
         Route::get('/transactions/create/{what}', ['uses' => 'TransactionController@create', 'as' => 'transactions.create'])->where(['what' => 'withdrawal|deposit|transfer']);
@@ -153,6 +143,9 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/transaction/edit/{tj}',['uses' => 'TransactionController@edit','as' => 'transactions.edit']);
         Route::get('/transaction/delete/{tj}',['uses' => 'TransactionController@delete','as' => 'transactions.delete']);
         Route::get('/transactions/index',['uses' => 'TransactionController@index','as' => 'transactions.index']);
+
+        // user controller
+        Route::get('/logout', ['uses' => 'UserController@logout', 'as' => 'logout']);
 
         // migration controller
         Route::get('/migrate', ['uses' => 'MigrationController@index', 'as' => 'migrate']);
@@ -177,43 +170,39 @@ Route::group(['before' => 'csrf|auth'], function () {
         Route::post('/categories/update/{category}', ['uses' => 'CategoryController@update', 'as' => 'categories.update']);
         Route::post('/categories/destroy/{category}', ['uses' => 'CategoryController@destroy', 'as' => 'categories.destroy']);
 
-        // profile controller
-        Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword']);
+        // limit controller:
+        Route::post('/budgets/limits/store/{budget?}', ['uses' => 'LimitController@store', 'as' => 'budgets.limits.store']);
+        Route::post('/budgets/limits/destroy/{id?}',['uses' => 'LimitController@destroy','as' => 'budgets.limits.destroy']);
+        Route::post('/budgets/limits/update/{id?}',['uses' => 'LimitController@update','as' => 'budgets.limits.update']);
 
-
-
-
-
-        // migration controller
-        Route::post('/migrate', ['uses' => 'MigrationController@postIndex']);
 
         // piggy bank controller
         Route::post('/piggybanks/store',['uses' => 'PiggybankController@store','as' => 'piggybanks.store']);
         Route::post('/piggybanks/update', ['uses' => 'PiggybankController@update','as' => 'piggybanks.update']);
         Route::post('/piggybanks/destroy/{piggybank}', ['uses' => 'PiggybankController@destroy','as' => 'piggybanks.destroy']);
 
-
-
         // preferences controller
         Route::post('/preferences', ['uses' => 'PreferencesController@postIndex']);
 
-
-        // limit controller:
-        Route::post('/budgets/limits/store/{budget?}', ['uses' => 'LimitController@store', 'as' => 'budgets.limits.store']);
-        Route::post('/budgets/limits/destroy/{id?}',['uses' => 'LimitController@destroy','as' => 'budgets.limits.destroy']);
-        Route::post('/budgets/limits/update/{id?}',['uses' => 'LimitController@update','as' => 'budgets.limits.update']);
+        // profile controller
+        Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword']);
 
         // transaction controller:
-        Route::post('/transactions/store/{what}', ['uses' => 'TransactionController@store', 'as' => 'transactions.store'])
-            ->where(['what' => 'withdrawal|deposit|transfer']);
+        Route::post('/transactions/store/{what}', ['uses' => 'TransactionController@store', 'as' => 'transactions.store'])->where(['what' => 'withdrawal|deposit|transfer']);
         Route::post('/transaction/update/{tj}',['uses' => 'TransactionController@update','as' => 'transactions.update']);
         Route::post('/transaction/destroy/{tj}',['uses' => 'TransactionController@destroy','as' => 'transactions.destroy']);
+
+        // migration controller
+        Route::post('/migrate', ['uses' => 'MigrationController@postIndex']);
 
     }
 );
 
 // guest routes:
 Route::group(['before' => 'guest'], function () {
+        // dev import route:
+        Route::get('/dev',['uses' => 'MigrationController@dev']);
+
         // user controller
         Route::get('/login', ['uses' => 'UserController@login', 'as' => 'login']);
         Route::get('/register', ['uses' => 'UserController@register', 'as' => 'register']);
@@ -221,9 +210,7 @@ Route::group(['before' => 'guest'], function () {
         Route::get('/reset/{reset}', ['uses' => 'UserController@reset', 'as' => 'reset']);
         Route::get('/remindme', ['uses' => 'UserController@remindme', 'as' => 'remindme']);
 
-        // dev import route:
-        Route::get('/dev',['uses' => 'MigrationController@dev']);
-        Route::get('/limit',['uses' => 'MigrationController@limit']);
+
     }
 );
 
