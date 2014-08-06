@@ -18,10 +18,15 @@ class CreateRecurringTransactionsTable extends Migration {
 			$table->timestamps();
             $table->integer('user_id')->unsigned();
             $table->string('name',50);
+            $table->string('match',255);
             $table->decimal('amount_max',10,2);
             $table->decimal('amount_min',10,2);
+            $table->date('date');
             $table->boolean('active');
+
+            $table->boolean('automatch');
             $table->enum('repeat_freq', ['daily', 'weekly','monthly','quarterly','half-year','yearly']);
+            $table->smallInteger('skip')->unsigned();
 
             $table->unique(['user_id','name']);
 

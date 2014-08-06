@@ -17,6 +17,7 @@ class RecurringTransactionsToComponents extends Migration {
 			$table->increments('id');
             $table->integer('component_id')->unsigned();
             $table->integer('recurring_transaction_id')->unsigned();
+            $table->boolean('optional');
 
             // link components with component_id
             $table->foreign('component_id')

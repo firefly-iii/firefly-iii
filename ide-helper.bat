@@ -1,3 +1,4 @@
+REM composer self-update
 composer update
 php artisan clear-compiled --env=local
 php artisan ide-helper:generate --env=local

@@ -73,6 +73,11 @@ class User extends Ardent implements UserInterface, RemindableInterface
         return $this->hasMany('Account');
     }
 
+    public function recurringtransactions()
+    {
+        return $this->hasMany('RecurringTransaction');
+    }
+
     public function piggybanks()
     {
         return $this->hasMany('Piggybank');
