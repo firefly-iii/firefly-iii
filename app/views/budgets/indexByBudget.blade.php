@@ -74,7 +74,9 @@
                         </div>
                         <div class="col-sm-3">
                             <small>
+                                <a href="{{route('budgets.show',$budget->id)}}?rep={{$rep->id}}">
                                 {{$rep->periodShow()}}
+                                </a>
                             </small>
                         </div>
                         @if($limit->repeats == 1)

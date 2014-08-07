@@ -35,7 +35,7 @@
                 <td>Out</td>
                 <td>
                     {{mf($show['statistics']['period']['out'])}}
-                    <a href="#transactions-thisaccount-this-period-expensesonly"><span class="glyphicon glyphicon-circle-arrow-right"></span></a>
+                    <a href="{{route('accounts.show',$account->id)}}#transactions-thisaccount-this-period-expensesonly"><span class="glyphicon glyphicon-circle-arrow-right"></span></a>
                 </td>
                 <td>
                     {{mf($show['statistics']['period']['t_out'])}}

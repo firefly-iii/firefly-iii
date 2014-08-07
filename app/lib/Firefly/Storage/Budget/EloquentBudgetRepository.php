@@ -124,7 +124,7 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
             }
             $limit->startdate = $startDate;
             $limit->amount = $data['amount'];
-            $limit->repeats = $data['repeats'];
+            $limit->repeats = isset($data['repeats']) ? $data['repeats'] : 0;
             $limit->repeat_freq = $data['repeat_freq'];
             if ($limit->validate()) {
                 $limit->save();

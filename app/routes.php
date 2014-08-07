@@ -20,6 +20,17 @@ Route::bind('accountname', function($value, $route)
         }
         return null;
     });
+
+
+Route::bind('recurring', function($value, $route)
+    {
+        if(Auth::check()) {
+            return RecurringTransaction::
+                where('id', $value)->
+                where('user_id',Auth::user()->id)->first();
+        }
+        return null;
+    });
 Route::bind('budget', function($value, $route)
     {
         if(Auth::check()) {
@@ -136,6 +147,9 @@ Route::group(['before' => 'auth'], function () {
 
         // recurring transactions controller
         Route::get('/recurring',['uses' => 'RecurringController@index', 'as' => 'recurring.index']);
+        Route::get('/recurring/create',['uses' => 'RecurringController@create', 'as' => 'recurring.create']);
+        Route::get('/recurring/edit/{recurring}',['uses' => 'RecurringController@edit','as' => 'recurring.edit']);
+        Route::get('/recurring/delete/{recurring}',['uses' => 'RecurringController@delete','as' => 'recurring.delete']);
 
         // transaction controller:
         Route::get('/transactions/create/{what}', ['uses' => 'TransactionController@create', 'as' => 'transactions.create'])->where(['what' => 'withdrawal|deposit|transfer']);
@@ -186,6 +200,11 @@ Route::group(['before' => 'csrf|auth'], function () {
 
         // profile controller
         Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword']);
+
+        // recurring controller
+        Route::post('/recurring/store',['uses' => 'RecurringController@store', 'as' => 'recurring.store']);
+        Route::post('/recurring/update/{recurring}',['uses' => 'RecurringController@update','as' => 'recurring.update']);
+        Route::post('/recurring/destroy/{recurring}',['uses' => 'RecurringController@destroy','as' => 'recurring.destroy']);
 
         // transaction controller:
         Route::post('/transactions/store/{what}', ['uses' => 'TransactionController@store', 'as' => 'transactions.store'])->where(['what' => 'withdrawal|deposit|transfer']);
