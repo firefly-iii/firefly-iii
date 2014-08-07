@@ -134,15 +134,23 @@ class Budget implements BudgetInterface
 
         }
 
-
-        $query = $budget->transactionjournals()->with(
-            'transactions', 'transactions.account', 'components', 'transactiontype',
-            'transactions.account.accounttype'
-        )->whereNotIn(
-                'transaction_journals.id', $inRepetition
+        if (count($inRepetition) > 0) {
+            $query = $budget->transactionjournals()->with(
+                'transactions', 'transactions.account', 'components', 'transactiontype',
+                'transactions.account.accounttype'
+            )->whereNotIn(
+                    'transaction_journals.id', $inRepetition
+                )->orderBy('date', 'DESC')->orderBy(
+                    'transaction_journals.id', 'DESC'
+                );
+        } else {
+            $query = $budget->transactionjournals()->with(
+                'transactions', 'transactions.account', 'components', 'transactiontype',
+                'transactions.account.accounttype'
             )->orderBy('date', 'DESC')->orderBy(
-                'transaction_journals.id', 'DESC'
-            );
+                    'transaction_journals.id', 'DESC'
+                );
+        }
 
         // build paginator:
         $perPage = 25;

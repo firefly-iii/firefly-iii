@@ -28,7 +28,7 @@
         <td>
             @foreach($journal->components as $component)
             @if($component->class == 'Budget')
-            <a href="#budget-overview-in-month"><span class="glyphicon glyphicon-tasks" title="Budget: {{{$component->name}}}"></span></a>
+            <a href="{{route('budgets.show',$component->id)}}#GETTHEREPSOMEHOW_ORLIMITQUERYbudget-overview-in-month"><span class="glyphicon glyphicon-tasks" title="Budget: {{{$component->name}}}"></span></a>
             @endif
             @if($component->class == 'Category')
             <a href="#category-overview-in-month"><span class="glyphicon glyphicon-tag" title="Category: {{{$component->name}}}"></span></a>
