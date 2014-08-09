@@ -136,6 +136,7 @@ Route::group(['before' => 'auth'], function () {
         // piggy bank controller
         Route::get('/piggybanks',['uses' => 'PiggybankController@index','as' => 'piggybanks.index']);
         Route::get('/piggybanks/create', ['uses' => 'PiggybankController@create','as' => 'piggybanks.create']);
+        Route::get('/piggybanks/show/{piggybank}', ['uses' => 'PiggybankController@show','as' => 'piggybanks.show']);
         Route::get('/piggybanks/edit/{piggybank}', ['uses' => 'PiggybankController@edit','as' => 'piggybanks.edit']);
         Route::get('/piggybanks/delete/{piggybank}', ['uses' => 'PiggybankController@delete','as' => 'piggybanks.delete']);
         Route::post('/piggybanks/updateAmount/{piggybank}',['uses' => 'PiggybankController@updateAmount','as' => 'piggybanks.updateAmount']);
@@ -164,9 +165,6 @@ Route::group(['before' => 'auth'], function () {
 
         // user controller
         Route::get('/logout', ['uses' => 'UserController@logout', 'as' => 'logout']);
-
-        // migration controller
-        Route::get('/migrate', ['uses' => 'MigrationController@index', 'as' => 'migrate']);
 
     }
 );
@@ -215,17 +213,11 @@ Route::group(['before' => 'csrf|auth'], function () {
         Route::post('/transaction/update/{tj}',['uses' => 'TransactionController@update','as' => 'transactions.update']);
         Route::post('/transaction/destroy/{tj}',['uses' => 'TransactionController@destroy','as' => 'transactions.destroy']);
 
-        // migration controller
-        Route::post('/migrate', ['uses' => 'MigrationController@postIndex']);
-
     }
 );
 
 // guest routes:
 Route::group(['before' => 'guest'], function () {
-        // dev import route:
-        Route::get('/dev',['uses' => 'MigrationController@dev']);
-
         // user controller
         Route::get('/login', ['uses' => 'UserController@login', 'as' => 'login']);
         Route::get('/register', ['uses' => 'UserController@register', 'as' => 'register']);
