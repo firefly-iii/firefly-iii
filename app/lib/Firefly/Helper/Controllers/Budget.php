@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 27/07/14
- * Time: 16:28
- */
 
 namespace Firefly\Helper\Controllers;
 
