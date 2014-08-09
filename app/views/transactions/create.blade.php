@@ -38,7 +38,7 @@
             <label for="description" class="col-sm-4 control-label">Description</label>
             <div class="col-sm-8">
                 <input type="text" name="description" value="{{{Input::old('description')}}}" autocomplete="off" class="form-control" placeholder="Description" />
-                @if($errors->has('description')
+                @if($errors->has('description'))
                     <p class="text-danger">{{$errors->first('description')}}</p>
                 @endif
             </div>
@@ -57,7 +57,7 @@
             </label>
             <div class="col-sm-8">
                 {{Form::select('account_id',$accounts,Input::old('account_id') ?: Input::get('account'),['class' => 'form-control'])}}
-                @if($errors->has('account_id')
+                @if($errors->has('account_id'))
                 <p class="text-danger">{{$errors->first('account_id')}}</p>
                 @endif
             </div>
@@ -77,7 +77,7 @@
             </label>
             <div class="col-sm-8">
                 <input type="text" name="beneficiary" value="{{{Input::old('beneficiary')}}}" autocomplete="off" class="form-control" placeholder="Beneficiary" />
-                @if($errors->has('beneficiary')
+                @if($errors->has('beneficiary'))
                 <p class="text-danger">{{$errors->first('beneficiary')}}</p>
                 @else
                 <span class="help-block">This field will auto-complete your existing beneficiaries (if any), but you can type freely to create new ones.</span>
@@ -135,7 +135,7 @@
             <label for="date" class="col-sm-4 control-label">Date</label>
             <div class="col-sm-8">
                 <input type="date" name="date" value="{{Input::old('date') ?: date('Y-m-d')}}" class="form-control" />
-                @if($errors->has('date')
+                @if($errors->has('date'))
                 <p class="text-danger">{{$errors->first('date')}}</p>
                 @endif
             </div>
@@ -151,7 +151,7 @@
             <label for="budget_id" class="col-sm-4 control-label">Budget</label>
             <div class="col-sm-8">
                 {{Form::select('budget_id',$budgets,Input::old('budget_id') ?: 0,['class' => 'form-control'])}}
-                @if($errors->has('budget_id')
+                @if($errors->has('budget_id'))
                 <p class="text-danger">{{$errors->first('budget_id')}}</p>
                 @else
                 <span class="help-block">Select one of your budgets to make this transaction a part of it.</span>
@@ -164,7 +164,7 @@
             <label for="category" class="col-sm-4 control-label">Category</label>
             <div class="col-sm-8">
                 <input type="text" name="category"  value="{{Input::old('category')}}" autocomplete="off" class="form-control" placeholder="Category" />
-                @if($errors->has('category')
+                @if($errors->has('category'))
                 <p class="text-danger">{{$errors->first('category')}}</p>
                 @else
                 <span class="help-block">Add more fine-grained information to this transaction by entering a category.
