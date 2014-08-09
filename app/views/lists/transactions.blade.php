@@ -10,7 +10,11 @@
     </tr>
     <?php $total = 0; ?>
     @foreach($journals as $journal)
-    <tr>
+    <tr
+        @if(isset($highlight) && $highlight == $journal->id)
+        class="success"
+        @endif
+        >
         <td>
             @if($journal->transactiontype->type == 'Withdrawal')
             <span class="glyphicon glyphicon-arrow-left" title="Withdrawal"></span>
@@ -28,10 +32,10 @@
         <td>
             @foreach($journal->components as $component)
             @if($component->class == 'Budget')
-            <a href="{{route('budgets.show',$component->id)}}#GETTHEREPSOMEHOW_ORLIMITQUERYbudget-overview-in-month"><span class="glyphicon glyphicon-tasks" title="Budget: {{{$component->name}}}"></span></a>
+            <a href="{{route('budgets.show',$component->id)}}?highlight={{$journal->id}}"><span class="glyphicon glyphicon-tasks" title="Budget: {{{$component->name}}}"></span></a>
             @endif
             @if($component->class == 'Category')
-            <a href="#category-overview-in-month"><span class="glyphicon glyphicon-tag" title="Category: {{{$component->name}}}"></span></a>
+            <a href="{{route('categories.show',$component->id)}}?highlight={{$journal->id}}"><span class="glyphicon glyphicon-tag" title="Category: {{{$component->name}}}"></span></a>
             @endif
             @endforeach
         </td>

@@ -49,9 +49,9 @@
             @endif
         </h4>
         @if($repetition['paginated'] == true)
-            @include('paginated.transactions',['journals' => $repetition['journals']])
+            @include('paginated.transactions',['journals' => $repetition['journals'],'highlight' => $highlight])
         @else
-            @include('lists.transactions',['journals' => $repetition['journals'],'sum' => true])
+            @include('lists.transactions',['journals' => $repetition['journals'],'sum' => true,'highlight' => $highlight])
         @endif
     </div>
 </div>

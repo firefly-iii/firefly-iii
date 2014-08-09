@@ -117,7 +117,7 @@ class BudgetController extends BaseController
 
         return View::make('budgets.show')->with('budget', $budget)->with('repetitions', $repetitions)->with(
             'filters', $filters
-        );
+        )->with('highlight',Input::get('highlight'));
     }
 
     /**
