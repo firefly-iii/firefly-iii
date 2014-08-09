@@ -68,8 +68,7 @@ class ChartController extends BaseController
         // loop and get array data.
 
         $url = count($accounts) == 1 && is_array($accounts)
-            ? '<a href="' . route('accounts.show', [$account->id]) . '">View more</a>'
-            :
+            ? '<a href="' . route('accounts.show', [$account->id]) . '">View more</a>'  :
             '<a href="' . route('accounts.index') . '">View more</a>';
         $data = [
             'chart_title' => count($accounts) == 1 ? $accounts[0]->name : 'All accounts',
@@ -85,8 +84,9 @@ class ChartController extends BaseController
         return Response::json($data);
     }
 
-    public function homeAccountInfo(Account $account, $day, $month, $year)
+    public function homeAccountInfo($name, $day, $month, $year)
     {
+        $account = $this->_accounts->findByName($name);
 
         $date = Carbon::createFromDate($year, $month, $day);
         $result = $this->_chart->accountDailySummary($account, $date);
