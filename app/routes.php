@@ -156,6 +156,9 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/recurring/edit/{recurring}',['uses' => 'RecurringController@edit','as' => 'recurring.edit']);
         Route::get('/recurring/delete/{recurring}',['uses' => 'RecurringController@delete','as' => 'recurring.delete']);
 
+        // report controller:
+        Route::get('/reports',['uses' => 'ReportController@index','as' => 'reports.index']);
+
         // transaction controller:
         Route::get('/transactions/create/{what}', ['uses' => 'TransactionController@create', 'as' => 'transactions.create'])->where(['what' => 'withdrawal|deposit|transfer']);
         Route::get('/transaction/show/{tj}',['uses' => 'TransactionController@show','as' => 'transactions.show']);
