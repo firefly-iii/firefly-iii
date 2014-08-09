@@ -14,8 +14,10 @@ Route::bind('account', function($value, $route)
 Route::bind('accountname', function($value, $route)
     {
         if(Auth::check()) {
+            $type = AccountType::where('description','Default account')->first();
             return Account::
                 where('name', $value)->
+                where('account_type_id',$type->id)->
                 where('user_id',Auth::user()->id)->first();
         }
         return null;
@@ -114,7 +116,8 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/chart/home/account/{account?}', ['uses' => 'ChartController@homeAccount', 'as' => 'chart.home']);
         Route::get('/chart/home/categories', ['uses' => 'ChartController@homeCategories', 'as' => 'chart.categories']);
         Route::get('/chart/home/budgets', ['uses' => 'ChartController@homeBudgets', 'as' => 'chart.budgets']);
-        Route::get('/chart/home/info/{accountname}/{day}/{month}/{year}', ['uses' => 'ChartController@homeAccountInfo', 'as' => 'chart.info']);
+        Route::get('/chart/home/info/{accountnameA}/{day}/{month}/{year}',
+            ['uses' => 'ChartController@homeAccountInfo', 'as' => 'chart.info']);
         Route::get('/chart/categories/show/{category}', ['uses' => 'ChartController@categoryShowChart','as' => 'chart.showcategory']);
 
         // home controller
