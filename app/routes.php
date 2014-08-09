@@ -159,6 +159,9 @@ Route::group(['before' => 'auth'], function () {
         // report controller:
         Route::get('/reports',['uses' => 'ReportController@index','as' => 'reports.index']);
 
+        // search controller:
+        Route::get('/search',['uses' => 'SearchController@index','as' => 'search']);
+
         // transaction controller:
         Route::get('/transactions/create/{what}', ['uses' => 'TransactionController@create', 'as' => 'transactions.create'])->where(['what' => 'withdrawal|deposit|transfer']);
         Route::get('/transaction/show/{tj}',['uses' => 'TransactionController@show','as' => 'transactions.show']);
