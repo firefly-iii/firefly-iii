@@ -29,10 +29,10 @@
             </tr>
             @foreach($list as $entry)
             <tr>
-                <td><a href="#">{{{$entry->name}}}</a></td>
+                <td><a href="{{route('recurring.show',$entry->id)}}">{{{$entry->name}}}</a></td>
                 <td>
                     @foreach(explode(' ',$entry->match) as $word)
-                    <span class="label label-default">{{{$word}}}</span>
+                    <span class="label label-info">{{{$word}}}</span>
                     @endforeach
                 </td>
                 <td>

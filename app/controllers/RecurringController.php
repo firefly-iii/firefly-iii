@@ -37,8 +37,13 @@ class RecurringController extends BaseController
 
     }
 
-    public function edit()
+    public function edit(RecurringTransaction $recurringTransaction)
     {
+        $periods = \Config::get('firefly.periods_to_text');
+
+        return View::make('recurring.edit')->with('periods', $periods)->with(
+            'recurringTransaction', $recurringTransaction
+        );
     }
 
     public function index()
@@ -71,7 +76,7 @@ class RecurringController extends BaseController
         }
     }
 
-    public function update()
+    public function update(RecurringTransaction $recurringTransaction)
     {
     }
 } 

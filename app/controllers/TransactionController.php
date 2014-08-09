@@ -133,14 +133,9 @@ class TransactionController extends BaseController
      *
      * @return $this|\Illuminate\View\View
      */
-    public function show($journalId)
+    public function show(TransactionJournal $journal)
     {
-//        $journal = $this->_journal->find($journalId);
-//        if ($journal) {
-//            return View::make('transactions.show')->with('journal', $journal);
-//        }
-//
-//        return View::make('error')->with('message', 'Invalid journal');
+        return View::make('transactions.show')->with('journal', $journal);
     }
 
     /**
