@@ -1,36 +1,37 @@
 <?php
+use Carbon\Carbon;
 use LaravelBook\Ardent\Ardent;
 
 /**
  * RecurringTransaction
  *
- * @property integer $id
+ * @property integer        $id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property integer $user_id
- * @property string $name
- * @property string $match
- * @property float $amount_max
- * @property float $amount_min
+ * @property integer        $user_id
+ * @property string         $name
+ * @property string         $match
+ * @property float          $amount_max
+ * @property float          $amount_min
  * @property \Carbon\Carbon $date
- * @property boolean $active
- * @property boolean $automatch
- * @property string $repeat_freq
- * @property integer $skip
- * @property-read \User $user
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereUserId($value) 
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereName($value) 
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereMatch($value) 
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAmountMax($value) 
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAmountMin($value) 
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereDate($value) 
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereActive($value) 
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAutomatch($value) 
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereRepeatFreq($value) 
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereSkip($value) 
+ * @property boolean        $active
+ * @property boolean        $automatch
+ * @property string         $repeat_freq
+ * @property integer        $skip
+ * @property-read \User     $user
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereMatch($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAmountMax($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAmountMin($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereDate($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereActive($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAutomatch($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereRepeatFreq($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereSkip($value)
  */
 class RecurringTransaction extends Ardent
 {
@@ -49,12 +50,23 @@ class RecurringTransaction extends Ardent
             'skip'        => 'required|between:0,31',
         ];
 
-    public static $factory
-        = [
-            'user_id' => 'factory|User',
-            'name'    => 'string',
-            'data'    => 'string'
+    public static function factory()
+    {
+        $date = new Carbon;
+
+        return [
+            'user_id'     => 'factory|User',
+            'name'        => 'string',
+            'match'       => 'string',
+            'amount_max'  => 100,
+            'amount_min'  => 50,
+            'date'        => $date,
+            'active'      => 1,
+            'automatch'   => 1,
+            'repeat_freq' => 'monthly',
+            'skip'        => 0,
         ];
+    }
 
     public function getDates()
     {
