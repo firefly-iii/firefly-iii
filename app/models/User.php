@@ -33,6 +33,7 @@ use LaravelBook\Ardent\Ardent;
  * @method static \Illuminate\Database\Query\Builder|\User whereMigrated($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\TransactionJournal[] $transactionjournals
  * @property-read \Illuminate\Database\Eloquent\Collection|\Piggybank[] $piggybanks
+ * @property-read \Illuminate\Database\Eloquent\Collection|\RecurringTransaction[] $recurringtransactions
  */
 class User extends Ardent implements UserInterface, RemindableInterface
 {

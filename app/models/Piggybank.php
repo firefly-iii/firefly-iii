@@ -1,19 +1,20 @@
 <?php
+use Carbon\Carbon;
 use LaravelBook\Ardent\Ardent as Ardent;
 
 /**
  * Piggybank
  *
- * @property integer $id
+ * @property integer        $id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property integer $account_id
+ * @property integer        $account_id
  * @property \Carbon\Carbon $targetdate
- * @property string $name
- * @property float $amount
- * @property float $target
- * @property integer $order
- * @property-read \Account $account
+ * @property string         $name
+ * @property float          $amount
+ * @property float          $target
+ * @property integer        $order
+ * @property-read \Account  $account
  * @method static \Illuminate\Database\Query\Builder|\Piggybank whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Piggybank whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Piggybank whereUpdatedAt($value)
@@ -35,6 +36,21 @@ class Piggybank extends Ardent
             'target'     => 'required|min:1',
             'order'      => 'required:min:1',
         ];
+
+    public static function factory()
+    {
+        $start = new Carbon;
+        $start->endOfMonth();
+
+        return [
+            'name'       => 'string',
+            'account_id' => 'factory|Account',
+            'targetdate' => $start,
+            'amount'     => 0,
+            'target'     => 100,
+            'order'      => 1
+        ];
+    }
 
     public function account()
     {
