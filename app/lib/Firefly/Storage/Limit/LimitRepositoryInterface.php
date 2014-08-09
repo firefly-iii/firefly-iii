@@ -34,4 +34,6 @@ interface LimitRepositoryInterface
      * @return mixed
      */
     public function find($limitId);
+
+    public function destroy(\Limit $limit);
 } 
