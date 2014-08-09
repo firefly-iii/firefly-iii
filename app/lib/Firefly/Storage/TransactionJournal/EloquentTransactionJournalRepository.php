@@ -378,7 +378,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         // update the amounts:
         /** @var \Transaction $transaction */
         $transactions = $journal->transactions()->orderBy('amount', 'ASC')->get();
-        $transactions[0]->amount = $amount;
+        $transactions[0]->amount = $amount * -1;
         $transactions[1]->amount = $amount;
 
         // switch on type to properly change things:
