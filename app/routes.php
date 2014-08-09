@@ -190,8 +190,8 @@ Route::group(['before' => 'csrf|auth'], function () {
 
         // limit controller:
         Route::post('/budgets/limits/store/{budget?}', ['uses' => 'LimitController@store', 'as' => 'budgets.limits.store']);
-        Route::post('/budgets/limits/destroy/{id?}',['uses' => 'LimitController@destroy','as' => 'budgets.limits.destroy']);
-        Route::post('/budgets/limits/update/{id?}',['uses' => 'LimitController@update','as' => 'budgets.limits.update']);
+        Route::post('/budgets/limits/destroy/{limit}',['uses' => 'LimitController@destroy','as' => 'budgets.limits.destroy']);
+        Route::post('/budgets/limits/update/{limit}',['uses' => 'LimitController@update','as' => 'budgets.limits.update']);
 
 
         // piggy bank controller

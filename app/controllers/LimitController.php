@@ -50,21 +50,19 @@ class LimitController extends BaseController
         return View::make('limits.delete')->with('limit', $limit);
     }
 
-    public function destroy($limitId)
+    public function destroy(\Limit $limit)
     {
-        $limit = $this->_limits->find($limitId);
+        $success = $this->_limits->destroy($limit);
 
-
-        if ($limit) {
-            $limit->delete();
-
-            if (Input::get('from') == 'date') {
-                return Redirect::route('budgets.index');
-            } else {
-                return Redirect::route('budgets.index.budget');
-            }
+        if ($success) {
+            Session::flash('success', 'The envelope was deleted.');
         } else {
-            return View::make('error')->with('message', 'No such limit!');
+            Session::flash('error', 'Could not delete the envelope. Check the logs to be sure.');
+        }
+        if (Input::get('from') == 'date') {
+            return Redirect::route('budgets.index');
+        } else {
+            return Redirect::route('budgets.index.budget');
         }
     }
 
@@ -106,33 +104,28 @@ class LimitController extends BaseController
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
-    public function update($limitId = null)
+    public function update(\Limit $limit)
     {
         /** @var \Limit $limit */
-        $limit = $this->_limits->find($limitId);
-        if ($limit) {
-            $limit->startdate = new \Carbon\Carbon(Input::get('date'));
-            $limit->repeat_freq = Input::get('period');
-            $limit->repeats = !is_null(Input::get('repeats')) && Input::get('repeats') == '1' ? 1 : 0;
-            $limit->amount = floatval(Input::get('amount'));
-            if (!$limit->save()) {
-                Session::flash('error', 'Could not save new limit: ' . $limit->errors()->first());
+        $limit->startdate = new \Carbon\Carbon(Input::get('date'));
+        $limit->repeat_freq = Input::get('period');
+        $limit->repeats = !is_null(Input::get('repeats')) && Input::get('repeats') == '1' ? 1 : 0;
+        $limit->amount = floatval(Input::get('amount'));
+        if (!$limit->save()) {
+            Session::flash('error', 'Could not save new limit: ' . $limit->errors()->first());
 
-                return Redirect::route('budgets.limits.edit', [$limit->id, 'from' => Input::get('from')])->withInput();
+            return Redirect::route('budgets.limits.edit', [$limit->id, 'from' => Input::get('from')])->withInput();
+        } else {
+            Session::flash('success', 'Limit saved!');
+            foreach ($limit->limitrepetitions()->get() as $rep) {
+                $rep->delete();
+            }
+            if (Input::get('from') == 'date') {
+                return Redirect::route('budgets.index');
             } else {
-                Session::flash('success', 'Limit saved!');
-                foreach ($limit->limitrepetitions()->get() as $rep) {
-                    $rep->delete();
-                }
-                if (Input::get('from') == 'date') {
-                    return Redirect::route('budgets.index');
-                } else {
-                    return Redirect::route('budgets.index.budget');
-                }
+                return Redirect::route('budgets.index.budget');
             }
         }
-
-        return View::make('error')->with('message', 'No limit!');
 
     }
 

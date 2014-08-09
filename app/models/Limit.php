@@ -42,7 +42,7 @@ class Limit extends Ardent
 
     public static function factory()
     {
-        $start = new Carbon\Carbon;
+        $start = new Carbon;
         $start->startOfMonth();
 
         return [

@@ -14,6 +14,13 @@ class EloquentLimitRepository implements LimitRepositoryInterface
 {
 
 
+    public function destroy(\Limit $limit)
+    {
+        $limit->delete();
+
+        return true;
+    }
+
     /**
      * @param $limitId
      *
@@ -25,6 +32,21 @@ class EloquentLimitRepository implements LimitRepositoryInterface
             'components', 'components.id', '=', 'limits.component_id'
         )
             ->where('components.user_id', \Auth::user()->id)->first(['limits.*']);
+    }
+
+    /**
+     * @param \Budget $budget
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return mixed
+     */
+    public function getTJByBudgetAndDateRange(\Budget $budget, Carbon $start, Carbon $end)
+    {
+        $result = $budget->transactionjournals()->with('transactions')->after($start)->before($end)->get();
+
+        return $result;
+
     }
 
     /**
@@ -92,21 +114,6 @@ class EloquentLimitRepository implements LimitRepositoryInterface
         }
 
         return $limit;
-    }
-
-    /**
-     * @param \Budget $budget
-     * @param Carbon  $start
-     * @param Carbon  $end
-     *
-     * @return mixed
-     */
-    public function getTJByBudgetAndDateRange(\Budget $budget, Carbon $start, Carbon $end)
-    {
-        $result = $budget->transactionjournals()->with('transactions')->after($start)->before($end)->get();
-
-        return $result;
-
     }
 
 } 
