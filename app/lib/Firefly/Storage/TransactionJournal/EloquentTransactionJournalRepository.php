@@ -386,7 +386,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
             case 'Withdrawal':
                 // means transaction[0] is the users account.
                 $account = $accountRepository->find($data['account_id']);
-                $beneficiary = $accountRepository->findByName($data['beneficiary']);
+                $beneficiary = $accountRepository->createOrFindBeneficiary($data['beneficiary']);
                 $transactions[0]->account()->associate($account);
                 $transactions[1]->account()->associate($beneficiary);
 
@@ -400,7 +400,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
             case 'Deposit':
                 // means transaction[0] is the beneficiary.
                 $account = $accountRepository->find($data['account_id']);
-                $beneficiary = $accountRepository->findByName($data['beneficiary']);
+                $beneficiary = $accountRepository->createOrFindBeneficiary($data['beneficiary']);
                 $journal->transactions[0]->account()->associate($beneficiary);
                 $journal->transactions[1]->account()->associate($account);
                 break;

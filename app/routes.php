@@ -147,6 +147,7 @@ Route::group(['before' => 'auth'], function () {
 
         // recurring transactions controller
         Route::get('/recurring',['uses' => 'RecurringController@index', 'as' => 'recurring.index']);
+        Route::get('/recurring/show/{recurring}',['uses' => 'RecurringController@show', 'as' => 'recurring.show']);
         Route::get('/recurring/create',['uses' => 'RecurringController@create', 'as' => 'recurring.create']);
         Route::get('/recurring/edit/{recurring}',['uses' => 'RecurringController@edit','as' => 'recurring.edit']);
         Route::get('/recurring/delete/{recurring}',['uses' => 'RecurringController@delete','as' => 'recurring.delete']);

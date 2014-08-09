@@ -157,6 +157,5 @@
 
 @stop
 @section('scripts')
-
-    <script type="text/javascript" src="assets/javascript/withdrawal.js"></script>
+<?php echo javascript_include_tag('transactions'); ?>
 @stop
