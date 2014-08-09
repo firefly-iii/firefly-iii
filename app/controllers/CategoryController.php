@@ -60,7 +60,9 @@ class CategoryController extends BaseController
 
         $journals = $this->_category->journalsInRange($category, $start, $end);
 
-        return View::make('categories.show')->with('category', $category)->with('journals', $journals);
+        return View::make('categories.show')->with('category', $category)->with('journals', $journals)->with(
+            'highlight', Input::get('highlight')
+        );
     }
 
     public function store()
@@ -84,14 +86,15 @@ class CategoryController extends BaseController
     public function update(Category $category)
     {
         $category = $this->_repository->update($category, Input::all());
-        if($category->validate()) {
+        if ($category->validate()) {
             Session::flash('success', 'Category "' . $category->name . '" updated.');
+
             return Redirect::route('categories.index');
         } else {
             Session::flash('success', 'Could not update category "' . $category->name . '".');
+
             return Redirect::route('categories.edit')->withErrors($category->errors())->withInput();
         }
-
 
 
     }
