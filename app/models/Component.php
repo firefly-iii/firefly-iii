@@ -38,19 +38,19 @@ class Component extends Firefly\Database\SingleTableInheritanceEntity
     protected $table = 'components';
     protected $subclassField = 'class';
 
-    public function transactions()
-    {
-        return $this->belongsToMany('Transaction');
-    }
-
     public function limits()
     {
-        return $this->belongsTo('Limit');
+        return $this->hasMany('Limit');
     }
 
     public function transactionjournals()
     {
         return $this->belongsToMany('TransactionJournal');
+    }
+
+    public function transactions()
+    {
+        return $this->belongsToMany('Transaction');
     }
 
     public function user()
