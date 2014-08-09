@@ -104,6 +104,9 @@ class Chart implements ChartInterface
                 }]
         )->orderBy('name', 'ASC')->get();
 
+        $limitInPeriod = 'Envelope for (empty)';
+        $spentInPeriod = 'Spent in (empty)';
+
         foreach ($budgets as $budget) {
             $budget->count = 0;
             foreach ($budget->limits as $limit) {
