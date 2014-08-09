@@ -2,6 +2,8 @@ language: php
 
 php:
   - 5.5
+  - 5.4
+  - hhvm
 
 install:
   - composer install
