@@ -84,7 +84,6 @@ class EloquentUserRepository implements UserRepositoryInterface
      */
     public function updatePassword(\User $user, $password)
     {
-        $password = \Hash::make($password);
         /** @noinspection PhpUndefinedFieldInspection */
         $user->password = $password;
         /** @noinspection PhpUndefinedMethodInspection */

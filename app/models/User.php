@@ -10,19 +10,19 @@ use LaravelBook\Ardent\Ardent;
 /**
  * User
  *
- * @property integer                                                             $id
- * @property \Carbon\Carbon                                                      $created_at
- * @property \Carbon\Carbon                                                      $updated_at
- * @property string                                                              $email
- * @property string                                                              $password
- * @property string                                                              $reset
- * @property string                                                              $remember_token
- * @property boolean                                                             $migrated
- * @property-read \Illuminate\Database\Eloquent\Collection|\Account[]            $accounts
- * @property-read \Illuminate\Database\Eloquent\Collection|\Preference[]         $preferences
- * @property-read \Illuminate\Database\Eloquent\Collection|\Component[]          $components
- * @property-read \Illuminate\Database\Eloquent\Collection|\Budget[]             $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\Category[]           $categories
+ * @property integer                                                               $id
+ * @property \Carbon\Carbon                                                        $created_at
+ * @property \Carbon\Carbon                                                        $updated_at
+ * @property string                                                                $email
+ * @property string                                                                $password
+ * @property string                                                                $reset
+ * @property string                                                                $remember_token
+ * @property boolean                                                               $migrated
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Account[]              $accounts
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Preference[]           $preferences
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Component[]            $components
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Budget[]               $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Category[]             $categories
  * @method static \Illuminate\Database\Query\Builder|\User whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\User whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\User whereUpdatedAt($value)
@@ -31,8 +31,8 @@ use LaravelBook\Ardent\Ardent;
  * @method static \Illuminate\Database\Query\Builder|\User whereReset($value)
  * @method static \Illuminate\Database\Query\Builder|\User whereRememberToken($value)
  * @method static \Illuminate\Database\Query\Builder|\User whereMigrated($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\TransactionJournal[] $transactionjournals
- * @property-read \Illuminate\Database\Eloquent\Collection|\Piggybank[] $piggybanks
+ * @property-read \Illuminate\Database\Eloquent\Collection|\TransactionJournal[]   $transactionjournals
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Piggybank[]            $piggybanks
  * @property-read \Illuminate\Database\Eloquent\Collection|\RecurringTransaction[] $recurringtransactions
  */
 class User extends Ardent implements UserInterface, RemindableInterface
@@ -48,14 +48,6 @@ class User extends Ardent implements UserInterface, RemindableInterface
             'password' => 'required|between:60,60',
             'reset'    => 'between:32,32',
         ];
-
-    public static $factory
-        = [
-            'email'    => 'email',
-            'password' => 'string|60',
-            'migrated' => '0'
-
-        ];
     /**
      * The database table used by the model.
      *
@@ -69,14 +61,34 @@ class User extends Ardent implements UserInterface, RemindableInterface
      */
     protected $hidden = ['remember_token'];
 
+    public static function factory()
+    {
+        return [
+            'email'    => 'email',
+            'password' => 'sander',
+            'migrated' => '0'
+
+        ];
+    }
+
     public function accounts()
     {
         return $this->hasMany('Account');
     }
 
-    public function recurringtransactions()
+    public function budgets()
     {
-        return $this->hasMany('RecurringTransaction');
+        return $this->hasMany('Budget');
+    }
+
+    public function categories()
+    {
+        return $this->hasMany('Category');
+    }
+
+    public function components()
+    {
+        return $this->hasMany('Component');
     }
 
     public function piggybanks()
@@ -89,19 +101,14 @@ class User extends Ardent implements UserInterface, RemindableInterface
         return $this->hasMany('Preference');
     }
 
-    public function components()
+    public function recurringtransactions()
     {
-        return $this->hasMany('Component');
+        return $this->hasMany('RecurringTransaction');
     }
 
-    public function budgets()
+    public function setPasswordAttribute($value)
     {
-        return $this->hasMany('Budget');
-    }
-
-    public function categories()
-    {
-        return $this->hasMany('Category');
+        $this->attributes['password'] = Hash::make($value);
     }
 
     public function transactionjournals()
