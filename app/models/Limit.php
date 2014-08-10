@@ -40,6 +40,9 @@ class Limit extends Ardent
 
         ];
 
+    /**
+     * @return array
+     */
     public static function factory()
     {
         $start = new Carbon;
@@ -54,16 +57,25 @@ class Limit extends Ardent
         ];
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function budget()
     {
         return $this->belongsTo('Budget', 'component_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function component()
     {
         return $this->belongsTo('Component', 'component_id');
     }
 
+    /**
+     * @param Carbon $start
+     */
     public function createRepetition(Carbon $start)
     {
 
@@ -116,12 +128,18 @@ class Limit extends Ardent
         }
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function limitrepetitions()
     {
         return $this->hasMany('LimitRepetition');
     }
 
 
+    /**
+     * @return array
+     */
     public function getDates()
     {
         return ['created_at', 'updated_at', 'startdate', 'enddate'];

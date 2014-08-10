@@ -1,6 +1,9 @@
 <?php
 
 
+/**
+ * Class TransactionTypeSeeder
+ */
 class TransactionTypeSeeder extends Seeder
 {
     public function run()

@@ -276,6 +276,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
      * @param Carbon   $date
      *
      * @return bool
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
     protected function _createInitialBalance(\Account $account, $amount = 0, Carbon $date)
     {

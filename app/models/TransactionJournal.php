@@ -84,6 +84,9 @@ class TransactionJournal extends Ardent
             'completed'               => 'required|between:0,1'
         ];
 
+    /**
+     * @return array
+     */
     public static function factory()
     {
         $date = new \Carbon\Carbon;
@@ -98,6 +101,9 @@ class TransactionJournal extends Ardent
         ];
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function transactionType()
     {
         return $this->belongsTo('TransactionType');
@@ -114,21 +120,33 @@ class TransactionJournal extends Ardent
     }
 
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function transactionCurrency()
     {
         return $this->belongsTo('TransactionCurrency');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function transactions()
     {
         return $this->hasMany('Transaction');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function components()
     {
         return $this->belongsToMany('Component');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function budgets()
     {
         return $this->belongsToMany(
@@ -136,6 +154,9 @@ class TransactionJournal extends Ardent
         );
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function categories()
     {
         return $this->belongsToMany(
@@ -143,16 +164,31 @@ class TransactionJournal extends Ardent
         );
     }
 
+    /**
+     * @return array
+     */
     public function getDates()
     {
-        return array('created_at', 'updated_at', 'date');
+        return ['created_at', 'updated_at', 'date'];
     }
 
+    /**
+     * @param                $query
+     * @param \Carbon\Carbon $date
+     *
+     * @return mixed
+     */
     public function scopeAfter($query, \Carbon\Carbon $date)
     {
         return $query->where('date', '>=', $date->format('Y-m-d'));
     }
 
+    /**
+     * @param                $query
+     * @param \Carbon\Carbon $date
+     *
+     * @return mixed
+     */
     public function scopeBefore($query, \Carbon\Carbon $date)
     {
         return $query->where('date', '<=', $date->format('Y-m-d'));

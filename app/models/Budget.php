@@ -30,11 +30,17 @@ class Budget extends Component
         ];
     protected $isSubclass = true;
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function limits()
     {
         return $this->hasMany('Limit', 'component_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function transactionjournals()
     {
         return $this->belongsToMany('TransactionJournal', 'component_transaction_journal', 'component_id');

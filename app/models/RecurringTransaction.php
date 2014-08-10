@@ -50,6 +50,9 @@ class RecurringTransaction extends Ardent
             'skip'        => 'required|between:0,31',
         ];
 
+    /**
+     * @return array
+     */
     public static function factory()
     {
         $date = new Carbon;
@@ -68,11 +71,17 @@ class RecurringTransaction extends Ardent
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getDates()
     {
         return ['created_at', 'updated_at', 'date'];
     }
 
+    /**
+     * @return Carbon
+     */
     public function next()
     {
         $start = clone $this->date;
@@ -105,6 +114,9 @@ class RecurringTransaction extends Ardent
         return $start;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user()
     {
         return $this->belongsTo('User');

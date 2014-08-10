@@ -3,6 +3,11 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+/**
+ * Class RecurringTransactionsToComponents
+ *
+ * @SuppressWarnings(PHPMD.ShortMethodName)
+ */
 class RecurringTransactionsToComponents extends Migration {
 
 	/**

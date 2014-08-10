@@ -2,6 +2,11 @@
 
 use Illuminate\Database\Migrations\Migration;
 
+/**
+ * Class CreateSessionTable
+ *
+ * @SuppressWarnings(PHPMD.ShortMethodName)
+ */
 class CreateSessionTable extends Migration {
 
 	/**

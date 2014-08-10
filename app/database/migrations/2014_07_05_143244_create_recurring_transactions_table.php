@@ -3,6 +3,11 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+/**
+ * Class CreateRecurringTransactionsTable
+ *
+ * @SuppressWarnings(PHPMD.ShortMethodName)
+ */
 class CreateRecurringTransactionsTable extends Migration {
 
 	/**

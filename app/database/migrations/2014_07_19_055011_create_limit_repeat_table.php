@@ -3,6 +3,11 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+/**
+ * Class CreateLimitRepeatTable
+ *
+ * @SuppressWarnings(PHPMD.ShortMethodName)
+ */
 class CreateLimitRepeatTable extends Migration {
 
 	/**

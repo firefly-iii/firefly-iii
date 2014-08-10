@@ -1,6 +1,9 @@
 <?php
 
 
+/**
+ * Class AccountTypeSeeder
+ */
 class AccountTypeSeeder extends Seeder
 {
     public function run()

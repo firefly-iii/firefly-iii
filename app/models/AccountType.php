@@ -22,6 +22,9 @@ class AccountType extends Eloquent
             'description' => 'string'
         ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function accounts()
     {
         return $this->hasMany('Account');

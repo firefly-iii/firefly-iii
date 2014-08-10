@@ -30,6 +30,9 @@ class Category extends Component
         ];
     protected $isSubclass = true;
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function transactionjournals()
     {
         return $this->belongsToMany('TransactionJournal', 'component_transaction_journal', 'component_id');

@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class DefaultUserSeeder
+ */
 class DefaultUserSeeder extends Seeder
 {
     public function run()

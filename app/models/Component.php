@@ -38,21 +38,33 @@ class Component extends Firefly\Database\SingleTableInheritanceEntity
     protected $table = 'components';
     protected $subclassField = 'class';
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function limits()
     {
         return $this->hasMany('Limit');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function transactionjournals()
     {
         return $this->belongsToMany('TransactionJournal');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function transactions()
     {
         return $this->belongsToMany('Transaction');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user()
     {
         return $this->belongsTo('User');

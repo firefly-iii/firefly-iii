@@ -92,6 +92,11 @@ class Account extends Ardent
         );
     }
 
+    /**
+     * @param \Carbon\Carbon $date
+     *
+     * @return null
+     */
     public function predict(\Carbon\Carbon $date)
     {
         return null;
