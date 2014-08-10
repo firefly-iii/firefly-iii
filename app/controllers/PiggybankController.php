@@ -12,6 +12,10 @@ class PiggybankController extends BaseController
     protected $_repository;
     protected $_accounts;
 
+    /**
+     * @param PRI $repository
+     * @param ARI $accounts
+     */
     public function __construct(PRI $repository, ARI $accounts)
     {
         $this->_repository = $repository;
@@ -20,6 +24,9 @@ class PiggybankController extends BaseController
 
     }
 
+    /**
+     * @return $this
+     */
     public function create()
     {
         $accounts = $this->_accounts->getActiveDefaultAsSelectList();
@@ -27,11 +34,21 @@ class PiggybankController extends BaseController
         return View::make('piggybanks.create')->with('accounts', $accounts);
     }
 
+    /**
+     * @param Piggybank $piggyBank
+     *
+     * @return $this
+     */
     public function delete(Piggybank $piggyBank)
     {
         return View::make('piggybanks.delete')->with('piggybank', $piggyBank);
     }
 
+    /**
+     * @param Piggybank $piggyBank
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(Piggybank $piggyBank)
     {
         $piggyBank->delete();
@@ -40,6 +57,11 @@ class PiggybankController extends BaseController
         return Redirect::route('piggybanks.index');
     }
 
+    /**
+     * @param Piggybank $piggyBank
+     *
+     * @return $this
+     */
     public function edit(Piggybank $piggyBank)
     {
         $accounts = $this->_accounts->getActiveDefaultAsSelectList();
@@ -47,6 +69,9 @@ class PiggybankController extends BaseController
         return View::make('piggybanks.edit')->with('piggybank', $piggyBank)->with('accounts', $accounts);
     }
 
+    /**
+     * @return $this
+     */
     public function index()
     {
         $count = $this->_repository->count();
@@ -75,10 +100,16 @@ class PiggybankController extends BaseController
         );
     }
 
+    /**
+     *
+     */
     public function show()
     {
     }
 
+    /**
+     * @return $this|\Illuminate\Http\RedirectResponse
+     */
     public function store()
     {
         $piggyBank = $this->_repository->store(Input::all());
@@ -100,6 +131,9 @@ class PiggybankController extends BaseController
 
     }
 
+    /**
+     * @return $this|\Illuminate\Http\RedirectResponse
+     */
     public function update()
     {
 
@@ -117,6 +151,9 @@ class PiggybankController extends BaseController
 
     }
 
+    /**
+     * @param Piggybank $piggybank
+     */
     public function updateAmount(Piggybank $piggybank)
     {
         $this->_repository->updateAmount($piggybank, Input::get('amount'));

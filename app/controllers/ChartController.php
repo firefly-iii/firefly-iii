@@ -15,7 +15,8 @@ class ChartController extends BaseController
 
 
     /**
-     * @param ChartInterface $chart
+     * @param ChartInterface             $chart
+     * @param AccountRepositoryInterface $accounts
      */
     public function __construct(ChartInterface $chart, AccountRepositoryInterface $accounts)
     {
@@ -23,6 +24,11 @@ class ChartController extends BaseController
         $this->_accounts = $accounts;
     }
 
+    /**
+     * @param Category $category
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function categoryShowChart(Category $category)
     {
         $start = Session::get('start');
@@ -49,7 +55,6 @@ class ChartController extends BaseController
     public function homeAccount(Account $account = null)
     {
         // get preferences and accounts (if necessary):
-        $data = [];
         $start = Session::get('start');
         $end = Session::get('end');
 
@@ -85,6 +90,14 @@ class ChartController extends BaseController
         return Response::json($data);
     }
 
+    /**
+     * @param $name
+     * @param $day
+     * @param $month
+     * @param $year
+     *
+     * @return $this
+     */
     public function homeAccountInfo($name, $day, $month, $year)
     {
         $account = $this->_accounts->findByName($name);

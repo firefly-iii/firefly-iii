@@ -11,6 +11,10 @@ class CategoryController extends BaseController
     protected $_repository;
     protected $_category;
 
+    /**
+     * @param CRI $repository
+     * @param CI  $category
+     */
     public function __construct(CRI $repository, CI $category)
     {
         $this->_repository = $repository;
@@ -18,16 +22,29 @@ class CategoryController extends BaseController
         View::share('menu', 'categories');
     }
 
+    /**
+     * @return \Illuminate\View\View
+     */
     public function create()
     {
         return View::make('categories.create');
     }
 
+    /**
+     * @param Category $category
+     *
+     * @return $this
+     */
     public function delete(Category $category)
     {
         return View::make('categories.delete')->with('category', $category);
     }
 
+    /**
+     * @param Category $category
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(Category $category)
     {
         $result = $this->_repository->destroy($category);
@@ -40,11 +57,19 @@ class CategoryController extends BaseController
         return Redirect::route('categories.index');
     }
 
+    /**
+     * @param Category $category
+     *
+     * @return $this
+     */
     public function edit(Category $category)
     {
         return View::make('categories.edit')->with('category', $category);
     }
 
+    /**
+     * @return $this
+     */
     public function index()
     {
         $categories = $this->_repository->get();
@@ -52,6 +77,11 @@ class CategoryController extends BaseController
         return View::make('categories.index')->with('categories', $categories);
     }
 
+    /**
+     * @param Category $category
+     *
+     * @return $this
+     */
     public function show(Category $category)
     {
         $start = \Session::get('start');
@@ -65,6 +95,9 @@ class CategoryController extends BaseController
         );
     }
 
+    /**
+     * @return $this|\Illuminate\Http\RedirectResponse
+     */
     public function store()
     {
         $category = $this->_repository->store(Input::all());
@@ -83,6 +116,11 @@ class CategoryController extends BaseController
         }
     }
 
+    /**
+     * @param Category $category
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse
+     */
     public function update(Category $category)
     {
         $category = $this->_repository->update($category, Input::all());

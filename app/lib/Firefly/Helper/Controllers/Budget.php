@@ -52,15 +52,13 @@ class Budget implements BudgetInterface
     }
 
     /**
-     * @param \Budget $budget
      * @param         $repetitionId
      *
      * @return array
      */
-    public function organizeRepetition(\Budget $budget, $repetitionId)
+    public function organizeRepetition($repetitionId)
     {
         $result = [];
-        $inRepetition = [];
         $repetition = \LimitRepetition::with('limit', 'limit.budget')->leftJoin(
             'limits', 'limit_repetitions.limit_id', '=', 'limits.id'
         )->leftJoin('components', 'limits.component_id', '=', 'components.id')->where(

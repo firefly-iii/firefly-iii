@@ -12,6 +12,11 @@ use Carbon\Carbon;
 class EloquentBudgetRepository implements BudgetRepositoryInterface
 {
 
+    /**
+     * @param \Budget $budget
+     *
+     * @return bool|mixed
+     */
     public function destroy(\Budget $budget)
     {
         $budget->delete();
@@ -69,18 +74,6 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
         return $return;
     }
 
-    /**
-     * @param Carbon $date
-     * @param        $range
-     *
-     * @return mixed
-     */
-    public function getWithRepetitionsInPeriod(Carbon $date, $range)
-    {
-
-
-        //return $set;
-    }
 
     /**
      * @param $data
@@ -138,9 +131,10 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
-     * @param $data
+     * @param \Budget $budget
+     * @param         $data
      *
-     * @return mixed
+     * @return \Budget|mixed
      */
     public function update(\Budget $budget, $data)
     {

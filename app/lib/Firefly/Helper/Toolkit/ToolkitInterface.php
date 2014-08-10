@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 interface ToolkitInterface
 {
     /**
+     * @param Request $request
+     *
      * @return mixed
      */
     public function getDateRange(Request $request);

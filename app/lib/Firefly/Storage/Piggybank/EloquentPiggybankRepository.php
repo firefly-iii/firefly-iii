@@ -12,6 +12,9 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
 {
 
 
+    /**
+     * @return mixed
+     */
     public function count()
     {
         return \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(
@@ -19,6 +22,11 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
         )->count();
     }
 
+    /**
+     * @param $piggyBankId
+     *
+     * @return mixed
+     */
     public function find($piggyBankId)
     {
         return \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(
@@ -26,6 +34,9 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
         )->where('piggybanks.id', $piggyBankId)->first(['piggybanks.*']);
     }
 
+    /**
+     * @return mixed
+     */
     public function get()
     {
         return \Piggybank::with('account')->leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(
@@ -33,6 +44,11 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
         )->get(['piggybanks.*']);
     }
 
+    /**
+     * @param $data
+     *
+     * @return \Piggybank
+     */
     public function store($data)
     {
         var_dump($data);
@@ -56,6 +72,11 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
         return $piggyBank;
     }
 
+    /**
+     * @param $data
+     *
+     * @return mixed
+     */
     public function update($data)
     {
         $piggyBank = $this->find($data['id']);
@@ -74,6 +95,12 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
         return $piggyBank;
     }
 
+    /**
+     * @param \Piggybank $piggyBank
+     * @param            $amount
+     *
+     * @return mixed|void
+     */
     public function updateAmount(\Piggybank $piggyBank, $amount)
     {
         $piggyBank->amount = floatval($amount);

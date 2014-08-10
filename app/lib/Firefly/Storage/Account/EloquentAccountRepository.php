@@ -65,6 +65,11 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         return $this->createOrFind($name, $type);
     }
 
+    /**
+     * @param \Account $account
+     *
+     * @return bool|mixed
+     */
     public function destroy(\Account $account)
     {
         $account->delete();
@@ -89,7 +94,8 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @param $name
+     * @param              $name
+     * @param \AccountType $type
      *
      * @return mixed
      */
@@ -228,9 +234,10 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @param $data
+     * @param \Account $account
+     * @param          $data
      *
-     * @return \Account|void
+     * @return \Account|mixed
      */
     public function update(\Account $account, $data)
     {

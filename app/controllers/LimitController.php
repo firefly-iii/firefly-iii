@@ -25,9 +25,9 @@ class LimitController extends BaseController
     }
 
     /**
-     * @param null $budgetId
+     * @param Budget $budget
      *
-     * @return $this|\Illuminate\View\View
+     * @return $this
      */
     public function create(\Budget $budget = null)
     {
@@ -45,11 +45,21 @@ class LimitController extends BaseController
         )->with('prefilled', $prefilled);
     }
 
+    /**
+     * @param Limit $limit
+     *
+     * @return $this
+     */
     public function delete(\Limit $limit)
     {
         return View::make('limits.delete')->with('limit', $limit);
     }
 
+    /**
+     * @param Limit $limit
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(\Limit $limit)
     {
         $success = $this->_limits->destroy($limit);
@@ -67,9 +77,9 @@ class LimitController extends BaseController
     }
 
     /**
-     * @param null $limitId
+     * @param Limit $limit
      *
-     * @return $this|\Illuminate\View\View
+     * @return $this
      */
     public function edit(Limit $limit)
     {
@@ -81,6 +91,11 @@ class LimitController extends BaseController
         );
     }
 
+    /**
+     * @param Budget $budget
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse
+     */
     public function store(Budget $budget = null)
     {
 
@@ -103,9 +118,9 @@ class LimitController extends BaseController
     }
 
     /**
-     * @param null $limitId
+     * @param Limit $limit
      *
-     * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
     public function update(\Limit $limit)
     {

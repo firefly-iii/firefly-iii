@@ -3,7 +3,6 @@
 namespace Firefly\Helper\Form;
 
 use Illuminate\Events\Dispatcher;
-
 /**
  * Class FormTrigger
  *
@@ -16,7 +15,7 @@ class FormTrigger
     {
         \Form::macro(
             'budget', function () {
-                $helper = new \Firefly\Helper\Form\FormHelper;
+                $helper = new FormHelper;
 
                 return $helper->budget();
             }
