@@ -63,16 +63,6 @@ class Account extends Ardent
     }
 
     /**
-     * User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function user()
-    {
-        return $this->belongsTo('User');
-    }
-
-    /**
      * Get an accounts current balance.
      *
      * @param \Carbon\Carbon $date
@@ -93,16 +83,6 @@ class Account extends Ardent
     }
 
     /**
-     * @param \Carbon\Carbon $date
-     *
-     * @return null
-     */
-    public function predict(\Carbon\Carbon $date)
-    {
-        return null;
-    }
-
-    /**
      * Transactions.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -110,6 +90,28 @@ class Account extends Ardent
     public function transactions()
     {
         return $this->hasMany('Transaction');
+    }
+
+    /**
+     * @param \Carbon\Carbon $date
+     *
+     * @return null
+     */
+    public function predict(
+        /** @noinspection PhpUnusedParameterInspection */
+        \Carbon\Carbon $date
+    ) {
+        return null;
+    }
+
+    /**
+     * User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo('User');
     }
 
 } 

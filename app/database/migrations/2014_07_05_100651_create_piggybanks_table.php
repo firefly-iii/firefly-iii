@@ -33,7 +33,7 @@ class CreatePiggybanksTable extends Migration
                 $table->foreign('account_id')
                     ->references('id')->on('accounts')
                     ->onDelete('cascade');
-                $table->unique(['account_id','name']);
+                $table->unique(['account_id', 'name']);
 
             }
         );

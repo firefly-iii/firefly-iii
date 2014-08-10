@@ -122,7 +122,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         $fromTransaction->amount = $amountFrom;
         if (!$fromTransaction->validate()) {
             throw new FireflyException('Cannot create valid transaction (from): ' . $fromTransaction->errors()->first(
-            ));
+                ));
         }
         $fromTransaction->save();
 
@@ -141,6 +141,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
 
         return $journal;
     }
+
     /**
      * @param $journalId
      *

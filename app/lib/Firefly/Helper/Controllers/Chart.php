@@ -27,9 +27,6 @@ class Chart implements ChartInterface
         $return = ['name' => $account->name, 'id' => $account->id, 'data' => []];
 
         while ($current <= $end) {
-            \Log::debug(
-                'Now at day: ' . $current . '(' . $current->timestamp . '), (' . ($current->timestamp * 1000) . ') '
-            );
             if ($current > $today) {
                 $return['data'][] = [$current->timestamp * 1000, $account->predict(clone $current)];
             } else {
@@ -117,9 +114,6 @@ class Chart implements ChartInterface
                     $q->where('startdate', $start->format('Y-m-d'));
                 }]
         )->orderBy('name', 'ASC')->get();
-
-        $limitInPeriod = 'Envelope for (empty)';
-        $spentInPeriod = 'Spent in (empty)';
 
         foreach ($budgets as $budget) {
             $budget->count = 0;

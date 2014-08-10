@@ -62,6 +62,8 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         }
         $type = \AccountType::where('description', 'Beneficiary account')->first();
 
+        /** @noinspection PhpParamsInspection */
+
         return $this->createOrFind($name, $type);
     }
 
