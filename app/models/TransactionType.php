@@ -1,5 +1,6 @@
 <?php
 
+use LaravelBook\Ardent\Ardent;
 
 /**
  * TransactionType
@@ -14,16 +15,16 @@
  * @method static \Illuminate\Database\Query\Builder|\TransactionType whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\TransactionType whereType($value)
  */
-class TransactionType extends Eloquent
+class TransactionType extends Ardent
 {
-    public function transactionJournals()
-    {
-        return $this->hasMany('TransactionJournal');
-    }
-
     public static $factory
         = [
             'type' => 'string'
         ];
+
+    public function transactionJournals()
+    {
+        return $this->hasMany('TransactionJournal');
+    }
 
 } 

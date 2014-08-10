@@ -96,7 +96,7 @@ class RecurringTransaction extends Ardent
                     $start->addMonths($skip * 6);
                     break;
                 case 'yearly':
-                    $this->addYears($skip);
+                    $start->addYears($skip);
                     break;
 
             }
