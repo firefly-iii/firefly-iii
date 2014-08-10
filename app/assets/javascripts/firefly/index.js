@@ -212,6 +212,7 @@ $(function () {
                 }
             },
             legend: {
+                enabled:false,
                 layout: 'vertical',
                 align: 'right',
                 verticalAlign: 'top',
