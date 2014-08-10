@@ -5,6 +5,12 @@ use Illuminate\Database\Eloquent\Collection;
 use Mockery as m;
 use Zizaco\FactoryMuff\Facade\FactoryMuff as f;
 
+/**
+ * Class BudgetControllerTest
+ *
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
+ */
 class BudgetControllerTest extends TestCase
 {
     protected $_repository;

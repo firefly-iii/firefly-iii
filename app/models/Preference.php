@@ -36,17 +36,27 @@ class Preference extends Ardent
             'data'    => 'string'
         ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user()
     {
         return $this->belongsTo('User');
     }
 
+    /**
+     * @param $value
+     */
     public function setDataAttribute($value)
     {
         $this->attributes['data'] = json_encode($value);
     }
 
-    //
+    /**
+     * @param $value
+     *
+     * @return mixed
+     */
     public function getDataAttribute($value)
     {
         return json_decode($value);

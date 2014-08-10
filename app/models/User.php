@@ -61,6 +61,9 @@ class User extends Ardent implements UserInterface, RemindableInterface
      */
     protected $hidden = ['remember_token'];
 
+    /**
+     * @return array
+     */
     public static function factory()
     {
         return [
@@ -71,41 +74,65 @@ class User extends Ardent implements UserInterface, RemindableInterface
         ];
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function accounts()
     {
         return $this->hasMany('Account');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function budgets()
     {
         return $this->hasMany('Budget');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function categories()
     {
         return $this->hasMany('Category');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function components()
     {
         return $this->hasMany('Component');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function preferences()
     {
         return $this->hasMany('Preference');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function recurringtransactions()
     {
         return $this->hasMany('RecurringTransaction');
     }
 
+    /**
+     * @param $value
+     */
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = Hash::make($value);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function transactionjournals()
     {
         return $this->hasMany('TransactionJournal');

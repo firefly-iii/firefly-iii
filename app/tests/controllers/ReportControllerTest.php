@@ -3,6 +3,9 @@ use Mockery as m;
 
 /**
  * Class ReportControllerTest
+ *
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class ReportControllerTest extends TestCase
 {

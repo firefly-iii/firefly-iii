@@ -6,6 +6,9 @@ use Zizaco\FactoryMuff\Facade\FactoryMuff as f;
 
 /**
  * Class UserControllerTest
+ *
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class UserControllerTest extends TestCase
 {
@@ -57,11 +60,7 @@ class UserControllerTest extends TestCase
 
     public function testPostLoginFails()
     {
-        $input = [
-            'username' => 'bla@bla',
-            'password' => 'something',
-            'remindme' => 0
-        ];
+
         $this->action('POST', 'UserController@postLogin');
         $this->assertResponseOk();
     }

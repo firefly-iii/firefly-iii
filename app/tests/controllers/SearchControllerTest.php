@@ -3,6 +3,9 @@ use Mockery as m;
 
 /**
  * Class SearchControllerTest
+ *
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class SearchControllerTest extends TestCase
 {

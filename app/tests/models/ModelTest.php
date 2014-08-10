@@ -2,6 +2,11 @@
 use Carbon\Carbon;
 use Zizaco\FactoryMuff\Facade\FactoryMuff as f;
 
+/**
+ * Class ModelTest
+ *
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ */
 class ModelTest extends TestCase
 {
 
@@ -179,7 +184,7 @@ class ModelTest extends TestCase
 
         // repeat frequency (present) for periodOrder
         $list = ['yearly', 'half-year', 'quarterly', 'monthly', 'weekly', 'daily'];
-        foreach ($list as $index => $entry) {
+        foreach ($list as $entry) {
             $rep->repeat_freq = $entry;
             $this->assertGreaterThan(0, strlen($rep->periodShow()));
         }
@@ -216,7 +221,7 @@ class ModelTest extends TestCase
         $this->assertEquals($rec->user_id, $user->id);
 
         $list = ['yearly', 'half-year', 'quarterly', 'monthly', 'weekly', 'daily'];
-        foreach ($list as $index => $entry) {
+        foreach ($list as $entry) {
             $start = clone $rec->date;
             $rec->repeat_freq = $entry;
             $end = $rec->next();

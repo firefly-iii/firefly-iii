@@ -31,6 +31,9 @@ class LimitRepetition extends Ardent
             'amount'    => 'numeric|required|min:0.01',
         ];
 
+    /**
+     * @return array
+     */
     public static function factory()
     {
         $start = new \Carbon\Carbon;
@@ -46,6 +49,9 @@ class LimitRepetition extends Ardent
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getDates()
     {
         return ['created_at', 'updated_at', 'startdate', 'enddate'];
@@ -76,6 +82,9 @@ class LimitRepetition extends Ardent
         return $left;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function limit()
     {
         return $this->belongsTo('Limit');

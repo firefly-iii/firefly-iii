@@ -4,6 +4,9 @@ use Zizaco\FactoryMuff\Facade\FactoryMuff as f;
 
 /**
  * Class LimitControllerTest
+ *
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class LimitControllerTest extends TestCase
 {

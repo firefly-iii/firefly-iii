@@ -8,6 +8,9 @@ use Zizaco\FactoryMuff\Facade\FactoryMuff as f;
 
 /**
  * Class ChartControllerTest
+ *
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class ChartControllerTest extends TestCase
 {

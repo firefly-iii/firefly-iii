@@ -4,6 +4,9 @@ use Zizaco\FactoryMuff\Facade\FactoryMuff as f;
 
 /**
  * Class ProfileControllerTest
+ *
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class ProfileControllerTest extends TestCase
 {

@@ -37,6 +37,9 @@ class Piggybank extends Ardent
             'order'      => 'required:min:1',
         ];
 
+    /**
+     * @return array
+     */
     public static function factory()
     {
         $start = new Carbon;
@@ -52,14 +55,20 @@ class Piggybank extends Ardent
         ];
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function account()
     {
         return $this->belongsTo('Account');
     }
 
+    /**
+     * @return array
+     */
     public function getDates()
     {
-        return array('created_at', 'updated_at', 'targetdate');
+        return ['created_at', 'updated_at', 'targetdate'];
     }
 
 } 

@@ -44,26 +44,41 @@ class Transaction extends Ardent
             'amount'                 => 'integer:5'
         ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function account()
     {
         return $this->belongsTo('Account');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function transactionJournal()
     {
         return $this->belongsTo('TransactionJournal');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function components()
     {
         return $this->belongsToMany('Component');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function budgets()
     {
         return $this->belongsToMany('Budget', 'component_transaction', 'transaction_id', 'component_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function categories()
     {
         return $this->belongsToMany('Category', 'component_transaction', 'transaction_id', 'component_id');

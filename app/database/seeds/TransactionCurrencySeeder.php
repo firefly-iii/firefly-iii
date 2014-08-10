@@ -1,6 +1,9 @@
 <?php
 
 
+/**
+ * Class TransactionCurrencySeeder
+ */
 class TransactionCurrencySeeder extends Seeder
 {
     public function run()

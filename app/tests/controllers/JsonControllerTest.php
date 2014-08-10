@@ -3,6 +3,9 @@ use Zizaco\FactoryMuff\Facade\FactoryMuff as f;
 
 /**
  * Class JsonControllerTest
+ *
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class JsonControllerTest extends TestCase
 {

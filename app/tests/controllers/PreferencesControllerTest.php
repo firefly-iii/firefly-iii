@@ -5,6 +5,9 @@ use Mockery as m;
 
 /**
  * Class PreferencesControllerTest
+ *
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class PreferencesControllerTest extends TestCase
 {

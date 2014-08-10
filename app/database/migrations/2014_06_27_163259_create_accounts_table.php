@@ -3,6 +3,11 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+/**
+ * Class CreateAccountsTable
+ *
+ * @SuppressWarnings(PHPMD.ShortMethodName)
+ */
 class CreateAccountsTable extends Migration {
 
 	/**

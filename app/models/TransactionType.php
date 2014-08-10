@@ -22,6 +22,9 @@ class TransactionType extends Ardent
             'type' => 'string'
         ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function transactionJournals()
     {
         return $this->hasMany('TransactionJournal');

@@ -22,7 +22,10 @@ class TransactionCurrency extends Eloquent
             'code' => 'string'
         ];
 
-    public function transactionJournals()
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transactionjournals()
     {
         return $this->hasMany('TransactionJournal');
     }

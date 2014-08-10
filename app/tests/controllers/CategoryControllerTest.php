@@ -7,6 +7,9 @@ use Zizaco\FactoryMuff\Facade\FactoryMuff as f;
 
 /**
  * Class CategoryControllerTest
+ *
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class CategoryControllerTest extends TestCase
 {
@@ -100,6 +103,7 @@ class CategoryControllerTest extends TestCase
     {
         $category = f::create('Category');
         $collection = new Collection();
+        $collection->add($category);
 
         $this->_repository->shouldReceive('get')->with()->once()->andReturn($collection);
         $this->action('GET', 'CategoryController@index');
