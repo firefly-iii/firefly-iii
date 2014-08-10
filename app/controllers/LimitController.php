@@ -86,16 +86,19 @@ class LimitController extends BaseController
 
         // find a limit with these properties, as we might already have one:
         $limit = $this->_limits->store(Input::all());
-        if ($limit->id) {
+        if ($limit->validate()) {
+            Session::flash('success', 'Envelope created!');
             if (Input::get('from') == 'date') {
                 return Redirect::route('budgets.index');
             } else {
                 return Redirect::route('budgets.index.budget');
             }
         } else {
+            Session::flash('success', 'Could not save new envelope.');
             $budgetId = $budget ? $budget->id : null;
-
-            return Redirect::route('budgets.limits.create', [$budgetId, 'from' => Input::get('from')])->withInput();
+            $parameters = [$budgetId, 'from' => Input::get('from')];
+            return Redirect::route('budgets.limits.create', $parameters)->withInput()
+                ->withErrors($limit->errors());
         }
     }
 
@@ -106,16 +109,13 @@ class LimitController extends BaseController
      */
     public function update(\Limit $limit)
     {
+        // TODO move logic to repository.
         /** @var \Limit $limit */
         $limit->startdate = new \Carbon\Carbon(Input::get('date'));
         $limit->repeat_freq = Input::get('period');
         $limit->repeats = !is_null(Input::get('repeats')) && Input::get('repeats') == '1' ? 1 : 0;
         $limit->amount = floatval(Input::get('amount'));
-        if (!$limit->save()) {
-            Session::flash('error', 'Could not save new limit: ' . $limit->errors()->first());
-
-            return Redirect::route('budgets.limits.edit', [$limit->id, 'from' => Input::get('from')])->withInput();
-        } else {
+        if ($limit->save()) {
             Session::flash('success', 'Limit saved!');
             foreach ($limit->limitrepetitions()->get() as $rep) {
                 $rep->delete();
@@ -125,6 +125,13 @@ class LimitController extends BaseController
             } else {
                 return Redirect::route('budgets.index.budget');
             }
+
+
+        } else {
+            Session::flash('error', 'Could not save new limit: ' . $limit->errors()->first());
+
+            return Redirect::route('budgets.limits.edit', [$limit->id, 'from' => Input::get('from')])->withInput()
+                ->withErrors($limit->errors());
         }
 
     }

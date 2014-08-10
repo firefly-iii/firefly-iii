@@ -15,10 +15,10 @@ class HomeController extends BaseController
     protected $_budgets;
 
     /**
-     * @param ARI     $accounts
-     * @param PHI     $preferences
-     * @param TJRI    $journal
-     * @param BRI     $budgets
+     * @param ARI  $accounts
+     * @param PHI  $preferences
+     * @param TJRI $journal
+     * @param BRI  $budgets
      */
     public function __construct(ARI $accounts, PHI $preferences, TJRI $journal, BRI $budgets)
     {

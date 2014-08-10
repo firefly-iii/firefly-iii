@@ -96,7 +96,9 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     public function findByName($name, \AccountType $type = null)
     {
         $type = is_null($type) ? \AccountType::where('description', 'Default account')->first() : $type;
-        return \Auth::user()->accounts()->where('account_type_id',$type->id)->where('name', 'like', '%' . $name . '%')->first();
+
+        return \Auth::user()->accounts()->where('account_type_id', $type->id)->where('name', 'like', '%' . $name . '%')
+            ->first();
     }
 
     /**

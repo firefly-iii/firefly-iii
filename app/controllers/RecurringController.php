@@ -60,7 +60,7 @@ class RecurringController extends BaseController
     public function store()
     {
         $recurringTransaction = $this->_repository->store(Input::all());
-        if ($recurringTransaction->id) {
+        if ($recurringTransaction->validate()) {
             Session::flash('success', 'Recurring transaction "' . $recurringTransaction->name . '" saved!');
             if (Input::get('create') == '1') {
                 return Redirect::route('recurring.create')->withInput();

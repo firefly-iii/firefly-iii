@@ -163,7 +163,7 @@ class AccountControllerTest extends TestCase
     public function testStoreFails()
     {
         $account = f::create('Account');
-        unset($account->id);
+        unset($account->name);
         $this->_repository->shouldReceive('store')->andReturn($account);
         $this->action('POST', 'AccountController@store');
         $this->assertRedirectedToRoute('accounts.create');

@@ -311,25 +311,25 @@ class ModelTest extends TestCase
         $journal = f::create('TransactionJournal');
 
         $user->accounts()->save($account);
-        $this->assertEquals($account->id,$user->accounts()->first()->id);
+        $this->assertEquals($account->id, $user->accounts()->first()->id);
 
         $user->components()->save($comp);
-        $this->assertEquals($comp->id,$user->components()->first()->id);
+        $this->assertEquals($comp->id, $user->components()->first()->id);
 
         $user->budgets()->save($bud);
-        $this->assertEquals($bud->id,$user->budgets()->first()->id);
+        $this->assertEquals($bud->id, $user->budgets()->first()->id);
 
         $user->categories()->save($cat);
-        $this->assertEquals($cat->id,$user->categories()->first()->id);
+        $this->assertEquals($cat->id, $user->categories()->first()->id);
 
         $user->preferences()->save($pref);
-        $this->assertEquals($pref->id,$user->preferences()->first()->id);
+        $this->assertEquals($pref->id, $user->preferences()->first()->id);
 
         $user->recurringtransactions()->save($rec);
-        $this->assertEquals($rec->id,$user->recurringtransactions()->first()->id);
+        $this->assertEquals($rec->id, $user->recurringtransactions()->first()->id);
 
         $user->transactionjournals()->save($journal);
-        $this->assertEquals($journal->id,$user->transactionjournals()->first()->id);
+        $this->assertEquals($journal->id, $user->transactionjournals()->first()->id);
     }
 
 

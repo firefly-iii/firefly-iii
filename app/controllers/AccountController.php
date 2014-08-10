@@ -102,12 +102,7 @@ class AccountController extends \BaseController
 
         $account = $this->_repository->store(Input::all());
 
-        if (!$account->id) {
-            // did not save, return with error:
-            Session::flash('error', 'Could not save the new account. Please check the form.');
-
-            return Redirect::route('accounts.create')->withErrors($account->errors())->withInput();
-        } else {
+        if ($account->validate()) {
             // saved! return to wherever.
             Session::flash('success', 'Account "' . $account->name . '" created!');
             if (Input::get('create') == '1') {
@@ -115,6 +110,12 @@ class AccountController extends \BaseController
             } else {
                 return Redirect::route('accounts.index');
             }
+        } else {
+            // did not save, return with error:
+            Session::flash('error', 'Could not save the new account. Please check the form.');
+
+            return Redirect::route('accounts.create')->withErrors($account->errors())->withInput();
+
         }
     }
 

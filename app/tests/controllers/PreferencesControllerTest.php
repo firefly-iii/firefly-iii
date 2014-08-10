@@ -35,8 +35,8 @@ class PreferencesControllerTest extends TestCase
         $viewRange->shouldReceive('getAttribute')->with('data')->andReturn('1M');
 
         $this->_accounts->shouldReceive('getDefault')->andReturn([]);
-        $this->_helper->shouldReceive('get')->with('viewRange','1M')->andReturn($viewRange);
-        $this->_helper->shouldReceive('get')->with('frontpageAccounts',[])->andReturn([]);
+        $this->_helper->shouldReceive('get')->with('viewRange', '1M')->andReturn($viewRange);
+        $this->_helper->shouldReceive('get')->with('frontpageAccounts', [])->andReturn([]);
 
 
         $this->action('GET', 'PreferencesController@index');
@@ -45,9 +45,9 @@ class PreferencesControllerTest extends TestCase
 
     public function testPostIndex()
     {
-        $this->_helper->shouldReceive('set')->with('frontpageAccounts',[1]);
-        $this->_helper->shouldReceive('set')->with('viewRange','1M');
-        $this->action('POST', 'PreferencesController@postIndex',['frontpageAccounts' => [1],'viewRange' => '1M']);
+        $this->_helper->shouldReceive('set')->with('frontpageAccounts', [1]);
+        $this->_helper->shouldReceive('set')->with('viewRange', '1M');
+        $this->action('POST', 'PreferencesController@postIndex', ['frontpageAccounts' => [1], 'viewRange' => '1M']);
         $this->assertResponseStatus(302);
     }
 } 

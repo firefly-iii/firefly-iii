@@ -118,8 +118,6 @@ class CategoryControllerTest extends TestCase
         $this->session(['start' => new Carbon, 'end' => new Carbon]);
 
 
-
-
         $this->_category->shouldReceive('journalsInRange')->once()->andReturn([]);
         $this->action('GET', 'CategoryController@show', $category->id);
         $this->assertResponseOk();
@@ -136,7 +134,7 @@ class CategoryControllerTest extends TestCase
     public function testStoreFails()
     {
         $category = f::create('Category');
-        unset($category->id);
+        unset($category->name);
         $this->_repository->shouldReceive('store')->andReturn($category);
         $this->action('POST', 'CategoryController@store');
         $this->assertRedirectedToRoute('categories.create');

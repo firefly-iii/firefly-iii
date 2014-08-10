@@ -117,7 +117,7 @@ class BudgetController extends BaseController
 
         return View::make('budgets.show')->with('budget', $budget)->with('repetitions', $repetitions)->with(
             'filters', $filters
-        )->with('highlight',Input::get('highlight'));
+        )->with('highlight', Input::get('highlight'));
     }
 
     /**
@@ -127,7 +127,7 @@ class BudgetController extends BaseController
     {
 
         $budget = $this->_repository->store(Input::all());
-        if ($budget->id) {
+        if ($budget->validate()) {
             Event::fire('budgets.change');
             Session::flash('success', 'Budget created!');
 

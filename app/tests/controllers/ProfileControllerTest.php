@@ -92,7 +92,7 @@ class ProfileControllerTest extends TestCase
         $this->_user->shouldReceive('getAttribute')->with('email')->andReturn('some@email');
         $this->_user->shouldReceive('getAttribute')->with('password')->andReturn('Blablabla');
 
-        $this->action('POST', 'ProfileController@postChangePassword',['old' => '']);
+        $this->action('POST', 'ProfileController@postChangePassword', ['old' => '']);
         $this->assertResponseOk();
     }
 
