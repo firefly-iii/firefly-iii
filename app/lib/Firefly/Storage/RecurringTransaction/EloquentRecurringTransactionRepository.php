@@ -7,8 +7,10 @@ use Carbon\Carbon;
 
 class EloquentRecurringTransactionRepository implements RecurringTransactionRepositoryInterface
 {
-    public function destroy(\RecurringTransaction $recurringTransaction) {
+    public function destroy(\RecurringTransaction $recurringTransaction)
+    {
         $recurringTransaction->delete();
+
         return true;
     }
 
@@ -27,8 +29,9 @@ class EloquentRecurringTransactionRepository implements RecurringTransactionRepo
         $recurringTransaction->amount_min = floatval($data['amount_min']);
 
         // both amounts zero:
-        if($recurringTransaction->amount_max == 0 && $recurringTransaction->amount_min == 0) {
-            $recurringTransaction->errors()->add('amount_max','Amount max and min cannot both be zero.');
+        if ($recurringTransaction->amount_max == 0 && $recurringTransaction->amount_min == 0) {
+            $recurringTransaction->errors()->add('amount_max', 'Amount max and min cannot both be zero.');
+
             return $recurringTransaction;
         }
 
@@ -38,9 +41,10 @@ class EloquentRecurringTransactionRepository implements RecurringTransactionRepo
         $recurringTransaction->skip = isset($data['skip']) ? intval($data['skip']) : 0;
         $recurringTransaction->repeat_freq = $data['repeat_freq'];
 
-        if($recurringTransaction->validate()) {
+        if ($recurringTransaction->validate()) {
             $recurringTransaction->save();
         }
+
         return $recurringTransaction;
     }
 

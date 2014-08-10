@@ -68,8 +68,8 @@ class CategoryController extends BaseController
     public function store()
     {
         $category = $this->_repository->store(Input::all());
-        if ($category->id) {
-            Session::flash('success', 'Category created!');
+        if ($category->validate()) {
+            Session::flash('success', 'Category "' . $category->name . '" created!');
 
             if (Input::get('create') == '1') {
                 return Redirect::route('categories.create');

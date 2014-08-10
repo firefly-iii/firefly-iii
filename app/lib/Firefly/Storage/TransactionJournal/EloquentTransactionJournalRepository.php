@@ -392,7 +392,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
 
                 // do budget:
                 $budget = $budRepository->find($data['budget_id']);
-                if(!is_null($budget)) {
+                if (!is_null($budget)) {
                     $journal->budgets()->attach($budget);
                 }
 

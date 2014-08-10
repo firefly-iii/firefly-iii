@@ -69,6 +69,7 @@ class EloquentUserRepository implements UserRepositoryInterface
         if (!$user->save()) {
             \Log::error('Invalid user');
             \Session::flash('error', 'Input invalid, please try again: ' . $user->errors()->first());
+
             return false;
         }
         $user->save();

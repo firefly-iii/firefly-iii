@@ -1,5 +1,6 @@
 <?php
 use Zizaco\FactoryMuff\Facade\FactoryMuff as f;
+
 /**
  * Class JsonControllerTest
  */

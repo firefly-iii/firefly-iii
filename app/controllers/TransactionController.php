@@ -145,19 +145,19 @@ class TransactionController extends BaseController
      */
     public function store($what)
     {
-        $transactionJournal = $this->_repository->store($what, Input::all());
-        if ($transactionJournal->id) {
-            Session::flash('success', 'Transaction "' . $transactionJournal->description . '" saved!');
+        $journal = $this->_repository->store($what, Input::all());
+        if ($journal->validate()) {
+            Session::flash('success', 'Transaction "' . $journal->description . '" saved!');
             if (Input::get('create') == '1') {
                 return Redirect::route('transactions.create', [$what])->withInput();
             } else {
                 return Redirect::route('transactions.index');
             }
         } else {
-            Session::flash('error', 'Could not save transaction: ' . $transactionJournal->errors()->first());
+            Session::flash('error', 'Could not save transaction: ' . $journal->errors()->first());
 
             return Redirect::route('transactions.create', [$what])->withInput()->withErrors(
-                $transactionJournal->errors()
+                $journal->errors()
             );
         }
 

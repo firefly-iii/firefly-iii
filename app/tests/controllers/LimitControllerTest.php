@@ -126,6 +126,7 @@ class LimitControllerTest extends TestCase
 
         $this->_limits->shouldReceive('store')->once()->andReturn($limit);
         $this->action('POST', 'LimitController@store');
+        $this->assertRedirectedToRoute('budgets.index.budget');
         $this->assertResponseStatus(302);
     }
 
@@ -137,10 +138,12 @@ class LimitControllerTest extends TestCase
         $limit->save();
         $limitrepetition = f::create('LimitRepetition');
         $limit->limitrepetitions()->save($limitrepetition);
-        unset($limit->id);
+        unset($limit->startdate);
+        unset($limit->component_id);
+
 
         $this->_limits->shouldReceive('store')->once()->andReturn($limit);
-        $this->action('POST', 'LimitController@store', [$budget->id, 'from' => 'date']);
+        $this->action('POST', 'LimitController@store', $budget->id);
         $this->assertResponseStatus(302);
     }
 

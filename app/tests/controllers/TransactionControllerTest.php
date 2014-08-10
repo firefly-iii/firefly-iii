@@ -242,7 +242,7 @@ class TransactionControllerTest extends TestCase
     public function testStoreFails()
     {
         $journal = f::create('TransactionJournal');
-        unset($journal->id);
+        unset($journal->description);
 
         $this->_repository->shouldReceive('store')->andReturn($journal);
 

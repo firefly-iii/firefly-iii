@@ -99,7 +99,7 @@ class PiggybankControllerTest extends TestCase
         $two->account()->associate($aOne);
         $three = f::create('Piggybank');
         $three->account()->associate($aTwo);
-        $this->_piggybanks->shouldReceive('get')->andReturn([$one,$two,$three]);
+        $this->_piggybanks->shouldReceive('get')->andReturn([$one, $two, $three]);
         $this->_piggybanks->shouldReceive('count')->andReturn(1);
         $this->action('GET', 'PiggybankController@index');
         $this->assertResponseOk();
@@ -131,7 +131,7 @@ class PiggybankControllerTest extends TestCase
     public function testStoreFails()
     {
         $piggyBank = f::create('Piggybank');
-        unset($piggyBank->id);
+        unset($piggyBank->amount);
         $this->_piggybanks->shouldReceive('store')->andReturn($piggyBank);
         $this->action('POST', 'PiggybankController@store');
         $this->assertResponseStatus(302);
@@ -141,13 +141,32 @@ class PiggybankControllerTest extends TestCase
     {
         $piggyBank = f::create('Piggybank');
         $this->_piggybanks->shouldReceive('store')->andReturn($piggyBank);
-        $this->action('POST', 'PiggybankController@store',['create' => '1']);
+        $this->action('POST', 'PiggybankController@store', ['create' => '1']);
         $this->assertResponseStatus(302);
     }
 
     public function testUpdate()
     {
         $piggyBank = f::create('Piggybank');
+
+        $this->_piggybanks->shouldReceive('update')->andReturn($piggyBank);
+
+        // for binding
+        Auth::shouldReceive('user')->andReturn($this->_user);
+        Auth::shouldReceive('check')->andReturn(true);
+        $this->_user->shouldReceive('getAttribute')->with('id')->andReturn(
+            $piggyBank->account()->first()->user_id
+        );
+        $this->_user->shouldReceive('getAttribute')->with('email')->andReturn('some@email');
+
+        $this->action('POST', 'PiggybankController@update', $piggyBank->id);
+        $this->assertResponseStatus(302);
+    }
+
+    public function testUpdateFails()
+    {
+        $piggyBank = f::create('Piggybank');
+        unset($piggyBank->amount);
 
         $this->_piggybanks->shouldReceive('update')->andReturn($piggyBank);
 

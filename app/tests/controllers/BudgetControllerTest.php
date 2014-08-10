@@ -5,7 +5,8 @@ use Illuminate\Database\Eloquent\Collection;
 use Mockery as m;
 use Zizaco\FactoryMuff\Facade\FactoryMuff as f;
 
-class BudgetControllerTest extends TestCase {
+class BudgetControllerTest extends TestCase
+{
     protected $_repository;
     protected $_user;
     protected $_budgets;
@@ -77,7 +78,7 @@ class BudgetControllerTest extends TestCase {
         Event::shouldReceive('fire')->once()->with('budgets.change');
         $this->_repository->shouldReceive('destroy')->once()->andReturn(true);
 
-        $this->action('POST', 'BudgetController@destroy', [$budget->id,'from' => 'date']);
+        $this->action('POST', 'BudgetController@destroy', [$budget->id, 'from' => 'date']);
         $this->assertRedirectedToRoute('budgets.index');
         $this->assertSessionHas('success');
     }
@@ -140,7 +141,6 @@ class BudgetControllerTest extends TestCase {
         $this->_user->shouldReceive('getAttribute')->with('email')->once()->andReturn($budget->email);
 
 
-
         $this->session(['start' => new Carbon, 'end' => new Carbon]);
 
         $this->_budgets->shouldReceive('organizeRepetitions')->once()->andReturn([]);
@@ -159,11 +159,10 @@ class BudgetControllerTest extends TestCase {
         $this->_user->shouldReceive('getAttribute')->with('email')->once()->andReturn($budget->email);
 
 
-
         $this->session(['start' => new Carbon, 'end' => new Carbon]);
 
         $this->_budgets->shouldReceive('outsideRepetitions')->once()->andReturn([]);
-        $this->action('GET', 'BudgetController@show', [$budget->id,'noenvelope' => 'true']);
+        $this->action('GET', 'BudgetController@show', [$budget->id, 'noenvelope' => 'true']);
         $this->assertResponseOk();
     }
 
@@ -178,11 +177,10 @@ class BudgetControllerTest extends TestCase {
         $this->_user->shouldReceive('getAttribute')->with('email')->once()->andReturn($budget->email);
 
 
-
         $this->session(['start' => new Carbon, 'end' => new Carbon]);
 
 //        $this->_budgets->shouldReceive('show')->once()->andReturn([]);
-        $arr = [0 => ['limitrepetition' => null, 'limit' => null,'date' => '']];
+        $arr = [0 => ['limitrepetition' => null, 'limit' => null, 'date' => '']];
         $this->_budgets->shouldReceive('organizeRepetition')->once()->andReturn($arr);
         $this->action('GET', 'BudgetController@show', [$budget->id, 'rep' => '1']);
         $this->assertResponseOk();
@@ -195,20 +193,21 @@ class BudgetControllerTest extends TestCase {
         $this->action('POST', 'BudgetController@store');
         $this->assertRedirectedToRoute('budgets.index.budget');
     }
+
     public function testStoreFromDate()
     {
         $budget = f::create('Budget');
         $this->_repository->shouldReceive('store')->andReturn($budget);
-        $this->action('POST', 'BudgetController@store',['from' => 'date']);
+        $this->action('POST', 'BudgetController@store', ['from' => 'date']);
         $this->assertRedirectedToRoute('budgets.index');
     }
 
     public function testStoreFails()
     {
         $budget = f::create('Budget');
-        unset($budget->id);
+        unset($budget->name);
         $this->_repository->shouldReceive('store')->andReturn($budget);
-        $this->action('POST', 'BudgetController@store',['from'=>'budget']);
+        $this->action('POST', 'BudgetController@store', ['from' => 'budget']);
         $this->assertRedirectedToRoute('budgets.create');
     }
 
@@ -216,8 +215,8 @@ class BudgetControllerTest extends TestCase {
     {
         $budget = f::create('Budget');
         $this->_repository->shouldReceive('store')->andReturn($budget);
-        $this->action('POST', 'BudgetController@store', ['from' => 'budget','create' => '1']);
-        $this->assertRedirectedToRoute('budgets.create',['from' => 'budget']);
+        $this->action('POST', 'BudgetController@store', ['from' => 'budget', 'create' => '1']);
+        $this->assertRedirectedToRoute('budgets.create', ['from' => 'budget']);
     }
 
     public function testUpdate()
@@ -243,7 +242,7 @@ class BudgetControllerTest extends TestCase {
         $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($budget->user_id);
         $this->_repository->shouldReceive('update')->andReturn($budget);
 
-        $this->action('POST', 'BudgetController@update', [$budget->id,'from' => 'date']);
+        $this->action('POST', 'BudgetController@update', [$budget->id, 'from' => 'date']);
         $this->assertRedirectedToRoute('budgets.index');
 
     }

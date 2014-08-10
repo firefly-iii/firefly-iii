@@ -82,19 +82,20 @@ class PiggybankController extends BaseController
     public function store()
     {
         $piggyBank = $this->_repository->store(Input::all());
-        if (!$piggyBank->id) {
-            Session::flash('error', 'Could not save piggy bank: ' . $piggyBank->errors()->first());
-
-            return Redirect::route('piggybanks.create')->withInput();
-        } else {
+        if ($piggyBank->validate()) {
             Session::flash('success', 'New piggy bank "' . $piggyBank->name . '" created!');
-
 
             if (Input::get('create') == '1') {
                 return Redirect::route('piggybanks.create')->withInput();
             }
 
             return Redirect::route('piggybanks.index');
+
+
+        } else {
+            Session::flash('error', 'Could not save piggy bank: ' . $piggyBank->errors()->first());
+
+            return Redirect::route('piggybanks.create')->withInput();
         }
 
     }
@@ -103,9 +104,17 @@ class PiggybankController extends BaseController
     {
 
         $piggyBank = $this->_repository->update(Input::all());
-        Session::flash('success', 'Piggy bank "' . $piggyBank->name . '" updated.');
+        if ($piggyBank->validate()) {
+            Session::flash('success', 'Piggy bank "' . $piggyBank->name . '" updated.');
 
-        return Redirect::route('piggybanks.index');
+            return Redirect::route('piggybanks.index');
+        } else {
+            Session::flash('error', 'Could not update piggy bank: ' . $piggyBank->errors()->first());
+
+            return Redirect::route('piggybanks.edit', $piggyBank->id)->withErrors($piggyBank->errors())->withInput();
+        }
+
+
     }
 
     public function updateAmount(Piggybank $piggybank)

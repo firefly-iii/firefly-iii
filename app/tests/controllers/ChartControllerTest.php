@@ -86,7 +86,7 @@ class ChartControllerTest extends TestCase
         $this->_user->shouldReceive('getAttribute')->with('id')->andReturn($account->user_id);
         $this->_accounts->shouldReceive('findByName')->andReturn($account);
 
-        $this->_charts->shouldReceive('accountDailySummary')->once()->andReturn(['rows' => [],'sum' => 0]);
+        $this->_charts->shouldReceive('accountDailySummary')->once()->andReturn(['rows' => [], 'sum' => 0]);
 
         $this->call('GET', 'chart/home/info/' . $account->name . '/01/08/2014');
         $this->assertResponseOk();

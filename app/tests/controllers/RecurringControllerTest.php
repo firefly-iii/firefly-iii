@@ -44,7 +44,7 @@ class RecurringControllerTest extends TestCase
         $this->_user->shouldReceive('getAttribute')->with('email')->once()->andReturn('some@email');
 
 
-        $this->action('GET', 'RecurringController@delete',$recurringTransaction->id);
+        $this->action('GET', 'RecurringController@delete', $recurringTransaction->id);
         $this->assertResponseOk();
     }
 
@@ -59,7 +59,7 @@ class RecurringControllerTest extends TestCase
         $this->_user->shouldReceive('getAttribute')->with('email')->andReturn('some@email');
         $this->_repository->shouldReceive('destroy')->andReturn(true);
 
-        $this->action('POST', 'RecurringController@destroy',$recurringTransaction->id);
+        $this->action('POST', 'RecurringController@destroy', $recurringTransaction->id);
         $this->assertResponseStatus(302);
     }
 
@@ -74,7 +74,7 @@ class RecurringControllerTest extends TestCase
         $this->_user->shouldReceive('getAttribute')->with('email')->andReturn('some@email');
         $this->_repository->shouldReceive('destroy')->andReturn(false);
 
-        $this->action('POST', 'RecurringController@destroy',$recurringTransaction->id);
+        $this->action('POST', 'RecurringController@destroy', $recurringTransaction->id);
         $this->assertResponseStatus(302);
     }
 
@@ -88,7 +88,7 @@ class RecurringControllerTest extends TestCase
         $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($recurringTransaction->user_id);
         $this->_user->shouldReceive('getAttribute')->with('email')->once()->andReturn('some@email');
 
-        $this->action('GET', 'RecurringController@edit',$recurringTransaction->id);
+        $this->action('GET', 'RecurringController@edit', $recurringTransaction->id);
         $this->assertResponseOk();
     }
 
@@ -112,7 +112,7 @@ class RecurringControllerTest extends TestCase
         $this->_user->shouldReceive('getAttribute')->with('email')->andReturn('some@email');
 
 
-        $this->action('GET', 'RecurringController@show',$recurringTransaction->id);
+        $this->action('GET', 'RecurringController@show', $recurringTransaction->id);
         $this->assertResponseOk();
     }
 
@@ -130,17 +130,18 @@ class RecurringControllerTest extends TestCase
         $recurringTransaction = f::create('RecurringTransaction');
 
         $this->_repository->shouldReceive('store')->andReturn($recurringTransaction);
-        $this->action('POST', 'RecurringController@store',['create' => '1']);
+        $this->action('POST', 'RecurringController@store', ['create' => '1']);
         $this->assertResponseStatus(302);
     }
 
     public function testStoreFails()
     {
         $recurringTransaction = f::create('RecurringTransaction');
-        unset($recurringTransaction->id);
+        unset($recurringTransaction->active);
+        unset($recurringTransaction->automatch);
 
         $this->_repository->shouldReceive('store')->andReturn($recurringTransaction);
-        $this->action('POST', 'RecurringController@store',['create' => '1']);
+        $this->action('POST', 'RecurringController@store', ['create' => '1']);
         $this->assertResponseStatus(302);
     }
 
@@ -155,7 +156,7 @@ class RecurringControllerTest extends TestCase
         $this->_user->shouldReceive('getAttribute')->with('email')->andReturn('some@email');
 
 
-        $this->action('POST', 'RecurringController@update',$recurringTransaction->id);
+        $this->action('POST', 'RecurringController@update', $recurringTransaction->id);
         $this->assertResponseOk();
     }
 } 
