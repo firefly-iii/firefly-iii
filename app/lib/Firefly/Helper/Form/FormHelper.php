@@ -9,6 +9,11 @@ namespace Firefly\Helper\Form;
  */
 class FormHelper
 {
+    /**
+     * @param null $value
+     *
+     * @return string
+     */
     public function budget($value = null)
     {
 

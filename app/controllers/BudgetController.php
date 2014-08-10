@@ -34,11 +34,21 @@ class BudgetController extends BaseController
         return View::make('budgets.create')->with('periods', $periods);
     }
 
+    /**
+     * @param Budget $budget
+     *
+     * @return $this
+     */
     public function delete(Budget $budget)
     {
         return View::make('budgets.delete')->with('budget', $budget);
     }
 
+    /**
+     * @param Budget $budget
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(Budget $budget)
     {
         $result = $this->_repository->destroy($budget);
@@ -58,6 +68,11 @@ class BudgetController extends BaseController
 
     }
 
+    /**
+     * @param Budget $budget
+     *
+     * @return $this
+     */
     public function edit(Budget $budget)
     {
         return View::make('budgets.edit')->with('budget', $budget);
@@ -102,7 +117,7 @@ class BudgetController extends BaseController
 
         if (!is_null(Input::get('rep'))) {
             $repetitionId = intval(Input::get('rep'));
-            $repetitions = $this->_budgets->organizeRepetition($budget, $repetitionId);
+            $repetitions = $this->_budgets->organizeRepetition($repetitionId);
             $filters[] = $repetitions[0]['limit'];
             $filters[] = $repetitions[0]['limitrepetition'];
         } else {
@@ -148,6 +163,11 @@ class BudgetController extends BaseController
 
     }
 
+    /**
+     * @param Budget $budget
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse
+     */
     public function update(Budget $budget)
     {
         $budget = $this->_repository->update($budget, Input::all());

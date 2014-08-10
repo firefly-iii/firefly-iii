@@ -18,6 +18,12 @@ interface BudgetInterface
      */
     public function organizeByDate(Collection $budgets);
 
+    /**
+     * @param         $repetitionId
+     *
+     * @return mixed
+     */
+    public function organizeRepetition($repetitionId);
 
     /**
      * @param \Budget $budget
@@ -25,14 +31,6 @@ interface BudgetInterface
      * @return mixed
      */
     public function organizeRepetitions(\Budget $budget);
-
-    /**
-     * @param \Budget $budget
-     * @param         $repetitionId
-     *
-     * @return mixed
-     */
-    public function organizeRepetition(\Budget $budget, $repetitionId);
 
     /**
      * @param \Budget $budget

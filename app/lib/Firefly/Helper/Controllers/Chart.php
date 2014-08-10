@@ -5,9 +5,21 @@ namespace Firefly\Helper\Controllers;
 use Carbon\Carbon;
 use Firefly\Exception\FireflyException;
 
+/**
+ * Class Chart
+ *
+ * @package Firefly\Helper\Controllers
+ */
 class Chart implements ChartInterface
 {
 
+    /**
+     * @param \Account $account
+     * @param Carbon   $start
+     * @param Carbon   $end
+     *
+     * @return array
+     */
     public function account(\Account $account, Carbon $start, Carbon $end)
     {
         $current = clone $start;
@@ -30,6 +42,12 @@ class Chart implements ChartInterface
         return $return;
     }
 
+    /**
+     * @param \Account $account
+     * @param Carbon   $date
+     *
+     * @return array
+     */
     public function accountDailySummary(\Account $account, Carbon $date)
     {
         $result = [
@@ -80,6 +98,8 @@ class Chart implements ChartInterface
     }
 
     /**
+     * @param Carbon $start
+     *
      * @return array
      */
     public function budgets(Carbon $start)
@@ -164,6 +184,13 @@ class Chart implements ChartInterface
         return $data;
     }
 
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     * @throws \Firefly\Exception\FireflyException
+     */
     public function categories(Carbon $start, Carbon $end)
     {
 
@@ -211,6 +238,15 @@ class Chart implements ChartInterface
         return $chartData;
     }
 
+    /**
+     * @param \Category $category
+     * @param           $range
+     * @param Carbon    $start
+     * @param Carbon    $end
+     *
+     * @return array
+     * @throws \Firefly\Exception\FireflyException
+     */
     public function categoryShowChart(\Category $category, $range, Carbon $start, Carbon $end)
     {
         $data = ['name' => $category->name . ' per ' . $range, 'data' => []];
@@ -278,7 +314,7 @@ class Chart implements ChartInterface
             $title = '';
             switch ($range) {
                 default:
-                    throw new \Firefly\Exception\FireflyException('No date formats for frequency "' . $range . '"!');
+                    throw new FireflyException('No date formats for frequency "' . $range . '"!');
                     break;
                 case '1D':
                     $title = $beginning->format('j F Y');

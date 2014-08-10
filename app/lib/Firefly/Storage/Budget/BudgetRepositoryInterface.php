@@ -2,8 +2,6 @@
 
 namespace Firefly\Storage\Budget;
 
-use Carbon\Carbon;
-
 /**
  * Interface BudgetRepositoryInterface
  *
@@ -12,7 +10,7 @@ use Carbon\Carbon;
 interface BudgetRepositoryInterface
 {
     /**
-     * @param $data
+     * @param \Budget $budget
      *
      * @return mixed
      */
@@ -36,14 +34,6 @@ interface BudgetRepositoryInterface
     public function getAsSelectList();
 
     /**
-     * @param Carbon $date
-     * @param        $range
-     *
-     * @return mixed
-     */
-    public function getWithRepetitionsInPeriod(Carbon $date, $range);
-
-    /**
      * @param $data
      *
      * @return mixed
@@ -51,7 +41,8 @@ interface BudgetRepositoryInterface
     public function store($data);
 
     /**
-     * @param $data
+     * @param \Budget $budget
+     * @param         $data
      *
      * @return mixed
      */

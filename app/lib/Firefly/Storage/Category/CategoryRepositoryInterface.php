@@ -15,6 +15,11 @@ interface CategoryRepositoryInterface
      */
     public function get();
 
+    /**
+     * @param $categoryId
+     *
+     * @return mixed
+     */
     public function find($categoryId);
 
     /**
@@ -38,10 +43,16 @@ interface CategoryRepositoryInterface
      */
     public function store($data);
 
+    /**
+     * @param $category
+     * @param $data
+     *
+     * @return mixed
+     */
     public function update($category, $data);
 
     /**
-     * @param $data
+     * @param $category
      *
      * @return mixed
      */

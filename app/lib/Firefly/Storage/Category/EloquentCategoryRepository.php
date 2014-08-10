@@ -26,6 +26,11 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
 
     }
 
+    /**
+     * @param $category
+     *
+     * @return bool|mixed
+     */
     public function destroy($category)
     {
         $category->delete();
@@ -33,6 +38,11 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
         return true;
     }
 
+    /**
+     * @param $categoryId
+     *
+     * @return mixed
+     */
     public function find($categoryId)
     {
         return \Auth::user()->categories()->find($categoryId);
@@ -62,7 +72,7 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param $name
+     * @param $data
      *
      * @return \Category|mixed
      */
@@ -77,6 +87,12 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
         return $category;
     }
 
+    /**
+     * @param $category
+     * @param $data
+     *
+     * @return mixed
+     */
     public function update($category, $data)
     {
         // update account accordingly:

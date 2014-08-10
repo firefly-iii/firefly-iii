@@ -22,7 +22,7 @@ interface AccountInterface
     public function index(Collection $accounts);
 
     /**
-     * @param Account $account
+     * @param \Account $account
      *
      * @return mixed
      */

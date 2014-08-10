@@ -2,16 +2,25 @@
 
 use Firefly\Storage\RecurringTransaction\RecurringTransactionRepositoryInterface as RTR;
 
+/**
+ * Class RecurringController
+ */
 class RecurringController extends BaseController
 {
     protected $_repository;
 
+    /**
+     * @param RTR $repository
+     */
     public function __construct(RTR $repository)
     {
         $this->_repository = $repository;
         View::share('menu', 'home');
     }
 
+    /**
+     * @return $this
+     */
     public function create()
     {
         $periods = \Config::get('firefly.periods_to_text');
@@ -19,11 +28,21 @@ class RecurringController extends BaseController
         return View::make('recurring.create')->with('periods', $periods);
     }
 
+    /**
+     * @param RecurringTransaction $recurringTransaction
+     *
+     * @return $this
+     */
     public function delete(RecurringTransaction $recurringTransaction)
     {
         return View::make('recurring.delete')->with('recurringTransaction', $recurringTransaction);
     }
 
+    /**
+     * @param RecurringTransaction $recurringTransaction
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(RecurringTransaction $recurringTransaction)
     {
         $result = $this->_repository->destroy($recurringTransaction);
@@ -37,6 +56,11 @@ class RecurringController extends BaseController
 
     }
 
+    /**
+     * @param RecurringTransaction $recurringTransaction
+     *
+     * @return $this
+     */
     public function edit(RecurringTransaction $recurringTransaction)
     {
         $periods = \Config::get('firefly.periods_to_text');
@@ -46,6 +70,9 @@ class RecurringController extends BaseController
         );
     }
 
+    /**
+     * @return $this
+     */
     public function index()
     {
         $list = $this->_repository->get();
@@ -53,10 +80,16 @@ class RecurringController extends BaseController
         return View::make('recurring.index')->with('list', $list);
     }
 
+    /**
+     *
+     */
     public function show()
     {
     }
 
+    /**
+     * @return $this|\Illuminate\Http\RedirectResponse
+     */
     public function store()
     {
         $recurringTransaction = $this->_repository->store(Input::all());
@@ -76,6 +109,9 @@ class RecurringController extends BaseController
         }
     }
 
+    /**
+     * @param RecurringTransaction $recurringTransaction
+     */
     public function update(RecurringTransaction $recurringTransaction)
     {
     }

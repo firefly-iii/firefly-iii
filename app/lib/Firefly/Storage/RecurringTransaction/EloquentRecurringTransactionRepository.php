@@ -5,8 +5,18 @@ namespace Firefly\Storage\RecurringTransaction;
 
 use Carbon\Carbon;
 
+/**
+ * Class EloquentRecurringTransactionRepository
+ *
+ * @package Firefly\Storage\RecurringTransaction
+ */
 class EloquentRecurringTransactionRepository implements RecurringTransactionRepositoryInterface
 {
+    /**
+     * @param \RecurringTransaction $recurringTransaction
+     *
+     * @return bool|mixed
+     */
     public function destroy(\RecurringTransaction $recurringTransaction)
     {
         $recurringTransaction->delete();
@@ -14,11 +24,19 @@ class EloquentRecurringTransactionRepository implements RecurringTransactionRepo
         return true;
     }
 
+    /**
+     * @return mixed
+     */
     public function get()
     {
         return \Auth::user()->recurringtransactions()->get();
     }
 
+    /**
+     * @param $data
+     *
+     * @return mixed|\RecurringTransaction
+     */
     public function store($data)
     {
         $recurringTransaction = new \RecurringTransaction;

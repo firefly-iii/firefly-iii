@@ -13,6 +13,8 @@ class Account implements AccountInterface
 {
     /**
      * @param Collection $accounts
+     *
+     * @return array|mixed
      */
     public function index(Collection $accounts)
     {

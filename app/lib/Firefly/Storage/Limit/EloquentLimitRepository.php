@@ -14,6 +14,11 @@ class EloquentLimitRepository implements LimitRepositoryInterface
 {
 
 
+    /**
+     * @param \Limit $limit
+     *
+     * @return bool
+     */
     public function destroy(\Limit $limit)
     {
         $limit->delete();

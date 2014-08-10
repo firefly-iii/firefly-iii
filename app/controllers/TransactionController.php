@@ -44,6 +44,11 @@ class TransactionController extends BaseController
         );
     }
 
+    /**
+     * @param TransactionJournal $transactionJournal
+     *
+     * @return $this
+     */
     public function delete(TransactionJournal $transactionJournal)
     {
         return View::make('transactions.delete')->with('journal', $transactionJournal);
@@ -51,6 +56,12 @@ class TransactionController extends BaseController
 
     }
 
+
+    /**
+     * @param TransactionJournal $transactionJournal
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(TransactionJournal $transactionJournal)
     {
         $transactionJournal->delete();
@@ -60,9 +71,9 @@ class TransactionController extends BaseController
     }
 
     /**
-     * @param $journalId
+     * @param TransactionJournal $journal
      *
-     * @return $this|\Illuminate\View\View
+     * @return $this
      */
     public function edit(TransactionJournal $journal)
     {
@@ -129,9 +140,9 @@ class TransactionController extends BaseController
     }
 
     /**
-     * @param $journalId
+     * @param TransactionJournal $journal
      *
-     * @return $this|\Illuminate\View\View
+     * @return $this
      */
     public function show(TransactionJournal $journal)
     {
@@ -164,6 +175,11 @@ class TransactionController extends BaseController
 
     }
 
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse
+     */
     public function update(TransactionJournal $journal)
     {
         $journal = $this->_repository->update($journal, Input::all());

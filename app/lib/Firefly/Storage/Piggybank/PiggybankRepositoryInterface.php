@@ -11,16 +11,43 @@ namespace Firefly\Storage\Piggybank;
 interface PiggybankRepositoryInterface
 {
 
+    /**
+     * @param $piggyBankId
+     *
+     * @return mixed
+     */
     public function find($piggyBankId);
 
+    /**
+     * @return mixed
+     */
     public function count();
 
+    /**
+     * @param $data
+     *
+     * @return mixed
+     */
     public function store($data);
 
+    /**
+     * @return mixed
+     */
     public function get();
 
+    /**
+     * @param \Piggybank $piggyBank
+     * @param            $amount
+     *
+     * @return mixed
+     */
     public function updateAmount(\Piggybank $piggyBank, $amount);
 
+    /**
+     * @param $data
+     *
+     * @return mixed
+     */
     public function update($data);
 
 } 

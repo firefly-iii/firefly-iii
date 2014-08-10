@@ -27,8 +27,20 @@ interface TransactionJournalRepositoryInterface
      */
     public function get();
 
+    /**
+     * @param $what
+     * @param $data
+     *
+     * @return mixed
+     */
     public function store($what, $data);
 
+    /**
+     * @param \TransactionJournal $journal
+     * @param                     $data
+     *
+     * @return mixed
+     */
     public function update(\TransactionJournal $journal, $data);
 
     /**
@@ -55,14 +67,6 @@ interface TransactionJournalRepositoryInterface
      * @return mixed
      */
     public function getByAccountAndDate(\Account $account, Carbon $date);
-
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return mixed
-     */
-    public function getByDateRange(Carbon $start, Carbon $end);
 
     /**
      * @param int $count
