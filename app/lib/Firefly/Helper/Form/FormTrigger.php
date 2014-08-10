@@ -3,6 +3,7 @@
 namespace Firefly\Helper\Form;
 
 use Illuminate\Events\Dispatcher;
+
 /**
  * Class FormTrigger
  *

@@ -142,6 +142,7 @@ class MigrationHelper implements MigrationHelperInterface
         foreach ($this->JSON->components as $entry) {
             switch ($entry->type->type) {
                 case 'beneficiary':
+                    /** @noinspection PhpParamsInspection */
                     $beneficiary = $this->_importBeneficiary($entry, $beneficiaryAT);
                     $this->map['accounts'][$entry->id] = $beneficiary;
                     break;
