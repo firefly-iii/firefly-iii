@@ -47,7 +47,7 @@
         <h3>Piggy banks</h3>
 
         @foreach($piggybanks as $piggybank)
-        <h4>{{{$piggybank->name}}} <small>{{mf($piggybank->target)}}</small></h4>
+        <h4><a href="{{route('piggybanks.show',$piggybank->id)}}">{{{$piggybank->name}}}</a> <small>{{mf($piggybank->target)}}</small></h4>
         @if(!is_null($piggybank->targetdate))
         <p>
             Target date: {{$piggybank->targetdate->format('jS F Y')}}
