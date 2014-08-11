@@ -103,8 +103,9 @@ class PiggybankController extends BaseController
     /**
      *
      */
-    public function show()
+    public function show(Piggybank $piggyBank)
     {
+        return View::make('piggybanks.show')->with('piggyBank',$piggyBank);
     }
 
     /**
