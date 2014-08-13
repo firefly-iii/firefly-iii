@@ -27,9 +27,10 @@ class PiggybankController extends BaseController
      */
     public function createPiggybank()
     {
+        $periods = Config::get('firefly.piggybank_periods');
         $accounts = $this->_accounts->getActiveDefaultAsSelectList();
 
-        return View::make('piggybanks.create-piggybank')->with('accounts', $accounts);
+        return View::make('piggybanks.create-piggybank')->with('accounts', $accounts)->with('periods',$periods);
     }
 
     public function createRepeated()

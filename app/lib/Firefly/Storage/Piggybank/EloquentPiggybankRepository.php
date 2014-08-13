@@ -1,6 +1,7 @@
 <?php
 
 namespace Firefly\Storage\Piggybank;
+use Carbon\Carbon;
 
 
 /**
@@ -74,7 +75,19 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
 
         $piggyBank = new \Piggybank($data);
         $piggyBank->account()->associate($account);
+        $today = new Carbon;
         if ($piggyBank->validate()) {
+            echo 'Valid, but some more checking!';
+            if($piggyBank->targetdate < $today) {
+                $piggyBank->errors()->add('targetdate','Target date cannot be in the past.');
+                echo 'errrrrrr on target date';
+                return $piggyBank;
+            }
+
+            // first period for reminder is AFTER target date.
+            // just flash a warning
+            die('Here be a check. Sorry for the kill-switch. Will continue tomorrow.');
+
             $piggyBank->save();
         }
 

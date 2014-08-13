@@ -31,6 +31,7 @@ class CreatePiggybanksTable extends Migration
                 $table->enum('rep_length', ['day', 'week', 'month', 'year'])->nullable();
                 $table->smallInteger('rep_times')->unsigned();
                 $table->enum('reminder', ['day', 'week', 'month', 'year'])->nullable();
+                $table->smallInteger('reminder_skip')->unsigned();
                 $table->integer('order')->unsigned();
 
                 // connect account to piggybank.
