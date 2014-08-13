@@ -25,12 +25,20 @@ class PiggybankController extends BaseController
     /**
      * @return $this
      */
-    public function create()
+    public function createPiggybank()
+    {
+        $accounts = $this->_accounts->getActiveDefaultAsSelectList();
+
+        return View::make('piggybanks.create-piggybank')->with('accounts', $accounts);
+    }
+
+    public function createRepeated()
     {
         $accounts = $this->_accounts->getActiveDefaultAsSelectList();
 
         return View::make('piggybanks.create')->with('accounts', $accounts);
     }
+
 
     /**
      * @param Piggybank $piggyBank
@@ -72,20 +80,12 @@ class PiggybankController extends BaseController
      */
     public function index()
     {
-        $count = $this->_repository->count();
+        $countRepeating = $this->_repository->countRepeating();
+        $countNonRepeating = $this->_repository->countNonrepeating();
         $piggybanks = $this->_repository->get();
-        $accounts = [];
-        // get accounts:
-        foreach ($piggybanks as $piggyBank) {
-            $account = $piggyBank->account;
-            $id = $account->id;
-            $accounts[$id] = $account;
-        }
-
-
-        return View::make('piggybanks.index')->with('count', $count)->with('accounts', $accounts)->with(
-            'piggybanks', $piggybanks
-        );
+        return View::make('piggybanks.index')->with('piggybanks', $piggybanks)
+            ->with('countRepeating',$countRepeating)
+            ->with('countNonRepeating',$countNonRepeating);
     }
 
     /**
@@ -94,6 +94,34 @@ class PiggybankController extends BaseController
     public function show(Piggybank $piggyBank)
     {
         return View::make('piggybanks.show')->with('piggyBank', $piggyBank);
+    }
+
+    /**
+     * @return $this|\Illuminate\Http\RedirectResponse
+     */
+    public function storePiggybank()
+    {
+        $data = Input::all();
+        unset($data['_token']);
+
+        // extend the data array with the settings needed to create a piggy bank:
+        $data['repeats'] = 0;
+        $data['rep_times'] = 0;
+        $data['order'] = 0;
+
+        $piggyBank = $this->_repository->store($data);
+        if ($piggyBank->validate()) {
+            Session::flash('success', 'New piggy bank "' . $piggyBank->name . '" created!');
+
+            return Redirect::route('piggybanks.index');
+
+
+        } else {
+            Session::flash('error', 'Could not save piggy bank: ' . $piggyBank->errors()->first());
+
+            return Redirect::route('piggybanks.create.piggybank')->withInput()->withErrors($piggyBank->errors());
+        }
+
     }
 
     /**

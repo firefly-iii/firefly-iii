@@ -39,6 +39,15 @@ use LaravelBook\Ardent\Ardent as Ardent;
  */
 class Piggybank extends Ardent
 {
+    public $fillable = [
+         'name',
+        'account_id',
+        'targetamount',
+        'repeats',
+        'rep_times',
+        'order'
+    ];
+
     public static $rules
         = [
             'account_id'   => 'required|exists:accounts,id',
