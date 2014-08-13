@@ -17,7 +17,6 @@ class TransactionController extends BaseController
     public function __construct(TJRI $repository)
     {
         $this->_repository = $repository;
-        View::share('menu', 'home');
     }
 
     /**

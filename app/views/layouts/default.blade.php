@@ -28,7 +28,7 @@
 </head>
 <body>
 <div class="container">
-    @include('partials.menu.'.$menu)
+    @include('partials.menu')
     @include('partials.flashes')
     @yield('content')
 </div>

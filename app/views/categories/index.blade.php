@@ -10,6 +10,9 @@
             Use categories to group expenses by hobby, for certain types of groceries or what bills are for.
             Expenses grouped in categories do not have to reoccur every month or every week, like budgets.
         </p>
+        <p>
+            <a href="{{route('categories.create')}}" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Create a new category</a>
+        </p>
     </div>
 </div>
 

@@ -13,6 +13,9 @@
             bank accounts are representated as accounts (naturally), but the stores you buy stuff at are also
             represented as accounts. Likewise, if you have a job, your salary is drawn from their account.
         </p>
+        <p>
+            <a href="{{route('accounts.create')}}" class="btn btn-success">Create a new account</a>
+        </p>
     </div>
 </div>
 <div class="row">

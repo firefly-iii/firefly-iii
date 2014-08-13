@@ -24,17 +24,33 @@ use LaravelBook\Ardent\Ardent as Ardent;
  * @method static \Illuminate\Database\Query\Builder|\Piggybank whereAmount($value)
  * @method static \Illuminate\Database\Query\Builder|\Piggybank whereTarget($value)
  * @method static \Illuminate\Database\Query\Builder|\Piggybank whereOrder($value)
+ * @property float $targetamount
+ * @property string $startdate
+ * @property boolean $repeats
+ * @property string $rep_length
+ * @property integer $rep_times
+ * @property string $reminder
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereTargetamount($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereStartdate($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepeats($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepLength($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepTimes($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereReminder($value) 
  */
 class Piggybank extends Ardent
 {
     public static $rules
         = [
-            'name'       => 'required|between:1,255',
-            'account_id' => 'required|exists:accounts,id',
-            'targetdate' => 'date',
-            'amount'     => 'required|min:0',
-            'target'     => 'required|min:1',
-            'order'      => 'required:min:1',
+            'account_id'   => 'required|exists:accounts,id',
+            'name'         => 'required|between:1,255',
+            'targetamount' => 'required|min:0',
+            'targetdate'   => 'date',
+            'startdate'    => 'date',
+            'repeats'      => 'required|between:0,1',
+            'rep_length'   => 'in:day,week,month,year',
+            'rep_times'    => 'required|min:0|max:100',
+            'reminder'     => 'in:day,week,month,year',
+            'order'        => 'required:min:1',
         ];
 
     /**
@@ -44,14 +60,19 @@ class Piggybank extends Ardent
     {
         $start = new Carbon;
         $start->endOfMonth();
+        $today = new Carbon;
 
         return [
-            'name'       => 'string',
             'account_id' => 'factory|Account',
-            'targetdate' => $start,
-            'amount'     => 0,
-            'target'     => 100,
-            'order'      => 1
+            'name'       => 'string',
+            'targetamount' => 'required|min:0',
+            'targetdate'   => $start,
+            'startdate'    => $today,
+            'repeats'      => 0,
+            'rep_length'   => null,
+            'rep_times'    => 0,
+            'reminder'     => null,
+            'order'        => 1,
         ];
     }
 
@@ -61,6 +82,10 @@ class Piggybank extends Ardent
     public function account()
     {
         return $this->belongsTo('Account');
+    }
+
+    public function piggybankrepetitions() {
+        return $this->hasMany('PiggybankRepetition');
     }
 
     /**

@@ -19,7 +19,6 @@ class CategoryController extends BaseController
     {
         $this->_repository = $repository;
         $this->_category = $category;
-        View::share('menu', 'categories');
     }
 
     /**

@@ -3,14 +3,44 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <h1>Firefly
-            <small>Piggy banks</small>
+            <small>Piggy banks, large expenses and repeated expenses</small>
         </h1>
-        <p class="lead">Set targets and save money</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12">
+        <p class="lead">Save money for large expenses</p>
         <p class="text-info">
-            Saving money is <em>hard</em>. Piggy banks allow you to group money
-            from an account together. If you also set a target (and a target date) you
-            can save towards your goals.
+            Saving money is <em>hard</em>. Firefly's piggy banks can help you to save money. Simply set the amount
+            of money you want to save, set an optional target and whether or not Firefly should remind you to add money
+            to the piggy bank.
         </p>
+        <p>
+            <a href="{{route('piggybanks.create')}}" class="btn btn-success">Create new piggy bank</a>
+        </p>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12">
+        <p class="lead">Repeated expenses</p>
+        <p class="text-info">
+            Taxes are due every year. Or maybe you want to save up for your yearly fireworks-binge. Buy a new smart
+            phone every three years. Firefly can help you organize these repeated expenses.
+        </p>
+        <p>
+            <a href="{{route('piggybanks.create')}}" class="btn btn-success">Create new repeated expense</a>
+        </p>
+    </div>
+</div>
+{{--
+
+        <p class="text-info">
+            Saving money is <em>hard</em>. Firefly's piggy banks can help you to save money. You can do two things using
+            these piggy banks:
+        </p>
+        <ol class="text-info">
+            <li>Save money towards a singular goal such as a new bike or a new car.</li>
+            <li>Save money repeatedly, for yearly expenses or long-term recurring investments. One example may be buying
+            a new phone every three year.</li>
+        </ol>
         @if($count == 0)
         <p>
             <a href="{{route('piggybanks.create')}}" class="btn btn-success">Create new piggy bank</a>
@@ -19,10 +49,44 @@
     </div>
 </div>
 
+
 @if($count > 0)
 <div class="row">
-    <div class="col-lg-6 col-md-6 col-sm-12">
+    <div class="col-lg-12 col-md-12 col-sm-12">
         <h4>Accounts used for piggy banks</h4>
+        <p class="text-info">
+            @if(count($accounts) != 1)
+            These (savings) accounts have
+            @else
+            This (savings) account has
+            @endif
+            @if(count($piggybanks) == 1)
+            a piggy bank
+            @else
+            piggy banks
+            @endif
+            associated to
+            @if(count($piggybanks) != 1)
+            them.
+            @else
+            it.
+            @endif
+             If you transfer money to or from
+            @if(count($accounts) != 1)
+            these accounts,
+            @else
+            this account,
+            @endif
+            you may associate it with your @if(count($piggybanks) != 1)
+            piggy banks.
+            @else
+            piggy bank.
+            @endif
+        </p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12">
         <table class="table table-striped">
             <tr>
                 <th>Account</th>
@@ -47,7 +111,14 @@
         <h3>Piggy banks</h3>
 
         @foreach($piggybanks as $piggybank)
-        <h4><a href="{{route('piggybanks.show',$piggybank->id)}}">{{{$piggybank->name}}}</a> <small>{{mf($piggybank->target)}}</small></h4>
+        <h4>
+            <a href="{{route('piggybanks.show',$piggybank->id)}}">{{{$piggybank->name}}}</a>
+        </h4>
+        @endforeach
+
+
+        @foreach($piggybanks as $piggybank)
+
         @if(!is_null($piggybank->targetdate))
         <p>
             Target date: {{$piggybank->targetdate->format('jS F Y')}}
@@ -72,16 +143,15 @@
             </tr>
         </table>
         @endforeach
-
-
         <p>
             <a href="{{route('piggybanks.create')}}" class="btn btn-success">Create new piggy bank</a>
         </p>
 
         </div>
     </div>
-
 @endif
+--}}
+
 @stop
 @section('scripts')
 <script type="text/javascript">

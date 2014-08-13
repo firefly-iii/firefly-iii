@@ -23,10 +23,14 @@ class CreatePiggybanksTable extends Migration
                 $table->increments('id');
                 $table->timestamps();
                 $table->integer('account_id')->unsigned();
-                $table->date('targetdate')->nullable();
                 $table->string('name', 100);
-                $table->decimal('amount', 10, 2);
-                $table->decimal('target', 10, 2)->nullable();
+                $table->decimal('targetamount', 10, 2);
+                $table->date('targetdate')->nullable();
+                $table->date('startdate')->nullable();
+                $table->boolean('repeats');
+                $table->enum('rep_length', ['day', 'week', 'month', 'year'])->nullable();
+                $table->smallInteger('rep_times')->unsigned();
+                $table->enum('reminder', ['day', 'week', 'month', 'year'])->nullable();
                 $table->integer('order')->unsigned();
 
                 // connect account to piggybank.

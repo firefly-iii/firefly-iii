@@ -20,7 +20,6 @@ class AccountController extends \BaseController
     {
         $this->_accounts = $accounts;
         $this->_repository = $repository;
-        View::share('menu', 'accounts');
     }
 
     /**
