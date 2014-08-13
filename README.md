@@ -48,7 +48,8 @@ Example: every "create"-action tends to be slightly different from the rest. Als
 and forms are equally well thought of; some are not looking very well or miss feedback.
 
 Most forms will not allow you to enter invalid data because the database cracks, not because it's actually checked.
+I'm still thinking about a way to build consistent forms. Laravel doesn't really cut it.
 
-A lot of views have CSRF vulnerabilities.
+A lot of views have CSRF vulnerabilities. The general advice is NOT to use this tool in production.
 
 Questions, ideas or other things to contribute? [Let me know](https://github.com/JC5/firefly-iii/issues/new)!
