@@ -41,15 +41,14 @@ Firefly III will feature:
 - Firefly will not encrypt the content of the (MySQL) tables. Old versions of Firefly had this capability but it sucks when searching, sorting and organizing entries.
 
 ## Current state
-I barely have the basics up and running and test coverage is doing very good. I have some good ideas about user configuration and preferences which was a huge pain in the butt with the previous Firefly.
+I have the basics up and running and test coverage is doing very well.
 
-Current problems include proper time-based navigation (how and when to switch to the next month, previous week, etc) and the best
-way to display your current financial state, which is something that still needs thinking.
+Current issues are the consistent look-and-feel of forms and likewise, the consistent inner workings of most of Firefly.
+Example: every "create"-action tends to be slightly different from the rest. Also is the fact that not all lists
+and forms are equally well thought of; some are not looking very well or miss feedback.
 
+Most forms will not allow you to enter invalid data because the database cracks, not because it's actually checked.
 
-The problem is that most peoples finances are very flexible and Firefly can be pretty static. For example, did you spend all your money? Or
-do you have money left? Good question: when your rent is due at the 1st of the month Firefly might think you've spent way too much. But
-marking it as some kind of "bill" will make Firefly ignore it, but it might make Firefly forget that you've got bills coming! So there's
-a lot to do, and a lot to fix.
+A lot of views have CSRF vulnerabilities.
 
-If you have an idea, [let me know](https://github.com/JC5/firefly-iii/issues/new)!
+Questions, ideas or other things to contribute? [Let me know](https://github.com/JC5/firefly-iii/issues/new)!

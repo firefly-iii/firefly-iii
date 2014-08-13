@@ -21,7 +21,6 @@ class BudgetController extends BaseController
     {
         $this->_budgets = $budgets;
         $this->_repository = $repository;
-        View::share('menu', 'budgets');
     }
 
     /**

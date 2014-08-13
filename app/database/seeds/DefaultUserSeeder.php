@@ -12,7 +12,7 @@ class DefaultUserSeeder extends Seeder
         User::create(
             [
                 'email'          => 's@nder.be',
-                'password'       => Hash::make('sander'),
+                'password'       => 'sander',
                 'reset'          => null,
                 'remember_token' => null,
                 'migrated'       => 0

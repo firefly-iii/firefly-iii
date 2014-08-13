@@ -20,7 +20,6 @@ class PreferencesController extends BaseController
 
         $this->_accounts = $accounts;
         $this->_preferences = $preferences;
-        View::share('menu', 'home');
     }
 
     /**

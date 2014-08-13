@@ -9,6 +9,7 @@ namespace Firefly\Helper\Form;
  */
 class FormHelper
 {
+
     /**
      * @param null $value
      *

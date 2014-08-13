@@ -15,7 +15,6 @@ class RecurringController extends BaseController
     public function __construct(RTR $repository)
     {
         $this->_repository = $repository;
-        View::share('menu', 'home');
     }
 
     /**

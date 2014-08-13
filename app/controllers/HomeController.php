@@ -26,9 +26,6 @@ class HomeController extends BaseController
         $this->_preferences = $preferences;
         $this->_journal = $journal;
         $this->_budgets = $budgets;
-        View::share('menu', 'home');
-
-
     }
 
     /**

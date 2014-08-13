@@ -13,6 +13,7 @@
  * @method static \Illuminate\Database\Query\Builder|\TransactionCurrency whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\TransactionCurrency whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\TransactionCurrency whereCode($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\TransactionJournal[] $transactionjournals
  */
 class TransactionCurrency extends Eloquent
 {

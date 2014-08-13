@@ -33,6 +33,20 @@
         </div>
 
         <div class="form-group">
+            <label for="account_id" class="col-sm-4 control-label">
+                Saving account
+            </label>
+            <div class="col-sm-8">
+                {{Form::select('account_id',$accounts,Input::old('account_id') ?: Input::get('account'),['class' => 'form-control'])}}
+                @if($errors->has('account_id'))
+                <p class="text-danger">{{$errors->first('account_id')}}</p>
+                @else
+                <span class="help-block">Indicate on which account you've got your savings.</span>
+                @endif
+            </div>
+        </div>
+
+        <div class="form-group">
             {{ Form::label('target', 'Target amount', ['class' => 'col-sm-4 control-label'])}}
             <div class="col-sm-8">
                 <div class="input-group">
@@ -49,23 +63,39 @@
         </div>
 
         <div class="form-group">
-            <label for="account_id" class="col-sm-4 control-label">
-                Saving account
-            </label>
+            <label for="create" class="col-sm-4 control-label">Repeat this piggy bank.</label>
             <div class="col-sm-8">
-                {{Form::select('account_id',$accounts,Input::old('account_id') ?: Input::get('account'),['class' => 'form-control'])}}
-                @if($errors->has('account_id'))
-                <p class="text-danger">{{$errors->first('account_id')}}</p>
-                @else
-                <span class="help-block">Indicate on which account you've got your savings.</span>
-                @endif
+                <div class="checkbox">
+                    <label>
+                        {{Form::checkbox('repeats',1,Input::old('repeats') == '1')}}
+                        Repeat this piggy bank
+                    </label>
+                </div>
+                <span class="help-block">If you need to save money annually (to save for taxes) use this form and fill
+                    in the fields that will appear.</span>
             </div>
         </div>
 
+        <div class="repeat-piggy">
+        <h4>Mandatory fields for repeating piggy banks</h4>
+            Fields be here.
+        </div>
+
+
+
     </div>
     <div class="col-lg-6 col-md-12 col-sm-6">
-        <h4>Optional fields</h4>
 
+        <div class="no-repeat-piggy">
+        <h4>Optional fields for non-repeating piggy banks</h4>
+            Fields be here
+        </div>
+        <div class="repeat-piggy">
+            <h4>Optional fields for repeating piggy banks</h4>
+            Fields be here.
+        </div>
+
+        <!--
         <div class="form-group">
             {{ Form::label('targetdate', 'Target date', ['class' => 'col-sm-4 control-label'])}}
             <div class="col-sm-8">
@@ -81,6 +111,7 @@
                 @endif
             </div>
         </div>
+        -->
 
 
     </div>
@@ -88,19 +119,6 @@
 
 <div class="row">
     <div class="col-lg-6 col-md-12 col-sm-6">
-
-        <!-- add another after this one? -->
-        <div class="form-group">
-            <label for="create" class="col-sm-4 control-label">&nbsp;</label>
-            <div class="col-sm-8">
-                <div class="checkbox">
-                    <label>
-                        {{Form::checkbox('create',1,Input::old('create') == '1')}}
-                        Create another (return to this form)
-                    </label>
-                </div>
-            </div>
-        </div>
 
         <div class="form-group">
             <div class="col-sm-offset-4 col-sm-8">
@@ -111,6 +129,7 @@
 </div>
 
 {{Form::close()}}
-
-
+@stop
+@section('scripts')
+<?php echo javascript_include_tag('piggybanks-create'); ?>
 @stop

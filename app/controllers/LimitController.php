@@ -20,8 +20,6 @@ class LimitController extends BaseController
     {
         $this->_budgets = $budgets;
         $this->_limits = $limits;
-        View::share('menu', 'budgets');
-
     }
 
     /**

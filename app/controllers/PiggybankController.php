@@ -20,8 +20,6 @@ class PiggybankController extends BaseController
     {
         $this->_repository = $repository;
         $this->_accounts = $accounts;
-        View::share('menu', 'home');
-
     }
 
     /**
@@ -80,17 +78,7 @@ class PiggybankController extends BaseController
         // get accounts:
         foreach ($piggybanks as $piggyBank) {
             $account = $piggyBank->account;
-            $piggyBank->pct = round(($piggyBank->amount / $piggyBank->target) * 100, 0) . '%';
             $id = $account->id;
-            if (!isset($accounts[$id])) {
-                $account->balance = $account->balance();
-                $account->left = $account->balance - $piggyBank->amount;
-                $account->total = $piggyBank->target;
-            } else {
-                $account->left -= $piggyBank->amount;
-                $account->total += $piggyBank->target;
-
-            }
             $accounts[$id] = $account;
         }
 
@@ -105,7 +93,7 @@ class PiggybankController extends BaseController
      */
     public function show(Piggybank $piggyBank)
     {
-        return View::make('piggybanks.show')->with('piggyBank',$piggyBank);
+        return View::make('piggybanks.show')->with('piggyBank', $piggyBank);
     }
 
     /**
