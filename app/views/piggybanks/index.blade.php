@@ -12,7 +12,7 @@
         <p class="lead">Save money for large expenses</p>
         <p class="text-info">
             Saving money is <em>hard</em>. Firefly's piggy banks can help you to save money. Simply set the amount
-            of money you want to save, set an optional target and whether or not Firefly should remind you to add money
+            of money you want to save, set an optional target date and whether or not Firefly should remind you to add money
             to the piggy bank.
         </p>
         <p>
