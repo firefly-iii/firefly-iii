@@ -2,8 +2,9 @@
 use Carbon\Carbon;
 
 return [
-    'index_periods'          => '1D', '1W', '1M', '3M', '6M', 'custom',
-    'budget_periods'         => 'daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly',
+    'index_periods'          => ['1D', '1W', '1M', '3M', '6M', 'custom'],
+    'budget_periods'         => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
+    'piggybank_periods'      => ['day', 'week', 'month', 'year'],
     'periods_to_text'        => [
         'weekly'    => 'A week',
         'monthly'   => 'A month',
@@ -11,6 +12,7 @@ return [
         'half-year' => 'Six months',
         'yearly'    => 'A year',
     ],
+
     'range_to_text'          => [
         '1D'     => 'day',
         '1W'     => 'week',
