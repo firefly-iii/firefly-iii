@@ -34,6 +34,21 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
         )->where('piggybanks.id', $piggyBankId)->first(['piggybanks.*']);
     }
 
+    public function countRepeating()
+    {
+        return \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(
+            'accounts.user_id', \Auth::user()->id
+        )->where('repeats', 1)->count();
+    }
+
+    public function countNonrepeating()
+    {
+        return \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(
+            'accounts.user_id', \Auth::user()->id
+        )->where('repeats', 0)->count();
+
+    }
+
     /**
      * @return mixed
      */
@@ -57,14 +72,8 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
         $account = isset($data['account_id']) ? $accounts->find($data['account_id']) : null;
 
 
-        $piggyBank = new \Piggybank;
+        $piggyBank = new \Piggybank($data);
         $piggyBank->account()->associate($account);
-        $piggyBank->targetdate
-            = isset($data['targetdate']) && strlen($data['targetdate']) > 0 ? $data['targetdate'] : null;
-        $piggyBank->name = isset($data['name']) ? $data['name'] : null;
-        $piggyBank->amount = 0;
-        $piggyBank->target = floatval($data['target']);
-        $piggyBank->order = 1;
         if ($piggyBank->validate()) {
             $piggyBank->save();
         }

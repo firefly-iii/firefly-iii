@@ -24,6 +24,16 @@ interface PiggybankRepositoryInterface
     public function count();
 
     /**
+     * @return mixed
+     */
+    public function countRepeating();
+
+    /**
+     * @return mixed
+     */
+    public function countNonrepeating();
+
+    /**
      * @param $data
      *
      * @return mixed
