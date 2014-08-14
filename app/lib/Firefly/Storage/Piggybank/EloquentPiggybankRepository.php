@@ -1,7 +1,9 @@
 <?php
 
 namespace Firefly\Storage\Piggybank;
+
 use Carbon\Carbon;
+use Firefly\Exception\FireflyException;
 
 
 /**
@@ -23,6 +25,21 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
         )->count();
     }
 
+    public function countNonrepeating()
+    {
+        return \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(
+            'accounts.user_id', \Auth::user()->id
+        )->where('repeats', 0)->count();
+
+    }
+
+    public function countRepeating()
+    {
+        return \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(
+            'accounts.user_id', \Auth::user()->id
+        )->where('repeats', 1)->count();
+    }
+
     /**
      * @param $piggyBankId
      *
@@ -33,21 +50,6 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
         return \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(
             'accounts.user_id', \Auth::user()->id
         )->where('piggybanks.id', $piggyBankId)->first(['piggybanks.*']);
-    }
-
-    public function countRepeating()
-    {
-        return \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(
-            'accounts.user_id', \Auth::user()->id
-        )->where('repeats', 1)->count();
-    }
-
-    public function countNonrepeating()
-    {
-        return \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(
-            'accounts.user_id', \Auth::user()->id
-        )->where('repeats', 0)->count();
-
     }
 
     /**
@@ -68,6 +70,13 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
     public function store($data)
     {
         var_dump($data);
+        if ($data['targetdate'] == '') {
+            unset($data['targetdate']);
+        }
+        if ($data['reminder'] == 'none') {
+            unset($data['reminder']);
+        }
+
         /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accounts */
         $accounts = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
         $account = isset($data['account_id']) ? $accounts->find($data['account_id']) : null;
@@ -76,19 +85,50 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
         $piggyBank = new \Piggybank($data);
         $piggyBank->account()->associate($account);
         $today = new Carbon;
+
         if ($piggyBank->validate()) {
             echo 'Valid, but some more checking!';
-            if($piggyBank->targetdate < $today) {
-                $piggyBank->errors()->add('targetdate','Target date cannot be in the past.');
-                echo 'errrrrrr on target date';
+
+            if (!is_null($piggyBank->targetdate) && $piggyBank->targetdate < $today) {
+                $piggyBank->errors()->add('targetdate', 'Target date cannot be in the past.');
+
                 return $piggyBank;
             }
 
-            // first period for reminder is AFTER target date.
-            // just flash a warning
-            die('Here be a check. Sorry for the kill-switch. Will continue tomorrow.');
+            if (!is_null($piggyBank->reminder) && !is_null($piggyBank->targetdate)) {
+                // first period for reminder is AFTER target date.
+                // just flash a warning
+                $reminderSkip = $piggyBank->reminder_skip < 1 ? 1 : intval($piggyBank->reminder_skip);
+                $firstReminder = new Carbon;
+                switch($piggyBank->reminder) {
+                    case 'day':
+                        $firstReminder->addDays($reminderSkip);
+                        break;
+                    case 'week':
+                        $firstReminder->addWeeks($reminderSkip);
+                        break;
+                    case 'month':
+                        $firstReminder->addMonths($reminderSkip);
+                        break;
+                    case 'year':
+                        $firstReminder->addYears($reminderSkip);
+                        break;
+                    default:
+                        throw new FireflyException('Invalid reminder period');
+                        break;
+                }
+                if($firstReminder > $piggyBank->targetdate) {
+                    $piggyBank->errors()->add('reminder','Something reminder bla.');
+                    return $piggyBank;
+                }
+            }
 
             $piggyBank->save();
+        } else {
+            echo 'Does not validate';
+
+            print_r($piggyBank->errors()->all());
+            exit;
         }
 
         return $piggyBank;
