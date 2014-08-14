@@ -111,7 +111,7 @@ class PiggybankController extends BaseController
         $data['order'] = 0;
 
         $piggyBank = $this->_repository->store($data);
-        if ($piggyBank->validate()) {
+        if (!is_null($piggyBank->id)) {
             Session::flash('success', 'New piggy bank "' . $piggyBank->name . '" created!');
 
             return Redirect::route('piggybanks.index');

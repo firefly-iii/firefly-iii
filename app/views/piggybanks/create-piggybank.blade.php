@@ -84,7 +84,7 @@
             <div class="col-sm-8">
                 <input type="number" step="1" min="1" value="1" style="width:50px;display:inline;" max="100" name="reminder_skip" class="form-control" />
 
-                <select class="form-control" style="width:150px;display: inline">
+                <select class="form-control" name="reminder" style="width:150px;display: inline">
                     <option value="none" label="do not remind me">do not remind me</option>
                     @foreach($periods as $period)
                         <option value="{{$period}}" label="{{$period}}">{{$period}}</option>
