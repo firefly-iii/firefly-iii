@@ -3,22 +3,18 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <h1>Firefly
-            <small>Create a new piggy bank</small>
+            <small>Create a new repeated expense</small>
         </h1>
-        <p class="lead">Create piggy banks to make saving money easier</p>
-        <p class="text-info">
-            Saving money is <em>hard</em>. Piggy banks allow you to group money
-            from an account together. If you also set a target (and a target date) you
-            can save towards your goals.
-        </p>
+        <p class="lead">Create repeated expenses to keep track of long-term planned expenses</p>
     </div>
 </div>
 
-{{Form::open(['class' => 'form-horizontal','url' => route('piggybanks.store')])}}
+{{Form::open(['class' => 'form-horizontal','url' => route('piggybanks.store.repeated')])}}
 
 <div class="row">
     <div class="col-lg-6 col-md-12 col-sm-6">
         <h4>Mandatory fields</h4>
+
 
         <div class="form-group">
             <label for="name" class="col-sm-4 control-label">Name</label>
@@ -47,39 +43,22 @@
         </div>
 
         <div class="form-group">
-            {{ Form::label('target', 'Target amount', ['class' => 'col-sm-4 control-label'])}}
+            {{ Form::label('targetamount', 'Target amount', ['class' => 'col-sm-4 control-label'])}}
             <div class="col-sm-8">
                 <div class="input-group">
                     <span class="input-group-addon">&euro;</span>
-                    {{Form::input('number','target', Input::old('target'), ['step' => 'any', 'min' => '1', 'class' => 'form-control'])}}
+                    {{Form::input('number','targetamount', Input::old('targetamount'), ['step' => 'any', 'min' => '1', 'class' => 'form-control'])}}
                 </div>
 
-                @if($errors->has('target'))
-                <p class="text-danger">{{$errors->first('target')}}</p>
+                @if($errors->has('targetamount'))
+                <p class="text-danger">{{$errors->first('targetamount')}}</p>
                 @else
                 <span class="help-block">How much money do you need to save?</span>
                 @endif
             </div>
         </div>
 
-        <div class="form-group">
-            <label for="create" class="col-sm-4 control-label">Repeat this piggy bank.</label>
-            <div class="col-sm-8">
-                <div class="checkbox">
-                    <label>
-                        {{Form::checkbox('repeats',1,Input::old('repeats') == '1')}}
-                        Repeat this piggy bank
-                    </label>
-                </div>
-                <span class="help-block">If you need to save money annually (to save for taxes) use this form and fill
-                    in the fields that will appear.</span>
-            </div>
-        </div>
 
-        <div class="repeat-piggy">
-        <h4>Mandatory fields for repeating piggy banks</h4>
-            Fields be here.
-        </div>
 
 
 

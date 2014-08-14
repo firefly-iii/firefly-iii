@@ -69,7 +69,6 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
      */
     public function store($data)
     {
-        var_dump($data);
         if ($data['targetdate'] == '') {
             unset($data['targetdate']);
         }
@@ -83,15 +82,14 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
 
 
         $piggyBank = new \Piggybank($data);
-        $piggyBank->account()->associate($account);
+        if (!is_null($account)) {
+            $piggyBank->account()->associate($account);
+        }
         $today = new Carbon;
 
         if ($piggyBank->validate()) {
-            echo 'Valid, but some more checking!';
-
             if (!is_null($piggyBank->targetdate) && $piggyBank->targetdate < $today) {
                 $piggyBank->errors()->add('targetdate', 'Target date cannot be in the past.');
-
                 return $piggyBank;
             }
 
@@ -100,7 +98,7 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
                 // just flash a warning
                 $reminderSkip = $piggyBank->reminder_skip < 1 ? 1 : intval($piggyBank->reminder_skip);
                 $firstReminder = new Carbon;
-                switch($piggyBank->reminder) {
+                switch ($piggyBank->reminder) {
                     case 'day':
                         $firstReminder->addDays($reminderSkip);
                         break;
@@ -117,18 +115,12 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
                         throw new FireflyException('Invalid reminder period');
                         break;
                 }
-                if($firstReminder > $piggyBank->targetdate) {
-                    $piggyBank->errors()->add('reminder','Something reminder bla.');
+                if ($firstReminder > $piggyBank->targetdate) {
+                    $piggyBank->errors()->add('reminder', 'The reminder has been set to remind you after the piggy bank will expire.');
                     return $piggyBank;
                 }
             }
-
             $piggyBank->save();
-        } else {
-            echo 'Does not validate';
-
-            print_r($piggyBank->errors()->all());
-            exit;
         }
 
         return $piggyBank;
