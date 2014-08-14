@@ -66,7 +66,11 @@
             <div class="col-sm-8">
                 <input type="date" name="startdate" value="{{Input::old('startdate') ?: date('Y-m-d')}}"
                        class="form-control"/>
+                 @if($errors->has('startdate'))
+                                <p class="text-danger">{{$errors->first('startdate')}}</p>
+                                @else
                 <span class="help-block">This date indicates when you start(ed) saving money for this piggy bank. This field defaults to today and you should keep it on today.</span>
+                @endif
             </div>
         </div>
 
@@ -75,14 +79,18 @@
             <div class="col-sm-8">
                 <input type="date" name="targetdate" value="{{Input::old('targetdate') ?: ''}}"
                        class="form-control"/>
+                        @if($errors->has('targetdate'))
+                                       <p class="text-danger">{{$errors->first('targetdate')}}</p>
+                                       @else
                 <span class="help-block">If this piggy bank has a dead line, enter it here.</span>
+                @endif
             </div>
         </div>
 
         <div class="form-group">
             {{ Form::label('reminder', 'Remind you every', ['class' => 'col-sm-4 control-label'])}}
             <div class="col-sm-8">
-                <input type="number" step="1" min="1" value="1" style="width:50px;display:inline;" max="100" name="reminder_skip" class="form-control" />
+                <input type="number" step="1" min="1" value="{{Input::old('reminder_skip') ?: 1}}" style="width:50px;display:inline;" max="100" name="reminder_skip" class="form-control" />
 
                 <select class="form-control" name="reminder" style="width:150px;display: inline">
                     <option value="none" label="do not remind me">do not remind me</option>
@@ -90,8 +98,12 @@
                         <option value="{{$period}}" label="{{$period}}">{{$period}}</option>
                     @endforeach
                 </select>
+                 @if($errors->has('reminder'))
+                                <p class="text-danger">{{$errors->first('reminder')}}</p>
+                                @else
                 <span class="help-block">Enter a number and a period and Firefly will remind you to add money
                     to this piggy bank every now and then.</span>
+                    @endif
             </div>
         </div>
 
