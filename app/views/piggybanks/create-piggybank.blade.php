@@ -32,7 +32,7 @@
                 Saving account
             </label>
             <div class="col-sm-8">
-                {{Form::select('account_id',$accounts,Input::old('account_id') ?: Input::get('account'),['class' => 'form-control'])}}
+                {{Form::select('account_id',$accounts,Input::old('account_id') ?: Input::get('account_id'),['class' => 'form-control'])}}
                 @if($errors->has('account_id'))
                 <p class="text-danger">{{$errors->first('account_id')}}</p>
                 @else

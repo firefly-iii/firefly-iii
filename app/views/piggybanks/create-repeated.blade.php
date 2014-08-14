@@ -33,7 +33,7 @@
                 Saving account
             </label>
             <div class="col-sm-8">
-                {{Form::select('account_id',$accounts,Input::old('account_id') ?: Input::get('account'),['class' => 'form-control'])}}
+                {{Form::select('account_id',$accounts,Input::old('account_id') ?: Input::get('account_id'),['class' => 'form-control'])}}
                 @if($errors->has('account_id'))
                 <p class="text-danger">{{$errors->first('account_id')}}</p>
                 @else
@@ -58,21 +58,66 @@
             </div>
         </div>
 
+        <div class="form-group">
+            {{ Form::label('targetdate', 'Target date', ['class' => 'col-sm-4 control-label'])}}
+            <div class="col-sm-8">
+                <input type="date" name="targetdate" value="{{Input::old('targetdate') ?: ''}}"
+                       class="form-control"/>
+                @if($errors->has('targetdate'))
+                <p class="text-danger">{{$errors->first('targetdate')}}</p>
+                @else
+                <span class="help-block">A dead line is needed to properly repeat this repeated expesnse.</span>
+                @endif
+            </div>
+        </div>
 
+        <div class="form-group">
+            {{ Form::label('rep_times', 'Repeat every', ['class' => 'col-sm-4 control-label'])}}
+            <div class="col-sm-8">
+                <input type="number" step="1" min="1" value="{{Input::old('rep_times') ?: 1}}" style="width:50px;display:inline;" max="100" name="rep_times" class="form-control" />
 
-
-
+                <select class="form-control" name="rep_length" style="width:150px;display: inline">
+                    @foreach($periods as $period)
+                    @if($period == 'month' || Input::old('reminder') == $period)
+                        <option value="{{$period}}" label="{{$period}}" selected="selected">{{$period}}</option>
+                    @else
+                        <option value="{{$period}}" label="{{$period}}">{{$period}}</option>
+                    @endif
+                    @endforeach
+                </select>
+                @if($errors->has('rep_length'))
+                <p class="text-danger">{{$errors->first('rep_length')}}</p>
+                @else
+                <span class="help-block">Something about every X years bla bla bla.</span>
+                @endif
+            </div>
+        </div>
     </div>
     <div class="col-lg-6 col-md-12 col-sm-6">
 
-        <div class="no-repeat-piggy">
-        <h4>Optional fields for non-repeating piggy banks</h4>
-            Fields be here
+            <h4>Optional fields</h4>
+
+        <div class="form-group">
+            {{ Form::label('reminder', 'Remind you every', ['class' => 'col-sm-4 control-label'])}}
+            <div class="col-sm-8">
+                <input type="number" step="1" min="1" value="{{Input::old('reminder_skip') ?: 1}}" style="width:50px;display:inline;" max="100" name="reminder_skip" class="form-control" />
+
+                <select class="form-control" name="reminder" style="width:150px;display: inline">
+                    <option value="none" label="do not remind me">do not remind me</option>
+                    @foreach($periods as $period)
+                    <option value="{{$period}}" label="{{$period}}">{{$period}}</option>
+                    @endforeach
+                </select>
+                @if($errors->has('reminder'))
+                <p class="text-danger">{{$errors->first('reminder')}}</p>
+                @else
+                <span class="help-block">Enter a number and a period and Firefly will remind you to save money
+                    for this repeated expense every now and then.</span>
+                @endif
+            </div>
         </div>
-        <div class="repeat-piggy">
-            <h4>Optional fields for repeating piggy banks</h4>
-            Fields be here.
-        </div>
+
+
 
         <!--
         <div class="form-group">
