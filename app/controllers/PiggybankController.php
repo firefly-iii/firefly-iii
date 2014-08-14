@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
 use Firefly\Storage\Piggybank\PiggybankRepositoryInterface as PRI;
 
@@ -129,18 +130,22 @@ class PiggybankController extends BaseController
     /**
      * @return $this|\Illuminate\Http\RedirectResponse
      */
-    public function store()
+    public function storeRepeated()
     {
-        $piggyBank = $this->_repository->store(Input::all());
+
+        $data = Input::all();
+        unset($data['_token']);
+
+        // extend the data array with the settings needed to create a repeated:
+        $data['repeats'] = 1;
+        $data['startdate'] = new Carbon;
+        $data['order'] = 0;
+
+        $piggyBank = $this->_repository->store($data);
         if ($piggyBank->validate()) {
             Session::flash('success', 'New piggy bank "' . $piggyBank->name . '" created!');
 
-            if (Input::get('create') == '1') {
-                return Redirect::route('piggybanks.create')->withInput();
-            }
-
             return Redirect::route('piggybanks.index');
-
 
         } else {
             Session::flash('error', 'Could not save piggy bank: ' . $piggyBank->errors()->first());
