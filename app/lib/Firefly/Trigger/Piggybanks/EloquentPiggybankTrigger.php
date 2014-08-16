@@ -45,6 +45,24 @@ class EloquentPiggybankTrigger
                 } catch (QueryException $e) {
                 }
             }
+
+            // whatever we did here, we now have all repetitions for this
+            // piggy bank, and we can find transactions that fall within
+            // that repetition (to fix the "saved amount".
+            $reps = $piggy->piggybankrepetitions()->get();
+            /** @var \PiggybankRepetition $rep */
+            foreach ($reps as $rep) {
+                $sum = \Transaction::where('piggybank_id', $piggy->id)->leftJoin(
+                        'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
+                    )->where('transaction_journals.date', '>=', $rep->startdate->format('Y-m-d'))->where(
+                        'transaction_journals.date', '<=', $rep->targetdate->format('Y-m-d')
+                    )->sum('transactions.amount');
+                $rep->currentamount = floatval($sum);
+                $rep->save();
+
+
+            }
+
         }
         unset($piggy, $piggybanks, $rep);
 
@@ -59,14 +77,8 @@ class EloquentPiggybankTrigger
             $rep->targetdate = $repeated->targetdate;
             $rep->currentamount = 0;
             try {
-                \Log::debug(
-                    'Creating initial rep ('.$repeated->name.') (from ' . ($rep->startdate ? $rep->startdate->format('d-m-Y')
-                        : 'NULL') . ' to '
-                    . ($rep->targetdate ? $rep->targetdate->format('d-m-Y') : 'NULL') . ')'
-                );
                 $rep->save();
             } catch (QueryException $e) {
-                \Log::error('FAILED initital repetition.');
             }
             unset($rep);
 
@@ -108,6 +120,19 @@ class EloquentPiggybankTrigger
 
                     }
                 }
+            }
+            $reps = $repeated->piggybankrepetitions()->get();
+            /** @var \PiggybankRepetition $rep */
+            foreach ($reps as $rep) {
+                $sum = \Transaction::where('piggybank_id', $repeated->id)->leftJoin(
+                    'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
+                )->where('transaction_journals.date', '>=', $rep->startdate->format('Y-m-d'))->where(
+                        'transaction_journals.date', '<=', $rep->targetdate->format('Y-m-d')
+                    )->sum('transactions.amount');
+                $rep->currentamount = floatval($sum);
+                $rep->save();
+
+
             }
         }
     }

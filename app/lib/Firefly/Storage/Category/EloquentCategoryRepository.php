@@ -16,6 +16,9 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
      */
     public function createOrFind($name)
     {
+        if(strlen($name) == 0) {
+            return null;
+        }
         $category = $this->findByName($name);
         if (!$category) {
             return $this->store(['name' => $name]);
@@ -55,7 +58,7 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
      */
     public function findByName($name)
     {
-        if ($name == '') {
+        if ($name == '' || strlen($name) == 0) {
             return null;
         }
 

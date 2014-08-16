@@ -114,6 +114,8 @@ class Chart implements ChartInterface
                     $q->where('startdate', $start->format('Y-m-d'));
                 }]
         )->orderBy('name', 'ASC')->get();
+        $limitInPeriod = '';
+        $spentInPeriod = '';
 
         foreach ($budgets as $budget) {
             $budget->count = 0;

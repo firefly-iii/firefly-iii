@@ -6,6 +6,7 @@ use Firefly\Storage\Piggybank\PiggybankRepositoryInterface as PRI;
 
 /**
  * Class PiggybankController
+ *
  */
 class PiggybankController extends BaseController
 {
@@ -63,7 +64,6 @@ class PiggybankController extends BaseController
      */
     public function destroy(Piggybank $piggyBank)
     {
-        // TODO move to repository.
         $this->_repository->destroy($piggyBank);
         Event::fire('piggybanks.change');
         Session::flash('success', 'Piggy bank deleted.');
@@ -96,9 +96,9 @@ class PiggybankController extends BaseController
      */
     public function index()
     {
+        Event::fire('piggybanks.change');
         $countRepeating = $this->_repository->countRepeating();
         $countNonRepeating = $this->_repository->countNonrepeating();
-        Event::fire('piggybanks.change'); // TODO remove
 
         $piggybanks = $this->_repository->get();
         return View::make('piggybanks.index')->with('piggybanks', $piggybanks)
@@ -111,7 +111,6 @@ class PiggybankController extends BaseController
      */
     public function show(Piggybank $piggyBank)
     {
-        Event::fire('piggybanks.change'); // TODO remove
         return View::make('piggybanks.show')->with('piggyBank', $piggyBank);
     }
 
@@ -159,7 +158,7 @@ class PiggybankController extends BaseController
         $data['order'] = 0;
 
         $piggyBank = $this->_repository->store($data);
-        if ($piggyBank->validate()) {
+        if ($piggyBank->id) {
             Session::flash('success', 'New piggy bank "' . $piggyBank->name . '" created!');
             Event::fire('piggybanks.change');
 
