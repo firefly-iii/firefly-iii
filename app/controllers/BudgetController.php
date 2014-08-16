@@ -171,6 +171,7 @@ class BudgetController extends BaseController
     {
         $budget = $this->_repository->update($budget, Input::all());
         if ($budget->validate()) {
+            Event::fire('budgets.change');
             Session::flash('success', 'Budget "' . $budget->name . '" updated.');
 
             if (Input::get('from') == 'date') {
