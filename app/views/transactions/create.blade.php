@@ -175,6 +175,37 @@
             </div>
         </div>
 
+        <!-- RELATE THIS TRANSFER TO A PIGGY BANK -->
+        @if($what == 'transfer' && count($piggies) > 0)
+        <div class="form-group">
+            <label for="piggybank_id" class="col-sm-4 control-label">
+                Piggy bank
+            </label>
+            <div class="col-sm-8">
+                <select name="piggybank_id" class="form-control">
+                    <option value="0" label="(no piggy bank)">(no piggy bank)</option>
+                    @foreach($piggies as $piggy)
+                        @if($piggy->id == Input::old('piggybank_id'))
+                            <option value="{{$piggy->id}}" label="{{{$piggy->name}}}" selected="selected    ">{{{$piggy->name}}}</option>
+                        @else
+                    <option value="{{$piggy->id}}" label="{{{$piggy->name}}}">{{{$piggy->name}}}</option>
+                        @endif
+                    @endforeach
+                </select>
+                @if($errors->has('piggybank_id'))
+                    <p class="text-danger">{{$errors->first('piggybank_id')}}</p>
+                @else
+                    <span class="help-block">
+                        You can directly add the amount you're transferring
+                        to one of your piggy banks, provided they are related to the account your
+                        transferring <em>to</em>.
+                    </span>
+                @endif
+            </div>
+        </div>
+        @endif
+
+
     </div>
 </div>
 

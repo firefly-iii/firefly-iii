@@ -163,20 +163,15 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
         $piggy->startdate
             = isset($data['startdate']) && strlen($data['startdate']) > 0 ? new Carbon($data['startdate']) : null;
 
-        // everything we can update for NON repeating piggy banks:
-        if ($piggy->repeats == 0) {
-            // if non-repeating there is only one PiggyBank instance and we can delete it safely.
-            // it will be recreated.
-            $piggy->piggybankrepetitions()->first()->delete();
-        } else {
-            // we can delete all of them, because reasons
-            foreach ($piggy->piggybankrepetitions()->get() as $rep) {
-                $rep->delete();
-            }
+        foreach ($piggy->piggybankrepetitions()->get() as $rep) {
+            $rep->delete();
+        }
 
+        if ($piggy->repeats == 1) {
             $piggy->rep_every = intval($data['rep_every']);
             $piggy->rep_length = $data['rep_length'];
         }
+
         if ($piggy->validate()) {
             // check the things we check for new piggies
             $piggy->save();

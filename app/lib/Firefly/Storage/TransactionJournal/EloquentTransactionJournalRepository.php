@@ -34,8 +34,8 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
      * A gains 200 (200). * -1
      * B loses 200 (-200). * 1
      *
-     * @param \Account       $from
-     * @param \Account       $toAccount
+     * @param \Account $from
+     * @param \Account $toAccount
      * @param                $description
      * @param                $amount
      * @param \Carbon\Carbon $date
@@ -287,6 +287,8 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
             case 'transfer':
                 $fromAccount = $accountRepository->find(intval($data['account_from_id']));
                 $toAccount = $accountRepository->find(intval($data['account_to_id']));
+
+
                 break;
         }
         // fall back to cash if necessary:
@@ -309,6 +311,39 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         if (!$transactionJournal->id || $transactionJournal->completed == 0) {
             return $transactionJournal;
         }
+
+        // here we're done and we have transactions in the journal:
+        // do something with the piggy bank:
+        if ($what == 'transfer') {
+            /** @var \Firefly\Storage\Piggybank\PiggybankRepositoryInterface $piggyRepository */
+            $piggyRepository = \App::make('Firefly\Storage\Piggybank\PiggybankRepositoryInterface');
+
+            if (isset($data['piggybank_id'])) {
+                /** @var \Piggybank $piggyBank */
+                $piggyBank = $piggyRepository->find(intval($data['piggybank_id']));
+
+                if ($piggyBank) {
+                    if ($toAccount->id == $piggyBank->account_id) {
+
+                        // find the transaction connected to the $toAccount:
+                        /** @var \Transaction $transaction */
+                        $transaction
+                            = $transactionJournal->transactions()->where('account_id', $toAccount->id)->first();
+                        // connect the piggy to it:
+                        $transaction->piggybank()->associate($piggyBank);
+                        $transaction->save();
+                    } else {
+                        \Session::flash(
+                            'warning',
+                            'Piggy bank "' . e($piggyBank->name) . '" is not set to draw money from account "' . e(
+                                $toAccount->name
+                            ) . '", so the money isn\'t added to the piggy bank.'
+                        );
+                    }
+                }
+            }
+        }
+
 
         // attach:
         if (!is_null($budget)) {
@@ -390,10 +425,13 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
                 break;
             case 'Transfer':
                 // means transaction[0] is account that sent the money (from).
+                /** @var \Account $fromAccount */
                 $fromAccount = $accountRepository->find($data['account_from_id']);
+                /** @var \Account $toAccount */
                 $toAccount = $accountRepository->find($data['account_to_id']);
                 $journal->transactions[0]->account()->associate($fromAccount);
                 $journal->transactions[1]->account()->associate($toAccount);
+
                 break;
             default:
                 throw new FireflyException('Cannot edit this!');

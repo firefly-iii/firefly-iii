@@ -37,10 +37,15 @@ class TransactionController extends BaseController
         $budgets = $budgetRepository->getAsSelectList();
         $budgets[0] = '(no budget)';
 
+        // get the number of piggy banks.
+        /** @var \Firefly\Storage\Piggybank\PiggybankRepositoryInterface $piggyRepository */
+        $piggyRepository = App::make('Firefly\Storage\Piggybank\PiggybankRepositoryInterface');
+        $piggies = $piggyRepository->get();
+
 
         return View::make('transactions.create')->with('accounts', $accounts)->with('budgets', $budgets)->with(
             'what', $what
-        );
+        )->with('piggies',$piggies);
     }
 
     /**

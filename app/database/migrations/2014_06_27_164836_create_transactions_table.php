@@ -12,6 +12,16 @@ class CreateTransactionsTable extends Migration
 {
 
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('transactions');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -23,6 +33,7 @@ class CreateTransactionsTable extends Migration
                 $table->increments('id');
                 $table->timestamps();
                 $table->integer('account_id')->unsigned();
+                $table->integer('piggybank_id')->nullable()->unsigned();
                 $table->integer('transaction_journal_id')->unsigned();
                 $table->string('description', 255)->nullable();
                 $table->decimal('amount', 10, 2);
@@ -32,6 +43,11 @@ class CreateTransactionsTable extends Migration
                     ->references('id')->on('transaction_journals')
                     ->onDelete('cascade');
 
+                // connect piggy banks
+                $table->foreign('piggybank_id')
+                    ->references('id')->on('piggybanks')
+                    ->onDelete('set null');
+
                 // connect account id:
                 $table->foreign('account_id')
                     ->references('id')->on('accounts')
@@ -39,16 +55,6 @@ class CreateTransactionsTable extends Migration
 
             }
         );
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('transactions');
     }
 
 }

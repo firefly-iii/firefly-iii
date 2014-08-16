@@ -1,43 +1,45 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
-class CreatePiggyInstance extends Migration {
+class CreatePiggyInstance extends Migration
+{
 
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-		Schema::create('piggybank_repetitions', function(Blueprint $table)
-		{
-			$table->increments('id');
-			$table->timestamps();
-            $table->integer('piggybank_id')->unsigned();
-            $table->date('startdate')->nullable();
-            $table->date('targetdate')->nullable();
-            $table->decimal('currentamount',10,2);
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create(
+            'piggybank_repetitions', function (Blueprint $table) {
+                $table->increments('id');
+                $table->timestamps();
+                $table->integer('piggybank_id')->unsigned();
+                $table->date('startdate')->nullable();
+                $table->date('targetdate')->nullable();
+                $table->decimal('currentamount', 10, 2);
 
-            $table->unique(['piggybank_id','startdate','targetdate']);
+                $table->unique(['piggybank_id', 'startdate', 'targetdate']);
 
-            // connect instance to piggybank.
-            $table->foreign('piggybank_id')
-                ->references('id')->on('piggybanks')
-                ->onDelete('cascade');
-		});
-	}
+                // connect instance to piggybank.
+                $table->foreign('piggybank_id')
+                    ->references('id')->on('piggybanks')
+                    ->onDelete('cascade');
+            }
+        );
+    }
 
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		Schema::drop('piggybank_repetitions');
-	}
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('piggybank_repetitions');
+    }
 
 }
