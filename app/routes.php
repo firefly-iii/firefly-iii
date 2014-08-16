@@ -202,7 +202,7 @@ Route::group(['before' => 'csrf|auth'], function () {
         // piggy bank controller
         Route::post('/piggybanks/store/piggybank',['uses' => 'PiggybankController@storePiggybank','as' => 'piggybanks.store.piggybank']);
         Route::post('/piggybanks/store/repeated',['uses' => 'PiggybankController@storeRepeated','as' => 'piggybanks.store.repeated']);
-        Route::post('/piggybanks/update', ['uses' => 'PiggybankController@update','as' => 'piggybanks.update']);
+        Route::post('/piggybanks/update/{piggybank}', ['uses' => 'PiggybankController@update','as' => 'piggybanks.update']);
         Route::post('/piggybanks/destroy/{piggybank}', ['uses' => 'PiggybankController@destroy','as' => 'piggybanks.destroy']);
 
         // preferences controller

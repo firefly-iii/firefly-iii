@@ -12,6 +12,28 @@ interface PiggybankRepositoryInterface
 {
 
     /**
+     * @return mixed
+     */
+    public function count();
+
+    /**
+     * @return mixed
+     */
+    public function countNonrepeating();
+
+    /**
+     * @return mixed
+     */
+    public function countRepeating();
+
+    /**
+     * @param \Piggybank $piggyBank
+     *
+     * @return mixed
+     */
+    public function destroy(\Piggybank $piggyBank);
+
+    /**
      * @param $piggyBankId
      *
      * @return mixed
@@ -21,17 +43,7 @@ interface PiggybankRepositoryInterface
     /**
      * @return mixed
      */
-    public function count();
-
-    /**
-     * @return mixed
-     */
-    public function countRepeating();
-
-    /**
-     * @return mixed
-     */
-    public function countNonrepeating();
+    public function get();
 
     /**
      * @param $data
@@ -41,9 +53,12 @@ interface PiggybankRepositoryInterface
     public function store($data);
 
     /**
+     * @param \Piggybank $piggy
+     * @param            $data
+     *
      * @return mixed
      */
-    public function get();
+    public function update(\Piggybank $piggy, $data);
 
     /**
      * @param \Piggybank $piggyBank
@@ -52,12 +67,5 @@ interface PiggybankRepositoryInterface
      * @return mixed
      */
     public function updateAmount(\Piggybank $piggyBank, $amount);
-
-    /**
-     * @param $data
-     *
-     * @return mixed
-     */
-    public function update($data);
 
 } 
