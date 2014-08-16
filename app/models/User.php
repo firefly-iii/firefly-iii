@@ -130,6 +130,11 @@ class User extends Ardent implements UserInterface, RemindableInterface
         $this->attributes['password'] = Hash::make($value);
     }
 
+    public function piggybanks()
+    {
+        return $this->hasManyThrough('Piggybank', 'Account');
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
