@@ -36,6 +36,46 @@
         <h3>Current piggy banks</h3>
         @if($countNonRepeating == 0)
         <p class="text-warning">No piggy banks found.</p>
+        @else
+            <table class="table table-bordered">
+            @foreach($piggybanks as $piggyBank)
+            @if($piggyBank->repeats == 0)
+                <!-- display piggy bank -->
+                <tr>
+                    <td>
+                <h4><a href="{{route('piggybanks.show',$piggyBank->id)}}">{{{$piggyBank->name}}}</a></h4>
+                <p>
+                        <!-- target amount -->
+                        Saving up to {{mf($piggyBank->targetamount)}}.
+                        <!-- currently saved -->
+                        Currently saved
+                        {{mf($piggyBank->currentRelevantRep()->currentamount)}}.
+
+                        <!-- start date (if any) -->
+                        @if(!is_null($piggyBank->startdate))
+                        Start date: {{$piggyBank->currentRelevantRep()->startdate->format('d M Y')}}.
+                        @endif
+
+                        <!-- target date (if any) -->
+                        @if(!is_null($piggyBank->targetdate))
+                            Target date: {{$piggyBank->currentRelevantRep()->targetdate->format('d M Y')}}.
+                        @endif
+
+                        @if(!is_null($piggyBank->reminder))
+                            Next reminder: {{$piggyBank->nextReminderDate()->format('d M Y')}}
+                        @endif
+
+                </p>
+                <div class="btn-group-xs btn-group">
+                    <a href="{{route('piggybanks.edit',$piggyBank->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="{{route('piggybanks.delete',$piggyBank->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                </div>
+                    </td>
+                </tr>
+
+            @endif
+            @endforeach
+            </table>
         @endif
 
     </div>
@@ -43,6 +83,45 @@
         <h3>Current repeated expenses</h3>
         @if($countRepeating == 0)
         <p class="text-warning">No repeated expenses found.</p>
+        @else
+            <table class="table table-bordered">
+            @foreach($piggybanks as $repeated)
+            @if($repeated->repeats == 1)
+                <!-- display repeated expense -->
+                <tr><td>
+                        <h4><a href="{{route('piggybanks.show',$repeated->id)}}">{{{$repeated->name}}}</a></h4>
+                    <p>
+                        <!-- target amount -->
+                        Saving up to {{mf($repeated->targetamount)}}.
+
+                        <!-- currently saved -->
+                        Currently saved
+                        {{mf($piggyBank->currentRelevantRep()->currentamount)}}.
+
+                        <!-- start date (if any) -->
+                        @if(!is_null($piggyBank->startdate))
+                        Start date: {{$piggyBank->currentRelevantRep()->startdate->format('d M Y')}}.
+                        @endif
+
+                        <!-- target date (if any) -->
+                        @if(!is_null($piggyBank->targetdate))
+                        Target date: {{$piggyBank->currentRelevantRep()->targetdate->format('d M Y')}}.
+                        @endif
+
+                        @if(!is_null($piggyBank->reminder))
+                        Next reminder: {{$piggyBank->nextReminderDate()->format('d M Y')}}
+                        @endif
+
+
+                    </p>
+                        <div class="btn-group-xs btn-group">
+                            <a href="{{route('piggybanks.edit',$repeated->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="{{route('piggybanks.delete',$repeated->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                        </div>
+                    </td></tr>
+            @endif
+            @endforeach
+            </table>
         @endif
     </div>
 </div>

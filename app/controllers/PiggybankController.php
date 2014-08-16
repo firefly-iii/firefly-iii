@@ -31,15 +31,18 @@ class PiggybankController extends BaseController
         $periods = Config::get('firefly.piggybank_periods');
         $accounts = $this->_accounts->getActiveDefaultAsSelectList();
 
-        return View::make('piggybanks.create-piggybank')->with('accounts', $accounts)->with('periods',$periods);
+        return View::make('piggybanks.create-piggybank')->with('accounts', $accounts)->with('periods', $periods);
     }
 
+    /**
+     * @return $this
+     */
     public function createRepeated()
     {
         $periods = Config::get('firefly.piggybank_periods');
         $accounts = $this->_accounts->getActiveDefaultAsSelectList();
 
-        return View::make('piggybanks.create-repeated')->with('accounts', $accounts)->with('periods',$periods);
+        return View::make('piggybanks.create-repeated')->with('accounts', $accounts)->with('periods', $periods);
     }
 
 
@@ -60,7 +63,9 @@ class PiggybankController extends BaseController
      */
     public function destroy(Piggybank $piggyBank)
     {
-        $piggyBank->delete();
+        // TODO move to repository.
+        $this->_repository->destroy($piggyBank);
+        Event::fire('piggybanks.change');
         Session::flash('success', 'Piggy bank deleted.');
 
         return Redirect::route('piggybanks.index');
@@ -74,8 +79,16 @@ class PiggybankController extends BaseController
     public function edit(Piggybank $piggyBank)
     {
         $accounts = $this->_accounts->getActiveDefaultAsSelectList();
+        $periods = Config::get('firefly.piggybank_periods');
+        if ($piggyBank->repeats == 1) {
+            return View::make('piggybanks.edit-repeated')->with('piggybank', $piggyBank)->with('accounts', $accounts)
+                ->with('periods', $periods);
+        } else {
+            return View::make('piggybanks.edit-piggybank')->with('piggybank', $piggyBank)->with('accounts', $accounts)
+                ->with('periods', $periods);
+        }
 
-        return View::make('piggybanks.edit')->with('piggybank', $piggyBank)->with('accounts', $accounts);
+
     }
 
     /**
@@ -85,10 +98,12 @@ class PiggybankController extends BaseController
     {
         $countRepeating = $this->_repository->countRepeating();
         $countNonRepeating = $this->_repository->countNonrepeating();
+        Event::fire('piggybanks.change'); // TODO remove
+
         $piggybanks = $this->_repository->get();
         return View::make('piggybanks.index')->with('piggybanks', $piggybanks)
-            ->with('countRepeating',$countRepeating)
-            ->with('countNonRepeating',$countNonRepeating);
+            ->with('countRepeating', $countRepeating)
+            ->with('countNonRepeating', $countNonRepeating);
     }
 
     /**
@@ -96,6 +111,7 @@ class PiggybankController extends BaseController
      */
     public function show(Piggybank $piggyBank)
     {
+        Event::fire('piggybanks.change'); // TODO remove
         return View::make('piggybanks.show')->with('piggyBank', $piggyBank);
     }
 
@@ -109,12 +125,14 @@ class PiggybankController extends BaseController
 
         // extend the data array with the settings needed to create a piggy bank:
         $data['repeats'] = 0;
-        $data['rep_times'] = 0;
+        $data['rep_times'] = 1;
+        $data['rep_every'] = 1;
         $data['order'] = 0;
 
         $piggyBank = $this->_repository->store($data);
         if (!is_null($piggyBank->id)) {
             Session::flash('success', 'New piggy bank "' . $piggyBank->name . '" created!');
+            Event::fire('piggybanks.change');
 
             return Redirect::route('piggybanks.index');
 
@@ -138,19 +156,19 @@ class PiggybankController extends BaseController
 
         // extend the data array with the settings needed to create a repeated:
         $data['repeats'] = 1;
-        $data['startdate'] = new Carbon;
         $data['order'] = 0;
 
         $piggyBank = $this->_repository->store($data);
         if ($piggyBank->validate()) {
             Session::flash('success', 'New piggy bank "' . $piggyBank->name . '" created!');
+            Event::fire('piggybanks.change');
 
             return Redirect::route('piggybanks.index');
 
         } else {
             Session::flash('error', 'Could not save piggy bank: ' . $piggyBank->errors()->first());
 
-            return Redirect::route('piggybanks.create')->withInput();
+            return Redirect::route('piggybanks.create.repeated')->withInput()->withErrors($piggyBank->errors());
         }
 
     }
@@ -158,12 +176,12 @@ class PiggybankController extends BaseController
     /**
      * @return $this|\Illuminate\Http\RedirectResponse
      */
-    public function update()
+    public function update(Piggybank $piggyBank)
     {
-
-        $piggyBank = $this->_repository->update(Input::all());
+        $piggyBank = $this->_repository->update($piggyBank, Input::all());
         if ($piggyBank->validate()) {
             Session::flash('success', 'Piggy bank "' . $piggyBank->name . '" updated.');
+            Event::fire('piggybanks.change');
 
             return Redirect::route('piggybanks.index');
         } else {
@@ -180,6 +198,7 @@ class PiggybankController extends BaseController
      */
     public function updateAmount(Piggybank $piggybank)
     {
+        Event::fire('piggybanks.change');
         $this->_repository->updateAmount($piggybank, Input::get('amount'));
     }
 }

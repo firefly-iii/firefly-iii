@@ -41,6 +41,18 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
     }
 
     /**
+     * @param \Piggybank $piggyBank
+     *
+     * @return mixed|void
+     */
+    public function destroy(\Piggybank $piggyBank)
+    {
+        $piggyBank->delete();
+
+        return true;
+    }
+
+    /**
      * @param $piggyBankId
      *
      * @return mixed
@@ -57,9 +69,7 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
      */
     public function get()
     {
-        return \Piggybank::with('account')->leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(
-            'accounts.user_id', \Auth::user()->id
-        )->get(['piggybanks.*']);
+        return \Auth::user()->piggybanks()->with(['account', 'piggybankrepetitions'])->get();
     }
 
     /**
@@ -90,12 +100,12 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
         if ($piggyBank->validate()) {
             if (!is_null($piggyBank->targetdate) && $piggyBank->targetdate < $today) {
                 $piggyBank->errors()->add('targetdate', 'Target date cannot be in the past.');
+
                 return $piggyBank;
             }
 
             if (!is_null($piggyBank->reminder) && !is_null($piggyBank->targetdate)) {
                 // first period for reminder is AFTER target date.
-                // just flash a warning
                 $reminderSkip = $piggyBank->reminder_skip < 1 ? 1 : intval($piggyBank->reminder_skip);
                 $firstReminder = new Carbon;
                 switch ($piggyBank->reminder) {
@@ -116,7 +126,10 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
                         break;
                 }
                 if ($firstReminder > $piggyBank->targetdate) {
-                    $piggyBank->errors()->add('reminder', 'The reminder has been set to remind you after the piggy bank will expire.');
+                    $piggyBank->errors()->add(
+                        'reminder', 'The reminder has been set to remind you after the piggy bank will expire.'
+                    );
+
                     return $piggyBank;
                 }
             }
@@ -127,26 +140,51 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
     }
 
     /**
-     * @param $data
+     * @param \Piggybank $piggy
+     * @param            $data
      *
      * @return mixed
      */
-    public function update($data)
+    public function update(\Piggybank $piggy, $data)
     {
-        $piggyBank = $this->find($data['id']);
-        if ($piggyBank) {
-            $accounts = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
-            $account = $accounts->find($data['account_id']);
-            // update piggybank accordingly:
-            $piggyBank->name = $data['name'];
-            $piggyBank->target = floatval($data['target']);
-            $piggyBank->account()->associate($account);
-            if ($piggyBank->validate()) {
-                $piggyBank->save();
-            }
+        /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accounts */
+        $accounts = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
+        $account = isset($data['account_id']) ? $accounts->find($data['account_id']) : null;
+
+        if (!is_null($account)) {
+            $piggy->account()->associate($account);
         }
 
-        return $piggyBank;
+        $piggy->name = $data['name'];
+        $piggy->targetamount = floatval($data['targetamount']);
+        $piggy->reminder = isset($data['reminder']) && $data['reminder'] != 'none' ? $data['reminder'] : null;
+        $piggy->reminder_skip = $data['reminder_skip'];
+        $piggy->targetdate = strlen($data['targetdate']) > 0 ? new Carbon($data['targetdate']) : null;
+        $piggy->startdate
+            = isset($data['startdate']) && strlen($data['startdate']) > 0 ? new Carbon($data['startdate']) : null;
+
+        // everything we can update for NON repeating piggy banks:
+        if ($piggy->repeats == 0) {
+            // if non-repeating there is only one PiggyBank instance and we can delete it safely.
+            // it will be recreated.
+            $piggy->piggybankrepetitions()->first()->delete();
+        } else {
+            // we can delete all of them, because reasons
+            foreach ($piggy->piggybankrepetitions()->get() as $rep) {
+                $rep->delete();
+            }
+
+            $piggy->rep_every = intval($data['rep_every']);
+            $piggy->rep_length = $data['rep_length'];
+        }
+        if ($piggy->validate()) {
+            // check the things we check for new piggies
+            $piggy->save();
+        }
+
+
+        return $piggy;
+
     }
 
     /**

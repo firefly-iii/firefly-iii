@@ -17,9 +17,11 @@ class CreatePiggyInstance extends Migration {
 			$table->increments('id');
 			$table->timestamps();
             $table->integer('piggybank_id')->unsigned();
-            $table->date('targetdate')->nullable();
             $table->date('startdate')->nullable();
+            $table->date('targetdate')->nullable();
             $table->decimal('currentamount',10,2);
+
+            $table->unique(['piggybank_id','startdate','targetdate']);
 
             // connect instance to piggybank.
             $table->foreign('piggybank_id')

@@ -29,11 +29,7 @@
         <div class="form-group">
             <div class="col-sm-8">
                 <input type="submit" name="submit" value="Remove piggy bank" class="btn btn-danger" />
-                @if(Input::get('from') == 'date')
-                <a href="{{route('budgets.index')}}" class="btn-default btn">Cancel</a>
-                @else
-                <a href="{{route('budgets.index.budget')}}" class="btn-default btn">Cancel</a>
-                @endif
+                <a href="{{route('piggybanks.index')}}" class="btn-default btn">Cancel</a>
             </div>
         </div>
     </div>

@@ -92,13 +92,16 @@ Event::subscribe('Firefly\Helper\Form\FormTrigger');
 
 // do something with events:
 Event::subscribe('Firefly\Trigger\Limits\EloquentLimitTrigger');
+Event::subscribe('Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger');
 
-App::booted(
-    function () {
-        $forms = new \Firefly\Helper\Form\FormTrigger;
-        $forms->registerFormExtensions();
-    }
-);
+//App::booted(
+//    function () {
+//        $forms = new \Firefly\Helper\Form\FormTrigger;
+//        $forms->registerFormExtensions();
+//    }
+//);
+
+
 
 
 return $app;
