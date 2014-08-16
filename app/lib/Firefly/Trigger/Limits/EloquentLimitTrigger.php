@@ -85,5 +85,3 @@ class EloquentLimitTrigger
         }
     }
 }
-
-\Limit::observe(new EloquentLimitTrigger);
