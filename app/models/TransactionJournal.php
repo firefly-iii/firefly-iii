@@ -79,6 +79,14 @@ use LaravelBook\Ardent\Ardent;
  *             'Budget[] $budgets
  * @property-read \Illuminate\Database\Eloquent\Collection|\
  *             'Category[] $categories
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *             'Budget[] $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *             'Category[] $categories
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *             'Budget[] $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *             'Category[] $categories
  */
 class TransactionJournal extends Ardent
 {
