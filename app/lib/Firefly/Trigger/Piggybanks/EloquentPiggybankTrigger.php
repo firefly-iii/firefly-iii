@@ -53,12 +53,18 @@ class EloquentPiggybankTrigger
             /** @var \PiggybankRepetition $rep */
             foreach ($reps as $rep) {
                 if ($rep->currentamount == 0) {
-                    $sum = \Transaction::where('piggybank_id', $piggy->id)->leftJoin(
+                    $query = \Transaction::where('piggybank_id', $piggy->id)->leftJoin(
                         'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-                    )->where('transaction_journals.date', '>=', $rep->startdate->format('Y-m-d'))->where(
+                    );
+                    if (!is_null($rep->startdate)) {
+                        $query->where('transaction_journals.date', '>=', $rep->startdate->format('Y-m-d'));
+                    }
+                    if (!is_null($rep->targetdate)) {
+                        $query->where(
                             'transaction_journals.date', '<=', $rep->targetdate->format('Y-m-d')
-                        )->sum('transactions.amount');
-
+                        );
+                    }
+                    $sum = $query->sum('transactions.amount');
                     $rep->currentamount = floatval($sum);
                 }
                 $rep->save();
