@@ -61,8 +61,13 @@
         <div class="form-group">
             {{ Form::label('targetdate', 'Target date', ['class' => 'col-sm-4 control-label'])}}
             <div class="col-sm-8">
+                @if(is_null($piggybank->targetdate))
+                <input type="date" name="targetdate" value="{{Input::old('targetdate') ?: ''}}"
+                       class="form-control"/>
+                @else
                 <input type="date" name="targetdate" value="{{Input::old('targetdate') ?: $piggybank->targetdate->format('Y-m-d')}}"
                        class="form-control"/>
+                @endif
                 @if($errors->has('targetdate'))
                 <p class="text-danger">{{$errors->first('targetdate')}}</p>
                 @else
@@ -99,8 +104,13 @@
         <div class="form-group">
             {{ Form::label('startdate', 'Start date', ['class' => 'col-sm-4 control-label'])}}
             <div class="col-sm-8">
+                @if(is_null($piggybank->startdate))
+                <input type="date" name="startdate" value="{{Input::old('startdate') ?: ''}}"
+                       class="form-control"/>
+                @else
                 <input type="date" name="startdate" value="{{Input::old('startdate') ?: $piggybank->startdate->format('Y-m-d')}}"
                        class="form-control"/>
+                @endif
                 @if($errors->has('startdate'))
                 <p class="text-danger">{{$errors->first('startdate')}}</p>
                 @else
@@ -133,24 +143,6 @@
         </div>
 
 
-
-        <!--
-        <div class="form-group">
-            {{ Form::label('targetdate', 'Target date', ['class' => 'col-sm-4 control-label'])}}
-            <div class="col-sm-8">
-                {{ Form::input('date','targetdate', Input::old('targetdate') ?: '', ['class'
-                => 'form-control']) }}
-                @if($errors->has('targetdate'))
-                <p class="text-danger">{{$errors->first('targetdate')}}</p>
-                @else
-                <span class="help-block">
-                    If you want to, set a target date. This will inform you how much money you should save to
-                    get to the target amount.
-                </span>
-                @endif
-            </div>
-        </div>
-        -->
 
 
     </div>

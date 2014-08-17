@@ -64,8 +64,13 @@
         <div class="form-group">
             {{ Form::label('startdate', 'Start date', ['class' => 'col-sm-4 control-label'])}}
             <div class="col-sm-8">
+                @if(is_null($piggybank->startdate))
+                <input type="date" name="startdate" value="{{Input::old('startdate') ?: ''}}"
+                       class="form-control"/>
+                @else
                 <input type="date" name="startdate" value="{{Input::old('startdate') ?: $piggybank->startdate->format('Y-m-d')}}"
                        class="form-control"/>
+                @endif
                  @if($errors->has('startdate'))
                                 <p class="text-danger">{{$errors->first('startdate')}}</p>
                                 @else
