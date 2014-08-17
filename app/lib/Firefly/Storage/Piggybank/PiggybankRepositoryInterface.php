@@ -46,6 +46,23 @@ interface PiggybankRepositoryInterface
     public function get();
 
     /**
+     * Will tell you how much money is left on this account.
+     *
+     * @param \Account $account
+     *
+     * @return mixed
+     */
+    public function leftOnAccount(\Account $account);
+
+    /**
+     * @param \Piggybank $piggyBank
+     * @param            $amount
+     *
+     * @return mixed
+     */
+    public function modifyAmount(\Piggybank $piggyBank, $amount);
+
+    /**
      * @param $data
      *
      * @return mixed
@@ -60,12 +77,5 @@ interface PiggybankRepositoryInterface
      */
     public function update(\Piggybank $piggy, $data);
 
-    /**
-     * @param \Piggybank $piggyBank
-     * @param            $amount
-     *
-     * @return mixed
-     */
-    public function updateAmount(\Piggybank $piggyBank, $amount);
 
 } 

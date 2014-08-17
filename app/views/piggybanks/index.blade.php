@@ -66,9 +66,17 @@
                         @endif
 
                 </p>
-                <div class="btn-group-xs btn-group">
+                <div class="btn-group-sm btn-group">
                     <a href="{{route('piggybanks.edit',$piggyBank->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
+                    @if($piggyBank->leftInAccount > 0)
+                        <a data-toggle="modal" href="{{route('piggybanks.amount.add',$piggyBank->id)}}" data-target="#modal" class="btn btn-default"><span class="glyphicon glyphicon-plus-sign"></span> Add money</a>
+                    @endif
+                    @if($piggyBank->currentRelevantRep()->currentamount > 0)
+                        <a data-toggle="modal" href="{{route('piggybanks.amount.remove',$piggyBank->id)}}" data-target="#modal" class="btn btn-default"><span class="glyphicon glyphicon-minus-sign"></span> Remove money</a>
+                    @endif
                     <a href="{{route('piggybanks.delete',$piggyBank->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+
+
                 </div>
                     </td>
                 </tr>
@@ -114,9 +122,16 @@
 
 
                     </p>
-                        <div class="btn-group-xs btn-group">
-                            <a href="{{route('piggybanks.edit',$repeated->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
-                            <a href="{{route('piggybanks.delete',$repeated->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                        <div class="btn-group btn-group-sm">
+                            <a href="{{route('piggybanks.edit',$piggyBank->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
+                            @if($piggyBank->leftInAccount > 0)
+                                <a data-toggle="modal" href="{{route('piggybanks.amount.add',$piggyBank->id)}}" data-target="#modal" class="btn btn-default"><span class="glyphicon glyphicon-plus-sign"></span> Add money</a>
+                            @endif
+                            @if($piggyBank->currentRelevantRep()->currentamount > 0)
+                                <a data-toggle="modal" href="{{route('piggybanks.amount.remove',$piggyBank->id)}}" data-target="#modal" class="btn btn-default"><span class="glyphicon glyphicon-minus-sign"></span> Remove money</a>
+                            @endif
+                            <a href="{{route('piggybanks.delete',$piggyBank->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+
                         </div>
                     </td></tr>
             @endif
@@ -125,6 +140,18 @@
         @endif
     </div>
 </div>
+
+<!-- MODAL -->
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+
+
+
 @stop
 @section('scripts')
 <?php echo javascript_include_tag('piggybanks'); ?>

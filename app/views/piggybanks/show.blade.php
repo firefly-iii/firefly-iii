@@ -5,6 +5,12 @@
         <h1>Firefly
             <small>Piggy bank "{{{$piggyBank->name}}}"</small>
         </h1>
+        <p>
+            <a href="{{route('accounts.show',$piggyBank->account_id)}}">{{{$piggyBank->account->name}}}</a> has
+            a balance of {{mf($piggyBank->account->balance())}}.
+            Of that {{mf($piggyBank->account->balance())}}, you have {{mf(0)}} not yet locked up in other piggy banks.
+            You can add {{mf(max(0,1))}} to this piggy bank.
+        </p>
     </div>
 </div>
 <div class="row">

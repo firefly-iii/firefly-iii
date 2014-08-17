@@ -137,6 +137,10 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/piggybanks',['uses' => 'PiggybankController@index','as' => 'piggybanks.index']);
         Route::get('/piggybanks/create/piggybank', ['uses' => 'PiggybankController@createPiggybank','as' => 'piggybanks.create.piggybank']);
         Route::get('/piggybanks/create/repeated', ['uses' => 'PiggybankController@createRepeated','as' => 'piggybanks.create.repeated']);
+
+        Route::get('/piggybanks/addMoney/{piggybank}', ['uses' => 'PiggybankController@addMoney','as' => 'piggybanks.amount.add']);
+        Route::get('/piggybanks/removeMoney/{piggybank}', ['uses' => 'PiggybankController@removeMoney','as' => 'piggybanks.amount.remove']);
+
         Route::get('/piggybanks/show/{piggybank}', ['uses' => 'PiggybankController@show','as' => 'piggybanks.show']);
         Route::get('/piggybanks/edit/{piggybank}', ['uses' => 'PiggybankController@edit','as' => 'piggybanks.edit']);
         Route::get('/piggybanks/delete/{piggybank}', ['uses' => 'PiggybankController@delete','as' => 'piggybanks.delete']);
@@ -204,6 +208,8 @@ Route::group(['before' => 'csrf|auth'], function () {
         Route::post('/piggybanks/store/repeated',['uses' => 'PiggybankController@storeRepeated','as' => 'piggybanks.store.repeated']);
         Route::post('/piggybanks/update/{piggybank}', ['uses' => 'PiggybankController@update','as' => 'piggybanks.update']);
         Route::post('/piggybanks/destroy/{piggybank}', ['uses' => 'PiggybankController@destroy','as' => 'piggybanks.destroy']);
+        Route::post('/piggybanks/mod/{piggybank}', ['uses' => 'PiggybankController@modMoney','as' => 'piggybanks.modMoney']);
+
 
         // preferences controller
         Route::post('/preferences', ['uses' => 'PreferencesController@postIndex']);

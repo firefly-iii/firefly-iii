@@ -177,6 +177,8 @@ class Piggybank extends Ardent
 
     /**
      * Grabs the PiggyBankRepetition that's currently relevant / active
+     *
+     * @returns \PiggybankRepetition
      */
     public function currentRelevantRep() {
         return $this->piggybankrepetitions()
