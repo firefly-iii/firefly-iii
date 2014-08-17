@@ -16,6 +16,7 @@ class TransactionControllerTest extends TestCase
 
     protected $_accounts;
     protected $_budgets;
+    protected $_piggies;
 
     public function setUp()
     {
@@ -26,6 +27,7 @@ class TransactionControllerTest extends TestCase
         $this->_repository = $this->mock('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
         $this->_accounts = $this->mock('Firefly\Storage\Account\AccountRepositoryInterface');
         $this->_budgets = $this->mock('Firefly\Storage\Budget\BudgetRepositoryInterface');
+        $this->_piggies = $this->mock('Firefly\Storage\Piggybank\PiggybankRepositoryInterface');
 
     }
 
@@ -38,6 +40,8 @@ class TransactionControllerTest extends TestCase
     {
         $this->_accounts->shouldReceive('getActiveDefaultAsSelectList')->andReturn([]);
         $this->_budgets->shouldReceive('getAsSelectList')->andReturn([]);
+        $this->_piggies->shouldReceive('get')->andReturn([]);
+
         $this->action('GET', 'TransactionController@create', ['what' => 'deposit']);
         $this->assertResponseOk();
     }
@@ -46,6 +50,7 @@ class TransactionControllerTest extends TestCase
     {
         $this->_accounts->shouldReceive('getActiveDefaultAsSelectList')->andReturn([]);
         $this->_budgets->shouldReceive('getAsSelectList')->andReturn([]);
+        $this->_piggies->shouldReceive('get')->andReturn([]);
         $this->action('GET', 'TransactionController@create', ['what' => 'transfer']);
         $this->assertResponseOk();
     }
@@ -54,6 +59,7 @@ class TransactionControllerTest extends TestCase
     {
         $this->_accounts->shouldReceive('getActiveDefaultAsSelectList')->andReturn([]);
         $this->_budgets->shouldReceive('getAsSelectList')->andReturn([]);
+        $this->_piggies->shouldReceive('get')->andReturn([]);
         $this->action('GET', 'TransactionController@create', ['what' => 'withdrawal']);
         $this->assertResponseOk();
     }
