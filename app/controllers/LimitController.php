@@ -110,6 +110,7 @@ class LimitController extends BaseController
             Session::flash('success', 'Could not save new envelope.');
             $budgetId = $budget ? $budget->id : null;
             $parameters = [$budgetId, 'from' => Input::get('from')];
+
             return Redirect::route('budgets.limits.create', $parameters)->withInput()
                 ->withErrors($limit->errors());
         }

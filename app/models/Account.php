@@ -21,6 +21,7 @@ use LaravelBook\Ardent\Ardent as Ardent;
  * @method static \Illuminate\Database\Query\Builder|\Account whereAccountTypeId($value)
  * @method static \Illuminate\Database\Query\Builder|\Account whereName($value)
  * @method static \Illuminate\Database\Query\Builder|\Account whereActive($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Piggybank[]   $piggybanks
  */
 class Account extends Ardent
 {

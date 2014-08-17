@@ -6,13 +6,13 @@ use LaravelBook\Ardent\Ardent as Ardent;
 /**
  * Class PiggybankRepetition
  *
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $piggybank_id
- * @property \Carbon\Carbon $targetdate
- * @property \Carbon\Carbon $startdate
- * @property float $currentamount
+ * @property integer         $id
+ * @property \Carbon\Carbon  $created_at
+ * @property \Carbon\Carbon  $updated_at
+ * @property integer         $piggybank_id
+ * @property \Carbon\Carbon  $targetdate
+ * @property \Carbon\Carbon  $startdate
+ * @property float           $currentamount
  * @property-read \Piggybank $piggybank
  * @method static \Illuminate\Database\Query\Builder|\PiggybankRepetition whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\PiggybankRepetition whereCreatedAt($value)
@@ -37,12 +37,15 @@ class PiggybankRepetition extends Ardent
      */
     public static function factory()
     {
-        $date = new Carbon;
+        $start = new Carbon;
+        $start->startOfMonth();
+        $end = new Carbon;
+        $end->endOfMonth();
 
         return [
             'piggybank_id'  => 'factory|Piggybank',
-            'targetdate'    => $date,
-            'startdate'     => $date,
+            'startdate'     => $start->format('Y-m-d'),
+            'targetdate'    => $end->format('Y-m-d'),
             'currentamount' => 200
         ];
     }

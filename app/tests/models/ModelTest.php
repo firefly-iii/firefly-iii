@@ -29,12 +29,16 @@ class ModelTest extends TestCase
         $account = f::create('Account');
         $user = f::create('User');
         $type = f::create('AccountType');
+        $piggybank = f::create('Piggybank');
         $account->user()->associate($user);
         $account->accounttype()->associate($type);
+        $account->piggybanks()->save($piggybank);
+
 
         $this->assertEquals($account->predict(new Carbon), null);
         $this->assertEquals($account->balance(new Carbon), null);
         $this->assertEquals($account->user_id, $user->id);
+        $this->assertEquals($piggybank->account_id, $account->id);
         $this->assertEquals($account->account_type_id, $type->id);
 
     }
@@ -199,8 +203,51 @@ class ModelTest extends TestCase
         $piggy = f::create('Piggybank');
         $account = f::create('Account');
         $piggy->account()->associate($account);
-
         $this->assertEquals($account->id, $piggy->account_id);
+
+        $repetition = f::create('PiggybankRepetition');
+        $repetition->piggybank()->associate($piggy);
+        $repetition->save();
+        $list = ['day', 'week', 'month', 'year'];
+
+        // with a start date, so next reminder is built from a loop:
+        foreach ($list as $reminder) {
+            $piggy->reminder = $reminder;
+            $repetition->save();
+            $piggy->nextReminderDate();
+        }
+        // set the reminder period to be invalid, should return NULL
+        $piggy->reminder = 'invalid';
+        $piggy->save();
+        $this->assertNull($piggy->nextReminderDate());
+
+        // set the start date to zero, give a valid $reminder, retry:
+        $repetition->startdate = null;
+        $piggy->reminder = 'month';
+        $repetition->save();
+        foreach ($list as $reminder) {
+            $piggy->reminder = $reminder;
+            $repetition->save();
+            $piggy->nextReminderDate();
+        }
+        // set the reminder to be invalid again:
+        $piggy->reminder = 'invalid';
+        $piggy->save();
+        $piggy->nextReminderDate();
+
+        // set it to be NULL
+        $piggy->reminder = null;
+        $piggy->save();
+        $piggy->nextReminderDate();
+
+
+        // remove the repetition, retry:
+        $piggy->reminder = 'month';
+        $piggy->save();
+        $repetition->delete();
+        $piggy->nextReminderDate();
+
+
     }
 
     public function testPreference()
@@ -237,6 +284,7 @@ class ModelTest extends TestCase
         $budget = f::create('Budget');
         $category = f::create('Category');
         $account = f::create('Account');
+        $piggy = f::create('Piggybank');
 
         $transaction->transactionJournal()->associate($journal);
         $this->assertEquals($transaction->transaction_journal_id, $journal->id);
@@ -248,6 +296,8 @@ class ModelTest extends TestCase
         $this->assertEquals($transaction->categories()->first()->id, $category->id);
         $transaction->account()->associate($account);
         $this->assertEquals($transaction->account_id, $account->id);
+        $transaction->piggybank()->associate($piggy);
+        $this->assertEquals($transaction->piggybank_id, $piggy->id);
     }
 
     public function testTransactionCurrency()
@@ -314,6 +364,7 @@ class ModelTest extends TestCase
         $pref = f::create('Preference');
         $rec = f::create('RecurringTransaction');
         $journal = f::create('TransactionJournal');
+        $piggy = f::create('Piggybank');
 
         $user->accounts()->save($account);
         $this->assertEquals($account->id, $user->accounts()->first()->id);
@@ -335,6 +386,10 @@ class ModelTest extends TestCase
 
         $user->transactionjournals()->save($journal);
         $this->assertEquals($journal->id, $user->transactionjournals()->first()->id);
+
+        $piggy->account()->associate($account);
+        $piggy->save();
+        $this->assertCount(1, $user->piggybanks()->get());
     }
 
 
