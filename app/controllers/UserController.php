@@ -48,10 +48,12 @@ class UserController extends BaseController
         $result = Auth::attempt($data, $rememberMe);
         if ($result) {
             Session::flash('success', 'Logged in!');
+
             return Redirect::route('index');
         }
 
         Session::flash('error', 'No good!');
+
         return View::make('user.login');
     }
 

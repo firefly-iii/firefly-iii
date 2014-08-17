@@ -122,10 +122,12 @@ class PiggybankController extends BaseController
 
     /**
      * @param Piggybank $piggyBank
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws Firefly\Exception\FireflyException
      */
     public function modMoney(Piggybank $piggyBank)
     {
-        var_dump(Input::all());
         $amount = floatval(Input::get('amount'));
         switch (Input::get('what')) {
             default:
@@ -141,9 +143,13 @@ class PiggybankController extends BaseController
                 }
                 break;
             case 'remove':
-                $maxRemove = $piggyBank->currentRelevantRep()->currentamount;
+                $rep = $piggyBank->currentRelevantRep();
+                $maxRemove = $rep->currentamount;
                 if (round($amount, 2) <= round($maxRemove, 2)) {
+                    Session::flash('success', 'Amount updated!');
                     $this->_repository->modifyAmount($piggyBank, ($amount * -1));
+                } else {
+                    Session::flash('warning', 'Could not!');
                 }
                 break;
         }

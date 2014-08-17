@@ -25,6 +25,9 @@ use LaravelBook\Ardent\Ardent;
  * @method static \Illuminate\Database\Query\Builder|\Transaction whereTransactionJournalId($value)
  * @method static \Illuminate\Database\Query\Builder|\Transaction whereDescription($value)
  * @method static \Illuminate\Database\Query\Builder|\Transaction whereAmount($value)
+ * @property integer                                                    $piggybank_id
+ * @property-read \Piggybank                                            $piggybank
+ * @method static \Illuminate\Database\Query\Builder|\Transaction wherePiggybankId($value)
  */
 class Transaction extends Ardent
 {

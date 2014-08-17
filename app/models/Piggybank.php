@@ -5,38 +5,38 @@ use LaravelBook\Ardent\Ardent as Ardent;
 /**
  * Piggybank
  *
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $account_id
- * @property string $name
- * @property float $targetamount
- * @property \Carbon\Carbon $targetdate
- * @property \Carbon\Carbon $startdate
- * @property boolean $repeats
- * @property string $rep_length
- * @property integer $rep_every
- * @property integer $rep_times
- * @property string $reminder
- * @property integer $reminder_skip
- * @property integer $order
- * @property-read \Account $account
+ * @property integer                                                              $id
+ * @property \Carbon\Carbon                                                       $created_at
+ * @property \Carbon\Carbon                                                       $updated_at
+ * @property integer                                                              $account_id
+ * @property string                                                               $name
+ * @property float                                                                $targetamount
+ * @property \Carbon\Carbon                                                       $targetdate
+ * @property \Carbon\Carbon                                                       $startdate
+ * @property boolean                                                              $repeats
+ * @property string                                                               $rep_length
+ * @property integer                                                              $rep_every
+ * @property integer                                                              $rep_times
+ * @property string                                                               $reminder
+ * @property integer                                                              $reminder_skip
+ * @property integer                                                              $order
+ * @property-read \Account                                                        $account
  * @property-read \Illuminate\Database\Eloquent\Collection|\PiggybankRepetition[] $piggybankrepetitions
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereAccountId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereName($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereTargetamount($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereTargetdate($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereStartdate($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepeats($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepLength($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepEvery($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepTimes($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereReminder($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereReminderSkip($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereOrder($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereAccountId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereTargetamount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereTargetdate($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereStartdate($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepeats($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepLength($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepEvery($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepTimes($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereReminder($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereReminderSkip($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereOrder($value)
  */
 class Piggybank extends Ardent
 {
@@ -77,15 +77,16 @@ class Piggybank extends Ardent
     public static function factory()
     {
         $start = new Carbon;
-        $start->endOfMonth();
-        $today = new Carbon;
+        $start->startOfMonth();
+        $end = new Carbon;
+        $end->endOfMonth();
 
         return [
             'account_id'    => 'factory|Account',
             'name'          => 'string',
-            'targetamount'  => 'required|min:0',
-            'startdate'     => $today,
-            'targetdate'    => $start,
+            'targetamount'  => 'integer',
+            'startdate'     => $start->format('Y-m-d'),
+            'targetdate'    => $end->format('Y-m-d'),
             'repeats'       => 0,
             'rep_length'    => null,
             'rep_times'     => 0,
@@ -109,7 +110,7 @@ class Piggybank extends Ardent
      */
     public function getDates()
     {
-        return ['created_at', 'updated_at', 'targetdate','startdate'];
+        return ['created_at', 'updated_at', 'targetdate', 'startdate'];
     }
 
     /**
@@ -119,58 +120,57 @@ class Piggybank extends Ardent
      */
     public function nextReminderDate()
     {
-        if(is_null($this->reminder)) {
+        if (is_null($this->reminder)) {
             return null;
         }
         /** @var \PiggybankRepetition $rep */
         $rep = $this->currentRelevantRep();
-        if($rep) {
-            $today = new Carbon;
-            if(is_null($rep->startdate)) {
-                switch($this->reminder) {
+        $today = new Carbon;
+        if ($rep && is_null($rep->startdate)) {
+            switch ($this->reminder) {
+                case 'day':
+                    return $today;
+                    break;
+                case 'week':
+                    return $today->endOfWeek();
+                    break;
+                case 'month':
+                    return $today->endOfMonth();
+                    break;
+                case 'year':
+                    return $today->endOfYear();
+                    break;
+
+            }
+            return null;
+        }
+        if ($rep && !is_null($rep->startdate)) {
+            // start with the start date
+            // when its bigger than today, return it:
+            $start = clone $rep->startdate;
+            while ($start <= $today) {
+                switch ($this->reminder) {
+                    default:
+                        return null;
+                        break;
                     case 'day':
-                        return $today;
+                        $start->addDay();
                         break;
                     case 'week':
-                        return $today->endOfWeek();
+                        $start->addWeek();
                         break;
                     case 'month':
-                        return $today->endOfMonth();
+                        $start->addMonth();
                         break;
                     case 'year':
-                        return $today->endOfYear();
+                        $start->addYear();
                         break;
 
                 }
-            } else {
-                // start with the start date
-                // when its bigger than today, return it:
-                $start = clone $rep->startdate;
-                while($start <= $today) {
-                    switch($this->reminder) {
-                        case 'day':
-                            $start->addDay();
-                            break;
-                        case 'week':
-                            $start->addWeek();
-                            break;
-                        case 'month':
-                            $start->addMonth();
-                            break;
-                        case 'year':
-                            $start->addYear();
-                            break;
-
-                    }
-                }
-                return $start;
             }
-            // if start date is null, simple switch on
-            // the reminder period (if any) and go to the end of the period.
 
-            // otherwise, keep jumping until we are past today.
+            return $start;
         }
-
 
         return new Carbon;
     }
@@ -180,19 +180,26 @@ class Piggybank extends Ardent
      *
      * @returns \PiggybankRepetition
      */
-    public function currentRelevantRep() {
-        return $this->piggybankrepetitions()
-            ->where(function ($q) {
+    public function currentRelevantRep()
+    {
+        $query = $this->piggybankrepetitions()
+            ->where(
+                function ($q) {
                     $today = new Carbon;
                     $q->whereNull('startdate');
-                    $q->orWhere('startdate','<=',$today->format('Y-m-d'));
-                })
-            ->where(function ($q) {
+                    $q->orWhere('startdate', '<=', $today->format('Y-m-d'));
+                }
+            )
+            ->where(
+                function ($q) {
                     $today = new Carbon;
                     $q->whereNull('targetdate');
-                    $q->orWhere('targetdate','>=',$today->format('Y-m-d'));
-                })
-            ->first();
+                    $q->orWhere('targetdate', '>=', $today->format('Y-m-d'));
+                }
+            );
+        $result = $query->first();
+
+        return $result;
 
 
     }

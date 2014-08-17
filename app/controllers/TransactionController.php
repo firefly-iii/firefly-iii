@@ -45,7 +45,7 @@ class TransactionController extends BaseController
 
         return View::make('transactions.create')->with('accounts', $accounts)->with('budgets', $budgets)->with(
             'what', $what
-        )->with('piggies',$piggies);
+        )->with('piggies', $piggies);
     }
 
     /**
