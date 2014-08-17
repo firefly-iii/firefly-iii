@@ -46,9 +46,9 @@
             <div class="input-group">
                 <div class="input-group-addon">&euro;</div>
             @if($what == 'add')
-                <input type="number" step="any" max="{{min($maxAdd,$piggybank->targetamount)}}" min="0.01" class="form-control" id="amount" name="amount">
+                <input type="number" step="any" max="{{round(min($maxAdd,$piggybank->targetamount),2)}}" min="0.01" class="form-control" id="amount" name="amount">
             @else
-                <input type="number" step="any" max="{{$maxRemove}}" min="0.01" class="form-control" id="amount" name="amount">
+                <input type="number" step="any" max="{{round($maxRemove,2)}}" min="0.01" class="form-control" id="amount" name="amount">
             @endif
             </div>
         </div>
