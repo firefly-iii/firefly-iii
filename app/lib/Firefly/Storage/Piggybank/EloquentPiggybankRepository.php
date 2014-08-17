@@ -129,6 +129,9 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
         if ($data['reminder'] == 'none') {
             unset($data['reminder']);
         }
+        if($data['startdate'] == '') {
+            unset($data['startdate']);
+        }
 
         /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accounts */
         $accounts = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
