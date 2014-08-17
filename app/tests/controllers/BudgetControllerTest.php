@@ -233,6 +233,7 @@ class BudgetControllerTest extends TestCase
         Auth::shouldReceive('check')->andReturn(true);
         $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($budget->user_id);
         $this->_repository->shouldReceive('update')->andReturn($budget);
+        Event::shouldReceive('fire')->with('budgets.change');
 
         $this->action('POST', 'BudgetController@update', $budget->id);
         $this->assertRedirectedToRoute('budgets.index.budget');
@@ -247,6 +248,8 @@ class BudgetControllerTest extends TestCase
         Auth::shouldReceive('check')->andReturn(true);
         $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($budget->user_id);
         $this->_repository->shouldReceive('update')->andReturn($budget);
+        Event::shouldReceive('fire')->with('budgets.change');
+        //$this->_user->shouldReceive('budgets')->andReturn([]); // trigger
 
         $this->action('POST', 'BudgetController@update', [$budget->id, 'from' => 'date']);
         $this->assertRedirectedToRoute('budgets.index');

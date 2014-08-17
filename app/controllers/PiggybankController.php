@@ -133,16 +133,16 @@ class PiggybankController extends BaseController
                 break;
             case 'add':
                 $maxAdd = $this->_repository->leftOnAccount($piggyBank->account);
-                if (round($amount,2) <= round(min($maxAdd, $piggyBank->targetamount),2)) {
-                    Session::flash('success','Amount updated!');
+                if (round($amount, 2) <= round(min($maxAdd, $piggyBank->targetamount), 2)) {
+                    Session::flash('success', 'Amount updated!');
                     $this->_repository->modifyAmount($piggyBank, $amount);
                 } else {
-                    Session::flash('warning','Could not!');
+                    Session::flash('warning', 'Could not!');
                 }
                 break;
             case 'remove':
                 $maxRemove = $piggyBank->currentRelevantRep()->currentamount;
-                if(round($amount,2) <= round($maxRemove,2)) {
+                if (round($amount, 2) <= round($maxRemove, 2)) {
                     $this->_repository->modifyAmount($piggyBank, ($amount * -1));
                 }
                 break;
@@ -249,14 +249,5 @@ class PiggybankController extends BaseController
         }
 
 
-    }
-
-    /**
-     * @param Piggybank $piggybank
-     */
-    public function updateAmount(Piggybank $piggybank)
-    {
-        Event::fire('piggybanks.change');
-        $this->_repository->updateAmount($piggybank, Input::get('amount'));
     }
 }

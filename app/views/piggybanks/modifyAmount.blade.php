@@ -21,8 +21,7 @@
                 piggy bank
             @endif
             by transferring it from one of your accounts to "{{{$piggybank->account->name}}}". However,
-            since there is still {{mf($maxAdd)}} on that account not locked in any piggy bank or repeated expense,
-            you can also add it manually.
+            since there is still {{mf($maxAdd)}} you can add manually.
 
             @else
 

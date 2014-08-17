@@ -27,7 +27,7 @@ class EloquentLimitTrigger
      */
     public function updateLimitRepetitions()
     {
-        if (!\Auth::check()) {
+        if (!\Auth::check() || is_null(\Auth::user())) {
             return;
         }
 
