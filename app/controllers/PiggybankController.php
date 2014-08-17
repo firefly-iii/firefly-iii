@@ -1,6 +1,6 @@
 <?php
 
-use Carbon\Carbon;
+use Firefly\Exception\FireflyException;
 use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
 use Firefly\Storage\Piggybank\PiggybankRepositoryInterface as PRI;
 
@@ -25,6 +25,20 @@ class PiggybankController extends BaseController
     }
 
     /**
+     * @param Piggybank $piggyBank
+     */
+    public function addMoney(Piggybank $piggyBank)
+    {
+        $what = 'add';
+        $maxAdd = $this->_repository->leftOnAccount($piggyBank->account);
+        $maxRemove = null;
+
+        return View::make('piggybanks.modifyAmount')->with('what', $what)->with('maxAdd', $maxAdd)->with(
+            'maxRemove', $maxRemove
+        )->with('piggybank', $piggyBank);
+    }
+
+    /**
      * @return $this
      */
     public function createPiggybank()
@@ -45,7 +59,6 @@ class PiggybankController extends BaseController
 
         return View::make('piggybanks.create-repeated')->with('accounts', $accounts)->with('periods', $periods);
     }
-
 
     /**
      * @param Piggybank $piggyBank
@@ -101,9 +114,55 @@ class PiggybankController extends BaseController
         $countNonRepeating = $this->_repository->countNonrepeating();
 
         $piggybanks = $this->_repository->get();
+
         return View::make('piggybanks.index')->with('piggybanks', $piggybanks)
             ->with('countRepeating', $countRepeating)
             ->with('countNonRepeating', $countNonRepeating);
+    }
+
+    /**
+     * @param Piggybank $piggyBank
+     */
+    public function modMoney(Piggybank $piggyBank)
+    {
+        var_dump(Input::all());
+        $amount = floatval(Input::get('amount'));
+        switch (Input::get('what')) {
+            default:
+                throw new FireflyException('No such action');
+                break;
+            case 'add':
+                $maxAdd = $this->_repository->leftOnAccount($piggyBank->account);
+                if ($amount <= min($maxAdd, $piggyBank->targetamount)) {
+                    Session::flash('success','Amount updated!');
+                    $this->_repository->modifyAmount($piggyBank, $amount);
+                } else {
+                    Session::flash('warning','Could not!');
+                }
+                break;
+            case 'remove':
+                $maxRemove = $piggyBank->currentRelevantRep()->currentamount;
+                if($amount <= $maxRemove) {
+                    $this->_repository->modifyAmount($piggyBank, ($amount * -1));
+                }
+                break;
+        }
+
+        return Redirect::route('piggybanks.index');
+    }
+
+    /**
+     * @param Piggybank $piggyBank
+     */
+    public function removeMoney(Piggybank $piggyBank)
+    {
+        $what = 'remove';
+        $maxAdd = $this->_repository->leftOnAccount($piggyBank->account);
+        $maxRemove = $piggyBank->currentRelevantRep()->currentamount;
+
+        return View::make('piggybanks.modifyAmount')->with('what', $what)->with('maxAdd', $maxAdd)->with(
+            'maxRemove', $maxRemove
+        )->with('piggybank', $piggyBank);
     }
 
     /**

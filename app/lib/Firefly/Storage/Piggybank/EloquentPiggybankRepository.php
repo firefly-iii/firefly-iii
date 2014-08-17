@@ -69,7 +69,51 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
      */
     public function get()
     {
-        return \Auth::user()->piggybanks()->with(['account', 'piggybankrepetitions'])->get();
+        $piggies = \Auth::user()->piggybanks()->with(['account', 'piggybankrepetitions'])->get();
+
+        foreach($piggies as $pig) {
+            $pig->leftInAccount = $this->leftOnAccount($pig->account);
+        }
+        return $piggies;
+    }
+
+    /**
+     * @param \Account $account
+     *
+     * @return mixed|void
+     */
+    public function leftOnAccount(\Account $account)
+    {
+        $balance = $account->balance();
+        /** @var \Piggybank $p */
+        foreach ($account->piggybanks()->get() as $p) {
+            $balance -= $p->currentRelevantRep()->currentamount;
+        }
+
+        return $balance;
+
+    }
+
+
+    /**
+     * @param \Piggybank $piggyBank
+     * @param            $amount
+     *
+     * @return bool|mixed
+     */
+    public function modifyAmount(\Piggybank $piggyBank, $amount)
+    {
+        $rep = $piggyBank->currentRelevantRep();
+        \Log::debug('Amount before: ' . $rep->currentamount);
+        $rep->currentamount += $amount;
+        \Log::debug('Amount after: ' . $rep->currentamount);
+        \Log::debug('validates: ' . $rep->validate());
+        \Log::debug(print_r($rep->toArray(),true));
+        $rep->save();
+
+
+        return true;
+
     }
 
     /**
@@ -182,18 +226,4 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
 
     }
 
-    /**
-     * @param \Piggybank $piggyBank
-     * @param            $amount
-     *
-     * @return mixed|void
-     */
-    public function updateAmount(\Piggybank $piggyBank, $amount)
-    {
-        $piggyBank->amount = floatval($amount);
-        if ($piggyBank->validate()) {
-            $piggyBank->save();
-        }
-
-    }
 }

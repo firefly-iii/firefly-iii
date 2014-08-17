@@ -93,6 +93,14 @@ class Account extends Ardent
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function piggybanks()
+    {
+        return $this->hasMany('Piggybank');
+    }
+
+    /**
      * @param \Carbon\Carbon $date
      *
      * @return null
