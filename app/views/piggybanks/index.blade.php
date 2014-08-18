@@ -140,6 +140,23 @@
         @endif
     </div>
 </div>
+<div class="row">
+<div class="col-lg-6">
+    <h4>Account information</h4>
+    <table class="table">
+    <tr>
+        <th>Account</th>
+        <th>Left for piggy banks</th>
+    </tr>
+    @foreach($accounts as $account)
+    <tr>
+        <td>{{{$account['account']->name}}}</td>
+        <td>{{mf($account['left'])}}</td>
+    </tr>
+    @endforeach
+    </table>
+</div>
+</div>
 
 <!-- MODAL -->
 <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">

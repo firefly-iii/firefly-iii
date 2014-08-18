@@ -51,24 +51,35 @@ class EloquentPiggybankTrigger
                 // piggy bank, and we can find transactions that fall within
                 // that repetition (to fix the "saved amount".
                 $reps = $piggy->piggybankrepetitions()->get();
+
                 /** @var \PiggybankRepetition $rep */
                 foreach ($reps as $rep) {
-                    if ($rep->currentamount == 0) {
-                        $query = \Transaction::where('piggybank_id', $piggy->id)->leftJoin(
-                            'transaction_journals', 'transaction_journals.id', '=',
-                            'transactions.transaction_journal_id'
-                        );
-                        if (!is_null($rep->startdate)) {
-                            $query->where('transaction_journals.date', '>=', $rep->startdate->format('Y-m-d'));
-                        }
-                        if (!is_null($rep->targetdate)) {
-                            $query->where(
-                                'transaction_journals.date', '<=', $rep->targetdate->format('Y-m-d')
-                            );
-                        }
-                        $sum = $query->sum('transactions.amount');
-                        $rep->currentamount = floatval($sum);
+                    $query = \Transaction::where('piggybank_id', $piggy->id)->leftJoin(
+                        'transaction_journals', 'transaction_journals.id', '=',
+                        'transactions.transaction_journal_id'
+                    );
+                    if (!is_null($rep->startdate)) {
+                        $query->where('transaction_journals.date', '>=', $rep->startdate->format('Y-m-d'));
                     }
+                    if (!is_null($rep->targetdate)) {
+                        $query->where(
+                            'transaction_journals.date', '<=', $rep->targetdate->format('Y-m-d')
+                        );
+                    }
+
+                    // get events for piggy bank, save those as well:
+                    $eventSumQuery = $piggy->piggybankevents();
+                    if(!is_null($rep->startdate)) {
+                        $eventSumQuery->where('date','>=',$rep->startdate->format('Y-m-d'));
+                    }
+                    if(!is_null($rep->targetdate)) {
+                        $eventSumQuery->where('date','<=',$rep->targetdate->format('Y-m-d'));
+                    }
+                    $eventSum = floatval($eventSumQuery->sum('amount'));
+
+
+                    $sum = $query->sum('transactions.amount');
+                    $rep->currentamount = floatval($sum) + $eventSum;
                     $rep->save();
 
 
@@ -138,8 +149,8 @@ class EloquentPiggybankTrigger
                     $sum = \Transaction::where('piggybank_id', $repeated->id)->leftJoin(
                         'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
                     )->where('transaction_journals.date', '>=', $rep->startdate->format('Y-m-d'))->where(
-                            'transaction_journals.date', '<=', $rep->targetdate->format('Y-m-d')
-                        )->sum('transactions.amount');
+                        'transaction_journals.date', '<=', $rep->targetdate->format('Y-m-d')
+                    )->sum('transactions.amount');
                     $rep->currentamount = floatval($sum);
                     $rep->save();
 
