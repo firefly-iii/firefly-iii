@@ -71,7 +71,7 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
     {
         $piggies = \Auth::user()->piggybanks()->with(['account', 'piggybankrepetitions'])->get();
 
-        foreach($piggies as $pig) {
+        foreach ($piggies as $pig) {
             $pig->leftInAccount = $this->leftOnAccount($pig->account);
         }
         return $piggies;
@@ -104,12 +104,17 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
     public function modifyAmount(\Piggybank $piggyBank, $amount)
     {
         $rep = $piggyBank->currentRelevantRep();
-        \Log::debug('Amount before: ' . $rep->currentamount);
-        $rep->currentamount += $amount;
-        \Log::debug('Amount after: ' . $rep->currentamount);
-        \Log::debug('validates: ' . $rep->validate());
-        \Log::debug(print_r($rep->toArray(),true));
-        $rep->save();
+        if (!is_null($rep)) {
+            $rep->currentamount += $amount;
+            $rep->save();
+
+            // create event:
+            $event = new \PiggybankEvent;
+            $event->date = new Carbon;
+            $event->amount = $amount;
+            $event->piggybank()->associate($piggyBank);
+            $event->save();
+        }
 
 
         return true;
@@ -129,7 +134,7 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
         if ($data['reminder'] == 'none') {
             unset($data['reminder']);
         }
-        if($data['startdate'] == '') {
+        if ($data['startdate'] == '') {
             unset($data['startdate']);
         }
 

@@ -115,9 +115,23 @@ class PiggybankController extends BaseController
 
         $piggybanks = $this->_repository->get();
 
+        // get the accounts with each piggy bank and check their balance; we might need to
+        // show the user a correction.
+
+        $accounts = [];
+        /** @var \Piggybank $piggybank */
+        foreach($piggybanks as $piggybank) {
+            $account = $piggybank->account;
+            $id = $account->id;
+            if(!isset($accounts[$id])) {
+                $accounts[$id] = ['account' => $account, 'left' => $this->_repository->leftOnAccount($account)];
+            }
+        }
+
         return View::make('piggybanks.index')->with('piggybanks', $piggybanks)
             ->with('countRepeating', $countRepeating)
-            ->with('countNonRepeating', $countNonRepeating);
+            ->with('countNonRepeating', $countNonRepeating)
+            ->with('accounts',$accounts);
     }
 
     /**
