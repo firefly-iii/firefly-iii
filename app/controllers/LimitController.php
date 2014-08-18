@@ -37,6 +37,7 @@ class LimitController extends BaseController
         ];
 
         $budgets = $this->_budgets->getAsSelectList();
+        Event::fire('budgets.change');
 
         return View::make('limits.create')->with('budgets', $budgets)->with(
             'periods', $periods
@@ -67,6 +68,7 @@ class LimitController extends BaseController
         } else {
             Session::flash('error', 'Could not delete the envelope. Check the logs to be sure.');
         }
+        Event::fire('budgets.change');
         if (Input::get('from') == 'date') {
             return Redirect::route('budgets.index');
         } else {
@@ -101,13 +103,14 @@ class LimitController extends BaseController
         $limit = $this->_limits->store(Input::all());
         if ($limit->validate()) {
             Session::flash('success', 'Envelope created!');
+            Event::fire('budgets.change');
             if (Input::get('from') == 'date') {
                 return Redirect::route('budgets.index');
             } else {
                 return Redirect::route('budgets.index.budget');
             }
         } else {
-            Session::flash('success', 'Could not save new envelope.');
+            Session::flash('error', 'Could not save new envelope.');
             $budgetId = $budget ? $budget->id : null;
             $parameters = [$budgetId, 'from' => Input::get('from')];
 
@@ -129,6 +132,7 @@ class LimitController extends BaseController
         $limit->repeat_freq = Input::get('period');
         $limit->repeats = !is_null(Input::get('repeats')) && Input::get('repeats') == '1' ? 1 : 0;
         $limit->amount = floatval(Input::get('amount'));
+        Event::fire('budgets.change');
         if ($limit->save()) {
             Session::flash('success', 'Limit saved!');
             foreach ($limit->limitrepetitions()->get() as $rep) {

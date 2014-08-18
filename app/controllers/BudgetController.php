@@ -86,6 +86,8 @@ class BudgetController extends BaseController
         $budgets = $this->_repository->get();
         $today = new Carbon;
 
+        Event::fire('budgets.change');
+
         return View::make('budgets.indexByBudget')->with('budgets', $budgets)->with('today', $today);
 
     }
@@ -99,6 +101,8 @@ class BudgetController extends BaseController
         // get a list of dates by getting all repetitions:
         $set = $this->_repository->get();
         $budgets = $this->_budgets->organizeByDate($set);
+
+        Event::fire('budgets.change');
 
         return View::make('budgets.indexByDate')->with('budgets', $budgets);
 

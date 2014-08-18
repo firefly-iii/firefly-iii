@@ -28,6 +28,7 @@ class EloquentLimitTrigger
     public function updateLimitRepetitions()
     {
         if (!\Auth::check() || is_null(\Auth::user())) {
+            \Log::debug('No user for updateLimitRepetitions.');
             return;
         }
 
