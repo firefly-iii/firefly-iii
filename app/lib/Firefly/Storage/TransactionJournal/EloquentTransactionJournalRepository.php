@@ -332,6 +332,9 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
                         // connect the piggy to it:
                         $transaction->piggybank()->associate($piggyBank);
                         $transaction->save();
+                        \Event::fire(
+                            'piggybanks.createRelatedTransfer', [$piggyBank, $transactionJournal, $transaction]
+                        );
                     } else {
                         \Session::flash(
                             'warning',
@@ -388,6 +391,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         if (!is_null($journal->budgets()->first())) {
             $journal->budgets()->detach($journal->budgets()->first()->id);
         }
+        // remove previous piggy bank, if any:
 
 
         $category = isset($data['category']) ? $catRepository->findByName($data['category']) : null;
@@ -395,8 +399,18 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
             $journal->categories()->attach($category);
         }
         // update the amounts:
-        /** @var \Transaction $transaction */
         $transactions = $journal->transactions()->orderBy('amount', 'ASC')->get();
+
+        // remove previous piggy bank, if any:
+        /** @var \Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            if (!is_null($transaction->piggybank()->first())) {
+                $transaction->piggybank()->detach($transaction->piggybank()->first()->first());
+                $transaction->save();
+            }
+        }
+        unset($transaction);
+
         $transactions[0]->amount = $amount * -1;
         $transactions[1]->amount = $amount;
 
@@ -431,6 +445,37 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
                 $toAccount = $accountRepository->find($data['account_to_id']);
                 $journal->transactions[0]->account()->associate($fromAccount);
                 $journal->transactions[1]->account()->associate($toAccount);
+
+                // attach the new piggy bank, if valid:
+                /** @var \Firefly\Storage\Piggybank\PiggybankRepositoryInterface $piggyRepository */
+                $piggyRepository = \App::make('Firefly\Storage\Piggybank\PiggybankRepositoryInterface');
+
+                if (isset($data['piggybank_id'])) {
+                    /** @var \Piggybank $piggyBank */
+                    $piggyBank = $piggyRepository->find(intval($data['piggybank_id']));
+
+                    if ($piggyBank) {
+                        if ($toAccount->id == $piggyBank->account_id) {
+
+                            // find the transaction connected to the $toAccount:
+                            /** @var \Transaction $transaction */
+                            $transaction
+                                = $journal->transactions()->where('account_id', $toAccount->id)->first();
+                            // connect the piggy to it:
+                            $transaction->piggybank()->associate($piggyBank);
+                            $transaction->save();
+                            \Event::fire('piggybanks.updateRelatedTransfer', [$piggyBank, $journal]);
+                        } else {
+                            \Session::flash(
+                                'warning',
+                                'Piggy bank "' . e($piggyBank->name) . '" is not set to draw money from account "' . e(
+                                    $toAccount->name
+                                ) . '", so the money isn\'t added to the piggy bank.'
+                            );
+                        }
+                    }
+                }
+
 
                 break;
             default:
