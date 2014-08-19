@@ -42,18 +42,18 @@ class Piggybank extends Ardent
 {
     public static $rules
         = [
-            'account_id' => 'required|exists:accounts,id', // link to Account
-            'name' => 'required|between:1,255', // name
-            'targetamount' => 'required|min:0', // amount you want to save
-            'startdate' => 'date', // when you started
-            'targetdate' => 'date', // when its due
-            'repeats' => 'required|between:0,1', // does it repeat?
-            'rep_length' => 'in:day,week,month,year', // how long is the period?
-            'rep_every' => 'required|min:1|max:100', // how often does it repeat? every 3 years.
-            'rep_times' => 'min:1|max:100', // how many times do you want to save this amount? eg. 3 times
-            'reminder' => 'in:day,week,month,year', // want a reminder to put money in this?
+            'account_id'    => 'required|exists:accounts,id', // link to Account
+            'name'          => 'required|between:1,255', // name
+            'targetamount'  => 'required|min:0', // amount you want to save
+            'startdate'     => 'date', // when you started
+            'targetdate'    => 'date', // when its due
+            'repeats'       => 'required|between:0,1', // does it repeat?
+            'rep_length'    => 'in:day,week,month,year', // how long is the period?
+            'rep_every'     => 'required|min:1|max:100', // how often does it repeat? every 3 years.
+            'rep_times'     => 'min:1|max:100', // how many times do you want to save this amount? eg. 3 times
+            'reminder'      => 'in:day,week,month,year', // want a reminder to put money in this?
             'reminder_skip' => 'required|min:0|max:100', // every week? every 2 months?
-            'order' => 'required:min:1', // not yet used.
+            'order'         => 'required:min:1', // not yet used.
         ];
     public $fillable
         = [
@@ -82,18 +82,18 @@ class Piggybank extends Ardent
         $end->endOfMonth();
 
         return [
-            'account_id' => 'factory|Account',
-            'name' => 'string',
-            'targetamount' => 'integer',
-            'startdate' => $start->format('Y-m-d'),
-            'targetdate' => $end->format('Y-m-d'),
-            'repeats' => 0,
-            'rep_length' => null,
-            'rep_times' => 0,
-            'rep_every' => 0,
-            'reminder' => null,
+            'account_id'    => 'factory|Account',
+            'name'          => 'string',
+            'targetamount'  => 'integer',
+            'startdate'     => $start->format('Y-m-d'),
+            'targetdate'    => $end->format('Y-m-d'),
+            'repeats'       => 0,
+            'rep_length'    => null,
+            'rep_times'     => 0,
+            'rep_every'     => 0,
+            'reminder'      => null,
             'reminder_skip' => 0,
-            'order' => 1,
+            'order'         => 1,
         ];
     }
 
@@ -185,18 +185,29 @@ class Piggybank extends Ardent
         $query = $this->piggybankrepetitions()
             ->where(
                 function ($q) {
-                    $today = new Carbon;
-                    $q->whereNull('startdate');
-                    $q->orWhere('startdate', '<=', $today->format('Y-m-d'));
+
+                    $q->where(
+                        function ($q) {
+                            $today = new Carbon;
+                            $q->whereNull('startdate');
+                            $q->orWhere('startdate', '<=', $today->format('Y-m-d'));
+                        }
+                    )
+                        ->where(
+                            function ($q) {
+                                $today = new Carbon;
+                                $q->whereNull('targetdate');
+                                $q->orWhere('targetdate', '>=', $today->format('Y-m-d'));
+                            }
+                        );
                 }
-            )
-            ->where(
+            )->orWhere(
                 function ($q) {
                     $today = new Carbon;
-                    $q->whereNull('targetdate');
-                    $q->orWhere('targetdate', '>=', $today->format('Y-m-d'));
+                    $q->where('startdate', '>=', $today->format('Y-m-d'));
+                    $q->where('targetdate', '>=', $today->format('Y-m-d'));
                 }
-            );
+            )->orderBy('startdate', 'ASC');
         $result = $query->first();
 
         return $result;
@@ -218,6 +229,38 @@ class Piggybank extends Ardent
     public function piggybankevents()
     {
         return $this->hasMany('PiggybankEvent');
+    }
+
+    /**
+     * Same but for specific date.
+     *
+     * @param Carbon $date
+     *
+     * @returns \PiggybankRepetition
+     */
+    public function repetitionForDate(Carbon $date)
+    {
+        $query = $this->piggybankrepetitions()
+            ->where(
+                function ($q) use ($date) {
+                    $q->whereNull('startdate');
+                    $q->orWhere('startdate', '<=', $date->format('Y-m-d'));
+                }
+            )
+            ->where(
+                function ($q) use ($date) {
+                    $q->whereNull('targetdate');
+                    $q->orWhere('targetdate', '>=', $date->format('Y-m-d'));
+                }
+            );
+        $result = $query->first();
+
+        return $result;
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany('Transaction');
     }
 
 } 

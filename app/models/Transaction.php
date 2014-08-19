@@ -34,6 +34,7 @@ class Transaction extends Ardent
     public static $rules
         = [
             'account_id'             => 'numeric|required|exists:accounts,id',
+            'piggybank_id'           => 'numeric|exists:piggybanks,id',
             'transaction_journal_id' => 'numeric|required|exists:transaction_journals,id',
             'description'            => 'between:1,255',
             'amount'                 => 'required|between:-65536,65536|not_in:0,0.00',
@@ -42,9 +43,11 @@ class Transaction extends Ardent
     public static $factory
         = [
             'account_id'             => 'factory|Account',
+            'piggybank_id'           => null,
             'transaction_journal_id' => 'factory|TransactionJournal',
             'description'            => 'string',
-            'amount'                 => 'integer:5'
+            'amount'                 => 'integer:5',
+
         ];
 
     /**

@@ -107,13 +107,6 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
         if (!is_null($rep)) {
             $rep->currentamount += $amount;
             $rep->save();
-
-            // create event:
-            $event = new \PiggybankEvent;
-            $event->date = new Carbon;
-            $event->amount = $amount;
-            $event->piggybank()->associate($piggyBank);
-            $event->save();
         }
 
 

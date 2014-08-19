@@ -77,8 +77,9 @@ class PiggybankController extends BaseController
      */
     public function destroy(Piggybank $piggyBank)
     {
+        Event::fire('piggybanks.destroy', [$piggyBank]);
         $this->_repository->destroy($piggyBank);
-        Event::fire('piggybanks.change');
+
         Session::flash('success', 'Piggy bank deleted.');
 
         return Redirect::route('piggybanks.index');
@@ -109,7 +110,6 @@ class PiggybankController extends BaseController
      */
     public function index()
     {
-        Event::fire('piggybanks.change');
         $countRepeating = $this->_repository->countRepeating();
         $countNonRepeating = $this->_repository->countNonrepeating();
 
@@ -120,10 +120,10 @@ class PiggybankController extends BaseController
 
         $accounts = [];
         /** @var \Piggybank $piggybank */
-        foreach($piggybanks as $piggybank) {
+        foreach ($piggybanks as $piggybank) {
             $account = $piggybank->account;
             $id = $account->id;
-            if(!isset($accounts[$id])) {
+            if (!isset($accounts[$id])) {
                 $accounts[$id] = ['account' => $account, 'left' => $this->_repository->leftOnAccount($account)];
             }
         }
@@ -131,7 +131,7 @@ class PiggybankController extends BaseController
         return View::make('piggybanks.index')->with('piggybanks', $piggybanks)
             ->with('countRepeating', $countRepeating)
             ->with('countNonRepeating', $countNonRepeating)
-            ->with('accounts',$accounts);
+            ->with('accounts', $accounts);
     }
 
     /**
@@ -152,6 +152,7 @@ class PiggybankController extends BaseController
                 if (round($amount, 2) <= round(min($maxAdd, $piggyBank->targetamount), 2)) {
                     Session::flash('success', 'Amount updated!');
                     $this->_repository->modifyAmount($piggyBank, $amount);
+                    Event::fire('piggybanks.modifyAmountAdd', [$piggyBank, $amount]);
                 } else {
                     Session::flash('warning', 'Could not!');
                 }
@@ -162,6 +163,7 @@ class PiggybankController extends BaseController
                 if (round($amount, 2) <= round($maxRemove, 2)) {
                     Session::flash('success', 'Amount updated!');
                     $this->_repository->modifyAmount($piggyBank, ($amount * -1));
+                    Event::fire('piggybanks.modifyAmountRemove', [$piggyBank, ($amount * -1)]);
                 } else {
                     Session::flash('warning', 'Could not!');
                 }
@@ -210,7 +212,7 @@ class PiggybankController extends BaseController
         $piggyBank = $this->_repository->store($data);
         if (!is_null($piggyBank->id)) {
             Session::flash('success', 'New piggy bank "' . $piggyBank->name . '" created!');
-            Event::fire('piggybanks.change');
+            Event::fire('piggybanks.storePiggy',[$piggyBank]);
 
             return Redirect::route('piggybanks.index');
 
@@ -239,7 +241,7 @@ class PiggybankController extends BaseController
         $piggyBank = $this->_repository->store($data);
         if ($piggyBank->id) {
             Session::flash('success', 'New piggy bank "' . $piggyBank->name . '" created!');
-            Event::fire('piggybanks.change');
+            Event::fire('piggybanks.storeRepeated',[$piggyBank]);
 
             return Redirect::route('piggybanks.index');
 
@@ -259,7 +261,7 @@ class PiggybankController extends BaseController
         $piggyBank = $this->_repository->update($piggyBank, Input::all());
         if ($piggyBank->validate()) {
             Session::flash('success', 'Piggy bank "' . $piggyBank->name . '" updated.');
-            Event::fire('piggybanks.change');
+            Event::fire('piggybanks.update',[$piggyBank]);
 
             return Redirect::route('piggybanks.index');
         } else {
