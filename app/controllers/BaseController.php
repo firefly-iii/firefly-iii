@@ -7,6 +7,13 @@ class BaseController extends Controller
 {
 
     /**
+     *
+     */
+    public function __construct() {
+        parent::__construct();
+        Event::fire('limits.check');
+    }
+    /**
      * Setup the layout used by the controller.
      *
      * @return void

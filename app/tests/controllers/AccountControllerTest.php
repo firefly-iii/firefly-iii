@@ -10,6 +10,7 @@ use Zizaco\FactoryMuff\Facade\FactoryMuff as f;
  *
  * @SuppressWarnings(PHPMD.TooManyMethods)
  * @SuppressWarnings(PHPMD.CamelCasePropertyName)
+ * @coversDefaultClass \AccountController
  */
 class AccountControllerTest extends TestCase
 {
@@ -33,13 +34,22 @@ class AccountControllerTest extends TestCase
         Mockery::close();
     }
 
+    /**
+     * @covers ::create
+     */
     public function testCreate()
     {
+        View::shouldReceive('make')->with('accounts.create')->once();
+
         $this->action('GET', 'AccountController@create');
         $this->assertResponseOk();
 
+
     }
 
+    /**
+     * @covers ::delete
+     */
     public function testDelete()
     {
 
@@ -49,19 +59,27 @@ class AccountControllerTest extends TestCase
         Auth::shouldReceive('user')->andReturn($this->_user);
         Auth::shouldReceive('check')->andReturn(true);
         $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($account->user_id);
-        $this->_user->shouldReceive('getAttribute')->with('email')->once()->andReturn('some@email');
+        $this->_user->shouldReceive('getAttribute')->with('email')->andReturn('some@email');
+
+        // view
+        View::shouldReceive('make')->once()->with('accounts.delete')->andReturn(m::self())->shouldReceive('with')->with(
+            'account', m::any()
+        );
 
         $this->action('GET', 'AccountController@delete', $account->id);
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers ::destroy
+     */
     public function testDestroy()
     {
         $account = f::create('Account');
 
         // for successful binding:
-        Auth::shouldReceive('user')->andReturn($this->_user);
-        Auth::shouldReceive('check')->andReturn(true);
+        Auth::shouldReceive('user')->once()->andReturn($this->_user);
+        Auth::shouldReceive('check')->once()->andReturn(true);
         $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($account->user_id);
         $this->_repository->shouldReceive('destroy')->once()->andReturn(true);
 
@@ -70,13 +88,16 @@ class AccountControllerTest extends TestCase
         $this->assertSessionHas('success');
     }
 
+    /**
+     * @covers ::destroy
+     */
     public function testDestroyFails()
     {
         $account = f::create('Account');
 
         // for successful binding:
-        Auth::shouldReceive('user')->andReturn($this->_user);
-        Auth::shouldReceive('check')->andReturn(true);
+        Auth::shouldReceive('user')->once()->andReturn($this->_user);
+        Auth::shouldReceive('check')->once()->andReturn(true);
         $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($account->user_id);
         $this->_repository->shouldReceive('destroy')->once()->andReturn(false);
 

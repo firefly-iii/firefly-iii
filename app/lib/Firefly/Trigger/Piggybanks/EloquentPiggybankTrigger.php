@@ -13,13 +13,15 @@ use Illuminate\Events\Dispatcher;
 class EloquentPiggybankTrigger
 {
     /**
-     * @param \Piggybank $piggyBank
+     * @param \Piggybank          $piggyBank
      * @param \TransactionJournal $journal
+     * @param \Transaction        $transaction
+     *
+     * @return bool
      */
     public function createRelatedTransfer(
         \Piggybank $piggyBank, \TransactionJournal $journal, \Transaction $transaction
-    )
-    {
+    ) {
         $repetition = $piggyBank->repetitionForDate($journal->date);
         if (!is_null($repetition)) {
             // get the amount transferred TO this

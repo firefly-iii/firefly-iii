@@ -86,6 +86,7 @@ class BudgetController extends BaseController
         $budgets = $this->_repository->get();
         $today = new Carbon;
 
+
         return View::make('budgets.indexByBudget')->with('budgets', $budgets)->with('today', $today);
 
     }
