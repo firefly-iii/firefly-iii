@@ -2,6 +2,7 @@
 
 namespace Firefly\Trigger\Limits;
 
+use Carbon\Carbon;
 use Illuminate\Events\Dispatcher;
 
 /**
@@ -13,6 +14,84 @@ class EloquentLimitTrigger
 {
 
     /**
+     * This trigger checks if any budgets have limits that repeat every period.
+     * If there are, this method will create any missing repetitions.
+     */
+    public function checkRepeatingLimits()
+    {
+        $limits = \Limit::leftJoin('components', 'components.id', '=', 'limits.component_id')
+            ->where('components.user_id', \Auth::user()->id)
+            ->where('limits.repeats', 1)
+            ->get(['limits.*']);
+
+        /** @var \Limit $limit */
+        foreach ($limits as $limit) {
+            /** @var \Budget $budget */
+            $budget = $limit->budget()->first();
+            // the limit repeats, and there should be at least one repetition already.
+            /** @var \LimitRepetition $primer */
+            $primer = $limit->limitrepetitions()->orderBy('startdate', 'DESC')->first();
+            $today = new Carbon;
+            $start = clone $primer->enddate;
+            // from the primer onwards.
+            while ($start <= $today) {
+                $start->addDay();
+                $end = clone $start;
+
+                // add period to determin end of limitrepetition:
+                switch ($limit->repeat_freq) {
+                    case 'daily':
+                        $end->addDay();
+                        break;
+                    case 'weekly':
+                        $end->addWeek();
+                        break;
+                    case 'monthly':
+                        $end->addMonth();
+                        break;
+                    case 'quarterly':
+                        $end->addMonths(3);
+                        break;
+                    case 'half-year':
+                        $end->addMonths(6);
+                        break;
+                    case 'yearly':
+                        $end->addYear();
+                        break;
+                }
+                $end->subDay();
+                // create repetition:
+                $limit->createRepetition($start);
+                $start = clone $end;
+            }
+        }
+    }
+
+    /**
+     * @param \Limit $limit
+     *
+     * @return bool
+     */
+    public function destroy(\Limit $limit)
+    {
+        return true;
+
+    }
+
+    /**
+     * @param \Limit $limit
+     *
+     * @return bool
+     */
+    public function store(\Limit $limit)
+    {
+        // create a repetition (repetitions) for this limit (we ignore "repeats"):
+        $limit->createRepetition($limit->startdate);
+
+        return true;
+    }
+
+    /**
      * @param Dispatcher $events
      */
     public function subscribe(Dispatcher $events)
@@ -21,98 +100,25 @@ class EloquentLimitTrigger
         $events->listen('limits.destroy', 'Firefly\Trigger\Limits\EloquentLimitTrigger@destroy');
         $events->listen('limits.store', 'Firefly\Trigger\Limits\EloquentLimitTrigger@store');
         $events->listen('limits.update', 'Firefly\Trigger\Limits\EloquentLimitTrigger@update');
+        $events->listen('limits.check', 'Firefly\Trigger\Limits\EloquentLimitTrigger@checkRepeatingLimits');
 
     }
 
-    public function destroy(\Limit $limit)
-    {
-        return true;
-
-    }
-
-    public function store(\Limit $limit)
-    {
-        // create a repetition (repetitions) for this limit (we ignore "repeats"):
-        $limit->createRepetition($limit->startdate);
-
-        // we may want to build a routine that does this for repeating limits.
-        // TODO.
-        return true;
-    }
-
+    /**
+     * @param \Limit $limit
+     *
+     * @return bool
+     */
     public function update(\Limit $limit)
     {
         // remove and recreate limit repetitions.
         // if limit is not repeating, simply update the repetition to match the limit,
         // even though deleting everything is easier.
-        foreach($limit->limitrepetitions()->get() as $l) {
+        foreach ($limit->limitrepetitions()->get() as $l) {
             $l->delete();
         }
         $limit->createRepetition($limit->startdate);
+
         return true;
     }
-
-//    /**
-//     *
-//     */
-//    public function updateLimitRepetitions()
-//    {
-//        if (!\Auth::check() || is_null(\Auth::user())) {
-//            \Log::debug('No user for updateLimitRepetitions.');
-//            return;
-//        }
-//
-//        // get budgets with limits:
-//        $budgets = \Auth::user()->budgets()
-//            ->with(
-//                ['limits', 'limits.limitrepetitions']
-//            )
-//            ->where('components.class', 'Budget')
-//            ->get(['components.*']);
-//
-//        // double check the non-repeating budgetlimits first.
-//        foreach ($budgets as $budget) {
-//            \Log::debug('Budgetstart: ' . $budget->name);
-//            foreach ($budget->limits as $limit) {
-//                if ($limit->repeats == 0) {
-//                    $limit->createRepetition($limit->startdate);
-//                }
-//                if ($limit->repeats == 1) {
-//                    $start = $limit->startdate;
-//                    $end = new Carbon;
-//
-//                    // repeat for period:
-//                    $current = clone $start;
-//                    \Log::debug('Create repeating limit for #' . $limit->id . ' starting on ' . $current);
-//                    while ($current <= $end) {
-//                        \Log::debug('Current is now: ' . $current);
-//                        $limit->createRepetition(clone $current);
-//                        // switch period, add time:
-//                        switch ($limit->repeat_freq) {
-//                            case 'daily':
-//                                $current->addDay();
-//                                break;
-//                            case 'weekly':
-//                                $current->addWeek();
-//                                break;
-//                            case 'monthly':
-//                                $current->addMonth();
-//                                break;
-//                            case 'quarterly':
-//                                $current->addMonths(3);
-//                                break;
-//                            case 'half-year':
-//                                $current->addMonths(6);
-//                                break;
-//                            case 'yearly':
-//                                $current->addYear();
-//                                break;
-//                        }
-//
-//                    }
-//                }
-//            }
-//
-//        }
-//    }
 }
