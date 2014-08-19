@@ -37,7 +37,7 @@ class TransactionController extends BaseController
         $budgets = $budgetRepository->getAsSelectList();
         $budgets[0] = '(no budget)';
 
-        // get the number of piggy banks.
+        // get the piggy banks.
         /** @var \Firefly\Storage\Piggybank\PiggybankRepositoryInterface $piggyRepository */
         $piggyRepository = App::make('Firefly\Storage\Piggybank\PiggybankRepositoryInterface');
         $piggies = $piggyRepository->get();
@@ -96,11 +96,22 @@ class TransactionController extends BaseController
         $budgets = $budgetRepository->getAsSelectList();
         $budgets[0] = '(no budget)';
 
+        // get the piggy banks.
+        /** @var \Firefly\Storage\Piggybank\PiggybankRepositoryInterface $piggyRepository */
+        $piggyRepository = App::make('Firefly\Storage\Piggybank\PiggybankRepositoryInterface');
+        $piggies = $piggyRepository->get();
+        // piggy bank id?
+        $piggyBankId = null;
+        foreach($journal->transactions as $t) {
+            $piggyBankId = $t->piggybank_id;
+        }
+
         // data to properly display form:
         $data = [
             'date'      => $journal->date->format('Y-m-d'),
             'category'  => '',
-            'budget_id' => 0
+            'budget_id' => 0,
+            'piggybank_id' => $piggyBankId
         ];
         $category = $journal->categories()->first();
         if (!is_null($category)) {
@@ -130,7 +141,7 @@ class TransactionController extends BaseController
 
         return View::make('transactions.edit')->with('journal', $journal)->with('accounts', $accounts)->with(
             'what', $what
-        )->with('budgets', $budgets)->with('data', $data);
+        )->with('budgets', $budgets)->with('data', $data)->with('piggies',$piggies);
     }
 
     /**

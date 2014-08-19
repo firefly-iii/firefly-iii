@@ -50,8 +50,8 @@ class BudgetController extends BaseController
      */
     public function destroy(Budget $budget)
     {
+        Event::fire('budgets.destroy',[$budget]); // just before deletion.
         $result = $this->_repository->destroy($budget);
-        Event::fire('budgets.change');
         if ($result === true) {
             Session::flash('success', 'The budget was deleted.');
             if (Input::get('from') == 'date') {
@@ -86,8 +86,6 @@ class BudgetController extends BaseController
         $budgets = $this->_repository->get();
         $today = new Carbon;
 
-        Event::fire('budgets.change');
-
         return View::make('budgets.indexByBudget')->with('budgets', $budgets)->with('today', $today);
 
     }
@@ -102,7 +100,6 @@ class BudgetController extends BaseController
         $set = $this->_repository->get();
         $budgets = $this->_budgets->organizeByDate($set);
 
-        Event::fire('budgets.change');
 
         return View::make('budgets.indexByDate')->with('budgets', $budgets);
 
@@ -146,7 +143,7 @@ class BudgetController extends BaseController
 
         $budget = $this->_repository->store(Input::all());
         if ($budget->validate()) {
-            Event::fire('budgets.change');
+            Event::fire('budgets.store',[$budget]);
             Session::flash('success', 'Budget created!');
 
             if (Input::get('create') == '1') {
@@ -175,7 +172,7 @@ class BudgetController extends BaseController
     {
         $budget = $this->_repository->update($budget, Input::all());
         if ($budget->validate()) {
-            Event::fire('budgets.change');
+            Event::fire('budgets.update',[$budget]);
             Session::flash('success', 'Budget "' . $budget->name . '" updated.');
 
             if (Input::get('from') == 'date') {

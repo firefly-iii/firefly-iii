@@ -175,6 +175,8 @@ class LimitControllerTest extends TestCase
         $this->_user->shouldReceive('getAttribute')->with('id')->andReturn($limit->budget()->first()->user_id);
         $this->_user->shouldReceive('getAttribute')->with('email')->andReturn('some@email');
 
+        $this->_limits->shouldReceive('update')->once()->andReturn($limit);
+
 
         $this->action(
             'POST', 'LimitController@update',
@@ -200,6 +202,9 @@ class LimitControllerTest extends TestCase
         $this->_user->shouldReceive('getAttribute')->with('id')->andReturn($limit->budget()->first()->user_id);
         $this->_user->shouldReceive('getAttribute')->with('email')->andReturn('some@email');
 
+        unset($limit->amount);
+        $this->_limits->shouldReceive('update')->once()->andReturn($limit);
+
 
         $this->action(
             'POST', 'LimitController@update',
@@ -218,6 +223,8 @@ class LimitControllerTest extends TestCase
         Auth::shouldReceive('check')->andReturn(true);
         $this->_user->shouldReceive('getAttribute')->with('id')->andReturn($limit->budget()->first()->user_id);
         $this->_user->shouldReceive('getAttribute')->with('email')->andReturn('some@email');
+
+        $this->_limits->shouldReceive('update')->once()->andReturn($limit);
 
 
         $this->action(

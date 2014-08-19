@@ -31,13 +31,12 @@ class LimitController extends BaseController
     {
         $periods = \Config::get('firefly.periods_to_text');
         $prefilled = [
-            'startdate'   => Input::get('startdate') ? : date('Y-m-d'),
-            'repeat_freq' => Input::get('repeat_freq') ? : 'monthly',
+            'startdate'   => \Input::get('startdate') ? : date('Y-m-d'),
+            'repeat_freq' => \Input::get('repeat_freq') ? : 'monthly',
             'budget_id'   => $budget ? $budget->id : null
         ];
 
         $budgets = $this->_budgets->getAsSelectList();
-        Event::fire('budgets.change');
 
         return View::make('limits.create')->with('budgets', $budgets)->with(
             'periods', $periods
@@ -61,6 +60,7 @@ class LimitController extends BaseController
      */
     public function destroy(\Limit $limit)
     {
+        Event::fire('limits.destroy',[$limit]); // before
         $success = $this->_limits->destroy($limit);
 
         if ($success) {
@@ -68,7 +68,6 @@ class LimitController extends BaseController
         } else {
             Session::flash('error', 'Could not delete the envelope. Check the logs to be sure.');
         }
-        Event::fire('budgets.change');
         if (Input::get('from') == 'date') {
             return Redirect::route('budgets.index');
         } else {
@@ -103,7 +102,7 @@ class LimitController extends BaseController
         $limit = $this->_limits->store(Input::all());
         if ($limit->validate()) {
             Session::flash('success', 'Envelope created!');
-            Event::fire('budgets.change');
+            Event::fire('limits.store',[$limit]);
             if (Input::get('from') == 'date') {
                 return Redirect::route('budgets.index');
             } else {
@@ -126,18 +125,13 @@ class LimitController extends BaseController
      */
     public function update(\Limit $limit)
     {
-        // TODO move logic to repository.
-        /** @var \Limit $limit */
-        $limit->startdate = new \Carbon\Carbon(Input::get('date'));
-        $limit->repeat_freq = Input::get('period');
-        $limit->repeats = !is_null(Input::get('repeats')) && Input::get('repeats') == '1' ? 1 : 0;
-        $limit->amount = floatval(Input::get('amount'));
-        Event::fire('budgets.change');
-        if ($limit->save()) {
+
+
+        $limit = $this->_limits->update($limit,Input::all());
+
+        if ($limit->validate()) {
+            Event::fire('limits.update',[$limit]);
             Session::flash('success', 'Limit saved!');
-            foreach ($limit->limitrepetitions()->get() as $rep) {
-                $rep->delete();
-            }
             if (Input::get('from') == 'date') {
                 return Redirect::route('budgets.index');
             } else {

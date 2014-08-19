@@ -20,6 +20,13 @@ interface LimitRepositoryInterface
     public function store($data);
 
     /**
+     * @param \Limit $limit
+     * @param $data
+     * @return mixed
+     */
+    public function update(\Limit $limit, $data);
+
+    /**
      * @param \Budget $budget
      * @param Carbon  $start
      * @param Carbon  $end

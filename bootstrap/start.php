@@ -93,6 +93,7 @@ Event::subscribe('Firefly\Helper\Form\FormTrigger');
 // do something with events:
 Event::subscribe('Firefly\Trigger\Limits\EloquentLimitTrigger');
 Event::subscribe('Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger');
+Event::subscribe('Firefly\Trigger\Budgets\EloquentBudgetTrigger');
 
 //App::booted(
 //    function () {
