@@ -92,7 +92,7 @@ class PiggybankControllerTest extends TestCase
         );
         $this->_user->shouldReceive('getAttribute')->with('email')->andReturn('some@email');
         $this->_piggybanks->shouldReceive('destroy')->andReturn(true);
-        Event::shouldReceive('fire')->with('piggybanks.change');
+        Event::shouldReceive('fire')->with('piggybanks.destroy', [$piggyBank]);
 
 
         $this->action('POST', 'PiggybankController@destroy', $piggyBank->id);
@@ -113,6 +113,7 @@ class PiggybankControllerTest extends TestCase
             $piggyBank->account()->first()->user_id
         );
         $this->_user->shouldReceive('getAttribute')->with('email')->once()->andReturn('some@email');
+
 
         $this->action('GET', 'PiggybankController@edit', $piggyBank->id);
         $this->assertResponseOk();
@@ -153,6 +154,7 @@ class PiggybankControllerTest extends TestCase
         $three->account()->associate($aTwo);
         $this->_piggybanks->shouldReceive('get')->andReturn([$one, $two, $three]);
         $this->_piggybanks->shouldReceive('countRepeating')->andReturn(0);
+        $this->_piggybanks->shouldReceive('leftOnAccount')->andReturn(0);
         $this->_piggybanks->shouldReceive('countNonrepeating')->andReturn(0);
         Event::shouldReceive('fire')->with('piggybanks.change');
 
@@ -169,7 +171,7 @@ class PiggybankControllerTest extends TestCase
         $input = [
             $piggyBank->id,
             'amount' => 10.0,
-            'what'   => 'add'
+            'what' => 'add'
         ];
 
         // for binding
@@ -179,7 +181,7 @@ class PiggybankControllerTest extends TestCase
             $piggyBank->account()->first()->user_id
         );
         $this->_user->shouldReceive('getAttribute')->with('email')->andReturn('some@email');
-        Event::shouldReceive('fire')->with('piggybanks.change');
+        Event::shouldReceive('fire');//->with('piggybanks.modifyAmountAdd', [$piggyBank, 10.0]);
         $this->_piggybanks->shouldReceive('modifyAmount')->once();
 
         $this->_piggybanks->shouldReceive('leftOnAccount')->once()->andReturn(200);
@@ -199,7 +201,7 @@ class PiggybankControllerTest extends TestCase
         $input = [
             $piggyBank->id,
             'amount' => 10.0,
-            'what'   => 'add'
+            'what' => 'add'
         ];
 
         // for binding
@@ -207,7 +209,7 @@ class PiggybankControllerTest extends TestCase
         Auth::shouldReceive('check')->andReturn(true);
         $this->_user->shouldReceive('getAttribute')->with('id')->andReturn($piggyBank->account()->first()->user_id);
         $this->_user->shouldReceive('getAttribute')->with('email')->andReturn('some@email');
-        Event::shouldReceive('fire')->with('piggybanks.change');
+        Event::shouldReceive('fire')->with('piggybanks.modifyAmountAdd', [$piggyBank, -10.0]);
         $this->_piggybanks->shouldReceive('leftOnAccount')->once()->andReturn(5);
 
 
@@ -228,7 +230,7 @@ class PiggybankControllerTest extends TestCase
         $input = [
             $piggyBank->id,
             'amount' => 10.0,
-            'what'   => 'yomoma'
+            'what' => 'yomoma'
         ];
 
         // for binding
@@ -267,7 +269,7 @@ class PiggybankControllerTest extends TestCase
         $input = [
             $rep->piggybank()->first()->id,
             'amount' => 10.0,
-            'what'   => 'remove'
+            'what' => 'remove'
         ];
 
         $this->action('POST', 'PiggybankController@modMoney', $input);
@@ -297,7 +299,7 @@ class PiggybankControllerTest extends TestCase
         $input = [
             $rep->piggybank()->first()->id,
             'amount' => 10.0,
-            'what'   => 'remove'
+            'what' => 'remove'
         ];
 
         $this->action('POST', 'PiggybankController@modMoney', $input);
@@ -391,7 +393,7 @@ class PiggybankControllerTest extends TestCase
             $piggyBank->account()->first()->user_id
         );
         $this->_user->shouldReceive('getAttribute')->with('email')->andReturn('some@email');
-        Event::shouldReceive('fire')->with('piggybanks.change');
+        Event::shouldReceive('fire')->with('piggybanks.update',[$piggyBank]);
 
         $this->action('POST', 'PiggybankController@update', $piggyBank->id);
         $this->assertResponseStatus(302);

@@ -13,12 +13,13 @@ use Illuminate\Events\Dispatcher;
 class EloquentPiggybankTrigger
 {
     /**
-     * @param \Piggybank          $piggyBank
+     * @param \Piggybank $piggyBank
      * @param \TransactionJournal $journal
      */
     public function createRelatedTransfer(
         \Piggybank $piggyBank, \TransactionJournal $journal, \Transaction $transaction
-    ) {
+    )
+    {
         $repetition = $piggyBank->repetitionForDate($journal->date);
         if (!is_null($repetition)) {
             // get the amount transferred TO this
@@ -226,10 +227,12 @@ class EloquentPiggybankTrigger
         }
     }
 
-    public function updateRelatedTransfer(\Piggybank $piggyBank, \TransactionJournal $journal)
+    public function updateRelatedTransfer(\Piggybank $piggyBank)
     {
-        die('no impl updateRelatedTransfer');
+        // fire the "update" trigger which should handle things just fine:
+        \Event::fire('piggybanks.update', [$piggyBank]);
     }
+
 
 
 

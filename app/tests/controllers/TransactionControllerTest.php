@@ -123,6 +123,8 @@ class TransactionControllerTest extends TestCase
         $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($journal->user_id);
         $this->_user->shouldReceive('getAttribute')->with('email')->andReturn('some@email');
 
+        $this->_piggies->shouldReceive('get')->once()->andReturn([]);
+
         $this->action('GET', 'TransactionController@edit', $journal->id);
         $this->assertResponseOk();
     }
@@ -151,6 +153,8 @@ class TransactionControllerTest extends TestCase
 
         $this->_accounts->shouldReceive('getActiveDefaultAsSelectList')->andReturn([]);
         $this->_budgets->shouldReceive('getAsSelectList')->andReturn([]);
+
+        $this->_piggies->shouldReceive('get')->once()->andReturn([]);
 
         // for binding
         Auth::shouldReceive('user')->andReturn($this->_user);
@@ -186,6 +190,7 @@ class TransactionControllerTest extends TestCase
 
         $this->_accounts->shouldReceive('getActiveDefaultAsSelectList')->andReturn([]);
         $this->_budgets->shouldReceive('getAsSelectList')->andReturn([]);
+        $this->_piggies->shouldReceive('get')->once()->andReturn([]);
 
         // for binding
         Auth::shouldReceive('user')->andReturn($this->_user);

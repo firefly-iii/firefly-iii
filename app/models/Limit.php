@@ -74,6 +74,9 @@ class Limit extends Ardent
     }
 
     /**
+     * Create a new repetition for this limit, starting on
+     * the given date.
+     *
      * @param Carbon $start
      */
     public function createRepetition(Carbon $start)

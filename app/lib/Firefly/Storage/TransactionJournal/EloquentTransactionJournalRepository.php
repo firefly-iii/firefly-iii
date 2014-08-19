@@ -121,8 +121,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         $fromTransaction->description = null;
         $fromTransaction->amount = $amountFrom;
         if (!$fromTransaction->validate()) {
-            throw new FireflyException('Cannot create valid transaction (from): ' . $fromTransaction->errors()->first(
-                ));
+            throw new FireflyException('Cannot create valid transaction (from): ' . $fromTransaction->errors()->first());
         }
         $fromTransaction->save();
 
@@ -151,9 +150,9 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
     {
         return \Auth::user()->transactionjournals()->with(
             ['transactions' => function ($q) {
-                    return $q->orderBy('amount', 'ASC');
-                }, 'transactioncurrency', 'transactiontype', 'components', 'transactions.account',
-             'transactions.account.accounttype']
+                return $q->orderBy('amount', 'ASC');
+            }, 'transactioncurrency', 'transactiontype', 'components', 'transactions.account',
+                'transactions.account.accounttype']
         )
             ->where('id', $journalId)->first();
     }
@@ -168,7 +167,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
 
     /**
      * @param \Account $account
-     * @param Carbon   $date
+     * @param Carbon $date
      *
      * @return mixed
      */
@@ -197,9 +196,9 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
 
     /**
      * @param \Account $account
-     * @param int      $count
-     * @param Carbon   $start
-     * @param Carbon   $end
+     * @param int $count
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return mixed
      */
@@ -236,8 +235,8 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         $query = \Auth::user()->transactionjournals()->with(
             [
                 'transactions' => function ($q) {
-                        return $q->orderBy('amount', 'ASC');
-                    },
+                    return $q->orderBy('amount', 'ASC');
+                },
                 'transactions.account',
                 'transactions.account.accounttype',
                 'transactioncurrency',
@@ -300,8 +299,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
 
         // find budget:
         $budget = isset($data['budget_id']) ? $budRepository->find(intval($data['budget_id'])) : null;
-//
-//        // find amount & description:
+        // find amount & description:
         $description = trim($data['description']);
         $amount = floatval($data['amount']);
         $date = new Carbon($data['date']);
@@ -323,25 +321,19 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
                 $piggyBank = $piggyRepository->find(intval($data['piggybank_id']));
 
                 if ($piggyBank) {
-                    if ($toAccount->id == $piggyBank->account_id) {
-
-                        // find the transaction connected to the $toAccount:
-                        /** @var \Transaction $transaction */
-                        $transaction
-                            = $transactionJournal->transactions()->where('account_id', $toAccount->id)->first();
-                        // connect the piggy to it:
-                        $transaction->piggybank()->associate($piggyBank);
-                        $transaction->save();
-                        \Event::fire(
-                            'piggybanks.createRelatedTransfer', [$piggyBank, $transactionJournal, $transaction]
-                        );
-                    } else {
-                        \Session::flash(
-                            'warning',
-                            'Piggy bank "' . e($piggyBank->name) . '" is not set to draw money from account "' . e(
-                                $toAccount->name
-                            ) . '", so the money isn\'t added to the piggy bank.'
-                        );
+                    // one of the two transactions may be connected to this piggy bank.
+                    $connected = false;
+                    foreach ($transactionJournal->transactions()->get() as $transaction) {
+                        if ($transaction->account_id == $piggyBank->account_id) {
+                            $connected = true;
+                            $transaction->piggybank()->associate($piggyBank);
+                            $transaction->save();
+                            \Event::fire('piggybanks.createRelatedTransfer', [$piggyBank, $transactionJournal, $transaction]);
+                            break;
+                        }
+                    }
+                    if ($connected === false) {
+                        \Session::flash('warning', 'Piggy bank "' . e($piggyBank->name) . '" is not set to draw money from any of the accounts in this transfer');
                     }
                 }
             }
@@ -405,7 +397,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         /** @var \Transaction $transaction */
         foreach ($transactions as $transaction) {
             if (!is_null($transaction->piggybank()->first())) {
-                $transaction->piggybank()->detach($transaction->piggybank()->first()->first());
+                $transaction->piggybank_id = null;
                 $transaction->save();
             }
         }
@@ -415,6 +407,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         $transactions[1]->amount = $amount;
 
         // switch on type to properly change things:
+        $fireEvent = false;
         switch ($journal->transactiontype->type) {
             case 'Withdrawal':
                 // means transaction[0] is the users account.
@@ -454,24 +447,22 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
                     /** @var \Piggybank $piggyBank */
                     $piggyBank = $piggyRepository->find(intval($data['piggybank_id']));
 
-                    if ($piggyBank) {
-                        if ($toAccount->id == $piggyBank->account_id) {
+                    // loop transactions and re-attach the piggy bank:
 
-                            // find the transaction connected to the $toAccount:
-                            /** @var \Transaction $transaction */
-                            $transaction
-                                = $journal->transactions()->where('account_id', $toAccount->id)->first();
-                            // connect the piggy to it:
-                            $transaction->piggybank()->associate($piggyBank);
-                            $transaction->save();
-                            \Event::fire('piggybanks.updateRelatedTransfer', [$piggyBank, $journal]);
-                        } else {
-                            \Session::flash(
-                                'warning',
-                                'Piggy bank "' . e($piggyBank->name) . '" is not set to draw money from account "' . e(
-                                    $toAccount->name
-                                ) . '", so the money isn\'t added to the piggy bank.'
-                            );
+                    if ($piggyBank) {
+
+                        $connected = false;
+                        foreach ($journal->transactions()->get() as $transaction) {
+                            if ($transaction->account_id == $piggyBank->account_id) {
+                                $connected = true;
+                                $transaction->piggybank()->associate($piggyBank);
+                                $transaction->save();
+                                $fireEvent = true;
+                                break;
+                            }
+                        }
+                        if ($connected === false) {
+                            \Session::flash('warning', 'Piggy bank "' . e($piggyBank->name) . '" is not set to draw money from any of the accounts in this transfer');
                         }
                     }
                 }
@@ -487,6 +478,9 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         $transactions[1]->save();
         if ($journal->validate()) {
             $journal->save();
+        }
+        if($fireEvent) {
+            \Event::fire('piggybanks.updateRelatedTransfer', [$piggyBank]);
         }
 
         return $journal;
