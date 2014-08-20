@@ -10,7 +10,6 @@ class BaseController extends Controller
      *
      */
     public function __construct() {
-        parent::__construct();
         Event::fire('limits.check');
     }
     /**
