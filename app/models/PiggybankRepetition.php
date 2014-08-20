@@ -50,6 +50,13 @@ class PiggybankRepetition extends Ardent
         ];
     }
 
+    public function pct() {
+        $total = $this->piggybank->targetamount;
+        $saved = $this->currentamount;
+        $pct = round(($saved / $total) * 100,1);
+        return $pct;
+    }
+
     /**
      * @return array
      */

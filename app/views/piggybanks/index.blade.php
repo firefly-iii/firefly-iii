@@ -43,7 +43,7 @@
                 <!-- display piggy bank -->
                 <tr>
                     <td>
-                <h4><a href="{{route('piggybanks.show',$piggyBank->id)}}">{{{$piggyBank->name}}}</a></h4>
+                <h4><a href="{{route('piggybanks.show',$piggyBank->id)}}">{{{$piggyBank->name}}}</a> <small> <span class="label label-default">{{$piggyBank->currentRelevantRep()->pct()}}%</span></small></h4>
                 <p>
                         <!-- target amount -->
                         Saving up to {{mf($piggyBank->targetamount)}}.
@@ -97,7 +97,7 @@
             @if($repeated->repeats == 1)
                 <!-- display repeated expense -->
                 <tr><td>
-                        <h4><a href="{{route('piggybanks.show',$repeated->id)}}">{{{$repeated->name}}}</a></h4>
+                        <h4><a href="{{route('piggybanks.show',$repeated->id)}}">{{{$repeated->name}}}</a><small> <span class="label label-default">{{$piggyBank->currentRelevantRep()->pct()}}%</span></small></h4>
                     <p>
                         <!-- target amount -->
                         Saving up to {{mf($repeated->targetamount)}}.
