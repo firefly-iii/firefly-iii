@@ -19,10 +19,14 @@ class EloquentLimitTrigger
      */
     public function checkRepeatingLimits()
     {
-        $limits = \Limit::leftJoin('components', 'components.id', '=', 'limits.component_id')
-            ->where('components.user_id', \Auth::user()->id)
-            ->where('limits.repeats', 1)
-            ->get(['limits.*']);
+        if (\Auth::check()) {
+            $limits = \Limit::leftJoin('components', 'components.id', '=', 'limits.component_id')
+                ->where('components.user_id', \Auth::user()->id)
+                ->where('limits.repeats', 1)
+                ->get(['limits.*']);
+        } else {
+            $limits = [];
+        }
 
         /** @var \Limit $limit */
         foreach ($limits as $limit) {
