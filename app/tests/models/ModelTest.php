@@ -247,6 +247,21 @@ class ModelTest extends TestCase
         $repetition->delete();
         $piggy->nextReminderDate();
 
+        $event = f::create('PiggybankEvent');
+        $event->piggybank()->associate($piggy);
+        $event->save();
+        $this->assertEquals($piggy->piggybankevents()->first()->id, $event->id);
+
+        $this->assertNull($piggy->repetitionForDate(new Carbon('2012-02-02')));
+
+        $transaction = f::create('Transaction');
+        $transaction->piggybank()->associate($piggy);
+        $transaction->save();
+        $this->assertEquals($transaction->piggybank_id, $piggy->id);
+        $this->assertEquals($piggy->transactions()->first()->id,$transaction->id);
+
+        $repetition->pct();
+
 
     }
 
