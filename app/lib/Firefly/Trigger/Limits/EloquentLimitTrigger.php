@@ -30,8 +30,6 @@ class EloquentLimitTrigger
 
         /** @var \Limit $limit */
         foreach ($limits as $limit) {
-            /** @var \Budget $budget */
-            $budget = $limit->budget()->first();
             // the limit repeats, and there should be at least one repetition already.
             /** @var \LimitRepetition $primer */
             $primer = $limit->limitrepetitions()->orderBy('startdate', 'DESC')->first();

@@ -97,40 +97,40 @@
             @if($repeated->repeats == 1)
                 <!-- display repeated expense -->
                 <tr><td>
-                        <h4><a href="{{route('piggybanks.show',$repeated->id)}}">{{{$repeated->name}}}</a><small> <span class="label label-default">{{$piggyBank->currentRelevantRep()->pct()}}%</span></small></h4>
+                        <h4><a href="{{route('piggybanks.show',$repeated->id)}}">{{{$repeated->name}}}</a><small> <span class="label label-default">{{$repeated->currentRelevantRep()->pct()}}%</span></small></h4>
                     <p>
                         <!-- target amount -->
                         Saving up to {{mf($repeated->targetamount)}}.
 
                         <!-- currently saved -->
                         Currently saved
-                        {{mf($piggyBank->currentRelevantRep()->currentamount)}}.
+                        {{mf($repeated->currentRelevantRep()->currentamount)}}.
 
                         <!-- start date (if any) -->
-                        @if(!is_null($piggyBank->startdate))
-                        Start date: {{$piggyBank->currentRelevantRep()->startdate->format('d M Y')}}.
+                        @if(!is_null($repeated->startdate))
+                        Start date: {{$repeated->currentRelevantRep()->startdate->format('d M Y')}}.
                         @endif
 
                         <!-- target date (if any) -->
-                        @if(!is_null($piggyBank->targetdate))
-                        Target date: {{$piggyBank->currentRelevantRep()->targetdate->format('d M Y')}}.
+                        @if(!is_null($repeated->targetdate))
+                        Target date: {{$repeated->currentRelevantRep()->targetdate->format('d M Y')}}.
                         @endif
 
-                        @if(!is_null($piggyBank->reminder))
-                        Next reminder: {{$piggyBank->nextReminderDate()->format('d M Y')}}
+                        @if(!is_null($repeated->reminder))
+                        Next reminder: {{$repeated->nextReminderDate()->format('d M Y')}}
                         @endif
 
 
                     </p>
                         <div class="btn-group btn-group-sm">
-                            <a href="{{route('piggybanks.edit',$piggyBank->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
-                            @if($piggyBank->leftInAccount > 0)
-                                <a data-toggle="modal" href="{{route('piggybanks.amount.add',$piggyBank->id)}}" data-target="#modal" class="btn btn-default"><span class="glyphicon glyphicon-plus-sign"></span> Add money</a>
+                            <a href="{{route('piggybanks.edit',$repeated->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
+                            @if($repeated->leftInAccount > 0)
+                                <a data-toggle="modal" href="{{route('piggybanks.amount.add',$repeated->id)}}" data-target="#modal" class="btn btn-default"><span class="glyphicon glyphicon-plus-sign"></span> Add money</a>
                             @endif
-                            @if($piggyBank->currentRelevantRep()->currentamount > 0)
-                                <a data-toggle="modal" href="{{route('piggybanks.amount.remove',$piggyBank->id)}}" data-target="#modal" class="btn btn-default"><span class="glyphicon glyphicon-minus-sign"></span> Remove money</a>
+                            @if($repeated->currentRelevantRep()->currentamount > 0)
+                                <a data-toggle="modal" href="{{route('piggybanks.amount.remove',$repeated->id)}}" data-target="#modal" class="btn btn-default"><span class="glyphicon glyphicon-minus-sign"></span> Remove money</a>
                             @endif
-                            <a href="{{route('piggybanks.delete',$piggyBank->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                            <a href="{{route('piggybanks.delete',$repeated->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
 
                         </div>
                     </td></tr>

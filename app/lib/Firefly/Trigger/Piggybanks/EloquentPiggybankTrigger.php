@@ -13,15 +13,16 @@ use Illuminate\Events\Dispatcher;
 class EloquentPiggybankTrigger
 {
     /**
-     * @param \Piggybank          $piggyBank
+     * @param \Piggybank $piggyBank
      * @param \TransactionJournal $journal
-     * @param \Transaction        $transaction
+     * @param \Transaction $transaction
      *
      * @return bool
      */
     public function createRelatedTransfer(
         \Piggybank $piggyBank, \TransactionJournal $journal, \Transaction $transaction
-    ) {
+    )
+    {
         $repetition = $piggyBank->repetitionForDate($journal->date);
         if (!is_null($repetition)) {
             // get the amount transferred TO this
@@ -88,6 +89,8 @@ class EloquentPiggybankTrigger
      */
     public function storePiggy(\Piggybank $piggyBank)
     {
+        $piggyBank->createRepetition($piggyBank->startdate, $piggyBank->targetdate);
+        return true;
         $rep = new \PiggybankRepetition;
         $rep->piggybank()->associate($piggyBank);
         $rep->targetdate = $piggyBank->targetdate;
@@ -100,59 +103,85 @@ class EloquentPiggybankTrigger
     }
 
     /**
+     * Validates and creates all repetitions for repeating piggy banks.
+     * This routine is also called whenever Firefly runs, so new repetitions
+     * are created automatically.
+     *
      * @param \Piggybank $piggyBank
      *
      * @return bool
      */
     public function storeRepeated(\Piggybank $piggyBank)
     {
-        // loop from start to today or something
-        $rep = new \PiggybankRepetition;
-        $rep->piggybank()->associate($piggyBank);
-        $rep->startdate = $piggyBank->startdate;
-        $rep->targetdate = $piggyBank->targetdate;
-        $rep->currentamount = 0;
-        $rep->save();
-        unset($rep);
-        $today = new Carbon;
+        $piggyBank->createRepetition($piggyBank->startdate, $piggyBank->targetdate);
+        return true;
+    }
 
-        if ($piggyBank->targetdate <= $today) {
-            // add 1 month to startdate, or maybe X period, like 3 weeks.
-            $startTarget = clone $piggyBank->targetdate;
-            while ($startTarget <= $today) {
-                $startCurrent = clone $startTarget;
 
-                // add some kind of period to start current making $endCurrent.
-                $endCurrent = clone $startCurrent;
-                switch ($piggyBank->rep_length) {
-                    default:
-                        return true;
-                        break;
-                    case 'day':
-                        $endCurrent->addDays($piggyBank->rep_every);
-                        break;
-                    case 'week':
-                        $endCurrent->addWeeks($piggyBank->rep_every);
-                        break;
-                    case 'month':
-                        $endCurrent->addMonths($piggyBank->rep_every);
-                        break;
-                    case 'year':
-                        $endCurrent->addYears($piggyBank->rep_every);
-                        break;
-                }
+    /**
+     *
+     */
+    public function checkRepeatingPiggies()
+    {
 
-                $rep = new \PiggybankRepetition;
-                $rep->piggybank()->associate($piggyBank);
-                $rep->startdate = $startCurrent;
-                $rep->targetdate = $endCurrent;
-                $rep->currentamount = 0;
-                $startTarget = $endCurrent;
-                $rep->save();
-            }
+        if (\Auth::check()) {
+            $piggies = \Auth::user()->piggybanks()->whereNotNull('repeats')->get();
+        } else {
+            $piggies = [];
         }
 
-        return true;
+        \Log::debug('Now in checkRepeatingPiggies with ' . count($piggies) . ' piggies');
+
+
+        /** @var \Piggybank $piggyBank */
+        foreach ($piggies as $piggyBank) {
+            \Log::debug('Now working on ' . $piggyBank->name);
+
+            // get the latest repetition, see if we need to "append" more:
+            /** @var \PiggybankRepetition $primer */
+            $primer = $piggyBank->piggybankrepetitions()->orderBy('targetdate', 'DESC')->first();
+            \Log::debug('Last target date is: ' . $primer->targetdate);
+
+            // for repeating piggy banks, the target date is mandatory:
+
+            $today = new Carbon;
+            $end = clone $primer->targetdate;
+
+            // the next repetition must be created starting at the day after the target date:
+            $start = clone $primer->targetdate;
+            $start->addDay();
+            while ($start <= $today) {
+                \Log::debug('Looping! Start is: ' . $start);
+
+                // to get to the end of the current repetition, we switch on the piggy bank's
+                // repetition period:
+                $end = clone $start;
+                switch ($piggyBank->rep_length) {
+                    case 'day':
+                        $end->addDays($piggyBank->rep_every);
+                        break;
+                    case 'week':
+                        $end->addWeeks($piggyBank->rep_every);
+                        break;
+                    case 'month':
+                        $end->addMonths($piggyBank->rep_every);
+                        break;
+                    case 'year':
+                        $end->addYears($piggyBank->rep_every);
+                        break;
+                }
+                $end->subDay();
+
+                // create repetition:
+                $piggyBank->createRepetition($start, $end);
+
+                $start = clone $end;
+                $start->addDay();
+
+
+            }
+
+        }
     }
 
     /**
@@ -181,6 +210,7 @@ class EloquentPiggybankTrigger
             'piggybanks.updateRelatedTransfer',
             'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@updateRelatedTransfer'
         );
+        $events->listen('piggybanks.check', 'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@checkRepeatingPiggies');
     }
 
     public function update(\Piggybank $piggyBank)
