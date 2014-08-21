@@ -41,7 +41,7 @@
             @foreach($piggybanks as $piggyBank)
                 @if($piggyBank->repeats == 0)
                     <h4><a href="{{route('piggybanks.show',$piggyBank->id)}}">{{{$piggyBank->name}}}</a></h4>
-                    <table class="table">
+                    <table class="table table-bordered">
                         <tr>
                             <td style="width:10%;">{{mf($piggyBank->currentRelevantRep()->currentamount)}}</td>
                             <td colspan="2">
@@ -68,13 +68,16 @@
                                     @if($piggyBank->currentRelevantRep()->currentamount > 0)
                                     <a data-toggle="modal" href="{{route('piggybanks.amount.remove',$piggyBank->id)}}" data-target="#modal" class="btn btn-default"><span class="glyphicon glyphicon-minus-sign"></span> Remove money</a>
                                     @endif
+                                    <a href="{{route('piggybanks.edit',$piggyBank->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
+                                    <a href="{{route('piggybanks.delete',$piggyBank->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
                                     </div>
                             </td>
                             <td style="width:40%;">
-                                <div class="btn-group-xs btn-group">
-                                    <a href="{{route('piggybanks.edit',$piggyBank->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
-                                    <a href="{{route('piggybanks.delete',$piggyBank->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
-                                </div>
+                                @if(!is_null($piggyBank->reminder))
+                                <small>
+                                Next reminder: {{$piggyBank->nextReminderDate()->format('M jS, Y')}} ({{$piggyBank->reminder}})
+                                </small>
+                                @endif
 
                             </td>
                             <td></td>
@@ -95,7 +98,7 @@
                     @if($repeated->repeats == 1)
                         <h4><a href="{{route('piggybanks.show',$repeated->id)}}">{{{$repeated->name}}}</a></h4>
 
-                <table class="table">
+                <table class="table table-bordered">
                     <tr>
                         <td style="width:10%;">{{mf($repeated->currentRelevantRep()->currentamount)}}</td>
                         <td colspan="2">
@@ -122,13 +125,16 @@
                                 @if($repeated->currentRelevantRep()->currentamount > 0)
                                 <a data-toggle="modal" href="{{route('piggybanks.amount.remove',$repeated->id)}}" data-target="#modal" class="btn btn-default"><span class="glyphicon glyphicon-minus-sign"></span> Remove money</a>
                                 @endif
-                            </div>
-                        </td>
-                        <td style="width:40%;">
-                            <div class="btn-group-xs btn-group">
                                 <a href="{{route('piggybanks.edit',$repeated->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
                                 <a href="{{route('piggybanks.delete',$repeated->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
                             </div>
+                        </td>
+                        <td style="width:40%;">
+                            @if(!is_null($repeated->reminder))
+                            <small>
+                                Next reminder: {{$repeated->nextReminderDate()->format('M jS, Y')}} ({{$piggyBank->reminder}})
+                            </small>
+                            @endif
 
                         </td>
                         <td></td>
@@ -141,143 +147,24 @@
     </div>
 </div>
 
-
-
-
-        {{--
-                <table class="table table-bordered">
-                <tr>
-                    <td style="width:40%;">Target amount</td>
-                    <td style="width:40%;">{{mf($piggyBank->targetamount)}}</td>
-                    <td><span class="text-muted">{{100-$piggyBank->currentRelevantRep()->pct()}}%</span></td>
-                </tr>
-                <tr>
-                    <td>Saved so far</td>
-                    <td>{{mf($piggyBank->currentRelevantRep()->currentamount)}}</td>
-                    <td><span class="text-muted">{{$piggyBank->currentRelevantRep()->pct()}}%</span></td>
-                </tr>
-                @if(!is_null($piggyBank->targetdate))
-                <tr>
-                    <td>Target date</td>
-                    <td>{{$piggyBank->currentRelevantRep()->targetdate->format('M jS, Y')}}</td>
-                    <td><span class="text-muted">Time diff</span></td>
-                </tr>
-                @endif
-                @if(!is_null($piggyBank->reminder))
-                    <tr>
-                        <td>Next reminder</td>
-                        <td colspan="2">{{$piggyBank->nextReminderDate()->format('M jS, Y')}}</td>
-                    </tr>
-
-                @endif
-                <tr>
-                    <td colspan="3">
-
-                        </td>
-                    </tr>
-                </table>
-                <!--
-                <p>
-                        target amount --
-                        Saving up to {{mf($piggyBank->targetamount)}}.
-                        -- currently saved --
-                        Currently saved
-
-
-                        -- start date (if any) --
-                        @if(!is_null($piggyBank->startdate))
-                        Started saving on {{$piggyBank->currentRelevantRep()->startdate->format('M jS, Y')}}.
-                        @endif
-
-                        -- target date (if any) --
-                        @if(!is_null($piggyBank->targetdate))
-                            Target date is .
-                        @endif
-
-
-
-                </p>
-
-                    </td>
-                </tr>
-                -->
-
-            @endif
-            @endforeach
-        @endif
-
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-12">
-        <h3>Current repeated expenses</h3>
-        @if($countRepeating == 0)
-        <p class="text-warning">No repeated expenses found.</p>
-        @else
-            <table class="table table-bordered">
-            @foreach($piggybanks as $repeated)
-            @if($repeated->repeats == 1)
-                <!-- display repeated expense -->
-                <tr><td>
-                        <h4><a href="{{route('piggybanks.show',$repeated->id)}}">{{{$repeated->name}}}</a><small> <span class="label label-default">{{$repeated->currentRelevantRep()->pct()}}%</span></small></h4>
-                    <p>
-                        <!-- target amount -->
-                        Saving up to {{mf($repeated->targetamount)}}.
-
-                        <!-- currently saved -->
-                        Currently saved
-                        {{mf($repeated->currentRelevantRep()->currentamount)}}.
-
-                        <!-- start date (if any) -->
-                        @if(!is_null($repeated->startdate))
-                        Start date: {{$repeated->currentRelevantRep()->startdate->format('d M Y')}}.
-                        @endif
-
-                        <!-- target date (if any) -->
-                        @if(!is_null($repeated->targetdate))
-                        Target date: {{$repeated->currentRelevantRep()->targetdate->format('d M Y')}}.
-                        @endif
-
-                        @if(!is_null($repeated->reminder))
-                        Next reminder: {{$repeated->nextReminderDate()->format('d M Y')}}
-                        @endif
-
-
-                    </p>
-                        <div class="btn-group btn-group-sm">
-                            <a href="{{route('piggybanks.edit',$repeated->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
-                            @if($repeated->leftInAccount > 0)
-                                <a data-toggle="modal" href="{{route('piggybanks.amount.add',$repeated->id)}}" data-target="#modal" class="btn btn-default"><span class="glyphicon glyphicon-plus-sign"></span> Add money</a>
-                            @endif
-                            @if($repeated->currentRelevantRep()->currentamount > 0)
-                                <a data-toggle="modal" href="{{route('piggybanks.amount.remove',$repeated->id)}}" data-target="#modal" class="btn btn-default"><span class="glyphicon glyphicon-minus-sign"></span> Remove money</a>
-                            @endif
-                            <a href="{{route('piggybanks.delete',$repeated->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
-
-                        </div>
-                    </td></tr>
-            @endif
-            @endforeach
-            </table>
-        @endif
-    </div>
-</div>
 <div class="row">
-<div class="col-lg-6">
-    <h4>Account information</h4>
-    <table class="table">
-    <tr>
-        <th>Account</th>
-        <th>Left for piggy banks</th>
-    </tr>
-    @foreach($accounts as $account)
-    <tr>
-        <td>{{{$account['account']->name}}}</td>
-        <td>{{mf($account['left'])}}</td>
-    </tr>
-    @endforeach
-    </table>
+    <div class="col-lg-6">
+        <h4>Account information</h4>
+        <table class="table">
+            <tr>
+                <th>Account</th>
+                <th>Left for piggy banks</th>
+            </tr>
+            @foreach($accounts as $account)
+            <tr>
+                <td>{{{$account['account']->name}}}</td>
+                <td>{{mf($account['left'])}}</td>
+            </tr>
+            @endforeach
+        </table>
+    </div>
 </div>
-</div>
---}}
+
 
 
 <!-- MODAL -->

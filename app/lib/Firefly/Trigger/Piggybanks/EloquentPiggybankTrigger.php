@@ -13,119 +13,13 @@ use Illuminate\Events\Dispatcher;
 class EloquentPiggybankTrigger
 {
     /**
-     * @param \Piggybank $piggyBank
-     * @param \TransactionJournal $journal
-     * @param \Transaction $transaction
-     *
-     * @return bool
-     */
-    public function createRelatedTransfer(
-        \Piggybank $piggyBank, \TransactionJournal $journal, \Transaction $transaction
-    )
-    {
-        $repetition = $piggyBank->repetitionForDate($journal->date);
-        if (!is_null($repetition)) {
-            // get the amount transferred TO this
-            $amount = floatval($transaction->amount);
-            $repetition->currentamount += $amount;
-            $repetition->save();
-        } else {
-            \Session::flash('warning', 'Cannot add transfer to piggy, outside of scope.');
-        }
-
-        return true;
-    }
-
-    /**
-     * @param \Piggybank $piggyBank
-     *
-     * @return bool
-     */
-    public function destroy(\Piggybank $piggyBank)
-    {
-        return true;
-    }
-
-    /**
-     * @param \Piggybank $piggyBank
-     * @param            $amount
-     */
-    public function modifyAmountAdd(\Piggybank $piggyBank, $amount)
-    {
-        $rep = $piggyBank->currentRelevantRep();
-        $today = new Carbon;
-
-        // create event:
-        $event = new \PiggybankEvent;
-        $event->date = new Carbon;
-        $event->amount = $amount;
-        $event->piggybank()->associate($piggyBank);
-
-        // for future / past repetitions.
-        if (!($rep->startdate >= $today && $rep->targetdate <= $today)) {
-            $event->date = $rep->startdate;
-        }
-
-
-        $event->save();
-    }
-
-    /**
-     * @param \Piggybank $piggyBank
-     * @param            $amount
-     */
-    public function modifyAmountRemove(\Piggybank $piggyBank, $amount)
-    {
-        // create event:
-        $event = new \PiggybankEvent;
-        $event->date = new Carbon;
-        $event->amount = $amount;
-        $event->piggybank()->associate($piggyBank);
-        $event->save();
-    }
-
-    /**
-     * @param \Piggybank $piggyBank
-     */
-    public function storePiggy(\Piggybank $piggyBank)
-    {
-        $piggyBank->createRepetition($piggyBank->startdate, $piggyBank->targetdate);
-        return true;
-        $rep = new \PiggybankRepetition;
-        $rep->piggybank()->associate($piggyBank);
-        $rep->targetdate = $piggyBank->targetdate;
-        $rep->startdate = $piggyBank->startdate;
-        $rep->currentamount = 0;
-        $rep->save();
-
-        return true;
-
-    }
-
-    /**
-     * Validates and creates all repetitions for repeating piggy banks.
-     * This routine is also called whenever Firefly runs, so new repetitions
-     * are created automatically.
-     *
-     * @param \Piggybank $piggyBank
-     *
-     * @return bool
-     */
-    public function storeRepeated(\Piggybank $piggyBank)
-    {
-        $piggyBank->createRepetition($piggyBank->startdate, $piggyBank->targetdate);
-        return true;
-    }
-
-
-    /**
      *
      */
     public function checkRepeatingPiggies()
     {
 
         if (\Auth::check()) {
-            $piggies = \Auth::user()->piggybanks()->where('repeats',1)->get();
+            $piggies = \Auth::user()->piggybanks()->where('repeats', 1)->get();
         } else {
             $piggies = [];
         }
@@ -185,6 +79,121 @@ class EloquentPiggybankTrigger
     }
 
     /**
+     * @param \Piggybank          $piggyBank
+     * @param \TransactionJournal $journal
+     * @param \Transaction        $transaction
+     *
+     * @return bool
+     */
+    public function createRelatedTransfer(
+        \Piggybank $piggyBank, \TransactionJournal $journal, \Transaction $transaction
+    ) {
+        $repetition = $piggyBank->repetitionForDate($journal->date);
+        if (!is_null($repetition)) {
+            // get the amount transferred TO this
+            $amount = floatval($transaction->amount);
+            $repetition->currentamount += $amount;
+            $repetition->save();
+        } else {
+            \Session::flash('warning', 'Cannot add transfer to piggy, outside of scope.');
+        }
+
+        return true;
+    }
+
+    /**
+     * @param \Piggybank $piggyBank
+     *
+     * @return bool
+     */
+    public function destroy(\Piggybank $piggyBank)
+    {
+        return true;
+    }
+
+    /**
+     * @param \PiggybankRepetition $rep
+     */
+    public function madeRep(\PiggybankRepetition $rep)
+    {
+        // do something.
+        \Log::info('TRIGGER: Created a piggybank repetition (#' . $rep->id . ')');
+    }
+
+    /**
+     * @param \Piggybank $piggyBank
+     * @param            $amount
+     */
+    public function modifyAmountAdd(\Piggybank $piggyBank, $amount)
+    {
+        $rep = $piggyBank->currentRelevantRep();
+        $today = new Carbon;
+
+        // create event:
+        $event = new \PiggybankEvent;
+        $event->date = new Carbon;
+        $event->amount = $amount;
+        $event->piggybank()->associate($piggyBank);
+
+        // for future / past repetitions.
+        if (!($rep->startdate >= $today && $rep->targetdate <= $today)) {
+            $event->date = $rep->startdate;
+        }
+
+
+        $event->save();
+    }
+
+    /**
+     * @param \Piggybank $piggyBank
+     * @param            $amount
+     */
+    public function modifyAmountRemove(\Piggybank $piggyBank, $amount)
+    {
+        // create event:
+        $event = new \PiggybankEvent;
+        $event->date = new Carbon;
+        $event->amount = $amount;
+        $event->piggybank()->associate($piggyBank);
+        $event->save();
+    }
+
+    /**
+     * @param \Piggybank $piggyBank
+     */
+    public function storePiggy(\Piggybank $piggyBank)
+    {
+        $piggyBank->createRepetition($piggyBank->startdate, $piggyBank->targetdate);
+
+        return true;
+        $rep = new \PiggybankRepetition;
+        $rep->piggybank()->associate($piggyBank);
+        $rep->targetdate = $piggyBank->targetdate;
+        $rep->startdate = $piggyBank->startdate;
+        $rep->currentamount = 0;
+        $rep->save();
+
+        return true;
+
+    }
+
+    /**
+     * Validates and creates all repetitions for repeating piggy banks.
+     * This routine is also called whenever Firefly runs, so new repetitions
+     * are created automatically.
+     *
+     * @param \Piggybank $piggyBank
+     *
+     * @return bool
+     */
+    public function storeRepeated(\Piggybank $piggyBank)
+    {
+        $piggyBank->createRepetition($piggyBank->startdate, $piggyBank->targetdate);
+
+        return true;
+    }
+
+    /**
      * @param Dispatcher $events
      */
     public function subscribe(Dispatcher $events)
@@ -210,7 +219,13 @@ class EloquentPiggybankTrigger
             'piggybanks.updateRelatedTransfer',
             'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@updateRelatedTransfer'
         );
-        $events->listen('piggybanks.check', 'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@checkRepeatingPiggies');
+        $events->listen(
+            'piggybanks.check', 'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@checkRepeatingPiggies'
+        );
+
+        $events->listen(
+            'piggybanks.repetition', 'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@madeRep'
+        );
     }
 
     public function update(\Piggybank $piggyBank)

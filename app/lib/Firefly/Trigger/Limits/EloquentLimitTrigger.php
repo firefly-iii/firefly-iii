@@ -81,6 +81,14 @@ class EloquentLimitTrigger
     }
 
     /**
+     * @param \LimitRepetition $repetition
+     */
+    public function madeRepetition(\LimitRepetition $repetition)
+    {
+        \Log::info('TRIGGER: Created a limit repetition (#' . $repetition->id . ')');
+    }
+
+    /**
      * @param \Limit $limit
      *
      * @return bool
@@ -101,8 +109,10 @@ class EloquentLimitTrigger
         //$events->listen('budgets.change', 'Firefly\Trigger\Limits\EloquentLimitTrigger@updateLimitRepetitions');
         $events->listen('limits.destroy', 'Firefly\Trigger\Limits\EloquentLimitTrigger@destroy');
         $events->listen('limits.store', 'Firefly\Trigger\Limits\EloquentLimitTrigger@store');
-        $events->listen('limits.update', 'Firefly\Trigger\Limits\EloquentLimitTrigger@update');
-        $events->listen('limits.check', 'Firefly\Trigger\Limits\EloquentLimitTrigger@checkRepeatingLimits');
+        $events->listen('limits.update',     'Firefly\Trigger\Limits\EloquentLimitTrigger@update');
+        $events->listen('limits.check',      'Firefly\Trigger\Limits\EloquentLimitTrigger@checkRepeatingLimits');
+        $events->listen('limits.repetition', 'Firefly\Trigger\Limits\EloquentLimitTrigger@madeRepetition');
+        //\Event::fire('limits.repetition', [$repetition]);
 
     }
 
