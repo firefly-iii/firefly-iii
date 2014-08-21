@@ -43,6 +43,10 @@ class HomeController extends BaseController
      */
     public function index()
     {
+
+        \Event::fire('limits.check');
+        \Event::fire('piggybanks.check');
+
         // count, maybe we need some introducing text to show:
         $count = $this->_accounts->count();
         $start = Session::get('start');
