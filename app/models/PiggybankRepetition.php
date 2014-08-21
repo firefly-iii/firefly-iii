@@ -32,23 +32,6 @@ class PiggybankRepetition extends Ardent
             'currentamount' => 'required|numeric'
         ];
 
-    /**
-     * @return array
-     */
-    public static function factory()
-    {
-        $start = new Carbon;
-        $start->startOfMonth();
-        $end = new Carbon;
-        $end->endOfMonth();
-
-        return [
-            'piggybank_id'  => 'factory|Piggybank',
-            'startdate'     => $start->format('Y-m-d'),
-            'targetdate'    => $end->format('Y-m-d'),
-            'currentamount' => 200
-        ];
-    }
 
     public function pct() {
         $total = $this->piggybank->targetamount;

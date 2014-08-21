@@ -2,7 +2,7 @@
 use League\FactoryMuffin\Facade;
 
 Facade::define(
-    'Budget',
+    'Category',
     [
         'name'    => 'word',
         'user_id' => 'factory|User',

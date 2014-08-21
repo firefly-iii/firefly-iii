@@ -52,22 +52,6 @@ class TransactionJournal extends Ardent
             'completed'               => 'required|between:0,1'
         ];
 
-    /**
-     * @return array
-     */
-    public static function factory()
-    {
-        $date = new \Carbon\Carbon;
-
-        return [
-            'transaction_type_id'     => 'factory|TransactionType',
-            'transaction_currency_id' => 'factory|TransactionCurrency',
-            'description'             => 'string',
-            'completed'               => '1',
-            'user_id'                 => 'factory|User',
-            'date'                    => $date
-        ];
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

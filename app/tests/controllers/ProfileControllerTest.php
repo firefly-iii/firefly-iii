@@ -71,6 +71,8 @@ class ProfileControllerTest extends TestCase
     public function testPostChangePasswordOK()
     {
         $user = f::create('User');
+        $user->password = 'sander';
+        $user->save();
         // for binding
         Auth::shouldReceive('user')->andReturn($user);
         Auth::shouldReceive('check')->andReturn(true);
@@ -82,6 +84,7 @@ class ProfileControllerTest extends TestCase
             'POST', 'ProfileController@postChangePassword',
             ['old' => 'sander', 'new1' => 'sander2', 'new2' => 'sander2']
         );
+        $this->assertSessionHas('success');
         $this->assertResponseStatus(302);
     }
 

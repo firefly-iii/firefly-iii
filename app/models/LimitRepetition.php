@@ -34,24 +34,6 @@ class LimitRepetition extends Ardent
     /**
      * @return array
      */
-    public static function factory()
-    {
-        $start = new \Carbon\Carbon;
-        $start->startOfMonth();
-        $end = clone $start;
-        $end->endOfMonth();
-
-        return [
-            'limit_id'  => 'factory|Limit',
-            'startdate' => $start,
-            'enddate'   => $end,
-            'amount'    => 100
-        ];
-    }
-
-    /**
-     * @return array
-     */
     public function getDates()
     {
         return ['created_at', 'updated_at', 'startdate', 'enddate'];
