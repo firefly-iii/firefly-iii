@@ -50,26 +50,6 @@ class RecurringTransaction extends Ardent
             'skip'        => 'required|between:0,31',
         ];
 
-    /**
-     * @return array
-     */
-    public static function factory()
-    {
-        $date = new Carbon;
-
-        return [
-            'user_id'     => 'factory|User',
-            'name'        => 'string',
-            'match'       => 'string',
-            'amount_max'  => 100,
-            'amount_min'  => 50,
-            'date'        => $date,
-            'active'      => 1,
-            'automatch'   => 1,
-            'repeat_freq' => 'monthly',
-            'skip'        => 0,
-        ];
-    }
 
     /**
      * @return array
@@ -99,7 +79,7 @@ class RecurringTransaction extends Ardent
                     $start->addMonths($skip);
                     break;
                 case 'quarterly':
-                    $start->addMonths($skip);
+                    $start->addMonths($skip * 3);
                     break;
                 case 'half-year':
                     $start->addMonths($skip * 6);

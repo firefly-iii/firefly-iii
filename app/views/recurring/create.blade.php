@@ -38,7 +38,7 @@
                 <p class="text-danger">{{$errors->first('match')}}</p>
                 @else
                 <span class="help-block">For example: rent, [company name]. All matches need to
-                    be present for the recurring transaction to be recognized. This field is not case-sensitive.</span>
+                    be present for the recurring transaction to be recognized. This field is not case-sensitive. <em>Press enter after every match</em></span>
                 @endif
             </div>
         </div>
