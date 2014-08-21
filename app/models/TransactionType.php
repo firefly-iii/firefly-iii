@@ -17,10 +17,6 @@ use LaravelBook\Ardent\Ardent;
  */
 class TransactionType extends Ardent
 {
-    public static $factory
-        = [
-            'type' => 'string'
-        ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

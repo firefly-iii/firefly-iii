@@ -35,27 +35,11 @@ class Limit extends Ardent
             'component_id' => 'required|exists:components,id',
             'startdate'    => 'required|date',
             'amount'       => 'numeric|required|min:0.01',
-            'repeats'      => 'required|between:0,1',
+            'repeats'      => 'required|boolean',
             'repeat_freq'  => 'required|in:daily,weekly,monthly,quarterly,half-year,yearly'
 
         ];
 
-    /**
-     * @return array
-     */
-    public static function factory()
-    {
-        $start = new Carbon;
-        $start->startOfMonth();
-
-        return [
-            'component_id' => 'factory|Budget',
-            'startdate'    => $start,
-            'amount'       => '100',
-            'repeats'      => 0,
-            'repeat_freq'  => 'monthly'
-        ];
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
