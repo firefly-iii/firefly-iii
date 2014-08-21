@@ -3,7 +3,7 @@
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Mockery as m;
-use Zizaco\FactoryMuff\Facade\FactoryMuff as f;
+use League\FactoryMuffin\Facade as f;
 
 /**
  * Class AccountControllerTest
@@ -21,6 +21,9 @@ class AccountControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
+
+
+
         Artisan::call('migrate');
         Artisan::call('db:seed');
         $this->_repository = $this->mock('Firefly\Storage\Account\AccountRepositoryInterface');
@@ -114,8 +117,14 @@ class AccountControllerTest extends TestCase
         Auth::shouldReceive('user')->andReturn($this->_user);
         Auth::shouldReceive('check')->andReturn(true);
         $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($account->user_id);
-        $this->_user->shouldReceive('getAttribute')->with('email')->once()->andReturn('some@email');
+        $this->_user->shouldReceive('getAttribute')->with('email')->andReturn('some@email');
         $this->_accounts->shouldReceive('openingBalanceTransaction')->once()->andReturn(null);
+
+        // test if the view works:
+        View::shouldReceive('make')->with('accounts.edit')->once()->andReturn(m::self())->shouldReceive('with')->with(
+            'account', m::any()
+        )
+            ->andReturn(m::self())->shouldReceive('with')->with('openingBalance', null)->andReturn(m::self());
 
         $this->action('GET', 'AccountController@edit', $account->id);
         $this->assertResponseOk();
@@ -127,14 +136,20 @@ class AccountControllerTest extends TestCase
         $collection = new Collection();
         $collection->add($account);
 
+        // create some fake accounts:
+        $personal = f::create('Account');
+        $bene = f::create('Account');
+        $init = f::create('Account');
+        $cash = f::create('Account');
+
         $list = [
-            'personal'      => [],
-            'beneficiaries' => [],
-            'initial'       => [],
-            'cash'          => []
+            'personal'      => [$personal],
+            'beneficiaries' => [$bene],
+            'initial'       => [$init],
+            'cash'          => [$cash]
         ];
 
-        $this->_repository->shouldReceive('get')->with()->once()->andReturn($collection);
+        $this->_repository->shouldReceive('get')->once()->andReturn($collection);
         $this->_accounts->shouldReceive('index')->with($collection)->once()->andReturn($list);
         $this->action('GET', 'AccountController@index');
         $this->assertResponseOk();

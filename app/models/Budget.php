@@ -22,12 +22,6 @@
  */
 class Budget extends Component
 {
-    public static $factory
-        = [
-            'name'    => 'string',
-            'user_id' => 'factory|User',
-            'class'   => 'Budget'
-        ];
     protected $isSubclass = true;
 
     /**

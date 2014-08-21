@@ -37,6 +37,8 @@ use LaravelBook\Ardent\Ardent as Ardent;
  * @method static \Illuminate\Database\Query\Builder|\Piggybank whereReminder($value)
  * @method static \Illuminate\Database\Query\Builder|\Piggybank whereReminderSkip($value)
  * @method static \Illuminate\Database\Query\Builder|\Piggybank whereOrder($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\PiggybankEvent[] $piggybankevents
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Transaction[] $transactions
  */
 class Piggybank extends Ardent
 {

@@ -53,8 +53,10 @@ $r = Route::current()->getName();
                         <li><a href="{{route('transactions.create','withdrawal')}}" title="For when you spend money"><span class="glyphicon glyphicon-arrow-left"></span> Withdrawal</a></li>
                     </ul>
                 </li>
-
             </ul>
+            <!--
+                <p style="cursor:pointer;" class="navbar-text"><span class="label label-danger">1 reminder</span> </p>
+            -->
 
             @if(\Auth::user() && \Auth::check())
             <ul class="nav navbar-nav navbar-right">

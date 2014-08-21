@@ -1,6 +1,6 @@
 <?php
 use Carbon\Carbon;
-use Zizaco\FactoryMuff\Facade\FactoryMuff as f;
+use League\FactoryMuffin\Facade as f;
 
 /**
  * Class ModelTest

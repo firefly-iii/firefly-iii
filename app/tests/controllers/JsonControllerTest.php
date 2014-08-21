@@ -1,5 +1,5 @@
 <?php
-use Zizaco\FactoryMuff\Facade\FactoryMuff as f;
+use League\FactoryMuffin\Facade as f;
 
 /**
  * Class JsonControllerTest
