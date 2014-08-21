@@ -35,6 +35,10 @@ use LaravelBook\Ardent\Ardent;
  * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereDate($value)
  * @method static \TransactionJournal after($date)
  * @method static \TransactionJournal before($date)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *             'Budget[] $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *             'Category[] $categories
  */
 class TransactionJournal extends Ardent
 {

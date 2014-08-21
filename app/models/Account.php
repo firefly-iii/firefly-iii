@@ -36,21 +36,8 @@ class Account extends Ardent
             'name'            => 'required|between:1,100',
             'user_id'         => 'required|exists:users,id',
             'account_type_id' => 'required|exists:account_types,id',
-            'active'          => 'required|between:0,1|numeric'
+            'active'          => 'required|boolean'
 
-        ];
-
-    /**
-     * Factory instructions
-     *
-     * @var array
-     */
-    public static $factory
-        = [
-            'name'            => 'string',
-            'user_id'         => 'factory|User',
-            'account_type_id' => 'factory|AccountType',
-            'active'          => '1'
         ];
 
     /**

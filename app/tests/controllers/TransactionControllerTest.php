@@ -1,7 +1,7 @@
 <?php
 
 use Mockery as m;
-use Zizaco\FactoryMuff\Facade\FactoryMuff as f;
+use League\FactoryMuffin\Facade as f;
 
 /**
  * Class TransactionControllerTest

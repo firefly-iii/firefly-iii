@@ -17,11 +17,6 @@
 class AccountType extends Eloquent
 {
 
-    public static $factory
-        = [
-            'description' => 'string'
-        ];
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

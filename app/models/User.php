@@ -44,7 +44,7 @@ class User extends Ardent implements UserInterface, RemindableInterface
     public static $rules
         = [
             'email'    => 'required|email|unique:users,email',
-            'migrated' => 'required|numeric|between:0,1',
+            'migrated' => 'required|boolean',
             'password' => 'required|between:60,60',
             'reset'    => 'between:32,32',
         ];
@@ -60,19 +60,6 @@ class User extends Ardent implements UserInterface, RemindableInterface
      * @var array
      */
     protected $hidden = ['remember_token'];
-
-    /**
-     * @return array
-     */
-    public static function factory()
-    {
-        return [
-            'email'    => 'email',
-            'password' => 'sander',
-            'migrated' => '0'
-
-        ];
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
