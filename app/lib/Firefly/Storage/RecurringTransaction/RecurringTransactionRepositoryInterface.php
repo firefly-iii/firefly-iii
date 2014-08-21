@@ -30,5 +30,12 @@ interface RecurringTransactionRepositoryInterface
      */
     public function destroy(\RecurringTransaction $recurringTransaction);
 
+    /**
+     * @param \RecurringTransaction $recurringTransaction
+     * @param $data
+     * @return mixed
+     */
+    public function update(\RecurringTransaction $recurringTransaction, $data);
+
 
 } 

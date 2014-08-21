@@ -82,8 +82,10 @@ class RecurringController extends BaseController
     /**
      *
      */
-    public function show()
+    public function show(RecurringTransaction $recurringTransaction)
     {
+        return View::make('recurring.show')->with('recurring',$recurringTransaction);
+
     }
 
     /**
@@ -113,5 +115,14 @@ class RecurringController extends BaseController
      */
     public function update(RecurringTransaction $recurringTransaction)
     {
+        /** @var \RecurringTransaction $recurringTransaction */
+        $recurringTransaction = $this->_repository->update($recurringTransaction, Input::all());
+        if($recurringTransaction->errors()->count() == 0) {
+            Session::flash('success', 'The recurring transaction has been updated.');
+            return Redirect::route('recurring.index');
+        } else {
+            Session::flash('error', 'Could not update the recurring transaction: ' . $recurringTransaction->errors()->first());
+            return Redirect::route('recurring.edit',$recurringTransaction->id)->withInput()->withErrors($recurringTransaction->errors());
+        }
     }
-} 
+}

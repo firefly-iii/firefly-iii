@@ -158,6 +158,8 @@ class RecurringControllerTest extends TestCase
         $this->_user->shouldReceive('getAttribute')->with('id')->andReturn($recurringTransaction->user_id);
         $this->_user->shouldReceive('getAttribute')->with('email')->andReturn('some@email');
 
+        $this->_repository->shouldReceive('update')->andReturn($recurringTransaction);
+
 
         $this->action('POST', 'RecurringController@update', $recurringTransaction->id);
         $this->assertResponseOk();
