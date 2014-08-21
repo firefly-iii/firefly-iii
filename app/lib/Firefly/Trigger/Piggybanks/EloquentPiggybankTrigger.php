@@ -125,7 +125,7 @@ class EloquentPiggybankTrigger
     {
 
         if (\Auth::check()) {
-            $piggies = \Auth::user()->piggybanks()->whereNotNull('repeats')->get();
+            $piggies = \Auth::user()->piggybanks()->where('repeats',1)->get();
         } else {
             $piggies = [];
         }
