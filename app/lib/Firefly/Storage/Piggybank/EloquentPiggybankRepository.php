@@ -137,6 +137,10 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
 
 
         $piggyBank = new \Piggybank($data);
+        if($piggyBank->repeats && !isset($data['targetdate'])) {
+            $piggyBank->errors()->add('targetdate','Target date is mandatory!');
+            return $piggyBank;
+        }
         if (!is_null($account)) {
             $piggyBank->account()->associate($account);
         }

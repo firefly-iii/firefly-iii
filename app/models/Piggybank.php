@@ -49,7 +49,7 @@ class Piggybank extends Ardent
             'targetamount' => 'required|min:0', // amount you want to save
             'startdate' => 'date', // when you started
             'targetdate' => 'date', // when its due
-            'repeats' => 'required|between:0,1', // does it repeat?
+            'repeats' => 'required|boolean', // does it repeat?
             'rep_length' => 'in:day,week,month,year', // how long is the period?
             'rep_every' => 'required|min:1|max:100', // how often does it repeat? every 3 years.
             'rep_times' => 'min:1|max:100', // how many times do you want to save this amount? eg. 3 times
@@ -74,37 +74,21 @@ class Piggybank extends Ardent
         ];
 
     /**
-     * @return array
-     */
-    public static function factory()
-    {
-        $start = new Carbon;
-        $start->startOfMonth();
-        $end = new Carbon;
-        $end->endOfMonth();
-
-        return [
-            'account_id' => 'factory|Account',
-            'name' => 'string',
-            'targetamount' => 'integer',
-            'startdate' => $start->format('Y-m-d'),
-            'targetdate' => $end->format('Y-m-d'),
-            'repeats' => 0,
-            'rep_length' => null,
-            'rep_times' => 0,
-            'rep_every' => 0,
-            'reminder' => null,
-            'reminder_skip' => 0,
-            'order' => 1,
-        ];
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function account()
     {
         return $this->belongsTo('Account');
+    }
+
+    public function createRepetition(Carbon $start = null, Carbon $target = null) {
+        $rep = new \PiggybankRepetition;
+        $rep->piggybank()->associate($this);
+        $rep->startdate = $start;
+        $rep->targetdate = $target;
+        $rep->currentamount = 0;
+        $rep->save();
+        return $rep;
     }
 
     /**
