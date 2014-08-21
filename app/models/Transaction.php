@@ -40,15 +40,6 @@ class Transaction extends Ardent
             'amount'                 => 'required|between:-65536,65536|not_in:0,0.00',
         ];
 
-    public static $factory
-        = [
-            'account_id'             => 'factory|Account',
-            'piggybank_id'           => null,
-            'transaction_journal_id' => 'factory|TransactionJournal',
-            'description'            => 'string',
-            'amount'                 => 'integer:5',
-
-        ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
