@@ -162,6 +162,6 @@ class RecurringControllerTest extends TestCase
 
 
         $this->action('POST', 'RecurringController@update', $recurringTransaction->id);
-        $this->assertResponseOk();
+        $this->assertResponseStatus(302);
     }
 } 
