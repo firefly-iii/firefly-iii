@@ -87,7 +87,7 @@
                 <td>Related budgets</td>
                 <td>
                     @foreach($show['statistics']['budgets'] as $bud)
-                    <a href="{{route('budgets.show',$bud->id)}}" class="btn btn-default btn-xs">{{{$bud->name}}}</a>
+                    <a href="{{route('budgets.show',$bud->id)}}?useSession=true" class="btn btn-default btn-xs">{{{$bud->name}}}</a>
                     @endforeach
                 </td>
             </tr>
