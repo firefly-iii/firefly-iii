@@ -5,20 +5,39 @@
         <h1>Firefly
             <small>Overview for budget "{{{$budget->name}}}"</small>
         </h1>
-        @if(count($filters) == 0)
             <p class="lead">Budgets can help you cut back on spending.</p>
-        @else
-            <p class="lead">
+                <!-- warning for selected limit -->
                 @if(isset($filters[0]) && is_object($filters[0]) && get_class($filters[0]) == 'Limit')
-                    {{{$repetitions[0]['limitrepetition']->periodShow()}}}, {{mf($repetitions[0]['limit']->amount,false)}}
-                @elseif(isset($filters[0]) && $filters[0] == 'no_envelope')
-                These transactions are not caught in an envelope.
+                <p class="bg-primary" style="padding:15px;">
+                    This view is filtered to show only the envelope from {{{$repetitions[0]['limitrepetition']->periodShow()}}}
+                    with a total amount of {{mf($repetitions[0]['limit']->amount,false)}}.
+                </p>
+                <p class="bg-info" style="padding:15px;">
+                                    <a href="{{route('budgets.show',$budget->id)}}" class="text-info">Reset the filters.</a>
+                                </p>
                 @endif
-            </p>
-        <p class="text-info">
-            <a href="{{route('budgets.show',$budget->id)}}">See the whole picture</a>
-        </p>
-        @endif
+
+                <!-- warning for non-caught only -->
+                @if(isset($filters[0]) && $filters[0] == 'no_envelope')
+                <p class="bg-primary" style="padding:15px;">
+                    This view is filtered to show transactions not in an envelope only.
+                </p>
+                <p class="bg-info" style="padding:15px;">
+                                    <a href="{{route('budgets.show',$budget->id)}}" class="text-info">Reset the filters.</a>
+                                </p>
+                @endif
+
+                <!-- warning for session date -->
+                @if($useSessionDates == true)
+                <p class="bg-primary" style="padding:15px;">
+                    This view is filtered to only show transactions between {{Session::get('start')->format('d M Y')}}
+                    and {{Session::get('end')->format('d M Y')}}.
+                </p>
+
+                <p class="bg-info" style="padding:15px;">
+                    <a href="{{route('budgets.show',$budget->id)}}" class="text-info">Reset the filters.</a>
+                </p>
+                @endif
 
     </div>
 </div>

@@ -114,6 +114,12 @@ class BudgetController extends BaseController
      */
     public function show(Budget $budget)
     {
+        /**
+         * Use the
+         */
+        $useSessionDates = Input::get('useSession') == 'true' ? true : false;
+
+
         $filters = [];
 
         if (!is_null(Input::get('rep'))) {
@@ -127,13 +133,13 @@ class BudgetController extends BaseController
                 $filters[] = 'no_envelope';
             } else {
                 // grab all limit repetitions, order them, show them:
-                $repetitions = $this->_budgets->organizeRepetitions($budget);
+                $repetitions = $this->_budgets->organizeRepetitions($budget,$useSessionDates);
             }
         }
 
         return View::make('budgets.show')->with('budget', $budget)->with('repetitions', $repetitions)->with(
             'filters', $filters
-        )->with('highlight', Input::get('highlight'));
+        )->with('highlight', Input::get('highlight'))->with('useSessionDates',$useSessionDates);
     }
 
     /**
