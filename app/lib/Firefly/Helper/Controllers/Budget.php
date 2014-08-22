@@ -30,6 +30,7 @@ class Budget implements BudgetInterface
                     $return[$periodOrder] = isset($return[$periodOrder])
                         ? $return[$periodOrder]
                         : ['date' => $period,
+                           'dateObject' => $rep->startdate,
                             'budget_id' => $limit->budget_id];
 
                 }
