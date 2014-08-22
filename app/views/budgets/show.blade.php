@@ -44,7 +44,28 @@
 
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
+        @if(isset($filters[0]) && is_object($filters[0]) && get_class($filters[0]) == 'Limit')
+
+        <p class="small text-center">
+            A chart showing the date-range of the selected envelope, all transactions
+            as bars and the amount left in the envelope as a line.
+        </p>
+        @elseif(isset($filters[0]) && $filters[0] == 'no_envelope')
+        <p class="small text-center">
+        A chart showing the date-range of all the not-enveloped stuff, and their amount.
+        </p>
+        @elseif($useSessionDates == true)
+        <p class="small text-center">
+        Date range of session, show chart with all expenses in bars
+        find all limit repetitions, add them as individual lines and make them go down.
+        same as the first but bigger range (potentially).
+        </p>
+        @else
         <p class="small text-center">(Some sort of chart here)</p>
+        @endif
+
+
+
     </div>
 </div>
 
