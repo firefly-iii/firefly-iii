@@ -35,7 +35,7 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <h3><a href="#transactions-in-this-period">{{$entry['date']}}</a>
-             <a class="btn btn-default btn-xs" href ="{{route('budgets.limits.create')}}#date-and-budget-selected"><span class="glyphicon glyphicon-plus-sign"></span> Create a new envelope for {{$entry['date']}}</a>
+             <a class="btn btn-default btn-xs" href ="{{route('budgets.limits.create')}}?startdate={{$entry['dateObject']->format('Y-m-d')}}"><span class="glyphicon glyphicon-plus-sign"></span> Create a new envelope for {{$entry['date']}}</a>
             </h3>
         <table class="table table-bordered table-striped">
             <tr>

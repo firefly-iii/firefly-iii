@@ -61,7 +61,8 @@
         same as the first but bigger range (potentially).
         </p>
         @else
-        <p class="small text-center">(Some sort of chart here)</p>
+        <p class="small text-center">(For each visible repetition, a sum of the expense as a bar. A line shows
+            the percentage spent for each rep.)</p>
         @endif
 
 
