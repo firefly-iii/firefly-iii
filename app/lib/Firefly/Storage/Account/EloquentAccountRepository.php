@@ -40,7 +40,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         $account = $this->findByName($name, $type);
         if (!$account) {
             $data = [
-                'name'         => $name,
+                'name' => $name,
                 'account_type' => $type
             ];
 
@@ -74,6 +74,38 @@ class EloquentAccountRepository implements AccountRepositoryInterface
      */
     public function destroy(\Account $account)
     {
+        // find the oldest transaction which also is a "Opening balance"
+        $first = \Transaction::
+        leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+            ->where('transaction_journals.user_id', \Auth::user()->id)
+            ->where('transaction_types.type', 'Opening balance')
+            ->where('account_id', '!=', $account->id)
+            ->orderBy('transactions.id', 'DESC')->first(['transactions.*']);
+
+        $initialbalanceAccount = null;
+        if (!is_null($first)) {
+            $initialbalanceAccount = $first->account()->first();
+        }
+
+
+        // loop the account, find all transaction journals, and delete them:
+        $transactions = $account->transactions()->with('transactionjournal')->get();
+        $journals = [];
+        /** @var \Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $journals[$transaction->transaction_journal_id] = $transaction->transactionJournal;
+        }
+        /** @var \TransactionJournal $journal */
+        foreach ($journals as $journal) {
+            $journal->delete();
+        }
+
+        if(!is_null($initialbalanceAccount)) {
+            $initialbalanceAccount->delete();
+        }
+
+
         $account->delete();
 
         /**
@@ -274,8 +306,8 @@ class EloquentAccountRepository implements AccountRepositoryInterface
 
     /**
      * @param \Account $account
-     * @param int      $amount
-     * @param Carbon   $date
+     * @param int $amount
+     * @param Carbon $date
      *
      * @return bool
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)

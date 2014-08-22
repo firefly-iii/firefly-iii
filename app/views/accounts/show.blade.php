@@ -62,6 +62,7 @@
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12">
         <table class="table table-striped table-condensed">
+            @if(count($show['statistics']['accounts']) > 0)
             <tr>
                 <td style="width:30%;">Related accounts</td>
                 <td>
@@ -70,22 +71,27 @@
                     @endforeach
                 </td>
             </tr>
+            @endif
+            @if(count($show['statistics']['categories']) > 0)
             <tr>
                 <td>Related categories</td>
                 <td>
                     @foreach($show['statistics']['categories'] as $cat)
-                    <a href="#category-overview" class="btn btn-default btn-xs">{{{$cat->name}}}</a>
+                    <a href="{{route('categories.show',$cat->id)}}" class="btn btn-default btn-xs">{{{$cat->name}}}</a>
                     @endforeach
                 </td>
             </tr>
+            @endif
+            @if(count($show['statistics']['budgets']) > 0)
             <tr>
                 <td>Related budgets</td>
                 <td>
                     @foreach($show['statistics']['budgets'] as $bud)
-                    <a href="#budget-overview" class="btn btn-default btn-xs">{{{$bud->name}}}</a>
+                    <a href="{{route('budgets.show',$bud->id)}}" class="btn btn-default btn-xs">{{{$bud->name}}}</a>
                     @endforeach
                 </td>
             </tr>
+            @endif
         </table>
     </div>
 </div>

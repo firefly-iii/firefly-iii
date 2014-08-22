@@ -63,6 +63,7 @@
             <a href="{{route('accounts.show',$journal->transactions[1]->account_id)}}">{{{$journal->transactions[1]->account->name}}}</a>
         </td>
         <td>
+            @if($journal->transactiontype->type != 'Opening balance')
             <div class="btn-group btn-group-xs">
                 <a href="{{route('transactions.edit',$journal->id)}}" class="btn btn-default">
                     <span class="glyphicon glyphicon-pencil"></span>
@@ -70,6 +71,7 @@
                         <span class="glyphicon glyphicon-trash"></span>
                     </a>
             </div>
+            @endif
         </td>
     </tr>
     @endforeach
