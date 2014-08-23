@@ -75,6 +75,19 @@ Route::bind('limit', function($value, $route)
         return null;
     });
 
+Route::bind('limitrepetition', function($value, $route)
+    {
+        if(Auth::check()) {
+            return LimitRepetition::
+                where('limit_repetitions.id', $value)->
+                leftjoin('limits','limits.id','=','limit_repetitions.limit_id')->
+                leftJoin('components','components.id','=','limits.component_id')->
+                where('components.class','Budget')->
+                where('components.user_id',Auth::user()->id)->first(['limit_repetitions.*']);
+        }
+        return null;
+    });
+
 Route::bind('piggybank', function($value, $route)
     {
         if(Auth::check()) {
@@ -116,9 +129,15 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/chart/home/account/{account?}', ['uses' => 'ChartController@homeAccount', 'as' => 'chart.home']);
         Route::get('/chart/home/categories', ['uses' => 'ChartController@homeCategories', 'as' => 'chart.categories']);
         Route::get('/chart/home/budgets', ['uses' => 'ChartController@homeBudgets', 'as' => 'chart.budgets']);
-        Route::get('/chart/home/info/{accountnameA}/{day}/{month}/{year}',
-            ['uses' => 'ChartController@homeAccountInfo', 'as' => 'chart.info']);
+        Route::get('/chart/home/info/{accountnameA}/{day}/{month}/{year}', ['uses' => 'ChartController@homeAccountInfo', 'as' => 'chart.info']);
         Route::get('/chart/categories/show/{category}', ['uses' => 'ChartController@categoryShowChart','as' => 'chart.showcategory']);
+        // (new charts for budgets)
+        Route::get('/chart/budget/{budget}/default', ['uses' => 'ChartController@budgetDefault', 'as' => 'chart.budget.default']);
+        Route::get('chart/budget/{budget}/no_envelope', ['uses' => 'ChartController@budgetNoLimits', 'as' => 'chart.budget.nolimit']);
+        Route::get('chart/budget/{budget}/session', ['uses' => 'ChartController@budgetSession', 'as' => 'chart.budget.session']);
+        Route::get('chart/budget/envelope/{limitrepetition}', ['uses' => 'ChartController@budgetLimit', 'as' => 'chart.budget.limit']);
+
+
 
         // home controller
         Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);

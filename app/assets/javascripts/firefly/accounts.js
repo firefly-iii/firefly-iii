@@ -7,7 +7,7 @@ if($('#chart').length == 1) {
         var options = {
             chart: {
                 renderTo: 'chart',
-                type: 'line'
+                type: 'spline'
             },
 
             series: data.series,
