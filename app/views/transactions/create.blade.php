@@ -28,6 +28,7 @@
 </div>
 
 {{Form::open(['class' => 'form-horizontal','url' => route('transactions.store',$what)])}}
+{{Form::hidden('reminder',Input::get('reminder_id'))}}
 
 <div class="row">
     <div class="col-lg-6 col-md-12 col-sm-12">
@@ -37,7 +38,7 @@
         <div class="form-group">
             <label for="description" class="col-sm-4 control-label">Description</label>
             <div class="col-sm-8">
-                <input type="text" name="description" value="{{{Input::old('description')}}}" autocomplete="off" class="form-control" placeholder="Description" />
+                <input type="text" name="description" value="{{{Input::old('description') ?: Input::get('description')}}}" autocomplete="off" class="form-control" placeholder="Description" />
                 @if($errors->has('description'))
                     <p class="text-danger">{{$errors->first('description')}}</p>
                 @endif
@@ -56,7 +57,7 @@
                 @endif
             </label>
             <div class="col-sm-8">
-                {{Form::select('account_id',$accounts,Input::old('account_id') ?: Input::get('account'),['class' => 'form-control'])}}
+                {{Form::select('account_id',$accounts,Input::old('account_id') ?: Input::get('account_id'),['class' => 'form-control'])}}
                 @if($errors->has('account_id'))
                 <p class="text-danger">{{$errors->first('account_id')}}</p>
                 @endif
@@ -91,7 +92,7 @@
         <div class="form-group">
             <label for="account_from_id" class="col-sm-4 control-label">Account from</label>
             <div class="col-sm-8">
-                {{Form::select('account_from_id',$accounts,Input::old('account_from_id'),['class' => 'form-control'])}}
+                {{Form::select('account_from_id',$accounts,Input::old('account_from_id') ?: Input::get('account_from_id'),['class' => 'form-control'])}}
                 @if($errors->has('account_from_id'))
                 <p class="text-danger">{{$errors->first('account_from_id')}}</p>
                 @endif
@@ -101,7 +102,7 @@
         <div class="form-group">
             <label for="account_to_id" class="col-sm-4 control-label">Account to</label>
             <div class="col-sm-8">
-                {{Form::select('account_to_id',$accounts,Input::old('account_to_id'),['class' => 'form-control'])}}
+                {{Form::select('account_to_id',$accounts,Input::old('account_to_id') ?: Input::get('account_to_id'),['class' => 'form-control'])}}
                 @if($errors->has('account_to_id'))
                 <p class="text-danger">{{$errors->first('account_to_id')}}</p>
                 @endif
@@ -123,7 +124,7 @@
                 @endif
             </label>
             <div class="col-sm-8">
-                <input type="number" name="amount" min="0.01" value="{{Input::old('amount')}}" step="any" class="form-control" />
+                <input type="number" name="amount" min="0.01" value="{{Input::old('amount') ?: Input::get('amount')}}" step="any" class="form-control" />
                 @if($errors->has('amount'))
                     <p class="text-danger">{{$errors->first('amount')}}</p>
                 @endif
@@ -185,7 +186,7 @@
                 <select name="piggybank_id" class="form-control">
                     <option value="0" label="(no piggy bank)">(no piggy bank)</option>
                     @foreach($piggies as $piggy)
-                        @if($piggy->id == Input::old('piggybank_id'))
+                        @if($piggy->id == Input::old('piggybank_id') || $piggy->id == Input::get('piggybank_id'))
                             <option value="{{$piggy->id}}" label="{{{$piggy->name}}}" selected="selected    ">{{{$piggy->name}}}</option>
                         @else
                     <option value="{{$piggy->id}}" label="{{{$piggy->name}}}">{{{$piggy->name}}}</option>

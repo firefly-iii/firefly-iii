@@ -23,4 +23,9 @@ interface ToolkitInterface
      */
     public function getDateRangeDates();
 
+    /**
+     * @return mixed
+     */
+    public function getReminders();
+
 } 

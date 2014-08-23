@@ -12,3 +12,4 @@
 //
 //= require jquery
 //= require bootstrap/bootstrap.min
+//= require firefly/reminders

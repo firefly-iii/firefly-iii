@@ -1,4 +1,5 @@
 <?php
+use Firefly\Database\SingleTableInheritanceEntity;
 
 /**
  * Component
@@ -20,7 +21,7 @@
  * @method static \Illuminate\Database\Query\Builder|\Component whereUserId($value) 
  * @method static \Illuminate\Database\Query\Builder|\Component whereClass($value) 
  */
-class Component extends Firefly\Database\SingleTableInheritanceEntity
+class Component extends SingleTableInheritanceEntity
 {
 
     public static $rules

@@ -43,7 +43,6 @@ class TransactionController extends BaseController
         $piggyRepository = App::make('Firefly\Storage\Piggybank\PiggybankRepositoryInterface');
         $piggies = $piggyRepository->get();
 
-
         return View::make('transactions.create')->with('accounts', $accounts)->with('budgets', $budgets)->with(
             'what', $what
         )->with('piggies', $piggies);
@@ -188,6 +187,16 @@ class TransactionController extends BaseController
         $journal = $this->_repository->store($what, Input::all());
         if ($journal->validate()) {
             Session::flash('success', 'Transaction "' . $journal->description . '" saved!');
+
+            // if reminder present, deactivate it:
+            if(Input::get('reminder')) {
+                /** @var \Firefly\Storage\Reminder\ReminderRepositoryInterface $reminders */
+                $reminders = App::make('Firefly\Storage\Reminder\ReminderRepositoryInterface');
+                $reminder = $reminders->find(Input::get('reminder'));
+                $reminders->deactivate($reminder);
+
+            }
+
             if (Input::get('create') == '1') {
                 return Redirect::route('transactions.create', [$what])->withInput();
             } else {
