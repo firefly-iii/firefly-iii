@@ -1,6 +1,7 @@
 <?php
 
 
+use Carbon\Carbon;
 use Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface as TJRI;
 
 /**
@@ -102,15 +103,15 @@ class TransactionController extends BaseController
         $piggies = $piggyRepository->get();
         // piggy bank id?
         $piggyBankId = null;
-        foreach($journal->transactions as $t) {
+        foreach ($journal->transactions as $t) {
             $piggyBankId = $t->piggybank_id;
         }
 
         // data to properly display form:
         $data = [
-            'date'      => $journal->date->format('Y-m-d'),
-            'category'  => '',
-            'budget_id' => 0,
+            'date'         => $journal->date->format('Y-m-d'),
+            'category'     => '',
+            'budget_id'    => 0,
             'piggybank_id' => $piggyBankId
         ];
         $category = $journal->categories()->first();
@@ -141,7 +142,7 @@ class TransactionController extends BaseController
 
         return View::make('transactions.edit')->with('journal', $journal)->with('accounts', $accounts)->with(
             'what', $what
-        )->with('budgets', $budgets)->with('data', $data)->with('piggies',$piggies);
+        )->with('budgets', $budgets)->with('data', $data)->with('piggies', $piggies);
     }
 
     /**
@@ -149,9 +150,22 @@ class TransactionController extends BaseController
      */
     public function index()
     {
-        $journals = $this->_repository->paginate(25);
+        $start = is_null(Input::get('startdate')) ? null : new Carbon(Input::get('startdate'));
+        $end = is_null(Input::get('enddate')) ? null : new Carbon(Input::get('enddate'));
+        if ($start <= $end && !is_null($start) && !is_null($end)) {
+            $journals = $this->_repository->paginate(25, $start, $end);
+            $filtered = true;
+            $filters = ['start' => $start, 'end' => $end];
+        } else {
+            $journals = $this->_repository->paginate(25);
+            $filtered = false;
+            $filters = null;
+        }
 
-        return View::make('transactions.index')->with('journals', $journals);
+
+        return View::make('transactions.index')->with('journals', $journals)->with('filtered', $filtered)->with(
+            'filters', $filters
+        );
     }
 
     /**

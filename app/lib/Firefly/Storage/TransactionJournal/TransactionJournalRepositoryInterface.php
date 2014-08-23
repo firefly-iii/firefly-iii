@@ -73,6 +73,6 @@ interface TransactionJournalRepositoryInterface
      *
      * @return mixed
      */
-    public function paginate($count = 25);
+    public function paginate($count = 25, Carbon $start = null, Carbon $end = null);
 
 }
