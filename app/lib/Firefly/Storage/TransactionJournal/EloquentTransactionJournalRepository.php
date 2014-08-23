@@ -121,7 +121,8 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         $fromTransaction->description = null;
         $fromTransaction->amount = $amountFrom;
         if (!$fromTransaction->validate()) {
-            throw new FireflyException('Cannot create valid transaction (from): ' . $fromTransaction->errors()->first());
+            throw new FireflyException('Cannot create valid transaction (from): ' . $fromTransaction->errors()->first(
+            ));
         }
         $fromTransaction->save();
 
@@ -150,9 +151,9 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
     {
         return \Auth::user()->transactionjournals()->with(
             ['transactions' => function ($q) {
-                return $q->orderBy('amount', 'ASC');
-            }, 'transactioncurrency', 'transactiontype', 'components', 'transactions.account',
-                'transactions.account.accounttype']
+                    return $q->orderBy('amount', 'ASC');
+                }, 'transactioncurrency', 'transactiontype', 'components', 'transactions.account',
+             'transactions.account.accounttype']
         )
             ->where('id', $journalId)->first();
     }
@@ -167,7 +168,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
 
     /**
      * @param \Account $account
-     * @param Carbon $date
+     * @param Carbon   $date
      *
      * @return mixed
      */
@@ -196,9 +197,9 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
 
     /**
      * @param \Account $account
-     * @param int $count
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param int      $count
+     * @param Carbon   $start
+     * @param Carbon   $end
      *
      * @return mixed
      */
@@ -230,13 +231,13 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
      *
      * @return mixed
      */
-    public function paginate($count = 25)
+    public function paginate($count = 25, Carbon $start = null, Carbon $end = null)
     {
         $query = \Auth::user()->transactionjournals()->with(
             [
                 'transactions' => function ($q) {
-                    return $q->orderBy('amount', 'ASC');
-                },
+                        return $q->orderBy('amount', 'ASC');
+                    },
                 'transactions.account',
                 'transactions.account.accounttype',
                 'transactioncurrency',
@@ -244,10 +245,17 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
             ]
         )
             ->orderBy('transaction_journals.date', 'DESC')
-            ->orderBy('transaction_journals.id', 'DESC')
-            ->paginate($count);
+            ->orderBy('transaction_journals.id', 'DESC');
+        if (!is_null($start)) {
+            $query->where('transaction_journals.date', '>=', $start->format('Y-m-d'));
+        }
+        if (!is_null($end)) {
+            $query->where('transaction_journals.date', '<=', $end->format('Y-m-d'));
+        }
 
-        return $query;
+        $result = $query->paginate($count);
+
+        return $result;
     }
 
     /**
@@ -328,12 +336,17 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
                             $connected = true;
                             $transaction->piggybank()->associate($piggyBank);
                             $transaction->save();
-                            \Event::fire('piggybanks.createRelatedTransfer', [$piggyBank, $transactionJournal, $transaction]);
+                            \Event::fire(
+                                'piggybanks.createRelatedTransfer', [$piggyBank, $transactionJournal, $transaction]
+                            );
                             break;
                         }
                     }
                     if ($connected === false) {
-                        \Session::flash('warning', 'Piggy bank "' . e($piggyBank->name) . '" is not set to draw money from any of the accounts in this transfer');
+                        \Session::flash(
+                            'warning', 'Piggy bank "' . e($piggyBank->name)
+                            . '" is not set to draw money from any of the accounts in this transfer'
+                        );
                     }
                 }
             }
@@ -462,7 +475,10 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
                             }
                         }
                         if ($connected === false) {
-                            \Session::flash('warning', 'Piggy bank "' . e($piggyBank->name) . '" is not set to draw money from any of the accounts in this transfer');
+                            \Session::flash(
+                                'warning', 'Piggy bank "' . e($piggyBank->name)
+                                . '" is not set to draw money from any of the accounts in this transfer'
+                            );
                         }
                     }
                 }
@@ -479,7 +495,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         if ($journal->validate()) {
             $journal->save();
         }
-        if($fireEvent) {
+        if ($fireEvent) {
             \Event::fire('piggybanks.updateRelatedTransfer', [$piggyBank]);
         }
 
