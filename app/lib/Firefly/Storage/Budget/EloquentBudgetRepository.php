@@ -42,7 +42,7 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
     {
         $set = \Auth::user()->budgets()->with(
             ['limits'                        => function ($q) {
-                    $q->orderBy('limits.startdate', 'ASC');
+                    $q->orderBy('limits.startdate', 'DESC');
                 }, 'limits.limitrepetitions' => function ($q) {
                     $q->orderBy('limit_repetitions.startdate', 'ASC');
                 }]
