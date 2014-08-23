@@ -52,15 +52,16 @@ class ChartController extends BaseController
                     )->sum('amount');
 
 
-                $pct = round(($spentInRep / $limit->amount) * 100,2);
-                $expense[] = [$rep->startdate->timestamp * 1000, floatval($spentInRep)];
-                $left[] = [$rep->startdate->timestamp * 1000, $pct];
+                $pct = round(($spentInRep / $limit->amount) * 100, 2);
+                $name = $rep->periodShow();
+                $expense[] = [$name, floatval($spentInRep)];
+                $left[] = [$name, $pct];
             }
         }
 
         $return = [
             'chart_title' => 'Overview for budget ' . $budget->name,
-            'subtitle'    => 'Between something something',
+            'subtitle'    => 'All envelopes',
             'series'      => [
                 [
                     'type' => 'column',
@@ -70,12 +71,13 @@ class ChartController extends BaseController
                 [
                     'type'  => 'line',
                     'yAxis' => 1,
-                    'name'  => 'Spent pct for envelope',
+                    'name'  => 'Spent percentage for envelope',
                     'data'  => $left
                 ]
 
             ]
         ];
+
         return Response::json($return);
     }
 
@@ -108,7 +110,8 @@ class ChartController extends BaseController
 
         $return = [
             'chart_title' => 'Overview for budget ' . $budget->name,
-            'subtitle'    => 'Between ' . $rep->startdate->format('d M Y') . ' and ' . $rep->startdate->format('d M Y'),
+            'subtitle'    =>
+                'Between ' . $rep->startdate->format('M jS, Y') . ' and ' . $rep->enddate->format('M jS, Y'),
             'series'      => [
                 [
                     'type'  => 'column',
@@ -224,7 +227,7 @@ class ChartController extends BaseController
         $start = clone Session::get('start');
         $repetitionSeries[] = [
             'type' => 'column',
-            'name' => 'Something something expenses',
+            'name' => 'Expenses per day',
             'data' => $expense
         ];
 
@@ -259,8 +262,7 @@ class ChartController extends BaseController
                     'type'  => 'spline',
                     'id'    => 'rep-' . $repetition->id,
                     'yAxis' => 1,
-                    'name'  => 'Serie ' . $repetition->startdate->format('Y-m-d') . ' to ' .
-                        $repetition->enddate->format('Y-m-d') . '.',
+                    'name'  => 'Envelope in ' . $repetition->periodShow(),
                     'data'  => []
                 ];
                 $current = clone $repetition->startdate;
@@ -299,7 +301,10 @@ class ChartController extends BaseController
 
         $return = [
             'chart_title' => 'Overview for budget ' . $budget->name,
-            'subtitle'    => 'Between Bla bla bla',
+            'subtitle'    =>
+                'Between ' . Session::get('start')->format('M jS, Y') . ' and ' . Session::get('end')->format(
+                    'M jS, Y'
+                ),
             'series'      => $repetitionSeries
         ];
 

@@ -45,25 +45,15 @@
 
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <div id="chart" style="height:300px;"></div>
+        <div id="chart"></div>
         @if(isset($filters[0]) && is_object($filters[0]) && get_class($filters[0]) == 'Limit')
         <div id="instr" data-type="envelope" data-envelope="{{$repetitions[0]['limitrepetition']->id}}"></div>
         @elseif(isset($filters[0]) && $filters[0] == 'no_envelope')
         <div id="instr" data-type="no_envelope" data-budget="{{$budget->id}}"></div>
-        <p class="small text-center">
-        A chart showing the date-range of all the not-enveloped stuff, and their amount.
-        </p>
         @elseif($useSessionDates == true)
         <div id="instr" data-type="session" data-budget="{{$budget->id}}"></div>
-        <p class="small text-center">
-        Date range of session, show chart with all expenses in bars
-        find all limit repetitions, add them as individual lines and make them go down.
-        same as the first but bigger range (potentially).
-        </p>
         @else
         <div id="instr" data-type="default" data-budget="{{$budget->id}}"></div>
-        <p class="small text-center">(For each visible repetition, a sum of the expense as a bar. A line shows
-            the percentage spent for each rep.)</p>
         @endif
 
 
@@ -110,5 +100,14 @@
 
 @stop
 @section('scripts')
-<?php echo javascript_include_tag('budgets'); ?>
+@if(isset($filters[0]) && is_object($filters[0]) && get_class($filters[0]) == 'Limit')
+<?php echo javascript_include_tag('budgets-limit'); ?>
+@elseif(isset($filters[0]) && $filters[0] == 'no_envelope')
+<?php echo javascript_include_tag('budgets-nolimit'); ?>
+@elseif($useSessionDates == true)
+<?php echo javascript_include_tag('budgets-session'); ?>
+@else
+<?php echo javascript_include_tag('budgets-default'); ?>
+@endif
+
 @stop
