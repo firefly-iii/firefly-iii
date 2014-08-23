@@ -10,13 +10,6 @@
     <?php echo stylesheet_link_tag(); ?>
     @yield('styles')
 
-
-    <!-- Bootstrap -->
-    <!--
-    <link href="assets/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/css/site.css" rel="stylesheet">
-    -->
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -32,6 +25,17 @@
     @include('partials.flashes')
     @yield('content')
 </div>
+
+<div class="modal fade" id="reminderModal" tabindex="-1" role="dialog"
+     aria-labelledby="reminderModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
 <?php echo javascript_include_tag(); ?>
 @yield('scripts')
 </body>

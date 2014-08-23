@@ -43,6 +43,16 @@ Route::bind('budget', function($value, $route)
         return null;
     });
 
+Route::bind('reminder', function($value, $route)
+    {
+        if(Auth::check()) {
+            return Reminder::
+                where('id', $value)->
+                where('user_id',Auth::user()->id)->first();
+        }
+        return null;
+    });
+
 Route::bind('category', function($value, $route)
 {
     if(Auth::check()) {
@@ -179,6 +189,12 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/recurring/create',['uses' => 'RecurringController@create', 'as' => 'recurring.create']);
         Route::get('/recurring/edit/{recurring}',['uses' => 'RecurringController@edit','as' => 'recurring.edit']);
         Route::get('/recurring/delete/{recurring}',['uses' => 'RecurringController@delete','as' => 'recurring.delete']);
+
+        // reminder controller
+        Route::get('/reminders/dialog',['uses' => 'ReminderController@modalDialog']);
+        Route::post('/reminders/postpone/{reminder}',['uses' => 'ReminderController@postpone']);
+        Route::post('/reminders/dismiss/{reminder}',['uses' => 'ReminderController@dismiss']);
+        Route::get('/reminders/redirect/{reminder}',['uses' => 'ReminderController@redirect']);
 
         // report controller:
         Route::get('/reports',['uses' => 'ReportController@index','as' => 'reports.index']);

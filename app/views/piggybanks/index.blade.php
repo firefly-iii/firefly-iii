@@ -68,8 +68,6 @@
                                     @if($piggyBank->currentRelevantRep()->currentamount > 0)
                                     <a data-toggle="modal" href="{{route('piggybanks.amount.remove',$piggyBank->id)}}" data-target="#modal" class="btn btn-default"><span class="glyphicon glyphicon-minus-sign"></span> Remove money</a>
                                     @endif
-                                    <a href="{{route('piggybanks.edit',$piggyBank->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
-                                    <a href="{{route('piggybanks.delete',$piggyBank->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
                                     </div>
                             </td>
                             <td style="width:40%;">
@@ -80,7 +78,12 @@
                                 @endif
 
                             </td>
-                            <td></td>
+                            <td>
+                                <div class="btn-group btn-group-xs">
+                                    <a href="{{route('piggybanks.edit',$piggyBank->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
+                                    <a href="{{route('piggybanks.delete',$piggyBank->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                                </div>
+                            </td>
                         </tr>
                     </table>
                 @endif
@@ -125,8 +128,7 @@
                                 @if($repeated->currentRelevantRep()->currentamount > 0)
                                 <a data-toggle="modal" href="{{route('piggybanks.amount.remove',$repeated->id)}}" data-target="#modal" class="btn btn-default"><span class="glyphicon glyphicon-minus-sign"></span> Remove money</a>
                                 @endif
-                                <a href="{{route('piggybanks.edit',$repeated->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
-                                <a href="{{route('piggybanks.delete',$repeated->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+
                             </div>
                         </td>
                         <td style="width:40%;">
@@ -137,7 +139,12 @@
                             @endif
 
                         </td>
-                        <td></td>
+                        <td>
+                            <div class="btn-group btn-group-xs">
+                                <a href="{{route('piggybanks.edit',$repeated->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
+                                <a href="{{route('piggybanks.delete',$repeated->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                            </div>
+                        </td>
                     </tr>
                 </table>
         @endif

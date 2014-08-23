@@ -36,6 +36,10 @@ class StorageServiceProvider extends ServiceProvider
             'Firefly\Storage\RecurringTransaction\EloquentRecurringTransactionRepository'
         );
 
+        $this->app->bind(
+            'Firefly\Storage\Reminder\ReminderRepositoryInterface',
+            'Firefly\Storage\Reminder\EloquentReminderRepository'
+        );
 
         $this->app->bind(
             'Firefly\Storage\Account\AccountRepositoryInterface',

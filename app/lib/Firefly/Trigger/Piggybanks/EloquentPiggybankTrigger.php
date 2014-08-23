@@ -3,6 +3,7 @@
 namespace Firefly\Trigger\Piggybanks;
 
 use Carbon\Carbon;
+use Illuminate\Database\QueryException;
 use Illuminate\Events\Dispatcher;
 
 /**
@@ -116,8 +117,64 @@ class EloquentPiggybankTrigger
      */
     public function madeRep(\PiggybankRepetition $rep)
     {
-        // do something.
-        \Log::info('TRIGGER: Created a piggybank repetition (#' . $rep->id . ')');
+        // do something with reminders?
+        $piggyBank = $rep->piggybank;
+        if (is_null(($piggyBank->reminder))) {
+            return null;
+        }
+
+        $current = clone $rep->startdate;
+        $today = new Carbon;
+        while ($current <= $rep->targetdate) {
+
+            // when do we start reminding?
+            // X days before $current:
+            $reminderStart = clone $current;
+            switch ($piggyBank->reminder) {
+                case 'day':
+                    $reminderStart->subDay();
+                    break;
+                case 'week':
+                    $reminderStart->subDays(4);
+                    break;
+                case 'month':
+                    $reminderStart->subDays(21);
+                    break;
+                case 'year':
+                    $reminderStart->subMonths(9);
+                    break;
+            }
+
+            if ($current >= $today) {
+                $reminder = new \PiggybankReminder;
+                $reminder->piggybank()->associate($piggyBank);
+                $reminder->user()->associate(\Auth::user());
+                $reminder->startdate = $reminderStart;
+                $reminder->enddate = $current;
+                try {
+                    $reminder->save();
+
+                } catch (QueryException $e) {
+                }
+            }
+
+
+            switch ($piggyBank->reminder) {
+                case 'day':
+                    $current->addDays($piggyBank->reminder_skip);
+                    break;
+                case 'week':
+                    $current->addWeeks($piggyBank->reminder_skip);
+                    break;
+                case 'month':
+                    $current->addMonths($piggyBank->reminder_skip);
+                    break;
+                case 'year':
+                    $current->addYears($piggyBank->reminder_skip);
+                    break;
+            }
+        }
+
     }
 
     /**
@@ -164,14 +221,6 @@ class EloquentPiggybankTrigger
     public function storePiggy(\Piggybank $piggyBank)
     {
         $piggyBank->createRepetition($piggyBank->startdate, $piggyBank->targetdate);
-
-        return true;
-        $rep = new \PiggybankRepetition;
-        $rep->piggybank()->associate($piggyBank);
-        $rep->targetdate = $piggyBank->targetdate;
-        $rep->startdate = $piggyBank->startdate;
-        $rep->currentamount = 0;
-        $rep->save();
 
         return true;
 

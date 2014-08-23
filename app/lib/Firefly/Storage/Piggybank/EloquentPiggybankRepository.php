@@ -136,7 +136,18 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
         $account = isset($data['account_id']) ? $accounts->find($data['account_id']) : null;
 
 
+
+
         $piggyBank = new \Piggybank($data);
+
+        if(!is_null($piggyBank->reminder) && is_null($piggyBank->startdate) && is_null($piggyBank->targetdate)) {
+
+            $piggyBank->errors()->add('reminder','Cannot create reminders without start ~ AND target date.');
+            return $piggyBank;
+
+        }
+
+
         if($piggyBank->repeats && !isset($data['targetdate'])) {
             $piggyBank->errors()->add('targetdate','Target date is mandatory!');
             return $piggyBank;

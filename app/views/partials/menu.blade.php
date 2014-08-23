@@ -54,9 +54,13 @@ $r = Route::current()->getName();
                     </ul>
                 </li>
             </ul>
-            <!--
-                <p style="cursor:pointer;" class="navbar-text"><span class="label label-danger">1 reminder</span> </p>
-            -->
+            @if(Session::get('reminderCount') == 1)
+                <p style="cursor:pointer;" id="reminderModalTrigger" class="navbar-text"><span class="label label-danger">1 reminder</span> </p>
+            @endif
+            @if(Session::get('reminderCount') > 1)
+            <p style="cursor:pointer;" id="reminderModalTrigger" class="navbar-text"><span class="label label-danger">{{Session::get('reminderCount')}}
+                    reminders</span> </p>
+            @endif
 
             @if(\Auth::user() && \Auth::check())
             <ul class="nav navbar-nav navbar-right">
