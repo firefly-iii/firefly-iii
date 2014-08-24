@@ -212,7 +212,7 @@ class PiggybankController extends BaseController
         $piggyBank = $this->_repository->store($data);
         if (!is_null($piggyBank->id)) {
             Session::flash('success', 'New piggy bank "' . $piggyBank->name . '" created!');
-            Event::fire('piggybanks.storePiggy',[$piggyBank]);
+            Event::fire('piggybanks.store',[$piggyBank]);
 
             return Redirect::route('piggybanks.index');
 
@@ -241,7 +241,7 @@ class PiggybankController extends BaseController
         $piggyBank = $this->_repository->store($data);
         if ($piggyBank->id) {
             Session::flash('success', 'New piggy bank "' . $piggyBank->name . '" created!');
-            Event::fire('piggybanks.storeRepeated',[$piggyBank]);
+            Event::fire('piggybanks.store',[$piggyBank]);
 
             return Redirect::route('piggybanks.index');
 
