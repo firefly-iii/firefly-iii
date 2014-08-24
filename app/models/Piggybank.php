@@ -222,6 +222,14 @@ class Piggybank extends Ardent
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function piggybankreminders()
+    {
+        return $this->hasMany('PiggybankReminder');
+    }
+
+    /**
      * Same but for specific date.
      *
      * @param Carbon $date
