@@ -60,9 +60,9 @@
 
             @include('transactions.journals-small',['transactions' => $data[0],'account' => $data[1]])
             <div class="btn-group btn-group-xs">
-                <a class="btn btn-default" href="{{route('transactions.create','withdrawal')}}?account={{$data[1]->id}}"><span class="glyphicon glyphicon-arrow-left" title="Withdrawal"></span> Add withdrawal</a>
-                <a class="btn btn-default" href="{{route('transactions.create','deposit')}}?account={{$data[1]->id}}"><span class="glyphicon glyphicon-arrow-right" title="Deposit"></span> Add deposit</a>
-                <a class="btn btn-default" href="{{route('transactions.create','transfer')}}?account={{$data[1]->id}}"><span class="glyphicon glyphicon-resize-full" title="Transfer"></span> Add transfer</a>
+                <a class="btn btn-default" href="{{route('transactions.create','withdrawal')}}?account_id={{$data[1]->id}}"><span class="glyphicon glyphicon-arrow-left" title="Withdrawal"></span> Add withdrawal</a>
+                <a class="btn btn-default" href="{{route('transactions.create','deposit')}}?account_id={{$data[1]->id}}"><span class="glyphicon glyphicon-arrow-right" title="Deposit"></span> Add deposit</a>
+                <a class="btn btn-default" href="{{route('transactions.create','transfer')}}?account_from_id={{$data[1]->id}}"><span class="glyphicon glyphicon-resize-full" title="Transfer"></span> Add transfer</a>
             </div>
 
         </div>
@@ -77,9 +77,6 @@
             <h4>Budgets</h4>
 
             <div id="budgets"></div>
-            <p>
-                <a class="btn btn-default btn-xs" href ="{{route('budgets.limits.create')}}?startdate={{Session::get('start')->format('Y-m-d')}}"><span class="glyphicon glyphicon-plus-sign"></span> Create a limit</a>
-            </p>
         </div>
     </div>
 
