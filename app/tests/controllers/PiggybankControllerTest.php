@@ -313,9 +313,7 @@ class PiggybankControllerTest extends TestCase
         $piggy = f::create('Piggybank');
         $piggy->repeats = 0;
         $piggy->save();
-        Event::shouldReceive('fire')->with('piggybanks.storePiggy',[$piggy])->once();
-        //Event::fire('piggybanks.storePiggy',[$piggyBank]);
-        //Event::fire('piggybanks.storeRepeated',[$piggyBank]);
+        Event::shouldReceive('fire')->with('piggybanks.store',[$piggy])->once();
 
 
         $this->_piggybanks->shouldReceive('store')->once()->andReturn($piggy);
@@ -328,7 +326,7 @@ class PiggybankControllerTest extends TestCase
         $piggy = f::create('Piggybank');
         $piggy->repeats = 1;
         $piggy->save();
-        Event::shouldReceive('fire')->with('piggybanks.storeRepeated',[$piggy])->once();
+        Event::shouldReceive('fire')->with('piggybanks.store',[$piggy])->once();
         $this->_piggybanks->shouldReceive('store')->once()->andReturn($piggy);
         $this->action('POST', 'PiggybankController@storeRepeated');
         $this->assertResponseStatus(302);

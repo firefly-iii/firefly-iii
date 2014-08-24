@@ -71,11 +71,14 @@
                                     </div>
                             </td>
                             <td style="width:40%;">
-                                @if(!is_null($piggyBank->reminder))
-                                <small>
-                                Next reminder: {{$piggyBank->nextReminderDate()->format('M jS, Y')}} ({{$piggyBank->reminder}})
-                                </small>
+                                <p class="small">
+                                @if(!is_null($piggyBank->targetdate))
+                                    Target date: {{$piggyBank->targetdate->format('M jS, Y')}}<br />
                                 @endif
+                                @if(!is_null($piggyBank->reminder))
+                                    Next reminder: {{$piggyBank->nextReminderDate()->format('M jS, Y')}} ({{$piggyBank->reminder}})
+                                @endif
+                                </p>
 
                             </td>
                             <td>
@@ -132,6 +135,7 @@
                             </div>
                         </td>
                         <td style="width:40%;">
+
                             @if(!is_null($repeated->reminder))
                             <small>
                                 Next reminder: {{$repeated->nextReminderDate()->format('M jS, Y')}} ({{$piggyBank->reminder}})
