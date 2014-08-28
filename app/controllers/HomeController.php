@@ -2,7 +2,7 @@
 use Carbon\Carbon;
 use Firefly\Helper\Preferences\PreferencesHelperInterface as PHI;
 use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
-use Firefly\Storage\Budget\BudgetRepositoryInterface as BRI;
+use Firefly\Storage\Reminder\ReminderRepositoryInterface as RRI;
 use Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface as TJRI;
 
 /**
@@ -13,20 +13,14 @@ class HomeController extends BaseController
     protected $_accounts;
     protected $_preferences;
     protected $_journal;
-    protected $_budgets;
+    protected $_reminders;
 
-    /**
-     * @param ARI  $accounts
-     * @param PHI  $preferences
-     * @param TJRI $journal
-     * @param BRI  $budgets
-     */
-    public function __construct(ARI $accounts, PHI $preferences, TJRI $journal, BRI $budgets)
+    public function __construct(ARI $accounts, PHI $preferences, TJRI $journal, RRI $reminders)
     {
         $this->_accounts = $accounts;
         $this->_preferences = $preferences;
         $this->_journal = $journal;
-        $this->_budgets = $budgets;
+        $this->_reminders = $reminders;
     }
 
     /**
@@ -47,7 +41,7 @@ class HomeController extends BaseController
 
         \Event::fire('limits.check');
         \Event::fire('piggybanks.check');
-
+        \Event::fire('recurring.check');
 
 
         // count, maybe we need some introducing text to show:
@@ -64,10 +58,9 @@ class HomeController extends BaseController
             $accounts = $this->_accounts->getByIds($frontpage->data);
         }
 
-
         $transactions = [];
         foreach ($accounts as $account) {
-            $set = $this->_journal->getByAccountInDateRange($account, 15, $start, $end);
+            $set = $this->_journal->getByAccountInDateRange($account, 10, $start, $end);
             if (count($set) > 0) {
                 $transactions[] = [$set, $account];
             }
@@ -81,7 +74,13 @@ class HomeController extends BaseController
             $transactions = array_chunk($transactions, 3);
         }
 
+        // get the users reminders:
+
+        $reminders =  $this->_reminders->getCurrentRecurringReminders();
+
         // build the home screen:
-        return View::make('index')->with('count', $count)->with('transactions', $transactions);
+        return View::make('index')->with('count', $count)->with('transactions', $transactions)->with(
+            'reminders', $reminders
+        );
     }
 }

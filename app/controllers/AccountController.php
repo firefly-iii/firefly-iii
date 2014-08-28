@@ -14,7 +14,7 @@ class AccountController extends \BaseController
 
     /**
      * @param ARI $repository
-     * @param AI $accounts
+     * @param AI  $accounts
      */
     public function __construct(ARI $repository, AI $accounts)
     {
@@ -40,7 +40,9 @@ class AccountController extends \BaseController
         $accountType = $account->accountType()->first();
 
         if ($accountType->description == 'Initial balance account' || $accountType->description == 'Cash account') {
-            return \View::make('error')->with('message', 'Cannot edit this account type (' . $accountType->description . ').');
+            return \View::make('error')->with(
+                'message', 'Cannot edit this account type (' . $accountType->description . ').'
+            );
         }
 
         return View::make('accounts.delete')->with('account', $account);
@@ -56,7 +58,9 @@ class AccountController extends \BaseController
         $accountType = $account->accountType()->first();
 
         if ($accountType->description == 'Initial balance account' || $accountType->description == 'Cash account') {
-            return View::make('error')->with('message', 'Cannot edit this account type (' . $accountType->description . ').');
+            return View::make('error')->with(
+                'message', 'Cannot edit this account type (' . $accountType->description . ').'
+            );
         }
         $result = $this->_repository->destroy($account);
         if ($result === true) {
@@ -79,7 +83,9 @@ class AccountController extends \BaseController
         $accountType = $account->accountType()->first();
 
         if ($accountType->description == 'Initial balance account' || $accountType->description == 'Cash account') {
-            return View::make('error')->with('message', 'Cannot edit this account type (' . $accountType->description . ').');
+            return View::make('error')->with(
+                'message', 'Cannot edit this account type (' . $accountType->description . ').'
+            );
         }
         $openingBalance = $this->_accounts->openingBalanceTransaction($account);
 
@@ -106,7 +112,9 @@ class AccountController extends \BaseController
     {
         $accountType = $account->accountType()->first();
         if ($accountType->description == 'Initial balance account' || $accountType->description == 'Cash account') {
-            return View::make('error')->with('message', 'Cannot show this account type (' . $accountType->description . ').');
+            return View::make('error')->with(
+                'message', 'Cannot show this account type (' . $accountType->description . ').'
+            );
         }
 
         $show = $this->_accounts->show($account, 40);
@@ -148,7 +156,9 @@ class AccountController extends \BaseController
     {
         $accountType = $account->accountType()->first();
         if ($accountType->description == 'Initial balance account' || $accountType->description == 'Cash account') {
-            return View::make('error')->with('message', 'Cannot show this account type (' . $accountType->description . ').');
+            return View::make('error')->with(
+                'message', 'Cannot show this account type (' . $accountType->description . ').'
+            );
         }
         $account = $this->_repository->update($account, Input::all());
         if ($account->validate()) {

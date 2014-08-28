@@ -247,10 +247,10 @@ class AccountControllerTest extends TestCase
         $collection->add($account);
 
         $list = [
-            'personal' => [],
+            'personal'      => [],
             'beneficiaries' => [],
-            'initial' => [],
-            'cash' => []
+            'initial'       => [],
+            'cash'          => []
         ];
 
         $this->_repository->shouldReceive('get')->once()->andReturn($collection);
@@ -283,19 +283,19 @@ class AccountControllerTest extends TestCase
 
         $data = [
             'statistics' => [
-                'period' => [
-                    'in' => 0,
-                    'out' => 0,
-                    'diff' => 0,
-                    't_in' => 0,
-                    't_out' => 0,
+                'period'     => [
+                    'in'     => 0,
+                    'out'    => 0,
+                    'diff'   => 0,
+                    't_in'   => 0,
+                    't_out'  => 0,
                     't_diff' => 0
                 ],
                 'categories' => [],
-                'budgets' => [],
-                'accounts' => []
+                'budgets'    => [],
+                'accounts'   => []
             ],
-            'journals' => $paginator,
+            'journals'   => $paginator,
         ];
 
         $this->_accounts->shouldReceive('show')->once()->andReturn($data);

@@ -121,7 +121,7 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
             $limit->repeat_freq = $data['repeat_freq'];
             if ($limit->validate()) {
                 $limit->save();
-                \Event::fire('limits.store',[$limit]);
+                \Event::fire('limits.store', [$limit]);
             }
         }
         if ($budget->validate()) {

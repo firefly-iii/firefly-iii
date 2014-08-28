@@ -192,7 +192,11 @@ class PiggybankController extends BaseController
      */
     public function show(Piggybank $piggyBank)
     {
-        return View::make('piggybanks.show')->with('piggyBank', $piggyBank);
+        $leftOnAccount = $this->_repository->leftOnAccount($piggyBank->account);
+        $balance = $piggyBank->account->balance();
+
+        return View::make('piggybanks.show')->with('piggyBank', $piggyBank)->with('leftOnAccount', $leftOnAccount)
+            ->with('balance', $balance);
     }
 
     /**
@@ -212,7 +216,7 @@ class PiggybankController extends BaseController
         $piggyBank = $this->_repository->store($data);
         if (!is_null($piggyBank->id)) {
             Session::flash('success', 'New piggy bank "' . $piggyBank->name . '" created!');
-            Event::fire('piggybanks.store',[$piggyBank]);
+            Event::fire('piggybanks.store', [$piggyBank]);
 
             return Redirect::route('piggybanks.index');
 
@@ -241,7 +245,7 @@ class PiggybankController extends BaseController
         $piggyBank = $this->_repository->store($data);
         if ($piggyBank->id) {
             Session::flash('success', 'New piggy bank "' . $piggyBank->name . '" created!');
-            Event::fire('piggybanks.store',[$piggyBank]);
+            Event::fire('piggybanks.store', [$piggyBank]);
 
             return Redirect::route('piggybanks.index');
 
@@ -261,7 +265,7 @@ class PiggybankController extends BaseController
         $piggyBank = $this->_repository->update($piggyBank, Input::all());
         if ($piggyBank->validate()) {
             Session::flash('success', 'Piggy bank "' . $piggyBank->name . '" updated.');
-            Event::fire('piggybanks.update',[$piggyBank]);
+            Event::fire('piggybanks.update', [$piggyBank]);
 
             return Redirect::route('piggybanks.index');
         } else {

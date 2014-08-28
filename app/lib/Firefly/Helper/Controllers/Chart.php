@@ -169,8 +169,8 @@ class Chart implements ChartInterface
                     $amount = floatval($rep->amount);
                     $spent = $rep->spent;
                     $color = $spent > $amount ? '#FF0000' : null;
-                    $data['series'][0]['data'][] = ['y' => $amount, 'id' => 'def'];
-                    $data['series'][1]['data'][] = ['y' => $rep->spent, 'color' => $color, 'id' => 'abc'];
+                    $data['series'][0]['data'][] = ['y' => $amount, 'id' => 'amount-' . $rep->id];
+                    $data['series'][1]['data'][] = ['y' => $rep->spent, 'color' => $color, 'id' => 'spent-' . $rep->id];
                 }
             }
 

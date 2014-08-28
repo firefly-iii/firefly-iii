@@ -1,7 +1,7 @@
 <?php
 
-use Mockery as m;
 use League\FactoryMuffin\Facade as f;
+use Mockery as m;
 
 
 /**

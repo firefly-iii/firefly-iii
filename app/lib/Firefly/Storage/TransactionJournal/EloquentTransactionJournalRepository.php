@@ -34,8 +34,8 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
      * A gains 200 (200). * -1
      * B loses 200 (-200). * 1
      *
-     * @param \Account $from
-     * @param \Account $toAccount
+     * @param \Account       $from
+     * @param \Account       $toAccount
      * @param                $description
      * @param                $amount
      * @param \Carbon\Carbon $date
@@ -122,7 +122,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         $fromTransaction->amount = $amountFrom;
         if (!$fromTransaction->validate()) {
             throw new FireflyException('Cannot create valid transaction (from): ' . $fromTransaction->errors()->first(
-            ));
+                ));
         }
         $fromTransaction->save();
 

@@ -3,6 +3,32 @@ use Carbon\Carbon;
 
 /**
  * Class PiggybankReminder
+ *
+ * @property integer $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property string $class
+ * @property integer $piggybank_id
+ * @property integer $recurring_transaction_id
+ * @property integer $user_id
+ * @property \Carbon\Carbon $startdate
+ * @property \Carbon\Carbon $enddate
+ * @property boolean $active
+ * @property-read \Piggybank $piggybank
+ * @property-read \RecurringTransaction $recurringTransaction
+ * @property-read \User $user
+ * @method static \Illuminate\Database\Query\Builder|\PiggybankReminder whereId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\PiggybankReminder whereCreatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\PiggybankReminder whereUpdatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\PiggybankReminder whereClass($value) 
+ * @method static \Illuminate\Database\Query\Builder|\PiggybankReminder wherePiggybankId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\PiggybankReminder whereRecurringTransactionId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\PiggybankReminder whereUserId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\PiggybankReminder whereStartdate($value) 
+ * @method static \Illuminate\Database\Query\Builder|\PiggybankReminder whereEnddate($value) 
+ * @method static \Illuminate\Database\Query\Builder|\PiggybankReminder whereActive($value) 
+ * @method static \Reminder validOn($date) 
+ * @method static \Reminder validOnOrAfter($date) 
  */
 class PiggybankReminder extends Reminder
 {

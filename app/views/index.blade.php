@@ -71,11 +71,68 @@
     @endforeach
     @endif
 
+    @if(count($reminders) > 0)
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <h4>Recurring transactions</h4>
+            <p class="text-info">These transactions are set to be expected between
+                {{Session::get('start')->format('j F Y')}} and {{Session::get('end')->format('j F Y')}}.</p>
+            <table class="table">
+                <tr>
+                    <th>Name</th>
+                    <th>Tags</th>
+                    <th colspan="2">Amount</th>
+                    <th>Repeats</th>
+                </tr>
+                <?php $max =0;$min = 0;?>
+                @foreach($reminders as $reminder)
+                <?php
+                $max += $reminder->recurringtransaction->amount_max;
+                $min += $reminder->recurringtransaction->amount_min;
+                ?>
+                <tr>
+                    <td>
+                        <a href="{{route('recurring.show',$reminder->recurringtransaction->id)}}">
+                            {{{$reminder->recurringtransaction->name}}}
+                        </a>
+                    </td>
+                    <td>
+                        @foreach(explode(' ',$reminder->recurringtransaction->match) as $word)
+                        <span class="label label-info">{{{$word}}}</span>
+                        @endforeach
+                    </td>
+
+                    <td>
+                        {{mf($reminder->recurringtransaction->amount_min)}}
+                        </td>
+                    <td>
+                        {{mf($reminder->recurringtransaction->amount_max)}}
+                    </td>
+                    <td>
+                        {{$reminder->recurringtransaction->repeat_freq}}
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-xs">
+                            <a href="#" class="btn btn-default">postpone</a>
+                            <a href="#" class="btn btn-default">dismiss</a>
+                            <a href="#" class="btn btn-default">done!</a>
+                        </div>
+                    </td>
+                </tr>
+                @endforeach
+                <tr>
+                    <td colspan="2">Sum</td>
+                    <td>{{mf($max)}}</td>
+                    <td colspan="3">{{mf($min)}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    @endif
+
 
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <h4>Budgets</h4>
-
             <div id="budgets"></div>
         </div>
     </div>

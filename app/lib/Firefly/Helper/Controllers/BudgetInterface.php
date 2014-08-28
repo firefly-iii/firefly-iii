@@ -28,7 +28,8 @@ interface BudgetInterface
 
     /**
      * @param \Budget $budget
-     * @param bool $useSessionDates
+     * @param bool    $useSessionDates
+     *
      * @return mixed
      */
     public function organizeRepetitions(\Budget $budget, $useSessionDates = false);

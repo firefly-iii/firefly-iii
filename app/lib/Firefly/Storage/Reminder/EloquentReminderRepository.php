@@ -45,4 +45,17 @@ class EloquentReminderRepository implements ReminderRepositoryInterface
         return \Auth::user()->reminders()->validOn($today)->get();
     }
 
+    /**
+     *
+     */
+    public function getCurrentRecurringReminders()
+    {
+        $today = new Carbon;
+
+        return \Auth::user()->reminders()->with('recurringtransaction')->validOn($today)->where(
+            'class', 'RecurringTransactionReminder'
+        )->get();
+
+    }
+
 } 

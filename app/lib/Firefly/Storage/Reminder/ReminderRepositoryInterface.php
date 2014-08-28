@@ -14,7 +14,8 @@ namespace Firefly\Storage\Reminder;
  *
  * @package Firefly\Storage\Reminder
  */
-interface ReminderRepositoryInterface {
+interface ReminderRepositoryInterface
+{
 
     /**
      * @param \Reminder $reminder
@@ -34,5 +35,8 @@ interface ReminderRepositoryInterface {
      * @return mixed
      */
     public function find($id);
+
+
+    public function getCurrentRecurringReminders();
 
 } 

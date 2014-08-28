@@ -264,7 +264,7 @@ class ModelTest extends TestCase
         $transaction->piggybank()->associate($piggy);
         $transaction->save();
         $this->assertEquals($transaction->piggybank_id, $piggy->id);
-        $this->assertEquals($piggy->transactions()->first()->id,$transaction->id);
+        $this->assertEquals($piggy->transactions()->first()->id, $transaction->id);
 
         $repetition->pct();
 

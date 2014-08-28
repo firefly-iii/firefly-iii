@@ -7,9 +7,21 @@
         </h1>
         <p>
             <a href="{{route('accounts.show',$piggyBank->account_id)}}">{{{$piggyBank->account->name}}}</a> has
-            a balance of {{mf($piggyBank->account->balance())}}.
-            Of that {{mf($piggyBank->account->balance())}}, you have {{mf(0)}} not yet locked up in other piggy banks.
-            You can add {{mf(max(0,1))}} to this piggy bank.
+            a balance of {{mf($balance)}}.
+            Of that {{mf($balance)}}, you have {{mf($leftOnAccount)}} not yet locked up in other piggy banks.
+            You can add {{mf(min(max($balance,$leftOnAccount),$piggyBank->targetamount))}} to this piggy bank.
+        </p>
+        <p>
+            <a href="{{route('piggybanks.edit',$piggyBank->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+            <a href="{{route('piggybanks.delete',$piggyBank->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a>
+
+            @if(min(max($balance,$leftOnAccount),$piggyBank->targetamount) > 0)
+                <a data-toggle="modal" href="{{route('piggybanks.amount.add',$piggyBank->id)}}" data-target="#modal" class="btn btn-default"><span class="glyphicon glyphicon-plus-sign"></span> Add money</a>
+            @endif
+            @if($piggyBank->currentRelevantRep()->currentamount > 0)
+                <a data-toggle="modal" href="{{route('piggybanks.amount.remove',$piggyBank->id)}}" data-target="#modal" class="btn btn-default"><span class="glyphicon glyphicon-minus-sign"></span> Remove money</a>
+            @endif
+
         </p>
     </div>
 </div>
@@ -105,7 +117,7 @@
             </tr>
             <tr>
                 <td>Current amount</td>
-                <td>{{mf($rep->currentamount)}}</td>
+                <td>{{mf($rep->currentamount)}} of {{mf($piggyBank->targetamount)}}</td>
             </tr>
             <tr>
                 <td>Start date</td>

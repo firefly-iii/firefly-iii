@@ -5,33 +5,34 @@ use LaravelBook\Ardent\Ardent;
 /**
  * RecurringTransaction
  *
- * @property integer $id
+ * @property integer        $id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property integer $user_id
- * @property string $name
- * @property string $match
- * @property float $amount_max
- * @property float $amount_min
+ * @property integer        $user_id
+ * @property string         $name
+ * @property string         $match
+ * @property float          $amount_max
+ * @property float          $amount_min
  * @property \Carbon\Carbon $date
- * @property boolean $active
- * @property boolean $automatch
- * @property string $repeat_freq
- * @property integer $skip
- * @property-read \User $user
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereUserId($value) 
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereName($value) 
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereMatch($value) 
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAmountMax($value) 
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAmountMin($value) 
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereDate($value) 
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereActive($value) 
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAutomatch($value) 
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereRepeatFreq($value) 
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereSkip($value) 
+ * @property boolean        $active
+ * @property boolean        $automatch
+ * @property string         $repeat_freq
+ * @property integer        $skip
+ * @property-read \User     $user
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereMatch($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAmountMax($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAmountMin($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereDate($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereActive($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAutomatch($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereRepeatFreq($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereSkip($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\RecurringTransactionReminder[] $reminders
  */
 class RecurringTransaction extends Ardent
 {
@@ -59,13 +60,27 @@ class RecurringTransaction extends Ardent
         return ['created_at', 'updated_at', 'date'];
     }
 
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function reminders()
+    {
+        return $this->hasMany('RecurringTransactionReminder');
+
+    }
+
     /**
      * @return Carbon
      */
     public function next()
     {
+        $today = new Carbon;
         $start = clone $this->date;
         $skip = $this->skip == 0 ? 1 : $this->skip;
+        if ($today < $start) {
+            return $start;
+        }
 
         while ($start <= $this->date) {
             switch ($this->repeat_freq) {

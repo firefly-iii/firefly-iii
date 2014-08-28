@@ -32,7 +32,8 @@ interface RecurringTransactionRepositoryInterface
 
     /**
      * @param \RecurringTransaction $recurringTransaction
-     * @param $data
+     * @param                       $data
+     *
      * @return mixed
      */
     public function update(\RecurringTransaction $recurringTransaction, $data);

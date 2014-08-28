@@ -68,10 +68,12 @@ class EloquentRecurringTransactionRepository implements RecurringTransactionRepo
 
     /**
      * @param \RecurringTransaction $recurringTransaction
-     * @param $data
+     * @param                       $data
+     *
      * @return mixed|void
      */
-    public function update(\RecurringTransaction $recurringTransaction, $data) {
+    public function update(\RecurringTransaction $recurringTransaction, $data)
+    {
         $recurringTransaction->name = $data['name'];
         $recurringTransaction->match = join(' ', explode(',', $data['match']));
         $recurringTransaction->amount_max = floatval($data['amount_max']);

@@ -189,13 +189,14 @@ class TransactionController extends BaseController
             Session::flash('success', 'Transaction "' . $journal->description . '" saved!');
 
             // if reminder present, deactivate it:
-            if(Input::get('reminder')) {
+            if (Input::get('reminder')) {
                 /** @var \Firefly\Storage\Reminder\ReminderRepositoryInterface $reminders */
                 $reminders = App::make('Firefly\Storage\Reminder\ReminderRepositoryInterface');
                 $reminder = $reminders->find(Input::get('reminder'));
                 $reminders->deactivate($reminder);
-
             }
+
+            // trigger the creation for recurring transactions.
 
             if (Input::get('create') == '1') {
                 return Redirect::route('transactions.create', [$what])->withInput();
