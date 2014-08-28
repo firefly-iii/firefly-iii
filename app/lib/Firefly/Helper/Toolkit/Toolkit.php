@@ -67,6 +67,29 @@ class Toolkit implements ToolkitInterface
     /**
      * @return mixed
      */
+    public function getReminders()
+    {
+        // get reminders, for menu, mumble mumble:
+        $today = new Carbon;
+        $reminders = \Auth::user()->reminders()->where('class', 'PiggybankReminder')->validOn($today)->get();
+
+        /** @var \Reminder $reminder */
+        foreach ($reminders as $index => $reminder) {
+            if (\Session::has('dismissal-' . $reminder->id)) {
+                $time = \Session::get('dismissal-' . $reminder->id);
+                if ($time >= $today) {
+                    unset($reminders[$index]);
+                }
+
+            }
+        }
+        \Session::put('reminderCount', count($reminders));
+
+    }
+
+    /**
+     * @return mixed
+     */
     protected function _getrange()
     {
         if (!is_null(\Input::get('range'))) {
@@ -300,28 +323,6 @@ class Toolkit implements ToolkitInterface
                 break;
         }
         return $end;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getReminders() {
-        // get reminders, for menu, mumble mumble:
-        $today = new Carbon;
-        $reminders = \Auth::user()->reminders()->validOn($today)->get();
-
-        /** @var \Reminder $reminder */
-        foreach($reminders as $index => $reminder) {
-            if(\Session::has('dismissal-' . $reminder->id)) {
-                $time = \Session::get('dismissal-' . $reminder->id);
-                if($time >= $today) {
-                    unset($reminders[$index]);
-                }
-
-            }
-        }
-        \Session::put('reminderCount',count($reminders));
-
     }
 
 } 

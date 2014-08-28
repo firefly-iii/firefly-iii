@@ -1,7 +1,7 @@
 <?php
 use Carbon\Carbon as Carbon;
-use Mockery as m;
 use League\FactoryMuffin\Facade as f;
+use Mockery as m;
 
 /**
  * Class HomeControllerTest
@@ -15,6 +15,7 @@ class HomeControllerTest extends TestCase
     protected $_repository;
     protected $_preferences;
     protected $_journals;
+    protected $_reminders;
 
     public function setUp()
     {
@@ -25,6 +26,7 @@ class HomeControllerTest extends TestCase
         $this->_repository = $this->mock('Firefly\Storage\Account\AccountRepositoryInterface');
         $this->_preferences = $this->mock('Firefly\Helper\Preferences\PreferencesHelperInterface');
         $this->_journals = $this->mock('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
+        $this->_reminders = $this->mock('Firefly\Storage\Reminder\ReminderRepositoryInterface');
 
 
     }
@@ -47,6 +49,11 @@ class HomeControllerTest extends TestCase
         $preference = $this->mock('Preference');
         $preference->shouldReceive('getAttribute')->with('data')->andReturn([]);
 
+        Event::shouldReceive('fire')->with('limits.check');
+        Event::shouldReceive('fire')->with('piggybanks.check');
+        Event::shouldReceive('fire')->with('recurring.check');
+
+        $this->_reminders->shouldReceive('getCurrentRecurringReminders')->once()->andReturn([]);
 
         // mock accounts:
         $this->_repository->shouldReceive('count')->once()->andReturn(0);
@@ -71,6 +78,12 @@ class HomeControllerTest extends TestCase
         $preference = $this->mock('Preference');
         $preference->shouldReceive('getAttribute')->with('data')->andReturn([$account->id]);
 
+        Event::shouldReceive('fire')->with('limits.check');
+        Event::shouldReceive('fire')->with('piggybanks.check');
+        Event::shouldReceive('fire')->with('recurring.check');
+
+        $this->_reminders->shouldReceive('getCurrentRecurringReminders')->once()->andReturn([]);
+
 
         // mock accounts:
         $this->_repository->shouldReceive('count')->once()->andReturn(0);
@@ -80,7 +93,7 @@ class HomeControllerTest extends TestCase
         $this->_preferences->shouldReceive('get')->with('frontpageAccounts', [])->andReturn($preference);
 
         // mock journals:
-        $this->_journals->shouldReceive('getByAccountInDateRange')->once()->with($account, 15, $start, $end)->andReturn(
+        $this->_journals->shouldReceive('getByAccountInDateRange')->once()->with($account, 10, $start, $end)->andReturn(
             [1, 2]
         );
 
@@ -103,6 +116,12 @@ class HomeControllerTest extends TestCase
         // mock preference:
         $preference = $this->mock('Preference');
         $preference->shouldReceive('getAttribute')->with('data')->andReturn($ids);
+
+        Event::shouldReceive('fire')->with('limits.check');
+        Event::shouldReceive('fire')->with('piggybanks.check');
+        Event::shouldReceive('fire')->with('recurring.check');
+
+        $this->_reminders->shouldReceive('getCurrentRecurringReminders')->once()->andReturn([]);
 
 
         // mock accounts:

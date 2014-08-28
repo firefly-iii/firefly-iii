@@ -6,20 +6,22 @@ Facade::define(
     'LimitRepetition',
     [
 
-        'limit_id' => 'factory|Limit',
+        'limit_id'  => 'factory|Limit',
         'startdate' => function () {
-            $start = new Carbon;
-            $start->startOfMonth();
-            return $start;
+                $start = new Carbon;
+                $start->startOfMonth();
 
-        },
-        'enddate' => function () {
-            $end = new Carbon;
-            $end->endOfMonth();
-            return $end;
+                return $start;
 
-        },
-        'amount' => 100
+            },
+        'enddate'   => function () {
+                $end = new Carbon;
+                $end->endOfMonth();
+
+                return $end;
+
+            },
+        'amount'    => 100
 
 
     ]

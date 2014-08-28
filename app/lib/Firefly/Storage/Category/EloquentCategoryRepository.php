@@ -16,7 +16,7 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
      */
     public function createOrFind($name)
     {
-        if(strlen($name) == 0) {
+        if (strlen($name) == 0) {
             return null;
         }
         $category = $this->findByName($name);

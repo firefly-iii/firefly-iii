@@ -7,17 +7,19 @@ Facade::define(
     [
 
 
-        'piggybank_id' => 'factory|Piggybank',
-        'startdate' => function () {
-            $start = new Carbon;
-            $start->startOfMonth();
-            return $start;
-        },
-        'targetdate' => function () {
-            $end = new Carbon;
-            $end->endOfMonth();
-            return $end;
-        },
+        'piggybank_id'  => 'factory|Piggybank',
+        'startdate'     => function () {
+                $start = new Carbon;
+                $start->startOfMonth();
+
+                return $start;
+            },
+        'targetdate'    => function () {
+                $end = new Carbon;
+                $end->endOfMonth();
+
+                return $end;
+            },
         'currentamount' => 200
     ]
 );

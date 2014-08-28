@@ -2,8 +2,8 @@
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
-use Mockery as m;
 use League\FactoryMuffin\Facade as f;
+use Mockery as m;
 
 /**
  * Class BudgetControllerTest
@@ -65,7 +65,7 @@ class BudgetControllerTest extends TestCase
         Auth::shouldReceive('user')->andReturn($this->_user);
         Auth::shouldReceive('check')->andReturn(true);
         $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($budget->user_id);
-        Event::shouldReceive('fire')->once()->with('budgets.destroy',[$budget]);
+        Event::shouldReceive('fire')->once()->with('budgets.destroy', [$budget]);
         $this->_repository->shouldReceive('destroy')->once()->andReturn(true);
 
         $this->action('POST', 'BudgetController@destroy', $budget->id);
@@ -81,7 +81,7 @@ class BudgetControllerTest extends TestCase
         Auth::shouldReceive('user')->andReturn($this->_user);
         Auth::shouldReceive('check')->andReturn(true);
         $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($budget->user_id);
-        Event::shouldReceive('fire')->once()->with('budgets.destroy',[$budget]);
+        Event::shouldReceive('fire')->once()->with('budgets.destroy', [$budget]);
         $this->_repository->shouldReceive('destroy')->once()->andReturn(true);
 
         $this->action('POST', 'BudgetController@destroy', [$budget->id, 'from' => 'date']);
@@ -97,7 +97,7 @@ class BudgetControllerTest extends TestCase
         Auth::shouldReceive('user')->andReturn($this->_user);
         Auth::shouldReceive('check')->andReturn(true);
         $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($budget->user_id);
-        Event::shouldReceive('fire')->once()->with('budgets.destroy',[$budget]);
+        Event::shouldReceive('fire')->once()->with('budgets.destroy', [$budget]);
         $this->_repository->shouldReceive('destroy')->once()->andReturn(false);
 
 
@@ -233,7 +233,7 @@ class BudgetControllerTest extends TestCase
         Auth::shouldReceive('check')->andReturn(true);
         $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($budget->user_id);
         $this->_repository->shouldReceive('update')->andReturn($budget);
-        Event::shouldReceive('fire')->with('budgets.update',[$budget]);
+        Event::shouldReceive('fire')->with('budgets.update', [$budget]);
 
         $this->action('POST', 'BudgetController@update', $budget->id);
         $this->assertRedirectedToRoute('budgets.index.budget');
@@ -248,7 +248,7 @@ class BudgetControllerTest extends TestCase
         Auth::shouldReceive('check')->andReturn(true);
         $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($budget->user_id);
         $this->_repository->shouldReceive('update')->andReturn($budget);
-        Event::shouldReceive('fire')->with('budgets.update',[$budget]);
+        Event::shouldReceive('fire')->with('budgets.update', [$budget]);
         //$this->_user->shouldReceive('budgets')->andReturn([]); // trigger
 
         $this->action('POST', 'BudgetController@update', [$budget->id, 'from' => 'date']);

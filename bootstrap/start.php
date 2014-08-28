@@ -1,8 +1,5 @@
 <?php
 
-use Carbon\Carbon;
-use Firefly\Exception\FireflyException;
-
 if (!function_exists('mf')) {
     function mf($n, $coloured = true)
     {
@@ -94,6 +91,7 @@ Event::subscribe('Firefly\Helper\Form\FormTrigger');
 Event::subscribe('Firefly\Trigger\Limits\EloquentLimitTrigger');
 Event::subscribe('Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger');
 Event::subscribe('Firefly\Trigger\Budgets\EloquentBudgetTrigger');
+Event::subscribe('Firefly\Trigger\Recurring\EloquentRecurringTrigger');
 
 //App::booted(
 //    function () {
@@ -101,8 +99,6 @@ Event::subscribe('Firefly\Trigger\Budgets\EloquentBudgetTrigger');
 //        $forms->registerFormExtensions();
 //    }
 //);
-
-
 
 
 return $app;

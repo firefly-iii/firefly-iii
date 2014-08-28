@@ -110,8 +110,8 @@ class Budget implements BudgetInterface
         // get the limits:
         if ($useSessionDates) {
             $limits = $budget->limits()->where('startdate', '>=', $sessionStart->format('Y-m-d'))->where(
-                    'startdate', '<=', $sessionEnd->format('Y-m-d')
-                )->get();
+                'startdate', '<=', $sessionEnd->format('Y-m-d')
+            )->get();
         } else {
             $limits = $budget->limits;
         }

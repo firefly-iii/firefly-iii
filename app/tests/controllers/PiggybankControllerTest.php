@@ -1,7 +1,7 @@
 <?php
 
-use Mockery as m;
 use League\FactoryMuffin\Facade as f;
+use Mockery as m;
 
 
 /**
@@ -171,7 +171,7 @@ class PiggybankControllerTest extends TestCase
         $input = [
             $piggyBank->id,
             'amount' => 10.0,
-            'what' => 'add'
+            'what'   => 'add'
         ];
 
         // for binding
@@ -181,7 +181,7 @@ class PiggybankControllerTest extends TestCase
             $piggyBank->account()->first()->user_id
         );
         $this->_user->shouldReceive('getAttribute')->with('email')->andReturn('some@email');
-        Event::shouldReceive('fire');//->with('piggybanks.modifyAmountAdd', [$piggyBank, 10.0]);
+        Event::shouldReceive('fire'); //->with('piggybanks.modifyAmountAdd', [$piggyBank, 10.0]);
         $this->_piggybanks->shouldReceive('modifyAmount')->once();
 
         $this->_piggybanks->shouldReceive('leftOnAccount')->once()->andReturn(200);
@@ -201,7 +201,7 @@ class PiggybankControllerTest extends TestCase
         $input = [
             $piggyBank->id,
             'amount' => 10.0,
-            'what' => 'add'
+            'what'   => 'add'
         ];
 
         // for binding
@@ -230,7 +230,7 @@ class PiggybankControllerTest extends TestCase
         $input = [
             $piggyBank->id,
             'amount' => 10.0,
-            'what' => 'yomoma'
+            'what'   => 'yomoma'
         ];
 
         // for binding
@@ -269,7 +269,7 @@ class PiggybankControllerTest extends TestCase
         $input = [
             $rep->piggybank()->first()->id,
             'amount' => 10.0,
-            'what' => 'remove'
+            'what'   => 'remove'
         ];
 
         $this->action('POST', 'PiggybankController@modMoney', $input);
@@ -299,55 +299,13 @@ class PiggybankControllerTest extends TestCase
         $input = [
             $rep->piggybank()->first()->id,
             'amount' => 10.0,
-            'what' => 'remove'
+            'what'   => 'remove'
         ];
 
         $this->action('POST', 'PiggybankController@modMoney', $input);
         $this->assertSessionHas('warning');
         $this->assertResponseStatus(302);
 
-    }
-
-    public function teststorePiggybank()
-    {
-        $piggy = f::create('Piggybank');
-        $piggy->repeats = 0;
-        $piggy->save();
-        Event::shouldReceive('fire')->with('piggybanks.store',[$piggy])->once();
-
-
-        $this->_piggybanks->shouldReceive('store')->once()->andReturn($piggy);
-        $this->action('POST', 'PiggybankController@storePiggybank');
-        $this->assertResponseStatus(302);
-    }
-
-    public function testStoreRepeated()
-    {
-        $piggy = f::create('Piggybank');
-        $piggy->repeats = 1;
-        $piggy->save();
-        Event::shouldReceive('fire')->with('piggybanks.store',[$piggy])->once();
-        $this->_piggybanks->shouldReceive('store')->once()->andReturn($piggy);
-        $this->action('POST', 'PiggybankController@storeRepeated');
-        $this->assertResponseStatus(302);
-    }
-
-    public function teststorePiggybankFails()
-    {
-        $piggy = f::create('Piggybank');
-        unset($piggy->id);
-        $this->_piggybanks->shouldReceive('store')->once()->andReturn($piggy);
-        $this->action('POST', 'PiggybankController@storePiggybank');
-        $this->assertResponseStatus(302);
-    }
-
-    public function testStoreRepeatedFails()
-    {
-        $piggy = f::create('Piggybank');
-        unset($piggy->id);
-        $this->_piggybanks->shouldReceive('store')->once()->andReturn($piggy);
-        $this->action('POST', 'PiggybankController@storeRepeated');
-        $this->assertResponseStatus(302);
     }
 
     public function testRemoveMoneyGET()
@@ -375,17 +333,46 @@ class PiggybankControllerTest extends TestCase
 
     public function testShow()
     {
-        $piggyBank = f::create('Piggybank');
-        // for binding
+        $pig = $this->mock('Piggybank');
+        $piggybank = f::create('Piggybank');
+        $rep = f::create('PiggybankRepetition');
+        $rep->piggybank_id = $piggybank->id;
+        $rep->save();
+
         Auth::shouldReceive('user')->andReturn($this->_user);
         Auth::shouldReceive('check')->andReturn(true);
         $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn(
-            $piggyBank->account()->first()->user_id
+            $piggybank->account()->first()->user_id
         );
         $this->_user->shouldReceive('getAttribute')->andReturn('some@email');
 
-        $this->action('GET', 'PiggybankController@show', $piggyBank->id);
+        $pig->shouldReceive('currentRelevantRep')->andReturn($rep);
+
+        // repos:
+        $this->_piggybanks->shouldReceive('leftOnAccount');
+
+        $this->action('GET', 'PiggybankController@show', $piggybank->id);
         $this->assertResponseOk();
+    }
+
+    public function testStoreRepeated()
+    {
+        $piggy = f::create('Piggybank');
+        $piggy->repeats = 1;
+        $piggy->save();
+        Event::shouldReceive('fire')->with('piggybanks.store', [$piggy])->once();
+        $this->_piggybanks->shouldReceive('store')->once()->andReturn($piggy);
+        $this->action('POST', 'PiggybankController@storeRepeated');
+        $this->assertResponseStatus(302);
+    }
+
+    public function testStoreRepeatedFails()
+    {
+        $piggy = f::create('Piggybank');
+        unset($piggy->id);
+        $this->_piggybanks->shouldReceive('store')->once()->andReturn($piggy);
+        $this->action('POST', 'PiggybankController@storeRepeated');
+        $this->assertResponseStatus(302);
     }
 
     public function testUpdate()
@@ -401,7 +388,7 @@ class PiggybankControllerTest extends TestCase
             $piggyBank->account()->first()->user_id
         );
         $this->_user->shouldReceive('getAttribute')->with('email')->andReturn('some@email');
-        Event::shouldReceive('fire')->with('piggybanks.update',[$piggyBank]);
+        Event::shouldReceive('fire')->with('piggybanks.update', [$piggyBank]);
 
         $this->action('POST', 'PiggybankController@update', $piggyBank->id);
         $this->assertResponseStatus(302);
@@ -424,6 +411,28 @@ class PiggybankControllerTest extends TestCase
         Event::shouldReceive('fire')->with('piggybanks.change');
 
         $this->action('POST', 'PiggybankController@update', $piggyBank->id);
+        $this->assertResponseStatus(302);
+    }
+
+    public function teststorePiggybank()
+    {
+        $piggy = f::create('Piggybank');
+        $piggy->repeats = 0;
+        $piggy->save();
+        Event::shouldReceive('fire')->with('piggybanks.store', [$piggy])->once();
+
+
+        $this->_piggybanks->shouldReceive('store')->once()->andReturn($piggy);
+        $this->action('POST', 'PiggybankController@storePiggybank');
+        $this->assertResponseStatus(302);
+    }
+
+    public function teststorePiggybankFails()
+    {
+        $piggy = f::create('Piggybank');
+        unset($piggy->id);
+        $this->_piggybanks->shouldReceive('store')->once()->andReturn($piggy);
+        $this->action('POST', 'PiggybankController@storePiggybank');
         $this->assertResponseStatus(302);
     }
 

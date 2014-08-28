@@ -2,8 +2,8 @@
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
-use Mockery as m;
 use League\FactoryMuffin\Facade as f;
+use Mockery as m;
 
 /**
  * Class CategoryControllerTest

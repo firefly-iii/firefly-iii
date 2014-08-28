@@ -1,6 +1,6 @@
 <?php
-use Mockery as m;
 use League\FactoryMuffin\Facade as f;
+use Mockery as m;
 
 /**
  * Class RecurringControllerTest
@@ -40,6 +40,8 @@ class RecurringControllerTest extends TestCase
     {
         $recurringTransaction = f::create('RecurringTransaction');
 
+
+
         // for binding
         Auth::shouldReceive('user')->andReturn($this->_user);
         Auth::shouldReceive('check')->andReturn(true);
@@ -54,6 +56,8 @@ class RecurringControllerTest extends TestCase
     public function testDestroy()
     {
         $recurringTransaction = f::create('RecurringTransaction');
+
+        Event::shouldReceive('fire')->with('recurring.destroy',m::any());
 
         // for binding
         Auth::shouldReceive('user')->andReturn($this->_user);
@@ -73,6 +77,7 @@ class RecurringControllerTest extends TestCase
         // for binding
         Auth::shouldReceive('user')->andReturn($this->_user);
         Auth::shouldReceive('check')->andReturn(true);
+        Event::shouldReceive('fire')->with('recurring.destroy',m::any());
         $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($recurringTransaction->user_id);
         $this->_user->shouldReceive('getAttribute')->with('email')->andReturn('some@email');
         $this->_repository->shouldReceive('destroy')->andReturn(false);
@@ -123,6 +128,8 @@ class RecurringControllerTest extends TestCase
     {
         $recurringTransaction = f::create('RecurringTransaction');
 
+        Event::shouldReceive('fire')->with('recurring.store',m::any());
+
         $this->_repository->shouldReceive('store')->andReturn($recurringTransaction);
         $this->action('POST', 'RecurringController@store');
         $this->assertResponseStatus(302);
@@ -131,6 +138,8 @@ class RecurringControllerTest extends TestCase
     public function testStoreRedirect()
     {
         $recurringTransaction = f::create('RecurringTransaction');
+
+        Event::shouldReceive('fire')->with('recurring.store',m::any());
 
         $this->_repository->shouldReceive('store')->andReturn($recurringTransaction);
         $this->action('POST', 'RecurringController@store', ['create' => '1']);
@@ -157,6 +166,8 @@ class RecurringControllerTest extends TestCase
         Auth::shouldReceive('check')->andReturn(true);
         $this->_user->shouldReceive('getAttribute')->with('id')->andReturn($recurringTransaction->user_id);
         $this->_user->shouldReceive('getAttribute')->with('email')->andReturn('some@email');
+
+        Event::shouldReceive('fire')->with('recurring.update',m::any());
 
         $this->_repository->shouldReceive('update')->andReturn($recurringTransaction);
 

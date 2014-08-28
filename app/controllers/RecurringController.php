@@ -44,6 +44,7 @@ class RecurringController extends BaseController
      */
     public function destroy(RecurringTransaction $recurringTransaction)
     {
+        Event::fire('recurring.destroy', [$recurringTransaction]);
         $result = $this->_repository->destroy($recurringTransaction);
         if ($result === true) {
             Session::flash('success', 'The recurring transaction was deleted.');
@@ -96,6 +97,7 @@ class RecurringController extends BaseController
         $recurringTransaction = $this->_repository->store(Input::all());
         if ($recurringTransaction->validate()) {
             Session::flash('success', 'Recurring transaction "' . $recurringTransaction->name . '" saved!');
+            Event::fire('recurring.store', [$recurringTransaction]);
             if (Input::get('create') == '1') {
                 return Redirect::route('recurring.create')->withInput();
             } else {
@@ -119,6 +121,7 @@ class RecurringController extends BaseController
         $recurringTransaction = $this->_repository->update($recurringTransaction, Input::all());
         if ($recurringTransaction->errors()->count() == 0) {
             Session::flash('success', 'The recurring transaction has been updated.');
+            Event::fire('recurring.update', [$recurringTransaction]);
 
             return Redirect::route('recurring.index');
         } else {

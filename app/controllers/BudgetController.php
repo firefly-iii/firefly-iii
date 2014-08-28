@@ -50,7 +50,7 @@ class BudgetController extends BaseController
      */
     public function destroy(Budget $budget)
     {
-        Event::fire('budgets.destroy',[$budget]); // just before deletion.
+        Event::fire('budgets.destroy', [$budget]); // just before deletion.
         $result = $this->_repository->destroy($budget);
         if ($result === true) {
             Session::flash('success', 'The budget was deleted.');
@@ -133,13 +133,13 @@ class BudgetController extends BaseController
                 $filters[] = 'no_envelope';
             } else {
                 // grab all limit repetitions, order them, show them:
-                $repetitions = $this->_budgets->organizeRepetitions($budget,$useSessionDates);
+                $repetitions = $this->_budgets->organizeRepetitions($budget, $useSessionDates);
             }
         }
 
         return View::make('budgets.show')->with('budget', $budget)->with('repetitions', $repetitions)->with(
             'filters', $filters
-        )->with('highlight', Input::get('highlight'))->with('useSessionDates',$useSessionDates);
+        )->with('highlight', Input::get('highlight'))->with('useSessionDates', $useSessionDates);
     }
 
     /**
@@ -150,7 +150,7 @@ class BudgetController extends BaseController
 
         $budget = $this->_repository->store(Input::all());
         if ($budget->validate()) {
-            Event::fire('budgets.store',[$budget]);
+            Event::fire('budgets.store', [$budget]);
             Session::flash('success', 'Budget created!');
 
             if (Input::get('create') == '1') {
@@ -179,7 +179,7 @@ class BudgetController extends BaseController
     {
         $budget = $this->_repository->update($budget, Input::all());
         if ($budget->validate()) {
-            Event::fire('budgets.update',[$budget]);
+            Event::fire('budgets.update', [$budget]);
             Session::flash('success', 'Budget "' . $budget->name . '" updated.');
 
             if (Input::get('from') == 'date') {

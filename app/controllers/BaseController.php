@@ -9,10 +9,12 @@ class BaseController extends Controller
     /**
      *
      */
-    public function __construct() {
+    public function __construct()
+    {
         \Event::fire('limits.check');
         \Event::fire('piggybanks.check');
     }
+
     /**
      * Setup the layout used by the controller.
      *

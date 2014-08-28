@@ -21,7 +21,8 @@ interface LimitRepositoryInterface
 
     /**
      * @param \Limit $limit
-     * @param $data
+     * @param        $data
+     *
      * @return mixed
      */
     public function update(\Limit $limit, $data);

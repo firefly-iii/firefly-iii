@@ -60,7 +60,7 @@ class LimitController extends BaseController
      */
     public function destroy(\Limit $limit)
     {
-        Event::fire('limits.destroy',[$limit]); // before
+        Event::fire('limits.destroy', [$limit]); // before
         $success = $this->_limits->destroy($limit);
 
         if ($success) {
@@ -102,7 +102,7 @@ class LimitController extends BaseController
         $limit = $this->_limits->store(Input::all());
         if ($limit->validate()) {
             Session::flash('success', 'Envelope created!');
-            Event::fire('limits.store',[$limit]);
+            Event::fire('limits.store', [$limit]);
             if (Input::get('from') == 'date') {
                 return Redirect::route('budgets.index');
             } else {
@@ -127,10 +127,10 @@ class LimitController extends BaseController
     {
 
 
-        $limit = $this->_limits->update($limit,Input::all());
+        $limit = $this->_limits->update($limit, Input::all());
 
         if ($limit->validate()) {
-            Event::fire('limits.update',[$limit]);
+            Event::fire('limits.update', [$limit]);
             Session::flash('success', 'Limit saved!');
             if (Input::get('from') == 'date') {
                 return Redirect::route('budgets.index');

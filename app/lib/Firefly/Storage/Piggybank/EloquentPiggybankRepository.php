@@ -225,7 +225,6 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
             = isset($data['startdate']) && strlen($data['startdate']) > 0 ? new Carbon($data['startdate']) : null;
 
 
-
         foreach ($piggy->piggybankrepetitions()->get() as $rep) {
             $rep->delete();
         }

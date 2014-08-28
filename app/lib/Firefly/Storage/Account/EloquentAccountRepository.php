@@ -40,7 +40,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         $account = $this->findByName($name, $type);
         if (!$account) {
             $data = [
-                'name' => $name,
+                'name'         => $name,
                 'account_type' => $type
             ];
 
@@ -76,7 +76,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     {
         // find the oldest transaction which also is a "Opening balance"
         $first = \Transaction::
-        leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->where('transaction_journals.user_id', \Auth::user()->id)
             ->where('transaction_types.type', 'Opening balance')
@@ -101,7 +101,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
             $journal->delete();
         }
 
-        if(!is_null($initialbalanceAccount)) {
+        if (!is_null($initialbalanceAccount)) {
             $initialbalanceAccount->delete();
         }
 
@@ -306,8 +306,8 @@ class EloquentAccountRepository implements AccountRepositoryInterface
 
     /**
      * @param \Account $account
-     * @param int $amount
-     * @param Carbon $date
+     * @param int      $amount
+     * @param Carbon   $date
      *
      * @return bool
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)

@@ -28,7 +28,8 @@ class EloquentLimitRepository implements LimitRepositoryInterface
 
     /**
      * @param \Limit $limit
-     * @param $data
+     * @param        $data
+     *
      * @return mixed|void
      */
     public function update(\Limit $limit, $data)
@@ -39,6 +40,7 @@ class EloquentLimitRepository implements LimitRepositoryInterface
         $limit->amount = floatval($data['amount']);
 
         $limit->save();
+
         return $limit;
     }
 
@@ -57,8 +59,8 @@ class EloquentLimitRepository implements LimitRepositoryInterface
 
     /**
      * @param \Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon  $start
+     * @param Carbon  $end
      *
      * @return mixed
      */
@@ -113,11 +115,11 @@ class EloquentLimitRepository implements LimitRepositoryInterface
         }
         // find existing:
         $count = \Limit::
-        leftJoin('components', 'components.id', '=', 'limits.component_id')->where(
-            'components.user_id', \Auth::user()->id
-        )->where('startdate', $date->format('Y-m-d'))->where('component_id', $data['budget_id'])->where(
-            'repeat_freq', $data['period']
-        )->count();
+            leftJoin('components', 'components.id', '=', 'limits.component_id')->where(
+                'components.user_id', \Auth::user()->id
+            )->where('startdate', $date->format('Y-m-d'))->where('component_id', $data['budget_id'])->where(
+                'repeat_freq', $data['period']
+            )->count();
         if ($count > 0) {
             \Session::flash('error', 'There already is an entry for these parameters.');
 
