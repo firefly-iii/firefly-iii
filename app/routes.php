@@ -1,23 +1,33 @@
 <?php
 
+//use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
+
+
 // models:
 Route::bind('account', function($value, $route)
     {
         if(Auth::check()) {
-            return Account::
-                where('id', $value)->
-                where('user_id',Auth::user()->id)->first();
+            $account = Account::
+                leftJoin('account_types','account_types.id','=','accounts.account_type_id')->
+                where('account_types.editable',1)->
+                where('accounts.id', $value)->
+                where('user_id',Auth::user()->id)->
+                first(['accounts.*']);
+            if($account) {
+                return $account;
+            }
         }
-        return null;
+        App::abort(404);
     });
 
 Route::bind('accountname', function($value, $route)
     {
         if(Auth::check()) {
-            $type = AccountType::where('description','Default account')->first();
             return Account::
+                leftJoin('account_types','account_types.id','=','accounts.account_type_id')->
+                where('account_types.editable',1)->
                 where('name', $value)->
-                where('account_type_id',$type->id)->
                 where('user_id',Auth::user()->id)->first();
         }
         return null;
