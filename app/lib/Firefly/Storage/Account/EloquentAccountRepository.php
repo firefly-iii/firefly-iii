@@ -36,7 +36,6 @@ class EloquentAccountRepository implements AccountRepositoryInterface
      */
     public function createOrFind($name, \AccountType $type = null)
     {
-
         $account = $this->findByName($name, $type);
         if (!$account) {
             $data = [
@@ -60,10 +59,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         if (is_null($name) || strlen($name) == 0) {
             return null;
         }
-        $type = \AccountType::where('description', 'Beneficiary account')->first();
-
-        /** @noinspection PhpParamsInspection */
-
+        $type = \AccountType::where('type', 'Beneficiary account')->first();
         return $this->createOrFind($name, $type);
     }
 
@@ -74,38 +70,29 @@ class EloquentAccountRepository implements AccountRepositoryInterface
      */
     public function destroy(\Account $account)
     {
-        // find the oldest transaction which also is a "Opening balance"
-        $first = \Transaction::
-            leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->where('transaction_journals.user_id', \Auth::user()->id)
-            ->where('transaction_types.type', 'Opening balance')
-            ->where('account_id', '!=', $account->id)
-            ->orderBy('transactions.id', 'DESC')->first(['transactions.*']);
+        // find all transaction journals related to this account:
+        $journals   = \TransactionJournal::withRelevantData()->account($account)->get(['transaction_journals.*']);
+        $accountIDs = [];
 
-        $initialbalanceAccount = null;
-        if (!is_null($first)) {
-            $initialbalanceAccount = $first->account()->first();
-        }
-
-
-        // loop the account, find all transaction journals, and delete them:
-        $transactions = $account->transactions()->with('transactionjournal')->get();
-        $journals = [];
-        /** @var \Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $journals[$transaction->transaction_journal_id] = $transaction->transactionJournal;
-        }
         /** @var \TransactionJournal $journal */
         foreach ($journals as $journal) {
+            // remember the account id's of the transactions involved:
+            foreach ($journal->transactions as $t) {
+                $accountIDs[] = $t->account_id;
+            }
             $journal->delete();
+
         }
-
-        if (!is_null($initialbalanceAccount)) {
-            $initialbalanceAccount->delete();
+        $accountIDs = array_unique($accountIDs);
+        if (count($accountIDs) > 0) {
+            // find the "initial balance" type accounts in this list. Should be just 1.
+            $query = \Auth::user()->accounts()->accountType(['Initial balance account'])
+                          ->whereIn('accounts.id', $accountIDs);
+            if ($query->count() == 1) {
+                $iba = $query->first(['accounts.*']);
+                $iba->delete();
+            }
         }
-
-
         $account->delete();
 
         /**
@@ -135,10 +122,11 @@ class EloquentAccountRepository implements AccountRepositoryInterface
      */
     public function findByName($name, \AccountType $type = null)
     {
-        $type = is_null($type) ? \AccountType::where('description', 'Default account')->first() : $type;
+        $type = is_null($type) ? \AccountType::where('type', 'Default account')->first() : $type;
 
-        return \Auth::user()->accounts()->where('account_type_id', $type->id)->where('name', 'like', '%' . $name . '%')
-            ->first();
+        return \Auth::user()->accounts()->where('account_type_id', $type->id)
+                    ->where('name', 'like', '%' . $name . '%')
+                    ->first();
     }
 
     /**
@@ -155,9 +143,9 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     public function getActiveDefault()
     {
         return \Auth::user()->accounts()->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-            ->where('account_types.description', 'Default account')->where('accounts.active', 1)
+                    ->where('account_types.type', 'Default account')->where('accounts.active', 1)
 
-            ->get(['accounts.*']);
+                    ->get(['accounts.*']);
     }
 
     /**
@@ -165,12 +153,12 @@ class EloquentAccountRepository implements AccountRepositoryInterface
      */
     public function  getActiveDefaultAsSelectList()
     {
-        $list = \Auth::user()->accounts()->leftJoin(
-            'account_types', 'account_types.id', '=', 'accounts.account_type_id'
+        $list   = \Auth::user()->accounts()->leftJoin(
+                       'account_types', 'account_types.id', '=', 'accounts.account_type_id'
         )
-            ->where('account_types.description', 'Default account')->where('accounts.active', 1)
+                       ->where('account_types.type', 'Default account')->where('accounts.active', 1)
 
-            ->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
+                       ->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
         $return = [];
         foreach ($list as $entry) {
             $return[intval($entry->id)] = $entry->name;
@@ -185,11 +173,11 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     public function getBeneficiaries()
     {
         $list = \Auth::user()->accounts()->leftJoin(
-            'account_types', 'account_types.id', '=', 'accounts.account_type_id'
+                     'account_types', 'account_types.id', '=', 'accounts.account_type_id'
         )
-            ->where('account_types.description', 'Beneficiary account')->where('accounts.active', 1)
+                     ->where('account_types.type', 'Beneficiary account')->where('accounts.active', 1)
 
-            ->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
+                     ->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
 
         return $list;
     }
@@ -213,7 +201,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
      */
     public function getCashAccount()
     {
-        $type = \AccountType::where('description', 'Cash account')->first();
+        $type = \AccountType::where('type', 'Cash account')->first();
         $cash = \Auth::user()->accounts()->where('account_type_id', $type->id)->first();
 
         return $cash;
@@ -226,9 +214,9 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     public function getDefault()
     {
         return \Auth::user()->accounts()->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-            ->where('account_types.description', 'Default account')
+                    ->where('account_types.type', 'Default account')
 
-            ->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
+                    ->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
     }
 
     /**
@@ -239,16 +227,26 @@ class EloquentAccountRepository implements AccountRepositoryInterface
      */
     public function store($data)
     {
-        $defaultAccountType = \AccountType::where('description', 'Default account')->first();
-        $accountType = isset($data['account_type']) ? $data['account_type'] : $defaultAccountType;
+        /**
+         * If the AccountType has been passed through, use it:
+         */
+        if (isset($data['account_type']) && is_object($data['account_type'])
+            && get_class($data['account_type']) == 'AccountType'
+        ) {
+            $accountType = $data['account_type'];
+        } else {
+            $accountType = \AccountType::where('type', 'Default account')->first();
+        }
 
-        // create Account:
+        /**
+         * Create new account:
+         */
         $account = new \Account;
         $account->accountType()->associate($accountType);
         $account->user()->associate(\Auth::user());
         $account->name = $data['name'];
         $account->active
-            = isset($data['active']) && intval($data['active']) >= 0 && intval($data['active']) <= 1 ? intval(
+                       = isset($data['active']) && intval($data['active']) >= 0 && intval($data['active']) <= 1 ? intval(
             $data['active']
         ) : 1;
 
@@ -257,7 +255,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
             // create initial balance, if necessary:
             if (isset($data['openingbalance']) && isset($data['openingbalancedate'])) {
                 $amount = floatval($data['openingbalance']);
-                $date = new Carbon($data['openingbalancedate']);
+                $date   = new Carbon($data['openingbalancedate']);
                 $this->_createInitialBalance($account, $amount, $date);
             }
         }
@@ -286,12 +284,12 @@ class EloquentAccountRepository implements AccountRepositoryInterface
             /** @var \Firefly\Helper\Controllers\AccountInterface $interface */
             $interface = \App::make('Firefly\Helper\Controllers\AccountInterface');
 
-            if ($account->accounttype->description == 'Default account') {
+            if ($account->accounttype->type == 'Default account') {
 
 
                 $journal = $interface->openingBalanceTransaction($account);
                 if ($journal) {
-                    $journal->date = new Carbon($data['openingbalancedate']);
+                    $journal->date                    = new Carbon($data['openingbalancedate']);
                     $journal->transactions[0]->amount = floatval($data['openingbalance']) * -1;
                     $journal->transactions[1]->amount = floatval($data['openingbalance']);
                     $journal->transactions[0]->save();
@@ -306,8 +304,8 @@ class EloquentAccountRepository implements AccountRepositoryInterface
 
     /**
      * @param \Account $account
-     * @param int      $amount
-     * @param Carbon   $date
+     * @param int $amount
+     * @param Carbon $date
      *
      * @return bool
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
@@ -315,24 +313,24 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     protected function _createInitialBalance(\Account $account, $amount = 0, Carbon $date)
     {
         // get account type:
-        $initialBalanceAT = \AccountType::where('description', 'Initial balance account')->first();
+        $initialBalanceAT = \AccountType::where('type', 'Initial balance account')->first();
 
         // create new account:
         $initial = new \Account;
         $initial->accountType()->associate($initialBalanceAT);
         $initial->user()->associate(\Auth::user());
-        $initial->name = $account->name . ' initial balance';
+        $initial->name   = $account->name . ' initial balance';
         $initial->active = 0;
         if ($initial->validate()) {
             $initial->save();
             // create new transaction journal (and transactions):
             /** @var \Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface $transactionJournal */
             $transactionJournal = \App::make(
-                'Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface'
+                                      'Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface'
             );
 
             $transactionJournal->createSimpleJournal(
-                $initial, $account, 'Initial Balance for ' . $account->name, $amount, $date
+                               $initial, $account, 'Initial Balance for ' . $account->name, $amount, $date
             );
 
             return true;

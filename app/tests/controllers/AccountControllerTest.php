@@ -57,7 +57,7 @@ class AccountControllerTest extends TestCase
 
         /** @var \AccountType $accountType */
         $accountType = f::create('AccountType');
-        $accountType->description = 'Default account';
+        $accountType->type = 'Default account';
         $accountType->save();
         $account->accountType()->associate($accountType);
         $account->save();
@@ -72,33 +72,6 @@ class AccountControllerTest extends TestCase
         $this->assertViewHas('account');
         $this->assertResponseOk();
     }
-
-    /**
-     * @covers ::delete
-     */
-    public function testDeleteWrongType()
-    {
-        /** @var \Account $account */
-        $account = f::create('Account');
-
-        /** @var \AccountType $accountType */
-        $accountType = f::create('AccountType');
-        $accountType->description = 'Initial balance account';
-        $accountType->save();
-        $account->accountType()->associate($accountType);
-        $account->save();
-
-        // for successful binding:
-        Auth::shouldReceive('user')->andReturn($this->_user);
-        Auth::shouldReceive('check')->andReturn(true);
-        $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($account->user_id);
-        $this->_user->shouldReceive('getAttribute')->with('email')->andReturn('some@email');
-
-        $this->action('GET', 'AccountController@delete', $account->id);
-        $this->assertViewHas('message');
-        $this->assertResponseOk();
-    }
-
     /**
      * @covers ::destroy
      */
@@ -109,7 +82,7 @@ class AccountControllerTest extends TestCase
 
         /** @var \AccountType $accountType */
         $accountType = f::create('AccountType');
-        $accountType->description = 'Default account';
+        $accountType->type = 'Default account';
         $accountType->save();
         $account->accountType()->associate($accountType);
         $account->save();
@@ -126,57 +99,6 @@ class AccountControllerTest extends TestCase
         $this->assertSessionHas('success');
     }
 
-    /**
-     * @covers ::destroy
-     */
-    public function testDestroyWrongType()
-    {
-        /** @var \Account $account */
-        $account = f::create('Account');
-
-        /** @var \AccountType $accountType */
-        $accountType = f::create('AccountType');
-        $accountType->description = 'Initial balance account';
-        $accountType->save();
-        $account->accountType()->associate($accountType);
-        $account->save();
-
-
-        // for successful binding:
-        Auth::shouldReceive('user')->once()->andReturn($this->_user);
-        Auth::shouldReceive('check')->once()->andReturn(true);
-        $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($account->user_id);
-
-        $this->action('POST', 'AccountController@destroy', $account->id);
-        $this->assertViewHas('message');
-        $this->assertResponseOk();
-    }
-
-    /**
-     * @covers ::destroy
-     */
-    public function testDestroyFails()
-    {
-        /** @var \Account $account */
-        $account = f::create('Account');
-
-        /** @var \AccountType $accountType */
-        $accountType = f::create('AccountType');
-        $accountType->description = 'Default account';
-        $accountType->save();
-        $account->accountType()->associate($accountType);
-        $account->save();
-
-        // for successful binding:
-        Auth::shouldReceive('user')->once()->andReturn($this->_user);
-        Auth::shouldReceive('check')->once()->andReturn(true);
-        $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($account->user_id);
-        $this->_repository->shouldReceive('destroy')->once()->andReturn(false);
-
-        $this->action('POST', 'AccountController@destroy', $account->id);
-        $this->assertRedirectedToRoute('accounts.index');
-        $this->assertSessionHas('error');
-    }
 
     public function testEdit()
     {
@@ -185,7 +107,7 @@ class AccountControllerTest extends TestCase
 
         /** @var \AccountType $accountType */
         $accountType = f::create('AccountType');
-        $accountType->description = 'Default account';
+        $accountType->type = 'Default account';
         $accountType->save();
         $account->accountType()->associate($accountType);
         $account->save();
@@ -208,28 +130,6 @@ class AccountControllerTest extends TestCase
     }
 
 
-    public function testEditWrongType()
-    {
-        /** @var \Account $account */
-        $account = f::create('Account');
-
-        /** @var \AccountType $accountType */
-        $accountType = f::create('AccountType');
-        $accountType->description = 'Initial balance account';
-        $accountType->save();
-        $account->accountType()->associate($accountType);
-        $account->save();
-
-        // for successful binding.
-        Auth::shouldReceive('user')->andReturn($this->_user);
-        Auth::shouldReceive('check')->andReturn(true);
-        $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($account->user_id);
-        $this->_user->shouldReceive('getAttribute')->with('email')->andReturn('some@email');
-
-        $this->action('GET', 'AccountController@edit', $account->id);
-        $this->assertViewHas('message');
-        $this->assertResponseOk();
-    }
 
     public function testIndex()
     {
@@ -238,7 +138,7 @@ class AccountControllerTest extends TestCase
 
         /** @var \AccountType $accountType */
         $accountType = f::create('AccountType');
-        $accountType->description = 'Default account';
+        $accountType->type = 'Default account';
         $accountType->save();
         $account->accountType()->associate($accountType);
         $account->save();
@@ -254,7 +154,6 @@ class AccountControllerTest extends TestCase
         ];
 
         $this->_repository->shouldReceive('get')->once()->andReturn($collection);
-        $this->_accounts->shouldReceive('index')->with($collection)->once()->andReturn($list);
         $this->action('GET', 'AccountController@index');
         $this->assertResponseOk();
     }
@@ -266,7 +165,7 @@ class AccountControllerTest extends TestCase
 
         /** @var \AccountType $accountType */
         $accountType = f::create('AccountType');
-        $accountType->description = 'Default account';
+        $accountType->type = 'Default account';
         $accountType->save();
         $account->accountType()->associate($accountType);
         $account->save();
@@ -303,29 +202,6 @@ class AccountControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
-    public function testShowWrongType()
-    {
-        /** @var \Account $account */
-        $account = f::create('Account');
-
-        /** @var \AccountType $accountType */
-        $accountType = f::create('AccountType');
-        $accountType->description = 'Initial balance account';
-        $accountType->save();
-        $account->accountType()->associate($accountType);
-        $account->save();
-
-        // for successful binding.
-        Auth::shouldReceive('user')->andReturn($this->_user);
-        Auth::shouldReceive('check')->andReturn(true);
-        $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($account->user_id);
-        $this->_user->shouldReceive('getAttribute')->with('email')->andReturn($account->email);
-
-
-        $this->action('GET', 'AccountController@show', $account->id);
-        $this->assertViewHas('message');
-        $this->assertResponseOk();
-    }
 
     public function testStore()
     {
@@ -334,7 +210,7 @@ class AccountControllerTest extends TestCase
 
         /** @var \AccountType $accountType */
         $accountType = f::create('AccountType');
-        $accountType->description = 'Default account';
+        $accountType->type = 'Default account';
         $accountType->save();
         $account->accountType()->associate($accountType);
         $account->save();
@@ -351,7 +227,7 @@ class AccountControllerTest extends TestCase
 
         /** @var \AccountType $accountType */
         $accountType = f::create('AccountType');
-        $accountType->description = 'Default account';
+        $accountType->type = 'Default account';
         $accountType->save();
         $account->accountType()->associate($accountType);
         $account->save();
@@ -369,7 +245,7 @@ class AccountControllerTest extends TestCase
 
         /** @var \AccountType $accountType */
         $accountType = f::create('AccountType');
-        $accountType->description = 'Default account';
+        $accountType->type = 'Default account';
         $accountType->save();
         $account->accountType()->associate($accountType);
         $account->save();
@@ -386,7 +262,7 @@ class AccountControllerTest extends TestCase
 
         /** @var \AccountType $accountType */
         $accountType = f::create('AccountType');
-        $accountType->description = 'Default account';
+        $accountType->type = 'Default account';
         $accountType->save();
         $account->accountType()->associate($accountType);
         $account->save();
@@ -402,30 +278,6 @@ class AccountControllerTest extends TestCase
 
     }
 
-    public function testUpdateWrongType()
-    {
-        /** @var \Account $account */
-        $account = f::create('Account');
-
-        /** @var \AccountType $accountType */
-        $accountType = f::create('AccountType');
-        $accountType->description = 'Initial balance account';
-        $accountType->save();
-        $account->accountType()->associate($accountType);
-        $account->save();
-
-        // for successful binding.
-        Auth::shouldReceive('user')->andReturn($this->_user);
-        Auth::shouldReceive('check')->andReturn(true);
-        $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($account->user_id);
-        $this->_repository->shouldReceive('update')->andReturn($account);
-
-        $this->action('POST', 'AccountController@update', $account->id);
-        $this->assertViewHas('message');
-        $this->assertResponseOk();
-
-    }
-
     public function testUpdateFails()
     {
         /** @var \Account $account */
@@ -433,7 +285,7 @@ class AccountControllerTest extends TestCase
 
         /** @var \AccountType $accountType */
         $accountType = f::create('AccountType');
-        $accountType->description = 'Default account';
+        $accountType->type = 'Default account';
         $accountType->save();
         $account->accountType()->associate($accountType);
         $account->save();

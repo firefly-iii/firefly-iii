@@ -4,7 +4,7 @@ use League\FactoryMuffin\Facade;
 Facade::define(
     'AccountType',
     [
-        'description' => function () {
+        'type' => function () {
                 $types = [
                     'Default account',
                     'Cash account',
@@ -13,6 +13,7 @@ Facade::define(
                 ];
 
                 return $types[rand(0, 3)];
-            }
+            },
+        'editable' => 1
     ]
 );

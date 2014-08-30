@@ -50,7 +50,7 @@ $r = Route::current()->getName();
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Create ... <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="{{route('transactions.create','withdrawal')}}" title="For when you spend money"><span class="glyphicon glyphicon-arrow-left"></span> Withdrawal</a></li>
+                        <li><a href="{{route('accounts.create')}}" title="Create new account"><span class="glyphicon glyphicon-inbox"></span> Account</a></li>
                     </ul>
                 </li>
             </ul>

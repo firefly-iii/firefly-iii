@@ -5,6 +5,8 @@ use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
 
 /**
  * Class AccountController
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class AccountController extends \BaseController
 {
@@ -33,41 +35,23 @@ class AccountController extends \BaseController
     /**
      * @param Account $account
      *
-     * @return \Illuminate\View\View
+     * @return $this
      */
     public function delete(Account $account)
     {
-        $accountType = $account->accountType()->first();
-
-        if ($accountType->description == 'Initial balance account' || $accountType->description == 'Cash account') {
-            return \View::make('error')->with(
-                'message', 'Cannot edit this account type (' . $accountType->description . ').'
-            );
-        }
-
         return View::make('accounts.delete')->with('account', $account);
     }
 
     /**
      * @param Account $account
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
     public function destroy(Account $account)
     {
-        $accountType = $account->accountType()->first();
 
-        if ($accountType->description == 'Initial balance account' || $accountType->description == 'Cash account') {
-            return View::make('error')->with(
-                'message', 'Cannot edit this account type (' . $accountType->description . ').'
-            );
-        }
-        $result = $this->_repository->destroy($account);
-        if ($result === true) {
-            Session::flash('success', 'The account was deleted.');
-        } else {
-            Session::flash('error', 'Could not delete the account.');
-        }
+        $this->_repository->destroy($account);
+        Session::flash('success', 'The account was deleted.');
 
         return Redirect::route('accounts.index');
 
@@ -76,54 +60,52 @@ class AccountController extends \BaseController
     /**
      * @param Account $account
      *
-     * @return \Illuminate\View\View
+     * @return $this
      */
     public function edit(Account $account)
     {
-        $accountType = $account->accountType()->first();
-
-        if ($accountType->description == 'Initial balance account' || $accountType->description == 'Cash account') {
-            return View::make('error')->with(
-                'message', 'Cannot edit this account type (' . $accountType->description . ').'
-            );
-        }
         $openingBalance = $this->_accounts->openingBalanceTransaction($account);
-
         return View::make('accounts.edit')->with('account', $account)->with('openingBalance', $openingBalance);
     }
 
     /**
-     * @return \Illuminate\View\View
+     * @return $this
      */
     public function index()
     {
         $accounts = $this->_repository->get();
-        $display = $this->_accounts->index($accounts);
+        $set = [
+            'personal'      => [],
+            'beneficiaries' => []
+        ];
+        foreach ($accounts as $account) {
+            switch ($account->accounttype->type) {
+                case 'Default account':
+                    $set['personal'][] = $account;
+                    break;
+                case 'Beneficiary account':
+                    $set['beneficiaries'][] = $account;
+                    break;
+            }
+        }
 
-        return View::make('accounts.index')->with('accounts', $display);
+        return View::make('accounts.index')->with('accounts', $set);
     }
 
     /**
      * @param Account $account
      *
-     * @return \Illuminate\View\View
+     * @return $this
      */
     public function show(Account $account)
     {
-        $accountType = $account->accountType()->first();
-        if ($accountType->description == 'Initial balance account' || $accountType->description == 'Cash account') {
-            return View::make('error')->with(
-                'message', 'Cannot show this account type (' . $accountType->description . ').'
-            );
-        }
+        $data = $this->_accounts->show($account, 40);
 
-        $show = $this->_accounts->show($account, 40);
-
-        return View::make('accounts.show')->with('account', $account)->with('show', $show);
+        return View::make('accounts.show')->with('account', $account)->with('show', $data);
     }
 
     /**
-     * @return \Illuminate\Http\RedirectResponse
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
     public function store()
     {
@@ -133,14 +115,14 @@ class AccountController extends \BaseController
         if ($account->validate()) {
             // saved! return to wherever.
             Session::flash('success', 'Account "' . $account->name . '" created!');
-            if (Input::get('create') == '1') {
+            if (intval(Input::get('create')) === 1) {
                 return Redirect::route('accounts.create')->withInput();
             } else {
                 return Redirect::route('accounts.index');
             }
         } else {
             // did not save, return with error:
-            Session::flash('error', 'Could not save the new account. Please check the form.');
+            Session::flash('error', 'Could not save the new account: ' . $account->errors()->first());
 
             return Redirect::route('accounts.create')->withErrors($account->errors())->withInput();
 
@@ -150,16 +132,10 @@ class AccountController extends \BaseController
     /**
      * @param Account $account
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
     public function update(Account $account)
     {
-        $accountType = $account->accountType()->first();
-        if ($accountType->description == 'Initial balance account' || $accountType->description == 'Cash account') {
-            return View::make('error')->with(
-                'message', 'Cannot show this account type (' . $accountType->description . ').'
-            );
-        }
         $account = $this->_repository->update($account, Input::all());
         if ($account->validate()) {
             Session::flash('success', 'Account "' . $account->name . '" updated.');

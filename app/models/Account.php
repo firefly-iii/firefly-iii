@@ -1,5 +1,6 @@
 <?php
 use LaravelBook\Ardent\Ardent as Ardent;
+use LaravelBook\Ardent\Builder;
 
 /**
  * Account
@@ -22,6 +23,7 @@ use LaravelBook\Ardent\Ardent as Ardent;
  * @method static \Illuminate\Database\Query\Builder|\Account whereAccountTypeId($value)
  * @method static \Illuminate\Database\Query\Builder|\Account whereName($value)
  * @method static \Illuminate\Database\Query\Builder|\Account whereActive($value)
+ * @method static \Account accountType($types)
  */
 class Account extends Ardent
 {
@@ -33,7 +35,7 @@ class Account extends Ardent
      */
     public static $rules
         = [
-            'name'            => 'required|between:1,100',
+            'name'            => ['required', 'between:1,100', 'alphabasic'],
             'user_id'         => 'required|exists:users,id',
             'account_type_id' => 'required|exists:account_types,id',
             'active'          => 'required|boolean'
@@ -63,10 +65,10 @@ class Account extends Ardent
 
         return floatval(
             $this->transactions()
-                ->leftJoin(
-                    'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
+                 ->leftJoin(
+                 'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
                 )
-                ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount')
+                 ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount')
         );
     }
 
@@ -96,7 +98,8 @@ class Account extends Ardent
     public function predict(
         /** @noinspection PhpUnusedParameterInspection */
         \Carbon\Carbon $date
-    ) {
+    )
+    {
         return null;
     }
 
@@ -110,4 +113,13 @@ class Account extends Ardent
         return $this->belongsTo('User');
     }
 
-} 
+    public function scopeAccountType(Builder $query, array $types) {
+        if(is_null($this->joinedAccountTypes)) {
+            $query->leftJoin('account_types','account_types.id','=','accounts.account_type_id');
+            $this->joinedAccountTypes = true;
+        }
+        $query->whereIn('account_types.type',$types);
+    }
+
+
+}

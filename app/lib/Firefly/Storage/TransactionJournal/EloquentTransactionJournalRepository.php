@@ -64,8 +64,8 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         }
 
         // account types for both:
-        $toAT = $toAccount->accountType->description;
-        $fromAT = $from->accountType->description;
+        $toAT = $toAccount->accountType->type;
+        $fromAT = $from->accountType->type;
 
         $journalType = null;
 
@@ -287,6 +287,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
                 $fromAccount = $accountRepository->find(intval($data['account_id']));
                 $toAccount = $accountRepository->createOrFindBeneficiary($data['beneficiary']);
                 break;
+
             case 'deposit':
                 $fromAccount = $accountRepository->createOrFindBeneficiary($data['beneficiary']);
                 $toAccount = $accountRepository->find(intval($data['account_id']));
@@ -294,7 +295,6 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
             case 'transfer':
                 $fromAccount = $accountRepository->find(intval($data['account_from_id']));
                 $toAccount = $accountRepository->find(intval($data['account_to_id']));
-
 
                 break;
         }
