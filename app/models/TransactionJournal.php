@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use LaravelBook\Ardent\Ardent;
+use LaravelBook\Ardent\Builder;
 
 
 /**
@@ -40,7 +41,33 @@ use LaravelBook\Ardent\Ardent;
  *             'Budget[] $budgets
  * @property-read \Illuminate\Database\Eloquent\Collection|\
  *             'Category[] $categories
- * @method static \TransactionJournal onDate($date) 
+ * @method static \TransactionJournal onDate($date)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *             'Budget[] $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *             'Category[] $categories
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *             'Budget[] $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *             'Category[] $categories
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *             'Budget[] $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *             'Category[] $categories
+ * @method static \TransactionJournal defaultSorting()
+ * @method static \TransactionJournal withRelevantData()
+ * @method static \TransactionJournal account($account)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *                     'Budget[] $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *                     'Category[] $categories
+ * @method static \TransactionJournal moreThan($amount)
+ * @method static \TransactionJournal lessThan($amount)
+ * @method static \TransactionJournal transactionTypes($types)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *                     'Budget[] $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *                     'Category[] $categories
  */
 class TransactionJournal extends Ardent
 {
@@ -61,7 +88,7 @@ class TransactionJournal extends Ardent
     public function budgets()
     {
         return $this->belongsToMany(
-            'Budget', 'component_transaction_journal', 'transaction_journal_id', 'component_id'
+                    'Budget', 'component_transaction_journal', 'transaction_journal_id', 'component_id'
         );
     }
 
@@ -71,7 +98,7 @@ class TransactionJournal extends Ardent
     public function categories()
     {
         return $this->belongsToMany(
-            'Category', 'component_transaction_journal', 'transaction_journal_id', 'component_id'
+                    'Category', 'component_transaction_journal', 'transaction_journal_id', 'component_id'
         );
     }
 
@@ -91,9 +118,18 @@ class TransactionJournal extends Ardent
         return ['created_at', 'updated_at', 'date'];
     }
 
+    public function scopeAccount(Builder $query, \Account $account)
+    {
+        if (!isset($this->joinedTransactions)) {
+            $query->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id');
+            $this->joinedTransactions = true;
+        }
+        $query->where('transactions.account_id', $account->id);
+    }
+
     /**
      * @param                $query
-     * @param Carbon         $date
+     * @param Carbon $date
      *
      * @return mixed
      */
@@ -104,13 +140,40 @@ class TransactionJournal extends Ardent
 
     /**
      * @param                $query
-     * @param Carbon         $date
+     * @param Carbon $date
      *
      * @return mixed
      */
     public function scopeBefore($query, Carbon $date)
     {
         return $query->where('date', '<=', $date->format('Y-m-d'));
+    }
+
+    public function scopeDefaultSorting(Builder $query)
+    {
+        $query->orderBy('date', 'DESC')->orderBy('transaction_journals.id', 'DESC');
+    }
+
+    public function scopeMoreThan(Builder $query, $amount)
+    {
+        if (is_null($this->joinedTransactions)) {
+            $query->leftJoin('transactions', 'transactions.transaction_journal_id', '=',
+                'transaction_journals.id');
+            $this->joinedTransactions = true;
+        }
+
+        $query->where('transactions.amount', '>=', $amount);
+    }
+
+    public function scopeLessThan(Builder $query, $amount)
+    {
+        if (is_null($this->joinedTransactions)) {
+            $query->leftJoin('transactions', 'transactions.transaction_journal_id', '=',
+                'transaction_journals.id');
+            $this->joinedTransactions = true;
+        }
+
+        $query->where('transactions.amount', '<=', $amount);
     }
 
     /**
@@ -122,6 +185,33 @@ class TransactionJournal extends Ardent
     public function scopeOnDate($query, Carbon $date)
     {
         return $query->where('date', '=', $date->format('Y-m-d'));
+    }
+
+    public function scopeTransactionTypes(Builder $query, array $types)
+    {
+        if (is_null($this->joinedTransactionTypes)) {
+            $query->leftJoin('transaction_types', 'transaction_types.id', '=',
+                'transaction_journals.transaction_type_id');
+            $this->joinedTransactionTypes = true;
+        }
+        $query->whereIn('transaction_types.type', $types);
+    }
+
+    /**
+     * Automatically includes the 'with' parameters to get relevant related
+     * objects.
+     *
+     * @param $query
+     */
+    public function scopeWithRelevantData(Builder $query)
+    {
+        $query->with(
+              ['transactions'                        => function ($q) {
+                      $q->orderBy('amount', 'ASC');
+                  }, 'transactiontype', 'components' => function ($q) {
+                      $q->orderBy('class');
+                  }, 'transactions.account.accounttype']
+        );
     }
 
     /**
@@ -158,4 +248,4 @@ class TransactionJournal extends Ardent
         return $this->belongsTo('User');
     }
 
-} 
+}
