@@ -40,6 +40,7 @@ return [
 #        'Barryvdh\Debugbar\ServiceProvider',
         'Firefly\Storage\StorageServiceProvider',
         'Firefly\Helper\HelperServiceProvider',
+        'Firefly\Validation\ValidationServiceProvider',
         'Codesleeve\AssetPipeline\AssetPipelineServiceProvider',
     ],
     'manifest'        => storage_path() . '/meta',
