@@ -10,11 +10,14 @@
             Accounts are the record holders for transactions and transfers. Money moves
             from one account to another.
         </p>
-
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6 col-md-12 col-sm-12">
         <p class="text-info">
-            In a double-entry bookkeeping system (such as this one) there is a "from" account and a "to"
-            account, even when money is created from thin air (such as interest, or when new accounts already have
-            a positive balance).
+            In a double-entry bookkeeping system (such as this one) there is a "from"-account and a "to"-account,
+            even when money is created from thin air (such as interest, or when new accounts already have a
+            positive balance).
         </p>
 
         <p class="text-info"><span class="text-danger">This form creates personal accounts only.</span>
@@ -34,9 +37,9 @@
             <div class="col-sm-8">
                 {{ Form::text('name', Input::old('name'), ['class' => 'form-control']) }}
                 @if($errors->has('name'))
-                <p class="text-danger">{{$errors->first('name')}}</p>
+                    <p class="text-danger">{{$errors->first('name')}}</p>
                 @else
-                <span class="help-block">Use something descriptive such as "checking account" or "My Bank Main Account".</span>
+                    <span class="help-block">Use something descriptive such as "checking account" or "My Bank Main Account".</span>
                 @endif
 
             </div>

@@ -22,7 +22,8 @@ class CreateAccountTypesTable extends Migration
             'account_types', function (Blueprint $table) {
                 $table->increments('id');
                 $table->timestamps();
-                $table->string('description', 50);
+                $table->string('type', 50);
+                $table->boolean('editable');
             }
         );
     }

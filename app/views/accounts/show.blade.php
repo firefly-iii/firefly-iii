@@ -35,22 +35,22 @@
                 <td>Out</td>
                 <td>
                     {{mf($show['statistics']['period']['out'])}}
-                    <a href="{{route('accounts.show',$account->id)}}#transactions-thisaccount-this-period-expensesonly"><span class="glyphicon glyphicon-circle-arrow-right"></span></a>
+                    <a href="{{route('accounts.show',$account->id)}}?type=transactions&amp;show=expenses"><span class="glyphicon glyphicon-circle-arrow-right"></span></a>
                 </td>
                 <td>
                     {{mf($show['statistics']['period']['t_out'])}}
-                    <a href="#transactions-thisaccount-this-period-transfers-out-only"><span class="glyphicon glyphicon-circle-arrow-right"></span></a>
+                    <a href="{{route('accounts.show',$account->id)}}?type=transfers&amp;show=out"><span class="glyphicon glyphicon-circle-arrow-right"></span></a>
                 </td>
             </tr>
             <tr>
                 <td>In</td>
                 <td>
                     {{mf($show['statistics']['period']['in'])}}
-                    <a href="#transactions-thisaccount-this-period-incomeonly"><span class="glyphicon glyphicon-circle-arrow-right"></span></a>
+                    <a href="{{route('accounts.show',$account->id)}}?type=transactions&amp;show=income"><span class="glyphicon glyphicon-circle-arrow-right"></span></a>
                 </td>
                 <td>
                     {{mf($show['statistics']['period']['t_in'])}}
-                    <a href="#transactions-thisaccount-this-period-transfers-in-only"><span class="glyphicon glyphicon-circle-arrow-right"></span></a>
+                    <a href="{{route('accounts.show',$account->id)}}?type=transfers&amp;show=in"><span class="glyphicon glyphicon-circle-arrow-right"></span></a>
                 </td>
             </tr>
             <tr>
@@ -101,7 +101,7 @@
 
 
         <h4>Transactions <small> For selected account and period</small></h4>
-        @include('paginated.transactions',['journals' => $show['journals']])
+        @include('paginated.transactions',['journals' => $show['journals'],'sum' => true])
     </div>
 </div>
 

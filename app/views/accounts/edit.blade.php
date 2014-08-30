@@ -33,7 +33,7 @@
 
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12">
-        @if($account->accounttype->description == 'Default account')
+        @if($account->accounttype->type == 'Default account')
         <h4>Optional fields</h4>
 
         <div class="form-group">

@@ -2,7 +2,7 @@
 
 namespace Firefly\Helper\Controllers;
 
-use Illuminate\Database\Eloquent\Collection;
+use Firefly\Exception\FireflyException;
 
 /**
  * Class Account
@@ -12,60 +12,18 @@ use Illuminate\Database\Eloquent\Collection;
 class Account implements AccountInterface
 {
     /**
-     * @param Collection $accounts
-     *
-     * @return array|mixed
-     */
-    public function index(Collection $accounts)
-    {
-
-        $list = [
-            'personal'      => [],
-            'beneficiaries' => [],
-            'initial'       => [],
-            'cash'          => []
-        ];
-        foreach ($accounts as $account) {
-
-            switch ($account->accounttype->description) {
-                case 'Default account':
-                    $list['personal'][] = $account;
-                    break;
-                case 'Cash account':
-                    $list['cash'][] = $account;
-                    break;
-                case 'Initial balance account':
-                    $list['initial'][] = $account;
-                    break;
-                case 'Beneficiary account':
-                    $list['beneficiaries'][] = $account;
-                    break;
-
-            }
-        }
-
-        return $list;
-
-    }
-
-    /**
      * @param \Account $account
      *
      * @return mixed
      */
     public function openingBalanceTransaction(\Account $account)
     {
-        $transactionType = \TransactionType::where('type', 'Opening balance')->first();
-
         return \TransactionJournal::
-            with(
-                ['transactions' => function ($q) {
-                        $q->orderBy('amount', 'ASC');
-                    }]
-            )->where('transaction_type_id', $transactionType->id)
-            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->where('transactions.account_id', $account->id)->first(['transaction_journals.*']);
-
+            withRelevantData()->account($account)
+                                  ->leftJoin('transaction_types', 'transaction_types.id', '=',
+                'transaction_journals.transaction_type_id')
+                                  ->where('transaction_types.type', 'Opening balance')
+                                  ->first(['transaction_journals.*']);
     }
 
     /**
@@ -77,7 +35,7 @@ class Account implements AccountInterface
     public function show(\Account $account, $perPage)
     {
         $start = \Session::get('start');
-        $end = \Session::get('end');
+        $end   = \Session::get('end');
         $stats = [
             'budgets'    => [],
             'categories' => [],
@@ -87,29 +45,51 @@ class Account implements AccountInterface
 
 
         // build a query:
-        $query = \TransactionJournal::with(
-            ['transactions'                        => function ($q) {
-                    $q->orderBy('amount', 'ASC');
-                }, 'transactiontype', 'components' => function ($q) {
-                    $q->orderBy('class');
-                }, 'transactions.account.accounttype']
-        )->orderBy('date', 'DESC')->leftJoin(
-                'transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
-            )->where('transactions.account_id', $account->id)->where('date', '>=', $start->format('Y-m-d'))->where(
-                'date', '<=', $end->format('Y-m-d')
-            )->orderBy('transaction_journals.id', 'DESC');
+        $query = \TransactionJournal::withRelevantData()->defaultSorting()->account($account)->after($start)
+                                    ->before($end);
+        // filter some:
+        if (\Input::get('type')) {
+            switch (\Input::get('type')) {
+                case 'transactions':
+                    $query->transactionTypes(['Deposit', 'Withdrawal']);
+                    break;
+                case 'transfers':
+                    $query->transactionTypes(['Transfer']);
+                    break;
+                default:
+                    throw new FireflyException('No case for type "' . \Input::get('type') . '"!');
+                    break;
+            }
+        }
+
+        if (\Input::get('show')) {
+            switch (\Input::get('show')) {
+                case 'expenses':
+                case 'out':
+                    $query->lessThan(0);
+                    break;
+                case 'income':
+                case 'in':
+                    $query->moreThan(0);
+                    break;
+                default:
+                    throw new FireflyException('No case for show "' . \Input::get('show') . '"!');
+                    break;
+            }
+        }
 
 
         // build paginator:
         $totalItems = $query->count();
-        $page = intval(\Input::get('page')) > 1 ? intval(\Input::get('page')) : 1;
-        $skip = ($page - 1) * $perPage;
-        $result = $query->skip($skip)->take($perPage)->get(['transaction_journals.*']);
-        // in the mean time, build list of categories, budgets and other accounts:
+        $page       = max(1, intval(\Input::get('page')));
+        $skip       = ($page - 1) * $perPage;
+        $result     = $query->skip($skip)->take($perPage)->get(['transaction_journals.*']);
 
+
+        // get the relevant budgets, categories and accounts from this list:
         /** @var $item \TransactionJournal */
-        foreach ($result as $item) {
-            $items[] = $item;
+        foreach ($result as $index => $item) {
+
             foreach ($item->components as $component) {
                 if ($component->class == 'Budget') {
                     $stats['budgets'][$component->id] = $component;
@@ -118,59 +98,56 @@ class Account implements AccountInterface
                     $stats['categories'][$component->id] = $component;
                 }
             }
-            $fromAccount = $item->transactions[0]->account;
-            $toAccount = $item->transactions[1]->account;
+            // since it is entirely possible the database is messed up somehow
+            // it might be that a transaction journal has only one transaction.
+            // this is mainly caused by wrong deletions and other artefacts from the past.
+            // if it is the case, we remove $item and continue like nothing ever happened.
+
+            // this will however, mess up some statisics but we can live with that.
+            // we might be needing some cleanup routine in the future.
+
+            // for now, we simply warn the user of this.
+
+            if (count($item->transactions) < 2) {
+                \Session::flash('warning',
+                    'Some transactions are incomplete; they will not be shown. Statistics may differ.');
+                unset($result[$index]);
+                continue;
+            }
+            $items[]                             = $item;
+            $fromAccount                         = $item->transactions[0]->account;
+            $toAccount                           = $item->transactions[1]->account;
             $stats['accounts'][$fromAccount->id] = $fromAccount;
-            $stats['accounts'][$toAccount->id] = $toAccount;
+            $stats['accounts'][$toAccount->id]   = $toAccount;
         }
-        unset($result, $page);
         $paginator = \Paginator::make($items, $totalItems, $perPage);
-
-        // statistics
-        $stats['period']['in'] = floatval(
-            \Transaction::where('account_id', $account->id)->where('amount', '>', 0)->leftJoin(
-                'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-            )->leftJoin(
-                    'transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id'
-                )->whereIn('transaction_types.type', ['Deposit', 'Withdrawal'])->where(
-                    'transaction_journals.date', '>=', $start->format('Y-m-d')
-                )->where('transaction_journals.date', '<=', $end->format('Y-m-d'))->sum('amount')
-        );
+        unset($result, $page, $item, $fromAccount, $toAccount);
 
 
-        $stats['period']['out'] = floatval(
-            \Transaction::where('account_id', $account->id)->where('amount', '<', 0)->leftJoin(
-                'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-            )->leftJoin(
-                    'transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id'
-                )->whereIn('transaction_types.type', ['Deposit', 'Withdrawal'])->where(
-                    'transaction_journals.date', '>=', $start->format('Y-m-d')
-                )->where('transaction_journals.date', '<=', $end->format('Y-m-d'))->sum('amount')
-        );
-        $stats['period']['diff'] = $stats['period']['in'] + $stats['period']['out'];
+        // statistics (transactions)
+        $trIn   = floatval(\Transaction::before($end)->after($start)->account($account)->moreThan(0)
+                                       ->transactionTypes(['Deposit', 'Withdrawal'])->sum('transactions.amount'));
+        $trOut  = floatval(\Transaction::before($end)->after($start)->account($account)->lessThan(0)
+                                       ->transactionTypes(['Deposit', 'Withdrawal'])->sum('transactions.amount'));
+        $trDiff = $trIn + $trOut;
 
-        $stats['period']['t_in'] = floatval(
-            \Transaction::where('account_id', $account->id)->where('amount', '>', 0)->leftJoin(
-                'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-            )->leftJoin(
-                    'transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id'
-                )->where('transaction_types.type', 'Transfer')->where(
-                    'transaction_journals.date', '>=', $start->format('Y-m-d')
-                )->where('transaction_journals.date', '<=', $end->format('Y-m-d'))->sum('amount')
-        );
+        // statistics (transfers)
+        $trfIn   = floatval(\Transaction::before($end)->after($start)->account($account)->moreThan(0)
+                                        ->transactionTypes(['Transfer'])->sum('transactions.amount'));
+        $trfOut  = floatval(\Transaction::before($end)->after($start)->account($account)->lessThan(0)
+                                        ->transactionTypes(['Transfer'])->sum('transactions.amount'));
+        $trfDiff = $trfIn + $trfOut;
 
-        $stats['period']['t_out'] = floatval(
-            \Transaction::where('account_id', $account->id)->where('amount', '<', 0)->leftJoin(
-                'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-            )->leftJoin(
-                    'transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id'
-                )->where('transaction_types.type', 'Transfer')->where(
-                    'transaction_journals.date', '>=', $start->format('Y-m-d')
-                )->where('transaction_journals.date', '<=', $end->format('Y-m-d'))->sum('amount')
-        );
 
-        $stats['period']['t_diff'] = $stats['period']['t_in'] + $stats['period']['t_out'];
+        $stats['period'] = [
+            'in'     => $trIn,
+            'out'    => $trOut,
+            'diff'   => $trDiff,
+            't_in'   => $trfIn,
+            't_out'  => $trfOut,
+            't_diff' => $trfDiff
 
+        ];
 
         $return = [
             'journals'   => $paginator,
