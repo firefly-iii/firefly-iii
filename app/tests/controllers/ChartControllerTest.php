@@ -78,7 +78,7 @@ class ChartControllerTest extends TestCase
     {
         $account = f::create('Account');
         $type = f::create('AccountType');
-        $type->description = 'Default account';
+        $type->type = 'Default account';
         $type->save();
         $account->accounttype()->associate($type);
         $account->save();

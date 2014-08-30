@@ -1,25 +1,27 @@
 <?php
 
+use Carbon\Carbon;
 use LaravelBook\Ardent\Ardent;
+use LaravelBook\Ardent\Builder;
 
 
 /**
  * Transaction
  *
- * @property integer                                                    $id
- * @property \Carbon\Carbon                                             $created_at
- * @property \Carbon\Carbon                                             $updated_at
- * @property integer                                                    $account_id
- * @property integer                                                    $piggybank_id
- * @property integer                                                    $transaction_journal_id
- * @property string                                                     $description
- * @property float                                                      $amount
- * @property-read \Account                                              $account
- * @property-read \Illuminate\Database\Eloquent\Collection|\Budget[]    $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\Category[]  $categories
+ * @property integer $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property integer $account_id
+ * @property integer $piggybank_id
+ * @property integer $transaction_journal_id
+ * @property string $description
+ * @property float $amount
+ * @property-read \Account $account
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Budget[] $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Category[] $categories
  * @property-read \Illuminate\Database\Eloquent\Collection|\Component[] $components
- * @property-read \Piggybank                                            $piggybank
- * @property-read \TransactionJournal                                   $transactionJournal
+ * @property-read \Piggybank $piggybank
+ * @property-read \TransactionJournal $transactionJournal
  * @method static \Illuminate\Database\Query\Builder|\Transaction whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Transaction whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Transaction whereUpdatedAt($value)
@@ -28,6 +30,12 @@ use LaravelBook\Ardent\Ardent;
  * @method static \Illuminate\Database\Query\Builder|\Transaction whereTransactionJournalId($value)
  * @method static \Illuminate\Database\Query\Builder|\Transaction whereDescription($value)
  * @method static \Illuminate\Database\Query\Builder|\Transaction whereAmount($value)
+ * @method static \Transaction account($account)
+ * @method static \Transaction after($date)
+ * @method static \Transaction before($date)
+ * @method static \Transaction lessThan($amount)
+ * @method static \Transaction moreThan($amount)
+ * @method static \Transaction transactionTypes($types)
  */
 class Transaction extends Ardent
 {
@@ -79,6 +87,56 @@ class Transaction extends Ardent
     public function piggybank()
     {
         return $this->belongsTo('Piggybank');
+    }
+
+    public function scopeAccount(Builder $query, Account $account)
+    {
+        $query->where('transactions.account_id', $account->id);
+    }
+
+    public function scopeAfter(Builder $query, Carbon $date)
+    {
+        if (is_null($this->joinedJournals)) {
+            $query->leftJoin('transaction_journals', 'transaction_journals.id', '=',
+                'transactions.transaction_journal_id');
+            $this->joinedJournals = true;
+        }
+        $query->where('transaction_journals.date', '>=', $date->format('Y-m-d'));
+    }
+
+    public function scopeBefore(Builder $query, Carbon $date)
+    {
+        if (is_null($this->joinedJournals)) {
+            $query->leftJoin('transaction_journals', 'transaction_journals.id', '=',
+                'transactions.transaction_journal_id');
+            $this->joinedJournals = true;
+        }
+        $query->where('transaction_journals.date', '<=', $date->format('Y-m-d'));
+    }
+
+    public function scopeLessThan(Builder $query, $amount)
+    {
+        $query->where('amount', '<', $amount);
+    }
+
+    public function scopeMoreThan(Builder $query, $amount)
+    {
+        $query->where('amount', '>', $amount);
+    }
+
+    public function scopeTransactionTypes(Builder $query, array $types)
+    {
+        if (is_null($this->joinedJournals)) {
+            $query->leftJoin('transaction_journals', 'transaction_journals.id', '=',
+                'transactions.transaction_journal_id');
+            $this->joinedJournals = true;
+        }
+        if (is_null($this->joinedTransactionTypes)) {
+            $query->leftJoin('transaction_types', 'transaction_types.id', '=',
+                'transaction_journals.transaction_type_id');
+            $this->joinedTransactionTypes = true;
+        }
+        $query->whereIn('transaction_types.type', $types);
     }
 
     /**

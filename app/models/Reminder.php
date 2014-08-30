@@ -21,18 +21,18 @@ use Firefly\Database\SingleTableInheritanceEntity;
  * @property-read \Piggybank $piggybank
  * @property-read \RecurringTransaction $recurringTransaction
  * @property-read \User $user
- * @method static \Illuminate\Database\Query\Builder|\Reminder whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Reminder whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Reminder whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Reminder whereClass($value) 
- * @method static \Illuminate\Database\Query\Builder|\Reminder wherePiggybankId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Reminder whereRecurringTransactionId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Reminder whereUserId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Reminder whereStartdate($value) 
- * @method static \Illuminate\Database\Query\Builder|\Reminder whereEnddate($value) 
- * @method static \Illuminate\Database\Query\Builder|\Reminder whereActive($value) 
- * @method static \Reminder validOn($date) 
- * @method static \Reminder validOnOrAfter($date) 
+ * @method static \Illuminate\Database\Query\Builder|\Reminder whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Reminder whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Reminder whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Reminder whereClass($value)
+ * @method static \Illuminate\Database\Query\Builder|\Reminder wherePiggybankId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Reminder whereRecurringTransactionId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Reminder whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Reminder whereStartdate($value)
+ * @method static \Illuminate\Database\Query\Builder|\Reminder whereEnddate($value)
+ * @method static \Illuminate\Database\Query\Builder|\Reminder whereActive($value)
+ * @method static \Reminder validOn($date)
+ * @method static \Reminder validOnOrAfter($date)
  */
 class Reminder extends SingleTableInheritanceEntity
 {
