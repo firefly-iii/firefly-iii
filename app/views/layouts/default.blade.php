@@ -5,7 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <base href="{{URL::route('index')}}/">
-    <title>Firefly</title>
+    <title>Firefly
+    @if(isset($title))
+        // {{{$title}}}
+    @endif
+    </title>
 
     <?php echo stylesheet_link_tag(); ?>
     @yield('styles')

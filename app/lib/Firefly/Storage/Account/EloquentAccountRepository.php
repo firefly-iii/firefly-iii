@@ -86,7 +86,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         $accountIDs = array_unique($accountIDs);
         if (count($accountIDs) > 0) {
             // find the "initial balance" type accounts in this list. Should be just 1.
-            $query = \Auth::user()->accounts()->accountType(['Initial balance account'])
+            $query = \Auth::user()->accounts()->accountTypeIn(['Initial balance account'])
                           ->whereIn('accounts.id', $accountIDs);
             if ($query->count() == 1) {
                 $iba = $query->first(['accounts.*']);

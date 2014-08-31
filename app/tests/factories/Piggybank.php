@@ -7,7 +7,7 @@ Facade::define(
     [
 
         'account_id'    => 'factory|Account',
-        'name'          => 'string',
+        'name'          => 'word',
         'targetamount'  => 'integer',
         'startdate'     => function () {
                 $start = new Carbon;
