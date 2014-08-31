@@ -5,17 +5,17 @@ use LaravelBook\Ardent\Builder;
 /**
  * Account
  *
- * @property integer                                                      $id
- * @property \Carbon\Carbon                                               $created_at
- * @property \Carbon\Carbon                                               $updated_at
- * @property integer                                                      $user_id
- * @property integer                                                      $account_type_id
- * @property string                                                       $name
- * @property boolean                                                      $active
- * @property-read \AccountType                                            $accountType
+ * @property integer $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property integer $user_id
+ * @property integer $account_type_id
+ * @property string $name
+ * @property boolean $active
+ * @property-read \AccountType $accountType
  * @property-read \Illuminate\Database\Eloquent\Collection|\Transaction[] $transactions
- * @property-read \Illuminate\Database\Eloquent\Collection|\Piggybank[]   $piggybanks
- * @property-read \User                                                   $user
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Piggybank[] $piggybanks
+ * @property-read \User $user
  * @method static \Illuminate\Database\Query\Builder|\Account whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Account whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Account whereUpdatedAt($value)

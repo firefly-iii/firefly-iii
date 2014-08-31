@@ -3,10 +3,8 @@
 use Carbon\Carbon;
 use Firefly\Database\SingleTableInheritanceEntity;
 
-
 /**
- * Class Reminder
- *     // reminder for: recurring, piggybank.
+ * Reminder
  *
  * @property integer $id
  * @property \Carbon\Carbon $created_at

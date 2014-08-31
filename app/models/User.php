@@ -10,21 +10,23 @@ use LaravelBook\Ardent\Ardent;
 /**
  * User
  *
- * @property integer                                                               $id
- * @property \Carbon\Carbon                                                        $created_at
- * @property \Carbon\Carbon                                                        $updated_at
- * @property string                                                                $email
- * @property string                                                                $password
- * @property string                                                                $reset
- * @property string                                                                $remember_token
- * @property boolean                                                               $migrated
- * @property-read \Illuminate\Database\Eloquent\Collection|\Account[]              $accounts
- * @property-read \Illuminate\Database\Eloquent\Collection|\Budget[]               $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\Category[]             $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\Component[]            $components
- * @property-read \Illuminate\Database\Eloquent\Collection|\Preference[]           $preferences
+ * @property integer $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property string $email
+ * @property string $password
+ * @property string $reset
+ * @property string $remember_token
+ * @property boolean $migrated
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Account[] $accounts
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Budget[] $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Reminder[] $reminders
+ * @property-read \Illuminate\Database\Eloquent\Collection|\PiggybankReminder[] $piggybankreminders
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Category[] $categories
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Component[] $components
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Preference[] $preferences
  * @property-read \Illuminate\Database\Eloquent\Collection|\RecurringTransaction[] $recurringtransactions
- * @property-read \Illuminate\Database\Eloquent\Collection|\TransactionJournal[]   $transactionjournals
+ * @property-read \Illuminate\Database\Eloquent\Collection|\TransactionJournal[] $transactionjournals
  * @method static \Illuminate\Database\Query\Builder|\User whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\User whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\User whereUpdatedAt($value)
@@ -33,8 +35,6 @@ use LaravelBook\Ardent\Ardent;
  * @method static \Illuminate\Database\Query\Builder|\User whereReset($value)
  * @method static \Illuminate\Database\Query\Builder|\User whereRememberToken($value)
  * @method static \Illuminate\Database\Query\Builder|\User whereMigrated($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\Reminder[] $reminders
- * @property-read \Illuminate\Database\Eloquent\Collection|\PiggybankReminder[] $piggybankreminders
  */
 class User extends Ardent implements UserInterface, RemindableInterface
 {

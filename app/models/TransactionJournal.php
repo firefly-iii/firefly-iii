@@ -4,28 +4,27 @@ use Carbon\Carbon;
 use LaravelBook\Ardent\Ardent;
 use LaravelBook\Ardent\Builder;
 
-
 /**
  * TransactionJournal
  *
- * @property integer                                                      $id
- * @property Carbon                                                       $created_at
- * @property Carbon                                                       $updated_at
- * @property integer                                                      $user_id
- * @property integer                                                      $transaction_type_id
- * @property integer                                                      $transaction_currency_id
- * @property string                                                       $description
- * @property boolean                                                      $completed
- * @property Carbon                                                       $date
+ * @property integer $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property integer $user_id
+ * @property integer $transaction_type_id
+ * @property integer $transaction_currency_id
+ * @property string $description
+ * @property boolean $completed
+ * @property \Carbon\Carbon $date
  * @property-read \Illuminate\Database\Eloquent\Collection|\
- *             'Budget[] $budgets
+ *                     'Budget[] $budgets
  * @property-read \Illuminate\Database\Eloquent\Collection|\
- *             'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\Component[]   $components
- * @property-read \TransactionCurrency                                    $transactionCurrency
- * @property-read \TransactionType                                        $transactionType
+ *                     'Category[] $categories
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Component[] $components
+ * @property-read \TransactionCurrency $transactionCurrency
+ * @property-read \TransactionType $transactionType
  * @property-read \Illuminate\Database\Eloquent\Collection|\Transaction[] $transactions
- * @property-read \User                                                   $user
+ * @property-read \User $user
  * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereUpdatedAt($value)
@@ -35,35 +34,15 @@ use LaravelBook\Ardent\Builder;
  * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereDescription($value)
  * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereCompleted($value)
  * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereDate($value)
+ * @method static \TransactionJournal account($account)
  * @method static \TransactionJournal after($date)
  * @method static \TransactionJournal before($date)
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *             'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *             'Category[] $categories
- * @method static \TransactionJournal onDate($date)
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *             'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *             'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *             'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *             'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *             'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *             'Category[] $categories
  * @method static \TransactionJournal defaultSorting()
- * @method static \TransactionJournal withRelevantData()
- * @method static \TransactionJournal account($account)
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
  * @method static \TransactionJournal moreThan($amount)
  * @method static \TransactionJournal lessThan($amount)
+ * @method static \TransactionJournal onDate($date)
  * @method static \TransactionJournal transactionTypes($types)
+ * @method static \TransactionJournal withRelevantData()
  * @property-read \Illuminate\Database\Eloquent\Collection|\
  *                     'Budget[] $budgets
  * @property-read \Illuminate\Database\Eloquent\Collection|\

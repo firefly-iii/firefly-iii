@@ -2,7 +2,7 @@
 use Carbon\Carbon;
 
 /**
- * Class PiggybankReminder
+ * PiggybankReminder
  *
  * @property integer $id
  * @property \Carbon\Carbon $created_at

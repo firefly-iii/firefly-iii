@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class RecurringTransactionReminder
+ * RecurringTransactionReminder
  *
  * @property integer $id
  * @property \Carbon\Carbon $created_at
