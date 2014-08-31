@@ -77,10 +77,8 @@ class ChartControllerTest extends TestCase
     public function testHomeAccountInfo()
     {
         $account = f::create('Account');
-        $type = f::create('AccountType');
-        $type->type = 'Default account';
-        $type->save();
-        $account->accounttype()->associate($type);
+        $accountType = \AccountType::whereType('Default account')->first();
+        $account->accounttype()->associate($accountType);
         $account->save();
         // for successful binding:
         Auth::shouldReceive('user')->andReturn($account->user()->first());
