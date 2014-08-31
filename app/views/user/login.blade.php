@@ -29,7 +29,7 @@
                 <input type="checkbox" name="remember_me" value="1"> Remember login
             </label>
         </div>
-        <button type="submit" class="btn btn-info">Submit</button>
+        <button type="submit" class="btn btn-info">Login</button>
         {{Form::close()}}
     </div>
 </div>
