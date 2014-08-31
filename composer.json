@@ -26,13 +26,12 @@
         "codesleeve/asset-pipeline": "~2.0"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "~1.6",
-        "barryvdh/laravel-ide-helper": "~1.9",
-        "mockery/mockery": "~0.9",
-        "satooshi/php-coveralls": "~0.6",
-        "league/factory-muffin": "~2.0",
-        "doctrine/dbal": "2.4.*",
-        "codeception/codeception": "*"
+        "barryvdh/laravel-debugbar": "@stable",
+        "barryvdh/laravel-ide-helper": "@stable",
+        "mockery/mockery": "@dev",
+        "satooshi/php-coveralls": "@stable",
+        "league/factory-muffin": "@stable",
+        "doctrine/dbal": "@stable"
     },
     "autoload": {
         "classmap": [
