@@ -5,20 +5,21 @@ use LaravelBook\Ardent\Ardent;
 /**
  * RecurringTransaction
  *
- * @property integer        $id
+ * @property integer $id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property integer        $user_id
- * @property string         $name
- * @property string         $match
- * @property float          $amount_max
- * @property float          $amount_min
+ * @property integer $user_id
+ * @property string $name
+ * @property string $match
+ * @property float $amount_max
+ * @property float $amount_min
  * @property \Carbon\Carbon $date
- * @property boolean        $active
- * @property boolean        $automatch
- * @property string         $repeat_freq
- * @property integer        $skip
- * @property-read \User     $user
+ * @property boolean $active
+ * @property boolean $automatch
+ * @property string $repeat_freq
+ * @property integer $skip
+ * @property-read \Illuminate\Database\Eloquent\Collection|\RecurringTransactionReminder[] $reminders
+ * @property-read \User $user
  * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereUpdatedAt($value)
@@ -32,7 +33,6 @@ use LaravelBook\Ardent\Ardent;
  * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAutomatch($value)
  * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereRepeatFreq($value)
  * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereSkip($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\RecurringTransactionReminder[] $reminders
  */
 class RecurringTransaction extends Ardent
 {

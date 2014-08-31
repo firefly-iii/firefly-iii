@@ -3,10 +3,10 @@
 /**
  * TransactionCurrency
  *
- * @property integer                                                             $id
- * @property \Carbon\Carbon                                                      $created_at
- * @property \Carbon\Carbon                                                      $updated_at
- * @property string                                                              $code
+ * @property integer $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property string $code
  * @property-read \Illuminate\Database\Eloquent\Collection|\TransactionJournal[] $transactionjournals
  * @method static \Illuminate\Database\Query\Builder|\TransactionCurrency whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\TransactionCurrency whereCreatedAt($value)
