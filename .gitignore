@@ -12,3 +12,4 @@ _ide_helper.php
 /build/logs/clover.xml
 index.html*
 app/storage/firefly-export*
+.vagrant
