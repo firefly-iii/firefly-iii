@@ -23,7 +23,7 @@ use LaravelBook\Ardent\Builder;
  * @method static \Illuminate\Database\Query\Builder|\Account whereAccountTypeId($value)
  * @method static \Illuminate\Database\Query\Builder|\Account whereName($value)
  * @method static \Illuminate\Database\Query\Builder|\Account whereActive($value)
- * @method static \Account accountType($types)
+ * @method static \Account accountTypeIn($types)
  */
 class Account extends Ardent
 {
@@ -113,7 +113,7 @@ class Account extends Ardent
         return $this->belongsTo('User');
     }
 
-    public function scopeAccountType(Builder $query, array $types) {
+    public function scopeAccountTypeIn(Builder $query, array $types) {
         if(is_null($this->joinedAccountTypes)) {
             $query->leftJoin('account_types','account_types.id','=','accounts.account_type_id');
             $this->joinedAccountTypes = true;

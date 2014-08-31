@@ -16,11 +16,11 @@ class AccountController extends \BaseController
 
     /**
      * @param ARI $repository
-     * @param AI  $accounts
+     * @param AI $accounts
      */
     public function __construct(ARI $repository, AI $accounts)
     {
-        $this->_accounts = $accounts;
+        $this->_accounts   = $accounts;
         $this->_repository = $repository;
     }
 
@@ -29,7 +29,7 @@ class AccountController extends \BaseController
      */
     public function create()
     {
-        return View::make('accounts.create');
+        return View::make('accounts.create')->with('title', 'Create account');
     }
 
     /**
@@ -39,7 +39,8 @@ class AccountController extends \BaseController
      */
     public function delete(Account $account)
     {
-        return View::make('accounts.delete')->with('account', $account);
+        return View::make('accounts.delete')->with('account', $account)
+                   ->with('title', 'Delete account "' . $account->name . '"');
     }
 
     /**
@@ -65,7 +66,7 @@ class AccountController extends \BaseController
     public function edit(Account $account)
     {
         $openingBalance = $this->_accounts->openingBalanceTransaction($account);
-        return View::make('accounts.edit')->with('account', $account)->with('openingBalance', $openingBalance);
+        return View::make('accounts.edit')->with('account', $account)->with('openingBalance', $openingBalance)->with('title','Edit account "'.$account->name.'"');
     }
 
     /**
@@ -74,7 +75,7 @@ class AccountController extends \BaseController
     public function index()
     {
         $accounts = $this->_repository->get();
-        $set = [
+        $set      = [
             'personal'      => [],
             'beneficiaries' => []
         ];
@@ -89,7 +90,7 @@ class AccountController extends \BaseController
             }
         }
 
-        return View::make('accounts.index')->with('accounts', $set);
+        return View::make('accounts.index')->with('accounts', $set)->with('title','All your accounts');
     }
 
     /**
@@ -101,7 +102,8 @@ class AccountController extends \BaseController
     {
         $data = $this->_accounts->show($account, 40);
 
-        return View::make('accounts.show')->with('account', $account)->with('show', $data);
+        return View::make('accounts.show')->with('account', $account)->with('show', $data)->with('title',
+            'Details for account "' . $account->name . '"');
     }
 
     /**
