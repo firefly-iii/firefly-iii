@@ -68,21 +68,21 @@ class AccountTest extends TestCase
         // user should equal test user:
         $this->assertEquals($user->id, $account->user()->first()->id);
 
-        // whatever the account type of this account, searching for it using the
-        // scope method should return one account:
-        $accountTypeType = $account->accounttype->type;
-        $this->assertCount(1, \Account::AccountTypeIn([$accountTypeType])->get());
-
-        // lame test
         $this->assertEquals('testing',\App::environment());
 
-        // count the number of accounts the account type has. Should be one:
+        \Log::debug('Hello from test!');
+        \Log::debug('Number of accounts: ' . \Account::count());
+        \Log::debug('Number of account types: ' . \AccountType::count());
+
+        foreach(\AccountType::get() as $t) {
+            \Log::debug('AccountType: #'.$t->id.', ' . $t->type);
+        }
+
+        // whatever the account type of this account, searching for it using the
+        // scope method should return one account:
         $accountType = $account->accounttype()->first();
-        $this->assertCount(1,$accountType->accounts()->get());
-
-
-
-
+        $accounts = $accountType->accounts()->count();
+        $this->assertCount($accounts, \Account::AccountTypeIn([$accountType->type])->get());
 
     }
 
@@ -111,9 +111,7 @@ class AccountTest extends TestCase
         $account = f::create('Account');
 
         /** @var \AccountType $accountType */
-        $accountType       = f::create('AccountType');
-        $accountType->type = 'Default account';
-        $accountType->save();
+        $accountType = \AccountType::whereType('Default account')->first();
         $account->accountType()->associate($accountType);
         $account->save();
 
@@ -142,9 +140,7 @@ class AccountTest extends TestCase
         $account = f::create('Account');
 
         /** @var \AccountType $accountType */
-        $accountType       = f::create('AccountType');
-        $accountType->type = 'Default account';
-        $accountType->save();
+        $accountType = \AccountType::whereType('Default account')->first();
         $account->accountType()->associate($accountType);
         $account->save();
 
@@ -173,9 +169,7 @@ class AccountTest extends TestCase
         $account = f::create('Account');
 
         /** @var \AccountType $accountType */
-        $accountType       = f::create('AccountType');
-        $accountType->type = 'Default account';
-        $accountType->save();
+        $accountType = \AccountType::whereType('Default account')->first();
         $account->accountType()->associate($accountType);
         $account->save();
 
@@ -204,12 +198,8 @@ class AccountTest extends TestCase
     public function testIndex()
     {
         // two account types:
-        $personalType       = f::create('AccountType');
-        $personalType->type = 'Default account';
-        $personalType->save();
-        $benType       = f::create('AccountType');
-        $benType->type = 'Beneficiary account';
-        $benType->save();
+        $personalType = \AccountType::whereType('Default account')->first();
+        $benType = \AccountType::whereType('Beneficiary account')->first();
 
         // create two accounts:
         /** @var \Account $account */
@@ -251,9 +241,7 @@ class AccountTest extends TestCase
         $account = f::create('Account');
 
         /** @var \AccountType $accountType */
-        $accountType       = f::create('AccountType');
-        $accountType->type = 'Default account';
-        $accountType->save();
+        $accountType = \AccountType::whereType('Default account')->first();
         $account->accountType()->associate($accountType);
         $account->save();
 
@@ -285,9 +273,7 @@ class AccountTest extends TestCase
         $account = f::create('Account');
 
         /** @var \AccountType $accountType */
-        $accountType       = f::create('AccountType');
-        $accountType->type = 'Default account';
-        $accountType->save();
+        $accountType = \AccountType::whereType('Default account')->first();
         $account->accountType()->associate($accountType);
         $account->save();
 
@@ -306,9 +292,7 @@ class AccountTest extends TestCase
         $account = f::create('Account');
 
         /** @var \AccountType $accountType */
-        $accountType       = f::create('AccountType');
-        $accountType->type = 'Default account';
-        $accountType->save();
+        $accountType = \AccountType::whereType('Default account')->first();
         $account->accountType()->associate($accountType);
         $account->save();
 
@@ -325,9 +309,7 @@ class AccountTest extends TestCase
         $account = f::create('Account');
 
         /** @var \AccountType $accountType */
-        $accountType       = f::create('AccountType');
-        $accountType->type = 'Default account';
-        $accountType->save();
+        $accountType = \AccountType::whereType('Default account')->first();
         $account->accountType()->associate($accountType);
         $account->save();
 
@@ -343,9 +325,7 @@ class AccountTest extends TestCase
         $account = f::create('Account');
 
         /** @var \AccountType $accountType */
-        $accountType       = f::create('AccountType');
-        $accountType->type = 'Default account';
-        $accountType->save();
+        $accountType = \AccountType::whereType('Default account')->first();
         $account->accountType()->associate($accountType);
         $account->save();
 
@@ -370,9 +350,7 @@ class AccountTest extends TestCase
         $account = f::create('Account');
 
         /** @var \AccountType $accountType */
-        $accountType       = f::create('AccountType');
-        $accountType->type = 'Default account';
-        $accountType->save();
+        $accountType = \AccountType::whereType('Default account')->first();
         $account->accountType()->associate($accountType);
         $account->save();
 

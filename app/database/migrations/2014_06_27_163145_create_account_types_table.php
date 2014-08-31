@@ -12,23 +12,6 @@ class CreateAccountTypesTable extends Migration
 {
 
     /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create(
-            'account_types', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->string('type', 50);
-                $table->boolean('editable');
-            }
-        );
-    }
-
-    /**
      * Reverse the migrations.
      *
      * @return void
@@ -36,6 +19,25 @@ class CreateAccountTypesTable extends Migration
     public function down()
     {
         Schema::drop('account_types');
+    }
+
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create(
+              'account_types', function (Blueprint $table) {
+                      $table->increments('id');
+                      $table->timestamps();
+                      $table->string('type', 50);
+                      $table->boolean('editable');
+
+                      $table->unique('type');
+                  }
+        );
     }
 
 }
