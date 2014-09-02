@@ -44,5 +44,11 @@ interface RecurringTransactionRepositoryInterface
      */
     public function update(\RecurringTransaction $recurringTransaction, $data);
 
+    /**
+     * @param \User $user
+     * @return mixed
+     */
+    public function overruleUser(\User $user);
+
 
 } 

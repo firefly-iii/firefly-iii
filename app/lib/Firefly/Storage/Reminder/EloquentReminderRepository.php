@@ -13,6 +13,26 @@ use Carbon\Carbon;
 class EloquentReminderRepository implements ReminderRepositoryInterface
 {
     /**
+     * @param \User $user
+     * @return mixed|void
+     */
+    public function overruleUser(\User $user)
+    {
+        $this->_user = $user;
+        return true;
+    }
+
+    protected $_user = null;
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        $this->_user = \Auth::user();
+    }
+
+    /**
      * @param \Reminder $reminder
      *
      * @return mixed|void
@@ -42,7 +62,7 @@ class EloquentReminderRepository implements ReminderRepositoryInterface
     {
         $today = new Carbon;
 
-        return \Auth::user()->reminders()->validOn($today)->get();
+        return $this->_user->reminders()->validOn($today)->get();
     }
 
     /**
@@ -52,8 +72,8 @@ class EloquentReminderRepository implements ReminderRepositoryInterface
     {
         $today = new Carbon;
 
-        return \Auth::user()->reminders()->with('recurringtransaction')->validOn($today)->where(
-            'class', 'RecurringTransactionReminder'
+        return $this->_user->reminders()->with('recurringtransaction')->validOn($today)->where(
+                    'class', 'RecurringTransactionReminder'
         )->get();
 
     }

@@ -39,4 +39,10 @@ interface ReminderRepositoryInterface
 
     public function getCurrentRecurringReminders();
 
+    /**
+     * @param \User $user
+     * @return mixed
+     */
+    public function overruleUser(\User $user);
+
 } 

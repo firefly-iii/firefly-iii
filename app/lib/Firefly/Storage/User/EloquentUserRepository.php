@@ -60,10 +60,10 @@ class EloquentUserRepository implements UserRepositoryInterface
      */
     public function register($array)
     {
-        $user = new \User;
-        $user->email = isset($array['email']) ? $array['email'] : null;
+        $user           = new \User;
+        $user->email    = isset($array['email']) ? $array['email'] : null;
         $user->migrated = 0;
-        $user->reset = \Str::random(32);
+        $user->reset    = \Str::random(32);
         $user->password = \Hash::make(\Str::random(12));
 
         if (!$user->save()) {

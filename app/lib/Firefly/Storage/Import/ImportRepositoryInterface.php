@@ -24,4 +24,10 @@ interface ImportRepositoryInterface
     public function findImportEntry(\Importmap $map, $class, $oldID);
 
     public function findImportComponentMap(\Importmap $map, $oldComponentId);
+
+    /**
+     * @param \User $user
+     * @return mixed
+     */
+    public function overruleUser(\User $user);
 } 

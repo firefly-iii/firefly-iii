@@ -3,8 +3,7 @@
 namespace Firefly\Queue;
 
 use Carbon\Carbon;
-use Firefly\Exception\FireflyException;
-use Illuminate\Queue\Jobs\SyncJob;
+use Illuminate\Queue\Jobs\Job;
 
 /**
  * Class Import
@@ -24,6 +23,18 @@ class Import
     /** @var \Firefly\Storage\Category\CategoryRepositoryInterface */
     protected $_categories;
 
+    /** @var \Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface */
+    protected $_journals;
+
+    /** @var \Firefly\Storage\Limit\LimitRepositoryInterface */
+    protected $_limits;
+
+    /** @var \Firefly\Storage\Piggybank\PiggybankRepositoryInterface */
+    protected $_piggybanks;
+
+    /** @var \Firefly\Storage\RecurringTransaction\RecurringTransactionRepositoryInterface */
+    protected $_recurring;
+
     /**
      *
      */
@@ -33,19 +44,59 @@ class Import
         $this->_repository = \App::make('Firefly\Storage\Import\ImportRepositoryInterface');
         $this->_budgets    = \App::make('Firefly\Storage\Budget\BudgetRepositoryInterface');
         $this->_categories = \App::make('Firefly\Storage\Category\CategoryRepositoryInterface');
+        $this->_journals   = \App::make('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
+        $this->_limits     = \App::make('Firefly\Storage\Limit\LimitRepositoryInterface');
+        $this->_piggybanks = \App::make('Firefly\Storage\Piggybank\PiggybankRepositoryInterface');
+        $this->_recurring  = \App::make('Firefly\Storage\RecurringTransaction\RecurringTransactionRepositoryInterface');
+
+
+    }
+
+    /**
+     * @param Job $job
+     * @param array $payload
+     * @throws \Firefly\Exception\FireflyException
+     */
+    public function importComponent(Job $job, array $payload)
+    {
+
+        \Log::debug('Going to import component "' . $payload['data']['name'] . '".');
+        switch ($payload['data']['type']['type']) {
+            case 'beneficiary':
+                $payload['class']                = 'Account';
+                $payload['data']['account_type'] = 'Beneficiary account';
+                $this->importAccount($job, $payload);
+                break;
+            case 'budget':
+                $this->importBudget($job, $payload);
+                break;
+            case 'category':
+                $this->importCategory($job, $payload);
+                break;
+            case 'payer':
+                $job->delete();
+                break;
+            default:
+                $job->delete();
+                break;
+        }
+
     }
 
     /**
      * Import a personal account or beneficiary as a new account.
      *
-     * @param SyncJob $job
+     * @param Job $job
      * @param array $payload
      */
-    public function importAccount(SyncJob $job, array $payload)
+    public function importAccount(Job $job, array $payload)
     {
 
         /** @var \Importmap $importMap */
         $importMap = $this->_repository->findImportmap($payload['mapID']);
+        $user      = $importMap->user;
+        $this->overruleUser($user);
+
 
         // maybe we've already imported this account:
         $importEntry = $this->_repository->findImportEntry($importMap, 'Account', intval($payload['data']['id']));
@@ -86,15 +137,32 @@ class Import
     }
 
     /**
+     * @param \User $user
+     */
+    protected function overruleUser(\User $user)
+    {
+        $this->_accounts->overruleUser($user);
+        $this->_budgets->overruleUser($user);
+        $this->_categories->overruleUser($user);
+        $this->_journals->overruleUser($user);
+        $this->_limits->overruleUser($user);
+        $this->_repository->overruleUser($user);
+        $this->_piggybanks->overruleUser($user);
+        $this->_recurring->overruleUser($user);
+    }
+
+    /**
      * Import a budget into Firefly.
      *
-     * @param SyncJob $job
+     * @param Job $job
      * @param array $payload
      */
-    public function importBudget(SyncJob $job, array $payload)
+    public function importBudget(Job $job, array $payload)
     {
         /** @var \Importmap $importMap */
         $importMap = $this->_repository->findImportmap($payload['mapID']);
+        $user      = $importMap->user;
+        $this->overruleUser($user);
 
         // maybe we've already imported this budget:
         $bdg = $this->_budgets->findByName($payload['data']['name']);
@@ -117,14 +185,16 @@ class Import
     /**
      * Import a category into Firefly.
      *
-     * @param SyncJob $job
+     * @param Job $job
      * @param array $payload
      */
-    public function importCategory(SyncJob $job, array $payload)
+    public function importCategory(Job $job, array $payload)
     {
 
         /** @var \Importmap $importMap */
         $importMap = $this->_repository->findImportmap($payload['mapID']);
+        $user      = $importMap->user;
+        $this->overruleUser($user);
 
         // try to find budget:
         $current = $this->_categories->findByName($payload['data']['name']);
@@ -141,85 +211,42 @@ class Import
     }
 
     /**
-     * @param SyncJob $job
-     * @param array $payload
-     * @throws \Firefly\Exception\FireflyException
-     */
-    public function importComponent(SyncJob $job, array $payload)
-    {
-
-        \Log::debug('Going to import component "' . $payload['data']['name'] . '".');
-        switch ($payload['data']['type']['type']) {
-            case 'beneficiary':
-                $jobFunction                     = 'Firefly\Queue\Import@importAccount';
-                $payload['class']                = 'Account';
-                $payload['data']['account_type'] = 'Beneficiary account';
-                \Log::debug('It is a beneficiary.');
-                break;
-            case 'budget':
-                $jobFunction = 'Firefly\Queue\Import@importBudget';
-                \Log::debug('It is a budget.');
-                break;
-            case 'category':
-                $jobFunction = 'Firefly\Queue\Import@importCategory';
-                \Log::debug('It is a category.');
-                break;
-            case 'payer':
-                // ignored!
-                break;
-            default:
-                throw new FireflyException('No import case for "' . $payload['data']['type']['type'] . '"!');
-        }
-        if (isset($jobFunction)) {
-            \Queue::push($jobFunction, $payload);
-        }
-        $job->delete();
-    }
-
-    /**
-     * @param SyncJob $job
+     * @param Job $job
      * @param array $payload
      */
-    public function importComponentTransaction(SyncJob $job, array $payload)
+    public function importComponentTransaction(Job $job, array $payload)
     {
         if ($job->attempts() > 1) {
-            \Log::info('Job running for ' . $job->attempts() . 'th time!');
+            \Log::info('importComponentTransaction Job running for ' . $job->attempts() . 'th time!');
+        }
+        if ($job->attempts() > 30) {
+            \Log::error('importComponentTransaction Job running for ' . $job->attempts() . 'th time, so KILL!');
+            $job->delete();
+            return;
         }
 
         $oldComponentId   = intval($payload['data']['component_id']);
         $oldTransactionId = intval($payload['data']['transaction_id']);
 
-        /** @var \Firefly\Storage\Import\ImportRepositoryInterface $repository */
-        $repository = \App::make('Firefly\Storage\Import\ImportRepositoryInterface');
-
-
-        /** @var \Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface $journals */
-        $journals = \App::make('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
-
-        /** @var \Firefly\Storage\Category\CategoryRepositoryInterface $categories */
-        $categories = \App::make('Firefly\Storage\Category\CategoryRepositoryInterface');
-
-        /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accounts */
-        $accounts = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
-
-
         /** @var \Importmap $importMap */
-        $importMap = $repository->findImportmap($payload['mapID']);
+        $importMap = $this->_repository->findImportmap($payload['mapID']);
+        $user      = $importMap->user;
+        $this->overruleUser($user);
 
-        $oldTransactionMap = $repository->findImportEntry($importMap, 'Transaction', $oldTransactionId);
+        $oldTransactionMap = $this->_repository->findImportEntry($importMap, 'Transaction', $oldTransactionId);
 
         // we don't know what the component is, so we need to search for it in a set
         // of possible types (Account / Beneficiary, Budget, Category)
         /** @var \Importentry $oldComponentMap */
-        $oldComponentMap = $repository->findImportComponentMap($importMap, $oldComponentId);
+        $oldComponentMap = $this->_repository->findImportComponentMap($importMap, $oldComponentId);
 
         if (is_null($oldComponentMap)) {
-            \Log::debug('Could not run this one, waiting for five seconds...');
-            $job->release(5);
+            \Log::debug('importComponentTransaction Could not run this one, waiting for five minutes...');
+            $job->release(300);
             return;
         }
 
-        $journal = $journals->find($oldTransactionMap->new);
+        $journal = $this->_journals->find($oldTransactionMap->new);
         \Log::debug('Going to update ' . $journal->description);
 
         // find the cash account:
@@ -237,8 +264,8 @@ class Import
 
                 break;
             case 'Category':
-                $category = $categories->find($oldComponentMap->new);
-                $journal  = $journals->find($oldTransactionMap->new);
+                $category = $this->_categories->find($oldComponentMap->new);
+                $journal  = $this->_journals->find($oldTransactionMap->new);
                 \Log::info('Updating transactions Category.');
                 $journal->categories()->save($category);
                 $journal->save();
@@ -246,11 +273,11 @@ class Import
                 break;
             case 'Account':
                 \Log::info('Updating transactions Account.');
-                $account = $accounts->find($oldComponentMap->new);
-                $journal = $journals->find($oldTransactionMap->new);
+                $account = $this->_accounts->find($oldComponentMap->new);
+                $journal = $this->_journals->find($oldTransactionMap->new);
                 if (is_null($account)) {
                     \Log::debug('Cash account is needed.');
-                    $account = $accounts->getCashAccount();
+                    $account = $this->_accounts->getCashAccount();
                     \Log::info($account);
                 }
 
@@ -269,51 +296,51 @@ class Import
     }
 
     /**
-     * @param SyncJob $job
+     * @param Job $job
      * @param array $payload
      */
-    public function importLimit(SyncJob $job, array $payload)
+    public function importLimit(Job $job, array $payload)
     {
-
-        /** @var \Firefly\Storage\Limit\LimitRepositoryInterface $limits */
-        $limits = \App::make('Firefly\Storage\Limit\LimitRepositoryInterface');
-
-        /** @var \Firefly\Storage\Import\ImportRepositoryInterface $repository */
-        $repository = \App::make('Firefly\Storage\Import\ImportRepositoryInterface');
-
-        /** @var \Firefly\Storage\Budget\BudgetRepositoryInterface $budgets */
-        $budgets = \App::make('Firefly\Storage\Budget\BudgetRepositoryInterface');
+        if ($job->attempts() > 30) {
+            \Log::error('importLimit Job running for ' . $job->attempts() . 'th time, so KILL!');
+            $job->delete();
+            return;
+        }
 
         /** @var \Importmap $importMap */
-        $importMap = $repository->findImportmap($payload['mapID']);
+        $importMap = $this->_repository->findImportmap($payload['mapID']);
+        $user      = $importMap->user;
+        $this->overruleUser($user);
 
 
         // find the budget this limit is part of:
-        $importEntry = $repository->findImportEntry($importMap, 'Budget', intval($payload['data']['component_id']));
+        $importEntry = $this->_repository->findImportEntry($importMap, 'Budget',
+            intval($payload['data']['component_id']));
 
         // budget is not yet imported:
         if (is_null($importEntry)) {
-            \Log::debug('Released job for work in five seconds...');
-            $job->release(5);
+            \Log::debug('importLimit Cannot import limit #' . $payload['data']['id'] .
+                ' because the budget is not here yet. #' . $job->attempts());
+            $job->release(300);
             return;
         }
         // find similar limit:
         \Log::debug('Trying to find budget with ID #' . $importEntry->new . ', based on entry #' . $importEntry->id);
-        $budget = $budgets->find($importEntry->new);
+        $budget = $this->_budgets->find($importEntry->new);
         if (!is_null($budget)) {
-            $current = $limits->findByBudgetAndDate($budget, new Carbon($payload['data']['date']));
+            $current = $this->_limits->findByBudgetAndDate($budget, new Carbon($payload['data']['date']));
             if (is_null($current)) {
                 // create it!
                 $payload['data']['budget_id'] = $budget->id;
                 $payload['data']['startdate'] = $payload['data']['date'];
                 $payload['data']['period']    = 'monthly';
-                $lim                          = $limits->store((array)$payload['data']);
-                $repository->store($importMap, 'Limit', $payload['data']['id'], $lim->id);
+                $lim                          = $this->_limits->store((array)$payload['data']);
+                $this->_repository->store($importMap, 'Limit', $payload['data']['id'], $lim->id);
                 \Event::fire('limits.store', [$lim]);
                 \Log::debug('Imported ' . $payload['class'] . ', for ' . $budget->name . ' (' . $lim->startdate . ').');
             } else {
                 // already has!
-                $repository->store($importMap, 'Budget', $payload['data']['id'], $current->id);
+                $this->_repository->store($importMap, 'Budget', $payload['data']['id'], $current->id);
                 \Log::debug('Already had ' . $payload['class'] . ', for ' . $budget->name . ' (' . $current->startdate . ').');
             }
         } else {
@@ -324,34 +351,27 @@ class Import
     }
 
     /**
-     * @param SyncJob $job
+     * @param Job $job
      * @param array $payload
      */
-    public function importPiggybank(SyncJob $job, array $payload)
+    public function importPiggybank(Job $job, array $payload)
     {
-        /** @var \Firefly\Storage\Piggybank\PiggybankRepositoryInterface $piggybanks */
-        $piggybanks = \App::make('Firefly\Storage\Piggybank\PiggybankRepositoryInterface');
-
-        /** @var \Firefly\Storage\Import\ImportRepositoryInterface $repository */
-        $repository = \App::make('Firefly\Storage\Import\ImportRepositoryInterface');
-
         /** @var \Importmap $importMap */
-        $importMap = $repository->findImportmap($payload['mapID']);
+        $importMap = $this->_repository->findImportmap($payload['mapID']);
+        $user      = $importMap->user;
+        $this->overruleUser($user);
 
-        /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accounts */
-        $accounts = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
-
-        // try to find related piggybank:
-        $current = $piggybanks->findByName($payload['data']['name']);
+//         try to find related piggybank:
+        $current = $this->_piggybanks->findByName($payload['data']['name']);
 
         // we need an account to go with this piggy bank:
-        $set = $accounts->getActiveDefault();
+        $set = $this->_accounts->getActiveDefault();
         if (count($set) > 0) {
             $account                       = $set[0];
             $payload['data']['account_id'] = $account->id;
         } else {
-            \Log::debug('Released job for work in five seconds...');
-            $job->release(5);
+            \Log::debug('Released job for work in five minutes...');
+            $job->release(300);
             return;
         }
 
@@ -361,35 +381,31 @@ class Import
             $payload['data']['rep_every']     = 1;
             $payload['data']['reminder_skip'] = 1;
             $payload['data']['rep_times']     = 1;
-            $piggy                            = $piggybanks->store((array)$payload['data']);
-            $repository->store($importMap, 'Piggybank', $payload['data']['id'], $piggy->id);
+            $piggy                            = $this->_piggybanks->store((array)$payload['data']);
+            $this->_repository->store($importMap, 'Piggybank', $payload['data']['id'], $piggy->id);
             \Log::debug('Imported ' . $payload['class'] . ' "' . $payload['data']['name'] . '".');
             \Event::fire('piggybanks.store', [$piggy]);
         } else {
-            $repository->store($importMap, 'Piggybank', $payload['data']['id'], $current->id);
+            $this->_repository->store($importMap, 'Piggybank', $payload['data']['id'], $current->id);
             \Log::debug('Already had ' . $payload['class'] . ' "' . $payload['data']['name'] . '".');
         }
         $job->delete();
     }
 
     /**
-     * @param SyncJob $job
+     * @param Job $job
      * @param array $payload
      */
-    public function importPredictable(SyncJob $job, array $payload)
+    public function importPredictable(Job $job, array $payload)
     {
-        /** @var \Firefly\Storage\RecurringTransaction\RecurringTransactionRepositoryInterface $piggybanks */
-        $recurring = \App::make('Firefly\Storage\RecurringTransaction\RecurringTransactionRepositoryInterface');
-
-        /** @var \Firefly\Storage\Import\ImportRepositoryInterface $repository */
-        $repository = \App::make('Firefly\Storage\Import\ImportRepositoryInterface');
-
         /** @var \Importmap $importMap */
-        $importMap = $repository->findImportmap($payload['mapID']);
+        $importMap = $this->_repository->findImportmap($payload['mapID']);
+        $user      = $importMap->user;
+        $this->overruleUser($user);
 
 
         // try to find related recurring transaction:
-        $current = $recurring->findByName($payload['data']['description']);
+        $current = $this->_recurring->findByName($payload['data']['description']);
         if (is_null($current)) {
 
             $payload['data']['name']        = $payload['data']['description'];
@@ -402,12 +418,12 @@ class Import
             $payload['data']['active']      = intval($payload['data']['inactive']) == 1 ? 0 : 1;
             $payload['data']['automatch']   = 1;
 
-            $recur = $recurring->store((array)$payload['data']);
+            $recur = $this->_recurring->store((array)$payload['data']);
 
-            $repository->store($importMap, 'RecurringTransaction', $payload['data']['id'], $recur->id);
+            $this->_repository->store($importMap, 'RecurringTransaction', $payload['data']['id'], $recur->id);
             \Log::debug('Imported ' . $payload['class'] . ' "' . $payload['data']['name'] . '".');
         } else {
-            $repository->store($importMap, 'RecurringTransaction', $payload['data']['id'], $current->id);
+            $this->_repository->store($importMap, 'RecurringTransaction', $payload['data']['id'], $current->id);
             \Log::debug('Already had ' . $payload['class'] . ' "' . $payload['data']['description'] . '".');
         }
         $job->delete();
@@ -415,10 +431,10 @@ class Import
     }
 
     /**
-     * @param SyncJob $job
+     * @param Job $job
      * @param array $payload
      */
-    public function importSetting(SyncJob $job, array $payload)
+    public function importSetting(Job $job, array $payload)
     {
         switch ($payload['data']['name']) {
             default:
@@ -429,23 +445,17 @@ class Import
                 // if we have this account, update all piggy banks:
                 $accountID = intval($payload['data']['value']);
 
-                /** @var \Firefly\Storage\Import\ImportRepositoryInterface $repository */
-                $repository = \App::make('Firefly\Storage\Import\ImportRepositoryInterface');
-
                 /** @var \Importmap $importMap */
-                $importMap = $repository->findImportmap($payload['mapID']);
+                $importMap = $this->_repository->findImportmap($payload['mapID']);
+                $user      = $importMap->user;
+                $this->overruleUser($user);
 
 
-                $importEntry = $repository->findImportEntry($importMap, 'Account', $accountID);
+                $importEntry = $this->_repository->findImportEntry($importMap, 'Account', $accountID);
                 if ($importEntry) {
-                    /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accounts */
-                    $accounts = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
 
-                    /** @var \Firefly\Storage\Piggybank\PiggybankRepositoryInterface $piggybanks */
-                    $piggybanks = \App::make('Firefly\Storage\Piggybank\PiggybankRepositoryInterface');
-
-                    $all     = $piggybanks->get();
-                    $account = $accounts->find($importEntry->new);
+                    $all     = $this->_piggybanks->get();
+                    $account = $this->_accounts->find($importEntry->new);
 
                     \Log::debug('Updating all piggybanks, found the right setting.');
                     foreach ($all as $piggy) {
@@ -454,7 +464,8 @@ class Import
                         $piggy->save();
                     }
                 } else {
-                    $job->release(5);
+                    \Log::debug('importSetting wait five minutes and try again...');
+                    $job->release(300);
                 }
                 break;
         }
@@ -463,35 +474,29 @@ class Import
     }
 
     /**
-     * @param SyncJob $job
+     * @param Job $job
      * @param array $payload
      */
-    public function importTransaction(SyncJob $job, array $payload)
+    public function importTransaction(Job $job, array $payload)
     {
-        /** @var \Firefly\Storage\Import\ImportRepositoryInterface $repository */
-        $repository = \App::make('Firefly\Storage\Import\ImportRepositoryInterface');
-
-        /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accounts */
-        $accounts = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
-
-        /** @var \Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface $journals */
-        $journals = \App::make('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
-
 
         /** @var \Importmap $importMap */
-        $importMap = $repository->findImportmap($payload['mapID']);
+        $importMap = $this->_repository->findImportmap($payload['mapID']);
+        $user      = $importMap->user;
+        $this->overruleUser($user);
 
         // find or create the account type for the import account.
         // find or create the account for the import account.
-        $accountType   = $accounts->findAccountType('Import account');
-        $importAccount = $accounts->createOrFind('Import account', $accountType);
+        $accountType   = $this->_accounts->findAccountType('Import account');
+        $importAccount = $this->_accounts->createOrFind('Import account', $accountType);
 
 
         // if amount is more than zero, move from $importAccount
         $amount = floatval($payload['data']['amount']);
 
-        $accountEntry    = $repository->findImportEntry($importMap, 'Account', intval($payload['data']['account_id']));
-        $personalAccount = $accounts->find($accountEntry->new);
+        $accountEntry    = $this->_repository->findImportEntry($importMap, 'Account',
+            intval($payload['data']['account_id']));
+        $personalAccount = $this->_accounts->find($accountEntry->new);
 
         if ($amount < 0) {
             // if amount is less than zero, move to $importAccount
@@ -505,54 +510,49 @@ class Import
         $date   = new Carbon($payload['data']['date']);
 
         // find a journal?
-        $current = $repository->findImportEntry($importMap, 'Transaction', intval($payload['data']['id']));
+        $current = $this->_repository->findImportEntry($importMap, 'Transaction', intval($payload['data']['id']));
 
 
         if (is_null($current)) {
-            $journal = $journals->createSimpleJournal($accountFrom, $accountTo,
+            $journal = $this->_journals->createSimpleJournal($accountFrom, $accountTo,
                 $payload['data']['description'], $amount, $date);
-            $repository->store($importMap, 'Transaction', $payload['data']['id'], $journal->id);
+            $this->_repository->store($importMap, 'Transaction', $payload['data']['id'], $journal->id);
             \Log::debug('Imported transaction "' . $payload['data']['description'] . '" (' . $journal->date->format('Y-m-d') . ').');
         } else {
             // do nothing.
             \Log::debug('ALREADY imported transaction "' . $payload['data']['description'] . '".');
         }
 
+        $job->delete();
 
     }
 
     /**
-     * @param SyncJob $job
+     * @param Job $job
      * @param array $payload
      */
-    public function importTransfer(SyncJob $job, array $payload)
+    public function importTransfer(Job $job, array $payload)
     {
-        /** @var \Firefly\Storage\Import\ImportRepositoryInterface $repository */
-        $repository = \App::make('Firefly\Storage\Import\ImportRepositoryInterface');
-
-        /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accounts */
-        $accounts = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
-
-        /** @var \Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface $journals */
-        $journals = \App::make('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
 
 
         /** @var \Importmap $importMap */
-        $importMap = $repository->findImportmap($payload['mapID']);
+        $importMap = $this->_repository->findImportmap($payload['mapID']);
+        $user      = $importMap->user;
+        $this->overruleUser($user);
 
         // from account:
         $oldFromAccountID    = intval($payload['data']['accountfrom_id']);
-        $oldFromAccountEntry = $repository->findImportEntry($importMap, 'Account', $oldFromAccountID);
-        $accountFrom         = $accounts->find($oldFromAccountEntry->new);
+        $oldFromAccountEntry = $this->_repository->findImportEntry($importMap, 'Account', $oldFromAccountID);
+        $accountFrom         = $this->_accounts->find($oldFromAccountEntry->new);
 
         // to account:
         $oldToAccountID    = intval($payload['data']['accountto_id']);
-        $oldToAccountEntry = $repository->findImportEntry($importMap, 'Account', $oldToAccountID);
-        $accountTo         = $accounts->find($oldToAccountEntry->new);
+        $oldToAccountEntry = $this->_repository->findImportEntry($importMap, 'Account', $oldToAccountID);
+        $accountTo         = $this->_accounts->find($oldToAccountEntry->new);
         if (!is_null($accountFrom) && !is_null($accountTo)) {
             $amount  = floatval($payload['data']['amount']);
             $date    = new Carbon($payload['data']['date']);
-            $journal = $journals->createSimpleJournal($accountFrom, $accountTo, $payload['data']['description'],
+            $journal = $this->_journals->createSimpleJournal($accountFrom, $accountTo, $payload['data']['description'],
                 $amount, $date);
             \Log::debug('Imported transfer "' . $payload['data']['description'] . '".');
             $job->delete();
@@ -563,10 +563,10 @@ class Import
     }
 
     /**
-     * @param SyncJob $job
+     * @param Job $job
      * @param $payload
      */
-    public function start(SyncJob $job, array $payload)
+    public function start(Job $job, array $payload)
     {
         \Log::debug('Start with job "start"');
         $user     = \User::find($payload['user']);
@@ -591,19 +591,20 @@ class Import
                 $class = ucfirst(\Str::singular($classes_plural));
                 \Log::debug('Create job to import all ' . $classes_plural);
                 foreach ($JSON->$classes_plural as $entry) {
-                    //\Log::debug('Create job to import single ' . $class);
+                    \Log::debug('Create job to import single ' . $class);
                     $fn          = 'import' . $class;
                     $jobFunction = 'Firefly\Queue\Import@' . $fn;
                     \Queue::push($jobFunction, ['data' => $entry, 'class' => $class, 'mapID' => $importMap->id]);
+
                 }
             }
 
-            // accounts, components, limits, piggybanks, predictables, settings, transactions, transfers
+            // , components, limits, piggybanks, predictables, settings, transactions, transfers
             // component_predictables, component_transactions, component_transfers
 
             $count = count($JSON->component_transaction);
             foreach ($JSON->component_transaction as $index => $entry) {
-                //\Log::debug('Create job to import components_transaction! Yay! (' . $index . '/' . $count . ') ');
+                \Log::debug('Create job to import components_transaction! Yay! (' . $index . '/' . $count . ') ');
                 $fn          = 'importComponentTransaction';
                 $jobFunction = 'Firefly\Queue\Import@' . $fn;
                 \Queue::push($jobFunction, ['data' => $entry, 'mapID' => $importMap->id]);
@@ -611,12 +612,7 @@ class Import
 
 
         }
-
-
-        echo 'Done';
         \Log::debug('Done with job "start"');
-        exit;
-
         // this is it, close the job:
         $job->delete();
     }

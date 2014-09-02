@@ -102,6 +102,12 @@ interface AccountRepositoryInterface
     public function getDefault();
 
     /**
+     * @param \User $user
+     * @return mixed
+     */
+    public function overruleUser(\User $user);
+
+    /**
      * @param $data
      *
      * @return \Account

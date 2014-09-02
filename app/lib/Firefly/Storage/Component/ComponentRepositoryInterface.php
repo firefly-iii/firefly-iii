@@ -28,4 +28,10 @@ interface ComponentRepositoryInterface
      */
     public function store($data);
 
+    /**
+     * @param \User $user
+     * @return mixed
+     */
+    public function overruleUser(\User $user);
+
 } 

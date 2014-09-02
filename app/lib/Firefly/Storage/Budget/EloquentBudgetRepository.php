@@ -11,6 +11,15 @@ use Carbon\Carbon;
  */
 class EloquentBudgetRepository implements BudgetRepositoryInterface
 {
+    protected $_user = null;
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        $this->_user = \Auth::user();
+    }
 
     /**
      * @param \Budget $budget
@@ -32,13 +41,13 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
     public function find($budgetId)
     {
 
-        return \Auth::user()->budgets()->find($budgetId);
+        return $this->_user->budgets()->find($budgetId);
     }
 
     public function findByName($budgetName)
     {
 
-        return \Auth::user()->budgets()->whereName($budgetName)->first();
+        return $this->_user->budgets()->whereName($budgetName)->first();
     }
 
     /**
@@ -46,12 +55,12 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
      */
     public function get()
     {
-        $set = \Auth::user()->budgets()->with(
-            ['limits'                        => function ($q) {
-                    $q->orderBy('limits.startdate', 'DESC');
-                }, 'limits.limitrepetitions' => function ($q) {
-                    $q->orderBy('limit_repetitions.startdate', 'ASC');
-                }]
+        $set = $this->_user->budgets()->with(
+                    ['limits'                        => function ($q) {
+                            $q->orderBy('limits.startdate', 'DESC');
+                        }, 'limits.limitrepetitions' => function ($q) {
+                            $q->orderBy('limit_repetitions.startdate', 'ASC');
+                        }]
         )->orderBy('name', 'ASC')->get();
         foreach ($set as $budget) {
             foreach ($budget->limits as $limit) {
@@ -69,8 +78,8 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
      */
     public function getAsSelectList()
     {
-        $list = \Auth::user()->budgets()->with(
-            ['limits', 'limits.limitrepetitions']
+        $list   = $this->_user->budgets()->with(
+                       ['limits', 'limits.limitrepetitions']
         )->orderBy('name', 'ASC')->get();
         $return = [];
         foreach ($list as $entry) {
@@ -88,9 +97,9 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
      */
     public function store($data)
     {
-        $budget = new \Budget;
+        $budget       = new \Budget;
         $budget->name = $data['name'];
-        $budget->user()->associate(\Auth::user());
+        $budget->user()->associate($this->_user);
         $budget->save();
 
         // if limit, create limit (repetition itself will be picked up elsewhere).
@@ -121,9 +130,9 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
                     $startDate->startOfYear();
                     break;
             }
-            $limit->startdate = $startDate;
-            $limit->amount = $data['amount'];
-            $limit->repeats = isset($data['repeats']) ? $data['repeats'] : 0;
+            $limit->startdate   = $startDate;
+            $limit->amount      = $data['amount'];
+            $limit->repeats     = isset($data['repeats']) ? $data['repeats'] : 0;
             $limit->repeat_freq = $data['repeat_freq'];
             if ($limit->validate()) {
                 $limit->save();
@@ -152,6 +161,16 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
         }
 
         return $budget;
+    }
+
+    /**
+     * @param \User $user
+     * @return mixed|void
+     */
+    public function overruleUser(\User $user)
+    {
+        $this->_user = $user;
+        return true;
     }
 
 } 

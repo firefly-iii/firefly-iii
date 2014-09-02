@@ -30,6 +30,12 @@ interface CategoryRepositoryInterface
     public function createOrFind($name);
 
     /**
+     * @param \User $user
+     * @return mixed
+     */
+    public function overruleUser(\User $user);
+
+    /**
      * @param $name
      *
      * @return mixed

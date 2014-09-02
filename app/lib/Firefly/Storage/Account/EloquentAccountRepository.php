@@ -12,11 +12,15 @@ use Carbon\Carbon;
  */
 class EloquentAccountRepository implements AccountRepositoryInterface
 {
+
+    protected $_user = null;
+
     /**
      *
      */
     public function __construct()
     {
+        $this->_user = \Auth::user();
     }
 
     /**
@@ -24,7 +28,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
      */
     public function count()
     {
-        return \Auth::user()->accounts()->count();
+        return $this->_user->accounts()->count();
 
     }
 
@@ -86,8 +90,8 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         $accountIDs = array_unique($accountIDs);
         if (count($accountIDs) > 0) {
             // find the "initial balance" type accounts in this list. Should be just 1.
-            $query = \Auth::user()->accounts()->accountTypeIn(['Initial balance account'])
-                          ->whereIn('accounts.id', $accountIDs);
+            $query = $this->_user->accounts()->accountTypeIn(['Initial balance account'])
+                                 ->whereIn('accounts.id', $accountIDs);
             if ($query->count() == 1) {
                 $iba = $query->first(['accounts.*']);
                 $iba->delete();
@@ -111,7 +115,16 @@ class EloquentAccountRepository implements AccountRepositoryInterface
      */
     public function find($accountId)
     {
-        return \Auth::user()->accounts()->where('id', $accountId)->first();
+        return $this->_user->accounts()->where('id', $accountId)->first();
+    }
+
+    /**
+     * @param $type
+     * @return mixed
+     */
+    public function findAccountType($type)
+    {
+        return \AccountType::where('type', $type)->first();
     }
 
     /**
@@ -124,9 +137,23 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     {
         $type = is_null($type) ? \AccountType::where('type', 'Default account')->first() : $type;
 
-        return \Auth::user()->accounts()->where('account_type_id', $type->id)
-                    ->where('name', 'like', '%' . $name . '%')
-                    ->first();
+        return $this->_user->accounts()->where('account_type_id', $type->id)
+                           ->where('name', 'like', '%' . $name . '%')
+                           ->first();
+    }
+
+    /**
+     * Used for import
+     *
+     * @param              $name
+     *
+     * @return mixed
+     */
+    public function findByNameAny($name)
+    {
+        return $this->_user->accounts()
+                           ->where('name', 'like', '%' . $name . '%')
+                           ->first();
     }
 
     /**
@@ -134,7 +161,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
      */
     public function get()
     {
-        return \Auth::user()->accounts()->with('accounttype')->orderBy('name', 'ASC')->get();
+        return $this->_user->accounts()->with('accounttype')->orderBy('name', 'ASC')->get();
     }
 
     /**
@@ -142,18 +169,10 @@ class EloquentAccountRepository implements AccountRepositoryInterface
      */
     public function getActiveDefault()
     {
-        return \Auth::user()->accounts()->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                    ->where('account_types.type', 'Default account')->where('accounts.active', 1)
+        return $this->_user->accounts()->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                           ->where('account_types.type', 'Default account')->where('accounts.active', 1)
 
-                    ->get(['accounts.*']);
-    }
-
-    /**
-     * @param $type
-     * @return mixed
-     */
-    public function findAccountType($type) {
-        return \AccountType::where('type',$type)->first();
+                           ->get(['accounts.*']);
     }
 
     /**
@@ -161,12 +180,12 @@ class EloquentAccountRepository implements AccountRepositoryInterface
      */
     public function  getActiveDefaultAsSelectList()
     {
-        $list   = \Auth::user()->accounts()->leftJoin(
-                       'account_types', 'account_types.id', '=', 'accounts.account_type_id'
+        $list   = $this->_user->accounts()->leftJoin(
+                              'account_types', 'account_types.id', '=', 'accounts.account_type_id'
         )
-                       ->where('account_types.type', 'Default account')->where('accounts.active', 1)
+                              ->where('account_types.type', 'Default account')->where('accounts.active', 1)
 
-                       ->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
+                              ->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
         $return = [];
         foreach ($list as $entry) {
             $return[intval($entry->id)] = $entry->name;
@@ -180,12 +199,12 @@ class EloquentAccountRepository implements AccountRepositoryInterface
      */
     public function getBeneficiaries()
     {
-        $list = \Auth::user()->accounts()->leftJoin(
-                     'account_types', 'account_types.id', '=', 'accounts.account_type_id'
+        $list = $this->_user->accounts()->leftJoin(
+                            'account_types', 'account_types.id', '=', 'accounts.account_type_id'
         )
-                     ->where('account_types.type', 'Beneficiary account')->where('accounts.active', 1)
+                            ->where('account_types.type', 'Beneficiary account')->where('accounts.active', 1)
 
-                     ->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
+                            ->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
 
         return $list;
     }
@@ -198,7 +217,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     public function getByIds(array $ids)
     {
         if (count($ids) > 0) {
-            return \Auth::user()->accounts()->with('accounttype')->whereIn('id', $ids)->orderBy('name', 'ASC')->get();
+            return $this->_user->accounts()->with('accounttype')->whereIn('id', $ids)->orderBy('name', 'ASC')->get();
         } else {
             return $this->getActiveDefault();
         }
@@ -210,12 +229,12 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     public function getCashAccount()
     {
         $type = \AccountType::where('type', 'Cash account')->first();
-        $cash = \Auth::user()->accounts()->where('account_type_id', $type->id)->first();
-        if(is_null($cash)) {
+        $cash = $this->_user->accounts()->where('account_type_id', $type->id)->first();
+        if (is_null($cash)) {
             $cash = new \Account;
             $cash->accountType()->associate($type);
-            $cash->user()->associate(\Auth::user());
-            $cash->name = 'Cash account';
+            $cash->user()->associate($this->_user);
+            $cash->name   = 'Cash account';
             $cash->active = 1;
             $cash->save();
         }
@@ -229,10 +248,20 @@ class EloquentAccountRepository implements AccountRepositoryInterface
      */
     public function getDefault()
     {
-        return \Auth::user()->accounts()->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                    ->where('account_types.type', 'Default account')
+        return $this->_user->accounts()->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                           ->where('account_types.type', 'Default account')
 
-                    ->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
+                           ->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
+    }
+
+    /**
+     * @param \User $user
+     * @return mixed|void
+     */
+    public function overruleUser(\User $user)
+    {
+        $this->_user = $user;
+        return true;
     }
 
     /**
@@ -262,11 +291,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
          */
         $account = new \Account;
         $account->accountType()->associate($accountType);
-        if (\Auth::check()) {
-            $account->user()->associate(\Auth::user());
-        } else {
-            $account->user_id = $data['user_id'];
-        }
+        $account->user()->associate($this->_user);
 
         $account->name = $data['name'];
         $account->active
@@ -329,20 +354,6 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * Used for import
-     *
-     * @param              $name
-     *
-     * @return mixed
-     */
-    public function findByNameAny($name)
-    {
-        return \Auth::user()->accounts()
-                    ->where('name', 'like', '%' . $name . '%')
-                    ->first();
-    }
-
-    /**
      * @param \Account $account
      * @param int $amount
      * @param Carbon $date
@@ -358,7 +369,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         // create new account:
         $initial = new \Account;
         $initial->accountType()->associate($initialBalanceAT);
-        $initial->user()->associate(\Auth::user());
+        $initial->user()->associate($this->_user);
         $initial->name   = $account->name . ' initial balance';
         $initial->active = 0;
         if ($initial->validate()) {

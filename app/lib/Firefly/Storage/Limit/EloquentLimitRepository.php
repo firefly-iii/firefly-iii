@@ -12,9 +12,14 @@ use Carbon\Carbon;
  */
 class EloquentLimitRepository implements LimitRepositoryInterface
 {
+    protected $_user = null;
 
-    public function findByBudgetAndDate(\Budget $budget, Carbon $date) {
-        return \Limit::whereComponentId($budget->id)->where('startdate',$date->format('Y-m-d'))->first();
+    /**
+     *
+     */
+    public function __construct()
+    {
+        $this->_user = \Auth::user();
     }
 
     /**
@@ -30,24 +35,6 @@ class EloquentLimitRepository implements LimitRepositoryInterface
     }
 
     /**
-     * @param \Limit $limit
-     * @param        $data
-     *
-     * @return mixed|void
-     */
-    public function update(\Limit $limit, $data)
-    {
-        $limit->startdate = new Carbon($data['startdate']);
-        $limit->repeat_freq = $data['period'];
-        $limit->repeats = isset($data['repeats']) && $data['repeats'] == '1' ? 1 : 0;
-        $limit->amount = floatval($data['amount']);
-
-        $limit->save();
-
-        return $limit;
-    }
-
-    /**
      * @param $limitId
      *
      * @return mixed
@@ -55,15 +42,20 @@ class EloquentLimitRepository implements LimitRepositoryInterface
     public function find($limitId)
     {
         return \Limit::with('limitrepetitions')->where('limits.id', $limitId)->leftJoin(
-            'components', 'components.id', '=', 'limits.component_id'
+                     'components', 'components.id', '=', 'limits.component_id'
         )
-            ->where('components.user_id', \Auth::user()->id)->first(['limits.*']);
+                     ->where('components.user_id', $this->_user->id)->first(['limits.*']);
+    }
+
+    public function findByBudgetAndDate(\Budget $budget, Carbon $date)
+    {
+        return \Limit::whereComponentId($budget->id)->where('startdate', $date->format('Y-m-d'))->first();
     }
 
     /**
      * @param \Budget $budget
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return mixed
      */
@@ -73,6 +65,16 @@ class EloquentLimitRepository implements LimitRepositoryInterface
 
         return $result;
 
+    }
+
+    /**
+     * @param \User $user
+     * @return mixed|void
+     */
+    public function overruleUser(\User $user)
+    {
+        $this->_user = $user;
+        return true;
     }
 
     /**
@@ -119,9 +121,9 @@ class EloquentLimitRepository implements LimitRepositoryInterface
         // find existing:
         $count = \Limit::
             leftJoin('components', 'components.id', '=', 'limits.component_id')->where(
-                'components.user_id', \Auth::user()->id
+                       'components.user_id', $this->_user->id
             )->where('startdate', $date->format('Y-m-d'))->where('component_id', $data['budget_id'])->where(
-                'repeat_freq', $data['period']
+                       'repeat_freq', $data['period']
             )->count();
         if ($count > 0) {
             \Session::flash('error', 'There already is an entry for these parameters.');
@@ -131,13 +133,31 @@ class EloquentLimitRepository implements LimitRepositoryInterface
         // create new limit:
         $limit = new \Limit;
         $limit->budget()->associate($budget);
-        $limit->startdate = $date;
-        $limit->amount = floatval($data['amount']);
-        $limit->repeats = isset($data['repeats']) ? intval($data['repeats']) : 0;
+        $limit->startdate   = $date;
+        $limit->amount      = floatval($data['amount']);
+        $limit->repeats     = isset($data['repeats']) ? intval($data['repeats']) : 0;
         $limit->repeat_freq = $data['period'];
         if (!$limit->save()) {
             \Session::flash('error', 'Could not save: ' . $limit->errors()->first());
         }
+
+        return $limit;
+    }
+
+    /**
+     * @param \Limit $limit
+     * @param        $data
+     *
+     * @return mixed|void
+     */
+    public function update(\Limit $limit, $data)
+    {
+        $limit->startdate   = new Carbon($data['startdate']);
+        $limit->repeat_freq = $data['period'];
+        $limit->repeats     = isset($data['repeats']) && $data['repeats'] == '1' ? 1 : 0;
+        $limit->amount      = floatval($data['amount']);
+
+        $limit->save();
 
         return $limit;
     }

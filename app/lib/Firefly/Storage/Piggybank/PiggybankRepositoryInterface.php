@@ -39,7 +39,9 @@ interface PiggybankRepositoryInterface
      * @return mixed
      */
     public function find($piggyBankId);
+
     public function findByName($piggyBankName);
+
     /**
      * @return mixed
      */
@@ -76,6 +78,12 @@ interface PiggybankRepositoryInterface
      * @return mixed
      */
     public function update(\Piggybank $piggy, $data);
+
+    /**
+     * @param \User $user
+     * @return mixed
+     */
+    public function overruleUser(\User $user);
 
 
 } 
