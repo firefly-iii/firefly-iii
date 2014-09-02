@@ -23,7 +23,8 @@
     "require": {
         "laravel/framework": "4.2.*",
         "laravelbook/ardent": "~2.4",
-        "codesleeve/asset-pipeline": "~2.0"
+        "codesleeve/asset-pipeline": "~2.0",
+        "pda/pheanstalk": "~2.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "@stable",

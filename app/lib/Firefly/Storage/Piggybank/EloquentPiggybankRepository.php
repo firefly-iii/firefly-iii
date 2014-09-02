@@ -21,14 +21,14 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
     public function count()
     {
         return \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(
-            'accounts.user_id', \Auth::user()->id
+                         'accounts.user_id', \Auth::user()->id
         )->count();
     }
 
     public function countNonrepeating()
     {
         return \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(
-            'accounts.user_id', \Auth::user()->id
+                         'accounts.user_id', \Auth::user()->id
         )->where('repeats', 0)->count();
 
     }
@@ -36,7 +36,7 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
     public function countRepeating()
     {
         return \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(
-            'accounts.user_id', \Auth::user()->id
+                         'accounts.user_id', \Auth::user()->id
         )->where('repeats', 1)->count();
     }
 
@@ -60,8 +60,15 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
     public function find($piggyBankId)
     {
         return \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(
-            'accounts.user_id', \Auth::user()->id
+                         'accounts.user_id', \Auth::user()->id
         )->where('piggybanks.id', $piggyBankId)->first(['piggybanks.*']);
+    }
+
+    public function findByName($piggyBankName)
+    {
+        return \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(
+                         'accounts.user_id', \Auth::user()->id
+        )->where('piggybanks.name', $piggyBankName)->first(['piggybanks.*']);
     }
 
     /**
@@ -122,19 +129,19 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
      */
     public function store($data)
     {
-        if ($data['targetdate'] == '') {
+        if (isset($data['targetdate']) && $data['targetdate'] == '') {
             unset($data['targetdate']);
         }
-        if ($data['reminder'] == 'none') {
+        if (isset($data['reminder']) && $data['reminder'] == 'none') {
             unset($data['reminder']);
         }
-        if ($data['startdate'] == '') {
+        if (isset($data['startdate']) && $data['startdate'] == '') {
             unset($data['startdate']);
         }
 
         /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accounts */
         $accounts = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
-        $account = isset($data['account_id']) ? $accounts->find($data['account_id']) : null;
+        $account  = isset($data['account_id']) ? $accounts->find($data['account_id']) : null;
 
 
         $piggyBank = new \Piggybank($data);
@@ -142,7 +149,7 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
         if (!is_null($piggyBank->reminder) && is_null($piggyBank->startdate) && is_null($piggyBank->targetdate)) {
 
             $piggyBank->errors()->add('reminder', 'Cannot create reminders without start ~ AND target date.');
-
+            \Log::error('PiggyBank create-error: ' . $piggyBank->errors()->first());
             return $piggyBank;
 
         }
@@ -150,6 +157,7 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
 
         if ($piggyBank->repeats && !isset($data['targetdate'])) {
             $piggyBank->errors()->add('targetdate', 'Target date is mandatory!');
+            \Log::error('PiggyBank create-error: ' . $piggyBank->errors()->first());
 
             return $piggyBank;
         }
@@ -161,13 +169,14 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
         if ($piggyBank->validate()) {
             if (!is_null($piggyBank->targetdate) && $piggyBank->targetdate < $today) {
                 $piggyBank->errors()->add('targetdate', 'Target date cannot be in the past.');
+                \Log::error('PiggyBank create-error: ' . $piggyBank->errors()->first());
 
                 return $piggyBank;
             }
 
             if (!is_null($piggyBank->reminder) && !is_null($piggyBank->targetdate)) {
                 // first period for reminder is AFTER target date.
-                $reminderSkip = $piggyBank->reminder_skip < 1 ? 1 : intval($piggyBank->reminder_skip);
+                $reminderSkip  = $piggyBank->reminder_skip < 1 ? 1 : intval($piggyBank->reminder_skip);
                 $firstReminder = new Carbon;
                 switch ($piggyBank->reminder) {
                     case 'day':
@@ -188,14 +197,16 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
                 }
                 if ($firstReminder > $piggyBank->targetdate) {
                     $piggyBank->errors()->add(
-                        'reminder', 'The reminder has been set to remind you after the piggy bank will expire.'
+                              'reminder', 'The reminder has been set to remind you after the piggy bank will expire.'
                     );
+                    \Log::error('PiggyBank create-error: ' . $piggyBank->errors()->first());
 
                     return $piggyBank;
                 }
             }
             $piggyBank->save();
         }
+
 
         return $piggyBank;
     }
@@ -210,19 +221,19 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
     {
         /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accounts */
         $accounts = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
-        $account = isset($data['account_id']) ? $accounts->find($data['account_id']) : null;
+        $account  = isset($data['account_id']) ? $accounts->find($data['account_id']) : null;
 
         if (!is_null($account)) {
             $piggy->account()->associate($account);
         }
 
-        $piggy->name = $data['name'];
-        $piggy->targetamount = floatval($data['targetamount']);
-        $piggy->reminder = isset($data['reminder']) && $data['reminder'] != 'none' ? $data['reminder'] : null;
+        $piggy->name          = $data['name'];
+        $piggy->targetamount  = floatval($data['targetamount']);
+        $piggy->reminder      = isset($data['reminder']) && $data['reminder'] != 'none' ? $data['reminder'] : null;
         $piggy->reminder_skip = $data['reminder_skip'];
-        $piggy->targetdate = strlen($data['targetdate']) > 0 ? new Carbon($data['targetdate']) : null;
+        $piggy->targetdate    = strlen($data['targetdate']) > 0 ? new Carbon($data['targetdate']) : null;
         $piggy->startdate
-            = isset($data['startdate']) && strlen($data['startdate']) > 0 ? new Carbon($data['startdate']) : null;
+                              = isset($data['startdate']) && strlen($data['startdate']) > 0 ? new Carbon($data['startdate']) : null;
 
 
         foreach ($piggy->piggybankrepetitions()->get() as $rep) {
@@ -230,7 +241,7 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
         }
 
         if ($piggy->repeats == 1) {
-            $piggy->rep_every = intval($data['rep_every']);
+            $piggy->rep_every  = intval($data['rep_every']);
             $piggy->rep_length = $data['rep_length'];
         }
 

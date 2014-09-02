@@ -24,7 +24,7 @@
 </div>
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-12">
-        <h2><a href="#">Migrate from Firefly II</a></h2>
+        <h2><a href="{{route('migrate.index')}}">Migrate from Firefly II</a></h2>
 
         <p>
             Use this option if you have a JSON file from your current Firefly II installation.

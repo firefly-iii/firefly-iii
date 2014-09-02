@@ -23,6 +23,13 @@ interface BudgetRepositoryInterface
      */
     public function find($budgetId);
 
+
+    /**
+     * @param $budgetName
+     * @return mixed
+     */
+    public function findByName($budgetName);
+
     /**
      * @return mixed
      */

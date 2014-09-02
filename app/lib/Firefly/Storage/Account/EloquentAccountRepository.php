@@ -149,6 +149,14 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @param $type
+     * @return mixed
+     */
+    public function findAccountType($type) {
+        return \AccountType::where('type',$type)->first();
+    }
+
+    /**
      * @return array|mixed
      */
     public function  getActiveDefaultAsSelectList()
@@ -203,6 +211,14 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     {
         $type = \AccountType::where('type', 'Cash account')->first();
         $cash = \Auth::user()->accounts()->where('account_type_id', $type->id)->first();
+        if(is_null($cash)) {
+            $cash = new \Account;
+            $cash->accountType()->associate($type);
+            $cash->user()->associate(\Auth::user());
+            $cash->name = 'Cash account';
+            $cash->active = 1;
+            $cash->save();
+        }
 
         return $cash;
 
@@ -234,6 +250,9 @@ class EloquentAccountRepository implements AccountRepositoryInterface
             && get_class($data['account_type']) == 'AccountType'
         ) {
             $accountType = $data['account_type'];
+        } else if (isset($data['account_type']) && is_string($data['account_type'])) {
+            $accountType = \AccountType::where('type', $data['account_type'])->first();
+
         } else {
             $accountType = \AccountType::where('type', 'Default account')->first();
         }
@@ -243,7 +262,12 @@ class EloquentAccountRepository implements AccountRepositoryInterface
          */
         $account = new \Account;
         $account->accountType()->associate($accountType);
-        $account->user()->associate(\Auth::user());
+        if (\Auth::check()) {
+            $account->user()->associate(\Auth::user());
+        } else {
+            $account->user_id = $data['user_id'];
+        }
+
         $account->name = $data['name'];
         $account->active
                        = isset($data['active']) && intval($data['active']) >= 0 && intval($data['active']) <= 1 ? intval(
@@ -256,7 +280,9 @@ class EloquentAccountRepository implements AccountRepositoryInterface
             if (isset($data['openingbalance']) && isset($data['openingbalancedate'])) {
                 $amount = floatval($data['openingbalance']);
                 $date   = new Carbon($data['openingbalancedate']);
-                $this->_createInitialBalance($account, $amount, $date);
+                if ($amount != 0) {
+                    $this->_createInitialBalance($account, $amount, $date);
+                }
             }
         }
 
@@ -300,6 +326,20 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         }
 
         return $account;
+    }
+
+    /**
+     * Used for import
+     *
+     * @param              $name
+     *
+     * @return mixed
+     */
+    public function findByNameAny($name)
+    {
+        return \Auth::user()->accounts()
+                    ->where('name', 'like', '%' . $name . '%')
+                    ->first();
     }
 
     /**

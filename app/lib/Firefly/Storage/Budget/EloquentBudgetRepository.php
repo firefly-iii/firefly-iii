@@ -35,6 +35,12 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
         return \Auth::user()->budgets()->find($budgetId);
     }
 
+    public function findByName($budgetName)
+    {
+
+        return \Auth::user()->budgets()->whereName($budgetName)->first();
+    }
+
     /**
      * @return mixed
      */
@@ -88,7 +94,7 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
         $budget->save();
 
         // if limit, create limit (repetition itself will be picked up elsewhere).
-        if (floatval($data['amount']) > 0) {
+        if (isset($data['amount']) && floatval($data['amount']) > 0) {
             $limit = new \Limit;
             $limit->budget()->associate($budget);
             $startDate = new Carbon;

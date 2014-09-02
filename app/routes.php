@@ -157,8 +157,6 @@ Route::group(['before' => 'auth'], function () {
         Route::get('chart/budget/{budget}/session', ['uses' => 'ChartController@budgetSession', 'as' => 'chart.budget.session']);
         Route::get('chart/budget/envelope/{limitrepetition}', ['uses' => 'ChartController@budgetLimit', 'as' => 'chart.budget.limit']);
 
-
-
         // home controller
         Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
         Route::get('/flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
@@ -172,19 +170,18 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/budgets/limits/delete/{limit}',['uses' => 'LimitController@delete','as' => 'budgets.limits.delete']);
         Route::get('/budgets/limits/edit/{limit}',['uses' => 'LimitController@edit','as' => 'budgets.limits.edit']);
 
+        Route::get('/migrate',['uses' => 'MigrateController@index', 'as' => 'migrate.index']);
+
         // piggy bank controller
         Route::get('/piggybanks',['uses' => 'PiggybankController@index','as' => 'piggybanks.index']);
         Route::get('/piggybanks/create/piggybank', ['uses' => 'PiggybankController@createPiggybank','as' => 'piggybanks.create.piggybank']);
         Route::get('/piggybanks/create/repeated', ['uses' => 'PiggybankController@createRepeated','as' => 'piggybanks.create.repeated']);
-
         Route::get('/piggybanks/addMoney/{piggybank}', ['uses' => 'PiggybankController@addMoney','as' => 'piggybanks.amount.add']);
         Route::get('/piggybanks/removeMoney/{piggybank}', ['uses' => 'PiggybankController@removeMoney','as' => 'piggybanks.amount.remove']);
-
         Route::get('/piggybanks/show/{piggybank}', ['uses' => 'PiggybankController@show','as' => 'piggybanks.show']);
         Route::get('/piggybanks/edit/{piggybank}', ['uses' => 'PiggybankController@edit','as' => 'piggybanks.edit']);
         Route::get('/piggybanks/delete/{piggybank}', ['uses' => 'PiggybankController@delete','as' => 'piggybanks.delete']);
         Route::post('/piggybanks/updateAmount/{piggybank}',['uses' => 'PiggybankController@updateAmount','as' => 'piggybanks.updateAmount']);
-
 
         // preferences controller
         Route::get('/preferences', ['uses' => 'PreferencesController@index', 'as' => 'preferences']);
@@ -246,6 +243,8 @@ Route::group(['before' => 'csrf|auth'], function () {
         Route::post('/budgets/limits/store/{budget?}', ['uses' => 'LimitController@store', 'as' => 'budgets.limits.store']);
         Route::post('/budgets/limits/destroy/{limit}',['uses' => 'LimitController@destroy','as' => 'budgets.limits.destroy']);
         Route::post('/budgets/limits/update/{limit}',['uses' => 'LimitController@update','as' => 'budgets.limits.update']);
+
+        Route::post('/migrate/upload',['uses' => 'MigrateController@upload', 'as' => 'migrate.upload']);
 
 
         // piggy bank controller

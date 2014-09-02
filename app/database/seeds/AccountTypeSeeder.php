@@ -11,16 +11,20 @@ class AccountTypeSeeder extends Seeder
         DB::table('account_types')->delete();
 
         AccountType::create(
-            ['type' => 'Default account','editable' => true]
+                   ['type' => 'Default account', 'editable' => true]
         );
         AccountType::create(
-            ['type' => 'Cash account','editable' => false]
+                   ['type' => 'Cash account', 'editable' => false]
         );
         AccountType::create(
-            ['type' => 'Initial balance account','editable' => false]
+                   ['type' => 'Initial balance account', 'editable' => false]
         );
         AccountType::create(
-            ['type' => 'Beneficiary account','editable' => true]
+                   ['type' => 'Beneficiary account', 'editable' => true]
+        );
+
+        AccountType::create(
+                   ['type' => 'Import account', 'editable' => false]
         );
     }
 
