@@ -9,6 +9,16 @@ namespace Firefly\Storage\Category;
  */
 class EloquentCategoryRepository implements CategoryRepositoryInterface
 {
+    protected $_user = null;
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        $this->_user = \Auth::user();
+    }
+
     /**
      * @param $name
      *
@@ -48,7 +58,7 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
      */
     public function find($categoryId)
     {
-        return \Auth::user()->categories()->find($categoryId);
+        return $this->_user->categories()->find($categoryId);
     }
 
     /**
@@ -62,7 +72,7 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
             return null;
         }
 
-        return \Auth::user()->categories()->where('name', 'LIKE', '%' . $name . '%')->first();
+        return $this->_user->categories()->where('name', 'LIKE', '%' . $name . '%')->first();
 
     }
 
@@ -71,7 +81,7 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
      */
     public function get()
     {
-        return \Auth::user()->categories()->orderBy('name', 'ASC')->get();
+        return $this->_user->categories()->orderBy('name', 'ASC')->get();
     }
 
     /**
@@ -81,10 +91,10 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
      */
     public function store($data)
     {
-        $category = new \Category;
+        $category       = new \Category;
         $category->name = $data['name'];
 
-        $category->user()->associate(\Auth::user());
+        $category->user()->associate($this->_user);
         $category->save();
 
         return $category;
@@ -105,5 +115,15 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
         }
 
         return $category;
+    }
+
+    /**
+     * @param \User $user
+     * @return mixed|void
+     */
+    public function overruleUser(\User $user)
+    {
+        $this->_user = $user;
+        return true;
     }
 } 

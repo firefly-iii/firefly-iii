@@ -12,6 +12,27 @@ use Carbon\Carbon;
  */
 class EloquentRecurringTransactionRepository implements RecurringTransactionRepositoryInterface
 {
+
+    /**
+     * @param \User $user
+     * @return mixed|void
+     */
+    public function overruleUser(\User $user)
+    {
+        $this->_user = $user;
+        return true;
+    }
+
+    protected $_user = null;
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        $this->_user = \Auth::user();
+    }
+
     /**
      * @param \RecurringTransaction $recurringTransaction
      *
@@ -26,7 +47,7 @@ class EloquentRecurringTransactionRepository implements RecurringTransactionRepo
 
     public function findByName($name)
     {
-        return \Auth::user()->recurringtransactions()->where('name', 'LIKE', '%' . $name . '%')->first();
+        return $this->_user->recurringtransactions()->where('name', 'LIKE', '%' . $name . '%')->first();
     }
 
     /**
@@ -34,7 +55,7 @@ class EloquentRecurringTransactionRepository implements RecurringTransactionRepo
      */
     public function get()
     {
-        return \Auth::user()->recurringtransactions()->get();
+        return $this->_user->recurringtransactions()->get();
     }
 
     /**
@@ -45,7 +66,7 @@ class EloquentRecurringTransactionRepository implements RecurringTransactionRepo
     public function store($data)
     {
         $recurringTransaction = new \RecurringTransaction;
-        $recurringTransaction->user()->associate(\Auth::user());
+        $recurringTransaction->user()->associate($this->_user);
         $recurringTransaction->name       = $data['name'];
         $recurringTransaction->match      = join(' ', explode(',', $data['match']));
         $recurringTransaction->amount_max = floatval($data['amount_max']);

@@ -5,6 +5,15 @@ namespace Firefly\Storage\Import;
 
 class EloquentImportRepository implements ImportRepositoryInterface
 {
+    protected $_user = null;
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        $this->_user = \Auth::user();
+    }
 
     public function findImportComponentMap(\Importmap $map, $oldComponentId)
     {
@@ -24,6 +33,16 @@ class EloquentImportRepository implements ImportRepositoryInterface
     public function findImportMap($id)
     {
         return \Importmap::find($id);
+    }
+
+    /**
+     * @param \User $user
+     * @return mixed|void
+     */
+    public function overruleUser(\User $user)
+    {
+        $this->_user = $user;
+        return true;
     }
 
     public function store(\Importmap $map, $class, $oldID, $newID)

@@ -14,6 +14,15 @@ use Firefly\Exception\FireflyException;
 class EloquentPiggybankRepository implements PiggybankRepositoryInterface
 {
 
+    protected $_user = null;
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        $this->_user = \Auth::user();
+    }
 
     /**
      * @return mixed
@@ -21,14 +30,14 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
     public function count()
     {
         return \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(
-                         'accounts.user_id', \Auth::user()->id
+                         'accounts.user_id', $this->_user->id
         )->count();
     }
 
     public function countNonrepeating()
     {
         return \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(
-                         'accounts.user_id', \Auth::user()->id
+                         'accounts.user_id', $this->_user->id
         )->where('repeats', 0)->count();
 
     }
@@ -36,7 +45,7 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
     public function countRepeating()
     {
         return \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(
-                         'accounts.user_id', \Auth::user()->id
+                         'accounts.user_id', $this->_user->id
         )->where('repeats', 1)->count();
     }
 
@@ -60,14 +69,14 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
     public function find($piggyBankId)
     {
         return \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(
-                         'accounts.user_id', \Auth::user()->id
+                         'accounts.user_id', $this->_user->id
         )->where('piggybanks.id', $piggyBankId)->first(['piggybanks.*']);
     }
 
     public function findByName($piggyBankName)
     {
         return \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(
-                         'accounts.user_id', \Auth::user()->id
+                         'accounts.user_id', $this->_user->id
         )->where('piggybanks.name', $piggyBankName)->first(['piggybanks.*']);
     }
 
@@ -76,7 +85,7 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
      */
     public function get()
     {
-        $piggies = \Auth::user()->piggybanks()->with(['account', 'piggybankrepetitions'])->get();
+        $piggies = $this->_user->piggybanks()->with(['account', 'piggybankrepetitions'])->get();
 
         foreach ($piggies as $pig) {
             $pig->leftInAccount = $this->leftOnAccount($pig->account);
@@ -102,7 +111,6 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
 
     }
 
-
     /**
      * @param \Piggybank $piggyBank
      * @param            $amount
@@ -120,6 +128,16 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
 
         return true;
 
+    }
+
+    /**
+     * @param \User $user
+     * @return mixed|void
+     */
+    public function overruleUser(\User $user)
+    {
+        $this->_user = $user;
+        return true;
     }
 
     /**
@@ -141,6 +159,7 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
 
         /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accounts */
         $accounts = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
+        $accounts->overruleUser($this->_user);
         $account  = isset($data['account_id']) ? $accounts->find($data['account_id']) : null;
 
 
@@ -221,6 +240,7 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
     {
         /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accounts */
         $accounts = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
+        $accounts->overruleUser($this->_user);
         $account  = isset($data['account_id']) ? $accounts->find($data['account_id']) : null;
 
         if (!is_null($account)) {

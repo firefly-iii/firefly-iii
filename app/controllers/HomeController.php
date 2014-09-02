@@ -38,10 +38,10 @@ class HomeController extends BaseController
      */
     public function index()
     {
-        Queue::push(function($job)
-        {
-            Log::debug('This is a job!');
-        });
+//        Queue::push(function($job)
+//        {
+//            Log::debug('This is a job!');
+//        });
 
         \Event::fire('limits.check');
         \Event::fire('piggybanks.check');

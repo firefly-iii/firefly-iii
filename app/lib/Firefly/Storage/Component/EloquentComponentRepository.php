@@ -14,12 +14,14 @@ use Illuminate\Database\QueryException;
 class EloquentComponentRepository implements ComponentRepositoryInterface
 {
     public $validator;
+    protected $_user = null;
 
     /**
      *
      */
     public function __construct()
     {
+        $this->_user = \Auth::user();
     }
 
     /**
@@ -27,7 +29,7 @@ class EloquentComponentRepository implements ComponentRepositoryInterface
      */
     public function count()
     {
-        return \Auth::user()->components()->count();
+        return $this->_user->components()->count();
 
     }
 
@@ -38,6 +40,16 @@ class EloquentComponentRepository implements ComponentRepositoryInterface
     public function get()
     {
         throw new FireflyException('No implementation.');
+    }
+
+    /**
+     * @param \User $user
+     * @return mixed|void
+     */
+    public function overruleUser(\User $user)
+    {
+        $this->_user = $user;
+        return true;
     }
 
     /**
@@ -62,7 +74,7 @@ class EloquentComponentRepository implements ComponentRepositoryInterface
 
         }
         $component->name = $data['name'];
-        $component->user()->associate(\Auth::user());
+        $component->user()->associate($this->_user);
         try {
             $component->save();
         } catch (QueryException $e) {

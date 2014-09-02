@@ -56,4 +56,10 @@ interface LimitRepositoryInterface
      * @return mixed
      */
     public function update(\Limit $limit, $data);
+
+    /**
+     * @param \User $user
+     * @return mixed
+     */
+    public function overruleUser(\User $user);
 } 

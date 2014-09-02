@@ -31,6 +31,12 @@ interface BudgetRepositoryInterface
     public function findByName($budgetName);
 
     /**
+     * @param \User $user
+     * @return mixed
+     */
+    public function overruleUser(\User $user);
+
+    /**
      * @return mixed
      */
     public function get();

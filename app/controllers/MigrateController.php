@@ -28,8 +28,10 @@ class MigrateController extends BaseController
             if (is_writable($path)) {
                 Input::file('file')->move($path, $fileName);
                 // so now we push something in a queue and do something with it! Yay!
-                Queue::push('Firefly\Queue\Import@start', ['file' => $fullName,'user' => \Auth::user()->id]);
-                exit;
+                \Log::debug('Pushed a job to start the import.');
+                Queue::push('Firefly\Queue\Import@start', ['file' => $fullName, 'user' => \Auth::user()->id]);
+                Session::flash('success', 'The import job has been queued. Please be patient. Data will appear');
+                return Redirect::route('index');
             }
             Session::flash('error', 'Could not save file to storage.');
             return Redirect::route('migrate.index');

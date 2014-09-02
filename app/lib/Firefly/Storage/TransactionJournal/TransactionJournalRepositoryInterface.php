@@ -16,7 +16,7 @@ interface TransactionJournalRepositoryInterface
      * @param \Account $toAccount
      * @param          $description
      * @param          $amount
-     * @param Carbon   $date
+     * @param Carbon $date
      *
      * @return mixed
      */
@@ -26,6 +26,12 @@ interface TransactionJournalRepositoryInterface
      * @return mixed
      */
     public function get();
+
+    /**
+     * @param \User $user
+     * @return mixed
+     */
+    public function overruleUser(\User $user);
 
     /**
      * @param $what
@@ -52,9 +58,9 @@ interface TransactionJournalRepositoryInterface
 
     /**
      * @param \Account $account
-     * @param int      $count
-     * @param Carbon   $start
-     * @param Carbon   $end
+     * @param int $count
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return mixed
      */
@@ -62,7 +68,7 @@ interface TransactionJournalRepositoryInterface
 
     /**
      * @param \Account $account
-     * @param Carbon   $date
+     * @param Carbon $date
      *
      * @return mixed
      */
