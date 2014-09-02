@@ -17,6 +17,12 @@ interface RecurringTransactionRepositoryInterface
     public function get();
 
     /**
+     * @param $name
+     * @return mixed
+     */
+    public function findByName($name);
+
+    /**
      * @param $data
      *
      * @return mixed

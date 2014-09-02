@@ -13,6 +13,9 @@ use Carbon\Carbon;
 class EloquentLimitRepository implements LimitRepositoryInterface
 {
 
+    public function findByBudgetAndDate(\Budget $budget, Carbon $date) {
+        return \Limit::whereComponentId($budget->id)->where('startdate',$date->format('Y-m-d'))->first();
+    }
 
     /**
      * @param \Limit $limit

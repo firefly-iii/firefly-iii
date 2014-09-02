@@ -39,7 +39,7 @@ interface PiggybankRepositoryInterface
      * @return mixed
      */
     public function find($piggyBankId);
-
+    public function findByName($piggyBankName);
     /**
      * @return mixed
      */
