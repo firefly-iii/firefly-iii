@@ -291,6 +291,7 @@ class Import
 
                 break;
         }
+        $job->delete();
 
 
     }
