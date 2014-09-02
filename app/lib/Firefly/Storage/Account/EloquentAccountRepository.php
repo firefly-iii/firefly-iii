@@ -379,6 +379,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
             $transactionJournal = \App::make(
                                       'Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface'
             );
+            $transactionJournal->overruleUser($this->_user);
 
             $transactionJournal->createSimpleJournal(
                                $initial, $account, 'Initial Balance for ' . $account->name, $amount, $date
