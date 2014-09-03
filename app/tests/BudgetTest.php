@@ -31,11 +31,17 @@ class BudgetTest extends TestCase
 
     }
 
+    public function tearDown()
+    {
+        Mockery::close();
+    }
+
     /**
      * @covers \Budget
      *
      */
-    public function testBudgetModel() {
+    public function testBudgetModel()
+    {
         // create budget:
         $budget = f::create('Budget');
 
@@ -46,17 +52,14 @@ class BudgetTest extends TestCase
         $budget->transactionjournals()->save($t1);
         $budget->transactionjournals()->save($t2);
 
-        $this->assertCount(2,$budget->transactionjournals()->get());
-        $this->assertEquals($budget->id,$t1->budgets()->first()->id);
+        $this->assertCount(2, $budget->transactionjournals()->get());
+        $this->assertEquals($budget->id, $t1->budgets()->first()->id);
 
     }
 
-
-    public function tearDown()
-    {
-        Mockery::close();
-    }
-
+    /**
+     * @covers \BudgetController::create
+     */
     public function testCreate()
     {
         // test config:
@@ -78,7 +81,9 @@ class BudgetTest extends TestCase
 
     }
 
-
+    /**
+     * @covers \BudgetController::delete
+     */
     public function testDelete()
     {
 
@@ -99,6 +104,9 @@ class BudgetTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers \BudgetController::destroy
+     */
     public function testDestroy()
     {
         $budget = f::create('Budget');
@@ -121,6 +129,9 @@ class BudgetTest extends TestCase
         $this->assertSessionHas('success');
     }
 
+    /**
+     * @covers \BudgetController::destroy
+     */
     public function testDestroyFromDate()
     {
         $budget = f::create('Budget');
@@ -143,7 +154,9 @@ class BudgetTest extends TestCase
         $this->assertSessionHas('success');
     }
 
-
+    /**
+     * @covers \BudgetController::edit
+     */
     public function testEdit()
     {
         $budget = f::create('Budget');
@@ -164,6 +177,9 @@ class BudgetTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers \BudgetController::indexByBudget
+     */
     public function testIndexByBudget()
     {
         $this->_repository->shouldReceive('get')->once()->andReturn([]);
@@ -179,6 +195,9 @@ class BudgetTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers \BudgetController::indexByDate
+     */
     public function testIndexByDate()
     {
         $collection = new Collection();
@@ -196,6 +215,9 @@ class BudgetTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers \BudgetController::show
+     */
     public function testShowDefault()
     {
         $budget = f::create('Budget');
@@ -222,6 +244,9 @@ class BudgetTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers \BudgetController::show
+     */
     public function testShowOutsideEnvelope()
     {
         $budget = f::create('Budget');
@@ -250,6 +275,10 @@ class BudgetTest extends TestCase
         $this->assertResponseOk();
     }
 
+
+    /**
+     * @covers \BudgetController::show
+     */
     public function testShowWithRepetition()
     {
         $budget     = f::create('Budget');
@@ -285,6 +314,9 @@ class BudgetTest extends TestCase
     }
 
 
+    /**
+     * @covers \BudgetController::store
+     */
     public function testStore()
     {
         $budget = f::create('Budget');
@@ -300,6 +332,9 @@ class BudgetTest extends TestCase
         $this->assertSessionHas('success');
     }
 
+    /**
+     * @covers \BudgetController::store
+     */
     public function testStoreComingFromDate()
     {
         $budget = f::create('Budget');
@@ -315,6 +350,9 @@ class BudgetTest extends TestCase
         $this->assertSessionHas('success');
     }
 
+    /**
+     * @covers \BudgetController::store
+     */
     public function testStoreFails()
     {
         $budget = f::create('Budget');
@@ -329,6 +367,9 @@ class BudgetTest extends TestCase
         $this->assertSessionHas('error');
     }
 
+    /**
+     * @covers \BudgetController::store
+     */
     public function testStoreWithRecreation()
     {
         $budget = f::create('Budget');
@@ -344,6 +385,9 @@ class BudgetTest extends TestCase
         $this->assertSessionHas('success');
     }
 
+    /**
+     * @covers \BudgetController::update
+     */
     public function testUpdate()
     {
         $budget = f::create('Budget');
@@ -366,6 +410,9 @@ class BudgetTest extends TestCase
 
     }
 
+    /**
+     * @covers \BudgetController::update
+     */
     public function testUpdateFails()
     {
         $budget = f::create('Budget');
@@ -381,11 +428,14 @@ class BudgetTest extends TestCase
         $this->_repository->shouldReceive('update')->andReturn($budget);
 
         $this->action('POST', 'BudgetController@update', [$budget->id]);
-        $this->assertRedirectedToRoute('budgets.edit',$budget->id);
+        $this->assertRedirectedToRoute('budgets.edit', $budget->id);
         $this->assertSessionHas('error');
 
     }
 
+    /**
+     * @covers \BudgetController::update
+     */
     public function testUpdateFromDate()
     {
         $budget = f::create('Budget');
