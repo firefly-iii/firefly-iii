@@ -209,6 +209,12 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         return $list;
     }
 
+    public function getByAccountType(\AccountType $type)
+    {
+        return $this->_user->accounts()->with('accounttype')->orderBy('name', 'ASC')
+                           ->where('account_type_id', $type->id)->get();
+    }
+
     /**
      * @param $ids
      *

@@ -66,7 +66,8 @@ class AccountController extends \BaseController
     public function edit(Account $account)
     {
         $openingBalance = $this->_accounts->openingBalanceTransaction($account);
-        return View::make('accounts.edit')->with('account', $account)->with('openingBalance', $openingBalance)->with('title','Edit account "'.$account->name.'"');
+        return View::make('accounts.edit')->with('account', $account)->with('openingBalance', $openingBalance)
+                   ->with('title', 'Edit account "' . $account->name . '"');
     }
 
     /**
@@ -90,7 +91,7 @@ class AccountController extends \BaseController
             }
         }
 
-        return View::make('accounts.index')->with('accounts', $set)->with('title','All your accounts');
+        return View::make('accounts.index')->with('accounts', $set)->with('title', 'All your accounts');
     }
 
     /**
