@@ -6,6 +6,9 @@ use Firefly\Storage\Budget\BudgetRepositoryInterface as BRI;
 
 /**
  * Class BudgetController
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
+ *
  */
 class BudgetController extends BaseController
 {
@@ -84,7 +87,7 @@ class BudgetController extends BaseController
         $budgets = $this->_repository->get();
 
         return View::make('budgets.indexByBudget')->with('budgets', $budgets)->with('today', new Carbon)
-                   ->with('title', 'Budgets grouped by budget');
+                   ->with('title', 'All your budgets grouped by budget');
 
     }
 
@@ -97,8 +100,8 @@ class BudgetController extends BaseController
         $set     = $this->_repository->get();
         $budgets = $this->_budgets->organizeByDate($set);
 
-
-        return View::make('budgets.indexByDate')->with('budgets', $budgets)->with('title', 'Budgets grouped by date.');
+        return View::make('budgets.indexByDate')->with('budgets', $budgets)
+                   ->with('title', 'All your budgets grouped by date');
 
 
     }
@@ -111,31 +114,32 @@ class BudgetController extends BaseController
      * - Show everything shows NO repetition.
      *
      * @param Budget $budget
+     * @param LimitRepetition $repetition
      *
      * @return int
      */
-    public function show(Budget $budget)
+    public function show(Budget $budget, \LimitRepetition $repetition = null)
     {
         $useSessionDates = Input::get('useSession') == 'true' ? true : false;
         $view            = null;
         $title           = null;
-
+        \Log::debug('Is envelope true? ' . (Input::get('noenvelope') == 'true'));
         switch (true) {
-            case (!is_null(Input::get('rep'))):
-                $repetitionId = intval(Input::get('rep'));
-                $data         = $this->_budgets->organizeRepetition($repetitionId);
-                $view         = 1;
-                $title        = $budget->name.', '. $data[0]['limitrepetition']->periodShow().', '.mf($data[0]['limit']->amount,false);
+            case (!is_null($repetition)):
+                $data  = $this->_budgets->organizeRepetition($repetition);
+                $view  = 1;
+                $title = $budget->name . ', ' . $repetition->periodShow() . ', ' . mf($repetition->limit->amount,
+                        false);
                 break;
             case (Input::get('noenvelope') == 'true'):
-                $data = $this->_budgets->outsideRepetitions($budget);
-                $view = 2;
-                $title = $budget->name.', transactions outside an envelope.';
+                $data  = $this->_budgets->outsideRepetitions($budget);
+                $view  = 2;
+                $title = $budget->name . ', transactions outside an envelope';
                 break;
             default:
-                $data = $this->_budgets->organizeRepetitions($budget, $useSessionDates);
-                $view = $useSessionDates ? 3 : 4;
-                $title = $useSessionDates ? $budget->name.' in session period' : $budget->name;
+                $data  = $this->_budgets->organizeRepetitions($budget, $useSessionDates);
+                $view  = $useSessionDates ? 3 : 4;
+                $title = $useSessionDates ? $budget->name . ' in session period' : $budget->name;
                 break;
         }
 

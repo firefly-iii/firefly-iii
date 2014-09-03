@@ -72,21 +72,21 @@
                 </td>
             </tr>
             @endif
-            @if(count($show['statistics']['categories']) > 0)
+            @if(isset($show['statistics']['Category']) && count($show['statistics']['Category']) > 0)
             <tr>
                 <td>Related categories</td>
                 <td>
-                    @foreach($show['statistics']['categories'] as $cat)
+                    @foreach($show['statistics']['Category'] as $cat)
                     <a href="{{route('categories.show',$cat->id)}}" class="btn btn-default btn-xs">{{{$cat->name}}}</a>
                     @endforeach
                 </td>
             </tr>
             @endif
-            @if(count($show['statistics']['budgets']) > 0)
+            @if(isset($show['statistics']['Budget']) && count($show['statistics']['Budget']) > 0)
             <tr>
                 <td>Related budgets</td>
                 <td>
-                    @foreach($show['statistics']['budgets'] as $bud)
+                    @foreach($show['statistics']['Budget'] as $bud)
                     <a href="{{route('budgets.show',$bud->id)}}?useSession=true" class="btn btn-default btn-xs">{{{$bud->name}}}</a>
                     @endforeach
                 </td>

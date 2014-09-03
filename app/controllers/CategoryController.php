@@ -13,12 +13,12 @@ class CategoryController extends BaseController
 
     /**
      * @param CRI $repository
-     * @param CI  $category
+     * @param CI $category
      */
     public function __construct(CRI $repository, CI $category)
     {
         $this->_repository = $repository;
-        $this->_category = $category;
+        $this->_category   = $category;
     }
 
     /**
@@ -26,7 +26,7 @@ class CategoryController extends BaseController
      */
     public function create()
     {
-        return View::make('categories.create');
+        return View::make('categories.create')->with('title', 'Create a new category');
     }
 
     /**
@@ -36,7 +36,8 @@ class CategoryController extends BaseController
      */
     public function delete(Category $category)
     {
-        return View::make('categories.delete')->with('category', $category);
+        return View::make('categories.delete')->with('category', $category)
+                   ->with('title', 'Delete category "' . $category->name . '"');
     }
 
     /**
@@ -46,13 +47,8 @@ class CategoryController extends BaseController
      */
     public function destroy(Category $category)
     {
-        $result = $this->_repository->destroy($category);
-        if ($result === true) {
-            Session::flash('success', 'The category was deleted.');
-        } else {
-            Session::flash('error', 'Could not delete the category. Check the logs to be sure.');
-        }
-
+        $this->_repository->destroy($category);
+        Session::flash('success', 'The category was deleted.');
         return Redirect::route('categories.index');
     }
 
@@ -63,7 +59,8 @@ class CategoryController extends BaseController
      */
     public function edit(Category $category)
     {
-        return View::make('categories.edit')->with('category', $category);
+        return View::make('categories.edit')->with('category', $category)
+            ->with('title', 'Edit category "' . $category->name . '"');
     }
 
     /**
@@ -73,7 +70,8 @@ class CategoryController extends BaseController
     {
         $categories = $this->_repository->get();
 
-        return View::make('categories.index')->with('categories', $categories);
+        return View::make('categories.index')->with('categories', $categories)
+            ->with('title', 'All your categories');
     }
 
     /**
@@ -84,14 +82,14 @@ class CategoryController extends BaseController
     public function show(Category $category)
     {
         $start = \Session::get('start');
-        $end = \Session::get('end');
+        $end   = \Session::get('end');
 
 
         $journals = $this->_category->journalsInRange($category, $start, $end);
 
         return View::make('categories.show')->with('category', $category)->with('journals', $journals)->with(
-            'highlight', Input::get('highlight')
-        );
+                   'highlight', Input::get('highlight')
+        )->with('title', 'Overview for category "'.$category->name.'"');;
     }
 
     /**

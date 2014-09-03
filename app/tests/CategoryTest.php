@@ -6,12 +6,12 @@ use League\FactoryMuffin\Facade as f;
 use Mockery as m;
 
 /**
- * Class CategoryControllerTest
+ * Class CategoryTest
  *
  * @SuppressWarnings(PHPMD.TooManyMethods)
  * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
-class CategoryControllerTest extends TestCase
+class CategoryTest extends TestCase
 {
     protected $_repository;
     protected $_user;
@@ -68,21 +68,6 @@ class CategoryControllerTest extends TestCase
         $this->action('POST', 'CategoryController@destroy', $category->id);
         $this->assertRedirectedToRoute('categories.index');
         $this->assertSessionHas('success');
-    }
-
-    public function testDestroyFails()
-    {
-        $category = f::create('Category');
-
-        // for successful binding:
-        Auth::shouldReceive('user')->andReturn($this->_user);
-        Auth::shouldReceive('check')->andReturn(true);
-        $this->_user->shouldReceive('getAttribute')->with('id')->once()->andReturn($category->user_id);
-        $this->_repository->shouldReceive('destroy')->once()->andReturn(false);
-
-        $this->action('POST', 'CategoryController@destroy', $category->id);
-        $this->assertRedirectedToRoute('categories.index');
-        $this->assertSessionHas('error');
     }
 
     public function testEdit()

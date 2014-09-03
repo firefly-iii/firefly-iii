@@ -3,11 +3,15 @@
 namespace Firefly\Storage\Budget;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Class EloquentBudgetRepository
  *
  * @package Firefly\Storage\Budget
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
+ *
  */
 class EloquentBudgetRepository implements BudgetRepositoryInterface
 {
@@ -24,7 +28,7 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
     /**
      * @param \Budget $budget
      *
-     * @return bool|mixed
+     * @return bool
      */
     public function destroy(\Budget $budget)
     {
@@ -36,7 +40,7 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
     /**
      * @param $budgetId
      *
-     * @return mixed
+     * @return \Budget|null
      */
     public function find($budgetId)
     {
@@ -44,6 +48,10 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
         return $this->_user->budgets()->find($budgetId);
     }
 
+    /**
+     * @param $budgetName
+     * @return \Budget|null
+     */
     public function findByName($budgetName)
     {
 
@@ -51,16 +59,16 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
-     * @return mixed
+     * @return Collection
      */
     public function get()
     {
         $set = $this->_user->budgets()->with(
-                    ['limits'                        => function ($q) {
-                            $q->orderBy('limits.startdate', 'DESC');
-                        }, 'limits.limitrepetitions' => function ($q) {
-                            $q->orderBy('limit_repetitions.startdate', 'ASC');
-                        }]
+                           ['limits'                        => function ($q) {
+                                   $q->orderBy('limits.startdate', 'DESC');
+                               }, 'limits.limitrepetitions' => function ($q) {
+                                   $q->orderBy('limit_repetitions.startdate', 'ASC');
+                               }]
         )->orderBy('name', 'ASC')->get();
         foreach ($set as $budget) {
             foreach ($budget->limits as $limit) {
@@ -74,12 +82,12 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
-     * @return array|mixed
+     * @return array
      */
     public function getAsSelectList()
     {
         $list   = $this->_user->budgets()->with(
-                       ['limits', 'limits.limitrepetitions']
+                              ['limits', 'limits.limitrepetitions']
         )->orderBy('name', 'ASC')->get();
         $return = [];
         foreach ($list as $entry) {
@@ -89,11 +97,20 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
         return $return;
     }
 
+    /**
+     * @param \User $user
+     * @return mixed|void
+     */
+    public function overruleUser(\User $user)
+    {
+        $this->_user = $user;
+        return true;
+    }
 
     /**
      * @param $data
      *
-     * @return \Budget|mixed
+     * @return \Budget
      */
     public function store($data)
     {
@@ -104,41 +121,21 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
 
         // if limit, create limit (repetition itself will be picked up elsewhere).
         if (isset($data['amount']) && floatval($data['amount']) > 0) {
-            $limit = new \Limit;
-            $limit->budget()->associate($budget);
             $startDate = new Carbon;
-            switch ($data['repeat_freq']) {
-                case 'daily':
-                    $startDate->startOfDay();
-                    break;
-                case 'weekly':
-                    $startDate->startOfWeek();
-                    break;
-                case 'monthly':
-                    $startDate->startOfMonth();
-                    break;
-                case 'quarterly':
-                    $startDate->firstOfQuarter();
-                    break;
-                case 'half-year':
-                    $startDate->startOfYear();
-                    if (intval($startDate->format('m')) >= 7) {
-                        $startDate->addMonths(6);
-                    }
-                    break;
-                case 'yearly':
-                    $startDate->startOfYear();
-                    break;
-            }
-            $limit->startdate   = $startDate;
-            $limit->amount      = $data['amount'];
-            $limit->repeats     = isset($data['repeats']) ? $data['repeats'] : 0;
-            $limit->repeat_freq = $data['repeat_freq'];
-            if ($limit->validate()) {
-                $limit->save();
-                \Event::fire('limits.store', [$limit]);
-            }
+            $limitData = [
+                'budget_id' => $budget->id,
+                'startdate' => $startDate->format('Y-m-d'),
+                'period'    => $data['repeat_freq'],
+                'amount'    => floatval($data['amount']),
+                'repeats'   => 0
+            ];
+            /** @var \Firefly\Storage\Limit\LimitRepositoryInterface $limitRepository */
+            $limitRepository = \App::make('Firefly\Storage\Limit\LimitRepositoryInterface');
+            $limitRepository->overruleUser($this->_user);
+            $limit = $limitRepository->store($limitData);
+            \Event::fire('limits.store', [$limit]);
         }
+        
         if ($budget->validate()) {
             $budget->save();
         }
@@ -161,16 +158,6 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
         }
 
         return $budget;
-    }
-
-    /**
-     * @param \User $user
-     * @return mixed|void
-     */
-    public function overruleUser(\User $user)
-    {
-        $this->_user = $user;
-        return true;
     }
 
 } 

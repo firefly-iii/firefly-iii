@@ -6,8 +6,9 @@
             <small>Overview for budget "{{{$budget->name}}}"</small>
         </h1>
             <p class="lead">Budgets can help you cut back on spending.</p>
-                <!-- warning for selected limit -->
+
                 @if($view == 1)
+                <!-- warning for selected limit -->
                 <p class="bg-primary" style="padding:15px;">
                     This view is filtered to show only the envelope from
                     {{{$repetitions[0]['limitrepetition']->periodShow()}}},
@@ -16,15 +17,16 @@
 
                 @endif
 
-                <!-- warning for non-caught only -->
+
                 @if($view == 2)
+                <!-- warning for non-caught only -->
                 <p class="bg-primary" style="padding:15px;">
                     This view is filtered to show transactions not in an envelope only.
                 </p>
                 @endif
 
-        <!-- warning for session date -->
                 @if($view == 3)
+                <!-- warning for session date -->
                 <p class="bg-primary" style="padding:15px;">
                     This view is filtered to only show transactions between {{Session::get('start')->format('d M Y')}}
                     and {{Session::get('end')->format('d M Y')}}.
@@ -32,7 +34,7 @@
                 @endif
         @if($view != 4)
         <p class="bg-info" style="padding:15px;">
-            <a href="{{route('budgets.show',$budget->id)}}" class="text-info">Reset the filter(s).</a>
+            <a class="btn btn-default btn-sm" href="{{route('budgets.show',$budget->id)}}">Reset the filter</a>
         </p>
         @endif
 
@@ -74,7 +76,7 @@
                     {{$repetition['date']}}</a> <small>paginated</small></h4>
             @else
                 <h4>
-                    <a href="{{route('budgets.show',$budget->id)}}?rep={{$repetition['limitrepetition']->id}}">
+                    <a href="{{route('budgets.show',$budget->id,$repetition['limitrepetition']->id)}}">
                         {{$repetition['date']}}
                     </a>
                 </h4>
@@ -101,13 +103,18 @@
 
 @stop
 @section('scripts')
-@if(isset($filters[0]) && is_object($filters[0]) && get_class($filters[0]) == 'Limit')
+@if($view == 1)
 <?php echo javascript_include_tag('budgets-limit'); ?>
-@elseif(isset($filters[0]) && $filters[0] == 'no_envelope')
+@endif
+
+@if($view == 2)
 <?php echo javascript_include_tag('budgets-nolimit'); ?>
-@elseif($useSessionDates == true)
+@endif
+
+@if($view == 3)
 <?php echo javascript_include_tag('budgets-session'); ?>
-@else
+@endif
+@if($view == 4)
 <?php echo javascript_include_tag('budgets-default'); ?>
 @endif
 

@@ -13,6 +13,11 @@ class Budget implements BudgetInterface
 {
 
     /**
+     * First, loop all budgets, all of their limits and all repetitions to get an overview per period
+     * and some basic information about that repetition's data.
+     *
+     *
+     *
      * @param Collection $budgets
      *
      * @return mixed|void
@@ -21,32 +26,30 @@ class Budget implements BudgetInterface
     {
         $return = [];
 
+        /** @var \Budget $budget */
         foreach ($budgets as $budget) {
+
+            /** @var \Limit $limit */
             foreach ($budget->limits as $limit) {
 
-                /** @var \LimitRepetition $rep */
-                foreach ($limit->limitrepetitions as $rep) {
-                    $periodOrder = $rep->periodOrder();
-                    $period = $rep->periodShow();
-                    $return[$periodOrder] = isset($return[$periodOrder])
-                        ? $return[$periodOrder]
-                        : ['date'       => $period,
-                           'dateObject' => $rep->startdate,
-                           'start'      => $rep->startdate,
-                           'end'        => $rep->enddate,
-                           'budget_id'  => $limit->budget_id];
+                /** @var \LimitRepetition $repetition */
+                foreach ($limit->limitrepetitions as $repetition) {
+                    $repetition->left = $repetition->left();
+                    $periodOrder      = $repetition->periodOrder();
+                    $period           = $repetition->periodShow();
+                    if (!isset($return[$periodOrder])) {
 
-                }
-            }
-        }
-        // put all the budgets under their respective date:
-        foreach ($budgets as $budget) {
-            foreach ($budget->limits as $limit) {
-                foreach ($limit->limitrepetitions as $rep) {
-                    $rep->left = $rep->left();
+                        $return[$periodOrder] = [
+                            'date'             => $period,
+                            'start'            => $repetition->startdate,
+                            'end'              => $repetition->enddate,
+                            'budget_id'        => $budget->id,
+                            'limitrepetitions' => [$repetition]
+                        ];
+                    } else {
+                        $return[$periodOrder]['limitrepetitions'][] = $repetition;
+                    }
 
-                    $month = $rep->periodOrder();
-                    $return[$month]['limitrepetitions'][] = $rep;
                 }
             }
         }
@@ -56,30 +59,24 @@ class Budget implements BudgetInterface
     }
 
     /**
+     * Get a repetition (complex because of user check)
+     * and then get the transactions in it.
      * @param         $repetitionId
      *
      * @return array
      */
-    public function organizeRepetition($repetitionId)
+    public function organizeRepetition(\LimitRepetition $repetition)
     {
         $result = [];
-        $repetition = \LimitRepetition::with('limit', 'limit.budget')->leftJoin(
-            'limits', 'limit_repetitions.limit_id', '=', 'limits.id'
-        )->leftJoin('components', 'limits.component_id', '=', 'components.id')->where(
-                'components.user_id', \Auth::user()->id
-            )
-            ->where('limit_repetitions.id', $repetitionId)->first(['limit_repetitions.*']);
-
         // get transactions:
-        $set = $repetition->limit->budget->transactionjournals()->with(
-            'transactions', 'transactions.account', 'components', 'transactiontype'
-        )->leftJoin(
-                'transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id'
-            )->where('transaction_types.type', 'Withdrawal')->where(
-                'date', '>=', $repetition->startdate->format('Y-m-d')
-            )->where('date', '<=', $repetition->enddate->format('Y-m-d'))->orderBy('date', 'DESC')->orderBy(
-                'id', 'DESC'
-            )->get(['transaction_journals.*']);
+        $set = $repetition->limit->budget
+            ->transactionjournals()
+            ->withRelevantData()
+            ->transactionTypes(['Withdrawal'])
+            ->after($repetition->startdate)
+            ->before($repetition->enddate)
+            ->defaultSorting()
+            ->get(['transaction_journals.*']);
 
         $result[0] = [
             'date'            => $repetition->periodShow(),
@@ -93,8 +90,10 @@ class Budget implements BudgetInterface
     }
 
     /**
+     *
+     *
      * @param \Budget $budget
-     * @param bool    $useSessionDates
+     * @param bool $useSessionDates
      *
      * @return array|mixed
      * @throws \Firefly\Exception\FireflyException
@@ -102,15 +101,15 @@ class Budget implements BudgetInterface
     public function organizeRepetitions(\Budget $budget, $useSessionDates = false)
     {
         $sessionStart = \Session::get('start');
-        $sessionEnd = \Session::get('end');
+        $sessionEnd   = \Session::get('end');
 
-        $result = [];
+        $result       = [];
         $inRepetition = [];
 
         // get the limits:
         if ($useSessionDates) {
             $limits = $budget->limits()->where('startdate', '>=', $sessionStart->format('Y-m-d'))->where(
-                'startdate', '<=', $sessionEnd->format('Y-m-d')
+                             'startdate', '<=', $sessionEnd->format('Y-m-d')
             )->get();
         } else {
             $limits = $budget->limits;
@@ -119,7 +118,7 @@ class Budget implements BudgetInterface
         /** @var \Limit $limit */
         foreach ($limits as $limit) {
             foreach ($limit->limitrepetitions as $repetition) {
-                $order = $repetition->periodOrder();
+                $order          = $repetition->periodOrder();
                 $result[$order] = [
                     'date'            => $repetition->periodShow(),
                     'limitrepetition' => $repetition,
@@ -127,16 +126,14 @@ class Budget implements BudgetInterface
                     'journals'        => [],
                     'paginated'       => false
                 ];
-                $transactions = [];
-                $set = $budget->transactionjournals()->with(
-                    'transactions', 'transactions.account', 'components', 'transactiontype'
-                )->leftJoin(
-                        'transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id'
-                    )->where('transaction_types.type', 'Withdrawal')->where(
-                        'date', '>=', $repetition->startdate->format('Y-m-d')
-                    )->where('date', '<=', $repetition->enddate->format('Y-m-d'))->orderBy('date', 'DESC')->orderBy(
-                        'id', 'DESC'
-                    )->get(['transaction_journals.*']);
+                $transactions   = [];
+                $set            = $budget->transactionjournals()
+                                         ->withRelevantData()
+                                         ->transactionTypes(['Withdrawal'])
+                                         ->after($repetition->startdate)
+                                         ->before($repetition->enddate)
+                                         ->defaultSorting()
+                                         ->get(['transaction_journals.*']);
                 foreach ($set as $entry) {
                     $transactions[] = $entry;
                     $inRepetition[] = $entry->id;
@@ -146,30 +143,17 @@ class Budget implements BudgetInterface
 
         }
         if ($useSessionDates === false) {
+            $query = $budget->transactionjournals()->withRelevantData()->defaultSorting();
             if (count($inRepetition) > 0) {
-                $query = $budget->transactionjournals()->with(
-                    'transactions', 'transactions.account', 'components', 'transactiontype',
-                    'transactions.account.accounttype'
-                )->whereNotIn(
-                        'transaction_journals.id', $inRepetition
-                    )->orderBy('date', 'DESC')->orderBy(
-                        'transaction_journals.id', 'DESC'
-                    );
-            } else {
-                $query = $budget->transactionjournals()->with(
-                    'transactions', 'transactions.account', 'components', 'transactiontype',
-                    'transactions.account.accounttype'
-                )->orderBy('date', 'DESC')->orderBy(
-                        'transaction_journals.id', 'DESC'
-                    );
+                $query->whereNotIn('transaction_journals.id', $inRepetition);
             }
 
             // build paginator:
-            $perPage = 25;
+            $perPage    = 25;
             $totalItems = $query->count();
-            $page = intval(\Input::get('page')) > 1 ? intval(\Input::get('page')) : 1;
-            $skip = ($page - 1) * $perPage;
-            $set = $query->skip($skip)->take($perPage)->get();
+            $page       = intval(\Input::get('page')) > 1 ? intval(\Input::get('page')) : 1;
+            $skip       = ($page - 1) * $perPage;
+            $set        = $query->skip($skip)->take($perPage)->get();
 
             // stupid paginator!
             $items = [];
@@ -177,9 +161,12 @@ class Budget implements BudgetInterface
             foreach ($set as $item) {
                 $items[] = $item;
             }
-            $paginator = \Paginator::make($items, $totalItems, $perPage);
-            $result['0000'] = ['date'     => 'Not in an envelope', 'limit' => null, 'paginated' => true,
-                               'journals' => $paginator];
+            $paginator      = \Paginator::make($items, $totalItems, $perPage);
+            $result['0000'] = [
+                'date'      => 'Not in an envelope',
+                'limit'     => null,
+                'paginated' => true,
+                'journals'  => $paginator];
         }
         krsort($result);
 
@@ -196,13 +183,12 @@ class Budget implements BudgetInterface
         $inRepetitions = [];
         foreach ($budget->limits as $limit) {
             foreach ($limit->limitrepetitions as $repetition) {
-                $set = $budget->transactionjournals()->leftJoin(
-                    'transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id'
-                )->where('transaction_types.type', 'Withdrawal')->where(
-                        'date', '>=', $repetition->startdate->format('Y-m-d')
-                    )->where('date', '<=', $repetition->enddate->format('Y-m-d'))->orderBy('date', 'DESC')->get(
-                        ['transaction_journals.id']
-                    );
+                $set = $budget->transactionjournals()
+                              ->transactionTypes(['Withdrawal'])
+                              ->after($repetition->startdate)
+                              ->before($repetition->enddate)
+                              ->defaultSorting()
+                              ->get(['transaction_journals.id']);
                 foreach ($set as $item) {
                     $inRepetitions[] = $item->id;
                 }
@@ -210,21 +196,17 @@ class Budget implements BudgetInterface
 
         }
 
-        $query = $budget->transactionjournals()->with(
-            'transactions', 'transactions.account', 'components', 'transactiontype',
-            'transactions.account.accounttype'
-        )->whereNotIn(
-                'transaction_journals.id', $inRepetitions
-            )->orderBy('date', 'DESC')->orderBy(
-                'transaction_journals.id', 'DESC'
-            );
+        $query = $budget->transactionjournals()
+                        ->withRelevantData()
+                        ->whereNotIn('transaction_journals.id', $inRepetitions)
+                        ->defaultSorting();
 
         // build paginator:
-        $perPage = 25;
+        $perPage    = 25;
         $totalItems = $query->count();
-        $page = intval(\Input::get('page')) > 1 ? intval(\Input::get('page')) : 1;
-        $skip = ($page - 1) * $perPage;
-        $set = $query->skip($skip)->take($perPage)->get();
+        $page       = intval(\Input::get('page')) > 1 ? intval(\Input::get('page')) : 1;
+        $skip       = ($page - 1) * $perPage;
+        $set        = $query->skip($skip)->take($perPage)->get();
 
         // stupid paginator!
         $items = [];
@@ -233,8 +215,12 @@ class Budget implements BudgetInterface
             $items[] = $item;
         }
         $paginator = \Paginator::make($items, $totalItems, $perPage);
-        $result = [0 => ['date'     => 'Not in an envelope', 'limit' => null, 'paginated' => true,
-                         'journals' => $paginator]];
+        $result    = [0 => [
+            'date'      => 'Not in an envelope',
+            'limit'     => null,
+            'paginated' => true,
+            'journals'  => $paginator
+        ]];
 
         return $result;
     }
