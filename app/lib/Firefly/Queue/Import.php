@@ -55,6 +55,30 @@ class Import
     /**
      * @param Job $job
      * @param array $payload
+     */
+    public function cleanImportAccount(Job $job, array $payload)
+    {
+        $importAccountType = $this->_accounts->findAccountType('Import account');
+        $importAccounts    = $this->_accounts->getByAccountType($importAccountType);
+        if (count($importAccounts) == 0) {
+            $job->delete();
+        } else if (count($importAccounts) == 1) {
+            /** @var \Account $importAccount */
+            $importAccount = $importAccounts[0];
+            $transactions  = $importAccount->transactions()->get();
+            /** @var \Transaction $transaction */
+            foreach ($transactions as $transaction) {
+                $transaction->account()->associate($importAccount);
+                $transaction->save();
+            }
+            \Log::debug('Updated ' . count($transactions) . ' transactions from Import Account to cash.');
+        }
+        $job->delete();
+    }
+
+    /**
+     * @param Job $job
+     * @param array $payload
      * @throws \Firefly\Exception\FireflyException
      */
     public function importComponent(Job $job, array $payload)
@@ -611,8 +635,13 @@ class Import
                 \Queue::push($jobFunction, ['data' => $entry, 'mapID' => $importMap->id]);
             }
 
+            // queue a job to clean up the "import account", it should properly fall back
+            // to the cash account (which it doesn't always do for some reason).
+            \Queue::push('Firefly\Queue\Import@cleanImportAccount', ['mapID' => $importMap->id]);
 
         }
+
+
         \Log::debug('Done with job "start"');
         // this is it, close the job:
         $job->delete();

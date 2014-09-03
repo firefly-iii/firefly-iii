@@ -8,7 +8,11 @@ use Mockery as m;
 /**
  * Class AccountTest
  *
- * Test EVERYTHING related to accounts. Models, views controllers.
+ * Test EVERYTHING related to accounts. Models, views, and controllers.
+ *
+ * This class does not cover the /lib/ map, it is for a later date.
+ *
+ * As far as I am concerned, this class is complete! Yay!
  *
  * @SuppressWarnings(PHPMD.TooManyMethods)
  * @SuppressWarnings(PHPMD.CamelCasePropertyName)
@@ -68,20 +72,20 @@ class AccountTest extends TestCase
         // user should equal test user:
         $this->assertEquals($user->id, $account->user()->first()->id);
 
-        $this->assertEquals('testing',\App::environment());
+        $this->assertEquals('testing', \App::environment());
 
         \Log::debug('Hello from test!');
         \Log::debug('Number of accounts: ' . \Account::count());
         \Log::debug('Number of account types: ' . \AccountType::count());
 
-        foreach(\AccountType::get() as $t) {
-            \Log::debug('AccountType: #'.$t->id.', ' . $t->type);
+        foreach (\AccountType::get() as $t) {
+            \Log::debug('AccountType: #' . $t->id . ', ' . $t->type);
         }
 
         // whatever the account type of this account, searching for it using the
         // scope method should return one account:
         $accountType = $account->accounttype()->first();
-        $accounts = $accountType->accounts()->count();
+        $accounts    = $accountType->accounts()->count();
         $this->assertCount($accounts, \Account::AccountTypeIn([$accountType->type])->get());
 
     }
@@ -199,7 +203,7 @@ class AccountTest extends TestCase
     {
         // two account types:
         $personalType = \AccountType::whereType('Default account')->first();
-        $benType = \AccountType::whereType('Beneficiary account')->first();
+        $benType      = \AccountType::whereType('Beneficiary account')->first();
 
         // create two accounts:
         /** @var \Account $account */
@@ -303,6 +307,9 @@ class AccountTest extends TestCase
         $this->assertSessionHas('error');
     }
 
+    /**
+     * @covers ::store
+     */
     public function testStoreRecreate()
     {
         /** @var \Account $account */
@@ -319,6 +326,9 @@ class AccountTest extends TestCase
         $this->assertSessionHas('success');
     }
 
+    /**
+     * @covers ::update
+     */
     public function testUpdate()
     {
         /** @var \Account $account */
@@ -344,6 +354,9 @@ class AccountTest extends TestCase
 
     }
 
+    /**
+     * @covers ::update
+     */
     public function testUpdateFails()
     {
         /** @var \Account $account */

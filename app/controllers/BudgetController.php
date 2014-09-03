@@ -14,12 +14,12 @@ class BudgetController extends BaseController
     protected $_repository;
 
     /**
-     * @param BI  $budgets
+     * @param BI $budgets
      * @param BRI $repository
      */
     public function __construct(BI $budgets, BRI $repository)
     {
-        $this->_budgets = $budgets;
+        $this->_budgets    = $budgets;
         $this->_repository = $repository;
     }
 
@@ -30,7 +30,7 @@ class BudgetController extends BaseController
     {
         $periods = \Config::get('firefly.periods_to_text');
 
-        return View::make('budgets.create')->with('periods', $periods);
+        return View::make('budgets.create')->with('periods', $periods)->with('title', 'Create a new budget');
     }
 
     /**
@@ -40,7 +40,8 @@ class BudgetController extends BaseController
      */
     public function delete(Budget $budget)
     {
-        return View::make('budgets.delete')->with('budget', $budget);
+        return View::make('budgets.delete')->with('budget', $budget)
+                   ->with('title', 'Delete budget "' . $budget->name . '"');
     }
 
     /**
@@ -50,20 +51,16 @@ class BudgetController extends BaseController
      */
     public function destroy(Budget $budget)
     {
+        // remove budget
         Event::fire('budgets.destroy', [$budget]); // just before deletion.
-        $result = $this->_repository->destroy($budget);
-        if ($result === true) {
-            Session::flash('success', 'The budget was deleted.');
-            if (Input::get('from') == 'date') {
-                return Redirect::route('budgets.index');
-            } else {
-                return Redirect::route('budgets.index.budget');
-            }
-        } else {
-            Session::flash('error', 'Could not delete the budget. Check the logs to be sure.');
-        }
+        $this->_repository->destroy($budget);
+        Session::flash('success', 'The budget was deleted.');
 
-        return Redirect::route('budgets.index');
+        // redirect:
+        if (Input::get('from') == 'date') {
+            return Redirect::route('budgets.index');
+        }
+        return Redirect::route('budgets.index.budget');
 
     }
 
@@ -74,7 +71,8 @@ class BudgetController extends BaseController
      */
     public function edit(Budget $budget)
     {
-        return View::make('budgets.edit')->with('budget', $budget);
+        return View::make('budgets.edit')->with('budget', $budget)
+                   ->with('title', 'Edit budget "' . $budget->name . '"');
 
     }
 
@@ -84,62 +82,70 @@ class BudgetController extends BaseController
     public function indexByBudget()
     {
         $budgets = $this->_repository->get();
-        $today = new Carbon;
 
-
-        return View::make('budgets.indexByBudget')->with('budgets', $budgets)->with('today', $today);
+        return View::make('budgets.indexByBudget')->with('budgets', $budgets)->with('today', new Carbon)
+                   ->with('title', 'Budgets grouped by budget');
 
     }
 
     /**
-     * @return $this|\Illuminate\View\View
-     * @throws Firefly\Exception\FireflyException
+     * @return $this
      */
     public function indexByDate()
     {
         // get a list of dates by getting all repetitions:
-        $set = $this->_repository->get();
+        $set     = $this->_repository->get();
         $budgets = $this->_budgets->organizeByDate($set);
 
 
-        return View::make('budgets.indexByDate')->with('budgets', $budgets);
+        return View::make('budgets.indexByDate')->with('budgets', $budgets)->with('title', 'Budgets grouped by date.');
 
 
     }
 
     /**
+     * Three use cases for this view:
+     *
+     * - Show everything.
+     * - Show a specific repetition.
+     * - Show everything shows NO repetition.
+     *
      * @param Budget $budget
      *
      * @return int
      */
     public function show(Budget $budget)
     {
-        /**
-         * Use the
-         */
         $useSessionDates = Input::get('useSession') == 'true' ? true : false;
+        $view            = null;
+        $title           = null;
 
-
-        $filters = [];
-
-        if (!is_null(Input::get('rep'))) {
-            $repetitionId = intval(Input::get('rep'));
-            $repetitions = $this->_budgets->organizeRepetition($repetitionId);
-            $filters[] = $repetitions[0]['limit'];
-            $filters[] = $repetitions[0]['limitrepetition'];
-        } else {
-            if (Input::get('noenvelope') == 'true') {
-                $repetitions = $this->_budgets->outsideRepetitions($budget);
-                $filters[] = 'no_envelope';
-            } else {
-                // grab all limit repetitions, order them, show them:
-                $repetitions = $this->_budgets->organizeRepetitions($budget, $useSessionDates);
-            }
+        switch (true) {
+            case (!is_null(Input::get('rep'))):
+                $repetitionId = intval(Input::get('rep'));
+                $data         = $this->_budgets->organizeRepetition($repetitionId);
+                $view         = 1;
+                $title        = $budget->name.', '. $data[0]['limitrepetition']->periodShow().', '.mf($data[0]['limit']->amount,false);
+                break;
+            case (Input::get('noenvelope') == 'true'):
+                $data = $this->_budgets->outsideRepetitions($budget);
+                $view = 2;
+                $title = $budget->name.', transactions outside an envelope.';
+                break;
+            default:
+                $data = $this->_budgets->organizeRepetitions($budget, $useSessionDates);
+                $view = $useSessionDates ? 3 : 4;
+                $title = $useSessionDates ? $budget->name.' in session period' : $budget->name;
+                break;
         }
 
-        return View::make('budgets.show')->with('budget', $budget)->with('repetitions', $repetitions)->with(
-            'filters', $filters
-        )->with('highlight', Input::get('highlight'))->with('useSessionDates', $useSessionDates);
+        return View::make('budgets.show')
+                   ->with('budget', $budget)
+                   ->with('repetitions', $data)
+                   ->with('view', $view)
+                   ->with('highlight', Input::get('highlight'))
+                   ->with('useSessionDates', $useSessionDates)
+                   ->with('title', $title);
     }
 
     /**

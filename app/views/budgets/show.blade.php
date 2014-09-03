@@ -7,38 +7,34 @@
         </h1>
             <p class="lead">Budgets can help you cut back on spending.</p>
                 <!-- warning for selected limit -->
-                @if(isset($filters[0]) && is_object($filters[0]) && get_class($filters[0]) == 'Limit')
+                @if($view == 1)
                 <p class="bg-primary" style="padding:15px;">
                     This view is filtered to show only the envelope from
                     {{{$repetitions[0]['limitrepetition']->periodShow()}}},
                     which contains {{mf($repetitions[0]['limit']->amount,false)}}.
                 </p>
-                <p class="bg-info" style="padding:15px;">
-                                    <a href="{{route('budgets.show',$budget->id)}}" class="text-info">Reset the filter(s).</a>
-                                </p>
+
                 @endif
 
                 <!-- warning for non-caught only -->
-                @if(isset($filters[0]) && $filters[0] == 'no_envelope')
+                @if($view == 2)
                 <p class="bg-primary" style="padding:15px;">
                     This view is filtered to show transactions not in an envelope only.
                 </p>
-                <p class="bg-info" style="padding:15px;">
-                                    <a href="{{route('budgets.show',$budget->id)}}" class="text-info">Reset the filter(s).</a>
-                                </p>
                 @endif
 
-                <!-- warning for session date -->
-                @if($useSessionDates == true)
+        <!-- warning for session date -->
+                @if($view == 3)
                 <p class="bg-primary" style="padding:15px;">
                     This view is filtered to only show transactions between {{Session::get('start')->format('d M Y')}}
                     and {{Session::get('end')->format('d M Y')}}.
                 </p>
-
-                <p class="bg-info" style="padding:15px;">
-                    <a href="{{route('budgets.show',$budget->id)}}" class="text-info">Reset the filter(s).</a>
-                </p>
                 @endif
+        @if($view != 4)
+        <p class="bg-info" style="padding:15px;">
+            <a href="{{route('budgets.show',$budget->id)}}" class="text-info">Reset the filter(s).</a>
+        </p>
+        @endif
 
     </div>
 </div>
@@ -46,17 +42,22 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div id="chart"></div>
-        @if(isset($filters[0]) && is_object($filters[0]) && get_class($filters[0]) == 'Limit')
+        @if($view == 1)
         <div id="instr" data-type="envelope" data-envelope="{{$repetitions[0]['limitrepetition']->id}}"></div>
-        @elseif(isset($filters[0]) && $filters[0] == 'no_envelope')
-        <div id="instr" data-type="no_envelope" data-budget="{{$budget->id}}"></div>
-        @elseif($useSessionDates == true)
-        <div id="instr" data-type="session" data-budget="{{$budget->id}}"></div>
-        @else
-        <div id="instr" data-type="default" data-budget="{{$budget->id}}"></div>
         @endif
 
 
+        @if($view == 2)
+        <div id="instr" data-type="no_envelope" data-budget="{{$budget->id}}"></div>
+        @endif
+
+        @if($view == 3)
+        <div id="instr" data-type="session" data-budget="{{$budget->id}}"></div>
+        @endif
+
+        @if($view == 4)
+        <div id="instr" data-type="default" data-budget="{{$budget->id}}"></div>
+        @endif
 
     </div>
 </div>

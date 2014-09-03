@@ -102,6 +102,12 @@ interface AccountRepositoryInterface
     public function getDefault();
 
     /**
+     * @param \AccountType $type
+     * @return mixed
+     */
+    public function getByAccountType(\AccountType $type);
+
+    /**
      * @param \User $user
      * @return mixed
      */
