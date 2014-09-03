@@ -16,7 +16,7 @@ use Mockery as m;
  *
  * @SuppressWarnings(PHPMD.TooManyMethods)
  * @SuppressWarnings(PHPMD.CamelCasePropertyName)
- * @coversDefaultClass \AccountController
+ *
  */
 class AccountTest extends TestCase
 {
@@ -24,6 +24,9 @@ class AccountTest extends TestCase
     protected $_user;
     protected $_accounts;
 
+    /**
+     *
+     */
     public function setUp()
     {
         parent::setUp();
@@ -35,12 +38,19 @@ class AccountTest extends TestCase
 
     }
 
+    /**
+     *
+     */
     public function tearDown()
     {
 
         Mockery::close();
     }
 
+    /**
+     * @covers \Account
+     * @covers \AccountType
+     */
     public function testAccountModel()
     {
         // create account and user:
@@ -74,14 +84,6 @@ class AccountTest extends TestCase
 
         $this->assertEquals('testing', \App::environment());
 
-        \Log::debug('Hello from test!');
-        \Log::debug('Number of accounts: ' . \Account::count());
-        \Log::debug('Number of account types: ' . \AccountType::count());
-
-        foreach (\AccountType::get() as $t) {
-            \Log::debug('AccountType: #' . $t->id . ', ' . $t->type);
-        }
-
         // whatever the account type of this account, searching for it using the
         // scope method should return one account:
         $accountType = $account->accounttype()->first();
@@ -91,7 +93,7 @@ class AccountTest extends TestCase
     }
 
     /**
-     * @covers ::create
+     * @covers \AccountController::create
      */
     public function testCreate()
     {
@@ -106,7 +108,7 @@ class AccountTest extends TestCase
     }
 
     /**
-     * @covers ::delete
+     * @covers \AccountController::delete
      */
     public function testDelete()
     {
@@ -136,7 +138,7 @@ class AccountTest extends TestCase
     }
 
     /**
-     * @covers ::destroy
+     * @covers \AccountController::destroy
      */
     public function testDestroy()
     {
@@ -165,7 +167,7 @@ class AccountTest extends TestCase
     }
 
     /**
-     * @covers ::edit
+     * @covers \AccountController::edit
      */
     public function testEdit()
     {
@@ -197,7 +199,7 @@ class AccountTest extends TestCase
     }
 
     /**
-     * @covers ::index
+     * @covers \AccountController::index
      */
     public function testIndex()
     {
@@ -237,7 +239,7 @@ class AccountTest extends TestCase
     }
 
     /**
-     * @covers ::show
+     * @covers \AccountController::show
      */
     public function testShow()
     {
@@ -269,7 +271,7 @@ class AccountTest extends TestCase
     }
 
     /**
-     * @covers ::store
+     * @covers \AccountController::store
      */
     public function testStore()
     {
@@ -288,7 +290,7 @@ class AccountTest extends TestCase
     }
 
     /**
-     * @covers ::store
+     * @covers \AccountController::store
      */
     public function testStoreFails()
     {
@@ -308,7 +310,7 @@ class AccountTest extends TestCase
     }
 
     /**
-     * @covers ::store
+     * @covers \AccountController::store
      */
     public function testStoreRecreate()
     {
@@ -327,7 +329,7 @@ class AccountTest extends TestCase
     }
 
     /**
-     * @covers ::update
+     * @covers \AccountController::update
      */
     public function testUpdate()
     {
@@ -355,7 +357,7 @@ class AccountTest extends TestCase
     }
 
     /**
-     * @covers ::update
+     * @covers \AccountController::update
      */
     public function testUpdateFails()
     {

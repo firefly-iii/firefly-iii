@@ -27,7 +27,7 @@ class Component extends SingleTableInheritanceEntity
     public static $rules
         = [
             'user_id' => 'exists:users,id|required',
-            'name'    => 'required|between:1,255',
+            'name'    => ['required', 'between:1,100', 'alphabasic'],
             'class'   => 'required',
         ];
     protected $table = 'components';

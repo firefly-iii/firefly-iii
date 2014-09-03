@@ -23,7 +23,7 @@ interface BudgetInterface
      *
      * @return mixed
      */
-    public function organizeRepetition($repetitionId);
+    public function organizeRepetition(\LimitRepetition $repetition);
 
 
     /**

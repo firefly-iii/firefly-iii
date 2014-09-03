@@ -2,8 +2,6 @@
 
 namespace Firefly\Helper\Controllers;
 
-use Firefly\Exception\FireflyException;
-
 /**
  * Class Account
  *
@@ -11,15 +9,15 @@ use Firefly\Exception\FireflyException;
  */
 class Account implements AccountInterface
 {
+
     /**
      * @param \Account $account
-     *
-     * @return mixed
+     * @return \TransactionJournal|null
      */
     public function openingBalanceTransaction(\Account $account)
     {
-        return \TransactionJournal::
-            withRelevantData()->account($account)
+        return \TransactionJournal::withRelevantData()
+                                  ->account($account)
                                   ->leftJoin('transaction_types', 'transaction_types.id', '=',
                 'transaction_journals.transaction_type_id')
                                   ->where('transaction_types.type', 'Opening balance')
@@ -27,55 +25,54 @@ class Account implements AccountInterface
     }
 
     /**
-     * @param \Account $account
-     * @param          $perPage
+     * Since it is entirely possible the database is messed up somehow it might be that a transaction
+     * journal has only one transaction. This is mainly caused by wrong deletions and other artefacts from the past.
      *
-     * @return mixed|void
+     * If it is the case, we remove $item and continue like nothing ever happened. This will however,
+     * mess up some statisics but we can live with that. We might be needing some cleanup routine in the future.
+     *
+     * For now, we simply warn the user of this.
+     *
+     * @param \Account $account
+     * @param $perPage
+     * @return array|mixed
+     * @throws \Firefly\Exception\FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function show(\Account $account, $perPage)
     {
         $start = \Session::get('start');
         $end   = \Session::get('end');
         $stats = [
-            'budgets'    => [],
-            'categories' => [],
-            'accounts'   => []
+            'accounts' => []
         ];
         $items = [];
 
-
         // build a query:
-        $query = \TransactionJournal::withRelevantData()->defaultSorting()->account($account)->after($start)
+        $query = \TransactionJournal::withRelevantData()
+                                    ->defaultSorting()
+                                    ->account($account)
+                                    ->after($start)
                                     ->before($end);
         // filter some:
-        if (\Input::get('type')) {
-            switch (\Input::get('type')) {
-                case 'transactions':
-                    $query->transactionTypes(['Deposit', 'Withdrawal']);
-                    break;
-                case 'transfers':
-                    $query->transactionTypes(['Transfer']);
-                    break;
-                default:
-                    throw new FireflyException('No case for type "' . \Input::get('type') . '"!');
-                    break;
-            }
+        switch (\Input::get('type')) {
+            case 'transactions':
+                $query->transactionTypes(['Deposit', 'Withdrawal']);
+                break;
+            case 'transfers':
+                $query->transactionTypes(['Transfer']);
+                break;
         }
 
-        if (\Input::get('show')) {
-            switch (\Input::get('show')) {
-                case 'expenses':
-                case 'out':
-                    $query->lessThan(0);
-                    break;
-                case 'income':
-                case 'in':
-                    $query->moreThan(0);
-                    break;
-                default:
-                    throw new FireflyException('No case for show "' . \Input::get('show') . '"!');
-                    break;
-            }
+        switch (\Input::get('show')) {
+            case 'expenses':
+            case 'out':
+                $query->lessThan(0);
+                break;
+            case 'income':
+            case 'in':
+                $query->moreThan(0);
+                break;
         }
 
 
@@ -91,26 +88,11 @@ class Account implements AccountInterface
         foreach ($result as $index => $item) {
 
             foreach ($item->components as $component) {
-                if ($component->class == 'Budget') {
-                    $stats['budgets'][$component->id] = $component;
-                }
-                if ($component->class == 'Category') {
-                    $stats['categories'][$component->id] = $component;
-                }
+                $stats[$component->class][$component->id] = $component;
             }
-            // since it is entirely possible the database is messed up somehow
-            // it might be that a transaction journal has only one transaction.
-            // this is mainly caused by wrong deletions and other artefacts from the past.
-            // if it is the case, we remove $item and continue like nothing ever happened.
-
-            // this will however, mess up some statisics but we can live with that.
-            // we might be needing some cleanup routine in the future.
-
-            // for now, we simply warn the user of this.
 
             if (count($item->transactions) < 2) {
-                \Session::flash('warning',
-                    'Some transactions are incomplete; they will not be shown. Statistics may differ.');
+                \Session::flash('warning', 'Some transactions are incomplete; they will not be shown.');
                 unset($result[$index]);
                 continue;
             }
@@ -138,7 +120,6 @@ class Account implements AccountInterface
                                         ->transactionTypes(['Transfer'])->sum('transactions.amount'));
         $trfDiff = $trfIn + $trfOut;
 
-
         $stats['period'] = [
             'in'     => $trIn,
             'out'    => $trOut,
@@ -155,7 +136,5 @@ class Account implements AccountInterface
         ];
 
         return $return;
-
-
     }
 } 

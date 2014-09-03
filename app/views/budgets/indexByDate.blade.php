@@ -35,7 +35,7 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <h3><a href="{{route('transactions.index')}}?startdate={{$entry['start']->format('Y-m-d')}}&amp;enddate={{$entry['end']->format('Y-m-d')}}">{{$entry['date']}}</a>
-             <a class="btn btn-default btn-xs" href ="{{route('budgets.limits.create')}}?startdate={{$entry['dateObject']->format('Y-m-d')}}"><span class="glyphicon glyphicon-plus-sign"></span> Create a new envelope for {{$entry['date']}}</a>
+             <a class="btn btn-default btn-xs" href ="{{route('budgets.limits.create')}}?startdate={{$entry['start']->format('Y-m-d')}}"><span class="glyphicon glyphicon-plus-sign"></span> Create a new envelope for {{$entry['date']}}</a>
             </h3>
         <table class="table table-bordered table-striped">
             <tr>
@@ -53,7 +53,7 @@
                     </div>
                 </td>
                 <td>
-                    <a href="{{route('budgets.show',$repetition->limit->budget->id)}}?rep={{$repetition->id}}">
+                    <a href="{{route('budgets.show',$repetition->limit->budget->id,$repetition->id)}}">
                         {{{$repetition->limit->budget->name}}}
                     </a>
                 </td>
