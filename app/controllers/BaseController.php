@@ -1,5 +1,7 @@
 <?php
 
+use \Illuminate\Routing\Controller;
+
 /**
  * Class BaseController
  */

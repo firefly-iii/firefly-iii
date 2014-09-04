@@ -7,7 +7,6 @@ use Firefly\Exception\FireflyException;
 
 /**
  * Class Chart
- *
  * @package Firefly\Helper\Controllers
  */
 class Chart implements ChartInterface
