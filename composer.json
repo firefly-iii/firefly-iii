@@ -23,16 +23,11 @@
     "require": {
         "laravel/framework": "4.2.*",
         "laravelbook/ardent": "~2.4",
-        "codesleeve/asset-pipeline": "~2.0",
-        "pda/pheanstalk": "~2.0"
+        "codesleeve/asset-pipeline": "~2.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "@stable",
-        "barryvdh/laravel-ide-helper": "@stable",
-        "mockery/mockery": "@dev",
-        "satooshi/php-coveralls": "@stable",
-        "league/factory-muffin": "@stable",
-        "doctrine/dbal": "@stable"
+        "barryvdh/laravel-ide-helper": "@stable"
     },
     "autoload": {
         "classmap": [
