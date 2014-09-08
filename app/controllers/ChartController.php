@@ -371,7 +371,6 @@ class ChartController extends BaseController
         ];
 
         foreach ($accounts as $account) {
-            \Log::debug('Now building series for ' . $account->name);
             $data['series'][] = $this->_chart->account($account, $start, $end);
         }
 
