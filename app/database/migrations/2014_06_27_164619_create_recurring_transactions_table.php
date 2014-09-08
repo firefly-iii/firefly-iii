@@ -25,8 +25,8 @@ class CreateRecurringTransactionsTable extends Migration
                 $table->integer('user_id')->unsigned();
                 $table->string('name', 50);
                 $table->string('match', 255);
-                $table->decimal('amount_max', 10, 2);
                 $table->decimal('amount_min', 10, 2);
+                $table->decimal('amount_max', 10, 2);
                 $table->date('date');
                 $table->boolean('active');
 
