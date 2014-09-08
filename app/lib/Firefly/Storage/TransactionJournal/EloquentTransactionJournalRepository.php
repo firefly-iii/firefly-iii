@@ -255,17 +255,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
      */
     public function paginate($count = 25, Carbon $start = null, Carbon $end = null)
     {
-        $query = $this->_user->transactionjournals()->with(
-                             [
-                                 'transactions' => function ($q) {
-                                         return $q->orderBy('amount', 'ASC');
-                                     },
-                                 'transactions.account',
-                                 'transactions.account.accounttype',
-                                 'transactioncurrency',
-                                 'transactiontype'
-                             ]
-        )
+        $query = $this->_user->transactionjournals()->WithRelevantData()
                              ->orderBy('transaction_journals.date', 'DESC')
                              ->orderBy('transaction_journals.id', 'DESC');
         if (!is_null($start)) {
