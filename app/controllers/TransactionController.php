@@ -197,6 +197,7 @@ class TransactionController extends BaseController
             }
 
             // trigger the creation for recurring transactions.
+            Event::fire('journals.store',[$journal]);
 
             if (Input::get('create') == '1') {
                 return Redirect::route('transactions.create', [$what])->withInput();
@@ -225,6 +226,7 @@ class TransactionController extends BaseController
         if ($journal->validate()) {
             // has been saved, return to index:
             Session::flash('success', 'Transaction updated!');
+            Event::fire('journals.update',[$journal]);
 
             return Redirect::route('transactions.index');
         } else {
