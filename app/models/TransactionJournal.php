@@ -91,6 +91,10 @@ use LaravelBook\Ardent\Builder;
  *                     'Budget[] $budgets
  * @property-read \Illuminate\Database\Eloquent\Collection|\
  *                     'Category[] $categories
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *                     'Budget[] $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *                     'Category[] $categories
  */
 class TransactionJournal extends Ardent
 {
@@ -131,6 +135,14 @@ class TransactionJournal extends Ardent
     public function components()
     {
         return $this->belongsToMany('Component');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function recurringTransaction()
+    {
+        return $this->belongsTo('RecurringTransaction');
     }
 
     /**
@@ -233,7 +245,7 @@ class TransactionJournal extends Ardent
                       $q->orderBy('amount', 'ASC');
                   }, 'transactiontype', 'components' => function ($q) {
                       $q->orderBy('class');
-                  }, 'transactions.account.accounttype']
+                  }, 'transactions.account.accounttype','recurringTransaction']
         );
     }
 
