@@ -38,6 +38,10 @@
             <a href="{{route('categories.show',$component->id)}}?highlight={{$journal->id}}"><span class="glyphicon glyphicon-tag" title="Category: {{{$component->name}}}"></span></a>
             @endif
             @endforeach
+            <!-- recurring transaction -->
+            @if(!is_null($journal->recurringTransaction))
+                <a href="{{route('recurring.show',$journal->recurring_transaction_id)}}" title="{{{$journal->recurringTransaction->name}}}"><span title="{{{$journal->recurringTransaction->name}}}" class="glyphicon glyphicon-refresh"></span></a>
+            @endif
         </td>
         <td>
             {{$journal->date->format('d F Y')}}
