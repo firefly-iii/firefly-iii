@@ -7,6 +7,7 @@ use Illuminate\Queue\Jobs\Job;
 
 /**
  * Class Import
+ *
  * @package Firefly\Queue
  */
 class Import
@@ -53,7 +54,7 @@ class Import
     }
 
     /**
-     * @param Job $job
+     * @param Job   $job
      * @param array $payload
      */
     public function cleanImportAccount(Job $job, array $payload)
@@ -77,8 +78,9 @@ class Import
     }
 
     /**
-     * @param Job $job
+     * @param Job   $job
      * @param array $payload
+     *
      * @throws \Firefly\Exception\FireflyException
      */
     public function importComponent(Job $job, array $payload)
@@ -110,7 +112,7 @@ class Import
     /**
      * Import a personal account or beneficiary as a new account.
      *
-     * @param Job $job
+     * @param Job   $job
      * @param array $payload
      */
     public function importAccount(Job $job, array $payload)
@@ -178,7 +180,7 @@ class Import
     /**
      * Import a budget into Firefly.
      *
-     * @param Job $job
+     * @param Job   $job
      * @param array $payload
      */
     public function importBudget(Job $job, array $payload)
@@ -209,7 +211,7 @@ class Import
     /**
      * Import a category into Firefly.
      *
-     * @param Job $job
+     * @param Job   $job
      * @param array $payload
      */
     public function importCategory(Job $job, array $payload)
@@ -235,7 +237,7 @@ class Import
     }
 
     /**
-     * @param Job $job
+     * @param Job   $job
      * @param array $payload
      */
     public function importComponentTransaction(Job $job, array $payload)
@@ -281,19 +283,25 @@ class Import
                 // budget thing link:
                 $budget = $this->_budgets->find($oldComponentMap->new);
 
-                \Log::debug('Updating transactions Budget.');
+                \Log::debug('Updating transactions budget.');
                 $journal->budgets()->save($budget);
                 $journal->save();
-                \Log::debug('Updated transactions Budget.');
+                \Log::debug('Updated transactions budget.');
 
                 break;
             case 'Category':
                 $category = $this->_categories->find($oldComponentMap->new);
                 $journal  = $this->_journals->find($oldTransactionMap->new);
-                \Log::info('Updating transactions Category.');
-                $journal->categories()->save($category);
-                $journal->save();
-                \Log::info('Updated transactions Category.');
+                \Log::info('Updating transactions category (old id is #' . $oldComponentMap->old . ').');
+                if (!is_null($category)) {
+                    $journal->categories()->save($category);
+                    $journal->save();
+                    \Log::info('Updated transactions category.');
+                } else {
+                    \Log::error('No category mapping to old id #' . $oldComponentMap->old . ' found. Release for 5m!');
+                    $job->release(300);
+                    return;
+                }
                 break;
             case 'Account':
                 \Log::info('Updating transactions Account.');
@@ -309,7 +317,9 @@ class Import
                     if ($transaction->account()->first()->account_type_id == 5) {
                         $transaction->account()->associate($account);
                         $transaction->save();
-                        \Log::debug('Updated transactions (#' . $journal->id . '), #' . $transaction->id . '\'s Account.');
+                        \Log::debug(
+                            'Updated transactions (#' . $journal->id . '), #' . $transaction->id . '\'s Account.'
+                        );
                     }
                 }
 
@@ -321,7 +331,7 @@ class Import
     }
 
     /**
-     * @param Job $job
+     * @param Job   $job
      * @param array $payload
      */
     public function importLimit(Job $job, array $payload)
@@ -339,13 +349,17 @@ class Import
 
 
         // find the budget this limit is part of:
-        $importEntry = $this->_repository->findImportEntry($importMap, 'Budget',
-            intval($payload['data']['component_id']));
+        $importEntry = $this->_repository->findImportEntry(
+            $importMap, 'Budget',
+            intval($payload['data']['component_id'])
+        );
 
         // budget is not yet imported:
         if (is_null($importEntry)) {
-            \Log::debug('importLimit Cannot import limit #' . $payload['data']['id'] .
-                ' because the budget is not here yet. #' . $job->attempts());
+            \Log::debug(
+                'importLimit Cannot import limit #' . $payload['data']['id'] .
+                ' because the budget is not here yet. #' . $job->attempts()
+            );
             $job->release(300);
             return;
         }
@@ -366,7 +380,9 @@ class Import
             } else {
                 // already has!
                 $this->_repository->store($importMap, 'Budget', $payload['data']['id'], $current->id);
-                \Log::debug('Already had ' . $payload['class'] . ', for ' . $budget->name . ' (' . $current->startdate . ').');
+                \Log::debug(
+                    'Already had ' . $payload['class'] . ', for ' . $budget->name . ' (' . $current->startdate . ').'
+                );
             }
         } else {
             // cannot import component limit, no longer supported.
@@ -376,7 +392,7 @@ class Import
     }
 
     /**
-     * @param Job $job
+     * @param Job   $job
      * @param array $payload
      */
     public function importPiggybank(Job $job, array $payload)
@@ -418,7 +434,7 @@ class Import
     }
 
     /**
-     * @param Job $job
+     * @param Job   $job
      * @param array $payload
      */
     public function importPredictable(Job $job, array $payload)
@@ -456,7 +472,7 @@ class Import
     }
 
     /**
-     * @param Job $job
+     * @param Job   $job
      * @param array $payload
      */
     public function importSetting(Job $job, array $payload)
@@ -499,7 +515,7 @@ class Import
     }
 
     /**
-     * @param Job $job
+     * @param Job   $job
      * @param array $payload
      */
     public function importTransaction(Job $job, array $payload)
@@ -519,8 +535,10 @@ class Import
         // if amount is more than zero, move from $importAccount
         $amount = floatval($payload['data']['amount']);
 
-        $accountEntry    = $this->_repository->findImportEntry($importMap, 'Account',
-            intval($payload['data']['account_id']));
+        $accountEntry    = $this->_repository->findImportEntry(
+            $importMap, 'Account',
+            intval($payload['data']['account_id'])
+        );
         $personalAccount = $this->_accounts->find($accountEntry->new);
 
         if ($amount < 0) {
@@ -539,10 +557,15 @@ class Import
 
 
         if (is_null($current)) {
-            $journal = $this->_journals->createSimpleJournal($accountFrom, $accountTo,
-                $payload['data']['description'], $amount, $date);
+            $journal = $this->_journals->createSimpleJournal(
+                $accountFrom, $accountTo,
+                $payload['data']['description'], $amount, $date
+            );
             $this->_repository->store($importMap, 'Transaction', $payload['data']['id'], $journal->id);
-            \Log::debug('Imported transaction "' . $payload['data']['description'] . '" (' . $journal->date->format('Y-m-d') . ').');
+            \Log::debug(
+                'Imported transaction "' . $payload['data']['description'] . '" (' . $journal->date->format('Y-m-d')
+                . ').'
+            );
         } else {
             // do nothing.
             \Log::debug('ALREADY imported transaction "' . $payload['data']['description'] . '".');
@@ -553,7 +576,7 @@ class Import
     }
 
     /**
-     * @param Job $job
+     * @param Job   $job
      * @param array $payload
      */
     public function importTransfer(Job $job, array $payload)
@@ -577,8 +600,10 @@ class Import
         if (!is_null($accountFrom) && !is_null($accountTo)) {
             $amount  = floatval($payload['data']['amount']);
             $date    = new Carbon($payload['data']['date']);
-            $journal = $this->_journals->createSimpleJournal($accountFrom, $accountTo, $payload['data']['description'],
-                $amount, $date);
+            $journal = $this->_journals->createSimpleJournal(
+                $accountFrom, $accountTo, $payload['data']['description'],
+                $amount, $date
+            );
             \Log::debug('Imported transfer "' . $payload['data']['description'] . '".');
             $job->delete();
         } else {
@@ -589,7 +614,7 @@ class Import
 
     /**
      * @param Job $job
-     * @param $payload
+     * @param     $payload
      */
     public function start(Job $job, array $payload)
     {
@@ -610,7 +635,7 @@ class Import
             $JSON = json_decode($raw);
 
             $classes = ['accounts', 'components', 'limits', 'piggybanks',
-                'predictables', 'settings', 'transactions', 'transfers'];
+                        'predictables', 'settings', 'transactions', 'transfers'];
 
             foreach ($classes as $classes_plural) {
                 $class = ucfirst(\Str::singular($classes_plural));
