@@ -98,9 +98,10 @@ interface ChartInterface
 
 
     /**
-     * We check how much money has been spend on the limitrepetition (aka: the current envelope) in the period denoted.
-     * Aka, we have a certain amount of money in an envelope and we wish to know how much we've spent between the dates
-     * entered. This can be a partial match with the date range of the envelope or no match at all.
+     * Firefly checks how much money has been spend on the limitrepetition (aka: the current envelope) in
+     * the period denoted. Aka, the user has a certain amount of money in an envelope and wishes to know how
+     * much he has spent between the dates entered. This date range can be a partial match with the date range
+     * of the envelope or no match at all.
      *
      * @param \LimitRepetition $repetition
      * @param Carbon           $start

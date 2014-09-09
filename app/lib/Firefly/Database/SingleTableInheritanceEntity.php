@@ -73,7 +73,7 @@ abstract class SingleTableInheritanceEntity extends Ardent
         // newEloquentBuilder() was added in 4.1
         $builder = $this->newEloquentBuilder($this->newBaseQueryBuilder());
 
-        // Once we have the query builders, we will set the model instances so the
+        // Once Firefly has the query builders, it will set the model instances so the
         // builder can easily access any information it may need from the model
         // while it is constructing and executing various queries against it.
         $builder->setModel($this)->with($this->with);
