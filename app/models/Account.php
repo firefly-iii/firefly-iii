@@ -72,6 +72,20 @@ class Account extends Ardent
         );
     }
 
+    public function balanceBeforeJournal(TransactionJournal $journal)
+    {
+        return floatval(
+            $this->transactions()
+                ->leftJoin(
+                    'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
+                )
+                ->where('transaction_journals.date', '<=', $journal->date->format('Y-m-d'))
+                ->where('transaction_journals.created_at', '<=', $journal->created_at->format('Y-m-d H:i:s'))
+                ->where('transaction_journals.id','!=',$journal->id)
+                ->sum('transactions.amount')
+        );
+    }
+
     /**
      * Transactions.
      *
