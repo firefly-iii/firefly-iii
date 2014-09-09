@@ -3,49 +3,35 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <h1>Firefly
-            <small>Piggy bank "{{{$piggyBank->name}}}"</small>
+            <small>
+                @if($piggyBank->repeats == 1)
+                Repeated expense
+                @else
+                Piggy bank
+                @endif
+                "{{{$piggyBank->name}}}"</small>
         </h1>
-        <p>
-            <a href="{{route('accounts.show',$piggyBank->account_id)}}">{{{$piggyBank->account->name}}}</a> has
-            a balance of {{mf($balance)}}.
-            Of that {{mf($balance)}}, you have {{mf($leftOnAccount)}} not yet locked up in other piggy banks.
-            You can add {{mf(min(max($balance,$leftOnAccount),$piggyBank->targetamount))}} to this piggy bank.
-        </p>
-        <p>
+        <div class="btn-group">
             <a href="{{route('piggybanks.edit',$piggyBank->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
             <a href="{{route('piggybanks.delete',$piggyBank->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a>
 
             @if(min(max($balance,$leftOnAccount),$piggyBank->targetamount) > 0)
                 <a data-toggle="modal" href="{{route('piggybanks.amount.add',$piggyBank->id)}}" data-target="#modal" class="btn btn-default"><span class="glyphicon glyphicon-plus-sign"></span> Add money</a>
             @endif
+
             @if($piggyBank->currentRelevantRep()->currentamount > 0)
                 <a data-toggle="modal" href="{{route('piggybanks.amount.remove',$piggyBank->id)}}" data-target="#modal" class="btn btn-default"><span class="glyphicon glyphicon-minus-sign"></span> Remove money</a>
             @endif
-
-        </p>
+        </div>
     </div>
 </div>
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-12">
-        <h3>Piggy bank info</h3>
+        <h3>General information</h3>
         <table class="table table-bordered table-striped">
             <tr>
                 <th>Field</th>
                 <th>Value</th>
-            </tr>
-            <tr>
-                <td>Type (repeats)</td>
-                <td>
-                    @if($piggyBank->repeats == 1)
-                    Repeated expense
-                    @else
-                    Piggy bank
-                    @endif
-                </td>
-            </tr>
-            <tr>
-                <td>Name</td>
-                <td>{{{$piggyBank->name}}} (#{{$piggyBank->id}})</td>
             </tr>
             <tr>
                 <td>Account</td>
