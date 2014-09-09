@@ -7,6 +7,7 @@ use Firefly\Exception\FireflyException;
 
 /**
  * Class Chart
+ *
  * @package Firefly\Helper\Controllers
  */
 class Chart implements ChartInterface
@@ -22,8 +23,8 @@ class Chart implements ChartInterface
     public function account(\Account $account, Carbon $start, Carbon $end)
     {
         $current = clone $start;
-        $today = new Carbon;
-        $return = ['name' => $account->name, 'id' => $account->id, 'data' => []];
+        $today   = new Carbon;
+        $return  = ['name' => $account->name, 'id' => $account->id, 'data' => []];
 
         while ($current <= $end) {
             if ($current > $today) {
@@ -105,7 +106,7 @@ class Chart implements ChartInterface
 
         $data = [];
 
-        $budgets = \Auth::user()->budgets()->with(
+        $budgets       = \Auth::user()->budgets()->with(
             ['limits'                        => function ($q) {
                     $q->orderBy('limits.startdate', 'ASC');
                 }, 'limits.limitrepetitions' => function ($q) use ($start) {
@@ -128,15 +129,15 @@ class Chart implements ChartInterface
                     $rep->left = $rep->left();
                     // overspent:
                     if ($rep->left < 0) {
-                        $rep->spent = ($rep->left * -1) + $rep->amount;
-                        $rep->overspent = $rep->left * -1;
-                        $total = $rep->spent + $rep->overspent;
-                        $rep->spent_pct = round(($rep->spent / $total) * 100);
+                        $rep->spent         = ($rep->left * -1) + $rep->amount;
+                        $rep->overspent     = $rep->left * -1;
+                        $total              = $rep->spent + $rep->overspent;
+                        $rep->spent_pct     = round(($rep->spent / $total) * 100);
                         $rep->overspent_pct = 100 - $rep->spent_pct;
                     } else {
-                        $rep->spent = $rep->amount - $rep->left;
+                        $rep->spent     = $rep->amount - $rep->left;
                         $rep->spent_pct = round(($rep->spent / $rep->amount) * 100);
-                        $rep->left_pct = 100 - $rep->spent_pct;
+                        $rep->left_pct  = 100 - $rep->spent_pct;
 
 
                     }
@@ -165,9 +166,9 @@ class Chart implements ChartInterface
             foreach ($budget->limits as $limit) {
                 foreach ($limit->limitrepetitions as $rep) {
                     //0: envelope for period:
-                    $amount = floatval($rep->amount);
-                    $spent = $rep->spent;
-                    $color = $spent > $amount ? '#FF0000' : null;
+                    $amount                      = floatval($rep->amount);
+                    $spent                       = $rep->spent;
+                    $color                       = $spent > $amount ? '#FF0000' : null;
                     $data['series'][0]['data'][] = ['y' => $amount, 'id' => 'amount-' . $rep->id];
                     $data['series'][1]['data'][] = ['y' => $rep->spent, 'color' => $color, 'id' => 'spent-' . $rep->id];
                 }
@@ -210,10 +211,10 @@ class Chart implements ChartInterface
                     . ' transactions!');
             }
             $transaction = $journal->transactions[0];
-            $amount = floatval($transaction->amount);
+            $amount      = floatval($transaction->amount);
 
             // get budget from journal:
-            $category = $journal->categories()->first();
+            $category     = $journal->categories()->first();
             $categoryName = is_null($category) ? '(no category)' : $category->name;
 
             $result[$categoryName] = isset($result[$categoryName]) ? $result[$categoryName] + floatval($amount)
@@ -334,7 +335,7 @@ class Chart implements ChartInterface
 
 
             // get sum for current range:
-            $journals = \TransactionJournal::
+            $journals   = \TransactionJournal::
                 with(
                     ['transactions' => function ($q) {
                             $q->where('amount', '>', 0);
@@ -359,7 +360,7 @@ class Chart implements ChartInterface
                         . ' transactions!');
                 }
                 $transaction = $journal->transactions[0];
-                $amount = floatval($transaction->amount);
+                $amount      = floatval($transaction->amount);
                 $currentSum += $amount;
 
             }
@@ -399,5 +400,87 @@ class Chart implements ChartInterface
 
 
     }
+
+    /**
+     * @param \Budget $budget
+     * @param Carbon  $date
+     *
+     * @return float|null
+     */
+    public function spentOnDay(\Budget $budget, Carbon $date)
+    {
+        return floatval(
+            \Transaction::
+                leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                ->leftJoin(
+                    'component_transaction_journal', 'component_transaction_journal.transaction_journal_id', '=',
+                    'transaction_journals.id'
+                )->where('component_transaction_journal.component_id', '=', $budget->id)->where(
+                    'transaction_journals.date', $date->format('Y-m-d')
+                )->where('amount', '>', 0)->sum('amount')
+        );
+    }
+
+    /**
+     * @param \Budget $budget
+     *
+     * @return int[]
+     */
+    public function allJournalsInBudgetEnvelope(\Budget $budget)
+    {
+        $inRepetitions = [];
+
+        foreach ($budget->limits as $limit) {
+            foreach ($limit->limitrepetitions as $repetition) {
+                $set = $budget
+                    ->transactionjournals()
+                    ->transactionTypes(['Withdrawal'])
+                    ->after($repetition->startdate)
+                    ->before($repetition->enddate)
+                    ->get(['transaction_journals.id']);
+
+                foreach ($set as $item) {
+                    $inRepetitions[] = $item->id;
+                }
+            }
+        }
+        return $inRepetitions;
+    }
+
+    /**
+     * @param \Budget $budget
+     * @param array   $ids
+     *
+     * @return mixed|void
+     */
+    public function journalsNotInSet(\Budget $budget, array $ids)
+    {
+        $query = $budget->transactionjournals()
+            ->whereNotIn('transaction_journals.id', $ids)
+            ->orderBy('date', 'DESC')
+            ->orderBy('transaction_journals.id', 'DESC');
+
+        $result = $query->get(['transaction_journals.id']);
+        $set    = [];
+        foreach ($result as $entry) {
+            $set[] = $entry->id;
+        }
+        return $set;
+    }
+
+    /**
+     * @param array $set
+     *
+     * @return mixed
+     */
+    public function transactionsByJournals(array $set)
+    {
+        $transactions = \Transaction::whereIn('transaction_journal_id', $set)
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->groupBy('transaction_journals.date')
+            ->where('amount', '>', 0)->get(['transaction_journals.date', \DB::Raw('SUM(`amount`) as `aggregate`')]);
+        return $transactions;
+    }
+
 
 }
