@@ -4,6 +4,8 @@ use Firefly\Storage\RecurringTransaction\RecurringTransactionRepositoryInterface
 
 /**
  * Class RecurringController
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class RecurringController extends BaseController
 {
@@ -114,6 +116,8 @@ class RecurringController extends BaseController
 
     /**
      * @param RecurringTransaction $recurringTransaction
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
     public function update(RecurringTransaction $recurringTransaction)
     {

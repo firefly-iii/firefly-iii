@@ -1,5 +1,4 @@
 <?php
-use Carbon\Carbon;
 use Firefly\Helper\Preferences\PreferencesHelperInterface as PHI;
 use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
 use Firefly\Storage\Reminder\ReminderRepositoryInterface as RRI;
@@ -7,6 +6,8 @@ use Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface as 
 
 /**
  * Class HomeController
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class HomeController extends BaseController
 {
@@ -15,12 +16,18 @@ class HomeController extends BaseController
     protected $_journal;
     protected $_reminders;
 
+    /**
+     * @param ARI  $accounts
+     * @param PHI  $preferences
+     * @param TJRI $journal
+     * @param RRI  $reminders
+     */
     public function __construct(ARI $accounts, PHI $preferences, TJRI $journal, RRI $reminders)
     {
-        $this->_accounts = $accounts;
+        $this->_accounts    = $accounts;
         $this->_preferences = $preferences;
-        $this->_journal = $journal;
-        $this->_reminders = $reminders;
+        $this->_journal     = $journal;
+        $this->_reminders   = $reminders;
     }
 
     /**
@@ -38,11 +45,14 @@ class HomeController extends BaseController
      */
     public function index()
     {
+        Event::fire('limits.check');
+        Event::fire('piggybanks.check');
+        Event::fire('recurring.check');
 
-        // count, maybe we need some introducing text to show:
+        // count, maybe Firefly needs some introducing text to show:
         $count = $this->_accounts->count();
         $start = Session::get('start');
-        $end = Session::get('end');
+        $end   = Session::get('end');
 
 
         // get the preference for the home accounts to show:

@@ -6,6 +6,9 @@ use Firefly\Storage\Account\AccountRepositoryInterface;
 
 /**
  * Class ChartController
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ChartController extends BaseController
 {
@@ -143,15 +146,15 @@ class ChartController extends BaseController
     public function budgetNoLimits(\Budget $budget)
     {
         /*
-         * We can go about this two ways. Either we find all transactions which definitely are IN an envelope
-         * and exclude them or we search for transactions outside of the range of any of the envelopes we have.
+         * Firefly can go about this two ways. Either it finds all transactions which definitely are IN an envelope
+         * and exclude them or it searches for transactions outside of the range of any of the envelopes there are.
          *
-         * Since either is shitty we go with the first one because it's easier to build.
+         * Since either is kinda shitty Firefly uses the first one because it's easier to build.
          */
         $inRepetitions = $this->_chart->allJournalsInBudgetEnvelope($budget);
 
         /*
-         * With this set of id's, we can search for all journals NOT in that set.
+         * With this set of id's, Firefly can search for all journals NOT in that set.
          * BUT they have to be in the budget (duh).
          */
         $set = $this->_chart->journalsNotInSet($budget, $inRepetitions);
@@ -226,14 +229,15 @@ class ChartController extends BaseController
         $reps = $this->_chart->limitsInRange($budget, $start, $end);
 
         /*
-         * For each limitrepetition we create a serie that contains the amount left in
+         * For each limitrepetition Firefly creates a serie that contains the amount left in
          * the limitrepetition for its entire date-range. Entries are only actually included when they
          * fall into the charts date range.
          *
-         * So example: we have a session date from Jan 15 to Jan 30. The limitrepetition starts at 1 Jan until 1 Feb.
+         * So example: the user has a session date from Jan 15 to Jan 30. The limitrepetition
+         * starts at 1 Jan until 1 Feb.
          *
-         * We loop from 1 Jan to 1 Feb but only include Jan 15 / Jan 30. But we do keep count of the amount outside
-         * of these dates because otherwise the line might be wrong.
+         * Firefly loops from 1 Jan to 1 Feb but only includes Jan 15 / Jan 30.
+         * But it does keep count of the amount outside of these dates because otherwise the line might be wrong.
          */
         /** @var \LimitRepetition $repetition */
         foreach ($reps as $repetition) {

@@ -17,7 +17,7 @@ class UserController extends BaseController
      */
     public function __construct(URI $user, EHI $email)
     {
-        $this->user = $user;
+        $this->user  = $user;
         $this->email = $email;
 
     }
@@ -41,11 +41,11 @@ class UserController extends BaseController
     public function postLogin()
     {
         $rememberMe = Input::get('remember_me') == '1';
-        $data = [
+        $data       = [
             'email'    => Input::get('email'),
             'password' => Input::get('password')
         ];
-        $result = Auth::attempt($data, $rememberMe);
+        $result     = Auth::attempt($data, $rememberMe);
         if ($result) {
             Session::flash('success', 'Logged in!');
 

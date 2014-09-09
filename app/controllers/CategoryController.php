@@ -5,6 +5,8 @@ use Firefly\Storage\Category\CategoryRepositoryInterface as CRI;
 
 /**
  * Class CategoryController
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class CategoryController extends BaseController
 {
@@ -13,7 +15,7 @@ class CategoryController extends BaseController
 
     /**
      * @param CRI $repository
-     * @param CI $category
+     * @param CI  $category
      */
     public function __construct(CRI $repository, CI $category)
     {
@@ -37,7 +39,7 @@ class CategoryController extends BaseController
     public function delete(Category $category)
     {
         return View::make('categories.delete')->with('category', $category)
-                   ->with('title', 'Delete category "' . $category->name . '"');
+            ->with('title', 'Delete category "' . $category->name . '"');
     }
 
     /**
@@ -88,8 +90,8 @@ class CategoryController extends BaseController
         $journals = $this->_category->journalsInRange($category, $start, $end);
 
         return View::make('categories.show')->with('category', $category)->with('journals', $journals)->with(
-                   'highlight', Input::get('highlight')
-        )->with('title', 'Overview for category "'.$category->name.'"');;
+            'highlight', Input::get('highlight')
+        )->with('title', 'Overview for category "' . $category->name . '"');
     }
 
     /**

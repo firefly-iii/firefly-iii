@@ -1,6 +1,6 @@
 <?php
 
-use \Illuminate\Routing\Controller;
+use Illuminate\Routing\Controller;
 
 /**
  * Class BaseController
@@ -13,10 +13,6 @@ class BaseController extends Controller
      */
     public function __construct()
     {
-        \Event::fire('limits.check');
-        \Event::fire('piggybanks.check');
-        \Event::fire('recurring.check');
-
     }
 
     /**

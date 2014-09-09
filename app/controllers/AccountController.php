@@ -8,8 +8,6 @@ use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
  *
  * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
-
-
 class AccountController extends \BaseController
 {
 
@@ -18,7 +16,7 @@ class AccountController extends \BaseController
 
     /**
      * @param ARI $repository
-     * @param AI $accounts
+     * @param AI  $accounts
      */
     public function __construct(ARI $repository, AI $accounts)
     {
@@ -42,7 +40,7 @@ class AccountController extends \BaseController
     public function delete(Account $account)
     {
         return View::make('accounts.delete')->with('account', $account)
-                   ->with('title', 'Delete account "' . $account->name . '"');
+            ->with('title', 'Delete account "' . $account->name . '"');
     }
 
     /**
@@ -69,7 +67,7 @@ class AccountController extends \BaseController
     {
         $openingBalance = $this->_accounts->openingBalanceTransaction($account);
         return View::make('accounts.edit')->with('account', $account)->with('openingBalance', $openingBalance)
-                   ->with('title', 'Edit account "' . $account->name . '"');
+            ->with('title', 'Edit account "' . $account->name . '"');
     }
 
     /**
@@ -105,8 +103,10 @@ class AccountController extends \BaseController
     {
         $data = $this->_accounts->show($account, 40);
 
-        return View::make('accounts.show')->with('account', $account)->with('show', $data)->with('title',
-            'Details for account "' . $account->name . '"');
+        return View::make('accounts.show')->with('account', $account)->with('show', $data)->with(
+            'title',
+            'Details for account "' . $account->name . '"'
+        );
     }
 
     /**

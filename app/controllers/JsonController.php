@@ -7,6 +7,8 @@ use Firefly\Storage\Component\ComponentRepositoryInterface as CRI;
 
 /**
  * Class JsonController
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class JsonController extends BaseController
 {
@@ -24,9 +26,9 @@ class JsonController extends BaseController
     public function __construct(ARI $accounts, CRI $components, Cat $categories, Bud $budgets)
     {
         $this->_components = $components;
-        $this->_accounts = $accounts;
+        $this->_accounts   = $accounts;
         $this->_categories = $categories;
-        $this->_budgets = $budgets;
+        $this->_budgets    = $budgets;
     }
 
     /**
@@ -34,7 +36,7 @@ class JsonController extends BaseController
      */
     public function beneficiaries()
     {
-        $list = $this->_accounts->getBeneficiaries();
+        $list   = $this->_accounts->getBeneficiaries();
         $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;
@@ -49,7 +51,7 @@ class JsonController extends BaseController
      */
     public function categories()
     {
-        $list = $this->_categories->get();
+        $list   = $this->_categories->get();
         $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;
