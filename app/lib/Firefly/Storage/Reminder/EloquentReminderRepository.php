@@ -66,6 +66,16 @@ class EloquentReminderRepository implements ReminderRepositoryInterface
     }
 
     /**
+     * @return mixed
+     */
+    public function getPiggybankReminders()
+    {
+        $today = new Carbon;
+
+        return $this->_user->reminders()->where('class','PiggybankReminder')->validOn($today)->get();
+    }
+
+    /**
      *
      */
     public function getCurrentRecurringReminders()

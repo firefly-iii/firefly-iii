@@ -28,13 +28,16 @@ class Account implements AccountInterface
      * Since it is entirely possible the database is messed up somehow it might be that a transaction
      * journal has only one transaction. This is mainly caused by wrong deletions and other artefacts from the past.
      *
-     * If it is the case, we remove $item and continue like nothing ever happened. This will however,
-     * mess up some statisics but we can live with that. We might be needing some cleanup routine in the future.
+     * If it is the case, Firefly removes $item and continues like nothing ever happened. This will however,
+     * mess up some statisics but it's decided everybody should learn to live with that.
      *
-     * For now, we simply warn the user of this.
+     * Firefly might be needing some cleanup routine in the future.
+     *
+     * For now, Firefly simply warns the user of this.
      *
      * @param \Account $account
      * @param $perPage
+     *
      * @return array|mixed
      * @throws \Firefly\Exception\FireflyException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)

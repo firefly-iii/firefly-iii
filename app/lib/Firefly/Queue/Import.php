@@ -133,7 +133,7 @@ class Import
             return;
         }
 
-        // if we try to import a beneficiary, Firefly will "merge" already,
+        // if Firefly tries to import a beneficiary, Firefly will "merge" already existing ones,
         // so we don't care:
         if (isset($payload['data']['account_type']) && $payload['data']['account_type'] == 'Beneficiary account') {
             // store beneficiary
