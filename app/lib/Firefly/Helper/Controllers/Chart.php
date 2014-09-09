@@ -195,7 +195,7 @@ class Chart implements ChartInterface
             } else {
                 // add for "empty" budget:
                 if ($budget->spentInPeriod > 0) {
-                    $data['labels'][]            = wordwrap($budget->name, 12, "<br>");
+                    $data['labels'][]            = $budget->name;
                     $data['series'][0]['data'][] = ['y' => null, 'id' => 'amount-norep-' . $budget->id];
                     $data['series'][1]['data'][] = ['y'  => $budget->spentInPeriod,
                                                     'id' => 'spent-norep-' . $budget->id];
