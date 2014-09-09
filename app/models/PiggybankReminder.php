@@ -35,8 +35,8 @@ class PiggybankReminder extends Reminder
     protected $isSubclass = true;
 
     /**
+     * This method will render a string telling you something about what to save or something.
      * @return string
-     * @throws Firefly\Exception\FireflyException
      */
     public function render()
     {
@@ -85,7 +85,7 @@ class PiggybankReminder extends Reminder
         $toSave = 0;
         switch ($piggyBank->reminder) {
             case 'day':
-                throw new \Firefly\Exception\FireflyException('No impl day reminder/ PiggyBankReminder Render');
+                $toSave = $left;// / ($diff->days / $piggyBank->reminder_skip);
                 break;
             case 'week':
                 $weeks = ceil($diff->days / 7);

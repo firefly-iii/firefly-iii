@@ -33,5 +33,10 @@ class RecurringTransactionReminder extends Reminder
 {
     protected $isSubclass = true;
 
+    public function render()
+    {
+        return '123';
+    }
+
 
 }
