@@ -22,10 +22,11 @@ class EloquentJournalTrigger
     {
         // select all reminders for recurring transactions:
         if ($journal->transaction_type->type == 'Withdrawal') {
+            \Log::debug('Trigger on the creation of a withdrawal');
             $transaction = $journal->transactions()->orderBy('amount', 'DESC')->first();
             $amount      = floatval($transaction->amount);
-            $description = $journal->description;
-            $beneficiary = $transaction->account->name;
+            $description = strtolower($journal->description);
+            $beneficiary = strtolower($transaction->account->name);
 
             // make an array of parts:
             $parts   = explode(' ', $description);
@@ -40,10 +41,13 @@ class EloquentJournalTrigger
                 ->where('amount_min', '<=', $amount)
                 ->where('amount_max', '>=', $amount)->get(['reminders.*']);
             /** @var \RecurringTransctionReminder $reminder */
-            foreach ($set as $reminder) {
+            \Log::debug('Have these parts to search for: ' . join('/',$parts));
+            \Log::debug('Found ' . count($set).' possible matching recurring transactions');
+            foreach ($set as $index => $reminder) {
                 /** @var \RecurringTransaction $RT */
                 $RT         = $reminder->recurring_transaction;
-                $matches    = explode(' ', $RT->match);
+                $matches    = explode(' ', strtolower($RT->match));
+                \Log::debug($index.': ' . join('/',$matches));
                 $matchCount = 0;
                 foreach ($parts as $part) {
                     if (in_array($part, $matches)) {
