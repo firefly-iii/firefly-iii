@@ -186,16 +186,26 @@ class ChartController extends BaseController
     }
 
     /**
+     * This method gets all transactions within a budget within the period set by the current session
+     * start and end date. It also includes any envelopes which might exist within this period.
+     *
      * @param Budget $budget
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function budgetSession(\Budget $budget)
     {
-        $expense          = [];
-        $repetitionSeries = [];
-        $current          = clone Session::get('start');
-        $end              = clone Session::get('end');
+        $series = [];
+        $end    = clone Session::get('end');
+        $start  = clone Session::get('start');
+
+
+
+        /*
+         * Expenses per day in the session's period. That's easy.
+         */
+        $expense = [];
+        $current = clone Session::get('start');
         while ($current <= $end) {
             $spent     = $this->_chart->spentOnDay($budget, $current);
             $spent     = floatval($spent) == 0 ? null : floatval($spent);
@@ -203,81 +213,58 @@ class ChartController extends BaseController
             $current->addDay();
         }
 
-        // find all limit repetitions (for this budget) between start and end.
-        $start              = clone Session::get('start');
-        $repetitionSeries[] = [
+        $series[] = [
             'type' => 'column',
             'name' => 'Expenses per day',
             'data' => $expense
         ];
+        unset($expense, $spent, $current);
 
+        /*
+         * Find all limit repetitions (for this budget) between start and end. This is
+         * quite a complex query.
+         */
+        $reps = $this->_chart->limitsInRange($budget, $start, $end);
 
-        /** @var \Limit $limit */
-        foreach ($budget->limits as $limit) {
-            $reps               = $limit->limitrepetitions()->where(
-                function ($q) use ($start, $end) {
-                    // startdate is between range
-                    $q->where(
-                        function ($q) use ($start, $end) {
-                            $q->where('startdate', '>=', $start->format('Y-m-d'));
-                            $q->where('startdate', '<=', $end->format('Y-m-d'));
-                        }
+        /*
+         * For each limitrepetition we create a serie that contains the amount left in
+         * the limitrepetition for its entire date-range. Entries are only actually included when they
+         * fall into the charts date range.
+         *
+         * So example: we have a session date from Jan 15 to Jan 30. The limitrepetition starts at 1 Jan until 1 Feb.
+         *
+         * We loop from 1 Jan to 1 Feb but only include Jan 15 / Jan 30. But we do keep count of the amount outside
+         * of these dates because otherwise the line might be wrong.
+         */
+        /** @var \LimitRepetition $repetition */
+        foreach ($reps as $repetition) {
+            $limitAmount = $repetition->limit->amount;
+
+            // create a serie for the repetition.
+            $currentSerie = [
+                'type'  => 'spline',
+                'id'    => 'rep-' . $repetition->id,
+                'yAxis' => 1,
+                'name'  => 'Envelope #'.$repetition->id.' in ' . $repetition->periodShow(),
+                'data'  => []
+            ];
+            $current      = clone $repetition->startdate;
+            while ($current <= $repetition->enddate) {
+                if ($current >= $start && $current <= $end) {
+                    // spent on limit:
+                    $spentSoFar  = $this->_chart->spentOnLimitRepetitionBetweenDates(
+                        $repetition, $repetition->startdate, $current
                     );
+                    $leftInLimit = floatval($limitAmount) - floatval($spentSoFar);
 
-                    // or enddate is between range.
-                    $q->orWhere(
-                        function ($q) use ($start, $end) {
-                            $q->where('enddate', '>=', $start->format('Y-m-d'));
-                            $q->where('enddate', '<=', $end->format('Y-m-d'));
-                        }
-                    );
+                    $currentSerie['data'][] = [$current->timestamp * 1000, $leftInLimit];
                 }
-            )->get();
-            $currentLeftInLimit = floatval($limit->amount);
-            /** @var \LimitRepetition $repetition */
-            foreach ($reps as $repetition) {
-                // create a serie for the repetition.
-                $currentSerie = [
-                    'type'  => 'spline',
-                    'id'    => 'rep-' . $repetition->id,
-                    'yAxis' => 1,
-                    'name'  => 'Envelope in ' . $repetition->periodShow(),
-                    'data'  => []
-                ];
-                $current      = clone $repetition->startdate;
-                while ($current <= $repetition->enddate) {
-                    if ($current >= Session::get('start') && $current <= Session::get('end')) {
-                        // spent on limit:
-
-                        $spentSoFar         = \Transaction::
-                            leftJoin(
-                                'transaction_journals', 'transaction_journals.id', '=',
-                                'transactions.transaction_journal_id'
-                            )
-                            ->leftJoin(
-                                'component_transaction_journal', 'component_transaction_journal.transaction_journal_id',
-                                '=',
-                                'transaction_journals.id'
-                            )->where('component_transaction_journal.component_id', '=', $budget->id)->where(
-                                'transaction_journals.date', '>=', $repetition->startdate->format('Y-m-d')
-                            )->where('transaction_journals.date', '<=', $current->format('Y-m-d'))->where(
-                                'amount', '>', 0
-                            )->sum('amount');
-                        $spent              = floatval($spent) == 0 ? null : floatval($spent);
-                        $currentLeftInLimit = floatval($limit->amount) - floatval($spentSoFar);
-
-                        $currentSerie['data'][] = [$current->timestamp * 1000, $currentLeftInLimit];
-                    }
-                    $current->addDay();
-                }
-
-                // do something here.
-                $repetitionSeries[] = $currentSerie;
-
+                $current->addDay();
             }
 
+            // do something here.
+            $series[] = $currentSerie;
         }
-
 
         $return = [
             'chart_title' => 'Overview for budget ' . $budget->name,
@@ -285,7 +272,7 @@ class ChartController extends BaseController
                 'Between ' . Session::get('start')->format('M jS, Y') . ' and ' . Session::get('end')->format(
                     'M jS, Y'
                 ),
-            'series'      => $repetitionSeries
+            'series'      => $series
         ];
 
         return Response::json($return);

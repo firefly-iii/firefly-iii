@@ -4,6 +4,7 @@ namespace Firefly\Helper\Controllers;
 
 use Carbon\Carbon;
 use Firefly\Exception\FireflyException;
+use Illuminate\Support\Collection;
 
 /**
  * Class Chart
@@ -117,6 +118,7 @@ class Chart implements ChartInterface
         $limitInPeriod = '';
         $spentInPeriod = '';
 
+        /** @var \Budget $budget */
         foreach ($budgets as $budget) {
             $budget->count = 0;
             foreach ($budget->limits as $limit) {
@@ -144,6 +146,23 @@ class Chart implements ChartInterface
                 }
                 $budget->count += count($limit->limitrepetitions);
             }
+            if ($budget->count == 0) {
+                // get expenses in period until today, starting at $start.
+                $end                   = \Session::get('end');
+                $expenses              = $budget->transactionjournals()->after($start)->before($end)
+                    ->transactionTypes(
+                        ['Withdrawal']
+                    )->get();
+                $budget->spentInPeriod = 0;
+                /** @var \TransactionJournal $expense */
+                foreach ($expenses as $expense) {
+                    $transaction = $expense->transactions[1];
+                    if (!is_null($transaction)) {
+                        $budget->spentInPeriod += floatval($transaction->amount);
+                    }
+                }
+
+            }
         }
 
 
@@ -162,15 +181,24 @@ class Chart implements ChartInterface
         foreach ($budgets as $budget) {
             if ($budget->count > 0) {
                 $data['labels'][] = wordwrap($budget->name, 12, "<br>");
-            }
-            foreach ($budget->limits as $limit) {
-                foreach ($limit->limitrepetitions as $rep) {
-                    //0: envelope for period:
-                    $amount                      = floatval($rep->amount);
-                    $spent                       = $rep->spent;
-                    $color                       = $spent > $amount ? '#FF0000' : null;
-                    $data['series'][0]['data'][] = ['y' => $amount, 'id' => 'amount-' . $rep->id];
-                    $data['series'][1]['data'][] = ['y' => $rep->spent, 'color' => $color, 'id' => 'spent-' . $rep->id];
+                foreach ($budget->limits as $limit) {
+                    foreach ($limit->limitrepetitions as $rep) {
+                        //0: envelope for period:
+                        $amount                      = floatval($rep->amount);
+                        $spent                       = $rep->spent;
+                        $color                       = $spent > $amount ? '#FF0000' : null;
+                        $data['series'][0]['data'][] = ['y' => $amount, 'id' => 'amount-' . $rep->id];
+                        $data['series'][1]['data'][] = ['y'  => $rep->spent, 'color' => $color,
+                                                        'id' => 'spent-' . $rep->id];
+                    }
+                }
+            } else {
+                // add for "empty" budget:
+                if ($budget->spentInPeriod > 0) {
+                    $data['labels'][]            = wordwrap($budget->name, 12, "<br>");
+                    $data['series'][0]['data'][] = ['y' => null, 'id' => 'amount-norep-' . $budget->id];
+                    $data['series'][1]['data'][] = ['y'  => $budget->spentInPeriod,
+                                                    'id' => 'spent-norep-' . $budget->id];
                 }
             }
 
@@ -481,6 +509,70 @@ class Chart implements ChartInterface
             ->where('amount', '>', 0)->get(['transaction_journals.date', \DB::Raw('SUM(`amount`) as `aggregate`')]);
         return $transactions;
     }
+
+    /**
+     * Get all limit (LimitRepetitions) for a budget falling in a certain date range.
+     *
+     * @param \Budget $budget
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return Collection
+     */
+    public function limitsInRange(\Budget $budget, Carbon $start, Carbon $end)
+    {
+        $reps = new Collection;
+        /** @var \Limit $limit */
+        foreach ($budget->limits as $limit) {
+            $set = $limit->limitrepetitions()->where(
+                function ($q) use ($start, $end) {
+                    // startdate is between range
+                    $q->where(
+                        function ($q) use ($start, $end) {
+                            $q->where('startdate', '>=', $start->format('Y-m-d'));
+                            $q->where('startdate', '<=', $end->format('Y-m-d'));
+                        }
+                    );
+
+                    // or enddate is between range.
+                    $q->orWhere(
+                        function ($q) use ($start, $end) {
+                            $q->where('enddate', '>=', $start->format('Y-m-d'));
+                            $q->where('enddate', '<=', $end->format('Y-m-d'));
+                        }
+                    );
+                }
+            )->get();
+
+            $reps = $reps->merge($set);
+        }
+        return $reps;
+    }
+
+    /**
+     * We check how much money has been spend on the limitrepetition (aka: the current envelope) in the period denoted.
+     * Aka, we have a certain amount of money in an envelope and we wish to know how much we've spent between the dates
+     * entered. This can be a partial match with the date range of the envelope or no match at all.
+     *
+     * @param \LimitRepetition $repetition
+     * @param Carbon           $start
+     * @param Carbon           $end
+     *
+     * @return mixed
+     */
+    public function spentOnLimitRepetitionBetweenDates(\LimitRepetition $repetition, Carbon $start, Carbon $end) {
+        return floatval(
+            \Transaction::
+            leftJoin('transaction_journals', 'transaction_journals.id', '=','transactions.transaction_journal_id')
+            ->leftJoin('component_transaction_journal', 'component_transaction_journal.transaction_journal_id','=',
+                'transaction_journals.id'
+            )->where('component_transaction_journal.component_id', '=', $repetition->limit->budget->id)->where(
+                'transaction_journals.date', '>=', $start->format('Y-m-d')
+            )->where('transaction_journals.date', '<=', $end->format('Y-m-d'))->where(
+                'amount', '>', 0
+            )->sum('amount')) ;
+    }
+
 
 
 }
