@@ -53,7 +53,7 @@
                     </div>
                 </td>
                 <td>
-                    <a href="{{route('budgets.show',$repetition->limit->budget->id,$repetition->id)}}">
+                    <a href="{{route('budgets.show',[$repetition->limit->budget->id,$repetition->id])}}">
                         {{{$repetition->limit->budget->name}}}
                     </a>
                 </td>
