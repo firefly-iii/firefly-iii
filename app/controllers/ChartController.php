@@ -200,7 +200,6 @@ class ChartController extends BaseController
         $start  = clone Session::get('start');
 
 
-
         /*
          * Expenses per day in the session's period. That's easy.
          */
@@ -245,7 +244,7 @@ class ChartController extends BaseController
                 'type'  => 'spline',
                 'id'    => 'rep-' . $repetition->id,
                 'yAxis' => 1,
-                'name'  => 'Envelope #'.$repetition->id.' in ' . $repetition->periodShow(),
+                'name'  => 'Envelope #' . $repetition->id . ' in ' . $repetition->periodShow(),
                 'data'  => []
             ];
             $current      = clone $repetition->startdate;

@@ -38,15 +38,6 @@ class HomeController extends BaseController
      */
     public function index()
     {
-//        Queue::push(function($job)
-//        {
-//            Log::debug('This is a job!');
-//        });
-
-        \Event::fire('limits.check');
-        \Event::fire('piggybanks.check');
-        \Event::fire('recurring.check');
-
 
         // count, maybe we need some introducing text to show:
         $count = $this->_accounts->count();
@@ -78,13 +69,7 @@ class HomeController extends BaseController
             $transactions = array_chunk($transactions, 3);
         }
 
-        // get the users reminders:
-
-        $reminders =  $this->_reminders->getCurrentRecurringReminders();
-
         // build the home screen:
-        return View::make('index')->with('count', $count)->with('transactions', $transactions)->with(
-            'reminders', $reminders
-        );
+        return View::make('index')->with('count', $count)->with('transactions', $transactions);
     }
 }

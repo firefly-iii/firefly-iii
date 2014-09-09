@@ -15,6 +15,8 @@ class BaseController extends Controller
     {
         \Event::fire('limits.check');
         \Event::fire('piggybanks.check');
+        \Event::fire('recurring.check');
+
     }
 
     /**
