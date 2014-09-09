@@ -13,42 +13,52 @@ Firefly Mark III is a new version of Firefly built upon best practices and lesso
 from building [Firefly](https://github.com/JC5/Firefly). It's Mark III since the original Firefly never made it outside of my
 laptop and [Firefly II](https://github.com/JC5/Firefly) is live.
 
+## Current features
+
+- [A double-entry bookkeeping system](http://en.wikipedia.org/wiki/Double-entry_bookkeeping_system).
+- You can store, edit and remove withdrawals, deposits and transfers. This allows you full financial management;
+- It's possible to create, change and manage money using _budgets_;
+- Organize transactions using categories;
+- Save towards a goal using piggy banks;
+- Predict and anticipate large expenses using "repeated expenses" (ie. yearly taxes);
+- Predict and anticipate bills using "recurring transactions" (rent for example).
+
+Everything is organised:
+
+- Clear views that should show you how you're doing;
+- Easy navigation through your records;
+- Browse back and forth to see previous months or even years;
+- Lots of help text in case you don't get it;
+- Lots of charts because we all love them.
+
 ## Changes
 
-Firefly III will feature:
+Firefly III will feature, but does not feature yet:
 
-- Double-entry bookkeeping system;
-- Better budgeting tools;
-- Better financial reporting;
+- Financial reporting showing you how well you are doing;
 - More control over other resources outside of personal finance
   - Accounts shared with a partner (household accounts)
   - Debts
   - Credit cards
-- More robust code base (mainly for my own peace of mind);
 - More test-coverage (aka: actual test coverage);
-
-## More features
- 
 - Firefly will be able to split transactions; a single purchase can be split in multiple entries, for more fine-grained control.
 - Firefly will be able to join transactions.
-- Transfers and transactions will be combined into one internal datatype which is more consistent with what you're actually doing: moving money from A to B. The fact that A or B or both are yours should not matter. And it will not, in the future.
-- The nesting of budgets, categories and beneficiaries will be removed.
-- Firefly will be able to automatically login a specified account. Although this is pretty unsafe, it removes the need for you to login to your own tool. 
+- Transfers and transactions are combined into one internal datatype which is more consistent with what you're actually doing: moving money from A to B. The fact that A or B or both are yours should not matter.
+- Any other features I might not have thought of.
 
-## Not changed
+Some stuff has been removed:
 
+- The nesting of budgets, categories and beneficiaries is removed because it was pretty pointless.
 - Firefly will not encrypt the content of the (MySQL) tables. Old versions of Firefly had this capability but it sucks when searching, sorting and organizing entries.
 
 ## Current state
-I have the basics up and running and test coverage is doing very well.
+I have the basics up and running. Test coverage is currently non-existent.
 
-Current issues are the consistent look-and-feel of forms and likewise, the consistent inner workings of most of Firefly.
-Example: every "create"-action tends to be slightly different from the rest. Also is the fact that not all lists
-and forms are equally well thought of; some are not looking very well or miss feedback.
+Although I have not checked extensively, some forms and views have CSRF vulnerabilities. This is because not all
+views escape all characters by default. Will be fixed.
 
-Most forms will not allow you to enter invalid data because the database cracks, not because it's actually checked.
-I'm still thinking about a way to build consistent forms. Laravel doesn't really cut it.
-
-A lot of views have CSRF vulnerabilities. The general advice is NOT to use this tool in production.
+The current layout / look & feel is a pretty basic Bootstrap3 template. I am currently working on a more consistent,
+expanded layout which will feature shiny AJAX things and data tables and all the Web 3.0 goodies you've come to expect
+from social media sites.
 
 Questions, ideas or other things to contribute? [Let me know](https://github.com/JC5/firefly-iii/issues/new)!
