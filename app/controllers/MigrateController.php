@@ -27,7 +27,7 @@ class MigrateController extends BaseController
             $fullName = $path . DIRECTORY_SEPARATOR . $fileName;
             if (is_writable($path)) {
                 Input::file('file')->move($path, $fileName);
-                // so now we push something in a queue and do something with it! Yay!
+                // so now Firefly pushes something in a queue and does something with it! Yay!
                 \Log::debug('Pushed a job to start the import.');
                 Queue::push('Firefly\Queue\Import@start', ['file' => $fullName, 'user' => \Auth::user()->id]);
                 Session::flash('success', 'The import job has been queued. Please be patient. Data will appear');

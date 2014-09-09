@@ -5,6 +5,8 @@ use Firefly\Storage\Limit\LimitRepositoryInterface as LRI;
 
 /**
  * Class LimitController
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class LimitController extends BaseController
 {
@@ -19,7 +21,7 @@ class LimitController extends BaseController
     public function __construct(BRI $budgets, LRI $limits)
     {
         $this->_budgets = $budgets;
-        $this->_limits = $limits;
+        $this->_limits  = $limits;
     }
 
     /**
@@ -29,7 +31,7 @@ class LimitController extends BaseController
      */
     public function create(\Budget $budget = null)
     {
-        $periods = \Config::get('firefly.periods_to_text');
+        $periods   = \Config::get('firefly.periods_to_text');
         $prefilled = [
             'startdate'   => \Input::get('startdate') ? : date('Y-m-d'),
             'repeat_freq' => \Input::get('repeat_freq') ? : 'monthly',
@@ -98,7 +100,7 @@ class LimitController extends BaseController
     public function store(Budget $budget = null)
     {
 
-        // find a limit with these properties, as we might already have one:
+        // find a limit with these properties, as Firefly might already have one:
         $limit = $this->_limits->store(Input::all());
         if ($limit->validate()) {
             Session::flash('success', 'Envelope created!');
@@ -110,7 +112,7 @@ class LimitController extends BaseController
             }
         } else {
             Session::flash('error', 'Could not save new envelope.');
-            $budgetId = $budget ? $budget->id : null;
+            $budgetId   = $budget ? $budget->id : null;
             $parameters = [$budgetId, 'from' => Input::get('from')];
 
             return Redirect::route('budgets.limits.create', $parameters)->withInput()

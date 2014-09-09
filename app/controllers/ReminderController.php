@@ -5,12 +5,17 @@ use Firefly\Storage\Reminder\ReminderRepositoryInterface as RRI;
 
 /**
  * Class ReminderController
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class ReminderController extends BaseController
 {
 
     protected $_repository;
 
+    /**
+     * @param RRI $repository
+     */
     public function __construct(RRI $repository)
     {
         $this->_repository = $repository;
@@ -33,8 +38,8 @@ class ReminderController extends BaseController
      */
     public function modalDialog()
     {
-        $today = new Carbon;
-        $reminders = $this->_repository->get();
+        $today     = new Carbon;
+        $reminders = $this->_repository->getPiggybankReminders();
 
         /** @var \Reminder $reminder */
         foreach ($reminders as $index => $reminder) {
@@ -66,6 +71,8 @@ class ReminderController extends BaseController
 
     /**
      * @param Reminder $reminder
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
     public function redirect(\Reminder $reminder)
     {
@@ -83,6 +90,7 @@ class ReminderController extends BaseController
                 route('transactions.create', ['what' => 'transfer']) . '?' . http_build_query($parameters)
             );
         }
+        return View::make('error')->with('message', 'No such reminder.');
 
     }
 

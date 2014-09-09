@@ -6,6 +6,8 @@ use Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface as 
 
 /**
  * Class TransactionController
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class TransactionController extends BaseController
 {
@@ -30,18 +32,18 @@ class TransactionController extends BaseController
         // get accounts with names and id's.
         /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accountRepository */
         $accountRepository = App::make('Firefly\Storage\Account\AccountRepositoryInterface');
-        $accounts = $accountRepository->getActiveDefaultAsSelectList();
+        $accounts          = $accountRepository->getActiveDefaultAsSelectList();
 
         // get budgets as a select list.
         /** @var \Firefly\Storage\Budget\BudgetRepositoryInterface $budgetRepository */
         $budgetRepository = App::make('Firefly\Storage\Budget\BudgetRepositoryInterface');
-        $budgets = $budgetRepository->getAsSelectList();
-        $budgets[0] = '(no budget)';
+        $budgets          = $budgetRepository->getAsSelectList();
+        $budgets[0]       = '(no budget)';
 
         // get the piggy banks.
         /** @var \Firefly\Storage\Piggybank\PiggybankRepositoryInterface $piggyRepository */
         $piggyRepository = App::make('Firefly\Storage\Piggybank\PiggybankRepositoryInterface');
-        $piggies = $piggyRepository->get();
+        $piggies         = $piggyRepository->get();
 
         return View::make('transactions.create')->with('accounts', $accounts)->with('budgets', $budgets)->with(
             'what', $what
@@ -88,18 +90,18 @@ class TransactionController extends BaseController
         // get accounts with names and id's.
         /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accountRepository */
         $accountRepository = App::make('Firefly\Storage\Account\AccountRepositoryInterface');
-        $accounts = $accountRepository->getActiveDefaultAsSelectList();
+        $accounts          = $accountRepository->getActiveDefaultAsSelectList();
 
         // get budgets as a select list.
         /** @var \Firefly\Storage\Budget\BudgetRepositoryInterface $budgetRepository */
         $budgetRepository = App::make('Firefly\Storage\Budget\BudgetRepositoryInterface');
-        $budgets = $budgetRepository->getAsSelectList();
-        $budgets[0] = '(no budget)';
+        $budgets          = $budgetRepository->getAsSelectList();
+        $budgets[0]       = '(no budget)';
 
         // get the piggy banks.
         /** @var \Firefly\Storage\Piggybank\PiggybankRepositoryInterface $piggyRepository */
         $piggyRepository = App::make('Firefly\Storage\Piggybank\PiggybankRepositoryInterface');
-        $piggies = $piggyRepository->get();
+        $piggies         = $piggyRepository->get();
         // piggy bank id?
         $piggyBankId = null;
         foreach ($journal->transactions as $t) {
@@ -107,7 +109,7 @@ class TransactionController extends BaseController
         }
 
         // data to properly display form:
-        $data = [
+        $data     = [
             'date'         => $journal->date->format('Y-m-d'),
             'category'     => '',
             'budget_id'    => 0,
@@ -119,23 +121,23 @@ class TransactionController extends BaseController
         }
         switch ($journal->transactiontype->type) {
             case 'Withdrawal':
-                $data['account_id'] = $journal->transactions[0]->account->id;
+                $data['account_id']  = $journal->transactions[0]->account->id;
                 $data['beneficiary'] = $journal->transactions[1]->account->name;
-                $data['amount'] = floatval($journal->transactions[1]->amount);
-                $budget = $journal->budgets()->first();
+                $data['amount']      = floatval($journal->transactions[1]->amount);
+                $budget              = $journal->budgets()->first();
                 if (!is_null($budget)) {
                     $data['budget_id'] = $budget->id;
                 }
                 break;
             case 'Deposit':
-                $data['account_id'] = $journal->transactions[1]->account->id;
+                $data['account_id']  = $journal->transactions[1]->account->id;
                 $data['beneficiary'] = $journal->transactions[0]->account->name;
-                $data['amount'] = floatval($journal->transactions[1]->amount);
+                $data['amount']      = floatval($journal->transactions[1]->amount);
                 break;
             case 'Transfer':
                 $data['account_from_id'] = $journal->transactions[1]->account->id;
-                $data['account_to_id'] = $journal->transactions[0]->account->id;
-                $data['amount'] = floatval($journal->transactions[1]->amount);
+                $data['account_to_id']   = $journal->transactions[0]->account->id;
+                $data['amount']          = floatval($journal->transactions[1]->amount);
                 break;
         }
 
@@ -150,15 +152,15 @@ class TransactionController extends BaseController
     public function index()
     {
         $start = is_null(Input::get('startdate')) ? null : new Carbon(Input::get('startdate'));
-        $end = is_null(Input::get('enddate')) ? null : new Carbon(Input::get('enddate'));
+        $end   = is_null(Input::get('enddate')) ? null : new Carbon(Input::get('enddate'));
         if ($start <= $end && !is_null($start) && !is_null($end)) {
             $journals = $this->_repository->paginate(25, $start, $end);
             $filtered = true;
-            $filters = ['start' => $start, 'end' => $end];
+            $filters  = ['start' => $start, 'end' => $end];
         } else {
             $journals = $this->_repository->paginate(25);
             $filtered = false;
-            $filters = null;
+            $filters  = null;
         }
 
 
@@ -192,12 +194,12 @@ class TransactionController extends BaseController
             if (Input::get('reminder')) {
                 /** @var \Firefly\Storage\Reminder\ReminderRepositoryInterface $reminders */
                 $reminders = App::make('Firefly\Storage\Reminder\ReminderRepositoryInterface');
-                $reminder = $reminders->find(Input::get('reminder'));
+                $reminder  = $reminders->find(Input::get('reminder'));
                 $reminders->deactivate($reminder);
             }
 
             // trigger the creation for recurring transactions.
-            Event::fire('journals.store',[$journal]);
+            Event::fire('journals.store', [$journal]);
 
             if (Input::get('create') == '1') {
                 return Redirect::route('transactions.create', [$what])->withInput();
@@ -226,7 +228,7 @@ class TransactionController extends BaseController
         if ($journal->validate()) {
             // has been saved, return to index:
             Session::flash('success', 'Transaction updated!');
-            Event::fire('journals.update',[$journal]);
+            Event::fire('journals.update', [$journal]);
 
             return Redirect::route('transactions.index');
         } else {

@@ -5,6 +5,8 @@ use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
 
 /**
  * Class PreferencesController
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class PreferencesController extends BaseController
 {
@@ -18,7 +20,7 @@ class PreferencesController extends BaseController
     public function __construct(ARI $accounts, PHI $preferences)
     {
 
-        $this->_accounts = $accounts;
+        $this->_accounts    = $accounts;
         $this->_preferences = $preferences;
     }
 
@@ -29,7 +31,7 @@ class PreferencesController extends BaseController
     {
         $accounts = $this->_accounts->getDefault();
 
-        $viewRange = $this->_preferences->get('viewRange', '1M');
+        $viewRange      = $this->_preferences->get('viewRange', '1M');
         $viewRangeValue = $viewRange->data;
 
         // pref:

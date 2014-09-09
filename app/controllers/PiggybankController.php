@@ -7,6 +7,10 @@ use Firefly\Storage\Piggybank\PiggybankRepositoryInterface as PRI;
 /**
  * Class PiggybankController
  *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ *
  */
 class PiggybankController extends BaseController
 {
@@ -21,16 +25,18 @@ class PiggybankController extends BaseController
     public function __construct(PRI $repository, ARI $accounts)
     {
         $this->_repository = $repository;
-        $this->_accounts = $accounts;
+        $this->_accounts   = $accounts;
     }
 
     /**
      * @param Piggybank $piggyBank
+     *
+     * @return $this
      */
     public function addMoney(Piggybank $piggyBank)
     {
-        $what = 'add';
-        $maxAdd = $this->_repository->leftOnAccount($piggyBank->account);
+        $what      = 'add';
+        $maxAdd    = $this->_repository->leftOnAccount($piggyBank->account);
         $maxRemove = null;
 
         return View::make('piggybanks.modifyAmount')->with('what', $what)->with('maxAdd', $maxAdd)->with(
@@ -43,7 +49,7 @@ class PiggybankController extends BaseController
      */
     public function createPiggybank()
     {
-        $periods = Config::get('firefly.piggybank_periods');
+        $periods  = Config::get('firefly.piggybank_periods');
         $accounts = $this->_accounts->getActiveDefaultAsSelectList();
 
         return View::make('piggybanks.create-piggybank')->with('accounts', $accounts)->with('periods', $periods);
@@ -54,7 +60,7 @@ class PiggybankController extends BaseController
      */
     public function createRepeated()
     {
-        $periods = Config::get('firefly.piggybank_periods');
+        $periods  = Config::get('firefly.piggybank_periods');
         $accounts = $this->_accounts->getActiveDefaultAsSelectList();
 
         return View::make('piggybanks.create-repeated')->with('accounts', $accounts)->with('periods', $periods);
@@ -93,7 +99,7 @@ class PiggybankController extends BaseController
     public function edit(Piggybank $piggyBank)
     {
         $accounts = $this->_accounts->getActiveDefaultAsSelectList();
-        $periods = Config::get('firefly.piggybank_periods');
+        $periods  = Config::get('firefly.piggybank_periods');
         if ($piggyBank->repeats == 1) {
             return View::make('piggybanks.edit-repeated')->with('piggybank', $piggyBank)->with('accounts', $accounts)
                 ->with('periods', $periods);
@@ -110,19 +116,19 @@ class PiggybankController extends BaseController
      */
     public function index()
     {
-        $countRepeating = $this->_repository->countRepeating();
+        $countRepeating    = $this->_repository->countRepeating();
         $countNonRepeating = $this->_repository->countNonrepeating();
 
         $piggybanks = $this->_repository->get();
 
-        // get the accounts with each piggy bank and check their balance; we might need to
+        // get the accounts with each piggy bank and check their balance; Fireflyy might needs to
         // show the user a correction.
 
         $accounts = [];
         /** @var \Piggybank $piggybank */
         foreach ($piggybanks as $piggybank) {
             $account = $piggybank->account;
-            $id = $account->id;
+            $id      = $account->id;
             if (!isset($accounts[$id])) {
                 $accounts[$id] = ['account' => $account, 'left' => $this->_repository->leftOnAccount($account)];
             }
@@ -158,7 +164,7 @@ class PiggybankController extends BaseController
                 }
                 break;
             case 'remove':
-                $rep = $piggyBank->currentRelevantRep();
+                $rep       = $piggyBank->currentRelevantRep();
                 $maxRemove = $rep->currentamount;
                 if (round($amount, 2) <= round($maxRemove, 2)) {
                     Session::flash('success', 'Amount updated!');
@@ -175,11 +181,13 @@ class PiggybankController extends BaseController
 
     /**
      * @param Piggybank $piggyBank
+     *
+     * @return $this
      */
     public function removeMoney(Piggybank $piggyBank)
     {
-        $what = 'remove';
-        $maxAdd = $this->_repository->leftOnAccount($piggyBank->account);
+        $what      = 'remove';
+        $maxAdd    = $this->_repository->leftOnAccount($piggyBank->account);
         $maxRemove = $piggyBank->currentRelevantRep()->currentamount;
 
         return View::make('piggybanks.modifyAmount')->with('what', $what)->with('maxAdd', $maxAdd)->with(
@@ -193,7 +201,7 @@ class PiggybankController extends BaseController
     public function show(Piggybank $piggyBank)
     {
         $leftOnAccount = $this->_repository->leftOnAccount($piggyBank->account);
-        $balance = $piggyBank->account->balance();
+        $balance       = $piggyBank->account->balance();
 
         return View::make('piggybanks.show')->with('piggyBank', $piggyBank)->with('leftOnAccount', $leftOnAccount)
             ->with('balance', $balance);
@@ -208,10 +216,10 @@ class PiggybankController extends BaseController
         unset($data['_token']);
 
         // extend the data array with the settings needed to create a piggy bank:
-        $data['repeats'] = 0;
+        $data['repeats']   = 0;
         $data['rep_times'] = 1;
         $data['rep_every'] = 1;
-        $data['order'] = 0;
+        $data['order']     = 0;
 
         $piggyBank = $this->_repository->store($data);
         if (!is_null($piggyBank->id)) {
@@ -240,7 +248,7 @@ class PiggybankController extends BaseController
 
         // extend the data array with the settings needed to create a repeated:
         $data['repeats'] = 1;
-        $data['order'] = 0;
+        $data['order']   = 0;
 
         $piggyBank = $this->_repository->store($data);
         if ($piggyBank->id) {
@@ -258,6 +266,8 @@ class PiggybankController extends BaseController
     }
 
     /**
+     * @param Piggybank $piggyBank
+     *
      * @return $this|\Illuminate\Http\RedirectResponse
      */
     public function update(Piggybank $piggyBank)

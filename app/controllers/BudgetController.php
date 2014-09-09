@@ -8,6 +8,7 @@ use Firefly\Storage\Budget\BudgetRepositoryInterface as BRI;
  * Class BudgetController
  *
  * @SuppressWarnings(PHPMD.CamelCasePropertyName)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  *
  */
 class BudgetController extends BaseController
@@ -17,7 +18,7 @@ class BudgetController extends BaseController
     protected $_repository;
 
     /**
-     * @param BI $budgets
+     * @param BI  $budgets
      * @param BRI $repository
      */
     public function __construct(BI $budgets, BRI $repository)
@@ -44,7 +45,7 @@ class BudgetController extends BaseController
     public function delete(Budget $budget)
     {
         return View::make('budgets.delete')->with('budget', $budget)
-                   ->with('title', 'Delete budget "' . $budget->name . '"');
+            ->with('title', 'Delete budget "' . $budget->name . '"');
     }
 
     /**
@@ -75,7 +76,7 @@ class BudgetController extends BaseController
     public function edit(Budget $budget)
     {
         return View::make('budgets.edit')->with('budget', $budget)
-                   ->with('title', 'Edit budget "' . $budget->name . '"');
+            ->with('title', 'Edit budget "' . $budget->name . '"');
 
     }
 
@@ -87,7 +88,7 @@ class BudgetController extends BaseController
         $budgets = $this->_repository->get();
 
         return View::make('budgets.indexByBudget')->with('budgets', $budgets)->with('today', new Carbon)
-                   ->with('title', 'All your budgets grouped by budget');
+            ->with('title', 'All your budgets grouped by budget');
 
     }
 
@@ -101,7 +102,7 @@ class BudgetController extends BaseController
         $budgets = $this->_budgets->organizeByDate($set);
 
         return View::make('budgets.indexByDate')->with('budgets', $budgets)
-                   ->with('title', 'All your budgets grouped by date');
+            ->with('title', 'All your budgets grouped by date');
 
 
     }
@@ -113,7 +114,7 @@ class BudgetController extends BaseController
      * - Show a specific repetition.
      * - Show everything shows NO repetition.
      *
-     * @param Budget $budget
+     * @param Budget          $budget
      * @param LimitRepetition $repetition
      *
      * @return int
@@ -128,8 +129,10 @@ class BudgetController extends BaseController
             case (!is_null($repetition)):
                 $data  = $this->_budgets->organizeRepetition($repetition);
                 $view  = 1;
-                $title = $budget->name . ', ' . $repetition->periodShow() . ', ' . mf($repetition->limit->amount,
-                        false);
+                $title = $budget->name . ', ' . $repetition->periodShow() . ', ' . mf(
+                        $repetition->limit->amount,
+                        false
+                    );
                 break;
             case (Input::get('noenvelope') == 'true'):
                 $data  = $this->_budgets->outsideRepetitions($budget);
@@ -144,12 +147,12 @@ class BudgetController extends BaseController
         }
 
         return View::make('budgets.show')
-                   ->with('budget', $budget)
-                   ->with('repetitions', $data)
-                   ->with('view', $view)
-                   ->with('highlight', Input::get('highlight'))
-                   ->with('useSessionDates', $useSessionDates)
-                   ->with('title', $title);
+            ->with('budget', $budget)
+            ->with('repetitions', $data)
+            ->with('view', $view)
+            ->with('highlight', Input::get('highlight'))
+            ->with('useSessionDates', $useSessionDates)
+            ->with('title', $title);
     }
 
     /**
