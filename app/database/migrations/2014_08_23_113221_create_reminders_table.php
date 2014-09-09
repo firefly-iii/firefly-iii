@@ -32,7 +32,7 @@ class CreateRemindersTable extends Migration
                 $table->integer('recurring_transaction_id')->unsigned()->nullable();
                 $table->integer('user_id')->unsigned();
                 $table->date('startdate');
-                $table->date('enddate');
+                $table->date('enddate')->nullable();
                 $table->boolean('active');
 
 
