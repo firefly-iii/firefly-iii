@@ -46,11 +46,15 @@
     <div class="col-lg-6 col-md-6 col-sm-12">
         <h3>Transactions</h3>
         @foreach($journal->transactions as $t)
-        <h4>{{{$t->account->name}}}<br /><small>{{{$t->account->accounttype->description}}}</small></h4>
+        <h4><a href="{{route('accounts.show',$t->account->id)}}">{{{$t->account->name}}}</a><br /><small>{{{$t->account->accounttype->description}}}</small></h4>
         <table class="table">
             <tr>
                 <td>Amount</td>
                 <td>{{mf($t->amount)}}</td>
+            </tr>
+            <tr>
+                <td>New balance</td>
+                <td>{{mf($t->account->balanceBeforeJournal($journal))}} &rarr; {{mf($t->account->balanceBeforeJournal($journal) + $t->amount)}}</td>
             </tr>
             @if(!is_null($t->description))
             <tr>
