@@ -180,7 +180,7 @@ class Chart implements ChartInterface
 
         foreach ($budgets as $budget) {
             if ($budget->count > 0) {
-                $data['labels'][] = wordwrap($budget->name, 12, "<br>");
+                $data['labels'][] = $budget->name;
                 foreach ($budget->limits as $limit) {
                     foreach ($limit->limitrepetitions as $rep) {
                         //0: envelope for period:
