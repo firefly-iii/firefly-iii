@@ -54,4 +54,38 @@ interface ChartInterface
      * @return mixed
      */
     public function categoryShowChart(\Category $category, $range, Carbon $start, Carbon $end);
+
+    /**
+     * @param \Budget $budget
+     * @param Carbon  $date
+     *
+     * @return float|null
+     */
+    public function spentOnDay(\Budget $budget, Carbon $date);
+
+    /**
+     * @param \Budget $budget
+     *
+     * @return int[]
+     */
+    public function allJournalsInBudgetEnvelope(\Budget $budget);
+
+    /**
+     * @param \Budget $budget
+     * @param array   $ids
+     *
+     * @return mixed
+     */
+    public function journalsNotInSet(\Budget $budget, array $ids);
+
+    /**
+     * @param array $set
+     *
+     * @return mixed
+     */
+    public function transactionsByJournals(array $set);
+
+
+
+
 }

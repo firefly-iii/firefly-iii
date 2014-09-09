@@ -26,6 +26,9 @@ $(function () {
                                 str += '<span style="color:' + colour + '">' + point.series.name + '</span>: € ' + Highcharts.numberFormat(point.y, 2) + '<br />';
                             }
                             if (x == 1) {
+                                str += '<span style="color:' + colour + '">' + point.series.name + '</span>: € ' + Highcharts.numberFormat(point.y, 2) + '<br />';
+                            }
+                            if (x == 2) {
                                 str += '<span style="color:' + colour + '">' + point.series.name + '</span>: ' + Highcharts.numberFormat(point.y, 1) + '%<br />';
                             }
                         }
