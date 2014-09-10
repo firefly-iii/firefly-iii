@@ -12,4 +12,5 @@
 //
 //= require jquery
 //= require bootstrap/bootstrap.min
-//= require firefly/reminders
+//= require metisMenu/jquery.metisMenu.min
+//= require sb-admin/sb-admin-2
