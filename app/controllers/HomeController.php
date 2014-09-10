@@ -71,14 +71,6 @@ class HomeController extends BaseController
             }
         }
 
-        if (count($transactions) % 2 == 0) {
-            $transactions = array_chunk($transactions, 2);
-        } elseif (count($transactions) == 1) {
-            $transactions = array_chunk($transactions, 3);
-        } else {
-            $transactions = array_chunk($transactions, 3);
-        }
-
         // build the home screen:
         return View::make('index')->with('count', $count)->with('transactions', $transactions)->with('title', 'Firefly')
             ->with('subTitle', 'What\'s playing?');
