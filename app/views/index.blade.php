@@ -1,8 +1,5 @@
 @extends('layouts.default')
 @section('content')
-@if($count > 0)
-    @include('partials.date_nav')
-@endif
 @if($count == 0)
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
@@ -33,8 +30,35 @@
 
     <!-- ACCOUNTS -->
     <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <div id="chart"></div>
+        <div class="col-lg-8 col-md-12 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-credit-card fa-fw"></i> Your accounts
+                    <div class="pull-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                Actions
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li><a href="#">Action</a>
+                                </li>
+                                <li><a href="#">Another action</a>
+                                </li>
+                                <li><a href="#">Something else here</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li><a href="#">Separated link</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div id="flot-chart-accounts" style="height:300px;"></div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -51,9 +75,15 @@
 
             @include('transactions.journals-small',['transactions' => $data[0],'account' => $data[1]])
             <div class="btn-group btn-group-xs">
-                <a class="btn btn-default" href="{{route('transactions.create','withdrawal')}}?account_id={{$data[1]->id}}"><span class="glyphicon glyphicon-arrow-left" title="Withdrawal"></span> Add withdrawal</a>
-                <a class="btn btn-default" href="{{route('transactions.create','deposit')}}?account_id={{$data[1]->id}}"><span class="glyphicon glyphicon-arrow-right" title="Deposit"></span> Add deposit</a>
-                <a class="btn btn-default" href="{{route('transactions.create','transfer')}}?account_from_id={{$data[1]->id}}"><span class="glyphicon glyphicon-resize-full" title="Transfer"></span> Add transfer</a>
+                <a class="btn btn-default"
+                   href="{{route('transactions.create','withdrawal')}}?account_id={{$data[1]->id}}"><span
+                        class="glyphicon glyphicon-arrow-left" title="Withdrawal"></span> Add withdrawal</a>
+                <a class="btn btn-default"
+                   href="{{route('transactions.create','deposit')}}?account_id={{$data[1]->id}}"><span
+                        class="glyphicon glyphicon-arrow-right" title="Deposit"></span> Add deposit</a>
+                <a class="btn btn-default"
+                   href="{{route('transactions.create','transfer')}}?account_from_id={{$data[1]->id}}"><span
+                        class="glyphicon glyphicon-resize-full" title="Transfer"></span> Add transfer</a>
             </div>
 
         </div>
