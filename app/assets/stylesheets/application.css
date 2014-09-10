@@ -10,4 +10,7 @@
  * but before any files alphabetically greater than 'application.css' 
  *
  *= require bootstrap/bootstrap.min
+ *= require metisMenu/metisMenu.min
+ *= require sb-admin/sb-admin-2
+ *= require fa/css/font-awesome.min
  */
