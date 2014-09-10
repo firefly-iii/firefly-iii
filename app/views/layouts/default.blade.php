@@ -28,7 +28,11 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">Firefly <small>What's playing?</small></h1>
+                <h1 class="page-header">{{$title or '(no title)'}}
+                    @if(isset($subTitle))
+                        <small>{{$subTitle}}</small>
+                    @endif
+                </h1>
             </div>
             <!-- /.col-lg-12 -->
         </div>

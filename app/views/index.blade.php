@@ -1,14 +1,5 @@
 @extends('layouts.default')
 @section('content')
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly
-            @if($count > 0)
-            <small>What's playing?</small>
-            @endif
-        </h1>
-    </div>
-</div>
 @if($count > 0)
     @include('partials.date_nav')
 @endif

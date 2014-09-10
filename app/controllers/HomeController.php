@@ -80,6 +80,7 @@ class HomeController extends BaseController
         }
 
         // build the home screen:
-        return View::make('index')->with('count', $count)->with('transactions', $transactions);
+        return View::make('index')->with('count', $count)->with('transactions', $transactions)->with('title', 'Firefly')
+            ->with('subTitle', 'What\'s playing?');
     }
 }
