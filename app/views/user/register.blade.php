@@ -1,42 +1,33 @@
 @extends('layouts.guest')
 @section('content')
 <div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly<br/>
-            <small>Register a new account</small>
-        </h1>
-    </div>
-</div>
+    <div class="col-md-4 col-md-offset-4">
+        <div class="login-panel panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Firefly III &mdash; Register</h3>
+            </div>
+            <div class="panel-body">
+                <p>
+                    Registering an account on Firefly requires an e-mail address.
+                    All instructions will be sent to you.
+                </p>
+                {{Form::open()}}
+                <div class="form-group">
+                    <label for="inputEmail">Email address</label>
+                    <input type="email" class="form-control" id="inputEmail" name="email" placeholder="Enter email">
+                </div>
+                <p>
+                    <button type="submit" class="btn btn-success btn-lg btn-block">Submit</button>
+                </p>
+                {{Form::close()}}
 
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-    </div>
-</div>
+                <div class="btn-group btn-group-justified btn-group-sm">
+                    <a href="{{route('login')}}" class="btn btn-default">Back to the login form</a>
+                    <a href="{{route('remindme')}}" class="btn btn-default">Forgot your password?</a>
+                </div>
 
-<div class="row">
-    <div class="col-lg-4 col-md-4 col-sm-12">
-        {{Form::open()}}
-        <div class="form-group">
-            <label for="inputEmail">Email address</label>
-            <input type="email" class="form-control" id="inputEmail" name="email" placeholder="Enter email">
+                </div>
+            </div>
         </div>
-        <button type="submit" class="btn btn-info">Submit</button>
-        {{Form::close()}}
     </div>
-</div>
-<div class="row">
-    <div class="col-lg-4 col-md-4 col-sm-12">
-        <p>
-            &nbsp;
-        </p>
-        <p>
-            <a href="{{route('login')}}" class="btn btn-default">Back to login form</a>
-        </p>
-        <p>
-            <a href="{{route('remindme')}}" class="btn btn-default">Reset password</a>
-        </p>
-
-    </div>
-</div>
-
 @stop
