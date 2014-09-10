@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <base href="{{URL::route('index')}}/">
     <title>Firefly
-    @if(isset($title))
+    @if(isset($title) && $title != 'Firefly')
         // {{{$title}}}
     @endif
     </title>

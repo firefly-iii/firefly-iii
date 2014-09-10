@@ -12,20 +12,9 @@ use Illuminate\Http\Request;
 interface ToolkitInterface
 {
     /**
-     * @param Request $request
      *
-     * @return mixed
+     * @return null
      */
-    public function getDateRange(Request $request);
+    public function getDateRange();
 
-    /**
-     * @return mixed
-     */
-    public function getDateRangeDates();
-
-    /**
-     * @return mixed
-     */
-    public function getReminders();
-
-} 
+}

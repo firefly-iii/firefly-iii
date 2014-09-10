@@ -73,6 +73,9 @@
                 <a href="#"><i class="fa fa-tags fa-fw"></i> Tags</a>
             </li>
             <li>
+                <a href="#"><i class="fa fa-tags fa-fw"></i> Reports</a>
+            </li>
+            <li>
                 <a href="{{route('transactions.index')}}"><i class="fa fa-repeat fa-fw"></i> Transactions<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
