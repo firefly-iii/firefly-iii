@@ -1,53 +1,40 @@
 @extends('layouts.guest')
 @section('content')
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly<br/>
-            <small>Login</small>
-        </h1>
-    </div>
-</div>
 
 <div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-    </div>
-</div>
+    <div class="col-md-4 col-md-offset-4">
+        <div class="login-panel panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Firefly III &mdash; Sign In</h3>
+            </div>
+            <div class="panel-body">
 
-<div class="row">
-    <div class="col-lg-4 col-md-4 col-sm-12">
+
+
         {{Form::open()}}
         <div class="form-group">
-            <label for="inputEmail">Email address</label>
-            <input type="email" class="form-control" id="inputEmail" name="email" placeholder="Enter email">
+            <input type="email" class="form-control" id="inputEmail" name="email" placeholder="E-mail">
         </div>
         <div class="form-group">
-            <label for="inputPassword">Password</label>
             <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password">
         </div>
         <div class="checkbox">
             <label>
-                <input type="checkbox" name="remember_me" value="1"> Remember login
+                <input type="checkbox" name="remember_me" value="1"> Remember me
             </label>
         </div>
-        <button type="submit" class="btn btn-info">Login</button>
+        <p>
+            <button type="submit" class="btn btn-lg btn-success btn-block">Login</button>
+        </p>
+        <div class="btn-group btn-group-justified btn-group-sm">
+            @if(Config::get('auth.allow_register') === true)
+                <a href="{{route('register')}}" class="btn btn-default">Register</a>
+            @endif
+            <a href="{{route('remindme')}}" class="btn btn-default">Forgot your password?</a>
+        </div>
         {{Form::close()}}
     </div>
 </div>
-<div class="row">
-    <div class="col-lg-4 col-md-4 col-sm-12">
-        <p>
-            &nbsp;
-        </p>
-        @if(Config::get('auth.allow_register') === true)
-        <p>
-            <a href="{{route('register')}}" class="btn btn-default">Register a new account</a>
-        </p>
-        @endif
-        <p>
-            <a href="{{route('remindme')}}" class="btn btn-default">Forgot your password?</a>
-        </p>
-
-    </div>
 </div>
-
+</div>
 @stop
