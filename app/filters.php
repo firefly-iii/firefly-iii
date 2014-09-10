@@ -7,9 +7,7 @@ App::before(
 
         if (Auth::check()) {
             $toolkit = App::make('Firefly\Helper\Toolkit\ToolkitInterface');
-            $toolkit->getDateRange($request);
-            $toolkit->getReminders();
-
+            $toolkit->getDateRange();
         }
 
     }
