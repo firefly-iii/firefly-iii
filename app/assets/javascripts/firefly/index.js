@@ -1,6 +1,4 @@
 $(function () {
-
-
     /**
      * get data from controller for home charts:
      */
@@ -17,20 +15,22 @@ $(function () {
             },
             yAxis: {
                 allowDecimals: false,
-                alternateGridColor: true,
                 labels: {
                     formatter: function () {
-                        return '€ ' + this.value;
+                        if(this.value >= 1000 || this.value <= -1000) {
+                            return '\u20AC ' + (this.value / 1000) + 'k';
+                        }
+                        return '\u20AC ' + this.value;
+
                     }
                 },
                 title: {text: null}
             },
             xAxis: {
-                floor: 0,
                 type: 'datetime',
                 dateTimeLabelFormats: {
                     day: '%e %b',
-                    year: '%b'
+                    week: '%e %b'
                 },
                 title: {
                     text: null
@@ -38,9 +38,6 @@ $(function () {
             },
             legend: {enabled:false},
             tooltip: {
-
-                shared: false,
-                crosshairs: false,
                 formatter: function () {
                     return this.series.name + ': \u20AC ' + Highcharts.numberFormat(this.y,2);
                 }
@@ -55,23 +52,12 @@ $(function () {
                     threshold: 0,
                     lineWidth: 1,
                     marker: {
-                        radius: 2
+                        radius: 0
                     },
                     point: {
                         events: {
                             click: function (e) {
-                                hs.htmlExpand(null, {
-                                        src: 'chart/home/info/' + this.series.name + '/' + Highcharts.dateFormat("%d/%m/%Y", this.x),
-                                        pageOrigin: {
-                                            x: e.pageX,
-                                            y: e.pageY
-                                        },
-                                        objectType: 'ajax',
-                                        headingText: '<a href="accounts/show/' + this.series.id + '">' + this.series.name + '</a>',
-                                        width: 250
-                                    }
-                                )
-                                ;
+                                alert('click!');
                             }
                         }
                     }
@@ -111,14 +97,23 @@ $(function () {
             yAxis: {
                 min: 0,
                 title: {
-                    text: 'Expense (€)'
-                }
+                    text: null
+                },
+                labels: {
+                    formatter: function () {
+                        if(this.value >= 1000 || this.value <= -1000) {
+                            return '\u20AC ' + (this.value / 1000) + 'k';
+                        }
+                        return '\u20AC ' + this.value;
+
+                    }
+                },
             },
             legend: {
                 enabled: false
             },
             tooltip: {
-                pointFormat: 'Total expense: <strong>€ {point.y:.2f}</strong>',
+                pointFormat: 'Total expense: <strong>\u20AC {point.y:.2f}</strong>',
             },
             plotOptions: {
                 column: {
@@ -165,24 +160,27 @@ $(function () {
                 labels: {
                     style: {
                         fontSize: '11px',
-                        fontFamily: 'Verdana, sans-serif'
                     }
-                }
-            },
-            yAxis: {
-                min: 0,
-                title: {
-                    text: 'Amount (€)',
-                    align: 'high'
-                },
-                labels: {
-                    overflow: 'justify'
                 }
             },
             tooltip: {
                 formatter: function () {
-                    return false;
-                    return '€ ' + Highcharts.numberFormat(this.y, 2);
+                    return this.series.name + ': \u20AC ' + Highcharts.numberFormat(this.y,2);
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {text:null},
+
+                labels: {
+                    overflow: 'justify',
+                    formatter: function () {
+                        if(this.value >= 1000 || this.value <= -1000) {
+                            return '\u20AC ' + (this.value / 1000) + 'k';
+                        }
+                        return '\u20AC ' + this.value;
+
+                    }
                 }
             },
             plotOptions: {
@@ -196,22 +194,13 @@ $(function () {
                     dataLabels: {
                         enabled: true,
                         formatter: function () {
-                            return '€ ' + Highcharts.numberFormat(this.y, 2);
+                            return '\u20AC ' + Highcharts.numberFormat(this.y, 2);
                         }
                     }
                 }
             },
             legend: {
                 enabled: false,
-                layout: 'vertical',
-                align: 'right',
-                verticalAlign: 'top',
-                x: -40,
-                y: 100,
-                floating: true,
-                borderWidth: 1,
-                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor || '#FFFFFF'),
-                shadow: true
             },
             credits: {
                 enabled: false

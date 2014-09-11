@@ -43,11 +43,11 @@ if($('#chart').length == 1) {
                     for (x in this.points) {
                         var point = this.points[x];
                         var colour = point.point.pointAttr[''].fill;
-                        str += '<span style="color:' + colour + '">' + point.series.name + '</span>: € ' + Highcharts.numberFormat(point.y, 2) + '<br />';
+                        str += '<span style="color:' + colour + '">' + point.series.name + '</span>: \u20AC ' + Highcharts.numberFormat(point.y, 2) + '<br />';
                     }
                     //console.log();
                     return str;
-                    return '<span style="font-size:80%;">' + this.series.name + ' on ' + Highcharts.dateFormat("%e %B", this.x) + ':</span><br /> € ' + Highcharts.numberFormat(this.y, 2);
+                    return '<span style="font-size:80%;">' + this.series.name + ' on ' + Highcharts.dateFormat("%e %B", this.x) + ':</span><br /> \u20AC ' + Highcharts.numberFormat(this.y, 2);
                 }
             },
             plotOptions: {
