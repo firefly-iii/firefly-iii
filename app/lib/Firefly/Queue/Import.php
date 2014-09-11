@@ -310,16 +310,19 @@ class Import
                 if (is_null($account)) {
                     \Log::debug('Cash account is needed.');
                     $account = $this->_accounts->getCashAccount();
-                    \Log::info($account);
                 }
+                // find
 
                 foreach ($journal->transactions as $transaction) {
-                    if ($transaction->account()->first()->account_type_id == 5) {
+                    $accountType = $transaction->account->accounttype->type;
+                    if ($accountType == 'Import account') {
                         $transaction->account()->associate($account);
                         $transaction->save();
                         \Log::debug(
                             'Updated transactions (#' . $journal->id . '), #' . $transaction->id . '\'s Account.'
                         );
+                    } else {
+                        \Log::error('Found account type: "' . $accountType.'" instead of expected "Import account"');
                     }
                 }
 
