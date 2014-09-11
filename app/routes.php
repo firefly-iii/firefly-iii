@@ -131,7 +131,8 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/accounts/expense', ['uses' => 'AccountController@expense', 'as' => 'accounts.expense']);
         Route::get('/accounts/revenue', ['uses' => 'AccountController@revenue', 'as' => 'accounts.revenue']);
 
-        Route::get('/accounts/create', ['uses' => 'AccountController@create', 'as' => 'accounts.create']);
+        Route::get('/accounts/create/{what}', ['uses' => 'AccountController@create', 'as' => 'accounts.create'])
+            ->where('what','revenue|asset|expense');
         Route::get('/accounts/{account}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
         Route::get('/accounts/{account}/edit', ['uses' => 'AccountController@edit', 'as' => 'accounts.edit']);
         Route::get('/accounts/{account}/delete', ['uses' => 'AccountController@delete', 'as' => 'accounts.delete']);
