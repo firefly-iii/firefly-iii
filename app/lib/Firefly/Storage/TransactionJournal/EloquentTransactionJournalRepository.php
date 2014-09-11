@@ -84,7 +84,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
                 $journalType = \TransactionType::where('type', 'Opening balance')->first();
                 break;
 
-            case ($fromAT == 'Default account' && $toAT == 'Default account'): // both are yours:
+            case (in_array($fromAT,['Default account','Asset account']) && in_array($toAT,['Default account','Asset account'])): // both are yours:
                 // determin transaction type. If both accounts are new, it's an initial balance transfer.
                 $journalType = \TransactionType::where('type', 'Transfer')->first();
                 break;
@@ -92,11 +92,11 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
                 $journalType = \TransactionType::where('type', 'Deposit')->first();
                 break;
             // is deposit into one of your own accounts:
-            case ($toAT == 'Default account'):
+            case ($toAT == 'Default account' || $toAT == 'Asset account'):
                 $journalType = \TransactionType::where('type', 'Deposit')->first();
                 break;
             // is withdrawal from one of your own accounts:
-            case ($fromAT == 'Default account'):
+            case ($fromAT == 'Default account' || $fromAT == 'Asset account'):
                 $journalType = \TransactionType::where('type', 'Withdrawal')->first();
                 break;
         }
