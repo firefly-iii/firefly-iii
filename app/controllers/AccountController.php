@@ -33,6 +33,27 @@ class AccountController extends \BaseController
     }
 
     /**
+     * @return $this
+     */
+    public function asset() {
+        return View::make('accounts.asset')->with('title','Accounts')->with('subTitle','Asset accounts');
+    }
+
+    /**
+     * @return $this
+     */
+    public function expense() {
+        return View::make('accounts.expense')->with('title','Accounts')->with('subTitle','Expense accounts');
+    }
+
+    /**
+     * @return $this
+     */
+    public function revenue() {
+        return View::make('accounts.revenue')->with('title','Accounts')->with('subTitle','Revenue accounts');
+    }
+
+    /**
      * @param Account $account
      *
      * @return $this
