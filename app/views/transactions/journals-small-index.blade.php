@@ -1,6 +1,6 @@
 <div class="list-group">
 @foreach($transactions as $journal)
-<a class="list-group-item" href="{{route('transactions.show',$journal->id)}}">
+<a class="list-group-item" title="{{$journal->date->format('jS M Y')}}" href="{{route('transactions.show',$journal->id)}}">
 
     @if($journal->transactiontype->type == 'Withdrawal')
     <i class="fa fa-long-arrow-left fa-fw" title="Withdrawal"></i>
