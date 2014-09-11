@@ -2,12 +2,8 @@
 @section('content')
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly
-            <small>Edit "{{{$account->name}}}"</small>
-        </h1>
         <p class="lead">
-            Accounts are the record holders for transactions and transfers. Money moves
-            from one account to another.
+            Bla text here.
         </p>
     </div>
 </div>
