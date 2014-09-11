@@ -30,7 +30,7 @@ use LaravelBook\Ardent\Builder;
  * @method static \Illuminate\Database\Query\Builder|\Transaction whereTransactionJournalId($value)
  * @method static \Illuminate\Database\Query\Builder|\Transaction whereDescription($value)
  * @method static \Illuminate\Database\Query\Builder|\Transaction whereAmount($value)
- * @method static \Transaction account($account)
+ * @method static \Transaction accountIs($account)
  * @method static \Transaction after($date)
  * @method static \Transaction before($date)
  * @method static \Transaction lessThan($amount)
@@ -89,7 +89,7 @@ class Transaction extends Ardent
         return $this->belongsTo('Piggybank');
     }
 
-    public function scopeAccount(Builder $query, Account $account)
+    public function scopeAccountIs(Builder $query, Account $account)
     {
         $query->where('transactions.account_id', $account->id);
     }
