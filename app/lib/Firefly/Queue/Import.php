@@ -90,7 +90,7 @@ class Import
         switch ($payload['data']['type']['type']) {
             case 'beneficiary':
                 $payload['class']                = 'Account';
-                $payload['data']['account_type'] = 'Beneficiary account';
+                $payload['data']['account_type'] = 'Expense account';
                 $this->importAccount($job, $payload);
                 break;
             case 'budget':
@@ -135,7 +135,7 @@ class Import
 
         // if Firefly tries to import a beneficiary, Firefly will "merge" already existing ones,
         // so we don't care:
-        if (isset($payload['data']['account_type']) && $payload['data']['account_type'] == 'Beneficiary account') {
+        if (isset($payload['data']['account_type']) && $payload['data']['account_type'] == 'Expense account') {
             // store beneficiary
             $acct = $this->_accounts->createOrFindBeneficiary($payload['data']['name']);
             \Log::debug('Imported ' . $payload['class'] . ' "' . $payload['data']['name'] . '".');
