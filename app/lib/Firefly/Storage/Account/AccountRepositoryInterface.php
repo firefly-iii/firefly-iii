@@ -25,6 +25,16 @@ interface AccountRepositoryInterface
     public function createOrFind($name, \AccountType $type);
 
     /**
+     * Gets a list of accounts that have the mentioned type. Will automatically convert
+     * strings in this array to actual (model) account types.
+     *
+     * @param array $types
+     *
+     * @return Collection
+     */
+    public function getOfTypes(array $types);
+
+    /**
      * @param $name
      *
      * @return mixed

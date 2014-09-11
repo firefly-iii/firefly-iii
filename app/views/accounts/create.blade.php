@@ -2,32 +2,21 @@
 @section('content')
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly
-            <small>Add a new personal account</small>
-        </h1>
-
         <p class="lead">
-            Accounts are the record holders for transactions and transfers. Money moves
-            from one account to another.
+            Something about accounts.
         </p>
     </div>
 </div>
 <div class="row">
     <div class="col-lg-6 col-md-12 col-sm-12">
         <p class="text-info">
-            In a double-entry bookkeeping system (such as this one) there is a "from"-account and a "to"-account,
-            even when money is created from thin air (such as interest, or when new accounts already have a
-            positive balance).
-        </p>
-
-        <p class="text-info"><span class="text-danger">This form creates personal accounts only.</span>
-            If this is your first account, it should be a checking or savings account. Enter its name and if relevant
-            the current balance. Check your bank statements for the last current balance you can find.
+            Something about accounts here!
         </p>
     </div>
 </div>
 
 {{Form::open(['class' => 'form-horizontal','route' => 'accounts.store'])}}
+{{Form::hidden('what',$what)}}
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-12">
         <h4>Mandatory fields</h4>
@@ -47,6 +36,7 @@
 
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12">
+        @if($what == 'asset')
         <h4>Optional fields</h4>
 
         <div class="form-group">
@@ -76,6 +66,7 @@
                 @endif
             </div>
         </div>
+        @endif
 
     </div>
 

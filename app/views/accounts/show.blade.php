@@ -2,16 +2,6 @@
 @section('content')
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly
-            <small>Overview for account "{{{$account->name}}}"</small>
-        </h1>
-    </div>
-</div>
-
-@include('partials.date_nav')
-
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
             <div id="chart"></div>
         </div>
     </div>
