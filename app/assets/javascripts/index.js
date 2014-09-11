@@ -10,7 +10,5 @@
 //
 // The available directives right now are require, require_directory, and require_tree
 //
-//= require highslide/highslide-full.min
-//= require highslide/highslide.config
-//= require_tree highcharts
+//= require highcharts/highcharts
 //= require firefly/index
