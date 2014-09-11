@@ -25,13 +25,20 @@ class Chart implements ChartInterface
     {
         $current = clone $start;
         $today   = new Carbon;
-        $return  = ['name' => $account->name, 'id' => $account->id, 'data' => []];
+        $return  = [
+            'name'          => $account->name,
+            'id'            => $account->id,
+            'type'          => 'spline',
+            'pointStart'    => $start->timestamp * 1000,
+            'pointInterval' => 24 * 3600 * 1000, // one day
+            'data'          => []
+        ];
 
         while ($current <= $end) {
             if ($current > $today) {
-                $return['data'][] = [$current->timestamp * 1000, $account->predict(clone $current)];
+                $return['data'][] = $account->predict(clone $current);
             } else {
-                $return['data'][] = [$current->timestamp * 1000, $account->balance(clone $current)];
+                $return['data'][] = $account->balance(clone $current);
             }
 
             $current->addDay();
@@ -561,19 +568,21 @@ class Chart implements ChartInterface
      *
      * @return mixed
      */
-    public function spentOnLimitRepetitionBetweenDates(\LimitRepetition $repetition, Carbon $start, Carbon $end) {
+    public function spentOnLimitRepetitionBetweenDates(\LimitRepetition $repetition, Carbon $start, Carbon $end)
+    {
         return floatval(
             \Transaction::
-            leftJoin('transaction_journals', 'transaction_journals.id', '=','transactions.transaction_journal_id')
-            ->leftJoin('component_transaction_journal', 'component_transaction_journal.transaction_journal_id','=',
-                'transaction_journals.id'
-            )->where('component_transaction_journal.component_id', '=', $repetition->limit->budget->id)->where(
-                'transaction_journals.date', '>=', $start->format('Y-m-d')
-            )->where('transaction_journals.date', '<=', $end->format('Y-m-d'))->where(
-                'amount', '>', 0
-            )->sum('amount')) ;
+                leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                ->leftJoin(
+                    'component_transaction_journal', 'component_transaction_journal.transaction_journal_id', '=',
+                    'transaction_journals.id'
+                )->where('component_transaction_journal.component_id', '=', $repetition->limit->budget->id)->where(
+                    'transaction_journals.date', '>=', $start->format('Y-m-d')
+                )->where('transaction_journals.date', '<=', $end->format('Y-m-d'))->where(
+                    'amount', '>', 0
+                )->sum('amount')
+        );
     }
-
 
 
 }
