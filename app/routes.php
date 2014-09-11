@@ -125,6 +125,12 @@ Route::group(['before' => 'auth'], function () {
 
         // account controller:
         Route::get('/accounts', ['uses' => 'AccountController@index', 'as' => 'accounts.index']);
+
+        // new routes for new layout:
+        Route::get('/accounts/asset',  ['uses' => 'AccountController@asset', 'as' => 'accounts.asset']);
+        Route::get('/accounts/expense', ['uses' => 'AccountController@expense', 'as' => 'accounts.expense']);
+        Route::get('/accounts/revenue', ['uses' => 'AccountController@revenue', 'as' => 'accounts.revenue']);
+
         Route::get('/accounts/create', ['uses' => 'AccountController@create', 'as' => 'accounts.create']);
         Route::get('/accounts/{account}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
         Route::get('/accounts/{account}/edit', ['uses' => 'AccountController@edit', 'as' => 'accounts.edit']);
