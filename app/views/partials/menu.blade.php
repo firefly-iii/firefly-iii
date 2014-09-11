@@ -52,13 +52,13 @@
                 <a href="#"><i class="fa fa-credit-card fa-fw"></i> Accounts<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a href="{{route('accounts.index')}}"><i class="fa fa-money fa-fw"></i> Asset accounts</a>
+                        <a href="{{route('accounts.asset')}}"><i class="fa fa-money fa-fw"></i> Asset accounts</a>
                     </li>
                     <li>
-                        <a href="{{route('accounts.index')}}"><i class="fa fa-shopping-cart fa-fw"></i> Expense accounts</a>
+                        <a href="{{route('accounts.expense')}}"><i class="fa fa-shopping-cart fa-fw"></i> Expense accounts</a>
                     </li>
                     <li>
-                        <a href="{{route('accounts.index')}}"><i class="fa fa-download fa-fw"></i> Revenue accounts</a>
+                        <a href="{{route('accounts.revenue')}}"><i class="fa fa-download fa-fw"></i> Revenue accounts</a>
                     </li>
                 </ul>
                 <!-- /.nav-second-level -->
