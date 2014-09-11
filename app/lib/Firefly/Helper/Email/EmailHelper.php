@@ -38,7 +38,7 @@ class EmailHelper implements EmailHelperInterface
     {
 
         $password = \Str::random(12);
-        $user->password = $password;
+        $user->password = \Hash::make($password);
         $user->reset = \Str::random(32); // new one.
         $user->forceSave();
         $email = $user->email;
