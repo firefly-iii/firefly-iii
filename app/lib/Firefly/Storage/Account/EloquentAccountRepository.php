@@ -44,6 +44,16 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @param              $name
+     * @param \AccountType $type
+     *
+     * @return \Account
+     */
+    public function findByNameAndAccountType($name, \AccountType $type) {
+        return $this->_user->accounts()->where('name',$name)->where('account_type_id',$type->id)->first();
+    }
+
+    /**
      * @return mixed
      */
     public function count()
@@ -155,44 +165,44 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         // whatever the result, return the account.
         return $account;
     }
-//
-//    /**
-//     * @param \Account $account
-//     * @param int      $amount
-//     * @param Carbon   $date
-//     *
-//     * @return bool
-//     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
-//     */
-//    protected function _createInitialBalance(\Account $account, $amount = 0, Carbon $date)
-//    {
-//        // get account type:
-//        $initialBalanceAT = \AccountType::where('type', 'Initial balance account')->first();
-//
-//        // create new account:
-//        $initial = new \Account;
-//        $initial->accountType()->associate($initialBalanceAT);
-//        $initial->user()->associate($this->_user);
-//        $initial->name   = $account->name . ' initial balance';
-//        $initial->active = 0;
-//        if ($initial->validate()) {
-//            $initial->save();
-//            // create new transaction journal (and transactions):
-//            /** @var \Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface $transactionJournal */
-//            $transactionJournal = \App::make(
-//                'Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface'
-//            );
-//            $transactionJournal->overruleUser($this->_user);
-//
-//            $transactionJournal->createSimpleJournal(
-//                $initial, $account, 'Initial Balance for ' . $account->name, $amount, $date
-//            );
-//
-//            return true;
-//        }
-//
-//        return false;
-//    }
+
+    /**
+     * @param \Account $account
+     * @param int      $amount
+     * @param Carbon   $date
+     *
+     * @return bool
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     */
+    protected function _createInitialBalance(\Account $account, $amount = 0, Carbon $date)
+    {
+        // get account type:
+        $initialBalanceAT = \AccountType::where('type', 'Initial balance account')->first();
+
+        // create new account:
+        $initial = new \Account;
+        $initial->accountType()->associate($initialBalanceAT);
+        $initial->user()->associate($this->_user);
+        $initial->name   = $account->name . ' initial balance';
+        $initial->active = 0;
+        if ($initial->validate()) {
+            $initial->save();
+            // create new transaction journal (and transactions):
+            /** @var \Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface $transactionJournal */
+            $transactionJournal = \App::make(
+                'Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface'
+            );
+            $transactionJournal->overruleUser($this->_user);
+
+            $transactionJournal->createSimpleJournal(
+                $initial, $account, 'Initial Balance for ' . $account->name, $amount, $date
+            );
+
+            return true;
+        }
+
+        return false;
+    }
 
     /**
      * @param \Account $account

@@ -32,11 +32,14 @@
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">
+                    @if(isset($mainTitleIcon))
+                        <i class="fa {{{$mainTitleIcon}}}"></i>
+                    @endif
                     {{$title or '(no title)'}}
                     @if(isset($subTitle))
                         <small>
-                            @if(isset($titleIcon))
-                                <i class="fa {{{$titleIcon}}}"></i>
+                            @if(isset($subTitleIcon))
+                                <i class="fa {{{$subTitleIcon}}}"></i>
                             @endif
                             {{$subTitle}}
                         </small>
