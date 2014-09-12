@@ -169,7 +169,8 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
 
         // JSON controller:
-        Route::get('/json/beneficiaries', ['uses' => 'JsonController@beneficiaries', 'as' => 'json.beneficiaries']);
+        Route::get('/json/expense-accounts', ['uses' => 'JsonController@expenseAccounts', 'as' => 'json.expense']);
+        Route::get('/json/revenue-accounts', ['uses' => 'JsonController@revenueAccounts', 'as' => 'json.revenue']);
         Route::get('/json/categories', ['uses' => 'JsonController@categories', 'as' => 'json.categories']);
 
         // limit controller:
@@ -222,6 +223,9 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/transaction/edit/{tj}',['uses' => 'TransactionController@edit','as' => 'transactions.edit']);
         Route::get('/transaction/delete/{tj}',['uses' => 'TransactionController@delete','as' => 'transactions.delete']);
         Route::get('/transactions/index',['uses' => 'TransactionController@index','as' => 'transactions.index']);
+        Route::get('/transactions/expenses',['uses' => 'TransactionController@expenses','as' => 'transactions.expenses']);
+        Route::get('/transactions/revenue',['uses' => 'TransactionController@revenue','as' => 'transactions.revenue']);
+        Route::get('/transactions/transfers',['uses' => 'TransactionController@transfers','as' => 'transactions.transfers']);
 
         // user controller
         Route::get('/logout', ['uses' => 'UserController@logout', 'as' => 'logout']);
