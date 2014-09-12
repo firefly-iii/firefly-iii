@@ -95,6 +95,18 @@ use LaravelBook\Ardent\Builder;
  *                     'Budget[] $budgets
  * @property-read \Illuminate\Database\Eloquent\Collection|\
  *                     'Category[] $categories
+ * @property integer $recurring_transaction_id
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *                     'Budget[] $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *                     'Category[] $categories
+ * @property-read \RecurringTransaction $recurringTransaction
+ * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereRecurringTransactionId($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *                     'Budget[] $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *                     'Category[] $categories
+ * @method static \TransactionJournal accountIs($account) 
  */
 class TransactionJournal extends Ardent
 {
@@ -153,7 +165,11 @@ class TransactionJournal extends Ardent
         return ['created_at', 'updated_at', 'date'];
     }
 
-    public function scopeAccount(Builder $query, \Account $account)
+    /**
+     * @param Builder $query
+     * @param Account $account
+     */
+    public function scopeAccountIs(Builder $query, \Account $account)
     {
         if (!isset($this->joinedTransactions)) {
             $query->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id');

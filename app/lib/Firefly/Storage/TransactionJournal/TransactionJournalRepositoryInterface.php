@@ -16,7 +16,7 @@ interface TransactionJournalRepositoryInterface
      * @param \Account $toAccount
      * @param          $description
      * @param          $amount
-     * @param Carbon $date
+     * @param Carbon   $date
      *
      * @return mixed
      */
@@ -27,8 +27,10 @@ interface TransactionJournalRepositoryInterface
      */
     public function get();
 
+
     /**
      * @param \User $user
+     *
      * @return mixed
      */
     public function overruleUser(\User $user);
@@ -50,6 +52,13 @@ interface TransactionJournalRepositoryInterface
     public function update(\TransactionJournal $journal, $data);
 
     /**
+     * @param $type
+     *
+     * @return \TransactionType
+     */
+    public function getTransactionType($type);
+
+    /**
      * @param $journalId
      *
      * @return mixed
@@ -58,9 +67,9 @@ interface TransactionJournalRepositoryInterface
 
     /**
      * @param \Account $account
-     * @param int $count
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param int      $count
+     * @param Carbon   $start
+     * @param Carbon   $end
      *
      * @return mixed
      */
@@ -68,17 +77,20 @@ interface TransactionJournalRepositoryInterface
 
     /**
      * @param \Account $account
-     * @param Carbon $date
+     * @param Carbon   $date
      *
      * @return mixed
      */
     public function getByAccountAndDate(\Account $account, Carbon $date);
 
     /**
-     * @param int $count
+     * @param \TransactionType $type
+     * @param int              $count
+     * @param Carbon           $start
+     * @param Carbon           $end
      *
      * @return mixed
      */
-    public function paginate($count = 25, Carbon $start = null, Carbon $end = null);
+    public function paginate(\TransactionType $type, $count = 25, Carbon $start = null, Carbon $end = null);
 
 }
