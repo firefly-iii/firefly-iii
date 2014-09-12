@@ -15,12 +15,18 @@ class EloquentAccountRepository implements AccountRepositoryInterface
 
     protected $_user = null;
 
+
+
     /**
      *
      */
     public function __construct()
     {
         $this->_user = \Auth::user();
+    }
+
+    public function firstOrCreate(array $data) {
+        return \Account::firstOrCreate($data);
     }
 
     /**
@@ -45,56 +51,56 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         return $this->_user->accounts()->count();
 
     }
-
-    /**
-     * @param $name
-     *
-     * @return \Account|mixed|null
-     */
-    public function createOrFindBeneficiary($name)
-    {
-        if (is_null($name) || strlen($name) == 0) {
-            return null;
-        }
-        $type = \AccountType::where('type', 'Expense account')->first();
-        return $this->createOrFind($name, $type);
-    }
-
-    /**
-     * @param              $name
-     * @param \AccountType $type
-     *
-     * @return \Account|mixed
-     */
-    public function createOrFind($name, \AccountType $type = null)
-    {
-        $account = $this->findByName($name, $type);
-        if (!$account) {
-            $data = [
-                'name'         => $name,
-                'account_type' => $type
-            ];
-
-            return $this->store($data);
-        }
-
-        return $account;
-    }
-
-    /**
-     * @param              $name
-     * @param \AccountType $type
-     *
-     * @return mixed
-     */
-    public function findByName($name, \AccountType $type = null)
-    {
-        $type = is_null($type) ? \AccountType::where('type', 'Asset account')->first() : $type;
-
-        return $this->_user->accounts()->where('account_type_id', $type->id)
-            ->where('name', 'like', '%' . $name . '%')
-            ->first();
-    }
+//
+//    /**
+//     * @param $name
+//     *
+//     * @return \Account|mixed|null
+//     */
+//    public function createOrFindBeneficiary($name)
+//    {
+//        if (is_null($name) || strlen($name) == 0) {
+//            return null;
+//        }
+//        $type = \AccountType::where('type', 'Expense account')->first();
+//        return $this->createOrFind($name, $type);
+//    }
+//
+//    /**
+//     * @param              $name
+//     * @param \AccountType $type
+//     *
+//     * @return \Account|mixed
+//     */
+//    public function createOrFind($name, \AccountType $type = null)
+//    {
+//        $account = $this->findByName($name, $type);
+//        if (!$account) {
+//            $data = [
+//                'name'         => $name,
+//                'account_type' => $type
+//            ];
+//
+//            return $this->store($data);
+//        }
+//
+//        return $account;
+//    }
+//
+//    /**
+//     * @param              $name
+//     * @param \AccountType $type
+//     *
+//     * @return mixed
+//     */
+//    public function findByName($name, \AccountType $type = null)
+//    {
+//        $type = is_null($type) ? \AccountType::where('type', 'Asset account')->first() : $type;
+//
+//        return $this->_user->accounts()->where('account_type_id', $type->id)
+//            ->where('name', 'like', '%' . $name . '%')
+//            ->first();
+//    }
 
     /**
      * @param $data
@@ -149,44 +155,44 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         // whatever the result, return the account.
         return $account;
     }
-
-    /**
-     * @param \Account $account
-     * @param int      $amount
-     * @param Carbon   $date
-     *
-     * @return bool
-     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
-     */
-    protected function _createInitialBalance(\Account $account, $amount = 0, Carbon $date)
-    {
-        // get account type:
-        $initialBalanceAT = \AccountType::where('type', 'Initial balance account')->first();
-
-        // create new account:
-        $initial = new \Account;
-        $initial->accountType()->associate($initialBalanceAT);
-        $initial->user()->associate($this->_user);
-        $initial->name   = $account->name . ' initial balance';
-        $initial->active = 0;
-        if ($initial->validate()) {
-            $initial->save();
-            // create new transaction journal (and transactions):
-            /** @var \Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface $transactionJournal */
-            $transactionJournal = \App::make(
-                'Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface'
-            );
-            $transactionJournal->overruleUser($this->_user);
-
-            $transactionJournal->createSimpleJournal(
-                $initial, $account, 'Initial Balance for ' . $account->name, $amount, $date
-            );
-
-            return true;
-        }
-
-        return false;
-    }
+//
+//    /**
+//     * @param \Account $account
+//     * @param int      $amount
+//     * @param Carbon   $date
+//     *
+//     * @return bool
+//     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+//     */
+//    protected function _createInitialBalance(\Account $account, $amount = 0, Carbon $date)
+//    {
+//        // get account type:
+//        $initialBalanceAT = \AccountType::where('type', 'Initial balance account')->first();
+//
+//        // create new account:
+//        $initial = new \Account;
+//        $initial->accountType()->associate($initialBalanceAT);
+//        $initial->user()->associate($this->_user);
+//        $initial->name   = $account->name . ' initial balance';
+//        $initial->active = 0;
+//        if ($initial->validate()) {
+//            $initial->save();
+//            // create new transaction journal (and transactions):
+//            /** @var \Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface $transactionJournal */
+//            $transactionJournal = \App::make(
+//                'Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface'
+//            );
+//            $transactionJournal->overruleUser($this->_user);
+//
+//            $transactionJournal->createSimpleJournal(
+//                $initial, $account, 'Initial Balance for ' . $account->name, $amount, $date
+//            );
+//
+//            return true;
+//        }
+//
+//        return false;
+//    }
 
     /**
      * @param \Account $account
@@ -249,19 +255,19 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         return \AccountType::where('type', $type)->first();
     }
 
-    /**
-     * Used for import
-     *
-     * @param              $name
-     *
-     * @return mixed
-     */
-    public function findByNameAny($name)
-    {
-        return $this->_user->accounts()
-            ->where('name', 'like', '%' . $name . '%')
-            ->first();
-    }
+//    /**
+//     * Used for import
+//     *
+//     * @param              $name
+//     *
+//     * @return mixed
+//     */
+//    public function findByNameAny($name)
+//    {
+//        return $this->_user->accounts()
+//            ->where('name', 'like', '%' . $name . '%')
+//            ->first();
+//    }
 
     /**
      * @return mixed
@@ -271,19 +277,19 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         return $this->_user->accounts()->with('accounttype')->orderBy('name', 'ASC')->get();
     }
 
-    /**
-     * @return array|mixed
-     */
-    public function  getActiveDefaultAsSelectList()
-    {
-        $list   = $this->getActiveDefault();
-        $return = [];
-        foreach ($list as $entry) {
-            $return[intval($entry->id)] = $entry->name;
-        }
-
-        return $return;
-    }
+//    /**
+//     * @return array|mixed
+//     */
+//    public function  getActiveDefaultAsSelectList()
+//    {
+//        $list   = $this->getActiveDefault();
+//        $return = [];
+//        foreach ($list as $entry) {
+//            $return[intval($entry->id)] = $entry->name;
+//        }
+//
+//        return $return;
+//    }
 
     /**
      * @return mixed
@@ -297,19 +303,19 @@ class EloquentAccountRepository implements AccountRepositoryInterface
             ->get(['accounts.*']);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getBeneficiaries()
-    {
-        $list = $this->_user->accounts()->accountTypeIn(['Beneficiary account', 'Expense account'])->where(
-            'accounts.active', 1
-        )->orderBy(
-                'accounts.name', 'ASC'
-            )->get(['accounts.*']);
-
-        return $list;
-    }
+//    /**
+//     * @return mixed
+//     */
+//    public function getBeneficiaries()
+//    {
+//        $list = $this->_user->accounts()->accountTypeIn(['Beneficiary account', 'Expense account'])->where(
+//            'accounts.active', 1
+//        )->orderBy(
+//                'accounts.name', 'ASC'
+//            )->get(['accounts.*']);
+//
+//        return $list;
+//    }
 
     public function getByAccountType(\AccountType $type)
     {

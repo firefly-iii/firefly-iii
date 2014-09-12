@@ -81,19 +81,27 @@
                 <a href="#"><i class="fa fa-tags fa-fw"></i> Tags</a>
             </li>
             <li>
-                <a href="#"><i class="fa fa-tags fa-fw"></i> Reports</a>
+                <a href="#"><i class="fa fa-line-chart fa-fw"></i> Reports</a>
             </li>
-            <li>
+            <li
+            @if(
+            !(strpos($r,'transactions.expenses') === false) ||
+            !(strpos($r,'transactions.revenue') === false) ||
+            !(strpos($r,'transactions.transfers') === false)
+            )
+            class="active"
+            @endif
+                >
                 <a href="{{route('transactions.index')}}"><i class="fa fa-repeat fa-fw"></i> Transactions<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a href="#"><i class="fa fa-long-arrow-left fa-fw"></i> Expenses</a>
+                        <a @if($r == 'transactions.expenses') class="active" @endif href="{{route('transactions.expenses')}}"><i class="fa fa-long-arrow-left fa-fw"></i> Expenses</a>
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-long-arrow-right fa-fw"></i> Revenue / income</a>
+                        <a @if($r == 'transactions.revenue') class="active" @endif href="{{route('transactions.revenue')}}"><i class="fa fa-long-arrow-right fa-fw"></i> Revenue / income</a>
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-arrows-h fa-fw"></i> Transfers</a>
+                        <a @if($r == 'transactions.transfers') class="active" @endif href="{{route('transactions.transfers')}}"><i class="fa fa-arrows-h fa-fw"></i> Transfers</a>
                     </li>
                 </ul>
 
@@ -113,17 +121,21 @@
                 </ul>
                 <!-- /.nav-second-level -->
             </li>
-            <li>
+            <li
+                @if( !(strpos($r,'transactions.create') === false) )
+                    class="active"
+                @endif
+                >
                 <a href="#"><i class="fa fa-plus fa-fw"></i> Create new<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a href="{{route('transactions.create','withdrawal')}}"><i class="fa fa-long-arrow-left fa-fw"></i> Withdrawal</a>
+                        <a @if($r == 'transactions.create' && isset($what) && $what == 'withdrawal') class="active" @endif href="{{route('transactions.create','withdrawal')}}"><i class="fa fa-long-arrow-left fa-fw"></i> Withdrawal</a>
                     </li>
                     <li>
-                        <a href="{{route('transactions.create','withdrawal')}}"><i class="fa fa-long-arrow-right fa-fw"></i> Deposit</a>
+                        <a @if($r == 'transactions.create' && isset($what) && $what == 'deposit') class="active" @endif href="{{route('transactions.create','deposit')}}"><i class="fa fa-long-arrow-right fa-fw"></i> Deposit</a>
                     </li>
                     <li>
-                        <a href="{{route('transactions.create','transfer')}}"><i class="fa fa-arrows-h fa-fw"></i> Transfer</a>
+                        <a @if($r == 'transactions.create' && isset($what) && $what == 'transfer') class="active" @endif href="{{route('transactions.create','transfer')}}"><i class="fa fa-arrows-h fa-fw"></i> Transfer</a>
                     </li>
                     <!--
                     <li>

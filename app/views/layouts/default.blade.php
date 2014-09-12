@@ -9,6 +9,9 @@
     @if(isset($title) && $title != 'Firefly')
         // {{{$title}}}
     @endif
+    @if(isset($subTitle))
+        // {{{$subTitle}}}
+    @endif
     </title>
 
     <?php echo stylesheet_link_tag(); ?>
@@ -28,9 +31,15 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">{{$title or '(no title)'}}
+                <h1 class="page-header">
+                    {{$title or '(no title)'}}
                     @if(isset($subTitle))
-                        <small>{{$subTitle}}</small>
+                        <small>
+                            @if(isset($titleIcon))
+                                <i class="fa {{{$titleIcon}}}"></i>
+                            @endif
+                            {{$subTitle}}
+                        </small>
                     @endif
                 </h1>
             </div>
