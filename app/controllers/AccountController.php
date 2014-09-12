@@ -43,7 +43,7 @@ class AccountController extends \BaseController
 
         return View::make('accounts.asset')->with('title', 'Accounts')->with('subTitle', 'Asset accounts')->with(
             'accounts', $accounts
-        );
+        )->with('titleIcon','fa-money');
     }
 
     /**
