@@ -25,134 +25,6 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
     }
 
     /**
-     *
-     * We're building this thinking the money goes from A to B.
-     * If the amount is negative however, the money still goes
-     * from A to B but the balances are reversed.
-     *
-     * Aka:
-     *
-     * Amount = 200
-     * A loses 200 (-200).  * -1
-     * B gains 200 (200).    * 1
-     *
-     * Final balance: -200 for A, 200 for B.
-     *
-     * When the amount is negative:
-     *
-     * Amount = -200
-     * A gains 200 (200). * -1
-     * B loses 200 (-200). * 1
-     *
-     * @param \Account $from
-     * @param \Account $toAccount
-     * @param                $description
-     * @param                $amount
-     * @param \Carbon\Carbon $date
-     *
-     * @return \TransactionJournal
-     * @throws \Firefly\Exception\FireflyException
-     */
-    public function createSimpleJournal(\Account $from, \Account $toAccount, $description, $amount, Carbon $date)
-    {
-        $journal = new \TransactionJournal;
-
-        $amountFrom = $amount * -1;
-        $amountTo   = $amount;
-
-        if (round(floatval($amount), 2) == 0.00) {
-            $journal->errors()->add('amount', 'Amount must not be zero.');
-
-            return $journal;
-        }
-        // same account:
-        if ($from->id == $toAccount->id) {
-            $journal->errors()->add('account_id', 'Must be different accounts.');
-            $journal->errors()->add('account_from_id', 'Must be different accounts.');
-
-            return $journal;
-        }
-
-        // account types for both:
-        $toAT   = $toAccount->accountType->type;
-        $fromAT = $from->accountType->type;
-
-        $journalType = null;
-
-        switch (true) {
-            case ($from->transactions()->count() == 0 && $toAccount->transactions()->count() == 0):
-                $journalType = \TransactionType::where('type', 'Opening balance')->first();
-                break;
-
-            case (in_array($fromAT,['Default account','Asset account']) && in_array($toAT,['Default account','Asset account'])): // both are yours:
-                // determin transaction type. If both accounts are new, it's an initial balance transfer.
-                $journalType = \TransactionType::where('type', 'Transfer')->first();
-                break;
-            case ($amount < 0):
-                $journalType = \TransactionType::where('type', 'Deposit')->first();
-                break;
-            // is deposit into one of your own accounts:
-            case ($toAT == 'Default account' || $toAT == 'Asset account'):
-                $journalType = \TransactionType::where('type', 'Deposit')->first();
-                break;
-            // is withdrawal from one of your own accounts:
-            case ($fromAT == 'Default account' || $fromAT == 'Asset account'):
-                $journalType = \TransactionType::where('type', 'Withdrawal')->first();
-                break;
-        }
-
-        if (is_null($journalType)) {
-            throw new FireflyException('Could not figure out transaction type.');
-        }
-
-        // always the same currency:
-        $currency = \TransactionCurrency::where('code', 'EUR')->first();
-        if (is_null($currency)) {
-            throw new FireflyException('No currency for journal!');
-        }
-
-        // new journal:
-
-        $journal->transactionType()->associate($journalType);
-        $journal->transactionCurrency()->associate($currency);
-        $journal->user()->associate($this->_user);
-        $journal->completed   = false;
-        $journal->description = $description;
-        $journal->date        = $date;
-        if (!$journal->validate()) {
-            return $journal;
-        }
-        $journal->save();
-
-        // create transactions:
-        $fromTransaction = new \Transaction;
-        $fromTransaction->account()->associate($from);
-        $fromTransaction->transactionJournal()->associate($journal);
-        $fromTransaction->description = null;
-        $fromTransaction->amount      = $amountFrom;
-        if (!$fromTransaction->validate()) {
-            throw new FireflyException('Cannot create valid transaction (from): ' . $fromTransaction->errors()
-                                                                                                    ->first());
-        }
-        $fromTransaction->save();
-
-        $toTransaction = new \Transaction;
-        $toTransaction->account()->associate($toAccount);
-        $toTransaction->transactionJournal()->associate($journal);
-        $toTransaction->description = null;
-        $toTransaction->amount      = $amountTo;
-        if (!$toTransaction->validate()) {
-            throw new FireflyException('Cannot create valid transaction (to): ' . $toTransaction->errors()->first());
-        }
-        $toTransaction->save();
-
-        $journal->completed = true;
-        $journal->save();
-
-        return $journal;
-    }
-
-    /**
      * @param $journalId
      *
      * @return mixed
@@ -160,12 +32,12 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
     public function find($journalId)
     {
         return $this->_user->transactionjournals()->with(
-                           ['transactions' => function ($q) {
-                                   return $q->orderBy('amount', 'ASC');
-                               }, 'transactioncurrency', 'transactiontype', 'components', 'transactions.account',
-                               'transactions.account.accounttype']
+            ['transactions' => function ($q) {
+                    return $q->orderBy('amount', 'ASC');
+                }, 'transactioncurrency', 'transactiontype', 'components', 'transactions.account',
+             'transactions.account.accounttype']
         )
-                           ->where('id', $journalId)->first();
+            ->where('id', $journalId)->first();
     }
 
     /**
@@ -177,8 +49,18 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
     }
 
     /**
+     * @param $type
+     *
+     * @return \TransactionType
+     */
+    public function getTransactionType($type)
+    {
+        return \TransactionType::whereType($type)->first();
+    }
+
+    /**
      * @param \Account $account
-     * @param Carbon $date
+     * @param Carbon   $date
      *
      * @return mixed
      */
@@ -186,31 +68,33 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
     {
         $accountID = $account->id;
         $query     = $this->_user->transactionjournals()->with(
-                                 [
-                                     'transactions',
-                                     'transactions.account',
-                                     'transactioncurrency',
-                                     'transactiontype'
-                                 ]
+            [
+                'transactions',
+                'transactions.account',
+                'transactioncurrency',
+                'transactiontype'
+            ]
         )
-                                 ->distinct()
-                                 ->leftJoin('transactions', 'transactions.transaction_journal_id', '=',
-                'transaction_journals.id')
-                                 ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                                 ->where('transactions.account_id', $accountID)
-                                 ->where('transaction_journals.date', $date->format('Y-m-d'))
-                                 ->orderBy('transaction_journals.date', 'DESC')
-                                 ->orderBy('transaction_journals.id', 'DESC')
-                                 ->get(['transaction_journals.*']);
+            ->distinct()
+            ->leftJoin(
+                'transactions', 'transactions.transaction_journal_id', '=',
+                'transaction_journals.id'
+            )
+            ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+            ->where('transactions.account_id', $accountID)
+            ->where('transaction_journals.date', $date->format('Y-m-d'))
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.id', 'DESC')
+            ->get(['transaction_journals.*']);
 
         return $query;
     }
 
     /**
      * @param \Account $account
-     * @param int $count
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param int      $count
+     * @param Carbon   $start
+     * @param Carbon   $end
      *
      * @return mixed
      */
@@ -218,28 +102,31 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
     {
         $accountID = $account->id;
         $query     = $this->_user->transactionjournals()->with(
-                                 [
-                                     'transactions',
-                                     'transactioncurrency',
-                                     'transactiontype'
-                                 ]
+            [
+                'transactions',
+                'transactioncurrency',
+                'transactiontype'
+            ]
         )
-                                 ->leftJoin('transactions', 'transactions.transaction_journal_id', '=',
-                'transaction_journals.id')
-                                 ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                                 ->where('accounts.id', $accountID)
-                                 ->where('date', '>=', $start->format('Y-m-d'))
-                                 ->where('date', '<=', $end->format('Y-m-d'))
-                                 ->orderBy('transaction_journals.date', 'DESC')
-                                 ->orderBy('transaction_journals.id', 'DESC')
-                                 ->take($count)
-                                 ->get(['transaction_journals.*']);
+            ->leftJoin(
+                'transactions', 'transactions.transaction_journal_id', '=',
+                'transaction_journals.id'
+            )
+            ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+            ->where('accounts.id', $accountID)
+            ->where('date', '>=', $start->format('Y-m-d'))
+            ->where('date', '<=', $end->format('Y-m-d'))
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.id', 'DESC')
+            ->take($count)
+            ->get(['transaction_journals.*']);
 
         return $query;
     }
 
     /**
      * @param \User $user
+     *
      * @return mixed|void
      */
     public function overruleUser(\User $user)
@@ -249,15 +136,19 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
     }
 
     /**
-     * @param int $count
+     * @param \TransactionType $type
+     * @param int              $count
+     * @param Carbon           $start
+     * @param Carbon           $end
      *
      * @return mixed
      */
-    public function paginate($count = 25, Carbon $start = null, Carbon $end = null)
+    public function paginate(\TransactionType $type, $count = 25, Carbon $start = null, Carbon $end = null)
     {
         $query = $this->_user->transactionjournals()->WithRelevantData()
-                             ->orderBy('transaction_journals.date', 'DESC')
-                             ->orderBy('transaction_journals.id', 'DESC');
+            ->transactionTypes([$type->type])
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.id', 'DESC');
         if (!is_null($start)) {
             $query->where('transaction_journals.date', '>=', $start->format('Y-m-d'));
         }
@@ -265,10 +156,11 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
             $query->where('transaction_journals.date', '<=', $end->format('Y-m-d'));
         }
 
-        $result = $query->paginate($count);
+        $result = $query->select(['transaction_journals.*'])->paginate($count);
 
         return $result;
     }
+
 
     /**
      * @param $what
@@ -299,12 +191,25 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
 
         switch ($what) {
             case 'withdrawal':
-                $fromAccount = $accountRepository->find(intval($data['account_id']));
-                $toAccount   = $accountRepository->createOrFindBeneficiary($data['beneficiary']);
+                $fromAccount        = $accountRepository->find(intval($data['account_id']));
+                $expenseAccountType = $accountRepository->findAccountType('Expense account');
+                $set                = [
+                    'name'            => $data['expense_account'],
+                    'account_type_id' => $expenseAccountType->id,
+                    'user_id'         => $this->_user->id,
+                    'active'          => 1];
+                $toAccount          = $accountRepository->firstOrCreate($set);
                 break;
 
             case 'deposit':
-                $fromAccount = $accountRepository->createOrFindBeneficiary($data['beneficiary']);
+                $revenueAccountType = $accountRepository->findAccountType('Revenue account');
+                $set                = [
+                    'name'            => $data['revenue_account'],
+                    'account_type_id' => $revenueAccountType->id,
+                    'user_id'         => $this->_user->id,
+                    'active'          => 1];
+
+                $fromAccount = $accountRepository->firstOrCreate($set);
                 $toAccount   = $accountRepository->find(intval($data['account_id']));
                 break;
             case 'transfer':
@@ -353,15 +258,15 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
                             $transaction->piggybank()->associate($piggyBank);
                             $transaction->save();
                             \Event::fire(
-                                  'piggybanks.createRelatedTransfer', [$piggyBank, $transactionJournal, $transaction]
+                                'piggybanks.createRelatedTransfer', [$piggyBank, $transactionJournal, $transaction]
                             );
                             break;
                         }
                     }
                     if ($connected === false) {
                         \Session::flash(
-                                'warning', 'Piggy bank "' . e($piggyBank->name)
-                                    . '" is not set to draw money from any of the accounts in this transfer'
+                            'warning', 'Piggy bank "' . e($piggyBank->name)
+                            . '" is not set to draw money from any of the accounts in this transfer'
                         );
                     }
                 }
@@ -378,6 +283,142 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         }
 
         return $transactionJournal;
+    }
+
+    /**
+     *
+     * We're building this thinking the money goes from A to B.
+     * If the amount is negative however, the money still goes
+     * from A to B but the balances are reversed.
+     *
+     * Aka:
+     *
+     * Amount = 200
+     * A loses 200 (-200).  * -1
+     * B gains 200 (200).    * 1
+     *
+     * Final balance: -200 for A, 200 for B.
+     *
+     * When the amount is negative:
+     *
+     * Amount = -200
+     * A gains 200 (200). * -1
+     * B loses 200 (-200). * 1
+     *
+     * @param \Account       $from
+     * @param \Account       $toAccount
+     * @param                $description
+     * @param                $amount
+     * @param \Carbon\Carbon $date
+     *
+     * @return \TransactionJournal
+     * @throws \Firefly\Exception\FireflyException
+     */
+    public function createSimpleJournal(\Account $fromAccount, \Account $toAccount, $description, $amount, Carbon $date)
+    {
+        $journal = new \TransactionJournal;
+        $journal->completed   = false;
+        $journal->description = $description;
+        $journal->date        = $date;
+
+        $amountFrom = $amount * -1;
+        $amountTo   = $amount;
+
+        if (round(floatval($amount), 2) == 0.00) {
+            $journal->errors()->add('amount', 'Amount must not be zero.');
+
+            return $journal;
+        }
+
+        // account types for both:
+        $toAT   = $toAccount->accountType->type;
+        $fromAT = $fromAccount->accountType->type;
+
+        $journalType = null;
+
+        switch (true) {
+            case ($fromAccount->transactions()->count() == 0 && $toAccount->transactions()->count() == 0):
+                $journalType = \TransactionType::where('type', 'Opening balance')->first();
+                break;
+
+            case (in_array($fromAT, ['Default account', 'Asset account'])
+                && in_array(
+                    $toAT, ['Default account', 'Asset account']
+                )): // both are yours:
+                // determin transaction type. If both accounts are new, it's an initial balance transfer.
+                $journalType = \TransactionType::where('type', 'Transfer')->first();
+                break;
+            case ($amount < 0):
+                $journalType = \TransactionType::where('type', 'Deposit')->first();
+                break;
+            // is deposit into one of your own accounts:
+            case ($toAT == 'Default account' || $toAT == 'Asset account'):
+                $journalType = \TransactionType::where('type', 'Deposit')->first();
+                break;
+            // is withdrawal from one of your own accounts:
+            case ($fromAT == 'Default account' || $fromAT == 'Asset account'):
+                $journalType = \TransactionType::where('type', 'Withdrawal')->first();
+                break;
+        }
+
+        if (is_null($journalType)) {
+            throw new FireflyException('Could not figure out transaction type.');
+        }
+
+
+
+        // always the same currency:
+        $currency = \TransactionCurrency::where('code', 'EUR')->first();
+        if (is_null($currency)) {
+            throw new FireflyException('No currency for journal!');
+        }
+
+        // new journal:
+
+        $journal->transactionType()->associate($journalType);
+        $journal->transactionCurrency()->associate($currency);
+        $journal->user()->associate($this->_user);
+
+        // same account:
+        if ($fromAccount->id == $toAccount->id) {
+
+            $journal->errors()->add('account_to_id', 'Must be different from the "account from".');
+            $journal->errors()->add('account_from_id', 'Must be different from the "account to".');
+            return $journal;
+        }
+
+
+        if (!$journal->validate()) {
+            return $journal;
+        }
+        $journal->save();
+
+        // create transactions:
+        $fromTransaction = new \Transaction;
+        $fromTransaction->account()->associate($fromAccount);
+        $fromTransaction->transactionJournal()->associate($journal);
+        $fromTransaction->description = null;
+        $fromTransaction->amount      = $amountFrom;
+        if (!$fromTransaction->validate()) {
+            throw new FireflyException('Cannot create valid transaction (from): ' . $fromTransaction->errors()
+                    ->first());
+        }
+        $fromTransaction->save();
+
+        $toTransaction = new \Transaction;
+        $toTransaction->account()->associate($toAccount);
+        $toTransaction->transactionJournal()->associate($journal);
+        $toTransaction->description = null;
+        $toTransaction->amount      = $amountTo;
+        if (!$toTransaction->validate()) {
+            throw new FireflyException('Cannot create valid transaction (to): ' . $toTransaction->errors()->first());
+        }
+        $toTransaction->save();
+
+        $journal->completed = true;
+        $journal->save();
+
+        return $journal;
     }
 
     /**
@@ -496,8 +537,8 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
                         }
                         if ($connected === false) {
                             \Session::flash(
-                                    'warning', 'Piggy bank "' . e($piggyBank->name)
-                                        . '" is not set to draw money from any of the accounts in this transfer'
+                                'warning', 'Piggy bank "' . e($piggyBank->name)
+                                . '" is not set to draw money from any of the accounts in this transfer'
                             );
                         }
                     }

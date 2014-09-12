@@ -1,21 +1,10 @@
 @extends('layouts.default')
 @section('content')
 <div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly
-            <small>Add a new {{$what}}</small>
-        </h1>
-    </div>
-</div>
-<div class="row">
     <div class="col-lg-6 col-md-12 col-sm-12">
         <p class="text-info">
-            Technically speaking, withdrawals, deposits and transfers are all transactions, moving money from
-            account <em>A</em> to account <em>B</em>.
-        </p>
-        <p class="text-info">
             @if($what == 'withdrawal')
-            A withdrawal is when you spend money on something, moving an amount to a <em>beneficiary</em>.
+            Some text about moving from asset accounts to expense accounts
             @endif
             @if($what == 'deposit')
             A deposit is when you earn money, moving an amount from a beneficiary into your own account.
@@ -49,12 +38,7 @@
         @if($what == 'deposit' || $what == 'withdrawal')
         <div class="form-group">
             <label for="account_id" class="col-sm-4 control-label">
-                @if($what == 'deposit')
-                Receiving account
-                @endif
-                @if($what == 'withdrawal')
-                Paid from account
-                @endif
+                Asset account
             </label>
             <div class="col-sm-8">
                 {{Form::select('account_id',$accounts,Input::old('account_id') ?: Input::get('account_id'),['class' => 'form-control'])}}
@@ -65,23 +49,33 @@
         </div>
         @endif
 
-        <!-- SHOW BENEFICIARY (ACCOUNT TO) ONLY FOR WITHDRAWALS AND DEPOSITS -->
-        @if($what == 'deposit' || $what == 'withdrawal')
+        <!-- SHOW EXPENSE ACCOUNT ONLY FOR WITHDRAWALS -->
+        @if($what == 'withdrawal')
         <div class="form-group">
-            <label for="beneficiary" class="col-sm-4 control-label">
-                @if($what == 'deposit')
-                    Paying beneficiary
+            <label for="expense_account" class="col-sm-4 control-label">Expense account</label>
+            <div class="col-sm-8">
+                <input type="text" name="expense_account" value="{{{Input::old('expense_account')}}}" autocomplete="off" class="form-control" placeholder="Expense account" />
+                @if($errors->has('expense_account'))
+                <p class="text-danger">{{$errors->first('expense_account')}}</p>
+                @else
+                    <span class="help-block">This field will auto-complete your existing expense accounts (if any), but you can type freely to create new ones.</span>
                 @endif
-                @if($what == 'withdrawal')
-                    Beneficiary
-                @endif
+            </div>
+        </div>
+        @endif
+
+        <!-- SHOW REVENUE ACCOUNT ONLY FOR DEPOSITS -->
+        @if($what == 'deposit')
+        <div class="form-group">
+            <label for="revenue_account" class="col-sm-4 control-label">
+                Revenue account
             </label>
             <div class="col-sm-8">
-                <input type="text" name="beneficiary" value="{{{Input::old('beneficiary')}}}" autocomplete="off" class="form-control" placeholder="Beneficiary" />
+                <input type="text" name="revenue_account" value="{{{Input::old('revenue_account')}}}" autocomplete="off" class="form-control" placeholder="Revenue account" />
                 @if($errors->has('beneficiary'))
-                <p class="text-danger">{{$errors->first('beneficiary')}}</p>
+                <p class="text-danger">{{$errors->first('revenue_account')}}</p>
                 @else
-                <span class="help-block">This field will auto-complete your existing beneficiaries (if any), but you can type freely to create new ones.</span>
+                <span class="help-block">This field will auto-complete your existing revenue accounts (if any), but you can type freely to create new ones.</span>
                 @endif
             </div>
         </div>
