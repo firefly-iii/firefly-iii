@@ -34,7 +34,7 @@ class BudgetController extends BaseController
     {
         $periods = \Config::get('firefly.periods_to_text');
 
-        return View::make('budgets.create')->with('periods', $periods)->with('title', 'Create a new budget');
+        return View::make('budgets.create')->with('periods', $periods)->with('subTitle', 'Create a new budget');
     }
 
     /**
@@ -45,7 +45,7 @@ class BudgetController extends BaseController
     public function delete(Budget $budget)
     {
         return View::make('budgets.delete')->with('budget', $budget)
-            ->with('title', 'Delete budget "' . $budget->name . '"');
+            ->with('subTitle', 'Delete budget "' . $budget->name . '"');
     }
 
     /**
@@ -76,7 +76,7 @@ class BudgetController extends BaseController
     public function edit(Budget $budget)
     {
         return View::make('budgets.edit')->with('budget', $budget)
-            ->with('title', 'Edit budget "' . $budget->name . '"');
+            ->with('subTitle', 'Edit budget "' . $budget->name . '"');
 
     }
 
@@ -88,7 +88,7 @@ class BudgetController extends BaseController
         $budgets = $this->_repository->get();
 
         return View::make('budgets.indexByBudget')->with('budgets', $budgets)->with('today', new Carbon)
-            ->with('title', 'All your budgets grouped by budget');
+            ->with('subTitle', 'All your budgets grouped by budget');
 
     }
 
@@ -102,7 +102,7 @@ class BudgetController extends BaseController
         $budgets = $this->_budgets->organizeByDate($set);
 
         return View::make('budgets.indexByDate')->with('budgets', $budgets)
-            ->with('title', 'All your budgets grouped by date');
+            ->with('subTitle', 'All your budgets grouped by date');
 
 
     }
@@ -152,7 +152,7 @@ class BudgetController extends BaseController
             ->with('view', $view)
             ->with('highlight', Input::get('highlight'))
             ->with('useSessionDates', $useSessionDates)
-            ->with('title', $title);
+            ->with('subTitle', $title);
     }
 
     /**
