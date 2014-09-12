@@ -34,9 +34,24 @@ class JsonController extends BaseController
     /**
      * Returns a JSON list of all beneficiaries.
      */
-    public function beneficiaries()
+    public function expenseAccounts()
     {
-        $list   = $this->_accounts->getBeneficiaries();
+        $list   = $this->_accounts->getOfTypes(['Expense account','Beneficiary account']);
+        $return = [];
+        foreach ($list as $entry) {
+            $return[] = $entry->name;
+        }
+
+        return Response::json($return);
+
+    }
+
+    /**
+     * Returns a JSON list of all revenue accounts.
+     */
+    public function revenueAccounts()
+    {
+        $list   = $this->_accounts->getOfTypes(['Revenue account']);
         $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;
