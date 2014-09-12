@@ -22,6 +22,8 @@ class AccountController extends \BaseController
     {
         $this->_accounts   = $accounts;
         $this->_repository = $repository;
+        View::share('mainTitleIcon', 'fa-credit-card');
+        View::share('title', 'Accounts');
     }
 
     /**
@@ -29,9 +31,11 @@ class AccountController extends \BaseController
      */
     public function create($what)
     {
-        return View::make('accounts.create')->with('title', 'Accounts')->with(
-            'subTitle', 'Create a new ' . $what . ' account'
-        )->with('what', $what);
+        View::share('subTitleIcon', 'fa-money');
+
+        return View::make('accounts.create')->with('subTitle', 'Create a new ' . $what . ' account')->with(
+            'what', $what
+        );
     }
 
     /**
@@ -39,11 +43,13 @@ class AccountController extends \BaseController
      */
     public function asset()
     {
+        View::share('subTitleIcon','fa-money');
+
         $accounts = $this->_repository->getOfTypes(['Asset account', 'Default account']);
 
-        return View::make('accounts.asset')->with('title', 'Accounts')->with('subTitle', 'Asset accounts')->with(
+        return View::make('accounts.asset')->with('subTitle', 'Asset accounts')->with(
             'accounts', $accounts
-        )->with('titleIcon','fa-money');
+        );
     }
 
     /**
@@ -51,9 +57,11 @@ class AccountController extends \BaseController
      */
     public function expense()
     {
+        View::share('subTitleIcon','fa-shopping-cart');
+
         $accounts = $this->_repository->getOfTypes(['Expense account', 'Beneficiary account']);
 
-        return View::make('accounts.expense')->with('title', 'Accounts')->with('subTitle', 'Expense accounts')->with(
+        return View::make('accounts.expense')->with('subTitle', 'Expense accounts')->with(
             'accounts', $accounts
         );
     }
@@ -63,9 +71,11 @@ class AccountController extends \BaseController
      */
     public function revenue()
     {
+        View::share('subTitleIcon','fa-download');
+
         $accounts = $this->_repository->getOfTypes(['Revenue account']);
 
-        return View::make('accounts.revenue')->with('title', 'Accounts')->with('subTitle', 'Revenue accounts')->with(
+        return View::make('accounts.revenue')->with('subTitle', 'Revenue accounts')->with(
             'accounts', $accounts
         );
     }
@@ -119,8 +129,8 @@ class AccountController extends \BaseController
     {
         $openingBalance = $this->_accounts->openingBalanceTransaction($account);
         return View::make('accounts.edit')->with('account', $account)->with('openingBalance', $openingBalance)
-            ->with('title','Accounts')
-            ->with('subTitle', 'Edit '.strtolower($account->accountType->type).' "' . $account->name . '"');
+            ->with('title', 'Accounts')
+            ->with('subTitle', 'Edit ' . strtolower($account->accountType->type) . ' "' . $account->name . '"');
     }
 
     /**
@@ -128,7 +138,7 @@ class AccountController extends \BaseController
      */
     public function index()
     {
-        return View::make('error')->with('message','This view has been disabled');
+        return View::make('error')->with('message', 'This view has been disabled');
 //        $accounts = $this->_repository->get();
 //        $set      = [
 //            'personal'      => [],
@@ -159,8 +169,8 @@ class AccountController extends \BaseController
 
         return View::make('accounts.show')->with('account', $account)->with('show', $data)->with(
             'subTitle',
-            'Details for '.strtolower($account->accountType->type).' "' . $account->name . '"'
-        )->with('title','Accounts');
+            'Details for ' . strtolower($account->accountType->type) . ' "' . $account->name . '"'
+        )->with('title', 'Accounts');
     }
 
     /**

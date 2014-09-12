@@ -135,17 +135,33 @@ class Import
 
         // if Firefly tries to import a beneficiary, Firefly will "merge" already existing ones,
         // so we don't care:
+
         if (isset($payload['data']['account_type']) && $payload['data']['account_type'] == 'Expense account') {
-            // store beneficiary
-            $acct = $this->_accounts->createOrFindBeneficiary($payload['data']['name']);
+            // unset some data to make firstOrCreate work:
+            $oldPayloadId = $payload['data']['id'];
+            unset($payload['data']['type_id'], $payload['data']['parent_component_id'],
+            $payload['data']['reporting'], $payload['data']['type'], $payload['data']['id'], $payload['data']['account_type']);
+            // set other data to make it work:
+            $expenseAccountType                 = $this->_accounts->findAccountType('Expense account');
+            $payload['data']['account_type_id'] = $expenseAccountType->id;
+
+            $acct = $this->_accounts->firstOrCreate((array)$payload['data']);
+            if (is_null($acct)) {
+                echo '$acct (1) is null, exit!';
+                var_dump($acct);
+                exit();
+            }
             \Log::debug('Imported ' . $payload['class'] . ' "' . $payload['data']['name'] . '".');
-            $this->_repository->store($importMap, 'Account', $payload['data']['id'], $acct->id);
+            $this->_repository->store($importMap, 'Account', $oldPayloadId, $acct->id);
             $job->delete();
             return;
         }
 
-        // but we cannot merge accounts, so we need to search first:
-        $acct = $this->_accounts->findByName($payload['data']['name']);
+        // but Firefly cannot merge other types accounts, so we need to search first:
+        $assetAccountType = $this->_accounts->findAccountType('Asset account');
+
+        // we need to find it by name AND type.
+        $acct = $this->_accounts->findByNameAndAccountType($payload['data']['name'], $assetAccountType);
         if (is_null($acct)) {
             // store new one!
             $acct = $this->_accounts->store((array)$payload['data']);
@@ -322,7 +338,7 @@ class Import
                             'Updated transactions (#' . $journal->id . '), #' . $transaction->id . '\'s Account.'
                         );
                     } else {
-                        \Log::error('Found account type: "' . $accountType.'" instead of expected "Import account"');
+                        \Log::error('Found account type: "' . $accountType . '" instead of expected "Import account"');
                     }
                 }
 
@@ -532,8 +548,14 @@ class Import
         // find or create the account type for the import account.
         // find or create the account for the import account.
         $accountType   = $this->_accounts->findAccountType('Import account');
-        $importAccount = $this->_accounts->createOrFind('Import account', $accountType);
-
+        $importAccount = $this->_accounts->firstOrCreate(
+            [
+                'account_type_id' => $accountType->id,
+                'name'            => 'Import account',
+                'user_id'         => $user->id,
+                'active'          => 1,
+            ]
+        );
 
         // if amount is more than zero, move from $importAccount
         $amount = floatval($payload['data']['amount']);
@@ -560,6 +582,7 @@ class Import
 
 
         if (is_null($current)) {
+
             $journal = $this->_journals->createSimpleJournal(
                 $accountFrom, $accountTo,
                 $payload['data']['description'], $amount, $date

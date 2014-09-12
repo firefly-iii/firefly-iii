@@ -48,6 +48,14 @@ interface AccountRepositoryInterface
     public function find($accountId);
 
     /**
+     * @param              $name
+     * @param \AccountType $type
+     *
+     * @return \Account
+     */
+    public function findByNameAndAccountType($name, \AccountType $type);
+
+    /**
      * @param $type
      * @return mixed
      */

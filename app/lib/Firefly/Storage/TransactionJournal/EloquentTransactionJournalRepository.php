@@ -411,7 +411,8 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         $toTransaction->description = null;
         $toTransaction->amount      = $amountTo;
         if (!$toTransaction->validate()) {
-            throw new FireflyException('Cannot create valid transaction (to): ' . $toTransaction->errors()->first());
+
+            throw new FireflyException('Cannot create valid transaction (to): ' . $toTransaction->errors()->first().': ' . print_r($toAccount->toArray(),true));
         }
         $toTransaction->save();
 
