@@ -17,7 +17,7 @@ class Account implements AccountInterface
     public function openingBalanceTransaction(\Account $account)
     {
         return \TransactionJournal::withRelevantData()
-                                  ->account($account)
+                                  ->accountIs($account)
                                   ->leftJoin('transaction_types', 'transaction_types.id', '=',
                 'transaction_journals.transaction_type_id')
                                   ->where('transaction_types.type', 'Opening balance')
@@ -54,7 +54,7 @@ class Account implements AccountInterface
         // build a query:
         $query = \TransactionJournal::withRelevantData()
                                     ->defaultSorting()
-                                    ->account($account)
+                                    ->accountIs($account)
                                     ->after($start)
                                     ->before($end);
         // filter some:
@@ -110,16 +110,16 @@ class Account implements AccountInterface
 
 
         // statistics (transactions)
-        $trIn   = floatval(\Transaction::before($end)->after($start)->account($account)->moreThan(0)
+        $trIn   = floatval(\Transaction::before($end)->after($start)->accountIs($account)->moreThan(0)
                                        ->transactionTypes(['Deposit', 'Withdrawal'])->sum('transactions.amount'));
-        $trOut  = floatval(\Transaction::before($end)->after($start)->account($account)->lessThan(0)
+        $trOut  = floatval(\Transaction::before($end)->after($start)->accountIs($account)->lessThan(0)
                                        ->transactionTypes(['Deposit', 'Withdrawal'])->sum('transactions.amount'));
         $trDiff = $trIn + $trOut;
 
         // statistics (transfers)
-        $trfIn   = floatval(\Transaction::before($end)->after($start)->account($account)->moreThan(0)
+        $trfIn   = floatval(\Transaction::before($end)->after($start)->accountIs($account)->moreThan(0)
                                         ->transactionTypes(['Transfer'])->sum('transactions.amount'));
-        $trfOut  = floatval(\Transaction::before($end)->after($start)->account($account)->lessThan(0)
+        $trfOut  = floatval(\Transaction::before($end)->after($start)->accountIs($account)->lessThan(0)
                                         ->transactionTypes(['Transfer'])->sum('transactions.amount'));
         $trfDiff = $trfIn + $trfOut;
 

@@ -42,6 +42,8 @@ class Account extends Ardent
 
         ];
 
+    protected $fillable = ['name','user_id','account_type_id','active'];
+
     /**
      * Account type.
      *

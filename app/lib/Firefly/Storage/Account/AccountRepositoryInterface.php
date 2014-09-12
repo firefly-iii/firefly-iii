@@ -17,14 +17,6 @@ interface AccountRepositoryInterface
     public function count();
 
     /**
-     * @param              $name
-     * @param \AccountType $type
-     *
-     * @return mixed
-     */
-    public function createOrFind($name, \AccountType $type);
-
-    /**
      * Gets a list of accounts that have the mentioned type. Will automatically convert
      * strings in this array to actual (model) account types.
      *
@@ -35,11 +27,11 @@ interface AccountRepositoryInterface
     public function getOfTypes(array $types);
 
     /**
-     * @param $name
+     * @param array $data
      *
      * @return mixed
      */
-    public function createOrFindBeneficiary($name);
+    public function firstOrCreate(array $data);
 
     /**
      * @param \Account $account
@@ -62,19 +54,6 @@ interface AccountRepositoryInterface
     public function findAccountType($type);
 
     /**
-     * @param $name
-     * @param \AccountType $type
-     * @return mixed
-     */
-    public function findByName($name, \AccountType $type = null);
-
-    /**
-     * @param $name
-     * @return mixed
-     */
-    public function findByNameAny($name);
-
-    /**
      * @return mixed
      */
     public function get();
@@ -83,16 +62,6 @@ interface AccountRepositoryInterface
      * @return mixed
      */
     public function getActiveDefault();
-
-    /**
-     * @return mixed
-     */
-    public function getActiveDefaultAsSelectList();
-
-    /**
-     * @return mixed
-     */
-    public function getBeneficiaries();
 
     /**
      * @param $ids
