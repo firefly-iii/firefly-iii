@@ -28,7 +28,7 @@ class CategoryController extends BaseController
      */
     public function create()
     {
-        return View::make('categories.create')->with('title', 'Create a new category');
+        return View::make('categories.create')->with('subTitle', 'Create a new category');
     }
 
     /**
@@ -39,7 +39,7 @@ class CategoryController extends BaseController
     public function delete(Category $category)
     {
         return View::make('categories.delete')->with('category', $category)
-            ->with('title', 'Delete category "' . $category->name . '"');
+            ->with('subTitle', 'Delete category "' . $category->name . '"');
     }
 
     /**
@@ -62,7 +62,7 @@ class CategoryController extends BaseController
     public function edit(Category $category)
     {
         return View::make('categories.edit')->with('category', $category)
-            ->with('title', 'Edit category "' . $category->name . '"');
+            ->with('subTitle', 'Edit category "' . $category->name . '"');
     }
 
     /**
@@ -73,7 +73,7 @@ class CategoryController extends BaseController
         $categories = $this->_repository->get();
 
         return View::make('categories.index')->with('categories', $categories)
-            ->with('title', 'All your categories');
+            ->with('subTitle', 'All your categories');
     }
 
     /**
@@ -91,7 +91,7 @@ class CategoryController extends BaseController
 
         return View::make('categories.show')->with('category', $category)->with('journals', $journals)->with(
             'highlight', Input::get('highlight')
-        )->with('title', 'Overview for category "' . $category->name . '"');
+        )->with('subTitle', 'Overview for category "' . $category->name . '"');
     }
 
     /**
