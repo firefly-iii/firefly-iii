@@ -9,6 +9,8 @@ use Illuminate\Queue\Jobs\Job;
  * Class Import
  *
  * @package Firefly\Queue
+ *
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class Import
 {
@@ -37,7 +39,7 @@ class Import
     protected $_recurring;
 
     /**
-     *
+     * This constructs the import handler and initiates all the relevant interfaces / classes.
      */
     public function __construct()
     {
@@ -54,27 +56,69 @@ class Import
     }
 
     /**
+     * The final step in the import routine is to get all transactions which have one of their accounts
+     * still set to "import", which means it is a cash transaction. This routine will set them all to cash instead.
+     *
      * @param Job   $job
      * @param array $payload
      */
     public function cleanImportAccount(Job $job, array $payload)
     {
+
+        /** @var \Importmap $importMap */
+        $importMap = $this->_repository->findImportmap($payload['mapID']);
+        $user      = $importMap->user;
+        $this->overruleUser($user);
+
+        // two import account types.
         $importAccountType = $this->_accounts->findAccountType('Import account');
-        $importAccounts    = $this->_accounts->getByAccountType($importAccountType);
-        if (count($importAccounts) == 0) {
-            $job->delete();
-        } else if (count($importAccounts) == 1) {
-            /** @var \Account $importAccount */
-            $importAccount = $importAccounts[0];
-            $transactions  = $importAccount->transactions()->get();
-            /** @var \Transaction $transaction */
-            foreach ($transactions as $transaction) {
-                $transaction->account()->associate($importAccount);
-                $transaction->save();
-            }
-            \Log::debug('Updated ' . count($transactions) . ' transactions from Import Account to cash.');
-        }
+        $cashAccountType   = $this->_accounts->findAccountType('Cash account');
+
+        // find or create import account:
+        $importAccount = $this->_accounts->firstOrCreate(
+            [
+                'name'            => 'Import account',
+                'account_type_id' => $importAccountType->id,
+                'active'          => 1,
+                'user_id'         => $user->id,
+            ]
+        );
+
+        // find or create cash account:
+        $cashAccount = $this->_accounts->firstOrCreate(
+            [
+                'name'            => 'Cash account',
+                'account_type_id' => $cashAccountType->id,
+                'active'          => 1,
+                'user_id'         => $user->id,
+            ]
+        );
+
+        // update all users transactions:
+        $count = \DB::table('transactions')
+            ->where('account_id', $importAccount->id)->count();
+
+        \DB::table('transactions')
+            ->where('account_id', $importAccount->id)
+            ->update(['account_id' => $cashAccount->id]);
+
+        \Log::debug('Updated ' . $count . ' transactions from Import Account to cash.');
         $job->delete();
+    }
+
+    /**
+     * @param \User $user
+     */
+    protected function overruleUser(\User $user)
+    {
+        $this->_accounts->overruleUser($user);
+        $this->_budgets->overruleUser($user);
+        $this->_categories->overruleUser($user);
+        $this->_journals->overruleUser($user);
+        $this->_limits->overruleUser($user);
+        $this->_repository->overruleUser($user);
+        $this->_piggybanks->overruleUser($user);
+        $this->_recurring->overruleUser($user);
     }
 
     /**
@@ -123,7 +167,6 @@ class Import
         $user      = $importMap->user;
         $this->overruleUser($user);
 
-
         // maybe we've already imported this account:
         $importEntry = $this->_repository->findImportEntry($importMap, 'Account', intval($payload['data']['id']));
 
@@ -140,7 +183,8 @@ class Import
             // unset some data to make firstOrCreate work:
             $oldPayloadId = $payload['data']['id'];
             unset($payload['data']['type_id'], $payload['data']['parent_component_id'],
-            $payload['data']['reporting'], $payload['data']['type'], $payload['data']['id'], $payload['data']['account_type']);
+            $payload['data']['reporting'],
+            $payload['data']['type'], $payload['data']['id'], $payload['data']['account_type']);
             // set other data to make it work:
             $expenseAccountType                 = $this->_accounts->findAccountType('Expense account');
             $payload['data']['account_type_id'] = $expenseAccountType->id;
@@ -176,21 +220,6 @@ class Import
         // and delete the job
         $job->delete();
 
-    }
-
-    /**
-     * @param \User $user
-     */
-    protected function overruleUser(\User $user)
-    {
-        $this->_accounts->overruleUser($user);
-        $this->_budgets->overruleUser($user);
-        $this->_categories->overruleUser($user);
-        $this->_journals->overruleUser($user);
-        $this->_limits->overruleUser($user);
-        $this->_repository->overruleUser($user);
-        $this->_piggybanks->overruleUser($user);
-        $this->_recurring->overruleUser($user);
     }
 
     /**
@@ -639,8 +668,12 @@ class Import
     }
 
     /**
+     * Yet to import: component_predictables, , component_transfers
+     *
      * @param Job $job
      * @param     $payload
+     *
+     * @SuppressWarnings(PHPMD.CamelCasePropertyName)
      */
     public function start(Job $job, array $payload)
     {
@@ -660,30 +693,29 @@ class Import
             $raw  = file_get_contents($filename);
             $JSON = json_decode($raw);
 
-            $classes = ['accounts', 'components', 'limits', 'piggybanks',
-                        'predictables', 'settings', 'transactions', 'transfers'];
+            $classes
+                = [
+                'accounts', 'components', 'limits',
+                'piggybanks', 'predictables', 'settings',
+                'transactions', 'transfers'
+            ];
 
-            foreach ($classes as $classes_plural) {
-                $class = ucfirst(\Str::singular($classes_plural));
-                \Log::debug('Create job to import all ' . $classes_plural);
-                foreach ($JSON->$classes_plural as $entry) {
+            foreach ($classes as $classesPlural) {
+                $class = ucfirst(\Str::singular($classesPlural));
+                \Log::debug('Create job to import all ' . $classesPlural);
+                foreach ($JSON->$classesPlural as $entry) {
                     \Log::debug('Create job to import single ' . $class);
-                    $fn          = 'import' . $class;
-                    $jobFunction = 'Firefly\Queue\Import@' . $fn;
+                    $jobFunction = 'Firefly\Queue\Import@import' . $class;
                     \Queue::push($jobFunction, ['data' => $entry, 'class' => $class, 'mapID' => $importMap->id]);
-
                 }
             }
-
-            // , components, limits, piggybanks, predictables, settings, transactions, transfers
-            // component_predictables, component_transactions, component_transfers
 
             $count = count($JSON->component_transaction);
             foreach ($JSON->component_transaction as $index => $entry) {
                 \Log::debug('Create job to import components_transaction! Yay! (' . $index . '/' . $count . ') ');
-                $fn          = 'importComponentTransaction';
-                $jobFunction = 'Firefly\Queue\Import@' . $fn;
-                \Queue::push($jobFunction, ['data' => $entry, 'mapID' => $importMap->id]);
+                \Queue::push(
+                    'Firefly\Queue\Import@importComponentTransaction', ['data' => $entry, 'mapID' => $importMap->id]
+                );
             }
 
             // queue a job to clean up the "import account", it should properly fall back

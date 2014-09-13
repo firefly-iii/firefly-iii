@@ -20,13 +20,10 @@ class MigrateController extends BaseController
     public function upload()
     {
         if (Input::hasFile('file') && Input::file('file')->isValid()) {
-            // move file to storage:
-            // ->move($destinationPath, $fileName);
             $path     = storage_path();
             $fileName = 'firefly-iii-import-' . date('Y-m-d-H-i') . '.json';
             $fullName = $path . DIRECTORY_SEPARATOR . $fileName;
-            if (is_writable($path)) {
-                Input::file('file')->move($path, $fileName);
+            if (Input::file('file')->move($path, $fileName)) {
                 // so now Firefly pushes something in a queue and does something with it! Yay!
                 \Log::debug('Pushed a job to start the import.');
                 Queue::push('Firefly\Queue\Import@start', ['file' => $fullName, 'user' => \Auth::user()->id]);
