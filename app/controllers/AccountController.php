@@ -88,7 +88,7 @@ class AccountController extends \BaseController
     public function delete(Account $account)
     {
         return View::make('accounts.delete')->with('account', $account)
-            ->with('title', 'Accounts')->with(
+            ->with(
                 'subTitle', 'Delete ' . strtolower($account->accountType->type) . ' "' . $account->name . '"'
             );
     }
@@ -129,7 +129,7 @@ class AccountController extends \BaseController
     {
         $openingBalance = $this->_accounts->openingBalanceTransaction($account);
         return View::make('accounts.edit')->with('account', $account)->with('openingBalance', $openingBalance)
-            ->with('title', 'Accounts')
+
             ->with('subTitle', 'Edit ' . strtolower($account->accountType->type) . ' "' . $account->name . '"');
     }
 
@@ -170,7 +170,7 @@ class AccountController extends \BaseController
         return View::make('accounts.show')->with('account', $account)->with('show', $data)->with(
             'subTitle',
             'Details for ' . strtolower($account->accountType->type) . ' "' . $account->name . '"'
-        )->with('title', 'Accounts');
+        );
     }
 
     /**
