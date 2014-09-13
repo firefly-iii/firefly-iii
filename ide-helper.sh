@@ -1,6 +1,8 @@
 #!/bin/bash
 #composer self-update
 
+
+rm -f ./app/storage/firefly-iii-import-*.json
 rm -f ./app/storage/debugbar/*.json
 rm -f ./app/storage/logs/laravel.log
 rm -f ./app/storage/meta/services.json
