@@ -120,8 +120,19 @@ Route::bind('piggybank', function($value, $route)
     });
 
 
+
+// a development route:
+Route::get('/dev', ['uses' => 'HomeController@jobDev']);
+
 // protected routes:
 Route::group(['before' => 'auth'], function () {
+
+
+
+
+        // some date routes:
+        Route::get('/prev',['uses' => 'HomeController@sessionPrev', 'as' => 'sessionPrev']);
+        Route::get('/next',['uses' => 'HomeController@sessionNext', 'as' => 'sessionNext']);
 
         // account controller:
         Route::get('/accounts', ['uses' => 'AccountController@index', 'as' => 'accounts.index']);

@@ -3,6 +3,7 @@
 namespace Firefly\Helper\Toolkit;
 
 use Carbon\Carbon;
+use Firefly\Exception\FireflyException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -30,23 +31,79 @@ class Toolkit implements ToolkitInterface
      */
     public function getDateRange()
     {
+        /*
+         * Get all data from the session:
+         */
         $range = $this->_getRange();
-        // start and end are always "now", and get edited later.
-        $start = new Carbon;
-        $end   = new Carbon;
+        #\Log::debug('Range is: ' . $range);
+        $start = \Session::has('start') ? \Session::get('start') : new Carbon;
 
-        // update start only:
+        #\Log::debug('Session start is: ' . $start->format('Y-m-d'));
+        $end = \Session::has('end') ? \Session::get('end') : new Carbon;
+        #\Log::debug('Session end is  : ' . $end->format('Y-m-d'));
+
+        /*
+         * Force start date to at the start of the $range.
+         * Ie. the start of the week, month, year.
+         */
         $start = $this->_updateStartDate($range, $start);
+        #\Log::debug('After update, session start is: ' . $start->format('Y-m-d'));
 
-        // update end only:
-        $end = $this->_updateEndDate($range, $start, $end);
+        /*
+         * Force end date to at the END of the $range. Always based on $start.
+         * Ie. the END of the week, month, year.
+         */
+        $end = $this->_updateEndDate($range, $start);
+        #\Log::debug('After update, session end is  : ' . $end->format('Y-m-d'));
 
-        // save in session:
+        /*
+         * get the name of the month, depending on the range. Purely for astetics
+         */
+        $period = $this->_periodName($range, $start);
+
+        /*
+         * Get the date for the previous and next period.
+         * Ie. next week, next month, etc.
+         */
+        $prev = $this->_previous($range, clone $start);
+        $next = $this->_next($range, clone $start);
+
+        /*
+         * Save everything in the session:
+         */
         \Session::put('start', $start);
         \Session::put('end', $end);
         \Session::put('range', $range);
+        \Session::put('period', $period);
+        \Session::put('prev', $this->_periodName($range, $prev));
+        \Session::put('next', $this->_periodName($range, $next));
         return null;
 
+    }
+
+    /**
+     *
+     */
+    public function checkImportJobs() {
+        /*
+         * Get all jobs.
+         */
+        /** @var \Importmap $importJob */
+        $importJob = \Importmap::where('user_id',\Auth::user()->id)
+            ->where('totaljobs','>',\DB::Raw('`jobsdone`'))
+            ->orderBy('created_at','DESC')
+            ->first();
+        if(!is_null($importJob)) {
+            $diff = intval($importJob->totaljobs) - intval($importJob->jobsdone);
+            $date = new Carbon;
+            $today = new Carbon;
+            $date->addSeconds($diff);
+            \Session::put('job_pct',$importJob->pct());
+            \Session::put('job_text',$date->diffForHumans());
+        } else {
+            \Session::forget('job_pct');
+            \Session::forget('job_text');
+        }
     }
 
     /**
@@ -63,6 +120,7 @@ class Toolkit implements ToolkitInterface
 
             // default range:
             $range = $viewRange->data;
+            \Session::put('range', $range);
         }
         return $range;
 
@@ -110,9 +168,8 @@ class Toolkit implements ToolkitInterface
      *
      * @return Carbon
      */
-    protected function _updateEndDate($range, Carbon $start, Carbon $end)
+    protected function _updateEndDate($range, Carbon $start)
     {
-        $today = new Carbon;
         switch ($range) {
             case '1D':
                 $end = clone $start;
@@ -132,15 +189,130 @@ class Toolkit implements ToolkitInterface
                 break;
             case '6M':
                 $end = clone $start;
-                if (intval($today->format('m')) >= 7) {
+                if (intval($start->format('m')) >= 7) {
                     $end->endOfYear();
                 } else {
                     $end->startOfYear()->addMonths(6);
                 }
                 break;
+            default:
+                throw new FireflyException('Nothing happened with $end!');
+                break;
         }
 
         return $end;
+    }
+
+    protected function _periodName($range, Carbon $date)
+    {
+        switch ($range) {
+            default:
+                throw new FireflyException('No _periodName() for range "' . $range . '"');
+                break;
+            case '1M':
+                return $date->format('F Y');
+                break;
+        }
+    }
+
+    protected function _previous($range, Carbon $date)
+    {
+        switch ($range) {
+            case '1D':
+                $date->startOfDay()->subDay();
+                break;
+            case '1W':
+                $date->startOfWeek()->subWeek();
+                break;
+            case '1M':
+                $date->startOfMonth()->subMonth();
+                break;
+            case '3M':
+                $date->firstOfQuarter()->subMonths(3)->firstOfQuarter();
+                break;
+            case '6M':
+                if (intval($date->format('m')) >= 7) {
+                    $date->startOfYear();
+                } else {
+                    $date->startOfYear()->subMonths(6);
+                }
+                break;
+        }
+        return $date;
+    }
+
+    protected function _next($range, Carbon $date)
+    {
+        switch ($range) {
+            case '1D':
+                $date->endOfDay()->addDay();
+                break;
+            case '1W':
+                $date->endOfWeek()->addDay()->startOfWeek();
+                break;
+            case '1M':
+                $date->endOfMonth()->addDay()->startOfMonth();
+                break;
+            case '3M':
+                $date->lastOfQuarter();
+                break;
+            case '6M':
+                if (intval($date->format('m')) >= 7) {
+                    $date->startOfYear()->addYear();
+                } else {
+                    $date->startOfYear()->addMonths(6);
+                }
+                break;
+        }
+        return $date;
+    }
+
+    public function next()
+    {
+        /*
+         * Get the start date and the range from the session
+         */
+        $range = $this->_getRange();
+        $start = \Session::get('start');
+
+        /*
+         * Add some period to $start.
+         */
+        $next = $this->_next($range, clone $start);
+
+        /*
+         * Save in session:
+         */
+        \Session::put('start', $next);
+        return true;
+    }
+
+    public function prev()
+    {
+        /*
+         * Get the start date and the range from the session
+         */
+        $range = $this->_getRange();
+        $start = \Session::get('start');
+
+        /*
+         * Substract some period to $start.
+         */
+        $prev = $this->_previous($range, clone $start);
+
+        /*
+         * Save in session:
+         */
+        \Session::put('start', $prev);
+        return true;
+    }
+
+    /**
+     * This method checks and
+     */
+    public function bootstrapDaterange()
+    {
+
     }
 
     /**

@@ -6,8 +6,10 @@ App::before(
     function ($request) {
 
         if (Auth::check()) {
+            /** @var \Firefly\Helper\Toolkit\ToolkitInterface $toolkit */
             $toolkit = App::make('Firefly\Helper\Toolkit\ToolkitInterface');
             $toolkit->getDateRange();
+            $toolkit->checkImportJobs();
         }
 
     }

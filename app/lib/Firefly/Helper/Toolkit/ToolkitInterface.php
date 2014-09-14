@@ -28,4 +28,11 @@ interface ToolkitInterface
      */
     public function makeSelectList(Collection $set, $titleField = null);
 
+    public function bootstrapDaterange();
+
+    public function next();
+    public function prev();
+
+public function checkImportJobs();
+
 }

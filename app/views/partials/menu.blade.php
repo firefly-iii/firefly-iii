@@ -12,7 +12,40 @@
 <!-- /.navbar-header -->
 
 <ul class="nav navbar-top-links navbar-right">
-<li class="dropdown">
+    <!-- /.dropdown -->
+    <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            <i class="fa fa-tasks fa-fw"></i>  <i class="fa fa-caret-down"></i>
+        </a>
+        <!-- display for import tasks, possibly others -->
+        @if(Session::has('job_pct'))
+        <ul class="dropdown-menu dropdown-tasks">
+            <li>
+                <a href="#">
+                    <div>
+                        <p>
+                            <strong>Import from Firefly II</strong>
+                            <span class="pull-right text-muted">{{Session::get('job_pct')}}% Complete</span>
+                        </p>
+                        <div class="progress progress-striped active">
+                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{Session::get('job_pct')}}" aria-valuemin="0" aria-valuemax="100" style="width: {{Session::get('job_pct')}}%">
+                                <span class="sr-only">{{Session::get('job_pct')}}% Complete (success)</span>
+                            </div>
+                        </div>
+                        <p>
+                            <small>Finished ~ {{Session::get('job_text')}}</small>
+                        </p>
+                    </div>
+                </a>
+            </li>
+        </ul>
+        <!-- /.dropdown-tasks -->
+    </li>
+    @endif
+
+
+
+    <li class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
         <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
     </a>
