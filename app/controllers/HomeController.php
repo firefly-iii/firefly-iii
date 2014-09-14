@@ -30,6 +30,33 @@ class HomeController extends BaseController
         $this->_reminders   = $reminders;
     }
 
+    public function jobDev() {
+        $fullName = storage_path().DIRECTORY_SEPARATOR.'firefly-export-2014-07-23.json';
+        \Log::notice('Pushed start job.');
+        Queue::push('Firefly\Queue\Import@start', ['file' => $fullName, 'user' => 1]);
+
+    }
+
+    /*
+     *
+     */
+    public function sessionPrev() {
+        /** @var \Firefly\Helper\Toolkit\ToolkitInterface $toolkit */
+        $toolkit = App::make('Firefly\Helper\Toolkit\ToolkitInterface');
+        $toolkit->prev();
+        return Redirect::route('index');
+    }
+
+    /*
+     *
+     */
+    public function sessionNext() {
+        /** @var \Firefly\Helper\Toolkit\ToolkitInterface $toolkit */
+        $toolkit = App::make('Firefly\Helper\Toolkit\ToolkitInterface');
+        $toolkit->next();
+        return Redirect::route('index');
+    }
+
     /**
      * @return \Illuminate\Http\RedirectResponse
      */
