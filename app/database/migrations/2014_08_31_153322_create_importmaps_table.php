@@ -18,6 +18,8 @@ class CreateImportmapsTable extends Migration {
 			$table->timestamps();
             $table->integer('user_id')->unsigned();
             $table->string('file',500);
+            $table->integer('totaljobs')->unsigned();
+            $table->integer('jobsdone')->unsigned();
 
             // connect maps to users
             $table->foreign('user_id')
