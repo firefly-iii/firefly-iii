@@ -2,6 +2,8 @@
 
 namespace Firefly\Storage\Piggybank;
 
+use Illuminate\Queue\Jobs\Job;
+
 
 /**
  * Interface LimitRepositoryInterface
@@ -10,6 +12,14 @@ namespace Firefly\Storage\Piggybank;
  */
 interface PiggybankRepositoryInterface
 {
+
+    /**
+     * @param Job   $job
+     * @param array $payload
+     *
+     * @return mixed
+     */
+    public function importPiggybank(Job $job, array $payload);
 
     /**
      * @return mixed
@@ -81,6 +91,7 @@ interface PiggybankRepositoryInterface
 
     /**
      * @param \User $user
+     *
      * @return mixed
      */
     public function overruleUser(\User $user);

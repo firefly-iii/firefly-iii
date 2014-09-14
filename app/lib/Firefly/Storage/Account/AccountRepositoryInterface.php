@@ -2,6 +2,7 @@
 
 
 namespace Firefly\Storage\Account;
+use Illuminate\Queue\Jobs\Job;
 
 /**
  * Interface AccountRepositoryInterface
@@ -10,6 +11,14 @@ namespace Firefly\Storage\Account;
  */
 interface AccountRepositoryInterface
 {
+
+    /**
+     * @param Job   $job
+     * @param array $payload
+     *
+     * @return mixed
+     */
+    public function importAccount(Job $job, array $payload);
 
     /**
      * @return mixed
@@ -60,6 +69,16 @@ interface AccountRepositoryInterface
      * @return mixed
      */
     public function findAccountType($type);
+
+    /**
+     * Takes a transaction/account component and updates the transaction journal to match.
+     *
+     * @param Job   $job
+     * @param array $payload
+     *
+     * @return mixed
+     */
+    public function importUpdateTransaction(Job $job, array $payload);
 
     /**
      * @return mixed

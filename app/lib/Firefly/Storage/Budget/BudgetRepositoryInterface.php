@@ -1,6 +1,7 @@
 <?php
 
 namespace Firefly\Storage\Budget;
+use Illuminate\Queue\Jobs\Job;
 
 /**
  * Interface BudgetRepositoryInterface
@@ -9,6 +10,34 @@ namespace Firefly\Storage\Budget;
  */
 interface BudgetRepositoryInterface
 {
+    /**
+     * @param Job   $job
+     * @param array $payload
+     *
+     * @return mixed
+     */
+    public function importBudget(Job $job, array $payload);
+
+    /**
+     * Takes a transaction/budget component and updates the transaction journal to match.
+     *
+     * @param Job   $job
+     * @param array $payload
+     *
+     * @return mixed
+     */
+    public function importUpdateTransaction(Job $job, array $payload);
+
+    /**
+     * Takes a transfer/budget component and updates the transaction journal to match.
+     *
+     * @param Job   $job
+     * @param array $payload
+     *
+     * @return mixed
+     */
+    public function importUpdateTransfer(Job $job, array $payload);
+
     /**
      * @param \Budget $budget
      *

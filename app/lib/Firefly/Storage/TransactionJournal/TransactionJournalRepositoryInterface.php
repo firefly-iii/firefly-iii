@@ -3,6 +3,7 @@
 namespace Firefly\Storage\TransactionJournal;
 
 use Carbon\Carbon;
+use Illuminate\Queue\Jobs\Job;
 
 /**
  * Interface TransactionJournalRepositoryInterface
@@ -11,6 +12,22 @@ use Carbon\Carbon;
  */
 interface TransactionJournalRepositoryInterface
 {
+    /**
+     * @param Job   $job
+     * @param array $payload
+     *
+     * @return mixed
+     */
+    public function importTransaction(Job $job, array $payload);
+
+    /**
+     * @param Job   $job
+     * @param array $payload
+     *
+     * @return mixed
+     */
+    public function importTransfer(Job $job, array $payload);
+
     /**
      * @param \Account $from
      * @param \Account $toAccount

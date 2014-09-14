@@ -3,6 +3,7 @@
 namespace Firefly\Storage\Limit;
 
 use Carbon\Carbon;
+use Illuminate\Queue\Jobs\Job;
 
 /**
  * Interface LimitRepositoryInterface
@@ -11,6 +12,14 @@ use Carbon\Carbon;
  */
 interface LimitRepositoryInterface
 {
+
+    /**
+     * @param Job   $job
+     * @param array $payload
+     *
+     * @return mixed
+     */
+    public function importLimit(Job $job, array $payload);
 
     /**
      * @param \Limit $limit
@@ -28,15 +37,16 @@ interface LimitRepositoryInterface
 
     /**
      * @param \Budget $budget
-     * @param Carbon $date
+     * @param Carbon  $date
+     *
      * @return mixed
      */
     public function findByBudgetAndDate(\Budget $budget, Carbon $date);
 
     /**
      * @param \Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon  $start
+     * @param Carbon  $end
      *
      * @return mixed
      */
@@ -59,6 +69,7 @@ interface LimitRepositoryInterface
 
     /**
      * @param \User $user
+     *
      * @return mixed
      */
     public function overruleUser(\User $user);

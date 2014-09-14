@@ -5,6 +5,7 @@ namespace Firefly\Storage\TransactionJournal;
 
 use Carbon\Carbon;
 use Firefly\Exception\FireflyException;
+use Illuminate\Queue\Jobs\Job;
 
 /**
  * Class EloquentTransactionJournalRepository
@@ -13,7 +14,6 @@ use Firefly\Exception\FireflyException;
  */
 class EloquentTransactionJournalRepository implements TransactionJournalRepositoryInterface
 {
-
     protected $_user = null;
 
     /**
@@ -22,6 +22,390 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
     public function __construct()
     {
         $this->_user = \Auth::user();
+    }
+
+    /**
+     * @param Job   $job
+     * @param array $payload
+     *
+     * @return mixed
+     */
+    public function importTransfer(Job $job, array $payload)
+    {
+        /** @var \Firefly\Storage\Import\ImportRepositoryInterface $repository */
+        $repository = \App::make('Firefly\Storage\Import\ImportRepositoryInterface');
+
+        /** @var \Importmap $importMap */
+        $importMap = $repository->findImportmap($payload['mapID']);
+        $user      = $importMap->user;
+        $this->overruleUser($user);
+
+
+        if ($job->attempts() > 10) {
+            \Log::error('Never found accounts for transfer "' . $payload['data']['description'] . '". KILL!');
+
+            $importMap->jobsdone++;
+            $importMap->save();
+
+            $job->delete(); // count fixed
+            return;
+        }
+
+
+
+        /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accounts */
+        $accounts = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
+        $accounts->overruleUser($user);
+
+        /*
+         * Prep some variables from the payload:
+         */
+        $fromAccountId = intval($payload['data']['accountfrom_id']);
+        $toAccountId   = intval($payload['data']['accountto_id']);
+        $description   = $payload['data']['description'];
+        $transferId    = intval($payload['data']['id']);
+        $amount        = floatval($payload['data']['amount']);
+        $date          = new Carbon($payload['data']['date']);
+
+        /*
+         * maybe Journal is already imported:
+         */
+        $importEntry = $repository->findImportEntry($importMap, 'Transfer', $transferId);
+
+        /*
+         * if so, delete job and return:
+         */
+        if (!is_null($importEntry)) {
+            \Log::debug('Already imported transfer ' . $description);
+
+            $importMap->jobsdone++;
+            $importMap->save();
+
+            $job->delete(); // count fixed
+            return;
+        }
+
+        /*
+         * Find the 'from' account:
+         */
+        $oldFromAccountEntry = $repository->findImportEntry($importMap, 'Account', $fromAccountId);
+        $accountFrom         = $accounts->find($oldFromAccountEntry->new);
+
+        /*
+         * Find the 'to' account:
+         */
+        $oldToAccountEntry = $repository->findImportEntry($importMap, 'Account', $toAccountId);
+        $accountTo         = $accounts->find($oldToAccountEntry->new);
+
+        /*
+         * If either is NULL, wait a bit and then reschedule.
+         */
+        if (is_null($accountTo) || is_null($accountFrom)) {
+            \Log::notice('No account to, or account from. Release transfer ' . $description);
+            if(\Config::get('queue.default') == 'sync') {
+                $importMap->jobsdone++;
+                $importMap->save();
+                $job->delete(); // count fixed
+            } else {
+                $job->release(300); // proper release.
+            }
+            return;
+        }
+
+        /*
+         * Import transfer:
+         */
+
+
+        $journal = $this->createSimpleJournal($accountFrom, $accountTo, $description, $amount, $date);
+        $repository->store($importMap, 'Transfer', $transferId, $journal->id);
+        \Log::debug('Imported transfer "' . $description . '" (' . $amount . ') (' . $date->format('Y-m-d') . ')');
+
+        // update map:
+        $importMap->jobsdone++;
+        $importMap->save();
+
+        $job->delete(); // count fixed.
+
+    }
+
+    /**
+     * @param \User $user
+     *
+     * @return mixed|void
+     */
+    public function overruleUser(\User $user)
+    {
+        $this->_user = $user;
+        return true;
+    }
+
+    /**
+     *
+     * We're building this thinking the money goes from A to B.
+     * If the amount is negative however, the money still goes
+     * from A to B but the balances are reversed.
+     *
+     * Aka:
+     *
+     * Amount = 200
+     * A loses 200 (-200).  * -1
+     * B gains 200 (200).    * 1
+     *
+     * Final balance: -200 for A, 200 for B.
+     *
+     * When the amount is negative:
+     *
+     * Amount = -200
+     * A gains 200 (200). * -1
+     * B loses 200 (-200). * 1
+     *
+     * @param \Account       $from
+     * @param \Account       $toAccount
+     * @param                $description
+     * @param                $amount
+     * @param \Carbon\Carbon $date
+     *
+     * @return \TransactionJournal
+     * @throws \Firefly\Exception\FireflyException
+     */
+    public function createSimpleJournal(\Account $fromAccount, \Account $toAccount, $description, $amount, Carbon $date)
+    {
+        $journal              = new \TransactionJournal;
+        $journal->completed   = false;
+        $journal->description = $description;
+        $journal->date        = $date;
+
+        $amountFrom = $amount * -1;
+        $amountTo   = $amount;
+
+        if (round(floatval($amount), 2) == 0.00) {
+            $journal->errors()->add('amount', 'Amount must not be zero.');
+
+            return $journal;
+        }
+
+        // account types for both:
+        $toAT   = $toAccount->accountType->type;
+        $fromAT = $fromAccount->accountType->type;
+
+        $journalType = null;
+
+        switch (true) {
+            case ($fromAccount->transactions()->count() == 0 && $toAccount->transactions()->count() == 0):
+                $journalType = \TransactionType::where('type', 'Opening balance')->first();
+                break;
+
+            case (in_array($fromAT, ['Default account', 'Asset account'])
+                && in_array(
+                    $toAT, ['Default account', 'Asset account']
+                )): // both are yours:
+                // determin transaction type. If both accounts are new, it's an initial balance transfer.
+                $journalType = \TransactionType::where('type', 'Transfer')->first();
+                break;
+            case ($amount < 0):
+                $journalType = \TransactionType::where('type', 'Deposit')->first();
+                break;
+            // is deposit into one of your own accounts:
+            case ($toAT == 'Default account' || $toAT == 'Asset account'):
+                $journalType = \TransactionType::where('type', 'Deposit')->first();
+                break;
+            // is withdrawal from one of your own accounts:
+            case ($fromAT == 'Default account' || $fromAT == 'Asset account'):
+                $journalType = \TransactionType::where('type', 'Withdrawal')->first();
+                break;
+        }
+
+        if (is_null($journalType)) {
+            throw new FireflyException('Could not figure out transaction type.');
+        }
+
+
+        // always the same currency:
+        $currency = \TransactionCurrency::where('code', 'EUR')->first();
+        if (is_null($currency)) {
+            throw new FireflyException('No currency for journal!');
+        }
+
+        // new journal:
+
+        $journal->transactionType()->associate($journalType);
+        $journal->transactionCurrency()->associate($currency);
+        $journal->user()->associate($this->_user);
+
+        // same account:
+        if ($fromAccount->id == $toAccount->id) {
+
+            $journal->errors()->add('account_to_id', 'Must be different from the "account from".');
+            $journal->errors()->add('account_from_id', 'Must be different from the "account to".');
+            return $journal;
+        }
+
+
+        if (!$journal->validate()) {
+            return $journal;
+        }
+        $journal->save();
+
+        // create transactions:
+        $fromTransaction = new \Transaction;
+        $fromTransaction->account()->associate($fromAccount);
+        $fromTransaction->transactionJournal()->associate($journal);
+        $fromTransaction->description = null;
+        $fromTransaction->amount      = $amountFrom;
+        if (!$fromTransaction->validate()) {
+            throw new FireflyException('Cannot create valid transaction (from): ' . $fromTransaction->errors()
+                    ->first());
+        }
+        $fromTransaction->save();
+
+        $toTransaction = new \Transaction;
+        $toTransaction->account()->associate($toAccount);
+        $toTransaction->transactionJournal()->associate($journal);
+        $toTransaction->description = null;
+        $toTransaction->amount      = $amountTo;
+        if (!$toTransaction->validate()) {
+
+            throw new FireflyException('Cannot create valid transaction (to): ' . $toTransaction->errors()->first()
+                . ': ' . print_r($toAccount->toArray(), true));
+        }
+        $toTransaction->save();
+
+        $journal->completed = true;
+        $journal->save();
+
+        return $journal;
+    }
+
+    /**
+     * @param Job   $job
+     * @param array $payload
+     *
+     * @return mixed
+     */
+    public function importTransaction(Job $job, array $payload)
+    {
+        /** @var \Firefly\Storage\Import\ImportRepositoryInterface $repository */
+        $repository = \App::make('Firefly\Storage\Import\ImportRepositoryInterface');
+
+        /** @var \Importmap $importMap */
+        $importMap = $repository->findImportmap($payload['mapID']);
+        $user      = $importMap->user;
+        $this->overruleUser($user);
+
+        if ($job->attempts() > 10) {
+            \Log::error('Never found asset account for transaction "' . $payload['data']['description'] . '". KILL!');
+
+            $importMap->jobsdone++;
+            $importMap->save();
+
+            $job->delete(); // count fixed
+            return;
+        }
+
+
+
+        /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accounts */
+        $accounts = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
+        $accounts->overruleUser($user);
+
+        /*
+         * Prep some vars coming out of the pay load:
+         */
+        $amount        = floatval($payload['data']['amount']);
+        $date          = new Carbon($payload['data']['date']);
+        $description   = $payload['data']['description'];
+        $transactionId = intval($payload['data']['id']);
+        $accountId     = intval($payload['data']['account_id']);
+
+        /*
+         * maybe Journal is already imported:
+         */
+        $importEntry = $repository->findImportEntry($importMap, 'Transaction', $transactionId);
+
+        /*
+         * if so, delete job and return:
+         */
+        if (!is_null($importEntry)) {
+            \Log::debug('Already imported transaction ' . $description);
+
+            $importMap->jobsdone++;
+            $importMap->save();
+
+            $job->delete(); // count fixed
+            return;
+        }
+
+
+        /*
+         * Find or create the "import account" which is used because at this point, Firefly
+         * doesn't know which beneficiary (expense account) should be connected to this transaction.
+         */
+        $accountType   = $accounts->findAccountType('Import account');
+        $importAccount = $accounts->firstOrCreate(
+            [
+                'account_type_id' => $accountType->id,
+                'name'            => 'Import account',
+                'user_id'         => $user->id,
+                'active'          => 1,
+            ]
+        );
+        unset($accountType);
+
+        /*
+         * Find the asset account this transaction is paid from / paid to:
+         */
+        $accountEntry = $repository->findImportEntry($importMap, 'Account', $accountId);
+        $assetAccount = $accounts->find($accountEntry->new);
+        unset($accountEntry);
+
+        /*
+         * If $assetAccount is null, we release this job and try later.
+         */
+        if (is_null($assetAccount)) {
+            \Log::notice('No asset account for "' . $description . '", try again later.');
+            if(\Config::get('queue.default') == 'sync') {
+                $importMap->jobsdone++;
+                $importMap->save();
+                $job->delete(); // count fixed
+            } else {
+                $job->release(300); // proper release.
+            }
+            return;
+        }
+
+        /*
+         * If the amount is less than zero, we move money to the $importAccount. Otherwise,
+         * we move it from the $importAccount.
+         */
+        if ($amount < 0) {
+            // if amount is less than zero, move to $importAccount
+            $accountFrom = $assetAccount;
+            $accountTo   = $importAccount;
+        } else {
+            $accountFrom = $importAccount;
+            $accountTo   = $assetAccount;
+        }
+
+        /*
+         * Modify the amount so it will work with or new transaction journal structure.
+         */
+        $amount = $amount < 0 ? $amount * -1 : $amount;
+
+        /*
+         * Import it:
+         */
+        $journal = $this->createSimpleJournal($accountFrom, $accountTo, $description, $amount, $date);
+        $repository->store($importMap, 'Transaction', $transactionId, $journal->id);
+        \Log::debug('Imported transaction "' . $description . '" (' . $amount . ') (' . $date->format('Y-m-d') . ')');
+
+        // update map:
+        $importMap->jobsdone++;
+        $importMap->save();
+
+        $job->delete(); // count fixed
+        return;
+
     }
 
     /**
@@ -125,17 +509,6 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
     }
 
     /**
-     * @param \User $user
-     *
-     * @return mixed|void
-     */
-    public function overruleUser(\User $user)
-    {
-        $this->_user = $user;
-        return true;
-    }
-
-    /**
      * @param \TransactionType $type
      * @param int              $count
      * @param Carbon           $start
@@ -160,7 +533,6 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
 
         return $result;
     }
-
 
     /**
      * @param $what
@@ -283,143 +655,6 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         }
 
         return $transactionJournal;
-    }
-
-    /**
-     *
-     * We're building this thinking the money goes from A to B.
-     * If the amount is negative however, the money still goes
-     * from A to B but the balances are reversed.
-     *
-     * Aka:
-     *
-     * Amount = 200
-     * A loses 200 (-200).  * -1
-     * B gains 200 (200).    * 1
-     *
-     * Final balance: -200 for A, 200 for B.
-     *
-     * When the amount is negative:
-     *
-     * Amount = -200
-     * A gains 200 (200). * -1
-     * B loses 200 (-200). * 1
-     *
-     * @param \Account       $from
-     * @param \Account       $toAccount
-     * @param                $description
-     * @param                $amount
-     * @param \Carbon\Carbon $date
-     *
-     * @return \TransactionJournal
-     * @throws \Firefly\Exception\FireflyException
-     */
-    public function createSimpleJournal(\Account $fromAccount, \Account $toAccount, $description, $amount, Carbon $date)
-    {
-        $journal = new \TransactionJournal;
-        $journal->completed   = false;
-        $journal->description = $description;
-        $journal->date        = $date;
-
-        $amountFrom = $amount * -1;
-        $amountTo   = $amount;
-
-        if (round(floatval($amount), 2) == 0.00) {
-            $journal->errors()->add('amount', 'Amount must not be zero.');
-
-            return $journal;
-        }
-
-        // account types for both:
-        $toAT   = $toAccount->accountType->type;
-        $fromAT = $fromAccount->accountType->type;
-
-        $journalType = null;
-
-        switch (true) {
-            case ($fromAccount->transactions()->count() == 0 && $toAccount->transactions()->count() == 0):
-                $journalType = \TransactionType::where('type', 'Opening balance')->first();
-                break;
-
-            case (in_array($fromAT, ['Default account', 'Asset account'])
-                && in_array(
-                    $toAT, ['Default account', 'Asset account']
-                )): // both are yours:
-                // determin transaction type. If both accounts are new, it's an initial balance transfer.
-                $journalType = \TransactionType::where('type', 'Transfer')->first();
-                break;
-            case ($amount < 0):
-                $journalType = \TransactionType::where('type', 'Deposit')->first();
-                break;
-            // is deposit into one of your own accounts:
-            case ($toAT == 'Default account' || $toAT == 'Asset account'):
-                $journalType = \TransactionType::where('type', 'Deposit')->first();
-                break;
-            // is withdrawal from one of your own accounts:
-            case ($fromAT == 'Default account' || $fromAT == 'Asset account'):
-                $journalType = \TransactionType::where('type', 'Withdrawal')->first();
-                break;
-        }
-
-        if (is_null($journalType)) {
-            throw new FireflyException('Could not figure out transaction type.');
-        }
-
-
-
-        // always the same currency:
-        $currency = \TransactionCurrency::where('code', 'EUR')->first();
-        if (is_null($currency)) {
-            throw new FireflyException('No currency for journal!');
-        }
-
-        // new journal:
-
-        $journal->transactionType()->associate($journalType);
-        $journal->transactionCurrency()->associate($currency);
-        $journal->user()->associate($this->_user);
-
-        // same account:
-        if ($fromAccount->id == $toAccount->id) {
-
-            $journal->errors()->add('account_to_id', 'Must be different from the "account from".');
-            $journal->errors()->add('account_from_id', 'Must be different from the "account to".');
-            return $journal;
-        }
-
-
-        if (!$journal->validate()) {
-            return $journal;
-        }
-        $journal->save();
-
-        // create transactions:
-        $fromTransaction = new \Transaction;
-        $fromTransaction->account()->associate($fromAccount);
-        $fromTransaction->transactionJournal()->associate($journal);
-        $fromTransaction->description = null;
-        $fromTransaction->amount      = $amountFrom;
-        if (!$fromTransaction->validate()) {
-            throw new FireflyException('Cannot create valid transaction (from): ' . $fromTransaction->errors()
-                    ->first());
-        }
-        $fromTransaction->save();
-
-        $toTransaction = new \Transaction;
-        $toTransaction->account()->associate($toAccount);
-        $toTransaction->transactionJournal()->associate($journal);
-        $toTransaction->description = null;
-        $toTransaction->amount      = $amountTo;
-        if (!$toTransaction->validate()) {
-
-            throw new FireflyException('Cannot create valid transaction (to): ' . $toTransaction->errors()->first().': ' . print_r($toAccount->toArray(),true));
-        }
-        $toTransaction->save();
-
-        $journal->completed = true;
-        $journal->save();
-
-        return $journal;
     }
 
     /**
