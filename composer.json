@@ -28,7 +28,8 @@
     "require-dev": {
         "barryvdh/laravel-debugbar": "@stable",
         "barryvdh/laravel-ide-helper": "@stable",
-        "doctrine/dbal": "~2.3"
+        "doctrine/dbal": "~2.3",
+        "pda/pheanstalk": "2.*"
     },
     "autoload": {
         "classmap": [
