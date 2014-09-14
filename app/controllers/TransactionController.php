@@ -8,6 +8,7 @@ use Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface as 
  * Class TransactionController
  *
  * @SuppressWarnings(PHPMD.CamelCasePropertyName)
+ *
  */
 class TransactionController extends BaseController
 {
