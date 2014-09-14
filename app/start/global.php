@@ -12,14 +12,14 @@
 */
 
 ClassLoader::addDirectories(
-    array(
+    [
 
         app_path() . '/commands',
         app_path() . '/controllers',
         app_path() . '/models',
         app_path() . '/database/seeds',
 
-    )
+    ]
 );
 
 /*
@@ -33,7 +33,7 @@ ClassLoader::addDirectories(
 |
 */
 
-Log::useFiles(storage_path() . '/logs/laravel.log');
+Log::useDailyFiles(storage_path('logs') . DIRECTORY_SEPARATOR . 'laravel.log', 3, Config::get('app.log_level'));
 
 /*
 |--------------------------------------------------------------------------
