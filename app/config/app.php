@@ -6,6 +6,7 @@ return [
     'timezone'        => 'UTC',
     'locale'          => 'en',
     'fallback_locale' => 'en',
+    'log_level'       => 'notice',
     'key'             => 'D93oqmVsIARg23FC3cbsHuBGk0uXQc3r',
     'cipher'          => MCRYPT_RIJNDAEL_128,
     'providers'       => [
