@@ -2,6 +2,7 @@
 
 
 namespace Firefly\Storage\RecurringTransaction;
+use Illuminate\Queue\Jobs\Job;
 
 /**
  * Interface RecurringTransactionRepositoryInterface
@@ -10,6 +11,14 @@ namespace Firefly\Storage\RecurringTransaction;
  */
 interface RecurringTransactionRepositoryInterface
 {
+
+    /**
+     * @param Job   $job
+     * @param array $payload
+     *
+     * @return mixed
+     */
+    public function importPredictable(Job $job, array $payload);
 
     /**
      * @return mixed

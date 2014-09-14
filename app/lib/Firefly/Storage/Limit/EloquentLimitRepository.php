@@ -4,6 +4,7 @@ namespace Firefly\Storage\Limit;
 
 
 use Carbon\Carbon;
+use Illuminate\Queue\Jobs\Job;
 
 /**
  * Class EloquentLimitRepository
@@ -23,14 +24,108 @@ class EloquentLimitRepository implements LimitRepositoryInterface
     }
 
     /**
-     * @param \Limit $limit
+     * @param Job   $job
+     * @param array $payload
      *
-     * @return bool
+     * @return mixed
      */
-    public function destroy(\Limit $limit)
+    public function importLimit(Job $job, array $payload)
     {
-        $limit->delete();
 
+        /** @var \Firefly\Storage\Import\ImportRepositoryInterface $repository */
+        $repository = \App::make('Firefly\Storage\Import\ImportRepositoryInterface');
+
+        /** @var \Importmap $importMap */
+        $importMap = $repository->findImportmap($payload['mapID']);
+        $user      = $importMap->user;
+        $this->overruleUser($user);
+
+        if ($job->attempts() > 10) {
+            \Log::error(
+                'No budget found for limit #' . $payload['data']['id'] . '. Prob. for another component. KILL!'
+            );
+
+            $importMap->jobsdone++;
+            $importMap->save();
+
+            $job->delete(); // count fixed.
+            return;
+        }
+
+        /** @var \Firefly\Storage\Budget\BudgetRepositoryInterface $budgets */
+        $budgets = \App::make('Firefly\Storage\Budget\BudgetRepositoryInterface');
+        $budgets->overruleUser($user);
+
+        /*
+         * Find the budget this limit is part of:
+         */
+        $importEntry = $repository->findImportEntry($importMap, 'Budget', intval($payload['data']['component_id']));
+
+        /*
+         * There is no budget (yet?)
+         */
+        if (is_null($importEntry)) {
+            $componentId = intval($payload['data']['component_id']);
+            \Log::warning('Budget #' . $componentId . ' not found. Requeue import job.');
+            if(\Config::get('queue.default') == 'sync') {
+                $importMap->jobsdone++;
+                $importMap->save();
+                $job->delete(); // count fixed
+            } else {
+                $job->release(300); // proper release.
+            }
+            return;
+        }
+
+        /*
+         * Find budget import limit is for:
+         */
+        $budget = $budgets->find($importEntry->new);
+        if (!is_null($budget)) {
+            /*
+             * Is actual limit already imported?
+             */
+            $limit = $this->findByBudgetAndDate($budget, new Carbon($payload['data']['date']));
+            if (is_null($limit)) {
+                /*
+                 * It isn't imported yet.
+                 */
+                $payload['data']['budget_id'] = $budget->id;
+                $payload['data']['startdate'] = $payload['data']['date'];
+                $payload['data']['period']    = 'monthly';
+                /*
+                 * Store limit, and fire event for LimitRepetition.
+                 */
+                $limit = $this->store($payload['data']);
+                $repository->store($importMap, 'Limit', $payload['data']['id'], $limit->id);
+                \Event::fire('limits.store', [$limit]);
+                \Log::debug('Imported limit for budget ' . $budget->name);
+            } else {
+                /*
+                 * Limit already imported:
+                 */
+                $repository->store($importMap, 'Budget', $payload['data']['id'], $limit->id);
+            }
+        } else {
+            \Log::error(print_r($importEntry,true));
+            \Log::error('Cannot import limit! Big bad error!');
+        }
+
+        // update map:
+        $importMap->jobsdone++;
+        $importMap->save();
+
+        $job->delete(); // count fixed
+    }
+
+    /**
+     * @param \User $user
+     *
+     * @return mixed|void
+     */
+    public function overruleUser(\User $user)
+    {
+        $this->_user = $user;
         return true;
     }
 
@@ -42,39 +137,14 @@ class EloquentLimitRepository implements LimitRepositoryInterface
     public function find($limitId)
     {
         return \Limit::with('limitrepetitions')->where('limits.id', $limitId)->leftJoin(
-                     'components', 'components.id', '=', 'limits.component_id'
+            'components', 'components.id', '=', 'limits.component_id'
         )
-                     ->where('components.user_id', $this->_user->id)->first(['limits.*']);
+            ->where('components.user_id', $this->_user->id)->first(['limits.*']);
     }
 
     public function findByBudgetAndDate(\Budget $budget, Carbon $date)
     {
         return \Limit::whereComponentId($budget->id)->where('startdate', $date->format('Y-m-d'))->first();
-    }
-
-    /**
-     * @param \Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return mixed
-     */
-    public function getTJByBudgetAndDateRange(\Budget $budget, Carbon $start, Carbon $end)
-    {
-        $result = $budget->transactionjournals()->with('transactions')->after($start)->before($end)->get();
-
-        return $result;
-
-    }
-
-    /**
-     * @param \User $user
-     * @return mixed|void
-     */
-    public function overruleUser(\User $user)
-    {
-        $this->_user = $user;
-        return true;
     }
 
     /**
@@ -121,9 +191,9 @@ class EloquentLimitRepository implements LimitRepositoryInterface
         // find existing:
         $count = \Limit::
             leftJoin('components', 'components.id', '=', 'limits.component_id')->where(
-                       'components.user_id', $this->_user->id
+                'components.user_id', $this->_user->id
             )->where('startdate', $date->format('Y-m-d'))->where('component_id', $data['budget_id'])->where(
-                       'repeat_freq', $data['period']
+                'repeat_freq', $data['period']
             )->count();
         if ($count > 0) {
             \Session::flash('error', 'There already is an entry for these parameters.');
@@ -142,6 +212,33 @@ class EloquentLimitRepository implements LimitRepositoryInterface
         }
 
         return $limit;
+    }
+
+    /**
+     * @param \Limit $limit
+     *
+     * @return bool
+     */
+    public function destroy(\Limit $limit)
+    {
+        $limit->delete();
+
+        return true;
+    }
+
+    /**
+     * @param \Budget $budget
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return mixed
+     */
+    public function getTJByBudgetAndDateRange(\Budget $budget, Carbon $start, Carbon $end)
+    {
+        $result = $budget->transactionjournals()->with('transactions')->after($start)->before($end)->get();
+
+        return $result;
+
     }
 
     /**

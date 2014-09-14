@@ -1,6 +1,7 @@
 <?php
 
 namespace Firefly\Storage\Category;
+use Illuminate\Queue\Jobs\Job;
 
 /**
  * Interface CategoryRepositoryInterface
@@ -9,6 +10,33 @@ namespace Firefly\Storage\Category;
  */
 interface CategoryRepositoryInterface
 {
+    /**
+     * Takes a transaction/category component and updates the transaction journal to match.
+     *
+     * @param Job   $job
+     * @param array $payload
+     *
+     * @return mixed
+     */
+    public function importUpdateTransaction(Job $job, array $payload);
+
+    /**
+     * Takes a transfer/category component and updates the transaction journal to match.
+     *
+     * @param Job   $job
+     * @param array $payload
+     *
+     * @return mixed
+     */
+    public function importUpdateTransfer(Job $job, array $payload);
+
+    /**
+     * @param Job   $job
+     * @param array $payload
+     *
+     * @return mixed
+     */
+    public function importCategory(Job $job, array $payload);
 
     /**
      * @return mixed

@@ -4,6 +4,7 @@
 namespace Firefly\Storage\RecurringTransaction;
 
 use Carbon\Carbon;
+use Illuminate\Queue\Jobs\Job;
 
 /**
  * Class EloquentRecurringTransactionRepository
@@ -12,16 +13,6 @@ use Carbon\Carbon;
  */
 class EloquentRecurringTransactionRepository implements RecurringTransactionRepositoryInterface
 {
-
-    /**
-     * @param \User $user
-     * @return mixed|void
-     */
-    public function overruleUser(\User $user)
-    {
-        $this->_user = $user;
-        return true;
-    }
 
     protected $_user = null;
 
@@ -34,28 +25,87 @@ class EloquentRecurringTransactionRepository implements RecurringTransactionRepo
     }
 
     /**
-     * @param \RecurringTransaction $recurringTransaction
+     * @param Job   $job
+     * @param array $payload
      *
-     * @return bool|mixed
+     * @return mixed
      */
-    public function destroy(\RecurringTransaction $recurringTransaction)
+    public function importPredictable(Job $job, array $payload)
     {
-        $recurringTransaction->delete();
+        /** @var \Firefly\Storage\Import\ImportRepositoryInterface $repository */
+        $repository = \App::make('Firefly\Storage\Import\ImportRepositoryInterface');
 
+        /** @var \Importmap $importMap */
+        $importMap = $repository->findImportmap($payload['mapID']);
+        $user      = $importMap->user;
+        $this->overruleUser($user);
+
+        /*
+         * maybe the recurring transaction is already imported:
+         */
+        $oldId       = intval($payload['data']['id']);
+        $description = $payload['data']['description'];
+        $importEntry = $repository->findImportEntry($importMap, 'RecurringTransaction', $oldId);
+
+        /*
+         * if so, delete job and return:
+         */
+        if (!is_null($importEntry)) {
+            \Log::debug('Already imported recurring transaction #' . $payload['data']['id']);
+
+            $importMap->jobsdone++;
+            $importMap->save();
+
+            $job->delete(); // count fixed
+            return;
+        }
+
+        // try to find related recurring transaction:
+        $recurringTransaction = $this->findByName($payload['data']['description']);
+        if (is_null($recurringTransaction)) {
+            $amount = floatval($payload['data']['amount']);
+            $pct    = intval($payload['data']['pct']);
+
+            $set = [
+                'name'        => $description,
+                'match'       => join(',', explode(' ', $description)),
+                'amount_min'  => $amount * ($pct / 100) * -1,
+                'amount_max'  => $amount * (1 + ($pct / 100)) * -1,
+                'date'        => date('Y-m-') . $payload['data']['dom'],
+                'repeat_freq' => 'monthly',
+                'active'      => intval($payload['data']['inactive']) == 1 ? 0 : 1,
+                'automatch'   => 1,
+            ];
+
+            $recurringTransaction = $this->store($set);
+            $this->store($importMap, 'RecurringTransaction', $oldId, $recurringTransaction->id);
+            \Log::debug('Imported predictable ' . $description);
+        } else {
+            $this->store($importMap, 'RecurringTransaction', $oldId, $recurringTransaction->id);
+            \Log::debug('Already had predictable ' . $description);
+        }
+        // update map:
+        $importMap->jobsdone++;
+        $importMap->save();
+
+        $job->delete(); // count fixed
+
+    }
+
+    /**
+     * @param \User $user
+     *
+     * @return mixed|void
+     */
+    public function overruleUser(\User $user)
+    {
+        $this->_user = $user;
         return true;
     }
 
     public function findByName($name)
     {
         return $this->_user->recurringtransactions()->where('name', 'LIKE', '%' . $name . '%')->first();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function get()
-    {
-        return $this->_user->recurringtransactions()->get();
     }
 
     /**
@@ -90,6 +140,26 @@ class EloquentRecurringTransactionRepository implements RecurringTransactionRepo
         }
 
         return $recurringTransaction;
+    }
+
+    /**
+     * @param \RecurringTransaction $recurringTransaction
+     *
+     * @return bool|mixed
+     */
+    public function destroy(\RecurringTransaction $recurringTransaction)
+    {
+        $recurringTransaction->delete();
+
+        return true;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function get()
+    {
+        return $this->_user->recurringtransactions()->get();
     }
 
     /**
