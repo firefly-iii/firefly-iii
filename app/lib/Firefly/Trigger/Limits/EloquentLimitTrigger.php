@@ -85,7 +85,7 @@ class EloquentLimitTrigger
      */
     public function madeRepetition(\LimitRepetition $repetition)
     {
-        \Log::info('TRIGGER: Created a limit repetition  (#' . $repetition->id . ')');
+        \Log::debug('TRIGGER: Created a limit repetition  (#' . $repetition->id . ')');
     }
 
     /**
