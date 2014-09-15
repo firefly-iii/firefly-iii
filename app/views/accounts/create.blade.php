@@ -28,7 +28,21 @@
                 @if($errors->has('name'))
                     <p class="text-danger">{{$errors->first('name')}}</p>
                 @else
-                    <span class="help-block">Use something descriptive such as "checking account" or "My Bank Main Account".</span>
+                    @if($what == 'asset')
+                        <span class="help-block">
+                            Use something descriptive such as "checking account" or "My Bank Main Account".
+                        </span>
+                    @endif
+                    @if($what == 'expense')
+                        <span class="help-block">
+                            Use something descriptive such as "Albert Heijn" or "Amazon".
+                        </span>
+                    @endif
+                    @if($what == 'revenue')
+                            <span class="help-block">
+                                Use something descriptive such as "my mom" or "my job".
+                            </span>
+                    @endif
                 @endif
 
             </div>
@@ -91,7 +105,7 @@
 
         <div class="form-group">
             <div class="col-sm-offset-4 col-sm-8">
-                <button type="submit" class="btn btn-default btn-success">Create the account</button>
+                <button type="submit" class="btn btn-default btn-success">Create the {{{$what}}} account</button>
             </div>
         </div>
     </div>
