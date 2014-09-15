@@ -2,9 +2,6 @@
 @section('content')
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly
-            <small>Delete envelope</small>
-        </h1>
         <p class="lead">Remember that deleting something is permanent.</p>
 
     </div>
@@ -34,9 +31,9 @@
             <div class="col-sm-8">
                 <input type="submit" name="submit" value="Remove envelope" class="btn btn-danger" />
                 @if(Input::get('from') == 'date')
-                <a href="{{route('budgets.index')}}" class="btn-default btn">Cancel</a>
+                    <a href="{{route('budgets.index.date')}}" class="btn-default btn">Cancel</a>
                 @else
-                <a href="{{route('budgets.index.budget')}}" class="btn-default btn">Cancel</a>
+                    <a href="{{route('budgets.index.budget')}}" class="btn-default btn">Cancel</a>
                 @endif
             </div>
         </div>
