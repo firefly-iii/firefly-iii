@@ -5,9 +5,6 @@
 
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly
-            <small>Category "{{{$category->name}}}"</small>
-        </h1>
         <p class="lead">Use categories to group your expenses</p>
         <p class="text-info">
             Use categories to group expenses by hobby, for certain types of groceries or what bills are for.

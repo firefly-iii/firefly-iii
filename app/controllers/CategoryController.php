@@ -21,6 +21,8 @@ class CategoryController extends BaseController
     {
         $this->_repository = $repository;
         $this->_category   = $category;
+        View::share('title','Categories');
+        View::share('mainTitleIcon', 'fa-bar-chart');
     }
 
     /**

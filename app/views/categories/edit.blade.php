@@ -2,9 +2,6 @@
 @section('content')
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly
-            <small>Edit category "{{{$category->name}}}"</small>
-        </h1>
         <p class="lead">Use categories to group your expenses</p>
     </div>
 </div>
