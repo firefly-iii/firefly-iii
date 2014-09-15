@@ -2,9 +2,6 @@
 @section('content')
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly
-            <small>Budgets and envelopes</small>
-        </h1>
         <p class="lead">Use budgets to organize and limit your expenses.</p>
 
         <p class="text-info">
@@ -22,15 +19,7 @@
             * <small>Every month, week, year, etc.</small>
         </p>
 
-        <p>
-            <div class="btn-group">
-            <a href="{{route('budgets.create')}}" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Create a new budget</a>
-            <a href="{{route('budgets.limits.create')}}" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Create a new envelope</a>
-            </div>
-        </p>
-
         <div class="btn-group">
-            <a class="btn btn-default" href ="{{route('budgets.index')}}"><span class="glyphicon glyphicon-indent-left"></span> Group by date</a>
             <a class="btn btn-default" href ="{{route('budgets.create')}}?from=budget"><span class="glyphicon glyphicon-plus-sign"></span> Create a new budget</a>
             <a class="btn btn-default" href ="{{route('budgets.limits.create')}}?from=budget"><span class="glyphicon glyphicon-plus-sign"></span> Create a new envelope</a>
         </div>

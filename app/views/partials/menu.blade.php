@@ -90,7 +90,7 @@
                     class="active"
                 @endif
                 >
-                <a href="#"><i class="fa fa-credit-card fa-fw"></i> Accounts<span class="fa arrow"></span></a>
+                <a href="#"><i class="fa fa-credit-card fa-fw"></i> Accounts <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
                         <a @if($r == 'accounts.asset') class="active" @endif href="{{route('accounts.asset')}}"><i class="fa fa-money fa-fw"></i> Asset accounts</a>
@@ -104,8 +104,23 @@
                 </ul>
                 <!-- /.nav-second-level -->
             </li>
-            <li>
-                <a href="{{route('budgets.index')}}"><i class="fa fa-tasks fa-fw"></i> Budgets</a>
+            <li
+            @if(!(strpos($r,'budgets') === false))
+            class="active"
+            @endif
+                >
+                <a href="#"><i class="fa fa-tasks fa-fw"></i> Budgets <span class="fa arrow"></span></a>
+
+                <ul class="nav nav-second-level">
+                    <li>
+                        <a @if($r == 'budgets.index.date') class="active" @endif href="{{route('budgets.index.date')}}"><i class="fa fa-calendar fa-fw"></i> Grouped by date</a>
+                    </li>
+                    <li>
+                        <a @if($r == 'budgets.index.budget') class="active" @endif href="{{route('budgets.index.budget')}}"><i class="fa fa-folder-open fa-fw"></i> Grouped by budget</a>
+                    </li>
+                </ul>
+
+
             </li>
             <li>
                 <a href="{{route('categories.index')}}"><i class="fa fa-bar-chart fa-fw"></i> Categories</a>
