@@ -25,6 +25,8 @@ class BudgetController extends BaseController
     {
         $this->_budgets    = $budgets;
         $this->_repository = $repository;
+        View::share('title','Budgets');
+        View::share('mainTitleIcon', 'fa-tasks');
     }
 
     /**
@@ -85,10 +87,12 @@ class BudgetController extends BaseController
      */
     public function indexByBudget()
     {
+        View::share('subTitleIcon', 'fa-folder-open');
+
         $budgets = $this->_repository->get();
 
         return View::make('budgets.indexByBudget')->with('budgets', $budgets)->with('today', new Carbon)
-            ->with('subTitle', 'All your budgets grouped by budget');
+            ->with('subTitle', 'Grouped by budget');
 
     }
 
@@ -97,12 +101,14 @@ class BudgetController extends BaseController
      */
     public function indexByDate()
     {
+        View::share('subTitleIcon', 'fa-calendar');
+
         // get a list of dates by getting all repetitions:
         $set     = $this->_repository->get();
         $budgets = $this->_budgets->organizeByDate($set);
 
         return View::make('budgets.indexByDate')->with('budgets', $budgets)
-            ->with('subTitle', 'All your budgets grouped by date');
+            ->with('subTitle', 'Grouped by date');
 
 
     }
@@ -152,7 +158,7 @@ class BudgetController extends BaseController
             ->with('view', $view)
             ->with('highlight', Input::get('highlight'))
             ->with('useSessionDates', $useSessionDates)
-            ->with('subTitle', $title);
+            ->with('subTitle', 'Overview for '.$title);
     }
 
     /**

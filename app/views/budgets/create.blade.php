@@ -2,9 +2,6 @@
 @section('content')
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly
-            <small>Create a budget</small>
-        </h1>
         <p class="lead">Use budgets to organize and limit your expenses.</p>
         <p class="text-info">
             Firefly uses the <a href="http://en.wikipedia.org/wiki/Envelope_System" class="text-success">envelope system</a>. Every budget

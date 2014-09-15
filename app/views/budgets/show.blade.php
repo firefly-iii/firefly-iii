@@ -2,9 +2,6 @@
 @section('content')
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly
-            <small>Overview for budget "{{{$budget->name}}}"</small>
-        </h1>
             <p class="lead">Budgets can help you cut back on spending.</p>
 
                 @if($view == 1)
