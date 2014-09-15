@@ -22,6 +22,9 @@ class LimitController extends BaseController
     {
         $this->_budgets = $budgets;
         $this->_limits  = $limits;
+
+        View::share('title','Envelopes');
+        View::share('mainTitleIcon', 'fa-tasks');
     }
 
     /**
@@ -42,7 +45,7 @@ class LimitController extends BaseController
 
         return View::make('limits.create')->with('budgets', $budgets)->with(
             'periods', $periods
-        )->with('prefilled', $prefilled);
+        )->with('prefilled', $prefilled)->with('subTitle','New envelope');
     }
 
     /**
@@ -52,7 +55,7 @@ class LimitController extends BaseController
      */
     public function delete(\Limit $limit)
     {
-        return View::make('limits.delete')->with('limit', $limit);
+        return View::make('limits.delete')->with('limit', $limit)->with('subTitle','Delete envelope');
     }
 
     /**
@@ -89,7 +92,7 @@ class LimitController extends BaseController
 
         return View::make('limits.edit')->with('limit', $limit)->with('budgets', $budgets)->with(
             'periods', $periods
-        );
+        )->with('subTitle','Edit envelope');
     }
 
     /**

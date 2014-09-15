@@ -2,9 +2,6 @@
 @section('content')
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly
-            <small>Create an envelope for a budget</small>
-        </h1>
         <p class="text-info">
             Firefly uses an "<a href="http://en.wikipedia.org/wiki/Envelope_System" class="text-success">envelope
                 system</a>" for your budgets, which means that for each period of time (for example a month) a virtual
