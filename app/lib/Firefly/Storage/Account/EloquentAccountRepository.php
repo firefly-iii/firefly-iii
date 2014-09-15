@@ -66,7 +66,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         /*
          * Find the import map for both:
          */
-        $accountMap      = $repository->findImportEntry($importMap, 'Account', $componentId);
+        $accountMap     = $repository->findImportEntry($importMap, 'Account', $componentId);
         $transactionMap = $repository->findImportEntry($importMap, 'Transaction', $transactionId);
 
         /*
@@ -74,7 +74,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
          */
         if (is_null($accountMap) || is_null($transactionMap)) {
             \Log::notice('No map found in account/transaction mapper. Release.');
-            if(\Config::get('queue.default') == 'sync') {
+            if (\Config::get('queue.default') == 'sync') {
                 $importMap->jobsdone++;
                 $importMap->save();
                 $job->delete(); // count fixed
@@ -96,7 +96,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
          */
         if (is_null($account) || is_null($journal)) {
             \Log::notice('Map is incorrect in account/transaction mapper. Release.');
-            if(\Config::get('queue.default') == 'sync') {
+            if (\Config::get('queue.default') == 'sync') {
                 $importMap->jobsdone++;
                 $importMap->save();
                 $job->delete(); // count fixed
@@ -111,24 +111,55 @@ class EloquentAccountRepository implements AccountRepositoryInterface
          */
         $importType = $this->findAccountType('Import account');
         /** @var \Transaction $transaction */
-        foreach($journal->transactions as $transaction) {
+        foreach ($journal->transactions as $transaction) {
             /*
              * If it's of the right type, update it!
              */
-            if($transaction->account->account_type_id == $importType->id) {
+            if ($transaction->account->account_type_id == $importType->id) {
                 $transaction->account()->associate($account);
                 $transaction->save();
             }
         }
 
         $journal->save();
-        \Log::debug('Connected expense account "' . $account->name . '" to journal "' . $journal->description.'"');
+        \Log::debug('Connected expense account "' . $account->name . '" to journal "' . $journal->description . '"');
 
         $importMap->jobsdone++;
         $importMap->save();
 
         $job->delete(); // count fixed
 
+    }
+
+    /**
+     * @param \User $user
+     *
+     * @return mixed|void
+     */
+    public function overruleUser(\User $user)
+    {
+        $this->_user = $user;
+        return true;
+    }
+
+    /**
+     * @param $accountId
+     *
+     * @return mixed
+     */
+    public function find($accountId)
+    {
+        return $this->_user->accounts()->where('id', $accountId)->first();
+    }
+
+    /**
+     * @param $type
+     *
+     * @return mixed
+     */
+    public function findAccountType($type)
+    {
+        return \AccountType::where('type', $type)->first();
     }
 
     /**
@@ -198,7 +229,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
             $importMap->jobsdone++;
             $importMap->save();
 
-            $job->delete();// count fixed
+            $job->delete(); // count fixed
             return;
         }
         \Log::debug('Imported ' . $payload['account_type'] . ': ' . $payload['data']['name']);
@@ -211,27 +242,6 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         $importMap->save();
         $job->delete(); // count fixed.
         return;
-    }
-
-    /**
-     * @param \User $user
-     *
-     * @return mixed|void
-     */
-    public function overruleUser(\User $user)
-    {
-        $this->_user = $user;
-        return true;
-    }
-
-    /**
-     * @param $type
-     *
-     * @return mixed
-     */
-    public function findAccountType($type)
-    {
-        return \AccountType::where('type', $type)->first();
     }
 
     /**
@@ -294,44 +304,6 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         // whatever the result, return the account.
         return $account;
     }
-
-    /**
-     * @param \Account $account
-     * @param int      $amount
-     * @param Carbon   $date
-     *
-     * @return bool
-     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
-     */
-    protected function _createInitialBalance(\Account $account, $amount = 0, Carbon $date)
-    {
-        // get account type:
-        $initialBalanceAT = \AccountType::where('type', 'Initial balance account')->first();
-
-        // create new account:
-        $initial = new \Account;
-        $initial->accountType()->associate($initialBalanceAT);
-        $initial->user()->associate($this->_user);
-        $initial->name   = $account->name . ' initial balance';
-        $initial->active = 0;
-        if ($initial->validate()) {
-            $initial->save();
-            // create new transaction journal (and transactions):
-            /** @var \Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface $transactionJournal */
-            $transactionJournal = \App::make(
-                'Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface'
-            );
-            $transactionJournal->overruleUser($this->_user);
-
-            $transactionJournal->createSimpleJournal(
-                $initial, $account, 'Initial Balance for ' . $account->name, $amount, $date
-            );
-
-            return true;
-        }
-
-        return false;
-    }
 //
 //    /**
 //     * @param $name
@@ -383,6 +355,44 @@ class EloquentAccountRepository implements AccountRepositoryInterface
 //            ->first();
 //    }
 
+    /**
+     * @param \Account $account
+     * @param int      $amount
+     * @param Carbon   $date
+     *
+     * @return bool
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
+     */
+    protected function _createInitialBalance(\Account $account, $amount = 0, Carbon $date)
+    {
+        // get account type:
+        $initialBalanceAT = \AccountType::where('type', 'Initial balance account')->first();
+
+        // create new account:
+        $initial = new \Account;
+        $initial->accountType()->associate($initialBalanceAT);
+        $initial->user()->associate($this->_user);
+        $initial->name   = $account->name . ' initial balance';
+        $initial->active = 0;
+        if ($initial->validate()) {
+            $initial->save();
+            // create new transaction journal (and transactions):
+            /** @var \Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface $transactionJournal */
+            $transactionJournal = \App::make(
+                'Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface'
+            );
+            $transactionJournal->overruleUser($this->_user);
+
+            $transactionJournal->createSimpleJournal(
+                $initial, $account, 'Initial Balance for ' . $account->name, $amount, $date
+            );
+
+            return true;
+        }
+
+        return false;
+    }
+
     public function firstOrCreate(array $data)
     {
         return \Account::firstOrCreate($data);
@@ -422,6 +432,20 @@ class EloquentAccountRepository implements AccountRepositoryInterface
 
     }
 
+//    /**
+//     * Used for import
+//     *
+//     * @param              $name
+//     *
+//     * @return mixed
+//     */
+//    public function findByNameAny($name)
+//    {
+//        return $this->_user->accounts()
+//            ->where('name', 'like', '%' . $name . '%')
+//            ->first();
+//    }
+
     /**
      * @param \Account $account
      *
@@ -430,7 +454,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     public function destroy(\Account $account)
     {
         // find all transaction journals related to this account:
-        $journals   = \TransactionJournal::withRelevantData()->account($account)->get(['transaction_journals.*']);
+        $journals   = \TransactionJournal::withRelevantData()->accountIs($account)->get(['transaction_journals.*']);
         $accountIDs = [];
 
         /** @var \TransactionJournal $journal */
@@ -461,30 +485,6 @@ class EloquentAccountRepository implements AccountRepositoryInterface
          */
 
         return true;
-    }
-
-//    /**
-//     * Used for import
-//     *
-//     * @param              $name
-//     *
-//     * @return mixed
-//     */
-//    public function findByNameAny($name)
-//    {
-//        return $this->_user->accounts()
-//            ->where('name', 'like', '%' . $name . '%')
-//            ->first();
-//    }
-
-    /**
-     * @param $accountId
-     *
-     * @return mixed
-     */
-    public function find($accountId)
-    {
-        return $this->_user->accounts()->where('id', $accountId)->first();
     }
 
 //    /**
@@ -598,7 +598,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
             $account->save();
         }
         // update initial balance if necessary:
-        if (floatval($data['openingbalance']) != 0) {
+        if (isset($data['openingbalance']) && floatval($data['openingbalance']) != 0) {
 
             /** @var \Firefly\Helper\Controllers\AccountInterface $interface */
             $interface = \App::make('Firefly\Helper\Controllers\AccountInterface');

@@ -29,7 +29,7 @@
 
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12">
-        @if($account->accounttype->type == 'Default account')
+        @if($account->accounttype->type == 'Default account' || $account->accounttype->type == 'Asset account')
         <h4>Optional fields</h4>
 
         <div class="form-group">
@@ -58,7 +58,7 @@
                 @if(!is_null($openingBalance))
                     {{ Form::input('date','openingbalancedate', Input::old('openingbalancedate') ?: $openingBalance->date->format('Y-m-d'), ['class' => 'form-control']) }}
                 @else
-                    {{ Form::input('date','openingbalancedate', Input::old('openingbalancedate') ?: date('Y-m-d'), ['class' => 'form-control']) }}
+                    {{ Form::input('date','openingbalancedate', Input::old('openingbalancedate') ?: '', ['class' => 'form-control']) }}
                 @endif
                 @if($errors->has('openingbalancedate'))
                 <p class="text-danger">{{$errors->first('openingbalancedate')}}</p>

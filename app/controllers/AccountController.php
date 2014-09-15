@@ -31,7 +31,18 @@ class AccountController extends \BaseController
      */
     public function create($what)
     {
-        View::share('subTitleIcon', 'fa-money');
+        switch ($what) {
+            case 'asset':
+                View::share('subTitleIcon', 'fa-money');
+                break;
+            case 'expense':
+                View::share('subTitleIcon', 'fa-shopping-cart');
+                break;
+            case 'revenue':
+                View::share('subTitleIcon', 'fa-download');
+                break;
+        }
+
 
         return View::make('accounts.create')->with('subTitle', 'Create a new ' . $what . ' account')->with(
             'what', $what
@@ -43,7 +54,7 @@ class AccountController extends \BaseController
      */
     public function asset()
     {
-        View::share('subTitleIcon','fa-money');
+        View::share('subTitleIcon', 'fa-money');
 
         $accounts = $this->_repository->getOfTypes(['Asset account', 'Default account']);
 
@@ -57,7 +68,7 @@ class AccountController extends \BaseController
      */
     public function expense()
     {
-        View::share('subTitleIcon','fa-shopping-cart');
+        View::share('subTitleIcon', 'fa-shopping-cart');
 
         $accounts = $this->_repository->getOfTypes(['Expense account', 'Beneficiary account']);
 
@@ -71,7 +82,7 @@ class AccountController extends \BaseController
      */
     public function revenue()
     {
-        View::share('subTitleIcon','fa-download');
+        View::share('subTitleIcon', 'fa-download');
 
         $accounts = $this->_repository->getOfTypes(['Revenue account']);
 
@@ -127,6 +138,21 @@ class AccountController extends \BaseController
      */
     public function edit(Account $account)
     {
+
+        switch ($account->accountType->type) {
+            case 'Asset account':
+            case 'Default account':
+                View::share('subTitleIcon', 'fa-money');
+                break;
+            case 'Expense account':
+            case 'Beneficiary account':
+                View::share('subTitleIcon', 'fa-shopping-cart');
+                break;
+            case 'Revenue account':
+                View::share('subTitleIcon', 'fa-download');
+                break;
+        }
+
         $openingBalance = $this->_accounts->openingBalanceTransaction($account);
         return View::make('accounts.edit')->with('account', $account)->with('openingBalance', $openingBalance)
 
@@ -139,23 +165,6 @@ class AccountController extends \BaseController
     public function index()
     {
         return View::make('error')->with('message', 'This view has been disabled');
-//        $accounts = $this->_repository->get();
-//        $set      = [
-//            'personal'      => [],
-//            'beneficiaries' => []
-//        ];
-//        foreach ($accounts as $account) {
-//            switch ($account->accounttype->type) {
-//                case 'Default account':
-//                    $set['personal'][] = $account;
-//                    break;
-//                case 'Beneficiary account':
-//                    $set['beneficiaries'][] = $account;
-//                    break;
-//            }
-//        }
-//
-//        return View::make('accounts.index')->with('accounts', $set)->with('title', 'All your accounts');
     }
 
     /**
@@ -165,6 +174,21 @@ class AccountController extends \BaseController
      */
     public function show(Account $account)
     {
+        switch ($account->accountType->type) {
+            case 'Asset account':
+            case 'Default account':
+                View::share('subTitleIcon', 'fa-money');
+                break;
+            case 'Expense account':
+            case 'Beneficiary account':
+                View::share('subTitleIcon', 'fa-shopping-cart');
+                break;
+            case 'Revenue account':
+                View::share('subTitleIcon', 'fa-download');
+                break;
+        }
+
+
         $data = $this->_accounts->show($account, 40);
 
         return View::make('accounts.show')->with('account', $account)->with('show', $data)->with(
@@ -204,7 +228,8 @@ class AccountController extends \BaseController
             if (intval(Input::get('create')) === 1) {
                 return Redirect::route('accounts.create', $data['what'])->withInput();
             } else {
-                return Redirect::route('accounts.index');
+
+                return Redirect::route('accounts.' . e($data['what']));
             }
         } else {
             // did not save, return with error:
@@ -222,11 +247,24 @@ class AccountController extends \BaseController
      */
     public function update(Account $account)
     {
+        /** @var \Account $account */
         $account = $this->_repository->update($account, Input::all());
         if ($account->validate()) {
             Session::flash('success', 'Account "' . $account->name . '" updated.');
+            switch ($account->accountType->type) {
+                case 'Asset account':
+                case 'Default account':
+                    return Redirect::route('accounts.asset');
+                    break;
+                case 'Expense account':
+                case 'Beneficiary account':
+                    return Redirect::route('accounts.expense');
+                    break;
+                case 'Revenue account':
+                    return Redirect::route('accounts.revenue');
+                    break;
+            }
 
-            return Redirect::route('accounts.index');
         } else {
             Session::flash('error', 'Could not update account: ' . $account->errors()->first());
 
