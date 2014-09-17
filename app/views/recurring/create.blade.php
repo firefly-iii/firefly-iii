@@ -2,9 +2,6 @@
 @section('content')
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly
-            <small>Create a recurring transaction</small>
-        </h1>
         <p class="lead">Use recurring transactions to track repeated expenses</p>
         <p class="text-info">
             Bla bla.
@@ -192,5 +189,4 @@
 @stop
 @section('scripts')
 <?php echo javascript_include_tag('recurring'); ?>
-
 @stop

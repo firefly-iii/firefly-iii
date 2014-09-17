@@ -2,14 +2,7 @@
 @section('content')
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <h2>Change your password<br/>
-            <small>Logged in as {{Auth::user()->email}}</small>
-        </h1>
-    </div>
-</div>
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <p>
+        <p class="text-info">
             Use this extremely obvious form to change your password.
         </p>
     </div>
@@ -40,7 +33,7 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-4 col-sm-10">
-                    <button type="submit" class="btn btn-info">Change your password</button>
+                    <button type="submit" class="btn btn-success">Change your password</button>
                 </div>
             </div>
         {{Form::close()}}

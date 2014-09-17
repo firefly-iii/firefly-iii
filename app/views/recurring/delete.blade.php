@@ -2,9 +2,6 @@
 @section('content')
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly
-            <small>Delete recurring transaction "{{{$recurringTransaction->name}}}"</small>
-        </h1>
         <p class="lead">
             Remember that deleting something is permanent.
         </p>

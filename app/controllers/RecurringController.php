@@ -17,6 +17,9 @@ class RecurringController extends BaseController
     public function __construct(RTR $repository)
     {
         $this->_repository = $repository;
+
+        View::share('title','Recurring transactions');
+        View::share('mainTitleIcon','fa-rotate-right');
     }
 
     /**
@@ -24,6 +27,7 @@ class RecurringController extends BaseController
      */
     public function create()
     {
+        View::share('subTitle','Create new');
         $periods = \Config::get('firefly.periods_to_text');
 
         return View::make('recurring.create')->with('periods', $periods);
@@ -36,6 +40,7 @@ class RecurringController extends BaseController
      */
     public function delete(RecurringTransaction $recurringTransaction)
     {
+        View::share('subTitle','Delete "' .$recurringTransaction->name.'"');
         return View::make('recurring.delete')->with('recurringTransaction', $recurringTransaction);
     }
 
@@ -67,6 +72,8 @@ class RecurringController extends BaseController
     {
         $periods = \Config::get('firefly.periods_to_text');
 
+        View::share('subTitle','Edit "' .$recurringTransaction->name.'"');
+
         return View::make('recurring.edit')->with('periods', $periods)->with(
             'recurringTransaction', $recurringTransaction
         );
@@ -79,6 +86,8 @@ class RecurringController extends BaseController
     {
         $list = $this->_repository->get();
 
+
+
         return View::make('recurring.index')->with('list', $list);
     }
 
@@ -87,6 +96,7 @@ class RecurringController extends BaseController
      */
     public function show(RecurringTransaction $recurringTransaction)
     {
+        View::share('subTitle',$recurringTransaction->name);
         return View::make('recurring.show')->with('recurring', $recurringTransaction);
 
     }

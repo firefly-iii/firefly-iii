@@ -11,7 +11,8 @@ class MigrateController extends BaseController
      */
     public function index()
     {
-        return View::make('migrate.index')->with('index', 'Migration');
+        return View::make('migrate.index')->with('index', 'Migration')->with('title','Migrate')->
+            with('subTitle','From Firefly II to Firefly III');
     }
 
     /**

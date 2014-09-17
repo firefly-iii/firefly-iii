@@ -2,15 +2,6 @@
 @section('content')
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly
-            <small>
-                @if($piggyBank->repeats == 1)
-                Repeated expense
-                @else
-                Piggy bank
-                @endif
-                "{{{$piggyBank->name}}}"</small>
-        </h1>
         <div class="btn-group">
             <a href="{{route('piggybanks.edit',$piggyBank->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
             <a href="{{route('piggybanks.delete',$piggyBank->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a>

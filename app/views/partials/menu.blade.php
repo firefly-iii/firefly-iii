@@ -12,13 +12,14 @@
 <!-- /.navbar-header -->
 
 <ul class="nav navbar-top-links navbar-right">
+    @if(Session::has('job_pct'))
     <!-- /.dropdown -->
     <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
             <i class="fa fa-tasks fa-fw"></i>  <i class="fa fa-caret-down"></i>
         </a>
         <!-- display for import tasks, possibly others -->
-        @if(Session::has('job_pct'))
+
         <ul class="dropdown-menu dropdown-tasks">
             <li>
                 <a href="#">
@@ -123,7 +124,11 @@
 
             </li>
             <li>
-                <a href="{{route('categories.index')}}"><i class="fa fa-bar-chart fa-fw"></i> Categories</a>
+                <a
+                @if(!(strpos($r,'categories') === false))
+                class="active"
+                @endif
+                    href="{{route('categories.index')}}"><i class="fa fa-bar-chart fa-fw"></i> Categories</a>
             </li>
             <li>
                 <a href="#"><i class="fa fa-tags fa-fw"></i> Tags</a>
@@ -154,17 +159,24 @@
                 </ul>
 
             </li>
-            <li>
+            <li
+            @if(
+            !(strpos($r,'piggybanks') === false) ||
+            !(strpos($r,'recurring') === false)
+            )
+            class="active"
+            @endif
+                >
                 <a href="#"><i class="fa fa-euro fa-fw"></i> Money management<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a href="{{route('piggybanks.index')}}"><i class="fa fa-envelope-o fa-fw"></i> Piggy banks</a>
+                        <a @if($r == 'piggybanks.index.piggybanks') class="active" @endif href="{{route('piggybanks.index.piggybanks')}}"><i class="fa fa-sort-amount-asc fa-fw"></i> Piggy banks</a>
                     </li>
                     <li>
-                        <a href="{{route('recurring.index')}}"><i class="fa fa-rotate-right fa-fw"></i> Recurring transactions</a>
+                        <a @if($r == 'recurring.index') class="active" @endif href="{{route('recurring.index')}}"><i class="fa fa-rotate-right fa-fw"></i> Recurring transactions</a>
                     </li>
                     <li>
-                        <a href="{{route('piggybanks.index')}}"><i class="fa fa-rotate-left fa-fw"></i> Repeated expenses</a>
+                        <a @if($r == 'piggybanks.index.repeated') class="active" @endif href="{{route('piggybanks.index.repeated')}}"><i class="fa fa-rotate-left fa-fw"></i> Repeated expenses</a>
                     </li>
                 </ul>
                 <!-- /.nav-second-level -->

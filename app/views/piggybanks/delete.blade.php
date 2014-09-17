@@ -2,9 +2,6 @@
 @section('content')
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly
-            <small>Delete piggy bank</small>
-        </h1>
         <p class="lead">Remember that deleting something is permanent.</p>
 
     </div>
@@ -29,7 +26,11 @@
         <div class="form-group">
             <div class="col-sm-8">
                 <input type="submit" name="submit" value="Remove piggy bank" class="btn btn-danger" />
-                <a href="{{route('piggybanks.index')}}" class="btn-default btn">Cancel</a>
+                @if($piggybank->repeats == 1)
+                    <a href="{{route('piggybanks.index.repeated')}}" class="btn-default btn">Cancel</a>
+                @else
+                    <a href="{{route('piggybanks.index.piggybanks')}}" class="btn-default btn">Cancel</a>
+                @endif
             </div>
         </div>
     </div>

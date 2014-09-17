@@ -22,6 +22,7 @@ class TransactionController extends BaseController
     {
         $this->_repository = $repository;
         View::share('title', 'Transactions');
+        View::share('mainTitleIcon', 'fa-repeat');
     }
 
     /**
@@ -37,8 +38,8 @@ class TransactionController extends BaseController
         // get asset accounts with names and id's.
         /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accountRepository */
         $accountRepository = App::make('Firefly\Storage\Account\AccountRepositoryInterface');
-        $accounts     = $accountRepository->getOfTypes(['Asset account','Default account']);
-        $assetAccounts = $toolkit->makeSelectList($accounts);
+        $list              = $accountRepository->getActiveDefault();
+        $assetAccounts     = $toolkit->makeSelectList($list);
 
 
         // get budgets as a select list.
@@ -64,6 +65,12 @@ class TransactionController extends BaseController
      */
     public function delete(TransactionJournal $transactionJournal)
     {
+        View::share(
+            'subTitle',
+            'Delete ' . strtolower($transactionJournal->transactionType->type) . ' "' . $transactionJournal->description
+            . '"'
+        );
+
         return View::make('transactions.delete')->with('journal', $transactionJournal);
 
 
@@ -95,9 +102,18 @@ class TransactionController extends BaseController
 
         // some lists prefilled:
         // get accounts with names and id's.
+        /** @var \Firefly\Helper\Toolkit\Toolkit $toolkit */
+        $toolkit = App::make('Firefly\Helper\Toolkit\Toolkit');
+
+        // get asset accounts with names and id's.
         /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accountRepository */
         $accountRepository = App::make('Firefly\Storage\Account\AccountRepositoryInterface');
-        $accounts          = $accountRepository->getActiveDefaultAsSelectList();
+        $list              = $accountRepository->getActiveDefault();
+        $accounts          = $toolkit->makeSelectList($list);
+
+        View::share(
+            'subTitle', 'Edit ' . strtolower($journal->transactionType->type) . ' "' . $journal->description . '"'
+        );
 
         // get budgets as a select list.
         /** @var \Firefly\Storage\Budget\BudgetRepositoryInterface $budgetRepository */
@@ -156,8 +172,8 @@ class TransactionController extends BaseController
     public function expenses()
     {
         $transactionType = $this->_repository->getTransactionType('Withdrawal');
-        $start = is_null(Input::get('startdate')) ? null : new Carbon(Input::get('startdate'));
-        $end   = is_null(Input::get('enddate')) ? null : new Carbon(Input::get('enddate'));
+        $start           = is_null(Input::get('startdate')) ? null : new Carbon(Input::get('startdate'));
+        $end             = is_null(Input::get('enddate')) ? null : new Carbon(Input::get('enddate'));
         if ($start <= $end && !is_null($start) && !is_null($end)) {
             $journals = $this->_repository->paginate($transactionType, 25, $start, $end);
             $filtered = true;
@@ -168,17 +184,17 @@ class TransactionController extends BaseController
             $filters  = null;
         }
 
-
+        View::share('subTitleIcon', 'fa-long-arrow-left');
         return View::make('transactions.index')->with('journals', $journals)->with('filtered', $filtered)->with(
             'filters', $filters
-        );
+        )->with('subTitle', 'Expenses');
     }
 
     public function revenue()
     {
         $transactionType = $this->_repository->getTransactionType('Deposit');
-        $start = is_null(Input::get('startdate')) ? null : new Carbon(Input::get('startdate'));
-        $end   = is_null(Input::get('enddate')) ? null : new Carbon(Input::get('enddate'));
+        $start           = is_null(Input::get('startdate')) ? null : new Carbon(Input::get('startdate'));
+        $end             = is_null(Input::get('enddate')) ? null : new Carbon(Input::get('enddate'));
         if ($start <= $end && !is_null($start) && !is_null($end)) {
             $journals = $this->_repository->paginate($transactionType, 25, $start, $end);
             $filtered = true;
@@ -189,18 +205,18 @@ class TransactionController extends BaseController
             $filters  = null;
         }
 
-
+        View::share('subTitleIcon', 'fa-long-arrow-right');
         return View::make('transactions.index')->with('journals', $journals)->with('filtered', $filtered)->with(
             'filters', $filters
-        );
+        )->with('subTitle', 'Revenue');
 
     }
 
     public function transfers()
     {
         $transactionType = $this->_repository->getTransactionType('Transfer');
-        $start = is_null(Input::get('startdate')) ? null : new Carbon(Input::get('startdate'));
-        $end   = is_null(Input::get('enddate')) ? null : new Carbon(Input::get('enddate'));
+        $start           = is_null(Input::get('startdate')) ? null : new Carbon(Input::get('startdate'));
+        $end             = is_null(Input::get('enddate')) ? null : new Carbon(Input::get('enddate'));
         if ($start <= $end && !is_null($start) && !is_null($end)) {
             $journals = $this->_repository->paginate($transactionType, 25, $start, $end);
             $filtered = true;
@@ -211,10 +227,10 @@ class TransactionController extends BaseController
             $filters  = null;
         }
 
-
+        View::share('subTitleIcon', 'fa-arrows-h');
         return View::make('transactions.index')->with('journals', $journals)->with('filtered', $filtered)->with(
             'filters', $filters
-        );
+        )->with('subTitle', 'Transfers');
 
     }
 
@@ -248,6 +264,8 @@ class TransactionController extends BaseController
      */
     public function show(TransactionJournal $journal)
     {
+        View::share('subTitle', $journal->transactionType->type . ' "' . $journal->description . '"');
+
         return View::make('transactions.show')->with('journal', $journal);
     }
 
@@ -260,8 +278,8 @@ class TransactionController extends BaseController
     {
 
         $journal = $this->_repository->store($what, Input::all());
-        if($journal->errors()->count() > 0) {
-            Session::flash('error', 'Could not save transaction: ' . $journal->errors()->first().'!');
+        if ($journal->errors()->count() > 0) {
+            Session::flash('error', 'Could not save transaction: ' . $journal->errors()->first() . '!');
             return Redirect::route('transactions.create', [$what])->withInput()->withErrors($journal->errors());
         }
 
@@ -282,7 +300,7 @@ class TransactionController extends BaseController
             if (Input::get('create') == '1') {
                 return Redirect::route('transactions.create', [$what])->withInput();
             } else {
-                switch($what) {
+                switch ($what) {
                     case 'withdrawal':
                         return Redirect::route('transactions.expenses');
                         break;
@@ -296,7 +314,7 @@ class TransactionController extends BaseController
 
             }
         } else {
-            Session::flash('error', 'Could not save transaction: ' . $journal->errors()->first().'!');
+            Session::flash('error', 'Could not save transaction: ' . $journal->errors()->first() . '!');
 
             return Redirect::route('transactions.create', [$what])->withInput()->withErrors($journal->errors());
         }
