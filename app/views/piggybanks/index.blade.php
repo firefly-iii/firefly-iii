@@ -2,9 +2,6 @@
 @section('content')
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly
-            <small>Piggy banks, large expenses and repeated expenses</small>
-        </h1>
     </div>
 </div>
 <div class="row">

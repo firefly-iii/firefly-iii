@@ -2,9 +2,6 @@
 @section('content')
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly
-            <small>Edit repeated expense "{{{$piggybank->name}}}"</small>
-        </h1>
         <p class="lead">Create repeated expenses to keep track of long-term planned expenses</p>
     </div>
 </div>

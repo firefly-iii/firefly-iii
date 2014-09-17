@@ -22,6 +22,8 @@ class PreferencesController extends BaseController
 
         $this->_accounts    = $accounts;
         $this->_preferences = $preferences;
+        View::share('title','Preferences');
+        View::share('mainTitleIcon','fa-gear');
     }
 
     /**

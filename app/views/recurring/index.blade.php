@@ -2,9 +2,6 @@
 @section('content')
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly
-            <small>Recurring transactions</small>
-        </h1>
         <p class="lead">Use recurring transactions to track repeated withdrawals</p>
         <p class="text-info">We all have bills to pay. Firefly can help you organize those bills into recurring transactions,
         which are exactly what the name suggests. Firefly can match new (and existing) transactions to such a recurring transaction

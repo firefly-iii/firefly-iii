@@ -1,13 +1,6 @@
 @extends('layouts.default')
 @section('content')
 <div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly
-            <small>Edit transaction "{{{$journal->description}}}"</small>
-        </h1>
-    </div>
-</div>
-<div class="row">
     <div class="col-lg-6 col-md-12 col-sm-12">
         <p class="text-info">
             Technically speaking, withdrawals, deposits and transfers are all transactions, moving money from

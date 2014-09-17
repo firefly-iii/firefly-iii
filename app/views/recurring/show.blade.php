@@ -2,9 +2,6 @@
 @section('content')
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Firefly
-            <small>Recurring transaction "{{{$recurring->name}}}"</small>
-        </h1>
         <p class="lead">Use recurring transactions to track repeated withdrawals</p>
             <p>
               <div class="btn-group btn-group-xs">
