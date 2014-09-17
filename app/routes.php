@@ -190,7 +190,8 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/migrate',['uses' => 'MigrateController@index', 'as' => 'migrate.index']);
 
         // piggy bank controller
-        Route::get('/piggybanks',['uses' => 'PiggybankController@index','as' => 'piggybanks.index']);
+        Route::get('/piggybanks',['uses' => 'PiggybankController@piggybanks','as' => 'piggybanks.index.piggybanks']);
+        Route::get('/repeated',['uses' => 'PiggybankController@repeated','as' => 'piggybanks.index.repeated']);
         Route::get('/piggybanks/create/piggybank', ['uses' => 'PiggybankController@createPiggybank','as' => 'piggybanks.create.piggybank']);
         Route::get('/piggybanks/create/repeated', ['uses' => 'PiggybankController@createRepeated','as' => 'piggybanks.create.repeated']);
         Route::get('/piggybanks/addMoney/{piggybank}', ['uses' => 'PiggybankController@addMoney','as' => 'piggybanks.amount.add']);
