@@ -378,14 +378,6 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
                     $q->orderBy('limit_repetitions.startdate', 'ASC');
                 }]
         )->orderBy('name', 'ASC')->get();
-        foreach ($set as $budget) {
-            foreach ($budget->limits as $limit) {
-                foreach ($limit->limitrepetitions as $rep) {
-                    $rep->left = $rep->left();
-                }
-            }
-        }
-
         return $set;
     }
 

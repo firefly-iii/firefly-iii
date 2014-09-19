@@ -4,6 +4,7 @@
 namespace Firefly\Storage\Account;
 
 use Carbon\Carbon;
+use Firefly\Exception\FireflyException;
 use Illuminate\Database\QueryException;
 use Illuminate\Queue\Jobs\Job;
 
@@ -23,6 +24,114 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     public function __construct()
     {
         $this->_user = \Auth::user();
+    }
+
+    /**
+     * @param $id
+     *
+     * @return |Account|null
+     */
+    public function findAssetAccountById($id)
+    {
+        return $this->_user->accounts()->find($id);
+    }
+    /**
+     * @param \Account $from
+     * @param \Account $to
+     * @param int $amount
+     *
+     * @throws FireflyException
+     *
+     * @return \TransactionType|null
+     */
+    public function transactionTypeByAccounts(\Account $from, \Account $to, $amount = 0) {
+        // account types for both:
+        $toAT   = $to->accountType->type;
+        $fromAT = $from->accountType->type;
+
+        $journalType = null;
+
+        switch (true) {
+            case ($from->transactions()->count() == 0 && $to->transactions()->count() == 0):
+                $journalType = \TransactionType::where('type', 'Opening balance')->first();
+                break;
+
+            case (in_array($fromAT, ['Default account', 'Asset account'])
+                && in_array(
+                    $toAT, ['Default account', 'Asset account']
+                )): // both are yours:
+                // determin transaction type. If both accounts are new, it's an initial balance transfer.
+                $journalType = \TransactionType::where('type', 'Transfer')->first();
+                break;
+            case ($amount < 0):
+                $journalType = \TransactionType::where('type', 'Deposit')->first();
+                break;
+            // is deposit into one of your own accounts:
+            case ($toAT == 'Default account' || $toAT == 'Asset account'):
+                $journalType = \TransactionType::where('type', 'Deposit')->first();
+                break;
+            // is withdrawal from one of your own accounts:
+            case ($fromAT == 'Default account' || $fromAT == 'Asset account'):
+                $journalType = \TransactionType::where('type', 'Withdrawal')->first();
+                break;
+        }
+
+        if (is_null($journalType)) {
+            throw new FireflyException('Could not figure out transaction type.');
+        }
+        return $journalType;
+    }
+
+
+
+    /**
+     * @param $name
+     *
+     * @return |Account|null
+     */
+    public function findExpenseAccountByName($name)
+    {
+        // find account:
+        $type    = $this->findAccountType('Expense account');
+        $account = $this->_user->accounts()->where('name', $name)->where('account_type_id', $type->id)->first();
+
+        // find cash account as fall back:
+        if (is_null($account)) {
+            $cashType = $this->findAccountType('Cash account');
+            $account  = $this->_user->accounts()->where('account_type_id', $cashType->id)->first();
+        }
+
+        // create cash account as ultimate fall back:
+        if (is_null($account)) {
+            $set     = [
+                'name'            => 'Cash account',
+                'user_id'         => $this->_user->id,
+                'active'          => 1,
+                'account_type_id' => $cashType->id
+            ];
+            $account = $this->firstOrCreate($set);
+        }
+
+        if ($account->active == 0) {
+            return null;
+        }
+
+        return $account;
+    }
+
+    /**
+     * @param $type
+     *
+     * @return mixed
+     */
+    public function findAccountType($type)
+    {
+        return \AccountType::where('type', $type)->first();
+    }
+
+    public function firstOrCreate(array $data)
+    {
+        return \Account::firstOrCreate($data);
     }
 
     /**
@@ -153,16 +262,6 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @param $type
-     *
-     * @return mixed
-     */
-    public function findAccountType($type)
-    {
-        return \AccountType::where('type', $type)->first();
-    }
-
-    /**
      * @param Job   $job
      * @param array $payload
      *
@@ -243,6 +342,56 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         $job->delete(); // count fixed.
         return;
     }
+//
+//    /**
+//     * @param $name
+//     *
+//     * @return \Account|mixed|null
+//     */
+//    public function createOrFindBeneficiary($name)
+//    {
+//        if (is_null($name) || strlen($name) == 0) {
+//            return null;
+//        }
+//        $type = \AccountType::where('type', 'Expense account')->first();
+//        return $this->createOrFind($name, $type);
+//    }
+//
+//    /**
+//     * @param              $name
+//     * @param \AccountType $type
+//     *
+//     * @return \Account|mixed
+//     */
+//    public function createOrFind($name, \AccountType $type = null)
+//    {
+//        $account = $this->findByName($name, $type);
+//        if (!$account) {
+//            $data = [
+//                'name'         => $name,
+//                'account_type' => $type
+//            ];
+//
+//            return $this->store($data);
+//        }
+//
+//        return $account;
+//    }
+//
+//    /**
+//     * @param              $name
+//     * @param \AccountType $type
+//     *
+//     * @return mixed
+//     */
+//    public function findByName($name, \AccountType $type = null)
+//    {
+//        $type = is_null($type) ? \AccountType::where('type', 'Asset account')->first() : $type;
+//
+//        return $this->_user->accounts()->where('account_type_id', $type->id)
+//            ->where('name', 'like', '%' . $name . '%')
+//            ->first();
+//    }
 
     /**
      * @param $data
@@ -304,56 +453,6 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         // whatever the result, return the account.
         return $account;
     }
-//
-//    /**
-//     * @param $name
-//     *
-//     * @return \Account|mixed|null
-//     */
-//    public function createOrFindBeneficiary($name)
-//    {
-//        if (is_null($name) || strlen($name) == 0) {
-//            return null;
-//        }
-//        $type = \AccountType::where('type', 'Expense account')->first();
-//        return $this->createOrFind($name, $type);
-//    }
-//
-//    /**
-//     * @param              $name
-//     * @param \AccountType $type
-//     *
-//     * @return \Account|mixed
-//     */
-//    public function createOrFind($name, \AccountType $type = null)
-//    {
-//        $account = $this->findByName($name, $type);
-//        if (!$account) {
-//            $data = [
-//                'name'         => $name,
-//                'account_type' => $type
-//            ];
-//
-//            return $this->store($data);
-//        }
-//
-//        return $account;
-//    }
-//
-//    /**
-//     * @param              $name
-//     * @param \AccountType $type
-//     *
-//     * @return mixed
-//     */
-//    public function findByName($name, \AccountType $type = null)
-//    {
-//        $type = is_null($type) ? \AccountType::where('type', 'Asset account')->first() : $type;
-//
-//        return $this->_user->accounts()->where('account_type_id', $type->id)
-//            ->where('name', 'like', '%' . $name . '%')
-//            ->first();
-//    }
 
     /**
      * @param \Account $account
@@ -391,11 +490,6 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         }
 
         return false;
-    }
-
-    public function firstOrCreate(array $data)
-    {
-        return \Account::firstOrCreate($data);
     }
 
     /**
@@ -551,7 +645,6 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         return $this->_user->accounts()->accountTypeIn(['Default account', 'Asset account'])->where(
             'accounts.active', 1
         )
-
             ->get(['accounts.*']);
     }
 

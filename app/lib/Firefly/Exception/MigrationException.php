@@ -1,6 +1,6 @@
 <?php
 
-namespace Firefly\Helper;
+namespace Firefly\Exception;
 
 
 /**
