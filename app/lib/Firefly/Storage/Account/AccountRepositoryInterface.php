@@ -2,6 +2,7 @@
 
 
 namespace Firefly\Storage\Account;
+
 use Illuminate\Queue\Jobs\Job;
 
 /**
@@ -66,6 +67,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param $type
+     *
      * @return mixed
      */
     public function findAccountType($type);
@@ -79,6 +81,28 @@ interface AccountRepositoryInterface
      * @return mixed
      */
     public function importUpdateTransaction(Job $job, array $payload);
+
+    /**
+     * @param $id
+     *
+     * @return |Account|null
+     */
+    public function findAssetAccountById($id);
+
+    /**
+     * @param $name
+     *
+     * @return |Account|null
+     */
+    public function findExpenseAccountByName($name);
+
+    /**
+     * @param \Account $from
+     * @param \Account $to
+     *
+     * @return \TransactionType|null
+     */
+    public function transactionTypeByAccounts(\Account $from, \Account $to);
 
     /**
      * @return mixed
@@ -109,12 +133,14 @@ interface AccountRepositoryInterface
 
     /**
      * @param \AccountType $type
+     *
      * @return mixed
      */
     public function getByAccountType(\AccountType $type);
 
     /**
      * @param \User $user
+     *
      * @return mixed
      */
     public function overruleUser(\User $user);

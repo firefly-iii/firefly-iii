@@ -213,10 +213,6 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
     {
         $piggies = $this->_user->piggybanks()->with(['account', 'piggybankrepetitions'])->get();
 
-        foreach ($piggies as $pig) {
-            $pig->leftInAccount = $this->leftOnAccount($pig->account);
-        }
-
         return $piggies;
     }
 
