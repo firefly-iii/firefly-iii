@@ -97,6 +97,13 @@ interface AccountRepositoryInterface
     public function findExpenseAccountByName($name);
 
     /**
+     * @param $name
+     *
+     * @return |Account|null
+     */
+    public function findRevenueAccountByName($name);
+
+    /**
      * @param \Account $from
      * @param \Account $to
      *

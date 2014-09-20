@@ -55,7 +55,7 @@ interface CategoryRepositoryInterface
      *
      * @return mixed
      */
-    public function createOrFind($name);
+    public function firstOrCreate($name);
 
     /**
      * @param \User $user

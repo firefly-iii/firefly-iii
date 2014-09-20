@@ -118,6 +118,40 @@ class EloquentAccountRepository implements AccountRepositoryInterface
 
         return $account;
     }
+    /**
+     * @param $name
+     *
+     * @return |Account|null
+     */
+    public function findRevenueAccountByName($name)
+    {
+        // find account:
+        $type    = $this->findAccountType('Revenue account');
+        $account = $this->_user->accounts()->where('name', $name)->where('account_type_id', $type->id)->first();
+
+        // find cash account as fall back:
+        if (is_null($account)) {
+            $cashType = $this->findAccountType('Cash account');
+            $account  = $this->_user->accounts()->where('account_type_id', $cashType->id)->first();
+        }
+
+        // create cash account as ultimate fall back:
+        if (is_null($account)) {
+            $set     = [
+                'name'            => 'Cash account',
+                'user_id'         => $this->_user->id,
+                'active'          => 1,
+                'account_type_id' => $cashType->id
+            ];
+            $account = $this->firstOrCreate($set);
+        }
+
+        if ($account->active == 0) {
+            return null;
+        }
+
+        return $account;
+    }
 
     /**
      * @param $type
