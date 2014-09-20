@@ -29,7 +29,8 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
      *
      * @return mixed
      */
-    public function importUpdateTransfer(Job $job, array $payload) {
+    public function importUpdateTransfer(Job $job, array $payload)
+    {
         /** @var \Firefly\Storage\Import\ImportRepositoryInterface $repository */
         $repository = \App::make('Firefly\Storage\Import\ImportRepositoryInterface');
 
@@ -57,13 +58,13 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
         /*
          * Prep some vars from the payload
          */
-        $transferId = intval($payload['data']['transfer_id']);
-        $componentId   = intval($payload['data']['component_id']);
+        $transferId  = intval($payload['data']['transfer_id']);
+        $componentId = intval($payload['data']['component_id']);
 
         /*
          * Find the import map for both:
          */
-        $categoryMap    = $repository->findImportEntry($importMap, 'Category', $componentId);
+        $categoryMap = $repository->findImportEntry($importMap, 'Category', $componentId);
         $transferMap = $repository->findImportEntry($importMap, 'Transfer', $transferId);
 
         /*
@@ -71,7 +72,7 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
          */
         if (is_null($categoryMap) || is_null($transferMap)) {
             \Log::notice('No map found in category/transfer mapper. Release.');
-            if(\Config::get('queue.default') == 'sync') {
+            if (\Config::get('queue.default') == 'sync') {
                 $importMap->jobsdone++;
                 $importMap->save();
                 $job->delete(); // count fixed
@@ -93,7 +94,7 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
          */
         if (is_null($category) || is_null($journal)) {
             \Log::notice('Map is incorrect in category/transfer mapper. Release.');
-            if(\Config::get('queue.default') == 'sync') {
+            if (\Config::get('queue.default') == 'sync') {
                 $importMap->jobsdone++;
                 $importMap->save();
                 $job->delete(); // count fixed
@@ -117,6 +118,27 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
 
 
         return;
+    }
+
+    /**
+     * @param \User $user
+     *
+     * @return mixed|void
+     */
+    public function overruleUser(\User $user)
+    {
+        $this->_user = $user;
+        return true;
+    }
+
+    /**
+     * @param $categoryId
+     *
+     * @return mixed
+     */
+    public function find($categoryId)
+    {
+        return $this->_user->categories()->find($categoryId);
     }
 
     /**
@@ -170,7 +192,7 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
          */
         if (is_null($categoryMap) || is_null($transactionMap)) {
             \Log::notice('No map found in category/transaction mapper. Release.');
-            if(\Config::get('queue.default') == 'sync') {
+            if (\Config::get('queue.default') == 'sync') {
                 $importMap->jobsdone++;
                 $importMap->save();
                 $job->delete(); // count fixed
@@ -192,7 +214,7 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
          */
         if (is_null($category) || is_null($journal)) {
             \Log::notice('Map is incorrect in category/transaction mapper. Release.');
-            if(\Config::get('queue.default') == 'sync') {
+            if (\Config::get('queue.default') == 'sync') {
                 $importMap->jobsdone++;
                 $importMap->save();
                 $job->delete(); // count fixed
@@ -216,27 +238,6 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
 
 
         return;
-    }
-
-    /**
-     * @param \User $user
-     *
-     * @return mixed|void
-     */
-    public function overruleUser(\User $user)
-    {
-        $this->_user = $user;
-        return true;
-    }
-
-    /**
-     * @param $categoryId
-     *
-     * @return mixed
-     */
-    public function find($categoryId)
-    {
-        return $this->_user->categories()->find($categoryId);
     }
 
     /**
@@ -334,18 +335,16 @@ class EloquentCategoryRepository implements CategoryRepositoryInterface
      *
      * @return \Category|mixed
      */
-    public function createOrFind($name)
+    public function firstOrCreate($name)
     {
         if (strlen($name) == 0) {
             return null;
         }
-        $category = $this->findByName($name);
-        if (!$category) {
-            return $this->store(['name' => $name]);
-        }
-
-        return $category;
-
+        $data = [
+            'name'    => $name,
+            'user_id' => $this->_user->id,
+        ];
+        return \Category::firstOrCreate($data);
 
     }
 

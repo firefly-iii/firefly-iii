@@ -2,6 +2,8 @@
 
 
 use Carbon\Carbon;
+use Firefly\Exception\FireflyException;
+use Firefly\Helper\Controllers\TransactionInterface as TI;
 use Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface as TJRI;
 
 /**
@@ -14,13 +16,16 @@ class TransactionController extends BaseController
 {
 
     protected $_repository;
+    protected $_helper;
 
     /**
      * @param TJRI $repository
+     * @param TI $helper
      */
-    public function __construct(TJRI $repository)
+    public function __construct(TJRI $repository, TI $helper)
     {
         $this->_repository = $repository;
+        $this->_helper     = $helper;
         View::share('title', 'Transactions');
         View::share('mainTitleIcon', 'fa-repeat');
     }
@@ -55,7 +60,7 @@ class TransactionController extends BaseController
 
         return View::make('transactions.create')->with('accounts', $assetAccounts)->with('budgets', $budgets)->with(
             'what', $what
-        )->with('piggies', $piggies)->with('subTitle', 'Add a new ' . $what)->with('title', 'Transactions');
+        )->with('piggies', $piggies)->with('subTitle', 'Add a new ' . $what);
     }
 
     /**
@@ -272,34 +277,37 @@ class TransactionController extends BaseController
     /**
      * @param $what
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return $this|\Illuminate\Http\RedirectResponse
+     * @throws FireflyException
      */
     public function store($what)
     {
+        /*
+         * Collect data to process:
+         */
+        $data         = Input::except(['_token']);
+        $data['what'] = $what;
 
-        $journal = $this->_repository->store($what, Input::all());
-        if ($journal->errors()->count() > 0) {
-            Session::flash('error', 'Could not save transaction: ' . $journal->errors()->first() . '!');
-            return Redirect::route('transactions.create', [$what])->withInput()->withErrors($journal->errors());
-        }
+        switch (Input::get('post_submit_action')) {
+            case 'store':
+                /*
+                 * Try to store:
+                 */
+                $messageBag = $this->_helper->store($data);
 
-        if ($journal->validate() && !is_null($journal->id)) {
-            Session::flash('success', 'Transaction "' . $journal->description . '" saved!');
+                /*
+                 * Failure!
+                 */
+                if($messageBag->count() > 0) {
+                    Session::flash('error', 'Could not save transaction: ' . $messageBag->first());
+                    return Redirect::route('transactions.create', [$what])->withInput()->withErrors($messageBag);
+                }
 
-            // if reminder present, deactivate it:
-            if (Input::get('reminder')) {
-                /** @var \Firefly\Storage\Reminder\ReminderRepositoryInterface $reminders */
-                $reminders = App::make('Firefly\Storage\Reminder\ReminderRepositoryInterface');
-                $reminder  = $reminders->find(Input::get('reminder'));
-                $reminders->deactivate($reminder);
-            }
+                /*
+                 * Success!
+                 */
+                Session::flash('success', 'Transaction "' . e(Input::get('description')) . '" saved!');
 
-            // trigger the creation for recurring transactions.
-            Event::fire('journals.store', [$journal]);
-
-            if (Input::get('create') == '1') {
-                return Redirect::route('transactions.create', [$what])->withInput();
-            } else {
                 switch ($what) {
                     case 'withdrawal':
                         return Redirect::route('transactions.expenses');
@@ -312,14 +320,11 @@ class TransactionController extends BaseController
                         break;
                 }
 
-            }
-        } else {
-            Session::flash('error', 'Could not save transaction: ' . $journal->errors()->first() . '!');
-
-            return Redirect::route('transactions.create', [$what])->withInput()->withErrors($journal->errors());
+                break;
+            default:
+                throw new FireflyException('Method ' . Input::get('post_submit_action') . ' not implemented yet.');
+                break;
         }
-
-
     }
 
     /**

@@ -27,11 +27,13 @@ class Component extends SingleTableInheritanceEntity
     public static $rules
         = [
             'user_id' => 'exists:users,id|required',
-            'name'    => ['required', 'between:1,100', 'alphabasic'],
+            'name'    => ['required', 'between:1,100','min:1', 'alphabasic'],
             'class'   => 'required',
         ];
     protected $table = 'components';
     protected $subclassField = 'class';
+    protected $fillable = ['name','user_id'];
+
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

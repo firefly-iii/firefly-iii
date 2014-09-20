@@ -28,21 +28,21 @@ interface TransactionJournalRepositoryInterface
      */
     public function importTransfer(Job $job, array $payload);
 
-    /**
-     * @param \Account $from
-     * @param \Account $toAccount
-     * @param          $description
-     * @param          $amount
-     * @param Carbon   $date
-     *
-     * @return mixed
-     */
-    public function createSimpleJournal(\Account $from, \Account $toAccount, $description, $amount, Carbon $date);
+//    /**
+//     * @param \Account $from
+//     * @param \Account $toAccount
+//     * @param          $description
+//     * @param          $amount
+//     * @param Carbon   $date
+//     *
+//     * @return mixed
+//     */
+//    public function createSimpleJournal(\Account $from, \Account $toAccount, $description, $amount, Carbon $date);
 
-    /**
-     * @return mixed
-     */
-    public function get();
+//    /**
+//     * @return mixed
+//     */
+//    public function get();
 
 
     /**
@@ -53,12 +53,22 @@ interface TransactionJournalRepositoryInterface
     public function overruleUser(\User $user);
 
     /**
-     * @param $what
+     * Store a new transaction journal.
+     *
      * @param $data
+     *
+     * @return \TransactionJournal|null
+     */
+    public function store(array $data);
+
+    /**
+     * @param \TransactionJournal $journal
+     * @param \Account            $account
+     * @param                     $amount
      *
      * @return mixed
      */
-    public function store($what, $data);
+    public function saveTransaction(\TransactionJournal $journal, \Account $account, $amount);
 
     /**
      * @param \TransactionJournal $journal
