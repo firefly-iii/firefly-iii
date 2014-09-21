@@ -158,7 +158,7 @@
 
     </div>
     <div class="col-lg-6 col-md-12 col-sm-12">
-        <!-- panel for mandatory fields -->
+        <!-- panel for optional fields -->
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <i class="fa fa-smile-o"></i> Optional fields
@@ -203,7 +203,7 @@
                                 Piggy bank
                             </label>
                             <div class="col-sm-8">
-                            {{Form::select('piggybank_id',$budgets,Input::old('piggybank_id') ?: 0,['class' => 'form-control'])}}
+                            {{Form::select('piggybank_id',$piggies,Input::old('piggybank_id') ?: 0,['class' => 'form-control'])}}
                                 @if($errors->has('piggybank_id'))
                                     <p class="text-danger">{{$errors->first('piggybank_id')}}</p>
                                 @else
@@ -218,7 +218,7 @@
                         @endif
                     </div>
                 </div>
-
+                <!-- panel for options -->
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <i class="fa fa-bolt"></i> Options

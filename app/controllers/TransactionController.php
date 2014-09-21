@@ -1,7 +1,6 @@
 <?php
 
 
-use Carbon\Carbon;
 use Firefly\Exception\FireflyException;
 use Firefly\Helper\Controllers\TransactionInterface as TI;
 use Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface as TJRI;
@@ -19,12 +18,6 @@ class TransactionController extends BaseController
 
     protected $_helper;
 
-    /** @var Carbon|null $_start */
-    protected $_start;
-
-    /** @var Carbon|null $_end */
-    protected $_end;
-
     /**
      * Construct a new transaction controller with two of the most often used helpers.
      *
@@ -37,13 +30,6 @@ class TransactionController extends BaseController
         $this->_helper     = $helper;
         View::share('title', 'Transactions');
         View::share('mainTitleIcon', 'fa-repeat');
-
-        /*
-         * With this construction, every method has access to a possibly set start
-         * and end date, to be used at their leisure:
-         */
-        $this->_start = is_null(Input::get('startdate')) ? null : new Carbon(Input::get('startdate'));
-        $this->_end   = is_null(Input::get('enddate')) ? null : new Carbon(Input::get('enddate'));
     }
 
     /**
@@ -166,16 +152,20 @@ class TransactionController extends BaseController
          * Get all piggy banks plus (if any) the relevant piggy bank. Since just one
          * of the transactions in the journal has this field, it should all fill in nicely.
          */
-        $piggies     = $piggyRepository->get();
-        $piggyBankId = null;
+        // get the piggy banks.
+        $piggies     = $toolkit->makeSelectList($piggyRepository->get());
+        $piggies[0]  = '(no piggy bank)';
+        $piggyBankId = 0;
         foreach ($journal->transactions as $t) {
-            $piggyBankId = $t->piggybank_id;
+            if (!is_null($t->piggybank_id)) {
+                $piggyBankId = $t->piggybank_id;
+            }
         }
 
         /*
          * Data to properly display the edit form.
          */
-        $data = [
+        $prefilled = [
             'date'         => $journal->date->format('Y-m-d'),
             'category'     => '',
             'budget_id'    => 0,
@@ -187,7 +177,7 @@ class TransactionController extends BaseController
          */
         $category = $journal->categories()->first();
         if (!is_null($category)) {
-            $data['category'] = $category->name;
+            $prefilled['category'] = $category->name;
         }
 
         /*
@@ -195,24 +185,24 @@ class TransactionController extends BaseController
          * relevant fields:
          */
         switch ($what) {
-            case 'Withdrawal':
-                $data['account_id']  = $journal->transactions[0]->account->id;
-                $data['beneficiary'] = $journal->transactions[1]->account->name;
-                $data['amount']      = floatval($journal->transactions[1]->amount);
-                $budget              = $journal->budgets()->first();
+            case 'withdrawal':
+                $prefilled['account_id']      = $journal->transactions[0]->account->id;
+                $prefilled['expense_account'] = $journal->transactions[1]->account->name;
+                $prefilled['amount']          = floatval($journal->transactions[1]->amount);
+                $budget                       = $journal->budgets()->first();
                 if (!is_null($budget)) {
-                    $data['budget_id'] = $budget->id;
+                    $prefilled['budget_id'] = $budget->id;
                 }
                 break;
-            case 'Deposit':
-                $data['account_id']  = $journal->transactions[1]->account->id;
-                $data['beneficiary'] = $journal->transactions[0]->account->name;
-                $data['amount']      = floatval($journal->transactions[1]->amount);
+            case 'deposit':
+                $prefilled['account_id']      = $journal->transactions[1]->account->id;
+                $prefilled['revenue_account'] = $journal->transactions[0]->account->name;
+                $prefilled['amount']          = floatval($journal->transactions[1]->amount);
                 break;
-            case 'Transfer':
-                $data['account_from_id'] = $journal->transactions[1]->account->id;
-                $data['account_to_id']   = $journal->transactions[0]->account->id;
-                $data['amount']          = floatval($journal->transactions[1]->amount);
+            case 'transfer':
+                $prefilled['account_from_id'] = $journal->transactions[1]->account->id;
+                $prefilled['account_to_id']   = $journal->transactions[0]->account->id;
+                $prefilled['amount']          = floatval($journal->transactions[1]->amount);
                 break;
         }
 
@@ -221,7 +211,7 @@ class TransactionController extends BaseController
          */
         return View::make('transactions.edit')->with('journal', $journal)->with('accounts', $accounts)->with(
             'what', $what
-        )->with('budgets', $budgets)->with('data', $data)->with('piggies', $piggies)->with(
+        )->with('budgets', $budgets)->with('data', $prefilled)->with('piggies', $piggies)->with(
             'subTitle', 'Edit ' . $what . ' "' . $journal->description . '"'
         );
     }
@@ -233,7 +223,7 @@ class TransactionController extends BaseController
     {
         return View::make('transactions.list')->with('subTitle', 'Expenses')->with(
             'subTitleIcon', 'fa-long-arrow-left'
-        )->with('what','expenses');
+        )->with('what', 'expenses');
     }
 
     /**
@@ -243,38 +233,15 @@ class TransactionController extends BaseController
     {
         return View::make('transactions.list')->with('subTitle', 'Revenue')->with(
             'subTitleIcon', 'fa-long-arrow-right'
-        )->with('what','revenue');
+        )->with('what', 'revenue');
     }
 
     public function transfers()
     {
         return View::make('transactions.list')->with('subTitle', 'Transfers')->with(
             'subTitleIcon', 'fa-arrows-h'
-        )->with('what','transfers');
+        )->with('what', 'transfers');
 
-    }
-
-    /**
-     * @return $this|\Illuminate\View\View
-     */
-    public function index()
-    {
-        $start = is_null(Input::get('startdate')) ? null : new Carbon(Input::get('startdate'));
-        $end   = is_null(Input::get('enddate')) ? null : new Carbon(Input::get('enddate'));
-        if ($start <= $end && !is_null($start) && !is_null($end)) {
-            $journals = $this->_repository->paginate(25, $start, $end);
-            $filtered = true;
-            $filters  = ['start' => $start, 'end' => $end];
-        } else {
-            $journals = $this->_repository->paginate(25);
-            $filtered = false;
-            $filters  = null;
-        }
-
-
-        return View::make('transactions.index')->with('journals', $journals)->with('filtered', $filtered)->with(
-            'filters', $filters
-        );
     }
 
     /**
@@ -284,9 +251,9 @@ class TransactionController extends BaseController
      */
     public function show(TransactionJournal $journal)
     {
-        View::share('subTitle', $journal->transactionType->type . ' "' . $journal->description . '"');
-
-        return View::make('transactions.show')->with('journal', $journal);
+        return View::make('transactions.show')->with('journal', $journal)->with(
+            'subTitle', $journal->transactionType->type . ' "' . $journal->description . '"'
+        );
     }
 
     /**
@@ -305,6 +272,7 @@ class TransactionController extends BaseController
 
         switch (Input::get('post_submit_action')) {
             case 'store':
+            case 'create_another':
                 /*
                  * Try to store:
                  */
@@ -323,16 +291,13 @@ class TransactionController extends BaseController
                  */
                 Session::flash('success', 'Transaction "' . e(Input::get('description')) . '" saved!');
 
-                switch ($what) {
-                    case 'withdrawal':
-                        return Redirect::route('transactions.expenses');
-                        break;
-                    case 'deposit':
-                        return Redirect::route('transactions.revenue');
-                        break;
-                    case 'transfer':
-                        return Redirect::route('transactions.transfers');
-                        break;
+                /*
+                 * Redirect to original location or back to the form.
+                 */
+                if (Input::get('post_submit_action') == 'create_another') {
+                    return Redirect::route('transactions.create', $what)->withInput();
+                } else {
+                    return Redirect::route('transactions.index.' . $what);
                 }
 
                 break;
@@ -349,17 +314,33 @@ class TransactionController extends BaseController
      */
     public function update(TransactionJournal $journal)
     {
-        $journal = $this->_repository->update($journal, Input::all());
-        if ($journal->validate()) {
-            // has been saved, return to index:
-            Session::flash('success', 'Transaction updated!');
-            Event::fire('journals.update', [$journal]);
+        switch (Input::get('post_submit_action')) {
+            case 'store':
+            case 'return_to_edit':
+                $what = strtolower($journal->transactionType->type);
+                $messageBag = $this->_helper->update($journal, Input::all());
+                if ($messageBag->count() == 0) {
+                    // has been saved, return to index:
+                    Session::flash('success', 'Transaction updated!');
+                    Event::fire('journals.update', [$journal]);
 
-            return Redirect::route('transactions.index');
-        } else {
-            Session::flash('error', 'Could not update transaction: ' . $journal->errors()->first());
+                    if (Input::get('post_submit_action') == 'create_another') {
+                        return Redirect::route('transactions.create', $what)->withInput();
+                    } else {
+                        return Redirect::route('transactions.index.' . $what);
+                    }
+                } else {
+                    Session::flash('error', 'Could not update transaction: ' . $journal->errors()->first());
 
-            return Redirect::route('transactions.edit', $journal->id)->withInput()->withErrors($journal->errors());
+                    return Redirect::route('transactions.edit', $journal->id)->withInput()->withErrors(
+                        $journal->errors()
+                    );
+                }
+
+                break;
+            default:
+                throw new FireflyException('Method ' . Input::get('post_submit_action') . ' not implemented yet.');
+                break;
         }
 
 

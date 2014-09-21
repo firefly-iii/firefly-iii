@@ -4,8 +4,8 @@
 namespace Firefly\Storage\TransactionJournal;
 
 use Carbon\Carbon;
-use Firefly\Exception\FireflyException;
 use Illuminate\Queue\Jobs\Job;
+use Illuminate\Support\MessageBag;
 
 /**
  * Class EloquentTransactionJournalRepository
@@ -51,11 +51,6 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
             return;
         }
 
-
-        /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accounts */
-        $accounts = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
-        $accounts->overruleUser($user);
-
         /** @var \Firefly\Helper\Controllers\TransactionInterface $transactions */
         $transactions = \App::make('Firefly\Helper\Controllers\TransactionInterface');
         $transactions->overruleUser($this->_user);
@@ -92,19 +87,48 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
          * Find the 'from' account:
          */
         $oldFromAccountEntry = $repository->findImportEntry($importMap, 'Account', $fromAccountId);
-        $accountFrom         = $accounts->find($oldFromAccountEntry->new);
 
         /*
          * Find the 'to' account:
          */
         $oldToAccountEntry = $repository->findImportEntry($importMap, 'Account', $toAccountId);
-        $accountTo         = $accounts->find($oldToAccountEntry->new);
 
         /*
-         * If either is NULL, wait a bit and then reschedule.
+         * Import transfer:
          */
-        if (is_null($accountTo) || is_null($accountFrom)) {
-            \Log::notice('No account to, or account from. Release transfer ' . $description);
+        $set     = [
+            'account_from_id' => $oldFromAccountEntry->new,
+            'account_to_id'   => $oldToAccountEntry->new,
+            'amount'          => $amount,
+            'description'     => $description,
+            'date'            => $date->format('Y-m-d'),
+            'category'        => '',
+            'what'            => 'transfer',
+            'return_journal'  => true
+        ];
+        $journal = $transactions->store($set);
+
+        /*
+         * Validate the store action:
+         */
+        if ($journal instanceof MessageBag) {
+            /*
+             * It's a message bag; clearly something went wrong.
+             */
+            \Log::notice('Could not import TJ "' . $description . '": ' . $journal->first());
+            if (\Config::get('queue.default') == 'sync') {
+                $importMap->jobsdone++;
+                $importMap->save();
+                $job->delete(); // count fixed
+            } else {
+                $job->release(300); // proper release.
+            }
+            return;
+        } else if ($journal instanceof \TransactionJournal && $journal->errors()->count() > 0) {
+            /*
+             * It's a journal but it still failed somehow.
+             */
+            \Log::notice('Could not import TJ "' . $description . '": ' . $journal->errors()->first());
             if (\Config::get('queue.default') == 'sync') {
                 $importMap->jobsdone++;
                 $importMap->save();
@@ -114,22 +138,6 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
             }
             return;
         }
-
-        /*
-         * Import transfer:
-         */
-        $set = [
-            'account_from_id' => $accountFrom->id,
-            'account_to_id'   => $accountTo->id,
-            'amount'          => $amount,
-            'description'     => $description,
-            'date'            => $date->format('Y-m-d'),
-            'category'        => '',
-            'what'            => 'transfer',
-            'return_journal' => true
-        ];
-        $journal = $transactions->store($set);
-
         $repository->store($importMap, 'Transfer', $transferId, $journal->id);
         \Log::debug('Imported transfer "' . $description . '" (' . $amount . ') (' . $date->format('Y-m-d') . ')');
 
@@ -152,6 +160,11 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         return true;
     }
 
+    /**
+     * @param array $data
+     *
+     * @return \TransactionJournal
+     */
     public function store(array $data)
     {
         /*
@@ -285,14 +298,65 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
          * Find the asset account this transaction is paid from / paid to:
          */
         $accountEntry = $repository->findImportEntry($importMap, 'Account', $accountId);
-        $assetAccount = $accounts->find($accountEntry->new);
-        unset($accountEntry);
 
         /*
-         * If $assetAccount is null, we release this job and try later.
+         * Prep some data for the import routine:
          */
-        if (is_null($assetAccount)) {
-            \Log::notice('No asset account for "' . $description . '", try again later.');
+        $set = [
+            'category'       => '',
+            'description'    => $description,
+            'date'           => $date->format('Y-m-d'),
+            'return_journal' => true,
+            'account_id'      => $accountEntry->new
+        ];
+
+
+        /*
+         * If the amount is less than zero, we move money to the $importAccount. Otherwise,
+         * we move it from the $importAccount.
+         */
+
+        if ($amount < 0) {
+            // if amount is less than zero, move to $importAccount
+            $set['what']            = 'withdrawal';
+            $set['expense_account'] = $importAccount->name;
+        } else {
+            $set['what']            = 'deposit';
+            $set['revenue_account'] = $importAccount->name;
+        }
+
+        /*
+         * Modify the amount so it will work with or new transaction journal structure.
+         */
+        $set['amount'] = $amount < 0 ? $amount * -1 : $amount;
+
+        /*
+         * Import it:
+         */
+        $journal = $transactions->store($set);
+
+        /*
+         * Validate the store action:
+         */
+        if ($journal instanceof MessageBag) {
+
+            /*
+             * It's a message bag; clearly something went wrong.
+             */
+            \Log::notice('Could not import transfer "' . $description . '": ' . $journal->first());
+            if (\Config::get('queue.default') == 'sync') {
+                $importMap->jobsdone++;
+                $importMap->save();
+                $job->delete(); // count fixed
+            } else {
+                $job->release(300); // proper release.
+            }
+            return;
+        } else if ($journal instanceof \TransactionJournal && $journal->errors()->count() > 0) {
+            /*
+             * It's a journal but it still failed somehow.
+             */
+            \Log::notice('Could not import transfer "' . $description . '": ' . $journal->errors()->first());
             if (\Config::get('queue.default') == 'sync') {
                 $importMap->jobsdone++;
                 $importMap->save();
@@ -302,44 +366,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
             }
             return;
         }
-        /*
-         * Prep some data for the import routine:
-         */
-        $set = [
-            'category'       => '',
-            'description'    => $description,
-            'date'           => $date->format('Y-m-d'),
-            'return_journal' => true
-        ];
 
-
-        /*
-         * If the amount is less than zero, we move money to the $importAccount. Otherwise,
-         * we move it from the $importAccount.
-         */
-        if ($amount < 0) {
-            // if amount is less than zero, move to $importAccount
-            $accountFrom            = $assetAccount;
-            $accountTo              = $importAccount;
-            $set['what']            = 'withdrawal';
-            $set['account_id']      = $accountFrom->id;
-            $set['expense_account'] = $importAccount->name;
-        } else {
-            $accountFrom            = $importAccount;
-            $accountTo              = $assetAccount;
-            $set['what']            = 'deposit';
-            $set['account_id']      = $accountTo->id;
-            $set['revenue_account'] = $accountFrom->name;
-        }
-
-        /*
-         * Modify the amount so it will work with or new transaction journal structure.
-         */
-        $set['amount'] = $amount < 0 ? $amount * -1 : $amount;
-        /*
-         * Import it:
-         */
-        $journal = $transactions->store($set);
         $repository->store($importMap, 'Transaction', $transactionId, $journal->id);
         \Log::debug('Imported transaction "' . $description . '" (' . $amount . ') (' . $date->format('Y-m-d') . ')');
 
@@ -479,140 +506,162 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
      */
     public function update(\TransactionJournal $journal, $data)
     {
-        /** @var \Firefly\Storage\Category\CategoryRepositoryInterface $catRepository */
-        $catRepository = \App::make('Firefly\Storage\Category\CategoryRepositoryInterface');
-        $catRepository->overruleUser($this->_user);
+        /*
+         * Update the basic fields:
+         */
+        $journal->description = trim($data['description']);
+        $journal->date        = new Carbon($data['date']);
 
-        /** @var \Firefly\Storage\Budget\BudgetRepositoryInterface $budgetRepository */
-        $budRepository = \App::make('Firefly\Storage\Budget\BudgetRepositoryInterface');
-        $budRepository->overruleUser($this->_user);
+        /*
+         * Validate & save journal
+         */
+        $journal->validate();
+        $journal->save();
 
-        /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accountRepository */
-        $accountRepository = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
-        $accountRepository->overruleUser($this->_user);
-
-
-        // update basics first:
-        $journal->description = $data['description'];
-        $journal->date        = $data['date'];
-        $amount               = floatval($data['amount']);
-
-        // remove previous category, if any:
-        if (!is_null($journal->categories()->first())) {
-            $journal->categories()->detach($journal->categories()->first()->id);
-        }
-        // remove previous budget, if any:
-        if (!is_null($journal->budgets()->first())) {
-            $journal->budgets()->detach($journal->budgets()->first()->id);
-        }
-        // remove previous piggy bank, if any:
-
-
-        $category = isset($data['category']) ? $catRepository->findByName($data['category']) : null;
-        if (!is_null($category)) {
-            $journal->categories()->attach($category);
-        }
-        // update the amounts:
-        $transactions = $journal->transactions()->orderBy('amount', 'ASC')->get();
-
-        // remove previous piggy bank, if any:
-        /** @var \Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            if (!is_null($transaction->piggybank()->first())) {
-                $transaction->piggybank_id = null;
-                $transaction->save();
-            }
-        }
-        unset($transaction);
-
-        $transactions[0]->amount = $amount * -1;
-        $transactions[1]->amount = $amount;
-
-        // switch on type to properly change things:
-        $fireEvent = false;
-        switch ($journal->transactiontype->type) {
-            case 'Withdrawal':
-                // means transaction[0] is the users account.
-                $account     = $accountRepository->find($data['account_id']);
-                $beneficiary = $accountRepository->createOrFindBeneficiary($data['beneficiary']);
-                $transactions[0]->account()->associate($account);
-                $transactions[1]->account()->associate($beneficiary);
-
-                // do budget:
-                $budget = $budRepository->find($data['budget_id']);
-                if (!is_null($budget)) {
-                    $journal->budgets()->attach($budget);
-                }
-
-                break;
-            case 'Deposit':
-                // means transaction[0] is the beneficiary.
-                $account     = $accountRepository->find($data['account_id']);
-                $beneficiary = $accountRepository->createOrFindBeneficiary($data['beneficiary']);
-                $journal->transactions[0]->account()->associate($beneficiary);
-                $journal->transactions[1]->account()->associate($account);
-                break;
-            case 'Transfer':
-                // means transaction[0] is account that sent the money (from).
-                /** @var \Account $fromAccount */
-                $fromAccount = $accountRepository->find($data['account_from_id']);
-                /** @var \Account $toAccount */
-                $toAccount = $accountRepository->find($data['account_to_id']);
-                $journal->transactions[0]->account()->associate($fromAccount);
-                $journal->transactions[1]->account()->associate($toAccount);
-
-                // attach the new piggy bank, if valid:
-                /** @var \Firefly\Storage\Piggybank\PiggybankRepositoryInterface $piggyRepository */
-                $piggyRepository = \App::make('Firefly\Storage\Piggybank\PiggybankRepositoryInterface');
-                $piggyRepository->overruleUser($this->_user);
-
-                if (isset($data['piggybank_id'])) {
-                    /** @var \Piggybank $piggyBank */
-                    $piggyBank = $piggyRepository->find(intval($data['piggybank_id']));
-
-                    // loop transactions and re-attach the piggy bank:
-
-                    if ($piggyBank) {
-
-                        $connected = false;
-                        foreach ($journal->transactions()->get() as $transaction) {
-                            if ($transaction->account_id == $piggyBank->account_id) {
-                                $connected = true;
-                                $transaction->piggybank()->associate($piggyBank);
-                                $transaction->save();
-                                $fireEvent = true;
-                                break;
-                            }
-                        }
-                        if ($connected === false) {
-                            \Session::flash(
-                                'warning', 'Piggy bank "' . e($piggyBank->name)
-                                . '" is not set to draw money from any of the accounts in this transfer'
-                            );
-                        }
-                    }
-                }
-
-
-                break;
-            default:
-                throw new FireflyException('Cannot edit this!');
-                break;
-        }
-
-        $transactions[0]->save();
-        $transactions[1]->save();
-        if ($journal->validate()) {
-            $journal->save();
-        }
-        if ($fireEvent) {
-            \Event::fire('piggybanks.updateRelatedTransfer', [$piggyBank]);
-        }
-
+        /*
+         * Return regardless.
+         */
         return $journal;
 
 
     }
+//        /*
+//         * Grab some of the repositories we need:
+//         */
+//        /** @var \Firefly\Storage\Category\CategoryRepositoryInterface $catRepository */
+//        $catRepository = \App::make('Firefly\Storage\Category\CategoryRepositoryInterface');
+//        $catRepository->overruleUser($this->_user);
+//
+//        /** @var \Firefly\Storage\Budget\BudgetRepositoryInterface $budgetRepository */
+//        $budRepository = \App::make('Firefly\Storage\Budget\BudgetRepositoryInterface');
+//        $budRepository->overruleUser($this->_user);
+//
+//        /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accountRepository */
+//        $accountRepository = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
+//        $accountRepository->overruleUser($this->_user);
+//
+//
+//         update basics first:
+//        $journal->description = $data['description'];
+//        $journal->date        = $data['date'];
+//        $amount               = floatval($data['amount']);
+//
+//        // remove previous category, if any:
+//        if (!is_null($journal->categories()->first())) {
+//            $journal->categories()->detach($journal->categories()->first()->id);
+//        }
+//        // remove previous budget, if any:
+//        if (!is_null($journal->budgets()->first())) {
+//            $journal->budgets()->detach($journal->budgets()->first()->id);
+//        }
+//        // remove previous piggy bank, if any:
+//
+//
+//        $category = isset($data['category']) ? $catRepository->findByName($data['category']) : null;
+//        if (!is_null($category)) {
+//            $journal->categories()->attach($category);
+//        }
+//        // update the amounts:
+//        $transactions = $journal->transactions()->orderBy('amount', 'ASC')->get();
+//
+//        // remove previous piggy bank, if any:
+//        /** @var \Transaction $transaction */
+//        foreach ($transactions as $transaction) {
+//            if (!is_null($transaction->piggybank()->first())) {
+//                $transaction->piggybank_id = null;
+//                $transaction->save();
+//            }
+//        }
+//        unset($transaction);
+//
+//        $transactions[0]->amount = $amount * -1;
+//        $transactions[1]->amount = $amount;
+//
+//        // switch on type to properly change things:
+//        $fireEvent = false;
+//        switch ($journal->transactiontype->type) {
+//            case 'Withdrawal':
+//                // means transaction[0] is the users account.
+//                $account     = $accountRepository->find($data['account_id']);
+//                $beneficiary = $accountRepository->createOrFindBeneficiary($data['beneficiary']);
+//                $transactions[0]->account()->associate($account);
+//                $transactions[1]->account()->associate($beneficiary);
+//
+//                // do budget:
+//                $budget = $budRepository->find($data['budget_id']);
+//                if (!is_null($budget)) {
+//                    $journal->budgets()->attach($budget);
+//                }
+//
+//                break;
+//            case 'Deposit':
+//                // means transaction[0] is the beneficiary.
+//                $account     = $accountRepository->find($data['account_id']);
+//                $beneficiary = $accountRepository->createOrFindBeneficiary($data['beneficiary']);
+//                $journal->transactions[0]->account()->associate($beneficiary);
+//                $journal->transactions[1]->account()->associate($account);
+//                break;
+//            case 'Transfer':
+//                // means transaction[0] is account that sent the money (from).
+//                /** @var \Account $fromAccount */
+//                $fromAccount = $accountRepository->find($data['account_from_id']);
+//                /** @var \Account $toAccount */
+//                $toAccount = $accountRepository->find($data['account_to_id']);
+//                $journal->transactions[0]->account()->associate($fromAccount);
+//                $journal->transactions[1]->account()->associate($toAccount);
+//
+//                // attach the new piggy bank, if valid:
+//                /** @var \Firefly\Storage\Piggybank\PiggybankRepositoryInterface $piggyRepository */
+//                $piggyRepository = \App::make('Firefly\Storage\Piggybank\PiggybankRepositoryInterface');
+//                $piggyRepository->overruleUser($this->_user);
+//
+//                if (isset($data['piggybank_id'])) {
+//                    /** @var \Piggybank $piggyBank */
+//                    $piggyBank = $piggyRepository->find(intval($data['piggybank_id']));
+//
+//                    // loop transactions and re-attach the piggy bank:
+//
+//                    if ($piggyBank) {
+//
+//                        $connected = false;
+//                        foreach ($journal->transactions()->get() as $transaction) {
+//                            if ($transaction->account_id == $piggyBank->account_id) {
+//                                $connected = true;
+//                                $transaction->piggybank()->associate($piggyBank);
+//                                $transaction->save();
+//                                $fireEvent = true;
+//                                break;
+//                            }
+//                        }
+//                        if ($connected === false) {
+//                            \Session::flash(
+//                                'warning', 'Piggy bank "' . e($piggyBank->name)
+//                                . '" is not set to draw money from any of the accounts in this transfer'
+//                            );
+//                        }
+//                    }
+//                }
+//
+//
+//                break;
+//            default:
+//                throw new FireflyException('Cannot edit this!');
+//                break;
+//        }
+//
+//        $transactions[0]->save();
+//        $transactions[1]->save();
+//        if ($journal->validate()) {
+//            $journal->save();
+//        }
+//        if ($fireEvent) {
+//            \Event::fire('piggybanks.updateRelatedTransfer', [$piggyBank]);
+//        }
+//
+//        return $journal;
+//
+//
+//    }
 
 
 }
