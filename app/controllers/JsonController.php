@@ -6,6 +6,7 @@ use Firefly\Storage\Category\CategoryRepositoryInterface as Cat;
 use Firefly\Storage\Component\ComponentRepositoryInterface as CRI;
 use Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface as TJRI;
 use Illuminate\Support\Collection;
+use LaravelBook\Ardent\Builder;
 
 /**
  * Class JsonController
@@ -38,12 +39,72 @@ class JsonController extends BaseController
     }
 
     /**
-     * Returns a list of transactions, expenses only, using the given parameters.
+     *
      */
-    public function expenses()
+    public function revenue()
     {
+        $parameters                     = $this->_datatableParameters();
+        $parameters['transactionTypes'] = ['Deposit'];
+        $parameters['amount']           = 'positive';
+
+        $query = $this->_datatableQuery($parameters);
+        $resultSet = $this->_datatableResultset($parameters, $query);
 
 
+        /*
+         * Build return data:
+         */
+
+        if (Input::get('debug') == 'true') {
+            echo '<pre>';
+            print_r($parameters);
+            echo '<hr>';
+            print_r($resultSet);
+            return '';
+
+        } else {
+            return Response::json($resultSet);
+        }
+
+
+    }
+
+    /**
+     *
+     */
+    public function transfers()
+    {
+        $parameters                     = $this->_datatableParameters();
+        $parameters['transactionTypes'] = ['Transfer'];
+        $parameters['amount']           = 'positive';
+
+        $query = $this->_datatableQuery($parameters);
+        $resultSet = $this->_datatableResultset($parameters, $query);
+
+
+        /*
+         * Build return data:
+         */
+
+        if (Input::get('debug') == 'true') {
+            echo '<pre>';
+            print_r($parameters);
+            echo '<hr>';
+            print_r($resultSet);
+            return '';
+
+        } else {
+            return Response::json($resultSet);
+        }
+
+
+    }
+
+    /**
+     * @return array
+     */
+    protected function _datatableParameters()
+    {
         /*
          * Process all parameters!
          */
@@ -76,7 +137,7 @@ class JsonController extends BaseController
         /*
          * Sorting.
          */
-        $orderOnAccount = false;
+        $parameters['orderOnAccount'] = false;
         if (!is_null(Input::get('order')) && is_array(Input::get('order'))) {
             foreach (Input::get('order') as $order) {
                 $columnIndex           = intval($order['column']);
@@ -86,7 +147,7 @@ class JsonController extends BaseController
                     'dir'  => strtoupper($order['dir'])
                 ];
                 if ($columnName == 'to' || $columnName == 'from') {
-                    $orderOnAccount = true;
+                    $parameters['orderOnAccount'] = true;
                 }
             }
         }
@@ -100,11 +161,33 @@ class JsonController extends BaseController
                 'regex' => $search['regex'] == 'true' ? true : false
             ];
         }
+        return $parameters;
+    }
+
+    /**
+     * @param array $parameters
+     *
+     * @return Builder
+     */
+    protected function _datatableQuery(array $parameters)
+    {
+        /*
+         * We need the following vars to fine tune the query:
+         */
+        if ($parameters['amount'] == 'negative') {
+            $operator        = '<';
+            $operatorNegated = '>';
+            $function        = 'lessThan';
+        } else {
+            $operator        = '>';
+            $operatorNegated = '<';
+            $function        = 'moreThan';
+        }
 
         /*
          * Build query:
          */
-        $query = \TransactionJournal::transactionTypes(['Withdrawal'])->withRelevantData();
+        $query = \TransactionJournal::transactionTypes($parameters['transactionTypes'])->withRelevantData();
 
         /*
          * This is complex. Join `transactions` twice, once for the "to" account and once for the
@@ -114,21 +197,21 @@ class JsonController extends BaseController
          *
          * Also need the table prefix for this to work.
          */
-        if ($orderOnAccount === true) {
+        if ($parameters['orderOnAccount'] === true) {
             $connection = \Config::get('database.default');
             $prefix     = \Config::get('database.connections.' . $connection . '.prefix');
             // left join first table for "from" account:
             $query->leftJoin(
-                'transactions AS ' . $prefix . 't1', function ($join) {
+                'transactions AS ' . $prefix . 't1', function ($join) use ($operator) {
                     $join->on('t1.transaction_journal_id', '=', 'transaction_journals.id')
-                        ->on('t1.amount', '<', \DB::Raw(0));
+                        ->on('t1.amount', $operator, \DB::Raw(0));
                 }
             );
             // left join second table for "to" account:
             $query->leftJoin(
-                'transactions AS ' . $prefix . 't2', function ($join) {
+                'transactions AS ' . $prefix . 't2', function ($join) use ($operatorNegated) {
                     $join->on('t2.transaction_journal_id', '=', 'transaction_journals.id')
-                        ->on('t2.amount', '>', \DB::Raw(0));
+                        ->on('t2.amount', $operatorNegated, \DB::Raw(0));
                 }
             );
 
@@ -137,21 +220,12 @@ class JsonController extends BaseController
             $query->leftJoin('accounts as ' . $prefix . 'a2', 'a2.id', '=', 't2.account_id');
         } else {
             // less complex
-            $query->lessThan(0);
+            $query->$function(0);
         }
-
-
-        //'t1.transaction_journal_id','=','transaction_journals.id');
-
-
-        $count = $query->count();
-        $query->take($parameters['length']);
-        $query->skip($parameters['start']);
 
         /*
          * Add sort parameters to query:
          */
-        \Debugbar::startMeasure('order');
         if (isset($parameters['order']) && count($parameters['order']) > 0) {
             foreach ($parameters['order'] as $order) {
                 $query->orderBy($order['name'], $order['dir']);
@@ -159,6 +233,66 @@ class JsonController extends BaseController
         } else {
             $query->defaultSorting();
         }
+        return $query;
+    }
+
+    /**
+     * Returns a list of transactions, expenses only, using the given parameters.
+     */
+    public function expenses()
+    {
+
+        /*
+         * Gets most parameters from the Input::all() array:
+         */
+        $parameters = $this->_datatableParameters();
+
+        /*
+         * Add some more parameters to fine tune the query:
+         */
+        $parameters['transactionTypes'] = ['Withdrawal'];
+        $parameters['amount']           = 'negative';
+
+        /*
+         * Get the query:
+         */
+        $query = $this->_datatableQuery($parameters);
+
+        /*
+         * Build result set:
+         */
+        $resultSet = $this->_datatableResultset($parameters, $query);
+
+
+        /*
+         * Build return data:
+         */
+
+        if (Input::get('debug') == 'true') {
+            echo '<pre>';
+            print_r($parameters);
+            echo '<hr>';
+            print_r($resultSet);
+            return '';
+
+        } else {
+            return Response::json($resultSet);
+        }
+    }
+
+    protected function _datatableResultset(array $parameters, Builder $query)
+    {
+        /*
+         * Count query:
+         */
+        $count = $query->count();
+
+        /*
+         * Update the selection:
+         */
+
+        $query->take($parameters['length']);
+        $query->skip($parameters['start']);
 
         /*
          * Build return array:
@@ -174,7 +308,7 @@ class JsonController extends BaseController
         /*
          * Get paginated result set:
          */
-        if ($orderOnAccount === true) {
+        if ($parameters['orderOnAccount'] === true) {
             /** @var Collection $set */
             $set = $query->get(
                 [
@@ -218,22 +352,7 @@ class JsonController extends BaseController
             ];
 
         }
-
-        /*
-         * Build return data:
-         */
-        $return = $data;
-
-        if (Input::get('debug') == 'true') {
-            echo '<pre>';
-            print_r($parameters);
-            echo '<hr>';
-            print_r($return);
-            return '';
-
-        } else {
-            return Response::json($return);
-        }
+        return $data;
     }
 
     /**

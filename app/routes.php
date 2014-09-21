@@ -178,10 +178,12 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
 
         // JSON controller:
-        Route::get('/json/expense-accounts', ['uses' => 'JsonController@expenseAccounts', 'as' => 'json.expense']);
-        Route::get('/json/revenue-accounts', ['uses' => 'JsonController@revenueAccounts', 'as' => 'json.revenue']);
+        Route::get('/json/expense-accounts', ['uses' => 'JsonController@expenseAccounts', 'as' => 'json.expense-accounts']);
+        Route::get('/json/revenue-accounts', ['uses' => 'JsonController@revenueAccounts', 'as' => 'json.revenue-accounts']);
         Route::get('/json/categories', ['uses' => 'JsonController@categories', 'as' => 'json.categories']);
         Route::get('/json/expenses', ['uses' => 'JsonController@expenses', 'as' => 'json.expenses']);
+        Route::get('/json/revenue', ['uses' => 'JsonController@revenue', 'as' => 'json.revenue']);
+        Route::get('/json/transfers', ['uses' => 'JsonController@transfers', 'as' => 'json.transfers']);
 
         // limit controller:
         Route::get('/budgets/limits/create/{budget?}',['uses' => 'LimitController@create','as' => 'budgets.limits.create']);
