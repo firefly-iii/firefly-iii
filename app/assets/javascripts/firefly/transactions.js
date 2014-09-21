@@ -24,37 +24,42 @@ $(document).ready(function () {
             order: [],
             "lengthMenu": [[50, 100, 250, -1], [50, 100, 250, "All"]],
             columns: [
-                {name: 'date', data: 'date'},
+                {
+                    name: 'date',
+                    data: 'date',
+                    searchable: false
+                },
                 {
                     name: 'description',
                     data: 'description',
                     render: function (data, type, full, meta) {
                         var icon = '';
-                        if(display == 'expenses') {
+                        if (display == 'expenses') {
                             icon = 'glyphicon-arrow-left';
                         }
-                        if(display == 'revenue') {
+                        if (display == 'revenue') {
                             icon = 'glyphicon-arrow-right';
                         }
-                        if(display == 'transfers') {
+                        if (display == 'transfers') {
                             icon = 'glyphicon-resize-full';
                         }
 
-                        return '<span class="glyphicon '+icon+'"></span> '+
+                        return '<span class="glyphicon ' + icon + '"></span> ' +
                         '<a href="' + data.url + '" title="' + data.description + '">' + data.description + '</a>';
                     }
                 },
                 {
                     name: 'amount',
                     data: 'amount',
+                    searchable: false,
                     render: function (data, type, full, meta) {
-                        if(display == 'expenses') {
+                        if (display == 'expenses') {
                             return '<span class="text-danger">\u20AC ' + data.toFixed(2) + '</span>';
                         }
-                        if(display == 'revenue') {
+                        if (display == 'revenue') {
                             return '<span class="text-success">\u20AC ' + data.toFixed(2) + '</span>';
                         }
-                        if(display == 'transfers') {
+                        if (display == 'transfers') {
                             return '<span class="text-info">\u20AC ' + data.toFixed(2) + '</span>';
                         }
                     }
@@ -62,6 +67,7 @@ $(document).ready(function () {
                 {
                     name: 'from',
                     data: 'from',
+                    searchable: false,
                     render: function (data, type, full, meta) {
                         return '<a href="' + data.url + '" title="' + data.name + '">' + data.name + '</a>';
                     }
@@ -69,6 +75,7 @@ $(document).ready(function () {
                 {
                     name: 'to',
                     data: 'to',
+                    searchable: false,
                     render: function (data, type, full, meta) {
                         return '<a href="' + data.url + '" title="' + data.name + '">' + data.name + '</a>';
                     }
@@ -76,12 +83,13 @@ $(document).ready(function () {
                 {
                     name: 'id',
                     data: 'id',
+                    searchable: false,
                     render: function (data, type, full, meta) {
-                        return '<div class="btn-group btn-group-xs">'+
-                        '<a class="btn btn-default btn-xs" href="'+data.edit+'">'+
+                        return '<div class="btn-group btn-group-xs">' +
+                        '<a class="btn btn-default btn-xs" href="' + data.edit + '">' +
                         '<span class="glyphicon glyphicon-pencil"</a>' +
-                        '<a class="btn btn-danger btn-xs" href="'+data.delete+'">'+
-                        '<span class="glyphicon glyphicon-trash"</a>'+
+                        '<a class="btn btn-danger btn-xs" href="' + data.delete + '">' +
+                        '<span class="glyphicon glyphicon-trash"</a>' +
                         '</a></div>';
                     }
                 }
