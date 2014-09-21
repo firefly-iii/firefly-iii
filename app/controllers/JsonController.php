@@ -110,7 +110,7 @@ class JsonController extends BaseController
          */
         $parameters = [
             'start'  => intval(Input::get('start')),
-            'length' => intval(Input::get('length')),
+            'length' => intval(Input::get('length')) < 0 ? 100000 : intval(Input::get('length')),
             'draw'   => intval(Input::get('draw')),
         ];
 
@@ -295,12 +295,22 @@ class JsonController extends BaseController
         $query->skip($parameters['start']);
 
         /*
+         * Input search parameters:
+         */
+        $filtered = $count;
+        if(strlen($parameters['search']['value']) > 0) {
+            $query->where('transaction_journals.description','LIKE','%'.e($parameters['search']['value']).'%');
+            $filtered = $query->count();
+        }
+
+
+        /*
          * Build return array:
          */
         $data = [
             'draw'            => $parameters['draw'],
             'recordsTotal'    => $count,
-            'recordsFiltered' => $count,
+            'recordsFiltered' => $filtered,
             'data'            => [],
 
         ];

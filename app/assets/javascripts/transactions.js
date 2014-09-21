@@ -12,4 +12,5 @@
 //
 //= require typeahead/bootstrap3-typeahead.min
 //= require datatables/jquery.dataTables
+//= require datatables/dataTables.bootstrap
 //= require firefly/transactions
