@@ -336,7 +336,7 @@ class Import
                 $accountID = intval($payload['data']['value']);
 
                 /*
-                 * Is account imported already.
+                 * Is account imported already?
                  */
                 $importEntry = $this->_repository->findImportEntry($importMap, 'Account', $accountID);
 
@@ -349,11 +349,13 @@ class Import
                     /*
                      * Update all piggy banks.
                      */
-                    \Log::debug('Updating all piggybanks, found the right setting.');
-                    foreach ($all as $piggy) {
-                        $piggy->account()->associate($account);
-                        unset($piggy->leftInAccount);
-                        $piggy->save();
+                    if (!is_null($account)) {
+                        \Log::debug('Updating all piggybanks, found the right setting.');
+                        foreach ($all as $piggy) {
+                            $piggy->account()->associate($account);
+                            unset($piggy->leftInAccount);
+                            $piggy->save();
+                        }
                     }
                 } else {
                     \Log::notice('Account not yet imported, hold or 5 minutes.');
@@ -587,7 +589,7 @@ class Import
             \Queue::push('Firefly\Queue\Import@cleanImportAccount', ['mapID' => $importMap->id]);
 
             $job->delete(); // count fixed
-            
+
             \Log::debug('Done with job "start"');
         }
     }

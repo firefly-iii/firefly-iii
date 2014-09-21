@@ -56,6 +56,10 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         $accounts = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
         $accounts->overruleUser($user);
 
+        /** @var \Firefly\Helper\Controllers\TransactionInterface $transactions */
+        $transactions = \App::make('Firefly\Helper\Controllers\TransactionInterface');
+        $transactions->overruleUser($this->_user);
+
         /*
          * Prep some variables from the payload:
          */
@@ -114,9 +118,18 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         /*
          * Import transfer:
          */
+        $set = [
+            'account_from_id' => $accountFrom->id,
+            'account_to_id'   => $accountTo->id,
+            'amount'          => $amount,
+            'description'     => $description,
+            'date'            => $date->format('Y-m-d'),
+            'category'        => '',
+            'what'            => 'transfer',
+            'return_journal' => true
+        ];
+        $journal = $transactions->store($set);
 
-
-        $journal = $this->createSimpleJournal($accountFrom, $accountTo, $description, $amount, $date);
         $repository->store($importMap, 'Transfer', $transferId, $journal->id);
         \Log::debug('Imported transfer "' . $description . '" (' . $amount . ') (' . $date->format('Y-m-d') . ')');
 
@@ -175,7 +188,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
      * @param \Account            $account
      * @param                     $amount
      *
-     * @return mixed
+     * @return \Transaction|null
      */
     public function saveTransaction(\TransactionJournal $journal, \Account $account, $amount)
     {
@@ -217,10 +230,14 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
             return;
         }
 
-
         /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accounts */
         $accounts = \App::make('Firefly\Storage\Account\AccountRepositoryInterface');
         $accounts->overruleUser($user);
+
+        /** @var \Firefly\Helper\Controllers\TransactionInterface $transactions */
+        $transactions = \App::make('Firefly\Helper\Controllers\TransactionInterface');
+        $transactions->overruleUser($this->_user);
+
 
         /*
          * Prep some vars coming out of the pay load:
@@ -248,7 +265,6 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
             $job->delete(); // count fixed
             return;
         }
-
 
         /*
          * Find or create the "import account" which is used because at this point, Firefly
@@ -286,6 +302,16 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
             }
             return;
         }
+        /*
+         * Prep some data for the import routine:
+         */
+        $set = [
+            'category'       => '',
+            'description'    => $description,
+            'date'           => $date->format('Y-m-d'),
+            'return_journal' => true
+        ];
+
 
         /*
          * If the amount is less than zero, we move money to the $importAccount. Otherwise,
@@ -293,22 +319,27 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
          */
         if ($amount < 0) {
             // if amount is less than zero, move to $importAccount
-            $accountFrom = $assetAccount;
-            $accountTo   = $importAccount;
+            $accountFrom            = $assetAccount;
+            $accountTo              = $importAccount;
+            $set['what']            = 'withdrawal';
+            $set['account_id']      = $accountFrom->id;
+            $set['expense_account'] = $importAccount->name;
         } else {
-            $accountFrom = $importAccount;
-            $accountTo   = $assetAccount;
+            $accountFrom            = $importAccount;
+            $accountTo              = $assetAccount;
+            $set['what']            = 'deposit';
+            $set['account_id']      = $accountTo->id;
+            $set['revenue_account'] = $accountFrom->name;
         }
 
         /*
          * Modify the amount so it will work with or new transaction journal structure.
          */
-        $amount = $amount < 0 ? $amount * -1 : $amount;
-
+        $set['amount'] = $amount < 0 ? $amount * -1 : $amount;
         /*
          * Import it:
          */
-        $journal = $this->createSimpleJournal($accountFrom, $accountTo, $description, $amount, $date);
+        $journal = $transactions->store($set);
         $repository->store($importMap, 'Transaction', $transactionId, $journal->id);
         \Log::debug('Imported transaction "' . $description . '" (' . $amount . ') (' . $date->format('Y-m-d') . ')');
 
@@ -336,14 +367,6 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         )
             ->where('id', $journalId)->first();
     }
-
-//    /**
-//     *
-//     */
-//    public function get()
-//    {
-//
-//    }
 
     /**
      * @param $type

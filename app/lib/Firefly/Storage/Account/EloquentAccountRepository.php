@@ -95,6 +95,17 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         $type    = $this->findAccountType('Expense account');
         $account = $this->_user->accounts()->where('name', $name)->where('account_type_id', $type->id)->first();
 
+        // create if not found:
+        if(strlen($name) > 0) {
+            $set     = [
+                'name'            => $name,
+                'user_id'         => $this->_user->id,
+                'active'          => 1,
+                'account_type_id' => $type->id
+            ];
+            $account = $this->firstOrCreate($set);
+        }
+
         // find cash account as fall back:
         if (is_null($account)) {
             $cashType = $this->findAccountType('Cash account');
@@ -156,7 +167,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     /**
      * @param $type
      *
-     * @return mixed
+     * @return \AccountType|null
      */
     public function findAccountType($type)
     {
@@ -498,10 +509,22 @@ class EloquentAccountRepository implements AccountRepositoryInterface
      */
     protected function _createInitialBalance(\Account $account, $amount = 0, Carbon $date)
     {
-        // get account type:
-        $initialBalanceAT = \AccountType::where('type', 'Initial balance account')->first();
+        /*
+         * The repositories we need:
+         */
+        /** @var \Firefly\Helper\Controllers\TransactionInterface $transactions */
+        $transactions = \App::make('Firefly\Helper\Controllers\TransactionInterface');
+        $transactions->overruleUser($this->_user);
 
-        // create new account:
+
+        /*
+         * get account type:
+         */
+        $initialBalanceAT = $this->findAccountType('Initial balance account');
+
+        /*
+         * create new account
+         */
         $initial = new \Account;
         $initial->accountType()->associate($initialBalanceAT);
         $initial->user()->associate($this->_user);
@@ -509,16 +532,20 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         $initial->active = 0;
         if ($initial->validate()) {
             $initial->save();
-            // create new transaction journal (and transactions):
-            /** @var \Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface $transactionJournal */
-            $transactionJournal = \App::make(
-                'Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface'
-            );
-            $transactionJournal->overruleUser($this->_user);
+            /*
+             * create new transaction journal (and transactions):
+             */
 
-            $transactionJournal->createSimpleJournal(
-                $initial, $account, 'Initial Balance for ' . $account->name, $amount, $date
-            );
+            $set =[
+                'account_from_id' => $initial->id,
+                'account_to_id' => $account->id,
+                'description' => 'Initial Balance for ' . $account->name,
+                'what' => 'Opening balance',
+                'amount' => $amount,
+                'category' => '',
+                'date' => $date->format('Y-m-d')
+            ];
+            $transactions->store($set);
 
             return true;
         }

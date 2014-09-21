@@ -128,7 +128,7 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
             /*
              * Already have a piggy bank with this name, we skip it.
              */
-            $this->_repository->store($importMap, 'Piggybank', $payload['data']['id'], $piggyBank->id);
+            $repository->store($importMap, 'Piggybank', $payload['data']['id'], $piggyBank->id);
             \Log::debug('Already imported piggy "' . $payload['data']['name'] . '".');
         }
         // update map:

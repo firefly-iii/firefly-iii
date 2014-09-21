@@ -19,4 +19,13 @@ interface TransactionInterface {
      */
     public function store(array $data);
 
+    /**
+     * Overrule the user used when the class is created.
+     *
+     * @param \User $user
+     *
+     * @return mixed
+     */
+    public function overruleUser(\User $user);
+
 } 

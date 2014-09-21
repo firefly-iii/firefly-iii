@@ -16,11 +16,20 @@ class TransactionController extends BaseController
 {
 
     protected $_repository;
+
     protected $_helper;
 
+    /** @var Carbon|null $_start */
+    protected $_start;
+
+    /** @var Carbon|null $_end */
+    protected $_end;
+
     /**
+     * Construct a new transaction controller with two of the most often used helpers.
+     *
      * @param TJRI $repository
-     * @param TI $helper
+     * @param TI   $helper
      */
     public function __construct(TJRI $repository, TI $helper)
     {
@@ -28,35 +37,49 @@ class TransactionController extends BaseController
         $this->_helper     = $helper;
         View::share('title', 'Transactions');
         View::share('mainTitleIcon', 'fa-repeat');
+
+        /*
+         * With this construction, every method has access to a possibly set start
+         * and end date, to be used at their leisure:
+         */
+        $this->_start = is_null(Input::get('startdate')) ? null : new Carbon(Input::get('startdate'));
+        $this->_end   = is_null(Input::get('enddate')) ? null : new Carbon(Input::get('enddate'));
     }
 
     /**
+     * Shows the view helping the user to create a new transaction journal.
+     *
      * @param string $what
      *
      * @return \Illuminate\View\View
      */
     public function create($what = 'deposit')
     {
+        /*
+         * The repositories we need:
+         */
         /** @var \Firefly\Helper\Toolkit\Toolkit $toolkit */
         $toolkit = App::make('Firefly\Helper\Toolkit\Toolkit');
 
-        // get asset accounts with names and id's.
         /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accountRepository */
         $accountRepository = App::make('Firefly\Storage\Account\AccountRepositoryInterface');
-        $list              = $accountRepository->getActiveDefault();
-        $assetAccounts     = $toolkit->makeSelectList($list);
 
-
-        // get budgets as a select list.
         /** @var \Firefly\Storage\Budget\BudgetRepositoryInterface $budgetRepository */
         $budgetRepository = App::make('Firefly\Storage\Budget\BudgetRepositoryInterface');
-        $budgets          = $toolkit->makeSelectList($budgetRepository->get());
-        $budgets[0]       = '(no budget)';
 
-        // get the piggy banks.
         /** @var \Firefly\Storage\Piggybank\PiggybankRepositoryInterface $piggyRepository */
         $piggyRepository = App::make('Firefly\Storage\Piggybank\PiggybankRepositoryInterface');
-        $piggies         = $piggyRepository->get();
+
+        // get asset accounts with names and id's.
+        $assetAccounts = $toolkit->makeSelectList($accountRepository->getActiveDefault());
+
+        // get budgets as a select list.
+        $budgets    = $toolkit->makeSelectList($budgetRepository->get());
+        $budgets[0] = '(no budget)';
+
+        // get the piggy banks.
+        $piggies    = $toolkit->makeSelectList($piggyRepository->get());
+        $piggies[0] = '(no piggy bank)';
 
         return View::make('transactions.create')->with('accounts', $assetAccounts)->with('budgets', $budgets)->with(
             'what', $what
@@ -64,19 +87,19 @@ class TransactionController extends BaseController
     }
 
     /**
+     * Shows the form that allows a user to delete a transaction journal.
+     *
      * @param TransactionJournal $transactionJournal
      *
      * @return $this
      */
     public function delete(TransactionJournal $transactionJournal)
     {
-        View::share(
-            'subTitle',
-            'Delete ' . strtolower($transactionJournal->transactionType->type) . ' "' . $transactionJournal->description
-            . '"'
-        );
+        $type = strtolower($transactionJournal->transactionType->type);
 
-        return View::make('transactions.delete')->with('journal', $transactionJournal);
+        return View::make('transactions.delete')->with('journal', $transactionJournal)->with(
+            'subTitle', 'Delete ' . $type . ' "' . $transactionJournal->description . '"'
+        );
 
 
     }
@@ -89,65 +112,89 @@ class TransactionController extends BaseController
      */
     public function destroy(TransactionJournal $transactionJournal)
     {
+        $type = $transactionJournal->transactionType->type;
         $transactionJournal->delete();
 
-        return Redirect::route('transactions.index');
-
+        switch ($type) {
+            case 'Withdrawal':
+                return Redirect::route('transactions.expenses');
+                break;
+            case 'Deposit':
+                return Redirect::route('transactions.revenue');
+                break;
+            case 'Transfer':
+                return Redirect::route('transactions.transfers');
+                break;
+        }
     }
 
     /**
+     * Shows the view to edit a transaction.
+     *
      * @param TransactionJournal $journal
      *
      * @return $this
      */
     public function edit(TransactionJournal $journal)
     {
-        // type is useful for display:
-        $what = strtolower($journal->transactiontype->type);
-
-        // some lists prefilled:
-        // get accounts with names and id's.
+        /*
+         * All the repositories we need:
+         */
         /** @var \Firefly\Helper\Toolkit\Toolkit $toolkit */
         $toolkit = App::make('Firefly\Helper\Toolkit\Toolkit');
 
-        // get asset accounts with names and id's.
         /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accountRepository */
         $accountRepository = App::make('Firefly\Storage\Account\AccountRepositoryInterface');
-        $list              = $accountRepository->getActiveDefault();
-        $accounts          = $toolkit->makeSelectList($list);
 
-        View::share(
-            'subTitle', 'Edit ' . strtolower($journal->transactionType->type) . ' "' . $journal->description . '"'
-        );
-
-        // get budgets as a select list.
         /** @var \Firefly\Storage\Budget\BudgetRepositoryInterface $budgetRepository */
         $budgetRepository = App::make('Firefly\Storage\Budget\BudgetRepositoryInterface');
-        $budgets          = $budgetRepository->getAsSelectList();
-        $budgets[0]       = '(no budget)';
 
-        // get the piggy banks.
         /** @var \Firefly\Storage\Piggybank\PiggybankRepositoryInterface $piggyRepository */
         $piggyRepository = App::make('Firefly\Storage\Piggybank\PiggybankRepositoryInterface');
-        $piggies         = $piggyRepository->get();
-        // piggy bank id?
+
+        // type is useful for display:
+        $what = strtolower($journal->transactiontype->type);
+
+        // get asset accounts with names and id's.
+        $accounts = $toolkit->makeSelectList($accountRepository->getActiveDefault());
+
+        // get budgets as a select list.
+        $budgets    = $budgetRepository->getAsSelectList();
+        $budgets[0] = '(no budget)';
+
+        /*
+         * Get all piggy banks plus (if any) the relevant piggy bank. Since just one
+         * of the transactions in the journal has this field, it should all fill in nicely.
+         */
+        $piggies     = $piggyRepository->get();
         $piggyBankId = null;
         foreach ($journal->transactions as $t) {
             $piggyBankId = $t->piggybank_id;
         }
 
-        // data to properly display form:
-        $data     = [
+        /*
+         * Data to properly display the edit form.
+         */
+        $data = [
             'date'         => $journal->date->format('Y-m-d'),
             'category'     => '',
             'budget_id'    => 0,
             'piggybank_id' => $piggyBankId
         ];
+
+        /*
+         * Fill in the category.
+         */
         $category = $journal->categories()->first();
         if (!is_null($category)) {
             $data['category'] = $category->name;
         }
-        switch ($journal->transactiontype->type) {
+
+        /*
+         * Switch on the type of transaction edited by the user and fill in other
+         * relevant fields:
+         */
+        switch ($what) {
             case 'Withdrawal':
                 $data['account_id']  = $journal->transactions[0]->account->id;
                 $data['beneficiary'] = $journal->transactions[1]->account->name;
@@ -169,30 +216,27 @@ class TransactionController extends BaseController
                 break;
         }
 
+        /*
+         * Show the view.
+         */
         return View::make('transactions.edit')->with('journal', $journal)->with('accounts', $accounts)->with(
             'what', $what
-        )->with('budgets', $budgets)->with('data', $data)->with('piggies', $piggies);
+        )->with('budgets', $budgets)->with('data', $data)->with('piggies', $piggies)->with(
+            'subTitle', 'Edit ' . $what . ' "' . $journal->description . '"'
+        );
     }
 
+    /**
+     * @return $this
+     */
     public function expenses()
     {
-        $transactionType = $this->_repository->getTransactionType('Withdrawal');
-        $start           = is_null(Input::get('startdate')) ? null : new Carbon(Input::get('startdate'));
-        $end             = is_null(Input::get('enddate')) ? null : new Carbon(Input::get('enddate'));
-        if ($start <= $end && !is_null($start) && !is_null($end)) {
-            $journals = $this->_repository->paginate($transactionType, 25, $start, $end);
-            $filtered = true;
-            $filters  = ['start' => $start, 'end' => $end];
-        } else {
-            $journals = $this->_repository->paginate($transactionType, 25);
-            $filtered = false;
-            $filters  = null;
-        }
+        #$transactionType = $this->_repository->getTransactionType('Withdrawal');
+        #$journals        = $this->_repository->paginate($transactionType, 25, $this->_start, $this->_end);
 
-        View::share('subTitleIcon', 'fa-long-arrow-left');
-        return View::make('transactions.index')->with('journals', $journals)->with('filtered', $filtered)->with(
-            'filters', $filters
-        )->with('subTitle', 'Expenses');
+        return View::make('transactions.list')->with('subTitle', 'Expenses')->with(
+            'subTitleIcon', 'fa-long-arrow-left'
+        );
     }
 
     public function revenue()
@@ -298,7 +342,7 @@ class TransactionController extends BaseController
                 /*
                  * Failure!
                  */
-                if($messageBag->count() > 0) {
+                if ($messageBag->count() > 0) {
                     Session::flash('error', 'Could not save transaction: ' . $messageBag->first());
                     return Redirect::route('transactions.create', [$what])->withInput()->withErrors($messageBag);
                 }
