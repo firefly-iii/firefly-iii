@@ -28,7 +28,8 @@
 @stop
 @section('scripts')
 <script type="text/javascript">
-var URL = '{{route('json.expenses')}}';
+var URL = '{{route('json.'.$what)}}';
+var display = '{{{$what}}}';
 </script>
 <?php echo javascript_include_tag('transactions'); ?>
 @stop

@@ -29,7 +29,18 @@ $(document).ready(function () {
                     name: 'description',
                     data: 'description',
                     render: function (data, type, full, meta) {
-                        return '<span class="glyphicon glyphicon-arrow-left"></span> '+
+                        var icon = '';
+                        if(display == 'expenses') {
+                            icon = 'glyphicon-arrow-left';
+                        }
+                        if(display == 'revenue') {
+                            icon = 'glyphicon-arrow-right';
+                        }
+                        if(display == 'transfers') {
+                            icon = 'glyphicon-resize-full';
+                        }
+
+                        return '<span class="glyphicon '+icon+'"></span> '+
                         '<a href="' + data.url + '" title="' + data.description + '">' + data.description + '</a>';
                     }
                 },
@@ -37,7 +48,15 @@ $(document).ready(function () {
                     name: 'amount',
                     data: 'amount',
                     render: function (data, type, full, meta) {
-                        return '<span class="text-danger">\u20AC ' + data.toFixed(2) + '</span>';
+                        if(display == 'expenses') {
+                            return '<span class="text-danger">\u20AC ' + data.toFixed(2) + '</span>';
+                        }
+                        if(display == 'revenue') {
+                            return '<span class="text-success">\u20AC ' + data.toFixed(2) + '</span>';
+                        }
+                        if(display == 'transfers') {
+                            return '<span class="text-info">\u20AC ' + data.toFixed(2) + '</span>';
+                        }
                     }
                 },
                 {

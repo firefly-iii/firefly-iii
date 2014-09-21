@@ -231,55 +231,26 @@ class TransactionController extends BaseController
      */
     public function expenses()
     {
-        #$transactionType = $this->_repository->getTransactionType('Withdrawal');
-        #$journals        = $this->_repository->paginate($transactionType, 25, $this->_start, $this->_end);
-
         return View::make('transactions.list')->with('subTitle', 'Expenses')->with(
             'subTitleIcon', 'fa-long-arrow-left'
-        );
+        )->with('what','expenses');
     }
 
+    /**
+     * @return $this
+     */
     public function revenue()
     {
-        $transactionType = $this->_repository->getTransactionType('Deposit');
-        $start           = is_null(Input::get('startdate')) ? null : new Carbon(Input::get('startdate'));
-        $end             = is_null(Input::get('enddate')) ? null : new Carbon(Input::get('enddate'));
-        if ($start <= $end && !is_null($start) && !is_null($end)) {
-            $journals = $this->_repository->paginate($transactionType, 25, $start, $end);
-            $filtered = true;
-            $filters  = ['start' => $start, 'end' => $end];
-        } else {
-            $journals = $this->_repository->paginate($transactionType, 25);
-            $filtered = false;
-            $filters  = null;
-        }
-
-        View::share('subTitleIcon', 'fa-long-arrow-right');
-        return View::make('transactions.index')->with('journals', $journals)->with('filtered', $filtered)->with(
-            'filters', $filters
-        )->with('subTitle', 'Revenue');
-
+        return View::make('transactions.list')->with('subTitle', 'Revenue')->with(
+            'subTitleIcon', 'fa-long-arrow-right'
+        )->with('what','revenue');
     }
 
     public function transfers()
     {
-        $transactionType = $this->_repository->getTransactionType('Transfer');
-        $start           = is_null(Input::get('startdate')) ? null : new Carbon(Input::get('startdate'));
-        $end             = is_null(Input::get('enddate')) ? null : new Carbon(Input::get('enddate'));
-        if ($start <= $end && !is_null($start) && !is_null($end)) {
-            $journals = $this->_repository->paginate($transactionType, 25, $start, $end);
-            $filtered = true;
-            $filters  = ['start' => $start, 'end' => $end];
-        } else {
-            $journals = $this->_repository->paginate($transactionType, 25);
-            $filtered = false;
-            $filters  = null;
-        }
-
-        View::share('subTitleIcon', 'fa-arrows-h');
-        return View::make('transactions.index')->with('journals', $journals)->with('filtered', $filtered)->with(
-            'filters', $filters
-        )->with('subTitle', 'Transfers');
+        return View::make('transactions.list')->with('subTitle', 'Transfers')->with(
+            'subTitleIcon', 'fa-arrows-h'
+        )->with('what','transfers');
 
     }
 
