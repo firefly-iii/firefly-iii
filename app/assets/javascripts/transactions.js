@@ -11,4 +11,5 @@
 // The available directives right now are require, require_directory, and require_tree
 //
 //= require typeahead/bootstrap3-typeahead.min
+//= require datatables/jquery.dataTables
 //= require firefly/transactions

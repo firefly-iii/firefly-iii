@@ -74,7 +74,7 @@ interface TransactionJournalRepositoryInterface
      * @param \TransactionJournal $journal
      * @param                     $data
      *
-     * @return mixed
+     * @return \Transaction|null
      */
     public function update(\TransactionJournal $journal, $data);
 

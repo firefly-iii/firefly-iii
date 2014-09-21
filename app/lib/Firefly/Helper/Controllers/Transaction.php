@@ -11,23 +11,61 @@ use Illuminate\Support\MessageBag;
  */
 class Transaction implements TransactionInterface
 {
+    protected $_user = null;
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        $this->_user = \Auth::user();
+    }
+
+    /**
+     * @param \User $user
+     *
+     * @return mixed|void
+     */
+    public function overruleUser(\User $user)
+    {
+        $this->_user = $user;
+        return true;
+    }
 
     /**
      * Store a full transaction journal and associated stuff
      *
      * @param array $data
      *
-     * @return MessageBag
+     * @return MessageBag|\TransactionJournal
      *
      * @SuppressWarnings(PHPMD.ShortVariable)
      */
     public function store(array $data)
     {
         /*
-         * save journal using repository
+         * All the repositories we need:
          */
         /** @var \Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface $journals */
         $journals = \App::make('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
+        $journals->overruleUser($this->_user);
+
+        /** @var \Firefly\Storage\Category\CategoryRepositoryInterface $categories */
+        $categories = \App::make('Firefly\Storage\Category\CategoryRepositoryInterface');
+        $categories->overruleUser($this->_user);
+
+        /** @var \Firefly\Storage\Budget\BudgetRepositoryInterface $budgets */
+        $budgets = \App::make('Firefly\Storage\Budget\BudgetRepositoryInterface');
+        $budgets->overruleUser($this->_user);
+
+        /** @var \Firefly\Storage\Piggybank\PiggybankRepositoryInterface $piggybanks */
+        $piggybanks = \App::make('Firefly\Storage\Piggybank\PiggybankRepositoryInterface');
+        $piggybanks->overruleUser($this->_user);
+
+
+        /*
+         * save journal using repository
+         */
         $journal  = $journals->store($data);
 
         /*
@@ -41,17 +79,21 @@ class Transaction implements TransactionInterface
          * save budget using repository
          */
         if (isset($data['budget_id'])) {
-            /** @var \Firefly\Storage\Budget\BudgetRepositoryInterface $budgets */
-            $budgets = \App::make('Firefly\Storage\Budget\BudgetRepositoryInterface');
             $budget  = $budgets->find($data['budget_id']);
         }
 
         /*
          * save category using repository
          */
-        /** @var \Firefly\Storage\Category\CategoryRepositoryInterface $categories */
-        $categories = \App::make('Firefly\Storage\Category\CategoryRepositoryInterface');
         $category   = $categories->firstOrCreate($data['category']);
+
+        /*
+         * Find piggy bank using repository:
+         */
+        $piggybank = null;
+        if(isset($data['piggybank_id'])) {
+            $piggybank = $piggybanks->find($data['piggybank_id']);
+        }
 
         /*
          * save accounts using repositories
@@ -76,6 +118,8 @@ class Transaction implements TransactionInterface
         if (isset($data['account_to_id'])) {
             $to = $accounts->findAssetAccountById($data['account_to_id']);
         }
+
+
         /*
          * Add a custom error when they are the same.
          */
@@ -86,10 +130,14 @@ class Transaction implements TransactionInterface
         }
 
         /*
-         * save transactions using repository.
+         * Save transactions using repository. We try to connect the (possibly existing)
+         * piggy bank to either transaction, knowing it will only work with one of them.
          */
+        /** @var \Transaction $one */
         $one = $journals->saveTransaction($journal, $from, floatval($data['amount']) * -1);
+        $one->connectPiggybank($piggybank);
         $two = $journals->saveTransaction($journal, $to, floatval($data['amount']));
+        $two->connectPiggybank($piggybank);
         /*
          * Count for $journal is zero? Then there were errors!
          */
@@ -103,7 +151,7 @@ class Transaction implements TransactionInterface
         }
 
         /*
-         * Connect budget and category:
+         * Connect budget, category and piggy bank:
          */
         if (isset($budget) && !is_null($budget)) {
             $journal->budgets()->save($budget);
@@ -111,8 +159,16 @@ class Transaction implements TransactionInterface
         if (!is_null($category)) {
             $journal->categories()->save($category);
         }
+        if(isset($piggybank) && !is_null($piggybank)) {
+            // some trigger?
+
+            //$journal->piggybanks()->save($piggybank);
+        }
         $journal->completed = true;
         $journal->save();
+        if(isset($data['return_journal']) && $data['return_journal'] == true) {
+            return $journal;
+        }
         return $journal->errors();
     }
 

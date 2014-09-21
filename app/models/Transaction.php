@@ -8,20 +8,20 @@ use LaravelBook\Ardent\Builder;
 /**
  * Transaction
  *
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $account_id
- * @property integer $piggybank_id
- * @property integer $transaction_journal_id
- * @property string $description
- * @property float $amount
- * @property-read \Account $account
- * @property-read \Illuminate\Database\Eloquent\Collection|\Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\Category[] $categories
+ * @property integer                                                    $id
+ * @property \Carbon\Carbon                                             $created_at
+ * @property \Carbon\Carbon                                             $updated_at
+ * @property integer                                                    $account_id
+ * @property integer                                                    $piggybank_id
+ * @property integer                                                    $transaction_journal_id
+ * @property string                                                     $description
+ * @property float                                                      $amount
+ * @property-read \Account                                              $account
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Budget[]    $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Category[]  $categories
  * @property-read \Illuminate\Database\Eloquent\Collection|\Component[] $components
- * @property-read \Piggybank $piggybank
- * @property-read \TransactionJournal $transactionJournal
+ * @property-read \Piggybank                                            $piggybank
+ * @property-read \TransactionJournal                                   $transactionJournal
  * @method static \Illuminate\Database\Query\Builder|\Transaction whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Transaction whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Transaction whereUpdatedAt($value)
@@ -58,6 +58,35 @@ class Transaction extends Ardent
     }
 
     /**
+     * @param Piggybank $piggybank
+     *
+     * @return bool
+     */
+    public function connectPiggybank(\Piggybank $piggybank = null)
+    {
+        if (is_null($piggybank)) {
+            return true;
+        }
+        /** @var \Firefly\Storage\Piggybank\PiggybankRepositoryInterface $piggyRepository */
+        $piggyRepository = \App::make('Firefly\Storage\Piggybank\PiggybankRepositoryInterface');
+        if ($this->account_id == $piggybank->account_id) {
+            $this->piggybank()->associate($piggybank);
+            $this->save();
+            \Event::fire('piggybanks.createRelatedTransfer', [$piggybank, $this->transactionJournal, $this]);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function piggybank()
+    {
+        return $this->belongsTo('Piggybank');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function budgets()
@@ -81,14 +110,6 @@ class Transaction extends Ardent
         return $this->belongsToMany('Component');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function piggybank()
-    {
-        return $this->belongsTo('Piggybank');
-    }
-
     public function scopeAccountIs(Builder $query, Account $account)
     {
         $query->where('transactions.account_id', $account->id);
@@ -97,8 +118,10 @@ class Transaction extends Ardent
     public function scopeAfter(Builder $query, Carbon $date)
     {
         if (is_null($this->joinedJournals)) {
-            $query->leftJoin('transaction_journals', 'transaction_journals.id', '=',
-                'transactions.transaction_journal_id');
+            $query->leftJoin(
+                'transaction_journals', 'transaction_journals.id', '=',
+                'transactions.transaction_journal_id'
+            );
             $this->joinedJournals = true;
         }
         $query->where('transaction_journals.date', '>=', $date->format('Y-m-d'));
@@ -107,8 +130,10 @@ class Transaction extends Ardent
     public function scopeBefore(Builder $query, Carbon $date)
     {
         if (is_null($this->joinedJournals)) {
-            $query->leftJoin('transaction_journals', 'transaction_journals.id', '=',
-                'transactions.transaction_journal_id');
+            $query->leftJoin(
+                'transaction_journals', 'transaction_journals.id', '=',
+                'transactions.transaction_journal_id'
+            );
             $this->joinedJournals = true;
         }
         $query->where('transaction_journals.date', '<=', $date->format('Y-m-d'));
@@ -127,13 +152,17 @@ class Transaction extends Ardent
     public function scopeTransactionTypes(Builder $query, array $types)
     {
         if (is_null($this->joinedJournals)) {
-            $query->leftJoin('transaction_journals', 'transaction_journals.id', '=',
-                'transactions.transaction_journal_id');
+            $query->leftJoin(
+                'transaction_journals', 'transaction_journals.id', '=',
+                'transactions.transaction_journal_id'
+            );
             $this->joinedJournals = true;
         }
         if (is_null($this->joinedTransactionTypes)) {
-            $query->leftJoin('transaction_types', 'transaction_types.id', '=',
-                'transaction_journals.transaction_type_id');
+            $query->leftJoin(
+                'transaction_types', 'transaction_types.id', '=',
+                'transaction_journals.transaction_type_id'
+            );
             $this->joinedTransactionTypes = true;
         }
         $query->whereIn('transaction_types.type', $types);
