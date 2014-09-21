@@ -18,13 +18,6 @@ interface UserRepositoryInterface
     public function register($array);
 
     /**
-     * @param $array
-     *
-     * @return mixed
-     */
-    public function auth($array);
-
-    /**
      * @param $reset
      *
      * @return mixed

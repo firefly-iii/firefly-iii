@@ -71,11 +71,6 @@ interface BudgetRepositoryInterface
     public function get();
 
     /**
-     * @return mixed
-     */
-    public function getAsSelectList();
-
-    /**
      * @param $data
      *
      * @return mixed

@@ -28,12 +28,6 @@ interface LimitRepositoryInterface
      */
     public function destroy(\Limit $limit);
 
-    /**
-     * @param $limitId
-     *
-     * @return mixed
-     */
-    public function find($limitId);
 
     /**
      * @param \Budget $budget

@@ -1,7 +1,4 @@
 <?php
-
-
-
 namespace Firefly\Database;
 
 use LaravelBook\Ardent\Ardent;

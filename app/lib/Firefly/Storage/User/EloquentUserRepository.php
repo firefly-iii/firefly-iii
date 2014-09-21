@@ -18,22 +18,6 @@ class EloquentUserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param $array
-     *
-     * @return bool
-     */
-    public function auth($array)
-    {
-        $user = \User::where('email', $array['email'])->first();
-        if (!is_null($user)) {
-            if (\Hash::check($array['password'], $user->password)) {
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * @param $email
      *
      * @return mixed

@@ -24,20 +24,6 @@ interface ReminderRepositoryInterface
      */
     public function deactivate(\Reminder $reminder);
 
-    /**
-     * @return mixed
-     */
-    public function get();
-
-    /**
-     * @param $id
-     *
-     * @return mixed
-     */
-    public function find($id);
-
-
-    public function getCurrentRecurringReminders();
 
     /**
      * @param \User $user

@@ -129,19 +129,6 @@ class EloquentLimitRepository implements LimitRepositoryInterface
         return true;
     }
 
-    /**
-     * @param $limitId
-     *
-     * @return mixed
-     */
-    public function find($limitId)
-    {
-        return \Limit::with('limitrepetitions')->where('limits.id', $limitId)->leftJoin(
-            'components', 'components.id', '=', 'limits.component_id'
-        )
-            ->where('components.user_id', $this->_user->id)->first(['limits.*']);
-    }
-
     public function findByBudgetAndDate(\Budget $budget, Carbon $date)
     {
         return \Limit::whereComponentId($budget->id)->where('startdate', $date->format('Y-m-d'))->first();

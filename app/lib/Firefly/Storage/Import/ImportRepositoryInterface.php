@@ -19,10 +19,28 @@ interface ImportRepositoryInterface
      */
     public function store(\Importmap $map, $class, $oldID, $newID);
 
+    /**
+     * @param $id
+     *
+     * @return mixed
+     */
     public function findImportMap($id);
 
+    /**
+     * @param \Importmap $map
+     * @param            $class
+     * @param            $oldID
+     *
+     * @return mixed
+     */
     public function findImportEntry(\Importmap $map, $class, $oldID);
 
+    /**
+     * @param \Importmap $map
+     * @param            $oldComponentId
+     *
+     * @return mixed
+     */
     public function findImportComponentMap(\Importmap $map, $oldComponentId);
 
     /**

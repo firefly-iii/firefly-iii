@@ -58,14 +58,6 @@ interface AccountRepositoryInterface
     public function find($accountId);
 
     /**
-     * @param              $name
-     * @param \AccountType $type
-     *
-     * @return \Account
-     */
-    public function findByNameAndAccountType($name, \AccountType $type);
-
-    /**
      * @param $type
      *
      * @return mixed
@@ -104,19 +96,6 @@ interface AccountRepositoryInterface
     public function findRevenueAccountByName($name);
 
     /**
-     * @param \Account $from
-     * @param \Account $to
-     *
-     * @return \TransactionType|null
-     */
-    public function transactionTypeByAccounts(\Account $from, \Account $to);
-
-    /**
-     * @return mixed
-     */
-    public function get();
-
-    /**
      * @return mixed
      */
     public function getActiveDefault();
@@ -127,11 +106,6 @@ interface AccountRepositoryInterface
      * @return mixed
      */
     public function getByIds(array $ids);
-
-    /**
-     * @return mixed
-     */
-    public function getCashAccount();
 
     /**
      * @return mixed
