@@ -15,9 +15,17 @@ interface TransactionInterface {
      *
      * @param array $data
      *
-     * @return MessageBag
+     * @return MessageBag|\TransactionJournal
      */
     public function store(array $data);
+
+    /**
+     * @param \TransactionJournal $journal
+     * @param array               $data
+     *
+     * @return MessageBag|\TransactionJournal
+     */
+    public function update(\TransactionJournal $journal, array $data);
 
     /**
      * Overrule the user used when the class is created.
