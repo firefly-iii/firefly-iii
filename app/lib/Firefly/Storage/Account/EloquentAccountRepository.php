@@ -35,16 +35,18 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     {
         return $this->_user->accounts()->find($id);
     }
+
     /**
      * @param \Account $from
      * @param \Account $to
-     * @param int $amount
+     * @param int      $amount
      *
      * @throws FireflyException
      *
      * @return \TransactionType|null
      */
-    public function transactionTypeByAccounts(\Account $from, \Account $to, $amount = 0) {
+    public function transactionTypeByAccounts(\Account $from, \Account $to, $amount = 0)
+    {
         // account types for both:
         $toAT   = $to->accountType->type;
         $fromAT = $from->accountType->type;
@@ -83,20 +85,36 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     }
 
 
-
     /**
+     * This method finds the expense account mentioned by name. This method is a sneaky little hobbits,
+     * because when you feed it "Import account" it will always return an import account of that type.
+     *
      * @param $name
      *
-     * @return |Account|null
+     * @return null|\Account
      */
     public function findExpenseAccountByName($name)
     {
+        // catch Import account:
+        if ($name == 'Import account') {
+            $importType = $this->findAccountType('Import account');
+            $import     = $this->firstOrCreate(
+                [
+                    'name'            => 'Import account',
+                    'user_id'         => $this->_user->id,
+                    'account_type_id' => $importType->id,
+                    'active'          => 1
+                ]
+            );
+            return $import;
+        }
+
         // find account:
         $type    = $this->findAccountType('Expense account');
         $account = $this->_user->accounts()->where('name', $name)->where('account_type_id', $type->id)->first();
 
         // create if not found:
-        if(strlen($name) > 0) {
+        if (strlen($name) > 0) {
             $set     = [
                 'name'            => $name,
                 'user_id'         => $this->_user->id,
@@ -105,40 +123,6 @@ class EloquentAccountRepository implements AccountRepositoryInterface
             ];
             $account = $this->firstOrCreate($set);
         }
-
-        // find cash account as fall back:
-        if (is_null($account)) {
-            $cashType = $this->findAccountType('Cash account');
-            $account  = $this->_user->accounts()->where('account_type_id', $cashType->id)->first();
-        }
-
-        // create cash account as ultimate fall back:
-        if (is_null($account)) {
-            $set     = [
-                'name'            => 'Cash account',
-                'user_id'         => $this->_user->id,
-                'active'          => 1,
-                'account_type_id' => $cashType->id
-            ];
-            $account = $this->firstOrCreate($set);
-        }
-
-        if ($account->active == 0) {
-            return null;
-        }
-
-        return $account;
-    }
-    /**
-     * @param $name
-     *
-     * @return |Account|null
-     */
-    public function findRevenueAccountByName($name)
-    {
-        // find account:
-        $type    = $this->findAccountType('Revenue account');
-        $account = $this->_user->accounts()->where('name', $name)->where('account_type_id', $type->id)->first();
 
         // find cash account as fall back:
         if (is_null($account)) {
@@ -177,6 +161,55 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     public function firstOrCreate(array $data)
     {
         return \Account::firstOrCreate($data);
+    }
+
+    /**
+     * @param $name
+     *
+     * @return |Account|null
+     */
+    public function findRevenueAccountByName($name)
+    {
+        // catch Import account:
+        if ($name == 'Import account') {
+            $importType = $this->findAccountType('Import account');
+            $import     = $this->firstOrCreate(
+                [
+                    'name'            => 'Import account',
+                    'user_id'         => $this->_user->id,
+                    'account_type_id' => $importType->id,
+                    'active'          => 1
+                ]
+            );
+            return $import;
+        }
+
+        // find account:
+        $type    = $this->findAccountType('Revenue account');
+        $account = $this->_user->accounts()->where('name', $name)->where('account_type_id', $type->id)->first();
+
+        // find cash account as fall back:
+        if (is_null($account)) {
+            $cashType = $this->findAccountType('Cash account');
+            $account  = $this->_user->accounts()->where('account_type_id', $cashType->id)->first();
+        }
+
+        // create cash account as ultimate fall back:
+        if (is_null($account)) {
+            $set     = [
+                'name'            => 'Cash account',
+                'user_id'         => $this->_user->id,
+                'active'          => 1,
+                'account_type_id' => $cashType->id
+            ];
+            $account = $this->firstOrCreate($set);
+        }
+
+        if ($account->active == 0) {
+            return null;
+        }
+
+        return $account;
     }
 
     /**
@@ -265,18 +298,37 @@ class EloquentAccountRepository implements AccountRepositoryInterface
          */
         $importType = $this->findAccountType('Import account');
         /** @var \Transaction $transaction */
-        foreach ($journal->transactions as $transaction) {
+        $updated = false;
+        \Log::debug(
+            'Connect "' . $account->name . '" (#' . $account->id . ') to "' . $journal->description . '" (#'
+            . $journal->id . ')'
+        );
+        foreach ($journal->transactions as $index => $transaction) {
             /*
              * If it's of the right type, update it!
              */
+            \Log::debug(
+                'Transaction ' . $index . ' (#' . $transaction->id . '): [' . $transaction->account->account_type_id
+                . ' vs. ' . $importType->id . ']'
+            );
             if ($transaction->account->account_type_id == $importType->id) {
                 $transaction->account()->associate($account);
                 $transaction->save();
+                $updated = true;
+                \Log::debug(
+                    'Connected expense account "' . $account->name . '" to journal "' . $journal->description . '"'
+                );
             }
+        }
+        if ($updated === false) {
+            \Log::error(
+                'Did not connect transactions of journal #' . $journal->id . ' to expense account ' . $account->id
+            );
+
         }
 
         $journal->save();
-        \Log::debug('Connected expense account "' . $account->name . '" to journal "' . $journal->description . '"');
+
 
         $importMap->jobsdone++;
         $importMap->save();
@@ -536,14 +588,14 @@ class EloquentAccountRepository implements AccountRepositoryInterface
              * create new transaction journal (and transactions):
              */
 
-            $set =[
+            $set = [
                 'account_from_id' => $initial->id,
-                'account_to_id' => $account->id,
-                'description' => 'Initial Balance for ' . $account->name,
-                'what' => 'Opening balance',
-                'amount' => $amount,
-                'category' => '',
-                'date' => $date->format('Y-m-d')
+                'account_to_id'   => $account->id,
+                'description'     => 'Initial Balance for ' . $account->name,
+                'what'            => 'Opening balance',
+                'amount'          => $amount,
+                'category'        => '',
+                'date'            => $date->format('Y-m-d')
             ];
             $transactions->store($set);
 
