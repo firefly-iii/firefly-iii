@@ -382,22 +382,6 @@ class EloquentBudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
-     * @return array
-     */
-    public function getAsSelectList()
-    {
-        $list   = $this->_user->budgets()->with(
-            ['limits', 'limits.limitrepetitions']
-        )->orderBy('name', 'ASC')->get();
-        $return = [];
-        foreach ($list as $entry) {
-            $return[intval($entry->id)] = $entry->name;
-        }
-
-        return $return;
-    }
-
-    /**
      * @param \Budget $budget
      * @param         $data
      *

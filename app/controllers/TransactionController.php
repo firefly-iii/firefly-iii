@@ -310,7 +310,7 @@ class TransactionController extends BaseController
     /**
      * @param TransactionJournal $journal
      *
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @throws FireflyException
      */
     public function update(TransactionJournal $journal)
     {

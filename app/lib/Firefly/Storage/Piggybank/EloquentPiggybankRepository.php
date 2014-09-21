@@ -157,16 +157,6 @@ class EloquentPiggybankRepository implements PiggybankRepositoryInterface
         )->where('piggybanks.name', $piggyBankName)->first(['piggybanks.*']);
     }
 
-    /**
-     * @return mixed
-     */
-    public function count()
-    {
-        return \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(
-            'accounts.user_id', $this->_user->id
-        )->count();
-    }
-
     public function countNonrepeating()
     {
         return \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where(

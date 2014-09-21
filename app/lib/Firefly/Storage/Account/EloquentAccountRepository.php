@@ -37,55 +37,6 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @param \Account $from
-     * @param \Account $to
-     * @param int      $amount
-     *
-     * @throws FireflyException
-     *
-     * @return \TransactionType|null
-     */
-    public function transactionTypeByAccounts(\Account $from, \Account $to, $amount = 0)
-    {
-        // account types for both:
-        $toAT   = $to->accountType->type;
-        $fromAT = $from->accountType->type;
-
-        $journalType = null;
-
-        switch (true) {
-            case ($from->transactions()->count() == 0 && $to->transactions()->count() == 0):
-                $journalType = \TransactionType::where('type', 'Opening balance')->first();
-                break;
-
-            case (in_array($fromAT, ['Default account', 'Asset account'])
-                && in_array(
-                    $toAT, ['Default account', 'Asset account']
-                )): // both are yours:
-                // determin transaction type. If both accounts are new, it's an initial balance transfer.
-                $journalType = \TransactionType::where('type', 'Transfer')->first();
-                break;
-            case ($amount < 0):
-                $journalType = \TransactionType::where('type', 'Deposit')->first();
-                break;
-            // is deposit into one of your own accounts:
-            case ($toAT == 'Default account' || $toAT == 'Asset account'):
-                $journalType = \TransactionType::where('type', 'Deposit')->first();
-                break;
-            // is withdrawal from one of your own accounts:
-            case ($fromAT == 'Default account' || $fromAT == 'Asset account'):
-                $journalType = \TransactionType::where('type', 'Withdrawal')->first();
-                break;
-        }
-
-        if (is_null($journalType)) {
-            throw new FireflyException('Could not figure out transaction type.');
-        }
-        return $journalType;
-    }
-
-
-    /**
      * This method finds the expense account mentioned by name. This method is a sneaky little hobbits,
      * because when you feed it "Import account" it will always return an import account of that type.
      *
@@ -631,17 +582,6 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @param              $name
-     * @param \AccountType $type
-     *
-     * @return \Account
-     */
-    public function findByNameAndAccountType($name, \AccountType $type)
-    {
-        return $this->_user->accounts()->where('name', $name)->where('account_type_id', $type->id)->first();
-    }
-
-    /**
      * @return mixed
      */
     public function count()
@@ -705,42 +645,6 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         return true;
     }
 
-//    /**
-//     * @return array|mixed
-//     */
-//    public function  getActiveDefaultAsSelectList()
-//    {
-//        $list   = $this->getActiveDefault();
-//        $return = [];
-//        foreach ($list as $entry) {
-//            $return[intval($entry->id)] = $entry->name;
-//        }
-//
-//        return $return;
-//    }
-
-    /**
-     * @return mixed
-     */
-    public function get()
-    {
-        return $this->_user->accounts()->with('accounttype')->orderBy('name', 'ASC')->get();
-    }
-
-//    /**
-//     * @return mixed
-//     */
-//    public function getBeneficiaries()
-//    {
-//        $list = $this->_user->accounts()->accountTypeIn(['Beneficiary account', 'Expense account'])->where(
-//            'accounts.active', 1
-//        )->orderBy(
-//                'accounts.name', 'ASC'
-//            )->get(['accounts.*']);
-//
-//        return $list;
-//    }
-
     public function getByAccountType(\AccountType $type)
     {
         return $this->_user->accounts()->with('accounttype')->orderBy('name', 'ASC')
@@ -771,27 +675,6 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         )
             ->get(['accounts.*']);
     }
-
-    /**
-     * @return mixed
-     */
-    public function getCashAccount()
-    {
-        $type = \AccountType::where('type', 'Cash account')->first();
-        $cash = $this->_user->accounts()->where('account_type_id', $type->id)->first();
-        if (is_null($cash)) {
-            $cash = new \Account;
-            $cash->accountType()->associate($type);
-            $cash->user()->associate($this->_user);
-            $cash->name   = 'Cash account';
-            $cash->active = 1;
-            $cash->save();
-        }
-
-        return $cash;
-
-    }
-
     /**
      * @return mixed
      */

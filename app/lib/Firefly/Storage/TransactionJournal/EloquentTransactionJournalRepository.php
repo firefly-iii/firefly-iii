@@ -396,48 +396,6 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
     }
 
     /**
-     * @param $type
-     *
-     * @return \TransactionType
-     */
-    public function getTransactionType($type)
-    {
-        return \TransactionType::whereType($type)->first();
-    }
-
-    /**
-     * @param \Account $account
-     * @param Carbon   $date
-     *
-     * @return mixed
-     */
-    public function getByAccountAndDate(\Account $account, Carbon $date)
-    {
-        $accountID = $account->id;
-        $query     = $this->_user->transactionjournals()->with(
-            [
-                'transactions',
-                'transactions.account',
-                'transactioncurrency',
-                'transactiontype'
-            ]
-        )
-            ->distinct()
-            ->leftJoin(
-                'transactions', 'transactions.transaction_journal_id', '=',
-                'transaction_journals.id'
-            )
-            ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-            ->where('transactions.account_id', $accountID)
-            ->where('transaction_journals.date', $date->format('Y-m-d'))
-            ->orderBy('transaction_journals.date', 'DESC')
-            ->orderBy('transaction_journals.id', 'DESC')
-            ->get(['transaction_journals.*']);
-
-        return $query;
-    }
-
-    /**
      * @param \Account $account
      * @param int      $count
      * @param Carbon   $start
@@ -470,33 +428,6 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
 
         return $query;
     }
-
-    /**
-     * @param \TransactionType $type
-     * @param int              $count
-     * @param Carbon           $start
-     * @param Carbon           $end
-     *
-     * @return mixed
-     */
-    public function paginate(\TransactionType $type, $count = 25, Carbon $start = null, Carbon $end = null)
-    {
-        $query = $this->_user->transactionjournals()->WithRelevantData()
-            ->transactionTypes([$type->type])
-            ->orderBy('transaction_journals.date', 'DESC')
-            ->orderBy('transaction_journals.id', 'DESC');
-        if (!is_null($start)) {
-            $query->where('transaction_journals.date', '>=', $start->format('Y-m-d'));
-        }
-        if (!is_null($end)) {
-            $query->where('transaction_journals.date', '<=', $end->format('Y-m-d'));
-        }
-
-        $result = $query->select(['transaction_journals.*'])->paginate($count);
-
-        return $result;
-    }
-
     /**
      * @param \TransactionJournal $journal
      * @param                     $data

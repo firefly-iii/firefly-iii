@@ -3,7 +3,6 @@
 use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
 use Firefly\Storage\Budget\BudgetRepositoryInterface as Bud;
 use Firefly\Storage\Category\CategoryRepositoryInterface as Cat;
-use Firefly\Storage\Component\ComponentRepositoryInterface as CRI;
 use Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface as TJRI;
 use Illuminate\Support\Collection;
 use LaravelBook\Ardent\Builder;
@@ -16,7 +15,6 @@ use LaravelBook\Ardent\Builder;
 class JsonController extends BaseController
 {
     protected $_accounts;
-    protected $_components;
     protected $_categories;
     protected $_budgets;
     /** @var TJRI $_journals */
@@ -24,14 +22,12 @@ class JsonController extends BaseController
 
     /**
      * @param ARI  $accounts
-     * @param CRI  $components
      * @param Cat  $categories
      * @param Bud  $budgets
      * @param TJRI $journals
      */
-    public function __construct(ARI $accounts, CRI $components, Cat $categories, Bud $budgets, TJRI $journals)
+    public function __construct(ARI $accounts, Cat $categories, Bud $budgets, TJRI $journals)
     {
-        $this->_components = $components;
         $this->_accounts   = $accounts;
         $this->_categories = $categories;
         $this->_budgets    = $budgets;

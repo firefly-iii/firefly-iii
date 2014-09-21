@@ -208,8 +208,6 @@ class Chart implements ChartInterface
                                                     'id' => 'spent-norep-' . $budget->id];
                 }
             }
-
-
         }
 
         return $data;

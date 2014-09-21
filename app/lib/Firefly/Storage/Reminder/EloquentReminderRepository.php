@@ -44,48 +44,4 @@ class EloquentReminderRepository implements ReminderRepositoryInterface
 
         return $reminder;
     }
-
-    /**
-     * @param $id
-     *
-     * @return mixed|void
-     */
-    public function find($id)
-    {
-        return \Reminder::find($id);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function get()
-    {
-        $today = new Carbon;
-
-        return $this->_user->reminders()->validOn($today)->get();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPiggybankReminders()
-    {
-        $today = new Carbon;
-
-        return $this->_user->reminders()->where('class','PiggybankReminder')->validOn($today)->get();
-    }
-
-    /**
-     *
-     */
-    public function getCurrentRecurringReminders()
-    {
-        $today = new Carbon;
-
-        return $this->_user->reminders()->with('recurringtransaction')->validOn($today)->where(
-                    'class', 'RecurringTransactionReminder'
-        )->get();
-
-    }
-
-} 
+}

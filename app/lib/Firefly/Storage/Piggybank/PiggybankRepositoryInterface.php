@@ -24,11 +24,6 @@ interface PiggybankRepositoryInterface
     /**
      * @return mixed
      */
-    public function count();
-
-    /**
-     * @return mixed
-     */
     public function countNonrepeating();
 
     /**
