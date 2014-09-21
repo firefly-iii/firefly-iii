@@ -76,6 +76,7 @@ class JsonController extends BaseController
         /*
          * Sorting.
          */
+        $orderOnAccount = false;
         if (!is_null(Input::get('order')) && is_array(Input::get('order'))) {
             foreach (Input::get('order') as $order) {
                 $columnIndex           = intval($order['column']);
@@ -84,6 +85,9 @@ class JsonController extends BaseController
                     'name' => $columnName,
                     'dir'  => strtoupper($order['dir'])
                 ];
+                if ($columnName == 'to' || $columnName == 'from') {
+                    $orderOnAccount = true;
+                }
             }
         }
         /*
@@ -100,7 +104,46 @@ class JsonController extends BaseController
         /*
          * Build query:
          */
-        $query = \TransactionJournal::lessThan(0)->transactionTypes(['Withdrawal'])->withRelevantData();
+        $query = \TransactionJournal::transactionTypes(['Withdrawal'])->withRelevantData();
+
+        /*
+         * This is complex. Join `transactions` twice, once for the "to" account and once for the
+         * "from" account. Then get the amount from one of these (depends on type).
+         *
+         * Only need to do this when there's a sort order for "from" or "to".
+         *
+         * Also need the table prefix for this to work.
+         */
+        if ($orderOnAccount === true) {
+            $connection = \Config::get('database.default');
+            $prefix     = \Config::get('database.connections.' . $connection . '.prefix');
+            // left join first table for "from" account:
+            $query->leftJoin(
+                'transactions AS ' . $prefix . 't1', function ($join) {
+                    $join->on('t1.transaction_journal_id', '=', 'transaction_journals.id')
+                        ->on('t1.amount', '<', \DB::Raw(0));
+                }
+            );
+            // left join second table for "to" account:
+            $query->leftJoin(
+                'transactions AS ' . $prefix . 't2', function ($join) {
+                    $join->on('t2.transaction_journal_id', '=', 'transaction_journals.id')
+                        ->on('t2.amount', '>', \DB::Raw(0));
+                }
+            );
+
+            // also join accounts twice to get the account's name, which we need for sorting.
+            $query->leftJoin('accounts as ' . $prefix . 'a1', 'a1.id', '=', 't1.account_id');
+            $query->leftJoin('accounts as ' . $prefix . 'a2', 'a2.id', '=', 't2.account_id');
+        } else {
+            // less complex
+            $query->lessThan(0);
+        }
+
+
+        //'t1.transaction_journal_id','=','transaction_journals.id');
+
+
         $count = $query->count();
         $query->take($parameters['length']);
         $query->skip($parameters['start']);
@@ -131,8 +174,27 @@ class JsonController extends BaseController
         /*
          * Get paginated result set:
          */
-        /** @var Collection $set */
-        $set = $query->get(['transaction_journals.*', 'transactions.amount']);
+        if ($orderOnAccount === true) {
+            /** @var Collection $set */
+            $set = $query->get(
+                [
+                    'transaction_journals.*',
+                    't1.amount',
+                    't1.account_id AS from_id',
+                    'a1.name AS from',
+                    't2.account_id AS to_id',
+                    'a2.name AS to',
+                ]
+            );
+        } else {
+            /** @var Collection $set */
+            $set = $query->get(
+                [
+                    'transaction_journals.*',
+                    'transactions.amount',
+                ]
+            );
+        }
 
         /*
          * Loop set and create entries to return.
@@ -154,6 +216,7 @@ class JsonController extends BaseController
                     'delete' => route('transactions.delete', $entry->id)
                 ]
             ];
+
         }
 
         /*
@@ -166,7 +229,7 @@ class JsonController extends BaseController
             print_r($parameters);
             echo '<hr>';
             print_r($return);
-            Response::json($return);
+            return '';
 
         } else {
             return Response::json($return);
