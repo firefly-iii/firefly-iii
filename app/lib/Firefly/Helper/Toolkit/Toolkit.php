@@ -308,14 +308,6 @@ class Toolkit implements ToolkitInterface
     }
 
     /**
-     * This method checks and
-     */
-    public function bootstrapDaterange()
-    {
-
-    }
-
-    /**
      * Takes any collection and tries to make a sensible select list compatible array of it.
      *
      * @param Collection $set
