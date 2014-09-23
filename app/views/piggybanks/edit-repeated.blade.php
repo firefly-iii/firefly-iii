@@ -159,5 +159,5 @@
 {{Form::close()}}
 @stop
 @section('scripts')
-<?php // echo javascript_include_tag('piggybanks-create'); ?>
+{{HTML::script('assets/javascript/firefly/piggybanks-create.js')}}
 @stop
