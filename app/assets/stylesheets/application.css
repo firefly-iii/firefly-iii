@@ -11,6 +11,6 @@
  *
  *= require bootstrap/bootstrap.min
  *= require metisMenu/metisMenu.min
- *= require_tree sb-admin
+ *= require sbadmin/sbadmin
  *= require fa/css/font-awesome.min
  */

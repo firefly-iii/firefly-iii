@@ -240,6 +240,10 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/transactions/revenue',['uses' => 'TransactionController@revenue','as' => 'transactions.revenue']);
         Route::get('/transactions/transfers',['uses' => 'TransactionController@transfers','as' => 'transactions.transfers']);
 
+        Route::get('/transactions/expenses',['uses' => 'TransactionController@expenses','as' => 'transactions.index.withdrawal']);
+        Route::get('/transactions/revenue',['uses' => 'TransactionController@revenue','as' => 'transactions.index.deposit']);
+        Route::get('/transactions/transfers',['uses' => 'TransactionController@transfers','as' => 'transactions.index.transfer']);
+
         // user controller
         Route::get('/logout', ['uses' => 'UserController@logout', 'as' => 'logout']);
 
