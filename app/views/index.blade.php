@@ -94,7 +94,8 @@
 
     @stop
     @section('scripts')
-    <?php // echo javascript_include_tag('index'); ?>
+    {{HTML::script('assets/javascript/highcharts/highcharts.js')}}
+    {{HTML::script('assets/javascript/firefly/index.js')}}
     @stop
     @section('styles')
     <?php // echo stylesheet_link_tag('index'); ?>
