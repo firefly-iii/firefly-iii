@@ -100,19 +100,20 @@
 
 @stop
 @section('scripts')
+{{HTML::script('assets/javascript/highcharts/highcharts.js')}}
 @if($view == 1)
-<?php // echo javascript_include_tag('budgets-limit'); ?>
+{{HTML::script('assets/javascript/firefly/budgets/limit.js')}}
 @endif
 
 @if($view == 2)
-<?php // echo javascript_include_tag('budgets-nolimit'); ?>
+{{HTML::script('assets/javascript/firefly/budgets/nolimit.js')}}
 @endif
 
 @if($view == 3)
-<?php // echo javascript_include_tag('budgets-session'); ?>
+{{HTML::script('assets/javascript/firefly/budgets/session.js')}}
 @endif
 @if($view == 4)
-<?php // echo javascript_include_tag('budgets-default'); ?>
+{{HTML::script('assets/javascript/firefly/budgets/default.js')}}
 @endif
 
 @stop
