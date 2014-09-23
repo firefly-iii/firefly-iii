@@ -87,7 +87,10 @@ class LimitController extends BaseController
      */
     public function edit(Limit $limit)
     {
-        $budgets = $this->_budgets->getAsSelectList();
+        /** @var \Firefly\Helper\Toolkit\Toolkit $toolkit */
+        $toolkit = App::make('Firefly\Helper\Toolkit\Toolkit');
+
+        $budgets    = $toolkit->makeSelectList($this->_budgets->get());
         $periods = \Config::get('firefly.periods_to_text');
 
         return View::make('limits.edit')->with('limit', $limit)->with('budgets', $budgets)->with(
