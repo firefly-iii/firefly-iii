@@ -98,5 +98,5 @@
     {{HTML::script('assets/javascript/firefly/index.js')}}
     @stop
     @section('styles')
-    <?php // echo stylesheet_link_tag('index'); ?>
+    {{HTML::style('assets/stylesheets/highslide/highslide.css')}}
     @stop
