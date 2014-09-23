@@ -273,5 +273,5 @@
 
 @stop
 @section('scripts')
-<?php echo javascript_include_tag('transactions'); ?>
+<?php//  echo javascript_include_tag('transactions'); ?>
 @stop

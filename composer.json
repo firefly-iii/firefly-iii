@@ -22,8 +22,7 @@
     },
     "require": {
         "laravel/framework": "4.2.*",
-        "laravelbook/ardent": "~2.4",
-        "codesleeve/asset-pipeline": "dev-master"
+        "laravelbook/ardent": "~2.4"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "@stable",

@@ -183,9 +183,9 @@
 
 @stop
 @section('styles')
-<?php echo stylesheet_link_tag('recurring'); ?>
+<?php // echo stylesheet_link_tag('recurring'); ?>
 @stop
 @section('scripts')
-<?php echo javascript_include_tag('recurring'); ?>
+<?php // echo javascript_include_tag('recurring'); ?>
 
 @stop

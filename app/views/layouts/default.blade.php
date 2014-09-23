@@ -14,7 +14,7 @@
     @endif
     </title>
 
-    <?php echo stylesheet_link_tag(); ?>
+    <?php // echo stylesheet_link_tag(); ?>
     @yield('styles')
 
     <!--[if lt IE 9]>
@@ -66,7 +66,7 @@
 </div><!-- /.modal -->
 
 
-<?php echo javascript_include_tag(); ?>
+<?php //  echo javascript_include_tag(); ?>
 @yield('scripts')
 </body>
 </html>
