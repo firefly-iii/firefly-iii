@@ -37,5 +37,5 @@ var display = '{{{$what}}}';
 {{HTML::script('assets/javascript/firefly/transactions.js')}}
 @stop
 @section('styles')
-<?php // echo stylesheet_link_tag('transactions'); ?>
+{{HTML::style('assets/stylesheets/datatables/dataTables.bootstrap.css')}}
 @stop
