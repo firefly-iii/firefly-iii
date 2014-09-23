@@ -145,7 +145,7 @@ class TransactionController extends BaseController
         $accounts = $toolkit->makeSelectList($accountRepository->getActiveDefault());
 
         // get budgets as a select list.
-        $budgets    = $budgetRepository->getAsSelectList();
+        $budgets    = $toolkit->makeSelectList($budgetRepository->get());
         $budgets[0] = '(no budget)';
 
         /*
