@@ -188,5 +188,5 @@
 
 @stop
 @section('scripts')
-<?php echo javascript_include_tag('piggybanks'); ?>
+<?php // echo javascript_include_tag('piggybanks'); ?>
 @stop

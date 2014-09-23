@@ -31,8 +31,8 @@
 var URL = '{{route('json.'.$what)}}';
 var display = '{{{$what}}}';
 </script>
-<?php echo javascript_include_tag('transactions'); ?>
+<?php // echo javascript_include_tag('transactions'); ?>
 @stop
 @section('styles')
-<?php echo stylesheet_link_tag('transactions'); ?>
+<?php // echo stylesheet_link_tag('transactions'); ?>
 @stop

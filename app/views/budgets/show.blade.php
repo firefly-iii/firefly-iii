@@ -101,18 +101,18 @@
 @stop
 @section('scripts')
 @if($view == 1)
-<?php echo javascript_include_tag('budgets-limit'); ?>
+<?php // echo javascript_include_tag('budgets-limit'); ?>
 @endif
 
 @if($view == 2)
-<?php echo javascript_include_tag('budgets-nolimit'); ?>
+<?php // echo javascript_include_tag('budgets-nolimit'); ?>
 @endif
 
 @if($view == 3)
-<?php echo javascript_include_tag('budgets-session'); ?>
+<?php // echo javascript_include_tag('budgets-session'); ?>
 @endif
 @if($view == 4)
-<?php echo javascript_include_tag('budgets-default'); ?>
+<?php // echo javascript_include_tag('budgets-default'); ?>
 @endif
 
 @stop

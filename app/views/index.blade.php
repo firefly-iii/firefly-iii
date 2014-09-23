@@ -94,8 +94,8 @@
 
     @stop
     @section('scripts')
-    <?php echo javascript_include_tag('index'); ?>
+    <?php // echo javascript_include_tag('index'); ?>
     @stop
     @section('styles')
-    <?php echo stylesheet_link_tag('index'); ?>
+    <?php // echo stylesheet_link_tag('index'); ?>
     @stop

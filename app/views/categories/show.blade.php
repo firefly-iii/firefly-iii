@@ -40,5 +40,5 @@
 <script type="text/javascript">
     var categoryID = {{$category->id}};
 </script>
-<?php echo javascript_include_tag('categories'); ?>
+<?php //  echo javascript_include_tag('categories'); ?>
 @stop

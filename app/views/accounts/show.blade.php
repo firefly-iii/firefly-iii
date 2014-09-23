@@ -98,12 +98,12 @@
 @stop
 
 @section('styles')
-<?php echo stylesheet_link_tag('accounts'); ?>
+<?php // echo stylesheet_link_tag('accounts'); ?>
 @stop
 
 @section('scripts')
 <script type="text/javascript">
     var accountID = {{$account->id}};
 </script>
-<?php echo javascript_include_tag('accounts'); ?>
+<?php // echo javascript_include_tag('accounts'); ?>
 @stop

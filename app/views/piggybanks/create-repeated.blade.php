@@ -165,5 +165,5 @@
 {{Form::close()}}
 @stop
 @section('scripts')
-<?php echo javascript_include_tag('piggybanks-create'); ?>
+<?php //  echo javascript_include_tag('piggybanks-create'); ?>
 @stop
