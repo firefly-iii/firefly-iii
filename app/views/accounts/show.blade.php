@@ -105,5 +105,6 @@
 <script type="text/javascript">
     var accountID = {{$account->id}};
 </script>
-<?php // echo javascript_include_tag('accounts'); ?>
+{{HTML::script('assets/javascript/highcharts/highcharts.js')}}
+{{HTML::script('assets/javascript/firefly/accounts.js')}}
 @stop
