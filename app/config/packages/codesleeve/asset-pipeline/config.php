@@ -147,7 +147,7 @@ return [
 	| command php artisan assets:clean -f somefilename.js -f application.css ...
 	|
 	*/
-	'cache' => 	['production'],
+	'cache' => 	['local'],
 
 	/*
 	|--------------------------------------------------------------------------
