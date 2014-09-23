@@ -9,9 +9,9 @@
  * gets included (e.g. say you have require_tree . then the code will appear after all the directories 
  * but before any files alphabetically greater than 'application.css' 
  *
- *= require bootstrap/bootstrap.min
- *= require metisMenu/metisMenu.min
- *= require sbadmin/sbadmin
- *= require fa/css/font-awesome.min
+ *= require bootstrap/bootstrap
+ *= require metisMenu/metisMenu
+ *= require sbadmin/sb
+ *= require fa/css/font-awesome
  */
 
