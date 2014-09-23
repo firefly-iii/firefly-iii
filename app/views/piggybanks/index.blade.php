@@ -188,5 +188,5 @@
 
 @stop
 @section('scripts')
-<?php // echo javascript_include_tag('piggybanks'); ?>
+{{HTML::script('assets/javascript/firefly/piggybanks.js')}}
 @stop
