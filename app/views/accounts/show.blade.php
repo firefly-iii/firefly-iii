@@ -98,7 +98,7 @@
 @stop
 
 @section('styles')
-<?php // echo stylesheet_link_tag('accounts'); ?>
+{{HTML::style('assets/stylesheets/highslide/highslide.css')}}
 @stop
 
 @section('scripts')
