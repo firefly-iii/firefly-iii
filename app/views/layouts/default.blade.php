@@ -13,8 +13,10 @@
         // {{{$subTitle}}}
     @endif
     </title>
-
-    <?php // echo stylesheet_link_tag(); ?>
+    {{HTML::style('assets/stylesheets/bootstrap/bootstrap.min.css')}}
+    {{HTML::style('assets/stylesheets/metisMenu/metisMenu.min.css')}}
+    {{HTML::style('assets/stylesheets/sbadmin/sb.css')}}
+    {{HTML::style('assets/stylesheets/fa/css/font-awesome.min.css')}}
     @yield('styles')
 
     <!--[if lt IE 9]>
