@@ -224,5 +224,8 @@
 
 @stop
 @section('scripts')
-<?php //  echo javascript_include_tag('transactions'); ?>
+{{HTML::script('assets/javascript/typeahead/bootstrap3-typeahead.min.js')}}
+{{HTML::script('assets/javascript/datatables/jquery.dataTables.min.js')}}
+{{HTML::script('assets/javascript/datatables/dataTables.bootstrap.js')}}
+{{HTML::script('assets/javascript/firefly/transactions.js')}}
 @stop
