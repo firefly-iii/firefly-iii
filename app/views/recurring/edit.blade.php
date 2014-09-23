@@ -183,7 +183,7 @@
 
 @stop
 @section('styles')
-<?php // echo stylesheet_link_tag('recurring'); ?>
+{{HTML::style('assets/stylesheets/tagsinput/bootstrap-tagsinput.css')}}
 @stop
 @section('scripts')
 {{HTML::script('assets/javascript/tagsinput/bootstrap-tagsinput.min.js')}}
