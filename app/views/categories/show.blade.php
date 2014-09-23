@@ -40,5 +40,6 @@
 <script type="text/javascript">
     var categoryID = {{$category->id}};
 </script>
-<?php //  echo javascript_include_tag('categories'); ?>
+{{HTML::script('assets/javascript/highcharts/highcharts.js')}}
+{{HTML::script('assets/javascript/firefly/categories.js')}}
 @stop
