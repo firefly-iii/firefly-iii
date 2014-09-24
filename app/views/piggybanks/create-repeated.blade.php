@@ -164,6 +164,3 @@
 
 {{Form::close()}}
 @stop
-@section('scripts')
-{{HTML::script('assets/javascript/firefly/piggybanks-create.js')}}
-@stop

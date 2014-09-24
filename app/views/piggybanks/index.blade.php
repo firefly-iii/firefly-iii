@@ -187,6 +187,3 @@
 
 
 @stop
-@section('scripts')
-{{HTML::script('assets/javascript/firefly/piggybanks.js')}}
-@stop

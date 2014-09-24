@@ -187,6 +187,4 @@
 @stop
 @section('scripts')
 {{HTML::script('assets/javascript/tagsinput/bootstrap-tagsinput.min.js')}}
-{{HTML::script('assets/javascript/firefly/recurring.js')}}
-
 @stop
