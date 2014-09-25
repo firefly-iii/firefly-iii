@@ -231,6 +231,7 @@ class Transaction implements TransactionInterface
         }
         if (isset($data['expense_account'])) {
             $to = $this->_accounts->findExpenseAccountByName($data['expense_account']);
+
         }
         if (isset($data['revenue_account'])) {
             $from = $this->_accounts->findRevenueAccountByName($data['revenue_account']);
@@ -242,7 +243,6 @@ class Transaction implements TransactionInterface
         if (isset($data['account_to_id'])) {
             $to = $this->_accounts->findAssetAccountById($data['account_to_id']);
         }
-
 
         /*
          * Add a custom error when they are the same.
