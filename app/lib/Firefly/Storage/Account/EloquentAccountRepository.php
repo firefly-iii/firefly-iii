@@ -4,7 +4,6 @@
 namespace Firefly\Storage\Account;
 
 use Carbon\Carbon;
-use Firefly\Exception\FireflyException;
 use Illuminate\Database\QueryException;
 use Illuminate\Queue\Jobs\Job;
 
@@ -61,11 +60,14 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         }
 
         // find account:
-        $type    = $this->findAccountType('Expense account');
-        $account = $this->_user->accounts()->where('name', $name)->where('account_type_id', $type->id)->first();
+
+        $account = $this->_user->accounts()->where('name', $name)->accountTypeIn(
+            ['Expense account', 'Beneficiary account']
+        )->first(['accounts.*']);
 
         // create if not found:
-        if (strlen($name) > 0) {
+        if (strlen($name) > 0 && is_null($account)) {
+            $type    = $this->findAccountType('Expense account');
             $set     = [
                 'name'            => $name,
                 'user_id'         => $this->_user->id,
@@ -675,6 +677,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         )
             ->get(['accounts.*']);
     }
+
     /**
      * @return mixed
      */
