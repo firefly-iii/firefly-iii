@@ -137,8 +137,12 @@
             <li>
                 <a href="#"><i class="fa fa-tags fa-fw"></i> Tags</a>
             </li>
-            <li>
-                <a href="#"><i class="fa fa-line-chart fa-fw"></i> Reports</a>
+            <li
+            @if(!(strpos($r,'reports') === false))
+            class="active"
+            @endif
+            >
+                <a href="{{route('reports.index')}}"><i class="fa fa-line-chart fa-fw"></i> Reports</a>
             </li>
             <li
             @if(
