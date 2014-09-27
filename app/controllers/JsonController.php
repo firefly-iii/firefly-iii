@@ -184,7 +184,7 @@ class JsonController extends BaseController
          * Build query:
          */
         $query = \TransactionJournal::transactionTypes($parameters['transactionTypes'])->withRelevantData();
-
+        $query->where('completed',1);
         /*
          * This is complex. Join `transactions` twice, once for the "to" account and once for the
          * "from" account. Then get the amount from one of these (depends on type).

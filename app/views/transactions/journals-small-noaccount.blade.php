@@ -1,35 +1,33 @@
-<table class="table table-bordered table-striped table-condensed">
-    <tr>
-        <th><small>&nbsp;</small></th>
-        <th><small>Description</small></th>
-        <th style="min-width:100px;"><small>Date</small></th>
-        <th style="min-width:80px;"><small>Amount</small></th>
-    </tr>
+<div class="list-group">
 @foreach($transactions as $journal)
-    <tr>
+<a class="list-group-item" title="{{$journal->date->format('jS M Y')}}" href="{{route('transactions.show',$journal->id)}}">
 
-        <td>
-            @if($journal->transactiontype->type == 'Withdrawal')
-                <span class="glyphicon glyphicon-arrow-left" title="Withdrawal"></span>
-            @endif
-            @if($journal->transactiontype->type == 'Deposit')
-                <span class="glyphicon glyphicon-arrow-right" title="Deposit"></span>
-            @endif
-            @if($journal->transactiontype->type == 'Transfer')
-                <span class="glyphicon glyphicon-resize-full" title="Transfer"></span>
-            @endif
+    @if($journal->transactiontype->type == 'Withdrawal')
+    <i class="fa fa-long-arrow-left fa-fw" title="Withdrawal"></i>
+    @endif
+    @if($journal->transactiontype->type == 'Deposit')
+    <i class="fa fa-long-arrow-right fa-fw" title="Deposit"></i>
+    @endif
+    @if($journal->transactiontype->type == 'Transfer')
+        <i class="fa fa-arrows-h fa-fw" title="Transfer"></i>
+    @endif
 
-        </td>
-        <td><small><a href="{{route('transactions.show',$journal->id)}}">{{{$journal->description}}}</a></small></td>
-        <td><small>{{$journal->date->format('jS M Y')}}</small></td>
-        <td><small>
-            @foreach($journal->transactions as $t)
-                @if($t->account_id == $account->id)
-                    {{mf($t->amount)}}
-                @endif
-            @endforeach
-            </small>
-        </td>
-    </tr>
+    {{{$journal->description}}}
+
+<span class="pull-right small">
+    @foreach($journal->transactions as $t)
+        @if($journal->transactiontype->type == 'Withdrawal' && $t->amount < 0)
+            {{mf($t->amount)}}
+        @endif
+        @if($journal->transactiontype->type == 'Deposit' && $t->amount > 0)
+            {{mf($t->amount)}}
+        @endif
+        @if($journal->transactiontype->type == 'Transfer' && $t->amount > 0)
+            {{mf($t->amount)}}
+        @endif
+    @endforeach
+</span>
+
+</a>
 @endforeach
-</table>
+</div>
