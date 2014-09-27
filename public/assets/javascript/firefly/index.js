@@ -188,7 +188,9 @@ $(function () {
                     cursor: 'pointer',
                     events: {
                         click: function (e) {
-                            alert('klik!!');
+                            if(e.point.url != null) {
+                                window.location = e.point.url;
+                            }
                         }
                     },
                     dataLabels: {

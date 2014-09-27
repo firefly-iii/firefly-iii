@@ -16,10 +16,10 @@
 
 <span class="pull-right small">
     @foreach($journal->transactions as $t)
-                @if($t->account_id == $account->id)
-                    {{mf($t->amount)}}
-                @endif
-            @endforeach
+        @if($t->account_id == $account->id)
+            {{mf($t->amount)}}
+        @endif
+    @endforeach
 </span>
 
 </a>

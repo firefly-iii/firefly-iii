@@ -77,7 +77,8 @@
                         {{$repetition['date']}}
                     </a>
                 </h4>
-            <small>{{mf($repetition['limit']->amount,false)}} (left: {{mf($repetition['limitrepetition']->left(),false)}})</small>
+            <small>{{mf($repetition['limit']->amount,false)}}
+            (left: {{mf($repetition['limitrepetition']->leftInRepetition(),false)}})</small>
             @endif
         </h4>
         @if($repetition['paginated'] == true)

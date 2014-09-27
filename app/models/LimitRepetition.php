@@ -42,7 +42,7 @@ class LimitRepetition extends Ardent
     /**
      * How much money is left in this?
      */
-    public function left()
+    public function leftInRepetition()
     {
         $left = floatval($this->amount);
 

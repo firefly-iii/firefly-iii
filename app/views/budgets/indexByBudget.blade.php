@@ -58,14 +58,14 @@
                                 {{mf($rep->amount,false)}}</span>
                         </div>
                         <div class="col-sm-2">
-                            @if($rep->left < 0)
+                            @if($rep->leftInRepetition() < 0)
                             <span class="label label-danger">
                                 <span class="glyphicon glyphicon-envelope"></span>
-                                {{mf($rep->left,false)}}</span>
+                                {{mf($rep->leftInRepetition(),false)}}</span>
                             @else
                             <span class="label label-success">
                                 <span class="glyphicon glyphicon-envelope"></span>
-                                {{mf($rep->left,false)}}</span>
+                                {{mf($rep->leftInRepetition(),false)}}</span>
                             @endif
                         </div>
                         <div class="col-sm-3">
