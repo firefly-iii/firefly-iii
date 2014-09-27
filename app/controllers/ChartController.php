@@ -46,7 +46,7 @@ class ChartController extends BaseController
             /** @var \LimitRepetition $rep */
             foreach ($limit->limitrepetitions as $rep) {
                 // get the amount of money spent in this period on this budget.
-                $spentInRep = $rep->amount - $rep->left();
+                $spentInRep = $rep->amount - $rep->leftInRepetition();
                 $pct        = round((floatval($spentInRep) / floatval($limit->amount)) * 100, 2);
                 $name       = $rep->periodShow();
                 $envelope[] = [$name, floatval($limit->amount)];
@@ -372,9 +372,113 @@ class ChartController extends BaseController
      */
     public function homeBudgets()
     {
-        $start = \Session::get('start');
+        $start = Session::get('start');
+        $end   = Session::get('end');
+        $data  = [
+            'labels' => [],
+            'series' => [
+                [
+                    'name' => 'Limit',
+                    'data' => []
+                ],
+                [
+                    'name' => 'Spent',
+                    'data' => []
+                ],
+            ]
+        ];
 
-        return Response::json($this->_chart->budgets($start));
+
+        /*
+         * Get all budgets.
+         */
+        $budgets   = \Auth::user()->budgets()->orderBy('name', 'ASC')->get();
+        $budgetIds = [];
+        /** @var \Budget $budget */
+        foreach ($budgets as $budget) {
+            $budgetIds[] = $budget->id;
+            /*
+             * Does the budget have a limit starting on $start?
+             */
+            $rep       = \LimitRepetition::
+            leftJoin('limits', 'limit_repetitions.limit_id', '=', 'limits.id')->leftJoin(
+                'components', 'limits.component_id', '=', 'components.id'
+            )->where('limit_repetitions.startdate', $start->format('Y-m-d'))->where(
+                'components.id', $budget->id
+            )->first(['limit_repetitions.*']);
+            $limit     = is_null($rep) ? 0.0 : floatval($rep->amount);
+            $id        = is_null($rep) ? null : $rep->id;
+            $parameter = is_null($rep) ? 'useSession=true' : '';
+
+            /*
+             * Date range to check for expenses made?
+             */
+            if (is_null($rep)) {
+                // use the session start and end for our search query
+                $expenseStart = Session::get('start');
+                $expenseEnd   = Session::get('end');
+
+            } else {
+                // use the limit's start and end for our search query
+                $expenseStart = $rep->startdate;
+                $expenseEnd   = $rep->enddate;
+            }
+            /*
+             * How much have we spent on this budget?
+             */
+            $expenses = $budget->transactionjournals()->before($expenseEnd)->after($expenseStart)->lessThan(0)->sum(
+                'amount'
+            );
+            $expenses = floatval($expenses) * -1;
+
+            /*
+             * Append to chart:
+             */
+            if ($limit > 0 || $expenses > 0) {
+                $data['labels'][]            = $budget->name;
+                $data['series'][0]['data'][] = [
+                    'y'   => $limit,
+                    'url' => route('budgets.show', [$budget->id, $id]) . '?' . $parameter
+                ];
+                $data['series'][1]['data'][] = [
+                    'y'   => $expenses,
+                    'url' => route('budgets.show', [$budget->id, $id]) . '?' . $parameter
+                ];
+            }
+        }
+        /*
+         * Add expenses that have no budget:
+         */
+        $set = \Auth::user()->transactionjournals()->whereNotIn(
+            'transaction_journals.id', function ($query) use ($start, $end) {
+                $query->select('transaction_journals.id')->from('transaction_journals')
+                    ->leftJoin(
+                        'component_transaction_journal', 'component_transaction_journal.transaction_journal_id', '=',
+                        'transaction_journals.id'
+                    )
+                    ->leftJoin('components', 'components.id', '=', 'component_transaction_journal.component_id')
+                    ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                    ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                    ->where('components.class', 'Budget');
+            }
+        )->before($end)->after($start)->lessThan(0)->transactionTypes(['Withdrawal'])->sum('amount');
+        /*
+         * This can be debugged by using get(['transaction_journals.*','transactions.amount']);
+         *
+         *
+         */
+        $data['labels'][]            = 'No budget';
+        $data['series'][0]['data'][] = [
+            'y'   => 0,
+            'url' => null
+        ];
+        $data['series'][1]['data'][] = [
+            'y'   => floatval($set) * -1,
+            'url' => null
+        ];
+
+        return Response::json($data);
+
     }
 
     /**

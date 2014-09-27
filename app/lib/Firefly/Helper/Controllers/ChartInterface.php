@@ -31,13 +31,6 @@ interface ChartInterface
     public function categories(Carbon $start, Carbon $end);
 
     /**
-     * @param Carbon $start
-     *
-     * @return mixed
-     */
-    public function budgets(Carbon $start);
-
-    /**
      * @param \Account $account
      * @param Carbon   $date
      *
