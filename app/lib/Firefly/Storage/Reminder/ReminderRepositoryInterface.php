@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 23/08/14
- * Time: 20:59
- */
-
 namespace Firefly\Storage\Reminder;
 
 
