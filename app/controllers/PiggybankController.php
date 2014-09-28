@@ -94,7 +94,7 @@ class PiggybankController extends BaseController
         View::share('subTitle', 'Delete "' . $piggyBank->name . '"');
         if ($piggyBank->repeats == 1) {
             View::share('title', 'Repeated expenses');
-            View::share('mainTitleIcon', 'fa-rotate-right')
+            View::share('mainTitleIcon', 'fa-rotate-right');
         } else {
             View::share('title', 'Piggy banks');
             View::share('mainTitleIcon', 'fa-sort-amount-asc');
@@ -196,8 +196,13 @@ class PiggybankController extends BaseController
                 }
                 break;
         }
+        if($piggyBank->repeats == 1) {
+            $route   = 'piggybanks.index.repeated';
 
-        return Redirect::route('piggybanks.index');
+        } else {
+            $route   = 'piggybanks.index.piggybanks';
+        }
+        return Redirect::route($route);
     }
 
     /**
@@ -219,7 +224,8 @@ class PiggybankController extends BaseController
             $account = $piggybank->account;
             $id      = $account->id;
             if (!isset($accounts[$id])) {
-                $accounts[$id] = ['account' => $account, 'left' => $this->_repository->leftOnAccount($account)];
+                $account->leftOnAccount = $this->_repository->leftOnAccount($account);
+                $accounts[$id]          = ['account' => $account, 'left' => $this->_repository->leftOnAccount($account)];
             }
         }
 
@@ -268,7 +274,8 @@ class PiggybankController extends BaseController
             $account = $piggybank->account;
             $id      = $account->id;
             if (!isset($accounts[$id])) {
-                $accounts[$id] = ['account' => $account, 'left' => $this->_repository->leftOnAccount($account)];
+                $account->leftOnAccount = $this->_repository->leftOnAccount($account);
+                $accounts[$id]          = ['account' => $account, 'left' => $this->_repository->leftOnAccount($account)];
             }
         }
 
@@ -373,10 +380,19 @@ class PiggybankController extends BaseController
     {
         $piggyBank = $this->_repository->update($piggyBank, Input::all());
         if ($piggyBank->validate()) {
-            Session::flash('success', 'Piggy bank "' . $piggyBank->name . '" updated.');
+            if ($piggyBank->repeats == 1) {
+                $route   = 'piggybanks.index.repeated';
+                $message = 'Repeated expense';
+            } else {
+                $route   = 'piggybanks.index.piggybanks';
+                $message = 'Piggy bank';
+            }
+
+
+            Session::flash('success', $message . ' "' . $piggyBank->name . '" updated.');
             Event::fire('piggybanks.update', [$piggyBank]);
 
-            return Redirect::route('piggybanks.index');
+            return Redirect::route($route);
         } else {
             Session::flash('error', 'Could not update piggy bank: ' . $piggyBank->errors()->first());
 
