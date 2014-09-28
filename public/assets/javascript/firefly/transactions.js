@@ -51,6 +51,7 @@ $(document).ready(function () {
                 {
                     name: 'amount',
                     data: 'amount',
+                    'title': 'Amount (\u20AC)',
                     searchable: false,
                     render: function (data, type, full, meta) {
                         if (display == 'expenses') {
@@ -84,6 +85,8 @@ $(document).ready(function () {
                     name: 'id',
                     data: 'id',
                     searchable: false,
+                    sortable: false,
+                    title: '',
                     render: function (data, type, full, meta) {
                         return '<div class="btn-group btn-group-xs">' +
                         '<a class="btn btn-default btn-xs" href="' + data.edit + '">' +

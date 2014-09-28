@@ -12,7 +12,7 @@
                     <tr>
                         <th>Date</th>
                         <th>Description</th>
-                        <th data-dynatable-column="amount">Amount (&euro;)</th>
+                        <th>Amount (&euro;)</th>
                         <th>From</th>
                         <th>To</th>
                         <th>ID</th>
