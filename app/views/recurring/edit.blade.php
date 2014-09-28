@@ -1,20 +1,15 @@
 @extends('layouts.default')
 @section('content')
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <p class="lead">Use recurring transactions to track repeated expenses</p>
-        <p class="text-info">
-            Bla bla.
-        </p>
-    </div>
-</div>
-
 {{Form::open(['class' => 'form-horizontal','url' => route('recurring.update', $recurringTransaction->id)])}}
 
 <div class="row">
     <div class="col-lg-6 col-md-12 col-sm-6">
-        <h4>Mandatory fields</h4>
-
+        <!-- panel for mandatory fields -->
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <i class="fa fa-exclamation-circle"></i> Mandatory fields
+            </div>
+            <div class="panel-body">
         <!-- name -->
         <div class="form-group">
             <label for="name" class="col-sm-4 control-label">Name</label>
@@ -23,8 +18,6 @@
                        value="{{{Input::old('name') ?: $recurringTransaction->name}}}" placeholder="Name">
                 @if($errors->has('name'))
                 <p class="text-danger">{{$errors->first('name')}}</p>
-                @else
-                <span class="help-block">For example: rent, gas, insurance</span>
                 @endif
             </div>
         </div>
@@ -36,9 +29,6 @@
                        data-role="tagsinput">
                 @if($errors->has('match'))
                 <p class="text-danger">{{$errors->first('match')}}</p>
-                @else
-                <span class="help-block">For example: rent, [company name]. All matches need to
-                    be present for the recurring transaction to be recognized. This field is not case-sensitive.</span>
                 @endif
             </div>
         </div>
@@ -54,9 +44,6 @@
 
                 @if($errors->has('amount_min'))
                 <p class="text-danger">{{$errors->first('amount_min')}}</p>
-                @else
-                <span class="help-block">Firefly will only include transactions with a higher amount than this. If your rent
-                is usually around &euro; 500,-, enter <code>450</code> to be safe.</span>
                 @endif
             </div>
         </div>
@@ -72,9 +59,6 @@
 
                 @if($errors->has('amount_max'))
                 <p class="text-danger">{{$errors->first('amount_max')}}</p>
-                @else
-                <span class="help-block">Firefly will only include transactions with a lower amount than this.
-                    If your rent is usually around &euro; 500,-, enter <code>550</code> to be safe.</span>
                 @endif
             </div>
         </div>
@@ -86,8 +70,6 @@
                 ['class' => 'form-control']) }}
                 @if($errors->has('date'))
                 <p class="text-danger">{{$errors->first('date')}}</p>
-                @else
-                <span class="help-block">Select the next date you expect the transaction to occur.</span>
                 @endif
             </div>
         </div>
@@ -99,16 +81,26 @@
                 ['class' => 'form-control'])}}
                 @if($errors->has('repeat_freq'))
                 <p class="text-danger">{{$errors->first('repeat_freq')}}</p>
-                @else
-                <span class="help-block">Select the period over which this transaction repeats</span>
                 @endif
             </div>
         </div>
+        </div>
 
     </div>
-    <div class="col-lg-6 col-md-12 col-sm-6">
-        <h4>Optional fields</h4>
 
+        <p>
+            <button type="submit" class="btn btn-lg btn-success">
+                <i class="fa fa-plus-circle"></i> Update recurring transasction
+            </button>
+        </p>
+</div>
+    <div class="col-lg-6 col-md-12 col-sm-6">
+        <!-- panel for optional fields -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-smile-o"></i> Optional fields
+            </div>
+            <div class="panel-body">
         <div class="form-group">
             {{ Form::label('skip', 'Skip', ['class' => 'col-sm-4 control-label'])}}
             <div class="col-sm-8">
@@ -117,20 +109,9 @@
 
                 @if($errors->has('skip'))
                 <p class="text-danger">{{$errors->first('skip')}}</p>
-                @else
-                <span class="help-block">Make Firefly skip every <em>n</em> times. Fill in <code>2</code>, and Firefly
-                will match, skip, skip and match a transaction.</span>
                 @endif
             </div>
         </div>
-
-        <!-- select budget -->
-
-
-
-        <!-- select category -->
-
-        <!-- select beneficiary -->
 
         <div class="form-group">
             <label for="automatch" class="col-sm-4 control-label">Auto-match</label>
@@ -159,25 +140,57 @@
                 <span class="help-block">This recurring transaction is actually active.</span>
             </div>
         </div>
-
-
-
-    </div>
 </div>
-
-<div class="row">
-    <div class="col-lg-6 col-md-12 col-sm-6">
-
-
-
-        <div class="form-group">
-            <div class="col-sm-offset-4 col-sm-8">
-                <button type="submit" class="btn btn-default btn-success">Update the recurring transaction</button>
+</div>
+            <!-- panel for options -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-bolt"></i> Options
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="default" class="col-sm-4 control-label">
+                        Update
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="radio">
+                            <label>
+                                {{Form::radio('post_submit_action','store',true)}}
+                                Update the recurring transaction
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                    <div class="form-group">
+                        <label for="validate_only" class="col-sm-4 control-label">
+                        Validate only
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="radio">
+                            <label>
+                                {{Form::radio('post_submit_action','validate_only')}}
+                                Only validate, do not save changes
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="return_to_form" class="col-sm-4 control-label">
+                    Return here
+                    </label>
+                    <div class="col-sm-8">
+                        <div class="radio">
+                        <label>
+                            {{Form::radio('post_submit_action','return_to_edit')}}
+                            After update, return here again.
+                        </label>
+                    </div>
+                </div>
             </div>
-        </div>
+            </div>
+
     </div>
 </div>
-
 {{Form::close()}}
 
 

@@ -1,5 +1,6 @@
 <?php
 
+use Firefly\Exception\FireflyException;
 use Firefly\Storage\RecurringTransaction\RecurringTransactionRepositoryInterface as RTR;
 
 /**
@@ -51,7 +52,7 @@ class RecurringController extends BaseController
      */
     public function destroy(RecurringTransaction $recurringTransaction)
     {
-        Event::fire('recurring.destroy', [$recurringTransaction]);
+        //Event::fire('recurring.destroy', [$recurringTransaction]);
         $result = $this->_repository->destroy($recurringTransaction);
         if ($result === true) {
             Session::flash('success', 'The recurring transaction was deleted.');
@@ -84,11 +85,7 @@ class RecurringController extends BaseController
      */
     public function index()
     {
-        $list = $this->_repository->get();
-
-
-
-        return View::make('recurring.index')->with('list', $list);
+        return View::make('recurring.index');
     }
 
     /**
@@ -106,10 +103,18 @@ class RecurringController extends BaseController
      */
     public function store()
     {
+
+        switch (Input::get('post_submit_action')) {
+            default:
+                throw new FireflyException('Method ' . Input::get('post_submit_action') . ' not implemented yet.');
+                break;
+        }
+
         $recurringTransaction = $this->_repository->store(Input::all());
-        if ($recurringTransaction->validate()) {
+
+        if ($recurringTransaction->errors()->count() == 0) {
             Session::flash('success', 'Recurring transaction "' . $recurringTransaction->name . '" saved!');
-            Event::fire('recurring.store', [$recurringTransaction]);
+            //Event::fire('recurring.store', [$recurringTransaction]);
             if (Input::get('create') == '1') {
                 return Redirect::route('recurring.create')->withInput();
             } else {
@@ -135,7 +140,7 @@ class RecurringController extends BaseController
         $recurringTransaction = $this->_repository->update($recurringTransaction, Input::all());
         if ($recurringTransaction->errors()->count() == 0) {
             Session::flash('success', 'The recurring transaction has been updated.');
-            Event::fire('recurring.update', [$recurringTransaction]);
+            //Event::fire('recurring.update', [$recurringTransaction]);
 
             return Redirect::route('recurring.index');
         } else {

@@ -28,6 +28,11 @@ class HelperServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            'Firefly\Helper\Controllers\JsonInterface',
+            'Firefly\Helper\Controllers\Json'
+        );
+
+        $this->app->bind(
             'Firefly\Helper\Controllers\SearchInterface',
             'Firefly\Helper\Controllers\Search'
         );

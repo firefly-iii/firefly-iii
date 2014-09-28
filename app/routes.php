@@ -184,6 +184,7 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/json/expenses', ['uses' => 'JsonController@expenses', 'as' => 'json.expenses']);
         Route::get('/json/revenue', ['uses' => 'JsonController@revenue', 'as' => 'json.revenue']);
         Route::get('/json/transfers', ['uses' => 'JsonController@transfers', 'as' => 'json.transfers']);
+        Route::get('/json/recurring', ['uses' => 'JsonController@recurring', 'as' => 'json.recurring']);
 
         // limit controller:
         Route::get('/budgets/limits/create/{budget?}',['uses' => 'LimitController@create','as' => 'budgets.limits.create']);

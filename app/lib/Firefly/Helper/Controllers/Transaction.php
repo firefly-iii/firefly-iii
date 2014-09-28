@@ -247,7 +247,8 @@ class Transaction implements TransactionInterface
         /*
          * Add a custom error when they are the same.
          */
-        if ($to->id == $from->id) {
+        if ($to->id ==
+            $from->id) {
             $bag = new MessageBag;
             $bag->add('account_from_id', 'The account from cannot be the same as the account to.');
             return $bag;

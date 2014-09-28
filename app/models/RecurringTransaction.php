@@ -51,6 +51,7 @@ class RecurringTransaction extends Ardent
             'skip'        => 'required|between:0,31',
         ];
 
+    protected $fillable = ['user_id','name','match','amount_min','amount_max','date','repeat_freq','skip','active','automatch'];
 
     /**
      * @return array
