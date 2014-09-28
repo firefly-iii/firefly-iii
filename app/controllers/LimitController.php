@@ -41,7 +41,9 @@ class LimitController extends BaseController
             'budget_id'   => $budget ? $budget->id : null
         ];
 
-        $budgets = $this->_budgets->getAsSelectList();
+        /** @var \Firefly\Helper\Toolkit\Toolkit $toolkit */
+        $toolkit = App::make('Firefly\Helper\Toolkit\Toolkit');
+        $budgets = $toolkit->makeSelectList($this->_budgets->get());
 
         return View::make('limits.create')->with('budgets', $budgets)->with(
             'periods', $periods
