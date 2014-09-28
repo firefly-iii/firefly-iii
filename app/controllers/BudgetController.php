@@ -25,7 +25,7 @@ class BudgetController extends BaseController
     {
         $this->_budgets    = $budgets;
         $this->_repository = $repository;
-        View::share('title','Budgets');
+        View::share('title', 'Budgets');
         View::share('mainTitleIcon', 'fa-tasks');
     }
 
@@ -158,7 +158,7 @@ class BudgetController extends BaseController
             ->with('view', $view)
             ->with('highlight', Input::get('highlight'))
             ->with('useSessionDates', $useSessionDates)
-            ->with('subTitle', 'Overview for '.$title);
+            ->with('subTitle', 'Overview for ' . $title);
     }
 
     /**

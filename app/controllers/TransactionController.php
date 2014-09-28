@@ -14,9 +14,8 @@ use Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface as 
 class TransactionController extends BaseController
 {
 
-    protected $_repository;
-
     protected $_helper;
+    protected $_repository;
 
     /**
      * Construct a new transaction controller with two of the most often used helpers.
@@ -236,14 +235,6 @@ class TransactionController extends BaseController
         )->with('what', 'revenue');
     }
 
-    public function transfers()
-    {
-        return View::make('transactions.list')->with('subTitle', 'Transfers')->with(
-            'subTitleIcon', 'fa-arrows-h'
-        )->with('what', 'transfers');
-
-    }
-
     /**
      * @param TransactionJournal $journal
      *
@@ -307,6 +298,14 @@ class TransactionController extends BaseController
         }
     }
 
+    public function transfers()
+    {
+        return View::make('transactions.list')->with('subTitle', 'Transfers')->with(
+            'subTitleIcon', 'fa-arrows-h'
+        )->with('what', 'transfers');
+
+    }
+
     /**
      * @param TransactionJournal $journal
      *
@@ -317,7 +316,7 @@ class TransactionController extends BaseController
         switch (Input::get('post_submit_action')) {
             case 'store':
             case 'return_to_edit':
-                $what = strtolower($journal->transactionType->type);
+                $what       = strtolower($journal->transactionType->type);
                 $messageBag = $this->_helper->update($journal, Input::all());
                 if ($messageBag->count() == 0) {
                     // has been saved, return to index:
