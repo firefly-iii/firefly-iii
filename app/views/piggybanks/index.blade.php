@@ -1,28 +1,12 @@
 @extends('layouts.default')
 @section('content')
 <div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-    </div>
-</div>
-<div class="row">
     <div class="col-lg-6 col-md-6 col-sm-12">
-        <p class="lead">Save money for large expenses</p>
-        <p class="text-info">
-            Saving money is <em>hard</em>. Firefly's piggy banks can help you to save money. Simply set the amount
-            of money you want to save, set an optional target date and whether or not
-            Firefly should remind you to add money
-            to the piggy bank.
-        </p>
         <p>
             <a href="{{route('piggybanks.create.piggybank')}}" class="btn btn-success">Create new piggy bank</a>
         </p>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12">
-        <p class="lead">Save money for repeated expenses</p>
-        <p class="text-info">
-            Taxes are due every year. Or maybe you want to save up for your yearly fireworks-binge. Buy a new smart
-            phone every three years. Firefly can help you organize these repeated expenses.
-        </p>
         <p>
             <a href="{{route('piggybanks.create.repeated')}}" class="btn btn-success">Create new repeated expense</a>
         </p>
@@ -59,7 +43,7 @@
                             </td>
                             <td style="width:40%;">
                                 <div class="btn-group-xs btn-group">
-                                    @if($piggyBank->leftInAccount > 0)
+                                    @if($accounts[$piggyBank->account_id]['account']->leftOnAccount > 0)
                                     <a data-toggle="modal" href="{{route('piggybanks.amount.add',$piggyBank->id)}}" data-target="#modal" class="btn btn-default"><span class="glyphicon glyphicon-plus-sign"></span> Add money</a>
                                     @endif
                                     @if($piggyBank->currentRelevantRep()->currentamount > 0)
@@ -122,7 +106,7 @@
                         </td>
                         <td style="width:40%;">
                             <div class="btn-group-xs btn-group">
-                                @if($repeated->leftInAccount > 0)
+                                @if($accounts[$repeated->account_id]['account']->leftOnAccount > 0)
                                 <a data-toggle="modal" href="{{route('piggybanks.amount.add',$repeated->id)}}" data-target="#modal" class="btn btn-default"><span class="glyphicon glyphicon-plus-sign"></span> Add money</a>
                                 @endif
                                 @if($repeated->currentRelevantRep()->currentamount > 0)
