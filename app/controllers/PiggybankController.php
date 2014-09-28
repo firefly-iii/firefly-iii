@@ -15,8 +15,8 @@ use Firefly\Storage\Piggybank\PiggybankRepositoryInterface as PRI;
 class PiggybankController extends BaseController
 {
 
-    protected $_repository;
     protected $_accounts;
+    protected $_repository;
 
     /**
      * @param PRI $repository
@@ -91,10 +91,10 @@ class PiggybankController extends BaseController
      */
     public function delete(Piggybank $piggyBank)
     {
-        View::share('subTitle', 'Delete "'.$piggyBank->name.'"');
-        if($piggyBank->repeats == 1) {
+        View::share('subTitle', 'Delete "' . $piggyBank->name . '"');
+        if ($piggyBank->repeats == 1) {
             View::share('title', 'Repeated expenses');
-            View::share('mainTitleIcon', 'fa-rotate-right');
+            View::share('mainTitleIcon', 'fa-rotate-right')
         } else {
             View::share('title', 'Piggy banks');
             View::share('mainTitleIcon', 'fa-sort-amount-asc');
@@ -111,11 +111,18 @@ class PiggybankController extends BaseController
     public function destroy(Piggybank $piggyBank)
     {
         Event::fire('piggybanks.destroy', [$piggyBank]);
+        if ($piggyBank->repeats == 1) {
+            $route   = 'piggybanks.index.repeated';
+            $message = 'Repeated expense';
+        } else {
+            $route   = 'piggybanks.index.piggybanks';
+            $message = 'Piggybank';
+        }
         $this->_repository->destroy($piggyBank);
 
-        Session::flash('success', 'Piggy bank deleted.');
+        Session::flash('success', $message . ' deleted.');
 
-        return Redirect::route('piggybanks.index');
+        return Redirect::route($route);
     }
 
     /**
@@ -133,19 +140,18 @@ class PiggybankController extends BaseController
         $periods  = Config::get('firefly.piggybank_periods');
 
 
-        View::share('subTitle','Edit "'.$piggyBank->name.'"');
-
+        View::share('subTitle', 'Edit "' . $piggyBank->name . '"');
 
 
         if ($piggyBank->repeats == 1) {
-            View::share('title','Repeated expenses');
+            View::share('title', 'Repeated expenses');
             View::share('mainTitleIcon', 'fa-rotate-left');
 
             return View::make('piggybanks.edit-repeated')->with('piggybank', $piggyBank)->with('accounts', $accounts)
                 ->with('periods', $periods);
         } else {
             // piggy bank.
-            View::share('title','Piggy banks');
+            View::share('title', 'Piggy banks');
             View::share('mainTitleIcon', 'fa-sort-amount-asc');
 
             return View::make('piggybanks.edit-piggybank')->with('piggybank', $piggyBank)->with('accounts', $accounts)
@@ -153,73 +159,6 @@ class PiggybankController extends BaseController
         }
 
 
-    }
-
-    /**
-     * @return $this
-     */
-    public function piggybanks()
-    {
-        $countRepeating    = $this->_repository->countRepeating();
-        $countNonRepeating = $this->_repository->countNonrepeating();
-
-        $piggybanks = $this->_repository->get();
-
-        // get the accounts with each piggy bank and check their balance; Fireflyy might needs to
-        // show the user a correction.
-
-        $accounts = [];
-        /** @var \Piggybank $piggybank */
-        foreach ($piggybanks as $piggybank) {
-            $account = $piggybank->account;
-            $id      = $account->id;
-            if (!isset($accounts[$id])) {
-                $accounts[$id] = ['account' => $account, 'left' => $this->_repository->leftOnAccount($account)];
-            }
-        }
-
-        View::share('title', 'Piggy banks');
-        View::share('subTitle', 'Save for big expenses');
-        View::share('mainTitleIcon', 'fa-sort-amount-asc');
-
-        return View::make('piggybanks.index')->with('piggybanks', $piggybanks)
-            ->with('countRepeating', $countRepeating)
-            ->with('countNonRepeating', $countNonRepeating)
-            ->with('accounts', $accounts);
-    }
-
-    /**
-     * @return $this
-     */
-    public function repeated()
-    {
-        $countRepeating    = $this->_repository->countRepeating();
-        $countNonRepeating = $this->_repository->countNonrepeating();
-
-        $piggybanks = $this->_repository->get();
-
-        // get the accounts with each piggy bank and check their balance; Fireflyy might needs to
-        // show the user a correction.
-
-        $accounts = [];
-        /** @var \Piggybank $piggybank */
-        foreach ($piggybanks as $piggybank) {
-            $account = $piggybank->account;
-            $id      = $account->id;
-            if (!isset($accounts[$id])) {
-                $accounts[$id] = ['account' => $account, 'left' => $this->_repository->leftOnAccount($account)];
-            }
-        }
-
-        View::share('title', 'Repeated expenses');
-        View::share('subTitle', 'Save for returning bills');
-        View::share('mainTitleIcon', 'fa-rotate-left');
-
-
-        return View::make('piggybanks.index')->with('piggybanks', $piggybanks)
-            ->with('countRepeating', $countRepeating)
-            ->with('countNonRepeating', $countNonRepeating)
-            ->with('accounts', $accounts);
     }
 
     /**
@@ -262,6 +201,39 @@ class PiggybankController extends BaseController
     }
 
     /**
+     * @return $this
+     */
+    public function piggybanks()
+    {
+        $countRepeating    = $this->_repository->countRepeating();
+        $countNonRepeating = $this->_repository->countNonrepeating();
+
+        $piggybanks = $this->_repository->get();
+
+        // get the accounts with each piggy bank and check their balance; Fireflyy might needs to
+        // show the user a correction.
+
+        $accounts = [];
+        /** @var \Piggybank $piggybank */
+        foreach ($piggybanks as $piggybank) {
+            $account = $piggybank->account;
+            $id      = $account->id;
+            if (!isset($accounts[$id])) {
+                $accounts[$id] = ['account' => $account, 'left' => $this->_repository->leftOnAccount($account)];
+            }
+        }
+
+        View::share('title', 'Piggy banks');
+        View::share('subTitle', 'Save for big expenses');
+        View::share('mainTitleIcon', 'fa-sort-amount-asc');
+
+        return View::make('piggybanks.index')->with('piggybanks', $piggybanks)
+            ->with('countRepeating', $countRepeating)
+            ->with('countNonRepeating', $countNonRepeating)
+            ->with('accounts', $accounts);
+    }
+
+    /**
      * @param Piggybank $piggyBank
      *
      * @return $this
@@ -278,6 +250,40 @@ class PiggybankController extends BaseController
     }
 
     /**
+     * @return $this
+     */
+    public function repeated()
+    {
+        $countRepeating    = $this->_repository->countRepeating();
+        $countNonRepeating = $this->_repository->countNonrepeating();
+
+        $piggybanks = $this->_repository->get();
+
+        // get the accounts with each piggy bank and check their balance; Fireflyy might needs to
+        // show the user a correction.
+
+        $accounts = [];
+        /** @var \Piggybank $piggybank */
+        foreach ($piggybanks as $piggybank) {
+            $account = $piggybank->account;
+            $id      = $account->id;
+            if (!isset($accounts[$id])) {
+                $accounts[$id] = ['account' => $account, 'left' => $this->_repository->leftOnAccount($account)];
+            }
+        }
+
+        View::share('title', 'Repeated expenses');
+        View::share('subTitle', 'Save for returning bills');
+        View::share('mainTitleIcon', 'fa-rotate-left');
+
+
+        return View::make('piggybanks.index')->with('piggybanks', $piggybanks)
+            ->with('countRepeating', $countRepeating)
+            ->with('countNonRepeating', $countNonRepeating)
+            ->with('accounts', $accounts);
+    }
+
+    /**
      *
      */
     public function show(Piggybank $piggyBank)
@@ -285,15 +291,15 @@ class PiggybankController extends BaseController
         $leftOnAccount = $this->_repository->leftOnAccount($piggyBank->account);
         $balance       = $piggyBank->account->balance();
 
-        View::share('subTitle',$piggyBank->name);
+        View::share('subTitle', $piggyBank->name);
 
-        if($piggyBank->repeats == 1) {
+        if ($piggyBank->repeats == 1) {
             // repeated expense.
-            View::share('title','Repeated expenses');
+            View::share('title', 'Repeated expenses');
             View::share('mainTitleIcon', 'fa-rotate-left');
         } else {
             // piggy bank.
-            View::share('title','Piggy banks');
+            View::share('title', 'Piggy banks');
             View::share('mainTitleIcon', 'fa-sort-amount-asc');
         }
 
