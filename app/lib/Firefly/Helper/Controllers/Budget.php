@@ -34,7 +34,7 @@ class Budget implements BudgetInterface
 
                 /** @var \LimitRepetition $repetition */
                 foreach ($limit->limitrepetitions as $repetition) {
-                    $repetition->left = $repetition->left();
+                    $repetition->left = $repetition->leftInRepetition();
                     $periodOrder      = $repetition->periodOrder();
                     $period           = $repetition->periodShow();
                     if (!isset($return[$periodOrder])) {
