@@ -167,7 +167,7 @@ class Transaction implements TransactionInterface
         /*
          * Connect budget and category:
          */
-        $budgetids = is_null($budget) ? [] : [$budget->id];
+        $budgetids = !isset($budget) || (isset($budget) && is_null($budget)) ? [] : [$budget->id];
         $catids    = is_null($category) ? [] : [$category->id];
         $journal->budgets()->sync($budgetids);
         $journal->categories()->sync($catids);
