@@ -292,6 +292,7 @@ class TransactionController extends BaseController
                 }
 
                 break;
+
             default:
                 throw new FireflyException('Method ' . Input::get('post_submit_action') . ' not implemented yet.');
                 break;
