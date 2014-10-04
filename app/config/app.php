@@ -42,6 +42,7 @@ return [
         'Firefly\Storage\StorageServiceProvider',
         'Firefly\Helper\HelperServiceProvider',
         'Firefly\Validation\ValidationServiceProvider',
+        'DaveJamesMiller\Breadcrumbs\ServiceProvider',
     ],
     'manifest'        => storage_path() . '/meta',
     'aliases'         => [
@@ -84,6 +85,7 @@ return [
         'URL'               => 'Illuminate\Support\Facades\URL',
         'Validator'         => 'Illuminate\Support\Facades\Validator',
         'View'              => 'Illuminate\Support\Facades\View',
+        'Breadcrumbs'       => 'DaveJamesMiller\Breadcrumbs\Facade',
 
     ],
 
