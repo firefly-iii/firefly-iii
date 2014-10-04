@@ -22,7 +22,8 @@
     },
     "require": {
         "laravel/framework": "4.2.*",
-        "laravelbook/ardent": "~2.4"
+        "laravelbook/ardent": "~2.4",
+        "davejamesmiller/laravel-breadcrumbs": "2.*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "@stable",
