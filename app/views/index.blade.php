@@ -1,5 +1,6 @@
 @extends('layouts.default')
 @section('content')
+{{ Breadcrumbs::render('home') }}
 @if($count == 0)
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
