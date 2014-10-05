@@ -3,6 +3,7 @@
 
 namespace Firefly\Storage\RecurringTransaction;
 use Illuminate\Queue\Jobs\Job;
+use Illuminate\Support\MessageBag;
 
 /**
  * Interface RecurringTransactionRepositoryInterface
@@ -34,7 +35,7 @@ interface RecurringTransactionRepositoryInterface
     /**
      * @param $data
      *
-     * @return mixed
+     * @return MessageBag
      */
     public function store($data);
 
