@@ -83,17 +83,19 @@ interface AccountRepositoryInterface
 
     /**
      * @param $name
+     * @param $create
      *
      * @return |Account|null
      */
-    public function findExpenseAccountByName($name);
+    public function findExpenseAccountByName($name, $create = true);
 
     /**
      * @param $name
+     * @param $create
      *
      * @return |Account|null
      */
-    public function findRevenueAccountByName($name);
+    public function findRevenueAccountByName($name, $create = true);
 
     /**
      * @return mixed

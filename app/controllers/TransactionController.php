@@ -4,6 +4,7 @@
 use Firefly\Exception\FireflyException;
 use Firefly\Helper\Controllers\TransactionInterface as TI;
 use Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface as TJRI;
+use Illuminate\Support\MessageBag;
 
 /**
  * Class TransactionController
@@ -21,12 +22,12 @@ class TransactionController extends BaseController
      * Construct a new transaction controller with two of the most often used helpers.
      *
      * @param TJRI $repository
-     * @param TI   $helper
+     * @param TI $helper
      */
     public function __construct(TJRI $repository, TI $helper)
     {
         $this->_repository = $repository;
-        $this->_helper     = $helper;
+        $this->_helper = $helper;
         View::share('title', 'Transactions');
         View::share('mainTitleIcon', 'fa-repeat');
     }
@@ -59,16 +60,26 @@ class TransactionController extends BaseController
         $assetAccounts = $toolkit->makeSelectList($accountRepository->getActiveDefault());
 
         // get budgets as a select list.
-        $budgets    = $toolkit->makeSelectList($budgetRepository->get());
+        $budgets = $toolkit->makeSelectList($budgetRepository->get());
         $budgets[0] = '(no budget)';
 
         // get the piggy banks.
-        $piggies    = $toolkit->makeSelectList($piggyRepository->get());
+        $piggies = $toolkit->makeSelectList($piggyRepository->get());
         $piggies[0] = '(no piggy bank)';
+
+        /*
+         * Catch messages from validation round:
+         */
+        if (Session::has('messages')) {
+            $messages = Session::get('messages');
+            Session::forget('messages');
+        } else {
+            $messages = new MessageBag;
+        }
 
         return View::make('transactions.create')->with('accounts', $assetAccounts)->with('budgets', $budgets)->with(
             'what', $what
-        )->with('piggies', $piggies)->with('subTitle', 'Add a new ' . $what);
+        )->with('piggies', $piggies)->with('subTitle', 'Add a new ' . $what)->with('messages', $messages);
     }
 
     /**
@@ -144,7 +155,7 @@ class TransactionController extends BaseController
         $accounts = $toolkit->makeSelectList($accountRepository->getActiveDefault());
 
         // get budgets as a select list.
-        $budgets    = $toolkit->makeSelectList($budgetRepository->get());
+        $budgets = $toolkit->makeSelectList($budgetRepository->get());
         $budgets[0] = '(no budget)';
 
         /*
@@ -152,8 +163,8 @@ class TransactionController extends BaseController
          * of the transactions in the journal has this field, it should all fill in nicely.
          */
         // get the piggy banks.
-        $piggies     = $toolkit->makeSelectList($piggyRepository->get());
-        $piggies[0]  = '(no piggy bank)';
+        $piggies = $toolkit->makeSelectList($piggyRepository->get());
+        $piggies[0] = '(no piggy bank)';
         $piggyBankId = 0;
         foreach ($journal->transactions as $t) {
             if (!is_null($t->piggybank_id)) {
@@ -165,9 +176,9 @@ class TransactionController extends BaseController
          * Data to properly display the edit form.
          */
         $prefilled = [
-            'date'         => $journal->date->format('Y-m-d'),
-            'category'     => '',
-            'budget_id'    => 0,
+            'date' => $journal->date->format('Y-m-d'),
+            'category' => '',
+            'budget_id' => 0,
             'piggybank_id' => $piggyBankId
         ];
 
@@ -185,23 +196,23 @@ class TransactionController extends BaseController
          */
         switch ($what) {
             case 'withdrawal':
-                $prefilled['account_id']      = $journal->transactions[0]->account->id;
+                $prefilled['account_id'] = $journal->transactions[0]->account->id;
                 $prefilled['expense_account'] = $journal->transactions[1]->account->name;
-                $prefilled['amount']          = floatval($journal->transactions[1]->amount);
-                $budget                       = $journal->budgets()->first();
+                $prefilled['amount'] = floatval($journal->transactions[1]->amount);
+                $budget = $journal->budgets()->first();
                 if (!is_null($budget)) {
                     $prefilled['budget_id'] = $budget->id;
                 }
                 break;
             case 'deposit':
-                $prefilled['account_id']      = $journal->transactions[1]->account->id;
+                $prefilled['account_id'] = $journal->transactions[1]->account->id;
                 $prefilled['revenue_account'] = $journal->transactions[0]->account->name;
-                $prefilled['amount']          = floatval($journal->transactions[1]->amount);
+                $prefilled['amount'] = floatval($journal->transactions[1]->amount);
                 break;
             case 'transfer':
                 $prefilled['account_from_id'] = $journal->transactions[1]->account->id;
-                $prefilled['account_to_id']   = $journal->transactions[0]->account->id;
-                $prefilled['amount']          = floatval($journal->transactions[1]->amount);
+                $prefilled['account_to_id'] = $journal->transactions[0]->account->id;
+                $prefilled['amount'] = floatval($journal->transactions[1]->amount);
                 break;
         }
 
@@ -258,7 +269,7 @@ class TransactionController extends BaseController
         /*
          * Collect data to process:
          */
-        $data         = Input::except(['_token']);
+        $data = Input::except(['_token']);
         $data['what'] = $what;
 
         switch (Input::get('post_submit_action')) {
@@ -292,7 +303,14 @@ class TransactionController extends BaseController
                 }
 
                 break;
+            case 'validate_only':
+                $messageBags = $this->_helper->validate($data);
 
+                Session::flash('warnings', $messageBags['warnings']);
+                Session::flash('successes', $messageBags['successes']);
+                Session::flash('errors', $messageBags['errors']);
+                return Redirect::route('transactions.create', [$what])->withInput();
+                break;
             default:
                 throw new FireflyException('Method ' . Input::get('post_submit_action') . ' not implemented yet.');
                 break;
@@ -317,7 +335,7 @@ class TransactionController extends BaseController
         switch (Input::get('post_submit_action')) {
             case 'store':
             case 'return_to_edit':
-                $what       = strtolower($journal->transactionType->type);
+                $what = strtolower($journal->transactionType->type);
                 $messageBag = $this->_helper->update($journal, Input::all());
                 if ($messageBag->count() == 0) {
                     // has been saved, return to index:

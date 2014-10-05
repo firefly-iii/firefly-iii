@@ -42,7 +42,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     public function destroy(\Account $account)
     {
         // find all transaction journals related to this account:
-        $journals   = \TransactionJournal::withRelevantData()->accountIs($account)->get(['transaction_journals.*']);
+        $journals = \TransactionJournal::withRelevantData()->accountIs($account)->get(['transaction_journals.*']);
         $accountIDs = [];
 
         /** @var \TransactionJournal $journal */
@@ -58,7 +58,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         if (count($accountIDs) > 0) {
             // find the "initial balance" type accounts in this list. Should be just 1.
             $query = $this->_user->accounts()->accountTypeIn(['Initial balance account'])
-                ->whereIn('accounts.id', $accountIDs);
+                                 ->whereIn('accounts.id', $accountIDs);
             if ($query->count() == 1) {
                 $iba = $query->first(['accounts.*']);
                 $iba->delete();
@@ -90,22 +90,23 @@ class EloquentAccountRepository implements AccountRepositoryInterface
      * because when you feed it "Import account" it will always return an import account of that type.
      *
      * @param $name
+     * @param $create
      *
      * @return null|\Account
      */
-    public function findExpenseAccountByName($name)
+    public function findExpenseAccountByName($name, $create = true)
     {
-        $cashType   = $this->findAccountType('Cash account');
+        $cashType = $this->findAccountType('Cash account');
         $importType = $this->findAccountType('Import account');
         // catch Import account:
         if ($name == 'Import account') {
 
             $import = $this->firstOrCreate(
                 [
-                    'name'            => 'Import account',
-                    'user_id'         => $this->_user->id,
+                    'name' => 'Import account',
+                    'user_id' => $this->_user->id,
                     'account_type_id' => $importType->id,
-                    'active'          => 1
+                    'active' => 1
                 ]
             );
             return $import;
@@ -118,15 +119,17 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         )->first(['accounts.*']);
 
         // create if not found:
-        if (strlen($name) > 0 && is_null($account)) {
-            $type    = $this->findAccountType('Expense account');
-            $set     = [
-                'name'            => $name,
-                'user_id'         => $this->_user->id,
-                'active'          => 1,
+        if (strlen($name) > 0 && is_null($account) && $create === true) {
+            $type = $this->findAccountType('Expense account');
+            $set = [
+                'name' => $name,
+                'user_id' => $this->_user->id,
+                'active' => 1,
                 'account_type_id' => $type->id
             ];
             $account = $this->firstOrCreate($set);
+        } else if (strlen($name) > 0 && is_null($account) && $create === false) {
+            return null;
         }
 
 
@@ -138,10 +141,10 @@ class EloquentAccountRepository implements AccountRepositoryInterface
 
         // create cash account as ultimate fall back:
         if (is_null($account)) {
-            $set     = [
-                'name'            => 'Cash account',
-                'user_id'         => $this->_user->id,
-                'active'          => 1,
+            $set = [
+                'name' => 'Cash account',
+                'user_id' => $this->_user->id,
+                'active' => 1,
                 'account_type_id' => $cashType->id
             ];
             $account = $this->firstOrCreate($set);
@@ -171,52 +174,55 @@ class EloquentAccountRepository implements AccountRepositoryInterface
 
     /**
      * @param $name
+     * @param $create
      *
      * @return |Account|null
      */
-    public function findRevenueAccountByName($name)
+    public function findRevenueAccountByName($name, $create = true)
     {
         // catch Import account:
         if ($name == 'Import account') {
             $importType = $this->findAccountType('Import account');
-            $import     = $this->firstOrCreate(
+            $import = $this->firstOrCreate(
                 [
-                    'name'            => 'Import account',
-                    'user_id'         => $this->_user->id,
+                    'name' => 'Import account',
+                    'user_id' => $this->_user->id,
                     'account_type_id' => $importType->id,
-                    'active'          => 1
+                    'active' => 1
                 ]
             );
             return $import;
         }
 
         // find account:
-        $type    = $this->findAccountType('Revenue account');
+        $type = $this->findAccountType('Revenue account');
         $account = $this->_user->accounts()->where('name', $name)->where('account_type_id', $type->id)->first();
 
         // create if not found:
-        if (strlen($name) > 0) {
-            $set     = [
-                'name'            => $name,
-                'user_id'         => $this->_user->id,
-                'active'          => 1,
+        if (strlen($name) > 0 && is_null($account) && $create === true) {
+            $set = [
+                'name' => $name,
+                'user_id' => $this->_user->id,
+                'active' => 1,
                 'account_type_id' => $type->id
             ];
             $account = $this->firstOrCreate($set);
+        } else if (strlen($name) > 0 && is_null($account) && $create === false) {
+            return null;
         }
 
         // find cash account as fall back:
         if (is_null($account)) {
             $cashType = $this->findAccountType('Cash account');
-            $account  = $this->_user->accounts()->where('account_type_id', $cashType->id)->first();
+            $account = $this->_user->accounts()->where('account_type_id', $cashType->id)->first();
         }
 
         // create cash account as ultimate fall back:
         if (is_null($account)) {
-            $set     = [
-                'name'            => 'Cash account',
-                'user_id'         => $this->_user->id,
-                'active'          => 1,
+            $set = [
+                'name' => 'Cash account',
+                'user_id' => $this->_user->id,
+                'active' => 1,
                 'account_type_id' => $cashType->id
             ];
             $account = $this->firstOrCreate($set);
@@ -232,7 +238,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     public function getByAccountType(\AccountType $type)
     {
         return $this->_user->accounts()->with('accounttype')->orderBy('name', 'ASC')
-            ->where('account_type_id', $type->id)->get();
+                           ->where('account_type_id', $type->id)->get();
     }
 
     /**
@@ -307,7 +313,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         return $this->_user->accounts()->accountTypeIn(['Default account', 'Asset account'])->where(
             'accounts.active', 1
         )
-            ->get(['accounts.*']);
+                           ->get(['accounts.*']);
     }
 
     /**
@@ -316,7 +322,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     public function getDefault()
     {
         return $this->_user->accounts()->accountTypeIn(['Default account', 'Asset account'])
-            ->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
+                           ->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
     }
 
     /**
@@ -334,7 +340,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @param Job   $job
+     * @param Job $job
      * @param array $payload
      *
      * @return mixed
@@ -346,7 +352,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
 
         /** @var \Importmap $importMap */
         $importMap = $repository->findImportmap($payload['mapID']);
-        $user      = $importMap->user;
+        $user = $importMap->user;
         $this->overruleUser($user);
 
         /*
@@ -369,17 +375,17 @@ class EloquentAccountRepository implements AccountRepositoryInterface
          * find the payload's account type:
          */
         $payload['account_type'] = isset($payload['account_type']) ? $payload['account_type'] : 'Expense account';
-        $type                    = $this->findAccountType($payload['account_type']);
+        $type = $this->findAccountType($payload['account_type']);
 
         /*
          * Create data array for store() procedure.
          */
         $data = [
             'account_type' => $type,
-            'name'         => $payload['data']['name'],
+            'name' => $payload['data']['name'],
         ];
         if (isset($payload['data']['openingbalance'])) {
-            $data['openingbalance']     = floatval($payload['data']['openingbalance']);
+            $data['openingbalance'] = floatval($payload['data']['openingbalance']);
             $data['openingbalancedate'] = $payload['data']['openingbalancedate'];
         }
         if (isset($payload['data']['inactive'])) {
@@ -464,7 +470,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
 
         $account->name = $data['name'];
         $account->active
-                       = isset($data['active']) && intval($data['active']) >= 0 && intval($data['active']) <= 1 ? intval(
+            = isset($data['active']) && intval($data['active']) >= 0 && intval($data['active']) <= 1 ? intval(
             $data['active']
         ) : 1;
 
@@ -474,7 +480,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
                 // create initial balance, if necessary:
                 if (isset($data['openingbalance']) && isset($data['openingbalancedate'])) {
                     $amount = floatval($data['openingbalance']);
-                    $date   = new Carbon($data['openingbalancedate']);
+                    $date = new Carbon($data['openingbalancedate']);
                     if ($amount != 0) {
                         $this->_createInitialBalance($account, $amount, $date);
                     }
@@ -491,8 +497,8 @@ class EloquentAccountRepository implements AccountRepositoryInterface
 
     /**
      * @param \Account $account
-     * @param int      $amount
-     * @param Carbon   $date
+     * @param int $amount
+     * @param Carbon $date
      *
      * @return bool
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
@@ -518,7 +524,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
         $initial = new \Account;
         $initial->accountType()->associate($initialBalanceAT);
         $initial->user()->associate($this->_user);
-        $initial->name   = $account->name . ' initial balance';
+        $initial->name = $account->name . ' initial balance';
         $initial->active = 0;
         if ($initial->validate()) {
             $initial->save();
@@ -528,12 +534,12 @@ class EloquentAccountRepository implements AccountRepositoryInterface
 
             $set = [
                 'account_from_id' => $initial->id,
-                'account_to_id'   => $account->id,
-                'description'     => 'Initial Balance for ' . $account->name,
-                'what'            => 'Opening balance',
-                'amount'          => $amount,
-                'category'        => '',
-                'date'            => $date->format('Y-m-d')
+                'account_to_id' => $account->id,
+                'description' => 'Initial Balance for ' . $account->name,
+                'what' => 'Opening balance',
+                'amount' => $amount,
+                'category' => '',
+                'date' => $date->format('Y-m-d')
             ];
             $transactions->store($set);
 
@@ -546,7 +552,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
     /**
      * Takes a transaction/account component and updates the transaction journal to match.
      *
-     * @param Job   $job
+     * @param Job $job
      * @param array $payload
      *
      * @return mixed
@@ -558,7 +564,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
 
         /** @var \Importmap $importMap */
         $importMap = $repository->findImportmap($payload['mapID']);
-        $user      = $importMap->user;
+        $user = $importMap->user;
         $this->overruleUser($user);
 
         if ($job->attempts() > 10) {
@@ -579,12 +585,12 @@ class EloquentAccountRepository implements AccountRepositoryInterface
          * Prep some vars from the payload
          */
         $transactionId = intval($payload['data']['transaction_id']);
-        $componentId   = intval($payload['data']['component_id']);
+        $componentId = intval($payload['data']['component_id']);
 
         /*
          * Find the import map for both:
          */
-        $accountMap     = $repository->findImportEntry($importMap, 'Account', $componentId);
+        $accountMap = $repository->findImportEntry($importMap, 'Account', $componentId);
         $transactionMap = $repository->findImportEntry($importMap, 'Transaction', $transactionId);
 
         /*
@@ -713,7 +719,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
 
                 $journal = $interface->openingBalanceTransaction($account);
                 if ($journal) {
-                    $journal->date                    = new Carbon($data['openingbalancedate']);
+                    $journal->date = new Carbon($data['openingbalancedate']);
                     $journal->transactions[0]->amount = floatval($data['openingbalance']) * -1;
                     $journal->transactions[1]->amount = floatval($data['openingbalance']);
                     $journal->transactions[0]->save();
