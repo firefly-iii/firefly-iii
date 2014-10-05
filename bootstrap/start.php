@@ -37,12 +37,11 @@ $app = new Illuminate\Foundation\Application;
 |
 */
 
-$env = $app->detectEnvironment(
-    function () {
-        // Default to production if LARAVEL_ENV is not set
-        return getenv('LARAVEL_ENV') ? : 'production';
-    }
-);
+$env = $app->detectEnvironment(array(
+
+                                   'local' => array('homestead', 'SMJD*'),
+
+                               ));
 
 
 /*
@@ -70,7 +69,7 @@ $app->bindInstallPaths(require __DIR__ . '/paths.php');
 */
 
 $framework = $app['path.base'] .
-    '/vendor/laravel/framework/src';
+             '/vendor/laravel/framework/src';
 
 require $framework . '/Illuminate/Foundation/start.php';
 
