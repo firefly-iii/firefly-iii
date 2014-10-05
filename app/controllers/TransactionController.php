@@ -67,19 +67,9 @@ class TransactionController extends BaseController
         $piggies = $toolkit->makeSelectList($piggyRepository->get());
         $piggies[0] = '(no piggy bank)';
 
-        /*
-         * Catch messages from validation round:
-         */
-        if (Session::has('messages')) {
-            $messages = Session::get('messages');
-            Session::forget('messages');
-        } else {
-            $messages = new MessageBag;
-        }
-
         return View::make('transactions.create')->with('accounts', $assetAccounts)->with('budgets', $budgets)->with(
             'what', $what
-        )->with('piggies', $piggies)->with('subTitle', 'Add a new ' . $what)->with('messages', $messages);
+        )->with('piggies', $piggies)->with('subTitle', 'Add a new ' . $what);
     }
 
     /**

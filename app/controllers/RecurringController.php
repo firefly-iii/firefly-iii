@@ -19,8 +19,8 @@ class RecurringController extends BaseController
     {
         $this->_repository = $repository;
 
-        View::share('title','Recurring transactions');
-        View::share('mainTitleIcon','fa-rotate-right');
+        View::share('title', 'Recurring transactions');
+        View::share('mainTitleIcon', 'fa-rotate-right');
     }
 
     /**
@@ -28,7 +28,7 @@ class RecurringController extends BaseController
      */
     public function create()
     {
-        View::share('subTitle','Create new');
+        View::share('subTitle', 'Create new');
         $periods = \Config::get('firefly.periods_to_text');
 
         return View::make('recurring.create')->with('periods', $periods);
@@ -41,7 +41,7 @@ class RecurringController extends BaseController
      */
     public function delete(RecurringTransaction $recurringTransaction)
     {
-        View::share('subTitle','Delete "' .$recurringTransaction->name.'"');
+        View::share('subTitle', 'Delete "' . $recurringTransaction->name . '"');
         return View::make('recurring.delete')->with('recurringTransaction', $recurringTransaction);
     }
 
@@ -73,7 +73,7 @@ class RecurringController extends BaseController
     {
         $periods = \Config::get('firefly.periods_to_text');
 
-        View::share('subTitle','Edit "' .$recurringTransaction->name.'"');
+        View::share('subTitle', 'Edit "' . $recurringTransaction->name . '"');
 
         return View::make('recurring.edit')->with('periods', $periods)->with(
             'recurringTransaction', $recurringTransaction
@@ -93,14 +93,11 @@ class RecurringController extends BaseController
      */
     public function show(RecurringTransaction $recurringTransaction)
     {
-        View::share('subTitle',$recurringTransaction->name);
+        View::share('subTitle', $recurringTransaction->name);
         return View::make('recurring.show')->with('recurring', $recurringTransaction);
 
     }
 
-    /**
-     * @return $this|\Illuminate\Http\RedirectResponse
-     */
     public function store()
     {
 
@@ -108,25 +105,54 @@ class RecurringController extends BaseController
             default:
                 throw new FireflyException('Method ' . Input::get('post_submit_action') . ' not implemented yet.');
                 break;
+            case 'store':
+            case 'create_another':
+                /*
+                 * Try to store:
+                 */
+                $messageBag = $this->_repository->store(Input::all());
+
+                /*
+                 * Failure!
+                 */
+                if ($messageBag->count() > 0) {
+                    Session::flash('error', 'Could not save recurring transaction: ' . $messageBag->first());
+                    return Redirect::route('recurring.create')->withInput()->withErrors($messageBag);
+                }
+
+                /*
+                 * Success!
+                 */
+                Session::flash('success', 'Recurring transaction "' . e(Input::get('name')) . '" saved!');
+
+                /*
+                 * Redirect to original location or back to the form.
+                 */
+                if (Input::get('post_submit_action') == 'create_another') {
+                    return Redirect::route('recurring.create')->withInput();
+                } else {
+                    return Redirect::route('recurring.index');
+                }
+                break;
         }
 
-        $recurringTransaction = $this->_repository->store(Input::all());
-
-        if ($recurringTransaction->errors()->count() == 0) {
-            Session::flash('success', 'Recurring transaction "' . $recurringTransaction->name . '" saved!');
-            //Event::fire('recurring.store', [$recurringTransaction]);
-            if (Input::get('create') == '1') {
-                return Redirect::route('recurring.create')->withInput();
-            } else {
-                return Redirect::route('recurring.index');
-            }
-        } else {
-            Session::flash(
-                'error', 'Could not save the recurring transaction: ' . $recurringTransaction->errors()->first()
-            );
-
-            return Redirect::route('recurring.create')->withInput()->withErrors($recurringTransaction->errors());
-        }
+//
+//
+//        if ($recurringTransaction->errors()->count() == 0) {
+//            Session::flash('success', 'Recurring transaction "' . $recurringTransaction->name . '" saved!');
+//            //Event::fire('recurring.store', [$recurringTransaction]);
+//            if (Input::get('create') == '1') {
+//                return Redirect::route('recurring.create')->withInput();
+//            } else {
+//                return Redirect::route('recurring.index');
+//            }
+//        } else {
+//            Session::flash(
+//                'error', 'Could not save the recurring transaction: ' . $recurringTransaction->errors()->first()
+//            );
+//
+//            return Redirect::route('recurring.create')->withInput()->withErrors($recurringTransaction->errors());
+//        }
     }
 
     /**

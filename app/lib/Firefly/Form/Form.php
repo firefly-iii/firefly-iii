@@ -16,17 +16,50 @@ class Form
      * @return string
      * @throws FireflyException
      */
-    public static function ffNumber($name, $value = null, array $options = [])
+    public static function ffInteger($name, $value = null, array $options = [])
     {
-        $options['step'] = 'any';
-        $options['min'] = '0.01';
+        $options['step'] = '1';
         return self::ffInput('number', $name, $value, $options);
 
     }
 
+    public static function ffCheckbox($name, $value = 1, $checked = null, $options = [])
+    {
+        $options['checked'] = $checked ? true : null;
+        return self::ffInput('checkbox', $name, $value, $options);
+    }
+
+    public static function ffAmount($name, $value = null, array $options = [])
+    {
+        $options['step'] = 'any';
+        $options['min'] = '0.01';
+        return self::ffInput('amount', $name, $value, $options);
+
+    }
+
+    /**
+     * @param $name
+     * @param null $value
+     * @param array $options
+     * @return string
+     * @throws FireflyException
+     */
     public static function ffDate($name, $value = null, array $options = [])
     {
         return self::ffInput('date', $name, $value, $options);
+    }
+
+    /**
+     * @param $name
+     * @param null $value
+     * @param array $options
+     * @return string
+     * @throws FireflyException
+     */
+    public static function ffTags($name, $value = null, array $options = [])
+    {
+        $options['data-role'] = 'tagsinput';
+        return self::ffInput('text', $name, $value, $options);
     }
 
     /**
@@ -55,6 +88,22 @@ class Form
 
     }
 
+    public static function label($name)
+    {
+        $labels = [
+            'amount_min' => 'Amount (min)',
+            'amount_max' => 'Amount (max)',
+            'match' => 'Matches on',
+            'repeat_freq' => 'Repetition',
+            'account_from_id' => 'Account from',
+            'account_to_id' => 'Account to',
+            'account_id' => 'Asset account'
+        ];
+
+        return isset($labels[$name]) ? $labels[$name] : str_replace('_',' ',ucfirst($name));
+
+    }
+
     /**
      * @param $type
      * @param $name
@@ -72,18 +121,11 @@ class Form
         $options['class'] = 'form-control';
         $options['id'] = 'ffInput_' . $name;
         $options['autocomplete'] = 'off';
-        $options['type'] = 'text';
-
+        $label = self::label($name);
         /*
          * Make label and placeholder look nice.
          */
-        $options['placeholder'] = isset($options['label']) ? $options['label'] : ucfirst($name);
-        $options['label'] = isset($options['label']) ? $options['label'] : ucfirst($name);
-        if ($name == 'account_id') {
-            $options['label'] = 'Asset account';
-        }
-        $options['label'] = str_replace(['_'], [' '], $options['label']);
-        $options['placeholder'] = str_replace(['_'], [' '], $options['placeholder']);
+        $options['placeholder'] = ucfirst($name);
 
         /*
          * Get the value.
@@ -129,7 +171,6 @@ class Form
         /*
          * Add some HTML.
          */
-        $label = isset($options['label']) ? $options['label'] : ucfirst($name);
         $html = '<div class="' . $classes . '">';
         $html .= '<label for="' . $options['id'] . '" class="col-sm-4 control-label">' . $label . '</label>';
         $html .= '<div class="col-sm-8">';
@@ -138,14 +179,27 @@ class Form
         /*
          * Switch input type:
          */
+        unset($options['label']);
         switch ($type) {
             case 'text':
                 $html .= \Form::input('text', $name, $value, $options);
                 break;
-            case 'number':
+            case 'amount':
                 $html .= '<div class="input-group"><div class="input-group-addon">&euro;</div>';
                 $html .= \Form::input('number', $name, $value, $options);
                 $html .= '</div>';
+                break;
+            case 'number':
+                $html .= \Form::input('number', $name, $value, $options);
+                break;
+            case 'checkbox':
+                $checked = $options['checked'];
+                unset($options['checked'], $options['placeholder'], $options['autocomplete'], $options['class']);
+                $html .= '<div class="checkbox"><label>';
+                $html .= \Form::checkbox($name, $value, $checked, $options);
+                $html .= '</label></div>';
+
+
                 break;
             case 'date':
                 $html .= \Form::input('date', $name, $value, $options);

@@ -5,6 +5,7 @@ namespace Firefly\Storage\RecurringTransaction;
 
 use Carbon\Carbon;
 use Illuminate\Queue\Jobs\Job;
+use Illuminate\Support\MessageBag;
 
 /**
  * Class EloquentRecurringTransactionRepository
@@ -45,7 +46,7 @@ class EloquentRecurringTransactionRepository implements RecurringTransactionRepo
     }
 
     /**
-     * @param Job   $job
+     * @param Job $job
      * @param array $payload
      *
      * @return mixed
@@ -57,13 +58,13 @@ class EloquentRecurringTransactionRepository implements RecurringTransactionRepo
 
         /** @var \Importmap $importMap */
         $importMap = $repository->findImportmap($payload['mapID']);
-        $user      = $importMap->user;
+        $user = $importMap->user;
         $this->overruleUser($user);
 
         /*
          * maybe the recurring transaction is already imported:
          */
-        $oldId       = intval($payload['data']['id']);
+        $oldId = intval($payload['data']['id']);
         $description = $payload['data']['description'];
         $importEntry = $repository->findImportEntry($importMap, 'RecurringTransaction', $oldId);
 
@@ -84,17 +85,17 @@ class EloquentRecurringTransactionRepository implements RecurringTransactionRepo
         $recurringTransaction = $this->findByName($payload['data']['description']);
         if (is_null($recurringTransaction)) {
             $amount = floatval($payload['data']['amount']);
-            $pct    = intval($payload['data']['pct']);
+            $pct = intval($payload['data']['pct']);
 
             $set = [
-                'name'        => $description,
-                'match'       => join(',', explode(' ', $description)),
-                'amount_min'  => $amount * ($pct / 100) * -1,
-                'amount_max'  => $amount * (1 + ($pct / 100)) * -1,
-                'date'        => date('Y-m-') . $payload['data']['dom'],
+                'name' => $description,
+                'match' => join(',', explode(' ', $description)),
+                'amount_min' => $amount * ($pct / 100) * -1,
+                'amount_max' => $amount * (1 + ($pct / 100)) * -1,
+                'date' => date('Y-m-') . $payload['data']['dom'],
                 'repeat_freq' => 'monthly',
-                'active'      => intval($payload['data']['inactive']) == 1 ? 0 : 1,
-                'automatch'   => 1,
+                'active' => intval($payload['data']['inactive']) == 1 ? 0 : 1,
+                'automatch' => 1,
             ];
 
             $recurringTransaction = $this->store($set);
@@ -131,45 +132,52 @@ class EloquentRecurringTransactionRepository implements RecurringTransactionRepo
     /**
      * @param $data
      *
-     * @return mixed|\RecurringTransaction
+     * @return MessageBag
      */
     public function store($data)
     {
+        $messageBag = new MessageBag;
         $recurringTransaction = new \RecurringTransaction(
             [
-                'user_id'     => $this->_user->id,
-                'name'        => $data['name'],
-                'match'       => join(' ', explode(',', $data['match'])),
-                'amount_max'  => floatval($data['amount_max']),
-                'amount_min'  => floatval($data['amount_min']),
-                'date'        => new Carbon($data['date']),
-                'active'      => isset($data['active']) ? intval($data['active']) : 0,
-                'automatch'   => isset($data['automatch']) ? intval($data['automatch']) : 0,
-                'skip'        => isset($data['skip']) ? intval($data['skip']) : 0,
+                'user_id' => $this->_user->id,
+                'name' => $data['name'],
+                'match' => join(' ', explode(',', $data['match'])),
+                'amount_max' => floatval($data['amount_max']),
+                'amount_min' => floatval($data['amount_min']),
+                'date' => new Carbon($data['date']),
+                'active' => isset($data['active']) ? intval($data['active']) : 0,
+                'automatch' => isset($data['automatch']) ? intval($data['automatch']) : 0,
+                'skip' => isset($data['skip']) ? intval($data['skip']) : 0,
                 'repeat_freq' => $data['repeat_freq'],
             ]
         );
 
+        // unique name?
+        $count = $this->_user->recurringtransactions()->whereName($data['name'])->count();
+        if($count > 0) {
+            $messageBag->add('name', 'A recurring transaction with this name already exists.');
+            return $messageBag;
+        }
+
         // both amounts zero?:
         if ($recurringTransaction->amount_max == 0 && $recurringTransaction->amount_min == 0) {
-            $recurringTransaction->errors()->add('amount_max', 'Amount max and min cannot both be zero.');
-
-            return $recurringTransaction;
+            $messageBag->add('amount_max', 'Amount max and min cannot both be zero.');
+            return $messageBag;
         }
 
         if ($recurringTransaction->amount_max < $recurringTransaction->amount_min) {
-            $recurringTransaction->errors()->add('amount_max', 'Amount max must be more than amount min.');
-            return $recurringTransaction;
+            $messageBag->add('amount_max', 'Amount max must be more than amount min.');
+            return $messageBag;
         }
 
         if ($recurringTransaction->amount_min > $recurringTransaction->amount_max) {
-            $recurringTransaction->errors()->add('amount_max', 'Amount min must be less than amount max.');
-            return $recurringTransaction;
+            $messageBag->add('amount_max', 'Amount min must be less than amount max.');
+            return $messageBag;
         }
 
-        if($recurringTransaction->date < Carbon::now()) {
-            $recurringTransaction->errors()->add('date', 'Must be in the future.');
-            return $recurringTransaction;
+        if ($recurringTransaction->date < Carbon::now()) {
+            $messageBag->add('date', 'Must be in the future.');
+            return $messageBag;
         }
 
 
@@ -177,7 +185,7 @@ class EloquentRecurringTransactionRepository implements RecurringTransactionRepo
             $recurringTransaction->save();
         }
 
-        return $recurringTransaction;
+        return $messageBag;
     }
 
     /**
@@ -188,8 +196,8 @@ class EloquentRecurringTransactionRepository implements RecurringTransactionRepo
      */
     public function update(\RecurringTransaction $recurringTransaction, $data)
     {
-        $recurringTransaction->name       = $data['name'];
-        $recurringTransaction->match      = join(' ', explode(',', $data['match']));
+        $recurringTransaction->name = $data['name'];
+        $recurringTransaction->match = join(' ', explode(',', $data['match']));
         $recurringTransaction->amount_max = floatval($data['amount_max']);
         $recurringTransaction->amount_min = floatval($data['amount_min']);
 
@@ -199,10 +207,10 @@ class EloquentRecurringTransactionRepository implements RecurringTransactionRepo
 
             return $recurringTransaction;
         }
-        $recurringTransaction->date        = new Carbon($data['date']);
-        $recurringTransaction->active      = isset($data['active']) ? intval($data['active']) : 0;
-        $recurringTransaction->automatch   = isset($data['automatch']) ? intval($data['automatch']) : 0;
-        $recurringTransaction->skip        = isset($data['skip']) ? intval($data['skip']) : 0;
+        $recurringTransaction->date = new Carbon($data['date']);
+        $recurringTransaction->active = isset($data['active']) ? intval($data['active']) : 0;
+        $recurringTransaction->automatch = isset($data['automatch']) ? intval($data['automatch']) : 0;
+        $recurringTransaction->skip = isset($data['skip']) ? intval($data['skip']) : 0;
         $recurringTransaction->repeat_freq = $data['repeat_freq'];
 
         if ($recurringTransaction->validate()) {
