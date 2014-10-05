@@ -12,103 +12,33 @@
                 </div>
                 <div class="panel-body">
                     <!-- ALWAYS AVAILABLE -->
-                    <div class="form-group">
-                        <label for="description" class="col-sm-4 control-label">Description</label>
-                        <div class="col-sm-8">
-                            <input type="text"
-                            name="description" value="{{{Input::old('description') ?: $journal->description}}}"
-                            autocomplete="off" class="form-control" placeholder="Description" />
-                        </div>
-                    </div>
+                    {{Form::ffText('description',$journal->description)}}
 
                     <!-- SHOW ACCOUNT (FROM) ONLY FOR WITHDRAWALS AND DEPOSITS -->
                     @if($what == 'deposit' || $what == 'withdrawal')
-                    <div class="form-group">
-                        <label for="account_id" class="col-sm-4 control-label">
-                            @if($what == 'deposit')
-                            Received into account
-                            @endif
-                            @if($what == 'withdrawal')
-                            Paid from account
-                            @endif
-                        </label>
-                        <div class="col-sm-8">
-                            {{Form::select('account_id',$accounts,Input::old('account_id') ?: $data['account_id'],['class' => 'form-control'])}}
-                        </div>
-                    </div>
+                        {{Form::ffSelect('account_id',$accounts,$data['account_id'])}}
                     @endif
 
                     <!-- SHOW EXPENSE ACCOUNT ONLY FOR WITHDRAWALS -->
                     @if($what == 'withdrawal')
-                    <div class="form-group">
-                        <label for="expense_account" class="col-sm-4 control-label">
-                            Expense account
-                        </label>
-                        <div class="col-sm-8">
-                            <input type="text"
-                            name="expense_account"
-                            value="{{{Input::old('expense_account') ?: $data['expense_account']}}}"
-                            autocomplete="off" class="form-control" />
-                        </div>
-                    </div>
+                        {{Form::ffText('expense_account',$data['expense_account'])}}
                     @endif
                     <!-- SHOW REVENUE ACCOUNT ONLY FOR DEPOSITS -->
                     @if($what == 'deposit')
-                    <div class="form-group">
-                        <label for="revenue_account" class="col-sm-4 control-label">
-                            Revenue account
-                        </label>
-                        <div class="col-sm-8">
-                            <input type="text"
-                            name="revenue_account"
-                            value="{{{Input::old('revenue_account') ?: $data['revenue_account']}}}"
-                            autocomplete="off" class="form-control" placeholder="Beneficiary" />
-                        </div>
-                    </div>
+                        {{Form::ffText('revenue_account',$data['revenue_account'])}}
                     @endif
 
                     <!-- ONLY SHOW FROM/TO ACCOUNT WHEN CREATING TRANSFER -->
                     @if($what == 'transfer')
-                    <div class="form-group">
-                        <label for="account_from_id" class="col-sm-4 control-label">Account from</label>
-                        <div class="col-sm-8">
-                            {{Form::select('account_to_id',$accounts,Input::old('account_from_id') ?: $data['account_from_id'],['class' => 'form-control'])}}
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="account_to_id" class="col-sm-4 control-label">Account to</label>
-                        <div class="col-sm-8">
-                            {{Form::select('account_from_id',$accounts,Input::old('account_to_id') ?: $data['account_to_id'],['class' => 'form-control'])}}
-                        </div>
-                    </div>
+                        {{Form::ffSelect('account_from_id',$accounts,$data['account_from_id'])}}
+                        {{Form::ffSelect('account_to_id',$accounts,$data['account_to_id'])}}
                     @endif
 
                     <!-- ALWAYS SHOW AMOUNT -->
-                    <div class="form-group">
-                        <label for="amount" class="col-sm-4 control-label">
-                            @if($what == 'withdrawal')
-                            Amount spent
-                            @endif
-                            @if($what == 'deposit')
-                            Amount received
-                            @endif
-                            @if($what == 'transfer')
-                            Amount transferred
-                            @endif
-                        </label>
-                        <div class="col-sm-8">
-                            <input type="number" name="amount" min="0.01" value="{{Input::old('amount') ?: $data['amount']}}" step="any" class="form-control" />
-                        </div>
-                    </div>
+                    {{Form::ffNumber('amount',$data['amount'])}}
 
                     <!-- ALWAYS SHOW DATE -->
-                    <div class="form-group">
-                        <label for="date" class="col-sm-4 control-label">Date</label>
-                        <div class="col-sm-8">
-                            <input type="date" name="date" value="{{Input::old('date') ?: $data['date']}}" class="form-control" />
-                        </div>
-                    </div>
+                    {{Form::ffDate('date',$data['date'])}}
             </div>
         </div> <!-- close panel -->
 
@@ -128,44 +58,16 @@
             <div class="panel-body">
                 <!-- BUDGET ONLY WHEN CREATING A WITHDRAWAL -->
                 @if($what == 'withdrawal')
-                <div class="form-group">
-                    <label for="budget_id" class="col-sm-4 control-label">Budget</label>
-                    <div class="col-sm-8">
-                        {{Form::select('budget_id',$budgets,Input::old('budget_id') ?: $data['budget_id'],['class' => 'form-control'])}}
-                        <span class="help-block">Select one of your budgets to make this transaction a part of it.</span>
-                    </div>
-                </div>
+                    {{Form::ffSelect('budget_id',$budgets,$data['budget_id'])}}
                 @endif
                 <!-- CATEGORY ALWAYS -->
-                <div class="form-group">
-                    <label for="category" class="col-sm-4 control-label">Category</label>
-                    <div class="col-sm-8">
-                        <input type="text" name="category"  value="{{Input::old('category') ?: $data['category']}}" autocomplete="off" class="form-control" placeholder="Category" />
-                        <span class="help-block">Add more fine-grained information to this transaction by entering a category.
-                        Like the beneficiary-field, this field will auto-complete existing categories but can also be used
-                            to create new ones.
-                        </span>
-                    </div>
-                </div>
+                {{Form::ffText('category',$data['category'])}}
+
+                <!-- TAGS -->
+
                 <!-- RELATE THIS TRANSFER TO A PIGGY BANK -->
                 @if($what == 'transfer' && count($piggies) > 0)
-                <div class="form-group">
-                    <label for="piggybank_id" class="col-sm-4 control-label">
-                        Piggy bank
-                    </label>
-                    <div class="col-sm-8">
-                        {{Form::select('piggybank_id',$piggies,Input::old('piggybank_id') ?: $data['piggybank_id'],['class' => 'form-control'])}}
-                        @if($errors->has('piggybank_id'))
-                            <p class="text-danger">{{$errors->first('piggybank_id')}}</p>
-                        @else
-                            <span class="help-block">
-                                You can directly add the amount you're transferring
-                                to one of your piggy banks, provided they are related to the account your
-                                transferring <em>to</em>.
-                            </span>
-                        @endif
-                    </div>
-                </div>
+                    {{Form::ffSelect('piggybank_id',$piggies,$data['piggybank_id'])}}
                 @endif
                     </div>
             </div><!-- end of panel for options-->

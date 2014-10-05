@@ -78,8 +78,8 @@ App::down(
 \Form::macro('ffSelect', function ($name, array $list = [], $selected = null, array $options = []) {
     return \Firefly\Form\Form::ffSelect($name, $list, $selected, $options);
 });
-\Form::macro('ffAmount', function ($name, $value = null, array $options = []) {
-    return \Firefly\Form\Form::ffAmount($name, $value, $options);
+\Form::macro('ffNumber', function ($name, $value = null, array $options = []) {
+    return \Firefly\Form\Form::ffNumber($name, $value, $options);
 });
 \Form::macro('ffDate', function ($name, $value = null, array $options = []) {
     return \Firefly\Form\Form::ffDate($name, $value, $options);
