@@ -37,7 +37,7 @@
 
 
                     <!-- ALWAYS SHOW AMOUNT -->
-                    {{Form::ffAmount('amount')}}
+                    {{Form::ffNumber('amount')}}
 
                     <!-- ALWAYS SHOW DATE -->
                     {{Form::ffDate('date', date('Y-m-d'))}}

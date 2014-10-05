@@ -342,8 +342,8 @@ class TransactionController extends BaseController
                     Session::flash('success', 'Transaction updated!');
                     Event::fire('journals.update', [$journal]);
 
-                    if (Input::get('post_submit_action') == 'create_another') {
-                        return Redirect::route('transactions.create', $what)->withInput();
+                    if (Input::get('post_submit_action') == 'return_to_edit') {
+                        return Redirect::route('transactions.edit', $journal->id);
                     } else {
                         return Redirect::route('transactions.index.' . $what);
                     }
@@ -355,6 +355,16 @@ class TransactionController extends BaseController
                     );
                 }
 
+                break;
+            case 'validate_only':
+                $data = Input::all();
+                $data['what'] = strtolower($journal->transactionType->type);
+                $messageBags = $this->_helper->validate($data);
+
+                Session::flash('warnings', $messageBags['warnings']);
+                Session::flash('successes', $messageBags['successes']);
+                Session::flash('errors', $messageBags['errors']);
+                return Redirect::route('transactions.edit', $journal->id)->withInput();
                 break;
             default:
                 throw new FireflyException('Method ' . Input::get('post_submit_action') . ' not implemented yet.');

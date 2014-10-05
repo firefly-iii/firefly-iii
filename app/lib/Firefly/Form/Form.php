@@ -16,7 +16,7 @@ class Form
      * @return string
      * @throws FireflyException
      */
-    public static function ffAmount($name, $value = null, array $options = [])
+    public static function ffNumber($name, $value = null, array $options = [])
     {
         $options['step'] = 'any';
         $options['min'] = '0.01';
