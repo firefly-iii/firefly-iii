@@ -1,20 +1,5 @@
 @extends('layouts.default')
 @section('content')
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <p class="lead">
-            Something about accounts.
-        </p>
-    </div>
-</div>
-<div class="row">
-    <div class="col-lg-6 col-md-12 col-sm-12">
-        <p class="text-info">
-            Something about accounts here!
-        </p>
-    </div>
-</div>
-
 {{Form::open(['class' => 'form-horizontal','route' => 'accounts.store'])}}
 {{Form::hidden('what',$what)}}
 <div class="row">

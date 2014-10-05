@@ -20,6 +20,15 @@ interface TransactionInterface {
     public function store(array $data);
 
     /**
+     * Returns messages about the validation.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    public function validate(array $data);
+
+    /**
      * @param \TransactionJournal $journal
      * @param array               $data
      *
