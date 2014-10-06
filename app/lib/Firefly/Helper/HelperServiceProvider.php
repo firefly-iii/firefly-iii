@@ -33,6 +33,11 @@ class HelperServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            'Firefly\Helper\Controllers\RecurringInterface',
+            'Firefly\Helper\Controllers\Recurring'
+        );
+
+        $this->app->bind(
             'Firefly\Helper\Controllers\SearchInterface',
             'Firefly\Helper\Controllers\Search'
         );

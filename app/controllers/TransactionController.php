@@ -323,7 +323,7 @@ class TransactionController extends BaseController
     public function update(TransactionJournal $journal)
     {
         switch (Input::get('post_submit_action')) {
-            case 'store':
+            case 'update':
             case 'return_to_edit':
                 $what = strtolower($journal->transactionType->type);
                 $messageBag = $this->_helper->update($journal, Input::all());
@@ -333,7 +333,7 @@ class TransactionController extends BaseController
                     Event::fire('journals.update', [$journal]);
 
                     if (Input::get('post_submit_action') == 'return_to_edit') {
-                        return Redirect::route('transactions.edit', $journal->id);
+                        return Redirect::route('transactions.edit', $journal->id)->withInput();
                     } else {
                         return Redirect::route('transactions.index.' . $what);
                     }
