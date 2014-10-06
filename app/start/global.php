@@ -93,6 +93,10 @@ App::down(
 \Form::macro('ffCheckbox',function ($name, $value = 1, $checked = null, $options = []) {
     return \Firefly\Form\Form::ffCheckbox($name, $value, $checked, $options);
 });
+\Form::macro('ffOptionsList',function ($type, $name) {
+    return \Firefly\Form\Form::ffOptionsList($type, $name);
+});
+
 
 /*
 |--------------------------------------------------------------------------

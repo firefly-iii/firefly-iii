@@ -43,45 +43,7 @@
                 <i class="fa fa-bolt"></i> Options
             </div>
             <div class="panel-body">
-                <div class="form-group">
-                    <label for="default" class="col-sm-4 control-label">
-                    Store
-                    </label>
-                    <div class="col-sm-8">
-                        <div class="radio">
-                        <label>
-                            {{Form::radio('post_submit_action','store',true)}}
-                            Store the recurring transaction
-                        </label>
-                    </div>
-                </div>
-            </div>
-                <div class="form-group">
-                    <label for="validate_only" class="col-sm-4 control-label">
-                    Validate only
-                    </label>
-                    <div class="col-sm-8">
-                        <div class="radio">
-                        <label>
-                            {{Form::radio('post_submit_action','validate_only')}}
-                            Only validate, do not save
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="return_to_form" class="col-sm-4 control-label">
-                Return here
-                </label>
-                <div class="col-sm-8">
-                    <div class="radio">
-                    <label>
-                        {{Form::radio('post_submit_action','create_another')}}
-                        After storing, return here to create another one.
-                    </label>
-                </div>
-            </div>
-        </div>
+            {{Form::ffOptionsList('create','recurring transaction')}}
         </div>
     </div>
 

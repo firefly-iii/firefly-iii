@@ -50,7 +50,7 @@ interface RecurringTransactionRepositoryInterface
      * @param \RecurringTransaction $recurringTransaction
      * @param                       $data
      *
-     * @return mixed
+     * @return MessageBag
      */
     public function update(\RecurringTransaction $recurringTransaction, $data);
 

@@ -100,8 +100,71 @@ class Form
             'account_id' => 'Asset account'
         ];
 
-        return isset($labels[$name]) ? $labels[$name] : str_replace('_',' ',ucfirst($name));
+        return isset($labels[$name]) ? $labels[$name] : str_replace('_', ' ', ucfirst($name));
 
+    }
+
+    /**
+     * Return buttons for update/validate/return.
+     *
+     * @param $type
+     * @param $name
+     */
+    public static function ffOptionsList($type, $name)
+    {
+        $previousValue = \Input::old('post_submit_action');
+        $previousValue = is_null($previousValue) ? 'store' : $previousValue;
+        /*
+         * Store.
+         */
+        $store = '';
+        switch ($type) {
+            case 'create':
+                $store = '<div class="form-group"><label for="default" class="col-sm-4 control-label">Store</label>';
+                $store .= '<div class="col-sm-8"><div class="radio"><label>';
+                $store .= \Form::radio('post_submit_action', 'store', $previousValue == 'store');
+                $store .= 'Store ' . $name . '</label></div></div></div>';
+                break;
+            case 'update':
+                $store = '<div class="form-group"><label for="default" class="col-sm-4 control-label">Store</label>';
+                $store .= '<div class="col-sm-8"><div class="radio"><label>';
+                $store .= \Form::radio('post_submit_action', 'update', $previousValue == 'store');
+                $store .= 'Update ' . $name . '</label></div></div></div>';
+                break;
+            default:
+                throw new FireflyException('Cannot create ffOptionsList for option (store) ' . $type);
+                break;
+        }
+
+        /*
+         * validate is always the same:
+         */
+        $validate = '<div class="form-group"><label for="validate_only" class="col-sm-4 control-label">Validate only';
+        $validate .= '</label><div class="col-sm-8"><div class="radio"><label>';
+        $validate .= \Form::radio('post_submit_action', 'validate_only', $previousValue == 'validate_only');
+        $validate .= 'Only validate, do not save</label></div></div></div>';
+
+        /*
+         * Store & return:
+         */
+        switch ($type) {
+            case 'create':
+                $return = '<div class="form-group"><label for="return_to_form" class="col-sm-4 control-label">';
+                $return .= 'Return here</label><div class="col-sm-8"><div class="radio"><label>';
+                $return .= \Form::radio('post_submit_action','create_another', $previousValue == 'create_another');
+                $return .= 'After storing, return here to create another one.</label></div></div></div>';
+                break;
+            case 'update':
+                $return = '<div class="form-group"><label for="return_to_edit" class="col-sm-4 control-label">';
+                $return .= 'Return here</label><div class="col-sm-8"><div class="radio"><label>';
+                $return .= \Form::radio('post_submit_action','return_to_edit', $previousValue == 'return_to_edit');
+                $return .= 'After updating, return here.</label></div></div></div>';
+                break;
+            default:
+                throw new FireflyException('Cannot create ffOptionsList for option (store+return) ' . $type);
+                break;
+        }
+        return $store.$validate.$return;
     }
 
     /**

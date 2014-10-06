@@ -154,7 +154,7 @@ class EloquentRecurringTransactionRepository implements RecurringTransactionRepo
 
         // unique name?
         $count = $this->_user->recurringtransactions()->whereName($data['name'])->count();
-        if($count > 0) {
+        if ($count > 0) {
             $messageBag->add('name', 'A recurring transaction with this name already exists.');
             return $messageBag;
         }
@@ -183,6 +183,8 @@ class EloquentRecurringTransactionRepository implements RecurringTransactionRepo
 
         if ($recurringTransaction->validate()) {
             $recurringTransaction->save();
+        } else {
+            $messageBag = $recurringTransaction->errors();
         }
 
         return $messageBag;
@@ -192,10 +194,11 @@ class EloquentRecurringTransactionRepository implements RecurringTransactionRepo
      * @param \RecurringTransaction $recurringTransaction
      * @param                       $data
      *
-     * @return mixed|void
+     * @return MessageBag
      */
     public function update(\RecurringTransaction $recurringTransaction, $data)
     {
+        $messageBag = new MessageBag;
         $recurringTransaction->name = $data['name'];
         $recurringTransaction->match = join(' ', explode(',', $data['match']));
         $recurringTransaction->amount_max = floatval($data['amount_max']);
@@ -203,9 +206,9 @@ class EloquentRecurringTransactionRepository implements RecurringTransactionRepo
 
         // both amounts zero:
         if ($recurringTransaction->amount_max == 0 && $recurringTransaction->amount_min == 0) {
-            $recurringTransaction->errors()->add('amount_max', 'Amount max and min cannot both be zero.');
+            $messageBag->add('amount_max', 'Amount max and min cannot both be zero.');
 
-            return $recurringTransaction;
+            return $messageBag;
         }
         $recurringTransaction->date = new Carbon($data['date']);
         $recurringTransaction->active = isset($data['active']) ? intval($data['active']) : 0;
@@ -215,9 +218,11 @@ class EloquentRecurringTransactionRepository implements RecurringTransactionRepo
 
         if ($recurringTransaction->validate()) {
             $recurringTransaction->save();
+        } else {
+            $messageBag = $recurringTransaction->errors();
         }
 
-        return $recurringTransaction;
+        return $messageBag;
 
     }
 
