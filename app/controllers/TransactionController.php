@@ -268,7 +268,10 @@ class TransactionController extends BaseController
                 /*
                  * Try to store:
                  */
-                $messageBag = $this->_helper->store($data);
+                $data['return_journal'] = true;
+                $set = $this->_helper->store($data);
+                $journal = $set['journal'];
+                $messageBag = $set['messagebag'];
 
                 /*
                  * Failure!
@@ -282,6 +285,13 @@ class TransactionController extends BaseController
                  * Success!
                  */
                 Session::flash('success', 'Transaction "' . e(Input::get('description')) . '" saved!');
+
+                /*
+                 * Trigger something that will search for possibly matching recurring transactions.
+                 * This only works for expenses. However, at this point we have no idea what the latest
+                 * transaction is. We'll have to find it, and when the user creates a lot of them it might
+                 * get lost somewhere.
+                 */
 
                 /*
                  * Redirect to original location or back to the form.

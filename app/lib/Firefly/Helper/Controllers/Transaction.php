@@ -469,7 +469,7 @@ class Transaction implements TransactionInterface
         $journal->completed = true;
         $journal->save();
         if (isset($data['return_journal']) && $data['return_journal'] == true) {
-            return $journal;
+            return ['journal' => $journal, 'messagebag' => $journal->errors()];
         }
         return $journal->errors();
     }
