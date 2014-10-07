@@ -106,7 +106,8 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
             'what'            => 'transfer',
             'return_journal'  => true
         ];
-        $journal = $transactions->store($set);
+        $returnSet = $transactions->store($set);
+        $journal = $returnSet['journal'];
 
         /*
          * Validate the store action:
@@ -333,7 +334,8 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         /*
          * Import it:
          */
-        $journal = $transactions->store($set);
+        $returnSet = $transactions->store($set);
+        $journal = $returnSet['journal'];
 
         /*
          * Validate the store action:
