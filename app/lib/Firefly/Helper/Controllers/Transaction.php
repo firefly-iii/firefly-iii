@@ -93,6 +93,7 @@ class Transaction implements TransactionInterface
         /*
          * find budget using repository
          */
+
         if (isset($data['budget_id'])) {
             $budget = $this->_budgets->find($data['budget_id']);
         }
@@ -172,8 +173,8 @@ class Transaction implements TransactionInterface
          */
         $budgetids = !isset($budget) || (isset($budget) && is_null($budget)) ? [] : [$budget->id];
         $catids = is_null($category) ? [] : [$category->id];
-        $journal->budgets()->sync($budgetids);
-        $journal->categories()->sync($catids);
+        $components = array_merge($budgetids,$catids);
+        $journal->components()->sync($components);
         $journal->save();
         if (isset($data['return_journal']) && $data['return_journal'] == true) {
             return $journal;
