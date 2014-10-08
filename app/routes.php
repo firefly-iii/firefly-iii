@@ -150,6 +150,8 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/budgets/budget',['uses' => 'BudgetController@indexByBudget','as' => 'budgets.index.budget']);
         Route::get('/budgets/create',['uses' => 'BudgetController@create', 'as' => 'budgets.create']);
 
+        Route::get('/budgets/nobudget/{period}',['uses' => 'BudgetController@nobudget', 'as' => 'budgets.nobudget']);
+
         Route::get('/budgets/show/{budget}/{limitrepetition?}',['uses' => 'BudgetController@show', 'as' => 'budgets.show']);
         Route::get('/budgets/edit/{budget}',['uses' => 'BudgetController@edit', 'as' => 'budgets.edit']);
         Route::get('/budgets/delete/{budget}',['uses' => 'BudgetController@delete', 'as' => 'budgets.delete']);

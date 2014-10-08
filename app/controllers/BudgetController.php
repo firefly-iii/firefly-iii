@@ -1,6 +1,7 @@
 <?php
 
 use Carbon\Carbon;
+use Firefly\Exception\FireflyException;
 use Firefly\Helper\Controllers\BudgetInterface as BI;
 use Firefly\Storage\Budget\BudgetRepositoryInterface as BRI;
 
@@ -27,6 +28,38 @@ class BudgetController extends BaseController
         $this->_repository = $repository;
         View::share('title', 'Budgets');
         View::share('mainTitleIcon', 'fa-tasks');
+    }
+
+    public function nobudget($view = 'session') {
+        switch($view) {
+            default:
+                throw new FireflyException('Cannot show transactions without a budget for view "'.$view.'".');
+                break;
+            case 'session':
+                $start = Session::get('start');
+                $end   = Session::get('end');
+                break;
+        }
+
+        // Add expenses that have no budget:
+        $set = \Auth::user()->transactionjournals()->whereNotIn(
+            'transaction_journals.id', function ($query) use ($start, $end) {
+                $query->select('transaction_journals.id')->from('transaction_journals')
+                      ->leftJoin(
+                          'component_transaction_journal', 'component_transaction_journal.transaction_journal_id', '=',
+                          'transaction_journals.id'
+                      )
+                      ->leftJoin('components', 'components.id', '=', 'component_transaction_journal.component_id')
+                      ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                      ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                      ->where('components.class', 'Budget');
+            }
+        )->before($end)->after($start)->get();
+
+        return View::make('budgets.nobudget')
+                   ->with('view', $view)
+                   ->with('transactions',$set)
+                   ->with('subTitle', 'Transactions without a budget');
     }
 
     /**
