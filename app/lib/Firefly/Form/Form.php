@@ -191,6 +191,14 @@ class Form
         $options['placeholder'] = ucfirst($name);
 
         /*
+         * Get prefilled value:
+         */
+        if(\Session::has('prefilled')) {
+            $prefilled = \Session::get('prefilled');
+            $value = isset($prefilled[$name]) ? $prefilled[$name] : null;
+        }
+
+        /*
          * Get the value.
          */
         if (!is_null(\Input::old($name))) {
