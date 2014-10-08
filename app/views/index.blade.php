@@ -82,6 +82,25 @@
                 <div class="panel-heading">
                     <i class="fa fa-money fa-fw"></i>
                     <a href="{{route('accounts.show',$data[1]->id)}}">{{{$data[1]->name}}}</a>
+
+
+                    <!-- ACTIONS MENU -->
+                    <div class="pull-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                Actions
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li><a href="{{route('transactions.create','withdrawal')}}?account_id={{{$data[1]->id}}}"><i class="fa fa-long-arrow-left fa-fw"></i> New withdrawal</a></li>
+                                <li><a href="{{route('transactions.create','deposit')}}?account_id={{{$data[1]->id}}}"><i class="fa fa-long-arrow-right fa-fw"></i> New deposit</a></li>
+                                <li><a href="{{route('transactions.create','transfer')}}?account_from_id={{{$data[1]->id}}}"><i class="fa fa-arrows-h fa-fw"></i> New transfer</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+
+
                 </div>
                 <div class="panel-body">
                     @include('transactions.journals-small-index',['transactions' => $data[0],'account' => $data[1]])

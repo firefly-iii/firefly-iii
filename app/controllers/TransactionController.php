@@ -67,6 +67,18 @@ class TransactionController extends BaseController
         $piggies = $toolkit->makeSelectList($piggyRepository->get());
         $piggies[0] = '(no piggy bank)';
 
+        /*
+         * respond to a possible given values in the URL.
+         */
+        $prefilled = Session::has('prefilled') ? Session::get('prefilled') : [];
+        $respondTo = ['account_id', 'account_from_id'];
+        foreach ($respondTo as $r) {
+            if (!is_null(Input::get($r))) {
+                $prefilled[$r] = Input::get($r);
+            }
+        }
+        Session::put('prefilled', $prefilled);
+
         return View::make('transactions.create')->with('accounts', $assetAccounts)->with('budgets', $budgets)->with(
             'what', $what
         )->with('piggies', $piggies)->with('subTitle', 'Add a new ' . $what);
