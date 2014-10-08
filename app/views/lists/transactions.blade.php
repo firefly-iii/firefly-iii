@@ -10,7 +10,7 @@
         <th id="empty2">B</th>
     </tr>
     </thead>
-    <?php $total = 0; ?>
+    <?php $expenses = 0;$incomes = 0;$transfers = 0; ?>
     @foreach($journals as $journal)
     @if(isset($journal->transactions[0]) && isset($journal->transactions[1]))
         <tr
@@ -53,14 +53,15 @@
             <td>
                 @if($journal->transactiontype->type == 'Withdrawal')
                 <span class="text-danger">{{mf($journal->transactions[1]->amount,false)}}</span>
-                <?php $total -= $journal->transactions[1]->amount;?>
+                <?php $expenses -= $journal->transactions[1]->amount;?>
                 @endif
                 @if($journal->transactiontype->type == 'Deposit')
                 <span class="text-success">{{mf($journal->transactions[1]->amount,false)}}</span>
+                <?php $incomes += $journal->transactions[1]->amount;?>
                 @endif
                 @if($journal->transactiontype->type == 'Transfer')
                 <span class="text-info">{{mf($journal->transactions[1]->amount,false)}}</span>
-
+                <?php $transfers += $journal->transactions[1]->amount;?>
                 @endif
             </td>
             <td>
@@ -95,10 +96,18 @@
         @endif
     @endforeach
     @if(isset($sum) && $sum == true)
-    <tr>
-        <td colspan="4">Sum:</td>
-        <td colspan="4">{{mf($total)}}</td>
-    </tr>
+        <tr>
+            <td colspan="4">Expenses:</td>
+            <td colspan="4">{{mf($expenses)}}</td>
+        </tr>
+        <tr>
+            <td colspan="4">Incomes:</td>
+            <td colspan="4">{{mf($incomes)}}</td>
+        </tr>
+        <tr>
+            <td colspan="4">Transfers:</td>
+            <td colspan="4" class="text-info">{{mf($transfers,false)}}</td>
+        </tr>
     @endif
 
 </table>
