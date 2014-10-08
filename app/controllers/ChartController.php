@@ -459,11 +459,11 @@ class ChartController extends BaseController
         $data['labels'][]            = 'No budget';
         $data['series'][0]['data'][] = [
             'y'   => 0,
-            'url' => null
+            'url' => route('budgets.nobudget','session')
         ];
         $data['series'][1]['data'][] = [
             'y'   => floatval($set) * -1,
-            'url' => null
+            'url' => route('budgets.nobudget','session')
         ];
 
         return Response::json($data);
