@@ -167,10 +167,13 @@ class Json implements JsonInterface
         /*
          * Loop set and create entries to return.
          */
+        /** @var \TransactionJournal $entry */
         foreach ($set as $entry) {
             $from           = $entry->transactions[0]->account;
             $to             = $entry->transactions[1]->account;
-            $data['data'][] = [
+            $budget = $entry->budgets()->first();
+            $category = $entry->categories()->first();
+            $arr = [
                 'date'        => $entry->date->format('j F Y'),
                 'description' => [
                     'description' => $entry->description,
@@ -179,11 +182,31 @@ class Json implements JsonInterface
                 'amount'      => floatval($entry->amount),
                 'from'        => ['name' => $from->name, 'url' => route('accounts.show', $from->id)],
                 'to'          => ['name' => $to->name, 'url' => route('accounts.show', $to->id)],
+                'components' => [
+                    'budget_id' => 0,
+                    'budget_url' => '',
+                    'budget_name' => '',
+                    'category_id' => 0,
+                    'category_url' => '',
+                    'category_name' => ''
+                ],
                 'id'          => [
                     'edit'   => route('transactions.edit', $entry->id),
                     'delete' => route('transactions.delete', $entry->id)
                 ]
             ];
+            if($budget) {
+                $arr['components']['budget_id'] = $budget->id;
+                $arr['components']['budget_name'] = $budget->name;
+                $arr['components']['budget_url'] = route('budgets.show',$budget->id);
+            }
+            if($category) {
+                $arr['components']['category_id'] = $category->id;
+                $arr['components']['category_name'] = $category->name;
+                $arr['components']['category_url'] = route('categories.show',$category->id);
+            }
+
+            $data['data'][] = $arr;
 
         }
         return $data;

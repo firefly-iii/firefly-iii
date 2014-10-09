@@ -15,6 +15,7 @@
                         <th>Amount (&euro;)</th>
                         <th>From</th>
                         <th>To</th>
+                        <th>Budget / category</th>
                         <th>ID</th>
                     </tr>
                 </thead>

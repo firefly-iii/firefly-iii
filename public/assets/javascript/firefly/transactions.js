@@ -82,6 +82,23 @@ $(document).ready(function () {
                     }
                 },
                 {
+                    name: 'components',
+                    data: 'components',
+                    searchable: true,
+                    sortable: false,
+                    title: '',
+                    render: function (data, type, full, meta) {
+                        var html = '';
+                        if (data.budget_id > 0) {
+                            html += '<a href="' + data.budget_url + '" title="' + data.budget_name + '"><i class="fa fa-tasks fa-fw"></i></a> ';
+                        }
+                        if (data.category_id > 0) {
+                            html += '<a href="' + data.category_url + '" title="' + data.category_name + '"><i class="fa fa-bar-chart fa-fw"></i></a> ';
+                        }
+                        return html;
+                    }
+                },
+                {
                     name: 'id',
                     data: 'id',
                     searchable: false,
