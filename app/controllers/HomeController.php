@@ -44,7 +44,8 @@ class HomeController extends BaseController
         /** @var \Firefly\Helper\Toolkit\ToolkitInterface $toolkit */
         $toolkit = App::make('Firefly\Helper\Toolkit\ToolkitInterface');
         $toolkit->prev();
-        return Redirect::route('index');
+        return Redirect::back();
+        //return Redirect::route('index');
     }
 
     /*
@@ -54,7 +55,8 @@ class HomeController extends BaseController
         /** @var \Firefly\Helper\Toolkit\ToolkitInterface $toolkit */
         $toolkit = App::make('Firefly\Helper\Toolkit\ToolkitInterface');
         $toolkit->next();
-        return Redirect::route('index');
+        return Redirect::back();
+        //return Redirect::route('index');
     }
 
     /**

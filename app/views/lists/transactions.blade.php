@@ -96,18 +96,25 @@
         @endif
     @endforeach
     @if(isset($sum) && $sum == true)
+        @if($expenses != 0)
         <tr>
             <td colspan="4">Expenses:</td>
             <td colspan="4">{{mf($expenses)}}</td>
         </tr>
+        @endif
+        @if($incomes != 0)
         <tr>
             <td colspan="4">Incomes:</td>
             <td colspan="4">{{mf($incomes)}}</td>
         </tr>
+        @endif
+        @if($transfers != 0)
         <tr>
             <td colspan="4">Transfers:</td>
             <td colspan="4" class="text-info">{{mf($transfers,false)}}</td>
         </tr>
+        @endif
     @endif
+
 
 </table>
