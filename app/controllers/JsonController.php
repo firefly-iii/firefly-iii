@@ -19,7 +19,6 @@ class JsonController extends BaseController
         $this->helper = $helper;
 
 
-
     }
 
     /**
@@ -97,11 +96,32 @@ class JsonController extends BaseController
         return Response::json($resultSet);
     }
 
+    /**
+     *
+     */
+    public function recurringjournals(RecurringTransaction $recurringTransaction)
+    {
+        $parameters                     = $this->helper->dataTableParameters();
+        $parameters['transactionTypes'] = ['Withdrawal'];
+        $parameters['amount']           = 'negative';
+
+        $query = $this->helper->journalQuery($parameters);
+
+        $query->where('recurring_transaction_id', $recurringTransaction->id);
+        $resultSet = $this->helper->journalDataset($parameters, $query);
+
+
+        /*
+         * Build return data:
+         */
+        return Response::json($resultSet);
+    }
+
     public function recurring()
     {
         $parameters = $this->helper->dataTableParameters();
-        $query = $this->helper->recurringTransactionsQuery($parameters);
-        $resultSet = $this->helper->recurringTransactionsDataset($parameters, $query);
+        $query      = $this->helper->recurringTransactionsQuery($parameters);
+        $resultSet  = $this->helper->recurringTransactionsDataset($parameters, $query);
         return Response::json($resultSet);
     }
 
