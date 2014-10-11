@@ -43,6 +43,7 @@ return [
         'Firefly\Helper\HelperServiceProvider',
         'Firefly\Validation\ValidationServiceProvider',
         'DaveJamesMiller\Breadcrumbs\ServiceProvider',
+        'TwigBridge\ServiceProvider'
     ],
     'manifest'        => storage_path() . '/meta',
     'aliases'         => [
@@ -86,6 +87,7 @@ return [
         'Validator'         => 'Illuminate\Support\Facades\Validator',
         'View'              => 'Illuminate\Support\Facades\View',
         'Breadcrumbs'       => 'DaveJamesMiller\Breadcrumbs\Facade',
+        'Twig'              => 'TwigBridge\Facade\Twig',
 
     ],
 
