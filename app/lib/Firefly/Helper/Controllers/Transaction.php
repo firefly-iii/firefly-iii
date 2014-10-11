@@ -176,6 +176,7 @@ class Transaction implements TransactionInterface
         $components = array_merge($budgetids,$catids);
         $journal->components()->sync($components);
         $journal->save();
+
         if (isset($data['return_journal']) && $data['return_journal'] == true) {
             return $journal;
         }
@@ -469,6 +470,12 @@ class Transaction implements TransactionInterface
         }
         $journal->completed = true;
         $journal->save();
+
+        /*
+         * Trigger recurring transaction event.
+         */
+        \Event::fire('journals.store',[$journal]);
+
         if (isset($data['return_journal']) && $data['return_journal'] == true) {
             return ['journal' => $journal, 'messagebag' => $journal->errors()];
         }

@@ -95,6 +95,9 @@ $(document).ready(function () {
                         if (data.category_id > 0) {
                             html += '<a href="' + data.category_url + '" title="' + data.category_name + '"><i class="fa fa-bar-chart fa-fw"></i></a> ';
                         }
+                        if(data.recurring_id > 0) {
+                            html += '<a href="' + data.recurring_url + '" title="' + data.recurring_name + '"><i class="fa fa-rotate-right fa-fw"></i></a> ';
+                        }
                         return html;
                     }
                 },
