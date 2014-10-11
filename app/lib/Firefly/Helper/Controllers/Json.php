@@ -34,9 +34,9 @@ class Json implements JsonInterface
             $length = intval(\Input::get('length'));
         }
         $parameters = [
-            'start'  => intval(\Input::get('start')),
+            'start' => intval(\Input::get('start')),
             'length' => $length,
-            'draw'   => intval(\Input::get('draw')),
+            'draw' => intval(\Input::get('draw')),
         ];
 
 
@@ -46,11 +46,11 @@ class Json implements JsonInterface
         if (!is_null(\Input::get('columns')) && is_array(\Input::get('columns'))) {
             foreach (\Input::get('columns') as $column) {
                 $parameters['columns'][] = [
-                    'data'       => $column['data'],
-                    'name'       => $column['name'],
+                    'data' => $column['data'],
+                    'name' => $column['name'],
                     'searchable' => $column['searchable'] == 'true' ? true : false,
-                    'orderable'  => $column['orderable'] == 'true' ? true : false,
-                    'search'     => [
+                    'orderable' => $column['orderable'] == 'true' ? true : false,
+                    'search' => [
                         'value' => $column['search']['value'],
                         'regex' => $column['search']['regex'] == 'true' ? true : false,
                     ]
@@ -69,7 +69,7 @@ class Json implements JsonInterface
                 $columnName            = $parameters['columns'][$columnIndex]['name'];
                 $parameters['order'][] = [
                     'name' => $columnName,
-                    'dir'  => strtoupper($order['dir'])
+                    'dir' => strtoupper($order['dir'])
                 ];
                 if ($columnName == 'to' || $columnName == 'from') {
                     $parameters['orderOnAccount'] = true;
@@ -97,7 +97,7 @@ class Json implements JsonInterface
      * Do some sorting, counting and ordering on the query and return a nicely formatted array
      * that can be used by the DataTables JQuery plugin.
      *
-     * @param array   $parameters
+     * @param array $parameters
      * @param Builder $query
      *
      * @return array
@@ -132,10 +132,10 @@ class Json implements JsonInterface
          * Build return array:
          */
         $data = [
-            'draw'            => $parameters['draw'],
-            'recordsTotal'    => $count,
+            'draw' => $parameters['draw'],
+            'recordsTotal' => $count,
             'recordsFiltered' => $filtered,
-            'data'            => [],
+            'data' => [],
 
         ];
 
@@ -169,19 +169,20 @@ class Json implements JsonInterface
          */
         /** @var \TransactionJournal $entry */
         foreach ($set as $entry) {
-            $from           = $entry->transactions[0]->account;
-            $to             = $entry->transactions[1]->account;
-            $budget = $entry->budgets()->first();
-            $category = $entry->categories()->first();
-            $arr = [
-                'date'        => $entry->date->format('j F Y'),
+            $from      = $entry->transactions[0]->account;
+            $to        = $entry->transactions[1]->account;
+            $budget    = $entry->budgets()->first();
+            $category  = $entry->categories()->first();
+            $recurring = $entry->recurringTransaction()->first();
+            $arr       = [
+                'date' => $entry->date->format('j F Y'),
                 'description' => [
                     'description' => $entry->description,
-                    'url'         => route('transactions.show', $entry->id)
+                    'url' => route('transactions.show', $entry->id)
                 ],
-                'amount'      => floatval($entry->amount),
-                'from'        => ['name' => $from->name, 'url' => route('accounts.show', $from->id)],
-                'to'          => ['name' => $to->name, 'url' => route('accounts.show', $to->id)],
+                'amount' => floatval($entry->amount),
+                'from' => ['name' => $from->name, 'url' => route('accounts.show', $from->id)],
+                'to' => ['name' => $to->name, 'url' => route('accounts.show', $to->id)],
                 'components' => [
                     'budget_id' => 0,
                     'budget_url' => '',
@@ -190,20 +191,25 @@ class Json implements JsonInterface
                     'category_url' => '',
                     'category_name' => ''
                 ],
-                'id'          => [
-                    'edit'   => route('transactions.edit', $entry->id),
+                'id' => [
+                    'edit' => route('transactions.edit', $entry->id),
                     'delete' => route('transactions.delete', $entry->id)
                 ]
             ];
-            if($budget) {
-                $arr['components']['budget_id'] = $budget->id;
+            if ($budget) {
+                $arr['components']['budget_id']   = $budget->id;
                 $arr['components']['budget_name'] = $budget->name;
-                $arr['components']['budget_url'] = route('budgets.show',$budget->id);
+                $arr['components']['budget_url']  = route('budgets.show', $budget->id);
             }
-            if($category) {
-                $arr['components']['category_id'] = $category->id;
+            if ($category) {
+                $arr['components']['category_id']   = $category->id;
                 $arr['components']['category_name'] = $category->name;
-                $arr['components']['category_url'] = route('categories.show',$category->id);
+                $arr['components']['category_url']  = route('categories.show', $category->id);
+            }
+            if ($recurring) {
+                $arr['components']['recurring_id']   = $recurring->id;
+                $arr['components']['recurring_name'] = e($recurring->name);
+                $arr['components']['recurring_url']  = route('recurring.show', $recurring->id);
             }
 
             $data['data'][] = $arr;
@@ -257,14 +263,14 @@ class Json implements JsonInterface
             $query->leftJoin(
                 'transactions AS ' . $prefix . 't1', function ($join) use ($operator) {
                     $join->on('t1.transaction_journal_id', '=', 'transaction_journals.id')
-                        ->on('t1.amount', $operator, \DB::Raw(0));
+                         ->on('t1.amount', $operator, \DB::Raw(0));
                 }
             );
             // left join second table for "to" account:
             $query->leftJoin(
                 'transactions AS ' . $prefix . 't2', function ($join) use ($operatorNegated) {
                     $join->on('t2.transaction_journal_id', '=', 'transaction_journals.id')
-                        ->on('t2.amount', $operatorNegated, \DB::Raw(0));
+                         ->on('t2.amount', $operatorNegated, \DB::Raw(0));
                 }
             );
 
@@ -293,7 +299,7 @@ class Json implements JsonInterface
      * Do some sorting, counting and ordering on the query and return a nicely formatted array
      * that can be used by the DataTables JQuery plugin.
      *
-     * @param array   $parameters
+     * @param array $parameters
      * @param Builder $query
      *
      * @return array
@@ -328,10 +334,10 @@ class Json implements JsonInterface
          * Build return array:
          */
         $data = [
-            'draw'            => $parameters['draw'],
-            'recordsTotal'    => $count,
+            'draw' => $parameters['draw'],
+            'recordsTotal' => $count,
             'recordsFiltered' => $filtered,
-            'data'            => [],
+            'data' => [],
 
         ];
 
@@ -351,16 +357,16 @@ class Json implements JsonInterface
         foreach ($set as $entry) {
             $data['data'][] = [
 
-                'name'        => ['name' => $entry->name,'url' => route('recurring.show',$entry->id)],
-                'match'       => explode(' ',$entry->match),
-                'amount_max'  => floatval($entry->amount_max),
-                'amount_min'  => floatval($entry->amount_min),
-                'date'        => $entry->date->format('j F Y'),
-                'active'      => intval($entry->active),
-                'automatch'   => intval($entry->automatch),
+                'name' => ['name' => $entry->name, 'url' => route('recurring.show', $entry->id)],
+                'match' => explode(' ', $entry->match),
+                'amount_max' => floatval($entry->amount_max),
+                'amount_min' => floatval($entry->amount_min),
+                'date' => $entry->date->format('j F Y'),
+                'active' => intval($entry->active),
+                'automatch' => intval($entry->automatch),
                 'repeat_freq' => $entry->repeat_freq,
-                'id'          => [
-                    'edit'   => route('recurring.edit', $entry->id),
+                'id' => [
+                    'edit' => route('recurring.edit', $entry->id),
                     'delete' => route('recurring.delete', $entry->id)
                 ]
             ];
