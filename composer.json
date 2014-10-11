@@ -23,7 +23,8 @@
     "require": {
         "laravel/framework": "4.2.*",
         "laravelbook/ardent": "~2.4",
-        "davejamesmiller/laravel-breadcrumbs": "2.*"
+        "davejamesmiller/laravel-breadcrumbs": "2.*",
+        "rcrowe/twigbridge": "0.6.*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "@stable",
