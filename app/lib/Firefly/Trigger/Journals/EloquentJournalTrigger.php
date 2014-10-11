@@ -20,52 +20,45 @@ class EloquentJournalTrigger
      */
     public function store(\TransactionJournal $journal)
     {
-        // select all reminders for recurring transactions:
-        if ($journal->transaction_type->type == 'Withdrawal') {
-            \Log::debug('Trigger on the creation of a withdrawal');
-            $transaction = $journal->transactions()->orderBy('amount', 'DESC')->first();
-            $amount      = floatval($transaction->amount);
-            $description = strtolower($journal->description);
-            $beneficiary = strtolower($transaction->account->name);
+        /*
+         * Grab all recurring events.
+         */
+        $set = $journal->user()->first()->recurringtransactions()->get();
+        $result = [];
+        /*
+         * Prep vars
+         */
+        $description = strtolower($journal->description);
 
-            // make an array of parts:
-            $parts   = explode(' ', $description);
-            $parts[] = $beneficiary;
-            $today   = new Carbon;
-            $set     = \RecurringTransactionReminder::
-                leftJoin(
-                    'recurring_transactions', 'recurring_transactions.id', '=', 'reminders.recurring_transaction_id'
-                )
-                ->where('startdate', '<', $today->format('Y-m-d'))
-                ->where('enddate', '>', $today->format('Y-m-d'))
-                ->where('amount_min', '<=', $amount)
-                ->where('amount_max', '>=', $amount)->get(['reminders.*']);
-            /** @var \RecurringTransctionReminder $reminder */
-            \Log::debug('Have these parts to search for: ' . join('/',$parts));
-            \Log::debug('Found ' . count($set).' possible matching recurring transactions');
-            foreach ($set as $index => $reminder) {
-                /** @var \RecurringTransaction $RT */
-                $RT         = $reminder->recurring_transaction;
-                $matches    = explode(' ', strtolower($RT->match));
-                \Log::debug($index.': ' . join('/',$matches));
-                $matchCount = 0;
-                foreach ($parts as $part) {
-                    if (in_array($part, $matches)) {
-                        $matchCount++;
-                    }
+        /** @var \RecurringTransaction $recurring */
+        foreach ($set as $recurring) {
+            $matches = explode(' ', $recurring->match);
+
+            /*
+             * Count the number of matches.
+             */
+            $count = 0;
+            foreach ($matches as $word) {
+                if (!(strpos($description, $word) === false)) {
+                    $count++;
+                    \Log::debug('Recurring transaction #' . $recurring->id . ': word "' . $word . '" found in "' . $description . '".');
                 }
-                if ($matchCount >= count($matches)) {
-                    // we have a match!
-                    \Log::debug(
-                        'Match between new journal "' . join('/', $parts) . '" and RT ' . join('/', $matches) . '.'
-                    );
-                    $journal->recurringTransaction()->associate($RT);
-                    $journal->save();
-                    // also update the reminder.
-                    $reminder->active = 0;
-                    $reminder->save();
-                    return true;
-                }
+            }
+            $result[$recurring->id] = $count;
+        }
+        /*
+         * The one with the highest value is the winrar!
+         */
+        $index = array_search(max($result), $result);
+
+        /*
+         * Find the recurring transaction:
+         */
+        if (count($result[$index]) > 0) {
+            $winner = $journal->user()->first()->recurringtransactions()->find($index);
+            if ($winner) {
+                $journal->recurringTransaction()->associate($winner);
+                $journal->save();
             }
         }
         return true;
