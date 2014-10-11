@@ -186,7 +186,7 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
         $journal->transaction_type_id     = $transactionType->id;
 
         /*
-         * Validatre & save journal
+         * Validate & save journal
          */
         $journal->validate();
         $journal->save();
