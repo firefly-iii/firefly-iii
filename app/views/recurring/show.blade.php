@@ -1,68 +1,57 @@
 @extends('layouts.default')
 @section('content')
 <div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <p class="lead">Use recurring transactions to track repeated withdrawals</p>
-            <p>
-              <div class="btn-group btn-group-xs">
-                                    <a href="{{route('recurring.edit',$recurring->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> edit</a>
-                                    <a href="{{route('recurring.delete',$recurring->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> delete</a>
-                                </div>
-            </p>
-    </div>
-</div>
-
-<div class="row">
     <div class="col-lg-6 col-sm-6 col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-rotate-right"></i> {{{$recurring->name}}}
 
-        <table class="table">
-        <tr>
-            <td>Matches on: </td>
-            <td>
-                @foreach(explode(' ',$recurring->match) as $word)
-                    <span class="label label-info">{{{$word}}}</span>
-                @endforeach
-            </td>
-        </tr>
-        <tr>
-            <td>Between</td>
-            <td> {{mf($recurring->amount_min)}} &ndash; {{mf($recurring->amount_max)}}</td>
-        </tr>
-        <tr>
-            <td>Repeats</td>
-            <td>{{ucfirst($recurring->repeat_freq)}}</td>
-        </tr>
-        <tr>
-            <td>Next reminder</td>
-            <td>{{$recurring->next()->format('d-m-Y')}}</td>
-        </tr>
-        <tr>
-        <td>Will be auto-matched</td>
-        <td>
-                            @if($recurring->automatch)
-                                <span class="glyphicon glyphicon-ok"></span>
-                            @else
-                                <span class="glyphicon glyphicon-remove"></span>
-                            @endif
-                        </td>
-        </tr>
-        <tr>
-        <td>Is active</td>
+                @if($recurring->active)
+                    <span class="glyphicon glyphicon-ok" title="Active"></span>
+                @else
+                    <span class="glyphicon glyphicon-remove" title="Inactive"></span>
+                @endif
 
-                <td>
-                    @if($recurring->active)
-                    <span class="glyphicon glyphicon-ok"></span>
-                    @else
-                    <span class="glyphicon glyphicon-remove"></span>
-                    @endif
-                </td>
-        </tr>
-        </table>
+                @if($recurring->automatch)
+                    <span class="glyphicon glyphicon-ok" title="Automatically matched by Firefly"></span>
+                @else
+                    <span class="glyphicon glyphicon-remove" title="Not automatically matched by Firefly"></span>
+                @endif
 
-                <td>
+                <!-- ACTIONS MENU -->
+                <div class="pull-right">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                            Actions
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu pull-right" role="menu">
+                            <li><a href="{{route('recurring.edit',$recurring->id)}}"><span class="glyphicon glyphicon-pencil"></span> edit</a></li>
+                            <li><a href="{{route('recurring.delete',$recurring->id)}}"><span class="glyphicon glyphicon-trash"></span> delete</a></li>
+                        </ul>
+                    </div>
+                </div>
 
-                </td>
-            </tr>
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                    <tr>
+                        <td colspan="2">
+                        Matching on
+                            @foreach(explode(' ',$recurring->match) as $word)
+                                <span class="label label-info">{{{$word}}}</span>
+                            @endforeach
+                            between {{mf($recurring->amount_min)}} and {{mf($recurring->amount_max)}}.
+                            Repeats {{$recurring->repeat_freq}}.</td>
+
+                    </tr>
+                    <tr>
+                        <td>Next reminder</td>
+                        <td>TODO TODO</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 @stop
