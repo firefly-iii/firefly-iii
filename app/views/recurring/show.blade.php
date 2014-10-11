@@ -54,4 +54,43 @@
         </div>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-lg-12 col-sm-12 col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Connected transaction journals
+            </div>
+            <div class="panel-body">
+                <table id="transactionTable" class="table table-striped table-bordered" >
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Amount (&euro;)</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Budget / category</th>
+                        <th>ID</th>
+                    </tr>
+                </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@stop
+
+@section('scripts')
+    <script type="text/javascript">
+        var URL = '{{route('json.recurringjournals',$recurring->id)}}';
+</script>
+{{HTML::script('assets/javascript/typeahead/bootstrap3-typeahead.min.js')}}
+{{HTML::script('assets/javascript/datatables/jquery.dataTables.min.js')}}
+{{HTML::script('assets/javascript/datatables/dataTables.bootstrap.js')}}
+{{HTML::script('assets/javascript/firefly/recurring.js')}}
+@stop
+@section('styles')
+{{HTML::style('assets/stylesheets/datatables/dataTables.bootstrap.css')}}
 @stop
