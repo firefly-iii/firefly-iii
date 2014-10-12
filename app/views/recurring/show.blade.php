@@ -1,7 +1,7 @@
 @extends('layouts.default')
 @section('content')
 <div class="row">
-    <div class="col-lg-6 col-sm-6 col-md-12">
+    <div class="col-lg-6 col-sm-12 col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-rotate-right"></i> {{{$recurring->name}}}
@@ -50,6 +50,18 @@
                         <td>TODO TODO</td>
                     </tr>
                 </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-sm-12 col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                More
+            </div>
+            <div class="panel-body">
+                <p>
+                    <a href="{{route('recurring.rescan',$recurring->id)}}" class="btn btn-default">Rescan old transactions</a>
+                </p>
             </div>
         </div>
     </div>
