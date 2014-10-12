@@ -28,11 +28,6 @@ class EloquentRecurringTrigger
 
     }
 
-    public function createReminders()
-    {
-        
-    }
-
     /**
      * @param \RecurringTransaction $recurring
      * @param \TransactionJournal $journal
@@ -91,7 +86,6 @@ class EloquentRecurringTrigger
 //        $events->listen('recurring.destroy', 'Firefly\Trigger\Recurring\EloquentRecurringTrigger@destroy');
 //        $events->listen('recurring.store', 'Firefly\Trigger\Recurring\EloquentRecurringTrigger@store');
 //        $events->listen('recurring.update', 'Firefly\Trigger\Recurring\EloquentRecurringTrigger@update');
-//        $events->listen('recurring.check', 'Firefly\Trigger\Recurring\EloquentRecurringTrigger@createReminders');
     }
 
     /**
