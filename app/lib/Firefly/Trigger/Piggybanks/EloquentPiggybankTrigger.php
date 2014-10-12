@@ -114,13 +114,6 @@ class EloquentPiggybankTrigger
      */
     public function destroy(\Piggybank $piggyBank)
     {
-        $reminders = $piggyBank->piggybankreminders()->get();
-        /** @var \PiggybankReminder $reminder */
-        foreach ($reminders as $reminder) {
-            $reminder->delete();
-
-        }
-
         return true;
     }
 
