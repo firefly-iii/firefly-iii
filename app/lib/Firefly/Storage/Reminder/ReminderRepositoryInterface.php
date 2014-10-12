@@ -11,14 +11,6 @@ interface ReminderRepositoryInterface
 {
 
     /**
-     * @param \Reminder $reminder
-     *
-     * @return mixed
-     */
-    public function deactivate(\Reminder $reminder);
-
-
-    /**
      * @param \User $user
      * @return mixed
      */
