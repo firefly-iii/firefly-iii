@@ -30,8 +30,13 @@ class EloquentRecurringTrigger
 
     public function createReminders()
     {
+        
     }
 
+    /**
+     * @param \RecurringTransaction $recurring
+     * @param \TransactionJournal $journal
+     */
     public function rescan(\RecurringTransaction $recurring, \TransactionJournal $journal)
     {
         /*
@@ -42,7 +47,7 @@ class EloquentRecurringTrigger
         $description = strtolower($journal->description);
         $count       = 0;
         foreach ($matches as $word) {
-            if (!(strpos($description, $word) === false)) {
+            if (!(strpos($description, strtolower($word)) === false)) {
                 $count++;
             }
         }
