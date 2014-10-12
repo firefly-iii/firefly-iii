@@ -23,12 +23,13 @@ class EloquentJournalTrigger
         /*
          * Grab all recurring events.
          */
-        $set = $journal->user()->first()->recurringtransactions()->get();
+        $set    = $journal->user()->first()->recurringtransactions()->get();
         $result = [];
         /*
          * Prep vars
          */
         $description = strtolower($journal->description);
+        $result      = [0 => 0];
 
         /** @var \RecurringTransaction $recurring */
         foreach ($set as $recurring) {
@@ -44,7 +45,16 @@ class EloquentJournalTrigger
                     \Log::debug('Recurring transaction #' . $recurring->id . ': word "' . $word . '" found in "' . $description . '".');
                 }
             }
-            $result[$recurring->id] = $count;
+            /*
+             * Check the amount if match on words:
+             */
+            $amount = max(floatval($journal->transactions[0]->amount), floatval($journal->transactions[1]->amount));
+            $min    = floatval($recurring->amount_min);
+            $max    = floatval($recurring->amount_max);
+            if ($amount >= $min && $amount <= $max) {
+                $result[$recurring->id] = $count;
+            }
+
         }
         /*
          * The one with the highest value is the winrar!
@@ -54,7 +64,9 @@ class EloquentJournalTrigger
         /*
          * Find the recurring transaction:
          */
-        if (count($result[$index]) > 0) {
+
+        if ($result[$index] > 0 && $index > 0) {
+
             $winner = $journal->user()->first()->recurringtransactions()->find($index);
             if ($winner) {
                 $journal->recurringTransaction()->associate($winner);
