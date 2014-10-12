@@ -224,12 +224,6 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/recurring/edit/{recurring}',['uses' => 'RecurringController@edit','as' => 'recurring.edit']);
         Route::get('/recurring/delete/{recurring}',['uses' => 'RecurringController@delete','as' => 'recurring.delete']);
 
-        // reminder controller
-        Route::get('/reminders/dialog',['uses' => 'ReminderController@modalDialog']);
-        Route::post('/reminders/postpone/{reminder}',['uses' => 'ReminderController@postpone']);
-        Route::post('/reminders/dismiss/{reminder}',['uses' => 'ReminderController@dismiss']);
-        Route::get('/reminders/redirect/{reminder}',['uses' => 'ReminderController@redirect']);
-
         // report controller:
         Route::get('/reports',['uses' => 'ReportController@index','as' => 'reports.index']);
 
