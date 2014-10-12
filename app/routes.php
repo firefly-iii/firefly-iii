@@ -133,6 +133,7 @@ Route::group(['before' => 'auth'], function () {
         // some date routes:
         Route::get('/prev',['uses' => 'HomeController@sessionPrev', 'as' => 'sessionPrev']);
         Route::get('/next',['uses' => 'HomeController@sessionNext', 'as' => 'sessionNext']);
+        Route::get('/jump/{range}',['uses' => 'HomeController@rangeJump','as' => 'rangeJump']);
 
         // account controller:
         Route::get('/accounts', ['uses' => 'AccountController@index', 'as' => 'accounts.index']);
@@ -187,6 +188,7 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/json/revenue', ['uses' => 'JsonController@revenue', 'as' => 'json.revenue']);
         Route::get('/json/transfers', ['uses' => 'JsonController@transfers', 'as' => 'json.transfers']);
         Route::get('/json/recurring', ['uses' => 'JsonController@recurring', 'as' => 'json.recurring']);
+        Route::get('/json/recurringjournals/{recurring}', ['uses' => 'JsonController@recurringjournals', 'as' => 'json.recurringjournals']);
 
         // limit controller:
         Route::get('/budgets/limits/create/{budget?}',['uses' => 'LimitController@create','as' => 'budgets.limits.create']);
