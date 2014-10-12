@@ -84,22 +84,23 @@ class Toolkit implements ToolkitInterface
     /**
      *
      */
-    public function checkImportJobs() {
+    public function checkImportJobs()
+    {
         /*
          * Get all jobs.
          */
         /** @var \Importmap $importJob */
-        $importJob = \Importmap::where('user_id',\Auth::user()->id)
-            ->where('totaljobs','>',\DB::Raw('`jobsdone`'))
-            ->orderBy('created_at','DESC')
-            ->first();
-        if(!is_null($importJob)) {
-            $diff = intval($importJob->totaljobs) - intval($importJob->jobsdone);
-            $date = new Carbon;
+        $importJob = \Importmap::where('user_id', \Auth::user()->id)
+                               ->where('totaljobs', '>', \DB::Raw('`jobsdone`'))
+                               ->orderBy('created_at', 'DESC')
+                               ->first();
+        if (!is_null($importJob)) {
+            $diff  = intval($importJob->totaljobs) - intval($importJob->jobsdone);
+            $date  = new Carbon;
             $today = new Carbon;
             $date->addSeconds($diff);
-            \Session::put('job_pct',$importJob->pct());
-            \Session::put('job_text',$date->diffForHumans());
+            \Session::put('job_pct', $importJob->pct());
+            \Session::put('job_text', $date->diffForHumans());
         } else {
             \Session::forget('job_pct');
             \Session::forget('job_text');
@@ -134,7 +135,6 @@ class Toolkit implements ToolkitInterface
      */
     protected function _updateStartDate($range, Carbon $start)
     {
-        $today = new Carbon;
         switch ($range) {
             case '1D':
                 $start->startOfDay();
@@ -149,11 +149,14 @@ class Toolkit implements ToolkitInterface
                 $start->firstOfQuarter();
                 break;
             case '6M':
-                if (intval($today->format('m')) >= 7) {
+                if (intval($start->format('m')) >= 7) {
                     $start->startOfYear()->addMonths(6);
                 } else {
                     $start->startOfYear();
                 }
+                break;
+            case '1Y':
+                $start->startOfYear();
                 break;
         }
 
@@ -170,33 +173,32 @@ class Toolkit implements ToolkitInterface
      */
     protected function _updateEndDate($range, Carbon $start)
     {
+        $end = clone $start;
         switch ($range) {
             case '1D':
-                $end = clone $start;
                 $end->endOfDay();
                 break;
             case '1W':
-                $end = clone $start;
                 $end->endOfWeek();
                 break;
             case '1M':
-                $end = clone $start;
                 $end->endOfMonth();
                 break;
             case '3M':
-                $end = clone $start;
                 $end->lastOfQuarter();
                 break;
             case '6M':
-                $end = clone $start;
                 if (intval($start->format('m')) >= 7) {
                     $end->endOfYear();
                 } else {
                     $end->startOfYear()->addMonths(6);
                 }
                 break;
-            default:
-                throw new FireflyException('Nothing happened with $end!');
+            case '1Y':
+                $end->endOfYear();
+                break;
+                default:
+                throw new FireflyException('_updateEndDate cannot handle $range ' . $range);
                 break;
         }
 
@@ -209,9 +211,30 @@ class Toolkit implements ToolkitInterface
             default:
                 throw new FireflyException('No _periodName() for range "' . $range . '"');
                 break;
+            case '1D':
+                return $date->format('jS F Y');
+                break;
+            case '1W':
+                return 'week ' . $date->format('W, Y');
+                break;
             case '1M':
                 return $date->format('F Y');
                 break;
+            case '3M':
+                $month = intval($date->format('m'));
+                return 'Q' . ceil(($month / 12) * 4) . ' ' . $date->format('Y');
+                break;
+            case '6M':
+                $month    = intval($date->format('m'));
+                $half     = ceil(($month / 12) * 2);
+                $halfName = $half == 1 ? 'first' : 'second';
+                return $halfName . ' half of ' . $date->format('d-m-Y');
+                break;
+            case '1Y':
+                return $date->format('Y');
+                break;
+
+
         }
     }
 
@@ -231,11 +254,18 @@ class Toolkit implements ToolkitInterface
                 $date->firstOfQuarter()->subMonths(3)->firstOfQuarter();
                 break;
             case '6M':
-                if (intval($date->format('m')) >= 7) {
-                    $date->startOfYear();
-                } else {
+                $month = intval($date->format('m'));
+                if ($month <= 6) {
                     $date->startOfYear()->subMonths(6);
+                } else {
+                    $date->startOfYear();
                 }
+                break;
+            case '1Y':
+                $date->startOfYear()->subYear();
+                break;
+                default:
+                throw new FireflyException('Cannot do _previous() on ' . $range);
                 break;
         }
         return $date;
@@ -254,7 +284,7 @@ class Toolkit implements ToolkitInterface
                 $date->endOfMonth()->addDay()->startOfMonth();
                 break;
             case '3M':
-                $date->lastOfQuarter();
+                $date->lastOfQuarter()->addDay();
                 break;
             case '6M':
                 if (intval($date->format('m')) >= 7) {
@@ -262,6 +292,12 @@ class Toolkit implements ToolkitInterface
                 } else {
                     $date->startOfYear()->addMonths(6);
                 }
+                break;
+            case '1Y':
+                $date->startOfYear()->addYear();
+                break;
+            default:
+                throw new FireflyException('Cannot do _next() on ' . $range);
                 break;
         }
         return $date;
@@ -311,7 +347,7 @@ class Toolkit implements ToolkitInterface
      * Takes any collection and tries to make a sensible select list compatible array of it.
      *
      * @param Collection $set
-     * @param null       $titleField
+     * @param null $titleField
      *
      * @return mixed
      */
