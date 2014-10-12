@@ -105,68 +105,6 @@ class Piggybank extends Ardent
     }
 
     /**
-     * Firefly shouldn't create piggybank repetions that completely
-     * lie in the future, so we should be able to safely grab the "latest"
-     * one and use that to calculate when the user will be reminded.
-     */
-    public function nextReminderDate()
-    {
-        if (is_null($this->reminder)) {
-            return null;
-        }
-        /** @var \PiggybankRepetition $rep */
-        $rep = $this->currentRelevantRep();
-        $today = new Carbon;
-        if ($rep && is_null($rep->startdate)) {
-            switch ($this->reminder) {
-                case 'day':
-                    return $today;
-                    break;
-                case 'week':
-                    return $today->endOfWeek();
-                    break;
-                case 'month':
-                    return $today->endOfMonth();
-                    break;
-                case 'year':
-                    return $today->endOfYear();
-                    break;
-
-            }
-            return null;
-        }
-        if ($rep && !is_null($rep->startdate)) {
-            // start with the start date
-            // when its bigger than today, return it:
-            $start = clone $rep->startdate;
-            while ($start <= $today) {
-                switch ($this->reminder) {
-                    default:
-                        return null;
-                        break;
-                    case 'day':
-                        $start->addDay();
-                        break;
-                    case 'week':
-                        $start->addWeek();
-                        break;
-                    case 'month':
-                        $start->addMonth();
-                        break;
-                    case 'year':
-                        $start->addYear();
-                        break;
-
-                }
-            }
-
-            return $start;
-        }
-
-        return new Carbon;
-    }
-
-    /**
      * Grabs the PiggyBankRepetition that's currently relevant / active
      *
      * @returns \PiggybankRepetition
@@ -220,14 +158,6 @@ class Piggybank extends Ardent
     public function piggybankevents()
     {
         return $this->hasMany('PiggybankEvent');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function piggybankreminders()
-    {
-        return $this->hasMany('PiggybankReminder');
     }
 
     /**
