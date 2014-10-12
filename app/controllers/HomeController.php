@@ -17,10 +17,10 @@ class HomeController extends BaseController
     protected $_reminders;
 
     /**
-     * @param ARI  $accounts
-     * @param PHI  $preferences
+     * @param ARI $accounts
+     * @param PHI $preferences
      * @param TJRI $journal
-     * @param RRI  $reminders
+     * @param RRI $reminders
      */
     public function __construct(ARI $accounts, PHI $preferences, TJRI $journal, RRI $reminders)
     {
@@ -30,8 +30,9 @@ class HomeController extends BaseController
         $this->_reminders   = $reminders;
     }
 
-    public function jobDev() {
-        $fullName = storage_path().DIRECTORY_SEPARATOR.'firefly-export-2014-07-23.json';
+    public function jobDev()
+    {
+        $fullName = storage_path() . DIRECTORY_SEPARATOR . 'firefly-export-2014-07-23.json';
         \Log::notice('Pushed start job.');
         Queue::push('Firefly\Queue\Import@start', ['file' => $fullName, 'user' => 1]);
 
@@ -40,7 +41,8 @@ class HomeController extends BaseController
     /*
      *
      */
-    public function sessionPrev() {
+    public function sessionPrev()
+    {
         /** @var \Firefly\Helper\Toolkit\ToolkitInterface $toolkit */
         $toolkit = App::make('Firefly\Helper\Toolkit\ToolkitInterface');
         $toolkit->prev();
@@ -51,12 +53,26 @@ class HomeController extends BaseController
     /*
      *
      */
-    public function sessionNext() {
+    public function sessionNext()
+    {
         /** @var \Firefly\Helper\Toolkit\ToolkitInterface $toolkit */
         $toolkit = App::make('Firefly\Helper\Toolkit\ToolkitInterface');
         $toolkit->next();
         return Redirect::back();
         //return Redirect::route('index');
+    }
+
+    public function rangeJump($range)
+    {
+
+        $viewRange      = $this->_preferences->get('viewRange', '1M');
+        $valid          = ['1D', '1W', '1M', '3M', '6M', '1Y',];
+
+        if(in_array($range,$valid)) {
+            $this->_preferences->set('viewRange', $range);
+            Session::forget('range');
+        }
+        return Redirect::back();
     }
 
     /**
@@ -102,6 +118,6 @@ class HomeController extends BaseController
 
         // build the home screen:
         return View::make('index')->with('count', $count)->with('transactions', $transactions)->with('title', 'Firefly')
-            ->with('subTitle', 'What\'s playing?')->with('mainTitleIcon','fa-fire');
+                   ->with('subTitle', 'What\'s playing?')->with('mainTitleIcon', 'fa-fire');
     }
 }
