@@ -40,7 +40,7 @@ class EloquentJournalTrigger
              */
             $count = 0;
             foreach ($matches as $word) {
-                if (!(strpos($description, $word) === false)) {
+                if (!(strpos($description, strtolower($word)) === false)) {
                     $count++;
                     \Log::debug('Recurring transaction #' . $recurring->id . ': word "' . $word . '" found in "' . $description . '".');
                 }
