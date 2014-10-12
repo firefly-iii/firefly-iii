@@ -175,6 +175,9 @@ class Toolkit implements ToolkitInterface
     {
         $end = clone $start;
         switch ($range) {
+            default:
+                throw new FireflyException('_updateEndDate cannot handle $range ' . $range);
+                break;
             case '1D':
                 $end->endOfDay();
                 break;
@@ -197,9 +200,7 @@ class Toolkit implements ToolkitInterface
             case '1Y':
                 $end->endOfYear();
                 break;
-                default:
-                throw new FireflyException('_updateEndDate cannot handle $range ' . $range);
-                break;
+
         }
 
         return $end;
@@ -241,6 +242,9 @@ class Toolkit implements ToolkitInterface
     protected function _previous($range, Carbon $date)
     {
         switch ($range) {
+            default:
+                throw new FireflyException('Cannot do _previous() on ' . $range);
+                break;
             case '1D':
                 $date->startOfDay()->subDay();
                 break;
@@ -264,9 +268,7 @@ class Toolkit implements ToolkitInterface
             case '1Y':
                 $date->startOfYear()->subYear();
                 break;
-                default:
-                throw new FireflyException('Cannot do _previous() on ' . $range);
-                break;
+
         }
         return $date;
     }
