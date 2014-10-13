@@ -170,6 +170,7 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/chart/home/budgets', ['uses' => 'ChartController@homeBudgets', 'as' => 'chart.budgets']);
         Route::get('/chart/home/info/{accountnameA}/{day}/{month}/{year}', ['uses' => 'ChartController@homeAccountInfo', 'as' => 'chart.info']);
         Route::get('/chart/categories/show/{category}', ['uses' => 'ChartController@categoryShowChart','as' => 'chart.showcategory']);
+        Route::get('/chart/home/recurring', ['uses' => 'ChartController@homeRecurring', 'as' => 'chart.recurring']);
         // (new charts for budgets)
         Route::get('/chart/budget/{budget}/default', ['uses' => 'ChartController@budgetDefault', 'as' => 'chart.budget.default']);
         Route::get('chart/budget/{budget}/no_envelope', ['uses' => 'ChartController@budgetNoLimits', 'as' => 'chart.budget.nolimit']);
@@ -219,15 +220,10 @@ Route::group(['before' => 'auth'], function () {
         // recurring transactions controller
         Route::get('/recurring',['uses' => 'RecurringController@index', 'as' => 'recurring.index']);
         Route::get('/recurring/show/{recurring}',['uses' => 'RecurringController@show', 'as' => 'recurring.show']);
+        Route::get('/recurring/rescan/{recurring}',['uses' => 'RecurringController@rescan', 'as' => 'recurring.rescan']);
         Route::get('/recurring/create',['uses' => 'RecurringController@create', 'as' => 'recurring.create']);
         Route::get('/recurring/edit/{recurring}',['uses' => 'RecurringController@edit','as' => 'recurring.edit']);
         Route::get('/recurring/delete/{recurring}',['uses' => 'RecurringController@delete','as' => 'recurring.delete']);
-
-        // reminder controller
-        Route::get('/reminders/dialog',['uses' => 'ReminderController@modalDialog']);
-        Route::post('/reminders/postpone/{reminder}',['uses' => 'ReminderController@postpone']);
-        Route::post('/reminders/dismiss/{reminder}',['uses' => 'ReminderController@dismiss']);
-        Route::get('/reminders/redirect/{reminder}',['uses' => 'ReminderController@redirect']);
 
         // report controller:
         Route::get('/reports',['uses' => 'ReportController@index','as' => 'reports.index']);

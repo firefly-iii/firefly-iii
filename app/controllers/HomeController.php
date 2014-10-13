@@ -1,7 +1,6 @@
 <?php
 use Firefly\Helper\Preferences\PreferencesHelperInterface as PHI;
 use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
-use Firefly\Storage\Reminder\ReminderRepositoryInterface as RRI;
 use Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface as TJRI;
 
 /**
@@ -14,20 +13,17 @@ class HomeController extends BaseController
     protected $_accounts;
     protected $_preferences;
     protected $_journal;
-    protected $_reminders;
 
     /**
      * @param ARI $accounts
      * @param PHI $preferences
      * @param TJRI $journal
-     * @param RRI $reminders
      */
-    public function __construct(ARI $accounts, PHI $preferences, TJRI $journal, RRI $reminders)
+    public function __construct(ARI $accounts, PHI $preferences, TJRI $journal)
     {
         $this->_accounts    = $accounts;
         $this->_preferences = $preferences;
         $this->_journal     = $journal;
-        $this->_reminders   = $reminders;
     }
 
     public function jobDev()
@@ -65,10 +61,9 @@ class HomeController extends BaseController
     public function rangeJump($range)
     {
 
-        $viewRange      = $this->_preferences->get('viewRange', '1M');
-        $valid          = ['1D', '1W', '1M', '3M', '6M', '1Y',];
+        $valid = ['1D', '1W', '1M', '3M', '6M', '1Y',];
 
-        if(in_array($range,$valid)) {
+        if (in_array($range, $valid)) {
             $this->_preferences->set('viewRange', $range);
             Session::forget('range');
         }

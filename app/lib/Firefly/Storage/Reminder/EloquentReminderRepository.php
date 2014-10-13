@@ -31,17 +31,4 @@ class EloquentReminderRepository implements ReminderRepositoryInterface
     {
         $this->_user = \Auth::user();
     }
-
-    /**
-     * @param \Reminder $reminder
-     *
-     * @return mixed|void
-     */
-    public function deactivate(\Reminder $reminder)
-    {
-        $reminder->active = 0;
-        $reminder->save();
-
-        return $reminder;
-    }
 }

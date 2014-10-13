@@ -10,6 +10,7 @@ App::before(
             $toolkit = App::make('Firefly\Helper\Toolkit\ToolkitInterface');
             $toolkit->getDateRange();
             $toolkit->checkImportJobs();
+            Event::fire('recurring.verify');
         }
 
     }
