@@ -495,17 +495,23 @@ class ChartController extends BaseController
     public function homeRecurring()
     {
         /** @var \Firefly\Helper\Toolkit\ToolkitInterface $toolkit */
-        $toolkit               = App::make('Firefly\Helper\Toolkit\ToolkitInterface');
-        $recurringTransactions = \Auth::user()->recurringtransactions()->get();
-        $sessionStart          = \Session::get('start');
-        $sessionEnd            = \Session::get('end');
-        $paid                  = [];
-        $unpaid                = [];
+        $toolkit = App::make('Firefly\Helper\Toolkit\ToolkitInterface');
+
+        /*
+         * Set of paid transaction journals.
+         * Set of unpaid recurring transactions.
+         */
+        $paid   = [];
+        $unpaid = [];
+
+        /*
+         * Loop the recurring transactions.
+         */
 
         /** @var \RecurringTransaction $recurring */
-        foreach ($recurringTransactions as $recurring) {
+        foreach (\Auth::user()->recurringtransactions()->get() as $recurring) {
             /*
-             * Start a loop starting at the $date.
+             * Start another loop starting at the $date.
              */
             $start = clone $recurring->date;
             $end   = Carbon::now();
@@ -515,37 +521,29 @@ class ChartController extends BaseController
              */
             $current = clone $start;
 
-            \Log::debug('Now looping recurring transaction #' . $recurring->id . ': ' . $recurring->name);
-
             while ($current <= $end) {
                 /*
                  * Get end of period for $current:
                  */
                 $currentEnd = clone $current;
                 $toolkit->endOfPeriod($currentEnd, $recurring->repeat_freq);
-                \Log::debug('Now at $current: ' . $current->format('D d F Y') . ' - ' . $currentEnd->format('D d F Y'));
 
                 /*
                  * In the current session range?
                  */
-                if ($sessionEnd >= $current and $currentEnd >= $sessionStart) {
+                if (\Session::get('end') >= $current and $currentEnd >= \Session::get('start')) {
                     /*
                      * Lets see if we've already spent money on this recurring transaction (it hath recurred).
                      */
-                    /** @var Collection $set */
-                    $set = \Auth::user()->transactionjournals()->where('recurring_transaction_id', $recurring->id)
-                                ->after($current)->before($currentEnd)->get();
-                    if (count($set) > 1) {
-                        \Log::error('Recurring #' . $recurring->id . ', dates [' . $current . ',' . $currentEnd . ']. Found multiple hits. Cannot handle this!');
-                        throw new FireflyException('Cannot handle multiple transactions. See logs.');
-                    } else if (count($set) == 0) {
+                    /** @var TransactionJournal $set */
+                    $transaction = \Auth::user()->transactionjournals()->where('recurring_transaction_id', $recurring->id)->after($current)->before($currentEnd)->first();
+
+                    if(is_null($transaction)) {
                         $unpaid[] = $recurring;
                     } else {
-                        $paid[] = $set->get(0);
+                        $paid[] = $transaction;
                     }
-
                 }
-
 
                 /*
                  * Add some time for the next loop!
@@ -556,23 +554,32 @@ class ChartController extends BaseController
 
         }
         /*
-         * Loop paid and unpaid to make two haves for a pie chart.
+         * Get some colors going.
          */
         $unPaidColours = $toolkit->colorRange('AA4643', 'FFFFFF', count($unpaid) == 0 ? 1 : count($unpaid));
         $paidColours   = $toolkit->colorRange('4572A7', 'FFFFFF', count($paid) == 0 ? 1 : count($paid));
+
+        /*
+         * The chart serie:
+         */
         $serie         = [
             'type' => 'pie',
             'name' => 'Amount',
             'data' => []
         ];
 
+        /*
+         * Loop paid and unpaid to make two haves for a pie chart.
+         */
         /** @var TransactionJournal $entry */
         foreach ($paid as $index => $entry) {
             $transactions    = $entry->transactions()->get();
             $amount          = max(floatval($transactions[0]->amount), floatval($transactions[1]->amount));
             $serie['data'][] = [
-                'name' => $entry->description,
+                'name' => 'Already paid "'.$entry->description.'"',
                 'y' => $amount,
+                'url' => route('transactions.show',$entry->id),
+                'objType' => 'paid',
                 'color' => $paidColours[$index]
             ];
         }
@@ -582,8 +589,10 @@ class ChartController extends BaseController
         foreach ($unpaid as $index => $entry) {
             $amount          = (floatval($entry->amount_max) + floatval($entry->amount_min)) / 2;
             $serie['data'][] = [
-                'name' => $entry->name,
+                'name' => 'Still due: '.$entry->name,
                 'y' => $amount,
+                'url' => route('recurring.show',$entry->id),
+                'objType' => 'unpaid',
                 'color' => $unPaidColours[$index]
             ];
         }
