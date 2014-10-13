@@ -2,6 +2,7 @@
 
 namespace Firefly\Helper\Toolkit;
 
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 /**
@@ -39,5 +40,13 @@ interface ToolkitInterface
      * @param int $steps
      */
     public function colorRange($start, $end, $steps = 5);
+
+    /**
+     * @param Carbon $date
+     * @param $repeatFreq
+     * @param $skip
+     * @return Carbon
+     */
+    public function addPeriod(Carbon $date, $repeatFreq, $skip);
 
 }
