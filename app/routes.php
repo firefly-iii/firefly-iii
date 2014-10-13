@@ -170,6 +170,7 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/chart/home/budgets', ['uses' => 'ChartController@homeBudgets', 'as' => 'chart.budgets']);
         Route::get('/chart/home/info/{accountnameA}/{day}/{month}/{year}', ['uses' => 'ChartController@homeAccountInfo', 'as' => 'chart.info']);
         Route::get('/chart/categories/show/{category}', ['uses' => 'ChartController@categoryShowChart','as' => 'chart.showcategory']);
+        Route::get('/chart/home/recurring', ['uses' => 'ChartController@homeRecurring', 'as' => 'chart.recurring']);
         // (new charts for budgets)
         Route::get('/chart/budget/{budget}/default', ['uses' => 'ChartController@budgetDefault', 'as' => 'chart.budget.default']);
         Route::get('chart/budget/{budget}/no_envelope', ['uses' => 'ChartController@budgetNoLimits', 'as' => 'chart.budget.nolimit']);

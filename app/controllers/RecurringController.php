@@ -108,6 +108,10 @@ class RecurringController extends BaseController
      */
     public function rescan(RecurringTransaction $recurringTransaction)
     {
+        if (intval($recurringTransaction->active) == 0) {
+            Session::flash('warning', 'Inactive recurring transactions cannot be scanned.');
+            return Redirect::back();
+        }
         // do something!
         /** @var \Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface $repo */
         $repo = App::make('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
@@ -117,7 +121,7 @@ class RecurringController extends BaseController
         foreach ($set as $journal) {
             Event::fire('recurring.rescan', [$recurringTransaction, $journal]);
         }
-        Session::flash('success','Rescanned everything.');
+        Session::flash('success', 'Rescanned everything.');
         return Redirect::back();
 
 

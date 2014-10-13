@@ -27,7 +27,6 @@ class CreateRemindersTable extends Migration
             'reminders', function (Blueprint $table) {
                 $table->increments('id');
                 $table->timestamps();
-                $table->string('class', 40);
                 $table->integer('user_id')->unsigned();
                 $table->date('startdate');
                 $table->date('enddate')->nullable();

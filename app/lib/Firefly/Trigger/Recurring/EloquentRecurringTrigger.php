@@ -3,6 +3,7 @@
 namespace Firefly\Trigger\Recurring;
 
 use Carbon\Carbon;
+use Firefly\Exception\FireflyException;
 use Illuminate\Events\Dispatcher;
 
 /**
@@ -81,11 +82,7 @@ class EloquentRecurringTrigger
      */
     public function subscribe(Dispatcher $events)
     {
-        //Event::fire('recurring.rematch', [$recurringTransaction, $journal]);
         $events->listen('recurring.rescan', 'Firefly\Trigger\Recurring\EloquentRecurringTrigger@rescan');
-//        $events->listen('recurring.destroy', 'Firefly\Trigger\Recurring\EloquentRecurringTrigger@destroy');
-//        $events->listen('recurring.store', 'Firefly\Trigger\Recurring\EloquentRecurringTrigger@store');
-//        $events->listen('recurring.update', 'Firefly\Trigger\Recurring\EloquentRecurringTrigger@update');
     }
 
     /**
