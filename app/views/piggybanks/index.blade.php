@@ -57,7 +57,7 @@
                                     Target date: {{$piggyBank->targetdate->format('M jS, Y')}}<br />
                                 @endif
                                 @if(!is_null($piggyBank->reminder))
-                                    Next reminder: {{$piggyBank->nextReminderDate()->format('M jS, Y')}} ({{$piggyBank->reminder}})
+                                    Next reminder: TODO
                                 @endif
                                 </p>
 
@@ -119,7 +119,7 @@
 
                             @if(!is_null($repeated->reminder))
                             <small>
-                                Next reminder: {{$repeated->nextReminderDate()->format('M jS, Y')}} ({{$piggyBank->reminder}})
+                                Next reminder: TODO
                             </small>
                             @endif
 

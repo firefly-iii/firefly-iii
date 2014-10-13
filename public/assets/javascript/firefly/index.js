@@ -17,7 +17,7 @@ $(function () {
                 allowDecimals: false,
                 labels: {
                     formatter: function () {
-                        if(this.value >= 1000 || this.value <= -1000) {
+                        if (this.value >= 1000 || this.value <= -1000) {
                             return '\u20AC ' + (this.value / 1000) + 'k';
                         }
                         return '\u20AC ' + this.value;
@@ -36,10 +36,10 @@ $(function () {
                     text: null
                 }
             },
-            legend: {enabled:false},
+            legend: {enabled: false},
             tooltip: {
                 formatter: function () {
-                    return this.series.name + ': \u20AC ' + Highcharts.numberFormat(this.y,2);
+                    return this.series.name + ': \u20AC ' + Highcharts.numberFormat(this.y, 2);
                 }
             },
             plotOptions: {
@@ -101,7 +101,7 @@ $(function () {
                 },
                 labels: {
                     formatter: function () {
-                        if(this.value >= 1000 || this.value <= -1000) {
+                        if (this.value >= 1000 || this.value <= -1000) {
                             return '\u20AC ' + (this.value / 1000) + 'k';
                         }
                         return '\u20AC ' + this.value;
@@ -165,17 +165,17 @@ $(function () {
             },
             tooltip: {
                 formatter: function () {
-                    return this.series.name + ': \u20AC ' + Highcharts.numberFormat(this.y,2);
+                    return this.series.name + ': \u20AC ' + Highcharts.numberFormat(this.y, 2);
                 }
             },
             yAxis: {
                 min: 0,
-                title: {text:null},
+                title: {text: null},
 
                 labels: {
                     overflow: 'justify',
                     formatter: function () {
-                        if(this.value >= 1000 || this.value <= -1000) {
+                        if (this.value >= 1000 || this.value <= -1000) {
                             return '\u20AC ' + (this.value / 1000) + 'k';
                         }
                         return '\u20AC ' + this.value;
@@ -188,7 +188,7 @@ $(function () {
                     cursor: 'pointer',
                     events: {
                         click: function (e) {
-                            if(e.point.url != null) {
+                            if (e.point.url != null) {
                                 window.location = e.point.url;
                             }
                         }
@@ -202,7 +202,7 @@ $(function () {
                 }
             },
             legend: {
-                enabled: false,
+                enabled: false
             },
             credits: {
                 enabled: false
@@ -211,5 +211,42 @@ $(function () {
         });
     });
 
+    $.getJSON('chart/home/recurring').success(function (data) {
+        $('#recurring').highcharts({
+            title: {
+                text: null
+            },
+            credits: {
+                enabled: false
+            },
+            tooltip: {
+                formatter: function () {
+                    if (this.point.objType == 'paid') {
+                        return this.key + ': \u20AC ' + Highcharts.numberFormat(this.y, 2);
+                    } else {
+                        return this.key + ': ~\u20AC ' + Highcharts.numberFormat(this.y, 2);
+                    }
+
+                }
+            },
+            plotOptions: {
+                pie: {
+                    events: {
+                        click: function (e) {
+                            if (e.point.url != null) {
+                                window.location = e.point.url;
+                            }
+                        }
+                    },
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: false
+                    }
+                }
+            },
+            series: data
+        });
+    });
 
 });

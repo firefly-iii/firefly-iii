@@ -63,15 +63,6 @@ class RecurringTransaction extends Ardent
 
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function reminders()
-    {
-        return $this->hasMany('RecurringTransactionReminder');
-
-    }
-
-    /**
      * @return Carbon
      */
     public function next()

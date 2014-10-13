@@ -27,25 +27,10 @@ class CreateRemindersTable extends Migration
             'reminders', function (Blueprint $table) {
                 $table->increments('id');
                 $table->timestamps();
-                $table->string('class', 40);
-                $table->integer('piggybank_id')->unsigned()->nullable();
-                $table->integer('recurring_transaction_id')->unsigned()->nullable();
                 $table->integer('user_id')->unsigned();
                 $table->date('startdate');
                 $table->date('enddate')->nullable();
                 $table->boolean('active');
-
-
-                // connect reminders to piggy banks.
-                $table->foreign('piggybank_id')
-                    ->references('id')->on('piggybanks')
-                    ->onDelete('set null');
-
-                // connect reminders to recurring transactions.
-                $table->foreign('recurring_transaction_id')
-                    ->references('id')->on('recurring_transactions')
-                    ->onDelete('set null');
-
 
                 // connect reminders to users
                 $table->foreign('user_id')

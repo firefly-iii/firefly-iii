@@ -21,7 +21,7 @@ class RecurringController extends BaseController
     public function __construct(RTR $repository, RI $helper)
     {
         $this->_repository = $repository;
-        $this->_helper = $helper;
+        $this->_helper     = $helper;
 
         View::share('title', 'Recurring transactions');
         View::share('mainTitleIcon', 'fa-rotate-right');
@@ -102,6 +102,31 @@ class RecurringController extends BaseController
 
     }
 
+    /**
+     * @param RecurringTransaction $recurringTransaction
+     * @return mixed
+     */
+    public function rescan(RecurringTransaction $recurringTransaction)
+    {
+        if (intval($recurringTransaction->active) == 0) {
+            Session::flash('warning', 'Inactive recurring transactions cannot be scanned.');
+            return Redirect::back();
+        }
+        // do something!
+        /** @var \Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface $repo */
+        $repo = App::make('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
+        $set  = $repo->get();
+
+        /** @var TransactionJournal $journal */
+        foreach ($set as $journal) {
+            Event::fire('recurring.rescan', [$recurringTransaction, $journal]);
+        }
+        Session::flash('success', 'Rescanned everything.');
+        return Redirect::back();
+
+
+    }
+
     public function store()
     {
         $data = Input::except(['_token', 'post_submit_action']);
@@ -170,14 +195,14 @@ class RecurringController extends BaseController
                     Session::flash('error', 'Could not update recurring transaction: ' . $messageBag->first());
 
                     return Redirect::route('transactions.edit', $recurringTransaction->id)->withInput()
-                        ->withErrors($messageBag);
+                                   ->withErrors($messageBag);
                 }
 
 
                 break;
             case 'validate_only':
-                $data = Input::all();
-                $data['id'] = $recurringTransaction->id;
+                $data        = Input::all();
+                $data['id']  = $recurringTransaction->id;
                 $messageBags = $this->_helper->validate($data);
 
                 Session::flash('warnings', $messageBags['warnings']);

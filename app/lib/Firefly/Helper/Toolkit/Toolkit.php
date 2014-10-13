@@ -381,4 +381,127 @@ class Toolkit implements ToolkitInterface
         }
         return $selectList;
     }
+
+    /**
+     * @param string $start
+     * @param string $end
+     * @param int $steps
+     */
+    public function colorRange($start, $end, $steps = 5)
+    {
+        if (strlen($start) != 6) {
+            throw new FireflyException('Start, ' . e($start) . ' should be a six character HTML colour.');
+        }
+        if (strlen($end) != 6) {
+            throw new FireflyException('End, ' . e($end) . ' should be a six character HTML colour.');
+        }
+        if ($steps < 1) {
+            throw new FireflyException('Steps must be > 1');
+        }
+
+        $start = '#' . $start;
+        $end   = '#' . $end;
+        /*
+         * Split html colours.
+         */
+        list($rs, $gs, $bs) = sscanf($start, "#%02x%02x%02x");
+        list($re, $ge, $be) = sscanf($end, "#%02x%02x%02x");
+
+        $stepr = ($re - $rs) / $steps;
+        $stepg = ($ge - $gs) / $steps;
+        $stepb = ($be - $bs) / $steps;
+
+        $return = [];
+        for ($i = 0; $i <= $steps; $i++) {
+            $cr = $rs + ($stepr * $i);
+            $cg = $gs + ($stepg * $i);
+            $cb = $bs + ($stepb * $i);
+
+            $return[] = $this->rgb2html($cr, $cg, $cb);
+        }
+
+        return $return;
+    }
+
+    protected function rgb2html($r, $g = -1, $b = -1)
+    {
+        $r = dechex($r < 0 ? 0 : ($r > 255 ? 255 : $r));
+        $g = dechex($g < 0 ? 0 : ($g > 255 ? 255 : $g));
+        $b = dechex($b < 0 ? 0 : ($b > 255 ? 255 : $b));
+
+        $color = (strlen($r) < 2 ? '0' : '') . $r;
+        $color .= (strlen($g) < 2 ? '0' : '') . $g;
+        $color .= (strlen($b) < 2 ? '0' : '') . $b;
+        return '#' . $color;
+    }
+
+    /**
+     * @param Carbon $currentEnd
+     * @param $repeatFreq
+     * @throws FireflyException
+     */
+    public function endOfPeriod(Carbon $currentEnd, $repeatFreq)
+    {
+        switch ($repeatFreq) {
+            default:
+                throw new FireflyException('Cannot do getFunctionForRepeatFreq for $repeat_freq ' . $repeatFreq);
+                break;
+            case 'daily':
+                $currentEnd->addDay();
+                break;
+            case 'weekly':
+                $currentEnd->addWeek()->subDay();
+                break;
+            case 'monthly':
+                $currentEnd->addMonth()->subDay();
+                break;
+            case 'quarterly':
+                $currentEnd->addMonths(3)->subDay();
+                break;
+            case 'half-year':
+                $currentEnd->addMonths(6)->subDay();
+                break;
+            case 'yearly':
+                $currentEnd->addYear()->subDay();
+                break;
+        }
+    }
+
+    /**
+     * @param Carbon $date
+     * @param $repeatFreq
+     * @param $skip
+     * @return Carbon
+     * @throws FireflyException
+     */
+    public function addPeriod(Carbon $date, $repeatFreq, $skip)
+    {
+        $add = ($skip + 1);
+        switch ($repeatFreq) {
+            default:
+                throw new FireflyException('Cannot do getFunctionForRepeatFreq for $repeat_freq ' . $repeatFreq);
+                break;
+            case 'daily':
+                $date->addDays($add);
+                break;
+            case 'weekly':
+                $date->addWeeks($add);
+                break;
+            case 'monthly':
+                $date->addMonths($add);
+                break;
+            case 'quarterly':
+                $months = $add * 3;
+                $date->addMonths($months);
+                break;
+            case 'half-year':
+                $months = $add * 6;
+                $date->addMonths($months);
+                break;
+            case 'yearly':
+                $date->addYears($add);
+                break;
+        }
+        return $date;
+    }
 }

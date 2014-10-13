@@ -5,6 +5,7 @@ namespace Firefly\Storage\TransactionJournal;
 
 use Carbon\Carbon;
 use Illuminate\Queue\Jobs\Job;
+use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 
 /**
@@ -22,6 +23,15 @@ class EloquentTransactionJournalRepository implements TransactionJournalReposito
     public function __construct()
     {
         $this->_user = \Auth::user();
+    }
+
+    /**
+     * Get them ALL
+     *
+     * @return Collection
+     */
+    public function get() {
+        return $this->_user->transactionjournals()->with('transactions')->get();
     }
 
     /**

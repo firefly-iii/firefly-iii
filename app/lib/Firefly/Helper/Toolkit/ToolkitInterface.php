@@ -2,6 +2,7 @@
 
 namespace Firefly\Helper\Toolkit;
 
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 /**
@@ -21,7 +22,7 @@ interface ToolkitInterface
      * Takes any collection and tries to make a sensible select list compatible array of it.
      *
      * @param Collection $set
-     * @param null       $titleField
+     * @param null $titleField
      *
      * @return mixed
      */
@@ -32,5 +33,20 @@ interface ToolkitInterface
     public function prev();
 
     public function checkImportJobs();
+
+    /**
+     * @param string $start
+     * @param string $end
+     * @param int $steps
+     */
+    public function colorRange($start, $end, $steps = 5);
+
+    /**
+     * @param Carbon $date
+     * @param $repeatFreq
+     * @param $skip
+     * @return Carbon
+     */
+    public function addPeriod(Carbon $date, $repeatFreq, $skip);
 
 }
