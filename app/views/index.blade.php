@@ -20,7 +20,7 @@
         </p>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12">
-        <h2><a href="{{route('accounts.create')}}">Start from scratch</a></h2>
+        <h2><a href="{{route('accounts.create','asset')}}">Start from scratch</a></h2>
 
         <p>
             Use this option if you are new to Firefly (III).
@@ -29,9 +29,10 @@
     @else
 
 
-    <!-- ACCOUNTS -->
+
     <div class="row">
         <div class="col-lg-8 col-md-12 col-sm-12">
+            <!-- ACCOUNTS -->
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-credit-card fa-fw"></i> <a href="#">Your accounts</a>
@@ -40,6 +41,7 @@
                     <div id="accounts-chart" style="height:300px;"></div>
                 </div>
             </div>
+            <!-- BUDGETS -->
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-tasks fa-fw"></i> <a href="{{route('budgets.index.date')}}">Budgets and spending</a>
@@ -48,6 +50,7 @@
                     <div id="budgets"></div>
                 </div>
             </div>
+            <!-- CATEGORIES -->
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-bar-chart fa-fw"></i> <a href="{{route('categories.index')}}">Categories</a>
@@ -55,8 +58,15 @@
                 <div class="panel-body">
                     <div id="categories"></div>
                 </div>
-
             </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-line-chart"></i> Savings
+                        </div>
+                        <div class="panel-body">
+                            Bla bla
+                        </div>
+                    </div>
 
 
 
@@ -64,6 +74,16 @@
         <div class="col-lg-4 col-md-6 col-sm-12">
             <!-- time based navigation -->
             @include('partials.date_nav')
+
+            <!-- REMINDERS -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-line-chart"></i> Recurring transactions
+                </div>
+                <div class="panel-body">
+                    <div id="recurring"></div>
+                </div>
+            </div>
 
             <!-- TRANSACTIONS -->
             @foreach($transactions as $data)

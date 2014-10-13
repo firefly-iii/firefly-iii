@@ -355,7 +355,7 @@ class Json implements JsonInterface
          * Loop set and create entries to return.
          */
         foreach ($set as $entry) {
-            $data['data'][] = [
+            $set = [
 
                 'name' => ['name' => $entry->name, 'url' => route('recurring.show', $entry->id)],
                 'match' => explode(' ', $entry->match),
@@ -370,6 +370,11 @@ class Json implements JsonInterface
                     'delete' => route('recurring.delete', $entry->id)
                 ]
             ];
+            if (intval($entry->skip) > 0) {
+                $set['repeat_freq'] = $entry->repeat_freq . ' (skip ' . $entry->skip . ')';
+            }
+            $data['data'][] = $set;
+
 
         }
         return $data;

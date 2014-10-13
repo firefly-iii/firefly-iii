@@ -1,8 +1,10 @@
 <?php
 
 use Carbon\Carbon;
+use Firefly\Exception\FireflyException;
 use Firefly\Helper\Controllers\ChartInterface;
 use Firefly\Storage\Account\AccountRepositoryInterface;
+use Illuminate\Support\Collection;
 
 /**
  * Class ChartController
@@ -18,7 +20,7 @@ class ChartController extends BaseController
 
 
     /**
-     * @param ChartInterface             $chart
+     * @param ChartInterface $chart
      * @param AccountRepositoryInterface $accounts
      */
     public function __construct(ChartInterface $chart, AccountRepositoryInterface $accounts)
@@ -57,13 +59,13 @@ class ChartController extends BaseController
 
         $return = [
             'chart_title' => 'Overview for budget ' . $budget->name,
-            'subtitle'    => 'All envelopes',
-            'series'      => [
+            'subtitle' => 'All envelopes',
+            'series' => [
                 [
-                    'type'  => 'line',
+                    'type' => 'line',
                     'yAxis' => 1,
-                    'name'  => 'Amount in envelope',
-                    'data'  => $envelope
+                    'name' => 'Amount in envelope',
+                    'data' => $envelope
                 ],
                 [
                     'type' => 'column',
@@ -71,10 +73,10 @@ class ChartController extends BaseController
                     'data' => $expense
                 ],
                 [
-                    'type'  => 'line',
+                    'type' => 'line',
                     'yAxis' => 1,
-                    'name'  => 'Spent percentage for envelope',
-                    'data'  => $left
+                    'name' => 'Spent percentage for envelope',
+                    'data' => $left
                 ]
 
 
@@ -111,14 +113,14 @@ class ChartController extends BaseController
 
         $return = [
             'chart_title' => 'Overview for budget ' . $budget->name,
-            'subtitle'    =>
+            'subtitle' =>
                 'Between ' . $rep->startdate->format('M jS, Y') . ' and ' . $rep->enddate->format('M jS, Y'),
-            'series'      => [
+            'series' => [
                 [
-                    'type'  => 'column',
-                    'name'  => 'Expenses per day',
+                    'type' => 'column',
+                    'name' => 'Expenses per day',
                     'yAxis' => 1,
-                    'data'  => $expense
+                    'data' => $expense
                 ],
                 [
                     'type' => 'line',
@@ -175,8 +177,8 @@ class ChartController extends BaseController
         }
         $return = [
             'chart_title' => 'Overview for ' . $budget->name,
-            'subtitle'    => 'Not organized by an envelope',
-            'series'      => [
+            'subtitle' => 'Not organized by an envelope',
+            'series' => [
                 [
                     'type' => 'column',
                     'name' => 'Expenses per day',
@@ -245,11 +247,11 @@ class ChartController extends BaseController
 
             // create a serie for the repetition.
             $currentSerie = [
-                'type'  => 'spline',
-                'id'    => 'rep-' . $repetition->id,
+                'type' => 'spline',
+                'id' => 'rep-' . $repetition->id,
                 'yAxis' => 1,
-                'name'  => 'Envelope #' . $repetition->id . ' in ' . $repetition->periodShow(),
-                'data'  => []
+                'name' => 'Envelope #' . $repetition->id . ' in ' . $repetition->periodShow(),
+                'data' => []
             ];
             $current      = clone $repetition->startdate;
             while ($current <= $repetition->enddate) {
@@ -271,11 +273,11 @@ class ChartController extends BaseController
 
         $return = [
             'chart_title' => 'Overview for budget ' . $budget->name,
-            'subtitle'    =>
+            'subtitle' =>
                 'Between ' . Session::get('start')->format('M jS, Y') . ' and ' . Session::get('end')->format(
                     'M jS, Y'
                 ),
-            'series'      => $series
+            'series' => $series
         ];
 
         return Response::json($return);
@@ -296,8 +298,8 @@ class ChartController extends BaseController
         $serie = $this->_chart->categoryShowChart($category, $range, $start, $end);
         $data  = [
             'chart_title' => $category->name,
-            'subtitle'    => '<a href="' . route('categories.show', [$category->id]) . '">View more</a>',
-            'series'      => $serie
+            'subtitle' => '<a href="' . route('categories.show', [$category->id]) . '">View more</a>',
+            'series' => $serie
         ];
 
         return Response::json($data);
@@ -336,8 +338,8 @@ class ChartController extends BaseController
             '<a href="' . route('accounts.index') . '">View more</a>';
         $data = [
             'chart_title' => count($accounts) == 1 ? $accounts[0]->name : 'All accounts',
-            'subtitle'    => $url,
-            'series'      => []
+            'subtitle' => $url,
+            'series' => []
         ];
 
         foreach ($accounts as $account) {
@@ -431,11 +433,11 @@ class ChartController extends BaseController
             if ($limit > 0 || $expenses > 0) {
                 $data['labels'][]            = $budget->name;
                 $data['series'][0]['data'][] = [
-                    'y'   => $limit,
+                    'y' => $limit,
                     'url' => route('budgets.show', [$budget->id, $id]) . '?' . $parameter
                 ];
                 $data['series'][1]['data'][] = [
-                    'y'   => $expenses,
+                    'y' => $expenses,
                     'url' => route('budgets.show', [$budget->id, $id]) . '?' . $parameter
                 ];
             }
@@ -444,26 +446,26 @@ class ChartController extends BaseController
         $set = \Auth::user()->transactionjournals()->whereNotIn(
             'transaction_journals.id', function ($query) use ($start, $end) {
                 $query->select('transaction_journals.id')->from('transaction_journals')
-                    ->leftJoin(
-                        'component_transaction_journal', 'component_transaction_journal.transaction_journal_id', '=',
-                        'transaction_journals.id'
-                    )
-                    ->leftJoin('components', 'components.id', '=', 'component_transaction_journal.component_id')
-                    ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                    ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                    ->where('components.class', 'Budget');
+                      ->leftJoin(
+                          'component_transaction_journal', 'component_transaction_journal.transaction_journal_id', '=',
+                          'transaction_journals.id'
+                      )
+                      ->leftJoin('components', 'components.id', '=', 'component_transaction_journal.component_id')
+                      ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                      ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                      ->where('components.class', 'Budget');
             }
         )->before($end)->after($start)->lessThan(0)->transactionTypes(['Withdrawal'])->sum('amount');
 
         // This can be debugged by using get(['transaction_journals.*','transactions.amount']);
         $data['labels'][]            = 'No budget';
         $data['series'][0]['data'][] = [
-            'y'   => 0,
-            'url' => route('budgets.nobudget','session')
+            'y' => 0,
+            'url' => route('budgets.nobudget', 'session')
         ];
         $data['series'][1]['data'][] = [
-            'y'   => floatval($set) * -1,
-            'url' => route('budgets.nobudget','session')
+            'y' => floatval($set) * -1,
+            'url' => route('budgets.nobudget', 'session')
         ];
 
         return Response::json($data);
@@ -480,6 +482,113 @@ class ChartController extends BaseController
 
         return Response::json($this->_chart->categories($start, $end));
 
+
+    }
+
+    /**
+     * This method checks all recurring transactions, calculates the current "moment" and returns
+     * a list of yet to be paid (and paid) recurring transactions. This list can be used to show a beautiful chart
+     * to the end user who will love it and cherish it.
+     *
+     * @throws FireflyException
+     */
+    public function homeRecurring()
+    {
+        /** @var \Firefly\Helper\Toolkit\ToolkitInterface $toolkit */
+        $toolkit               = App::make('Firefly\Helper\Toolkit\ToolkitInterface');
+        $recurringTransactions = \Auth::user()->recurringtransactions()->get();
+        $sessionStart          = \Session::get('start');
+        $sessionEnd            = \Session::get('end');
+        $paid                  = [];
+        $unpaid                = [];
+
+        /** @var \RecurringTransaction $recurring */
+        foreach ($recurringTransactions as $recurring) {
+            /*
+             * Start a loop starting at the $date.
+             */
+            $start = clone $recurring->date;
+            $end   = Carbon::now();
+
+            /*
+             * The jump we make depends on the $repeat_freq
+             */
+            $current = clone $start;
+
+            \Log::debug('Now looping recurring transaction #' . $recurring->id . ': ' . $recurring->name);
+
+            while ($current <= $end) {
+                /*
+                 * Get end of period for $current:
+                 */
+                $currentEnd = clone $current;
+                $toolkit->endOfPeriod($currentEnd, $recurring->repeat_freq);
+                \Log::debug('Now at $current: ' . $current->format('D d F Y') . ' - ' . $currentEnd->format('D d F Y'));
+
+                /*
+                 * In the current session range?
+                 */
+                if ($sessionEnd >= $current and $currentEnd >= $sessionStart) {
+                    /*
+                     * Lets see if we've already spent money on this recurring transaction (it hath recurred).
+                     */
+                    /** @var Collection $set */
+                    $set = \Auth::user()->transactionjournals()->where('recurring_transaction_id', $recurring->id)
+                                ->after($current)->before($currentEnd)->get();
+                    if (count($set) > 1) {
+                        \Log::error('Recurring #' . $recurring->id . ', dates [' . $current . ',' . $currentEnd . ']. Found multiple hits. Cannot handle this!');
+                        throw new FireflyException('Cannot handle multiple transactions. See logs.');
+                    } else if (count($set) == 0) {
+                        $unpaid[] = $recurring;
+                    } else {
+                        $paid[] = $set->get(0);
+                    }
+
+                }
+
+
+                /*
+                 * Add some time for the next loop!
+                 */
+                $toolkit->addPeriod($current, $recurring->repeat_freq, intval($recurring->skip));
+
+            }
+
+        }
+        /*
+         * Loop paid and unpaid to make two haves for a pie chart.
+         */
+        $unPaidColours = $toolkit->colorRange('AA4643', 'FFFFFF', count($unpaid) == 0 ? 1 : count($unpaid));
+        $paidColours   = $toolkit->colorRange('4572A7', 'FFFFFF', count($paid) == 0 ? 1 : count($paid));
+        $serie         = [
+            'type' => 'pie',
+            'name' => 'Amount',
+            'data' => []
+        ];
+
+        /** @var TransactionJournal $entry */
+        foreach ($paid as $index => $entry) {
+            $transactions    = $entry->transactions()->get();
+            $amount          = max(floatval($transactions[0]->amount), floatval($transactions[1]->amount));
+            $serie['data'][] = [
+                'name' => $entry->description,
+                'y' => $amount,
+                'color' => $paidColours[$index]
+            ];
+        }
+
+
+        /** @var RecurringTransaction $entry */
+        foreach ($unpaid as $index => $entry) {
+            $amount          = (floatval($entry->amount_max) + floatval($entry->amount_min)) / 2;
+            $serie['data'][] = [
+                'name' => $entry->name,
+                'y' => $amount,
+                'color' => $unPaidColours[$index]
+            ];
+        }
+
+        return Response::json([$serie]);
 
     }
 }

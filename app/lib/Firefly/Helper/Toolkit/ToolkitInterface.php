@@ -21,7 +21,7 @@ interface ToolkitInterface
      * Takes any collection and tries to make a sensible select list compatible array of it.
      *
      * @param Collection $set
-     * @param null       $titleField
+     * @param null $titleField
      *
      * @return mixed
      */
@@ -32,5 +32,12 @@ interface ToolkitInterface
     public function prev();
 
     public function checkImportJobs();
+
+    /**
+     * @param string $start
+     * @param string $end
+     * @param int $steps
+     */
+    public function colorRange($start, $end, $steps = 5);
 
 }
