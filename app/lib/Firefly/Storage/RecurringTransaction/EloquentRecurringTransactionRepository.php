@@ -175,12 +175,6 @@ class EloquentRecurringTransactionRepository implements RecurringTransactionRepo
             return $messageBag;
         }
 
-        if ($recurringTransaction->date < Carbon::now()) {
-            $messageBag->add('date', 'Must be in the future.');
-            return $messageBag;
-        }
-
-
         if ($recurringTransaction->validate()) {
             $recurringTransaction->save();
         } else {
