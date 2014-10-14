@@ -22,9 +22,9 @@ class ProfileController extends BaseController
      */
     public function index()
     {
-        View::share('title','Profile');
-        View::share('subTitle',Auth::user()->email);
-        View::share('mainTitleIcon','fa-user');
+        View::share('title', 'Profile');
+        View::share('subTitle', Auth::user()->email);
+        View::share('mainTitleIcon', 'fa-user');
         return View::make('profile.index');
     }
 
@@ -33,9 +33,9 @@ class ProfileController extends BaseController
      */
     public function changePassword()
     {
-        View::share('title',Auth::user()->email);
-        View::share('subTitle','Change your password');
-        View::share('mainTitleIcon','fa-user');
+        View::share('title', Auth::user()->email);
+        View::share('subTitle', 'Change your password');
+        View::share('mainTitleIcon', 'fa-user');
         return View::make('profile.change-password');
     }
 
