@@ -41,21 +41,37 @@ class EloquentRecurringTrigger
         $wordMatch   = false;
         $matches     = explode(' ', $recurring->match);
         $description = strtolower($journal->description);
-        $count       = 0;
+
+        /*
+         * Attach expense account to description for more narrow matching.
+         */
+        $transactions = $journal->transactions()->get();
+        /** @var \Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            /** @var \Account $account */
+            $account = $transaction->account()->first();
+            /** @var \AccountType $type */
+            $type = $account->accountType()->first();
+            if ($type->type == 'Expense account' || $type->type == 'Beneficiary account') {
+                $description .= ' ' . strtolower($account->name);
+            }
+        }
+
+        $count = 0;
         foreach ($matches as $word) {
             if (!(strpos($description, strtolower($word)) === false)) {
                 $count++;
             }
         }
-        if ($count > 0) {
+        if ($count >= count($matches)) {
             $wordMatch = true;
         }
 
         /*
          * Match amount.
          */
-        $transactions = $journal->transactions()->get();
-        $amountMatch  = false;
+
+        $amountMatch = false;
         if (count($transactions) > 1) {
 
             $amount = max(floatval($transactions[0]->amount), floatval($transactions[1]->amount));
@@ -73,6 +89,7 @@ class EloquentRecurringTrigger
             $journal->recurringTransaction()->associate($recurring);
             $journal->save();
         }
+
     }
 
     /**
