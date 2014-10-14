@@ -212,41 +212,45 @@ $(function () {
     });
 
     $.getJSON('chart/home/recurring').success(function (data) {
-        $('#recurring').highcharts({
-            title: {
-                text: null
-            },
-            credits: {
-                enabled: false
-            },
-            tooltip: {
-                formatter: function () {
-                    if (this.point.objType == 'paid') {
-                        return this.key + ': \u20AC ' + Highcharts.numberFormat(this.y, 2);
-                    } else {
-                        return this.key + ': ~\u20AC ' + Highcharts.numberFormat(this.y, 2);
-                    }
-
-                }
-            },
-            plotOptions: {
-                pie: {
-                    events: {
-                        click: function (e) {
-                            if (e.point.url != null) {
-                                window.location = e.point.url;
-                            }
+        if (data[0].data.length == 0) {
+            $('#recurring').parent().parent().remove();
+        } else {
+            $('#recurring').highcharts({
+                title: {
+                    text: null
+                },
+                credits: {
+                    enabled: false
+                },
+                tooltip: {
+                    formatter: function () {
+                        if (this.point.objType == 'paid') {
+                            return this.key + ': \u20AC ' + Highcharts.numberFormat(this.y, 2);
+                        } else {
+                            return this.key + ': ~\u20AC ' + Highcharts.numberFormat(this.y, 2);
                         }
-                    },
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    dataLabels: {
-                        enabled: false
+
                     }
-                }
-            },
-            series: data
-        });
+                },
+                plotOptions: {
+                    pie: {
+                        events: {
+                            click: function (e) {
+                                if (e.point.url != null) {
+                                    window.location = e.point.url;
+                                }
+                            }
+                        },
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: false
+                        }
+                    }
+                },
+                series: data
+            });
+        }
     });
 
 });
