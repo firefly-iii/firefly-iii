@@ -72,30 +72,51 @@ App::down(
 );
 
 // forms:
-\Form::macro('ffText', function ($name, $value = null, array $options = []) {
-    return \Firefly\Form\Form::ffText($name, $value, $options);
-});
-\Form::macro('ffSelect', function ($name, array $list = [], $selected = null, array $options = []) {
-    return \Firefly\Form\Form::ffSelect($name, $list, $selected, $options);
-});
-\Form::macro('ffInteger', function ($name, $value = null, array $options = []) {
-    return \Firefly\Form\Form::ffInteger($name, $value, $options);
-});
-\Form::macro('ffAmount', function ($name, $value = null, array $options = []) {
-    return \Firefly\Form\Form::ffAmount($name, $value, $options);
-});
-\Form::macro('ffDate', function ($name, $value = null, array $options = []) {
-    return \Firefly\Form\Form::ffDate($name, $value, $options);
-});
-\Form::macro('ffTags', function ($name, $value = null, array $options = []) {
-    return \Firefly\Form\Form::ffTags($name, $value, $options);
-});
-\Form::macro('ffCheckbox',function ($name, $value = 1, $checked = null, $options = []) {
-    return \Firefly\Form\Form::ffCheckbox($name, $value, $checked, $options);
-});
-\Form::macro('ffOptionsList',function ($type, $name) {
-    return \Firefly\Form\Form::ffOptionsList($type, $name);
-});
+\Form::macro(
+    'ffText', function ($name, $value = null, array $options = []) {
+        return \Firefly\Form\Form::ffText($name, $value, $options);
+    }
+);
+\Form::macro(
+    'ffSelect', function ($name, array $list = [], $selected = null, array $options = []) {
+        return \Firefly\Form\Form::ffSelect($name, $list, $selected, $options);
+    }
+);
+\Form::macro(
+    'ffInteger', function ($name, $value = null, array $options = []) {
+        return \Firefly\Form\Form::ffInteger($name, $value, $options);
+    }
+);
+\Form::macro(
+    'ffAmount', function ($name, $value = null, array $options = []) {
+        return \Firefly\Form\Form::ffAmount($name, $value, $options);
+    }
+);
+\Form::macro(
+    'ffBalance', function ($name, $value = null, array $options = []) {
+        return \Firefly\Form\Form::ffBalance($name, $value, $options);
+    }
+);
+\Form::macro(
+    'ffDate', function ($name, $value = null, array $options = []) {
+        return \Firefly\Form\Form::ffDate($name, $value, $options);
+    }
+);
+\Form::macro(
+    'ffTags', function ($name, $value = null, array $options = []) {
+        return \Firefly\Form\Form::ffTags($name, $value, $options);
+    }
+);
+\Form::macro(
+    'ffCheckbox', function ($name, $value = 1, $checked = null, $options = []) {
+        return \Firefly\Form\Form::ffCheckbox($name, $value, $checked, $options);
+    }
+);
+\Form::macro(
+    'ffOptionsList', function ($type, $name) {
+        return \Firefly\Form\Form::ffOptionsList($type, $name);
+    }
+);
 
 
 /*
