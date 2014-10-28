@@ -98,13 +98,13 @@
                 <a href="#"><i class="fa fa-credit-card fa-fw"></i> Accounts <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a @if($r == 'accounts.asset') class="active" @endif href="{{route('accounts.asset')}}"><i class="fa fa-money fa-fw"></i> Asset accounts</a>
+                        <a @if(isset($what) && $what == 'asset')class="active"@endif href="{{route('accounts.index','asset')}}"><i class="fa fa-money fa-fw"></i> Asset accounts</a>
                     </li>
                     <li>
-                        <a @if($r == 'accounts.expense') class="active" @endif href="{{route('accounts.expense')}}"><i class="fa fa-shopping-cart fa-fw"></i> Expense accounts</a>
+                        <a @if(isset($what) && $what == 'expense')class="active"@endif href="{{route('accounts.index','expense')}}"><i class="fa fa-shopping-cart fa-fw"></i> Expense accounts</a>
                     </li>
                     <li>
-                        <a @if($r == 'accounts.revenue') class="active" @endif href="{{route('accounts.revenue')}}"><i class="fa fa-download fa-fw"></i> Revenue accounts</a>
+                        <a @if(isset($what) && $what == 'revenue')class="active"@endif href="{{route('accounts.index','revenue')}}"><i class="fa fa-download fa-fw"></i> Revenue accounts</a>
                     </li>
                 </ul>
                 <!-- /.nav-second-level -->
@@ -208,7 +208,7 @@
                     </li>
                     <!--
                     <li>
-                        <a href="{{route('accounts.create')}}"><i class="fa fa-money fa-fw"></i> Account</a>
+                        <a href="#"><i class="fa fa-money fa-fw"></i> Account</a>
                     </li>
                     -->
                     <li>

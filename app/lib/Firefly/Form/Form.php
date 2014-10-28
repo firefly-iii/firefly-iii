@@ -29,10 +29,33 @@ class Form
         return self::ffInput('checkbox', $name, $value, $options);
     }
 
+    /**
+     * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     * @throws FireflyException
+     */
     public static function ffAmount($name, $value = null, array $options = [])
     {
         $options['step'] = 'any';
         $options['min'] = '0.01';
+        return self::ffInput('amount', $name, $value, $options);
+
+    }
+
+    /**
+     * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    public static function ffBalance($name, $value = null, array $options = [])
+    {
+        $options['step'] = 'any';
         return self::ffInput('amount', $name, $value, $options);
 
     }
