@@ -110,15 +110,6 @@ class AccountController extends BaseController
 
         return Response::jsoN($return);
     }
-
-    public function transactions(Account $account)
-    {
-        /*
-         * TODO get the JSON helper to get transactions or something.
-         */
-
-    }
-
     /**
      * @param $account
      *
