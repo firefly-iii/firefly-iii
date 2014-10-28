@@ -40,5 +40,5 @@ google.setOnLoadCallback(drawChart);
     var chart = new google.visualization.Sankey(document.getElementById('sankey_multiple'));
     chart.draw(data, options);
    }
-</script>
+</script><!-- TODO remove me -->
 @stop

@@ -5,7 +5,7 @@
         <p class="lead">Remember that deleting something is permanent.</p>
 
     </div>
-
+<!-- TODO cleanup for new forms and layout. -->
 </div>
 
 {{Form::open(['class' => 'form-horizontal','url' => route('piggybanks.destroy',$piggybank->id)])}}

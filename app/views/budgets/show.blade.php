@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-<div class="row">
+<div class="row"><!-- TODO cleanup to match new theme & form -->
     <div class="col-lg-12 col-md-12 col-sm-12">
             <p class="lead">Budgets can help you cut back on spending.</p>
 

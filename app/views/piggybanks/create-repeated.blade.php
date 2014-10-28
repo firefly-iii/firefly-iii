@@ -3,7 +3,7 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <p class="lead">Create repeated expenses to keep track of long-term planned expenses</p>
-    </div>
+    </div><!-- TODO cleanup for new forms and layout. -->
 </div>
 
 {{Form::open(['class' => 'form-horizontal','url' => route('piggybanks.store.repeated')])}}

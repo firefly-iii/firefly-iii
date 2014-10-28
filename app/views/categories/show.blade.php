@@ -15,7 +15,7 @@
             transactions for the currently selected period.
         </p>
     </div>
-</div>
+</div><!-- TODO cleanup to match new theme & form -->
 
 
 @include('partials.date_nav')

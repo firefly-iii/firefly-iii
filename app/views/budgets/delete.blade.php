@@ -25,7 +25,7 @@
         </p>
     </div>
 
-</div>
+</div><!-- TODO cleanup to match new theme & form -->
 
 <div class="row">
     <div class="col-lg-6">

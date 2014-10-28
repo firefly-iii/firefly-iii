@@ -4,7 +4,7 @@
     <div class="col-lg-12 col-md-12 col-sm-12">
         <p class="lead">Use piggy banks to save for a one-time goal.</p>
     </div>
-</div>
+</div><!-- TODO cleanup for new forms and layout. -->
 
 {{Form::open(['class' => 'form-horizontal','url' => route('piggybanks.update',$piggybank->id)])}}
 

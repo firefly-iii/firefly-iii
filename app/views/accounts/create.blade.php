@@ -10,9 +10,6 @@
             </div>
             <div class="panel-body">
                 {{Form::ffText('name')}}
-
-
-
             </div>
         </div>
         <p>

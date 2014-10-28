@@ -9,4 +9,4 @@
         <td>{{mf($entry['amount']*-1)}}</td>
     </tr>
     @endforeach
-</table>
+</table><!-- TODO remove me -->

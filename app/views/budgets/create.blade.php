@@ -13,7 +13,7 @@
             end of the [period], congratulations! You have saved money!
         </p>
     </div>
-</div>
+</div><!-- TODO cleanup to match new theme & form -->
 
 {{Form::open(['class' => 'form-horizontal','url' => route('budgets.store')])}}
 

@@ -9,7 +9,7 @@
             and {{Session::get('end')->format('d M Y')}}.
         </p>
         @endif
-    </div>
+    </div><!-- TODO cleanup to match new theme & form -->
 </div>
 @if($transactions->count() > 0)
 <div class="row">

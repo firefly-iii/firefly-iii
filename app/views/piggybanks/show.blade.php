@@ -15,7 +15,7 @@
             @endif
         </div>
     </div>
-</div>
+</div><!-- TODO cleanup for new forms and layout. -->
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-12">
         <h3>General information</h3>
