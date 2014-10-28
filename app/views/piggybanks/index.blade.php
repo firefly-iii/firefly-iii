@@ -22,12 +22,27 @@
                     @endif
                     </p>
 
+                    <div class="btn-group btn-group-xs">
+                        <a href="{{route('piggybanks.edit',$piggyBank->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="{{route('piggybanks.delete',$piggyBank->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                    </div>
+
 
             </div>
         </div>
     </div>
     @endif
 @endforeach
+    <div class="col-lg-2 col-md-4 col-sm-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                &nbsp;
+            </div>
+            <div class="panel-body">
+                <a href="{{route('piggybanks.create.piggybank')}}" class="btn btn-success btn-block">Add new piggybank</a>
+            </div>
+        </div>
+    </div>
 </div>
 @endif
 {{--
