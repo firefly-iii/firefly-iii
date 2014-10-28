@@ -12,14 +12,17 @@ class Account implements AccountInterface
 
     /**
      * @param \Account $account
+     *
      * @return \TransactionJournal|null
      */
     public function openingBalanceTransaction(\Account $account)
     {
         return \TransactionJournal::withRelevantData()
                                   ->accountIs($account)
-                                  ->leftJoin('transaction_types', 'transaction_types.id', '=',
-                'transaction_journals.transaction_type_id')
+                                  ->leftJoin(
+                                      'transaction_types', 'transaction_types.id', '=',
+                                      'transaction_journals.transaction_type_id'
+                                  )
                                   ->where('transaction_types.type', 'Opening balance')
                                   ->first(['transaction_journals.*']);
     }
@@ -36,7 +39,7 @@ class Account implements AccountInterface
      * For now, Firefly simply warns the user of this.
      *
      * @param \Account $account
-     * @param $perPage
+     * @param          $perPage
      *
      * @return array|mixed
      * @throws \Firefly\Exception\FireflyException
@@ -110,17 +113,25 @@ class Account implements AccountInterface
 
 
         // statistics (transactions)
-        $trIn   = floatval(\Transaction::before($end)->after($start)->accountIs($account)->moreThan(0)
-                                       ->transactionTypes(['Deposit', 'Withdrawal'])->sum('transactions.amount'));
-        $trOut  = floatval(\Transaction::before($end)->after($start)->accountIs($account)->lessThan(0)
-                                       ->transactionTypes(['Deposit', 'Withdrawal'])->sum('transactions.amount'));
+        $trIn   = floatval(
+            \Transaction::before($end)->after($start)->accountIs($account)->moreThan(0)
+                        ->transactionTypes(['Deposit', 'Withdrawal'])->sum('transactions.amount')
+        );
+        $trOut  = floatval(
+            \Transaction::before($end)->after($start)->accountIs($account)->lessThan(0)
+                        ->transactionTypes(['Deposit', 'Withdrawal'])->sum('transactions.amount')
+        );
         $trDiff = $trIn + $trOut;
 
         // statistics (transfers)
-        $trfIn   = floatval(\Transaction::before($end)->after($start)->accountIs($account)->moreThan(0)
-                                        ->transactionTypes(['Transfer'])->sum('transactions.amount'));
-        $trfOut  = floatval(\Transaction::before($end)->after($start)->accountIs($account)->lessThan(0)
-                                        ->transactionTypes(['Transfer'])->sum('transactions.amount'));
+        $trfIn   = floatval(
+            \Transaction::before($end)->after($start)->accountIs($account)->moreThan(0)
+                        ->transactionTypes(['Transfer'])->sum('transactions.amount')
+        );
+        $trfOut  = floatval(
+            \Transaction::before($end)->after($start)->accountIs($account)->lessThan(0)
+                        ->transactionTypes(['Transfer'])->sum('transactions.amount')
+        );
         $trfDiff = $trfIn + $trfOut;
 
         $stats['period'] = [

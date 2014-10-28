@@ -136,15 +136,12 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/jump/{range}',['uses' => 'HomeController@rangeJump','as' => 'rangeJump']);
 
         // account controller:
-        Route::get('/accounts', ['uses' => 'AccountController@index', 'as' => 'accounts.index']);
-        Route::get('/accounts/asset',  ['uses' => 'AccountController@asset', 'as' => 'accounts.asset']);
-        Route::get('/accounts/expense', ['uses' => 'AccountController@expense', 'as' => 'accounts.expense']);
-        Route::get('/accounts/revenue', ['uses' => 'AccountController@revenue', 'as' => 'accounts.revenue']);
-
+        Route::get('/accounts/json/{what}', ['uses' => 'AccountController@json', 'as' => 'accounts.json'])->where('what','revenue|asset|expense');
+        Route::get('/accounts/{what}', ['uses' => 'AccountController@index', 'as' => 'accounts.index'])->where('what','revenue|asset|expense');
         Route::get('/accounts/create/{what}', ['uses' => 'AccountController@create', 'as' => 'accounts.create'])->where('what','revenue|asset|expense');
-        Route::get('/accounts/{account}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
-        Route::get('/accounts/{account}/edit', ['uses' => 'AccountController@edit', 'as' => 'accounts.edit']);
-        Route::get('/accounts/{account}/delete', ['uses' => 'AccountController@delete', 'as' => 'accounts.delete']);
+        Route::get('/accounts/edit/{account}',['uses' => 'AccountController@edit','as' => 'accounts.edit']);
+        Route::get('/accounts/delete/{account}',['uses' => 'AccountController@delete','as' => 'accounts.delete']);
+        Route::get('/accounts/show/{account}',['uses' => 'AccountController@show','as' => 'accounts.show']);
 
         // budget controller:
         Route::get('/budgets/date',['uses' => 'BudgetController@indexByDate','as' => 'budgets.index.date']);
