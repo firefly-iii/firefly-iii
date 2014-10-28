@@ -7,7 +7,7 @@
                 <i class="fa fa-fw {{$subTitleIcon}} fa-fw"></i> {{{$account->name}}}
             </div>
             <div class="panel-body">
-                <div id="accountTransactionsTable"></div>
+                <div id="overviewChart"></div>
             </div>
         </div>
     </div>
@@ -61,11 +61,36 @@
                 </div>
     </div>
 </div>
+
+
+<div class="row">
+    <div class="col-lg-6 col-md-12 col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Out
+            </div>
+            <div class="panel-body">
+                <div id="accountOutSankey"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-12 col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                In
+            </div>
+            <div class="panel-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <i class="fa fa-repeat fa-fw"></i> Transaction
+                <i class="fa fa-repeat fa-fw"></i> Transactions
             </div>
             <div class="panel-body">
 
@@ -122,18 +147,7 @@
     </div>
 </div>
 
-<div class="row">
-<div class="col-lg-12 col-md-12 col-sm-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-repeat fa-fw"></i> Transaction
-            </div>
-            <div class="panel-body">
 
-            </div>
-        </div>
-    </div>
-</div>
 
 {{--
 <div class="row">
@@ -153,12 +167,9 @@
 @section('scripts')
 <script type="text/javascript">
     var accountID = {{{$account->id}}};
-    var URL = 'bla bla bla';
-    var container = 'transactionByAccountTable';
 </script>
 {{HTML::script('assets/javascript/datatables/jquery.dataTables.min.js')}}
 {{HTML::script('assets/javascript/datatables/dataTables.bootstrap.js')}}
-{{HTML::script('assets/javascript/datatables/transactions.js')}}
 {{HTML::script('assets/javascript/highcharts/highcharts.js')}}
 {{HTML::script('assets/javascript/firefly/accounts.js')}}
 @stop
