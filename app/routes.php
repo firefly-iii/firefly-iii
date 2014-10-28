@@ -142,7 +142,6 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/accounts/edit/{account}',['uses' => 'AccountController@edit','as' => 'accounts.edit']);
         Route::get('/accounts/delete/{account}',['uses' => 'AccountController@delete','as' => 'accounts.delete']);
         Route::get('/accounts/show/{account}',['uses' => 'AccountController@show','as' => 'accounts.show']);
-        Route::get('/accounts/sankey/{account}/out',['uses' => 'AccountController@sankeyOut','as' => 'accounts.sankey.out']);
 
         // budget controller:
         Route::get('/budgets/date',['uses' => 'BudgetController@indexByDate','as' => 'budgets.index.date']);
