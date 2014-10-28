@@ -8,6 +8,10 @@ body {
     background-color: #f8f8f8;
 }
 
+.google-chart-error {
+    border:1px red solid;height:20px;
+}
+
 #wrapper {
     width: 100%;
 }
