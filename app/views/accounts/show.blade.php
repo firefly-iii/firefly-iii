@@ -70,7 +70,7 @@
                 Out
             </div>
             <div class="panel-body">
-                <div id="accountOutSankey"></div>
+                <div id="accountOutSankey"><img src="http://placehold.it/550x300" title="Placeholder" alt="" /></div>
             </div>
         </div>
     </div>
@@ -80,7 +80,7 @@
                 In
             </div>
             <div class="panel-body">
-
+                <div id="accountInSankey"><img src="http://placehold.it/550x300" title="Placeholder" alt="" /></div>
             </div>
         </div>
     </div>
