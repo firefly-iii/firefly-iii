@@ -29,12 +29,10 @@ google.setOnLoadCallback(drawChart);
 
     // Set chart options
     var options = {
-        width: 600,
-
         sankey: {
                 link: { color: { fill: '#9fa8da', fillOpacity: 0.8 } },
-                node: { color: { fill: '#a61d4c' },
-                        label: { color: '#871b47' } }
+                node: { color: { fill: '#000' },
+                        label: { color: '#000' } }
               }
     };
 

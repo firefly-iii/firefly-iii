@@ -111,7 +111,8 @@ class AccountController extends BaseController
         return Response::jsoN($return);
     }
 
-    public function transactions(Account $account) {
+    public function transactions(Account $account)
+    {
         /*
          * TODO get the JSON helper to get transactions or something.
          */
@@ -123,7 +124,7 @@ class AccountController extends BaseController
      *
      * @return \Illuminate\View\View
      */
-    public function sankey($account)
+    public function sankeyOut($account)
     {
 
         /*
@@ -162,7 +163,7 @@ class AccountController extends BaseController
                     $from     = $to;
                     $category = $entry->categories()->first();
                     if ($category) {
-                        $to = $category->name . ' (cat)';
+                        $to = ' ' . $category->name;
                     } else {
                         $to = '(no category)';
                     }
@@ -211,16 +212,18 @@ class AccountController extends BaseController
             }
 
         }
-        ksort($filtered);
-
         /*
-         * Collect amounts to give the labels the proper
+         * Take out the keys:
          */
+        foreach ($filtered as $key => $entry) {
+            $result[] = [$entry['from'],$entry['to'],$entry['amount']];
+        }
+
 
         /*
          * Loop it again to add the amounts.
          */
-        return View::make('accounts.sankey', compact('filtered'));
+        return Response::json($result);
     }
 
 
