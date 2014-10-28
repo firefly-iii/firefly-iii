@@ -1,27 +1,45 @@
 @extends('layouts.default')
 @section('content')
-<div class="row">
-    <div class="col-lg-6 col-md-6 col-sm-12">
-        <p>
-            <a href="{{route('piggybanks.create.piggybank')}}" class="btn btn-success">Create new piggy bank</a>
-        </p><!-- TODO cleanup for new forms and layout. -->
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-12">
-        <p>
-            <a href="{{route('piggybanks.create.repeated')}}" class="btn btn-success">Create new repeated expense</a>
-        </p>
-    </div>
-</div>
 
+@if($countNonRepeating > 0)
 <div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
+@foreach($piggybanks as $piggyBank)
+    @if($piggyBank->repeats == 0)
+    <div class="col-lg-2 col-md-4 col-sm-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a href="{{route('piggybanks.show',$piggyBank->id)}}">{{{$piggyBank->name}}}</a>
+            </div>
+            <div class="panel-body">
+                    <div class="progress" style="height:3px;">
+                      <div class="progress-bar @if($piggyBank->currentRelevantRep()->pct() == 100)progress-bar-success @endif " role="progressbar" aria-valuenow="{{$piggyBank->currentRelevantRep()->pct()}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$piggyBank->currentRelevantRep()->pct()}}%">
+                      </div>
+                    </div>
+                    <p class="small">
+                    {{mf($piggyBank->currentRelevantRep()->currentamount)}} of {{mf($piggyBank->targetamount)}}<br />
+                    @if($piggyBank->targetamount-$piggyBank->currentRelevantRep()->currentamount > 0)
+                        {{mf($piggyBank->targetamount-$piggyBank->currentRelevantRep()->currentamount)}} to go.
+                    @endif
+                    </p>
+
+
+            </div>
+        </div>
+    </div>
+    @endif
+@endforeach
+</div>
+@endif
+{{--
+
+
         <h3>Current piggy banks</h3>
         @if($countNonRepeating == 0)
         <p class="text-warning">No piggy banks found.</p>
         @else
             @foreach($piggybanks as $piggyBank)
                 @if($piggyBank->repeats == 0)
-                    <h4><a href="{{route('piggybanks.show',$piggyBank->id)}}">{{{$piggyBank->name}}}</a></h4>
+                    <h4></h4>
                     <table class="table table-bordered">
                         <tr>
                             <td style="width:10%;">{{mf($piggyBank->currentRelevantRep()->currentamount)}}</td>
@@ -139,6 +157,20 @@
     </div>
 </div>
 
+
+
+
+
+<!-- MODAL -->
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+
+--}}
 <div class="row">
     <div class="col-lg-6">
         <h4>Account information</h4>
@@ -156,18 +188,5 @@
         </table>
     </div>
 </div>
-
-
-
-<!-- MODAL -->
-<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-
-        </div>
-    </div>
-</div>
-
-
 
 @stop
