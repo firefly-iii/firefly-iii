@@ -25,7 +25,7 @@
         </div>
         </p>
     </div>
-</div>
+</div><!-- TODO cleanup to match new theme & form -->
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <table class="table table-bordered table-striped">

@@ -4,7 +4,7 @@
     <div class="col-lg-12 col-md-12 col-sm-12">
         <p class="lead">Use categories to group your expenses</p>
     </div>
-</div>
+</div><!-- TODO cleanup to match new theme & form -->
 
 {{Form::open(['class' => 'form-horizontal','url' => route('categories.update',$category->id)])}}
 

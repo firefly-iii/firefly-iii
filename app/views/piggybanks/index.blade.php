@@ -4,7 +4,7 @@
     <div class="col-lg-6 col-md-6 col-sm-12">
         <p>
             <a href="{{route('piggybanks.create.piggybank')}}" class="btn btn-success">Create new piggy bank</a>
-        </p>
+        </p><!-- TODO cleanup for new forms and layout. -->
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12">
         <p>

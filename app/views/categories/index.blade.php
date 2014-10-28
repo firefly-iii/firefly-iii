@@ -11,7 +11,7 @@
             <a href="{{route('categories.create')}}" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Create a new category</a>
         </p>
     </div>
-</div>
+</div><!-- TODO cleanup to match new theme & form -->
 
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">

@@ -23,7 +23,7 @@
             <a class="btn btn-default" href ="{{route('budgets.limits.create')}}?from=date"><span class="glyphicon glyphicon-plus-sign"></span> Create a new envelope</a>
         </div>
     </div>
-</div>
+</div><!-- TODO cleanup to match new theme & form -->
 
 <!-- count = zero! -->
 

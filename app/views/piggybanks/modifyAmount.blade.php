@@ -7,7 +7,7 @@
             Remove money from "{{{$piggybank->name}}}"
         @endif
         </h4>
-</div>
+</div><!-- TODO cleanup for new forms and layout. -->
 <form style="display: inline;" action="{{route('piggybanks.modMoney',$piggybank->id)}}" method="POST">
     <input type="hidden" name="what" value="{{$what}}" />
     {{Form::token()}}

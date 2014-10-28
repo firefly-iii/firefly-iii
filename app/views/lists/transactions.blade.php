@@ -2,7 +2,7 @@
 <thead>
     <tr>
         <th colspan="2" id="empty1">A</th>
-        <th>Date</th>
+        <th>Date</th><!-- TODO remove me-->
         <th>Description</th>
         <th>Amount (&euro;)</th>
         <th>From</th>

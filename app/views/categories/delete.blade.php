@@ -6,7 +6,7 @@
             Remember that deleting something is permanent.
         </p>
     </div>
-</div>
+</div><!-- TODO cleanup to match new theme & form -->
 
 {{Form::open(['class' => 'form-horizontal','url' => route('categories.destroy',$category->id)])}}
 <div class="row">
