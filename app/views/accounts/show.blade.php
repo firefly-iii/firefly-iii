@@ -21,6 +21,7 @@
                         <i class="fa fa-fw fa-align-justify"></i> Summary
                     </div>
                     <div class="panel-body">
+                    On the todo list.
                     {{--
                         <table class="table table-striped table-condensed">
                             <tr>
