@@ -62,7 +62,7 @@ class PiggybankController extends BaseController
         View::share('mainTitleIcon', 'fa-sort-amount-asc');
 
         return View::make('piggybanks.create-piggybank')->with('accounts', $accounts)
-            ->with('periods', $periods);
+                   ->with('periods', $periods);
     }
 
     /**
@@ -148,14 +148,14 @@ class PiggybankController extends BaseController
             View::share('mainTitleIcon', 'fa-rotate-left');
 
             return View::make('piggybanks.edit-repeated')->with('piggybank', $piggyBank)->with('accounts', $accounts)
-                ->with('periods', $periods);
+                       ->with('periods', $periods);
         } else {
             // piggy bank.
             View::share('title', 'Piggy banks');
             View::share('mainTitleIcon', 'fa-sort-amount-asc');
 
             return View::make('piggybanks.edit-piggybank')->with('piggybank', $piggyBank)->with('accounts', $accounts)
-                ->with('periods', $periods);
+                       ->with('periods', $periods);
         }
 
 
@@ -196,11 +196,11 @@ class PiggybankController extends BaseController
                 }
                 break;
         }
-        if($piggyBank->repeats == 1) {
-            $route   = 'piggybanks.index.repeated';
+        if ($piggyBank->repeats == 1) {
+            $route = 'piggybanks.index.repeated';
 
         } else {
-            $route   = 'piggybanks.index.piggybanks';
+            $route = 'piggybanks.index.piggybanks';
         }
         return Redirect::route($route);
     }
@@ -225,7 +225,15 @@ class PiggybankController extends BaseController
             $id      = $account->id;
             if (!isset($accounts[$id])) {
                 $account->leftOnAccount = $this->_repository->leftOnAccount($account);
-                $accounts[$id]          = ['account' => $account, 'left' => $this->_repository->leftOnAccount($account)];
+                $accounts[$id]          = [
+                    'account' => $account,
+                    'left'    => $this->_repository->leftOnAccount($account),
+                    'tosave'  => $piggybank->targetamount,
+                    'saved'   => $piggybank->currentRelevantRep()->currentamount
+                ];
+            } else {
+                $accounts[$id]['tosave'] += $piggybank->targetamount;
+                $accounts[$id]['saved'] += $piggybank->currentRelevantRep()->currentamount;
             }
         }
 
@@ -234,9 +242,9 @@ class PiggybankController extends BaseController
         View::share('mainTitleIcon', 'fa-sort-amount-asc');
 
         return View::make('piggybanks.index')->with('piggybanks', $piggybanks)
-            ->with('countRepeating', $countRepeating)
-            ->with('countNonRepeating', $countNonRepeating)
-            ->with('accounts', $accounts);
+                   ->with('countRepeating', $countRepeating)
+                   ->with('countNonRepeating', $countNonRepeating)
+                   ->with('accounts', $accounts);
     }
 
     /**
@@ -285,9 +293,9 @@ class PiggybankController extends BaseController
 
 
         return View::make('piggybanks.index')->with('piggybanks', $piggybanks)
-            ->with('countRepeating', $countRepeating)
-            ->with('countNonRepeating', $countNonRepeating)
-            ->with('accounts', $accounts);
+                   ->with('countRepeating', $countRepeating)
+                   ->with('countNonRepeating', $countNonRepeating)
+                   ->with('accounts', $accounts);
     }
 
     /**
@@ -311,7 +319,7 @@ class PiggybankController extends BaseController
         }
 
         return View::make('piggybanks.show')->with('piggyBank', $piggyBank)->with('leftOnAccount', $leftOnAccount)
-            ->with('balance', $balance);
+                   ->with('balance', $balance);
     }
 
     /**
