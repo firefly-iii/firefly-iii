@@ -7,7 +7,7 @@
                 <i class="fa fa-fw {{$subTitleIcon}} fa-fw"></i> {{{$account->name}}}
             </div>
             <div class="panel-body">
-                <div id="overviewChart"></div>
+                <div id="overviewChart"><img src="http://placehold.it/650x300" title="Placeholder" alt="" /></div>
             </div>
         </div>
     </div>
