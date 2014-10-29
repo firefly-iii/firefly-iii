@@ -186,17 +186,23 @@
 
 --}}
 <div class="row">
-    <div class="col-lg-6">
+    <div class="col-lg-12">
         <h4>Account information</h4>
         <table class="table">
             <tr>
                 <th>Account</th>
                 <th>Left for piggy banks</th>
+                <th>Total planned savings</th>
+                <th>Saved so far</th>
+                <th>Left to save</th>
             </tr>
             @foreach($accounts as $account)
             <tr>
                 <td>{{{$account['account']->name}}}</td>
                 <td>{{mf($account['left'])}}</td>
+                <td>{{mf($account['tosave'])}}</td>
+                <td>{{mf($account['saved'])}}</td>
+                <td>{{mf($account['tosave']-$account['saved'])}}</td>
             </tr>
             @endforeach
         </table>
