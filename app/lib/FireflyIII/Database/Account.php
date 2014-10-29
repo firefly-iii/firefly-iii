@@ -16,6 +16,9 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
 {
     use SwitchUser;
 
+    /**
+     *
+     */
     public function __construct()
     {
         $this->setUser(\Auth::user());
@@ -422,5 +425,15 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
     public function findByWhat($what)
     {
         // TODO: Implement findByWhat() method.
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function getByIds(array $ids)
+    {
+        return $this->getUser()->accounts()->whereIn('id', $ids)->get();
     }
 }

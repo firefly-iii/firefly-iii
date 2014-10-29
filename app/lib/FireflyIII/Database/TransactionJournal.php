@@ -33,6 +33,17 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         $this->setUser(\Auth::user());
     }
 
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getInDateRange(Carbon $start, Carbon $end)
+    {
+        return $this->getuser()->transactionjournals()->withRelevantData()->before($end)->after($start)->get();
+    }
+
 
     /**
      * @param Ardent $model
@@ -249,5 +260,15 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
     public function findByWhat($what)
     {
         // TODO: Implement findByWhat() method.
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function getByIds(array $ids)
+    {
+        // TODO: Implement getByIds() method.
     }
 }
