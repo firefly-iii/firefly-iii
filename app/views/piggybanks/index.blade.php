@@ -25,6 +25,12 @@
                     <div class="btn-group btn-group-xs">
                         <a href="{{route('piggybanks.edit',$piggyBank->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
                         <a href="{{route('piggybanks.delete',$piggyBank->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                        @if($accounts[$piggyBank->account_id]['account']->leftOnAccount > 0)
+                            <a data-toggle="modal" href="{{route('piggybanks.amount.add',$piggyBank->id)}}" data-target="#modal" class="btn btn-default"><span class="glyphicon glyphicon-plus-sign"></span></a>
+                        @endif
+                        @if($piggyBank->currentRelevantRep()->currentamount > 0)
+                        <a data-toggle="modal" href="{{route('piggybanks.amount.remove',$piggyBank->id)}}" data-target="#modal" class="btn btn-default"><span class="glyphicon glyphicon-minus-sign"></span></a>
+                        @endif
                     </div>
 
 
@@ -176,14 +182,7 @@
 
 
 
-<!-- MODAL -->
-<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
 
-        </div>
-    </div>
-</div>
 
 --}}
 <div class="row">
@@ -201,6 +200,17 @@
             </tr>
             @endforeach
         </table>
+    </div>
+</div>
+
+
+
+<!-- MODAL -->
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        </div>
     </div>
 </div>
 
