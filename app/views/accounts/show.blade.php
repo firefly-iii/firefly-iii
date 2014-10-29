@@ -7,7 +7,7 @@
                 <i class="fa fa-fw {{$subTitleIcon}} fa-fw"></i> {{{$account->name}}}
             </div>
             <div class="panel-body">
-                <div id="overviewChart"></div>
+                <div id="overviewChart"><img src="http://placehold.it/650x300" title="Placeholder" alt="" /></div>
             </div>
         </div>
     </div>
@@ -161,7 +161,6 @@
 @stop
 
 @section('styles')
-{{HTML::style('assets/stylesheets/highslide/highslide.css')}}
 {{HTML::style('assets/stylesheets/datatables/dataTables.bootstrap.css')}}
 @stop
 
@@ -171,6 +170,5 @@
 </script>
 {{HTML::script('assets/javascript/datatables/jquery.dataTables.min.js')}}
 {{HTML::script('assets/javascript/datatables/dataTables.bootstrap.js')}}
-{{HTML::script('assets/javascript/highcharts/highcharts.js')}}
 {{HTML::script('assets/javascript/firefly/accounts.js')}}
 @stop
