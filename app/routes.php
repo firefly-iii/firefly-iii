@@ -162,12 +162,15 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/categories/delete/{category}',['uses' => 'CategoryController@delete','as' => 'categories.delete']);
 
         // chart controller
-        Route::get('/chart/home/account/{account?}', ['uses' => 'ChartController@homeAccount', 'as' => 'chart.home']);
-        Route::get('/chart/home/categories', ['uses' => 'ChartController@homeCategories', 'as' => 'chart.categories']);
-        Route::get('/chart/home/budgets', ['uses' => 'ChartController@homeBudgets', 'as' => 'chart.budgets']);
+        Route::get('/chart/home/account', ['uses' => 'GoogleChartController@allAccountsBalanceChart']);
+        Route::get('/chart/home/budgets', ['uses' => 'GoogleChartController@allBudgetsHomeChart']);
+        Route::get('/chart/home/categories', ['uses' => 'GoogleChartController@allCategoriesHomeChart']);
+        Route::get('/chart/home/recurring', ['uses' => 'GoogleChartController@recurringTransactionsOverview']);
+
+
         Route::get('/chart/home/info/{accountnameA}/{day}/{month}/{year}', ['uses' => 'ChartController@homeAccountInfo', 'as' => 'chart.info']);
         Route::get('/chart/categories/show/{category}', ['uses' => 'ChartController@categoryShowChart','as' => 'chart.showcategory']);
-        Route::get('/chart/home/recurring', ['uses' => 'ChartController@homeRecurring', 'as' => 'chart.recurring']);
+
         // (new charts for budgets)
         Route::get('/chart/budget/{budget}/default', ['uses' => 'ChartController@budgetDefault', 'as' => 'chart.budget.default']);
         Route::get('chart/budget/{budget}/no_envelope', ['uses' => 'ChartController@budgetNoLimits', 'as' => 'chart.budget.nolimit']);
