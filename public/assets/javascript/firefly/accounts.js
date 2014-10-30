@@ -1,10 +1,24 @@
 $(function () {
+
+    if (typeof(googleLineChart) == "function") {
+        googleLineChart('chart/account/' + accountID, 'overview-chart');
+    }
+    //
+    if(typeof(googleSankeyChart) == 'function') {
+        googleSankeyChart('chart/sankey/' + accountID + '/out','account-out-sankey');
+        googleSankeyChart('chart/sankey/' + accountID + '/in','account-in-sankey');
+    }
+    if(typeof(googleTable) == 'function') {
+        googleTable('table/account/' + accountID + '/transactions','account-transactions');
+    }
+
+
     if ($('#accountTable').length == 1) {
         drawDatatable();
     }
-    if ($('#overviewChart').length == 1) {
-        drawOverviewChart();
-    }
+    //if ($('#overviewChart').length == 1) {
+    //    drawOverviewChart();
+    //}
 
 });
 

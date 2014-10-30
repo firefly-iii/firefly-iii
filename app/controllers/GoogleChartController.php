@@ -174,6 +174,10 @@ class GoogleChartController extends BaseController
 
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Firefly\Exception\FireflyException
+     */
     public function recurringTransactionsOverview()
     {
 
@@ -255,6 +259,160 @@ class GoogleChartController extends BaseController
         /** @var \RecurringTransaction $entry */
         $chart->addRow('Unpaid: ' . join(', ', $unpaid['items']), $unpaid['amount']);
         $chart->addRow('Paid: ' . join(', ', $paid['items']), $paid['amount']);
+
+        $chart->generate();
+        return Response::json($chart->getData());
+
+    }
+
+    /**
+     * @param Account $account
+     */
+    public function accountBalanceChart(Account $account)
+    {
+        /** @var \Grumpydictator\Gchart\GChart $chart */
+        $chart = App::make('gchart');
+        $chart->addColumn('Day of month', 'date');
+        $chart->addColumn('Balance for ' . $account->name, 'number');
+
+        /*
+         * Loop the date, then loop the accounts, then add balance.
+         */
+        $start   = Session::get('start');
+        $end     = Session::get('end');
+        $current = clone $start;
+
+        while ($end >= $current) {
+            $row = [clone $current];
+            if ($current > Carbon::now()) {
+                $row[] = null;
+            } else {
+                $row[] = $account->balance($current);
+            }
+
+            $chart->addRowArray($row);
+            $current->addDay();
+        }
+
+
+        $chart->generate();
+        return Response::json($chart->getData());
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function accountSankeyOutChart(Account $account)
+    {
+        // collect all relevant entries.
+        $set = [];
+
+        /** @var \Grumpydictator\Gchart\GChart $chart */
+        $chart = App::make('gchart');
+        $chart->addColumn('From', 'string');
+        $chart->addColumn('To', 'string', 'domain');
+        $chart->addColumn('Weight', 'number');
+
+        $transactions = $account->transactions()->with(
+            ['transactionjournal', 'transactionjournal.transactions', 'transactionjournal.budgets', 'transactionjournal.transactiontype',
+             'transactionjournal.categories']
+        )->before(Session::get('end'))->after(
+            Session::get('start')
+        )->get();
+
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $amount = floatval($transaction->amount);
+            $type   = $transaction->transactionJournal->transactionType->type;
+
+            if ($amount < 0 && $type != 'Transfer') {
+
+                // from account to a budget (if present).
+                $budgetName = isset($transaction->transactionJournal->budgets[0]) ? $transaction->transactionJournal->budgets[0]->name : '(no budget)';
+                $set[]      = [$account->name, $budgetName, $amount * -1];
+
+                // from budget to category.
+                $categoryName = isset($transaction->transactionJournal->categories[0]) ? ' ' . $transaction->transactionJournal->categories[0]->name
+                    : '(no cat)';
+                $set[]        = [$budgetName, $categoryName, $amount * -1];
+            }
+        }
+        // loop the set, group everything together:
+        $grouped = [];
+        foreach ($set as $entry) {
+            $key = $entry[0] . $entry[1];
+            if (isset($grouped[$key])) {
+                $grouped[$key][2] += $entry[2];
+            } else {
+                $grouped[$key] = $entry;
+            }
+        }
+
+        // add rows to the chart:
+        foreach ($grouped as $entry) {
+            $chart->addRow($entry[0], $entry[1], $entry[2]);
+        }
+
+        $chart->generate();
+        return Response::json($chart->getData());
+
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function accountSankeyInChart(Account $account)
+    {
+        // collect all relevant entries.
+        $set = [];
+
+        /** @var \Grumpydictator\Gchart\GChart $chart */
+        $chart = App::make('gchart');
+        $chart->addColumn('From', 'string');
+        $chart->addColumn('To', 'string', 'domain');
+        $chart->addColumn('Weight', 'number');
+
+        $transactions = $account->transactions()->with(
+            ['transactionjournal', 'transactionjournal.transactions' => function ($q) {
+                $q->where('amount', '<', 0);
+            }, 'transactionjournal.budgets', 'transactionjournal.transactiontype', 'transactionjournal.categories']
+        )->before(Session::get('end'))->after(
+            Session::get('start')
+        )->get();
+
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $amount = floatval($transaction->amount);
+            $type   = $transaction->transactionJournal->transactionType->type;
+
+            if ($amount > 0 && $type != 'Transfer') {
+
+                $otherAccount = $transaction->transactionJournal->transactions[0]->account->name;
+                $categoryName = isset($transaction->transactionJournal->categories[0]) ? $transaction->transactionJournal->categories[0]->name
+                    : '(no cat)';
+                $set[]        = [$otherAccount, $categoryName, $amount];
+                $set[]        = [$categoryName, $account->name, $amount];
+            }
+        }
+        // loop the set, group everything together:
+        $grouped = [];
+        foreach ($set as $entry) {
+            $key = $entry[0] . $entry[1];
+            if (isset($grouped[$key])) {
+                $grouped[$key][2] += $entry[2];
+            } else {
+                $grouped[$key] = $entry;
+            }
+        }
+
+        // add rows to the chart:
+        foreach ($grouped as $entry) {
+            $chart->addRow($entry[0], $entry[1], $entry[2]);
+        }
 
         $chart->generate();
         return Response::json($chart->getData());

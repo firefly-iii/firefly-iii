@@ -161,11 +161,19 @@ Route::group(['before' => 'auth'], function () {
         Route::get('/categories/edit/{category}',['uses' => 'CategoryController@edit','as' => 'categories.edit']);
         Route::get('/categories/delete/{category}',['uses' => 'CategoryController@delete','as' => 'categories.delete']);
 
-        // chart controller
+        // google chart controller
         Route::get('/chart/home/account', ['uses' => 'GoogleChartController@allAccountsBalanceChart']);
         Route::get('/chart/home/budgets', ['uses' => 'GoogleChartController@allBudgetsHomeChart']);
         Route::get('/chart/home/categories', ['uses' => 'GoogleChartController@allCategoriesHomeChart']);
         Route::get('/chart/home/recurring', ['uses' => 'GoogleChartController@recurringTransactionsOverview']);
+        Route::get('/chart/account/{account}', ['uses' => 'GoogleChartController@accountBalanceChart']);
+        Route::get('/chart/sankey/{account}/out', ['uses' => 'GoogleChartController@accountSankeyOutChart']);
+        Route::get('/chart/sankey/{account}/in', ['uses' => 'GoogleChartController@accountSankeyInChart']);
+
+        // google table controller
+        Route::get('/table/account/{account}/transactions', ['uses' => 'GoogleTableController@transactionsByAccount']);
+
+
 
 
         Route::get('/chart/home/info/{accountnameA}/{day}/{month}/{year}', ['uses' => 'ChartController@homeAccountInfo', 'as' => 'chart.info']);
