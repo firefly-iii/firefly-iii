@@ -1,16 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 23/10/14
- * Time: 13:40
- */
 
 namespace FireflyIII\Database;
 
 use Firefly\Exception\FireflyException;
 use Illuminate\Support\Collection;
 use LaravelBook\Ardent\Ardent;
+use FireflyIII\Database\Ifaces\AccountTypeInterface;
+use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
+use FireflyIII\Database\Ifaces\CUD;
+use FireflyIII\Database\Ifaces\AccountTypeInterface;
 
 /**
  * Class AccountType
@@ -116,5 +114,15 @@ class AccountType implements AccountTypeInterface, CUD, CommonDatabaseCalls
     public function get()
     {
         // TODO: Implement get() method.
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function getByIds(array $ids)
+    {
+        // TODO: Implement getByIds() method.
     }
 }

@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 24/10/14
- * Time: 07:17
- */
 
-namespace FireflyIII\Database;
+namespace FireflyIII\Database\Ifaces;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 

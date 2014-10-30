@@ -1,16 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 24/10/14
- * Time: 10:27
- */
 
 namespace FireflyIII\Database;
 
 
 use Illuminate\Support\Collection;
 use LaravelBook\Ardent\Ardent;
+use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
+use FireflyIII\Database\Ifaces\CUD;
+use FireflyIII\Database\Ifaces\TransactionCurrencyInterface;
 
 /**
  * Class TransactionType
@@ -108,5 +105,15 @@ class TransactionCurrency implements TransactionCurrencyInterface, CUD, CommonDa
     public function findByCode($code)
     {
         return \TransactionCurrency::whereCode($code)->first();
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function getByIds(array $ids)
+    {
+        // TODO: Implement getByIds() method.
     }
 }

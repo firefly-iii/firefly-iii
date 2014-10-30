@@ -6,6 +6,9 @@ namespace FireflyIII\Database;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use LaravelBook\Ardent\Ardent;
+use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
+use FireflyIII\Database\Ifaces\CUD;
+use FireflyIII\Database\Ifaces\RecurringInterface;
 
 /**
  * Class Recurring
