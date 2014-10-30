@@ -7,7 +7,7 @@
                 <i class="fa fa-fw {{$subTitleIcon}} fa-fw"></i> {{{$account->name}}}
             </div>
             <div class="panel-body">
-                <div id="overviewChart"><img src="http://placehold.it/650x300" title="Placeholder" alt="" /></div>
+                <div id="overview-chart"></div>
             </div>
         </div>
     </div>
@@ -71,7 +71,7 @@
                 Out
             </div>
             <div class="panel-body">
-                <div id="accountOutSankey"><img src="http://placehold.it/550x300" title="Placeholder" alt="" /></div>
+                <div id="account-out-sankey"></div>
             </div>
         </div>
     </div>
@@ -81,7 +81,7 @@
                 In
             </div>
             <div class="panel-body">
-                <div id="accountInSankey"><img src="http://placehold.it/550x300" title="Placeholder" alt="" /></div>
+                <div id="account-in-sankey"></div>
             </div>
         </div>
     </div>
@@ -94,57 +94,8 @@
                 <i class="fa fa-repeat fa-fw"></i> Transactions
             </div>
             <div class="panel-body">
-
-            <table id="transactionByAccountTable" class="table table-striped table-bordered" >
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Description</th>
-                    <th>Amount (&euro;)</th>
-                    <th>From</th>
-                    <th>To</th>
-                    <th>Budget / category</th>
-                    <th>ID</th>
-                </tr>
-            </thead>
-            </table>
-
-            {{--
-                <table class="table table-striped table-condensed">
-                    @if(count($show['statistics']['accounts']) > 0)
-                    <tr>
-                        <td style="width:30%;">Related accounts</td>
-                        <td>
-                            @foreach($show['statistics']['accounts'] as $acct)
-                            <a href="{{route('accounts.show',$acct->id)}}" class="btn btn-default btn-xs">{{{$acct->name}}}</a>
-                            @endforeach
-                        </td>
-                    </tr>
-                    @endif
-                    @if(isset($show['statistics']['Category']) && count($show['statistics']['Category']) > 0)
-                    <tr>
-                        <td>Related categories</td>
-                        <td>
-                            @foreach($show['statistics']['Category'] as $cat)
-                            <a href="{{route('categories.show',$cat->id)}}" class="btn btn-default btn-xs">{{{$cat->name}}}</a>
-                            @endforeach
-                        </td>
-                    </tr>
-                    @endif
-                    @if(isset($show['statistics']['Budget']) && count($show['statistics']['Budget']) > 0)
-                    <tr>
-                        <td>Related budgets</td>
-                        <td>
-                            @foreach($show['statistics']['Budget'] as $bud)
-                            <a href="{{route('budgets.show',$bud->id)}}?useSession=true" class="btn btn-default btn-xs">{{{$bud->name}}}</a>
-                            @endforeach
-                        </td>
-                    </tr>
-                    @endif
-                </table>
-                --}}
+                <div id="account-transactions"></div>
             </div>
-        </div>
     </div>
 </div>
 
@@ -161,16 +112,18 @@
 @stop
 
 @section('styles')
-{{HTML::style('assets/stylesheets/highslide/highslide.css')}}
-{{HTML::style('assets/stylesheets/datatables/dataTables.bootstrap.css')}}
 @stop
 
 @section('scripts')
 <script type="text/javascript">
     var accountID = {{{$account->id}}};
 </script>
-{{HTML::script('assets/javascript/datatables/jquery.dataTables.min.js')}}
-{{HTML::script('assets/javascript/datatables/dataTables.bootstrap.js')}}
-{{HTML::script('assets/javascript/highcharts/highcharts.js')}}
+<!-- load the libraries and scripts necessary for Google Charts: -->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+{{HTML::script('assets/javascript/firefly/gcharts.options.js')}}
+{{HTML::script('assets/javascript/firefly/gcharts.js')}}
+
+
+
 {{HTML::script('assets/javascript/firefly/accounts.js')}}
 @stop
