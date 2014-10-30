@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 14/10/14
- * Time: 09:31
- */
 
-namespace FireflyIII\Database;
+namespace FireflyIII\Database\Ifaces;
 
 use Illuminate\Support\Collection;
 use LaravelBook\Ardent\Ardent;

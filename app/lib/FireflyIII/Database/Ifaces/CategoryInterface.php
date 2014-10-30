@@ -1,6 +1,6 @@
 <?php
 
-namespace FireflyIII\Database;
+namespace FireflyIII\Database\Ifaces;
 
 use Carbon\Carbon;
 use Illuminate\Support\Collection;

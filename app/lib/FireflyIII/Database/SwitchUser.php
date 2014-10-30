@@ -1,12 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 14/10/14
- * Time: 09:45
- */
 
 namespace FireflyIII\Database;
+
 
 /**
  * Class SwitchUser

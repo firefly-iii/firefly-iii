@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 24/10/14
- * Time: 07:16
- */
 
 namespace FireflyIII\Database;
 
@@ -15,7 +9,9 @@ use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use LaravelBook\Ardent\Ardent;
-
+use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
+use FireflyIII\Database\Ifaces\CUD;
+use FireflyIII\Database\Ifaces\TransactionJournalInterface;
 /**
  * Class TransactionJournal
  *

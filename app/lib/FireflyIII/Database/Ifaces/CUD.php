@@ -1,6 +1,6 @@
 <?php
 
-namespace FireflyIII\Database;
+namespace FireflyIII\Database\Ifaces;
 use Illuminate\Support\MessageBag;
 use LaravelBook\Ardent\Ardent;
 

@@ -1,16 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 24/10/14
- * Time: 10:27
- */
 
 namespace FireflyIII\Database;
 
 
 use Illuminate\Support\Collection;
 use LaravelBook\Ardent\Ardent;
+use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
+use FireflyIII\Database\Ifaces\CUD;
+use FireflyIII\Database\Ifaces\TransactionTypeInterface;
 
 /**
  * Class TransactionType
@@ -107,5 +104,15 @@ class TransactionType implements TransactionTypeInterface, CUD, CommonDatabaseCa
 
         }
         return null;
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function getByIds(array $ids)
+    {
+        // TODO: Implement getByIds() method.
     }
 }
