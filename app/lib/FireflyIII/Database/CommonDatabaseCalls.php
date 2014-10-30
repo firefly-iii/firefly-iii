@@ -35,6 +35,14 @@ interface CommonDatabaseCalls
      */
     public function get();
 
+
+    /**
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function getByIds(array $ids);
+
     /**
      * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
      *
