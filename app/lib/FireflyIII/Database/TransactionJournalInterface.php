@@ -7,6 +7,8 @@
  */
 
 namespace FireflyIII\Database;
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 /**
  * Interface TransactionJournalInterface
@@ -15,5 +17,12 @@ namespace FireflyIII\Database;
  */
 interface TransactionJournalInterface
 {
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getInDateRange(Carbon $start, Carbon $end);
 
 } 

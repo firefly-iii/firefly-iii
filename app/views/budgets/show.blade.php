@@ -40,7 +40,7 @@
 
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <div id="chart"></div>
+        <div id="chart"><img src="http://placehold.it/650x300" title="Placeholder" alt="" /></div>
         @if($view == 1)
         <div id="instr" data-type="envelope" data-envelope="{{$repetitions[0]['limitrepetition']->id}}"></div>
         @endif
@@ -101,7 +101,6 @@
 
 @stop
 @section('scripts')
-{{HTML::script('assets/javascript/highcharts/highcharts.js')}}
 @if($view == 1)
 {{HTML::script('assets/javascript/firefly/budgets/limit.js')}}
 @endif
