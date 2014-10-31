@@ -179,14 +179,16 @@
                 <a href="#"><i class="fa fa-euro fa-fw"></i> Money management<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a @if($r == 'piggybanks.index.piggybanks') class="active" @endif href="{{route('piggybanks.index.piggybanks')}}"><i class="fa fa-sort-amount-asc fa-fw"></i> Piggy banks</a>
+                        <a @if($r == 'piggybanks.index') class="active" @endif href="{{route('piggybanks.index')}}"><i class="fa fa-sort-amount-asc fa-fw"></i> Piggy banks</a>
                     </li>
                     <li>
                         <a @if($r == 'recurring.index') class="active" @endif href="{{route('recurring.index')}}"><i class="fa fa-rotate-right fa-fw"></i> Recurring transactions</a>
                     </li>
+                    {{--
                     <li>
                         <a @if($r == 'piggybanks.index.repeated') class="active" @endif href="{{route('piggybanks.index.repeated')}}"><i class="fa fa-rotate-left fa-fw"></i> Repeated expenses</a>
                     </li>
+                    --}}
                 </ul>
                 <!-- /.nav-second-level -->
             </li>
@@ -217,15 +219,19 @@
                     <li>
                         <a href="#"><i class="fa fa-bar-chart fa-fw"></i> Category</a>
                     </li>
+                    {{--
                     <li>
                         <a href="{{route('piggybanks.create.piggybank')}}"><i class="fa fa-envelope-o fa-fw"></i> Piggy bank</a>
                     </li>
+                    --}}
                     <li>
                         <a href="{{route('recurring.create')}}"><i class="fa fa-rotate-right fa-fw"></i> Recurring transaction</a>
                     </li>
+                    {{--
                     <li>
                         <a href="{{route('piggybanks.create.repeated')}}"><i class="fa fa-rotate-left fa-fw"></i> Repeated expense</a>
                     </li>
+                    --}}
                 </ul>
                 <!-- /.nav-second-level -->
             </li>

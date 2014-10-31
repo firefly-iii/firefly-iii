@@ -1,6 +1,3 @@
-/*
-This line is required to be properly triggered by Google.
- */
 google.setOnLoadCallback(drawChart);
 
 

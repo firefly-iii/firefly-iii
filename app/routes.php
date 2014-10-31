@@ -200,6 +200,8 @@ Route::group(
 
         // piggy bank controller
         Route::get('/piggybanks', ['uses' => 'PiggybankController@index', 'as' => 'piggybanks.index']);
+        Route::get('/piggybanks/add/{piggybank}', ['uses' => 'PiggybankController@add']);
+        Route::get('/piggybanks/remove/{piggybank}', ['uses' => 'PiggybankController@remove']);
 //        Route::get('/repeated',['uses' => 'PiggybankController@repeated','as' => 'piggybanks.index.repeated']);
 //        Route::get('/piggybanks/create/piggybank', ['uses' => 'PiggybankController@createPiggybank','as' => 'piggybanks.create.piggybank']);
 //        Route::get('/piggybanks/create/repeated', ['uses' => 'PiggybankController@createRepeated','as' => 'piggybanks.create.repeated']);
@@ -280,11 +282,13 @@ Route::group(
 
 
         // piggy bank controller
-        Route::post('/piggybanks/store/piggybank', ['uses' => 'PiggybankController@storePiggybank', 'as' => 'piggybanks.store.piggybank']);
-        Route::post('/piggybanks/store/repeated', ['uses' => 'PiggybankController@storeRepeated', 'as' => 'piggybanks.store.repeated']);
-        Route::post('/piggybanks/update/{piggybank}', ['uses' => 'PiggybankController@update', 'as' => 'piggybanks.update']);
-        Route::post('/piggybanks/destroy/{piggybank}', ['uses' => 'PiggybankController@destroy', 'as' => 'piggybanks.destroy']);
-        Route::post('/piggybanks/mod/{piggybank}', ['uses' => 'PiggybankController@modMoney', 'as' => 'piggybanks.modMoney']);
+        #Route::post('/piggybanks/store/piggybank', ['uses' => 'PiggybankController@storePiggybank', 'as' => 'piggybanks.store.piggybank']);
+        #Route::post('/piggybanks/store/repeated', ['uses' => 'PiggybankController@storeRepeated', 'as' => 'piggybanks.store.repeated']);
+        #Route::post('/piggybanks/update/{piggybank}', ['uses' => 'PiggybankController@update', 'as' => 'piggybanks.update']);
+        #Route::post('/piggybanks/destroy/{piggybank}', ['uses' => 'PiggybankController@destroy', 'as' => 'piggybanks.destroy']);
+        #Route::post('/piggybanks/mod/{piggybank}', ['uses' => 'PiggybankController@modMoney', 'as' => 'piggybanks.modMoney']);
+        Route::post('/piggybanks/add/{piggybank}', ['uses' => 'PiggybankController@postAdd', 'as' => 'piggybanks.add']);
+        Route::post('/piggybanks/remove/{piggybank}', ['uses' => 'PiggybankController@postRemove', 'as' => 'piggybanks.remove']);
 
 
         // preferences controller
