@@ -2,6 +2,7 @@
 
 use Firefly\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
+use Illuminate\Support\Collection;
 
 /**
  * Class PiggybankController
@@ -17,44 +18,15 @@ class PiggybankController extends BaseController
     {
     }
 
-//    /**
-//     * @param Piggybank $piggyBank
-//     *
-//     * @return $this
-//     */
-//    public function addMoney(Piggybank $piggyBank)
-//    {
-//        throw new NotImplementedException;
-//        $what      = 'add';
-//        $maxAdd    = $this->_repository->leftOnAccount($piggyBank->account);
-//        $maxRemove = null;
-//
-//        return View::make('piggybanks.modifyAmount')->with('what', $what)->with('maxAdd', $maxAdd)->with(
-//            'maxRemove', $maxRemove
-//        )->with('piggybank', $piggyBank);
-//    }
-
     /**
-     * @return $this
+     * @throws NotImplementedException
      */
     public function create()
     {
         throw new NotImplementedException;
-//        /** @var \Firefly\Helper\Toolkit\Toolkit $toolkit */
-//        $toolkit = App::make('Firefly\Helper\Toolkit\Toolkit');
-//
-//
-//        $periods  = Config::get('firefly.piggybank_periods');
-//        $list     = $this->_accounts->getActiveDefault();
-//        $accounts = $toolkit->makeSelectList($list);
-//
-//        View::share('title', 'Piggy banks');
-//        View::share('subTitle', 'Create new');
-//        View::share('mainTitleIcon', 'fa-sort-amount-asc');
-//
-//        return View::make('piggybanks.create-piggybank')->with('accounts', $accounts)
-//                   ->with('periods', $periods);
     }
+
+
 
 //    /**
 //     * @return $this
@@ -201,15 +173,127 @@ class PiggybankController extends BaseController
 //        return Redirect::route($route);
 //    }
 
-//    /**
-//     * @return $this
-//     */
+
+    /**
+     * @param Piggybank $piggybank
+     *
+     * @return $this
+     */
+    public function add(Piggybank $piggybank)
+    {
+        /** @var \FireflyIII\Database\Piggybank $acct */
+        $repos = App::make('FireflyIII\Database\Piggybank');
+
+        $leftOnAccount = $repos->leftOnAccount($piggybank->account);
+        $savedSoFar    = $piggybank->currentRelevantRep()->currentamount;
+        $leftToSave    = $piggybank->targetamount - $savedSoFar;
+        $amount        = min($leftOnAccount, $leftToSave);
+
+
+        return View::make('piggybanks.add', compact('piggybank'))->with('maxAmount', $amount);
+    }
+
+    /**
+     * @param Piggybank $piggybank
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postAdd(Piggybank $piggybank)
+    {
+        $amount = floatval(Input::get('amount'));
+
+        /** @var \FireflyIII\Database\Piggybank $acct */
+        $repos = App::make('FireflyIII\Database\Piggybank');
+
+        $leftOnAccount = $repos->leftOnAccount($piggybank->account);
+        $savedSoFar    = $piggybank->currentRelevantRep()->currentamount;
+        $leftToSave    = $piggybank->targetamount - $savedSoFar;
+        $maxAmount     = min($leftOnAccount, $leftToSave);
+
+        if ($amount <= $maxAmount) {
+            $repetition = $piggybank->currentRelevantRep();
+            $repetition->currentamount += $amount;
+            $repetition->save();
+            Session::flash('success', 'Added ' . mf($amount, false) . ' to "' . e($piggybank->name) . '".');
+        } else {
+            Session::flash('error', 'Could not add ' . mf($amount, false) . ' to "' . e($piggybank->name) . '".');
+        }
+        return Redirect::route('piggybanks.index');
+    }
+
+    /**
+     * @param Piggybank $piggybank
+     *
+     * @return \Illuminate\View\View
+     */
+    public function remove(Piggybank $piggybank)
+    {
+        return View::make('piggybanks.remove', compact('piggybank'));
+    }
+
+    /**
+     * @param Piggybank $piggybank
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postRemove(Piggybank $piggybank)
+    {
+        $amount = floatval(Input::get('amount'));
+
+        $savedSoFar = $piggybank->currentRelevantRep()->currentamount;
+
+        if ($amount <= $savedSoFar) {
+            $repetition = $piggybank->currentRelevantRep();
+            $repetition->currentamount -= $amount;
+            $repetition->save();
+            Session::flash('success', 'Removed ' . mf($amount, false) . ' from "' . e($piggybank->name) . '".');
+        } else {
+            Session::flash('error', 'Could not remove ' . mf($amount, false) . ' from "' . e($piggybank->name) . '".');
+        }
+        return Redirect::route('piggybanks.index');
+    }
+
     public function index()
     {
-        
+        /** @var \FireflyIII\Database\Piggybank $repos */
+        $repos = App::make('FireflyIII\Database\Piggybank');
 
+        /** @var \FireflyIII\Database\Account $acct */
+        $acct = App::make('FireflyIII\Database\Account');
 
-        throw new NotImplementedException;
+        /** @var Collection $piggybanks */
+        $piggybanks = $repos->get();
+
+        $accounts = [];
+        /** @var Piggybank $piggybank */
+        foreach ($piggybanks as $piggybank) {
+            $piggybank->savedSoFar = floatval($piggybank->currentRelevantRep()->currentamount);
+            $piggybank->percentage = intval($piggybank->savedSoFar / $piggybank->targetamount * 100);
+            $piggybank->leftToSave = $piggybank->targetamount - $piggybank->savedSoFar;
+
+            /*
+             * Fill account information:
+             */
+            $account = $piggybank->account;
+            if (!isset($accounts[$account->id])) {
+                $accounts[$account->id] = [
+                    'name'              => $account->name,
+                    'balance'           => $account->balance(),
+                    'leftForPiggybanks' => $account->balance() - $piggybank->savedSoFar,
+                    'sumOfSaved'        => $piggybank->savedSoFar,
+                    'sumOfTargets'      => floatval($piggybank->targetamount),
+                    'leftToSave'        => $piggybank->leftToSave
+                ];
+            } else {
+                $accounts[$account->id]['leftForPiggybanks'] -= $piggybank->savedSoFar;
+                $accounts[$account->id]['sumOfSaved'] += $piggybank->savedSoFar;
+                $accounts[$account->id]['sumOfTargets'] += floatval($piggybank->targetamount);
+                $accounts[$account->id]['leftToSave'] += $piggybank->leftToSave;
+            }
+        }
+        return View::make('piggybanks.index', compact('piggybanks','accounts'))->with('title', 'Piggy banks')->with('mainTitleIcon', 'fa-sort-amount-asc');
+
+        //throw new NotImplementedException;
 //        $countRepeating    = $this->_repository->countRepeating();
 //        $countNonRepeating = $this->_repository->countNonrepeating();
 //
@@ -416,3 +500,20 @@ class PiggybankController extends BaseController
 
     }
 }
+
+//    /**
+//     * @param Piggybank $piggyBank
+//     *
+//     * @return $this
+//     */
+//    public function addMoney(Piggybank $piggyBank)
+//    {
+//        throw new NotImplementedException;
+//        $what      = 'add';
+//        $maxAdd    = $this->_repository->leftOnAccount($piggyBank->account);
+//        $maxRemove = null;
+//
+//        return View::make('piggybanks.modifyAmount')->with('what', $what)->with('maxAdd', $maxAdd)->with(
+//            'maxRemove', $maxRemove
+//        )->with('piggybank', $piggyBank);
+//    }
