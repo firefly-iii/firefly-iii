@@ -44,9 +44,9 @@ class GoogleChartController extends BaseController
 
             foreach ($accounts as $account) {
                 //if ($current > Carbon::now()) {
-                  //  $row[] = 0;
+                //  $row[] = 0;
                 //} else {
-                    $row[] = $account->balance($current);
+                $row[] = $account->balance($current);
                 //}
 
             }
@@ -54,6 +54,86 @@ class GoogleChartController extends BaseController
             $chart->addRowArray($row);
             $current->addDay();
         }
+
+        $chart->generate();
+        return Response::json($chart->getData());
+
+    }
+
+    /**
+     * @param $year
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function yearInExp($year)
+    {
+        try {
+            $start = new Carbon('01-01-' . $year);
+        } catch (Exception $e) {
+            App::abort(500);
+        }
+        /** @var \Grumpydictator\Gchart\GChart $chart */
+        $chart = App::make('gchart');
+        $chart->addColumn('Month', 'date');
+        $chart->addColumn('Income', 'number');
+        $chart->addColumn('Expenses', 'number');
+
+        /** @var \FireflyIII\Database\TransactionJournal $tj */
+        $tj = App::make('FireflyIII\Database\TransactionJournal');
+
+        $end = clone $start;
+        $end->endOfYear();
+        while ($start < $end) {
+
+            // total income:
+            $income  = $tj->getSumOfIncomesByMonth($start);
+            $expense = $tj->getSumOfExpensesByMonth($start);
+
+            $chart->addRow(clone $start, $income, $expense);
+            $start->addMonth();
+        }
+
+
+        $chart->generate();
+        return Response::json($chart->getData());
+
+    }
+    /**
+     * @param $year
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function yearInExpSum($year)
+    {
+        try {
+            $start = new Carbon('01-01-' . $year);
+        } catch (Exception $e) {
+            App::abort(500);
+        }
+        /** @var \Grumpydictator\Gchart\GChart $chart */
+        $chart = App::make('gchart');
+        $chart->addColumn('Month', 'string');
+        $chart->addColumn('Income', 'number');
+        $chart->addColumn('Expenses', 'number');
+
+        /** @var \FireflyIII\Database\TransactionJournal $tj */
+        $tj = App::make('FireflyIII\Database\TransactionJournal');
+
+        $end = clone $start;
+        $end->endOfYear();
+        $income = 0;
+        $expense = 0;
+        while ($start < $end) {
+
+            // total income:
+            $income  += $tj->getSumOfIncomesByMonth($start);
+            $expense += $tj->getSumOfExpensesByMonth($start);
+
+            $start->addMonth();
+        }
+        $chart->addRow('Sum', $income, $expense);
+
+
 
         $chart->generate();
         return Response::json($chart->getData());

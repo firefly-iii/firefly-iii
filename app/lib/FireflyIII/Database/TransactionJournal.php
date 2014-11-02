@@ -12,6 +12,7 @@ use LaravelBook\Ardent\Ardent;
 use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
 use FireflyIII\Database\Ifaces\CUD;
 use FireflyIII\Database\Ifaces\TransactionJournalInterface;
+
 /**
  * Class TransactionJournal
  *
@@ -30,6 +31,43 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
     }
 
     /**
+     * @param Carbon $date
+     *
+     * @return float
+     */
+    public function getSumOfIncomesByMonth(Carbon $date)
+    {
+        $end = clone $date;
+        $date->startOfMonth();
+        $end->endOfMonth();
+        $list = $this->getUser()->transactionjournals()->transactionTypes(['Deposit'])->before($end)->after($date)->get(['transaction_journals.*']);
+        $sum  = 0;
+        /** @var \TransactionJournal $entry */
+        foreach ($list as $entry) {
+            $sum += $entry->getAmount();
+        }
+        return $sum;
+    }
+
+    /**
+     * @param Carbon $date
+     *
+     * @return float
+     */
+    public function getSumOfExpensesByMonth(Carbon $date) {
+        $end = clone $date;
+        $date->startOfMonth();
+        $end->endOfMonth();
+        $list = $this->getUser()->transactionjournals()->transactionTypes(['Withdrawal'])->before($end)->after($date)->get(['transaction_journals.*']);
+        $sum  = 0;
+        /** @var \TransactionJournal $entry */
+        foreach ($list as $entry) {
+            $sum += $entry->getAmount();
+        }
+        return $sum;
+    }
+
+    /**
      * @param Carbon $start
      * @param Carbon $end
      *
@@ -38,6 +76,14 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
     public function getInDateRange(Carbon $start, Carbon $end)
     {
         return $this->getuser()->transactionjournals()->withRelevantData()->before($end)->after($start)->get();
+    }
+
+    /**
+     * @return TransactionJournal
+     */
+    public function first()
+    {
+        return $this->getUser()->transactionjournals()->orderBy('date', 'ASC')->first();
     }
 
 

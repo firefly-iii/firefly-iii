@@ -163,6 +163,8 @@ Route::group(
         Route::get('/chart/account/{account}', ['uses' => 'GoogleChartController@accountBalanceChart']);
         Route::get('/chart/sankey/{account}/out', ['uses' => 'GoogleChartController@accountSankeyOutChart']);
         Route::get('/chart/sankey/{account}/in', ['uses' => 'GoogleChartController@accountSankeyInChart']);
+        Route::get('/chart/reports/income-expenses/{year}', ['uses' => 'GoogleChartController@yearInExp']);
+        Route::get('/chart/reports/income-expenses-sum/{year}', ['uses' => 'GoogleChartController@yearInExpSum']);
 
         // google table controller
         Route::get('/table/account/{account}/transactions', ['uses' => 'GoogleTableController@transactionsByAccount']);
@@ -232,6 +234,7 @@ Route::group(
 
         // report controller:
         Route::get('/reports', ['uses' => 'ReportController@index', 'as' => 'reports.index']);
+        Route::get('/reports/{year}', ['uses' => 'ReportController@year', 'as' => 'reports.year']);
 
         // search controller:
         Route::get('/search', ['uses' => 'SearchController@index', 'as' => 'search']);

@@ -4,242 +4,6 @@ use Carbon\Carbon;
 use LaravelBook\Ardent\Ardent;
 use LaravelBook\Ardent\Builder;
 
-/**
- * TransactionJournal
- *
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $user_id
- * @property integer $transaction_type_id
- * @property integer $transaction_currency_id
- * @property string $description
- * @property boolean $completed
- * @property \Carbon\Carbon $date
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\Component[] $components
- * @property-read \TransactionCurrency $transactionCurrency
- * @property-read \TransactionType $transactionType
- * @property-read \Illuminate\Database\Eloquent\Collection|\Transaction[] $transactions
- * @property-read \User $user
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereTransactionTypeId($value)
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereTransactionCurrencyId($value)
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereDescription($value)
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereCompleted($value)
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereDate($value)
- * @method static \TransactionJournal account($account)
- * @method static \TransactionJournal after($date)
- * @method static \TransactionJournal before($date)
- * @method static \TransactionJournal defaultSorting()
- * @method static \TransactionJournal moreThan($amount)
- * @method static \TransactionJournal lessThan($amount)
- * @method static \TransactionJournal onDate($date)
- * @method static \TransactionJournal transactionTypes($types)
- * @method static \TransactionJournal withRelevantData()
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property integer $recurring_transaction_id
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \RecurringTransaction $recurringTransaction
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereRecurringTransactionId($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @method static \TransactionJournal accountIs($account)
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *                     'Category[] $categories
- */
 class TransactionJournal extends Ardent
 {
 
@@ -259,7 +23,7 @@ class TransactionJournal extends Ardent
     public function budgets()
     {
         return $this->belongsToMany(
-                    'Budget', 'component_transaction_journal', 'transaction_journal_id', 'component_id'
+            'Budget', 'component_transaction_journal', 'transaction_journal_id', 'component_id'
         );
     }
 
@@ -269,7 +33,7 @@ class TransactionJournal extends Ardent
     public function categories()
     {
         return $this->belongsToMany(
-                    'Category', 'component_transaction_journal', 'transaction_journal_id', 'component_id'
+            'Category', 'component_transaction_journal', 'transaction_journal_id', 'component_id'
         );
     }
 
@@ -279,6 +43,18 @@ class TransactionJournal extends Ardent
     public function components()
     {
         return $this->belongsToMany('Component');
+    }
+
+    /**
+     * @return float
+     */
+    public function getAmount()
+    {
+        foreach ($this->transactions as $t) {
+            if (floatval($t->amount) > 0) {
+                return floatval($t->amount);
+            }
+        }
     }
 
     /**
@@ -312,7 +88,7 @@ class TransactionJournal extends Ardent
 
     /**
      * @param                $query
-     * @param Carbon $date
+     * @param Carbon         $date
      *
      * @return mixed
      */
@@ -323,7 +99,7 @@ class TransactionJournal extends Ardent
 
     /**
      * @param                $query
-     * @param Carbon $date
+     * @param Carbon         $date
      *
      * @return mixed
      */
@@ -340,8 +116,10 @@ class TransactionJournal extends Ardent
     public function scopeMoreThan(Builder $query, $amount)
     {
         if (is_null($this->joinedTransactions)) {
-            $query->leftJoin('transactions', 'transactions.transaction_journal_id', '=',
-                'transaction_journals.id');
+            $query->leftJoin(
+                'transactions', 'transactions.transaction_journal_id', '=',
+                'transaction_journals.id'
+            );
             $this->joinedTransactions = true;
         }
 
@@ -351,8 +129,10 @@ class TransactionJournal extends Ardent
     public function scopeLessThan(Builder $query, $amount)
     {
         if (is_null($this->joinedTransactions)) {
-            $query->leftJoin('transactions', 'transactions.transaction_journal_id', '=',
-                'transaction_journals.id');
+            $query->leftJoin(
+                'transactions', 'transactions.transaction_journal_id', '=',
+                'transaction_journals.id'
+            );
             $this->joinedTransactions = true;
         }
 
@@ -373,8 +153,10 @@ class TransactionJournal extends Ardent
     public function scopeTransactionTypes(Builder $query, array $types)
     {
         if (is_null($this->joinedTransactionTypes)) {
-            $query->leftJoin('transaction_types', 'transaction_types.id', '=',
-                'transaction_journals.transaction_type_id');
+            $query->leftJoin(
+                'transaction_types', 'transaction_types.id', '=',
+                'transaction_journals.transaction_type_id'
+            );
             $this->joinedTransactionTypes = true;
         }
         $query->whereIn('transaction_types.type', $types);
@@ -389,11 +171,11 @@ class TransactionJournal extends Ardent
     public function scopeWithRelevantData(Builder $query)
     {
         $query->with(
-              ['transactions'                        => function ($q) {
-                      $q->orderBy('amount', 'ASC');
-                  }, 'transactiontype', 'components' => function ($q) {
-                      $q->orderBy('class');
-                  }, 'transactions.account.accounttype','recurringTransaction']
+            ['transactions'                    => function ($q) {
+                $q->orderBy('amount', 'ASC');
+            }, 'transactiontype', 'components' => function ($q) {
+                $q->orderBy('class');
+            }, 'transactions.account.accounttype', 'recurringTransaction']
         );
     }
 
