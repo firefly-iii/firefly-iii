@@ -336,7 +336,8 @@ class AccountController extends BaseController
     /**
      * @param Account $account
      *
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @return $this
+     * @throws FireflyException
      */
     public function update(Account $account)
     {
@@ -345,12 +346,15 @@ class AccountController extends BaseController
         $acct = App::make('FireflyIII\Database\Account');
         $data = Input::except('_token');
 
-        switch($account->accountType->type) {
+        switch ($account->accountType->type) {
             default:
                 throw new FireflyException('Cannot handle account type "' . e($account->accountType->type) . '"');
                 break;
             case 'Default account':
                 $data['what'] = 'asset';
+                break;
+            case 'Beneficiary account':
+                $data['what'] = 'expense';
                 break;
         }
 
