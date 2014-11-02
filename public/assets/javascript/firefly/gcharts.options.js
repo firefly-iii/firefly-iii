@@ -3,6 +3,7 @@ var defaultLineChartOptions = {
     legend: {
         position: 'none'
     },
+    interpolateNulls: true,
     lineWidth: 1,
     chartArea: {
         left: 50,

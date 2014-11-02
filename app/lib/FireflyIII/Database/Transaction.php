@@ -171,4 +171,25 @@ class Transaction implements TransactionInterface, CUD, CommonDatabaseCalls
     {
         // TODO: Implement findByWhat() method.
     }
+
+    /**
+     * @param Ardent $model
+     * @param array  $data
+     *
+     * @return bool
+     */
+    public function update(Ardent $model, array $data)
+    {
+        // TODO: Implement update() method.
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function getByIds(array $ids)
+    {
+        // TODO: Implement getByIds() method.
+    }
 }

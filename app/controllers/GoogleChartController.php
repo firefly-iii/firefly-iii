@@ -43,11 +43,11 @@ class GoogleChartController extends BaseController
             $row = [clone $current];
 
             foreach ($accounts as $account) {
-                if ($current > Carbon::now()) {
-                    $row[] = null;
-                } else {
+                //if ($current > Carbon::now()) {
+                  //  $row[] = 0;
+                //} else {
                     $row[] = $account->balance($current);
-                }
+                //}
 
             }
 

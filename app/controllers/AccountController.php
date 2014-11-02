@@ -340,28 +340,50 @@ class AccountController extends BaseController
      */
     public function update(Account $account)
     {
-        /** @var \Account $account */
-        $account = $this->_repository->update($account, Input::all());
-        if ($account->validate()) {
-            Session::flash('success', 'Account "' . $account->name . '" updated.');
-            switch ($account->accountType->type) {
-                case 'Asset account':
-                case 'Default account':
-                    return Redirect::route('accounts.asset');
-                    break;
-                case 'Expense account':
-                case 'Beneficiary account':
-                    return Redirect::route('accounts.expense');
-                    break;
-                case 'Revenue account':
-                    return Redirect::route('accounts.revenue');
-                    break;
-            }
 
-        } else {
-            Session::flash('error', 'Could not update account: ' . $account->errors()->first());
+        /** @var \FireflyIII\Database\Account $acct */
+        $acct = App::make('FireflyIII\Database\Account');
+        $data = Input::except('_token');
 
-            return Redirect::route('accounts.edit', $account->id)->withInput()->withErrors($account->errors());
+        switch($account->accountType->type) {
+            default:
+                throw new FireflyException('Cannot handle account type "' . e($account->accountType->type) . '"');
+                break;
+            case 'Default account':
+                $data['what'] = 'asset';
+                break;
+        }
+
+        switch (Input::get('post_submit_action')) {
+            default:
+                throw new FireflyException('Cannot handle post_submit_action "' . e(Input::get('post_submit_action')) . '"');
+                break;
+            case 'create_another':
+            case 'store':
+                $messages = $acct->validate($data);
+                /** @var MessageBag $messages ['errors'] */
+                if ($messages['errors']->count() > 0) {
+                    Session::flash('warnings', $messages['warnings']);
+                    Session::flash('successes', $messages['successes']);
+                    Session::flash('error', 'Could not save account: ' . $messages['errors']->first());
+                    return Redirect::route('accounts.create', $data['what'])->withInput()->withErrors($messages['errors']);
+                }
+                // store!
+                $acct->update($account, $data);
+                Session::flash('success', 'Account updated!');
+
+                if ($data['post_submit_action'] == 'create_another') {
+                    return Redirect::route('accounts.edit', $account->id);
+                } else {
+                    return Redirect::route('accounts.edit', $account->id);
+                }
+            case 'validate_only':
+                $messageBags = $acct->validate($data);
+                Session::flash('warnings', $messageBags['warnings']);
+                Session::flash('successes', $messageBags['successes']);
+                Session::flash('errors', $messageBags['errors']);
+                return Redirect::route('accounts.edit', $account->id)->withInput();
+                break;
         }
     }
 

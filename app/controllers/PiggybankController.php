@@ -3,6 +3,7 @@
 use Firefly\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
+use Illuminate\Support\MessageBag;
 
 /**
  * Class PiggybankController
@@ -23,7 +24,19 @@ class PiggybankController extends BaseController
      */
     public function create()
     {
-        throw new NotImplementedException;
+
+        /** @var \FireflyIII\Database\Account $acct */
+        $acct = App::make('FireflyIII\Database\Account');
+
+        /** @var \FireflyIII\Shared\Toolkit\Form $toolkit */
+        $toolkit = App::make('FireflyIII\Shared\Toolkit\Form');
+
+        $periods = Config::get('firefly.piggybank_periods');
+
+
+        $accounts = $toolkit->makeSelectList($acct->getAssetAccounts());
+        return View::make('piggybanks.create', compact('accounts', 'periods'))->with('title', 'Piggy banks')->with('mainTitleIcon', 'fa-sort-amount-asc')
+                   ->with('subTitle', 'Create new piggy bank')->with('subTitleIcon', 'fa-plus');
     }
 
 
@@ -96,9 +109,36 @@ class PiggybankController extends BaseController
      *
      * @return $this
      */
-    public function edit(Piggybank $piggyBank)
+    public function edit(Piggybank $piggybank)
     {
-        throw new NotImplementedException;
+
+        /** @var \FireflyIII\Database\Account $acct */
+        $acct = App::make('FireflyIII\Database\Account');
+
+        /** @var \FireflyIII\Shared\Toolkit\Form $toolkit */
+        $toolkit = App::make('FireflyIII\Shared\Toolkit\Form');
+
+        $periods = Config::get('firefly.piggybank_periods');
+
+        $accounts = $toolkit->makeSelectList($acct->getAssetAccounts());
+
+        /*
+         * Flash some data to fill the form.
+         */
+        $prefilled = [
+            'name'         => $piggybank->name,
+            'account_id'   => $piggybank->account_id,
+            'targetamount' => $piggybank->targetamount,
+            'targetdate'   => $piggybank->targetdate,
+            'remind_me'    => intval($piggybank->remind_me) == 1 ? true : false
+        ];
+        Session::flash('prefilled', $prefilled);
+
+        return View::make('piggybanks.edit', compact('piggybank', 'accounts', 'periods','prefilled'))->with('title', 'Piggybanks')->with(
+            'mainTitleIcon', 'fa-sort-amount-asc'
+        )
+                   ->with('subTitle', 'Edit piggy bank "' . e($piggybank->name) . '"')->with('subTitleIcon', 'fa-pencil');
+        //throw new NotImplementedException;
 //        /** @var \Firefly\Helper\Toolkit\Toolkit $toolkit */
 //        $toolkit = App::make('Firefly\Helper\Toolkit\Toolkit');
 //
@@ -258,9 +298,6 @@ class PiggybankController extends BaseController
         /** @var \FireflyIII\Database\Piggybank $repos */
         $repos = App::make('FireflyIII\Database\Piggybank');
 
-        /** @var \FireflyIII\Database\Account $acct */
-        $acct = App::make('FireflyIII\Database\Account');
-
         /** @var Collection $piggybanks */
         $piggybanks = $repos->get();
 
@@ -291,7 +328,7 @@ class PiggybankController extends BaseController
                 $accounts[$account->id]['leftToSave'] += $piggybank->leftToSave;
             }
         }
-        return View::make('piggybanks.index', compact('piggybanks','accounts'))->with('title', 'Piggy banks')->with('mainTitleIcon', 'fa-sort-amount-asc');
+        return View::make('piggybanks.index', compact('piggybanks', 'accounts'))->with('title', 'Piggy banks')->with('mainTitleIcon', 'fa-sort-amount-asc');
 
         //throw new NotImplementedException;
 //        $countRepeating    = $this->_repository->countRepeating();
@@ -410,12 +447,49 @@ class PiggybankController extends BaseController
 //                   ->with('balance', $balance);
     }
 
-//    /**
-//     * @return $this|\Illuminate\Http\RedirectResponse
-//     */
+    /**
+     *
+     */
     public function store()
     {
-        throw new NotImplementedException;
+        $data            = Input::all();
+        $data['repeats'] = 0;
+        /** @var \FireflyIII\Database\Piggybank $repos */
+        $repos = App::make('FireflyIII\Database\Piggybank');
+
+        switch ($data['post_submit_action']) {
+            default:
+                throw new FireflyException('Cannot handle post_submit_action "' . e($data['post_submit_action']) . '"');
+                break;
+            case 'create_another':
+            case 'store':
+                $messages = $repos->validate($data);
+                /** @var MessageBag $messages ['errors'] */
+                if ($messages['errors']->count() > 0) {
+                    Session::flash('warnings', $messages['warnings']);
+                    Session::flash('successes', $messages['successes']);
+                    Session::flash('error', 'Could not save piggy bank: ' . $messages['errors']->first());
+                    return Redirect::route('piggybanks.create')->withInput()->withErrors($messages['errors']);
+                }
+                // store!
+                $repos->store($data);
+                Session::flash('success', 'New piggy bank stored!');
+
+                if ($data['post_submit_action'] == 'create_another') {
+                    return Redirect::route('piggybanks.create');
+                } else {
+                    return Redirect::route('piggybanks.index');
+                }
+                break;
+            case 'validate_only':
+                $messageBags = $repos->validate($data);
+                Session::flash('warnings', $messageBags['warnings']);
+                Session::flash('successes', $messageBags['successes']);
+                Session::flash('errors', $messageBags['errors']);
+
+                return Redirect::route('piggybanks.create')->withInput();
+                break;
+        }
 //        $data = Input::all();
 //        unset($data['_token']);
 //

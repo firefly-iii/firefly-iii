@@ -2,7 +2,6 @@ google.setOnLoadCallback(drawChart);
 
 
 function drawChart() {
-    console.log(1);
     googleLineChart('chart/home/account', 'accounts-chart');
     googleBarChart('chart/home/budgets','budgets-chart');
     googleColumnChart('chart/home/categories','categories-chart');

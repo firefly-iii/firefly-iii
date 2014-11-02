@@ -40,7 +40,7 @@
                         </div>
                         <div class="col-lg-8 col-md-6 col-sm-4">
                             <div class="btn-group btn-group-xs">
-                                <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
+                                <a href="{{route('piggybanks.edit',$piggybank->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
                                 <a href="#" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
                             </div>
                         </div>
@@ -60,7 +60,11 @@
                 <i class="fa fa-fw fa-plus"></i> Create piggy bank
             </div>
             <div class="panel-body">
-                <a href="#" class="btn btn-success btn-lg">Create new piggy bank</a>
+                <div class="row">
+                    <div class="col-lg-8 col-md-6 col-sm-4 col-lg-offset-2 col-md-offset-3 col-sm-offset-4">
+                        <a href="{{route('piggybanks.create')}}" class="btn btn-success">Create new piggy bank</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

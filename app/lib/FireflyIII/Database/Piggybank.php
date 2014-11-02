@@ -2,6 +2,7 @@
 namespace FireflyIII\Database;
 
 use Carbon\Carbon;
+use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\MessageBag;
 use LaravelBook\Ardent\Ardent;
 use Illuminate\Support\Collection;
@@ -76,7 +77,81 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
      */
     public function validate(array $model)
     {
-        // TODO: Implement validate() method.
+        $warnings  = new MessageBag;
+        $successes = new MessageBag;
+        $errors    = new MessageBag;
+
+        /*
+         * Name validation:
+         */
+        if (!isset($model['name'])) {
+            $errors->add('name', 'Name is mandatory');
+        }
+
+        if (isset($model['name']) && strlen($model['name']) == 0) {
+            $errors->add('name', 'Name is too short');
+        }
+        if (isset($model['name']) && strlen($model['name']) > 100) {
+            $errors->add('name', 'Name is too long');
+        }
+
+        if (intval($model['account_id']) == 0) {
+            $errors->add('account_id', 'Account is mandatory');
+        }
+        if ($model['targetdate'] == '' && isset($model['remind_me']) && intval($model['remind_me']) == 1) {
+            $errors->add('targetdate', 'Target date is mandatory when setting reminders.');
+        }
+        if ($model['targetdate'] != '') {
+            try {
+                new Carbon($model['targetdate']);
+            } catch (\Exception $e) {
+                $errors->add('date', 'Invalid date.');
+            }
+        }
+        if (floatval($model['targetamount']) < 0.01) {
+            $errors->add('targetamount', 'Amount should be above 0.01.');
+        }
+        if (!in_array(ucfirst($model['reminder']), \Config::get('firefly.piggybank_periods'))) {
+            $errors->add('reminder', 'Invalid reminder period (' . $model['reminder'] . ')');
+        }
+        // check period.
+        if (!$errors->has('reminder') && !$errors->has('targetdate') && isset($model['remind_me']) && intval($model['remind_me']) == 1) {
+            $today  = new Carbon;
+            $target = new Carbon($model['targetdate']);
+            switch ($model['reminder']) {
+                case 'week':
+                    $today->addWeek();
+                    break;
+                case 'month':
+                    $today->addMonth();
+                    break;
+                case 'year':
+                    $today->addYear();
+                    break;
+            }
+            if ($today > $target) {
+                $errors->add('reminder', 'Target date is too close to today to set reminders.');
+            }
+        }
+
+        $validator = \Validator::make($model, \Piggybank::$rules);
+        if ($validator->invalid()) {
+            $errors->merge($errors);
+        }
+
+        // add ok messages.
+        $list = ['name', 'account_id', 'targetamount', 'targetdate', 'remind_me', 'reminder'];
+        foreach ($list as $entry) {
+            if (!$errors->has($entry) && !$warnings->has($entry)) {
+                $successes->add($entry, 'OK');
+            }
+        }
+
+        return [
+            'errors'    => $errors,
+            'warnings'  => $warnings,
+            'successes' => $successes
+        ];
     }
 
     /**
@@ -86,7 +161,22 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
      */
     public function store(array $data)
     {
-        // TODO: Implement store() method.
+        $data['rep_every']     = isset($data['rep_every']) ? $data['rep_every'] : 0;
+        $data['reminder_skip'] = isset($data['reminder_skip']) ? $data['reminder_skip'] : 0;
+        $data['order']         = isset($data['order']) ? $data['order'] : 0;
+        $data['remind_me']     = isset($data['remind_me']) ? intval($data['remind_me']) : 0;
+        $data['startdate']     = isset($data['startdate']) ? $data['startdate'] : Carbon::now()->format('Y-m-d');
+        $data['targetdate']    = isset($data['targetdate']) && $data['targetdate'] != '' ? $data['targetdate'] : null;
+
+
+        $piggybank = new \Piggybank($data);
+        if (!$piggybank->validate()) {
+            var_dump($piggybank->errors()->all());
+            exit;
+        }
+        $piggybank->save();
+        \Event::fire('piggybanks.store', [$piggybank]);
+        $piggybank->save();
     }
 
     /**

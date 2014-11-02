@@ -115,4 +115,15 @@ class TransactionType implements TransactionTypeInterface, CUD, CommonDatabaseCa
     {
         // TODO: Implement getByIds() method.
     }
+
+    /**
+     * @param Ardent $model
+     * @param array  $data
+     *
+     * @return bool
+     */
+    public function update(Ardent $model, array $data)
+    {
+        // TODO: Implement update() method.
+    }
 }

@@ -28,6 +28,37 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
     }
 
     /**
+     * @param Ardent $model
+     * @param array  $data
+     *
+     * @return bool
+     */
+    public function update(Ardent $model, array $data)
+    {
+        $model->name   = $data['name'];
+        $model->active = isset($data['active']) ? intval($data['active']) : 0;
+        $model->save();
+
+        if (isset($data['openingbalance']) && isset($data['openingbalancedate'])) {
+            $openingBalance = $this->openingBalanceTransaction($model);
+
+            $openingBalance->date = new Carbon($data['openingbalancedate']);
+            $openingBalance->save();
+            $amount = floatval($data['openingbalance']);
+            /** @var \Transaction $transaction */
+            foreach ($openingBalance->transactions as $transaction) {
+                if ($transaction->account_id == $model->id) {
+                    $transaction->amount = $amount;
+                } else {
+                    $transaction->amount = $amount * -1;
+                }
+                $transaction->save();
+            }
+        }
+        return true;
+    }
+
+    /**
      * Get all asset accounts. Optional JSON based parameters.
      *
      * @param array $parameters

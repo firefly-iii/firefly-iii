@@ -29,8 +29,8 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
 
     /**
      * @param \RecurringTransaction $recurring
-     * @param Carbon                $current
-     * @param Carbon                $currentEnd
+     * @param Carbon                $start
+     * @param Carbon                $end
      *
      * @return \TransactionJournal|null
      */
@@ -128,5 +128,16 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
     public function findByWhat($what)
     {
         // TODO: Implement findByWhat() method.
+    }
+
+    /**
+     * @param Ardent $model
+     * @param array  $data
+     *
+     * @return bool
+     */
+    public function update(Ardent $model, array $data)
+    {
+        // TODO: Implement update() method.
     }
 }
