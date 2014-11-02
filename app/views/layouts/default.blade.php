@@ -17,6 +17,7 @@
     {{HTML::style('assets/stylesheets/metisMenu/metisMenu.min.css')}}
     {{HTML::style('assets/stylesheets/sbadmin/sb.css')}}
     {{HTML::style('assets/stylesheets/fa/css/font-awesome.min.css')}}
+    <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
     @yield('styles')
 
     <!--[if lt IE 9]>
