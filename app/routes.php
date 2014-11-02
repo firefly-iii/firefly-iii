@@ -204,6 +204,7 @@ Route::group(
         Route::get('/piggybanks/remove/{piggybank}', ['uses' => 'PiggybankController@remove']);
         Route::get('/piggybanks/edit/{piggybank}', ['uses' => 'PiggybankController@edit','as' => 'piggybanks.edit']);
         Route::get('/piggybanks/create', ['uses' => 'PiggybankController@create', 'as' => 'piggybanks.create']);
+        Route::get('/piggybanks/delete/{piggybank}', ['uses' => 'PiggybankController@delete','as' => 'piggybanks.delete']);
 
 
 //        Route::get('/repeated',['uses' => 'PiggybankController@repeated','as' => 'piggybanks.index.repeated']);
@@ -287,7 +288,7 @@ Route::group(
         Route::post('/piggybanks/store', ['uses' => 'PiggybankController@store', 'as' => 'piggybanks.store']);
         #Route::post('/piggybanks/store/repeated', ['uses' => 'PiggybankController@storeRepeated', 'as' => 'piggybanks.store.repeated']);
         #Route::post('/piggybanks/update/{piggybank}', ['uses' => 'PiggybankController@update', 'as' => 'piggybanks.update']);
-        #Route::post('/piggybanks/destroy/{piggybank}', ['uses' => 'PiggybankController@destroy', 'as' => 'piggybanks.destroy']);
+        Route::post('/piggybanks/destroy/{piggybank}', ['uses' => 'PiggybankController@destroy', 'as' => 'piggybanks.destroy']);
         #Route::post('/piggybanks/mod/{piggybank}', ['uses' => 'PiggybankController@modMoney', 'as' => 'piggybanks.modMoney']);
         Route::post('/piggybanks/add/{piggybank}', ['uses' => 'PiggybankController@postAdd', 'as' => 'piggybanks.add']);
         Route::post('/piggybanks/remove/{piggybank}', ['uses' => 'PiggybankController@postRemove', 'as' => 'piggybanks.remove']);

@@ -66,19 +66,13 @@ class PiggybankController extends BaseController
      *
      * @return $this
      */
-    public function delete(Piggybank $piggyBank)
+    public function delete(Piggybank $piggybank)
     {
-        throw new NotImplementedException;
-//        View::share('subTitle', 'Delete "' . $piggyBank->name . '"');
-//        if ($piggyBank->repeats == 1) {
-//            View::share('title', 'Repeated expenses');
-//            View::share('mainTitleIcon', 'fa-rotate-right');
-//        } else {
-//            View::share('title', 'Piggy banks');
-//            View::share('mainTitleIcon', 'fa-sort-amount-asc');
-//        }
-//
-//        return View::make('piggybanks.delete')->with('piggybank', $piggyBank);
+        View::share('subTitle', 'Delete "' . $piggybank->name . '"');
+        View::share('title', 'Piggy banks');
+        View::share('mainTitleIcon', 'fa-sort-amount-asc');
+
+        return View::make('piggybanks.delete')->with('piggybank', $piggybank);
     }
 
     /**
@@ -88,20 +82,14 @@ class PiggybankController extends BaseController
      */
     public function destroy(Piggybank $piggyBank)
     {
-        throw new NotImplementedException;
-//        Event::fire('piggybanks.destroy', [$piggyBank]);
-//        if ($piggyBank->repeats == 1) {
-//            $route   = 'piggybanks.index.repeated';
-//            $message = 'Repeated expense';
-//        } else {
-//            $route   = 'piggybanks.index.piggybanks';
-//            $message = 'Piggybank';
-//        }
-//        $this->_repository->destroy($piggyBank);
-//
-//        Session::flash('success', $message . ' deleted.');
-//
-//        return Redirect::route($route);
+        Event::fire('piggybanks.destroy', [$piggyBank]);
+
+        /** @var \FireflyIII\Database\Piggybank $acct */
+        $repos = App::make('FireflyIII\Database\Piggybank');
+        $repos->destroy($piggyBank);
+        Session::flash('success', 'Piggy bank deleted.');
+
+        return Redirect::route('piggybanks.index');
     }
 
     /**
@@ -134,7 +122,7 @@ class PiggybankController extends BaseController
         ];
         Session::flash('prefilled', $prefilled);
 
-        return View::make('piggybanks.edit', compact('piggybank', 'accounts', 'periods','prefilled'))->with('title', 'Piggybanks')->with(
+        return View::make('piggybanks.edit', compact('piggybank', 'accounts', 'periods', 'prefilled'))->with('title', 'Piggybanks')->with(
             'mainTitleIcon', 'fa-sort-amount-asc'
         )
                    ->with('subTitle', 'Edit piggy bank "' . e($piggybank->name) . '"')->with('subTitleIcon', 'fa-pencil');
