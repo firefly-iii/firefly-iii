@@ -231,8 +231,7 @@ class GoogleChartController extends BaseController
         /** @var \TransactionJournal $journal */
         foreach ($journals as $journal) {
             if ($journal->transactionType->type == 'Withdrawal') {
-                $amount   = floatval($journal->transactions[1]->amount);
-                $amount   = $amount < 0 ? $amount * -1 : $amount;
+                $amount   = $journal->getAmount();
                 $category = $journal->categories()->first();
                 if (!is_null($category)) {
                     if (isset($data[$category->name])) {
@@ -321,8 +320,7 @@ class GoogleChartController extends BaseController
                         $unpaid['items'][] = $entry->name;
                         $unpaid['amount'] += (($entry->amount_max + $entry->amount_min) / 2);
                     } else {
-                        $amount          = floatval($journal->transactions[0]->amount);
-                        $amount          = $amount < 0 ? $amount * -1 : $amount;
+                        $amount          = $journal->getAmount();
                         $paid['items'][] = $journal->description;
                         $paid['amount'] += $amount;
                     }

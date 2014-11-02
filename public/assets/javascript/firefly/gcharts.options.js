@@ -12,13 +12,32 @@ var defaultLineChartOptions = {
         height: '80%'
     },
     height: 400,
-    vAxis: {format: '\u20AC #'}
+    vAxis: {format: '\u20AC #'},
+    colors: ["#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043", "#9e9d24", "#5c6bc0", "#f06292", "#00796b", "#c2185b"],
+    hAxis: {
+        textStyle: {
+            color: '#838383',
+            fontName: 'Roboto',
+            fontSize: '12'
+        },
+        gridlines: {
+            color: 'transparent'
+        }
+    },
+    vAxis: {
+        textStyle: {
+            color: '#838383',
+            fontName: 'Roboto',
+            fontSize: '12'
+        }
+    }
 
 
 };
 
 var defaultBarChartOptions = {
     height: 400,
+    bars: 'horizontal',
     hAxis: {format: '\u20AC #'},
     chartArea: {
         left: 75,
@@ -29,7 +48,7 @@ var defaultBarChartOptions = {
 
     legend: {
         position: 'none'
-    }
+    },
 };
 
 var defaultColumnChartOptions = {
@@ -43,7 +62,7 @@ var defaultColumnChartOptions = {
     vAxis: {format: '\u20AC #'},
     legend: {
         position: 'none'
-    }
+    },
 };
 
 var defaultPieChartOptions = {
@@ -56,7 +75,8 @@ var defaultPieChartOptions = {
     height: 200,
     legend: {
         position: 'none'
-    }
+    },
+    colors: ["#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043", "#9e9d24", "#5c6bc0", "#f06292", "#00796b", "#c2185b"]
 };
 
 var defaultSankeyChartOptions = {

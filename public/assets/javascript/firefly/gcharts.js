@@ -1,4 +1,4 @@
-google.load('visualization', '1.1', {'packages': ['corechart', 'sankey', 'table']});
+google.load('visualization', '1.1', {'packages': ['corechart', 'bar','sankey', 'table']});
 
 function googleLineChart(URL, container) {
     $.getJSON(URL).success(function (data) {
@@ -48,7 +48,7 @@ function googleBarChart(URL, container) {
         /*
          Create a new google charts object.
          */
-        var chart = new google.visualization.BarChart(document.getElementById(container));
+        var chart = new google.charts.Bar(document.getElementById(container));
 
         /*
          Draw it:
@@ -78,8 +78,7 @@ function googleColumnChart(URL, container) {
         /*
          Create a new google charts object.
          */
-        var chart = new google.visualization.ColumnChart(document.getElementById(container));
-
+        var chart = new google.charts.Bar(document.getElementById(container));
         /*
          Draw it:
          */
