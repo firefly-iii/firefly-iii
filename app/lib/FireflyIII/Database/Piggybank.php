@@ -51,7 +51,7 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
      */
     public function destroy(Ardent $model)
     {
-        // TODO: Implement destroy() method.
+        $model->delete();
     }
 
     /**

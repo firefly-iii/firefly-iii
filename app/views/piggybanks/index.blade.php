@@ -41,7 +41,7 @@
                         <div class="col-lg-8 col-md-6 col-sm-4">
                             <div class="btn-group btn-group-xs">
                                 <a href="{{route('piggybanks.edit',$piggybank->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
-                                <a href="#" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                                <a href="{{route('piggybanks.delete',$piggybank->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
                             </div>
                         </div>
                         <div class="col-lg-2 col-md-3 col-sm-4">
