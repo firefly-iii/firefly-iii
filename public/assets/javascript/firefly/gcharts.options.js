@@ -17,7 +17,7 @@ var defaultLineChartOptions = {
     hAxis: {
         textStyle: {
             color: '#838383',
-            fontName: 'Roboto',
+            fontName: 'Roboto2',
             fontSize: '12'
         },
         gridlines: {
@@ -27,7 +27,7 @@ var defaultLineChartOptions = {
     vAxis: {
         textStyle: {
             color: '#838383',
-            fontName: 'Roboto',
+            fontName: 'Roboto2',
             fontSize: '12'
         }
     }
