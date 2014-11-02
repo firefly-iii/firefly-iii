@@ -46,4 +46,12 @@ interface CUD
      */
     public function store(array $data);
 
+    /**
+     * @param Ardent $model
+     * @param array  $data
+     *
+     * @return bool
+     */
+    public function update(Ardent $model, array $data);
+
 } 

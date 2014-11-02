@@ -24,6 +24,7 @@ class AccountType implements AccountTypeInterface, CUD, CommonDatabaseCalls
      * @param $what
      *
      * @return \AccountType|null
+     * @throws FireflyException
      */
     public function findByWhat($what)
     {
@@ -124,5 +125,16 @@ class AccountType implements AccountTypeInterface, CUD, CommonDatabaseCalls
     public function getByIds(array $ids)
     {
         // TODO: Implement getByIds() method.
+    }
+
+    /**
+     * @param Ardent $model
+     * @param array  $data
+     *
+     * @return bool
+     */
+    public function update(Ardent $model, array $data)
+    {
+        // TODO: Implement update() method.
     }
 }

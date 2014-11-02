@@ -193,7 +193,7 @@ class EloquentPiggybankTrigger
             'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@updateRelatedTransfer'
         );
         $events->listen(
-            'piggybanks.check', 'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@checkRepeatingPiggies'
+            'piggybanks.storepiggybanks.check', 'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@checkRepeatingPiggies'
         );
 
     }

@@ -115,4 +115,15 @@ class Category implements CUD, CommonDatabaseCalls, CategoryInterface
     {
         // TODO: Implement findByWhat() method.
     }
+
+    /**
+     * @param Ardent $model
+     * @param array  $data
+     *
+     * @return bool
+     */
+    public function update(Ardent $model, array $data)
+    {
+        // TODO: Implement update() method.
+    }
 }

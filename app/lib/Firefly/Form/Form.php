@@ -10,9 +10,10 @@ class Form
 {
 
     /**
-     * @param $name
-     * @param null $value
+     * @param       $name
+     * @param null  $value
      * @param array $options
+     *
      * @return string
      * @throws FireflyException
      */
@@ -40,7 +41,7 @@ class Form
     public static function ffAmount($name, $value = null, array $options = [])
     {
         $options['step'] = 'any';
-        $options['min'] = '0.01';
+        $options['min']  = '0.01';
         return self::ffInput('amount', $name, $value, $options);
 
     }
@@ -61,9 +62,10 @@ class Form
     }
 
     /**
-     * @param $name
-     * @param null $value
+     * @param       $name
+     * @param null  $value
      * @param array $options
+     *
      * @return string
      * @throws FireflyException
      */
@@ -73,9 +75,10 @@ class Form
     }
 
     /**
-     * @param $name
-     * @param null $value
+     * @param       $name
+     * @param null  $value
      * @param array $options
+     *
      * @return string
      * @throws FireflyException
      */
@@ -86,10 +89,11 @@ class Form
     }
 
     /**
-     * @param $name
+     * @param       $name
      * @param array $list
-     * @param null $selected
+     * @param null  $selected
      * @param array $options
+     *
      * @return string
      * @throws FireflyException
      */
@@ -99,9 +103,10 @@ class Form
     }
 
     /**
-     * @param $name
-     * @param null $value
+     * @param       $name
+     * @param null  $value
      * @param array $options
+     *
      * @return string
      * @throws FireflyException
      */
@@ -111,16 +116,25 @@ class Form
 
     }
 
-    public static function label($name)
+    /**
+     * @param $name
+     * @param $options
+     *
+     * @return string
+     */
+    public static function label($name, $options)
     {
+        if (isset($options['label'])) {
+            return $options['label'];
+        }
         $labels = [
-            'amount_min' => 'Amount (min)',
-            'amount_max' => 'Amount (max)',
-            'match' => 'Matches on',
-            'repeat_freq' => 'Repetition',
+            'amount_min'      => 'Amount (min)',
+            'amount_max'      => 'Amount (max)',
+            'match'           => 'Matches on',
+            'repeat_freq'     => 'Repetition',
             'account_from_id' => 'Account from',
-            'account_to_id' => 'Account to',
-            'account_id' => 'Asset account'
+            'account_to_id'   => 'Account to',
+            'account_id'      => 'Asset account'
         ];
 
         return isset($labels[$name]) ? $labels[$name] : str_replace('_', ' ', ucfirst($name));
@@ -174,28 +188,29 @@ class Form
             case 'create':
                 $return = '<div class="form-group"><label for="return_to_form" class="col-sm-4 control-label">';
                 $return .= 'Return here</label><div class="col-sm-8"><div class="radio"><label>';
-                $return .= \Form::radio('post_submit_action','create_another', $previousValue == 'create_another');
+                $return .= \Form::radio('post_submit_action', 'create_another', $previousValue == 'create_another');
                 $return .= 'After storing, return here to create another one.</label></div></div></div>';
                 break;
             case 'update':
                 $return = '<div class="form-group"><label for="return_to_edit" class="col-sm-4 control-label">';
                 $return .= 'Return here</label><div class="col-sm-8"><div class="radio"><label>';
-                $return .= \Form::radio('post_submit_action','return_to_edit', $previousValue == 'return_to_edit');
+                $return .= \Form::radio('post_submit_action', 'return_to_edit', $previousValue == 'return_to_edit');
                 $return .= 'After updating, return here.</label></div></div></div>';
                 break;
             default:
                 throw new FireflyException('Cannot create ffOptionsList for option (store+return) ' . $type);
                 break;
         }
-        return $store.$validate.$return;
+        return $store . $validate . $return;
     }
 
     /**
-     * @param $type
-     * @param $name
-     * @param null $value
+     * @param       $type
+     * @param       $name
+     * @param null  $value
      * @param array $options
      * @param array $list
+     *
      * @return string
      * @throws FireflyException
      */
@@ -204,10 +219,10 @@ class Form
         /*
          * add some defaults to this method:
          */
-        $options['class'] = 'form-control';
-        $options['id'] = 'ffInput_' . $name;
+        $options['class']        = 'form-control';
+        $options['id']           = 'ffInput_' . $name;
         $options['autocomplete'] = 'off';
-        $label = self::label($name);
+        $label                   = self::label($name, $options);
         /*
          * Make label and placeholder look nice.
          */
@@ -216,9 +231,9 @@ class Form
         /*
          * Get prefilled value:
          */
-        if(\Session::has('prefilled')) {
+        if (\Session::has('prefilled')) {
             $prefilled = \Session::get('prefilled');
-            $value = isset($prefilled[$name]) && is_null($value) ? $prefilled[$name] : $value;
+            $value     = isset($prefilled[$name]) && is_null($value) ? $prefilled[$name] : $value;
         }
 
         /*

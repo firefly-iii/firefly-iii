@@ -154,4 +154,15 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
             }
         )->before($end)->after($start)->lessThan(0)->transactionTypes(['Withdrawal'])->get();
     }
+
+    /**
+     * @param Ardent $model
+     * @param array  $data
+     *
+     * @return bool
+     */
+    public function update(Ardent $model, array $data)
+    {
+        // TODO: Implement update() method.
+    }
 }
