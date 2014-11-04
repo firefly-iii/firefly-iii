@@ -89,9 +89,9 @@ class Limit extends Ardent
                 break;
         }
         $end->subDay();
-        $count = $this->limitrepetitions()->where('startdate', $start->format('Y-m-d'))->where(
-            'enddate', $start->format('Y-m-d')
-        )->count();
+        $count = $this->limitrepetitions()->where('startdate', $start->format('Y-m-d'))->where('enddate', $end->format('Y-m-d'))->count();
+        \Log::debug('All: '.$this->limitrepetitions()->count().' (#'.$this->id.')');
+        \Log::debug('Found ' . $count.' limit-reps for limit #' . $this->id.' with start '.$start->format('Y-m-d') .' and end ' . $end->format('Y-m-d'));
 
         if ($count == 0) {
 

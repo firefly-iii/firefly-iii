@@ -98,6 +98,7 @@ class GoogleChartController extends BaseController
         return Response::json($chart->getData());
 
     }
+
     /**
      * @param $year
      *
@@ -112,7 +113,7 @@ class GoogleChartController extends BaseController
         }
         /** @var \Grumpydictator\Gchart\GChart $chart */
         $chart = App::make('gchart');
-        $chart->addColumn('Month', 'string');
+        $chart->addColumn('Summary', 'string');
         $chart->addColumn('Income', 'number');
         $chart->addColumn('Expenses', 'number');
 
@@ -121,18 +122,17 @@ class GoogleChartController extends BaseController
 
         $end = clone $start;
         $end->endOfYear();
-        $income = 0;
+        $income  = 0;
         $expense = 0;
         while ($start < $end) {
 
             // total income:
-            $income  += $tj->getSumOfIncomesByMonth($start);
+            $income += $tj->getSumOfIncomesByMonth($start);
             $expense += $tj->getSumOfExpensesByMonth($start);
 
             $start->addMonth();
         }
         $chart->addRow('Sum', $income, $expense);
-
 
 
         $chart->generate();

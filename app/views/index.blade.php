@@ -44,7 +44,7 @@
         <!-- BUDGETS -->
         <div class="panel panel-default">
             <div class="panel-heading">
-                <i class="fa fa-tasks fa-fw"></i> <a href="{{route('budgets.index.date')}}">Budgets and spending</a>
+                <i class="fa fa-tasks fa-fw"></i> <a href="{{route('budgets.index')}}">Budgets and spending</a>
             </div>
             <div class="panel-body">
                 <div id="budgets-chart"></div>
