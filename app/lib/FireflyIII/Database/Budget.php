@@ -106,7 +106,22 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
      */
     public function get()
     {
-        return $this->getUser()->budgets()->get();
+        $budgets = $this->getUser()->budgets()->get();
+
+        return $budgets;
+    }
+
+    /**
+     * @param \Budget $budget
+     * @param Carbon $date
+     * @return float
+     */
+    public function spentInMonth(\Budget $budget, Carbon $date) {
+        $end = clone $date;
+        $date->startOfMonth();
+        $end->endOfMonth();
+        $sum = floatval($budget->transactionjournals()->before($end)->after($date)->lessThan(0)->sum('amount')) * -1;
+        return $sum;
     }
 
     /**

@@ -48,7 +48,7 @@
 
     <li class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
     </a>
     <ul class="dropdown-menu dropdown-user">
         <li><a href="{{route('profile')}}"><i class="fa fa-user fa-fw"></i> {{Auth::user()->email}}</a>
@@ -109,23 +109,8 @@
                 </ul>
                 <!-- /.nav-second-level -->
             </li>
-            <li
-            @if(!(strpos($r,'budgets') === false))
-            class="active"
-            @endif
-                >
-                <a href="#"><i class="fa fa-tasks fa-fw"></i> Budgets <span class="fa arrow"></span></a>
-
-                <ul class="nav nav-second-level">
-                    <li>
-                        <a @if($r == 'budgets.index.date') class="active" @endif href="{{route('budgets.index.date')}}"><i class="fa fa-calendar fa-fw"></i> Grouped by date</a>
-                    </li>
-                    <li>
-                        <a @if($r == 'budgets.index.budget') class="active" @endif href="{{route('budgets.index.budget')}}"><i class="fa fa-folder-open fa-fw"></i> Grouped by budget</a>
-                    </li>
-                </ul>
-
-
+            <li>
+                <a href="{{route('budgets.index')}}"><i class="fa fa-tasks fa-fw"></i> Budgets</a>
             </li>
             <li>
                 <a
@@ -214,7 +199,7 @@
                     </li>
                     -->
                     <li>
-                        <a href="{{route('budgets.create')}}"><i class="fa fa-tasks fa-fw"></i> Budget</a>
+                        <a href="#"><i class="fa fa-tasks fa-fw"></i> Budget</a>
                     </li>
                     <li>
                         <a href="#"><i class="fa fa-bar-chart fa-fw"></i> Category</a>

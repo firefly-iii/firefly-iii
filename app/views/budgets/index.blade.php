@@ -1,0 +1,150 @@
+@extends('layouts.default')
+@section('content')
+<div class="row">
+    <div class="col-lg-9 col-sm-8 col-md-8">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                {{\Session::get('start')->format('F Y')}}
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-6 col-md-4 col-sm-3">
+                        <small>Budgeted: <span id="budgetedAmount" data-value="300">{{mf(300)}}</span></small>
+                    </div>
+                    <div class="col-lg-6 col-md-4 col-sm-3" style="text-align:right;">
+                        <small>Income {{\Session::get('start')->format('F Y')}}:
+                        <a href="#" class="updateIncome"><span id="totalAmount" data-value="{{$budgetAmount->data}}">{{mf($budgetAmount->data)}}</span></a></small>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="progress">
+                            <div class="progress-bar" id="progress-bar-default" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                            <div class="progress-bar progress-bar-danger" id="progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                            <div class="progress-bar progress-bar-warning" id="progress-bar-warning" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <h3></h3>
+    </div>
+    <div class="col-lg-3 col-sm-4 col-md-4">
+        <!-- time based navigation -->
+        @include('partials.date_nav')
+    </div>
+</div>
+
+<div class="row">
+@foreach($budgets as $budget)
+    <div class="col-lg-3 col-sm-4 col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @if($budget->currentRep)
+                    <a href="{{route('budgets.show',[$budget->id,$budget->currentRep->id])}}" id="budget-link-{{$budget->id}}">{{{$budget->name}}}</a>
+                @else
+                    <a href="{{route('budgets.show',$budget->id)}}" id="budget-link-{{$budget->id}}">{{{$budget->name}}}</a>
+                @endif
+            </div>
+            <div class="panel-body">
+            <!-- the range in which the budget can be set -->
+            <p>
+                @if($budget->currentRep)
+                    <input type="range" data-id="{{$budget->id}}" data-spent="{{$budget->spent}}" id="budget-range-{{$budget->id}}" max="900" min="0" value="{{$budget->currentRep->amount}}" />
+                @else
+                    <input type="range" data-id="{{$budget->id}}" data-spent="{{$budget->spent}}" id="budget-range-{{$budget->id}}" max="900" min="0" value="0" />
+                @endif
+            </p>
+            <!-- some textual info about the budget. Updates dynamically. -->
+            <p>
+            <!-- budget-holder-X holds all the elements -->
+            <span id="budget-holder-{{$budget->id}}">
+            @if($budget->currentRep)
+                <!-- budget-description-X holds the description. -->
+                <span id="budget-description-{{$budget->id}}">Budgeted: </span>
+                <!-- budget-info-X holds the input and the euro-sign: -->
+                <span id="budget-info-{{$budget->id}}">
+                @if($budget->limit > $budget->spent)
+                    <span class="text-success">&euro;</span> <input type="number" min="0" max="900" data-id="{{$budget->id}}" step="1" value="{{$budget->limit}}" style="width:50px;color:#3c763d;" />
+                @else
+                    <span class="text-danger">&euro;</span> <input type="number" min="0" max="900"  data-id="{{$budget->id}}" step="1" value="{{$budget->limit}}" style="width:50px;color:#a94442;" />
+                @endif
+                </span>
+            @else
+                <span id="budget-description-{{$budget->id}}"><em>No budget</em></span>
+                <span id="budget-info-{{$budget->id}}">
+                    <span class="text-success" style="display:none;">&euro;</span> <input  style="display:none;"  data-id="{{$budget->id}}" type="number" min="0" max="900" step="1" value="0" style="width:50px;color:#3c763d;" />
+                </span>
+            @endif
+            </span>
+            </p>
+            <p>
+            <span id="spent-{{$budget->id}}" data-value="{{$budget->spent}}">Spent: {{mf($budget->spent)}}</span>
+            </p>
+            </div>
+        </div>
+    </div>
+
+@endforeach
+</div>
+
+
+
+@foreach($budgets as $budget)
+{{--
+<div class="row">
+    <div class="col-lg-9 col-sm-8 col-md-8">
+        <div class="row">
+            <div class="col-lg-3 col-md-4 col-sm-4">
+                {{$budget->name}}
+            </div>
+            <div class="col-lg-7 col-md-4 col-sm-4">
+
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-3">
+                 <span id="budget-range-display-{{$budget->id}}" data-id="{{$budget->id}}"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-7 col-lg-offset-3 col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4">
+                @if($budget->pct > 0)
+                    <!-- display a progress bar. -->
+                    <div class="progress" id="budget-progress-{{$budget->id}}" data-spent="{{$budget->spent}}" data-amount="{{$budget->limit}}">
+
+                    </div>
+                @else
+                    <!-- do NOT display a progress bar. -->
+                    <div style="display:none;" class="progress" id="budget-progress-{{$budget->id}}" data-spent="{{$budget->spent}}" data-amount="{{$budget->limit}}">
+
+                    </div>
+                @endif
+                <!--
+                    @if($budget->currentRep)
+                        @if($budget->currentRep->amount <= $budget->spent)
+                            Overspent on budget (budgeted: {{$budget->currentRep->amount}}, spent: {{$budget->spent}}).
+                        @else
+                            NOT overspent on budget (budgeted: {{$budget->currentRep->amount}}, spent: {{$budget->spent}}).
+
+                        @endif
+                    @else
+                        No limit.
+                    @endif
+                    -->
+            </div>
+        </div>
+    </div>
+</div>
+--}}
+@endforeach
+
+<!-- DIALOG -->
+<div class="modal fade" id="monthlyBudgetModal">
+</div><!-- /.modal -->
+
+
+@stop
+@section('scripts')
+{{HTML::script('assets/javascript/firefly/budgets.js')}}
+@stop
