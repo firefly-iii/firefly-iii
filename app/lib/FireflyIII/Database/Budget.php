@@ -2,6 +2,7 @@
 namespace FireflyIII\Database;
 
 use Carbon\Carbon;
+use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\MessageBag;
 use LaravelBook\Ardent\Ardent;
 use Illuminate\Support\Collection;
@@ -74,7 +75,7 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
      */
     public function validate(array $model)
     {
-        // TODO: Implement validate() method.
+        throw new NotImplementedException;
     }
 
     /**

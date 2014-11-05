@@ -115,6 +115,12 @@ class Limit extends Ardent
             if (isset($repetition->id)) {
                 \Event::fire('limits.repetition', [$repetition]);
             }
+        } else if($count == 1) {
+            // update this one:
+            $repetition = $this->limitrepetitions()->where('startdate', $start->format('Y-m-d'))->where('enddate', $end->format('Y-m-d'))->first();
+            $repetition->amount = $this->amount;
+            $repetition->save();
+
         }
     }
 

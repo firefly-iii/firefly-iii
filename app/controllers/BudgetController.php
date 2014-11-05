@@ -5,6 +5,7 @@ use Firefly\Exception\FireflyException;
 use Firefly\Helper\Controllers\BudgetInterface as BI;
 use Firefly\Storage\Budget\BudgetRepositoryInterface as BRI;
 use FireflyIII\Exception\NotImplementedException;
+use Illuminate\Support\MessageBag;
 
 
 class BudgetController extends BaseController
@@ -36,7 +37,7 @@ class BudgetController extends BaseController
     public function amount(Budget $budget)
     {
         $amount = intval(Input::get('amount'));
-        $date = Session::get('start');
+        $date   = Session::get('start');
         /** @var \Limit $limit */
         $limit = $budget->limits()->where('startdate', $date->format('Y-m-d'))->first();
         if (!$limit) {
@@ -57,10 +58,10 @@ class BudgetController extends BaseController
         }
         // try to find the limit repetition for this limit:
         $repetition = $limit->limitrepetitions()->first();
-        if($repetition) {
-            return Response::json(['name' => $budget->name,'repetition' => $repetition->id]);
+        if ($repetition) {
+            return Response::json(['name' => $budget->name, 'repetition' => $repetition->id]);
         } else {
-            return Response::json(['name' => $budget->name,'repetition' => null]);
+            return Response::json(['name' => $budget->name, 'repetition' => null]);
         }
 
     }
@@ -82,7 +83,7 @@ class BudgetController extends BaseController
         foreach ($budgets as $budget) {
 
             $budget->spent = $repos->spentInMonth($budget, $date);
-            $budget->pct = 0;
+            $budget->pct   = 0;
             $budget->limit = 0;
 
             /** @var \Limit $limit */
@@ -91,8 +92,8 @@ class BudgetController extends BaseController
                 foreach ($limit->limitrepetitions as $repetition) {
                     if ($repetition->startdate == $date) {
                         $budget->currentRep = $repetition;
-                        $budget->limit = floatval($repetition->amount);
-                        if($budget->limit > $budget->spent) {
+                        $budget->limit      = floatval($repetition->amount);
+                        if ($budget->limit > $budget->spent) {
                             // not overspent:
                             $budget->pct = 30;
                         } else {
@@ -109,6 +110,9 @@ class BudgetController extends BaseController
         return View::make('budgets.index', compact('budgets'))->with('budgetAmount', $budgetAmount);
     }
 
+    /**
+     * @return $this
+     */
     public function updateIncome()
     {
         $date = Session::get('start');
@@ -116,6 +120,21 @@ class BudgetController extends BaseController
         $preferences  = App::make('Firefly\Helper\Preferences\PreferencesHelperInterface');
         $budgetAmount = $preferences->get('budgetIncomeTotal' . $date->format('FY'), 1000);
         return View::make('budgets.income')->with('amount', $budgetAmount)->with('date', $date);
+    }
+
+    /**
+     * @param Budget          $budget
+     * @param LimitRepetition $repetition
+     *
+     * @return \Illuminate\View\View
+     */
+    public function show(Budget $budget, LimitRepetition $repetition = null)
+    {
+        if (!is_null($repetition) && $repetition->limit->budget->id != $budget->id) {
+            App::abort(500);
+        }
+
+        return View::make('budgets.show');
     }
 
 
@@ -152,13 +171,17 @@ class BudgetController extends BaseController
 ////        return Redirect::route('budgets.index.budget');
 //
 //    }
-//    public function edit(Budget $budget)
-//    {
-//        throw new NotImplementedException;
-////        return View::make('budgets.edit')->with('budget', $budget)
-////                   ->with('subTitle', 'Edit budget "' . $budget->name . '"');
-//
-//    }
+    /**
+     * @param Budget $budget
+     *
+     * @return $this
+     */
+    public function edit(Budget $budget)
+    {
+        Session::flash('prefilled', ['name' => $budget->name]);
+        return View::make('budgets.edit')->with('budget', $budget)->with('subTitle', 'Edit budget "' . $budget->name . '"');
+
+    }
 
 //    /**
 //     * @return $this|\Illuminate\View\View
@@ -267,13 +290,50 @@ class BudgetController extends BaseController
 //
 //    }
 //
-//    /**
-//     * @param Budget $budget
-//     *
-//     * @return $this|\Illuminate\Http\RedirectResponse
-//     */
-//    public function update(Budget $budget)
-//    {
+    /**
+     * @param Budget $budget
+     *
+     * @throws FireflyException
+     */
+    public function update(Budget $budget)
+    {
+
+        /** @var \FireflyIII\Database\Budget $repos */
+        $repos = App::make('FireflyIII\Database\Budget');
+        $data  = Input::except('_token');
+
+        switch (Input::get('post_submit_action')) {
+            default:
+                throw new FireflyException('Cannot handle post_submit_action "' . e(Input::get('post_submit_action')) . '"');
+                break;
+            case 'create_another':
+            case 'update':
+                $messages = $repos->validate($data);
+                /** @var MessageBag $messages ['errors'] */
+                if ($messages['errors']->count() > 0) {
+                    Session::flash('warnings', $messages['warnings']);
+                    Session::flash('successes', $messages['successes']);
+                    Session::flash('error', 'Could not save account: ' . $messages['errors']->first());
+                    return Redirect::route('budgets.edit', $budget->id)->withInput()->withErrors($messages['errors']);
+                }
+                // store!
+                $repos->update($budget, $data);
+                Session::flash('success', 'Account updated!');
+
+                if ($data['post_submit_action'] == 'create_another') {
+                    return Redirect::route('budgets.edit', $budget->id);
+                } else {
+                    return Redirect::route('budgets.edit', $budget->id);
+                }
+            case 'validate_only':
+                $messageBags = $repos->validate($data);
+                Session::flash('warnings', $messageBags['warnings']);
+                Session::flash('successes', $messageBags['successes']);
+                Session::flash('errors', $messageBags['errors']);
+                return Redirect::route('budgets.edit', $budget->id)->withInput();
+                break;
+        }
+
 //        $budget = $this->_repository->update($budget, Input::all());
 //        if ($budget->validate()) {
 //            Event::fire('budgets.update', [$budget]);
@@ -290,7 +350,7 @@ class BudgetController extends BaseController
 //            return Redirect::route('budgets.edit', $budget->id)->withInput()->withErrors($budget->errors());
 //        }
 //
-//    }
+    }
 
 //    public function nobudget($view = 'session') {
 //        switch($view) {

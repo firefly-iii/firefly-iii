@@ -17,7 +17,7 @@
         </div>
         <p>
             <button type="submit" class="btn btn-lg btn-success">
-                <i class="fa fa-plus-circle"></i> Store new piggy bank
+                <i class="fa fa-pencil"></i> Update piggy bank
             </button>
         </p>
     </div>

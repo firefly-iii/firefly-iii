@@ -29,7 +29,6 @@
 
             </div>
         </div>
-        <h3></h3>
     </div>
     <div class="col-lg-3 col-sm-4 col-md-4">
         <!-- time based navigation -->
@@ -39,7 +38,7 @@
 
 <div class="row">
 @foreach($budgets as $budget)
-    <div class="col-lg-3 col-sm-4 col-md-6">
+    <div class="col-lg-3 col-sm-4 col-md-6" style="height:180px;">
         <div class="panel panel-default">
             <div class="panel-heading">
                 @if($budget->currentRep)
@@ -47,6 +46,22 @@
                 @else
                     <a href="{{route('budgets.show',$budget->id)}}" id="budget-link-{{$budget->id}}">{{{$budget->name}}}</a>
                 @endif
+
+
+                <!-- ACTIONS MENU -->
+                <div class="pull-right">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                            Actions
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu pull-right" role="menu">
+                            <li><a href="{{route('budgets.edit',$budget->id)}}"><i class="fa fa-pencil fa-fw"></i> Edit</a></li>
+                            <li><a href="{{route('budgets.delete',$budget->id)}}"><i class="fa fa-trash fa-fw"></i> Delete</a></li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
             <div class="panel-body">
             <!-- the range in which the budget can be set -->
@@ -75,7 +90,7 @@
             @else
                 <span id="budget-description-{{$budget->id}}"><em>No budget</em></span>
                 <span id="budget-info-{{$budget->id}}">
-                    <span class="text-success" style="display:none;">&euro;</span> <input  style="display:none;"  data-id="{{$budget->id}}" type="number" min="0" max="900" step="1" value="0" style="width:50px;color:#3c763d;" />
+                    <span class="text-success" style="display:none;">&euro;</span> <input data-id="{{$budget->id}}" type="number" min="0" max="900" step="1" value="0" style="width:50px;color:#3c763d;display:none;" />
                 </span>
             @endif
             </span>
@@ -86,8 +101,16 @@
             </div>
         </div>
     </div>
-
 @endforeach
+    <div class="col-lg-3 col-sm-4 col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Create budget
+            </div>
+            <div class="panel-body">
+                <a href="{{route('budgets.create')}}" class="btn btn-success">Create new budget</a>
+            </div>
+    </div>
 </div>
 
 
