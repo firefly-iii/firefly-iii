@@ -52,9 +52,13 @@ class BudgetController extends BaseController
             Event::fire('limits.store', [$limit]);
 
         } else {
-            $limit->amount = $amount;
-            $limit->save();
-            Event::fire('limits.update', [$limit]);
+            if ($amount > 0) {
+                $limit->amount = $amount;
+                $limit->save();
+                Event::fire('limits.update', [$limit]);
+            } else {
+                $limit->delete();
+            }
         }
         // try to find the limit repetition for this limit:
         $repetition = $limit->limitrepetitions()->first();
