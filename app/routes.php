@@ -297,7 +297,7 @@ Route::group(
         // piggy bank controller
         Route::post('/piggybanks/store', ['uses' => 'PiggybankController@store', 'as' => 'piggybanks.store']);
         #Route::post('/piggybanks/store/repeated', ['uses' => 'PiggybankController@storeRepeated', 'as' => 'piggybanks.store.repeated']);
-        #Route::post('/piggybanks/update/{piggybank}', ['uses' => 'PiggybankController@update', 'as' => 'piggybanks.update']);
+        Route::post('/piggybanks/update/{piggybank}', ['uses' => 'PiggybankController@update', 'as' => 'piggybanks.update']);
         Route::post('/piggybanks/destroy/{piggybank}', ['uses' => 'PiggybankController@destroy', 'as' => 'piggybanks.destroy']);
         #Route::post('/piggybanks/mod/{piggybank}', ['uses' => 'PiggybankController@modMoney', 'as' => 'piggybanks.modMoney']);
         Route::post('/piggybanks/add/{piggybank}', ['uses' => 'PiggybankController@postAdd', 'as' => 'piggybanks.add']);
