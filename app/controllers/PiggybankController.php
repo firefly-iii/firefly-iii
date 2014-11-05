@@ -304,7 +304,7 @@ class PiggybankController extends BaseController
                 $accounts[$account->id] = [
                     'name'              => $account->name,
                     'balance'           => $account->balance(),
-                    'leftForPiggybanks' => $account->balance() - $piggybank->savedSoFar,
+                    'leftForPiggybanks' => $repos->leftOnAccount($account),
                     'sumOfSaved'        => $piggybank->savedSoFar,
                     'sumOfTargets'      => floatval($piggybank->targetamount),
                     'leftToSave'        => $piggybank->leftToSave
