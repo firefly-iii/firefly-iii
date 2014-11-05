@@ -356,6 +356,9 @@ class AccountController extends BaseController
             case 'Beneficiary account':
                 $data['what'] = 'expense';
                 break;
+            case 'Revenue account':
+                $data['what'] = 'revenue';
+                break;
         }
 
         switch (Input::get('post_submit_action')) {
@@ -363,14 +366,14 @@ class AccountController extends BaseController
                 throw new FireflyException('Cannot handle post_submit_action "' . e(Input::get('post_submit_action')) . '"');
                 break;
             case 'create_another':
-            case 'store':
+            case 'update':
                 $messages = $acct->validate($data);
                 /** @var MessageBag $messages ['errors'] */
                 if ($messages['errors']->count() > 0) {
                     Session::flash('warnings', $messages['warnings']);
                     Session::flash('successes', $messages['successes']);
                     Session::flash('error', 'Could not save account: ' . $messages['errors']->first());
-                    return Redirect::route('accounts.create', $data['what'])->withInput()->withErrors($messages['errors']);
+                    return Redirect::route('accounts.edit', $account->id)->withInput()->withErrors($messages['errors']);
                 }
                 // store!
                 $acct->update($account, $data);

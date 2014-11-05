@@ -45,7 +45,7 @@
                 <i class="fa fa-bolt"></i> Options
             </div>
             <div class="panel-body">
-                {{Form::ffOptionsList('create','account')}}
+                {{Form::ffOptionsList('update','account')}}
             </div>
         </div>
 

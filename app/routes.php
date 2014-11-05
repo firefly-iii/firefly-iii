@@ -144,11 +144,11 @@ Route::group(
 
         #Route::get('/budgets/date', ['uses' => 'BudgetController@indexByDate', 'as' => 'budgets.index.date']);
         #Route::get('/budgets/budget', ['uses' => 'BudgetController@indexByBudget', 'as' => 'budgets.index.budget']);
-        #Route::get('/budgets/create', ['uses' => 'BudgetController@create', 'as' => 'budgets.create']);
+        Route::get('/budgets/create', ['uses' => 'BudgetController@create', 'as' => 'budgets.create']);
         #Route::get('/budgets/nobudget/{period}', ['uses' => 'BudgetController@nobudget', 'as' => 'budgets.nobudget']);
 
-        #Route::get('/budgets/edit/{budget}', ['uses' => 'BudgetController@edit', 'as' => 'budgets.edit']);
-        #Route::get('/budgets/delete/{budget}', ['uses' => 'BudgetController@delete', 'as' => 'budgets.delete']);
+        Route::get('/budgets/edit/{budget}', ['uses' => 'BudgetController@edit', 'as' => 'budgets.edit']);
+        Route::get('/budgets/delete/{budget}', ['uses' => 'BudgetController@delete', 'as' => 'budgets.delete']);
 
         // category controller:
         Route::get('/categories', ['uses' => 'CategoryController@index', 'as' => 'categories.index']);
@@ -276,8 +276,9 @@ Route::group(
 
         // budget controller:
         Route::post('/budgets/income', ['uses' => 'BudgetController@postUpdateIncome', 'as' => 'budgets.postIncome']);
+        Route::post('/budgets/update/{budget}', ['uses' => 'BudgetController@update', 'as' => 'budgets.update']);
         #Route::post('/budgets/store', ['uses' => 'BudgetController@store', 'as' => 'budgets.store']);
-        #Route::post('/budgets/update/{budget}', ['uses' => 'BudgetController@update', 'as' => 'budgets.update']);
+
         #Route::post('/budgets/destroy/{budget}', ['uses' => 'BudgetController@destroy', 'as' => 'budgets.destroy']);
 
         // category controller
