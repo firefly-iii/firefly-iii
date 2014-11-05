@@ -310,7 +310,6 @@ class PiggybankController extends BaseController
                     'leftToSave'        => $piggybank->leftToSave
                 ];
             } else {
-                $accounts[$account->id]['leftForPiggybanks'] -= $piggybank->savedSoFar;
                 $accounts[$account->id]['sumOfSaved'] += $piggybank->savedSoFar;
                 $accounts[$account->id]['sumOfTargets'] += floatval($piggybank->targetamount);
                 $accounts[$account->id]['leftToSave'] += $piggybank->leftToSave;
