@@ -382,7 +382,7 @@ class AccountController extends BaseController
                 if ($data['post_submit_action'] == 'create_another') {
                     return Redirect::route('accounts.edit', $account->id);
                 } else {
-                    return Redirect::route('accounts.edit', $account->id);
+                    return Redirect::route('accounts.index',$data['what']);
                 }
             case 'validate_only':
                 $messageBags = $acct->validate($data);

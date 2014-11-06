@@ -91,10 +91,13 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
         } else {
             $errors->add('name', 'Name is mandatory');
         }
-        $validator = \Validator::make([$model], \Budget::$rules);
+        $validator = \Validator::make($model, \Component::$rules);
+
         if ($validator->invalid()) {
-            $errors->merge($errors);
+            $errors->merge($validator->errors());
         }
+
+
         if(!$errors->has('name')) {
             $successes->add('name','OK');
         }
