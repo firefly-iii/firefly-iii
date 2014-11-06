@@ -335,12 +335,12 @@ class BudgetController extends BaseController
                 }
                 // store!
                 $repos->update($budget, $data);
-                Session::flash('success', 'Account updated!');
+                Session::flash('success', 'Budget updated!');
 
                 if ($data['post_submit_action'] == 'create_another') {
                     return Redirect::route('budgets.edit', $budget->id);
                 } else {
-                    return Redirect::route('budgets.edit', $budget->id);
+                    return Redirect::route('budgets.index');
                 }
             case 'validate_only':
                 $messageBags = $repos->validate($data);
