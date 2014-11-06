@@ -18,6 +18,9 @@ class BudgetController extends BaseController
         View::share('mainTitleIcon', 'fa-tasks');
     }
 
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function postUpdateIncome()
     {
         /** @var \Firefly\Helper\Preferences\PreferencesHelperInterface $preferences */
@@ -141,40 +144,35 @@ class BudgetController extends BaseController
         return View::make('budgets.show');
     }
 
+    /**
+     * @return $this
+     */
+    public function create()
+    {
+        return View::make('budgets.create')->with('subTitle', 'Create a new budget');
+    }
 
+    /**
+     * @param Budget $budget
+     *
+     * @return $this
+     */
+    public function delete(Budget $budget)
+    {
+        return View::make('budgets.delete')->with('budget', $budget)->with('subTitle', 'Delete budget "' . $budget->name . '"');
+    }
 
+    public function destroy(Budget $budget)
+    {
+        /** @var \FireflyIII\Database\Budget $repos */
+        $repos = App::make('FireflyIII\Database\Budget');
+        // remove budget
+        $repos->destroy($budget);
+        Session::flash('success', 'The budget was deleted.');
+        return Redirect::route('budgets.index');
 
-//
-//    public function create()
-//    {
-//        throw new NotImplementedException;
-////        $periods = \Config::get('firefly.periods_to_text');
-////
-////        return View::make('budgets.create')->with('periods', $periods)->with('subTitle', 'Create a new budget');
-//    }
-//
-//    public function delete(Budget $budget)
-//    {
-//        throw new NotImplementedException;
-////        return View::make('budgets.delete')->with('budget', $budget)
-////            ->with('subTitle', 'Delete budget "' . $budget->name . '"');
-//    }
-//
-//    public function destroy(Budget $budget)
-//    {
-//        throw new NotImplementedException;
-////        // remove budget
-////        Event::fire('budgets.destroy', [$budget]); // just before deletion.
-////        $this->_repository->destroy($budget);
-////        Session::flash('success', 'The budget was deleted.');
-////
-////        // redirect:
-////        if (Input::get('from') == 'date') {
-////            return Redirect::route('budgets.index');
-////        }
-////        return Redirect::route('budgets.index.budget');
-//
-//    }
+    }
+
     /**
      * @param Budget $budget
      *
@@ -266,33 +264,48 @@ class BudgetController extends BaseController
 //                   ->with('subTitle', 'Overview for ' . $title);
 //    }
 //
-//    /**
-//     * @return \Illuminate\Http\RedirectResponse
-//     */
-//    public function store()
-//    {
-//
-//        $budget = $this->_repository->store(Input::all());
-//        if ($budget->validate()) {
-//            Event::fire('budgets.store', [$budget]);
-//            Session::flash('success', 'Budget created!');
-//
-//            if (Input::get('create') == '1') {
-//                return Redirect::route('budgets.create', ['from' => Input::get('from')]);
-//            }
-//
-//            if (Input::get('from') == 'date') {
-//                return Redirect::route('budgets.index');
-//            } else {
-//                return Redirect::route('budgets.index.budget');
-//            }
-//        } else {
-//            Session::flash('error', 'Could not save the new budget');
-//
-//            return Redirect::route('budgets.create')->withInput()->withErrors($budget->errors());
-//        }
-//
-//    }
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store()
+    {
+        /** @var \FireflyIII\Database\Budget $repos */
+        $repos = App::make('FireflyIII\Database\Budget');
+        $data  = Input::except('_token');
+
+        switch ($data['post_submit_action']) {
+            default:
+                throw new FireflyException('Cannot handle post_submit_action "' . e($data['post_submit_action']) . '"');
+                break;
+            case 'create_another':
+            case 'store':
+                $messages = $repos->validate($data);
+                /** @var MessageBag $messages ['errors'] */
+                if ($messages['errors']->count() > 0) {
+                    Session::flash('warnings', $messages['warnings']);
+                    Session::flash('successes', $messages['successes']);
+                    Session::flash('error', 'Could not save budget: ' . $messages['errors']->first());
+                    return Redirect::route('budgets.create')->withInput()->withErrors($messages['errors']);
+                }
+                // store!
+                $repos->store($data);
+                Session::flash('success', 'New budget stored!');
+
+                if ($data['post_submit_action'] == 'create_another') {
+                    return Redirect::route('budgets.create');
+                } else {
+                    return Redirect::route('budgets.index');
+                }
+                break;
+            case 'validate_only':
+                $messageBags = $repos->validate($data);
+                Session::flash('warnings', $messageBags['warnings']);
+                Session::flash('successes', $messageBags['successes']);
+                Session::flash('errors', $messageBags['errors']);
+                return Redirect::route('budgets.create')->withInput();
+                break;
+        }
+    }
 //
     /**
      * @param Budget $budget
@@ -317,7 +330,7 @@ class BudgetController extends BaseController
                 if ($messages['errors']->count() > 0) {
                     Session::flash('warnings', $messages['warnings']);
                     Session::flash('successes', $messages['successes']);
-                    Session::flash('error', 'Could not save account: ' . $messages['errors']->first());
+                    Session::flash('error', 'Could not save budget: ' . $messages['errors']->first());
                     return Redirect::route('budgets.edit', $budget->id)->withInput()->withErrors($messages['errors']);
                 }
                 // store!
