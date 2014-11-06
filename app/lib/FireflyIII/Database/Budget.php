@@ -49,7 +49,8 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
      */
     public function destroy(Ardent $model)
     {
-        // TODO: Implement destroy() method.
+        $model->delete();
+        return true;
     }
 
     /**
@@ -75,7 +76,34 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
      */
     public function validate(array $model)
     {
-        throw new NotImplementedException;
+        $warnings  = new MessageBag;
+        $successes = new MessageBag;
+        $errors    = new MessageBag;
+
+        if(isset($model['name'])) {
+            if(strlen($model['name']) < 1) {
+                $errors->add('name', 'Name is too short');
+            }
+            if(strlen($model['name']) > 200) {
+                $errors->add('name', 'Name is too long');
+
+            }
+        } else {
+            $errors->add('name', 'Name is mandatory');
+        }
+        $validator = \Validator::make([$model], \Budget::$rules);
+        if ($validator->invalid()) {
+            $errors->merge($errors);
+        }
+        if(!$errors->has('name')) {
+            $successes->add('name','OK');
+        }
+
+        return [
+            'errors'    => $errors,
+            'warnings'  => $warnings,
+            'successes' => $successes
+        ];
     }
 
     /**
@@ -85,7 +113,17 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
      */
     public function store(array $data)
     {
-        // TODO: Implement store() method.
+        $data['user_id'] = $this->getUser()->id;
+
+        $budget = new \Budget($data);
+        $budget->class = 'Budget';
+
+        if (!$budget->validate()) {
+            var_dump($budget->errors()->all());
+            exit;
+        }
+        $budget->save();
+        return $budget;
     }
 
     /**
@@ -179,6 +217,15 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
      */
     public function update(Ardent $model, array $data)
     {
-        // TODO: Implement update() method.
+        $model->name   = $data['name'];
+        if (!$model->validate()) {
+            var_dump($model->errors()->all());
+            exit;
+        }
+
+
+        $model->save();
+
+        return true;
     }
 }
