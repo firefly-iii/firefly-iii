@@ -9,7 +9,8 @@ body {
 }
 
 .google-chart-error {
-    border:1px red solid;height:20px;
+    height:30px;
+    background:url('../../images/error.png') no-repeat center center
 }
 
 #wrapper {

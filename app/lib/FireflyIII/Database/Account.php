@@ -123,11 +123,7 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
         /*
          * If present, process parameters for sorting:
          */
-        if (isset($parameters['order'])) {
-            foreach ($parameters['order'] as $instr) {
-                $query->orderBy($instr['name'], $instr['dir']);
-            }
-        }
+        $query->orderBy('name', 'ASC');
 
         /*
          * If present, process parameters for searching.

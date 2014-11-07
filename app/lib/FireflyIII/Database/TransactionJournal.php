@@ -289,7 +289,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      */
     public function get()
     {
-        // TODO: Implement get() method.
+        return $this->getUser()->transactionjournals()->get();
     }
 
     /**

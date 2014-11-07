@@ -1,4 +1,4 @@
-google.load('visualization', '1.1', {'packages': ['corechart', 'bar','sankey', 'table']});
+google.load('visualization', '1.1', {'packages': ['corechart', 'bar', 'sankey', 'table']});
 
 function googleLineChart(URL, container) {
     $.getJSON(URL).success(function (data) {
@@ -187,24 +187,24 @@ function googleTable(URL, container) {
             /*
              Format a string using the previous column as URL.
              */
-            if (label == 'Description' || label == 'From' || label == 'To' || label == 'Budget' || label == 'Category') {
+            if (label == 'Description' || label == 'From' || label == 'Name' || label == 'To' || label == 'Budget' || label == 'Category') {
                 URLFormatter.format(gdata, [i - 1, i], i);
                 columnsToHide.push(i - 1);
             }
-            if(label == 'ID') {
-                EditButtonFormatter.format(gdata, [i+1,i+2],i);
-                columnsToHide.push(i+1,i+2);
+            if (label == 'ID') {
+                EditButtonFormatter.format(gdata, [i + 1, i + 2], i);
+                columnsToHide.push(i + 1, i + 2);
             }
 
             /*
-            Format with buttons:
+             Format with buttons:
              */
 
 
             /*
              Format as money
              */
-            if (label == 'Amount') {
+            if (label == 'Amount' || label == 'Balance') {
                 money.format(gdata, i);
             }
 

@@ -22,29 +22,25 @@
 
             </div>
             <div class="panel-body">
-                <table id="accountTable" class="table table-striped table-bordered" >
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>balance</th>
-                            <th>ID</th>
-                        </tr>
-                    </thead>
-                </table>
+                <div id="account-list"></div>
             </div>
         </div>
     </div>
 </div>
 @stop
 @section('scripts')
-{{HTML::script('assets/javascript/datatables/jquery.dataTables.min.js')}}
-{{HTML::script('assets/javascript/datatables/dataTables.bootstrap.js')}}
 <script type="text/javascript">
-    var URL = '{{route('accounts.json',e($what))}}';
+    var what = '{{{$what}}}';
 </script>
+
+<!-- load the libraries and scripts necessary for Google Charts: -->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+{{HTML::script('assets/javascript/firefly/gcharts.options.js')}}
+{{HTML::script('assets/javascript/firefly/gcharts.js')}}
+
+
 <script src="assets/javascript/firefly/accounts.js"></script>
 @stop
 
 @section('styles')
-{{HTML::style('assets/stylesheets/datatables/dataTables.bootstrap.css')}}
 @endsection
