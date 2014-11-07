@@ -128,6 +128,7 @@ Route::group(
         Route::get('/prev', ['uses' => 'HomeController@sessionPrev', 'as' => 'sessionPrev']);
         Route::get('/next', ['uses' => 'HomeController@sessionNext', 'as' => 'sessionNext']);
         Route::get('/jump/{range}', ['uses' => 'HomeController@rangeJump', 'as' => 'rangeJump']);
+        Route::get('/cleanup', ['uses' => 'HomeController@cleanup', 'as' => 'cleanup']);
 
         // account controller:
         Route::get('/accounts/json/{what}', ['uses' => 'AccountController@json', 'as' => 'accounts.json'])->where('what', 'revenue|asset|expense');
@@ -170,6 +171,7 @@ Route::group(
 
         // google table controller
         Route::get('/table/account/{account}/transactions', ['uses' => 'GoogleTableController@transactionsByAccount']);
+        Route::get('/table/accounts/{what}', ['uses' => 'GoogleTableController@accountList']);
 
 
         Route::get('/chart/home/info/{accountnameA}/{day}/{month}/{year}', ['uses' => 'ChartController@homeAccountInfo', 'as' => 'chart.info']);

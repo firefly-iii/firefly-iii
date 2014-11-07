@@ -8,7 +8,6 @@ use LaravelBook\Ardent\Ardent;
 use FireflyIII\Database\Ifaces\AccountTypeInterface;
 use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
 use FireflyIII\Database\Ifaces\CUD;
-use FireflyIII\Database\Ifaces\AccountTypeInterface;
 
 /**
  * Class AccountType

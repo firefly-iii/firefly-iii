@@ -1,11 +1,62 @@
 <?php
 use Carbon\Carbon;
+use Firefly\Exception\FireflyException;
 
 /**
  * Class GoogleTableController
  */
 class GoogleTableController extends BaseController
 {
+
+    /**
+     * @param $what
+     *
+     * @throws FireflyException
+     */
+    public function accountList($what)
+    {
+
+        /** @var \FireflyIII\Database\Account $acct */
+        $acct = App::make('FireflyIII\Database\Account');
+
+        switch ($what) {
+            default:
+                throw new FireflyException('Cannot handle "' . e($what) . '" in accountList.');
+                break;
+            case 'asset':
+                $list = $acct->getAssetAccounts();
+                break;
+            case 'expense':
+                $list = $acct->getExpenseAccounts();
+                break;
+            case 'revenue':
+                $list = $acct->getRevenueAccounts();
+                break;
+        }
+
+
+        $chart = App::make('gchart');
+        $chart->addColumn('ID', 'number');
+        $chart->addColumn('ID_Edit', 'string');
+        $chart->addColumn('ID_Delete', 'string');
+        $chart->addColumn('Name_URL', 'string');
+        $chart->addColumn('Name', 'string');
+        $chart->addColumn('Balance', 'number');
+
+        /** @var \Account $entry */
+        foreach ($list as $entry) {
+            $edit   = route('accounts.edit', $entry->id);
+            $delete = route('accounts.delete', $entry->id);
+            $show   = route('accounts.show', $entry->id);
+            $chart->addRow($entry->id, $edit, $delete, $show, $entry->name, $entry->balance());
+        }
+
+        $chart->generate();
+        return Response::json($chart->getData());
+
+
+    }
+
     /**
      * @param Account $account
      */
