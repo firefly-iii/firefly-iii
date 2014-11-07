@@ -12,7 +12,6 @@ var defaultLineChartOptions = {
         height: '80%'
     },
     height: 400,
-    vAxis: {format: '\u20AC #'},
     colors: ["#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043", "#9e9d24", "#5c6bc0", "#f06292", "#00796b", "#c2185b"],
     hAxis: {
         textStyle: {
@@ -29,7 +28,8 @@ var defaultLineChartOptions = {
             color: '#838383',
             fontName: 'Roboto2',
             fontSize: '12'
-        }
+        },
+        format: '\u20AC #'
     }
 
 
@@ -62,6 +62,40 @@ var defaultColumnChartOptions = {
     vAxis: {format: '\u20AC #'},
     legend: {
         position: 'none'
+    },
+};
+
+var defaultStackedColumnChartOptions = {
+    height: 400,
+    chartArea: {
+        left: 50,
+        top: 10,
+        width: '85%',
+        height: '80%'
+    },
+    vAxis: {format: '\u20AC #'},
+    legend: {
+        position: 'none'
+    },
+    isStacked: true,
+    colors: ["#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043", "#9e9d24", "#5c6bc0", "#f06292", "#00796b", "#c2185b"],
+    vAxis: {
+        textStyle: {
+            color: '#838383',
+            fontName: 'Roboto2',
+            fontSize: '12'
+        },
+        format: '\u20AC #'
+    },
+    hAxis: {
+        textStyle: {
+            color: '#838383',
+            fontName: 'Roboto2',
+            fontSize: '12'
+        },
+        gridlines: {
+            color: 'transparent'
+        }
     },
 };
 

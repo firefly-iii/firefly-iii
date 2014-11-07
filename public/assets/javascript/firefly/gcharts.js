@@ -89,6 +89,35 @@ function googleColumnChart(URL, container) {
     });
 }
 
+function googleStackedColumnChart(URL, container) {
+    $.getJSON(URL).success(function (data) {
+        /*
+         Get the data from the JSON
+         */
+        gdata = new google.visualization.DataTable(data);
+
+        /*
+         Format as money
+         */
+        var money = new google.visualization.NumberFormat({decimalSymbol: ',', groupingSymbol: '.', prefix: '\u20AC '});
+        for (i = 1; i < gdata.getNumberOfColumns(); i++) {
+            money.format(gdata, i);
+        }
+
+        /*
+         Create a new google charts object.
+         */
+        var chart = new google.visualization.ColumnChart(document.getElementById(container));
+        /*
+         Draw it:
+         */
+        chart.draw(gdata, defaultStackedColumnChartOptions);
+
+    }).fail(function () {
+        $('#' + container).addClass('google-chart-error');
+    });
+}
+
 function googlePieChart(URL, container) {
     $.getJSON(URL).success(function (data) {
         /*

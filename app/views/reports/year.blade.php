@@ -25,7 +25,7 @@
 
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-    <div class="panel panel-default">
+        <div class="panel panel-default">
             <div class="panel-heading">
                 Summary
             </div>
@@ -33,8 +33,8 @@
                 <table class="table table-striped">
                     <tr>
                         <td></td>
-                        @foreach($summary as $entry)
-                            <th>{{$entry['month']}}</th>
+                            @foreach($summary as $entry)
+                                <th>{{$entry['month']}}</th>
                         @endforeach
                         <th>Sum</th>
                     </tr>
@@ -62,6 +62,19 @@
                         <td>{{mf($inSum + $outSum)}}</td>
                     </tr>
                 </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Budgets
+            </div>
+            <div class="panel-body">
+                <div id="budgets"></div>
             </div>
         </div>
     </div>

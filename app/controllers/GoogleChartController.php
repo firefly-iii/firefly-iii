@@ -124,20 +124,71 @@ class GoogleChartController extends BaseController
         $end->endOfYear();
         $income  = 0;
         $expense = 0;
+        $count   = 0;
         while ($start < $end) {
 
             // total income:
             $income += $tj->getSumOfIncomesByMonth($start);
             $expense += $tj->getSumOfExpensesByMonth($start);
+            $count++;
 
             $start->addMonth();
         }
         $chart->addRow('Sum', $income, $expense);
+        $count = $count > 0 ? $count : 1;
+        $chart->addRow('Average', ($income / $count), ($expense / $count));
 
 
         $chart->generate();
         return Response::json($chart->getData());
 
+    }
+
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function budgetsReportChart($year)
+    {
+
+        try {
+            $start = new Carbon('01-01-' . $year);
+        } catch (Exception $e) {
+            App::abort(500);
+        }
+
+        /** @var \Grumpydictator\Gchart\GChart $chart */
+        $chart = App::make('gchart');
+
+        /** @var \FireflyIII\Database\Budget $bdt */
+        $bdt     = App::make('FireflyIII\Database\Budget');
+        $budgets = $bdt->get();
+
+        $chart->addColumn('Month', 'date');
+        /** @var \Budget $budget */
+        foreach ($budgets as $budget) {
+            $chart->addColumn($budget->name, 'number');
+        }
+
+        /*
+         * Loop budgets this year.
+         */
+        $end = clone $start;
+        $end->endOfYear();
+        while ($start <= $end) {
+            $row = [clone $start];
+
+            foreach($budgets as $budget) {
+                $row[] = $bdt->spentInMonth($budget, $start);
+            }
+
+            $chart->addRowArray($row);
+            $start->addMonth();
+        }
+
+
+        $chart->generate();
+        return Response::json($chart->getData());
     }
 
     /**
