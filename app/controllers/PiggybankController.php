@@ -228,7 +228,7 @@ class PiggybankController extends BaseController
      */
     public function postAdd(Piggybank $piggybank)
     {
-        $amount = floatval(Input::get('amount'));
+        $amount = round(floatval(Input::get('amount')), 2);
 
         /** @var \FireflyIII\Database\Piggybank $acct */
         $repos = App::make('FireflyIII\Database\Piggybank');
@@ -236,7 +236,7 @@ class PiggybankController extends BaseController
         $leftOnAccount = $repos->leftOnAccount($piggybank->account);
         $savedSoFar    = $piggybank->currentRelevantRep()->currentamount;
         $leftToSave    = $piggybank->targetamount - $savedSoFar;
-        $maxAmount     = min($leftOnAccount, $leftToSave);
+        $maxAmount     = round(min($leftOnAccount, $leftToSave), 2);
 
         if ($amount <= $maxAmount) {
             $repetition = $piggybank->currentRelevantRep();
