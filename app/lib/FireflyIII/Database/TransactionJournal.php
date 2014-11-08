@@ -40,12 +40,15 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         $end = clone $date;
         $date->startOfMonth();
         $end->endOfMonth();
-        $list = $this->getUser()->transactionjournals()->transactionTypes(['Deposit'])->before($end)->after($date)->get(['transaction_journals.*']);
-        $sum  = 0;
-        /** @var \TransactionJournal $entry */
-        foreach ($list as $entry) {
-            $sum += $entry->getAmount();
-        }
+
+        $sum = \DB::table('transactions')
+                  ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                  ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
+                  ->where('amount', '>', 0)
+                  ->where('transaction_types.type', '=', 'Deposit')
+                  ->where('transaction_journals.date', '>=', $date->format('Y-m-d'))
+                  ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))->sum('transactions.amount');
+        $sum = floatval($sum);
         return $sum;
     }
 
@@ -54,16 +57,20 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      *
      * @return float
      */
-    public function getSumOfExpensesByMonth(Carbon $date) {
+    public function getSumOfExpensesByMonth(Carbon $date)
+    {
         $end = clone $date;
         $date->startOfMonth();
         $end->endOfMonth();
-        $list = $this->getUser()->transactionjournals()->transactionTypes(['Withdrawal'])->before($end)->after($date)->get(['transaction_journals.*']);
-        $sum  = 0;
-        /** @var \TransactionJournal $entry */
-        foreach ($list as $entry) {
-            $sum += $entry->getAmount();
-        }
+
+        $sum = \DB::table('transactions')
+                  ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                  ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
+                  ->where('amount', '>', 0)
+                  ->where('transaction_types.type', '=', 'Withdrawal')
+                  ->where('transaction_journals.date', '>=', $date->format('Y-m-d'))
+                  ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))->sum('transactions.amount');
+        $sum = floatval($sum);
         return $sum;
     }
 
