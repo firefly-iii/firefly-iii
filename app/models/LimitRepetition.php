@@ -5,14 +5,14 @@ use LaravelBook\Ardent\Ardent as Ardent;
 /**
  * LimitRepetition
  *
- * @property integer $id
+ * @property integer        $id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property integer $limit_id
+ * @property integer        $limit_id
  * @property \Carbon\Carbon $startdate
  * @property \Carbon\Carbon $enddate
- * @property float $amount
- * @property-read \Limit $limit
+ * @property float          $amount
+ * @property-read \Limit    $limit
  * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereUpdatedAt($value)
@@ -39,29 +39,27 @@ class LimitRepetition extends Ardent
         return ['created_at', 'updated_at', 'startdate', 'enddate'];
     }
 
+    public function spentInRepetition() {
+        $sum = \DB::table('transactions')
+                  ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                  ->leftJoin('component_transaction_journal', 'component_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                  ->leftJoin('components', 'components.id', '=', 'component_transaction_journal.component_id')
+                  ->leftJoin('limits', 'limits.component_id', '=', 'components.id')
+                  ->leftJoin('limit_repetitions', 'limit_repetitions.limit_id', '=', 'limits.id')
+                  ->where('transaction_journals.date', '>=', $this->startdate->format('Y-m-d'))
+                  ->where('transaction_journals.date', '<=', $this->enddate->format('Y-m-d'))
+                  ->where('transactions.amount', '>', 0)
+                  ->where('limit_repetitions.id', '=', $this->id)->sum('transactions.amount');
+        return floatval($sum);
+    }
+
     /**
      * How much money is left in this?
      */
     public function leftInRepetition()
     {
-        $left = floatval($this->amount);
+        return floatval($this->amount - $this->spentInRepetition());
 
-        // budget:
-        $budget = $this->limit->budget;
-
-        /** @var \Firefly\Storage\Limit\EloquentLimitRepository $limits */
-        $limits = App::make('Firefly\Storage\Limit\EloquentLimitRepository');
-        $set = $limits->getTJByBudgetAndDateRange($budget, $this->startdate, $this->enddate);
-
-        foreach ($set as $journal) {
-            foreach ($journal->transactions as $t) {
-                if ($t->amount < 0) {
-                    $left += floatval($t->amount);
-                }
-            }
-        }
-
-        return $left;
     }
 
     /**
@@ -85,8 +83,10 @@ class LimitRepetition extends Ardent
         }
         switch ($this->repeat_freq) {
             default:
-                throw new \Firefly\Exception\FireflyException('No date formats for frequency "' . $this->repeat_freq
-                    . '"!');
+                throw new \Firefly\Exception\FireflyException(
+                    'No date formats for frequency "' . $this->repeat_freq
+                    . '"!'
+                );
                 break;
             case 'daily':
                 return $this->startdate->format('Ymd') . '-5';
@@ -119,8 +119,10 @@ class LimitRepetition extends Ardent
         }
         switch ($this->repeat_freq) {
             default:
-                throw new \Firefly\Exception\FireflyException('No date formats for frequency "' . $this->repeat_freq
-                    . '"!');
+                throw new \Firefly\Exception\FireflyException(
+                    'No date formats for frequency "' . $this->repeat_freq
+                    . '"!'
+                );
                 break;
             case 'daily':
                 return $this->startdate->format('j F Y');
