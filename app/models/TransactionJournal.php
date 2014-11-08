@@ -50,11 +50,13 @@ class TransactionJournal extends Ardent
      */
     public function getAmount()
     {
+
         foreach ($this->transactions as $t) {
             if (floatval($t->amount) > 0) {
                 return floatval($t->amount);
             }
         }
+        return -0.01;
     }
 
     /**
