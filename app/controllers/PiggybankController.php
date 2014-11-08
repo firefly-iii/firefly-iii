@@ -529,34 +529,49 @@ class PiggybankController extends BaseController
 //
 //    }
 
-//    /**
-//     * @param Piggybank $piggyBank
-//     *
-//     * @return $this|\Illuminate\Http\RedirectResponse
-//     */
+    /**
+     * @param Piggybank $piggyBank
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse
+     */
     public function update(Piggybank $piggyBank)
     {
-        throw new NotImplementedException;
-//        $piggyBank = $this->_repository->update($piggyBank, Input::all());
-//        if ($piggyBank->validate()) {
-//            if ($piggyBank->repeats == 1) {
-//                $route   = 'piggybanks.index.repeated';
-//                $message = 'Repeated expense';
-//            } else {
-//                $route   = 'piggybanks.index.piggybanks';
-//                $message = 'Piggy bank';
-//            }
-//
-//
-//            Session::flash('success', $message . ' "' . $piggyBank->name . '" updated.');
-//            Event::fire('piggybanks.update', [$piggyBank]);
-//
-//            return Redirect::route($route);
-//        } else {
-//            Session::flash('error', 'Could not update piggy bank: ' . $piggyBank->errors()->first());
-//
-//            return Redirect::route('piggybanks.edit', $piggyBank->id)->withErrors($piggyBank->errors())->withInput();
-//        }
+
+        /** @var \FireflyIII\Database\Piggybank $repos */
+        $repos = App::make('FireflyIII\Database\Piggybank');
+        $data  = Input::except('_token');
+
+        switch (Input::get('post_submit_action')) {
+            default:
+                throw new FireflyException('Cannot handle post_submit_action "' . e(Input::get('post_submit_action')) . '"');
+                break;
+            case 'create_another':
+            case 'update':
+                $messages = $repos->validate($data);
+                /** @var MessageBag $messages ['errors'] */
+                if ($messages['errors']->count() > 0) {
+                    Session::flash('warnings', $messages['warnings']);
+                    Session::flash('successes', $messages['successes']);
+                    Session::flash('error', 'Could not save piggy bank: ' . $messages['errors']->first());
+                    return Redirect::route('piggybanks.edit', $piggyBank->id)->withInput()->withErrors($messages['errors']);
+                }
+                // store!
+                $repos->update($piggyBank, $data);
+                Session::flash('success', 'Piggy bank updated!');
+
+                if ($data['post_submit_action'] == 'create_another') {
+                    return Redirect::route('piggybanks.edit', $piggyBank->id);
+                } else {
+                    return Redirect::route('piggybanks.index');
+                }
+            case 'validate_only':
+                $messageBags = $repos->validate($data);
+                Session::flash('warnings', $messageBags['warnings']);
+                Session::flash('successes', $messageBags['successes']);
+                Session::flash('errors', $messageBags['errors']);
+                return Redirect::route('piggybanks.edit', $piggyBank->id)->withInput();
+                break;
+        }
 
 
     }

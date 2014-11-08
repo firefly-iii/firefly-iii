@@ -40,7 +40,7 @@
                 <i class="fa fa-bolt"></i> Options
             </div>
             <div class="panel-body">
-                {{Form::ffOptionsList('create','piggy bank')}}
+                {{Form::ffOptionsList('update','piggy bank')}}
             </div>
         </div>
 
