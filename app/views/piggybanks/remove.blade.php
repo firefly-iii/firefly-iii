@@ -12,7 +12,7 @@
                 </p>
                 <div class="input-group">
                     <div class="input-group-addon">€</div>
-                    <input step="any" class="form-control" id="amount" autocomplete="off" name="amount" max="{{$piggybank->currentRelevantRep()->currentamount}}" type="number">
+                    <input step="any" class="form-control" id="amount" autocomplete="off" name="amount" max="{{round($piggybank->currentRelevantRep()->currentamount,2)}}" type="number">
                 </div>
             </div>
             <div class="modal-footer">
