@@ -58,10 +58,90 @@ class GoogleTableController extends BaseController
     }
 
     /**
+     * @param Budget          $budget
+     * @param LimitRepetition $repetition
+     */
+    public function transactionsByBudget(Budget $budget, LimitRepetition $repetition = null)
+    {
+        /** @var \Grumpydictator\Gchart\GChart $chart */
+        $chart = App::make('gchart');
+        $chart->addColumn('ID', 'number');
+        $chart->addColumn('ID_Edit', 'string');
+        $chart->addColumn('ID_Delete', 'string');
+        $chart->addColumn('Date', 'date');
+        $chart->addColumn('Description_URL', 'string');
+        $chart->addColumn('Description', 'string');
+        $chart->addColumn('Amount', 'number');
+        $chart->addColumn('From_URL', 'string');
+        $chart->addColumn('From', 'string');
+        $chart->addColumn('To_URL', 'string');
+        $chart->addColumn('To', 'string');
+        $chart->addColumn('Budget_URL', 'string');
+        $chart->addColumn('Budget', 'string');
+        $chart->addColumn('Category_URL', 'string');
+        $chart->addColumn('Category', 'string');
+
+        if (is_null($repetition)) {
+            $journals = $budget->transactionjournals()->with(['budgets', 'categories', 'transactions', 'transactions.account'])->orderBy('date', 'DESC')->get();
+        } else {
+            $journals = $budget->transactionjournals()->with(['budgets', 'categories', 'transactions', 'transactions.account'])->
+                after($repetition->startdate)->before($repetition->enddate)->orderBy('date', 'DESC')->get();
+        }
+        /** @var TransactionJournal $transaction */
+        foreach ($journals as $journal) {
+            $date           = $journal->date;
+            $descriptionURL = route('transactions.show', $journal->id);
+            $description    = $journal->description;
+            /** @var Transaction $transaction */
+            foreach ($journal->transactions as $transaction) {
+                if (floatval($transaction->amount) > 0) {
+                    $amount = floatval($transaction->amount);
+                    $to     = $transaction->account->name;
+                    $toURL  = route('accounts.show', $transaction->account->id);
+                } else {
+                    $from    = $transaction->account->name;
+                    $fromURL = route('accounts.show', $transaction->account->id);
+                }
+
+            }
+            if (isset($journal->budgets[0])) {
+                $budgetURL = route('budgets.show', $journal->budgets[0]->id);
+                $budget    = $journal->budgets[0]->name;
+            } else {
+                $budgetURL = '';
+                $budget    = '';
+            }
+
+            if (isset($journal->categories[0])) {
+                $categoryURL = route('categories.show', $journal->categories[0]->id);
+                $category    = $journal->categories[0]->name;
+            } else {
+                $categoryURL = '';
+                $category    = '';
+            }
+
+
+            $id     = $journal->id;
+            $edit   = route('transactions.edit', $journal->id);
+            $delete = route('transactions.delete', $journal->id);
+            $chart->addRow(
+                $id, $edit, $delete, $date, $descriptionURL, $description, $amount, $fromURL, $from, $toURL, $to, $budgetURL, $budget, $categoryURL,
+                $category
+            );
+        }
+
+
+        $chart->generate();
+        return Response::json($chart->getData());
+
+    }
+
+    /**
      * @param Account $account
      */
     public function transactionsByAccount(Account $account)
     {
+        /** @var \Grumpydictator\Gchart\GChart $chart */
         $chart = App::make('gchart');
         $chart->addColumn('ID', 'number');
         $chart->addColumn('ID_Edit', 'string');
@@ -118,8 +198,8 @@ class GoogleTableController extends BaseController
                 $categoryURL = route('categories.show', $transaction->transactionJournal->categories[0]->id);
                 $category    = $transaction->transactionJournal->categories[0]->name;
             } else {
-                $budgetURL = '';
-                $budget    = '';
+                $categoryURL = '';
+                $category    = '';
             }
 
 
@@ -137,7 +217,6 @@ class GoogleTableController extends BaseController
                 $fromURL = $opposingAccountURI;
             }
 
-            $budcat = 'Budcat';
             $id     = $transaction->transactionJournal->id;
             $edit   = route('transactions.edit', $transaction->transactionJournal->id);
             $delete = route('transactions.delete', $transaction->transactionJournal->id);

@@ -117,5 +117,7 @@ var defaultSankeyChartOptions = {
     height: 400
 }
 var defaultTableOptions = {
-    allowHtml: true
+    allowHtml: true,
+    page: 'enable',
+    pageSize: 50
 };

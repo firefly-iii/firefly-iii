@@ -2,9 +2,18 @@ $(function () {
     updateRanges();
     $('input[type="range"]').change(updateSingleRange);
     $('input[type="range"]').on('input', updateSingleRange);
-    $('input[type="number"]').on('change',updateSingleRange);
-    $('input[type="number"]').on('input',updateSingleRange);
+    $('input[type="number"]').on('change', updateSingleRange);
+    $('input[type="number"]').on('input', updateSingleRange);
     $('.updateIncome').on('click', updateIncome);
+
+
+    if (typeof(googleTable) == 'function') {
+        if (typeof budgetID != 'undefined' && typeof repetitionID == 'undefined') {
+            googleTable('table/budget/' + budgetID + '/0/transactions', 'transactions');
+        } else if (typeof budgetID != 'undefined' && typeof repetitionID != 'undefined') {
+            googleTable('table/budget/' + budgetID + '/' + repetitionID + '/transactions', 'transactions');
+        }
+    }
 
 });
 
@@ -19,10 +28,10 @@ function updateSingleRange(e) {
     console.log('Spent vs budgeted: ' + spent + ' vs ' + value)
 
     // update small display:
-    if(value > 0) {
+    if (value > 0) {
         // show the input:
-        $('#budget-info-' + id +' span').show();
-        $('#budget-info-' + id +' input').show();
+        $('#budget-info-' + id + ' span').show();
+        $('#budget-info-' + id + ' input').show();
 
         // update the text:
         $('#budget-description-' + id).text('Budgeted: ');
@@ -35,8 +44,8 @@ function updateSingleRange(e) {
     } else {
         console.log('Set to zero!');
         // hide the input:
-        $('#budget-info-' + id +' span').hide();
-        $('#budget-info-' + id +' input').hide();
+        $('#budget-info-' + id + ' span').hide();
+        $('#budget-info-' + id + ' input').hide();
 
         // update the text:
         $('#budget-description-' + id).html('<em>No budget</em>');
@@ -51,14 +60,14 @@ function updateSingleRange(e) {
     $.post('budgets/amount/' + id, {amount: value}).success(function (data) {
         console.log('Budget ' + data.name + ' updated!');
         // update the link if relevant:
-        $('#budget-link-' + id).attr('href','budgets/show/' + id + '/' + data.repetition);
+        $('#budget-link-' + id).attr('href', 'budgets/show/' + id + '/' + data.repetition);
     });
-    if(input.attr('type') == 'number') {
+    if (input.attr('type') == 'number') {
         // update the range-input:
         $('#budget-range-' + id).val(value);
     } else {
         // update the number-input:
-        $('#budget-info-' + id +' input').val(value);
+        $('#budget-info-' + id + ' input').val(value);
     }
 
     // update or hide the bar, whichever is necessary.

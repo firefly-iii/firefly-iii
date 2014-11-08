@@ -173,6 +173,7 @@ Route::group(
         // google table controller
         Route::get('/table/account/{account}/transactions', ['uses' => 'GoogleTableController@transactionsByAccount']);
         Route::get('/table/accounts/{what}', ['uses' => 'GoogleTableController@accountList']);
+        Route::get('/table/budget/{budget}/{limitrepetition?}/transactions', ['uses' => 'GoogleTableController@transactionsByBudget']);
 
 
         Route::get('/chart/home/info/{accountnameA}/{day}/{month}/{year}', ['uses' => 'ChartController@homeAccountInfo', 'as' => 'chart.info']);
@@ -209,9 +210,9 @@ Route::group(
         Route::get('/piggybanks', ['uses' => 'PiggybankController@index', 'as' => 'piggybanks.index']);
         Route::get('/piggybanks/add/{piggybank}', ['uses' => 'PiggybankController@add']);
         Route::get('/piggybanks/remove/{piggybank}', ['uses' => 'PiggybankController@remove']);
-        Route::get('/piggybanks/edit/{piggybank}', ['uses' => 'PiggybankController@edit','as' => 'piggybanks.edit']);
+        Route::get('/piggybanks/edit/{piggybank}', ['uses' => 'PiggybankController@edit', 'as' => 'piggybanks.edit']);
         Route::get('/piggybanks/create', ['uses' => 'PiggybankController@create', 'as' => 'piggybanks.create']);
-        Route::get('/piggybanks/delete/{piggybank}', ['uses' => 'PiggybankController@delete','as' => 'piggybanks.delete']);
+        Route::get('/piggybanks/delete/{piggybank}', ['uses' => 'PiggybankController@delete', 'as' => 'piggybanks.delete']);
 
 
 //        Route::get('/repeated',['uses' => 'PiggybankController@repeated','as' => 'piggybanks.index.repeated']);
@@ -263,7 +264,7 @@ Route::group(
         // user controller
         Route::get('/logout', ['uses' => 'UserController@logout', 'as' => 'logout']);
 
-        Route::post('budgets/amount/{budget}',['uses' => 'BudgetController@amount']);
+        Route::post('budgets/amount/{budget}', ['uses' => 'BudgetController@amount']);
 
 
     }
