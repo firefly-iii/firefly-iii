@@ -12,7 +12,7 @@
                 </p>
                 <div class="input-group">
                     <div class="input-group-addon">€</div>
-                    <input step="any" class="form-control" id="amount" autocomplete="off" name="amount" max="{{$maxAmount}}" type="number">
+                    <input step="any" class="form-control" id="amount" autocomplete="off" name="amount" max="{{round($maxAmount,2)}}" type="number">
                 </div>
             </div>
             <div class="modal-footer">
