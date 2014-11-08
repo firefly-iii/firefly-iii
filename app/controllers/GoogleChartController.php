@@ -169,6 +169,7 @@ class GoogleChartController extends BaseController
         foreach ($budgets as $budget) {
             $chart->addColumn($budget->name, 'number');
         }
+        $chart->addColumn('No budget','number');
 
         /*
          * Loop budgets this year.
@@ -181,6 +182,14 @@ class GoogleChartController extends BaseController
             foreach($budgets as $budget) {
                 $row[] = $bdt->spentInMonth($budget, $start);
             }
+
+            /*
+             * Without a budget:
+             */
+            $endOfMonth = clone $start;
+            $endOfMonth->endOfMonth();
+            $set = $bdt->transactionsWithoutBudgetInDateRange($start, $endOfMonth);
+            $row[] = floatval($set->sum('amount')) * -1;
 
             $chart->addRowArray($row);
             $start->addMonth();
