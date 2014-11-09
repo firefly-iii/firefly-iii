@@ -53,7 +53,7 @@ Some stuff has been removed:
 
 ## Screenshots
 
-![Index](http://i.imgur.com/oUQ1UhU.png)
+![Index](http://i.imgur.com/TkZNIer.png)
 
 ![Accounts](http://i.imgur.com/YE8WavP.png)
 
