@@ -51,6 +51,10 @@ Some stuff has been removed:
 - The nesting of budgets, categories and beneficiaries is removed because it was pretty pointless.
 - Firefly will not encrypt the content of the (MySQL) tables. Old versions of Firefly had this capability but it sucks when searching, sorting and organizing entries.
 
+## Screenshots
+
+![Index](http://i.imgur.com/oUQ1UhU.png)
+
 ## Current state
 I have the basics up and running. Test coverage is currently non-existent.
 
