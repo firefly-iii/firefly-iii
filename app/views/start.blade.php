@@ -12,7 +12,7 @@
     <div class="col-lg-12 col-md-12 col-sm-12">
         <p>
             Welcome to Firefly! To get started, choose either of the two options below.
-        </p>
+        </p><!-- TODO delete me. -->
     </div>
 </div>
 

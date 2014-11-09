@@ -14,7 +14,7 @@
             always add more of them.
         </p>
     </div>
-</div>
+</div><!-- TODO cleanup and use new forms -->
 
 {{Form::open(['class' => 'form-horizontal','url' => route('budgets.limits.store',$prefilled['budget_id'])])}}
 {{Form::hidden('from',e(Input::get('from')))}}

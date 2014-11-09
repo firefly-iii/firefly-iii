@@ -30,102 +30,107 @@
 
 
 
-    <div class="row">
-        <div class="col-lg-8 col-md-12 col-sm-12">
-            <!-- ACCOUNTS -->
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-credit-card fa-fw"></i> <a href="#">Your accounts</a>
-                </div>
-                <div class="panel-body">
-                    <div id="accounts-chart" style="height:300px;"></div>
-                </div>
+<div class="row">
+    <div class="col-lg-8 col-md-12 col-sm-12">
+        <!-- ACCOUNTS -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-credit-card fa-fw"></i> <a href="#">Your accounts</a>
             </div>
-            <!-- BUDGETS -->
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-tasks fa-fw"></i> <a href="{{route('budgets.index.date')}}">Budgets and spending</a>
-                </div>
-                <div class="panel-body">
-                    <div id="budgets"></div>
-                </div>
+            <div class="panel-body">
+                <div id="accounts-chart"></div>
             </div>
-            <!-- CATEGORIES -->
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-bar-chart fa-fw"></i> <a href="{{route('categories.index')}}">Categories</a>
-                </div>
-                <div class="panel-body">
-                    <div id="categories"></div>
-                </div>
-            </div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <i class="fa fa-line-chart"></i> Savings
-                        </div>
-                        <div class="panel-body">
-                            Bla bla
-                        </div>
-                    </div>
-
-
-
         </div>
-        <div class="col-lg-4 col-md-6 col-sm-12">
-            <!-- time based navigation -->
-            @include('partials.date_nav')
-
-            <!-- REMINDERS -->
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-line-chart"></i> Recurring transactions
-                </div>
-                <div class="panel-body">
-                    <div id="recurring"></div>
-                </div>
+        <!-- BUDGETS -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-tasks fa-fw"></i> <a href="{{route('budgets.index')}}">Budgets and spending</a>
             </div>
-
-            <!-- TRANSACTIONS -->
-            @foreach($transactions as $data)
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-money fa-fw"></i>
-                    <a href="{{route('accounts.show',$data[1]->id)}}">{{{$data[1]->name}}}</a>
-
-
-                    <!-- ACTIONS MENU -->
-                    <div class="pull-right">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                                Actions
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu pull-right" role="menu">
-                                <li><a href="{{route('transactions.create','withdrawal')}}?account_id={{{$data[1]->id}}}"><i class="fa fa-long-arrow-left fa-fw"></i> New withdrawal</a></li>
-                                <li><a href="{{route('transactions.create','deposit')}}?account_id={{{$data[1]->id}}}"><i class="fa fa-long-arrow-right fa-fw"></i> New deposit</a></li>
-                                <li><a href="{{route('transactions.create','transfer')}}?account_from_id={{{$data[1]->id}}}"><i class="fa fa-arrows-h fa-fw"></i> New transfer</a></li>
-                            </ul>
-                        </div>
-                    </div>
-
-
-
-                </div>
-                <div class="panel-body">
-                    @include('transactions.journals-small-index',['transactions' => $data[0],'account' => $data[1]])
-                </div>
+            <div class="panel-body">
+                <div id="budgets-chart"></div>
             </div>
-            @endforeach
         </div>
+        <!-- CATEGORIES -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-bar-chart fa-fw"></i> <a href="{{route('categories.index')}}">Categories</a>
+            </div>
+            <div class="panel-body">
+                <div id="categories-chart"></div>
+            </div>
+        </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-line-chart"></i> Savings
+                    </div>
+                    <div class="panel-body">
+                        (todo)
+                    </div>
+                </div>
+
+
+
     </div>
+    <div class="col-lg-4 col-md-6 col-sm-12">
+        <!-- time based navigation -->
+        @include('partials.date_nav')
 
-    @endif
+        <!-- REMINDERS -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-line-chart"></i> Recurring transactions
+            </div>
+            <div class="panel-body">
+                <div id="recurring-chart"></div>
+            </div>
+        </div>
 
-    @stop
-    @section('scripts')
-    {{HTML::script('assets/javascript/highcharts/highcharts.js')}}
-    {{HTML::script('assets/javascript/firefly/index.js')}}
-    @stop
-    @section('styles')
-    {{HTML::style('assets/stylesheets/highslide/highslide.css')}}
-    @stop
+        <!-- TRANSACTIONS -->
+        @foreach($transactions as $data)
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-money fa-fw"></i>
+                <a href="{{route('accounts.show',$data[1]->id)}}">{{{$data[1]->name}}}</a>
+
+
+                <!-- ACTIONS MENU -->
+                <div class="pull-right">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                            Actions
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu pull-right" role="menu">
+                            <li><a href="{{route('transactions.create','withdrawal')}}?account_id={{{$data[1]->id}}}"><i class="fa fa-long-arrow-left fa-fw"></i> New withdrawal</a></li>
+                            <li><a href="{{route('transactions.create','deposit')}}?account_id={{{$data[1]->id}}}"><i class="fa fa-long-arrow-right fa-fw"></i> New deposit</a></li>
+                            <li><a href="{{route('transactions.create','transfer')}}?account_from_id={{{$data[1]->id}}}"><i class="fa fa-arrows-h fa-fw"></i> New transfer</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+
+
+            </div>
+            <div class="panel-body">
+                @include('transactions.journals-small-index',['transactions' => $data[0],'account' => $data[1]])
+            </div>
+        </div>
+        @endforeach
+    </div>
+</div>
+
+@endif
+
+@stop
+@section('scripts')
+<!-- load the libraries and scripts necessary for Google Charts: -->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+{{HTML::script('assets/javascript/firefly/gcharts.options.js')}}
+{{HTML::script('assets/javascript/firefly/gcharts.js')}}
+
+
+
+{{HTML::script('assets/javascript/firefly/index.js')}}
+@stop
+@section('styles')
+@stop

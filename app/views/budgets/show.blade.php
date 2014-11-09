@@ -1,120 +1,92 @@
 @extends('layouts.default')
 @section('content')
+
 <div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-            <p class="lead">Budgets can help you cut back on spending.</p>
+    <div class="col-lg-9 col-md-9 col-sm-7">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Some stuff?
+            </div>
+            <div class="panel-body">
+                <div id="budgetOverview"></div>
+            </div>
+        </div>
 
-                @if($view == 1)
-                <!-- warning for selected limit -->
-                <p class="bg-primary" style="padding:15px;">
-                    This view is filtered to show only the envelope from
-                    {{{$repetitions[0]['limitrepetition']->periodShow()}}},
-                    which contains {{mf($repetitions[0]['limit']->amount,false)}}.
-                </p>
+         <div class="panel panel-default">
+            <div class="panel-heading">
+                Transactions
+            </div>
+            <div class="panel-body">
+                <div id="transactions"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-5">
+        @foreach($limits as $limit)
+            @foreach($limit->limitrepetitions as $rep)
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a href="{{route('budgets.show',[$budget->id,$rep->id])}}">{{$rep->startdate->format('F Y')}}</a>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                Amount: {{mf($rep->amount)}}
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                Spent: {{mf($rep->spentInRepetition())}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12">
+                                <?php
+                                $overspent = $rep->spentInRepetition() > $rep->amount;
+                                ?>
+                                @if($overspent)
+                                <?php
+                                $pct = $rep->amount / $rep->spentInRepetition()*100;
+                                ?>
+                                <div class="progress progress-striped">
+                                  <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ceil($pct)}}" aria-valuemin="0" aria-valuemax="100" style="width: {{ceil($pct)}}%;"></div>
+                                  <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{100-ceil($pct)}}" aria-valuemin="0" aria-valuemax="100" style="width: {{100-ceil($pct)}}%;"></div>
+                                </div>
+                                @else
+                                <?php
+                                $pct = $rep->spentInRepetition() / $rep->amount*100;
+                                ?>
+                                <div class="progress progress-striped">
+                                  <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ceil($pct)}}" aria-valuemin="0" aria-valuemax="100" style="width: {{ceil($pct)}}%;">
+                                  </div>
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        @endforeach
 
-                @endif
-
-
-                @if($view == 2)
-                <!-- warning for non-caught only -->
-                <p class="bg-primary" style="padding:15px;">
-                    This view is filtered to show transactions not in an envelope only.
-                </p>
-                @endif
-
-                @if($view == 3)
-                <!-- warning for session date -->
-                <p class="bg-primary" style="padding:15px;">
-                    This view is filtered to only show transactions between {{Session::get('start')->format('d M Y')}}
-                    and {{Session::get('end')->format('d M Y')}}.
-                </p>
-                @endif
-        @if($view != 4)
-        <p class="bg-info" style="padding:15px;">
-            <a class="btn btn-default btn-sm" href="{{route('budgets.show',$budget->id)}}">Reset the filter</a>
-        </p>
-        @endif
 
     </div>
 </div>
-
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <div id="chart"></div>
-        @if($view == 1)
-        <div id="instr" data-type="envelope" data-envelope="{{$repetitions[0]['limitrepetition']->id}}"></div>
-        @endif
-
-
-        @if($view == 2)
-        <div id="instr" data-type="no_envelope" data-budget="{{$budget->id}}"></div>
-        @endif
-
-        @if($view == 3)
-        <div id="instr" data-type="session" data-budget="{{$budget->id}}"></div>
-        @endif
-
-        @if($view == 4)
-        <div id="instr" data-type="default" data-budget="{{$budget->id}}"></div>
-        @endif
-
-    </div>
-</div>
-
-@foreach($repetitions as $repetition)
-@if(isset($repetition['journals']) && count($repetition['journals']) > 0)
-<div class="row">
-    <div class="col-lg-12">
-
-
-            @if($repetition['paginated'] == true)
-                <h4>
-                    <a href="{{route('budgets.show',$budget->id)}}?noenvelope=true">
-                    {{$repetition['date']}}</a> <small>paginated</small></h4>
-            @else
-                <h4>
-                    <a href="{{route('budgets.show',$budget->id,$repetition['limitrepetition']->id)}}">
-                        {{$repetition['date']}}
-                    </a>
-                </h4>
-            <small>{{mf($repetition['limit']->amount,false)}}
-            (left: {{mf($repetition['limitrepetition']->leftInRepetition(),false)}})</small>
-            @endif
-        </h4>
-        @if($repetition['paginated'] == true)
-            @include('paginated.transactions',['journals' => $repetition['journals'],'highlight' => $highlight])
-        @else
-            @include('lists.transactions',['journals' => $repetition['journals'],'sum' => true,'highlight' => $highlight])
-        @endif
-    </div>
-</div>
-@else
-<div class="row">
-    <div class="col-lg-12">
-        <h4>{{$repetition['date']}}
-        </h4>
-        <p><em>No transactions</em></p>
-    </div>
-</div>
-@endif
-@endforeach
 
 @stop
 @section('scripts')
-{{HTML::script('assets/javascript/highcharts/highcharts.js')}}
-@if($view == 1)
-{{HTML::script('assets/javascript/firefly/budgets/limit.js')}}
-@endif
+<script type="text/javascript">
+    var budgetID = {{$budget->id}};
+    @if(!is_null($repetition))
+        var repetitionID = {{$repetition->id}};
+        var year = {{$repetition->startdate->format('Y')}};
+    @else
+        var year = {{Session::get('start')->format('Y')}};
+    @endif
 
-@if($view == 2)
-{{HTML::script('assets/javascript/firefly/budgets/nolimit.js')}}
-@endif
+</script>
 
-@if($view == 3)
-{{HTML::script('assets/javascript/firefly/budgets/session.js')}}
-@endif
-@if($view == 4)
-{{HTML::script('assets/javascript/firefly/budgets/default.js')}}
-@endif
+<!-- load the libraries and scripts necessary for Google Charts: -->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+{{HTML::script('assets/javascript/firefly/gcharts.options.js')}}
+{{HTML::script('assets/javascript/firefly/gcharts.js')}}
+{{HTML::script('assets/javascript/firefly/budgets.js')}}
 
 @stop

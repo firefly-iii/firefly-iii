@@ -1,31 +1,42 @@
 <?php
 
 use Firefly\Exception\FireflyException;
-use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
-use Firefly\Storage\Piggybank\PiggybankRepositoryInterface as PRI;
+use FireflyIII\Exception\NotImplementedException;
+use Illuminate\Support\Collection;
+use Illuminate\Support\MessageBag;
 
 /**
  * Class PiggybankController
- *
- * @SuppressWarnings(PHPMD.CamelCasePropertyName)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.TooManyMethods)
  *
  */
 class PiggybankController extends BaseController
 {
 
-    protected $_accounts;
-    protected $_repository;
+    /**
+     *
+     */
+    public function __construct()
+    {
+    }
 
     /**
-     * @param PRI $repository
-     * @param ARI $accounts
+     * @throws NotImplementedException
      */
-    public function __construct(PRI $repository, ARI $accounts)
+    public function create()
     {
-        $this->_repository = $repository;
-        $this->_accounts   = $accounts;
+
+        /** @var \FireflyIII\Database\Account $acct */
+        $acct = App::make('FireflyIII\Database\Account');
+
+        /** @var \FireflyIII\Shared\Toolkit\Form $toolkit */
+        $toolkit = App::make('FireflyIII\Shared\Toolkit\Form');
+
+        $periods = Config::get('firefly.piggybank_periods');
+
+
+        $accounts = $toolkit->makeSelectList($acct->getAssetAccounts());
+        return View::make('piggybanks.create', compact('accounts', 'periods'))->with('title', 'Piggy banks')->with('mainTitleIcon', 'fa-sort-amount-asc')
+                   ->with('subTitle', 'Create new piggy bank')->with('subTitleIcon', 'fa-plus');
     }
 
     /**
@@ -33,74 +44,13 @@ class PiggybankController extends BaseController
      *
      * @return $this
      */
-    public function addMoney(Piggybank $piggyBank)
+    public function delete(Piggybank $piggybank)
     {
-        $what      = 'add';
-        $maxAdd    = $this->_repository->leftOnAccount($piggyBank->account);
-        $maxRemove = null;
-
-        return View::make('piggybanks.modifyAmount')->with('what', $what)->with('maxAdd', $maxAdd)->with(
-            'maxRemove', $maxRemove
-        )->with('piggybank', $piggyBank);
-    }
-
-    /**
-     * @return $this
-     */
-    public function createPiggybank()
-    {
-        /** @var \Firefly\Helper\Toolkit\Toolkit $toolkit */
-        $toolkit = App::make('Firefly\Helper\Toolkit\Toolkit');
-
-
-        $periods  = Config::get('firefly.piggybank_periods');
-        $list     = $this->_accounts->getActiveDefault();
-        $accounts = $toolkit->makeSelectList($list);
-
+        View::share('subTitle', 'Delete "' . $piggybank->name . '"');
         View::share('title', 'Piggy banks');
-        View::share('subTitle', 'Create new');
         View::share('mainTitleIcon', 'fa-sort-amount-asc');
 
-        return View::make('piggybanks.create-piggybank')->with('accounts', $accounts)
-            ->with('periods', $periods);
-    }
-
-    /**
-     * @return $this
-     */
-    public function createRepeated()
-    {
-        /** @var \Firefly\Helper\Toolkit\Toolkit $toolkit */
-        $toolkit = App::make('Firefly\Helper\Toolkit\Toolkit');
-
-        $periods  = Config::get('firefly.piggybank_periods');
-        $list     = $this->_accounts->getActiveDefault();
-        $accounts = $toolkit->makeSelectList($list);
-
-        View::share('title', 'Repeated expenses');
-        View::share('subTitle', 'Create new');
-        View::share('mainTitleIcon', 'fa-rotate-right');
-
-        return View::make('piggybanks.create-repeated')->with('accounts', $accounts)->with('periods', $periods);
-    }
-
-    /**
-     * @param Piggybank $piggyBank
-     *
-     * @return $this
-     */
-    public function delete(Piggybank $piggyBank)
-    {
-        View::share('subTitle', 'Delete "' . $piggyBank->name . '"');
-        if ($piggyBank->repeats == 1) {
-            View::share('title', 'Repeated expenses');
-            View::share('mainTitleIcon', 'fa-rotate-right');
-        } else {
-            View::share('title', 'Piggy banks');
-            View::share('mainTitleIcon', 'fa-sort-amount-asc');
-        }
-
-        return View::make('piggybanks.delete')->with('piggybank', $piggyBank);
+        return View::make('piggybanks.delete')->with('piggybank', $piggybank);
     }
 
     /**
@@ -111,18 +61,13 @@ class PiggybankController extends BaseController
     public function destroy(Piggybank $piggyBank)
     {
         Event::fire('piggybanks.destroy', [$piggyBank]);
-        if ($piggyBank->repeats == 1) {
-            $route   = 'piggybanks.index.repeated';
-            $message = 'Repeated expense';
-        } else {
-            $route   = 'piggybanks.index.piggybanks';
-            $message = 'Piggybank';
-        }
-        $this->_repository->destroy($piggyBank);
 
-        Session::flash('success', $message . ' deleted.');
+        /** @var \FireflyIII\Database\Piggybank $acct */
+        $repos = App::make('FireflyIII\Database\Piggybank');
+        $repos->destroy($piggyBank);
+        Session::flash('success', 'Piggy bank deleted.');
 
-        return Redirect::route($route);
+        return Redirect::route('piggybanks.index');
     }
 
     /**
@@ -130,245 +75,203 @@ class PiggybankController extends BaseController
      *
      * @return $this
      */
-    public function edit(Piggybank $piggyBank)
+    public function edit(Piggybank $piggybank)
     {
-        /** @var \Firefly\Helper\Toolkit\Toolkit $toolkit */
-        $toolkit = App::make('Firefly\Helper\Toolkit\Toolkit');
 
-        $list     = $this->_accounts->getActiveDefault();
-        $accounts = $toolkit->makeSelectList($list);
-        $periods  = Config::get('firefly.piggybank_periods');
+        /** @var \FireflyIII\Database\Account $acct */
+        $acct = App::make('FireflyIII\Database\Account');
 
+        /** @var \FireflyIII\Shared\Toolkit\Form $toolkit */
+        $toolkit = App::make('FireflyIII\Shared\Toolkit\Form');
 
-        View::share('subTitle', 'Edit "' . $piggyBank->name . '"');
+        $periods = Config::get('firefly.piggybank_periods');
 
+        $accounts = $toolkit->makeSelectList($acct->getAssetAccounts());
 
-        if ($piggyBank->repeats == 1) {
-            View::share('title', 'Repeated expenses');
-            View::share('mainTitleIcon', 'fa-rotate-left');
+        /*
+         * Flash some data to fill the form.
+         */
+        $prefilled = [
+            'name'         => $piggybank->name,
+            'account_id'   => $piggybank->account_id,
+            'targetamount' => $piggybank->targetamount,
+            'targetdate'   => $piggybank->targetdate,
+            'remind_me'    => intval($piggybank->remind_me) == 1 ? true : false
+        ];
+        Session::flash('prefilled', $prefilled);
 
-            return View::make('piggybanks.edit-repeated')->with('piggybank', $piggyBank)->with('accounts', $accounts)
-                ->with('periods', $periods);
-        } else {
-            // piggy bank.
-            View::share('title', 'Piggy banks');
-            View::share('mainTitleIcon', 'fa-sort-amount-asc');
-
-            return View::make('piggybanks.edit-piggybank')->with('piggybank', $piggyBank)->with('accounts', $accounts)
-                ->with('periods', $periods);
-        }
-
-
+        return View::make('piggybanks.edit', compact('piggybank', 'accounts', 'periods', 'prefilled'))->with('title', 'Piggybanks')->with(
+            'mainTitleIcon', 'fa-sort-amount-asc'
+        )
+                   ->with('subTitle', 'Edit piggy bank "' . e($piggybank->name) . '"')->with('subTitleIcon', 'fa-pencil');
     }
 
     /**
-     * @param Piggybank $piggyBank
+     * @param Piggybank $piggybank
+     *
+     * @return $this
+     */
+    public function add(Piggybank $piggybank)
+    {
+        /** @var \FireflyIII\Database\Piggybank $acct */
+        $repos = App::make('FireflyIII\Database\Piggybank');
+
+        $leftOnAccount = $repos->leftOnAccount($piggybank->account);
+        $savedSoFar    = $piggybank->currentRelevantRep()->currentamount;
+        $leftToSave    = $piggybank->targetamount - $savedSoFar;
+        $amount        = min($leftOnAccount, $leftToSave);
+
+
+        return View::make('piggybanks.add', compact('piggybank'))->with('maxAmount', $amount);
+    }
+
+    /**
+     * @param Piggybank $piggybank
      *
      * @return \Illuminate\Http\RedirectResponse
-     * @throws Firefly\Exception\FireflyException
      */
-    public function modMoney(Piggybank $piggyBank)
+    public function postAdd(Piggybank $piggybank)
+    {
+        $amount = round(floatval(Input::get('amount')), 2);
+
+        /** @var \FireflyIII\Database\Piggybank $acct */
+        $repos = App::make('FireflyIII\Database\Piggybank');
+
+        $leftOnAccount = $repos->leftOnAccount($piggybank->account);
+        $savedSoFar    = $piggybank->currentRelevantRep()->currentamount;
+        $leftToSave    = $piggybank->targetamount - $savedSoFar;
+        $maxAmount     = round(min($leftOnAccount, $leftToSave), 2);
+
+        if ($amount <= $maxAmount) {
+            $repetition = $piggybank->currentRelevantRep();
+            $repetition->currentamount += $amount;
+            $repetition->save();
+            Session::flash('success', 'Added ' . mf($amount, false) . ' to "' . e($piggybank->name) . '".');
+        } else {
+            Session::flash('error', 'Could not add ' . mf($amount, false) . ' to "' . e($piggybank->name) . '".');
+        }
+        return Redirect::route('piggybanks.index');
+    }
+
+    /**
+     * @param Piggybank $piggybank
+     *
+     * @return \Illuminate\View\View
+     */
+    public function remove(Piggybank $piggybank)
+    {
+        return View::make('piggybanks.remove', compact('piggybank'));
+    }
+
+    /**
+     * @param Piggybank $piggybank
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postRemove(Piggybank $piggybank)
     {
         $amount = floatval(Input::get('amount'));
-        switch (Input::get('what')) {
-            default:
-                throw new FireflyException('No such action');
-                break;
-            case 'add':
-                $maxAdd = $this->_repository->leftOnAccount($piggyBank->account);
-                if (round($amount, 2) <= round(min($maxAdd, $piggyBank->targetamount), 2)) {
-                    Session::flash('success', 'Amount updated!');
-                    $this->_repository->modifyAmount($piggyBank, $amount);
-                    Event::fire('piggybanks.modifyAmountAdd', [$piggyBank, $amount]);
-                } else {
-                    Session::flash('warning', 'Could not!');
-                }
-                break;
-            case 'remove':
-                $rep       = $piggyBank->currentRelevantRep();
-                $maxRemove = $rep->currentamount;
-                if (round($amount, 2) <= round($maxRemove, 2)) {
-                    Session::flash('success', 'Amount updated!');
-                    $this->_repository->modifyAmount($piggyBank, ($amount * -1));
-                    Event::fire('piggybanks.modifyAmountRemove', [$piggyBank, ($amount * -1)]);
-                } else {
-                    Session::flash('warning', 'Could not!');
-                }
-                break;
-        }
-        if($piggyBank->repeats == 1) {
-            $route   = 'piggybanks.index.repeated';
 
+        $savedSoFar = $piggybank->currentRelevantRep()->currentamount;
+
+        if ($amount <= $savedSoFar) {
+            $repetition = $piggybank->currentRelevantRep();
+            $repetition->currentamount -= $amount;
+            $repetition->save();
+            Session::flash('success', 'Removed ' . mf($amount, false) . ' from "' . e($piggybank->name) . '".');
         } else {
-            $route   = 'piggybanks.index.piggybanks';
+            Session::flash('error', 'Could not remove ' . mf($amount, false) . ' from "' . e($piggybank->name) . '".');
         }
-        return Redirect::route($route);
+        return Redirect::route('piggybanks.index');
     }
 
-    /**
-     * @return $this
-     */
-    public function piggybanks()
+    public function index()
     {
-        $countRepeating    = $this->_repository->countRepeating();
-        $countNonRepeating = $this->_repository->countNonrepeating();
+        /** @var \FireflyIII\Database\Piggybank $repos */
+        $repos = App::make('FireflyIII\Database\Piggybank');
 
-        $piggybanks = $this->_repository->get();
-
-        // get the accounts with each piggy bank and check their balance; Fireflyy might needs to
-        // show the user a correction.
+        /** @var Collection $piggybanks */
+        $piggybanks = $repos->get();
 
         $accounts = [];
-        /** @var \Piggybank $piggybank */
+        /** @var Piggybank $piggybank */
         foreach ($piggybanks as $piggybank) {
+            $piggybank->savedSoFar = floatval($piggybank->currentRelevantRep()->currentamount);
+            $piggybank->percentage = intval($piggybank->savedSoFar / $piggybank->targetamount * 100);
+            $piggybank->leftToSave = $piggybank->targetamount - $piggybank->savedSoFar;
+
+            /*
+             * Fill account information:
+             */
             $account = $piggybank->account;
-            $id      = $account->id;
-            if (!isset($accounts[$id])) {
-                $account->leftOnAccount = $this->_repository->leftOnAccount($account);
-                $accounts[$id]          = ['account' => $account, 'left' => $this->_repository->leftOnAccount($account)];
+            if (!isset($accounts[$account->id])) {
+                $accounts[$account->id] = [
+                    'name'              => $account->name,
+                    'balance'           => $account->balance(),
+                    'leftForPiggybanks' => $repos->leftOnAccount($account),
+                    'sumOfSaved'        => $piggybank->savedSoFar,
+                    'sumOfTargets'      => floatval($piggybank->targetamount),
+                    'leftToSave'        => $piggybank->leftToSave
+                ];
+            } else {
+                $accounts[$account->id]['sumOfSaved'] += $piggybank->savedSoFar;
+                $accounts[$account->id]['sumOfTargets'] += floatval($piggybank->targetamount);
+                $accounts[$account->id]['leftToSave'] += $piggybank->leftToSave;
             }
         }
-
-        View::share('title', 'Piggy banks');
-        View::share('subTitle', 'Save for big expenses');
-        View::share('mainTitleIcon', 'fa-sort-amount-asc');
-
-        return View::make('piggybanks.index')->with('piggybanks', $piggybanks)
-            ->with('countRepeating', $countRepeating)
-            ->with('countNonRepeating', $countNonRepeating)
-            ->with('accounts', $accounts);
+        return View::make('piggybanks.index', compact('piggybanks', 'accounts'))->with('title', 'Piggy banks')->with('mainTitleIcon', 'fa-sort-amount-asc');
     }
 
-    /**
-     * @param Piggybank $piggyBank
-     *
-     * @return $this
-     */
-    public function removeMoney(Piggybank $piggyBank)
-    {
-        $what      = 'remove';
-        $maxAdd    = $this->_repository->leftOnAccount($piggyBank->account);
-        $maxRemove = $piggyBank->currentRelevantRep()->currentamount;
 
-        return View::make('piggybanks.modifyAmount')->with('what', $what)->with('maxAdd', $maxAdd)->with(
-            'maxRemove', $maxRemove
-        )->with('piggybank', $piggyBank);
-    }
-
-    /**
-     * @return $this
-     */
-    public function repeated()
-    {
-        $countRepeating    = $this->_repository->countRepeating();
-        $countNonRepeating = $this->_repository->countNonrepeating();
-
-        $piggybanks = $this->_repository->get();
-
-        // get the accounts with each piggy bank and check their balance; Fireflyy might needs to
-        // show the user a correction.
-
-        $accounts = [];
-        /** @var \Piggybank $piggybank */
-        foreach ($piggybanks as $piggybank) {
-            $account = $piggybank->account;
-            $id      = $account->id;
-            if (!isset($accounts[$id])) {
-                $account->leftOnAccount = $this->_repository->leftOnAccount($account);
-                $accounts[$id]          = ['account' => $account, 'left' => $this->_repository->leftOnAccount($account)];
-            }
-        }
-
-        View::share('title', 'Repeated expenses');
-        View::share('subTitle', 'Save for returning bills');
-        View::share('mainTitleIcon', 'fa-rotate-left');
-
-
-        return View::make('piggybanks.index')->with('piggybanks', $piggybanks)
-            ->with('countRepeating', $countRepeating)
-            ->with('countNonRepeating', $countNonRepeating)
-            ->with('accounts', $accounts);
-    }
-
-    /**
-     *
-     */
     public function show(Piggybank $piggyBank)
     {
-        $leftOnAccount = $this->_repository->leftOnAccount($piggyBank->account);
-        $balance       = $piggyBank->account->balance();
-
-        View::share('subTitle', $piggyBank->name);
-
-        if ($piggyBank->repeats == 1) {
-            // repeated expense.
-            View::share('title', 'Repeated expenses');
-            View::share('mainTitleIcon', 'fa-rotate-left');
-        } else {
-            // piggy bank.
-            View::share('title', 'Piggy banks');
-            View::share('mainTitleIcon', 'fa-sort-amount-asc');
-        }
-
-        return View::make('piggybanks.show')->with('piggyBank', $piggyBank)->with('leftOnAccount', $leftOnAccount)
-            ->with('balance', $balance);
-    }
-
-    /**
-     * @return $this|\Illuminate\Http\RedirectResponse
-     */
-    public function storePiggybank()
-    {
-        $data = Input::all();
-        unset($data['_token']);
-
-        // extend the data array with the settings needed to create a piggy bank:
-        $data['repeats']   = 0;
-        $data['rep_times'] = 1;
-        $data['rep_every'] = 1;
-        $data['order']     = 0;
-
-        $piggyBank = $this->_repository->store($data);
-        if (!is_null($piggyBank->id)) {
-            Session::flash('success', 'New piggy bank "' . $piggyBank->name . '" created!');
-            Event::fire('piggybanks.store', [$piggyBank]);
-
-            return Redirect::route('piggybanks.index.piggybanks');
-
-
-        } else {
-            Session::flash('error', 'Could not save piggy bank: ' . $piggyBank->errors()->first());
-
-            return Redirect::route('piggybanks.create.piggybank')->withInput()->withErrors($piggyBank->errors());
-        }
+        throw new NotImplementedException;
 
     }
 
     /**
-     * @return $this|\Illuminate\Http\RedirectResponse
+     *
      */
-    public function storeRepeated()
+    public function store()
     {
+        $data            = Input::all();
+        $data['repeats'] = 0;
+        /** @var \FireflyIII\Database\Piggybank $repos */
+        $repos = App::make('FireflyIII\Database\Piggybank');
 
-        $data = Input::all();
-        unset($data['_token']);
+        switch ($data['post_submit_action']) {
+            default:
+                throw new FireflyException('Cannot handle post_submit_action "' . e($data['post_submit_action']) . '"');
+                break;
+            case 'create_another':
+            case 'store':
+                $messages = $repos->validate($data);
+                /** @var MessageBag $messages ['errors'] */
+                if ($messages['errors']->count() > 0) {
+                    Session::flash('warnings', $messages['warnings']);
+                    Session::flash('successes', $messages['successes']);
+                    Session::flash('error', 'Could not save piggy bank: ' . $messages['errors']->first());
+                    return Redirect::route('piggybanks.create')->withInput()->withErrors($messages['errors']);
+                }
+                // store!
+                $repos->store($data);
+                Session::flash('success', 'New piggy bank stored!');
 
-        // extend the data array with the settings needed to create a repeated:
-        $data['repeats'] = 1;
-        $data['order']   = 0;
+                if ($data['post_submit_action'] == 'create_another') {
+                    return Redirect::route('piggybanks.create');
+                } else {
+                    return Redirect::route('piggybanks.index');
+                }
+                break;
+            case 'validate_only':
+                $messageBags = $repos->validate($data);
+                Session::flash('warnings', $messageBags['warnings']);
+                Session::flash('successes', $messageBags['successes']);
+                Session::flash('errors', $messageBags['errors']);
 
-        $piggyBank = $this->_repository->store($data);
-        if ($piggyBank->id) {
-            Session::flash('success', 'New piggy bank "' . $piggyBank->name . '" created!');
-            Event::fire('piggybanks.store', [$piggyBank]);
-            return Redirect::route('piggybanks.index.repeated');
-
-        } else {
-            Session::flash('error', 'Could not save piggy bank: ' . $piggyBank->errors()->first());
-
-            return Redirect::route('piggybanks.create.repeated')->withInput()->withErrors($piggyBank->errors());
+                return Redirect::route('piggybanks.create')->withInput();
+                break;
         }
-
     }
 
     /**
@@ -378,25 +281,41 @@ class PiggybankController extends BaseController
      */
     public function update(Piggybank $piggyBank)
     {
-        $piggyBank = $this->_repository->update($piggyBank, Input::all());
-        if ($piggyBank->validate()) {
-            if ($piggyBank->repeats == 1) {
-                $route   = 'piggybanks.index.repeated';
-                $message = 'Repeated expense';
-            } else {
-                $route   = 'piggybanks.index.piggybanks';
-                $message = 'Piggy bank';
-            }
 
+        /** @var \FireflyIII\Database\Piggybank $repos */
+        $repos = App::make('FireflyIII\Database\Piggybank');
+        $data  = Input::except('_token');
 
-            Session::flash('success', $message . ' "' . $piggyBank->name . '" updated.');
-            Event::fire('piggybanks.update', [$piggyBank]);
+        switch (Input::get('post_submit_action')) {
+            default:
+                throw new FireflyException('Cannot handle post_submit_action "' . e(Input::get('post_submit_action')) . '"');
+                break;
+            case 'create_another':
+            case 'update':
+                $messages = $repos->validate($data);
+                /** @var MessageBag $messages ['errors'] */
+                if ($messages['errors']->count() > 0) {
+                    Session::flash('warnings', $messages['warnings']);
+                    Session::flash('successes', $messages['successes']);
+                    Session::flash('error', 'Could not save piggy bank: ' . $messages['errors']->first());
+                    return Redirect::route('piggybanks.edit', $piggyBank->id)->withInput()->withErrors($messages['errors']);
+                }
+                // store!
+                $repos->update($piggyBank, $data);
+                Session::flash('success', 'Piggy bank updated!');
 
-            return Redirect::route($route);
-        } else {
-            Session::flash('error', 'Could not update piggy bank: ' . $piggyBank->errors()->first());
-
-            return Redirect::route('piggybanks.edit', $piggyBank->id)->withErrors($piggyBank->errors())->withInput();
+                if ($data['post_submit_action'] == 'create_another') {
+                    return Redirect::route('piggybanks.edit', $piggyBank->id);
+                } else {
+                    return Redirect::route('piggybanks.index');
+                }
+            case 'validate_only':
+                $messageBags = $repos->validate($data);
+                Session::flash('warnings', $messageBags['warnings']);
+                Session::flash('successes', $messageBags['successes']);
+                Session::flash('errors', $messageBags['errors']);
+                return Redirect::route('piggybanks.edit', $piggyBank->id)->withInput();
+                break;
         }
 
 

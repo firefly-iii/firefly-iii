@@ -1,7 +1,7 @@
 @extends('layouts.default')
 @section('content')
 @if(!is_null($query))
-<div class="row">
+<div class="row"><!-- TODO cleanup for new forms and layout and see if it actually still works. -->
     @if(isset($result['transactions']) && $result['transactions']->count() > 0)
     <div class="col-lg-6 col-md-12 col-sm-12">
         <div class="panel panel-default">

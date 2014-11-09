@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 27/09/14
- * Time: 07:39
- */
-
 namespace Firefly\Helper\Controllers;
 
 use LaravelBook\Ardent\Builder;

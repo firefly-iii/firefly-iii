@@ -48,7 +48,7 @@
 
     <li class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-        <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
     </a>
     <ul class="dropdown-menu dropdown-user">
         <li><a href="{{route('profile')}}"><i class="fa fa-user fa-fw"></i> {{Auth::user()->email}}</a>
@@ -98,34 +98,19 @@
                 <a href="#"><i class="fa fa-credit-card fa-fw"></i> Accounts <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a @if($r == 'accounts.asset') class="active" @endif href="{{route('accounts.asset')}}"><i class="fa fa-money fa-fw"></i> Asset accounts</a>
+                        <a @if(isset($what) && $what == 'asset')class="active"@endif href="{{route('accounts.index','asset')}}"><i class="fa fa-money fa-fw"></i> Asset accounts</a>
                     </li>
                     <li>
-                        <a @if($r == 'accounts.expense') class="active" @endif href="{{route('accounts.expense')}}"><i class="fa fa-shopping-cart fa-fw"></i> Expense accounts</a>
+                        <a @if(isset($what) && $what == 'expense')class="active"@endif href="{{route('accounts.index','expense')}}"><i class="fa fa-shopping-cart fa-fw"></i> Expense accounts</a>
                     </li>
                     <li>
-                        <a @if($r == 'accounts.revenue') class="active" @endif href="{{route('accounts.revenue')}}"><i class="fa fa-download fa-fw"></i> Revenue accounts</a>
+                        <a @if(isset($what) && $what == 'revenue')class="active"@endif href="{{route('accounts.index','revenue')}}"><i class="fa fa-download fa-fw"></i> Revenue accounts</a>
                     </li>
                 </ul>
                 <!-- /.nav-second-level -->
             </li>
-            <li
-            @if(!(strpos($r,'budgets') === false))
-            class="active"
-            @endif
-                >
-                <a href="#"><i class="fa fa-tasks fa-fw"></i> Budgets <span class="fa arrow"></span></a>
-
-                <ul class="nav nav-second-level">
-                    <li>
-                        <a @if($r == 'budgets.index.date') class="active" @endif href="{{route('budgets.index.date')}}"><i class="fa fa-calendar fa-fw"></i> Grouped by date</a>
-                    </li>
-                    <li>
-                        <a @if($r == 'budgets.index.budget') class="active" @endif href="{{route('budgets.index.budget')}}"><i class="fa fa-folder-open fa-fw"></i> Grouped by budget</a>
-                    </li>
-                </ul>
-
-
+            <li>
+                <a href="{{route('budgets.index')}}"><i class="fa fa-tasks fa-fw"></i> Budgets</a>
             </li>
             <li>
                 <a
@@ -179,14 +164,16 @@
                 <a href="#"><i class="fa fa-euro fa-fw"></i> Money management<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a @if($r == 'piggybanks.index.piggybanks') class="active" @endif href="{{route('piggybanks.index.piggybanks')}}"><i class="fa fa-sort-amount-asc fa-fw"></i> Piggy banks</a>
+                        <a @if($r == 'piggybanks.index') class="active" @endif href="{{route('piggybanks.index')}}"><i class="fa fa-sort-amount-asc fa-fw"></i> Piggy banks</a>
                     </li>
                     <li>
                         <a @if($r == 'recurring.index') class="active" @endif href="{{route('recurring.index')}}"><i class="fa fa-rotate-right fa-fw"></i> Recurring transactions</a>
                     </li>
+                    {{--
                     <li>
                         <a @if($r == 'piggybanks.index.repeated') class="active" @endif href="{{route('piggybanks.index.repeated')}}"><i class="fa fa-rotate-left fa-fw"></i> Repeated expenses</a>
                     </li>
+                    --}}
                 </ul>
                 <!-- /.nav-second-level -->
             </li>
@@ -208,24 +195,28 @@
                     </li>
                     <!--
                     <li>
-                        <a href="{{route('accounts.create')}}"><i class="fa fa-money fa-fw"></i> Account</a>
+                        <a href="#"><i class="fa fa-money fa-fw"></i> Account</a>
                     </li>
                     -->
                     <li>
-                        <a href="{{route('budgets.create')}}"><i class="fa fa-tasks fa-fw"></i> Budget</a>
+                        <a href="#"><i class="fa fa-tasks fa-fw"></i> Budget</a>
                     </li>
                     <li>
                         <a href="#"><i class="fa fa-bar-chart fa-fw"></i> Category</a>
                     </li>
+                    {{--
                     <li>
                         <a href="{{route('piggybanks.create.piggybank')}}"><i class="fa fa-envelope-o fa-fw"></i> Piggy bank</a>
                     </li>
+                    --}}
                     <li>
                         <a href="{{route('recurring.create')}}"><i class="fa fa-rotate-right fa-fw"></i> Recurring transaction</a>
                     </li>
+                    {{--
                     <li>
                         <a href="{{route('piggybanks.create.repeated')}}"><i class="fa fa-rotate-left fa-fw"></i> Repeated expense</a>
                     </li>
+                    --}}
                 </ul>
                 <!-- /.nav-second-level -->
             </li>

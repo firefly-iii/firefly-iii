@@ -56,6 +56,7 @@ class Piggybank extends Ardent
             'rep_times'     => 'min:1|max:100', // how many times do you want to save this amount? eg. 3 times
             'reminder'      => 'in:day,week,month,year', // want a reminder to put money in this?
             'reminder_skip' => 'required|min:0|max:100', // every week? every 2 months?
+            'remind_me' => 'required|boolean',
             'order'         => 'required:min:1', // not yet used.
         ];
     public $fillable
@@ -71,6 +72,7 @@ class Piggybank extends Ardent
             'rep_times',
             'reminder',
             'reminder_skip',
+            'remind_me',
             'order'
         ];
 
@@ -90,7 +92,6 @@ class Piggybank extends Ardent
         $rep->targetdate = $target;
         $rep->currentamount = 0;
         $rep->save();
-
         \Event::fire('piggybanks.repetition', [$rep]);
 
         return $rep;
