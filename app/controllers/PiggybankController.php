@@ -46,11 +46,11 @@ class PiggybankController extends BaseController
      */
     public function delete(Piggybank $piggybank)
     {
-        View::share('subTitle', 'Delete "' . $piggybank->name . '"');
-        View::share('title', 'Piggy banks');
-        View::share('mainTitleIcon', 'fa-sort-amount-asc');
-
-        return View::make('piggybanks.delete')->with('piggybank', $piggybank);
+        return View::make('piggybanks.delete')
+	        ->with('piggybank', $piggybank)
+	        ->with('subTitle', 'Delete "' . $piggybank->name . '"')
+	        ->with('title', 'Piggy banks')
+	        ->with('mainTitleIcon', 'fa-sort-amount-asc');
     }
 
     /**
