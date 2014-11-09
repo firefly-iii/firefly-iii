@@ -55,6 +55,12 @@ Some stuff has been removed:
 
 ![Index](http://i.imgur.com/oUQ1UhU.png)
 
+![Accounts](http://i.imgur.com/YE8WavP.png)
+
+![Budgets](http://i.imgur.com/Go0M6Nd.png)
+
+![Reports](http://i.imgur.com/EnEIyQI.png)
+
 ## Current state
 I have the basics up and running. Test coverage is currently non-existent.
 
