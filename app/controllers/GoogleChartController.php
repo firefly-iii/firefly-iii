@@ -200,6 +200,47 @@ class GoogleChartController extends BaseController
         return Response::json($chart->getData());
     }
 
+    public function budgetsAndSpending(Budget $budget, $year) {
+        try {
+            $start = new Carbon('01-01-' . $year);
+        } catch (Exception $e) {
+            App::abort(500);
+        }
+
+        /** @var \FireflyIII\Database\Budget $bdt */
+        $bdt     = App::make('FireflyIII\Database\Budget');
+
+        /** @var \Grumpydictator\Gchart\GChart $chart */
+        $chart = App::make('gchart');
+        $chart->addColumn('Month', 'date');
+        $chart->addColumn('Budgeted', 'number');
+        $chart->addColumn('Spent', 'number');
+
+        $end = clone $start;
+        $end->endOfYear();
+        while($start <= $end) {
+
+            $spent = $bdt->spentInMonth($budget, $start);
+            $repetition = $bdt->repetitionOnStartingOnDate($budget, $start);
+            if($repetition) {
+                $budgeted = floatval($repetition->amount);
+            } else {
+                $budgeted = 0;
+            }
+
+            $chart->addRow(clone $start, $budgeted, $spent);
+
+            $start->addMonth();
+        }
+
+
+
+        $chart->generate();
+        return Response::json($chart->getData());
+
+
+    }
+
     /**
      * @return \Illuminate\Http\JsonResponse
      */

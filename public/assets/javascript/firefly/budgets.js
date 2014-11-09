@@ -10,6 +10,8 @@ $(function () {
     if (typeof(googleTable) == 'function') {
         if (typeof budgetID != 'undefined' && typeof repetitionID == 'undefined') {
             googleTable('table/budget/' + budgetID + '/0/transactions', 'transactions');
+            googleColumnChart('chart/budgets/'+budgetID+'/spending/2014','budgetOverview');
+
         } else if (typeof budgetID != 'undefined' && typeof repetitionID != 'undefined') {
             googleTable('table/budget/' + budgetID + '/' + repetitionID + '/transactions', 'transactions');
         }

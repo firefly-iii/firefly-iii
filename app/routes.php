@@ -169,6 +169,7 @@ Route::group(
         Route::get('/chart/reports/income-expenses/{year}', ['uses' => 'GoogleChartController@yearInExp']);
         Route::get('/chart/reports/income-expenses-sum/{year}', ['uses' => 'GoogleChartController@yearInExpSum']);
         Route::get('/chart/reports/budgets/{year}', ['uses' => 'GoogleChartController@budgetsReportChart']);
+        Route::get('/chart/budgets/{budget}/spending/{year}', ['uses' => 'GoogleChartController@budgetsAndSpending']);
 
         // google table controller
         Route::get('/table/account/{account}/transactions', ['uses' => 'GoogleTableController@transactionsByAccount']);
