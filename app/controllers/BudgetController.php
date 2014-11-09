@@ -89,10 +89,12 @@ class BudgetController extends BaseController
 
         // get the limits for the current month.
         $date = \Session::get('start');
+        $spent = 0;
         /** @var \Budget $budget */
         foreach ($budgets as $budget) {
 
             $budget->spent = $repos->spentInMonth($budget, $date);
+            $spent += $budget->spent;
             $budget->pct   = 0;
             $budget->limit = 0;
 
@@ -116,8 +118,17 @@ class BudgetController extends BaseController
         }
 
         $budgetAmount = $preferences->get('budgetIncomeTotal' . $date->format('FY'), 1000);
+        $amount = floatval($budgetAmount->data);
+        $overspent = $spent > $amount;
+        if($overspent) {
+            // overspent on total amount
+            $spentPCT = ceil($amount / $spent * 100);
+        } else {
+            // not overspent on total amount.
+            $spentPCT = ceil($spent / $amount * 100);
+        }
 
-        return View::make('budgets.index', compact('budgets'))->with('budgetAmount', $budgetAmount);
+        return View::make('budgets.index', compact('budgets','spent','spentPCT','overspent'))->with('budgetAmount', $budgetAmount);
     }
 
     /**
