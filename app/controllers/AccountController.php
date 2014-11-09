@@ -31,19 +31,22 @@ class AccountController extends BaseController
                 throw new FireflyException('Cannot handle account type "' . e($what) . '".');
                 break;
             case 'asset':
-                View::share('subTitleIcon', 'fa-money');
-                View::share('subTitle', 'Asset accounts');
+                $subTitleIcon = 'fa-money';
+                $subTitle = 'Asset accounts';
                 break;
             case 'expense':
-                View::share('subTitleIcon', 'fa-shopping-cart');
-                View::share('subTitle', 'Expense accounts');
+                $subTitleIcon = 'fa-shopping-cart';
+                $subTitle = 'Expense accounts';
                 break;
             case 'revenue':
-                View::share('subTitleIcon', 'fa-download');
-                View::share('subTitle', 'Revenue accounts');
+                $subTitleIcon = 'fa-download';
+                $subTitle = 'Revenue accounts';
                 break;
         }
-        return View::make('accounts.index')->with('what', $what);
+        return View::make('accounts.index')
+	        ->with('what', $what)
+	        ->with(compact('subTitleIcon'))
+	        ->with(compact('subTitle'));
     }
 
 
@@ -118,17 +121,20 @@ class AccountController extends BaseController
     {
         switch ($what) {
             case 'asset':
-                View::share('subTitleIcon', 'fa-money');
+                $subTitleIcon = 'fa-money';
                 break;
             case 'expense':
-                View::share('subTitleIcon', 'fa-shopping-cart');
+                $subTitleIcon = 'fa-shopping-cart';
                 break;
             case 'revenue':
-                View::share('subTitleIcon', 'fa-download');
+                $subTitleIcon = 'fa-download';
                 break;
         }
 
-        return View::make('accounts.create')->with('subTitle', 'Create a new ' . $what . ' account')->with('what', $what);
+        return View::make('accounts.create')
+	        ->with('subTitle', 'Create a new ' . $what . ' account')
+	        ->with('what', $what)
+	        ->with(compact('subTitleIcon'));
     }
 
     /**
@@ -229,14 +235,14 @@ class AccountController extends BaseController
         switch ($account->accountType->type) {
             case 'Asset account':
             case 'Default account':
-                View::share('subTitleIcon', 'fa-money');
+                $subTitleIcon = 'fa-money';
                 break;
             case 'Expense account':
             case 'Beneficiary account':
-                View::share('subTitleIcon', 'fa-shopping-cart');
+                $subTitleIcon = 'fa-shopping-cart';
                 break;
             case 'Revenue account':
-                View::share('subTitleIcon', 'fa-download');
+                $subTitleIcon = 'fa-download';
                 break;
         }
 
@@ -251,9 +257,11 @@ class AccountController extends BaseController
             Session::flash('prefilled', $prefilled);
         }
 
-
-        return View::make('accounts.edit')->with('account', $account)->with('openingBalance', $openingBalance)->with(
-            'subTitle', 'Edit ' . strtolower(
+        return View::make('accounts.edit')
+	        ->with('account', $account)
+	        ->with('openingBalance', $openingBalance)
+            ->with(compact('subTitleIcon'))
+	        ->with('subTitle', 'Edit ' . strtolower(
                 $account->accountType->type
             ) . ' "' . $account->name . '"'
         );
@@ -269,22 +277,23 @@ class AccountController extends BaseController
         switch ($account->accountType->type) {
             case 'Asset account':
             case 'Default account':
-                View::share('subTitleIcon', 'fa-money');
+                $subTitleIcon = 'fa-money';
                 break;
             case 'Expense account':
             case 'Beneficiary account':
-                View::share('subTitleIcon', 'fa-shopping-cart');
+                $subTitleIcon = 'fa-shopping-cart';
                 break;
             case 'Revenue account':
-                View::share('subTitleIcon', 'fa-download');
+                $subTitleIcon = 'fa-download';
                 break;
         }
 
 
         //$data = $this->_accounts->show($account, 40);
         return View::make('accounts.show')
-                   ->with('account', $account)
-                   ->with('subTitle', 'Details for ' . strtolower($account->accountType->type) . ' "' . $account->name . '"');
+            ->with('account', $account)
+            ->with('subTitle', 'Details for ' . strtolower($account->accountType->type) . ' "' . $account->name . '"')
+	        ->with(compact('subTitleIcon'));
     }
 
     /**
