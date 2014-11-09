@@ -104,14 +104,12 @@ class Limit extends Ardent
             try {
                 $repetition->save();
                 \Log::debug('Created new repetition with id #' . $repetition->id);
-                // @codeCoverageIgnoreStart
             } catch (QueryException $e) {
                 // do nothing
 
                 \Log::error('Trying to save new Limitrepetition failed!');
                 \Log::error($e->getMessage());
             }
-            // @codeCoverageIgnoreEnd
             if (isset($repetition->id)) {
                 \Event::fire('limits.repetition', [$repetition]);
             }
