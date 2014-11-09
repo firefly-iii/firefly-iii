@@ -25,4 +25,4 @@
     @yield('content')
 </div>
 </body>
-</html>
+</html><!-- TODO main update title and title-tag -->

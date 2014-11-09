@@ -8,6 +8,11 @@ body {
     background-color: #f8f8f8;
 }
 
+.google-chart-error {
+    height:30px;
+    background:url('../../images/error.png') no-repeat center center
+}
+
 #wrapper {
     width: 100%;
 }

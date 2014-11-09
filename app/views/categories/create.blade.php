@@ -8,7 +8,7 @@
             Expenses grouped in categories do not have to reoccur every month or every week, like budgets.
         </p>
     </div>
-</div>
+</div><!-- TODO cleanup to match new theme & form -->
 
 {{Form::open(['class' => 'form-horizontal','url' => route('categories.store')])}}
 

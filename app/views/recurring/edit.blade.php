@@ -21,7 +21,7 @@
 
         <p>
             <button type="submit" class="btn btn-lg btn-success">
-                <i class="fa fa-plus-circle"></i> Update recurring transasction
+                <i class="fa fa-plus-circle"></i> Update recurring transaction
             </button>
         </p>
 </div>

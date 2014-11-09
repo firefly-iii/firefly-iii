@@ -126,9 +126,6 @@ class EloquentLimitTrigger
         // remove and recreate limit repetitions.
         // if limit is not repeating, simply update the repetition to match the limit,
         // even though deleting everything is easier.
-        foreach ($limit->limitrepetitions()->get() as $l) {
-            $l->delete();
-        }
         $limit->createRepetition($limit->startdate);
 
         return true;

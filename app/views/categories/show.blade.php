@@ -15,13 +15,13 @@
             transactions for the currently selected period.
         </p>
     </div>
-</div>
+</div><!-- TODO cleanup to match new theme & form -->
 
 
 @include('partials.date_nav')
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <div id="chart"><p class="small text-center">(Some chart here)</p></div>
+        <div id="chart"><img src="http://placehold.it/650x300" title="Placeholder" alt="" /></div>
         </div>
     </div>
 
@@ -40,6 +40,5 @@
 <script type="text/javascript">
     var categoryID = {{$category->id}};
 </script>
-{{HTML::script('assets/javascript/highcharts/highcharts.js')}}
 {{HTML::script('assets/javascript/firefly/categories.js')}}
 @stop

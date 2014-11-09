@@ -43,7 +43,7 @@ return [
         'Firefly\Helper\HelperServiceProvider',
         'Firefly\Validation\ValidationServiceProvider',
         'DaveJamesMiller\Breadcrumbs\ServiceProvider',
-        'TwigBridge\ServiceProvider'
+        'Grumpydictator\Gchart\GchartServiceProvider',
     ],
     'manifest'        => storage_path() . '/meta',
     'aliases'         => [

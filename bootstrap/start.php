@@ -9,16 +9,16 @@ if (!function_exists('mf')) {
         $string = number_format($n, 2, ',', '.');
 
         if ($coloured === true && $n === 0.0) {
-            return '<span style="color:#999">&#128; ' . $string . '</span>';
+            return '<span style="color:#999">&#8364; ' . $string . '</span>';
         }
         if ($coloured === true && $n > 0) {
-            return '<span class="text-success">&#128; ' . $string . '</span>';
+            return '<span class="text-success">&#8364; ' . $string . '</span>';
         }
         if ($coloured === true && $n < 0) {
-            return '<span class="text-danger">&#128; ' . $string . '</span>';
+            return '<span class="text-danger">&#8364; ' . $string . '</span>';
         }
 
-        return '&#128; ' . $string;
+        return '&#8364; ' . $string;
     }
 }
 

@@ -1,3 +1,3 @@
 {{$journals->links()}}
 @include('lists.transactions')
-{{$journals->links()}}
+{{$journals->links()}} <!-- TODO is this even used? -->

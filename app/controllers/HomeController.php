@@ -15,8 +15,8 @@ class HomeController extends BaseController
     protected $_journal;
 
     /**
-     * @param ARI $accounts
-     * @param PHI $preferences
+     * @param ARI  $accounts
+     * @param PHI  $preferences
      * @param TJRI $journal
      */
     public function __construct(ARI $accounts, PHI $preferences, TJRI $journal)
@@ -114,5 +114,60 @@ class HomeController extends BaseController
         // build the home screen:
         return View::make('index')->with('count', $count)->with('transactions', $transactions)->with('title', 'Firefly')
                    ->with('subTitle', 'What\'s playing?')->with('mainTitleIcon', 'fa-fire');
+    }
+
+    public function cleanup()
+    {
+        /** @var \FireflyIII\Database\TransactionJournal $jrnls */
+        $jrnls = App::make('FireflyIII\Database\TransactionJournal');
+
+        /** @var \FireflyIII\Database\Account $acct */
+        $acct = \App::make('FireflyIII\Database\Account');
+
+        /** @var \FireflyIII\Database\AccountType $acctType */
+        $acctType      = \App::make('FireflyIII\Database\AccountType');
+        $rightAcctType = $acctType->findByWhat('revenue');
+
+        $all = $jrnls->get();
+
+        /** @var \TransactionJournal $entry */
+        foreach ($all as $entry) {
+            $wrongFromType = false;
+            $wrongToType   = false;
+            $transactions  = $entry->transactions;
+            if (count($transactions) == 2) {
+                switch ($entry->transactionType->type) {
+                    case 'Deposit':
+                        /** @var \Transaction $transaction */
+                        foreach ($transactions as $transaction) {
+                            if (floatval($transaction->amount) < 0) {
+                                $accountType = $transaction->account->accountType;
+                                if ($accountType->type == 'Beneficiary account') {
+                                    // should be a Revenue account!
+                                    $name = $transaction->account->name;
+                                    /** @var \Account $account */
+                                    $account = \Auth::user()->accounts()->where('name', $name)->where('account_type_id', $rightAcctType->id)->first();
+                                    if (!$account) {
+                                        $new     = [
+                                            'name' => $name,
+                                            'what' => 'revenue'
+                                        ];
+                                        $account = $acct->store($new);
+                                    }
+                                    $transaction->account()->associate($account);
+                                    $transaction->save();
+                                }
+
+                                echo 'Paid by: ' . $transaction->account->name . ' (' . $transaction->account->accountType->type . ')<br />';
+                            }
+                        }
+                        break;
+                }
+
+
+            }
+        }
+
+
     }
 }

@@ -17,7 +17,7 @@
             @endif
         </p>
     </div>
-</div>
+</div><!-- TODO cleanup and use new forms -->
 
 {{Form::open(['class' => 'form-horizontal','url' => route('budgets.limits.update',$limit->id)])}}
 {{Form::hidden('from',e(Input::get('from')))}}
