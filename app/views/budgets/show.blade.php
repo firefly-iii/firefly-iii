@@ -8,7 +8,7 @@
                 Some stuff?
             </div>
             <div class="panel-body">
-                Some stuff?
+                <div id="budgetOverview"></div>
             </div>
         </div>
 
@@ -76,7 +76,11 @@
     var budgetID = {{$budget->id}};
     @if(!is_null($repetition))
         var repetitionID = {{$repetition->id}};
+        var year = {{$repetition->startdate->format('Y')}};
+    @else
+        var year = {{Session::get('start')->format('Y')}};
     @endif
+
 </script>
 
 <!-- load the libraries and scripts necessary for Google Charts: -->
