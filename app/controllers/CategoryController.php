@@ -10,8 +10,17 @@ use Firefly\Storage\Category\CategoryRepositoryInterface as CRI;
  */
 class CategoryController extends BaseController
 {
-    public function __construct()
+    protected $_repository;
+    protected $_category;
+
+    /**
+     * @param CRI $repository
+     * @param CI  $category
+     */
+    public function __construct(CRI $repository, CI $category)
     {
+        $this->_repository = $repository;
+        $this->_category   = $category;
         View::share('title', 'Categories');
         View::share('mainTitleIcon', 'fa-bar-chart');
     }
