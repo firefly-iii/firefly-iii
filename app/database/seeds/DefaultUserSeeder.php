@@ -11,7 +11,7 @@ class DefaultUserSeeder extends Seeder
 
         User::create(
             [
-                'email'          => 's@nder.be',
+                'email'          => 'thegrumpydictator@gmail.com',
                 'password'       => 'sander',
                 'reset'          => null,
                 'remember_token' => null,
