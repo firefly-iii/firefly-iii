@@ -9,6 +9,38 @@ class GoogleTableController extends BaseController
 {
 
     /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function categoryList()
+    {
+
+        /** @var \FireflyIII\Database\Category $repos */
+        $repos = App::make('FireflyIII\Database\Category');
+
+        /** @var \Grumpydictator\Gchart\GChart $chart */
+        $chart = App::make('gchart');
+        $chart->addColumn('ID', 'number');
+        $chart->addColumn('ID_Edit', 'string');
+        $chart->addColumn('ID_Delete', 'string');
+        $chart->addColumn('Name_URL', 'string');
+        $chart->addColumn('Name', 'string');
+
+        $list = $repos->get();
+
+        /** @var Category $entry */
+        foreach ($list as $entry) {
+            $chart->addRow(
+                $entry->id, route('categories.edit', $entry->id), route('categories.delete', $entry->id), route('categories.show', $entry->id), $entry->name
+            );
+        }
+
+
+        $chart->generate();
+        return Response::json($chart->getData());
+
+    }
+
+    /**
      * @param $what
      *
      * @throws FireflyException
@@ -84,8 +116,8 @@ class GoogleTableController extends BaseController
         if (is_null($repetition)) {
             $journals = $budget->transactionjournals()->with(['budgets', 'categories', 'transactions', 'transactions.account'])->orderBy('date', 'DESC')->get();
         } else {
-            $journals = $budget->transactionjournals()->with(['budgets', 'categories', 'transactions', 'transactions.account'])->
-                after($repetition->startdate)->before($repetition->enddate)->orderBy('date', 'DESC')->get();
+            $journals = $budget->transactionjournals()->with(['budgets', 'categories', 'transactions', 'transactions.account'])->after($repetition->startdate)
+                               ->before($repetition->enddate)->orderBy('date', 'DESC')->get();
         }
         /** @var TransactionJournal $transaction */
         foreach ($journals as $journal) {

@@ -41,6 +41,3 @@
 
 <script src="assets/javascript/firefly/accounts.js"></script>
 @stop
-
-@section('styles')
-@endsection

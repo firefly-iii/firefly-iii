@@ -174,6 +174,7 @@ Route::group(
         // google table controller
         Route::get('/table/account/{account}/transactions', ['uses' => 'GoogleTableController@transactionsByAccount']);
         Route::get('/table/accounts/{what}', ['uses' => 'GoogleTableController@accountList']);
+        Route::get('/table/categories', ['uses' => 'GoogleTableController@categoryList']);
         Route::get('/table/budget/{budget}/{limitrepetition?}/transactions', ['uses' => 'GoogleTableController@transactionsByBudget']);
 
 

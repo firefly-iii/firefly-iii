@@ -312,7 +312,7 @@ class AccountController extends BaseController
             default:
                 throw new FireflyException('Cannot handle post_submit_action "' . e($data['post_submit_action']) . '"');
                 break;
-            case 'create_another':
+            case 'return_to_edit':
             case 'store':
                 $messages = $acct->validate($data);
                 /** @var MessageBag $messages ['errors'] */
