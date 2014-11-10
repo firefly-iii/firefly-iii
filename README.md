@@ -9,6 +9,8 @@ firefly-iii
 [![Latest Unstable Version](https://poser.pugx.org/grumpydictator/firefly-iii/v/unstable.svg)](https://packagist.org/packages/grumpydictator/firefly-iii)
 [![License](https://poser.pugx.org/grumpydictator/firefly-iii/license.svg)](https://packagist.org/packages/grumpydictator/firefly-iii)
 
+Firefly II is a tool to help you manage your finances. Please read the full description [in the wiki](https://github.com/JC5/firefly-iii/wiki/full-description).
+
 Firefly Mark III is a new version of Firefly built upon best practices and lessons learned
 from building [Firefly](https://github.com/JC5/Firefly). It's Mark III since the original Firefly never made it outside of my
 laptop and [Firefly II](https://github.com/JC5/Firefly) is live.
