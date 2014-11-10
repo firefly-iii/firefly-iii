@@ -90,10 +90,10 @@ class GoogleTableController extends BaseController
     }
 
     /**
-     * @param Budget          $budget
+     * @param Component       $component
      * @param LimitRepetition $repetition
      */
-    public function transactionsByBudget(Budget $budget, LimitRepetition $repetition = null)
+    public function transactionsByComponent(Component $component, LimitRepetition $repetition = null)
     {
         /** @var \Grumpydictator\Gchart\GChart $chart */
         $chart = App::make('gchart');
@@ -114,10 +114,13 @@ class GoogleTableController extends BaseController
         $chart->addColumn('Category', 'string');
 
         if (is_null($repetition)) {
-            $journals = $budget->transactionjournals()->with(['budgets', 'categories', 'transactions', 'transactions.account'])->orderBy('date', 'DESC')->get();
+            $journals = $component->transactionjournals()->with(['budgets', 'categories', 'transactions', 'transactions.account'])->orderBy('date', 'DESC')
+                                  ->get();
         } else {
-            $journals = $budget->transactionjournals()->with(['budgets', 'categories', 'transactions', 'transactions.account'])->after($repetition->startdate)
-                               ->before($repetition->enddate)->orderBy('date', 'DESC')->get();
+            $journals = $component->transactionjournals()->with(['budgets', 'categories', 'transactions', 'transactions.account'])->after(
+                $repetition->startdate
+            )
+                                  ->before($repetition->enddate)->orderBy('date', 'DESC')->get();
         }
         /** @var TransactionJournal $transaction */
         foreach ($journals as $journal) {
@@ -138,10 +141,10 @@ class GoogleTableController extends BaseController
             }
             if (isset($journal->budgets[0])) {
                 $budgetURL = route('budgets.show', $journal->budgets[0]->id);
-                $budget    = $journal->budgets[0]->name;
+                $component = $journal->budgets[0]->name;
             } else {
                 $budgetURL = '';
-                $budget    = '';
+                $component = '';
             }
 
             if (isset($journal->categories[0])) {
@@ -157,7 +160,7 @@ class GoogleTableController extends BaseController
             $edit   = route('transactions.edit', $journal->id);
             $delete = route('transactions.delete', $journal->id);
             $chart->addRow(
-                $id, $edit, $delete, $date, $descriptionURL, $description, $amount, $fromURL, $from, $toURL, $to, $budgetURL, $budget, $categoryURL,
+                $id, $edit, $delete, $date, $descriptionURL, $description, $amount, $fromURL, $from, $toURL, $to, $budgetURL, $component, $categoryURL,
                 $category
             );
         }

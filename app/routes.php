@@ -51,6 +51,16 @@ Route::bind(
 );
 
 Route::bind(
+    'component', function ($value, $route) {
+        if (Auth::check()) {
+            return Component::
+            where('id', $value)->where('user_id', Auth::user()->id)->first();
+        }
+        return null;
+    }
+);
+
+Route::bind(
     'reminder', function ($value, $route) {
         if (Auth::check()) {
             return Reminder::
@@ -169,13 +179,18 @@ Route::group(
         Route::get('/chart/reports/income-expenses/{year}', ['uses' => 'GoogleChartController@yearInExp']);
         Route::get('/chart/reports/income-expenses-sum/{year}', ['uses' => 'GoogleChartController@yearInExpSum']);
         Route::get('/chart/reports/budgets/{year}', ['uses' => 'GoogleChartController@budgetsReportChart']);
-        Route::get('/chart/budgets/{budget}/spending/{year}', ['uses' => 'GoogleChartController@budgetsAndSpending']);
+
+        // google chart (categories + budgets)
+        Route::get('/chart/component/{component}/spending/{year}', ['uses' => 'GoogleChartController@componentsAndSpending']);
 
         // google table controller
         Route::get('/table/account/{account}/transactions', ['uses' => 'GoogleTableController@transactionsByAccount']);
         Route::get('/table/accounts/{what}', ['uses' => 'GoogleTableController@accountList']);
         Route::get('/table/categories', ['uses' => 'GoogleTableController@categoryList']);
-        Route::get('/table/budget/{budget}/{limitrepetition?}/transactions', ['uses' => 'GoogleTableController@transactionsByBudget']);
+
+        // google table (categories + budgets)
+
+        Route::get('/table/component/{component}/{limitrepetition}/transactions', ['uses' => 'GoogleTableController@transactionsByComponent']);
 
 
         Route::get('/chart/home/info/{accountnameA}/{day}/{month}/{year}', ['uses' => 'ChartController@homeAccountInfo', 'as' => 'chart.info']);
