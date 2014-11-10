@@ -11,7 +11,6 @@ use LaravelBook\Ardent\Ardent;
  * @property integer $id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property string $class
  * @property integer $user_id
  * @property \Carbon\Carbon $startdate
  * @property \Carbon\Carbon $enddate
@@ -20,7 +19,6 @@ use LaravelBook\Ardent\Ardent;
  * @method static \Illuminate\Database\Query\Builder|\Reminder whereId($value) 
  * @method static \Illuminate\Database\Query\Builder|\Reminder whereCreatedAt($value) 
  * @method static \Illuminate\Database\Query\Builder|\Reminder whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Reminder whereClass($value) 
  * @method static \Illuminate\Database\Query\Builder|\Reminder whereUserId($value) 
  * @method static \Illuminate\Database\Query\Builder|\Reminder whereStartdate($value) 
  * @method static \Illuminate\Database\Query\Builder|\Reminder whereEnddate($value) 

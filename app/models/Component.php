@@ -14,12 +14,12 @@ use Firefly\Database\SingleTableInheritanceEntity;
  * @property-read \Illuminate\Database\Eloquent\Collection|\TransactionJournal[] $transactionjournals
  * @property-read \Illuminate\Database\Eloquent\Collection|\Transaction[] $transactions
  * @property-read \User $user
- * @method static \Illuminate\Database\Query\Builder|\Component whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Component whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Component whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Component whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\Component whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\Component whereClass($value)
+ * @method static \Illuminate\Database\Query\Builder|\Component whereId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Component whereCreatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Component whereUpdatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Component whereName($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Component whereUserId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Component whereClass($value) 
  */
 class Component extends SingleTableInheritanceEntity
 {
