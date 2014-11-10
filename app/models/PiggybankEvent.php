@@ -12,12 +12,12 @@ use LaravelBook\Ardent\Ardent as Ardent;
  * @property \Carbon\Carbon $date
  * @property float $amount
  * @property-read \Piggybank $piggybank
- * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent wherePiggybankId($value)
- * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent whereDate($value)
- * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent whereAmount($value)
+ * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent whereId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent whereCreatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent whereUpdatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent wherePiggybankId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent whereDate($value) 
+ * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent whereAmount($value) 
  */
 class PiggybankEvent extends Ardent
 {
