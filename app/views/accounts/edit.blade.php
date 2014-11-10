@@ -1,13 +1,5 @@
 @extends('layouts.default')
 @section('content')
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <p class="lead">
-            Bla text here.
-        </p>
-    </div>
-</div>
-
 {{Form::model($account, ['class' => 'form-horizontal','url' => route('accounts.update',$account->id)])}}
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-12">

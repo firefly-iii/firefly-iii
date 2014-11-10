@@ -2,6 +2,7 @@
 namespace FireflyIII\Database;
 
 use Carbon\Carbon;
+use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\MessageBag;
 use LaravelBook\Ardent\Ardent;
 use Illuminate\Support\Collection;
@@ -33,7 +34,8 @@ class Category implements CUD, CommonDatabaseCalls, CategoryInterface
      */
     public function destroy(Ardent $model)
     {
-        // TODO: Implement destroy() method.
+        $model->delete();
+        return true;
     }
 
     /**
@@ -59,7 +61,37 @@ class Category implements CUD, CommonDatabaseCalls, CategoryInterface
      */
     public function validate(array $model)
     {
-        // TODO: Implement validate() method.
+        $warnings  = new MessageBag;
+        $successes = new MessageBag;
+        $errors    = new MessageBag;
+
+        if (isset($model['name'])) {
+            if (strlen($model['name']) < 1) {
+                $errors->add('name', 'Name is too short');
+            }
+            if (strlen($model['name']) > 200) {
+                $errors->add('name', 'Name is too long');
+
+            }
+        } else {
+            $errors->add('name', 'Name is mandatory');
+        }
+        $validator = \Validator::make($model, \Component::$rules);
+
+        if ($validator->invalid()) {
+            $errors->merge($validator->errors());
+        }
+
+
+        if (!$errors->has('name')) {
+            $successes->add('name', 'OK');
+        }
+
+        return [
+            'errors'    => $errors,
+            'warnings'  => $warnings,
+            'successes' => $successes
+        ];
     }
 
     /**
@@ -91,7 +123,7 @@ class Category implements CUD, CommonDatabaseCalls, CategoryInterface
      */
     public function get()
     {
-        // TODO: Implement get() method.
+        return $this->getUser()->categories()->orderBy('name', 'ASC')->get();
     }
 
     /**
@@ -124,6 +156,15 @@ class Category implements CUD, CommonDatabaseCalls, CategoryInterface
      */
     public function update(Ardent $model, array $data)
     {
-        // TODO: Implement update() method.
+        $model->name = $data['name'];
+        if (!$model->validate()) {
+            var_dump($model->errors()->all());
+            exit;
+        }
+
+
+        $model->save();
+
+        return true;
     }
 }

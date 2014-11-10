@@ -263,7 +263,7 @@ class BudgetController extends BaseController
             default:
                 throw new FireflyException('Cannot handle post_submit_action "' . e(Input::get('post_submit_action')) . '"');
                 break;
-            case 'create_another':
+            case 'return_to_edit':
             case 'update':
                 $messages = $repos->validate($data);
                 /** @var MessageBag $messages ['errors'] */
@@ -277,7 +277,7 @@ class BudgetController extends BaseController
                 $repos->update($budget, $data);
                 Session::flash('success', 'Budget updated!');
 
-                if ($data['post_submit_action'] == 'create_another') {
+                if ($data['post_submit_action'] == 'return_to_edit') {
                     return Redirect::route('budgets.edit', $budget->id);
                 } else {
                     return Redirect::route('budgets.index');

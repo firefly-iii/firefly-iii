@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
 use FireflyIII\Database\Ifaces\CUD;
 use FireflyIII\Database\Ifaces\BudgetInterface;
+
 /**
  * Class Budget
  *
@@ -80,11 +81,11 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
         $successes = new MessageBag;
         $errors    = new MessageBag;
 
-        if(isset($model['name'])) {
-            if(strlen($model['name']) < 1) {
+        if (isset($model['name'])) {
+            if (strlen($model['name']) < 1) {
                 $errors->add('name', 'Name is too short');
             }
-            if(strlen($model['name']) > 200) {
+            if (strlen($model['name']) > 200) {
                 $errors->add('name', 'Name is too long');
 
             }
@@ -98,8 +99,8 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
         }
 
 
-        if(!$errors->has('name')) {
-            $successes->add('name','OK');
+        if (!$errors->has('name')) {
+            $successes->add('name', 'OK');
         }
 
         return [
@@ -118,7 +119,7 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     {
         $data['user_id'] = $this->getUser()->id;
 
-        $budget = new \Budget($data);
+        $budget        = new \Budget($data);
         $budget->class = 'Budget';
 
         if (!$budget->validate()) {
@@ -155,10 +156,12 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
 
     /**
      * @param \Budget $budget
-     * @param Carbon $date
+     * @param Carbon  $date
+     *
      * @return float
      */
-    public function spentInMonth(\Budget $budget, Carbon $date) {
+    public function spentInMonth(\Budget $budget, Carbon $date)
+    {
         $end = clone $date;
         $date->startOfMonth();
         $end->endOfMonth();
@@ -220,7 +223,7 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
      */
     public function update(Ardent $model, array $data)
     {
-        $model->name   = $data['name'];
+        $model->name = $data['name'];
         if (!$model->validate()) {
             var_dump($model->errors()->all());
             exit;
