@@ -6,7 +6,6 @@ use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\UserTrait;
 use LaravelBook\Ardent\Ardent;
 
-
 /**
  * User
  *
@@ -20,21 +19,19 @@ use LaravelBook\Ardent\Ardent;
  * @property boolean $migrated
  * @property-read \Illuminate\Database\Eloquent\Collection|\Account[] $accounts
  * @property-read \Illuminate\Database\Eloquent\Collection|\Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\Reminder[] $reminders
- * @property-read \Illuminate\Database\Eloquent\Collection|\PiggybankReminder[] $piggybankreminders
  * @property-read \Illuminate\Database\Eloquent\Collection|\Category[] $categories
  * @property-read \Illuminate\Database\Eloquent\Collection|\Component[] $components
  * @property-read \Illuminate\Database\Eloquent\Collection|\Preference[] $preferences
  * @property-read \Illuminate\Database\Eloquent\Collection|\RecurringTransaction[] $recurringtransactions
  * @property-read \Illuminate\Database\Eloquent\Collection|\TransactionJournal[] $transactionjournals
- * @method static \Illuminate\Database\Query\Builder|\User whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\User whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\User whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\User whereEmail($value)
- * @method static \Illuminate\Database\Query\Builder|\User wherePassword($value)
- * @method static \Illuminate\Database\Query\Builder|\User whereReset($value)
- * @method static \Illuminate\Database\Query\Builder|\User whereRememberToken($value)
- * @method static \Illuminate\Database\Query\Builder|\User whereMigrated($value)
+ * @method static \Illuminate\Database\Query\Builder|\User whereId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\User whereCreatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\User whereUpdatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\User whereEmail($value) 
+ * @method static \Illuminate\Database\Query\Builder|\User wherePassword($value) 
+ * @method static \Illuminate\Database\Query\Builder|\User whereReset($value) 
+ * @method static \Illuminate\Database\Query\Builder|\User whereRememberToken($value) 
+ * @method static \Illuminate\Database\Query\Builder|\User whereMigrated($value) 
  */
 class User extends Ardent implements UserInterface, RemindableInterface
 {

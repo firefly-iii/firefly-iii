@@ -18,21 +18,20 @@ use LaravelBook\Ardent\Ardent;
  * @property boolean $automatch
  * @property string $repeat_freq
  * @property integer $skip
- * @property-read \Illuminate\Database\Eloquent\Collection|\RecurringTransactionReminder[] $reminders
  * @property-read \User $user
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereMatch($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAmountMax($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAmountMin($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereDate($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereActive($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAutomatch($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereRepeatFreq($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereSkip($value)
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereCreatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereUpdatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereUserId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereName($value) 
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereMatch($value) 
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAmountMax($value) 
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAmountMin($value) 
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereDate($value) 
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereActive($value) 
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAutomatch($value) 
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereRepeatFreq($value) 
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereSkip($value) 
  */
 class RecurringTransaction extends Ardent
 {

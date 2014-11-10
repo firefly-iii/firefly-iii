@@ -16,14 +16,14 @@ use LaravelBook\Ardent\Builder;
  * @property-read \Illuminate\Database\Eloquent\Collection|\Transaction[] $transactions
  * @property-read \Illuminate\Database\Eloquent\Collection|\Piggybank[] $piggybanks
  * @property-read \User $user
- * @method static \Illuminate\Database\Query\Builder|\Account whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Account whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Account whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Account whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\Account whereAccountTypeId($value)
- * @method static \Illuminate\Database\Query\Builder|\Account whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\Account whereActive($value)
- * @method static \Account accountTypeIn($types)
+ * @method static \Illuminate\Database\Query\Builder|\Account whereId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Account whereCreatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Account whereUpdatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Account whereUserId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Account whereAccountTypeId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Account whereName($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Account whereActive($value) 
+ * @method static \Account accountTypeIn($types) 
  */
 class Account extends Ardent
 {
@@ -42,17 +42,7 @@ class Account extends Ardent
 
         ];
 
-    protected $fillable = ['name','user_id','account_type_id','active'];
-
-    /**
-     * Account type.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function accountType()
-    {
-        return $this->belongsTo('AccountType');
-    }
+    protected $fillable = ['name', 'user_id', 'account_type_id', 'active'];
 
     /**
      * Get an accounts current balance.
@@ -68,24 +58,39 @@ class Account extends Ardent
         return floatval(
             $this->transactions()
                  ->leftJoin(
-                 'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-                )
+                     'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
+                 )
                  ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount')
         );
     }
 
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return float
+     */
     public function balanceBeforeJournal(TransactionJournal $journal)
     {
         return floatval(
             $this->transactions()
-                ->leftJoin(
-                    'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-                )
-                ->where('transaction_journals.date', '<=', $journal->date->format('Y-m-d'))
-                ->where('transaction_journals.created_at', '<=', $journal->created_at->format('Y-m-d H:i:s'))
-                ->where('transaction_journals.id','!=',$journal->id)
-                ->sum('transactions.amount')
+                 ->leftJoin(
+                     'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
+                 )
+                 ->where('transaction_journals.date', '<=', $journal->date->format('Y-m-d'))
+                 ->where('transaction_journals.created_at', '<=', $journal->created_at->format('Y-m-d H:i:s'))
+                 ->where('transaction_journals.id', '!=', $journal->id)
+                 ->sum('transactions.amount')
         );
+    }
+
+    /**
+     * Account type.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function accountType()
+    {
+        return $this->belongsTo('AccountType');
     }
 
     /**
@@ -114,8 +119,7 @@ class Account extends Ardent
     public function predict(
         /** @noinspection PhpUnusedParameterInspection */
         \Carbon\Carbon $date
-    )
-    {
+    ) {
         return null;
     }
 
@@ -129,12 +133,17 @@ class Account extends Ardent
         return $this->belongsTo('User');
     }
 
-    public function scopeAccountTypeIn(Builder $query, array $types) {
-        if(is_null($this->joinedAccountTypes)) {
-            $query->leftJoin('account_types','account_types.id','=','accounts.account_type_id');
+    /**
+     * @param Builder $query
+     * @param array   $types
+     */
+    public function scopeAccountTypeIn(Builder $query, array $types)
+    {
+        if (is_null($this->joinedAccountTypes)) {
+            $query->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id');
             $this->joinedAccountTypes = true;
         }
-        $query->whereIn('account_types.type',$types);
+        $query->whereIn('account_types.type', $types);
     }
 
 

@@ -13,12 +13,12 @@
  * @property-read \Illuminate\Database\Eloquent\Collection|\TransactionJournal[] $transactionjournals
  * @property-read \Illuminate\Database\Eloquent\Collection|\Transaction[] $transactions
  * @property-read \User $user
- * @method static \Illuminate\Database\Query\Builder|\Budget whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Budget whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Budget whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Budget whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\Budget whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\Budget whereClass($value)
+ * @method static \Illuminate\Database\Query\Builder|\Budget whereId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Budget whereCreatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Budget whereUpdatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Budget whereName($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Budget whereUserId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Budget whereClass($value) 
  */
 class Budget extends Component
 {
