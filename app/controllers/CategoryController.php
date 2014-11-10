@@ -10,18 +10,9 @@ use Firefly\Storage\Category\CategoryRepositoryInterface as CRI;
  */
 class CategoryController extends BaseController
 {
-    protected $_repository;
-    protected $_category;
-
-    /**
-     * @param CRI $repository
-     * @param CI  $category
-     */
-    public function __construct(CRI $repository, CI $category)
+    public function __construct()
     {
-        $this->_repository = $repository;
-        $this->_category   = $category;
-        View::share('title','Categories');
+        View::share('title', 'Categories');
         View::share('mainTitleIcon', 'fa-bar-chart');
     }
 
@@ -41,7 +32,7 @@ class CategoryController extends BaseController
     public function delete(Category $category)
     {
         return View::make('categories.delete')->with('category', $category)
-            ->with('subTitle', 'Delete category "' . $category->name . '"');
+                   ->with('subTitle', 'Delete category "' . $category->name . '"');
     }
 
     /**
@@ -64,7 +55,7 @@ class CategoryController extends BaseController
     public function edit(Category $category)
     {
         return View::make('categories.edit')->with('category', $category)
-            ->with('subTitle', 'Edit category "' . $category->name . '"');
+                   ->with('subTitle', 'Edit category "' . $category->name . '"');
     }
 
     /**
@@ -75,7 +66,7 @@ class CategoryController extends BaseController
         $categories = $this->_repository->get();
 
         return View::make('categories.index')->with('categories', $categories)
-            ->with('subTitle', 'All your categories');
+                   ->with('subTitle', 'All your categories');
     }
 
     /**

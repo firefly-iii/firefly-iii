@@ -19,27 +19,28 @@ use LaravelBook\Ardent\Ardent as Ardent;
  * @property integer $rep_times
  * @property string $reminder
  * @property integer $reminder_skip
+ * @property boolean $remind_me
  * @property integer $order
  * @property-read \Account $account
  * @property-read \Illuminate\Database\Eloquent\Collection|\PiggybankRepetition[] $piggybankrepetitions
  * @property-read \Illuminate\Database\Eloquent\Collection|\PiggybankEvent[] $piggybankevents
- * @property-read \Illuminate\Database\Eloquent\Collection|\PiggybankReminder[] $piggybankreminders
  * @property-read \Illuminate\Database\Eloquent\Collection|\Transaction[] $transactions
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereAccountId($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereTargetamount($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereStartdate($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereTargetdate($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepeats($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepLength($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepEvery($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepTimes($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereReminder($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereReminderSkip($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereOrder($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereCreatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereUpdatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereAccountId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereName($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereTargetamount($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereStartdate($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereTargetdate($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepeats($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepLength($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepEvery($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepTimes($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereReminder($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereReminderSkip($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRemindMe($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereOrder($value) 
  */
 class Piggybank extends Ardent
 {
