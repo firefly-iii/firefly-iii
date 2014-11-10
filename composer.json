@@ -24,14 +24,13 @@
         "laravel/framework": "4.2.*",
         "laravelbook/ardent": "~2.4",
         "davejamesmiller/laravel-breadcrumbs": "2.*",
-        "rcrowe/twigbridge": "0.6.*",
         "grumpydictator/gchart": "dev-master"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "@stable",
         "barryvdh/laravel-ide-helper": "@stable",
         "doctrine/dbal": "~2.3",
-        "pda/pheanstalk": "2.*"
+        "codeception/codeception": "*"
     },
     "autoload": {
         "classmap": [
