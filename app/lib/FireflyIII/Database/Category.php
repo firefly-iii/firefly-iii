@@ -149,6 +149,32 @@ class Category implements CUD, CommonDatabaseCalls, CategoryInterface
     }
 
     /**
+     * @param \Category $budget
+     * @param Carbon  $date
+     *
+     * @return null
+     */
+    public function repetitionOnStartingOnDate(\Category $category, Carbon $date)
+    {
+        return null;
+    }
+
+    /**
+     * @param \Category $category
+     * @param Carbon  $date
+     *
+     * @return float
+     */
+    public function spentInMonth(\Category $category, Carbon $date)
+    {
+        $end = clone $date;
+        $date->startOfMonth();
+        $end->endOfMonth();
+        $sum = floatval($category->transactionjournals()->before($end)->after($date)->lessThan(0)->sum('amount')) * -1;
+        return $sum;
+    }
+
+    /**
      * @param Ardent $model
      * @param array  $data
      *

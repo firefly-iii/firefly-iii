@@ -75,15 +75,7 @@ class CategoryController extends BaseController
      */
     public function show(Category $category)
     {
-        $start = \Session::get('start');
-        $end   = \Session::get('end');
-
-
-        $journals = $this->_category->journalsInRange($category, $start, $end);
-
-        return View::make('categories.show')->with('category', $category)->with('journals', $journals)->with(
-            'highlight', Input::get('highlight')
-        )->with('subTitle', 'Overview for category "' . $category->name . '"');
+        return View::make('categories.show', compact('category'));
     }
 
     /**

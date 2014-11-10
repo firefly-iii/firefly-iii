@@ -8,12 +8,15 @@ $(function () {
 
 
     if (typeof(googleTable) == 'function') {
-        if (typeof budgetID != 'undefined' && typeof repetitionID == 'undefined') {
-            googleTable('table/budget/' + budgetID + '/0/transactions', 'transactions');
-            googleColumnChart('chart/budgets/'+budgetID+'/spending/2014','budgetOverview');
+        console.log('A');
+        if (typeof componentID != 'undefined' && typeof repetitionID == 'undefined') {
+            console.log('B');
+            googleTable('table/component/' + componentID + '/0/transactions', 'transactions');
+            googleColumnChart('chart/component/' + componentID + '/spending/' + year, 'componentOverview');
 
-        } else if (typeof budgetID != 'undefined' && typeof repetitionID != 'undefined') {
-            googleTable('table/budget/' + budgetID + '/' + repetitionID + '/transactions', 'transactions');
+        } else if (typeof componentID != 'undefined' && typeof repetitionID != 'undefined') {
+            console.log('C');
+            googleTable('table/component/' + componentID + '/' + repetitionID + '/transactions', 'transactions');
         }
     }
 
@@ -162,7 +165,6 @@ function updateRanges() {
         // we gaan er X overheen,
 
         var pct = totalAmount / sum * 100;
-        console.log(pct)
         var danger = 100 - pct;
         var err = 100 - danger;
         $('#progress-bar-default').css('width', 0);
