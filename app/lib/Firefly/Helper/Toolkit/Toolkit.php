@@ -107,9 +107,6 @@ class Toolkit implements ToolkitInterface
         }
     }
 
-    /**
-     * @return mixed
-     */
     protected function _getRange()
     {
         if (!is_null(\Session::get('range'))) {

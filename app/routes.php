@@ -1,8 +1,5 @@
 <?php
 
-//use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
-
 // models:
 Route::bind(
     'account', function ($value, $route) {
@@ -91,18 +88,6 @@ Route::bind(
 );
 
 Route::bind(
-    'limit', function ($value, $route) {
-        if (Auth::check()) {
-            return Limit::
-            where('limits.id', $value)->leftJoin('components', 'components.id', '=', 'limits.component_id')->where('components.class', 'Budget')->where(
-                'components.user_id', Auth::user()->id
-            )->first(['limits.*']);
-        }
-        return null;
-    }
-);
-
-Route::bind(
     'limitrepetition', function ($value, $route) {
         if (Auth::check()) {
             return LimitRepetition::
@@ -126,22 +111,18 @@ Route::bind(
 );
 
 
-// a development route:
-Route::get('/dev', ['uses' => 'HomeController@jobDev']);
-
 // protected routes:
 Route::group(
     ['before' => 'auth'], function () {
 
 
-        // some date routes:
+        // some date routes used for (well duh) date-based navigation.
         Route::get('/prev', ['uses' => 'HomeController@sessionPrev', 'as' => 'sessionPrev']);
         Route::get('/next', ['uses' => 'HomeController@sessionNext', 'as' => 'sessionNext']);
         Route::get('/jump/{range}', ['uses' => 'HomeController@rangeJump', 'as' => 'rangeJump']);
         Route::get('/cleanup', ['uses' => 'HomeController@cleanup', 'as' => 'cleanup']);
 
         // account controller:
-        Route::get('/accounts/json/{what}', ['uses' => 'AccountController@json', 'as' => 'accounts.json'])->where('what', 'revenue|asset|expense');
         Route::get('/accounts/{what}', ['uses' => 'AccountController@index', 'as' => 'accounts.index'])->where('what', 'revenue|asset|expense');
         Route::get('/accounts/create/{what}', ['uses' => 'AccountController@create', 'as' => 'accounts.create'])->where('what', 'revenue|asset|expense');
         Route::get('/accounts/edit/{account}', ['uses' => 'AccountController@edit', 'as' => 'accounts.edit']);
@@ -150,23 +131,18 @@ Route::group(
 
         // budget controller:
         Route::get('/budgets', ['uses' => 'BudgetController@index', 'as' => 'budgets.index']);
-        Route::get('/budgets/income', ['uses' => 'BudgetController@updateIncome', 'as' => 'budgets.income']);
-        Route::get('/budgets/show/{budget}/{limitrepetition?}', ['uses' => 'BudgetController@show', 'as' => 'budgets.show']);
-
-        #Route::get('/budgets/date', ['uses' => 'BudgetController@indexByDate', 'as' => 'budgets.index.date']);
-        #Route::get('/budgets/budget', ['uses' => 'BudgetController@indexByBudget', 'as' => 'budgets.index.budget']);
+        Route::get('/budgets/income', ['uses' => 'BudgetController@updateIncome', 'as' => 'budgets.income']); # extra.
         Route::get('/budgets/create', ['uses' => 'BudgetController@create', 'as' => 'budgets.create']);
-        #Route::get('/budgets/nobudget/{period}', ['uses' => 'BudgetController@nobudget', 'as' => 'budgets.nobudget']);
-
         Route::get('/budgets/edit/{budget}', ['uses' => 'BudgetController@edit', 'as' => 'budgets.edit']);
         Route::get('/budgets/delete/{budget}', ['uses' => 'BudgetController@delete', 'as' => 'budgets.delete']);
+        Route::get('/budgets/show/{budget}/{limitrepetition?}', ['uses' => 'BudgetController@show', 'as' => 'budgets.show']);
 
         // category controller:
         Route::get('/categories', ['uses' => 'CategoryController@index', 'as' => 'categories.index']);
         Route::get('/categories/create', ['uses' => 'CategoryController@create', 'as' => 'categories.create']);
-        Route::get('/categories/show/{category}', ['uses' => 'CategoryController@show', 'as' => 'categories.show']);
         Route::get('/categories/edit/{category}', ['uses' => 'CategoryController@edit', 'as' => 'categories.edit']);
         Route::get('/categories/delete/{category}', ['uses' => 'CategoryController@delete', 'as' => 'categories.delete']);
+        Route::get('/categories/show/{category}', ['uses' => 'CategoryController@show', 'as' => 'categories.show']);
 
         // google chart controller
         Route::get('/chart/home/account', ['uses' => 'GoogleChartController@allAccountsBalanceChart']);
@@ -180,7 +156,7 @@ Route::group(
         Route::get('/chart/reports/income-expenses-sum/{year}', ['uses' => 'GoogleChartController@yearInExpSum']);
         Route::get('/chart/reports/budgets/{year}', ['uses' => 'GoogleChartController@budgetsReportChart']);
 
-        // google chart (categories + budgets)
+        // google chart for components (categories + budgets combined)
         Route::get('/chart/component/{component}/spending/{year}', ['uses' => 'GoogleChartController@componentsAndSpending']);
 
         // google table controller
@@ -188,57 +164,23 @@ Route::group(
         Route::get('/table/accounts/{what}', ['uses' => 'GoogleTableController@accountList']);
         Route::get('/table/categories', ['uses' => 'GoogleTableController@categoryList']);
 
-        // google table (categories + budgets)
-
+        // google table for components (categories + budgets)
         Route::get('/table/component/{component}/{limitrepetition}/transactions', ['uses' => 'GoogleTableController@transactionsByComponent']);
 
 
-        Route::get('/chart/home/info/{accountnameA}/{day}/{month}/{year}', ['uses' => 'ChartController@homeAccountInfo', 'as' => 'chart.info']);
-        Route::get('/chart/categories/show/{category}', ['uses' => 'ChartController@categoryShowChart', 'as' => 'chart.showcategory']);
-
-        // (new charts for budgets)
-        Route::get('/chart/budget/{budget}/default', ['uses' => 'ChartController@budgetDefault', 'as' => 'chart.budget.default']);
-        Route::get('chart/budget/{budget}/no_envelope', ['uses' => 'ChartController@budgetNoLimits', 'as' => 'chart.budget.nolimit']);
-        Route::get('chart/budget/{budget}/session', ['uses' => 'ChartController@budgetSession', 'as' => 'chart.budget.session']);
-        Route::get('chart/budget/envelope/{limitrepetition}', ['uses' => 'ChartController@budgetLimit', 'as' => 'chart.budget.limit']);
-
         // home controller
         Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
-        Route::get('/flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
-
-        // JSON controller:
-        Route::get('/json/expense-accounts', ['uses' => 'JsonController@expenseAccounts', 'as' => 'json.expense-accounts']);
-        Route::get('/json/revenue-accounts', ['uses' => 'JsonController@revenueAccounts', 'as' => 'json.revenue-accounts']);
-        Route::get('/json/categories', ['uses' => 'JsonController@categories', 'as' => 'json.categories']);
-        Route::get('/json/expenses', ['uses' => 'JsonController@expenses', 'as' => 'json.expenses']);
-        Route::get('/json/revenue', ['uses' => 'JsonController@revenue', 'as' => 'json.revenue']);
-        Route::get('/json/transfers', ['uses' => 'JsonController@transfers', 'as' => 'json.transfers']);
-        Route::get('/json/recurring', ['uses' => 'JsonController@recurring', 'as' => 'json.recurring']);
-        Route::get('/json/recurringjournals/{recurring}', ['uses' => 'JsonController@recurringjournals', 'as' => 'json.recurringjournals']);
-
-        // limit controller:
-        Route::get('/budgets/limits/create/{budget?}', ['uses' => 'LimitController@create', 'as' => 'budgets.limits.create']);
-        Route::get('/budgets/limits/delete/{limit}', ['uses' => 'LimitController@delete', 'as' => 'budgets.limits.delete']);
-        Route::get('/budgets/limits/edit/{limit}', ['uses' => 'LimitController@edit', 'as' => 'budgets.limits.edit']);
-
-        Route::get('/migrate', ['uses' => 'MigrateController@index', 'as' => 'migrate.index']);
+        Route::get('/flush', ['uses' => 'HomeController@flush', 'as' => 'flush']); # even though nothing is cached.
 
         // piggy bank controller
         Route::get('/piggybanks', ['uses' => 'PiggybankController@index', 'as' => 'piggybanks.index']);
-        Route::get('/piggybanks/add/{piggybank}', ['uses' => 'PiggybankController@add']);
-        Route::get('/piggybanks/remove/{piggybank}', ['uses' => 'PiggybankController@remove']);
-        Route::get('/piggybanks/edit/{piggybank}', ['uses' => 'PiggybankController@edit', 'as' => 'piggybanks.edit']);
+        Route::get('/piggybanks/add/{piggybank}', ['uses' => 'PiggybankController@add']); # add money
+        Route::get('/piggybanks/remove/{piggybank}', ['uses' => 'PiggybankController@remove']); #remove money
+
         Route::get('/piggybanks/create', ['uses' => 'PiggybankController@create', 'as' => 'piggybanks.create']);
+        Route::get('/piggybanks/edit/{piggybank}', ['uses' => 'PiggybankController@edit', 'as' => 'piggybanks.edit']);
         Route::get('/piggybanks/delete/{piggybank}', ['uses' => 'PiggybankController@delete', 'as' => 'piggybanks.delete']);
-
-
-//        Route::get('/repeated',['uses' => 'PiggybankController@repeated','as' => 'piggybanks.index.repeated']);
-//        Route::get('/piggybanks/create/repeated', ['uses' => 'PiggybankController@createRepeated','as' => 'piggybanks.create.repeated']);
-//        Route::get('/piggybanks/addMoney/{piggybank}', ['uses' => 'PiggybankController@addMoney','as' => 'piggybanks.amount.add']);
-//        Route::get('/piggybanks/removeMoney/{piggybank}', ['uses' => 'PiggybankController@removeMoney','as' => 'piggybanks.amount.remove']);
-//        Route::get('/piggybanks/show/{piggybank}', ['uses' => 'PiggybankController@show','as' => 'piggybanks.show']);
-//        Route::get('/piggybanks/delete/{piggybank}', ['uses' => 'PiggybankController@delete','as' => 'piggybanks.delete']);
-//        Route::post('/piggybanks/updateAmount/{piggybank}',['uses' => 'PiggybankController@updateAmount','as' => 'piggybanks.updateAmount']);
+        Route::get('/piggybanks/show/{piggybank}', ['uses' => 'PiggybankController@show', 'as' => 'piggybanks.show']);
 
         // preferences controller
         Route::get('/preferences', ['uses' => 'PreferencesController@index', 'as' => 'preferences']);
@@ -249,11 +191,11 @@ Route::group(
 
         // recurring transactions controller
         Route::get('/recurring', ['uses' => 'RecurringController@index', 'as' => 'recurring.index']);
-        Route::get('/recurring/show/{recurring}', ['uses' => 'RecurringController@show', 'as' => 'recurring.show']);
-        Route::get('/recurring/rescan/{recurring}', ['uses' => 'RecurringController@rescan', 'as' => 'recurring.rescan']);
+        Route::get('/recurring/rescan/{recurring}', ['uses' => 'RecurringController@rescan', 'as' => 'recurring.rescan']); # rescan for matching.
         Route::get('/recurring/create', ['uses' => 'RecurringController@create', 'as' => 'recurring.create']);
         Route::get('/recurring/edit/{recurring}', ['uses' => 'RecurringController@edit', 'as' => 'recurring.edit']);
         Route::get('/recurring/delete/{recurring}', ['uses' => 'RecurringController@delete', 'as' => 'recurring.delete']);
+        Route::get('/recurring/show/{recurring}', ['uses' => 'RecurringController@show', 'as' => 'recurring.show']);
 
         // report controller:
         Route::get('/reports', ['uses' => 'ReportController@index', 'as' => 'reports.index']);
@@ -263,25 +205,20 @@ Route::group(
         Route::get('/search', ['uses' => 'SearchController@index', 'as' => 'search']);
 
         // transaction controller:
-        Route::get('/transactions/create/{what}', ['uses' => 'TransactionController@create', 'as' => 'transactions.create'])->where(
-            ['what' => 'withdrawal|deposit|transfer']
+        Route::get('/transactions/{what}', ['uses' => 'TransactionController@index', 'as' => 'transactions.index'])->where(
+            ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
         );
-        Route::get('/transaction/show/{tj}', ['uses' => 'TransactionController@show', 'as' => 'transactions.show']);
+        Route::get('/transactions/create/{what}', ['uses' => 'TransactionController@create', 'as' => 'transactions.create'])->where(
+            ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
+        );
         Route::get('/transaction/edit/{tj}', ['uses' => 'TransactionController@edit', 'as' => 'transactions.edit']);
         Route::get('/transaction/delete/{tj}', ['uses' => 'TransactionController@delete', 'as' => 'transactions.delete']);
-        Route::get('/transactions/index', ['uses' => 'TransactionController@index', 'as' => 'transactions.index']);
-        Route::get('/transactions/expenses', ['uses' => 'TransactionController@expenses', 'as' => 'transactions.expenses']);
-        Route::get('/transactions/revenue', ['uses' => 'TransactionController@revenue', 'as' => 'transactions.revenue']);
-        Route::get('/transactions/transfers', ['uses' => 'TransactionController@transfers', 'as' => 'transactions.transfers']);
-
-        Route::get('/transactions/expenses', ['uses' => 'TransactionController@expenses', 'as' => 'transactions.index.withdrawal']);
-        Route::get('/transactions/revenue', ['uses' => 'TransactionController@revenue', 'as' => 'transactions.index.deposit']);
-        Route::get('/transactions/transfers', ['uses' => 'TransactionController@transfers', 'as' => 'transactions.index.transfer']);
+        Route::get('/transaction/show/{tj}', ['uses' => 'TransactionController@show', 'as' => 'transactions.show']);
 
         // user controller
         Route::get('/logout', ['uses' => 'UserController@logout', 'as' => 'logout']);
 
-        Route::post('budgets/amount/{budget}', ['uses' => 'BudgetController@amount']);
+        //Route::post('budgets/amount/{budget}', ['uses' => 'BudgetController@amount']);
 
 
     }
@@ -297,8 +234,8 @@ Route::group(
 
         // budget controller:
         Route::post('/budgets/income', ['uses' => 'BudgetController@postUpdateIncome', 'as' => 'budgets.postIncome']);
-        Route::post('/budgets/update/{budget}', ['uses' => 'BudgetController@update', 'as' => 'budgets.update']);
         Route::post('/budgets/store', ['uses' => 'BudgetController@store', 'as' => 'budgets.store']);
+        Route::post('/budgets/update/{budget}', ['uses' => 'BudgetController@update', 'as' => 'budgets.update']);
         Route::post('/budgets/destroy/{budget}', ['uses' => 'BudgetController@destroy', 'as' => 'budgets.destroy']);
 
         // category controller
@@ -306,22 +243,12 @@ Route::group(
         Route::post('/categories/update/{category}', ['uses' => 'CategoryController@update', 'as' => 'categories.update']);
         Route::post('/categories/destroy/{category}', ['uses' => 'CategoryController@destroy', 'as' => 'categories.destroy']);
 
-        // limit controller:
-        Route::post('/budgets/limits/store/{budget?}', ['uses' => 'LimitController@store', 'as' => 'budgets.limits.store']);
-        Route::post('/budgets/limits/destroy/{limit}', ['uses' => 'LimitController@destroy', 'as' => 'budgets.limits.destroy']);
-        Route::post('/budgets/limits/update/{limit}', ['uses' => 'LimitController@update', 'as' => 'budgets.limits.update']);
-
-        Route::post('/migrate/upload', ['uses' => 'MigrateController@upload', 'as' => 'migrate.upload']);
-
-
         // piggy bank controller
         Route::post('/piggybanks/store', ['uses' => 'PiggybankController@store', 'as' => 'piggybanks.store']);
-        #Route::post('/piggybanks/store/repeated', ['uses' => 'PiggybankController@storeRepeated', 'as' => 'piggybanks.store.repeated']);
         Route::post('/piggybanks/update/{piggybank}', ['uses' => 'PiggybankController@update', 'as' => 'piggybanks.update']);
         Route::post('/piggybanks/destroy/{piggybank}', ['uses' => 'PiggybankController@destroy', 'as' => 'piggybanks.destroy']);
-        #Route::post('/piggybanks/mod/{piggybank}', ['uses' => 'PiggybankController@modMoney', 'as' => 'piggybanks.modMoney']);
-        Route::post('/piggybanks/add/{piggybank}', ['uses' => 'PiggybankController@postAdd', 'as' => 'piggybanks.add']);
-        Route::post('/piggybanks/remove/{piggybank}', ['uses' => 'PiggybankController@postRemove', 'as' => 'piggybanks.remove']);
+        Route::post('/piggybanks/add/{piggybank}', ['uses' => 'PiggybankController@postAdd', 'as' => 'piggybanks.add']); # add money
+        Route::post('/piggybanks/remove/{piggybank}', ['uses' => 'PiggybankController@postRemove', 'as' => 'piggybanks.remove']); # remove money.
 
 
         // preferences controller
@@ -337,7 +264,7 @@ Route::group(
 
         // transaction controller:
         Route::post('/transactions/store/{what}', ['uses' => 'TransactionController@store', 'as' => 'transactions.store'])->where(
-            ['what' => 'withdrawal|deposit|transfer']
+            ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
         );
         Route::post('/transaction/update/{tj}', ['uses' => 'TransactionController@update', 'as' => 'transactions.update']);
         Route::post('/transaction/destroy/{tj}', ['uses' => 'TransactionController@destroy', 'as' => 'transactions.destroy']);

@@ -86,6 +86,34 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
     }
 
     /**
+     * @param \Account $account
+     * @param int      $count
+     * @param Carbon   $start
+     * @param Carbon   $end
+     *
+     * @return Collection
+     */
+    public function getInDateRangeAccount(\Account $account, $count = 20, Carbon $start, Carbon $end)
+    {
+
+        $accountID = $account->id;
+        $query     = $this->_user
+            ->transactionjournals()
+            ->with(['transactions', 'transactioncurrency', 'transactiontype'])
+            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+            ->where('accounts.id', $accountID)
+            ->where('date', '>=', $start->format('Y-m-d'))
+            ->where('date', '<=', $end->format('Y-m-d'))
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.id', 'DESC')
+            ->take($count)
+            ->get(['transaction_journals.*']);
+
+        return $query;
+    }
+
+    /**
      * @return TransactionJournal
      */
     public function first()
