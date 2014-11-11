@@ -18,11 +18,15 @@ class GoogleChartController extends BaseController
 
         /** @var \FireflyIII\Shared\Preferences\Preferences $preferences */
         $preferences = App::make('FireflyIII\Shared\Preferences\Preferences');
-        $pref        = $preferences->get('frontpageAccounts');
+        $pref        = $preferences->get('frontpageAccounts', []);
 
         /** @var \FireflyIII\Database\Account $acct */
-        $acct     = App::make('FireflyIII\Database\Account');
-        $accounts = $acct->getByIds($pref->data);
+        $acct = App::make('FireflyIII\Database\Account');
+        if (count($pref->data) > 0) {
+            $accounts = $acct->getByIds($pref->data);
+        } else {
+            $accounts = $acct->getAssetAccounts();
+        }
 
 
         /*
@@ -169,7 +173,7 @@ class GoogleChartController extends BaseController
         foreach ($budgets as $budget) {
             $chart->addColumn($budget->name, 'number');
         }
-        $chart->addColumn('No budget','number');
+        $chart->addColumn('No budget', 'number');
 
         /*
          * Loop budgets this year.
@@ -179,7 +183,7 @@ class GoogleChartController extends BaseController
         while ($start <= $end) {
             $row = [clone $start];
 
-            foreach($budgets as $budget) {
+            foreach ($budgets as $budget) {
                 $row[] = $bdt->spentInMonth($budget, $start);
             }
 
@@ -188,7 +192,7 @@ class GoogleChartController extends BaseController
              */
             $endOfMonth = clone $start;
             $endOfMonth->endOfMonth();
-            $set = $bdt->transactionsWithoutBudgetInDateRange($start, $endOfMonth);
+            $set   = $bdt->transactionsWithoutBudgetInDateRange($start, $endOfMonth);
             $row[] = floatval($set->sum('amount')) * -1;
 
             $chart->addRowArray($row);
@@ -202,23 +206,24 @@ class GoogleChartController extends BaseController
 
     /**
      * @param Component $component
-     * @param        $year
+     * @param           $year
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function componentsAndSpending(Component $component, $year) {
+    public function componentsAndSpending(Component $component, $year)
+    {
         try {
             $start = new Carbon('01-01-' . $year);
         } catch (Exception $e) {
             App::abort(500);
         }
 
-        if($component->class == 'Budget') {
+        if ($component->class == 'Budget') {
             /** @var \FireflyIII\Database\Budget $repos */
-            $repos     = App::make('FireflyIII\Database\Budget');
+            $repos = App::make('FireflyIII\Database\Budget');
         } else {
             /** @var \FireflyIII\Database\Category $repos */
-            $repos     = App::make('FireflyIII\Database\Category');
+            $repos = App::make('FireflyIII\Database\Category');
         }
 
         /** @var \Grumpydictator\Gchart\GChart $chart */
@@ -229,11 +234,11 @@ class GoogleChartController extends BaseController
 
         $end = clone $start;
         $end->endOfYear();
-        while($start <= $end) {
+        while ($start <= $end) {
 
-            $spent = $repos->spentInMonth($component, $start);
+            $spent      = $repos->spentInMonth($component, $start);
             $repetition = $repos->repetitionOnStartingOnDate($component, $start);
-            if($repetition) {
+            if ($repetition) {
                 $budgeted = floatval($repetition->amount);
             } else {
                 $budgeted = null;
@@ -243,7 +248,6 @@ class GoogleChartController extends BaseController
 
             $start->addMonth();
         }
-
 
 
         $chart->generate();
