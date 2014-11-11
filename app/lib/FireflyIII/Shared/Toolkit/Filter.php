@@ -29,8 +29,8 @@ class Filter
         if (!is_null(\Session::get('range'))) {
             $range = \Session::get('range');
         } else {
-            /** @noinspection PhpUndefinedClassInspection */
-            $preferences = \App::make('Firefly\Helper\Preferences\PreferencesHelperInterface');
+            /** @var \FireflyIII\Shared\Preferences\PreferencesInterface $preferences */
+            $preferences = \App::make('FireflyIII\Shared\Preferences\PreferencesInterface');
             $viewRange   = $preferences->get('viewRange', '1M');
 
             // default range:
