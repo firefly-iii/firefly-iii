@@ -6,11 +6,10 @@ App::before(
     function ($request) {
 
         if (Auth::check()) {
-            /** @var \Firefly\Helper\Toolkit\ToolkitInterface $toolkit */
-            $toolkit = App::make('Firefly\Helper\Toolkit\ToolkitInterface');
-            $toolkit->getDateRange();
-            $toolkit->checkImportJobs();
-            Event::fire('recurring.verify');
+            /** @var \FireflyIII\Shared\Toolkit\Filter $toolkit */
+            $filter = App::make('FireflyIII\Shared\Toolkit\Filter');
+            $filter->setSessionDateRange();
+            //Event::fire('recurring.verify');
         }
 
     }

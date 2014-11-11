@@ -1,7 +1,5 @@
 <?php
-use Firefly\Helper\Preferences\PreferencesHelperInterface as PHI;
-use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
-use Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface as TJRI;
+use FireflyIII\Shared\Preferences\PreferencesInterface as Prefs;
 
 /**
  * Class HomeController
@@ -10,20 +8,15 @@ use Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface as 
  */
 class HomeController extends BaseController
 {
-    protected $_accounts;
     protected $_preferences;
     protected $_journal;
 
     /**
-     * @param ARI  $accounts
      * @param PHI  $preferences
-     * @param TJRI $journal
      */
-    public function __construct(ARI $accounts, PHI $preferences, TJRI $journal)
+    public function __construct(Prefs $preferences)
     {
-        $this->_accounts    = $accounts;
         $this->_preferences = $preferences;
-        $this->_journal     = $journal;
     }
 
     public function jobDev()
@@ -85,12 +78,19 @@ class HomeController extends BaseController
      */
     public function index()
     {
-        Event::fire('limits.check');
-        Event::fire('piggybanks.check');
-        Event::fire('recurring.check');
+//        Event::fire('limits.check');
+//        Event::fire('piggybanks.check');
+//        Event::fire('recurring.check');
 
         // count, maybe Firefly needs some introducing text to show:
-        $count = $this->_accounts->count();
+        /** @var \FireflyIII\Database\Account $acct */
+        $acct = App::make('FireflyIII\Database\Account');
+
+        /** @var \FireflyIII\Database\TransactionJournal $jrnls */
+        $jrnls = App::make('FireflyIII\Database\TransactionJournal');
+
+        $count = $acct->countAssetAccounts();
+
         $start = Session::get('start');
         $end   = Session::get('end');
 
@@ -98,14 +98,14 @@ class HomeController extends BaseController
         // get the preference for the home accounts to show:
         $frontpage = $this->_preferences->get('frontpageAccounts', []);
         if ($frontpage->data == []) {
-            $accounts = $this->_accounts->getActiveDefault();
+            $accounts = $acct->getAssetAccounts();
         } else {
-            $accounts = $this->_accounts->getByIds($frontpage->data);
+            $accounts = $acct->getByIds($frontpage->data);
         }
 
         $transactions = [];
         foreach ($accounts as $account) {
-            $set = $this->_journal->getByAccountInDateRange($account, 10, $start, $end);
+            $set = $jrnls->getInDateRangeAccount($account, 10, $start, $end);
             if (count($set) > 0) {
                 $transactions[] = [$set, $account];
             }
@@ -114,60 +114,5 @@ class HomeController extends BaseController
         // build the home screen:
         return View::make('index')->with('count', $count)->with('transactions', $transactions)->with('title', 'Firefly')
                    ->with('subTitle', 'What\'s playing?')->with('mainTitleIcon', 'fa-fire');
-    }
-
-    public function cleanup()
-    {
-        /** @var \FireflyIII\Database\TransactionJournal $jrnls */
-        $jrnls = App::make('FireflyIII\Database\TransactionJournal');
-
-        /** @var \FireflyIII\Database\Account $acct */
-        $acct = \App::make('FireflyIII\Database\Account');
-
-        /** @var \FireflyIII\Database\AccountType $acctType */
-        $acctType      = \App::make('FireflyIII\Database\AccountType');
-        $rightAcctType = $acctType->findByWhat('revenue');
-
-        $all = $jrnls->get();
-
-        /** @var \TransactionJournal $entry */
-        foreach ($all as $entry) {
-            $wrongFromType = false;
-            $wrongToType   = false;
-            $transactions  = $entry->transactions;
-            if (count($transactions) == 2) {
-                switch ($entry->transactionType->type) {
-                    case 'Deposit':
-                        /** @var \Transaction $transaction */
-                        foreach ($transactions as $transaction) {
-                            if (floatval($transaction->amount) < 0) {
-                                $accountType = $transaction->account->accountType;
-                                if ($accountType->type == 'Beneficiary account') {
-                                    // should be a Revenue account!
-                                    $name = $transaction->account->name;
-                                    /** @var \Account $account */
-                                    $account = \Auth::user()->accounts()->where('name', $name)->where('account_type_id', $rightAcctType->id)->first();
-                                    if (!$account) {
-                                        $new     = [
-                                            'name' => $name,
-                                            'what' => 'revenue'
-                                        ];
-                                        $account = $acct->store($new);
-                                    }
-                                    $transaction->account()->associate($account);
-                                    $transaction->save();
-                                }
-
-                                echo 'Paid by: ' . $transaction->account->name . ' (' . $transaction->account->accountType->type . ')<br />';
-                            }
-                        }
-                        break;
-                }
-
-
-            }
-        }
-
-
     }
 }
