@@ -19,14 +19,6 @@ class HomeController extends BaseController
         $this->_preferences = $preferences;
     }
 
-    public function jobDev()
-    {
-        $fullName = storage_path() . DIRECTORY_SEPARATOR . 'firefly-export-2014-07-23.json';
-        \Log::notice('Pushed start job.');
-        Queue::push('Firefly\Queue\Import@start', ['file' => $fullName, 'user' => 1]);
-
-    }
-
     /*
      *
      */

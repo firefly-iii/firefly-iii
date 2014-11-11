@@ -7,24 +7,13 @@
         <p class="lead">Welcome to Firefly III.</p>
 
         <p>
-            To get get started, choose below:
+            Create a new asset account to get started.
         </p>
     </div>
 </div>
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-12">
-        <h2><a href="{{route('migrate.index')}}">Migrate from Firefly II</a></h2>
-
-        <p>
-            Use this option if you have a JSON file from your current Firefly II installation.
-        </p>
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-12">
         <h2><a href="{{route('accounts.create','asset')}}">Start from scratch</a></h2>
-
-        <p>
-            Use this option if you are new to Firefly (III).
-        </p>
     </div>
     @else
 

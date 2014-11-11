@@ -1,8 +1,5 @@
 <?php
 
-use Firefly\Helper\Email\EmailHelperInterface as EHI;
-use Firefly\Storage\User\UserRepositoryInterface as URI;
-
 /**
  * Class UserController
  */
@@ -11,15 +8,9 @@ class UserController extends BaseController
 
     /**
      * Constructor.
-     *
-     * @param URI $user
-     * @param EHI $email
      */
-    public function __construct(URI $user, EHI $email)
+    public function __construct()
     {
-        $this->user  = $user;
-        $this->email = $email;
-
     }
 
     /**
@@ -84,14 +75,25 @@ class UserController extends BaseController
         if (Config::get('auth.allow_register') !== true) {
             return View::make('error')->with('message', 'Not possible');
         }
-        $user = $this->user->register(Input::all());
+
+        /** @var \FireflyIII\Database\User $repository */
+        $repository = App::make('FireflyIII\Database\User');
+
+        /** @var \FireflyIII\Shared\Mail\RegistrationInterface $email */
+        $email = App::make('FireflyIII\Shared\Mail\RegistrationInterface');
+
+        $user = $repository->register(Input::all());
+
+
+
+        //$user = $this->user->register(Input::all());
         if ($user) {
             if (Config::get('auth.verify_mail') === true) {
-                $this->email->sendVerificationMail($user);
+                $email->sendVerificationMail($user);
 
                 return View::make('user.verification-pending');
             }
-            $this->email->sendPasswordMail($user);
+            $email->sendPasswordMail($user);
 
             return View::make('user.registered');
         }
@@ -130,18 +132,26 @@ class UserController extends BaseController
      */
     public function postRemindme()
     {
-        $user = $this->user->findByEmail(Input::get('email'));
+
+        /** @var \FireflyIII\Database\User $repository */
+        $repository = App::make('FireflyIII\Database\User');
+
+        /** @var \FireflyIII\Shared\Mail\RegistrationInterface $email */
+        $email = App::make('FireflyIII\Shared\Mail\RegistrationInterface');
+
+
+        $user = $repository->findByEmail(Input::get('email'));
         if (!$user) {
             Session::flash('error', 'No good!');
 
             return View::make('user.remindme');
         }
         if (Config::get('auth.verify_reset') === true) {
-            $this->email->sendResetVerification($user);
+            $email->sendResetVerification($user);
 
             return View::make('user.verification-pending');
         }
-        $this->email->sendPasswordMail($user);
+        $email->sendPasswordMail($user);
 
         return View::make('user.registered');
 
@@ -156,9 +166,16 @@ class UserController extends BaseController
      */
     public function reset($reset)
     {
-        $user = $this->user->findByReset($reset);
+
+        /** @var \FireflyIII\Database\User $repository */
+        $repository = App::make('FireflyIII\Database\User');
+
+        /** @var \FireflyIII\Shared\Mail\RegistrationInterface $email */
+        $email = App::make('FireflyIII\Shared\Mail\RegistrationInterface');
+
+        $user = $repository->findByReset($reset);
         if ($user) {
-            $this->email->sendPasswordMail($user);
+            $email->sendPasswordMail($user);
 
             return View::make('user.registered');
         }
