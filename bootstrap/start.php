@@ -4,8 +4,8 @@ if (!function_exists('mf')) {
     function mf($n, $coloured = true)
     {
 
-        $n = floatval($n);
-        $n = round($n, 2);
+        $n      = floatval($n);
+        $n      = round($n, 2);
         $string = number_format($n, 2, ',', '.');
 
         if ($coloured === true && $n === 0.0) {
@@ -37,11 +37,12 @@ $app = new Illuminate\Foundation\Application;
 |
 */
 
-$env = $app->detectEnvironment(array(
-
-                                   'local' => array('homestead', 'SMJD*'),
-
-                               ));
+$env = $app->detectEnvironment(
+    [
+        'local'     => ['SMJD*'],
+        'homestead' => ['homestead']
+    ]
+);
 
 
 /*
