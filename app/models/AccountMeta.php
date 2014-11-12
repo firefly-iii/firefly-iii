@@ -12,11 +12,7 @@ class AccountMeta extends Ardent
      * @var array
      */
     public static $rules
-        = [
-            'account_id' => 'numeric|required|exists:accounts,id',
-            'name'       => 'required|between:1,250',
-            'data'       => 'required'
-        ];
+        = ['account_id' => 'numeric|required|exists:accounts,id', 'name' => 'required|between:1,250', 'data' => 'required'];
 
     /**
      * @var array
