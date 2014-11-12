@@ -15,5 +15,7 @@ if ($('input[name="category"]').length > 0) {
 }
 
 $(document).ready(function () {
-
+    if(typeof googleTable != 'undefined') {
+        googleTable('table/transactions/' + what,'transaction-table');
+    }
 });
