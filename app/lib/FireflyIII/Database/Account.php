@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use FireflyIII\Database\Ifaces\AccountInterface;
 use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
 use FireflyIII\Database\Ifaces\CUD;
+use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use LaravelBook\Ardent\Ardent;
@@ -199,16 +200,6 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
     }
 
     /**
-     * Get all default accounts.
-     *
-     * @return Collection
-     */
-    public function getDefaultAccounts()
-    {
-        // TODO: Implement getDefaultAccounts() method.
-    }
-
-    /**
      * Returns an object with id $id.
      *
      * @param int $id
@@ -235,16 +226,6 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
         ];
         return \Account::firstOrCreate($data);
 
-    }
-
-    /**
-     * Returns all objects.
-     *
-     * @return Collection
-     */
-    public function get()
-    {
-        // TODO: Implement get() method.
     }
 
     /**
@@ -279,19 +260,6 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
         $model->delete();
         return true;
 
-    }
-
-    /**
-     * Validates a model. Returns an array containing MessageBags
-     * errors/warnings/successes.
-     *
-     * @param Ardent $model
-     *
-     * @return array
-     */
-    public function validateObject(Ardent $model)
-    {
-        die('No impl');
     }
 
     /**
@@ -463,6 +431,38 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
     }
 
     /**
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function getByIds(array $ids)
+    {
+        return $this->getUser()->accounts()->whereIn('id', $ids)->get();
+    }
+
+    /**
+     * Get all default accounts.
+     *
+     * @return Collection
+     */
+    public function getDefaultAccounts()
+    {
+        // TODO: Implement getDefaultAccounts() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * Returns all objects.
+     *
+     * @return Collection
+     */
+    public function get()
+    {
+        // TODO: Implement get() method.
+        throw new NotImplementedException;
+    }
+
+    /**
      * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
      *
      * @param $what
@@ -472,15 +472,20 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
     public function findByWhat($what)
     {
         // TODO: Implement findByWhat() method.
+        throw new NotImplementedException;
     }
 
     /**
-     * @param array $ids
+     * Validates a model. Returns an array containing MessageBags
+     * errors/warnings/successes.
      *
-     * @return Collection
+     * @param Ardent $model
+     *
+     * @return array
      */
-    public function getByIds(array $ids)
+    public function validateObject(Ardent $model)
     {
-        return $this->getUser()->accounts()->whereIn('id', $ids)->get();
+        // TODO: Implement validateObject() method.
+        throw new NotImplementedException;
     }
 }

@@ -264,7 +264,6 @@ class GoogleTableController extends BaseController
             $date = $journal->date;
             $descriptionURL = route('transactions.show', $journal->id);
             $description = $journal->description;
-            $amount = floatval(-0.01); // TODO
             $id = $journal->id;
 
 

@@ -4,6 +4,7 @@ namespace FireflyIII\Database;
 
 
 use Carbon\Carbon;
+use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use LaravelBook\Ardent\Ardent;
 use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
@@ -40,6 +41,17 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
 
     }
 
+
+    /**
+     * Returns all objects.
+     *
+     * @return Collection
+     */
+    public function get()
+    {
+        return $this->getUser()->recurringtransactions()->get();
+    }
+
     /**
      * @param Ardent $model
      *
@@ -48,6 +60,7 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
     public function destroy(Ardent $model)
     {
         // TODO: Implement destroy() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -61,6 +74,7 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
     public function validateObject(Ardent $model)
     {
         // TODO: Implement validateObject() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -74,6 +88,7 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
     public function validate(array $model)
     {
         // TODO: Implement validate() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -84,6 +99,19 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
     public function store(array $data)
     {
         // TODO: Implement store() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * @param Ardent $model
+     * @param array $data
+     *
+     * @return bool
+     */
+    public function update(Ardent $model, array $data)
+    {
+        // TODO: Implement update() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -96,16 +124,7 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
     public function find($id)
     {
         // TODO: Implement find() method.
-    }
-
-    /**
-     * Returns all objects.
-     *
-     * @return Collection
-     */
-    public function get()
-    {
-        return $this->getUser()->recurringtransactions()->get();
+        throw new NotImplementedException;
     }
 
     /**
@@ -116,6 +135,7 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
     public function getByIds(array $ids)
     {
         // TODO: Implement getByIds() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -128,16 +148,6 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
     public function findByWhat($what)
     {
         // TODO: Implement findByWhat() method.
-    }
-
-    /**
-     * @param Ardent $model
-     * @param array  $data
-     *
-     * @return bool
-     */
-    public function update(Ardent $model, array $data)
-    {
-        // TODO: Implement update() method.
+        throw new NotImplementedException;
     }
 }

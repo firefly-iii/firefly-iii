@@ -7,6 +7,7 @@ use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
 use FireflyIII\Database\Ifaces\CUD;
 use FireflyIII\Database\Ifaces\TransactionTypeInterface;
 use FireflyIII\Exception\FireflyException;
+use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use LaravelBook\Ardent\Ardent;
 
@@ -17,74 +18,6 @@ use LaravelBook\Ardent\Ardent;
  */
 class TransactionType implements TransactionTypeInterface, CUD, CommonDatabaseCalls
 {
-
-    /**
-     * @param Ardent $model
-     *
-     * @return bool
-     */
-    public function destroy(Ardent $model)
-    {
-        // TODO: Implement destroy() method.
-    }
-
-    /**
-     * Validates a model. Returns an array containing MessageBags
-     * errors/warnings/successes.
-     *
-     * @param Ardent $model
-     *
-     * @return array
-     */
-    public function validateObject(Ardent $model)
-    {
-        // TODO: Implement validateObject() method.
-    }
-
-    /**
-     * Validates an array. Returns an array containing MessageBags
-     * errors/warnings/successes.
-     *
-     * @param array $model
-     *
-     * @return array
-     */
-    public function validate(array $model)
-    {
-        // TODO: Implement validate() method.
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return Ardent
-     */
-    public function store(array $data)
-    {
-        // TODO: Implement store() method.
-    }
-
-    /**
-     * Returns an object with id $id.
-     *
-     * @param int $id
-     *
-     * @return Ardent
-     */
-    public function find($id)
-    {
-        // TODO: Implement find() method.
-    }
-
-    /**
-     * Returns all objects.
-     *
-     * @return Collection
-     */
-    public function get()
-    {
-        // TODO: Implement get() method.
-    }
 
     /**
      * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
@@ -115,13 +48,53 @@ class TransactionType implements TransactionTypeInterface, CUD, CommonDatabaseCa
     }
 
     /**
-     * @param array $ids
+     * @param Ardent $model
      *
-     * @return Collection
+     * @return bool
      */
-    public function getByIds(array $ids)
+    public function destroy(Ardent $model)
     {
-        // TODO: Implement getByIds() method.
+        // TODO: Implement destroy() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * Validates a model. Returns an array containing MessageBags
+     * errors/warnings/successes.
+     *
+     * @param Ardent $model
+     *
+     * @return array
+     */
+    public function validateObject(Ardent $model)
+    {
+        // TODO: Implement validateObject() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * Validates an array. Returns an array containing MessageBags
+     * errors/warnings/successes.
+     *
+     * @param array $model
+     *
+     * @return array
+     */
+    public function validate(array $model)
+    {
+        // TODO: Implement validate() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return Ardent
+     */
+    public function store(array $data)
+    {
+        // TODO: Implement store() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -133,5 +106,41 @@ class TransactionType implements TransactionTypeInterface, CUD, CommonDatabaseCa
     public function update(Ardent $model, array $data)
     {
         // TODO: Implement update() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * Returns an object with id $id.
+     *
+     * @param int $id
+     *
+     * @return Ardent
+     */
+    public function find($id)
+    {
+        // TODO: Implement find() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * Returns all objects.
+     *
+     * @return Collection
+     */
+    public function get()
+    {
+        // TODO: Implement get() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function getByIds(array $ids)
+    {
+        // TODO: Implement getByIds() method.
+        throw new NotImplementedException;
     }
 }

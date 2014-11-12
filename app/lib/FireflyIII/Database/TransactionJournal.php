@@ -8,6 +8,7 @@ use Firefly\Exception\FireflyException;
 use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
 use FireflyIII\Database\Ifaces\CUD;
 use FireflyIII\Database\Ifaces\TransactionJournalInterface;
+use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use LaravelBook\Ardent\Ardent;
@@ -120,29 +121,6 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         return $this->getUser()->transactionjournals()->orderBy('date', 'ASC')->first();
     }
 
-
-    /**
-     * @param Ardent $model
-     *
-     * @return bool
-     */
-    public function destroy(Ardent $model)
-    {
-        // TODO: Implement destroy() method.
-    }
-
-    /**
-     * Validates a model. Returns an array containing MessageBags
-     * errors/warnings/successes.
-     *
-     * @param Ardent $model
-     *
-     * @return array
-     */
-    public function validateObject(Ardent $model)
-    {
-        // TODO: Implement validateObject() method.
-    }
 
     /**
      * Validates an array. Returns an array containing MessageBags
@@ -452,25 +430,28 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
 
 
     /**
-     * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
+     * @param Ardent $model
      *
-     * @param $what
-     *
-     * @return \AccountType|null
+     * @return bool
      */
-    public function findByWhat($what)
+    public function destroy(Ardent $model)
     {
-        // TODO: Implement findByWhat() method.
+        // TODO: Implement destroy() method.
+        throw new NotImplementedException;
     }
 
     /**
-     * @param array $ids
+     * Validates a model. Returns an array containing MessageBags
+     * errors/warnings/successes.
      *
-     * @return Collection
+     * @param Ardent $model
+     *
+     * @return array
      */
-    public function getByIds(array $ids)
+    public function validateObject(Ardent $model)
     {
-        // TODO: Implement getByIds() method.
+        // TODO: Implement validateObject() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -482,5 +463,30 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
     public function update(Ardent $model, array $data)
     {
         // TODO: Implement update() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function getByIds(array $ids)
+    {
+        // TODO: Implement getByIds() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
+     *
+     * @param $what
+     *
+     * @return \AccountType|null
+     */
+    public function findByWhat($what)
+    {
+        // TODO: Implement findByWhat() method.
+        throw new NotImplementedException;
     }
 }

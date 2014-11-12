@@ -51,13 +51,19 @@ class BudgetController extends BaseController
             $limit->repeat_freq = 'monthly';
             $limit->repeats     = 0;
             $limit->save();
-            Event::fire('limits.store', [$limit]);
+            /*
+             * A newly stored limit also created a limit repetition.
+             */
+            Event::fire('limits.store', [$limit]); // Still in use.
 
         } else {
             if ($amount > 0) {
                 $limit->amount = $amount;
                 $limit->save();
-                Event::fire('limits.update', [$limit]);
+                /*
+                 * An updated limit also updates the associated limit repetitions.
+                 */
+                Event::fire('limits.update', [$limit]); // Still in use.
             } else {
                 $limit->delete();
             }
