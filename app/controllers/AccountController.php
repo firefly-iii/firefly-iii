@@ -32,21 +32,21 @@ class AccountController extends BaseController
                 break;
             case 'asset':
                 $subTitleIcon = 'fa-money';
-                $subTitle = 'Asset accounts';
+                $subTitle     = 'Asset accounts';
                 break;
             case 'expense':
                 $subTitleIcon = 'fa-shopping-cart';
-                $subTitle = 'Expense accounts';
+                $subTitle     = 'Expense accounts';
                 break;
             case 'revenue':
                 $subTitleIcon = 'fa-download';
-                $subTitle = 'Revenue accounts';
+                $subTitle     = 'Revenue accounts';
                 break;
         }
         return View::make('accounts.index')
-	        ->with('what', $what)
-	        ->with(compact('subTitleIcon'))
-	        ->with(compact('subTitle'));
+                   ->with('what', $what)
+                   ->with(compact('subTitleIcon'))
+                   ->with(compact('subTitle'));
     }
 
 
@@ -68,9 +68,9 @@ class AccountController extends BaseController
         }
 
         return View::make('accounts.create')
-	        ->with('subTitle', 'Create a new ' . $what . ' account')
-	        ->with('what', $what)
-	        ->with(compact('subTitleIcon'));
+                   ->with('subTitle', 'Create a new ' . $what . ' account')
+                   ->with('what', $what)
+                   ->with(compact('subTitleIcon'));
     }
 
     /**
@@ -194,13 +194,10 @@ class AccountController extends BaseController
         }
 
         return View::make('accounts.edit')
-	        ->with('account', $account)
-	        ->with('openingBalance', $openingBalance)
-            ->with(compact('subTitleIcon'))
-	        ->with('subTitle', 'Edit ' . strtolower(
-                $account->accountType->type
-            ) . ' "' . $account->name . '"'
-        );
+                   ->with('account', $account)
+                   ->with('openingBalance', $openingBalance)
+                   ->with(compact('subTitleIcon'))
+                   ->with('subTitle', 'Edit ' . strtolower($account->accountType->type) . ' "' . $account->name . '"');
     }
 
     /**
@@ -227,9 +224,9 @@ class AccountController extends BaseController
 
         //$data = $this->_accounts->show($account, 40);
         return View::make('accounts.show')
-            ->with('account', $account)
-            ->with('subTitle', 'Details for ' . strtolower($account->accountType->type) . ' "' . $account->name . '"')
-	        ->with(compact('subTitleIcon'));
+                   ->with('account', $account)
+                   ->with('subTitle', 'Details for ' . strtolower($account->accountType->type) . ' "' . $account->name . '"')
+                   ->with(compact('subTitleIcon'));
     }
 
     /**
@@ -327,7 +324,7 @@ class AccountController extends BaseController
                 if ($data['post_submit_action'] == 'create_another') {
                     return Redirect::route('accounts.edit', $account->id);
                 } else {
-                    return Redirect::route('accounts.index',$data['what']);
+                    return Redirect::route('accounts.index', $data['what']);
                 }
             case 'validate_only':
                 $messageBags = $acct->validate($data);

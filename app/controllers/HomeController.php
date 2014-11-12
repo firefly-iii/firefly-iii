@@ -9,40 +9,44 @@ use FireflyIII\Shared\Preferences\PreferencesInterface as Prefs;
 class HomeController extends BaseController
 {
     protected $_preferences;
-    protected $_journal;
 
     /**
-     * @param PHI  $preferences
+     * @param Prefs  $preferences
      */
     public function __construct(Prefs $preferences)
     {
         $this->_preferences = $preferences;
     }
 
-    /*
-     *
+    /**
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function sessionPrev()
     {
-        /** @var \Firefly\Helper\Toolkit\ToolkitInterface $toolkit */
-        $toolkit = App::make('Firefly\Helper\Toolkit\ToolkitInterface');
-        $toolkit->prev();
+        /** @var \FireflyIII\Shared\Toolkit\Navigation $navigation */
+        $navigation = App::make('FireflyIII\Shared\Toolkit\Navigation');
+        $navigation->prev();
         return Redirect::back();
         //return Redirect::route('index');
     }
 
-    /*
-     *
+    /**
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function sessionNext()
     {
-        /** @var \Firefly\Helper\Toolkit\ToolkitInterface $toolkit */
-        $toolkit = App::make('Firefly\Helper\Toolkit\ToolkitInterface');
-        $toolkit->next();
+        /** @var \FireflyIII\Shared\Toolkit\Navigation $navigation */
+        $navigation = App::make('FireflyIII\Shared\Toolkit\Navigation');
+        $navigation->next();
         return Redirect::back();
         //return Redirect::route('index');
     }
 
+    /**
+     * @param $range
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function rangeJump($range)
     {
 

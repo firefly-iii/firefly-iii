@@ -5,6 +5,7 @@ namespace FireflyIII\Database;
 
 /**
  * Class User
+ *
  * @package FireflyIII\Database
  */
 class User
@@ -12,14 +13,15 @@ class User
 
     /**
      * @param array $data
+     *
      * @return bool|\User
      */
     public function register(array $data)
     {
-        $user = new \User;
-        $user->email = isset($data['email']) ? $data['email'] : null;
+        $user           = new \User;
+        $user->email    = isset($data['email']) ? $data['email'] : null;
         $user->migrated = 0;
-        $user->reset = \Str::random(32);
+        $user->reset    = \Str::random(32);
         $user->password = \Hash::make(\Str::random(12));
 
         if (!$user->save()) {
@@ -32,6 +34,20 @@ class User
 
         return $user;
 
+    }
+
+    /**
+     * @param \User $user
+     * @param       $password
+     *
+     * @return bool
+     */
+    public function updatePassword(\User $user, $password)
+    {
+        $user->password = $password;
+        $user->forceSave();
+
+        return true;
     }
 
     /**

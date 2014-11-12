@@ -1,25 +1,17 @@
 <?php
-
-use Firefly\Helper\Controllers\SearchInterface as SI;
+use FireflyIII\Exception\NotImplementedException;
 
 /**
  * Class SearchController
  */
 class SearchController extends BaseController
 {
-    protected $_helper;
-
-    public function __construct(SI $helper)
-    {
-        $this->_helper = $helper;
-
-    }
-
     /**
      * Results always come in the form of an array [results, count, fullCount]
      */
     public function index()
     {
+        throw new NotImplementedException;
         $subTitle = null;
         $rawQuery = null;
         $result = [];
