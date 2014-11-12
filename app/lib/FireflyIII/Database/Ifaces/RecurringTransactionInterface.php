@@ -2,8 +2,6 @@
 
 namespace FireflyIII\Database\Ifaces;
 
-use Illuminate\Support\Collection;
-
 /**
  * Interface AccountInterface
  *

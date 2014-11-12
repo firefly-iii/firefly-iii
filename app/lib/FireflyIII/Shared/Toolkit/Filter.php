@@ -19,29 +19,6 @@ use Firefly\Exception\FireflyException;
 class Filter
 {
     /**
-     * Checks and sets the currently set 'range' or defaults to a session
-     * and if that fails, defaults to 1M. Always returns the final value.
-     *
-     * @return string
-     */
-    public function setSessionRangeValue()
-    {
-        if (!is_null(\Session::get('range'))) {
-            $range = \Session::get('range');
-        } else {
-            /** @var \FireflyIII\Shared\Preferences\PreferencesInterface $preferences */
-            $preferences = \App::make('FireflyIII\Shared\Preferences\PreferencesInterface');
-            $viewRange   = $preferences->get('viewRange', '1M');
-
-            // default range:
-            $range = $viewRange->data;
-            \Session::put('range', $range);
-        }
-        return $range;
-
-    }
-
-    /**
      * Save Session::get('start') and Session::get('end') for other methods to use.
      */
     public function setSessionDateRange()
@@ -87,7 +64,32 @@ class Filter
         \Session::put('period', $period);
         \Session::put('prev', $this->periodName($range, $prev));
         \Session::put('next', $this->periodName($range, $next));
+
         return null;
+
+    }
+
+    /**
+     * Checks and sets the currently set 'range' or defaults to a session
+     * and if that fails, defaults to 1M. Always returns the final value.
+     *
+     * @return string
+     */
+    public function setSessionRangeValue()
+    {
+        if (!is_null(\Session::get('range'))) {
+            $range = \Session::get('range');
+        } else {
+            /** @var \FireflyIII\Shared\Preferences\PreferencesInterface $preferences */
+            $preferences = \App::make('FireflyIII\Shared\Preferences\PreferencesInterface');
+            $viewRange   = $preferences->get('viewRange', '1M');
+
+            // default range:
+            $range = $viewRange->data;
+            \Session::put('range', $range);
+        }
+
+        return $range;
 
     }
 
@@ -198,12 +200,14 @@ class Filter
                 break;
             case '3M':
                 $month = intval($date->format('m'));
+
                 return 'Q' . ceil(($month / 12) * 4) . ' ' . $date->format('Y');
                 break;
             case '6M':
                 $month    = intval($date->format('m'));
                 $half     = ceil(($month / 12) * 2);
                 $halfName = $half == 1 ? 'first' : 'second';
+
                 return $halfName . ' half of ' . $date->format('d-m-Y');
                 break;
             case '1Y':
@@ -252,6 +256,7 @@ class Filter
                 break;
 
         }
+
         return $date;
     }
 
@@ -291,6 +296,7 @@ class Filter
                 throw new FireflyException('Cannot do _next() on ' . $range);
                 break;
         }
+
         return $date;
     }
 } 

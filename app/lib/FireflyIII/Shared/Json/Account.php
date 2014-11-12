@@ -7,6 +7,7 @@ namespace FireflyIII\Shared\Json;
  *
  * @package FireflyIII\Shared\Json
  */
-class Account {
+class Account
+{
 
 } 

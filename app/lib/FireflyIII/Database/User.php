@@ -12,16 +12,36 @@ class User
 {
 
     /**
+     * @param $mail
+     *
+     * @return null|User
+     */
+    public function findByEmail($mail)
+    {
+        return \User::where('email', $mail)->first();
+    }
+
+    /**
+     * @param $reset
+     *
+     * @return null|User
+     */
+    public function findByReset($reset)
+    {
+        return \User::where('reset', $reset)->first();
+    }
+
+    /**
      * @param array $data
      *
      * @return bool|\User
      */
     public function register(array $data)
     {
-        $user = new \User;
-        $user->email = isset($data['email']) ? $data['email'] : null;
+        $user           = new \User;
+        $user->email    = isset($data['email']) ? $data['email'] : null;
         $user->migrated = 0;
-        $user->reset = \Str::random(32);
+        $user->reset    = \Str::random(32);
         $user->password = \Hash::make(\Str::random(12));
 
         if (!$user->save()) {
@@ -48,26 +68,6 @@ class User
         $user->forceSave();
 
         return true;
-    }
-
-    /**
-     * @param $mail
-     *
-     * @return null|User
-     */
-    public function findByEmail($mail)
-    {
-        return \User::where('email', $mail)->first();
-    }
-
-    /**
-     * @param $reset
-     *
-     * @return null|User
-     */
-    public function findByReset($reset)
-    {
-        return \User::where('reset', $reset)->first();
     }
 
 } 

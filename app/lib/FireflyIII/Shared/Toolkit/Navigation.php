@@ -33,6 +33,7 @@ class Navigation
          * Save in session:
          */
         \Session::put('start', $next);
+
         return true;
     }
 
@@ -59,6 +60,7 @@ class Navigation
          * Save in session:
          */
         \Session::put('start', $prev);
+
         return true;
     }
 } 

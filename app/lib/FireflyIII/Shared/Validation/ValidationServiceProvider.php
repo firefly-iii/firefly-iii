@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 
 /**
  * Class ValidationServiceProvider
+ *
  * @package FireflyIII\Shared\Validation
  */
 class ValidationServiceProvider extends ServiceProvider

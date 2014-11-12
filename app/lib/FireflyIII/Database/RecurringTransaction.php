@@ -26,17 +26,6 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
         $this->setUser(\Auth::user());
     }
 
-
-    /**
-     * Returns all objects.
-     *
-     * @return Collection
-     */
-    public function get()
-    {
-        return $this->getUser()->recurringtransactions()->get();
-    }
-
     /**
      * @param Ardent $model
      *
@@ -49,16 +38,25 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
     }
 
     /**
-     * Validates a model. Returns an array containing MessageBags
-     * errors/warnings/successes.
+     * @param array $data
      *
-     * @param Ardent $model
-     *
-     * @return array
+     * @return Ardent
      */
-    public function validateObject(Ardent $model)
+    public function store(array $data)
     {
-        // TODO: Implement validateObject() method.
+        // TODO: Implement store() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * @param Ardent $model
+     * @param array  $data
+     *
+     * @return bool
+     */
+    public function update(Ardent $model, array $data)
+    {
+        // TODO: Implement update() method.
         throw new NotImplementedException;
     }
 
@@ -77,25 +75,16 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
     }
 
     /**
-     * @param array $data
+     * Validates a model. Returns an array containing MessageBags
+     * errors/warnings/successes.
      *
-     * @return Ardent
-     */
-    public function store(array $data)
-    {
-        // TODO: Implement store() method.
-        throw new NotImplementedException;
-    }
-
-    /**
      * @param Ardent $model
-     * @param array $data
      *
-     * @return bool
+     * @return array
      */
-    public function update(Ardent $model, array $data)
+    public function validateObject(Ardent $model)
     {
-        // TODO: Implement update() method.
+        // TODO: Implement validateObject() method.
         throw new NotImplementedException;
     }
 
@@ -113,17 +102,6 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
     }
 
     /**
-     * @param array $ids
-     *
-     * @return Collection
-     */
-    public function getByIds(array $ids)
-    {
-        // TODO: Implement getByIds() method.
-        throw new NotImplementedException;
-    }
-
-    /**
      * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
      *
      * @param $what
@@ -133,6 +111,27 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
     public function findByWhat($what)
     {
         // TODO: Implement findByWhat() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * Returns all objects.
+     *
+     * @return Collection
+     */
+    public function get()
+    {
+        return $this->getUser()->recurringtransactions()->get();
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function getByIds(array $ids)
+    {
+        // TODO: Implement getByIds() method.
         throw new NotImplementedException;
     }
 }

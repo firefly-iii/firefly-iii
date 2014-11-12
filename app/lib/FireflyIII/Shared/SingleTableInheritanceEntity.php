@@ -11,17 +11,17 @@ use LaravelBook\Ardent\Ardent;
 abstract class SingleTableInheritanceEntity extends Ardent
 {
     /**
-     * The field that stores the subclass
-     *
-     * @var string
-     */
-    protected $subclassField = null;
-    /**
      * must be overridden and set to true in subclasses
      *
      * @var bool
      */
     protected $isSubclass = false;
+    /**
+     * The field that stores the subclass
+     *
+     * @var string
+     */
+    protected $subclassField = null;
 
     /**
      * @param array $attributes
@@ -35,24 +35,6 @@ abstract class SingleTableInheritanceEntity extends Ardent
 
         return $instance;
     }
-
-
-    /**
-     * if no subclass is defined, function as normal
-     *
-     * @param array $attributes
-     *
-     * @return \Illuminate\Database\Eloquent\Model|static
-     */
-    public function mapData(array $attributes)
-    {
-        if (!$this->subclassField) {
-            return $this->newInstance();
-        }
-
-        return new $attributes[$this->subclassField];
-    }
-
 
     /**
      *
@@ -87,14 +69,6 @@ abstract class SingleTableInheritanceEntity extends Ardent
     }
 
     /**
-     * @return bool
-     */
-    public function isSubclass()
-    {
-        return $this->isSubclass;
-    }
-
-    /**
      * ensure that the subclass field is assigned on save
      *
      * @param array    $rules
@@ -106,16 +80,36 @@ abstract class SingleTableInheritanceEntity extends Ardent
      * @return bool
      */
     public function save(
-        array $rules = [],
-        array $customMessages = [],
-        array $options = [],
-        \Closure $beforeSave = null,
-        \Closure $afterSave = null
+        array $rules = [], array $customMessages = [], array $options = [], \Closure $beforeSave = null, \Closure $afterSave = null
     ) {
         if ($this->subclassField) {
             $this->attributes[$this->subclassField] = get_class($this);
         }
 
         return parent::save($rules, $customMessages, $options, $beforeSave, $afterSave);
+    }
+
+    /**
+     * if no subclass is defined, function as normal
+     *
+     * @param array $attributes
+     *
+     * @return \Illuminate\Database\Eloquent\Model|static
+     */
+    public function mapData(array $attributes)
+    {
+        if (!$this->subclassField) {
+            return $this->newInstance();
+        }
+
+        return new $attributes[$this->subclassField];
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSubclass()
+    {
+        return $this->isSubclass;
     }
 } 

@@ -20,6 +20,81 @@ class TransactionType implements TransactionTypeInterface, CUD, CommonDatabaseCa
 {
 
     /**
+     * @param Ardent $model
+     *
+     * @return bool
+     */
+    public function destroy(Ardent $model)
+    {
+        // TODO: Implement destroy() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return Ardent
+     */
+    public function store(array $data)
+    {
+        // TODO: Implement store() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * @param Ardent $model
+     * @param array  $data
+     *
+     * @return bool
+     */
+    public function update(Ardent $model, array $data)
+    {
+        // TODO: Implement update() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * Validates an array. Returns an array containing MessageBags
+     * errors/warnings/successes.
+     *
+     * @param array $model
+     *
+     * @return array
+     */
+    public function validate(array $model)
+    {
+        // TODO: Implement validate() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * Validates a model. Returns an array containing MessageBags
+     * errors/warnings/successes.
+     *
+     * @param Ardent $model
+     *
+     * @return array
+     */
+    public function validateObject(Ardent $model)
+    {
+        // TODO: Implement validateObject() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * Returns an object with id $id.
+     *
+     * @param int $id
+     *
+     * @return Ardent
+     */
+    public function find($id)
+    {
+        // TODO: Implement find() method.
+        throw new NotImplementedException;
+    }
+
+    /**
      * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
      *
      * @param $what
@@ -44,82 +119,8 @@ class TransactionType implements TransactionTypeInterface, CUD, CommonDatabaseCa
 
 
         }
+
         return null;
-    }
-
-    /**
-     * @param Ardent $model
-     *
-     * @return bool
-     */
-    public function destroy(Ardent $model)
-    {
-        // TODO: Implement destroy() method.
-        throw new NotImplementedException;
-    }
-
-    /**
-     * Validates a model. Returns an array containing MessageBags
-     * errors/warnings/successes.
-     *
-     * @param Ardent $model
-     *
-     * @return array
-     */
-    public function validateObject(Ardent $model)
-    {
-        // TODO: Implement validateObject() method.
-        throw new NotImplementedException;
-    }
-
-    /**
-     * Validates an array. Returns an array containing MessageBags
-     * errors/warnings/successes.
-     *
-     * @param array $model
-     *
-     * @return array
-     */
-    public function validate(array $model)
-    {
-        // TODO: Implement validate() method.
-        throw new NotImplementedException;
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return Ardent
-     */
-    public function store(array $data)
-    {
-        // TODO: Implement store() method.
-        throw new NotImplementedException;
-    }
-
-    /**
-     * @param Ardent $model
-     * @param array $data
-     *
-     * @return bool
-     */
-    public function update(Ardent $model, array $data)
-    {
-        // TODO: Implement update() method.
-        throw new NotImplementedException;
-    }
-
-    /**
-     * Returns an object with id $id.
-     *
-     * @param int $id
-     *
-     * @return Ardent
-     */
-    public function find($id)
-    {
-        // TODO: Implement find() method.
-        throw new NotImplementedException;
     }
 
     /**
