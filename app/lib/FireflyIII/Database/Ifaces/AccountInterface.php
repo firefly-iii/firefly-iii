@@ -13,13 +13,13 @@ interface AccountInterface
 {
 
     /**
-     * Get all asset accounts. The parameters are optional and are provided by the DataTables plugin.
+     * Counts the number of accounts found with the included types.
      *
-     * @param array $parameters
+     * @param array $types
      *
-     * @return Collection
+     * @return int
      */
-    public function getAssetAccounts(array $parameters = []);
+    public function countAccountsByType(array $types);
 
     /**
      * Counts the number of total asset accounts. Useful for DataTables.
@@ -55,6 +55,32 @@ interface AccountInterface
      */
     public function findInitialBalanceAccount(\Account $account);
 
+    /**
+     * Get all accounts of the selected types. Is also capable of handling DataTables' parameters.
+     *
+     * @param array $types
+     * @param array $parameters
+     *
+     * @return Collection
+     */
+    public function getAccountsByType(array $types, array $parameters = []);
+
+    /**
+     * Get all asset accounts. The parameters are optional and are provided by the DataTables plugin.
+     *
+     * @param array $parameters
+     *
+     * @return Collection
+     */
+    public function getAssetAccounts(array $parameters = []);
+
+    /**
+     * Get all default accounts.
+     *
+     * @return Collection
+     */
+    public function getDefaultAccounts();
+
     public function getExpenseAccounts(array $parameters = []);
 
     /**
@@ -67,32 +93,6 @@ interface AccountInterface
     public function getRevenueAccounts(array $parameters = []);
 
     /**
-     * Get all accounts of the selected types. Is also capable of handling DataTables' parameters.
-     *
-     * @param array $types
-     * @param array $parameters
-     *
-     * @return Collection
-     */
-    public function getAccountsByType(array $types, array $parameters = []);
-
-    /**
-     * Counts the number of accounts found with the included types.
-     *
-     * @param array $types
-     *
-     * @return int
-     */
-    public function countAccountsByType(array $types);
-
-    /**
-     * Get all default accounts.
-     *
-     * @return Collection
-     */
-    public function getDefaultAccounts();
-
-    /**
      * @param \Account $account
      *
      * @return \TransactionJournal|null
@@ -101,7 +101,7 @@ interface AccountInterface
 
     /**
      * @param \Account $account
-     * @param array $data
+     * @param array    $data
      *
      * @return bool
      */

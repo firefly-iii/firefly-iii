@@ -22,40 +22,11 @@ class Form
      * @return string
      * @throws FireflyException
      */
-    public static function ffInteger($name, $value = null, array $options = [])
-    {
-        $options['step'] = '1';
-        return self::ffInput('number', $name, $value, $options);
-
-    }
-
-    /**
-     * @param       $name
-     * @param int   $value
-     * @param null  $checked
-     * @param array $options
-     *
-     * @return string
-     * @throws FireflyException
-     */
-    public static function ffCheckbox($name, $value = 1, $checked = null, $options = [])
-    {
-        $options['checked'] = $checked ? true : null;
-        return self::ffInput('checkbox', $name, $value, $options);
-    }
-
-    /**
-     * @param       $name
-     * @param null  $value
-     * @param array $options
-     *
-     * @return string
-     * @throws FireflyException
-     */
     public static function ffAmount($name, $value = null, array $options = [])
     {
         $options['step'] = 'any';
         $options['min']  = '0.01';
+
         return self::ffInput('amount', $name, $value, $options);
 
     }
@@ -71,8 +42,25 @@ class Form
     public static function ffBalance($name, $value = null, array $options = [])
     {
         $options['step'] = 'any';
+
         return self::ffInput('amount', $name, $value, $options);
 
+    }
+
+    /**
+     * @param       $name
+     * @param int   $value
+     * @param null  $checked
+     * @param array $options
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    public static function ffCheckbox($name, $value = 1, $checked = null, $options = [])
+    {
+        $options['checked'] = $checked ? true : null;
+
+        return self::ffInput('checkbox', $name, $value, $options);
     }
 
     /**
@@ -96,126 +84,12 @@ class Form
      * @return string
      * @throws FireflyException
      */
-    public static function ffTags($name, $value = null, array $options = [])
+    public static function ffInteger($name, $value = null, array $options = [])
     {
-        $options['data-role'] = 'tagsinput';
-        return self::ffInput('text', $name, $value, $options);
-    }
+        $options['step'] = '1';
 
-    /**
-     * @param       $name
-     * @param array $list
-     * @param null  $selected
-     * @param array $options
-     *
-     * @return string
-     * @throws FireflyException
-     */
-    public static function ffSelect($name, array $list = [], $selected = null, array $options = [])
-    {
-        return self::ffInput('select', $name, $selected, $options, $list);
-    }
+        return self::ffInput('number', $name, $value, $options);
 
-    /**
-     * @param       $name
-     * @param null  $value
-     * @param array $options
-     *
-     * @return string
-     * @throws FireflyException
-     */
-    public static function ffText($name, $value = null, array $options = array())
-    {
-        return self::ffInput('text', $name, $value, $options);
-
-    }
-
-    /**
-     * @param $name
-     * @param $options
-     *
-     * @return string
-     */
-    public static function label($name, $options)
-    {
-        if (isset($options['label'])) {
-            return $options['label'];
-        }
-        $labels = [
-            'amount_min'      => 'Amount (min)',
-            'amount_max'      => 'Amount (max)',
-            'match'           => 'Matches on',
-            'repeat_freq'     => 'Repetition',
-            'account_from_id' => 'Account from',
-            'account_to_id'   => 'Account to',
-            'account_id'      => 'Asset account'
-        ];
-
-        return isset($labels[$name]) ? $labels[$name] : str_replace('_', ' ', ucfirst($name));
-
-    }
-
-    /**
-     * Return buttons for update/validate/return.
-     *
-     * @param $type
-     * @param $name
-     */
-    public static function ffOptionsList($type, $name)
-    {
-        $previousValue = \Input::old('post_submit_action');
-        $previousValue = is_null($previousValue) ? 'store' : $previousValue;
-        /*
-         * Store.
-         */
-        $store = '';
-        switch ($type) {
-            case 'create':
-                $store = '<div class="form-group"><label for="default" class="col-sm-4 control-label">Store</label>';
-                $store .= '<div class="col-sm-8"><div class="radio"><label>';
-                $store .= \Form::radio('post_submit_action', 'store', $previousValue == 'store');
-                $store .= 'Store ' . $name . '</label></div></div></div>';
-                break;
-            case 'update':
-                $store = '<div class="form-group"><label for="default" class="col-sm-4 control-label">Store</label>';
-                $store .= '<div class="col-sm-8"><div class="radio"><label>';
-                $store .= \Form::radio('post_submit_action', 'update', $previousValue == 'store');
-                $store .= 'Update ' . $name . '</label></div></div></div>';
-                break;
-            default:
-                throw new FireflyException('Cannot create ffOptionsList for option (store) ' . $type);
-                break;
-        }
-
-        /*
-         * validate is always the same:
-         */
-        $validate = '<div class="form-group"><label for="validate_only" class="col-sm-4 control-label">Validate only';
-        $validate .= '</label><div class="col-sm-8"><div class="radio"><label>';
-        $validate .= \Form::radio('post_submit_action', 'validate_only', $previousValue == 'validate_only');
-        $validate .= 'Only validate, do not save</label></div></div></div>';
-
-        /*
-         * Store & return:
-         */
-        switch ($type) {
-            case 'create':
-                $return = '<div class="form-group"><label for="return_to_form" class="col-sm-4 control-label">';
-                $return .= 'Return here</label><div class="col-sm-8"><div class="radio"><label>';
-                $return .= \Form::radio('post_submit_action', 'create_another', $previousValue == 'create_another');
-                $return .= 'After storing, return here to create another one.</label></div></div></div>';
-                break;
-            case 'update':
-                $return = '<div class="form-group"><label for="return_to_edit" class="col-sm-4 control-label">';
-                $return .= 'Return here</label><div class="col-sm-8"><div class="radio"><label>';
-                $return .= \Form::radio('post_submit_action', 'return_to_edit', $previousValue == 'return_to_edit');
-                $return .= 'After updating, return here.</label></div></div></div>';
-                break;
-            default:
-                throw new FireflyException('Cannot create ffOptionsList for option (store+return) ' . $type);
-                break;
-        }
-        return $store . $validate . $return;
     }
 
     /**
@@ -228,7 +102,7 @@ class Form
      * @return string
      * @throws FireflyException
      */
-    public static function ffInput($type, $name, $value = null, array $options = array(), $list = [])
+    public static function ffInput($type, $name, $value = null, array $options = [], $list = [])
     {
         /*
          * add some defaults to this method:
@@ -374,6 +248,131 @@ class Form
         $html .= '</div>';
 
         return $html;
+
+    }
+
+    /**
+     * @param $name
+     * @param $options
+     *
+     * @return string
+     */
+    public static function label($name, $options)
+    {
+        if (isset($options['label'])) {
+            return $options['label'];
+        }
+        $labels = ['amount_min'      => 'Amount (min)', 'amount_max' => 'Amount (max)', 'match' => 'Matches on', 'repeat_freq' => 'Repetition',
+                   'account_from_id' => 'Account from', 'account_to_id' => 'Account to', 'account_id' => 'Asset account'];
+
+        return isset($labels[$name]) ? $labels[$name] : str_replace('_', ' ', ucfirst($name));
+
+    }
+
+    /**
+     * Return buttons for update/validate/return.
+     *
+     * @param $type
+     * @param $name
+     */
+    public static function ffOptionsList($type, $name)
+    {
+        $previousValue = \Input::old('post_submit_action');
+        $previousValue = is_null($previousValue) ? 'store' : $previousValue;
+        /*
+         * Store.
+         */
+        $store = '';
+        switch ($type) {
+            case 'create':
+                $store = '<div class="form-group"><label for="default" class="col-sm-4 control-label">Store</label>';
+                $store .= '<div class="col-sm-8"><div class="radio"><label>';
+                $store .= \Form::radio('post_submit_action', 'store', $previousValue == 'store');
+                $store .= 'Store ' . $name . '</label></div></div></div>';
+                break;
+            case 'update':
+                $store = '<div class="form-group"><label for="default" class="col-sm-4 control-label">Store</label>';
+                $store .= '<div class="col-sm-8"><div class="radio"><label>';
+                $store .= \Form::radio('post_submit_action', 'update', $previousValue == 'store');
+                $store .= 'Update ' . $name . '</label></div></div></div>';
+                break;
+            default:
+                throw new FireflyException('Cannot create ffOptionsList for option (store) ' . $type);
+                break;
+        }
+
+        /*
+         * validate is always the same:
+         */
+        $validate = '<div class="form-group"><label for="validate_only" class="col-sm-4 control-label">Validate only';
+        $validate .= '</label><div class="col-sm-8"><div class="radio"><label>';
+        $validate .= \Form::radio('post_submit_action', 'validate_only', $previousValue == 'validate_only');
+        $validate .= 'Only validate, do not save</label></div></div></div>';
+
+        /*
+         * Store & return:
+         */
+        switch ($type) {
+            case 'create':
+                $return = '<div class="form-group"><label for="return_to_form" class="col-sm-4 control-label">';
+                $return .= 'Return here</label><div class="col-sm-8"><div class="radio"><label>';
+                $return .= \Form::radio('post_submit_action', 'create_another', $previousValue == 'create_another');
+                $return .= 'After storing, return here to create another one.</label></div></div></div>';
+                break;
+            case 'update':
+                $return = '<div class="form-group"><label for="return_to_edit" class="col-sm-4 control-label">';
+                $return .= 'Return here</label><div class="col-sm-8"><div class="radio"><label>';
+                $return .= \Form::radio('post_submit_action', 'return_to_edit', $previousValue == 'return_to_edit');
+                $return .= 'After updating, return here.</label></div></div></div>';
+                break;
+            default:
+                throw new FireflyException('Cannot create ffOptionsList for option (store+return) ' . $type);
+                break;
+        }
+
+        return $store . $validate . $return;
+    }
+
+    /**
+     * @param       $name
+     * @param array $list
+     * @param null  $selected
+     * @param array $options
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    public static function ffSelect($name, array $list = [], $selected = null, array $options = [])
+    {
+        return self::ffInput('select', $name, $selected, $options, $list);
+    }
+
+    /**
+     * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    public static function ffTags($name, $value = null, array $options = [])
+    {
+        $options['data-role'] = 'tagsinput';
+
+        return self::ffInput('text', $name, $value, $options);
+    }
+
+    /**
+     * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    public static function ffText($name, $value = null, array $options = [])
+    {
+        return self::ffInput('text', $name, $value, $options);
 
     }
 }

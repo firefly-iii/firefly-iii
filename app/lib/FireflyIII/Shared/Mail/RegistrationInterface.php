@@ -15,13 +15,6 @@ interface RegistrationInterface
      *
      * @return mixed
      */
-    public function sendVerificationMail(\User $user);
-
-    /**
-     * @param \User $user
-     *
-     * @return mixed
-     */
     public function sendPasswordMail(\User $user);
 
     /**
@@ -30,5 +23,12 @@ interface RegistrationInterface
      * @return mixed
      */
     public function sendResetVerification(\User $user);
+
+    /**
+     * @param \User $user
+     *
+     * @return mixed
+     */
+    public function sendVerificationMail(\User $user);
 
 } 

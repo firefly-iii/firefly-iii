@@ -23,21 +23,6 @@ interface CommonDatabaseCalls
     public function find($id);
 
     /**
-     * Returns all objects.
-     *
-     * @return Collection
-     */
-    public function get();
-
-
-    /**
-     * @param array $ids
-     *
-     * @return Collection
-     */
-    public function getByIds(array $ids);
-
-    /**
      * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
      *
      * @param $what
@@ -45,5 +30,19 @@ interface CommonDatabaseCalls
      * @return \AccountType|null
      */
     public function findByWhat($what);
+
+    /**
+     * Returns all objects.
+     *
+     * @return Collection
+     */
+    public function get();
+
+    /**
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function getByIds(array $ids);
 
 }

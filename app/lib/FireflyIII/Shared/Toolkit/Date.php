@@ -13,39 +13,6 @@ use Firefly\Exception\FireflyException;
 class Date
 {
     /**
-     * @param Carbon $currentEnd
-     * @param        $repeatFreq
-     *
-     * @throws FireflyException
-     */
-    public function endOfPeriod(Carbon $currentEnd, $repeatFreq)
-    {
-        switch ($repeatFreq) {
-            default:
-                throw new FireflyException('Cannot do endOfPeriod for $repeat_freq ' . $repeatFreq);
-                break;
-            case 'daily':
-                $currentEnd->addDay();
-                break;
-            case 'weekly':
-                $currentEnd->addWeek()->subDay();
-                break;
-            case 'monthly':
-                $currentEnd->addMonth()->subDay();
-                break;
-            case 'quarterly':
-                $currentEnd->addMonths(3)->subDay();
-                break;
-            case 'half-year':
-                $currentEnd->addMonths(6)->subDay();
-                break;
-            case 'yearly':
-                $currentEnd->addYear()->subDay();
-                break;
-        }
-    }
-
-    /**
      * @param Carbon $date
      * @param        $repeatFreq
      * @param        $skip
@@ -81,6 +48,40 @@ class Date
                 $date->addYears($add);
                 break;
         }
+
         return $date;
+    }
+
+    /**
+     * @param Carbon $currentEnd
+     * @param        $repeatFreq
+     *
+     * @throws FireflyException
+     */
+    public function endOfPeriod(Carbon $currentEnd, $repeatFreq)
+    {
+        switch ($repeatFreq) {
+            default:
+                throw new FireflyException('Cannot do endOfPeriod for $repeat_freq ' . $repeatFreq);
+                break;
+            case 'daily':
+                $currentEnd->addDay();
+                break;
+            case 'weekly':
+                $currentEnd->addWeek()->subDay();
+                break;
+            case 'monthly':
+                $currentEnd->addMonth()->subDay();
+                break;
+            case 'quarterly':
+                $currentEnd->addMonths(3)->subDay();
+                break;
+            case 'half-year':
+                $currentEnd->addMonths(6)->subDay();
+                break;
+            case 'yearly':
+                $currentEnd->addYear()->subDay();
+                break;
+        }
     }
 } 

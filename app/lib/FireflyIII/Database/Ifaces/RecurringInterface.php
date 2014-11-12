@@ -1,6 +1,7 @@
 <?php
 
 namespace FireflyIII\Database\Ifaces;
+
 use Carbon\Carbon;
 
 /**

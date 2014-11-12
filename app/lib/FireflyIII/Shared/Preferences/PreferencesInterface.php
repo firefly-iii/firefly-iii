@@ -11,19 +11,19 @@ interface PreferencesInterface
 
 
     /**
-     * @param $name
-     * @param $value
-     *
-     * @return null|\Preference
-     */
-    public function set($name, $value);
-
-    /**
      * @param      $name
      * @param null $default
      *
      * @return \Preference
      */
     public function get($name, $default = null);
+
+    /**
+     * @param $name
+     * @param $value
+     *
+     * @return null|\Preference
+     */
+    public function set($name, $value);
 
 }

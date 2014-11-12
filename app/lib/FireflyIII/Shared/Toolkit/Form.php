@@ -9,12 +9,13 @@ use Illuminate\Support\Collection;
  *
  * @package FireflyIII\Shared\Toolkit
  */
-class Form {
+class Form
+{
     /**
      * Takes any collection and tries to make a sensible select list compatible array of it.
      *
      * @param Collection $set
-     * @param null $titleField
+     * @param null       $titleField
      *
      * @return mixed
      */
@@ -44,6 +45,7 @@ class Form {
             }
             $selectList[$id] = $title;
         }
+
         return $selectList;
     }
 

@@ -29,64 +29,54 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
     }
 
     /**
-     * @param Ardent $model
-     * @param array $data
+     * @param array $types
      *
-     * @return bool
+     * @return int
      */
-    public function update(Ardent $model, array $data)
+    public function countAccountsByType(array $types)
     {
-        $model->name = $data['name'];
-        $model->active = isset($data['active']) ? intval($data['active']) : 0;
-        $model->save();
+        return $this->getUser()->accounts()->accountTypeIn($types)->count();
+    }
 
-        if (isset($data['openingbalance']) && isset($data['openingbalancedate'])) {
-            $openingBalance = $this->openingBalanceTransaction($model);
+    /**
+     * @return int
+     */
+    public function countAssetAccounts()
+    {
+        return $this->countAccountsByType(['Default account', 'Asset account']);
+    }
 
-            $openingBalance->date = new Carbon($data['openingbalancedate']);
-            $openingBalance->save();
-            $amount = floatval($data['openingbalance']);
-            /** @var \Transaction $transaction */
-            foreach ($openingBalance->transactions as $transaction) {
-                if ($transaction->account_id == $model->id) {
-                    $transaction->amount = $amount;
-                } else {
-                    $transaction->amount = $amount * -1;
-                }
-                $transaction->save();
-            }
-        }
-        return true;
+    /**
+     * @return int
+     */
+    public function countExpenseAccounts()
+    {
+        return $this->countAccountsByType(['Expense account', 'Beneficiary account']);
+    }
+
+    /**
+     * Counts the number of total revenue accounts. Useful for DataTables.
+     *
+     * @return int
+     */
+    public function countRevenueAccounts()
+    {
+        return $this->countAccountsByType(['Revenue account']);
     }
 
     /**
      * @param \Account $account
      *
-     * @return \TransactionJournal|null
+     * @return \Account|null
      */
-    public function openingBalanceTransaction(\Account $account)
+    public function findInitialBalanceAccount(\Account $account)
     {
-        return \TransactionJournal::withRelevantData()
-            ->accountIs($account)
-            ->leftJoin(
-                'transaction_types', 'transaction_types.id', '=',
-                'transaction_journals.transaction_type_id'
-            )
-            ->where('transaction_types.type', 'Opening balance')
-            ->first(['transaction_journals.*']);
-    }
+        /** @var \FireflyIII\Database\AccountType $acctType */
+        $acctType = \App::make('FireflyIII\Database\AccountType');
 
-    /**
-     * Get all asset accounts. Optional JSON based parameters.
-     *
-     * @param array $parameters
-     *
-     * @return Collection
-     */
-    public function getAssetAccounts(array $parameters = [])
-    {
-        return $this->getAccountsByType(['Default account', 'Asset account'], $parameters);
+        $accountType = $acctType->findByWhat('initial');
 
+        return $this->getUser()->accounts()->where('account_type_id', $accountType->id)->where('name', 'LIKE', $account->name . '%')->first();
     }
 
     /**
@@ -149,44 +139,27 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
     }
 
     /**
-     * @param \Account $account
+     * Get all asset accounts. Optional JSON based parameters.
      *
-     * @return \Account|null
-     */
-    public function findInitialBalanceAccount(\Account $account)
-    {
-        /** @var \FireflyIII\Database\AccountType $acctType */
-        $acctType = \App::make('FireflyIII\Database\AccountType');
-
-        $accountType = $acctType->findByWhat('initial');
-
-        return $this->getUser()->accounts()->where('account_type_id', $accountType->id)->where('name', 'LIKE', $account->name . '%')->first();
-    }
-
-    /**
-     * @return int
-     */
-    public function countAssetAccounts()
-    {
-        return $this->countAccountsByType(['Default account', 'Asset account']);
-    }
-
-    /**
-     * @param array $types
+     * @param array $parameters
      *
-     * @return int
+     * @return Collection
      */
-    public function countAccountsByType(array $types)
+    public function getAssetAccounts(array $parameters = [])
     {
-        return $this->getUser()->accounts()->accountTypeIn($types)->count();
+        return $this->getAccountsByType(['Default account', 'Asset account'], $parameters);
+
     }
 
     /**
-     * @return int
+     * Get all default accounts.
+     *
+     * @return Collection
      */
-    public function countExpenseAccounts()
+    public function getDefaultAccounts()
     {
-        return $this->countAccountsByType(['Expense account', 'Beneficiary account']);
+        // TODO: Implement getDefaultAccounts() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -197,45 +170,6 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
     public function getExpenseAccounts(array $parameters = [])
     {
         return $this->getAccountsByType(['Expense account', 'Beneficiary account'], $parameters);
-    }
-
-    /**
-     * Returns an object with id $id.
-     *
-     * @param int $id
-     *
-     * @return Ardent
-     */
-    public function find($id)
-    {
-        return $this->getUser()->accounts()->find($id);
-    }
-
-    public function firstExpenseAccountOrCreate($name)
-    {
-        /** @var \FireflyIII\Database\AccountType $accountTypeRepos */
-        $accountTypeRepos = \App::make('FireflyIII\Database\AccountType');
-
-        $accountType = $accountTypeRepos->findByWhat('expense');
-
-        $data = [
-            'user_id' => $this->getUser()->id,
-            'account_type_id' => $accountType->id,
-            'name' => $name,
-            'active' => 1
-        ];
-        return \Account::firstOrCreate($data);
-
-    }
-
-    /**
-     * Counts the number of total revenue accounts. Useful for DataTables.
-     *
-     * @return int
-     */
-    public function countRevenueAccounts()
-    {
-        return $this->countAccountsByType(['Revenue account']);
     }
 
     /**
@@ -251,6 +185,65 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
     }
 
     /**
+     * @param \Account $account
+     *
+     * @return \TransactionJournal|null
+     */
+    public function openingBalanceTransaction(\Account $account)
+    {
+        return \TransactionJournal::withRelevantData()->accountIs($account)->leftJoin(
+                'transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id'
+            )->where('transaction_types.type', 'Opening balance')->first(['transaction_journals.*']);
+    }
+
+    /**
+     * @param \Account $account
+     * @param array    $data
+     *
+     * @return bool
+     */
+    public function storeInitialBalance(\Account $account, array $data)
+    {
+        $opposingData    = ['name' => $account->name . ' Initial Balance', 'active' => 0, 'what' => 'initial'];
+        $opposingAccount = $this->store($opposingData);
+
+        /*
+         * Create a journal from opposing to account or vice versa.
+         */
+        $balance = floatval($data['openingbalance']);
+        $date    = new Carbon($data['openingbalancedate']);
+        /** @var \FireflyIII\Database\TransactionJournal $tj */
+        $tj = \App::make('FireflyIII\Database\TransactionJournal');
+        if ($balance < 0) {
+            // first transaction draws money from the new account to the opposing
+            $from = $account;
+            $to   = $opposingAccount;
+        } else {
+            // first transaction puts money into account
+            $from = $opposingAccount;
+            $to   = $account;
+        }
+
+        // data for transaction journal:
+        $balance = $balance < 0 ? $balance * -1 : $balance;
+        $opening = ['what'        => 'opening', 'currency' => 'EUR', 'amount' => $balance, 'from' => $from, 'to' => $to, 'date' => $date,
+                    'description' => 'Opening balance for new account ' . $account->name,];
+
+
+        $validation = $tj->validate($opening);
+        if ($validation['errors']->count() == 0) {
+            $tj->store($opening);
+
+            return true;
+        } else {
+            var_dump($validation['errors']);
+            exit;
+        }
+
+        return false;
+    }
+
+    /**
      * @param Ardent $model
      *
      * @return bool
@@ -258,8 +251,81 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
     public function destroy(Ardent $model)
     {
         $model->delete();
+
         return true;
 
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return Ardent
+     */
+    public function store(array $data)
+    {
+
+        /*
+         * Find account type.
+         */
+        /** @var \FireflyIII\Database\AccountType $acctType */
+        $acctType = \App::make('FireflyIII\Database\AccountType');
+
+        $accountType = $acctType->findByWhat($data['what']);
+
+        $data['user_id']         = $this->getUser()->id;
+        $data['account_type_id'] = $accountType->id;
+        $data['active']          = isset($data['active']) && $data['active'] === '1' ? 1 : 0;
+
+
+        $data    = array_except($data, ['_token', 'what']);
+        $account = new \Account($data);
+        if (!$account->validate()) {
+            var_dump($account->errors()->all());
+            exit;
+        }
+        $account->save();
+        if (isset($data['openingbalance']) && floatval($data['openingbalance']) != 0) {
+            $this->storeInitialBalance($account, $data);
+        }
+
+
+        /* Tell transaction journal to store a new one.*/
+
+
+        return $account;
+
+    }
+
+    /**
+     * @param Ardent $model
+     * @param array  $data
+     *
+     * @return bool
+     */
+    public function update(Ardent $model, array $data)
+    {
+        $model->name   = $data['name'];
+        $model->active = isset($data['active']) ? intval($data['active']) : 0;
+        $model->save();
+
+        if (isset($data['openingbalance']) && isset($data['openingbalancedate'])) {
+            $openingBalance = $this->openingBalanceTransaction($model);
+
+            $openingBalance->date = new Carbon($data['openingbalancedate']);
+            $openingBalance->save();
+            $amount = floatval($data['openingbalance']);
+            /** @var \Transaction $transaction */
+            foreach ($openingBalance->transactions as $transaction) {
+                if ($transaction->account_id == $model->id) {
+                    $transaction->amount = $amount;
+                } else {
+                    $transaction->amount = $amount * -1;
+                }
+                $transaction->save();
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -272,9 +338,9 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
      */
     public function validate(array $model)
     {
-        $warnings = new MessageBag;
+        $warnings  = new MessageBag;
         $successes = new MessageBag;
-        $errors = new MessageBag;
+        $errors    = new MessageBag;
 
         /*
          * Name validation:
@@ -327,139 +393,34 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
         if (!$errors->has('openingbalancedate')) {
             $successes->add('openingbalancedate', 'OK');
         }
-        return [
-            'errors' => $errors,
-            'warnings' => $warnings,
-            'successes' => $successes
-        ];
+
+        return ['errors' => $errors, 'warnings' => $warnings, 'successes' => $successes];
     }
 
     /**
-     * @param array $data
+     * Validates a model. Returns an array containing MessageBags
+     * errors/warnings/successes.
+     *
+     * @param Ardent $model
+     *
+     * @return array
+     */
+    public function validateObject(Ardent $model)
+    {
+        // TODO: Implement validateObject() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * Returns an object with id $id.
+     *
+     * @param int $id
      *
      * @return Ardent
      */
-    public function store(array $data)
+    public function find($id)
     {
-
-        /*
-         * Find account type.
-         */
-        /** @var \FireflyIII\Database\AccountType $acctType */
-        $acctType = \App::make('FireflyIII\Database\AccountType');
-
-        $accountType = $acctType->findByWhat($data['what']);
-
-        $data['user_id'] = $this->getUser()->id;
-        $data['account_type_id'] = $accountType->id;
-        $data['active'] = isset($data['active']) && $data['active'] === '1' ? 1 : 0;
-
-
-        $data = array_except($data, array('_token', 'what'));
-        $account = new \Account($data);
-        if (!$account->validate()) {
-            var_dump($account->errors()->all());
-            exit;
-        }
-        $account->save();
-        if (isset($data['openingbalance']) && floatval($data['openingbalance']) != 0) {
-            $this->storeInitialBalance($account, $data);
-        }
-
-
-        /* Tell transaction journal to store a new one.*/
-
-
-        return $account;
-
-    }
-
-    /**
-     * @param \Account $account
-     * @param array $data
-     *
-     * @return bool
-     */
-    public function storeInitialBalance(\Account $account, array $data)
-    {
-        $opposingData = [
-            'name' => $account->name . ' Initial Balance',
-            'active' => 0,
-            'what' => 'initial'
-        ];
-        $opposingAccount = $this->store($opposingData);
-
-        /*
-         * Create a journal from opposing to account or vice versa.
-         */
-        $balance = floatval($data['openingbalance']);
-        $date = new Carbon($data['openingbalancedate']);
-        /** @var \FireflyIII\Database\TransactionJournal $tj */
-        $tj = \App::make('FireflyIII\Database\TransactionJournal');
-        if ($balance < 0) {
-            // first transaction draws money from the new account to the opposing
-            $from = $account;
-            $to = $opposingAccount;
-        } else {
-            // first transaction puts money into account
-            $from = $opposingAccount;
-            $to = $account;
-        }
-
-        // data for transaction journal:
-        $balance = $balance < 0 ? $balance * -1 : $balance;
-        $opening = [
-            'what' => 'opening',
-            'currency' => 'EUR',
-            'amount' => $balance,
-            'from' => $from,
-            'to' => $to,
-            'date' => $date,
-            'description' => 'Opening balance for new account ' . $account->name,
-        ];
-
-
-        $validation = $tj->validate($opening);
-        if ($validation['errors']->count() == 0) {
-            $tj->store($opening);
-            return true;
-        } else {
-            var_dump($validation['errors']);
-            exit;
-        }
-        return false;
-    }
-
-    /**
-     * @param array $ids
-     *
-     * @return Collection
-     */
-    public function getByIds(array $ids)
-    {
-        return $this->getUser()->accounts()->whereIn('id', $ids)->get();
-    }
-
-    /**
-     * Get all default accounts.
-     *
-     * @return Collection
-     */
-    public function getDefaultAccounts()
-    {
-        // TODO: Implement getDefaultAccounts() method.
-        throw new NotImplementedException;
-    }
-
-    /**
-     * Returns all objects.
-     *
-     * @return Collection
-     */
-    public function get()
-    {
-        // TODO: Implement get() method.
-        throw new NotImplementedException;
+        return $this->getUser()->accounts()->find($id);
     }
 
     /**
@@ -476,16 +437,36 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
     }
 
     /**
-     * Validates a model. Returns an array containing MessageBags
-     * errors/warnings/successes.
+     * Returns all objects.
      *
-     * @param Ardent $model
-     *
-     * @return array
+     * @return Collection
      */
-    public function validateObject(Ardent $model)
+    public function get()
     {
-        // TODO: Implement validateObject() method.
+        // TODO: Implement get() method.
         throw new NotImplementedException;
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function getByIds(array $ids)
+    {
+        return $this->getUser()->accounts()->whereIn('id', $ids)->get();
+    }
+
+    public function firstExpenseAccountOrCreate($name)
+    {
+        /** @var \FireflyIII\Database\AccountType $accountTypeRepos */
+        $accountTypeRepos = \App::make('FireflyIII\Database\AccountType');
+
+        $accountType = $accountTypeRepos->findByWhat('expense');
+
+        $data = ['user_id' => $this->getUser()->id, 'account_type_id' => $accountType->id, 'name' => $name, 'active' => 1];
+
+        return \Account::firstOrCreate($data);
+
     }
 }
