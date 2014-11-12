@@ -191,11 +191,16 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
             $errors->add('date', 'This date is invalid.');
         }
 
-        if (isset($model['to_id']) && intval($model['to_id']) < 0) {
+        if (isset($model['to_id']) && intval($model['to_id']) < 1) {
             $errors->add('account_to', 'Invalid to-account');
         }
-        if (isset($model['from_id']) && intval($model['from_id']) < 0) {
+
+        if (isset($model['from_id']) && intval($model['from_id']) < 1) {
             $errors->add('account_from', 'Invalid from-account');
+
+        }
+        if (isset($model['account_id']) && intval($model['account_id']) < 1) {
+            $errors->add('account_id', 'Invalid account!');
         }
         if (isset($model['to']) && !($model['to'] instanceof \Account)) {
             $errors->add('account_to', 'Invalid to-account');
@@ -208,6 +213,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         }
         if (!isset($model['from']) && !isset($model['to'])) {
             $errors->add('account_to', 'No accounts found!');
+            $errors->add('account_id', 'No accounts found!');
         }
 
         $validator = \Validator::make([$model], \Transaction::$rules);
@@ -356,7 +362,6 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
     {
         return $this->getUser()->transactionjournals()->withRelevantData()->transactionTypes(['Withdrawal'])->get(['transaction_journals.*']);
     }
-
 
 
     /**
