@@ -240,7 +240,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
                     $errors->add('account_to_id', 'Invalid account selected.');
 
                 } else {
-                    if (intval($model['account_from_id']) == intval($model['account_from_id'])) {
+                    if (intval($model['account_from_id']) == intval($model['account_to_id'])) {
                         $errors->add('account_to_id', 'Cannot be the same as "from" account.');
                         $errors->add('account_from_id', 'Cannot be the same as "to" account.');
                     } else {
@@ -319,6 +319,9 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         /** @var \FireflyIII\Database\TransactionType $typeRepository */
         $typeRepository = \App::make('FireflyIII\Database\TransactionType');
 
+        /** @var \FireflyIII\Database\Account $accountRepository */
+        $accountRepository = \App::make('FireflyIII\Database\Account');
+
         /** @var \FireflyIII\Database\TransactionCurrency $currencyRepository */
         $currencyRepository = \App::make('FireflyIII\Database\TransactionCurrency');
 
@@ -335,16 +338,32 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         $journal->description = $data['description'];
         $journal->date = $data['date'];
         $journal->completed = 0;
-        //$journal->user_id     = $this->getUser()->id;
 
         /*
          * This must be enough to store the journal:
          */
         if (!$journal->validate()) {
             \Log::error($journal->errors()->all());
-            throw new FireflyException('store() transactionjournal failed, but it should not!');
+            throw new FireflyException('store() transaction journal failed, but it should not!');
         }
         $journal->save();
+
+        /*
+         * Still need to find the accounts related to the transactions.
+         * This depends on the type of transaction.
+         */
+        switch ($data['what']) {
+            case 'withdrawal':
+                $data['from'] = $accountRepository->find($data['account_id']);
+                $data['to'] = $accountRepository->firstExpenseAccountOrCreate($data['expense_account']);
+                break;
+            case 'opening':
+                break;
+
+            default:
+                throw new FireflyException('Cannot save transaction journal with accounts based on $what "' . $data['what'] . '".');
+                break;
+        }
 
         /*
          *  Then store both transactions.

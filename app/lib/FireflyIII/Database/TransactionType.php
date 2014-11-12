@@ -3,11 +3,12 @@
 namespace FireflyIII\Database;
 
 
-use Illuminate\Support\Collection;
-use LaravelBook\Ardent\Ardent;
 use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
 use FireflyIII\Database\Ifaces\CUD;
 use FireflyIII\Database\Ifaces\TransactionTypeInterface;
+use FireflyIII\Exception\FireflyException;
+use Illuminate\Support\Collection;
+use LaravelBook\Ardent\Ardent;
 
 /**
  * Class TransactionType
@@ -98,9 +99,16 @@ class TransactionType implements TransactionTypeInterface, CUD, CommonDatabaseCa
             case 'opening':
                 return \TransactionType::whereType('Opening balance')->first();
                 break;
+            case 'transfer':
+                return \TransactionType::whereType('Transfer')->first();
+                break;
+            case 'withdrawal':
+                return \TransactionType::whereType('Withdrawal')->first();
+                break;
             default:
                 throw new FireflyException('Cannot find transaction type described as "' . e($what) . '".');
                 break;
+
 
         }
         return null;
@@ -118,7 +126,7 @@ class TransactionType implements TransactionTypeInterface, CUD, CommonDatabaseCa
 
     /**
      * @param Ardent $model
-     * @param array  $data
+     * @param array $data
      *
      * @return bool
      */
