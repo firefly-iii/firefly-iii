@@ -24,36 +24,6 @@ class TransactionController extends BaseController
     }
 
     /**
-     * @param $what
-     *
-     * @return $this
-     */
-    public function index($what)
-    {
-
-        switch ($what) {
-            case 'expenses':
-            case 'withdrawal':
-                $subTitleIcon = 'fa-long-arrow-left';
-                $subTitle     = 'Expenses';
-                break;
-            case 'revenue':
-            case 'deposit':
-                $subTitleIcon = 'fa-long-arrow-right';
-                $subTitle     = 'Revenue, income and deposits';
-                break;
-            case 'transfer':
-            case 'transfers':
-                $subTitleIcon = 'fa-arrows-h';
-                $subTitle     = 'Transfers';
-                break;
-        }
-
-        return View::make('transactions.index', compact('subTitle', 'subTitleIcon'))->with('what', $what);
-
-    }
-
-    /**
      * Shows the view helping the user to create a new transaction journal.
      *
      * @param string $what
@@ -121,7 +91,6 @@ class TransactionController extends BaseController
 
 
     }
-
 
     /**
      * @param TransactionJournal $transactionJournal
@@ -201,12 +170,7 @@ class TransactionController extends BaseController
         /*
          * Data to properly display the edit form.
          */
-        $prefilled = [
-            'date'         => $journal->date->format('Y-m-d'),
-            'category'     => '',
-            'budget_id'    => 0,
-            'piggybank_id' => $piggyBankId
-        ];
+        $prefilled = ['date' => $journal->date->format('Y-m-d'), 'category' => '', 'budget_id' => 0, 'piggybank_id' => $piggyBankId];
 
         /*
          * Fill in the category.
@@ -245,11 +209,42 @@ class TransactionController extends BaseController
         /*
          * Show the view.
          */
+
         return View::make('transactions.edit')->with('journal', $journal)->with('accounts', $accounts)->with(
             'what', $what
         )->with('budgets', $budgets)->with('data', $prefilled)->with('piggies', $piggies)->with(
             'subTitle', 'Edit ' . $what . ' "' . $journal->description . '"'
         );
+    }
+
+    /**
+     * @param $what
+     *
+     * @return $this
+     */
+    public function index($what)
+    {
+
+        switch ($what) {
+            case 'expenses':
+            case 'withdrawal':
+                $subTitleIcon = 'fa-long-arrow-left';
+                $subTitle     = 'Expenses';
+                break;
+            case 'revenue':
+            case 'deposit':
+                $subTitleIcon = 'fa-long-arrow-right';
+                $subTitle     = 'Revenue, income and deposits';
+                break;
+            case 'transfer':
+            case 'transfers':
+                $subTitleIcon = 'fa-arrows-h';
+                $subTitle     = 'Transfers';
+                break;
+        }
+
+        return View::make('transactions.index', compact('subTitle', 'subTitleIcon'))->with('what', $what);
+
     }
 
     /**
@@ -273,8 +268,8 @@ class TransactionController extends BaseController
      */
     public function store($what)
     {
-        $data              = Input::except('_token');
-        $data['what']      = $what;
+        $data             = Input::except('_token');
+        $data['what']     = $what;
         $data['currency'] = 'EUR';
 
         /** @var \FireflyIII\Database\TransactionJournal $repository */
@@ -292,6 +287,7 @@ class TransactionController extends BaseController
                     Session::flash('warnings', $messages['warnings']);
                     Session::flash('successes', $messages['successes']);
                     Session::flash('error', 'Could not save transaction: ' . $messages['errors']->first());
+
                     return Redirect::route('transactions.create', $what)->withInput()->withErrors($messages['errors']);
                 }
                 // store!
@@ -301,7 +297,7 @@ class TransactionController extends BaseController
                 if ($data['post_submit_action'] == 'create_another') {
                     return Redirect::route('transactions.create', $what);
                 } else {
-                    return Redirect::route('transactions.index',$what);
+                    return Redirect::route('transactions.index', $what);
                 }
                 break;
             case 'validate_only':
@@ -310,7 +306,7 @@ class TransactionController extends BaseController
                 Session::flash('successes', $messageBags['successes']);
                 Session::flash('errors', $messageBags['errors']);
 
-                return Redirect::route('transactions.create',$what)->withInput();
+                return Redirect::route('transactions.create', $what)->withInput();
                 break;
         }
 
@@ -335,6 +331,7 @@ class TransactionController extends BaseController
                  */
                 if ($messageBag->count() > 0) {
                     Session::flash('error', 'Could not save transaction: ' . $messageBag->first());
+
                     return Redirect::route('transactions.create', [$what])->withInput()->withErrors($messageBag);
                 }
 
@@ -359,6 +356,7 @@ class TransactionController extends BaseController
                 Session::flash('warnings', $messageBags['warnings']);
                 Session::flash('successes', $messageBags['successes']);
                 Session::flash('errors', $messageBags['errors']);
+
                 return Redirect::route('transactions.create', [$what])->withInput();
                 break;
             default:
@@ -408,6 +406,7 @@ class TransactionController extends BaseController
                 Session::flash('warnings', $messageBags['warnings']);
                 Session::flash('successes', $messageBags['successes']);
                 Session::flash('errors', $messageBags['errors']);
+
                 return Redirect::route('transactions.edit', $journal->id)->withInput();
                 break;
             default:

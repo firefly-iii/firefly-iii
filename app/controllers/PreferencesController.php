@@ -28,13 +28,12 @@ class PreferencesController extends BaseController
         /** @var \FireflyIII\Shared\Preferences\Preferences $preferences */
         $preferences = App::make('FireflyIII\Shared\Preferences\Preferences');
 
-        $accounts = $acct->getAssetAccounts();
-        $viewRange = $preferences->get('viewRange', '1M');
+        $accounts       = $acct->getAssetAccounts();
+        $viewRange      = $preferences->get('viewRange', '1M');
         $viewRangeValue = $viewRange->data;
-        $frontpage = $preferences->get('frontpageAccounts', []);
+        $frontpage      = $preferences->get('frontpageAccounts', []);
 
-        return View::make('preferences.index')->with('accounts', $accounts)->with('frontpageAccounts', $frontpage)
-            ->with('viewRange', $viewRangeValue);
+        return View::make('preferences.index')->with('accounts', $accounts)->with('frontpageAccounts', $frontpage)->with('viewRange', $viewRangeValue);
     }
 
     /**

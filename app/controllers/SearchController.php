@@ -14,7 +14,7 @@ class SearchController extends BaseController
         throw new NotImplementedException;
         $subTitle = null;
         $rawQuery = null;
-        $result = [];
+        $result   = [];
         if (!is_null(Input::get('q'))) {
             $rawQuery = trim(Input::get('q'));
             $words    = explode(' ', $rawQuery);
@@ -25,18 +25,12 @@ class SearchController extends BaseController
             $categories   = $this->_helper->searchCategories($words);
             $budgets      = $this->_helper->searchBudgets($words);
             $tags         = $this->_helper->searchTags($words);
-            $result = [
-                'transactions' => $transactions,
-                'accounts' => $accounts,
-                'categories' => $categories,
-                'budgets' => $budgets,
-                'tags' => $tags
-            ];
+            $result       = ['transactions' => $transactions, 'accounts' => $accounts, 'categories' => $categories, 'budgets' => $budgets, 'tags' => $tags];
 
         }
 
         return View::make('search.index')->with('title', 'Search')->with('subTitle', $subTitle)->with(
             'mainTitleIcon', 'fa-search'
-        )->with('query', $rawQuery)->with('result',$result);
+        )->with('query', $rawQuery)->with('result', $result);
     }
 }

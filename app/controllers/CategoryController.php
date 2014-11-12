@@ -46,6 +46,7 @@ class CategoryController extends BaseController
 
         $repos->destroy($category);
         Session::flash('success', 'The category was deleted.');
+
         return Redirect::route('categories.index');
     }
 
@@ -56,8 +57,7 @@ class CategoryController extends BaseController
      */
     public function edit(Category $category)
     {
-        return View::make('categories.edit')->with('category', $category)
-                   ->with('subTitle', 'Edit category "' . $category->name . '"');
+        return View::make('categories.edit')->with('category', $category)->with('subTitle', 'Edit category "' . $category->name . '"');
     }
 
     /**
@@ -122,6 +122,7 @@ class CategoryController extends BaseController
                     Session::flash('warnings', $messages['warnings']);
                     Session::flash('successes', $messages['successes']);
                     Session::flash('error', 'Could not save category: ' . $messages['errors']->first());
+
                     return Redirect::route('categories.edit', $category->id)->withInput()->withErrors($messages['errors']);
                 }
                 // store!
@@ -138,6 +139,7 @@ class CategoryController extends BaseController
                 Session::flash('warnings', $messageBags['warnings']);
                 Session::flash('successes', $messageBags['successes']);
                 Session::flash('errors', $messageBags['errors']);
+
                 return Redirect::route('categories.edit', $category->id)->withInput();
                 break;
         }

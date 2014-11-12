@@ -23,6 +23,18 @@ class UserController extends BaseController
         return View::make('user.login');
     }
 
+    /**
+     * Logout user.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function logout()
+    {
+        Auth::logout();
+        Session::flush();
+
+        return Redirect::route('index');
+    }
 
     /**
      * Login.
@@ -32,10 +44,7 @@ class UserController extends BaseController
     public function postLogin()
     {
         $rememberMe = Input::get('remember_me') == '1';
-        $data       = [
-            'email'    => Input::get('email'),
-            'password' => Input::get('password')
-        ];
+        $data       = ['email' => Input::get('email'), 'password' => Input::get('password')];
         $result     = Auth::attempt($data, $rememberMe);
         if ($result) {
             return Redirect::route('index');
@@ -44,20 +53,6 @@ class UserController extends BaseController
         Session::flash('error', 'No good!');
 
         return View::make('user.login');
-    }
-
-    /**
-     * If allowed, show the register form.
-     *
-     * @return $this|\Illuminate\View\View
-     */
-    public function register()
-    {
-        if (Config::get('auth.allow_register') !== true) {
-            return View::make('error')->with('message', 'Not possible');
-        }
-
-        return View::make('user.register');
     }
 
     /**
@@ -85,7 +80,6 @@ class UserController extends BaseController
         $user = $repository->register(Input::all());
 
 
-
         //$user = $this->user->register(Input::all());
         if ($user) {
             if (Config::get('auth.verify_mail') === true) {
@@ -99,29 +93,6 @@ class UserController extends BaseController
         }
 
         return View::make('user.register');
-    }
-
-    /**
-     * Logout user.
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function logout()
-    {
-        Auth::logout();
-        Session::flush();
-
-        return Redirect::route('index');
-    }
-
-    /**
-     * Show form to help user get a new password.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function remindme()
-    {
-        return View::make('user.remindme');
     }
 
     /**
@@ -155,6 +126,30 @@ class UserController extends BaseController
 
         return View::make('user.registered');
 
+    }
+
+    /**
+     * If allowed, show the register form.
+     *
+     * @return $this|\Illuminate\View\View
+     */
+    public function register()
+    {
+        if (Config::get('auth.allow_register') !== true) {
+            return View::make('error')->with('message', 'Not possible');
+        }
+
+        return View::make('user.register');
+    }
+
+    /**
+     * Show form to help user get a new password.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function remindme()
+    {
+        return View::make('user.remindme');
     }
 
     /**

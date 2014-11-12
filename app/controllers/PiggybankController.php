@@ -20,6 +20,25 @@ class PiggybankController extends BaseController
     }
 
     /**
+     * @param Piggybank $piggybank
+     *
+     * @return $this
+     */
+    public function add(Piggybank $piggybank)
+    {
+        /** @var \FireflyIII\Database\Piggybank $acct */
+        $repos = App::make('FireflyIII\Database\Piggybank');
+
+        $leftOnAccount = $repos->leftOnAccount($piggybank->account);
+        $savedSoFar    = $piggybank->currentRelevantRep()->currentamount;
+        $leftToSave    = $piggybank->targetamount - $savedSoFar;
+        $amount        = min($leftOnAccount, $leftToSave);
+
+
+        return View::make('piggybanks.add', compact('piggybank'))->with('maxAmount', $amount);
+    }
+
+    /**
      * @throws NotImplementedException
      */
     public function create()
@@ -35,8 +54,10 @@ class PiggybankController extends BaseController
 
 
         $accounts = $toolkit->makeSelectList($acct->getAssetAccounts());
-        return View::make('piggybanks.create', compact('accounts', 'periods'))->with('title', 'Piggy banks')->with('mainTitleIcon', 'fa-sort-amount-asc')
-                   ->with('subTitle', 'Create new piggy bank')->with('subTitleIcon', 'fa-plus');
+
+        return View::make('piggybanks.create', compact('accounts', 'periods'))->with('title', 'Piggy banks')->with('mainTitleIcon', 'fa-sort-amount-asc')->with(
+                'subTitle', 'Create new piggy bank'
+            )->with('subTitleIcon', 'fa-plus');
     }
 
     /**
@@ -46,11 +67,9 @@ class PiggybankController extends BaseController
      */
     public function delete(Piggybank $piggybank)
     {
-        return View::make('piggybanks.delete')
-	        ->with('piggybank', $piggybank)
-	        ->with('subTitle', 'Delete "' . $piggybank->name . '"')
-	        ->with('title', 'Piggy banks')
-	        ->with('mainTitleIcon', 'fa-sort-amount-asc');
+        return View::make('piggybanks.delete')->with('piggybank', $piggybank)->with('subTitle', 'Delete "' . $piggybank->name . '"')->with(
+                'title', 'Piggy banks'
+            )->with('mainTitleIcon', 'fa-sort-amount-asc');
     }
 
     /**
@@ -89,38 +108,46 @@ class PiggybankController extends BaseController
         /*
          * Flash some data to fill the form.
          */
-        $prefilled = [
-            'name'         => $piggybank->name,
-            'account_id'   => $piggybank->account_id,
-            'targetamount' => $piggybank->targetamount,
-            'targetdate'   => $piggybank->targetdate,
-            'remind_me'    => intval($piggybank->remind_me) == 1 ? true : false
-        ];
+        $prefilled = ['name'       => $piggybank->name, 'account_id' => $piggybank->account_id, 'targetamount' => $piggybank->targetamount,
+                      'targetdate' => $piggybank->targetdate, 'remind_me' => intval($piggybank->remind_me) == 1 ? true : false];
         Session::flash('prefilled', $prefilled);
 
         return View::make('piggybanks.edit', compact('piggybank', 'accounts', 'periods', 'prefilled'))->with('title', 'Piggybanks')->with(
             'mainTitleIcon', 'fa-sort-amount-asc'
-        )
-                   ->with('subTitle', 'Edit piggy bank "' . e($piggybank->name) . '"')->with('subTitleIcon', 'fa-pencil');
+        )->with('subTitle', 'Edit piggy bank "' . e($piggybank->name) . '"')->with('subTitleIcon', 'fa-pencil');
     }
 
-    /**
-     * @param Piggybank $piggybank
-     *
-     * @return $this
-     */
-    public function add(Piggybank $piggybank)
+    public function index()
     {
-        /** @var \FireflyIII\Database\Piggybank $acct */
+        /** @var \FireflyIII\Database\Piggybank $repos */
         $repos = App::make('FireflyIII\Database\Piggybank');
 
-        $leftOnAccount = $repos->leftOnAccount($piggybank->account);
-        $savedSoFar    = $piggybank->currentRelevantRep()->currentamount;
-        $leftToSave    = $piggybank->targetamount - $savedSoFar;
-        $amount        = min($leftOnAccount, $leftToSave);
+        /** @var Collection $piggybanks */
+        $piggybanks = $repos->get();
 
+        $accounts = [];
+        /** @var Piggybank $piggybank */
+        foreach ($piggybanks as $piggybank) {
+            $piggybank->savedSoFar = floatval($piggybank->currentRelevantRep()->currentamount);
+            $piggybank->percentage = intval($piggybank->savedSoFar / $piggybank->targetamount * 100);
+            $piggybank->leftToSave = $piggybank->targetamount - $piggybank->savedSoFar;
 
-        return View::make('piggybanks.add', compact('piggybank'))->with('maxAmount', $amount);
+            /*
+             * Fill account information:
+             */
+            $account = $piggybank->account;
+            if (!isset($accounts[$account->id])) {
+                $accounts[$account->id] = ['name'              => $account->name, 'balance' => $account->balance(),
+                                           'leftForPiggybanks' => $repos->leftOnAccount($account), 'sumOfSaved' => $piggybank->savedSoFar,
+                                           'sumOfTargets'      => floatval($piggybank->targetamount), 'leftToSave' => $piggybank->leftToSave];
+            } else {
+                $accounts[$account->id]['sumOfSaved'] += $piggybank->savedSoFar;
+                $accounts[$account->id]['sumOfTargets'] += floatval($piggybank->targetamount);
+                $accounts[$account->id]['leftToSave'] += $piggybank->leftToSave;
+            }
+        }
+
+        return View::make('piggybanks.index', compact('piggybanks', 'accounts'))->with('title', 'Piggy banks')->with('mainTitleIcon', 'fa-sort-amount-asc');
     }
 
     /**
@@ -148,17 +175,8 @@ class PiggybankController extends BaseController
         } else {
             Session::flash('error', 'Could not add ' . mf($amount, false) . ' to "' . e($piggybank->name) . '".');
         }
-        return Redirect::route('piggybanks.index');
-    }
 
-    /**
-     * @param Piggybank $piggybank
-     *
-     * @return \Illuminate\View\View
-     */
-    public function remove(Piggybank $piggybank)
-    {
-        return View::make('piggybanks.remove', compact('piggybank'));
+        return Redirect::route('piggybanks.index');
     }
 
     /**
@@ -180,46 +198,19 @@ class PiggybankController extends BaseController
         } else {
             Session::flash('error', 'Could not remove ' . mf($amount, false) . ' from "' . e($piggybank->name) . '".');
         }
+
         return Redirect::route('piggybanks.index');
     }
 
-    public function index()
+    /**
+     * @param Piggybank $piggybank
+     *
+     * @return \Illuminate\View\View
+     */
+    public function remove(Piggybank $piggybank)
     {
-        /** @var \FireflyIII\Database\Piggybank $repos */
-        $repos = App::make('FireflyIII\Database\Piggybank');
-
-        /** @var Collection $piggybanks */
-        $piggybanks = $repos->get();
-
-        $accounts = [];
-        /** @var Piggybank $piggybank */
-        foreach ($piggybanks as $piggybank) {
-            $piggybank->savedSoFar = floatval($piggybank->currentRelevantRep()->currentamount);
-            $piggybank->percentage = intval($piggybank->savedSoFar / $piggybank->targetamount * 100);
-            $piggybank->leftToSave = $piggybank->targetamount - $piggybank->savedSoFar;
-
-            /*
-             * Fill account information:
-             */
-            $account = $piggybank->account;
-            if (!isset($accounts[$account->id])) {
-                $accounts[$account->id] = [
-                    'name'              => $account->name,
-                    'balance'           => $account->balance(),
-                    'leftForPiggybanks' => $repos->leftOnAccount($account),
-                    'sumOfSaved'        => $piggybank->savedSoFar,
-                    'sumOfTargets'      => floatval($piggybank->targetamount),
-                    'leftToSave'        => $piggybank->leftToSave
-                ];
-            } else {
-                $accounts[$account->id]['sumOfSaved'] += $piggybank->savedSoFar;
-                $accounts[$account->id]['sumOfTargets'] += floatval($piggybank->targetamount);
-                $accounts[$account->id]['leftToSave'] += $piggybank->leftToSave;
-            }
-        }
-        return View::make('piggybanks.index', compact('piggybanks', 'accounts'))->with('title', 'Piggy banks')->with('mainTitleIcon', 'fa-sort-amount-asc');
+        return View::make('piggybanks.remove', compact('piggybank'));
     }
-
 
     public function show(Piggybank $piggyBank)
     {
@@ -249,6 +240,7 @@ class PiggybankController extends BaseController
                     Session::flash('warnings', $messages['warnings']);
                     Session::flash('successes', $messages['successes']);
                     Session::flash('error', 'Could not save piggy bank: ' . $messages['errors']->first());
+
                     return Redirect::route('piggybanks.create')->withInput()->withErrors($messages['errors']);
                 }
                 // store!
@@ -296,6 +288,7 @@ class PiggybankController extends BaseController
                     Session::flash('warnings', $messages['warnings']);
                     Session::flash('successes', $messages['successes']);
                     Session::flash('error', 'Could not save piggy bank: ' . $messages['errors']->first());
+
                     return Redirect::route('piggybanks.edit', $piggyBank->id)->withInput()->withErrors($messages['errors']);
                 }
                 // store!
@@ -312,6 +305,7 @@ class PiggybankController extends BaseController
                 Session::flash('warnings', $messageBags['warnings']);
                 Session::flash('successes', $messageBags['successes']);
                 Session::flash('errors', $messageBags['errors']);
+
                 return Redirect::route('piggybanks.edit', $piggyBank->id)->withInput();
                 break;
         }

@@ -1,7 +1,5 @@
 <?php
 
-use FireflyIII\Exception\FireflyException;
-
 /**
  * Class RecurringController
  *
@@ -23,9 +21,7 @@ class RecurringController extends BaseController
     {
         $periods = \Config::get('firefly.periods_to_text');
 
-        return View::make('recurring.create')
-	        ->with('periods', $periods)
-	        ->with('subTitle', 'Create new');
+        return View::make('recurring.create')->with('periods', $periods)->with('subTitle', 'Create new');
     }
 
     /**
@@ -35,9 +31,9 @@ class RecurringController extends BaseController
      */
     public function delete(RecurringTransaction $recurringTransaction)
     {
-        return View::make('recurring.delete')
-	        ->with('recurringTransaction', $recurringTransaction)
-	        ->with('subTitle', 'Delete "' . $recurringTransaction->name . '"');
+        return View::make('recurring.delete')->with('recurringTransaction', $recurringTransaction)->with(
+                'subTitle', 'Delete "' . $recurringTransaction->name . '"'
+            );
     }
 
     /**
@@ -72,10 +68,9 @@ class RecurringController extends BaseController
     {
         $periods = \Config::get('firefly.periods_to_text');
 
-        return View::make('recurring.edit')
-	        ->with('periods', $periods)
-	        ->with('recurringTransaction', $recurringTransaction)
-	        ->with('subTitle', 'Edit "' . $recurringTransaction->name . '"');
+        return View::make('recurring.edit')->with('periods', $periods)->with('recurringTransaction', $recurringTransaction)->with(
+                'subTitle', 'Edit "' . $recurringTransaction->name . '"'
+            );
     }
 
     /**
@@ -87,28 +82,29 @@ class RecurringController extends BaseController
     }
 
     /**
-     *
-     */
-    public function show(RecurringTransaction $recurringTransaction)
-    {
-        return View::make('recurring.show')
-	        ->with('recurring', $recurringTransaction)
-	        ->with('subTitle', $recurringTransaction->name);
-    }
-
-    /**
      * @param RecurringTransaction $recurringTransaction
+     *
      * @return mixed
      */
     public function rescan(RecurringTransaction $recurringTransaction)
     {
         if (intval($recurringTransaction->active) == 0) {
             Session::flash('warning', 'Inactive recurring transactions cannot be scanned.');
+
             return Redirect::back();
         }
         throw new NotImplementedException;
         Session::flash('success', 'Rescanned everything.');
+
         return Redirect::back();
+    }
+
+    /**
+     *
+     */
+    public function show(RecurringTransaction $recurringTransaction)
+    {
+        return View::make('recurring.show')->with('recurring', $recurringTransaction)->with('subTitle', $recurringTransaction->name);
     }
 
     public function store()

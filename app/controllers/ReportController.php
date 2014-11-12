@@ -49,11 +49,7 @@ class ReportController extends BaseController
         $end = clone $date;
         $end->endOfYear();
         while ($date < $end) {
-            $summary[] = [
-                'month'   => $date->format('F'),
-                'income'  => $tj->getSumOfIncomesByMonth($date),
-                'expense' => $tj->getSumOfExpensesByMonth($date),
-            ];
+            $summary[] = ['month' => $date->format('F'), 'income' => $tj->getSumOfIncomesByMonth($date), 'expense' => $tj->getSumOfExpensesByMonth($date),];
             $date->addMonth();
         }
 

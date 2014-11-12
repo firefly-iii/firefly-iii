@@ -19,38 +19,6 @@ class AccountController extends BaseController
     }
 
     /**
-     * @param string $what
-     *
-     * @return View
-     * @throws FireflyException
-     */
-    public function index($what = 'default')
-    {
-        switch ($what) {
-            default:
-                throw new FireflyException('Cannot handle account type "' . e($what) . '".');
-                break;
-            case 'asset':
-                $subTitleIcon = 'fa-money';
-                $subTitle     = 'Asset accounts';
-                break;
-            case 'expense':
-                $subTitleIcon = 'fa-shopping-cart';
-                $subTitle     = 'Expense accounts';
-                break;
-            case 'revenue':
-                $subTitleIcon = 'fa-download';
-                $subTitle     = 'Revenue accounts';
-                break;
-        }
-        return View::make('accounts.index')
-                   ->with('what', $what)
-                   ->with(compact('subTitleIcon'))
-                   ->with(compact('subTitle'));
-    }
-
-
-    /**
      * @return \Illuminate\View\View
      */
     public function create($what)
@@ -67,10 +35,7 @@ class AccountController extends BaseController
                 break;
         }
 
-        return View::make('accounts.create')
-                   ->with('subTitle', 'Create a new ' . $what . ' account')
-                   ->with('what', $what)
-                   ->with(compact('subTitleIcon'));
+        return View::make('accounts.create')->with('subTitle', 'Create a new ' . $what . ' account')->with('what', $what)->with(compact('subTitleIcon'));
     }
 
     /**
@@ -80,10 +45,9 @@ class AccountController extends BaseController
      */
     public function delete(Account $account)
     {
-        return View::make('accounts.delete')->with('account', $account)
-                   ->with(
-                       'subTitle', 'Delete ' . strtolower($account->accountType->type) . ' "' . $account->name . '"'
-                   );
+        return View::make('accounts.delete')->with('account', $account)->with(
+                'subTitle', 'Delete ' . strtolower($account->accountType->type) . ' "' . $account->name . '"'
+            );
     }
 
     /**
@@ -193,11 +157,40 @@ class AccountController extends BaseController
             Session::flash('prefilled', $prefilled);
         }
 
-        return View::make('accounts.edit')
-                   ->with('account', $account)
-                   ->with('openingBalance', $openingBalance)
-                   ->with(compact('subTitleIcon'))
-                   ->with('subTitle', 'Edit ' . strtolower($account->accountType->type) . ' "' . $account->name . '"');
+        return View::make('accounts.edit')->with('account', $account)->with('openingBalance', $openingBalance)->with(compact('subTitleIcon'))->with(
+                'subTitle', 'Edit ' . strtolower(
+                    $account->accountType->type
+                ) . ' "' . $account->name . '"'
+            );
+    }
+
+    /**
+     * @param string $what
+     *
+     * @return View
+     * @throws FireflyException
+     */
+    public function index($what = 'default')
+    {
+        switch ($what) {
+            default:
+                throw new FireflyException('Cannot handle account type "' . e($what) . '".');
+                break;
+            case 'asset':
+                $subTitleIcon = 'fa-money';
+                $subTitle     = 'Asset accounts';
+                break;
+            case 'expense':
+                $subTitleIcon = 'fa-shopping-cart';
+                $subTitle     = 'Expense accounts';
+                break;
+            case 'revenue':
+                $subTitleIcon = 'fa-download';
+                $subTitle     = 'Revenue accounts';
+                break;
+        }
+
+        return View::make('accounts.index')->with('what', $what)->with(compact('subTitleIcon'))->with(compact('subTitle'));
     }
 
     /**
@@ -223,10 +216,9 @@ class AccountController extends BaseController
 
 
         //$data = $this->_accounts->show($account, 40);
-        return View::make('accounts.show')
-                   ->with('account', $account)
-                   ->with('subTitle', 'Details for ' . strtolower($account->accountType->type) . ' "' . $account->name . '"')
-                   ->with(compact('subTitleIcon'));
+        return View::make('accounts.show')->with('account', $account)->with(
+                'subTitle', 'Details for ' . strtolower($account->accountType->type) . ' "' . $account->name . '"'
+            )->with(compact('subTitleIcon'));
     }
 
     /**
@@ -236,7 +228,7 @@ class AccountController extends BaseController
     public function store()
     {
 
-        $data         = Input::all();
+        $data = Input::all();
         $data['what'] = isset($data['what']) && $data['what'] != '' ? $data['what'] : 'asset';
         /** @var \FireflyIII\Database\Account $acct */
         $acct = App::make('FireflyIII\Database\Account');
@@ -253,6 +245,7 @@ class AccountController extends BaseController
                     Session::flash('warnings', $messages['warnings']);
                     Session::flash('successes', $messages['successes']);
                     Session::flash('error', 'Could not save account: ' . $messages['errors']->first());
+
                     return Redirect::route('accounts.create', $data['what'])->withInput()->withErrors($messages['errors']);
                 }
                 // store!
@@ -270,6 +263,7 @@ class AccountController extends BaseController
                 Session::flash('warnings', $messageBags['warnings']);
                 Session::flash('successes', $messageBags['successes']);
                 Session::flash('errors', $messageBags['errors']);
+
                 return Redirect::route('accounts.create', $data['what'])->withInput();
                 break;
         }
@@ -315,6 +309,7 @@ class AccountController extends BaseController
                     Session::flash('warnings', $messages['warnings']);
                     Session::flash('successes', $messages['successes']);
                     Session::flash('error', 'Could not save account: ' . $messages['errors']->first());
+
                     return Redirect::route('accounts.edit', $account->id)->withInput()->withErrors($messages['errors']);
                 }
                 // store!
@@ -331,6 +326,7 @@ class AccountController extends BaseController
                 Session::flash('warnings', $messageBags['warnings']);
                 Session::flash('successes', $messageBags['successes']);
                 Session::flash('errors', $messageBags['errors']);
+
                 return Redirect::route('accounts.edit', $account->id)->withInput();
                 break;
         }
