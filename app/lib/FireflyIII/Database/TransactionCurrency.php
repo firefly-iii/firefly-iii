@@ -3,6 +3,7 @@
 namespace FireflyIII\Database;
 
 
+use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use LaravelBook\Ardent\Ardent;
 use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
@@ -17,6 +18,17 @@ use FireflyIII\Database\Ifaces\TransactionCurrencyInterface;
 class TransactionCurrency implements TransactionCurrencyInterface, CUD, CommonDatabaseCalls
 {
 
+
+    /**
+     * @param string $code
+     *
+     * @return \TransactionCurrency|null
+     */
+    public function findByCode($code)
+    {
+        return \TransactionCurrency::whereCode($code)->first();
+    }
+
     /**
      * @param Ardent $model
      *
@@ -25,6 +37,7 @@ class TransactionCurrency implements TransactionCurrencyInterface, CUD, CommonDa
     public function destroy(Ardent $model)
     {
         // TODO: Implement destroy() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -38,6 +51,7 @@ class TransactionCurrency implements TransactionCurrencyInterface, CUD, CommonDa
     public function validateObject(Ardent $model)
     {
         // TODO: Implement validateObject() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -51,6 +65,7 @@ class TransactionCurrency implements TransactionCurrencyInterface, CUD, CommonDa
     public function validate(array $model)
     {
         // TODO: Implement validate() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -61,6 +76,19 @@ class TransactionCurrency implements TransactionCurrencyInterface, CUD, CommonDa
     public function store(array $data)
     {
         // TODO: Implement store() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * @param Ardent $model
+     * @param array $data
+     *
+     * @return bool
+     */
+    public function update(Ardent $model, array $data)
+    {
+        // TODO: Implement update() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -73,6 +101,7 @@ class TransactionCurrency implements TransactionCurrencyInterface, CUD, CommonDa
     public function find($id)
     {
         // TODO: Implement find() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -83,6 +112,18 @@ class TransactionCurrency implements TransactionCurrencyInterface, CUD, CommonDa
     public function get()
     {
         // TODO: Implement get() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function getByIds(array $ids)
+    {
+        // TODO: Implement getByIds() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -94,37 +135,7 @@ class TransactionCurrency implements TransactionCurrencyInterface, CUD, CommonDa
      */
     public function findByWhat($what)
     {
-        // TODO: Implement get() method.
-    }
-
-    /**
-     * @param string $code
-     *
-     * @return \TransactionCurrency|null
-     */
-    public function findByCode($code)
-    {
-        return \TransactionCurrency::whereCode($code)->first();
-    }
-
-    /**
-     * @param array $ids
-     *
-     * @return Collection
-     */
-    public function getByIds(array $ids)
-    {
-        // TODO: Implement getByIds() method.
-    }
-
-    /**
-     * @param Ardent $model
-     * @param array  $data
-     *
-     * @return bool
-     */
-    public function update(Ardent $model, array $data)
-    {
-        // TODO: Implement update() method.
+        // TODO: Implement findByWhat() method.
+        throw new NotImplementedException;
     }
 }

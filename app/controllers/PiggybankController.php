@@ -60,8 +60,6 @@ class PiggybankController extends BaseController
      */
     public function destroy(Piggybank $piggyBank)
     {
-        Event::fire('piggybanks.destroy', [$piggyBank]);
-
         /** @var \FireflyIII\Database\Piggybank $acct */
         $repos = App::make('FireflyIII\Database\Piggybank');
         $repos->destroy($piggyBank);

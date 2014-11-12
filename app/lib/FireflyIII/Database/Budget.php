@@ -2,13 +2,13 @@
 namespace FireflyIII\Database;
 
 use Carbon\Carbon;
-use FireflyIII\Exception\NotImplementedException;
-use Illuminate\Support\MessageBag;
-use LaravelBook\Ardent\Ardent;
-use Illuminate\Support\Collection;
+use FireflyIII\Database\Ifaces\BudgetInterface;
 use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
 use FireflyIII\Database\Ifaces\CUD;
-use FireflyIII\Database\Ifaces\BudgetInterface;
+use FireflyIII\Exception\NotImplementedException;
+use Illuminate\Support\Collection;
+use Illuminate\Support\MessageBag;
+use LaravelBook\Ardent\Ardent;
 
 /**
  * Class Budget
@@ -29,7 +29,7 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
 
     /**
      * @param \Budget $budget
-     * @param Carbon  $date
+     * @param Carbon $date
      *
      * @return \LimitRepetition|null
      */
@@ -54,18 +54,6 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
         return true;
     }
 
-    /**
-     * Validates a model. Returns an array containing MessageBags
-     * errors/warnings/successes.
-     *
-     * @param Ardent $model
-     *
-     * @return array
-     */
-    public function validateObject(Ardent $model)
-    {
-        // TODO: Implement validateObject() method.
-    }
 
     /**
      * Validates an array. Returns an array containing MessageBags
@@ -77,9 +65,9 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
      */
     public function validate(array $model)
     {
-        $warnings  = new MessageBag;
+        $warnings = new MessageBag;
         $successes = new MessageBag;
-        $errors    = new MessageBag;
+        $errors = new MessageBag;
 
         if (isset($model['name'])) {
             if (strlen($model['name']) < 1) {
@@ -104,8 +92,8 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
         }
 
         return [
-            'errors'    => $errors,
-            'warnings'  => $warnings,
+            'errors' => $errors,
+            'warnings' => $warnings,
             'successes' => $successes
         ];
     }
@@ -119,7 +107,7 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     {
         $data['user_id'] = $this->getUser()->id;
 
-        $budget        = new \Budget($data);
+        $budget = new \Budget($data);
         $budget->class = 'Budget';
 
         if (!$budget->validate()) {
@@ -128,18 +116,6 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
         }
         $budget->save();
         return $budget;
-    }
-
-    /**
-     * Returns an object with id $id.
-     *
-     * @param int $id
-     *
-     * @return Ardent
-     */
-    public function find($id)
-    {
-        // TODO: Implement find() method.
     }
 
     /**
@@ -156,7 +132,7 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
 
     /**
      * @param \Budget $budget
-     * @param Carbon  $date
+     * @param Carbon $date
      *
      * @return float
      */
@@ -169,27 +145,6 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
         return $sum;
     }
 
-    /**
-     * @param array $ids
-     *
-     * @return Collection
-     */
-    public function getByIds(array $ids)
-    {
-        // TODO: Implement getByIds() method.
-    }
-
-    /**
-     * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
-     *
-     * @param $what
-     *
-     * @return \AccountType|null
-     */
-    public function findByWhat($what)
-    {
-        // TODO: Implement findByWhat() method.
-    }
 
     /**
      * @param Carbon $start
@@ -203,21 +158,21 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
         return \Auth::user()->transactionjournals()->whereNotIn(
             'transaction_journals.id', function ($query) use ($start, $end) {
                 $query->select('transaction_journals.id')->from('transaction_journals')
-                      ->leftJoin(
-                          'component_transaction_journal', 'component_transaction_journal.transaction_journal_id', '=',
-                          'transaction_journals.id'
-                      )
-                      ->leftJoin('components', 'components.id', '=', 'component_transaction_journal.component_id')
-                      ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                      ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                      ->where('components.class', 'Budget');
+                    ->leftJoin(
+                        'component_transaction_journal', 'component_transaction_journal.transaction_journal_id', '=',
+                        'transaction_journals.id'
+                    )
+                    ->leftJoin('components', 'components.id', '=', 'component_transaction_journal.component_id')
+                    ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                    ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                    ->where('components.class', 'Budget');
             }
         )->before($end)->after($start)->lessThan(0)->transactionTypes(['Withdrawal'])->get();
     }
 
     /**
      * @param Ardent $model
-     * @param array  $data
+     * @param array $data
      *
      * @return bool
      */
@@ -233,5 +188,56 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
         $model->save();
 
         return true;
+    }
+
+    /**
+     * Validates a model. Returns an array containing MessageBags
+     * errors/warnings/successes.
+     *
+     * @param Ardent $model
+     *
+     * @return array
+     */
+    public function validateObject(Ardent $model)
+    {
+        // TODO: Implement validateObject() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * Returns an object with id $id.
+     *
+     * @param int $id
+     *
+     * @return Ardent
+     */
+    public function find($id)
+    {
+        // TODO: Implement find() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function getByIds(array $ids)
+    {
+        // TODO: Implement getByIds() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
+     *
+     * @param $what
+     *
+     * @return \AccountType|null
+     */
+    public function findByWhat($what)
+    {
+        // TODO: Implement findByWhat() method.
+        throw new NotImplementedException;
     }
 }

@@ -109,16 +109,6 @@ class EloquentPiggybankTrigger
 
     /**
      * @param \Piggybank $piggyBank
-     *
-     * @return bool
-     */
-    public function destroy(\Piggybank $piggyBank)
-    {
-        return true;
-    }
-
-    /**
-     * @param \Piggybank $piggyBank
      * @param            $amount
      */
     public function modifyAmountAdd(\Piggybank $piggyBank, $amount)
@@ -175,7 +165,6 @@ class EloquentPiggybankTrigger
      */
     public function subscribe(Dispatcher $events)
     {
-        $events->listen('piggybanks.destroy', 'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@destroy');
         $events->listen(
             'piggybanks.modifyAmountAdd', 'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@modifyAmountAdd'
         );

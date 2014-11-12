@@ -3,6 +3,7 @@
 namespace FireflyIII\Database;
 
 use Firefly\Exception\FireflyException;
+use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use LaravelBook\Ardent\Ardent;
 use FireflyIII\Database\Ifaces\AccountTypeInterface;
@@ -56,6 +57,7 @@ class AccountType implements AccountTypeInterface, CUD, CommonDatabaseCalls
     public function destroy(Ardent $model)
     {
         // TODO: Implement destroy() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -69,6 +71,7 @@ class AccountType implements AccountTypeInterface, CUD, CommonDatabaseCalls
     public function validateObject(Ardent $model)
     {
         // TODO: Implement validateObject() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -82,6 +85,7 @@ class AccountType implements AccountTypeInterface, CUD, CommonDatabaseCalls
     public function validate(array $model)
     {
         // TODO: Implement validate() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -92,6 +96,19 @@ class AccountType implements AccountTypeInterface, CUD, CommonDatabaseCalls
     public function store(array $data)
     {
         // TODO: Implement store() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * @param Ardent $model
+     * @param array $data
+     *
+     * @return bool
+     */
+    public function update(Ardent $model, array $data)
+    {
+        // TODO: Implement update() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -104,6 +121,7 @@ class AccountType implements AccountTypeInterface, CUD, CommonDatabaseCalls
     public function find($id)
     {
         // TODO: Implement find() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -114,6 +132,7 @@ class AccountType implements AccountTypeInterface, CUD, CommonDatabaseCalls
     public function get()
     {
         // TODO: Implement get() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -124,16 +143,6 @@ class AccountType implements AccountTypeInterface, CUD, CommonDatabaseCalls
     public function getByIds(array $ids)
     {
         // TODO: Implement getByIds() method.
-    }
-
-    /**
-     * @param Ardent $model
-     * @param array  $data
-     *
-     * @return bool
-     */
-    public function update(Ardent $model, array $data)
-    {
-        // TODO: Implement update() method.
+        throw new NotImplementedException;
     }
 }

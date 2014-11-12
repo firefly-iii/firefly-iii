@@ -2,14 +2,12 @@
 
 namespace FireflyIII\Database;
 
-use Carbon\Carbon;
-use FireflyIII\Database\Ifaces\RecurringTransactionInterface;
 use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
 use FireflyIII\Database\Ifaces\CUD;
+use FireflyIII\Database\Ifaces\RecurringTransactionInterface;
 use FireflyIII\Exception\NotImplementedException;
-use Illuminate\Support\MessageBag;
-use LaravelBook\Ardent\Ardent;
 use Illuminate\Support\Collection;
+use LaravelBook\Ardent\Ardent;
 
 /**
  * Class Account
@@ -26,6 +24,17 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
     public function __construct()
     {
         $this->setUser(\Auth::user());
+    }
+
+
+    /**
+     * Returns all objects.
+     *
+     * @return Collection
+     */
+    public function get()
+    {
+        return $this->getUser()->recurringtransactions()->get();
     }
 
     /**
@@ -80,7 +89,7 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
 
     /**
      * @param Ardent $model
-     * @param array  $data
+     * @param array $data
      *
      * @return bool
      */
@@ -101,16 +110,6 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
     {
         // TODO: Implement find() method.
         throw new NotImplementedException;
-    }
-
-    /**
-     * Returns all objects.
-     *
-     * @return Collection
-     */
-    public function get()
-    {
-        return $this->getUser()->recurringtransactions()->get();
     }
 
     /**

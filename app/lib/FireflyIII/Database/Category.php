@@ -2,13 +2,13 @@
 namespace FireflyIII\Database;
 
 use Carbon\Carbon;
-use FireflyIII\Exception\NotImplementedException;
-use Illuminate\Support\MessageBag;
-use LaravelBook\Ardent\Ardent;
-use Illuminate\Support\Collection;
+use FireflyIII\Database\Ifaces\CategoryInterface;
 use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
 use FireflyIII\Database\Ifaces\CUD;
-use FireflyIII\Database\Ifaces\CategoryInterface;
+use FireflyIII\Exception\NotImplementedException;
+use Illuminate\Support\Collection;
+use Illuminate\Support\MessageBag;
+use LaravelBook\Ardent\Ardent;
 
 /**
  * Class Category
@@ -38,18 +38,6 @@ class Category implements CUD, CommonDatabaseCalls, CategoryInterface
         return true;
     }
 
-    /**
-     * Validates a model. Returns an array containing MessageBags
-     * errors/warnings/successes.
-     *
-     * @param Ardent $model
-     *
-     * @return array
-     */
-    public function validateObject(Ardent $model)
-    {
-        // TODO: Implement validateObject() method.
-    }
 
     /**
      * Validates an array. Returns an array containing MessageBags
@@ -61,9 +49,9 @@ class Category implements CUD, CommonDatabaseCalls, CategoryInterface
      */
     public function validate(array $model)
     {
-        $warnings  = new MessageBag;
+        $warnings = new MessageBag;
         $successes = new MessageBag;
-        $errors    = new MessageBag;
+        $errors = new MessageBag;
 
         if (isset($model['name'])) {
             if (strlen($model['name']) < 1) {
@@ -88,32 +76,10 @@ class Category implements CUD, CommonDatabaseCalls, CategoryInterface
         }
 
         return [
-            'errors'    => $errors,
-            'warnings'  => $warnings,
+            'errors' => $errors,
+            'warnings' => $warnings,
             'successes' => $successes
         ];
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return Ardent
-     */
-    public function store(array $data)
-    {
-        // TODO: Implement store() method.
-    }
-
-    /**
-     * Returns an object with id $id.
-     *
-     * @param int $id
-     *
-     * @return Ardent
-     */
-    public function find($id)
-    {
-        // TODO: Implement find() method.
     }
 
     /**
@@ -126,31 +92,10 @@ class Category implements CUD, CommonDatabaseCalls, CategoryInterface
         return $this->getUser()->categories()->orderBy('name', 'ASC')->get();
     }
 
-    /**
-     * @param array $ids
-     *
-     * @return Collection
-     */
-    public function getByIds(array $ids)
-    {
-        // TODO: Implement getByIds() method.
-    }
-
-    /**
-     * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
-     *
-     * @param $what
-     *
-     * @return \AccountType|null
-     */
-    public function findByWhat($what)
-    {
-        // TODO: Implement findByWhat() method.
-    }
 
     /**
      * @param \Category $budget
-     * @param Carbon  $date
+     * @param Carbon $date
      *
      * @return null
      */
@@ -161,7 +106,7 @@ class Category implements CUD, CommonDatabaseCalls, CategoryInterface
 
     /**
      * @param \Category $category
-     * @param Carbon  $date
+     * @param Carbon $date
      *
      * @return float
      */
@@ -176,7 +121,7 @@ class Category implements CUD, CommonDatabaseCalls, CategoryInterface
 
     /**
      * @param Ardent $model
-     * @param array  $data
+     * @param array $data
      *
      * @return bool
      */
@@ -192,5 +137,67 @@ class Category implements CUD, CommonDatabaseCalls, CategoryInterface
         $model->save();
 
         return true;
+    }
+
+    /**
+     * Validates a model. Returns an array containing MessageBags
+     * errors/warnings/successes.
+     *
+     * @param Ardent $model
+     *
+     * @return array
+     */
+    public function validateObject(Ardent $model)
+    {
+        // TODO: Implement validateObject() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return Ardent
+     */
+    public function store(array $data)
+    {
+        // TODO: Implement store() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * Returns an object with id $id.
+     *
+     * @param int $id
+     *
+     * @return Ardent
+     */
+    public function find($id)
+    {
+        // TODO: Implement find() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function getByIds(array $ids)
+    {
+        // TODO: Implement getByIds() method.
+        throw new NotImplementedException;
+    }
+
+    /**
+     * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
+     *
+     * @param $what
+     *
+     * @return \AccountType|null
+     */
+    public function findByWhat($what)
+    {
+        // TODO: Implement findByWhat() method.
+        throw new NotImplementedException;
     }
 }
