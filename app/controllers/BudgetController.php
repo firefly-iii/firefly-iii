@@ -18,20 +18,6 @@ class BudgetController extends BaseController
     }
 
     /**
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function postUpdateIncome()
-    {
-        /** @var \FireflyIII\Shared\Preferences\PreferencesInterface $preferences */
-        $preferences = App::make('FireflyIII\Shared\Preferences\PreferencesInterface');
-        $date        = Session::get('start');
-
-        $value = intval(Input::get('amount'));
-        $preferences->set('budgetIncomeTotal' . $date->format('FY'), $value);
-        return Redirect::route('budgets.index');
-    }
-
-    /**
      * Update the amount for a budget's limitrepetition and/or create it.
      *
      * @param Budget $budget
@@ -75,6 +61,49 @@ class BudgetController extends BaseController
         } else {
             return Response::json(['name' => $budget->name, 'repetition' => null]);
         }
+
+    }
+
+    /**
+     * @return $this
+     */
+    public function create()
+    {
+        return View::make('budgets.create')->with('subTitle', 'Create a new budget');
+    }
+
+    /**
+     * @param Budget $budget
+     *
+     * @return $this
+     */
+    public function delete(Budget $budget)
+    {
+        return View::make('budgets.delete')->with('budget', $budget)->with('subTitle', 'Delete budget "' . $budget->name . '"');
+    }
+
+    public function destroy(Budget $budget)
+    {
+        /** @var \FireflyIII\Database\Budget $repos */
+        $repos = App::make('FireflyIII\Database\Budget');
+        // remove budget
+        $repos->destroy($budget);
+        Session::flash('success', 'The budget was deleted.');
+
+        return Redirect::route('budgets.index');
+
+    }
+
+    /**
+     * @param Budget $budget
+     *
+     * @return $this
+     */
+    public function edit(Budget $budget)
+    {
+        Session::flash('prefilled', ['name' => $budget->name]);
+
+        return View::make('budgets.edit')->with('budget', $budget)->with('subTitle', 'Edit budget "' . $budget->name . '"');
 
     }
 
@@ -137,15 +166,18 @@ class BudgetController extends BaseController
     }
 
     /**
-     * @return $this
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function updateIncome()
+    public function postUpdateIncome()
     {
-        $date = Session::get('start');
         /** @var \FireflyIII\Shared\Preferences\PreferencesInterface $preferences */
         $preferences = App::make('FireflyIII\Shared\Preferences\PreferencesInterface');
-        $budgetAmount = $preferences->get('budgetIncomeTotal' . $date->format('FY'), 1000);
-        return View::make('budgets.income')->with('amount', $budgetAmount)->with('date', $date);
+        $date        = Session::get('start');
+
+        $value = intval(Input::get('amount'));
+        $preferences->set('budgetIncomeTotal' . $date->format('FY'), $value);
+
+        return Redirect::route('budgets.index');
     }
 
     /**
@@ -173,47 +205,6 @@ class BudgetController extends BaseController
     }
 
     /**
-     * @return $this
-     */
-    public function create()
-    {
-        return View::make('budgets.create')->with('subTitle', 'Create a new budget');
-    }
-
-    /**
-     * @param Budget $budget
-     *
-     * @return $this
-     */
-    public function delete(Budget $budget)
-    {
-        return View::make('budgets.delete')->with('budget', $budget)->with('subTitle', 'Delete budget "' . $budget->name . '"');
-    }
-
-    public function destroy(Budget $budget)
-    {
-        /** @var \FireflyIII\Database\Budget $repos */
-        $repos = App::make('FireflyIII\Database\Budget');
-        // remove budget
-        $repos->destroy($budget);
-        Session::flash('success', 'The budget was deleted.');
-        return Redirect::route('budgets.index');
-
-    }
-
-    /**
-     * @param Budget $budget
-     *
-     * @return $this
-     */
-    public function edit(Budget $budget)
-    {
-        Session::flash('prefilled', ['name' => $budget->name]);
-        return View::make('budgets.edit')->with('budget', $budget)->with('subTitle', 'Edit budget "' . $budget->name . '"');
-
-    }
-
-    /**
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store()
@@ -234,6 +225,7 @@ class BudgetController extends BaseController
                     Session::flash('warnings', $messages['warnings']);
                     Session::flash('successes', $messages['successes']);
                     Session::flash('error', 'Could not save budget: ' . $messages['errors']->first());
+
                     return Redirect::route('budgets.create')->withInput()->withErrors($messages['errors']);
                 }
                 // store!
@@ -251,6 +243,7 @@ class BudgetController extends BaseController
                 Session::flash('warnings', $messageBags['warnings']);
                 Session::flash('successes', $messageBags['successes']);
                 Session::flash('errors', $messageBags['errors']);
+
                 return Redirect::route('budgets.create')->withInput();
                 break;
         }
@@ -280,6 +273,7 @@ class BudgetController extends BaseController
                     Session::flash('warnings', $messages['warnings']);
                     Session::flash('successes', $messages['successes']);
                     Session::flash('error', 'Could not save budget: ' . $messages['errors']->first());
+
                     return Redirect::route('budgets.edit', $budget->id)->withInput()->withErrors($messages['errors']);
                 }
                 // store!
@@ -296,8 +290,22 @@ class BudgetController extends BaseController
                 Session::flash('warnings', $messageBags['warnings']);
                 Session::flash('successes', $messageBags['successes']);
                 Session::flash('errors', $messageBags['errors']);
+
                 return Redirect::route('budgets.edit', $budget->id)->withInput();
                 break;
         }
+    }
+
+    /**
+     * @return $this
+     */
+    public function updateIncome()
+    {
+        $date = Session::get('start');
+        /** @var \FireflyIII\Shared\Preferences\PreferencesInterface $preferences */
+        $preferences  = App::make('FireflyIII\Shared\Preferences\PreferencesInterface');
+        $budgetAmount = $preferences->get('budgetIncomeTotal' . $date->format('FY'), 1000);
+
+        return View::make('budgets.income')->with('amount', $budgetAmount)->with('date', $date);
     }
 }

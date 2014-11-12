@@ -8,6 +8,162 @@ class GoogleChartController extends BaseController
 {
 
     /**
+     * @param Account $account
+     */
+    public function accountBalanceChart(Account $account)
+    {
+        /** @var \Grumpydictator\Gchart\GChart $chart */
+        $chart = App::make('gchart');
+        $chart->addColumn('Day of month', 'date');
+        $chart->addColumn('Balance for ' . $account->name, 'number');
+
+        /*
+         * Loop the date, then loop the accounts, then add balance.
+         */
+        $start   = Session::get('start');
+        $end     = Session::get('end');
+        $current = clone $start;
+
+        while ($end >= $current) {
+            $row = [clone $current];
+            if ($current > Carbon::now()) {
+                $row[] = null;
+            } else {
+                $row[] = $account->balance($current);
+            }
+
+            $chart->addRowArray($row);
+            $current->addDay();
+        }
+
+
+        $chart->generate();
+
+        return Response::json($chart->getData());
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function accountSankeyInChart(Account $account)
+    {
+        // collect all relevant entries.
+        $set = [];
+
+        /** @var \Grumpydictator\Gchart\GChart $chart */
+        $chart = App::make('gchart');
+        $chart->addColumn('From', 'string');
+        $chart->addColumn('To', 'string', 'domain');
+        $chart->addColumn('Weight', 'number');
+
+        $transactions = $account->transactions()->with(
+            ['transactionjournal', 'transactionjournal.transactions' => function ($q) {
+                $q->where('amount', '<', 0);
+            }, 'transactionjournal.budgets', 'transactionjournal.transactiontype', 'transactionjournal.categories']
+        )->before(Session::get('end'))->after(
+            Session::get('start')
+        )->get();
+
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $amount = floatval($transaction->amount);
+            $type   = $transaction->transactionJournal->transactionType->type;
+
+            if ($amount > 0 && $type != 'Transfer') {
+
+                $otherAccount = $transaction->transactionJournal->transactions[0]->account->name;
+                $categoryName = isset($transaction->transactionJournal->categories[0]) ? $transaction->transactionJournal->categories[0]->name : '(no cat)';
+                $set[]        = [$otherAccount, $categoryName, $amount];
+                $set[]        = [$categoryName, $account->name, $amount];
+            }
+        }
+        // loop the set, group everything together:
+        $grouped = [];
+        foreach ($set as $entry) {
+            $key = $entry[0] . $entry[1];
+            if (isset($grouped[$key])) {
+                $grouped[$key][2] += $entry[2];
+            } else {
+                $grouped[$key] = $entry;
+            }
+        }
+
+        // add rows to the chart:
+        foreach ($grouped as $entry) {
+            $chart->addRow($entry[0], $entry[1], $entry[2]);
+        }
+
+        $chart->generate();
+
+        return Response::json($chart->getData());
+
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function accountSankeyOutChart(Account $account)
+    {
+        // collect all relevant entries.
+        $set = [];
+
+        /** @var \Grumpydictator\Gchart\GChart $chart */
+        $chart = App::make('gchart');
+        $chart->addColumn('From', 'string');
+        $chart->addColumn('To', 'string', 'domain');
+        $chart->addColumn('Weight', 'number');
+
+        $transactions = $account->transactions()->with(
+            ['transactionjournal', 'transactionjournal.transactions', 'transactionjournal.budgets', 'transactionjournal.transactiontype',
+             'transactionjournal.categories']
+        )->before(Session::get('end'))->after(
+            Session::get('start')
+        )->get();
+
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            $amount = floatval($transaction->amount);
+            $type   = $transaction->transactionJournal->transactionType->type;
+
+            if ($amount < 0 && $type != 'Transfer') {
+
+                // from account to a budget (if present).
+                $budgetName = isset($transaction->transactionJournal->budgets[0]) ? $transaction->transactionJournal->budgets[0]->name : '(no budget)';
+                $set[]      = [$account->name, $budgetName, $amount * -1];
+
+                // from budget to category.
+                $categoryName = isset($transaction->transactionJournal->categories[0]) ? ' ' . $transaction->transactionJournal->categories[0]->name
+                    : '(no cat)';
+                $set[]        = [$budgetName, $categoryName, $amount * -1];
+            }
+        }
+        // loop the set, group everything together:
+        $grouped = [];
+        foreach ($set as $entry) {
+            $key = $entry[0] . $entry[1];
+            if (isset($grouped[$key])) {
+                $grouped[$key][2] += $entry[2];
+            } else {
+                $grouped[$key] = $entry;
+            }
+        }
+
+        // add rows to the chart:
+        foreach ($grouped as $entry) {
+            $chart->addRow($entry[0], $entry[1], $entry[2]);
+        }
+
+        $chart->generate();
+
+        return Response::json($chart->getData());
+
+    }
+
+    /**
      * This method renders the b
      */
     public function allAccountsBalanceChart()
@@ -60,199 +216,8 @@ class GoogleChartController extends BaseController
         }
 
         $chart->generate();
+
         return Response::json($chart->getData());
-
-    }
-
-    /**
-     * @param $year
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function yearInExp($year)
-    {
-        try {
-            $start = new Carbon('01-01-' . $year);
-        } catch (Exception $e) {
-            App::abort(500);
-        }
-        /** @var \Grumpydictator\Gchart\GChart $chart */
-        $chart = App::make('gchart');
-        $chart->addColumn('Month', 'date');
-        $chart->addColumn('Income', 'number');
-        $chart->addColumn('Expenses', 'number');
-
-        /** @var \FireflyIII\Database\TransactionJournal $tj */
-        $tj = App::make('FireflyIII\Database\TransactionJournal');
-
-        $end = clone $start;
-        $end->endOfYear();
-        while ($start < $end) {
-
-            // total income:
-            $income  = $tj->getSumOfIncomesByMonth($start);
-            $expense = $tj->getSumOfExpensesByMonth($start);
-
-            $chart->addRow(clone $start, $income, $expense);
-            $start->addMonth();
-        }
-
-
-        $chart->generate();
-        return Response::json($chart->getData());
-
-    }
-
-    /**
-     * @param $year
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function yearInExpSum($year)
-    {
-        try {
-            $start = new Carbon('01-01-' . $year);
-        } catch (Exception $e) {
-            App::abort(500);
-        }
-        /** @var \Grumpydictator\Gchart\GChart $chart */
-        $chart = App::make('gchart');
-        $chart->addColumn('Summary', 'string');
-        $chart->addColumn('Income', 'number');
-        $chart->addColumn('Expenses', 'number');
-
-        /** @var \FireflyIII\Database\TransactionJournal $tj */
-        $tj = App::make('FireflyIII\Database\TransactionJournal');
-
-        $end = clone $start;
-        $end->endOfYear();
-        $income  = 0;
-        $expense = 0;
-        $count   = 0;
-        while ($start < $end) {
-
-            // total income:
-            $income += $tj->getSumOfIncomesByMonth($start);
-            $expense += $tj->getSumOfExpensesByMonth($start);
-            $count++;
-
-            $start->addMonth();
-        }
-        $chart->addRow('Sum', $income, $expense);
-        $count = $count > 0 ? $count : 1;
-        $chart->addRow('Average', ($income / $count), ($expense / $count));
-
-
-        $chart->generate();
-        return Response::json($chart->getData());
-
-    }
-
-
-    /**
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function budgetsReportChart($year)
-    {
-
-        try {
-            $start = new Carbon('01-01-' . $year);
-        } catch (Exception $e) {
-            App::abort(500);
-        }
-
-        /** @var \Grumpydictator\Gchart\GChart $chart */
-        $chart = App::make('gchart');
-
-        /** @var \FireflyIII\Database\Budget $bdt */
-        $bdt     = App::make('FireflyIII\Database\Budget');
-        $budgets = $bdt->get();
-
-        $chart->addColumn('Month', 'date');
-        /** @var \Budget $budget */
-        foreach ($budgets as $budget) {
-            $chart->addColumn($budget->name, 'number');
-        }
-        $chart->addColumn('No budget', 'number');
-
-        /*
-         * Loop budgets this year.
-         */
-        $end = clone $start;
-        $end->endOfYear();
-        while ($start <= $end) {
-            $row = [clone $start];
-
-            foreach ($budgets as $budget) {
-                $row[] = $bdt->spentInMonth($budget, $start);
-            }
-
-            /*
-             * Without a budget:
-             */
-            $endOfMonth = clone $start;
-            $endOfMonth->endOfMonth();
-            $set   = $bdt->transactionsWithoutBudgetInDateRange($start, $endOfMonth);
-            $row[] = floatval($set->sum('amount')) * -1;
-
-            $chart->addRowArray($row);
-            $start->addMonth();
-        }
-
-
-        $chart->generate();
-        return Response::json($chart->getData());
-    }
-
-    /**
-     * @param Component $component
-     * @param           $year
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function componentsAndSpending(Component $component, $year)
-    {
-        try {
-            $start = new Carbon('01-01-' . $year);
-        } catch (Exception $e) {
-            App::abort(500);
-        }
-
-        if ($component->class == 'Budget') {
-            /** @var \FireflyIII\Database\Budget $repos */
-            $repos = App::make('FireflyIII\Database\Budget');
-        } else {
-            /** @var \FireflyIII\Database\Category $repos */
-            $repos = App::make('FireflyIII\Database\Category');
-        }
-
-        /** @var \Grumpydictator\Gchart\GChart $chart */
-        $chart = App::make('gchart');
-        $chart->addColumn('Month', 'date');
-        $chart->addColumn('Budgeted', 'number');
-        $chart->addColumn('Spent', 'number');
-
-        $end = clone $start;
-        $end->endOfYear();
-        while ($start <= $end) {
-
-            $spent      = $repos->spentInMonth($component, $start);
-            $repetition = $repos->repetitionOnStartingOnDate($component, $start);
-            if ($repetition) {
-                $budgeted = floatval($repetition->amount);
-            } else {
-                $budgeted = null;
-            }
-
-            $chart->addRow(clone $start, $budgeted, $spent);
-
-            $start->addMonth();
-        }
-
-
-        $chart->generate();
-        return Response::json($chart->getData());
-
 
     }
 
@@ -321,6 +286,7 @@ class GoogleChartController extends BaseController
 
 
         $chart->generate();
+
         return Response::json($chart->getData());
     }
 
@@ -365,7 +331,117 @@ class GoogleChartController extends BaseController
 
 
         $chart->generate();
+
         return Response::json($chart->getData());
+
+    }
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function budgetsReportChart($year)
+    {
+
+        try {
+            $start = new Carbon('01-01-' . $year);
+        } catch (Exception $e) {
+            App::abort(500);
+        }
+
+        /** @var \Grumpydictator\Gchart\GChart $chart */
+        $chart = App::make('gchart');
+
+        /** @var \FireflyIII\Database\Budget $bdt */
+        $bdt     = App::make('FireflyIII\Database\Budget');
+        $budgets = $bdt->get();
+
+        $chart->addColumn('Month', 'date');
+        /** @var \Budget $budget */
+        foreach ($budgets as $budget) {
+            $chart->addColumn($budget->name, 'number');
+        }
+        $chart->addColumn('No budget', 'number');
+
+        /*
+         * Loop budgets this year.
+         */
+        $end = clone $start;
+        $end->endOfYear();
+        while ($start <= $end) {
+            $row = [clone $start];
+
+            foreach ($budgets as $budget) {
+                $row[] = $bdt->spentInMonth($budget, $start);
+            }
+
+            /*
+             * Without a budget:
+             */
+            $endOfMonth = clone $start;
+            $endOfMonth->endOfMonth();
+            $set   = $bdt->transactionsWithoutBudgetInDateRange($start, $endOfMonth);
+            $row[] = floatval($set->sum('amount')) * -1;
+
+            $chart->addRowArray($row);
+            $start->addMonth();
+        }
+
+
+        $chart->generate();
+
+        return Response::json($chart->getData());
+    }
+
+    /**
+     * @param Component $component
+     * @param           $year
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function componentsAndSpending(Component $component, $year)
+    {
+        try {
+            $start = new Carbon('01-01-' . $year);
+        } catch (Exception $e) {
+            App::abort(500);
+        }
+
+        if ($component->class == 'Budget') {
+            /** @var \FireflyIII\Database\Budget $repos */
+            $repos = App::make('FireflyIII\Database\Budget');
+        } else {
+            /** @var \FireflyIII\Database\Category $repos */
+            $repos = App::make('FireflyIII\Database\Category');
+        }
+
+        /** @var \Grumpydictator\Gchart\GChart $chart */
+        $chart = App::make('gchart');
+        $chart->addColumn('Month', 'date');
+        $chart->addColumn('Budgeted', 'number');
+        $chart->addColumn('Spent', 'number');
+
+        $end = clone $start;
+        $end->endOfYear();
+        while ($start <= $end) {
+
+            $spent      = $repos->spentInMonth($component, $start);
+            $repetition = $repos->repetitionOnStartingOnDate($component, $start);
+            if ($repetition) {
+                $budgeted = floatval($repetition->amount);
+            } else {
+                $budgeted = null;
+            }
+
+            $chart->addRow(clone $start, $budgeted, $spent);
+
+            $start->addMonth();
+        }
+
+
+        $chart->generate();
+
+        return Response::json($chart->getData());
+
 
     }
 
@@ -380,14 +456,8 @@ class GoogleChartController extends BaseController
          * Set of paid transaction journals.
          * Set of unpaid recurring transactions.
          */
-        $paid   = [
-            'items'  => [],
-            'amount' => 0
-        ];
-        $unpaid = [
-            'items'  => [],
-            'amount' => 0
-        ];
+        $paid   = ['items' => [], 'amount' => 0];
+        $unpaid = ['items' => [], 'amount' => 0];
 
         /** @var \Grumpydictator\Gchart\GChart $chart */
         $chart = App::make('gchart');
@@ -455,160 +525,93 @@ class GoogleChartController extends BaseController
         $chart->addRow('Paid: ' . join(', ', $paid['items']), $paid['amount']);
 
         $chart->generate();
+
         return Response::json($chart->getData());
 
     }
 
     /**
-     * @param Account $account
-     */
-    public function accountBalanceChart(Account $account)
-    {
-        /** @var \Grumpydictator\Gchart\GChart $chart */
-        $chart = App::make('gchart');
-        $chart->addColumn('Day of month', 'date');
-        $chart->addColumn('Balance for ' . $account->name, 'number');
-
-        /*
-         * Loop the date, then loop the accounts, then add balance.
-         */
-        $start   = Session::get('start');
-        $end     = Session::get('end');
-        $current = clone $start;
-
-        while ($end >= $current) {
-            $row = [clone $current];
-            if ($current > Carbon::now()) {
-                $row[] = null;
-            } else {
-                $row[] = $account->balance($current);
-            }
-
-            $chart->addRowArray($row);
-            $current->addDay();
-        }
-
-
-        $chart->generate();
-        return Response::json($chart->getData());
-    }
-
-    /**
-     * @param Account $account
+     * @param $year
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function accountSankeyOutChart(Account $account)
+    public function yearInExp($year)
     {
-        // collect all relevant entries.
-        $set = [];
-
+        try {
+            $start = new Carbon('01-01-' . $year);
+        } catch (Exception $e) {
+            App::abort(500);
+        }
         /** @var \Grumpydictator\Gchart\GChart $chart */
         $chart = App::make('gchart');
-        $chart->addColumn('From', 'string');
-        $chart->addColumn('To', 'string', 'domain');
-        $chart->addColumn('Weight', 'number');
+        $chart->addColumn('Month', 'date');
+        $chart->addColumn('Income', 'number');
+        $chart->addColumn('Expenses', 'number');
 
-        $transactions = $account->transactions()->with(
-            ['transactionjournal', 'transactionjournal.transactions', 'transactionjournal.budgets', 'transactionjournal.transactiontype',
-             'transactionjournal.categories']
-        )->before(Session::get('end'))->after(
-            Session::get('start')
-        )->get();
+        /** @var \FireflyIII\Database\TransactionJournal $tj */
+        $tj = App::make('FireflyIII\Database\TransactionJournal');
 
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $amount = floatval($transaction->amount);
-            $type   = $transaction->transactionJournal->transactionType->type;
+        $end = clone $start;
+        $end->endOfYear();
+        while ($start < $end) {
 
-            if ($amount < 0 && $type != 'Transfer') {
+            // total income:
+            $income  = $tj->getSumOfIncomesByMonth($start);
+            $expense = $tj->getSumOfExpensesByMonth($start);
 
-                // from account to a budget (if present).
-                $budgetName = isset($transaction->transactionJournal->budgets[0]) ? $transaction->transactionJournal->budgets[0]->name : '(no budget)';
-                $set[]      = [$account->name, $budgetName, $amount * -1];
-
-                // from budget to category.
-                $categoryName = isset($transaction->transactionJournal->categories[0]) ? ' ' . $transaction->transactionJournal->categories[0]->name
-                    : '(no cat)';
-                $set[]        = [$budgetName, $categoryName, $amount * -1];
-            }
-        }
-        // loop the set, group everything together:
-        $grouped = [];
-        foreach ($set as $entry) {
-            $key = $entry[0] . $entry[1];
-            if (isset($grouped[$key])) {
-                $grouped[$key][2] += $entry[2];
-            } else {
-                $grouped[$key] = $entry;
-            }
+            $chart->addRow(clone $start, $income, $expense);
+            $start->addMonth();
         }
 
-        // add rows to the chart:
-        foreach ($grouped as $entry) {
-            $chart->addRow($entry[0], $entry[1], $entry[2]);
-        }
 
         $chart->generate();
+
         return Response::json($chart->getData());
 
     }
 
     /**
-     * @param Account $account
+     * @param $year
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function accountSankeyInChart(Account $account)
+    public function yearInExpSum($year)
     {
-        // collect all relevant entries.
-        $set = [];
-
+        try {
+            $start = new Carbon('01-01-' . $year);
+        } catch (Exception $e) {
+            App::abort(500);
+        }
         /** @var \Grumpydictator\Gchart\GChart $chart */
         $chart = App::make('gchart');
-        $chart->addColumn('From', 'string');
-        $chart->addColumn('To', 'string', 'domain');
-        $chart->addColumn('Weight', 'number');
+        $chart->addColumn('Summary', 'string');
+        $chart->addColumn('Income', 'number');
+        $chart->addColumn('Expenses', 'number');
 
-        $transactions = $account->transactions()->with(
-            ['transactionjournal', 'transactionjournal.transactions' => function ($q) {
-                $q->where('amount', '<', 0);
-            }, 'transactionjournal.budgets', 'transactionjournal.transactiontype', 'transactionjournal.categories']
-        )->before(Session::get('end'))->after(
-            Session::get('start')
-        )->get();
+        /** @var \FireflyIII\Database\TransactionJournal $tj */
+        $tj = App::make('FireflyIII\Database\TransactionJournal');
 
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $amount = floatval($transaction->amount);
-            $type   = $transaction->transactionJournal->transactionType->type;
+        $end = clone $start;
+        $end->endOfYear();
+        $income  = 0;
+        $expense = 0;
+        $count   = 0;
+        while ($start < $end) {
 
-            if ($amount > 0 && $type != 'Transfer') {
+            // total income:
+            $income += $tj->getSumOfIncomesByMonth($start);
+            $expense += $tj->getSumOfExpensesByMonth($start);
+            $count++;
 
-                $otherAccount = $transaction->transactionJournal->transactions[0]->account->name;
-                $categoryName = isset($transaction->transactionJournal->categories[0]) ? $transaction->transactionJournal->categories[0]->name
-                    : '(no cat)';
-                $set[]        = [$otherAccount, $categoryName, $amount];
-                $set[]        = [$categoryName, $account->name, $amount];
-            }
+            $start->addMonth();
         }
-        // loop the set, group everything together:
-        $grouped = [];
-        foreach ($set as $entry) {
-            $key = $entry[0] . $entry[1];
-            if (isset($grouped[$key])) {
-                $grouped[$key][2] += $entry[2];
-            } else {
-                $grouped[$key] = $entry;
-            }
-        }
+        $chart->addRow('Sum', $income, $expense);
+        $count = $count > 0 ? $count : 1;
+        $chart->addRow('Average', ($income / $count), ($expense / $count));
 
-        // add rows to the chart:
-        foreach ($grouped as $entry) {
-            $chart->addRow($entry[0], $entry[1], $entry[2]);
-        }
 
         $chart->generate();
+
         return Response::json($chart->getData());
 
     }

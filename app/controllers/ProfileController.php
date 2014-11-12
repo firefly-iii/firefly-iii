@@ -8,21 +8,21 @@ class ProfileController extends BaseController
 
     /**
      * @return \Illuminate\View\View
-     *
-     */
-    public function index()
-    {
-        return View::make('profile.index')->with('title', 'Profile')->with('subTitle', Auth::user()->email)->with('mainTitleIcon', 'fa-user');
-    }
-
-    /**
-     * @return \Illuminate\View\View
      */
     public function changePassword()
     {
         return View::make('profile.change-password')->with('title', Auth::user()->email)->with('subTitle', 'Change your password')->with(
             'mainTitleIcon', 'fa-user'
         );
+    }
+
+    /**
+     * @return \Illuminate\View\View
+     *
+     */
+    public function index()
+    {
+        return View::make('profile.index')->with('title', 'Profile')->with('subTitle', Auth::user()->email)->with('mainTitleIcon', 'fa-user');
     }
 
     /**
