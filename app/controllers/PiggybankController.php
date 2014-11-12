@@ -1,6 +1,6 @@
 <?php
 
-use Firefly\Exception\FireflyException;
+use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;

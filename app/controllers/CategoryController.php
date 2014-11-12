@@ -1,5 +1,5 @@
 <?php
-use Firefly\Exception\FireflyException;
+use FireflyIII\Exception\FireflyException;
 use Illuminate\Support\MessageBag;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 use Carbon\Carbon;
-use Firefly\Exception\FireflyException;
+use FireflyIII\Exception\FireflyException;
 
 /**
  * Class GoogleTableController
