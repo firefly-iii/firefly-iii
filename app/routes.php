@@ -174,6 +174,12 @@ Route::group(
         Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
         Route::get('/flush', ['uses' => 'HomeController@flush', 'as' => 'flush']); # even though nothing is cached.
 
+        // JSON controller
+        Route::get('/json/expense-accounts', ['uses' => 'JsonController@expenseAccounts', 'as' => 'json.expense-accounts']);
+        Route::get('/json/revenue-accounts', ['uses' => 'JsonController@revenueAccounts', 'as' => 'json.revenue-accounts']);
+        Route::get('/json/categories', ['uses' => 'JsonController@categories', 'as' => 'json.categories']);
+
+
         // piggy bank controller
         Route::get('/piggybanks', ['uses' => 'PiggybankController@index', 'as' => 'piggybanks.index']);
         Route::get('/piggybanks/add/{piggybank}', ['uses' => 'PiggybankController@add']); # add money
