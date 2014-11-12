@@ -12,6 +12,7 @@ use Illuminate\Support\MessageBag;
 class TransactionController extends BaseController
 {
 
+
     /**
      * Construct a new transaction controller with two of the most often used helpers.
      *
@@ -20,6 +21,36 @@ class TransactionController extends BaseController
     {
         View::share('title', 'Transactions');
         View::share('mainTitleIcon', 'fa-repeat');
+    }
+
+    /**
+     * @param $what
+     *
+     * @return $this
+     */
+    public function index($what)
+    {
+
+        switch ($what) {
+            case 'expenses':
+            case 'withdrawal':
+                $subTitleIcon = 'fa-long-arrow-left';
+                $subTitle     = 'Expenses';
+                break;
+            case 'revenue':
+            case 'deposit':
+                $subTitleIcon = 'fa-long-arrow-right';
+                $subTitle     = 'Revenue, income and deposits';
+                break;
+            case 'transfer':
+            case 'transfers':
+                $subTitleIcon = 'fa-arrows-h';
+                $subTitle     = 'Transfers';
+                break;
+        }
+
+        return View::make('transactions.index', compact('subTitle', 'subTitleIcon'))->with('what', $what);
+
     }
 
     /**
@@ -46,7 +77,7 @@ class TransactionController extends BaseController
         /** @var \FireflyIII\Database\Piggybank $piggyRepository */
         $piggyRepository = App::make('FireflyIII\Database\Piggybank');
 
-        // get asset accounts with names and id's.
+        // get asset accounts with names and id's .
         $assetAccounts = $form->makeSelectList($accountRepository->getAssetAccounts());
 
         // get budgets as a select list.
@@ -223,32 +254,13 @@ class TransactionController extends BaseController
     }
 
     /**
-     * @return $this
-     */
-    public function expenses()
-    {
-        return View::make('transactions.list')->with('subTitle', 'Expenses')->with(
-            'subTitleIcon', 'fa-long-arrow-left'
-        )->with('what', 'expenses');
-    }
-
-    /**
-     * @return $this
-     */
-    public function revenue()
-    {
-        return View::make('transactions.list')->with('subTitle', 'Revenue')->with(
-            'subTitleIcon', 'fa-long-arrow-right'
-        )->with('what', 'revenue');
-    }
-
-    /**
      * @param TransactionJournal $journal
      *
      * @return $this
      */
-    public function show(TransactionJournal $journal)
-    {
+    public function show(
+        TransactionJournal $journal
+    ) {
         return View::make('transactions.show')->with('journal', $journal)->with(
             'subTitle', $journal->transactionType->type . ' "' . $journal->description . '"'
         );
@@ -260,8 +272,7 @@ class TransactionController extends BaseController
      * @return $this|\Illuminate\Http\RedirectResponse
      * @throws FireflyException
      */
-    public function store($what)
-    {
+    public function store($what) {
         throw new NotImplementedException;
         /*
          * Collect data to process:
@@ -314,19 +325,13 @@ class TransactionController extends BaseController
         }
     }
 
-    public function index($what)
-    {
-        return View::make('transactions.index')->with('subTitle', 'Bla bla')->with('subTitleIcon', 'fa-arrows-h')->with('what', $what);
-
-    }
 
     /**
      * @param TransactionJournal $journal
      *
      * @throws FireflyException
      */
-    public function update(TransactionJournal $journal)
-    {
+    public function update(TransactionJournal $journal) {
         throw new NotImplementedException;
         switch (Input::get('post_submit_action')) {
             case 'update':
@@ -370,4 +375,4 @@ class TransactionController extends BaseController
 
     }
 
-} 
+}

@@ -328,6 +328,38 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
     }
 
     /**
+     * Some objects.
+     *
+     * @return Collection
+     */
+    public function getTransfers()
+    {
+        return $this->getUser()->transactionjournals()->withRelevantData()->transactionTypes(['Transfer'])->get(['transaction_journals.*']);
+    }
+
+    /**
+     * Some objects.
+     *
+     * @return Collection
+     */
+    public function getDeposits()
+    {
+        return $this->getUser()->transactionjournals()->withRelevantData()->transactionTypes(['Deposit'])->get(['transaction_journals.*']);
+    }
+
+    /**
+     * Some objects.
+     *
+     * @return Collection
+     */
+    public function getWithdrawals()
+    {
+        return $this->getUser()->transactionjournals()->withRelevantData()->transactionTypes(['Withdrawal'])->get(['transaction_journals.*']);
+    }
+
+
+
+    /**
      * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
      *
      * @param $what

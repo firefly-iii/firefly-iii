@@ -164,6 +164,7 @@ Route::group(
         Route::get('/table/accounts/{what}', ['uses' => 'GoogleTableController@accountList']);
         Route::get('/table/categories', ['uses' => 'GoogleTableController@categoryList']);
         Route::get('/table/recurring', ['uses' => 'GoogleTableController@recurringList']);
+        Route::get('/table/transactions/{what}', ['uses' => 'GoogleTableController@transactionsList'])->where(['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']);
 
         // google table for components (categories + budgets)
         Route::get('/table/component/{component}/{limitrepetition}/transactions', ['uses' => 'GoogleTableController@transactionsByComponent']);
