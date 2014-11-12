@@ -5,13 +5,12 @@ namespace FireflyIII\Database;
 
 use Carbon\Carbon;
 use Firefly\Exception\FireflyException;
-use FireflyIII\Exception\NotImplementedException;
-use Illuminate\Support\Collection;
-use Illuminate\Support\MessageBag;
-use LaravelBook\Ardent\Ardent;
 use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
 use FireflyIII\Database\Ifaces\CUD;
 use FireflyIII\Database\Ifaces\TransactionJournalInterface;
+use Illuminate\Support\Collection;
+use Illuminate\Support\MessageBag;
+use LaravelBook\Ardent\Ardent;
 
 /**
  * Class TransactionJournal
@@ -42,12 +41,12 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         $end->endOfMonth();
 
         $sum = \DB::table('transactions')
-                  ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                  ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
-                  ->where('amount', '>', 0)
-                  ->where('transaction_types.type', '=', 'Deposit')
-                  ->where('transaction_journals.date', '>=', $date->format('Y-m-d'))
-                  ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))->sum('transactions.amount');
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
+            ->where('amount', '>', 0)
+            ->where('transaction_types.type', '=', 'Deposit')
+            ->where('transaction_journals.date', '>=', $date->format('Y-m-d'))
+            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))->sum('transactions.amount');
         $sum = floatval($sum);
         return $sum;
     }
@@ -64,12 +63,12 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         $end->endOfMonth();
 
         $sum = \DB::table('transactions')
-                  ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                  ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
-                  ->where('amount', '>', 0)
-                  ->where('transaction_types.type', '=', 'Withdrawal')
-                  ->where('transaction_journals.date', '>=', $date->format('Y-m-d'))
-                  ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))->sum('transactions.amount');
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
+            ->where('amount', '>', 0)
+            ->where('transaction_types.type', '=', 'Withdrawal')
+            ->where('transaction_journals.date', '>=', $date->format('Y-m-d'))
+            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))->sum('transactions.amount');
         $sum = floatval($sum);
         return $sum;
     }
@@ -87,9 +86,9 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
 
     /**
      * @param \Account $account
-     * @param int      $count
-     * @param Carbon   $start
-     * @param Carbon   $end
+     * @param int $count
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return Collection
      */
@@ -97,7 +96,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
     {
 
         $accountID = $account->id;
-        $query     = $this->_user
+        $query = $this->_user
             ->transactionjournals()
             ->with(['transactions', 'transactioncurrency', 'transactiontype'])
             ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
@@ -156,9 +155,9 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
     public function validate(array $model)
     {
 
-        $warnings  = new MessageBag;
+        $warnings = new MessageBag;
         $successes = new MessageBag;
-        $errors    = new MessageBag;
+        $errors = new MessageBag;
 
 
         if (!isset($model['what'])) {
@@ -191,30 +190,99 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
             $errors->add('date', 'This date is invalid.');
         }
 
-        if (isset($model['to_id']) && intval($model['to_id']) < 1) {
-            $errors->add('account_to', 'Invalid to-account');
+        /*
+         * Amount:
+         */
+        if (isset($model['amount']) && floatval($model['amount']) < 0.01) {
+            $errors->add('amount', 'Amount must be > 0.01');
+        } else if (!isset($model['amount'])) {
+            $errors->add('amount', 'Amount must be set!');
+        } else {
+            $successes->add('amount', 'OK');
         }
 
-        if (isset($model['from_id']) && intval($model['from_id']) < 1) {
-            $errors->add('account_from', 'Invalid from-account');
+        /*
+         * Budget:
+         */
+        if (isset($model['budget_id']) && !ctype_digit($model['budget_id'])) {
+            $errors->add('budget_id', 'Invalid budget');
+        } else {
+            $successes->add('budget_id', 'OK');
+        }
 
+        $successes->add('category', 'OK');
+
+        /*
+         * Many checks to catch invalid or not-existing accounts.
+         */
+        $accountError = false;
+        switch (true) {
+            // this combination is often seen in withdrawals.
+            case (isset($model['account_id']) && isset($model['expense_account'])):
+                if (intval($model['account_id']) < 1) {
+                    $errors->add('account_id', 'Invalid account.');
+                } else {
+                    $successes->add('account_id', 'OK');
+                }
+                $successes->add('expense_account', 'OK');
+                break;
+            case (isset($model['account_id']) && isset($model['revenue_account'])):
+                if (intval($model['account_id']) < 1) {
+                    $errors->add('account_id', 'Invalid account.');
+                } else {
+                    $successes->add('account_id', 'OK');
+                }
+                $successes->add('revenue_account', 'OK');
+                break;
+            case (isset($model['account_from_id']) && isset($model['account_to_id'])):
+                if (intval($model['account_from_id']) < 1 || intval($model['account_from_id']) < 1) {
+                    $errors->add('account_from_id', 'Invalid account selected.');
+                    $errors->add('account_to_id', 'Invalid account selected.');
+
+                } else {
+                    if (intval($model['account_from_id']) == intval($model['account_from_id'])) {
+                        $errors->add('account_to_id', 'Cannot be the same as "from" account.');
+                        $errors->add('account_from_id', 'Cannot be the same as "to" account.');
+                    } else {
+                        $successes->add('account_from_id', 'OK');
+                        $successes->add('account_to_id', 'OK');
+                    }
+                }
+                break;
+
+            case (isset($model['to']) && isset($model['from'])):
+                if (is_object($model['to']) && is_object($model['from'])) {
+                    $successes->add('from', 'OK');
+                    $successes->add('to', 'OK');
+                }
+                break;
+
+            default:
+                throw new FireflyException('Cannot validate accounts for transaction journal.');
+                break;
         }
-        if (isset($model['account_id']) && intval($model['account_id']) < 1) {
-            $errors->add('account_id', 'Invalid account!');
-        }
-        if (isset($model['to']) && !($model['to'] instanceof \Account)) {
-            $errors->add('account_to', 'Invalid to-account');
-        }
-        if (isset($model['from']) && !($model['from'] instanceof \Account)) {
-            $errors->add('account_from', 'Invalid from-account');
-        }
-        if (!isset($model['amount']) || (isset($model['amount']) && floatval($model['amount']) < 0)) {
-            $errors->add('amount', 'Invalid amount');
-        }
-        if (!isset($model['from']) && !isset($model['to'])) {
-            $errors->add('account_to', 'No accounts found!');
-            $errors->add('account_id', 'No accounts found!');
-        }
+
+//        if (isset($model['to_id']) && intval($model['to_id']) < 1) {
+//            $errors->add('account_to', 'Invalid to-account');
+//        }
+//
+//        if (isset($model['from_id']) && intval($model['from_id']) < 1) {
+//            $errors->add('account_from', 'Invalid from-account');
+//
+//        }
+//        if (isset($model['account_id']) && intval($model['account_id']) < 1) {
+//            $errors->add('account_id', 'Invalid account!');
+//        }
+//        if (isset($model['to']) && !($model['to'] instanceof \Account)) {
+//            $errors->add('account_to', 'Invalid to-account');
+//        }
+//        if (isset($model['from']) && !($model['from'] instanceof \Account)) {
+//            $errors->add('account_from', 'Invalid from-account');
+//        }
+//        if (!isset($model['amount']) || (isset($model['amount']) && floatval($model['amount']) < 0)) {
+//            $errors->add('amount', 'Invalid amount');
+//        }
+
 
         $validator = \Validator::make([$model], \Transaction::$rules);
         if ($validator->invalid()) {
@@ -232,8 +300,8 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
             $successes->add('date', 'OK');
         }
         return [
-            'errors'    => $errors,
-            'warnings'  => $warnings,
+            'errors' => $errors,
+            'warnings' => $warnings,
             'successes' => $successes
         ];
 
@@ -258,15 +326,15 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         $transactionRepository = \App::make('FireflyIII\Database\Transaction');
 
         $journalType = $typeRepository->findByWhat($data['what']);
-        $currency    = $currencyRepository->findByCode($data['currency']);
+        $currency = $currencyRepository->findByCode($data['currency']);
 
         $journal = new \TransactionJournal;
         $journal->transactionType()->associate($journalType);
         $journal->transactionCurrency()->associate($currency);
         $journal->user()->associate($this->getUser());
         $journal->description = $data['description'];
-        $journal->date        = $data['date'];
-        $journal->completed   = 0;
+        $journal->date = $data['date'];
+        $journal->completed = 0;
         //$journal->user_id     = $this->getUser()->id;
 
         /*
@@ -281,10 +349,10 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         /*
          *  Then store both transactions.
          */
-        $first    = [
-            'account'             => $data['from'],
+        $first = [
+            'account' => $data['from'],
             'transaction_journal' => $journal,
-            'amount'              => ($data['amount'] * -1),
+            'amount' => ($data['amount'] * -1),
         ];
         $validate = $transactionRepository->validate($first);
         if ($validate['errors']->count() == 0) {
@@ -294,9 +362,9 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         }
 
         $second = [
-            'account'             => $data['to'],
+            'account' => $data['to'],
             'transaction_journal' => $journal,
-            'amount'              => floatval($data['amount']),
+            'amount' => floatval($data['amount']),
         ];
 
         $validate = $transactionRepository->validate($second);
@@ -388,7 +456,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
 
     /**
      * @param Ardent $model
-     * @param array  $data
+     * @param array $data
      *
      * @return bool
      */
