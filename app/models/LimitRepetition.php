@@ -1,5 +1,6 @@
 <?php
 
+use FireflyIII\Exception\FireflyException;
 use LaravelBook\Ardent\Ardent as Ardent;
 
 /**
@@ -83,10 +84,7 @@ class LimitRepetition extends Ardent
         }
         switch ($this->repeat_freq) {
             default:
-                throw new \Firefly\Exception\FireflyException(
-                    'No date formats for frequency "' . $this->repeat_freq
-                    . '"!'
-                );
+                throw new FireflyException('No date formats for frequency "' . $this->repeat_freq . '"!');
                 break;
             case 'daily':
                 return $this->startdate->format('Ymd') . '-5';
@@ -119,10 +117,7 @@ class LimitRepetition extends Ardent
         }
         switch ($this->repeat_freq) {
             default:
-                throw new \Firefly\Exception\FireflyException(
-                    'No date formats for frequency "' . $this->repeat_freq
-                    . '"!'
-                );
+                throw new FireflyException('No date formats for frequency "' . $this->repeat_freq . '"!');
                 break;
             case 'daily':
                 return $this->startdate->format('j F Y');

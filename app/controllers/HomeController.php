@@ -4,20 +4,9 @@ use FireflyIII\Shared\Preferences\PreferencesInterface as Prefs;
 /**
  * Class HomeController
  *
- * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class HomeController extends BaseController
 {
-    protected $_preferences;
-
-    /**
-     * @param Prefs  $preferences
-     */
-    public function __construct(Prefs $preferences)
-    {
-        $this->_preferences = $preferences;
-    }
-
     /**
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -52,8 +41,11 @@ class HomeController extends BaseController
 
         $valid = ['1D', '1W', '1M', '3M', '6M', '1Y',];
 
+        /** @var \FireflyIII\Shared\Preferences\PreferencesInterface $preferences */
+        $preferences = App::make('FireflyIII\Shared\Preferences\PreferencesInterface');
+
         if (in_array($range, $valid)) {
-            $this->_preferences->set('viewRange', $range);
+            $preferences->set('viewRange', $range);
             Session::forget('range');
         }
         return Redirect::back();
@@ -85,6 +77,9 @@ class HomeController extends BaseController
         /** @var \FireflyIII\Database\TransactionJournal $jrnls */
         $jrnls = App::make('FireflyIII\Database\TransactionJournal');
 
+        /** @var \FireflyIII\Shared\Preferences\PreferencesInterface $preferences */
+        $preferences = App::make('FireflyIII\Shared\Preferences\PreferencesInterface');
+
         $count = $acct->countAssetAccounts();
 
         $start = Session::get('start');
@@ -92,7 +87,7 @@ class HomeController extends BaseController
 
 
         // get the preference for the home accounts to show:
-        $frontpage = $this->_preferences->get('frontpageAccounts', []);
+        $frontpage = $preferences->get('frontpageAccounts', []);
         if ($frontpage->data == []) {
             $accounts = $acct->getAssetAccounts();
         } else {

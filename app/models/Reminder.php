@@ -1,7 +1,6 @@
 <?php
 
 use Carbon\Carbon;
-use Firefly\Database\SingleTableInheritanceEntity;
 use LaravelBook\Ardent\Ardent;
 
 

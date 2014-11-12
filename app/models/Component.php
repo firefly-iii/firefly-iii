@@ -1,5 +1,5 @@
 <?php
-use Firefly\Database\SingleTableInheritanceEntity;
+use FireflyIII\Shared\SingleTableInheritanceEntity;
 
 /**
  * Component

@@ -371,7 +371,7 @@ class GoogleChartController extends BaseController
 
     /**
      * @return \Illuminate\Http\JsonResponse
-     * @throws \Firefly\Exception\FireflyException
+     * @throws \FireflyIII\Exception\FireflyException
      */
     public function recurringTransactionsOverview()
     {

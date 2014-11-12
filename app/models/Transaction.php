@@ -1,6 +1,7 @@
 <?php
 
 use Carbon\Carbon;
+use FireflyIII\Exception\NotImplementedException;
 use LaravelBook\Ardent\Ardent;
 use LaravelBook\Ardent\Builder;
 
@@ -64,18 +65,19 @@ class Transaction extends Ardent
      */
     public function connectPiggybank(\Piggybank $piggybank = null)
     {
-        if (is_null($piggybank)) {
-            return true;
-        }
-        /** @var \Firefly\Storage\Piggybank\PiggybankRepositoryInterface $piggyRepository */
-        $piggyRepository = \App::make('Firefly\Storage\Piggybank\PiggybankRepositoryInterface');
-        if ($this->account_id == $piggybank->account_id) {
-            $this->piggybank()->associate($piggybank);
-            $this->save();
-            \Event::fire('piggybanks.createRelatedTransfer', [$piggybank, $this->transactionJournal, $this]);
-            return true;
-        }
-        return false;
+        throw new NotImplementedException;
+//        if (is_null($piggybank)) {
+//            return true;
+//        }
+//        /** @var \Firefly\Storage\Piggybank\PiggybankRepositoryInterface $piggyRepository */
+//        $piggyRepository = \App::make('Firefly\Storage\Piggybank\PiggybankRepositoryInterface');
+//        if ($this->account_id == $piggybank->account_id) {
+//            $this->piggybank()->associate($piggybank);
+//            $this->save();
+//            \Event::fire('piggybanks.createRelatedTransfer', [$piggybank, $this->transactionJournal, $this]);
+//            return true;
+//        }
+//        return false;
     }
 
     /**
