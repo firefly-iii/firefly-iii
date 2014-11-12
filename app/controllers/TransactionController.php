@@ -310,7 +310,7 @@ class TransactionController extends BaseController
                 Session::flash('successes', $messageBags['successes']);
                 Session::flash('errors', $messageBags['errors']);
 
-                return Redirect::route('transactions.create')->withInput();
+                return Redirect::route('transactions.create',$what)->withInput();
                 break;
         }
 
