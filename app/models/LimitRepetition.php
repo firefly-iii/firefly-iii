@@ -6,31 +6,26 @@ use LaravelBook\Ardent\Ardent as Ardent;
 /**
  * LimitRepetition
  *
- * @property integer $id
+ * @property integer        $id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property integer $limit_id
+ * @property integer        $limit_id
  * @property \Carbon\Carbon $startdate
  * @property \Carbon\Carbon $enddate
- * @property float $amount
- * @property-read \Limit $limit
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereLimitId($value) 
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereStartdate($value) 
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereEnddate($value) 
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereAmount($value) 
+ * @property float          $amount
+ * @property-read \Limit    $limit
+ * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereLimitId($value)
+ * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereStartdate($value)
+ * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereEnddate($value)
+ * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereAmount($value)
  */
 class LimitRepetition extends Ardent
 {
     public static $rules
-        = [
-            'limit_id'  => 'required|exists:limits,id',
-            'startdate' => 'required|date',
-            'enddate'   => 'required|date',
-            'amount'    => 'numeric|required|min:0.01',
-        ];
+        = ['limit_id' => 'required|exists:limits,id', 'startdate' => 'required|date', 'enddate' => 'required|date', 'amount' => 'numeric|required|min:0.01',];
 
     /**
      * @return array
@@ -40,20 +35,6 @@ class LimitRepetition extends Ardent
         return ['created_at', 'updated_at', 'startdate', 'enddate'];
     }
 
-    public function spentInRepetition() {
-        $sum = \DB::table('transactions')
-                  ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                  ->leftJoin('component_transaction_journal', 'component_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                  ->leftJoin('components', 'components.id', '=', 'component_transaction_journal.component_id')
-                  ->leftJoin('limits', 'limits.component_id', '=', 'components.id')
-                  ->leftJoin('limit_repetitions', 'limit_repetitions.limit_id', '=', 'limits.id')
-                  ->where('transaction_journals.date', '>=', $this->startdate->format('Y-m-d'))
-                  ->where('transaction_journals.date', '<=', $this->enddate->format('Y-m-d'))
-                  ->where('transactions.amount', '>', 0)
-                  ->where('limit_repetitions.id', '=', $this->id)->sum('transactions.amount');
-        return floatval($sum);
-    }
-
     /**
      * How much money is left in this?
      */
@@ -61,6 +42,21 @@ class LimitRepetition extends Ardent
     {
         return floatval($this->amount - $this->spentInRepetition());
 
+    }
+
+    public function spentInRepetition()
+    {
+        $sum = \DB::table('transactions')->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')->leftJoin(
+                'component_transaction_journal', 'component_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
+            )->leftJoin('components', 'components.id', '=', 'component_transaction_journal.component_id')->leftJoin(
+                'limits', 'limits.component_id', '=', 'components.id'
+            )->leftJoin('limit_repetitions', 'limit_repetitions.limit_id', '=', 'limits.id')->where(
+                'transaction_journals.date', '>=', $this->startdate->format('Y-m-d')
+            )->where('transaction_journals.date', '<=', $this->enddate->format('Y-m-d'))->where('transactions.amount', '>', 0)->where(
+                'limit_repetitions.id', '=', $this->id
+            )->sum('transactions.amount');
+
+        return floatval($sum);
     }
 
     /**

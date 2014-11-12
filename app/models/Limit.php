@@ -7,36 +7,32 @@ use LaravelBook\Ardent\Ardent as Ardent;
 /**
  * Limit
  *
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $component_id
- * @property \Carbon\Carbon $startdate
- * @property float $amount
- * @property boolean $repeats
- * @property string $repeat_freq
- * @property-read \Budget $budget
- * @property-read \Component $component
+ * @property integer                                                          $id
+ * @property \Carbon\Carbon                                                   $created_at
+ * @property \Carbon\Carbon                                                   $updated_at
+ * @property integer                                                          $component_id
+ * @property \Carbon\Carbon                                                   $startdate
+ * @property float                                                            $amount
+ * @property boolean                                                          $repeats
+ * @property string                                                           $repeat_freq
+ * @property-read \Budget                                                     $budget
+ * @property-read \Component                                                  $component
  * @property-read \Illuminate\Database\Eloquent\Collection|\LimitRepetition[] $limitrepetitions
- * @method static \Illuminate\Database\Query\Builder|\Limit whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereComponentId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereStartdate($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereAmount($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereRepeats($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereRepeatFreq($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Limit whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Limit whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Limit whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Limit whereComponentId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Limit whereStartdate($value)
+ * @method static \Illuminate\Database\Query\Builder|\Limit whereAmount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Limit whereRepeats($value)
+ * @method static \Illuminate\Database\Query\Builder|\Limit whereRepeatFreq($value)
  */
 class Limit extends Ardent
 {
 
     public static $rules
-        = [
-            'component_id' => 'required|exists:components,id',
-            'startdate'    => 'required|date',
-            'amount'       => 'numeric|required|min:0.01',
-            'repeats'      => 'required|boolean',
-            'repeat_freq'  => 'required|in:daily,weekly,monthly,quarterly,half-year,yearly'
+        = ['component_id' => 'required|exists:components,id', 'startdate' => 'required|date', 'amount' => 'numeric|required|min:0.01',
+           'repeats'      => 'required|boolean', 'repeat_freq' => 'required|in:daily,weekly,monthly,quarterly,half-year,yearly'
 
         ];
 
@@ -90,15 +86,15 @@ class Limit extends Ardent
         }
         $end->subDay();
         $count = $this->limitrepetitions()->where('startdate', $start->format('Y-m-d'))->where('enddate', $end->format('Y-m-d'))->count();
-        \Log::debug('All: '.$this->limitrepetitions()->count().' (#'.$this->id.')');
-        \Log::debug('Found ' . $count.' limit-reps for limit #' . $this->id.' with start '.$start->format('Y-m-d') .' and end ' . $end->format('Y-m-d'));
+        \Log::debug('All: ' . $this->limitrepetitions()->count() . ' (#' . $this->id . ')');
+        \Log::debug('Found ' . $count . ' limit-reps for limit #' . $this->id . ' with start ' . $start->format('Y-m-d') . ' and end ' . $end->format('Y-m-d'));
 
         if ($count == 0) {
 
-            $repetition = new \LimitRepetition();
+            $repetition            = new \LimitRepetition();
             $repetition->startdate = $start;
-            $repetition->enddate = $end;
-            $repetition->amount = $this->amount;
+            $repetition->enddate   = $end;
+            $repetition->amount    = $this->amount;
             $repetition->limit()->associate($this);
 
             try {
@@ -113,12 +109,14 @@ class Limit extends Ardent
             if (isset($repetition->id)) {
                 \Event::fire('limits.repetition', [$repetition]);
             }
-        } else if($count == 1) {
-            // update this one:
-            $repetition = $this->limitrepetitions()->where('startdate', $start->format('Y-m-d'))->where('enddate', $end->format('Y-m-d'))->first();
-            $repetition->amount = $this->amount;
-            $repetition->save();
+        } else {
+            if ($count == 1) {
+                // update this one:
+                $repetition         = $this->limitrepetitions()->where('startdate', $start->format('Y-m-d'))->where('enddate', $end->format('Y-m-d'))->first();
+                $repetition->amount = $this->amount;
+                $repetition->save();
 
+            }
         }
     }
 
