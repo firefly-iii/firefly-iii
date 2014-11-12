@@ -1,8 +1,5 @@
 <?php
 
-use Firefly\Helper\Preferences\PreferencesHelperInterface as PHI;
-use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
-
 /**
  * Class PreferencesController
  *
@@ -10,20 +7,14 @@ use Firefly\Storage\Account\AccountRepositoryInterface as ARI;
  */
 class PreferencesController extends BaseController
 {
-    protected $_accounts;
-    protected $_preferences;
-
     /**
-     * @param ARI $accounts
-     * @param PHI $preferences
+     *
      */
-    public function __construct(ARI $accounts, PHI $preferences)
+    public function __construct()
     {
 
-        $this->_accounts    = $accounts;
-        $this->_preferences = $preferences;
-        View::share('title','Preferences');
-        View::share('mainTitleIcon','fa-gear');
+        View::share('title', 'Preferences');
+        View::share('mainTitleIcon', 'fa-gear');
     }
 
     /**
@@ -31,13 +22,16 @@ class PreferencesController extends BaseController
      */
     public function index()
     {
-        $accounts = $this->_accounts->getDefault();
+        /** @var \FireflyIII\Database\Account $acct */
+        $acct = App::make('FireflyIII\Database\Account');
 
-        $viewRange      = $this->_preferences->get('viewRange', '1M');
+        /** @var \FireflyIII\Shared\Preferences\Preferences $preferences */
+        $preferences = App::make('FireflyIII\Shared\Preferences\Preferences');
+
+        $accounts = $acct->getAssetAccounts();
+        $viewRange = $preferences->get('viewRange', '1M');
         $viewRangeValue = $viewRange->data;
-
-        // pref:
-        $frontpage = $this->_preferences->get('frontpageAccounts', []);
+        $frontpage = $preferences->get('frontpageAccounts', []);
 
         return View::make('preferences.index')->with('accounts', $accounts)->with('frontpageAccounts', $frontpage)
             ->with('viewRange', $viewRangeValue);
@@ -49,15 +43,18 @@ class PreferencesController extends BaseController
     public function postIndex()
     {
 
+        /** @var \FireflyIII\Shared\Preferences\Preferences $preferences */
+        $preferences = App::make('FireflyIII\Shared\Preferences\Preferences');
+
         // frontpage accounts
         $frontpageAccounts = [];
         foreach (Input::get('frontpageAccounts') as $id) {
             $frontpageAccounts[] = intval($id);
         }
-        $this->_preferences->set('frontpageAccounts', $frontpageAccounts);
+        $preferences->set('frontpageAccounts', $frontpageAccounts);
 
         // view range:
-        $this->_preferences->set('viewRange', Input::get('viewRange'));
+        $preferences->set('viewRange', Input::get('viewRange'));
         // forget session values:
         Session::forget('start');
         Session::forget('end');
