@@ -2,6 +2,7 @@
 
 
 use FireflyIII\Exception\FireflyException;
+use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\MessageBag;
 
 /**
@@ -30,31 +31,30 @@ class TransactionController extends BaseController
      */
     public function create($what = 'deposit')
     {
-        throw new NotImplementedException;
         /*
          * The repositories we need:
          */
-        /** @var \Firefly\Helper\Toolkit\Toolkit $toolkit */
-        $toolkit = App::make('Firefly\Helper\Toolkit\Toolkit');
+        /** @var \FireflyIII\Shared\Toolkit\Form $form */
+        $form = App::make('FireflyIII\Shared\Toolkit\Form');
 
-        /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accountRepository */
-        $accountRepository = App::make('Firefly\Storage\Account\AccountRepositoryInterface');
+        /** @var \FireflyIII\Database\Account $accountRepository */
+        $accountRepository = App::make('FireflyIII\Database\Account');
 
-        /** @var \Firefly\Storage\Budget\BudgetRepositoryInterface $budgetRepository */
-        $budgetRepository = App::make('Firefly\Storage\Budget\BudgetRepositoryInterface');
+        /** @var \FireflyIII\Database\Budget $budgetRepository */
+        $budgetRepository = App::make('FireflyIII\Database\Budget');
 
-        /** @var \Firefly\Storage\Piggybank\PiggybankRepositoryInterface $piggyRepository */
-        $piggyRepository = App::make('Firefly\Storage\Piggybank\PiggybankRepositoryInterface');
+        /** @var \FireflyIII\Database\Piggybank $piggyRepository */
+        $piggyRepository = App::make('FireflyIII\Database\Piggybank');
 
         // get asset accounts with names and id's.
-        $assetAccounts = $toolkit->makeSelectList($accountRepository->getActiveDefault());
+        $assetAccounts = $form->makeSelectList($accountRepository->getAssetAccounts());
 
         // get budgets as a select list.
-        $budgets = $toolkit->makeSelectList($budgetRepository->get());
+        $budgets    = $form->makeSelectList($budgetRepository->get());
         $budgets[0] = '(no budget)';
 
         // get the piggy banks.
-        $piggies = $toolkit->makeSelectList($piggyRepository->get());
+        $piggies    = $form->makeSelectList($piggyRepository->get());
         $piggies[0] = '(no piggy bank)';
 
         /*
@@ -100,19 +100,21 @@ class TransactionController extends BaseController
      */
     public function destroy(TransactionJournal $transactionJournal)
     {
-        throw new NotImplementedException;
         $type = $transactionJournal->transactionType->type;
-        $transactionJournal->delete();
+
+        /** @var \FireflyIII\Database\TransactionJournal $repository */
+        $repository = App::make('FireflyIII\Database\TransactionJournal');
+        $repository->destroy($transactionJournal);
 
         switch ($type) {
             case 'Withdrawal':
-                return Redirect::route('transactions.expenses');
+                return Redirect::route('transactions.index', 'withdrawal');
                 break;
             case 'Deposit':
-                return Redirect::route('transactions.revenue');
+                return Redirect::route('transactions.index', 'deposit');
                 break;
             case 'Transfer':
-                return Redirect::route('transactions.transfers');
+                return Redirect::route('transactions.index', 'transfers');
                 break;
         }
     }
@@ -126,30 +128,30 @@ class TransactionController extends BaseController
      */
     public function edit(TransactionJournal $journal)
     {
-        throw new NotImplementedException;
         /*
          * All the repositories we need:
          */
-        /** @var \Firefly\Helper\Toolkit\Toolkit $toolkit */
-        $toolkit = App::make('Firefly\Helper\Toolkit\Toolkit');
+        /** @var \FireflyIII\Shared\Toolkit\Form $form */
+        $form = App::make('FireflyIII\Shared\Toolkit\Form');
 
-        /** @var \Firefly\Storage\Account\AccountRepositoryInterface $accountRepository */
-        $accountRepository = App::make('Firefly\Storage\Account\AccountRepositoryInterface');
+        /** @var \FireflyIII\Database\Account $accountRepository */
+        $accountRepository = App::make('FireflyIII\Database\Account');
 
-        /** @var \Firefly\Storage\Budget\BudgetRepositoryInterface $budgetRepository */
-        $budgetRepository = App::make('Firefly\Storage\Budget\BudgetRepositoryInterface');
+        /** @var \FireflyIII\Database\Budget $budgetRepository */
+        $budgetRepository = App::make('FireflyIII\Database\Budget');
 
-        /** @var \Firefly\Storage\Piggybank\PiggybankRepositoryInterface $piggyRepository */
-        $piggyRepository = App::make('Firefly\Storage\Piggybank\PiggybankRepositoryInterface');
+        /** @var \FireflyIII\Database\Piggybank $piggyRepository */
+        $piggyRepository = App::make('FireflyIII\Database\Piggybank');
+
 
         // type is useful for display:
         $what = strtolower($journal->transactiontype->type);
 
         // get asset accounts with names and id's.
-        $accounts = $toolkit->makeSelectList($accountRepository->getActiveDefault());
+        $accounts = $form->makeSelectList($accountRepository->getAssetAccounts());
 
         // get budgets as a select list.
-        $budgets = $toolkit->makeSelectList($budgetRepository->get());
+        $budgets    = $form->makeSelectList($budgetRepository->get());
         $budgets[0] = '(no budget)';
 
         /*
@@ -157,8 +159,8 @@ class TransactionController extends BaseController
          * of the transactions in the journal has this field, it should all fill in nicely.
          */
         // get the piggy banks.
-        $piggies = $toolkit->makeSelectList($piggyRepository->get());
-        $piggies[0] = '(no piggy bank)';
+        $piggies     = $form->makeSelectList($piggyRepository->get());
+        $piggies[0]  = '(no piggy bank)';
         $piggyBankId = 0;
         foreach ($journal->transactions as $t) {
             if (!is_null($t->piggybank_id)) {
@@ -190,23 +192,23 @@ class TransactionController extends BaseController
          */
         switch ($what) {
             case 'withdrawal':
-                $prefilled['account_id'] = $journal->transactions[0]->account->id;
+                $prefilled['account_id']      = $journal->transactions[0]->account->id;
                 $prefilled['expense_account'] = $journal->transactions[1]->account->name;
-                $prefilled['amount'] = floatval($journal->transactions[1]->amount);
-                $budget = $journal->budgets()->first();
+                $prefilled['amount']          = floatval($journal->transactions[1]->amount);
+                $budget                       = $journal->budgets()->first();
                 if (!is_null($budget)) {
                     $prefilled['budget_id'] = $budget->id;
                 }
                 break;
             case 'deposit':
-                $prefilled['account_id'] = $journal->transactions[1]->account->id;
+                $prefilled['account_id']      = $journal->transactions[1]->account->id;
                 $prefilled['revenue_account'] = $journal->transactions[0]->account->name;
-                $prefilled['amount'] = floatval($journal->transactions[1]->amount);
+                $prefilled['amount']          = floatval($journal->transactions[1]->amount);
                 break;
             case 'transfer':
                 $prefilled['account_from_id'] = $journal->transactions[1]->account->id;
-                $prefilled['account_to_id'] = $journal->transactions[0]->account->id;
-                $prefilled['amount'] = floatval($journal->transactions[1]->amount);
+                $prefilled['account_to_id']   = $journal->transactions[0]->account->id;
+                $prefilled['amount']          = floatval($journal->transactions[1]->amount);
                 break;
         }
 
@@ -264,7 +266,7 @@ class TransactionController extends BaseController
         /*
          * Collect data to process:
          */
-        $data = Input::except(['_token']);
+        $data         = Input::except(['_token']);
         $data['what'] = $what;
 
         switch (Input::get('post_submit_action')) {
@@ -312,11 +314,9 @@ class TransactionController extends BaseController
         }
     }
 
-    public function transfers()
+    public function index($what)
     {
-        return View::make('transactions.list')->with('subTitle', 'Transfers')->with(
-            'subTitleIcon', 'fa-arrows-h'
-        )->with('what', 'transfers');
+        return View::make('transactions.index')->with('subTitle', 'Bla bla')->with('subTitleIcon', 'fa-arrows-h')->with('what', $what);
 
     }
 
@@ -331,7 +331,7 @@ class TransactionController extends BaseController
         switch (Input::get('post_submit_action')) {
             case 'update':
             case 'return_to_edit':
-                $what = strtolower($journal->transactionType->type);
+                $what       = strtolower($journal->transactionType->type);
                 $messageBag = $this->_helper->update($journal, Input::all());
                 if ($messageBag->count() == 0) {
                     // has been saved, return to index:
@@ -353,9 +353,9 @@ class TransactionController extends BaseController
 
                 break;
             case 'validate_only':
-                $data = Input::all();
+                $data         = Input::all();
                 $data['what'] = strtolower($journal->transactionType->type);
-                $messageBags = $this->_helper->validate($data);
+                $messageBags  = $this->_helper->validate($data);
 
                 Session::flash('warnings', $messageBags['warnings']);
                 Session::flash('successes', $messageBags['successes']);
