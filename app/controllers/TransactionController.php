@@ -1,33 +1,22 @@
 <?php
 
 
-use Firefly\Exception\FireflyException;
-use Firefly\Helper\Controllers\TransactionInterface as TI;
-use Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface as TJRI;
+use FireflyIII\Exception\FireflyException;
 use Illuminate\Support\MessageBag;
 
 /**
  * Class TransactionController
  *
- * @SuppressWarnings(PHPMD.CamelCasePropertyName)
- *
  */
 class TransactionController extends BaseController
 {
 
-    protected $_helper;
-    protected $_repository;
-
     /**
      * Construct a new transaction controller with two of the most often used helpers.
      *
-     * @param TJRI $repository
-     * @param TI   $helper
      */
-    public function __construct(TJRI $repository, TI $helper)
+    public function __construct()
     {
-        $this->_repository = $repository;
-        $this->_helper = $helper;
         View::share('title', 'Transactions');
         View::share('mainTitleIcon', 'fa-repeat');
     }
@@ -41,6 +30,7 @@ class TransactionController extends BaseController
      */
     public function create($what = 'deposit')
     {
+        throw new NotImplementedException;
         /*
          * The repositories we need:
          */
@@ -110,6 +100,7 @@ class TransactionController extends BaseController
      */
     public function destroy(TransactionJournal $transactionJournal)
     {
+        throw new NotImplementedException;
         $type = $transactionJournal->transactionType->type;
         $transactionJournal->delete();
 
@@ -135,6 +126,7 @@ class TransactionController extends BaseController
      */
     public function edit(TransactionJournal $journal)
     {
+        throw new NotImplementedException;
         /*
          * All the repositories we need:
          */
@@ -268,6 +260,7 @@ class TransactionController extends BaseController
      */
     public function store($what)
     {
+        throw new NotImplementedException;
         /*
          * Collect data to process:
          */
@@ -334,6 +327,7 @@ class TransactionController extends BaseController
      */
     public function update(TransactionJournal $journal)
     {
+        throw new NotImplementedException;
         switch (Input::get('post_submit_action')) {
             case 'update':
             case 'return_to_edit':

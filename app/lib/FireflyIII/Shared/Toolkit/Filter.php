@@ -24,7 +24,7 @@ class Filter
      *
      * @return string
      */
-    protected function setSessionRangeValue()
+    public function setSessionRangeValue()
     {
         if (!is_null(\Session::get('range'))) {
             $range = \Session::get('range');
@@ -221,7 +221,7 @@ class Filter
      * @return Carbon
      * @throws FireflyException
      */
-    protected function previous($range, Carbon $date)
+    public function previous($range, Carbon $date)
     {
         switch ($range) {
             default:
@@ -262,7 +262,7 @@ class Filter
      * @return Carbon
      * @throws FireflyException
      */
-    protected function next($range, Carbon $date)
+    public function next($range, Carbon $date)
     {
         switch ($range) {
             case '1D':

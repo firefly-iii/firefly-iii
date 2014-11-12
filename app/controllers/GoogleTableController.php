@@ -171,6 +171,51 @@ class GoogleTableController extends BaseController
 
     }
 
+    public function recurringList()
+    {
+        /** @var \Grumpydictator\Gchart\GChart $chart */
+        $chart = App::make('gchart');
+        $chart->addColumn('ID', 'number');
+        $chart->addColumn('ID_Edit', 'string');
+        $chart->addColumn('ID_Delete', 'string');
+        $chart->addColumn('Name_URL', 'string');
+        $chart->addColumn('Name', 'string');
+
+        /** @var \FireflyIII\Database\RecurringTransaction $repository */
+        $repository = App::make('FireflyIII\Database\RecurringTransaction');
+
+        $set = $repository->get();
+
+        /** @var \RecurringTransaction $entry */
+        foreach ($set as $entry) {
+            $row = [
+                $entry->id,
+                route('recurring.edit', $entry->id),
+                route('recurring.delete', $entry->id),
+                route('recurring.show', $entry->id),
+                $entry->name
+            ];
+            $chart->addRowArray($row);
+
+        }
+
+
+        /*
+         *                     <th>name</th>
+        <th>match</th>
+        <th>amount_min</th>
+        <th>amount_max</th>
+        <th>date</th>
+        <th>active</th>
+        <th>automatch</th>
+        <th>repeat_freq</th>
+        <th>id</th>
+
+         */
+        $chart->generate();
+        return Response::json($chart->getData());
+    }
+
     /**
      * @param Account $account
      */

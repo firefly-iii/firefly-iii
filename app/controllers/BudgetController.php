@@ -22,8 +22,8 @@ class BudgetController extends BaseController
      */
     public function postUpdateIncome()
     {
-        /** @var \Firefly\Helper\Preferences\PreferencesHelperInterface $preferences */
-        $preferences = App::make('Firefly\Helper\Preferences\PreferencesHelperInterface');
+        /** @var \FireflyIII\Shared\Preferences\PreferencesInterface $preferences */
+        $preferences = App::make('FireflyIII\Shared\Preferences\PreferencesInterface');
         $date        = Session::get('start');
 
         $value = intval(Input::get('amount'));
@@ -72,11 +72,14 @@ class BudgetController extends BaseController
 
     }
 
+    /**
+     * @return $this
+     */
     public function index()
     {
 
-        /** @var \Firefly\Helper\Preferences\PreferencesHelperInterface $preferences */
-        $preferences = App::make('Firefly\Helper\Preferences\PreferencesHelperInterface');
+        /** @var \FireflyIII\Shared\Preferences\PreferencesInterface $preferences */
+        $preferences = App::make('FireflyIII\Shared\Preferences\PreferencesInterface');
         $date        = Session::get('start');
 
         /** @var \FireflyIII\Database\Budget $repos */
@@ -133,8 +136,8 @@ class BudgetController extends BaseController
     public function updateIncome()
     {
         $date = Session::get('start');
-        /** @var \Firefly\Helper\Preferences\PreferencesHelperInterface $preferences */
-        $preferences  = App::make('Firefly\Helper\Preferences\PreferencesHelperInterface');
+        /** @var \FireflyIII\Shared\Preferences\PreferencesInterface $preferences */
+        $preferences = App::make('FireflyIII\Shared\Preferences\PreferencesInterface');
         $budgetAmount = $preferences->get('budgetIncomeTotal' . $date->format('FY'), 1000);
         return View::make('budgets.income')->with('amount', $budgetAmount)->with('date', $date);
     }
