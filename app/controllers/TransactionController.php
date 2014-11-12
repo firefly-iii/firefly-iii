@@ -301,7 +301,7 @@ class TransactionController extends BaseController
                 if ($data['post_submit_action'] == 'create_another') {
                     return Redirect::route('transactions.create', $what);
                 } else {
-                    return Redirect::route('transactions.index');
+                    return Redirect::route('transactions.index',$what);
                 }
                 break;
             case 'validate_only':

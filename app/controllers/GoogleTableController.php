@@ -1,5 +1,4 @@
 <?php
-use Carbon\Carbon;
 use FireflyIII\Exception\FireflyException;
 
 /**
@@ -77,9 +76,9 @@ class GoogleTableController extends BaseController
 
         /** @var \Account $entry */
         foreach ($list as $entry) {
-            $edit   = route('accounts.edit', $entry->id);
+            $edit = route('accounts.edit', $entry->id);
             $delete = route('accounts.delete', $entry->id);
-            $show   = route('accounts.show', $entry->id);
+            $show = route('accounts.show', $entry->id);
             $chart->addRow($entry->id, $edit, $delete, $show, $entry->name, $entry->balance());
         }
 
@@ -90,7 +89,7 @@ class GoogleTableController extends BaseController
     }
 
     /**
-     * @param Component       $component
+     * @param Component $component
      * @param LimitRepetition $repetition
      */
     public function transactionsByComponent(Component $component, LimitRepetition $repetition = null)
@@ -115,26 +114,26 @@ class GoogleTableController extends BaseController
 
         if (is_null($repetition)) {
             $journals = $component->transactionjournals()->with(['budgets', 'categories', 'transactions', 'transactions.account'])->orderBy('date', 'DESC')
-                                  ->get();
+                ->get();
         } else {
             $journals = $component->transactionjournals()->with(['budgets', 'categories', 'transactions', 'transactions.account'])->after(
                 $repetition->startdate
             )
-                                  ->before($repetition->enddate)->orderBy('date', 'DESC')->get();
+                ->before($repetition->enddate)->orderBy('date', 'DESC')->get();
         }
         /** @var TransactionJournal $transaction */
         foreach ($journals as $journal) {
-            $date           = $journal->date;
+            $date = $journal->date;
             $descriptionURL = route('transactions.show', $journal->id);
-            $description    = $journal->description;
+            $description = $journal->description;
             /** @var Transaction $transaction */
             foreach ($journal->transactions as $transaction) {
                 if (floatval($transaction->amount) > 0) {
                     $amount = floatval($transaction->amount);
-                    $to     = $transaction->account->name;
-                    $toURL  = route('accounts.show', $transaction->account->id);
+                    $to = $transaction->account->name;
+                    $toURL = route('accounts.show', $transaction->account->id);
                 } else {
-                    $from    = $transaction->account->name;
+                    $from = $transaction->account->name;
                     $fromURL = route('accounts.show', $transaction->account->id);
                 }
 
@@ -149,15 +148,15 @@ class GoogleTableController extends BaseController
 
             if (isset($journal->categories[0])) {
                 $categoryURL = route('categories.show', $journal->categories[0]->id);
-                $category    = $journal->categories[0]->name;
+                $category = $journal->categories[0]->name;
             } else {
                 $categoryURL = '';
-                $category    = '';
+                $category = '';
             }
 
 
-            $id     = $journal->id;
-            $edit   = route('transactions.edit', $journal->id);
+            $id = $journal->id;
+            $edit = route('transactions.edit', $journal->id);
             $delete = route('transactions.delete', $journal->id);
             $chart->addRow(
                 $id, $edit, $delete, $date, $descriptionURL, $description, $amount, $fromURL, $from, $toURL, $to, $budgetURL, $component, $categoryURL,
@@ -232,6 +231,7 @@ class GoogleTableController extends BaseController
         $chart->addColumn('Description_URL', 'string');
         $chart->addColumn('Description', 'string');
         $chart->addColumn('Amount', 'number');
+
         $chart->addColumn('From_URL', 'string');
         $chart->addColumn('From', 'string');
         $chart->addColumn('To_URL', 'string');
@@ -259,56 +259,53 @@ class GoogleTableController extends BaseController
                 break;
         }
 
-        /** @var Transaction $transaction */
-        foreach ($list as $transaction) {
-            $date           = $transaction->transactionJournal->date;
-            $descriptionURL = route('transactions.show', $transaction->transaction_journal_id);
-            $description    = $transaction->transactionJournal->description;
-            $amount         = floatval($transaction->amount);
+        /** @var TransactionJournal $journal */
+        foreach ($list as $journal) {
+            $date = $journal->date;
+            $descriptionURL = route('transactions.show', $journal->id);
+            $description = $journal->description;
+            $amount = floatval(-0.01); // TODO
+            $id = $journal->id;
 
-            if ($transaction->transactionJournal->transactions[0]->account->id == $account->id) {
-                $opposingAccountURI  = route('accounts.show', $transaction->transactionJournal->transactions[1]->account->id);
-                $opposingAccountName = $transaction->transactionJournal->transactions[1]->account->name;
+
+            if ($journal->transactions[0]->amount < 0) {
+
+                $fromURL = route('accounts.show', $journal->transactions[0]->account->id);
+                $fromName = $journal->transactions[0]->account->name;
+                $amount = floatval($journal->transactions[0]->amount);
+
+                $toURL = route('accounts.show', $journal->transactions[1]->account->id);
+                $toName = $journal->transactions[1]->account->name;
+
             } else {
-                $opposingAccountURI  = route('accounts.show', $transaction->transactionJournal->transactions[0]->account->id);
-                $opposingAccountName = $transaction->transactionJournal->transactions[0]->account->name;
+                $fromURL = route('accounts.show', $journal->transactions[1]->account->id);
+                $fromName = $journal->transactions[1]->account->name;
+                $amount = floatval($journal->transactions[1]->amount);
+
+                $toURL = route('accounts.show', $journal->transactions[0]->account->id);
+                $toName = $journal->transactions[0]->account->name;
             }
-            if (isset($transaction->transactionJournal->budgets[0])) {
-                $budgetURL = route('budgets.show', $transaction->transactionJournal->budgets[0]->id);
-                $budget    = $transaction->transactionJournal->budgets[0]->name;
+            if (isset($journal->budgets[0])) {
+                $budgetURL = route('budgets.show', $journal->budgets[0]->id);
+                $budget = $journal->budgets[0]->name;
             } else {
                 $budgetURL = '';
-                $budget    = '';
+                $budget = '';
             }
 
-            if (isset($transaction->transactionJournal->categories[0])) {
-                $categoryURL = route('categories.show', $transaction->transactionJournal->categories[0]->id);
-                $category    = $transaction->transactionJournal->categories[0]->name;
+            if (isset($journal->categories[0])) {
+                $categoryURL = route('categories.show', $journal->categories[0]->id);
+                $category = $journal->categories[0]->name;
             } else {
                 $categoryURL = '';
-                $category    = '';
+                $category = '';
             }
-
-
-            if ($amount < 0) {
-                $from    = $account->name;
-                $fromURL = route('accounts.show', $account->id);
-
-                $to    = $opposingAccountName;
-                $toURL = $opposingAccountURI;
-            } else {
-                $to    = $account->name;
-                $toURL = route('accounts.show', $account->id);
-
-                $from    = $opposingAccountName;
-                $fromURL = $opposingAccountURI;
-            }
-
-            $id     = $transaction->transactionJournal->id;
-            $edit   = route('transactions.edit', $transaction->transactionJournal->id);
-            $delete = route('transactions.delete', $transaction->transactionJournal->id);
+            $edit = route('transactions.edit', $journal->id);
+            $delete = route('transactions.delete', $journal->id);
             $chart->addRow(
-                $id, $edit, $delete, $date, $descriptionURL, $description, $amount, $fromURL, $from, $toURL, $to, $budgetURL, $budget, $categoryURL, $category
+                $id, $edit, $delete, $date, $descriptionURL, $description, $amount,
+                $fromURL, $fromName, $toURL, $toName,
+                $budgetURL, $budget, $categoryURL, $category
             );
         }
 
@@ -344,63 +341,63 @@ class GoogleTableController extends BaseController
         /*
          * Find transactions:
          */
-        $accountID    = $account->id;
+        $accountID = $account->id;
         $transactions = $account->transactions()->with(
             ['transactionjournal', 'transactionjournal.transactions' => function ($q) use ($accountID) {
                 $q->where('account_id', '!=', $accountID);
             }, 'transactionjournal.budgets', 'transactionjournal.transactiontype',
-             'transactionjournal.categories']
+                'transactionjournal.categories']
         )->before(Session::get('end'))->after(
             Session::get('start')
         )->orderBy('date', 'DESC')->get();
 
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            $date           = $transaction->transactionJournal->date;
+            $date = $transaction->transactionJournal->date;
             $descriptionURL = route('transactions.show', $transaction->transaction_journal_id);
-            $description    = $transaction->transactionJournal->description;
-            $amount         = floatval($transaction->amount);
+            $description = $transaction->transactionJournal->description;
+            $amount = floatval($transaction->amount);
 
             if ($transaction->transactionJournal->transactions[0]->account->id == $account->id) {
-                $opposingAccountURI  = route('accounts.show', $transaction->transactionJournal->transactions[1]->account->id);
+                $opposingAccountURI = route('accounts.show', $transaction->transactionJournal->transactions[1]->account->id);
                 $opposingAccountName = $transaction->transactionJournal->transactions[1]->account->name;
             } else {
-                $opposingAccountURI  = route('accounts.show', $transaction->transactionJournal->transactions[0]->account->id);
+                $opposingAccountURI = route('accounts.show', $transaction->transactionJournal->transactions[0]->account->id);
                 $opposingAccountName = $transaction->transactionJournal->transactions[0]->account->name;
             }
             if (isset($transaction->transactionJournal->budgets[0])) {
                 $budgetURL = route('budgets.show', $transaction->transactionJournal->budgets[0]->id);
-                $budget    = $transaction->transactionJournal->budgets[0]->name;
+                $budget = $transaction->transactionJournal->budgets[0]->name;
             } else {
                 $budgetURL = '';
-                $budget    = '';
+                $budget = '';
             }
 
             if (isset($transaction->transactionJournal->categories[0])) {
                 $categoryURL = route('categories.show', $transaction->transactionJournal->categories[0]->id);
-                $category    = $transaction->transactionJournal->categories[0]->name;
+                $category = $transaction->transactionJournal->categories[0]->name;
             } else {
                 $categoryURL = '';
-                $category    = '';
+                $category = '';
             }
 
 
             if ($amount < 0) {
-                $from    = $account->name;
+                $from = $account->name;
                 $fromURL = route('accounts.show', $account->id);
 
-                $to    = $opposingAccountName;
+                $to = $opposingAccountName;
                 $toURL = $opposingAccountURI;
             } else {
-                $to    = $account->name;
+                $to = $account->name;
                 $toURL = route('accounts.show', $account->id);
 
-                $from    = $opposingAccountName;
+                $from = $opposingAccountName;
                 $fromURL = $opposingAccountURI;
             }
 
-            $id     = $transaction->transactionJournal->id;
-            $edit   = route('transactions.edit', $transaction->transactionJournal->id);
+            $id = $transaction->transactionJournal->id;
+            $edit = route('transactions.edit', $transaction->transactionJournal->id);
             $delete = route('transactions.delete', $transaction->transactionJournal->id);
             $chart->addRow(
                 $id, $edit, $delete, $date, $descriptionURL, $description, $amount, $fromURL, $from, $toURL, $to, $budgetURL, $budget, $categoryURL, $category
