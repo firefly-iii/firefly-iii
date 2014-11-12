@@ -100,9 +100,8 @@ class TransactionController extends BaseController
         }
         Session::put('prefilled', $prefilled);
 
-        return View::make('transactions.create')->with('accounts', $assetAccounts)->with('budgets', $budgets)->with(
-            'what', $what
-        )->with('piggies', $piggies)->with('subTitle', 'Add a new ' . $what);
+        return View::make('transactions.create')->with('accounts', $assetAccounts)->with('budgets', $budgets)->with('what', $what)->with('piggies', $piggies)
+                   ->with('subTitle', 'Add a new ' . $what);
     }
 
     /**
@@ -272,7 +271,50 @@ class TransactionController extends BaseController
      * @return $this|\Illuminate\Http\RedirectResponse
      * @throws FireflyException
      */
-    public function store($what) {
+    public function store($what)
+    {
+        $data              = Input::except('_token');
+        $data['what']      = $what;
+        $data['currency'] = 'EUR';
+
+        /** @var \FireflyIII\Database\TransactionJournal $repository */
+        $repository = App::make('FireflyIII\Database\TransactionJournal');
+
+        switch ($data['post_submit_action']) {
+            default:
+                throw new FireflyException('Cannot handle post_submit_action "' . e($data['post_submit_action']) . '"');
+                break;
+            case 'create_another':
+            case 'store':
+                $messages = $repository->validate($data);
+                /** @var MessageBag $messages ['errors'] */
+                if ($messages['errors']->count() > 0) {
+                    Session::flash('warnings', $messages['warnings']);
+                    Session::flash('successes', $messages['successes']);
+                    Session::flash('error', 'Could not save transaction: ' . $messages['errors']->first());
+                    return Redirect::route('transactions.create', $what)->withInput()->withErrors($messages['errors']);
+                }
+                // store!
+                $repository->store($data);
+                Session::flash('success', 'New transaction stored!');
+
+                if ($data['post_submit_action'] == 'create_another') {
+                    return Redirect::route('transactions.create', $what);
+                } else {
+                    return Redirect::route('transactions.index');
+                }
+                break;
+            case 'validate_only':
+                $messageBags = $repository->validate($data);
+                Session::flash('warnings', $messageBags['warnings']);
+                Session::flash('successes', $messageBags['successes']);
+                Session::flash('errors', $messageBags['errors']);
+
+                return Redirect::route('transactions.create')->withInput();
+                break;
+        }
+
+
         throw new NotImplementedException;
         /*
          * Collect data to process:
@@ -331,7 +373,8 @@ class TransactionController extends BaseController
      *
      * @throws FireflyException
      */
-    public function update(TransactionJournal $journal) {
+    public function update(TransactionJournal $journal)
+    {
         throw new NotImplementedException;
         switch (Input::get('post_submit_action')) {
             case 'update':
