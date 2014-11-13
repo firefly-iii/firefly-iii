@@ -11,6 +11,16 @@ class CreateSessionTable extends Migration
 {
 
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('sessions');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -24,16 +34,6 @@ class CreateSessionTable extends Migration
                 $t->integer('last_activity');
             }
         );
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('sessions');
     }
 
 }

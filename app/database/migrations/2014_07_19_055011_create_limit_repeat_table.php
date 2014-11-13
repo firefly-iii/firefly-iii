@@ -12,6 +12,16 @@ class CreateLimitRepeatTable extends Migration
 {
 
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('limit_repetitions');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -30,21 +40,9 @@ class CreateLimitRepeatTable extends Migration
                 $table->unique(['limit_id', 'startdate', 'enddate']);
 
                 // connect limit
-                $table->foreign('limit_id')
-                    ->references('id')->on('limits')
-                    ->onDelete('cascade');
+                $table->foreign('limit_id')->references('id')->on('limits')->onDelete('cascade');
             }
         );
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('limit_repetitions');
     }
 
 }

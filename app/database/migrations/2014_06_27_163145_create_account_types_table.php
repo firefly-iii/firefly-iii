@@ -29,14 +29,14 @@ class CreateAccountTypesTable extends Migration
     public function up()
     {
         Schema::create(
-              'account_types', function (Blueprint $table) {
-                      $table->increments('id');
-                      $table->timestamps();
-                      $table->string('type', 50);
-                      $table->boolean('editable');
+            'account_types', function (Blueprint $table) {
+                $table->increments('id');
+                $table->timestamps();
+                $table->string('type', 50);
+                $table->boolean('editable');
 
-                      $table->unique('type');
-                  }
+                $table->unique('type');
+            }
         );
     }
 

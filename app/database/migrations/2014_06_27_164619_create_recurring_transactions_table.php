@@ -12,6 +12,16 @@ class CreateRecurringTransactionsTable extends Migration
 {
 
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('recurring_transactions');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -39,16 +49,6 @@ class CreateRecurringTransactionsTable extends Migration
 
             }
         );
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('recurring_transactions');
     }
 
 }

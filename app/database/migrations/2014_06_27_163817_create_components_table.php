@@ -12,6 +12,16 @@ class CreateComponentsTable extends Migration
 {
 
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('components');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -27,24 +37,12 @@ class CreateComponentsTable extends Migration
                 $table->string('class', 20);
 
                 // connect components to users
-                $table->foreign('user_id')
-                    ->references('id')->on('users')
-                    ->onDelete('cascade');
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
                 $table->unique(['user_id', 'class', 'name']);
             }
         );
 
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('components');
     }
 
 }

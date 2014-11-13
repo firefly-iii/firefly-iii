@@ -10,13 +10,7 @@ class DefaultUserSeeder extends Seeder
         DB::table('users')->delete();
 
         User::create(
-            [
-                'email'          => 'thegrumpydictator@gmail.com',
-                'password'       => 'sander',
-                'reset'          => null,
-                'remember_token' => null,
-                'migrated'       => 0
-            ]
+            ['email' => 'thegrumpydictator@gmail.com', 'password' => 'sander', 'reset' => null, 'remember_token' => null, 'migrated' => 0]
         );
 
     }
