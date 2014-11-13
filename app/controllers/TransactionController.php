@@ -294,7 +294,7 @@ class TransactionController extends BaseController
                 Session::flash('success', 'New transaction stored!');
 
                 if ($data['post_submit_action'] == 'create_another') {
-                    return Redirect::route('transactions.create', $what);
+                    return Redirect::route('transactions.create', $what)->withInput();
                 } else {
                     return Redirect::route('transactions.index', $what);
                 }
