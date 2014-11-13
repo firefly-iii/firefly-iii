@@ -12,6 +12,16 @@ class CreateUsersTable extends Migration
 {
 
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('users');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -31,16 +41,6 @@ class CreateUsersTable extends Migration
                 $table->unique('email');
             }
         );
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('users');
     }
 
 }

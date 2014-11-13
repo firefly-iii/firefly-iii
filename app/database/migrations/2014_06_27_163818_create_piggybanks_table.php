@@ -12,6 +12,16 @@ class CreatePiggybanksTable extends Migration
 {
 
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('piggybanks');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -37,23 +47,11 @@ class CreatePiggybanksTable extends Migration
                 $table->integer('order')->unsigned();
 
                 // connect account to piggybank.
-                $table->foreign('account_id')
-                    ->references('id')->on('accounts')
-                    ->onDelete('cascade');
+                $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
                 $table->unique(['account_id', 'name']);
 
             }
         );
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('piggybanks');
     }
 
 }

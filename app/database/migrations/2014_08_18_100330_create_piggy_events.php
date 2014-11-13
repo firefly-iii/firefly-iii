@@ -7,6 +7,16 @@ class CreatePiggyEvents extends Migration
 {
 
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('piggybank_events');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -22,21 +32,9 @@ class CreatePiggyEvents extends Migration
                 $table->decimal('amount', 10, 2);
 
                 // connect instance to piggybank.
-                $table->foreign('piggybank_id')
-                    ->references('id')->on('piggybanks')
-                    ->onDelete('cascade');
+                $table->foreign('piggybank_id')->references('id')->on('piggybanks')->onDelete('cascade');
             }
         );
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('piggybank_events');
     }
 
 }
