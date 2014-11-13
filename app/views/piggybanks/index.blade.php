@@ -5,7 +5,7 @@
         <div class="col-lg-6 col-md-6 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-fw fa-rocket"></i> <a href="#" title="{{{$piggybank->name}}}">{{{$piggybank->name}}}</a>
+                    <i class="fa fa-fw fa-rocket"></i> <a href="{{route('piggybanks.show',$piggybank->id)}}" title="{{{$piggybank->name}}}">{{{$piggybank->name}}}</a>
                 </div>
                 <div class="panel-body">
                     <div class="row">
