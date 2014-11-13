@@ -41,7 +41,7 @@
             <li class="sidebar-search">
             <form action="{{route('search')}}" method="GET" class="form-inline">
                 <div class="input-group custom-search-form">
-                    <input type="text" name="q" class="form-control" placeholder="Search...">
+                    <input type="text" name="q" class="form-control" value="@if(Input::get('q')){{{Input::get('q')}}}@endif" placeholder="Search...">
                                 <span class="input-group-btn">
                                 <button class="btn btn-default" type="submit">
                                     <i class="fa fa-search"></i>

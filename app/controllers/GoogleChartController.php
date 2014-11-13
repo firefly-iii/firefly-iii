@@ -464,8 +464,8 @@ class GoogleChartController extends BaseController
         $chart->addColumn('Name', 'string');
         $chart->addColumn('Amount', 'number');
 
-        /** @var \FireflyIII\Database\RecurringTransaction $rcr */
-        $rcr = App::make('FireflyIII\Database\RecurringTransaction');
+        /** @var \FireflyIII\Database\Recurring $rcr */
+        $rcr = App::make('FireflyIII\Database\Recurring');
 
         /** @var \FireflyIII\Shared\Toolkit\Date $dateKit */
         $dateKit = App::make('FireflyIII\Shared\Toolkit\Date');

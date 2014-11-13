@@ -1,5 +1,4 @@
 <?php
-use FireflyIII\Exception\NotImplementedException;
 
 /**
  * Class SearchController
@@ -11,7 +10,10 @@ class SearchController extends BaseController
      */
     public function index()
     {
-        throw new NotImplementedException;
+
+        /** @var \FireflyIII\Search\Search $searcher */
+        $searcher = App::make('FireflyIII\Search\Search');
+
         $subTitle = null;
         $rawQuery = null;
         $result   = [];
@@ -20,11 +22,11 @@ class SearchController extends BaseController
             $words    = explode(' ', $rawQuery);
             $subTitle = 'Results for "' . e($rawQuery) . '"';
 
-            $transactions = $this->_helper->searchTransactions($words);
-            $accounts     = $this->_helper->searchAccounts($words);
-            $categories   = $this->_helper->searchCategories($words);
-            $budgets      = $this->_helper->searchBudgets($words);
-            $tags         = $this->_helper->searchTags($words);
+            $transactions = $searcher->searchTransactions($words);
+            $accounts     = $searcher->searchAccounts($words);
+            $categories   = $searcher->searchCategories($words);
+            $budgets      = $searcher->searchBudgets($words);
+            $tags         = $searcher->searchTags($words);
             $result       = ['transactions' => $transactions, 'accounts' => $accounts, 'categories' => $categories, 'budgets' => $budgets, 'tags' => $tags];
 
         }

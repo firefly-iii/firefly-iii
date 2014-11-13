@@ -228,6 +228,11 @@ function googleSankeyChart(URL, container) {
     }
 }
 
+/**
+ * TODO fix this method so the layout is nice and dandy.
+ * @param URL
+ * @param container
+ */
 function googleTable(URL, container) {
     if ($('#' + container).length == 1) {
         $.getJSON(URL).success(function (data) {

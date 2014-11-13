@@ -85,6 +85,7 @@ class Transaction extends Ardent
      */
     public function connectPiggybank(\Piggybank $piggybank = null)
     {
+        // TODO connect a piggy bank to a transaction.
         throw new NotImplementedException;
         //        if (is_null($piggybank)) {
         //            return true;
