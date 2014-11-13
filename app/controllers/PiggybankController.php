@@ -56,8 +56,8 @@ class PiggybankController extends BaseController
         $accounts = $toolkit->makeSelectList($acct->getAssetAccounts());
 
         return View::make('piggybanks.create', compact('accounts', 'periods'))->with('title', 'Piggy banks')->with('mainTitleIcon', 'fa-sort-amount-asc')->with(
-                'subTitle', 'Create new piggy bank'
-            )->with('subTitleIcon', 'fa-plus');
+            'subTitle', 'Create new piggy bank'
+        )->with('subTitleIcon', 'fa-plus');
     }
 
     /**
@@ -68,8 +68,8 @@ class PiggybankController extends BaseController
     public function delete(Piggybank $piggybank)
     {
         return View::make('piggybanks.delete')->with('piggybank', $piggybank)->with('subTitle', 'Delete "' . $piggybank->name . '"')->with(
-                'title', 'Piggy banks'
-            )->with('mainTitleIcon', 'fa-sort-amount-asc');
+            'title', 'Piggy banks'
+        )->with('mainTitleIcon', 'fa-sort-amount-asc');
     }
 
     /**
@@ -212,9 +212,12 @@ class PiggybankController extends BaseController
         return View::make('piggybanks.remove', compact('piggybank'));
     }
 
-    public function show(Piggybank $piggyBank)
+    public function show(Piggybank $piggybank)
     {
-        throw new NotImplementedException;
+
+        return View::make('piggybanks.show', compact('piggybank'))->with('title', 'Piggy banks')->with('mainTitleIcon', 'fa-sort-amount-asc')->with(
+            'subTitle', $piggybank->name
+        );
 
     }
 
