@@ -92,6 +92,14 @@ class RecurringTransaction extends Ardent
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transactionjournals()
+    {
+        return $this->hasMany('TransactionJournal');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()

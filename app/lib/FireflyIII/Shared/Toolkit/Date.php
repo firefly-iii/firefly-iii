@@ -3,7 +3,7 @@
 namespace FireflyIII\Shared\Toolkit;
 
 use Carbon\Carbon;
-use Firefly\Exception\FireflyException;
+use FireflyIII\Exception\FireflyException;
 
 /**
  * Class Date
@@ -83,5 +83,45 @@ class Date
                 $currentEnd->addYear()->subDay();
                 break;
         }
+    }
+
+    /**
+     * @param Carbon $date
+     * @param        $repeatFreq
+     *
+     * @return Carbon
+     * @throws FireflyException
+     */
+    public function startOfPeriod(Carbon $date, $repeatFreq)
+    {
+        switch ($repeatFreq) {
+            default:
+                throw new FireflyException('Cannot do startOfPeriod for $repeat_freq ' . $repeatFreq);
+                break;
+            case 'daily':
+                $date->startOfDay();
+                break;
+            case 'weekly':
+                $date->startOfWeek();
+                break;
+            case 'monthly':
+                $date->startOfMonth();
+                break;
+            case 'quarterly':
+                $date->firstOfQuarter();
+                break;
+            case 'half-year':
+                $month = intval($date->format('m'));
+                $date->startOfYear();
+                if ($month >= 7) {
+                    $date->addMonths(6);
+                }
+                break;
+            case 'yearly':
+                $date->startOfYear();
+                break;
+        }
+
+        return $date;
     }
 } 

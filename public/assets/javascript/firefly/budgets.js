@@ -8,14 +8,11 @@ $(function () {
 
 
     if (typeof(googleTable) == 'function') {
-        console.log('A');
         if (typeof componentID != 'undefined' && typeof repetitionID == 'undefined') {
-            console.log('B');
             googleTable('table/component/' + componentID + '/0/transactions', 'transactions');
             googleColumnChart('chart/component/' + componentID + '/spending/' + year, 'componentOverview');
 
         } else if (typeof componentID != 'undefined' && typeof repetitionID != 'undefined') {
-            console.log('C');
             googleTable('table/component/' + componentID + '/' + repetitionID + '/transactions', 'transactions');
         }
     }
