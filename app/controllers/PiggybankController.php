@@ -251,7 +251,7 @@ class PiggybankController extends BaseController
                 Session::flash('success', 'New piggy bank stored!');
 
                 if ($data['post_submit_action'] == 'create_another') {
-                    return Redirect::route('piggybanks.create');
+                    return Redirect::route('piggybanks.create')->withInput();
                 } else {
                     return Redirect::route('piggybanks.index');
                 }

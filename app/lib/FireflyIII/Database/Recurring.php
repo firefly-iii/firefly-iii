@@ -9,6 +9,7 @@ use FireflyIII\Database\Ifaces\CUD;
 use FireflyIII\Database\Ifaces\RecurringInterface;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
+use Illuminate\Support\MessageBag;
 use LaravelBook\Ardent\Ardent;
 
 /**
@@ -72,8 +73,57 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
      */
     public function validate(array $model)
     {
-        // TODO: Implement validate() method.
-        throw new NotImplementedException;
+        $warnings  = new MessageBag;
+        $successes = new MessageBag;
+        $errors    = new MessageBag;
+
+        if (isset($model['name']) && strlen($model['name']) == 0) {
+            $errors->add('name', 'Name must be longer.');
+        }
+        if (isset($model['name']) && strlen($model['name']) > 200) {
+            $errors->add('name', 'Name must be shorter.');
+        }
+
+        if (isset($model['match']) && strlen(trim($model['match'])) <= 2) {
+            $errors->add('match', 'Needs more matches.');
+        }
+
+        if (isset($model['amount_min']) && floatval($model['amount_min']) < 0.01) {
+            $errors->add('amount_min', 'Minimum amount must be higher.');
+        }
+        if (isset($model['amount_max']) && floatval($model['amount_max']) < 0.02) {
+            $errors->add('amount_max', 'Maximum amount must be higher.');
+        }
+        if(isset($model['amount_min']) && isset($model['amount_max']) && floatval($model['amount_min']) > floatval($model['amount_max'])) {
+            $errors->add('amount_max', 'Maximum amount can not be less than minimum amount.');
+            $errors->add('amount_min', 'Minimum amount can not be more than maximum amount.');
+        }
+
+        if ($model['date'] != '') {
+            try {
+                new Carbon($model['date']);
+            } catch (\Exception $e) {
+                $errors->add('date', 'Invalid date.');
+            }
+        }
+
+        $reminders = \Config::get('firefly.budget_periods');
+        if (!isset($model['repeat_freq']) || (isset($model['repeat_freq']) && !in_array($model['repeat_freq'], $reminders))) {
+            $errors->add('repeat_freq', 'Invalid reminder period');
+        }
+
+        if (isset($model['skip']) && intval($model['skip']) < 0) {
+            $errors->add('skip', 'Invalid skip.');
+        }
+
+        $set = ['name','match','amount_min','amount_max','date','repeat_freq','skip','automatch','active'];
+        foreach($set as $entry) {
+            if(!$errors->has($entry)) {
+                $successes->add($entry,'OK');
+            }
+        }
+
+        return ['errors' => $errors, 'warnings' => $warnings, 'successes' => $successes];
     }
 
     /**
