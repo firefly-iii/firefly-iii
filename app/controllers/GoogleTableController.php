@@ -99,6 +99,9 @@ class GoogleTableController extends BaseController
         $chart->addColumn('ID_Delete', 'string');
         $chart->addColumn('Name_URL', 'string');
         $chart->addColumn('Name', 'string');
+        $chart->addColumn('Matches','string');
+        $chart->addColumn('Min amount','number');
+        $chart->addColumn('Max amount','number');
 
         /** @var \FireflyIII\Database\RecurringTransaction $repository */
         $repository = App::make('FireflyIII\Database\RecurringTransaction');
@@ -107,7 +110,10 @@ class GoogleTableController extends BaseController
 
         /** @var \RecurringTransaction $entry */
         foreach ($set as $entry) {
-            $row = [$entry->id, route('recurring.edit', $entry->id), route('recurring.delete', $entry->id), route('recurring.show', $entry->id), $entry->name];
+            $row = [$entry->id, route('recurring.edit', $entry->id), route('recurring.delete', $entry->id), route('recurring.show', $entry->id), $entry->name
+            , $entry->match,$entry->amount_min,$entry->amount_max
+
+            ];
             $chart->addRowArray($row);
 
         }
@@ -365,6 +371,9 @@ class GoogleTableController extends BaseController
             $descriptionURL = route('transactions.show', $journal->id);
             $description    = $journal->description;
             $id             = $journal->id;
+            if(!isset($journal->transactions[0]) || !isset($journal->transactions[1])) {
+                continue;
+            }
 
 
             if ($journal->transactions[0]->amount < 0) {

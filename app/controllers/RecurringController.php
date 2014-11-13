@@ -1,4 +1,7 @@
 <?php
+use FireflyIII\Exception\FireflyException;
+use FireflyIII\Exception\NotImplementedException;
+use Illuminate\Support\MessageBag;
 
 /**
  * Class RecurringController
@@ -109,7 +112,44 @@ class RecurringController extends BaseController
 
     public function store()
     {
-        throw new NotImplementedException;
+        $data            = Input::except('_token');
+        /** @var \FireflyIII\Database\Recurring $repos */
+        $repos = App::make('FireflyIII\Database\Recurring');
+
+        switch ($data['post_submit_action']) {
+            default:
+                throw new FireflyException('Cannot handle post_submit_action "' . e($data['post_submit_action']) . '"');
+                break;
+            case 'create_another':
+            case 'store':
+                $messages = $repos->validate($data);
+                /** @var MessageBag $messages ['errors'] */
+                if ($messages['errors']->count() > 0) {
+                    Session::flash('warnings', $messages['warnings']);
+                    Session::flash('successes', $messages['successes']);
+                    Session::flash('error', 'Could not save recurring transaction: ' . $messages['errors']->first());
+
+                    return Redirect::route('recurring.create')->withInput()->withErrors($messages['errors']);
+                }
+                // store!
+                $repos->store($data);
+                Session::flash('success', 'New recurring transaction stored!');
+
+                if ($data['post_submit_action'] == 'create_another') {
+                    return Redirect::route('recurring.create')->withInput();
+                } else {
+                    return Redirect::route('recurring.index');
+                }
+                break;
+            case 'validate_only':
+                $messageBags = $repos->validate($data);
+                Session::flash('warnings', $messageBags['warnings']);
+                Session::flash('successes', $messageBags['successes']);
+                Session::flash('errors', $messageBags['errors']);
+
+                return Redirect::route('recurring.create')->withInput();
+                break;
+        }
 
     }
 
