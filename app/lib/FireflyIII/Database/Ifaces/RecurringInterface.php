@@ -20,4 +20,19 @@ interface RecurringInterface
      */
     public function getJournalForRecurringInRange(\RecurringTransaction $recurring, Carbon $start, Carbon $end);
 
+    /**
+     * @param \RecurringTransaction $recurring
+     *
+     * @return bool
+     */
+    public function scanEverything(\RecurringTransaction $recurring);
+
+    /**
+     * @param \RecurringTransaction $recurring
+     * @param \TransactionJournal   $journal
+     *
+     * @return bool
+     */
+    public function scan(\RecurringTransaction $recurring,\TransactionJournal $journal);
+
 } 

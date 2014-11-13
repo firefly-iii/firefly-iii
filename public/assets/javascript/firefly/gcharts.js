@@ -200,9 +200,7 @@ function googleSankeyChart(URL, container) {
              Format as money
              */
 
-            console.log(gdata.getNumberOfRows())
             if (gdata.getNumberOfRows() < 1) {
-                console.log('remove');
                 $('#' + container).parent().parent().remove();
                 return;
             } else if (gdata.getNumberOfRows() < 6) {
@@ -261,7 +259,6 @@ function googleTable(URL, container) {
 
             for (var i = 0; i < x; i++) {
                 var label = gdata.getColumnLabel(i);
-                console.log('Column ' + i + ':' + label);
                 /*
                  Format a string using the previous column as URL.
                  */
@@ -282,7 +279,7 @@ function googleTable(URL, container) {
                 /*
                  Format as money
                  */
-                if (label == 'Amount' || label == 'Balance') {
+                if (label == 'Amount' || label == 'Balance' || label == 'Minimum amount' || label == 'Maximum amount') {
                     money.format(gdata, i);
                 }
 

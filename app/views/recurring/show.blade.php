@@ -38,7 +38,7 @@
                     <tr>
                         <td colspan="2">
                         Matching on
-                            @foreach(explode(' ',$recurring->match) as $word)
+                            @foreach(explode(',',$recurring->match) as $word)
                                 <span class="label label-info">{{{$word}}}</span>
                             @endforeach
                             between {{mf($recurring->amount_min)}} and {{mf($recurring->amount_max)}}.
@@ -47,7 +47,7 @@
                     </tr>
                     <tr>
                         <td>Next reminder</td>
-                        <td>TODO TODO</td>
+                        <td>some date <!-- TODO --></td>
                     </tr>
                 </table>
             </div>
@@ -74,19 +74,8 @@
                 Connected transaction journals
             </div>
             <div class="panel-body">
-                <table id="transactionTable" class="table table-striped table-bordered" >
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Description</th>
-                        <th>Amount (&euro;)</th>
-                        <th>From</th>
-                        <th>To</th>
-                        <th>Budget / category</th>
-                        <th>ID</th>
-                    </tr>
-                </thead>
-                </table>
+            <div id="transaction-table"></div>
+
             </div>
         </div>
     </div>
@@ -95,14 +84,14 @@
 @stop
 
 @section('scripts')
-    <script type="text/javascript">
-        var URL = '{{route('json.recurringjournals',$recurring->id)}}';
+<script type="text/javascript">
+var recurringID = {{{$recurring->id}}};
 </script>
-{{HTML::script('assets/javascript/typeahead/bootstrap3-typeahead.min.js')}}
-{{HTML::script('assets/javascript/datatables/jquery.dataTables.min.js')}}
-{{HTML::script('assets/javascript/datatables/dataTables.bootstrap.js')}}
+
+<!-- load the libraries and scripts necessary for Google Charts: -->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+{{HTML::script('assets/javascript/firefly/gcharts.options.js')}}
+{{HTML::script('assets/javascript/firefly/gcharts.js')}}
+
 {{HTML::script('assets/javascript/firefly/recurring.js')}}
-@stop
-@section('styles')
-{{HTML::style('assets/stylesheets/datatables/dataTables.bootstrap.css')}}
 @stop

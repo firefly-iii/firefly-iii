@@ -1,7 +1,6 @@
 <?php
 
 use FireflyIII\Exception\FireflyException;
-use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 
@@ -39,7 +38,7 @@ class PiggybankController extends BaseController
     }
 
     /**
-     * @throws NotImplementedException
+     * @return mixed
      */
     public function create()
     {

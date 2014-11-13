@@ -309,60 +309,6 @@ class TransactionController extends BaseController
                 return Redirect::route('transactions.create', $what)->withInput();
                 break;
         }
-
-
-        throw new NotImplementedException;
-        /*
-         * Collect data to process:
-         */
-        $data         = Input::except(['_token']);
-        $data['what'] = $what;
-
-        switch (Input::get('post_submit_action')) {
-            case 'store':
-            case 'create_another':
-                /*
-                 * Try to store:
-                 */
-                $messageBag = $this->_helper->store($data);
-
-                /*
-                 * Failure!
-                 */
-                if ($messageBag->count() > 0) {
-                    Session::flash('error', 'Could not save transaction: ' . $messageBag->first());
-
-                    return Redirect::route('transactions.create', [$what])->withInput()->withErrors($messageBag);
-                }
-
-                /*
-                 * Success!
-                 */
-                Session::flash('success', 'Transaction "' . e(Input::get('description')) . '" saved!');
-
-                /*
-                 * Redirect to original location or back to the form.
-                 */
-                if (Input::get('post_submit_action') == 'create_another') {
-                    return Redirect::route('transactions.create', $what)->withInput();
-                } else {
-                    return Redirect::route('transactions.index.' . $what);
-                }
-
-                break;
-            case 'validate_only':
-                $messageBags = $this->_helper->validate($data);
-
-                Session::flash('warnings', $messageBags['warnings']);
-                Session::flash('successes', $messageBags['successes']);
-                Session::flash('errors', $messageBags['errors']);
-
-                return Redirect::route('transactions.create', [$what])->withInput();
-                break;
-            default:
-                throw new FireflyException('Method ' . Input::get('post_submit_action') . ' not implemented yet.');
-                break;
-        }
     }
 
 
@@ -374,46 +320,46 @@ class TransactionController extends BaseController
     public function update(TransactionJournal $journal)
     {
         throw new NotImplementedException;
-        switch (Input::get('post_submit_action')) {
-            case 'update':
-            case 'return_to_edit':
-                $what       = strtolower($journal->transactionType->type);
-                $messageBag = $this->_helper->update($journal, Input::all());
-                if ($messageBag->count() == 0) {
-                    // has been saved, return to index:
-                    Session::flash('success', 'Transaction updated!');
-                    Event::fire('journals.update', [$journal]);
-
-                    if (Input::get('post_submit_action') == 'return_to_edit') {
-                        return Redirect::route('transactions.edit', $journal->id)->withInput();
-                    } else {
-                        return Redirect::route('transactions.index.' . $what);
-                    }
-                } else {
-                    Session::flash('error', 'Could not update transaction: ' . $journal->errors()->first());
-
-                    return Redirect::route('transactions.edit', $journal->id)->withInput()->withErrors(
-                        $journal->errors()
-                    );
-                }
-
-                break;
-            case 'validate_only':
-                $data         = Input::all();
-                $data['what'] = strtolower($journal->transactionType->type);
-                $messageBags  = $this->_helper->validate($data);
-
-                Session::flash('warnings', $messageBags['warnings']);
-                Session::flash('successes', $messageBags['successes']);
-                Session::flash('errors', $messageBags['errors']);
-
-                return Redirect::route('transactions.edit', $journal->id)->withInput();
-                break;
-            default:
-                throw new FireflyException('Method ' . Input::get('post_submit_action') . ' not implemented yet.');
-                break;
-        }
-
+//        switch (Input::get('post_submit_action')) {
+//            case 'update':
+//            case 'return_to_edit':
+//                $what       = strtolower($journal->transactionType->type);
+//                $messageBag = $this->_helper->update($journal, Input::all());
+//                if ($messageBag->count() == 0) {
+//                    // has been saved, return to index:
+//                    Session::flash('success', 'Transaction updated!');
+//                    Event::fire('journals.update', [$journal]);
+//
+//                    if (Input::get('post_submit_action') == 'return_to_edit') {
+//                        return Redirect::route('transactions.edit', $journal->id)->withInput();
+//                    } else {
+//                        return Redirect::route('transactions.index.' . $what);
+//                    }
+//                } else {
+//                    Session::flash('error', 'Could not update transaction: ' . $journal->errors()->first());
+//
+//                    return Redirect::route('transactions.edit', $journal->id)->withInput()->withErrors(
+//                        $journal->errors()
+//                    );
+//                }
+//
+//                break;
+//            case 'validate_only':
+//                $data         = Input::all();
+//                $data['what'] = strtolower($journal->transactionType->type);
+//                $messageBags  = $this->_helper->validate($data);
+//
+//                Session::flash('warnings', $messageBags['warnings']);
+//                Session::flash('successes', $messageBags['successes']);
+//                Session::flash('errors', $messageBags['errors']);
+//
+//                return Redirect::route('transactions.edit', $journal->id)->withInput();
+//                break;
+//            default:
+//                throw new FireflyException('Method ' . Input::get('post_submit_action') . ' not implemented yet.');
+//                break;
+//        }
+//
 
     }
 

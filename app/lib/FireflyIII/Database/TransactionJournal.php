@@ -355,8 +355,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      */
     public function getByIds(array $ids)
     {
-        // TODO: Implement getByIds() method.
-        throw new NotImplementedException;
+        return $this->getUser()->transactionjournals()->with('transactions')->whereIn('id', $ids)->orderBy('date', 'ASC')->get();
     }
 
     /**
@@ -390,9 +389,10 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         $end->endOfMonth();
 
         $sum = \DB::table('transactions')->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')->leftJoin(
-                'transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id'
-            )->where('amount', '>', 0)->where('transaction_types.type', '=', 'Withdrawal')->where('transaction_journals.date', '>=', $date->format('Y-m-d'))
-                  ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))->sum('transactions.amount');
+            'transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id'
+        )->where('amount', '>', 0)->where('transaction_types.type', '=', 'Withdrawal')->where('transaction_journals.date', '>=', $date->format('Y-m-d'))->where(
+                'transaction_journals.date', '<=', $end->format('Y-m-d')
+            )->sum('transactions.amount');
         $sum = floatval($sum);
 
         return $sum;
@@ -410,9 +410,10 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         $end->endOfMonth();
 
         $sum = \DB::table('transactions')->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')->leftJoin(
-                'transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id'
-            )->where('amount', '>', 0)->where('transaction_types.type', '=', 'Deposit')->where('transaction_journals.date', '>=', $date->format('Y-m-d'))
-                  ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))->sum('transactions.amount');
+            'transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id'
+        )->where('amount', '>', 0)->where('transaction_types.type', '=', 'Deposit')->where('transaction_journals.date', '>=', $date->format('Y-m-d'))->where(
+                'transaction_journals.date', '<=', $end->format('Y-m-d')
+            )->sum('transactions.amount');
         $sum = floatval($sum);
 
         return $sum;
@@ -441,12 +442,12 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
 
         $accountID = $account->id;
         $query     = $this->_user->transactionjournals()->with(['transactions', 'transactioncurrency', 'transactiontype'])->leftJoin(
-                'transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
-            )->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')->where('accounts.id', $accountID)->where(
-                'date', '>=', $start->format('Y-m-d')
-            )->where('date', '<=', $end->format('Y-m-d'))->orderBy('transaction_journals.date', 'DESC')->orderBy('transaction_journals.id', 'DESC')->take(
-                $count
-            )->get(['transaction_journals.*']);
+            'transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
+        )->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')->where('accounts.id', $accountID)->where(
+            'date', '>=', $start->format('Y-m-d')
+        )->where('date', '<=', $end->format('Y-m-d'))->orderBy('transaction_journals.date', 'DESC')->orderBy('transaction_journals.id', 'DESC')->take(
+            $count
+        )->get(['transaction_journals.*']);
 
         return $query;
     }
