@@ -330,7 +330,6 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
      * @param \RecurringTransaction $recurring
      *
      * @return bool
-     * @throws NotImplementedException
      */
     public function scanEverything(\RecurringTransaction $recurring)
     {
