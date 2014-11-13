@@ -92,6 +92,14 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
                 break;
             case 'opening':
                 break;
+            case 'deposit':
+                $data['to']   = $accountRepository->find($data['account_id']);
+                $data['from'] = $accountRepository->firstRevenueAccountOrCreate($data['revenue_account']);
+                break;
+            case 'transfer':
+                $data['from'] = $accountRepository->find($data['account_from_id']);
+                $data['to']   = $accountRepository->find($data['account_to_id']);
+                break;
 
             default:
                 throw new FireflyException('Cannot save transaction journal with accounts based on $what "' . $data['what'] . '".');
@@ -118,6 +126,10 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
             throw new FireflyException($validate['errors']->first());
         }
 
+        /*
+         * TODO store budget and category.
+         */
+
         $journal->completed = 1;
         $journal->save();
 
@@ -132,8 +144,81 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      */
     public function update(Ardent $model, array $data)
     {
-        // TODO: Implement update() method.
-        throw new NotImplementedException;
+        var_dump($data);
+        /** @var \FireflyIII\Database\TransactionType $typeRepository */
+        $typeRepository = \App::make('FireflyIII\Database\TransactionType');
+
+        /** @var \FireflyIII\Database\Account $accountRepository */
+        $accountRepository = \App::make('FireflyIII\Database\Account');
+
+        /** @var \FireflyIII\Database\TransactionCurrency $currencyRepository */
+        $currencyRepository = \App::make('FireflyIII\Database\TransactionCurrency');
+
+        /** @var \FireflyIII\Database\Transaction $transactionRepository */
+        $transactionRepository = \App::make('FireflyIII\Database\Transaction');
+
+        $journalType = $typeRepository->findByWhat($data['what']);
+        $currency    = $currencyRepository->findByCode($data['currency']);
+
+        $model->transactionType()->associate($journalType);
+        $model->transactionCurrency()->associate($currency);
+        $model->user()->associate($this->getUser());
+        $model->description = $data['description'];
+        $model->date        = $data['date'];
+
+        /*
+         * This must be enough to store the journal:
+         */
+        if (!$model->validate()) {
+            \Log::error($model->errors()->all());
+            throw new FireflyException('store() transaction journal failed, but it should not!');
+        }
+        $model->save();
+
+        /*
+         * Still need to find the accounts related to the transactions.
+         * This depends on the type of transaction.
+         */
+        switch ($data['what']) {
+            case 'withdrawal':
+                $data['from'] = $accountRepository->find($data['account_id']);
+                $data['to']   = $accountRepository->firstExpenseAccountOrCreate($data['expense_account']);
+                break;
+            case 'opening':
+                break;
+            case 'deposit':
+                $data['to']   = $accountRepository->find($data['account_id']);
+                $data['from'] = $accountRepository->firstRevenueAccountOrCreate($data['revenue_account']);
+                break;
+            case 'transfer':
+                $data['from'] = $accountRepository->find($data['account_from_id']);
+                $data['to']   = $accountRepository->find($data['account_to_id']);
+                break;
+
+            default:
+                throw new FireflyException('Cannot save transaction journal with accounts based on $what "' . $data['what'] . '".');
+                break;
+        }
+        /*
+         * Now we can update the transactions related to this journal.
+         */
+        $amount = floatval($data['amount']);
+        /** @var \Transaction $transaction */
+        foreach ($model->transactions()->get() as $transaction) {
+            if (floatval($transaction->amount) > 0) {
+                // the TO transaction.
+                $transaction->account()->associate($data['to']);
+                $transaction->amount = $amount;
+            } else {
+                $transaction->account()->associate($data['from']);
+                $transaction->amount = $amount * -1;
+            }
+            if (!$transaction->validate()) {
+                throw new FireflyException('Could not validate transaction while saving.');
+            }
+            $transaction->save();
+        }
+        return new MessageBag;
     }
 
     /**
@@ -391,8 +476,8 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         $sum = \DB::table('transactions')->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')->leftJoin(
             'transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id'
         )->where('amount', '>', 0)->where('transaction_types.type', '=', 'Withdrawal')->where('transaction_journals.date', '>=', $date->format('Y-m-d'))->where(
-                'transaction_journals.date', '<=', $end->format('Y-m-d')
-            )->sum('transactions.amount');
+            'transaction_journals.date', '<=', $end->format('Y-m-d')
+        )->sum('transactions.amount');
         $sum = floatval($sum);
 
         return $sum;
@@ -412,8 +497,8 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         $sum = \DB::table('transactions')->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')->leftJoin(
             'transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id'
         )->where('amount', '>', 0)->where('transaction_types.type', '=', 'Deposit')->where('transaction_journals.date', '>=', $date->format('Y-m-d'))->where(
-                'transaction_journals.date', '<=', $end->format('Y-m-d')
-            )->sum('transactions.amount');
+            'transaction_journals.date', '<=', $end->format('Y-m-d')
+        )->sum('transactions.amount');
         $sum = floatval($sum);
 
         return $sum;
