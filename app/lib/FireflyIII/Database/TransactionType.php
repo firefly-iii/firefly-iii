@@ -113,6 +113,9 @@ class TransactionType implements TransactionTypeInterface, CUD, CommonDatabaseCa
             case 'withdrawal':
                 return \TransactionType::whereType('Withdrawal')->first();
                 break;
+            case 'deposit':
+                return \TransactionType::whereType('Deposit')->first();
+                break;
             default:
                 throw new FireflyException('Cannot find transaction type described as "' . e($what) . '".');
                 break;

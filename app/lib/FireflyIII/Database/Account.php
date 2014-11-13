@@ -192,8 +192,8 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
     public function openingBalanceTransaction(\Account $account)
     {
         return \TransactionJournal::withRelevantData()->accountIs($account)->leftJoin(
-                'transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id'
-            )->where('transaction_types.type', 'Opening balance')->first(['transaction_journals.*']);
+            'transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id'
+        )->where('transaction_types.type', 'Opening balance')->first(['transaction_journals.*']);
     }
 
     /**
@@ -469,4 +469,19 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
         return \Account::firstOrCreate($data);
 
     }
+
+    public function firstRevenueAccountOrCreate($name)
+    {
+        /** @var \FireflyIII\Database\AccountType $accountTypeRepos */
+        $accountTypeRepos = \App::make('FireflyIII\Database\AccountType');
+
+        $accountType = $accountTypeRepos->findByWhat('revenue');
+
+        $data = ['user_id' => $this->getUser()->id, 'account_type_id' => $accountType->id, 'name' => $name, 'active' => 1];
+
+        return \Account::firstOrCreate($data);
+
+    }
+
+
 }
