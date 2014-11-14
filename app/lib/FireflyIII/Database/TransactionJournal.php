@@ -218,6 +218,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
             }
             $transaction->save();
         }
+
         return new MessageBag;
     }
 
@@ -509,9 +510,17 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      *
      * @return Collection
      */
-    public function getDeposits()
+    public function getDeposits($limit = null, $offset = null)
     {
-        return $this->getUser()->transactionjournals()->withRelevantData()->transactionTypes(['Deposit'])->get(['transaction_journals.*']);
+        $query = $this->getUser()->transactionjournals()->withRelevantData()->transactionTypes(['Deposit']);
+        if(!is_null($limit)) {
+            $query->take($limit);
+        }
+        if(!is_null($offset) && intval($offset) > 0) {
+            $query->skip($offset);
+        }
+
+        return $query->get(['transaction_journals.*']);
     }
 
     /**
@@ -542,9 +551,17 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      *
      * @return Collection
      */
-    public function getTransfers()
+    public function getTransfers($limit = null, $offset = null)
     {
-        return $this->getUser()->transactionjournals()->withRelevantData()->transactionTypes(['Transfer'])->get(['transaction_journals.*']);
+        $query = $this->getUser()->transactionjournals()->withRelevantData()->transactionTypes(['Transfer']);
+
+        if(!is_null($limit)) {
+            $query->take($limit);
+        }
+        if(!is_null($offset) && intval($offset) > 0) {
+            $query->skip($offset);
+        }
+        return $query->get(['transaction_journals.*']);
     }
 
     /**
@@ -552,8 +569,16 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      *
      * @return Collection
      */
-    public function getWithdrawals()
+    public function getWithdrawals($limit = null, $offset = null)
     {
-        return $this->getUser()->transactionjournals()->withRelevantData()->transactionTypes(['Withdrawal'])->get(['transaction_journals.*']);
+        $query = $this->getUser()->transactionjournals()->withRelevantData()->transactionTypes(['Withdrawal']);
+
+        if(!is_null($limit) && intval($limit) > 0) {
+            $query->take($limit);
+        }
+        if(!is_null($offset) && intval($offset) > 0) {
+            $query->skip($offset);
+        }
+        return $query->get(['transaction_journals.*']);
     }
 }

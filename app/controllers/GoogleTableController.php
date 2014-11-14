@@ -1,5 +1,6 @@
 <?php
 use FireflyIII\Exception\FireflyException;
+use Illuminate\Support\Collection;
 
 /**
  * Class GoogleTableController
@@ -99,9 +100,9 @@ class GoogleTableController extends BaseController
         $chart->addColumn('ID_Delete', 'string');
         $chart->addColumn('Name_URL', 'string');
         $chart->addColumn('Name', 'string');
-        $chart->addColumn('Matches','string');
-        $chart->addColumn('Minimum amount','number');
-        $chart->addColumn('Maximum amount','number');
+        $chart->addColumn('Matches', 'string');
+        $chart->addColumn('Minimum amount', 'number');
+        $chart->addColumn('Maximum amount', 'number');
 
         /** @var \FireflyIII\Database\Recurring $repository */
         $repository = App::make('FireflyIII\Database\Recurring');
@@ -110,8 +111,8 @@ class GoogleTableController extends BaseController
 
         /** @var \RecurringTransaction $entry */
         foreach ($set as $entry) {
-            $row = [$entry->id, route('recurring.edit', $entry->id), route('recurring.delete', $entry->id), route('recurring.show', $entry->id), $entry->name
-            , $entry->match,$entry->amount_min,$entry->amount_max
+            $row = [$entry->id, route('recurring.edit', $entry->id), route('recurring.delete', $entry->id), route('recurring.show', $entry->id), $entry->name,
+                    $entry->match, $entry->amount_min, $entry->amount_max
 
             ];
             $chart->addRowArray($row);
@@ -136,99 +137,12 @@ class GoogleTableController extends BaseController
         return Response::json($chart->getData());
     }
 
-    public function transactionsByRecurring(RecurringTransaction $recurring) {
-        /** @var \Grumpydictator\Gchart\GChart $chart */
-        $chart = App::make('gchart');
-        $chart->addColumn('ID', 'number');
-        $chart->addColumn('ID_Edit', 'string');
-        $chart->addColumn('ID_Delete', 'string');
-        $chart->addColumn('Date', 'date');
-        $chart->addColumn('Description_URL', 'string');
-        $chart->addColumn('Description', 'string');
-        $chart->addColumn('Amount', 'number');
-        $chart->addColumn('From_URL', 'string');
-        $chart->addColumn('From', 'string');
-        $chart->addColumn('To_URL', 'string');
-        $chart->addColumn('To', 'string');
-        $chart->addColumn('Budget_URL', 'string');
-        $chart->addColumn('Budget', 'string');
-        $chart->addColumn('Category_URL', 'string');
-        $chart->addColumn('Category', 'string');
-
-        $journals = $recurring->transactionjournals()->get();
-
-        /** @var TransactionJournal $transaction */
-        foreach ($journals as $journal) {
-            $date           = $journal->date;
-            $descriptionURL = route('transactions.show', $journal->id);
-            $description    = $journal->description;
-            /** @var Transaction $transaction */
-            foreach ($journal->transactions as $transaction) {
-                if (floatval($transaction->amount) > 0) {
-                    $amount = floatval($transaction->amount);
-                    $to     = $transaction->account->name;
-                    $toURL  = route('accounts.show', $transaction->account->id);
-                } else {
-                    $from    = $transaction->account->name;
-                    $fromURL = route('accounts.show', $transaction->account->id);
-                }
-
-            }
-            if (isset($journal->budgets[0])) {
-                $budgetURL = route('budgets.show', $journal->budgets[0]->id);
-                $component = $journal->budgets[0]->name;
-            } else {
-                $budgetURL = '';
-                $component = '';
-            }
-
-            if (isset($journal->categories[0])) {
-                $categoryURL = route('categories.show', $journal->categories[0]->id);
-                $category    = $journal->categories[0]->name;
-            } else {
-                $categoryURL = '';
-                $category    = '';
-            }
-
-
-            $id     = $journal->id;
-            $edit   = route('transactions.edit', $journal->id);
-            $delete = route('transactions.delete', $journal->id);
-            $chart->addRow(
-                $id, $edit, $delete, $date, $descriptionURL, $description, $amount, $fromURL, $from, $toURL, $to, $budgetURL, $component, $categoryURL,
-                $category
-            );
-        }
-
-        $chart->generate();
-
-        return Response::json($chart->getData());
-    }
-
     /**
      * @param Account $account
      */
     public function transactionsByAccount(Account $account)
     {
-        /** @var \Grumpydictator\Gchart\GChart $chart */
-        $chart = App::make('gchart');
-        $chart->addColumn('ID', 'number');
-        $chart->addColumn('ID_Edit', 'string');
-        $chart->addColumn('ID_Delete', 'string');
-        $chart->addColumn('Date', 'date');
-        $chart->addColumn('Description_URL', 'string');
-        $chart->addColumn('Description', 'string');
-        $chart->addColumn('Amount', 'number');
-        $chart->addColumn('From_URL', 'string');
-        $chart->addColumn('From', 'string');
-        $chart->addColumn('To_URL', 'string');
-        $chart->addColumn('To', 'string');
-        $chart->addColumn('Budget_URL', 'string');
-        $chart->addColumn('Budget', 'string');
-        $chart->addColumn('Category_URL', 'string');
-        $chart->addColumn('Category', 'string');
-
-
+        $table    = new \FireflyIII\Shared\Google\Table\Transactions;
         /*
          * Find transactions:
          */
@@ -241,8 +155,10 @@ class GoogleTableController extends BaseController
             Session::get('start')
         )->orderBy('date', 'DESC')->get();
 
+        $collection = new Collection;
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
+
             $date           = $transaction->transactionJournal->date;
             $descriptionURL = route('transactions.show', $transaction->transaction_journal_id);
             $description    = $transaction->transactionJournal->description;
@@ -390,6 +306,18 @@ class GoogleTableController extends BaseController
 
     }
 
+    public function transactionsByRecurring(RecurringTransaction $recurring)
+    {
+
+        /** @var \FireflyIII\Shared\Google\Table\Transactions $table */
+        $table    = new \FireflyIII\Shared\Google\Table\Transactions;
+        $journals = $recurring->transactionjournals()->get();
+
+        $table->addData($journals);
+
+        return $table->generate();
+    }
+
     /**
      * @param $what
      *
@@ -397,24 +325,21 @@ class GoogleTableController extends BaseController
      */
     public function transactionsList($what)
     {
-        /** @var \Grumpydictator\Gchart\GChart $chart */
-        $chart = App::make('gchart');
-        $chart->addColumn('ID', 'number');
-        $chart->addColumn('ID_Edit', 'string');
-        $chart->addColumn('ID_Delete', 'string');
-        $chart->addColumn('Date', 'date');
-        $chart->addColumn('Description_URL', 'string');
-        $chart->addColumn('Description', 'string');
-        $chart->addColumn('Amount', 'number');
+        /*
+         * Process some google stuff:
+         */
+        $parameters = explode(' ',trim(Input::get('tq')));
+        $limit = intval($parameters[1]);
+        $offset = intval($parameters[3]);
+        $request = explode(':',Input::get('tqx'));
+        $reqID = $request[1];
 
-        $chart->addColumn('From_URL', 'string');
-        $chart->addColumn('From', 'string');
-        $chart->addColumn('To_URL', 'string');
-        $chart->addColumn('To', 'string');
-        $chart->addColumn('Budget_URL', 'string');
-        $chart->addColumn('Budget', 'string');
-        $chart->addColumn('Category_URL', 'string');
-        $chart->addColumn('Category', 'string');
+        /** @var \FireflyIII\Shared\Google\Table\Transactions $table */
+        $table    = new \FireflyIII\Shared\Google\Table\Transactions;
+        $table->setPaging(true);
+        $table->setLimit($limit);
+        $table->setOffset($offset);
+        $table->setReqID($reqID);
 
         /** @var \FireflyIII\Database\TransactionJournal $repository */
         $repository = App::make('FireflyIII\Database\TransactionJournal');
@@ -422,72 +347,21 @@ class GoogleTableController extends BaseController
         switch ($what) {
             case 'expenses':
             case 'withdrawal':
-                $list = $repository->getWithdrawals();
+                $list = $repository->getWithdrawals($limit, $offset);
                 break;
             case 'revenue':
             case 'deposit':
-                $list = $repository->getDeposits();
+                $list = $repository->getDeposits($limit, $offset);
                 break;
             case 'transfer':
             case 'transfers':
-                $list = $repository->getTransfers();
+                $list = $repository->getTransfers($limit, $offset);
                 break;
         }
 
-        /** @var TransactionJournal $journal */
-        foreach ($list as $journal) {
-            $date           = $journal->date;
-            $descriptionURL = route('transactions.show', $journal->id);
-            $description    = $journal->description;
-            $id             = $journal->id;
-            if(!isset($journal->transactions[0]) || !isset($journal->transactions[1])) {
-                continue;
-            }
+        $table->addData($list);
 
-
-            if ($journal->transactions[0]->amount < 0) {
-
-                $fromURL  = route('accounts.show', $journal->transactions[0]->account->id);
-                $fromName = $journal->transactions[0]->account->name;
-                $amount   = floatval($journal->transactions[0]->amount);
-
-                $toURL  = route('accounts.show', $journal->transactions[1]->account->id);
-                $toName = $journal->transactions[1]->account->name;
-
-            } else {
-                $fromURL  = route('accounts.show', $journal->transactions[1]->account->id);
-                $fromName = $journal->transactions[1]->account->name;
-                $amount   = floatval($journal->transactions[1]->amount);
-
-                $toURL  = route('accounts.show', $journal->transactions[0]->account->id);
-                $toName = $journal->transactions[0]->account->name;
-            }
-            if (isset($journal->budgets[0])) {
-                $budgetURL = route('budgets.show', $journal->budgets[0]->id);
-                $budget    = $journal->budgets[0]->name;
-            } else {
-                $budgetURL = '';
-                $budget    = '';
-            }
-
-            if (isset($journal->categories[0])) {
-                $categoryURL = route('categories.show', $journal->categories[0]->id);
-                $category    = $journal->categories[0]->name;
-            } else {
-                $categoryURL = '';
-                $category    = '';
-            }
-            $edit   = route('transactions.edit', $journal->id);
-            $delete = route('transactions.delete', $journal->id);
-            $chart->addRow(
-                $id, $edit, $delete, $date, $descriptionURL, $description, $amount, $fromURL, $fromName, $toURL, $toName, $budgetURL, $budget, $categoryURL,
-                $category
-            );
-        }
-
-
-        $chart->generate();
-
-        return Response::json($chart->getData());
+        echo $table->generate();
+        exit;
     }
 } 
