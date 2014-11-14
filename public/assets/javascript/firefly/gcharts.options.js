@@ -116,8 +116,3 @@ var defaultPieChartOptions = {
 var defaultSankeyChartOptions = {
     height: 400
 }
-var defaultTableOptions = {
-    allowHtml: true,
-    page: 'enable',
-    pageSize: 50
-};

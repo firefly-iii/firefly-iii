@@ -9,7 +9,7 @@
                 <i class="fa fa-repeat"></i> Transactions ({{$result['transactions']->count()}})
             </div>
             <div class="panel-body">
-                @include('transactions.journals-small-noaccount',['transactions' => $result['transactions']])
+                @include('...lists.old.journals-small-noaccount',['transactions' => $result['transactions']])
             </div>
         </div>
     </div>

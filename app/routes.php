@@ -160,15 +160,14 @@ Route::group(
         Route::get('/chart/component/{component}/spending/{year}', ['uses' => 'GoogleChartController@componentsAndSpending']);
 
         // google table controller
-        Route::get('/table/account/{account}/transactions', ['uses' => 'GoogleTableController@transactionsByAccount']);
-        Route::get('/table/accounts/{what}', ['uses' => 'GoogleTableController@accountList']);
-        Route::get('/table/categories', ['uses' => 'GoogleTableController@categoryList']);
-        Route::get('/table/recurring', ['uses' => 'GoogleTableController@recurringList']);
-        Route::get('/table/recurring/{recurring}/transactions', ['uses' => 'GoogleTableController@transactionsByRecurring']);
-        Route::get('/table/transactions/{what}', ['uses' => 'GoogleTableController@transactionsList'])->where(['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']);
-
+        #Route::get('/table/account/{account}/transactions', ['uses' => 'GoogleTableController@transactionsByAccount']);
+        #Route::get('/table/accounts/{what}', ['uses' => 'GoogleTableController@accountList']);
+        #Route::get('/table/categories', ['uses' => 'GoogleTableController@categoryList']);
+        #Route::get('/table/recurring', ['uses' => 'GoogleTableController@recurringList']);
+        #Route::get('/table/recurring/{recurring}/transactions', ['uses' => 'GoogleTableController@transactionsByRecurring']);
+        #Route::get('/table/transactions/{what}', ['uses' => 'GoogleTableController@transactionsList'])->where(['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']);
         // google table for components (categories + budgets)
-        Route::get('/table/component/{component}/{limitrepetition}/transactions', ['uses' => 'GoogleTableController@transactionsByComponent']);
+        #Route::get('/table/component/{component}/{limitrepetition}/transactions', ['uses' => 'GoogleTableController@transactionsByComponent']);
 
 
         // home controller
