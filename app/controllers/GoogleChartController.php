@@ -445,6 +445,32 @@ class GoogleChartController extends BaseController
 
     }
 
+    public function budgetLimitSpending(\Budget $budget, \LimitRepetition $repetition) {
+        $start = clone $repetition->startdate;
+        $end = $repetition->enddate;
+
+        /** @var \Grumpydictator\Gchart\GChart $chart */
+        $chart = App::make('gchart');
+        $chart->addColumn('Day', 'date');
+        $chart->addColumn('Left', 'number');
+
+
+        $amount = $repetition->amount;
+
+        while($start <= $end) {
+            /*
+             * Sum of expenses on this day:
+             */
+            $sum = floatval($budget->transactionjournals()->lessThan(0)->transactionTypes(['Withdrawal'])->onDate($start)->sum('amount'));
+            $amount += $sum;
+            $chart->addRow(clone $start, $amount);
+            $start->addDay();
+        }
+        $chart->generate();
+        return Response::json($chart->getData());
+
+    }
+
     /**
      * @return \Illuminate\Http\JsonResponse
      * @throws \FireflyIII\Exception\FireflyException
@@ -525,7 +551,6 @@ class GoogleChartController extends BaseController
         $chart->addRow('Paid: ' . join(', ', $paid['items']), $paid['amount']);
 
         $chart->generate();
-
         return Response::json($chart->getData());
 
     }
