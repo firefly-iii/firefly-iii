@@ -213,7 +213,7 @@ class TransactionJournal extends Ardent
                 $q->orderBy('amount', 'ASC');
             }, 'transactiontype', 'components' => function ($q) {
                 $q->orderBy('class');
-            }, 'transactions.account.accounttype', 'recurringTransaction']
+            }, 'transactions.account.accounttype', 'recurringTransaction','budgets','categories']
         );
     }
 

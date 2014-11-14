@@ -7,14 +7,8 @@ $(function () {
     $('.updateIncome').on('click', updateIncome);
 
 
-    if (typeof(googleTable) == 'function') {
-        if (typeof componentID != 'undefined' && typeof repetitionID == 'undefined') {
-            googleTable('table/component/' + componentID + '/0/transactions', 'transactions');
-            googleColumnChart('chart/component/' + componentID + '/spending/' + year, 'componentOverview');
-
-        } else if (typeof componentID != 'undefined' && typeof repetitionID != 'undefined') {
-            googleTable('table/component/' + componentID + '/' + repetitionID + '/transactions', 'transactions');
-        }
+    if (typeof componentID != 'undefined' && typeof repetitionID == 'undefined') {
+        googleColumnChart('chart/component/' + componentID + '/spending/' + year, 'componentOverview');
     }
 
 });

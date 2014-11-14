@@ -220,11 +220,17 @@ class AccountController extends BaseController
                 break;
         }
 
+        // get a paginated view of all transactions for this account:
+        /** @var \FireflyIII\Database\Account $acct */
+        $acct = App::make('FireflyIII\Database\Account');
+
+        $journals = $acct->getTransactionJournals($account, 50);
+
 
         //$data = $this->_accounts->show($account, 40);
-        return View::make('accounts.show')->with('account', $account)->with(
+        return View::make('accounts.show',compact('account','subTitleIcon','journals'))->with('account', $account)->with(
                 'subTitle', 'Details for ' . strtolower($account->accountType->type) . ' "' . $account->name . '"'
-            )->with(compact('subTitleIcon'));
+            );
     }
 
     /**
