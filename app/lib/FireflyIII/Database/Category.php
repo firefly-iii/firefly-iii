@@ -170,6 +170,20 @@ class Category implements CUD, CommonDatabaseCalls, CategoryInterface
         throw new NotImplementedException;
     }
 
+    public function getTransactionJournals(\Category $category, $limit = 50)
+    {
+        $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
+        $set    = $category->transactionJournals()->withRelevantData()->take($limit)->offset($offset)->orderBy('date', 'DESC')->get(['transaction_journals.*']);
+        $count  = $category->transactionJournals()->count();
+        $items  = [];
+        foreach ($set as $entry) {
+            $items[] = $entry;
+        }
+
+        return \Paginator::make($items, $count, $limit);
+
+    }
+
     /**
      * @param \Category $budget
      * @param Carbon    $date
