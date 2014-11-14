@@ -48,7 +48,7 @@
                 <i class="fa fa-repeat fa-fw"></i> Transactions
             </div>
             <div class="panel-body">
-                <div id="account-transactions"></div>
+                @include('list.journals-full')
             </div>
     </div>
 </div>

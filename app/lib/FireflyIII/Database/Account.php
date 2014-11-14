@@ -483,5 +483,25 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
 
     }
 
+    public function getTransactionJournals(\Account $account, $limit = 50)
+    {
+        $start  = \Session::get('start');
+        $end    = \Session::get('end');
+        $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
+        $set    = $this->getUser()->transactionJournals()->withRelevantData()->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                       ->where('transactions.account_id', $account->id)->take($limit)->offset($offset)->before($end)->after($start)->orderBy('date', 'DESC')
+                       ->get(['transaction_journals.*']);
+        $count  = $this->getUser()->transactionJournals()->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                       ->before($end)->after($start)->orderBy('date', 'DESC')->where('transactions.account_id', $account->id)->count();
+        $items  = [];
+        foreach ($set as $entry) {
+            $items[] = $entry;
+        }
+
+        return \Paginator::make($items, $count, $limit);
+
+
+    }
+
 
 }
