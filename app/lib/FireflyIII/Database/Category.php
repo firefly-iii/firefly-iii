@@ -170,6 +170,11 @@ class Category implements CUD, CommonDatabaseCalls, CategoryInterface
         throw new NotImplementedException;
     }
 
+    public function firstOrCreate($name)
+    {
+        return \Category::firstOrCreate(['user_id' => $this->getUser()->id, 'name' => $name]);
+    }
+
     public function getTransactionJournals(\Category $category, $limit = 50)
     {
         $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
