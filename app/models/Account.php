@@ -1,4 +1,5 @@
 <?php
+use Carbon\Carbon;
 use LaravelBook\Ardent\Ardent as Ardent;
 use LaravelBook\Ardent\Builder;
 
@@ -34,7 +35,7 @@ class Account extends Ardent
      * @var array
      */
     public static $rules
-        = ['name' => ['required', 'between:1,100', 'alphabasic'], 'user_id' => 'required|exists:users,id',
+        = ['name'            => ['required', 'between:1,100', 'alphabasic'], 'user_id' => 'required|exists:users,id',
            'account_type_id' => 'required|exists:account_types,id', 'active' => 'required|boolean'
 
         ];
@@ -64,19 +65,9 @@ class Account extends Ardent
 
         return floatval(
             $this->transactions()->leftJoin(
-                    'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-                )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount')
+                'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
+            )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount')
         );
-    }
-
-    /**
-     * Transactions.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function transactions()
-    {
-        return $this->hasMany('Transaction');
     }
 
     /**
@@ -88,11 +79,34 @@ class Account extends Ardent
     {
         return floatval(
             $this->transactions()->leftJoin(
-                    'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-                )->where('transaction_journals.date', '<=', $journal->date->format('Y-m-d'))->where(
-                    'transaction_journals.created_at', '<=', $journal->created_at->format('Y-m-d H:i:s')
-                )->where('transaction_journals.id', '!=', $journal->id)->sum('transactions.amount')
+                'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
+            )->where('transaction_journals.date', '<=', $journal->date->format('Y-m-d'))->where(
+                'transaction_journals.created_at', '<=', $journal->created_at->format('Y-m-d H:i:s')
+            )->where('transaction_journals.id', '!=', $journal->id)->sum('transactions.amount')
         );
+    }
+
+    /**
+     * @return Carbon
+     */
+    public function lastActionDate()
+    {
+        $transaction = $this->transactions()->orderBy('updated_at', 'DESC')->first();
+        if(is_null($transaction)) {
+            return null;
+        }
+
+        return $transaction->updated_at;
+    }
+
+    /**
+     * Transactions.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transactions()
+    {
+        return $this->hasMany('Transaction');
     }
 
     /**

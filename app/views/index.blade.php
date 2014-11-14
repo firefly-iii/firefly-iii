@@ -101,7 +101,7 @@
 
             </div>
             <div class="panel-body">
-                @include('lists.old.journals-small-index',['transactions' => $data[0],'account' => $data[1]])
+                @include('list.journals-tiny',['transactions' => $data[0],'account' => $data[1]])
             </div>
         </div>
         @endforeach
