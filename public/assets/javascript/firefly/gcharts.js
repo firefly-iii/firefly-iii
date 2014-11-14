@@ -315,3 +315,20 @@ function googleTable(URL, container) {
         console.log('No container found called "' + container + '"');
     }
 }
+
+/**
+ *
+ * @param URL
+ * @param container
+ */
+function googleTablePaged(URL, container) {
+    var query, options;
+    query = new google.visualization.Query(URL);
+    objContainer = document.getElementById(container);
+    options = {'pageSize': 5};
+
+    query.abort();
+    var tableQueryWrapper = new TableQueryWrapper(query, objContainer, options);
+    tableQueryWrapper.sendAndDraw();
+
+}
