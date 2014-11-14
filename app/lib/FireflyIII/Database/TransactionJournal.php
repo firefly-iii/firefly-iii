@@ -37,8 +37,8 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      */
     public function destroy(Ardent $model)
     {
-        // TODO: Implement destroy() method.
-        throw new NotImplementedException;
+        $model->delete();
+        return true;
     }
 
     /**
