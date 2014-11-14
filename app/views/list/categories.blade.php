@@ -13,7 +13,7 @@
             </div>
         </td>
         <td>
-            <a href="{{route('categories.show',$category->id)" title="{{{$category->name}}}">{{{$category->name}}}</a>
+            <a href="{{route('categories.show',$category->id)}}" title="{{{$category->name}}}">{{{$category->name}}}</a>
         </td>
         <td>
             <?php $active = $category->lastActionDate(); ?>

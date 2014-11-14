@@ -7,23 +7,11 @@
                 <i class="fa {{$subTitleIcon}}"></i> {{{$subTitle}}}
             </div>
             <div class="panel-body">
-                <div id="transaction-table"></div>
+                @include('list.journals-full')
             </div>
         </div>
     </div>
 </div>
 
 
-@stop
-@section('scripts')
-<script type="text/javascript">
-var what = '{{{$what}}}';
-</script>
-<!-- load the libraries and scripts necessary for Google Charts: -->
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-{{HTML::script('assets/javascript/firefly/gcharts.options.js')}}
-{{HTML::script('assets/javascript/firefly/gcharts.js')}}
-
-
-{{HTML::script('assets/javascript/firefly/transactions.js')}}
 @stop

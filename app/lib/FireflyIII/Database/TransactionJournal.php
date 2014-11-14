@@ -506,24 +506,6 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
     }
 
     /**
-     * Some objects.
-     *
-     * @return Collection
-     */
-    public function getDeposits($limit = null, $offset = null)
-    {
-        $query = $this->getUser()->transactionjournals()->withRelevantData()->transactionTypes(['Deposit']);
-        if(!is_null($limit)) {
-            $query->take($limit);
-        }
-        if(!is_null($offset) && intval($offset) > 0) {
-            $query->skip($offset);
-        }
-
-        return $query->get(['transaction_journals.*']);
-    }
-
-    /**
      * @param \Account $account
      * @param int      $count
      * @param Carbon   $start
@@ -546,39 +528,42 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         return $query;
     }
 
-    /**
-     * Some objects.
-     *
-     * @return Collection
-     */
-    public function getTransfers($limit = null, $offset = null)
-    {
-        $query = $this->getUser()->transactionjournals()->withRelevantData()->transactionTypes(['Transfer']);
+    public function getWithdrawalsPaginated($limit = 50) {
+        $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
 
-        if(!is_null($limit)) {
-            $query->take($limit);
+        $set    = $this->getUser()->transactionJournals()->transactionTypes(['Withdrawal'])->withRelevantData()->take($limit)->offset($offset)->orderBy('date', 'DESC')->get(['transaction_journals.*']);
+        $count  = $this->getUser()->transactionJournals()->transactionTypes(['Withdrawal'])->count();
+        $items  = [];
+        foreach ($set as $entry) {
+            $items[] = $entry;
         }
-        if(!is_null($offset) && intval($offset) > 0) {
-            $query->skip($offset);
-        }
-        return $query->get(['transaction_journals.*']);
+
+        return \Paginator::make($items, $count, $limit);
     }
 
-    /**
-     * Some objects.
-     *
-     * @return Collection
-     */
-    public function getWithdrawals($limit = null, $offset = null)
-    {
-        $query = $this->getUser()->transactionjournals()->withRelevantData()->transactionTypes(['Withdrawal']);
+    public function getDepositsPaginated($limit = 50) {
+        $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
 
-        if(!is_null($limit) && intval($limit) > 0) {
-            $query->take($limit);
+        $set    = $this->getUser()->transactionJournals()->transactionTypes(['Deposit'])->withRelevantData()->take($limit)->offset($offset)->orderBy('date', 'DESC')->get(['transaction_journals.*']);
+        $count  = $this->getUser()->transactionJournals()->transactionTypes(['Deposit'])->count();
+        $items  = [];
+        foreach ($set as $entry) {
+            $items[] = $entry;
         }
-        if(!is_null($offset) && intval($offset) > 0) {
-            $query->skip($offset);
+
+        return \Paginator::make($items, $count, $limit);
+    }
+
+    public function getTransfersPaginated($limit = 50) {
+        $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
+
+        $set    = $this->getUser()->transactionJournals()->transactionTypes(['Transfer'])->withRelevantData()->take($limit)->offset($offset)->orderBy('date', 'DESC')->get(['transaction_journals.*']);
+        $count  = $this->getUser()->transactionJournals()->transactionTypes(['Transfer'])->count();
+        $items  = [];
+        foreach ($set as $entry) {
+            $items[] = $entry;
         }
-        return $query->get(['transaction_journals.*']);
+
+        return \Paginator::make($items, $count, $limit);
     }
 }
