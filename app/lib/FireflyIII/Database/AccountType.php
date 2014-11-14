@@ -113,6 +113,9 @@ class AccountType implements AccountTypeInterface, CUD, CommonDatabaseCalls
             case 'revenue':
                 return \AccountType::whereType('Revenue account')->first();
                 break;
+            case 'cash':
+                return \AccountType::whereType('Cash account')->first();
+                break;
             case 'initial':
                 return \AccountType::whereType('Initial balance account')->first();
                 break;

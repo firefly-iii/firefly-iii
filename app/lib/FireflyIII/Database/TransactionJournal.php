@@ -48,7 +48,6 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      */
     public function store(array $data)
     {
-
         /** @var \FireflyIII\Database\TransactionType $typeRepository */
         $typeRepository = \App::make('FireflyIII\Database\TransactionType');
 
@@ -127,11 +126,32 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         }
 
         /*
-         * TODO store budget and category.
+         * Store the budget.
          */
+        if(isset($data['budget_id']) && intval($data['budget_id']) > 0) {
+            /** @var \FireflyIII\Database\Budget $budgetRepository */
+            $budgetRepository = \App::make('FireflyIII\Database\Budget');
+            $budget = $budgetRepository->find(intval($data['budget_id']));
+            if($budget) {
+                $journal->budgets()->save($budget);
+            }
+        }
+        if(strlen($data['category']) > 0) {
+            /** @var \FireflyIII\Database\Category $categoryRepository */
+            $categoryRepository = \App::make('FireflyIII\Database\Category');
+            $category = $categoryRepository->firstOrCreate($data['category']);
+            if($category) {
+                $journal->categories()->save($category);
+            }
+        }
 
         $journal->completed = 1;
         $journal->save();
+
+        /*
+         * Trigger a search for a relevant recurring transaction.
+         */
+
 
         return $journal;
     }
@@ -199,6 +219,27 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
                 throw new FireflyException('Cannot save transaction journal with accounts based on $what "' . $data['what'] . '".');
                 break;
         }
+
+        /*
+         * Store the budget.
+         */
+        if(isset($data['budget_id']) && intval($data['budget_id']) > 0) {
+            /** @var \FireflyIII\Database\Budget $budgetRepository */
+            $budgetRepository = \App::make('FireflyIII\Database\Budget');
+            $budget = $budgetRepository->find(intval($data['budget_id']));
+            if($budget) {
+                $model->budgets()->sync([$budget->id]);
+            }
+        }
+        if(strlen($data['category']) > 0) {
+            /** @var \FireflyIII\Database\Category $categoryRepository */
+            $categoryRepository = \App::make('FireflyIII\Database\Category');
+            $category = $categoryRepository->firstOrCreate($data['category']);
+            if($category) {
+                $model->categories()->sync([$category->id]);
+            }
+        }
+
         /*
          * Now we can update the transactions related to this journal.
          */

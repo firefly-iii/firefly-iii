@@ -142,8 +142,7 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
      */
     public function find($id)
     {
-        // TODO: Implement find() method.
-        throw new NotImplementedException;
+        return $this->getUser()->budgets()->find($id);
     }
 
     /**

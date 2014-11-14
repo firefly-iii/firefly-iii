@@ -464,6 +464,16 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
 
         $accountType = $accountTypeRepos->findByWhat('expense');
 
+        // if name is "", find cash account:
+        if (strlen($name) == 0) {
+            $cashAccountType = $accountTypeRepos->findByWhat('cash');
+
+            // find or create cash account:
+            return \Account::firstOrCreate(
+                ['name' => 'Cash account', 'account_type_id' => $cashAccountType->id, 'active' => 1, 'user_id' => $this->getUser()->id,]
+            );
+        }
+
         $data = ['user_id' => $this->getUser()->id, 'account_type_id' => $accountType->id, 'name' => $name, 'active' => 1];
 
         return \Account::firstOrCreate($data);
@@ -488,9 +498,11 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
         $start  = \Session::get('start');
         $end    = \Session::get('end');
         $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
-        $set    = $this->getUser()->transactionJournals()->withRelevantData()->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                       ->where('transactions.account_id', $account->id)->take($limit)->offset($offset)->before($end)->after($start)->orderBy('date', 'DESC')
-                       ->get(['transaction_journals.*']);
+        $set    = $this->getUser()->transactionJournals()->withRelevantData()->leftJoin(
+            'transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
+        )->where('transactions.account_id', $account->id)->take($limit)->offset($offset)->before($end)->after($start)->orderBy('date', 'DESC')->get(
+                ['transaction_journals.*']
+            );
         $count  = $this->getUser()->transactionJournals()->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                        ->before($end)->after($start)->orderBy('date', 'DESC')->where('transactions.account_id', $account->id)->count();
         $items  = [];
