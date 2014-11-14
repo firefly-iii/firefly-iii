@@ -224,25 +224,31 @@ class TransactionController extends BaseController
     public function index($what)
     {
 
+        /** @var \FireflyIII\Database\TransactionJournal $repository */
+        $repository = App::make('FireflyIII\Database\TransactionJournal');
+
         switch ($what) {
             case 'expenses':
             case 'withdrawal':
                 $subTitleIcon = 'fa-long-arrow-left';
                 $subTitle     = 'Expenses';
+                $journals     = $repository->getWithdrawalsPaginated(50);
                 break;
             case 'revenue':
             case 'deposit':
                 $subTitleIcon = 'fa-long-arrow-right';
                 $subTitle     = 'Revenue, income and deposits';
+                $journals     = $repository->getDepositsPaginated(50);
                 break;
             case 'transfer':
             case 'transfers':
                 $subTitleIcon = 'fa-arrows-h';
                 $subTitle     = 'Transfers';
+                $journals     = $repository->getTransfersPaginated(50);
                 break;
         }
 
-        return View::make('transactions.index', compact('subTitle', 'subTitleIcon'))->with('what', $what);
+        return View::make('transactions.index', compact('subTitle', 'subTitleIcon','journals'))->with('what', $what);
 
     }
 
@@ -251,9 +257,8 @@ class TransactionController extends BaseController
      *
      * @return $this
      */
-    public function show(
-        TransactionJournal $journal
-    ) {
+    public function show(TransactionJournal $journal)
+    {
         return View::make('transactions.show')->with('journal', $journal)->with(
             'subTitle', $journal->transactionType->type . ' "' . $journal->description . '"'
         );
