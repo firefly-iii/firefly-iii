@@ -110,7 +110,9 @@ class RecurringController extends BaseController
     }
 
     /**
+     * @param RecurringTransaction $recurringTransaction
      *
+     * @return mixed
      */
     public function show(RecurringTransaction $recurringTransaction)
     {

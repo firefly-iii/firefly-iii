@@ -3,7 +3,7 @@
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-12">
         <h3>Metadata</h3>
-        <table class="table">
+        <table class="table table-striped table-bordered">
             <tr>
                 <td>Date</td>
                 <td>{{{$journal->date->format('jS F Y')}}}</td>
@@ -26,12 +26,19 @@
                     @endif
                 </td>
             </tr>
-            @foreach($journal->components as $component)
-            <tr>
-                <td>{{$component->class}}</td>
-                <td>{{{$component->name}}}</td>
-            </tr>
+            @foreach($journal->budgets()->get() as $budget)
+                            <tr>
+                                <td>{{$budget->class}}</td>
+                                <td><a href="{{route('budgets.show',$budget->id)}}">{{{$budget->name}}}</a></td>
+                            </tr>
             @endforeach
+            @foreach($journal->categories()->get() as $category)
+                <tr>
+                    <td>{{$category->class}}</td>
+                    <td><a href="{{route('categories.show',$category->id)}}">{{{$category->name}}}</a></td>
+                </tr>
+            @endforeach
+
         </table>
     </div>
 
@@ -39,7 +46,7 @@
         <h3>Transactions</h3>
         @foreach($journal->transactions as $t)
         <h4><a href="{{route('accounts.show',$t->account->id)}}">{{{$t->account->name}}}</a><br /><small>{{{$t->account->accounttype->description}}}</small></h4>
-        <table class="table">
+        <table class="table table-striped table-bordered">
             <tr>
                 <td>Amount</td>
                 <td>{{mf($t->amount)}}</td>

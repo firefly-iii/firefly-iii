@@ -339,9 +339,8 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
         /** @var \FireflyIII\Database\TransactionJournal $journalRepository */
         $journalRepository = \App::make('FireflyIII\Database\TransactionJournal');
 
-        $set = \DB::table('transactions')->where('amount', '>', 0)->where('amount', '>=', $recurring->amount_min)->where(
-            'amount', '<=', $recurring->amount_max
-        )->get(['transaction_journal_id']);
+        $set = \DB::table('transactions')->where('amount', '>', 0)->where('amount', '>=', $recurring->amount_min)->where('amount', '<=', $recurring->amount_max)
+                  ->get(['transaction_journal_id']);
         $ids = [];
 
         /** @var \Transaction $entry */
