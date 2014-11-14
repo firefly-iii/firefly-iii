@@ -17,6 +17,18 @@
         <th><i class="fa fa-fw fa-rotate-right" title="Recurring transaction"></i></th>
     </tr>
     @foreach($journals as $journal)
+    @if(!isset($journal->transactions[1]) || !isset($journal->transactions[0]))
+        <tr>
+            <td>
+                <div class="btn-group btn-group-xs">
+                    <a href="{{route('transactions.delete',$journal->id)}}" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                </div>
+            </td>
+            <td>&nbsp;</td>
+            <td>{{{$journal->description}}}</td>
+            <td colspan="7"><em>Invalid journal: Found {{$journal->transactions()->count()}} transaction(s)</td>
+        </tr>
+    @else
     <tr>
         <td>
             <div class="btn-group btn-group-xs">
@@ -91,6 +103,8 @@
 
 
     </tr>
+        @endif
+
     @endforeach
 </table>
 
