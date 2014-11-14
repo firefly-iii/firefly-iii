@@ -31,4 +31,16 @@ class Category extends Component
     {
         return $this->belongsToMany('TransactionJournal', 'component_transaction_journal', 'component_id');
     }
+    /**
+     * @return Carbon
+     */
+    public function lastActionDate()
+    {
+        $transaction = $this->transactionjournals()->orderBy('updated_at', 'DESC')->first();
+        if(is_null($transaction)) {
+            return null;
+        }
+
+        return $transaction->date;
+    }
 } 

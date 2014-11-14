@@ -1,3 +1,6 @@
+@if(is_object($journals))
+{{$journals->links()}}
+@endif
 <table class="table table-striped table-bordered">
     <tr>
         <th>&nbsp;</th>
@@ -7,7 +10,9 @@
         <th>Date</th>
         <th>From</th>
         <th>To</th>
-        <th><i class="fa fa-tasks fa-fw" title="Budget"></i></th>
+        @if(!isset($hideBudget) || (isset($hideBudget) && $hideBudget=== false))
+            <th><i class="fa fa-tasks fa-fw" title="Budget"></i></th>
+        @endif
         <th><i class="fa fa-bar-chart fa-fw" title="Category"></i></th>
         <th><i class="fa fa-fw fa-rotate-right" title="Recurring transaction"></i></th>
     </tr>
@@ -64,12 +69,14 @@
                 <a href="{{route('accounts.show',$journal->transactions[1]->account_id)}}">{{{$journal->transactions[1]->account->name}}}</a>
             @endif
         </td>
-        <td>
-        <?php $budget = isset($journal->budgets[0]) ? $journal->budgets[0] : null; ?>
-            @if($budget)
-                <a href="{{route('budgets.show',$budget->id)}}">{{{$budget->name}}}</a>
-            @endif
-        </td>
+        @if(!isset($hideBudget) || (isset($hideBudget) && $hideBudget=== false))
+            <td>
+            <?php $budget = isset($journal->budgets[0]) ? $journal->budgets[0] : null; ?>
+                @if($budget)
+                    <a href="{{route('budgets.show',$budget->id)}}">{{{$budget->name}}}</a>
+                @endif
+            </td>
+        @endif
         <td>
         <?php $category = isset($journal->categories[0]) ? $journal->categories[0] : null; ?>
             @if($category)
@@ -87,4 +94,6 @@
     @endforeach
 </table>
 
+@if(is_object($journals))
 {{$journals->links()}}
+@endif
