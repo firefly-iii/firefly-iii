@@ -22,7 +22,7 @@
 
             </div>
             <div class="panel-body">
-                <div id="category-list"></div>
+                @include('list.categories')
             </div>
         </div>
     </div>

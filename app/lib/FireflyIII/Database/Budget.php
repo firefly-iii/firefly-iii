@@ -182,6 +182,36 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
         throw new NotImplementedException;
     }
 
+    public function getTransactionJournals(\Budget $budget, $limit = 50)
+    {
+        $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
+        $set    = $budget->transactionJournals()->withRelevantData()->take($limit)->offset($offset)->orderBy('date', 'DESC')->get(['transaction_journals.*']);
+        $count  = $budget->transactionJournals()->count();
+        $items  = [];
+        foreach ($set as $entry) {
+            $items[] = $entry;
+        }
+
+        return \Paginator::make($items, $count, $limit);
+
+    }
+
+    public function getTransactionJournalsInRepetition(\Budget $budget, \LimitRepetition $repetition, $limit = 50)
+    {
+        $start = $repetition->startdate;
+        $end = $repetition->enddate;
+
+        $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
+        $set    = $budget->transactionJournals()->withRelevantData()->before($end)->after($start)->take($limit)->offset($offset)->orderBy('date', 'DESC')->get(['transaction_journals.*']);
+        $count  = $budget->transactionJournals()->before($end)->after($start)->count();
+        $items  = [];
+        foreach ($set as $entry) {
+            $items[] = $entry;
+        }
+
+        return \Paginator::make($items, $count, $limit);
+    }
+
     /**
      * @param \Budget $budget
      * @param Carbon  $date
@@ -210,10 +240,10 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
         return \Auth::user()->transactionjournals()->whereNotIn(
             'transaction_journals.id', function ($query) use ($start, $end) {
                 $query->select('transaction_journals.id')->from('transaction_journals')->leftJoin(
-                        'component_transaction_journal', 'component_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
-                    )->leftJoin('components', 'components.id', '=', 'component_transaction_journal.component_id')->where(
-                        'transaction_journals.date', '>=', $start->format('Y-m-d')
-                    )->where('transaction_journals.date', '<=', $end->format('Y-m-d'))->where('components.class', 'Budget');
+                    'component_transaction_journal', 'component_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
+                )->leftJoin('components', 'components.id', '=', 'component_transaction_journal.component_id')->where(
+                    'transaction_journals.date', '>=', $start->format('Y-m-d')
+                )->where('transaction_journals.date', '<=', $end->format('Y-m-d'))->where('components.class', 'Budget');
             }
         )->before($end)->after($start)->lessThan(0)->transactionTypes(['Withdrawal'])->get();
     }

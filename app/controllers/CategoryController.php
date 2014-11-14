@@ -65,7 +65,10 @@ class CategoryController extends BaseController
      */
     public function index()
     {
-        return View::make('categories.index');
+        /** @var \FireflyIII\Database\Category $repos */
+        $repos = App::make('FireflyIII\Database\Category');
+        $categories = $repos->get();
+        return View::make('categories.index',compact('categories'));
     }
 
     /**

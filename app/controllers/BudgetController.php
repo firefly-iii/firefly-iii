@@ -191,17 +191,28 @@ class BudgetController extends BaseController
         if (!is_null($repetition) && $repetition->limit->budget->id != $budget->id) {
             App::abort(500);
         }
+        /** @var \FireflyIII\Database\Budget $repos */
+        $repos = App::make('FireflyIII\Database\Budget');
 
         if (is_null($repetition)) {
             // get all other repetitions:
             $limits = $budget->limits()->orderBy('startdate', 'DESC')->get();
+            // get all transaction journals for this budget.
+            $journals = $repos->getTransactionJournals($budget, 50);
 
+            $subTitle = $budget->name;
         } else {
             // get nothing? i dunno
             $limits = [$repetition->limit];
+            // get all transaction journals for this budget and limit repetition.
+            $journals = [];
+            $subTitle = $budget->name.' in ' . $repetition->startdate->format('F Y');
+            $journals = $repos->getTransactionJournalsInRepetition($budget, $repetition, 50);
         }
+        $hideBudget = true;
 
-        return View::make('budgets.show', compact('limits', 'budget', 'repetition'));
+
+        return View::make('budgets.show', compact('limits', 'budget', 'repetition', 'journals','subTitle','hideBudget'));
     }
 
     /**

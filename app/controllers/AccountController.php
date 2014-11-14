@@ -224,7 +224,7 @@ class AccountController extends BaseController
         /** @var \FireflyIII\Database\Account $acct */
         $acct = App::make('FireflyIII\Database\Account');
 
-        $journals = $acct->getTransactionJournals($account, 50);
+        $journals = $acct->getTransactionJournals($account, 10);
 
 
         //$data = $this->_accounts->show($account, 40);
