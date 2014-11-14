@@ -172,6 +172,9 @@ class AccountController extends BaseController
      */
     public function index($what = 'default')
     {
+        /** @var \FireflyIII\Database\Account $acct */
+        $acct = App::make('FireflyIII\Database\Account');
+
         switch ($what) {
             default:
                 throw new FireflyException('Cannot handle account type "' . e($what) . '".');
@@ -179,18 +182,21 @@ class AccountController extends BaseController
             case 'asset':
                 $subTitleIcon = 'fa-money';
                 $subTitle     = 'Asset accounts';
+                $accounts = $acct->getAssetAccounts();
                 break;
             case 'expense':
                 $subTitleIcon = 'fa-shopping-cart';
                 $subTitle     = 'Expense accounts';
+                $accounts = $acct->getExpenseAccounts();
                 break;
             case 'revenue':
                 $subTitleIcon = 'fa-download';
                 $subTitle     = 'Revenue accounts';
+                $accounts = $acct->getRevenueAccounts();
                 break;
         }
 
-        return View::make('accounts.index')->with('what', $what)->with(compact('subTitleIcon'))->with(compact('subTitle'));
+        return View::make('accounts.index',compact('what','subTitleIcon','subTitle','accounts'));
     }
 
     /**

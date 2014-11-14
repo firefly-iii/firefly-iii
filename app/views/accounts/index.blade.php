@@ -22,7 +22,7 @@
 
             </div>
             <div class="panel-body">
-                <div id="account-list"></div>
+                @include('list.accounts')
             </div>
         </div>
     </div>
