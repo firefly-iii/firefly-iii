@@ -78,7 +78,14 @@ class CategoryController extends BaseController
      */
     public function show(Category $category)
     {
-        return View::make('categories.show', compact('category'));
+        $hideCategory = true;
+
+        /** @var \FireflyIII\Database\Category $repos */
+        $repos = App::make('FireflyIII\Database\Category');
+
+        $journals = $repos->getTransactionJournals($category, 50);
+
+        return View::make('categories.show', compact('category','journals','hideCategory'));
     }
 
     /**

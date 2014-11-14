@@ -17,7 +17,7 @@
                 Transactions
             </div>
             <div class="panel-body">
-                <div id="transactions"></div>
+                @include('list.journals-full')
             </div>
         </div>
     </div>
