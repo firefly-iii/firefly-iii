@@ -7,7 +7,7 @@
             <i class="fa {{$mainTitleIcon}}"></i> {{{$title}}}
         </div>
         <div class="panel-body">
-            <div id="recurring-table"></div>
+            @include('list.recurring')
         </div>
         </div>
     </div>
@@ -15,13 +15,4 @@
 @stop
 @section('scripts')
 
-<!-- load the libraries and scripts necessary for Google Charts: -->
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-{{HTML::script('assets/javascript/firefly/gcharts.options.js')}}
-{{HTML::script('assets/javascript/firefly/gcharts.js')}}
-
-
-<script src="assets/javascript/firefly/accounts.js"></script>
-
-{{HTML::script('assets/javascript/firefly/recurring.js')}}
 @stop

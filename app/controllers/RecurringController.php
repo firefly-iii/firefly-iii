@@ -80,7 +80,11 @@ class RecurringController extends BaseController
      */
     public function index()
     {
-        return View::make('recurring.index');
+        /** @var \FireflyIII\Database\Recurring $repos */
+        $repos = App::make('FireflyIII\Database\Recurring');
+
+        $recurring = $repos->get();
+        return View::make('recurring.index',compact('recurring'));
     }
 
     /**
@@ -110,7 +114,9 @@ class RecurringController extends BaseController
      */
     public function show(RecurringTransaction $recurringTransaction)
     {
-        return View::make('recurring.show')->with('recurring', $recurringTransaction)->with('subTitle', $recurringTransaction->name);
+        $journals = $recurringTransaction->transactionjournals()->withRelevantData()->orderBy('date','DESC')->get();
+        $hideRecurring = true;
+        return View::make('recurring.show',compact('journals','hideRecurring'))->with('recurring', $recurringTransaction)->with('subTitle', $recurringTransaction->name);
     }
 
     public function store()

@@ -1,4 +1,4 @@
-@if(is_object($journals))
+@if(is_object($journals) && method_exists($journals, 'links'))
 {{$journals->links()}}
 @endif
 <table class="table table-striped table-bordered">
@@ -16,7 +16,9 @@
         @if(!isset($hideCategory) || (isset($hideCategory) && $hideCategory=== false))
             <th><i class="fa fa-bar-chart fa-fw" title="Category"></i></th>
         @endif
-        <th><i class="fa fa-fw fa-rotate-right" title="Recurring transaction"></i></th>
+        @if(!isset($hideRecurring) || (isset($hideRecurring) && $hideRecurring=== false))
+            <th><i class="fa fa-fw fa-rotate-right" title="Recurring transaction"></i></th>
+        @endif
     </tr>
     @foreach($journals as $journal)
     @if(!isset($journal->transactions[1]) || !isset($journal->transactions[0]))
@@ -99,11 +101,13 @@
             @endif
         </td>
         @endif
+        @if(!isset($hideRecurring) || (isset($hideRecurring) && $hideRecurring=== false))
         <td>
-        @if($journal->recurringTransaction)
-            <a href="{{route('recurring.show',$journal->recurring_transaction_id)}}">{{{$journal->recurringTransaction->name}}}</a>
-        @endif
+            @if($journal->recurringTransaction)
+                <a href="{{route('recurring.show',$journal->recurring_transaction_id)}}">{{{$journal->recurringTransaction->name}}}</a>
+            @endif
         </td>
+        @endif
 
 
     </tr>
@@ -112,6 +116,6 @@
     @endforeach
 </table>
 
-@if(is_object($journals))
+@if(is_object($journals) && method_exists($journals, 'links'))
 {{$journals->links()}}
 @endif
