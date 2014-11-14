@@ -87,10 +87,10 @@ require $framework . '/Illuminate/Foundation/start.php';
 */
 
 // do something with events:
-Event::subscribe('Firefly\Trigger\Limits\EloquentLimitTrigger');
-Event::subscribe('Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger');
-Event::subscribe('Firefly\Trigger\Budgets\EloquentBudgetTrigger');
-Event::subscribe('Firefly\Trigger\Recurring\EloquentRecurringTrigger');
-Event::subscribe('Firefly\Trigger\Journals\EloquentJournalTrigger');
+//Event::subscribe('Firefly\Trigger\Limits\EloquentLimitTrigger');
+//Event::subscribe('Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger');
+//Event::subscribe('Firefly\Trigger\Budgets\EloquentBudgetTrigger');
+//Event::subscribe('Firefly\Trigger\Recurring\EloquentRecurringTrigger');
+//Event::subscribe('Firefly\Trigger\Journals\EloquentJournalTrigger');
 
 return $app;

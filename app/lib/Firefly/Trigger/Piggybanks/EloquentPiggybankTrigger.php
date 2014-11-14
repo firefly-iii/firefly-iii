@@ -165,25 +165,13 @@ class EloquentPiggybankTrigger
      */
     public function subscribe(Dispatcher $events)
     {
-        $events->listen(
-            'piggybanks.modifyAmountAdd', 'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@modifyAmountAdd'
-        );
-        $events->listen(
-            'piggybanks.modifyAmountRemove', 'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@modifyAmountRemove'
-        );
-        $events->listen('piggybanks.store', 'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@store');
-        $events->listen('piggybanks.update', 'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@update');
-        $events->listen(
-            'piggybanks.createRelatedTransfer',
-            'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@createRelatedTransfer'
-        );
-        $events->listen(
-            'piggybanks.updateRelatedTransfer',
-            'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@updateRelatedTransfer'
-        );
-        $events->listen(
-            'piggybanks.storepiggybanks.check', 'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@checkRepeatingPiggies'
-        );
+//        $events->listen('piggybanks.modifyAmountAdd', 'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@modifyAmountAdd');
+//        $events->listen('piggybanks.modifyAmountRemove', 'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@modifyAmountRemove');
+//        $events->listen('piggybanks.store', 'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@store');
+//        $events->listen('piggybanks.update', 'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@update');
+//        $events->listen('piggybanks.createRelatedTransfer', 'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@createRelatedTransfer');
+//        $events->listen('piggybanks.updateRelatedTransfer', 'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@updateRelatedTransfer');
+//        $events->listen('piggybanks.storepiggybanks.check', 'Firefly\Trigger\Piggybanks\EloquentPiggybankTrigger@checkRepeatingPiggies');
 
     }
 
