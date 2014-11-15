@@ -19,6 +19,7 @@ class PiggybankController extends BaseController
     }
 
     /**
+     * Add money to piggy bank
      * @param Piggybank $piggybank
      *
      * @return $this
@@ -150,6 +151,7 @@ class PiggybankController extends BaseController
     }
 
     /**
+     * POST add money to piggy bank
      * @param Piggybank $piggybank
      *
      * @return \Illuminate\Http\RedirectResponse
@@ -170,6 +172,12 @@ class PiggybankController extends BaseController
             $repetition = $piggybank->currentRelevantRep();
             $repetition->currentamount += $amount;
             $repetition->save();
+
+            /*
+             * Create event!
+             */
+            Event::fire('piggybank.addMoney',[$piggybank, $amount]);
+
             Session::flash('success', 'Added ' . mf($amount, false) . ' to "' . e($piggybank->name) . '".');
         } else {
             Session::flash('error', 'Could not add ' . mf($amount, false) . ' to "' . e($piggybank->name) . '".');
@@ -193,6 +201,12 @@ class PiggybankController extends BaseController
             $repetition = $piggybank->currentRelevantRep();
             $repetition->currentamount -= $amount;
             $repetition->save();
+
+            /*
+             * Create event!
+             */
+            Event::fire('piggybank.removeMoney',[$piggybank, $amount]);
+
             Session::flash('success', 'Removed ' . mf($amount, false) . ' from "' . e($piggybank->name) . '".');
         } else {
             Session::flash('error', 'Could not remove ' . mf($amount, false) . ' from "' . e($piggybank->name) . '".');

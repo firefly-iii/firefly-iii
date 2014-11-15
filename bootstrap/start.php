@@ -92,6 +92,7 @@ require $framework . '/Illuminate/Foundation/start.php';
 //Event::subscribe('Firefly\Trigger\Budgets\EloquentBudgetTrigger');
 //Event::subscribe('Firefly\Trigger\Recurring\EloquentRecurringTrigger');
 //Event::subscribe('Firefly\Trigger\Journals\EloquentJournalTrigger');
+Event::subscribe('FireflyIII\Event\Piggybank');
 
 // TODO event that creates a relationship between transaction journals and recurring events when created.
 // TODO event that updates the relationship between transaction journals and recurring events when edited.
