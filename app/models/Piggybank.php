@@ -70,6 +70,20 @@ class Piggybank extends Ardent
         return $this->belongsTo('Account');
     }
 
+    public function countFutureReminders() {
+        /** @var \FireflyIII\Shared\Toolkit\Date $dateKit */
+        $dateKit = App::make('FireflyIII\Shared\Toolkit\Date');
+
+        $start = new Carbon;
+        $end = !is_null($this->targetdate) ? clone $this->targetdate : new Carbon;
+        $reminders = 0;
+        while($start <= $end) {
+            $reminders++;
+            $start = $dateKit->addPeriod($start, $this->reminder, $this->reminder_skip);
+        }
+        return $reminders;
+    }
+
     public function createRepetition(Carbon $start = null, Carbon $target = null)
     {
         $rep = new \PiggybankRepetition;
@@ -90,15 +104,16 @@ class Piggybank extends Ardent
      */
     public function currentRelevantRep()
     {
-        if($this->currentRep) {
+        if ($this->currentRep) {
             return $this->currentRep;
         }
         if ($this->repeats == 0) {
-            $rep = $this->piggybankrepetitions()->first();
+            $rep              = $this->piggybankrepetitions()->first();
             $this->currentRep = $rep;
+
             return $rep;
         } else {
-            $query  = $this->piggybankrepetitions()->where(
+            $query            = $this->piggybankrepetitions()->where(
                 function ($q) {
 
                     $q->where(
@@ -122,7 +137,7 @@ class Piggybank extends Ardent
                     $q->where('targetdate', '>=', $today->format('Y-m-d'));
                 }
             )->orderBy('startdate', 'ASC');
-            $result = $query->first();
+            $result           = $query->first();
             $this->currentRep = $result;
 
             return $result;

@@ -81,6 +81,7 @@
                 Chart
             </div>
             <div class="panel-body">
+                <div id="recurring-overview"></div>
                 <!-- TODO chart with hits, grouped by repeat_freq and two lines with max/min amount -->
             </div>
         </div>

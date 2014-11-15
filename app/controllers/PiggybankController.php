@@ -20,6 +20,7 @@ class PiggybankController extends BaseController
 
     /**
      * Add money to piggy bank
+     *
      * @param Piggybank $piggybank
      *
      * @return $this
@@ -109,7 +110,7 @@ class PiggybankController extends BaseController
          * Flash some data to fill the form.
          */
         $prefilled = ['name'       => $piggybank->name, 'account_id' => $piggybank->account_id, 'targetamount' => $piggybank->targetamount,
-                      'targetdate' => $piggybank->targetdate, 'remind_me' => intval($piggybank->remind_me) == 1 ? true : false];
+                      'targetdate' => !is_null($piggybank->targetdate) ? $piggybank->targetdate->format('Y-m-d') : null,'reminder' => $piggybank->reminder, 'remind_me' => intval($piggybank->remind_me) == 1 ? true : false];
         Session::flash('prefilled', $prefilled);
 
         return View::make('piggybanks.edit', compact('piggybank', 'accounts', 'periods', 'prefilled'))->with('title', 'Piggybanks')->with(
@@ -152,6 +153,7 @@ class PiggybankController extends BaseController
 
     /**
      * POST add money to piggy bank
+     *
      * @param Piggybank $piggybank
      *
      * @return \Illuminate\Http\RedirectResponse
@@ -176,7 +178,7 @@ class PiggybankController extends BaseController
             /*
              * Create event!
              */
-            Event::fire('piggybank.addMoney',[$piggybank, $amount]);
+            Event::fire('piggybank.addMoney', [$piggybank, $amount]);
 
             Session::flash('success', 'Added ' . mf($amount, false) . ' to "' . e($piggybank->name) . '".');
         } else {
@@ -205,7 +207,7 @@ class PiggybankController extends BaseController
             /*
              * Create event!
              */
-            Event::fire('piggybank.removeMoney',[$piggybank, $amount]);
+            Event::fire('piggybank.removeMoney', [$piggybank, $amount]);
 
             Session::flash('success', 'Removed ' . mf($amount, false) . ' from "' . e($piggybank->name) . '".');
         } else {
@@ -228,7 +230,21 @@ class PiggybankController extends BaseController
     public function show(Piggybank $piggybank)
     {
 
-        return View::make('piggybanks.show', compact('piggybank'))->with('title', 'Piggy banks')->with('mainTitleIcon', 'fa-sort-amount-asc')->with(
+        $events = $piggybank->piggybankevents()->orderBy('date', 'DESC')->get();
+
+        /*
+         * Number of reminders:
+         */
+        $remindersCount = $piggybank->countFutureReminders();
+        if ($remindersCount > 0) {
+            $amountPerReminder = ($piggybank->targetamount - $piggybank->currentRelevantRep()->currentamount) / $remindersCount;
+        } else {
+            $amountPerReminder = ($piggybank->targetamount - $piggybank->currentRelevantRep()->currentamount);
+        }
+
+        return View::make('piggybanks.show', compact('amountPerReminder', 'remindersCount', 'piggybank', 'events'))->with('title', 'Piggy banks')->with(
+            'mainTitleIcon', 'fa-sort-amount-asc'
+        )->with(
             'subTitle', $piggybank->name
         );
 
@@ -296,7 +312,7 @@ class PiggybankController extends BaseController
             default:
                 throw new FireflyException('Cannot handle post_submit_action "' . e(Input::get('post_submit_action')) . '"');
                 break;
-            case 'create_another':
+            case 'return_to_edit':
             case 'update':
                 $messages = $repos->validate($data);
                 /** @var MessageBag $messages ['errors'] */
@@ -311,7 +327,7 @@ class PiggybankController extends BaseController
                 $repos->update($piggyBank, $data);
                 Session::flash('success', 'Piggy bank updated!');
 
-                if ($data['post_submit_action'] == 'create_another') {
+                if ($data['post_submit_action'] == 'return_to_edit') {
                     return Redirect::route('piggybanks.edit', $piggyBank->id);
                 } else {
                     return Redirect::route('piggybanks.index');

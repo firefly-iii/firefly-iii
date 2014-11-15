@@ -336,6 +336,34 @@ class GoogleChartController extends BaseController
 
     }
 
+    public function budgetLimitSpending(\Budget $budget, \LimitRepetition $repetition)
+    {
+        $start = clone $repetition->startdate;
+        $end   = $repetition->enddate;
+
+        /** @var \Grumpydictator\Gchart\GChart $chart */
+        $chart = App::make('gchart');
+        $chart->addColumn('Day', 'date');
+        $chart->addColumn('Left', 'number');
+
+
+        $amount = $repetition->amount;
+
+        while ($start <= $end) {
+            /*
+             * Sum of expenses on this day:
+             */
+            $sum = floatval($budget->transactionjournals()->lessThan(0)->transactionTypes(['Withdrawal'])->onDate($start)->sum('amount'));
+            $amount += $sum;
+            $chart->addRow(clone $start, $amount);
+            $start->addDay();
+        }
+        $chart->generate();
+
+        return Response::json($chart->getData());
+
+    }
+
     /**
      * @return \Illuminate\Http\JsonResponse
      */
@@ -445,28 +473,44 @@ class GoogleChartController extends BaseController
 
     }
 
-    public function budgetLimitSpending(\Budget $budget, \LimitRepetition $repetition) {
-        $start = clone $repetition->startdate;
-        $end = $repetition->enddate;
+    /**
+     * @param RecurringTransaction $recurring
+     */
+    public function recurringOverview(RecurringTransaction $recurring)
+    {
+
+        /** @var \FireflyIII\Shared\Toolkit\Date $dateKit */
+        $dateKit = App::make('FireflyIII\Shared\Toolkit\Date');
 
         /** @var \Grumpydictator\Gchart\GChart $chart */
         $chart = App::make('gchart');
-        $chart->addColumn('Day', 'date');
-        $chart->addColumn('Left', 'number');
+        $chart->addColumn('Date', 'date');
+        $chart->addColumn('Max amount', 'number');
+        $chart->addColumn('Min amount', 'number');
+        $chart->addColumn('Current entry', 'number');
 
-
-        $amount = $repetition->amount;
-
-        while($start <= $end) {
-            /*
-             * Sum of expenses on this day:
-             */
-            $sum = floatval($budget->transactionjournals()->lessThan(0)->transactionTypes(['Withdrawal'])->onDate($start)->sum('amount'));
-            $amount += $sum;
-            $chart->addRow(clone $start, $amount);
-            $start->addDay();
+        // get first transaction or today for start:
+        $first = $recurring->transactionjournals()->orderBy('date', 'ASC')->first();
+        if ($first) {
+            $start = $first->date;
+        } else {
+            $start = new Carbon;
         }
+        $end = new Carbon;
+        while ($start <= $end) {
+            $result = $recurring->transactionjournals()->before($end)->after($start)->first();
+            if($result) {
+                $amount = $result->getAmount();
+            } else {
+                $amount = 0;
+            }
+            unset($result);
+            $chart->addRow(clone $start, $recurring->amount_max, $recurring->amount_min, $amount);
+            $start = $dateKit->addPeriod($start, $recurring->repeat_freq, 0);
+        }
+
         $chart->generate();
+
         return Response::json($chart->getData());
 
     }
@@ -551,6 +595,7 @@ class GoogleChartController extends BaseController
         $chart->addRow('Paid: ' . join(', ', $paid['items']), $paid['amount']);
 
         $chart->generate();
+
         return Response::json($chart->getData());
 
     }

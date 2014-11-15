@@ -8,15 +8,29 @@
                 <i class="fa fa-fw fa-clock-o"></i> Events
             </div>
             <div class="panel-body">
-                <div id="piggybank-history"></div> <!-- TODO piggy bank events -->
+                <div id="piggybank-history"></div>
             </div>
         </div>
-
     </div>
     <div class="col-lg-4 col-md-4 col-sm-6">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-fw fa-info-circle"></i> Details
+
+                    <!-- ACTIONS MENU -->
+                    <div class="pull-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                Actions
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li><a href="{{route('piggybanks.edit',$piggybank->id)}}"><i class="fa fa-pencil fa-fw"></i> Edit</a></li>
+                                <li><a href="{{route('piggybanks.delete',$piggybank->id)}}"><i class="fa fa-trash fa-fw"></i> Delete</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="panel-body">
                     <table class="table table-bordered table-striped">
@@ -72,13 +86,21 @@
                         </tr>
                         <tr>
                             <td>Reminders left</td>
-                            <td>12</td> <!-- TODO piggy bank reminders-->
+                            <td>{{$remindersCount}}</td>
                         </tr>
                         <tr>
                             <td>Expected amount per reminder</td>
-                            <td>{{mf(0)}}</td> <!-- TODO piggy bank reminder -->
+                            <td>{{mf($amountPerReminder)}}</td>
                         </tr>
                     </table>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-fw fa-clock-o"></i> Table
+                </div>
+                <div class="panel-body">
+                    @include('list.piggybank-events')
                 </div>
             </div>
     </div>

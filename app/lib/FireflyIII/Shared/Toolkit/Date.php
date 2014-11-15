@@ -30,9 +30,11 @@ class Date
             case 'daily':
                 $date->addDays($add);
                 break;
+            case 'week':
             case 'weekly':
                 $date->addWeeks($add);
                 break;
+            case 'month':
             case 'monthly':
                 $date->addMonths($add);
                 break;
