@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-{{Form::open(['class' => 'form-horizontal','url' => route('piggybanks.update',$piggybank->id)])}}
+{{Form::model($piggybank, ['class' => 'form-horizontal','url' => route('piggybanks.update',$piggybank->id)])}}
 
 <div class="row">
     <div class="col-lg-6 col-md-12 col-sm-6">
@@ -30,7 +30,7 @@
             <div class="panel-body">
                 {{Form::ffDate('targetdate')}}
                 {{Form::ffCheckbox('remind_me','1',$prefilled['remind_me'],['label' => 'Remind me'])}}
-                {{Form::ffSelect('reminder',$periods,'month',['label' => 'Remind every'])}}
+                {{Form::ffSelect('reminder',$periods,$prefilled['reminder'],['label' => 'Remind every'])}}
             </div>
         </div>
 

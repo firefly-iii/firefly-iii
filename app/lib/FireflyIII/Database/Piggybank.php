@@ -79,10 +79,12 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
         $model->reminder_skip = isset($data['reminder_skip']) ? $data['reminder_skip'] : 0;
         $model->order         = isset($data['order']) ? $data['order'] : 0;
         $model->remind_me     = isset($data['remind_me']) ? intval($data['remind_me']) : 0;
+        $model->reminder      = isset($data['reminder']) ? $data['reminder'] : 'month';
         if (!$model->validate()) {
             var_dump($model->errors());
             exit();
         }
+
         $model->save();
 
         return true;

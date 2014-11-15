@@ -100,8 +100,6 @@ Event::subscribe('FireflyIII\Event\Piggybank');
 // TODO event for when a transfer gets created and set an associated piggy bank; save as Piggy bank event.
 // TODO when this transfer gets edited, retro-actively edit the event and THUS also the piggy bank.
 // TODO event for when a transfer gets deleted; also delete related piggy bank event.
-// TODO event for when money is added to a piggy bank.
-// TODO event for when money is removed from a piggy bank.
 // TODO event to create the first repetition (for non-repeating piggy banks) when the piggy bank is created.
 // TODO event for when the non-repeating piggy bank is updated because the single repetition must also be changed.
 // (also make piggy bank events "invalid" when they start falling outside of the date-scope of the piggy bank,
