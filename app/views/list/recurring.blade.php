@@ -32,10 +32,20 @@
             {{mf($entry->amount_max)}}
         </td>
         <td>
-            <!-- TODO -->
+            <?php $lastMatch = $entry->lastFoundMatch();?>
+            @if($lastMatch)
+                {{$lastMatch->format('j F Y')}}
+            @else
+                <em>Unknown</em>
+            @endif
         </td>
         <td>
-            <!-- TODO -->
+            <?php $nextExpectedMatch = $entry->nextExpectedMatch();?>
+            @if($nextExpectedMatch)
+                {{$nextExpectedMatch->format('j F Y')}}
+            @else
+                <em>Unknown</em>
+            @endif
         </td>
         <td>
             @if($entry->active)

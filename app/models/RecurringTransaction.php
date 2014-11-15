@@ -51,44 +51,66 @@ class RecurringTransaction extends Ardent
         return ['created_at', 'updated_at', 'date'];
     }
 
+    public function lastFoundMatch() {
+        $last = $this->transactionjournals()->orderBy('date','DESC')->first();
+        if($last) {
+            return $last->date;
+        }
+        return null;
+    }
 
     /**
-     * @return Carbon
+     * Find the next expected match based on the set journals and the date stuff from the recurring
+     * transaction.
      */
-    public function next()
+    public function nextExpectedMatch()
     {
-        $today = new Carbon;
-        $start = clone $this->date;
-        $skip  = $this->skip == 0 ? 1 : $this->skip;
-        if ($today < $start) {
-            return $start;
-        }
 
-        while ($start <= $this->date) {
-            switch ($this->repeat_freq) {
-                case 'daily':
-                    $start->addDays($skip);
-                    break;
-                case 'weekly':
-                    $start->addWeeks($skip);
-                    break;
-                case 'monthly':
-                    $start->addMonths($skip);
-                    break;
-                case 'quarterly':
-                    $start->addMonths($skip * 3);
-                    break;
-                case 'half-year':
-                    $start->addMonths($skip * 6);
-                    break;
-                case 'yearly':
-                    $start->addYears($skip);
-                    break;
+        /** @var \FireflyIII\Shared\Toolkit\Date $dateKit */
+        $dateKit = App::make('FireflyIII\Shared\Toolkit\Date');
 
+        /*
+         * The date Firefly tries to find. If this stays null, it's "unknown".
+         */
+        $finalDate = null;
+
+        /*
+         * $today is the start of the next period, to make sure FF3 won't miss anything
+         * when the current period has a transaction journal.
+         */
+        $today = $dateKit->addPeriod(new Carbon, $this->repeat_freq, 0);
+
+        /*
+         * FF3 loops from the $start of the recurring transaction, and to make sure
+         * $skip works, it adds one (for modulo).
+         */
+        $skip  = $this->skip + 1;
+        $start = $dateKit->startOfPeriod(new Carbon, $this->repeat_freq);
+        /*
+         * go back exactly one month/week/etc because FF3 does not care about 'next'
+         * recurring transactions if they're too far into the past.
+         */
+        //        echo 'Repeat freq is: ' . $recurringTransaction->repeat_freq . '<br />';
+
+        //        echo 'Start: ' . $start . ' <br />';
+
+        $counter = 0;
+        while ($start <= $today) {
+            if (($counter % $skip) == 0) {
+                // do something.
+                $end          = $dateKit->endOfPeriod(clone $start, $this->repeat_freq);
+                $journalCount = $this->transactionjournals()->before($end)->after($start)->count();
+                if ($journalCount == 0) {
+                    $finalDate = clone $start;
+                    break;
+                }
             }
-        }
 
-        return $start;
+            // add period for next round!
+            $start = $dateKit->addPeriod($start, $this->repeat_freq, 0);
+            $counter++;
+        }
+        return $finalDate;
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+use Carbon\Carbon;
 use FireflyIII\Exception\FireflyException;
 use Illuminate\Support\MessageBag;
 
@@ -84,7 +85,8 @@ class RecurringController extends BaseController
         $repos = App::make('FireflyIII\Database\Recurring');
 
         $recurring = $repos->get();
-        return View::make('recurring.index',compact('recurring'));
+
+        return View::make('recurring.index', compact('recurring'));
     }
 
     /**
@@ -116,9 +118,13 @@ class RecurringController extends BaseController
      */
     public function show(RecurringTransaction $recurringTransaction)
     {
-        $journals = $recurringTransaction->transactionjournals()->withRelevantData()->orderBy('date','DESC')->get();
+        $journals      = $recurringTransaction->transactionjournals()->withRelevantData()->orderBy('date', 'DESC')->get();
         $hideRecurring = true;
-        return View::make('recurring.show',compact('journals','hideRecurring'))->with('recurring', $recurringTransaction)->with('subTitle', $recurringTransaction->name);
+
+
+        return View::make('recurring.show', compact('journals', 'hideRecurring','finalDate'))->with('recurring', $recurringTransaction)->with(
+            'subTitle', $recurringTransaction->name
+        );
     }
 
     public function store()

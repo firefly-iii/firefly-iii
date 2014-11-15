@@ -46,8 +46,16 @@ class Category implements CUD, CommonDatabaseCalls, CategoryInterface
      */
     public function store(array $data)
     {
-        // TODO: Implement store() method.
-        throw new NotImplementedException;
+        $category = new \Category;
+        $category->name = $data['name'];
+        $category->class = 'Category';
+        $category->user()->associate($this->getUser());
+        if(!$category->validate()) {
+            var_dump($category->errors());
+            exit();
+        }
+        $category->save();
+        return $category;
     }
 
     /**

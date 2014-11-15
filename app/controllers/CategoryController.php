@@ -93,19 +93,43 @@ class CategoryController extends BaseController
      */
     public function store()
     {
-        $category = $this->_repository->store(Input::all());
-        if ($category->validate()) {
-            Session::flash('success', 'Category "' . $category->name . '" created!');
+        $data            = Input::all();
+        /** @var \FireflyIII\Database\Category $repos */
+        $repos = App::make('FireflyIII\Database\Category');
 
-            if (Input::get('create') == '1') {
-                return Redirect::route('categories.create');
-            }
+        switch ($data['post_submit_action']) {
+            default:
+                throw new FireflyException('Cannot handle post_submit_action "' . e($data['post_submit_action']) . '"');
+                break;
+            case 'create_another':
+            case 'store':
+                $messages = $repos->validate($data);
+                /** @var MessageBag $messages ['errors'] */
+                if ($messages['errors']->count() > 0) {
+                    Session::flash('warnings', $messages['warnings']);
+                    Session::flash('successes', $messages['successes']);
+                    Session::flash('error', 'Could not save category: ' . $messages['errors']->first());
 
-            return Redirect::route('categories.index');
-        } else {
-            Session::flash('error', 'Could not save the new category!');
+                    return Redirect::route('categories.create')->withInput()->withErrors($messages['errors']);
+                }
+                // store!
+                $repos->store($data);
+                Session::flash('success', 'New category stored!');
 
-            return Redirect::route('categories.create')->withInput();
+                if ($data['post_submit_action'] == 'create_another') {
+                    return Redirect::route('categories.create')->withInput();
+                } else {
+                    return Redirect::route('categories.index');
+                }
+                break;
+            case 'validate_only':
+                $messageBags = $repos->validate($data);
+                Session::flash('warnings', $messageBags['warnings']);
+                Session::flash('successes', $messageBags['successes']);
+                Session::flash('errors', $messageBags['errors']);
+
+                return Redirect::route('categories.create')->withInput();
+                break;
         }
     }
 
