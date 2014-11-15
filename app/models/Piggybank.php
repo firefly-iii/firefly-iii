@@ -90,7 +90,15 @@ class Piggybank extends Ardent
      */
     public function currentRelevantRep()
     {
-        $query  = $this->piggybankrepetitions()->where(
+        if($this->currentRep) {
+            return $this->currentRep;
+        }
+        if ($this->repeats == 0) {
+            $rep = $this->piggybankrepetitions()->first();
+            $this->currentRep = $rep;
+            return $rep;
+        } else {
+            $query  = $this->piggybankrepetitions()->where(
                 function ($q) {
 
                     $q->where(
@@ -100,12 +108,12 @@ class Piggybank extends Ardent
                             $q->orWhere('startdate', '<=', $today->format('Y-m-d'));
                         }
                     )->where(
-                            function ($q) {
-                                $today = new Carbon;
-                                $q->whereNull('targetdate');
-                                $q->orWhere('targetdate', '>=', $today->format('Y-m-d'));
-                            }
-                        );
+                        function ($q) {
+                            $today = new Carbon;
+                            $q->whereNull('targetdate');
+                            $q->orWhere('targetdate', '>=', $today->format('Y-m-d'));
+                        }
+                    );
                 }
             )->orWhere(
                 function ($q) {
@@ -114,9 +122,11 @@ class Piggybank extends Ardent
                     $q->where('targetdate', '>=', $today->format('Y-m-d'));
                 }
             )->orderBy('startdate', 'ASC');
-        $result = $query->first();
+            $result = $query->first();
+            $this->currentRep = $result;
 
-        return $result;
+            return $result;
+        }
 
 
     }
@@ -155,26 +165,26 @@ class Piggybank extends Ardent
     public function repetitionForDate(Carbon $date)
     {
         $query  = $this->piggybankrepetitions()->where(
-                function ($q) use ($date) {
+            function ($q) use ($date) {
 
-                    $q->where(
-                        function ($q) use ($date) {
-                            $q->whereNull('startdate');
-                            $q->orWhere('startdate', '<=', $date->format('Y-m-d'));
-                        }
-                    )->where(
-                            function ($q) use ($date) {
-                                $q->whereNull('targetdate');
-                                $q->orWhere('targetdate', '>=', $date->format('Y-m-d'));
-                            }
-                        );
-                }
-            )->orWhere(
-                function ($q) use ($date) {
-                    $q->where('startdate', '>=', $date->format('Y-m-d'));
-                    $q->where('targetdate', '>=', $date->format('Y-m-d'));
-                }
-            )->orderBy('startdate', 'ASC');
+                $q->where(
+                    function ($q) use ($date) {
+                        $q->whereNull('startdate');
+                        $q->orWhere('startdate', '<=', $date->format('Y-m-d'));
+                    }
+                )->where(
+                    function ($q) use ($date) {
+                        $q->whereNull('targetdate');
+                        $q->orWhere('targetdate', '>=', $date->format('Y-m-d'));
+                    }
+                );
+            }
+        )->orWhere(
+            function ($q) use ($date) {
+                $q->where('startdate', '>=', $date->format('Y-m-d'));
+                $q->where('targetdate', '>=', $date->format('Y-m-d'));
+            }
+        )->orderBy('startdate', 'ASC');
         $result = $query->first();
 
         return $result;

@@ -79,29 +79,6 @@ class Transaction extends Ardent
     }
 
     /**
-     * @param Piggybank $piggybank
-     *
-     * @return bool
-     */
-    public function connectPiggybank(\Piggybank $piggybank = null)
-    {
-        // TODO connect a piggy bank to a transaction.
-        throw new NotImplementedException;
-        //        if (is_null($piggybank)) {
-        //            return true;
-        //        }
-        //        /** @var \Firefly\Storage\Piggybank\PiggybankRepositoryInterface $piggyRepository */
-        //        $piggyRepository = \App::make('Firefly\Storage\Piggybank\PiggybankRepositoryInterface');
-        //        if ($this->account_id == $piggybank->account_id) {
-        //            $this->piggybank()->associate($piggybank);
-        //            $this->save();
-        //            \Event::fire('piggybanks.createRelatedTransfer', [$piggybank, $this->transactionJournal, $this]);
-        //            return true;
-        //        }
-        //        return false;
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function piggybank()

@@ -46,8 +46,15 @@
 
                     </tr>
                     <tr>
-                        <td>Next reminder</td>
-                        <td>some date <!-- TODO --></td>
+                        <td>Next expected match</td>
+                        <td>
+                        <?php $nextExpectedMatch = $recurring->nextExpectedMatch();?>
+                            @if($nextExpectedMatch)
+                                {{$nextExpectedMatch->format('j F Y')}}
+                            @else
+                                <em>Unknown</em>
+                            @endif
+                            </td>
                     </tr>
                 </table>
             </div>
@@ -62,6 +69,19 @@
                 <p>
                     <a href="{{route('recurring.rescan',$recurring->id)}}" class="btn btn-default">Rescan old transactions</a>
                 </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 col-sm-12 col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Chart
+            </div>
+            <div class="panel-body">
+                <!-- TODO chart with hits, grouped by repeat_freq and two lines with max/min amount -->
             </div>
         </div>
     </div>
