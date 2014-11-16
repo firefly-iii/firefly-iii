@@ -74,6 +74,10 @@ class Piggybank extends Ardent
         /** @var \FireflyIII\Shared\Toolkit\Date $dateKit */
         $dateKit = App::make('FireflyIII\Shared\Toolkit\Date');
 
+        if(is_null($this->reminder)) {
+            return 0;
+        }
+
         $start = new Carbon;
         $end = !is_null($this->targetdate) ? clone $this->targetdate : new Carbon;
         $reminders = 0;
