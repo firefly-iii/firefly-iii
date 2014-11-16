@@ -41,4 +41,12 @@ class PiggybankEvent extends Ardent
         return $this->belongsTo('Piggybank');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function transactionJournal()
+    {
+        return $this->belongsTo('TransactionJournal');
+    }
+
 } 

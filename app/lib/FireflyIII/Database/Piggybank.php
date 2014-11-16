@@ -2,6 +2,7 @@
 namespace FireflyIII\Database;
 
 use Carbon\Carbon;
+use Firefly\Exception\FireflyException;
 use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
 use FireflyIII\Database\Ifaces\CUD;
 use FireflyIII\Database\Ifaces\PiggybankInterface;
@@ -196,8 +197,10 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
      */
     public function find($id)
     {
-        // TODO: Implement find() method.
-        throw new NotImplementedException;
+        return \Piggybank::
+        leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')
+            ->where('piggybanks.id','=',$id)
+            ->where('accounts.user_id', $this->getUser()->id)->first(['piggybanks.*']);
     }
 
     /**
@@ -231,6 +234,18 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
     public function getByIds(array $ids)
     {
         // TODO: Implement getByIds() method.
+        throw new NotImplementedException;
+    }
+
+    public function findRepetitionByDate(\Piggybank $piggybank, Carbon $date)
+    {
+        $reps = $piggybank->piggybankrepetitions()->get();
+        if ($reps->count() == 1) {
+            return $reps->first();
+        }
+        if ($reps->count() == 0) {
+            throw new FireflyException('Should always find a piggy bank repetition.');
+        }
         throw new NotImplementedException;
     }
 

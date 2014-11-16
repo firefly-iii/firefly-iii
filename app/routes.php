@@ -154,6 +154,7 @@ Route::group(
         Route::get('/chart/sankey/{account}/in', ['uses' => 'GoogleChartController@accountSankeyInChart']);
         Route::get('/chart/reports/income-expenses/{year}', ['uses' => 'GoogleChartController@yearInExp']);
         Route::get('/chart/reports/income-expenses-sum/{year}', ['uses' => 'GoogleChartController@yearInExpSum']);
+        Route::get('/chart/recurring/{recurring}', ['uses' => 'GoogleChartController@recurringOverview']);
         Route::get('/chart/reports/budgets/{year}', ['uses' => 'GoogleChartController@budgetsReportChart']);
         Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'GoogleChartController@budgetLimitSpending']);
 

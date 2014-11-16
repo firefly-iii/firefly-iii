@@ -139,6 +139,14 @@ class TransactionJournal extends Ardent
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function piggybankevents()
+    {
+        return $this->hasMany('PiggybankEvent');
+    }
+
+    /**
      * @param                $query
      * @param Carbon         $date
      *
