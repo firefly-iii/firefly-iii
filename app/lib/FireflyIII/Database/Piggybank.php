@@ -59,8 +59,7 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
             exit;
         }
         $piggybank->save();
-        \Event::fire('piggybanks.store', [$piggybank]);
-        $piggybank->save();
+        return $piggybank;
     }
 
     /**
