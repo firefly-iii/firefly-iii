@@ -320,7 +320,7 @@ class TransactionController extends BaseController
                  * piggy bank and store an event.
                  */
                 if (!is_null(Input::get('piggybank_id')) && intval(Input::get('piggybank_id')) > 0) {
-                    Event::fire('piggybank.createTransfer', [$journal, intval(Input::get('piggybank_id'))]);
+                    Event::fire('piggybank.storeTransfer', [$journal, intval(Input::get('piggybank_id'))]);
                 }
 
                 if ($data['post_submit_action'] == 'create_another') {

@@ -276,7 +276,13 @@ class PiggybankController extends BaseController
                     return Redirect::route('piggybanks.create')->withInput()->withErrors($messages['errors']);
                 }
                 // store!
-                $repos->store($data);
+                $piggyBank = $repos->store($data);
+
+                /*
+                 * Create the relevant repetition per Event.
+                 */
+                Event::fire('piggybank.storePiggybank',[$piggyBank]);
+
                 Session::flash('success', 'New piggy bank stored!');
 
                 if ($data['post_submit_action'] == 'create_another') {
