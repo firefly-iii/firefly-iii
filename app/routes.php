@@ -157,6 +157,7 @@ Route::group(
         Route::get('/chart/recurring/{recurring}', ['uses' => 'GoogleChartController@recurringOverview']);
         Route::get('/chart/reports/budgets/{year}', ['uses' => 'GoogleChartController@budgetsReportChart']);
         Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'GoogleChartController@budgetLimitSpending']);
+        Route::get('/chart/piggyhistory/{piggybank}',['uses' => 'GoogleChartController@piggyBankHistory']);
 
         // google chart for components (categories + budgets combined)
         Route::get('/chart/component/{component}/spending/{year}', ['uses' => 'GoogleChartController@componentsAndSpending']);
