@@ -473,6 +473,29 @@ class GoogleChartController extends BaseController
 
     }
 
+    public function piggyBankHistory(\Piggybank $piggybank)
+    {
+        /** @var \Grumpydictator\Gchart\GChart $chart */
+        $chart = App::make('gchart');
+        $chart->addColumn('Date', 'date');
+        $chart->addColumn('Balance', 'number');
+        $sum = 0;
+
+        $set = \DB::table('piggybank_events')
+            ->where('piggybank_id',$piggybank->id)
+            ->groupBy('date')
+            ->get(['date',DB::Raw('SUM(`amount`) AS `sum`')]);
+
+        foreach($set as $entry) {
+            $chart->addRow(new Carbon($entry->date), floatval($entry->sum));
+        }
+
+        $chart->generate();
+
+        return Response::json($chart->getData());
+
+    }
+
     /**
      * @param RecurringTransaction $recurring
      */
@@ -499,7 +522,7 @@ class GoogleChartController extends BaseController
         $end = new Carbon;
         while ($start <= $end) {
             $result = $recurring->transactionjournals()->before($end)->after($start)->first();
-            if($result) {
+            if ($result) {
                 $amount = $result->getAmount();
             } else {
                 $amount = 0;

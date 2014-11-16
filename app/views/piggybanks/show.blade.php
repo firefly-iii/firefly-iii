@@ -113,4 +113,13 @@
 @stop
 
 @section('scripts')
+<script type="text/javascript">
+var piggyBankID = {{{$piggybank->id}}};
+</script>
+
+<!-- load the libraries and scripts necessary for Google Charts: -->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+{{HTML::script('assets/javascript/firefly/gcharts.options.js')}}
+{{HTML::script('assets/javascript/firefly/gcharts.js')}}
+{{HTML::script('assets/javascript/firefly/piggybanks.js')}}
 @stop
