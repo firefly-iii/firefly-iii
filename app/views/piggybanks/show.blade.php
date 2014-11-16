@@ -70,6 +70,7 @@
                                 @endif
                             </td>
                         </tr>
+                        @if(!is_null($piggybank->reminder))
                         <tr>
                             <td>Reminder</td>
                             <td>
@@ -84,14 +85,17 @@
                                 @endif
                             </td>
                         </tr>
-                        <tr>
-                            <td>Reminders left</td>
-                            <td>{{$remindersCount}}</td>
-                        </tr>
-                        <tr>
-                            <td>Expected amount per reminder</td>
-                            <td>{{mf($amountPerReminder)}}</td>
-                        </tr>
+                        @endif
+                        @if($remindersCount > 0)
+                            <tr>
+                                <td>Reminders left</td>
+                                <td>{{$remindersCount}}</td>
+                            </tr>
+                            <tr>
+                                <td>Expected amount per reminder</td>
+                                <td>{{mf($amountPerReminder)}}</td>
+                            </tr>
+                        @endif
                     </table>
                 </div>
             </div>
