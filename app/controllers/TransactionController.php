@@ -100,9 +100,15 @@ class TransactionController extends BaseController
     {
         $type = $transactionJournal->transactionType->type;
 
+        /*
+         * Trigger creation of new piggy bank event
+         */
+        Event::fire('piggybank.destroyTransfer', [$transactionJournal]);
+
         /** @var \FireflyIII\Database\TransactionJournal $repository */
         $repository = App::make('FireflyIII\Database\TransactionJournal');
         $repository->destroy($transactionJournal);
+
 
         switch ($type) {
             case 'Withdrawal':
@@ -126,6 +132,9 @@ class TransactionController extends BaseController
      */
     public function edit(TransactionJournal $journal)
     {
+        /*
+         * TODO the piggybank id must be filled in when relevant.
+         */
         /*
          * All the repositories we need:
          */
@@ -199,9 +208,17 @@ class TransactionController extends BaseController
                 $prefilled['amount']          = floatval($journal->transactions[1]->amount);
                 break;
             case 'transfer':
-                $prefilled['account_from_id'] = $journal->transactions[1]->account->id;
-                $prefilled['account_to_id']   = $journal->transactions[0]->account->id;
-                $prefilled['amount']          = floatval($journal->transactions[1]->amount);
+                if (floatval($journal->transactions[0]->amount) < 0) {
+                    // zero = from account.
+                    $prefilled['account_from_id'] = $journal->transactions[0]->account->id;
+                    $prefilled['account_to_id']   = $journal->transactions[1]->account->id;
+                    $prefilled['amount']          = floatval($journal->transactions[1]->amount);
+                } else {
+                    // one = from account
+                    $prefilled['account_from_id'] = $journal->transactions[1]->account->id;
+                    $prefilled['account_to_id']   = $journal->transactions[0]->account->id;
+                    $prefilled['amount']          = floatval($journal->transactions[0]->amount);
+                }
                 break;
         }
 
@@ -248,7 +265,7 @@ class TransactionController extends BaseController
                 break;
         }
 
-        return View::make('transactions.index', compact('subTitle', 'subTitleIcon','journals'))->with('what', $what);
+        return View::make('transactions.index', compact('subTitle', 'subTitleIcon', 'journals'))->with('what', $what);
 
     }
 
@@ -295,8 +312,16 @@ class TransactionController extends BaseController
                     return Redirect::route('transactions.create', $what)->withInput()->withErrors($messages['errors']);
                 }
                 // store!
-                $repository->store($data);
+                $journal = $repository->store($data);
                 Session::flash('success', 'New transaction stored!');
+
+                /*
+                 * Trigger a search for the related (if selected)
+                 * piggy bank and store an event.
+                 */
+                if (!is_null(Input::get('piggybank_id')) && intval(Input::get('piggybank_id')) > 0) {
+                    Event::fire('piggybank.createTransfer', [$journal, intval(Input::get('piggybank_id'))]);
+                }
 
                 if ($data['post_submit_action'] == 'create_another') {
                     return Redirect::route('transactions.create', $what)->withInput();
@@ -339,6 +364,7 @@ class TransactionController extends BaseController
                     // has been saved, return to index:
                     Session::flash('success', 'Transaction updated!');
                     //                    Event::fire('journals.update', [$journal]);
+                    Event::fire('piggybank.updateTransfer', [$journal]);
 
                     if (Input::get('post_submit_action') == 'return_to_edit') {
                         return Redirect::route('transactions.edit', $journal->id)->withInput();

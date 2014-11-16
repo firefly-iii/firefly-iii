@@ -164,7 +164,6 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      */
     public function update(Ardent $model, array $data)
     {
-        var_dump($data);
         /** @var \FireflyIII\Database\TransactionType $typeRepository */
         $typeRepository = \App::make('FireflyIII\Database\TransactionType');
 

@@ -230,7 +230,7 @@ class PiggybankController extends BaseController
     public function show(Piggybank $piggybank)
     {
 
-        $events = $piggybank->piggybankevents()->orderBy('date', 'DESC')->get();
+        $events = $piggybank->piggybankevents()->orderBy('date', 'DESC')->orderBy('id','DESC')->get();
 
         /*
          * Number of reminders:
