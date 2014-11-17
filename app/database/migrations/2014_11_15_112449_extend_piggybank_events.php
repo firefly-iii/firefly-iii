@@ -23,7 +23,7 @@ class ExtendPiggybankEvents extends Migration
     public function up()
     {
         Schema::table(
-            'piggybank_events', function ($table) {
+            'piggybank_events', function (Blueprint $table) {
                 $table->integer('transaction_journal_id')->unsigned()->nullable();
                 $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('set null');
             }

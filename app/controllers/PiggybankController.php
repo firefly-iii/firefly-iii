@@ -179,7 +179,7 @@ class PiggybankController extends BaseController
             /*
              * Create event!
              */
-            Event::fire('piggybank.addMoney', [$piggybank, $amount]);
+            Event::fire('piggybank.addMoney', [$piggybank, $amount]); // new and used.
 
             Session::flash('success', 'Added ' . mf($amount, false) . ' to "' . e($piggybank->name) . '".');
         } else {
@@ -208,7 +208,7 @@ class PiggybankController extends BaseController
             /*
              * Create event!
              */
-            Event::fire('piggybank.removeMoney', [$piggybank, $amount]);
+            Event::fire('piggybank.removeMoney', [$piggybank, $amount]); // new and used.
 
             Session::flash('success', 'Removed ' . mf($amount, false) . ' from "' . e($piggybank->name) . '".');
         } else {
@@ -279,7 +279,7 @@ class PiggybankController extends BaseController
                 /*
                  * Create the relevant repetition per Event.
                  */
-                Event::fire('piggybank.storePiggybank', [$piggyBank]);
+                Event::fire('piggybank.storePiggybank', [$piggyBank]); // new and used.
 
                 Session::flash('success', 'New piggy bank stored!');
 

@@ -103,4 +103,5 @@ Event::subscribe('FireflyIII\Event\Piggybank');
 // TODO check if recurring transactions are being updated when journals are updated (aka no longer fitting, thus removed).
 // TODO think about reminders.
 // TODO an event that triggers and creates a limit + limit repetition when a budget is created, or something?
+// TODO has many through needs to be added wherever relevant. Account > journals, etc.
 return $app;

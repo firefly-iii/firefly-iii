@@ -81,6 +81,11 @@ class Piggybank extends Ardent
 
     }
 
+    public function reminders()
+    {
+        return $this->morphMany('Reminder', 'remembersable');
+    }
+
     /**
      * TODO remove this method in favour of something in the FireflyIII libraries.
      *

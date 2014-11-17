@@ -100,7 +100,7 @@ class Limit extends Ardent
                 \Log::error($e->getMessage());
             }
             if (isset($repetition->id)) {
-                \Event::fire('limits.repetition', [$repetition]);
+                \Event::fire('limits.repetition', [$repetition]); // not used, I guess?
             }
         } else {
             if ($count == 1) {
