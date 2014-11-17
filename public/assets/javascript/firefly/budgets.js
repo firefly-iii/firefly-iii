@@ -1,8 +1,8 @@
 $(function () {
     updateRanges();
-    $('input[type="range"]').change(updateSingleRange);
+    //$('input[type="range"]').change(updateSingleRange);
     $('input[type="range"]').on('input', updateSingleRange);
-    $('input[type="number"]').on('change', updateSingleRange);
+    //$('input[type="number"]').on('change', updateSingleRange);
     $('input[type="number"]').on('input', updateSingleRange);
     $('.updateIncome').on('click', updateIncome);
 
@@ -56,6 +56,7 @@ function updateSingleRange(e) {
 
     // send a post to Firefly to update the amount:
     console.log('Value is: ' + value);
+    console.log('POST! with ID ' + id + ' AND value ' + value);
     $.post('budgets/amount/' + id, {amount: value}).success(function (data) {
         console.log('Budget ' + data.name + ' updated!');
         // update the link if relevant:
