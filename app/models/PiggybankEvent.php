@@ -15,13 +15,13 @@ use LaravelBook\Ardent\Ardent as Ardent;
  * @property integer $transaction_journal_id
  * @property-read \Piggybank $piggybank
  * @property-read \TransactionJournal $transactionJournal
- * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent wherePiggybankId($value) 
- * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent whereDate($value) 
- * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent whereAmount($value) 
- * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent whereTransactionJournalId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent wherePiggybankId($value)
+ * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent whereDate($value)
+ * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent whereAmount($value)
+ * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent whereTransactionJournalId($value)
  */
 class PiggybankEvent extends Ardent
 {

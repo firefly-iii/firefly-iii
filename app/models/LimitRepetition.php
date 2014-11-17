@@ -15,13 +15,13 @@ use LaravelBook\Ardent\Ardent as Ardent;
  * @property \Carbon\Carbon $enddate
  * @property float $amount
  * @property-read \Limit $limit
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereLimitId($value) 
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereStartdate($value) 
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereEnddate($value) 
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereAmount($value) 
+ * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereLimitId($value)
+ * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereStartdate($value)
+ * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereEnddate($value)
+ * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereAmount($value)
  */
 class LimitRepetition extends Ardent
 {

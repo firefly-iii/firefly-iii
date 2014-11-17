@@ -22,20 +22,20 @@ use LaravelBook\Ardent\Builder;
  * @property-read \Illuminate\Database\Eloquent\Collection|\Component[] $components
  * @property-read \Piggybank $piggybank
  * @property-read \TransactionJournal $transactionJournal
- * @method static \Illuminate\Database\Query\Builder|\Transaction whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Transaction whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Transaction whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Transaction whereAccountId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Transaction wherePiggybankId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Transaction whereTransactionJournalId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Transaction whereDescription($value) 
- * @method static \Illuminate\Database\Query\Builder|\Transaction whereAmount($value) 
- * @method static \Transaction accountIs($account) 
- * @method static \Transaction after($date) 
- * @method static \Transaction before($date) 
- * @method static \Transaction lessThan($amount) 
- * @method static \Transaction moreThan($amount) 
- * @method static \Transaction transactionTypes($types) 
+ * @method static \Illuminate\Database\Query\Builder|\Transaction whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Transaction whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Transaction whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Transaction whereAccountId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Transaction wherePiggybankId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Transaction whereTransactionJournalId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Transaction whereDescription($value)
+ * @method static \Illuminate\Database\Query\Builder|\Transaction whereAmount($value)
+ * @method static \Transaction accountIs($account)
+ * @method static \Transaction after($date)
+ * @method static \Transaction before($date)
+ * @method static \Transaction lessThan($amount)
+ * @method static \Transaction moreThan($amount)
+ * @method static \Transaction transactionTypes($types)
  */
 class Transaction extends Ardent
 {

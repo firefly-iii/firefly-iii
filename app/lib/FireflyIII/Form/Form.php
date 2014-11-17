@@ -51,7 +51,6 @@ class Form
         $options['autocomplete'] = 'off';
         $label                   = self::label($name, $options);
 
-
         /*
          * Make label and placeholder look nice.
          */
@@ -62,7 +61,8 @@ class Form
          */
         if (\Session::has('prefilled')) {
             $prefilled = \Session::get('prefilled');
-            $value     = isset($prefilled[$name]) && is_null($value) ? $prefilled[$name] : $value;
+            //$value     = isset($prefilled[$name]) && is_null($value) ? $prefilled[$name] : $value;
+
         }
 
         /*
@@ -132,7 +132,7 @@ class Form
                 break;
             case 'checkbox':
                 $checked = $options['checked'];
-                unset($options['checked'], $options['placeholder'], $options['autocomplete'], $options['class']);
+                unset($options['placeholder'], $options['autocomplete'], $options['class']);
                 $html .= '<div class="checkbox"><label>';
                 $html .= \Form::checkbox($name, $value, $checked, $options);
                 $html .= '</label></div>';
@@ -237,7 +237,7 @@ class Form
      */
     public static function ffCheckbox($name, $value = 1, $checked = null, $options = [])
     {
-        $options['checked'] = $checked ? true : null;
+        $options['checked'] = $checked === true ? true : null;
 
         return self::ffInput('checkbox', $name, $value, $options);
     }

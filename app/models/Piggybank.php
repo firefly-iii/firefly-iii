@@ -42,6 +42,7 @@ use LaravelBook\Ardent\Ardent as Ardent;
  * @method static \Illuminate\Database\Query\Builder|\Piggybank whereReminderSkip($value)
  * @method static \Illuminate\Database\Query\Builder|\Piggybank whereOrder($value)
  * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRemindMe($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Reminder[] $reminders
  */
 class Piggybank extends Ardent
 {
@@ -83,7 +84,7 @@ class Piggybank extends Ardent
 
     public function reminders()
     {
-        return $this->morphMany('Reminder', 'remembersable');
+        return $this->morphMany('Reminder', 'remindersable');
     }
 
     /**

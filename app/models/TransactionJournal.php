@@ -29,25 +29,29 @@ use LaravelBook\Ardent\Builder;
  * @property-read \TransactionType $transactionType
  * @property-read \Illuminate\Database\Eloquent\Collection|\Transaction[] $transactions
  * @property-read \User $user
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereUserId($value) 
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereTransactionTypeId($value) 
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereRecurringTransactionId($value) 
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereTransactionCurrencyId($value) 
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereDescription($value) 
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereCompleted($value) 
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereDate($value) 
- * @method static \TransactionJournal accountIs($account) 
- * @method static \TransactionJournal after($date) 
- * @method static \TransactionJournal before($date) 
- * @method static \TransactionJournal defaultSorting() 
- * @method static \TransactionJournal lessThan($amount) 
- * @method static \TransactionJournal moreThan($amount) 
- * @method static \TransactionJournal onDate($date) 
- * @method static \TransactionJournal transactionTypes($types) 
- * @method static \TransactionJournal withRelevantData() 
+ * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereTransactionTypeId($value)
+ * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereRecurringTransactionId($value)
+ * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereTransactionCurrencyId($value)
+ * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereDescription($value)
+ * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereCompleted($value)
+ * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereDate($value)
+ * @method static \TransactionJournal accountIs($account)
+ * @method static \TransactionJournal after($date)
+ * @method static \TransactionJournal before($date)
+ * @method static \TransactionJournal defaultSorting()
+ * @method static \TransactionJournal lessThan($amount)
+ * @method static \TransactionJournal moreThan($amount)
+ * @method static \TransactionJournal onDate($date)
+ * @method static \TransactionJournal transactionTypes($types)
+ * @method static \TransactionJournal withRelevantData()
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *             'Budget[] $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\
+ *             'Category[] $categories
  */
 class TransactionJournal extends Ardent
 {

@@ -69,6 +69,7 @@ class Date
             case 'daily':
                 $currentEnd->addDay();
                 break;
+            case 'week':
             case 'weekly':
                 $currentEnd->addWeek()->subDay();
                 break;
@@ -105,6 +106,7 @@ class Date
             case 'daily':
                 $date->startOfDay();
                 break;
+            case 'week':
             case 'weekly':
                 $date->startOfWeek();
                 break;
