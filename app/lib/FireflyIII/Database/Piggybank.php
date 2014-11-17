@@ -59,6 +59,7 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
             exit;
         }
         $piggybank->save();
+
         return $piggybank;
     }
 
@@ -197,9 +198,8 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
     public function find($id)
     {
         return \Piggybank::
-        leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')
-            ->where('piggybanks.id','=',$id)
-            ->where('accounts.user_id', $this->getUser()->id)->first(['piggybanks.*']);
+        leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where('piggybanks.id', '=', $id)->where('accounts.user_id', $this->getUser()->id)
+                         ->first(['piggybanks.*']);
     }
 
     /**

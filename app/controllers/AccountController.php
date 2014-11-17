@@ -46,8 +46,8 @@ class AccountController extends BaseController
     public function delete(Account $account)
     {
         return View::make('accounts.delete')->with('account', $account)->with(
-                'subTitle', 'Delete ' . strtolower($account->accountType->type) . ' "' . $account->name . '"'
-            );
+            'subTitle', 'Delete ' . strtolower($account->accountType->type) . ' "' . $account->name . '"'
+        );
     }
 
     /**
@@ -158,10 +158,10 @@ class AccountController extends BaseController
         }
 
         return View::make('accounts.edit')->with('account', $account)->with('openingBalance', $openingBalance)->with(compact('subTitleIcon'))->with(
-                'subTitle', 'Edit ' . strtolower(
-                    $account->accountType->type
-                ) . ' "' . $account->name . '"'
-            );
+            'subTitle', 'Edit ' . strtolower(
+                $account->accountType->type
+            ) . ' "' . $account->name . '"'
+        );
     }
 
     /**
@@ -182,21 +182,21 @@ class AccountController extends BaseController
             case 'asset':
                 $subTitleIcon = 'fa-money';
                 $subTitle     = 'Asset accounts';
-                $accounts = $acct->getAssetAccounts();
+                $accounts     = $acct->getAssetAccounts();
                 break;
             case 'expense':
                 $subTitleIcon = 'fa-shopping-cart';
                 $subTitle     = 'Expense accounts';
-                $accounts = $acct->getExpenseAccounts();
+                $accounts     = $acct->getExpenseAccounts();
                 break;
             case 'revenue':
                 $subTitleIcon = 'fa-download';
                 $subTitle     = 'Revenue accounts';
-                $accounts = $acct->getRevenueAccounts();
+                $accounts     = $acct->getRevenueAccounts();
                 break;
         }
 
-        return View::make('accounts.index',compact('what','subTitleIcon','subTitle','accounts'));
+        return View::make('accounts.index', compact('what', 'subTitleIcon', 'subTitle', 'accounts'));
     }
 
     /**
@@ -228,9 +228,9 @@ class AccountController extends BaseController
 
 
         //$data = $this->_accounts->show($account, 40);
-        return View::make('accounts.show',compact('account','subTitleIcon','journals'))->with('account', $account)->with(
-                'subTitle', 'Details for ' . strtolower($account->accountType->type) . ' "' . $account->name . '"'
-            );
+        return View::make('accounts.show', compact('account', 'subTitleIcon', 'journals'))->with('account', $account)->with(
+            'subTitle', 'Details for ' . strtolower($account->accountType->type) . ' "' . $account->name . '"'
+        );
     }
 
     /**
@@ -240,7 +240,7 @@ class AccountController extends BaseController
     public function store()
     {
 
-        $data = Input::all();
+        $data         = Input::all();
         $data['what'] = isset($data['what']) && $data['what'] != '' ? $data['what'] : 'asset';
         /** @var \FireflyIII\Database\Account $acct */
         $acct = App::make('FireflyIII\Database\Account');

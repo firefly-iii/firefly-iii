@@ -32,67 +32,6 @@ class Form
     }
 
     /**
-     * @param       $name
-     * @param null  $value
-     * @param array $options
-     *
-     * @return string
-     * @throws FireflyException
-     */
-    public static function ffBalance($name, $value = null, array $options = [])
-    {
-        $options['step'] = 'any';
-
-        return self::ffInput('amount', $name, $value, $options);
-
-    }
-
-    /**
-     * @param       $name
-     * @param int   $value
-     * @param null  $checked
-     * @param array $options
-     *
-     * @return string
-     * @throws FireflyException
-     */
-    public static function ffCheckbox($name, $value = 1, $checked = null, $options = [])
-    {
-        $options['checked'] = $checked ? true : null;
-
-        return self::ffInput('checkbox', $name, $value, $options);
-    }
-
-    /**
-     * @param       $name
-     * @param null  $value
-     * @param array $options
-     *
-     * @return string
-     * @throws FireflyException
-     */
-    public static function ffDate($name, $value = null, array $options = [])
-    {
-        return self::ffInput('date', $name, $value, $options);
-    }
-
-    /**
-     * @param       $name
-     * @param null  $value
-     * @param array $options
-     *
-     * @return string
-     * @throws FireflyException
-     */
-    public static function ffInteger($name, $value = null, array $options = [])
-    {
-        $options['step'] = '1';
-
-        return self::ffInput('number', $name, $value, $options);
-
-    }
-
-    /**
      * @param       $type
      * @param       $name
      * @param null  $value
@@ -111,7 +50,6 @@ class Form
         $options['id']           = 'ffInput_' . $name;
         $options['autocomplete'] = 'off';
         $label                   = self::label($name, $options);
-
 
 
         /*
@@ -269,6 +207,67 @@ class Form
                    'account_from_id' => 'Account from', 'account_to_id' => 'Account to', 'account_id' => 'Asset account'];
 
         return isset($labels[$name]) ? $labels[$name] : str_replace('_', ' ', ucfirst($name));
+
+    }
+
+    /**
+     * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    public static function ffBalance($name, $value = null, array $options = [])
+    {
+        $options['step'] = 'any';
+
+        return self::ffInput('amount', $name, $value, $options);
+
+    }
+
+    /**
+     * @param       $name
+     * @param int   $value
+     * @param null  $checked
+     * @param array $options
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    public static function ffCheckbox($name, $value = 1, $checked = null, $options = [])
+    {
+        $options['checked'] = $checked ? true : null;
+
+        return self::ffInput('checkbox', $name, $value, $options);
+    }
+
+    /**
+     * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    public static function ffDate($name, $value = null, array $options = [])
+    {
+        return self::ffInput('date', $name, $value, $options);
+    }
+
+    /**
+     * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    public static function ffInteger($name, $value = null, array $options = [])
+    {
+        $options['step'] = '1';
+
+        return self::ffInput('number', $name, $value, $options);
 
     }
 

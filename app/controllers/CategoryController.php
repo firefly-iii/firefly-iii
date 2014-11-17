@@ -66,9 +66,10 @@ class CategoryController extends BaseController
     public function index()
     {
         /** @var \FireflyIII\Database\Category $repos */
-        $repos = App::make('FireflyIII\Database\Category');
+        $repos      = App::make('FireflyIII\Database\Category');
         $categories = $repos->get();
-        return View::make('categories.index',compact('categories'));
+
+        return View::make('categories.index', compact('categories'));
     }
 
     /**
@@ -85,7 +86,7 @@ class CategoryController extends BaseController
 
         $journals = $repos->getTransactionJournals($category, 50);
 
-        return View::make('categories.show', compact('category','journals','hideCategory'));
+        return View::make('categories.show', compact('category', 'journals', 'hideCategory'));
     }
 
     /**
@@ -93,7 +94,7 @@ class CategoryController extends BaseController
      */
     public function store()
     {
-        $data            = Input::all();
+        $data = Input::all();
         /** @var \FireflyIII\Database\Category $repos */
         $repos = App::make('FireflyIII\Database\Category');
 

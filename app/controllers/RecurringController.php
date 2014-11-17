@@ -1,5 +1,4 @@
 <?php
-use Carbon\Carbon;
 use FireflyIII\Exception\FireflyException;
 use Illuminate\Support\MessageBag;
 
@@ -122,7 +121,7 @@ class RecurringController extends BaseController
         $hideRecurring = true;
 
 
-        return View::make('recurring.show', compact('journals', 'hideRecurring','finalDate'))->with('recurring', $recurringTransaction)->with(
+        return View::make('recurring.show', compact('journals', 'hideRecurring', 'finalDate'))->with('recurring', $recurringTransaction)->with(
             'subTitle', $recurringTransaction->name
         );
     }

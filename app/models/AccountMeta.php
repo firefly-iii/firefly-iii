@@ -1,6 +1,7 @@
 <?php
 use LaravelBook\Ardent\Ardent as Ardent;
 
+
 /**
  * AccountMeta
  *

@@ -38,6 +38,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
     public function destroy(Ardent $model)
     {
         $model->delete();
+
         return true;
     }
 
@@ -128,19 +129,19 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         /*
          * Store the budget.
          */
-        if(isset($data['budget_id']) && intval($data['budget_id']) > 0) {
+        if (isset($data['budget_id']) && intval($data['budget_id']) > 0) {
             /** @var \FireflyIII\Database\Budget $budgetRepository */
             $budgetRepository = \App::make('FireflyIII\Database\Budget');
-            $budget = $budgetRepository->find(intval($data['budget_id']));
-            if($budget) {
+            $budget           = $budgetRepository->find(intval($data['budget_id']));
+            if ($budget) {
                 $journal->budgets()->save($budget);
             }
         }
-        if(strlen($data['category']) > 0) {
+        if (strlen($data['category']) > 0) {
             /** @var \FireflyIII\Database\Category $categoryRepository */
             $categoryRepository = \App::make('FireflyIII\Database\Category');
-            $category = $categoryRepository->firstOrCreate($data['category']);
-            if($category) {
+            $category           = $categoryRepository->firstOrCreate($data['category']);
+            if ($category) {
                 $journal->categories()->save($category);
             }
         }
@@ -222,19 +223,19 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         /*
          * Store the budget.
          */
-        if(isset($data['budget_id']) && intval($data['budget_id']) > 0) {
+        if (isset($data['budget_id']) && intval($data['budget_id']) > 0) {
             /** @var \FireflyIII\Database\Budget $budgetRepository */
             $budgetRepository = \App::make('FireflyIII\Database\Budget');
-            $budget = $budgetRepository->find(intval($data['budget_id']));
-            if($budget) {
+            $budget           = $budgetRepository->find(intval($data['budget_id']));
+            if ($budget) {
                 $model->budgets()->sync([$budget->id]);
             }
         }
-        if(strlen($data['category']) > 0) {
+        if (strlen($data['category']) > 0) {
             /** @var \FireflyIII\Database\Category $categoryRepository */
             $categoryRepository = \App::make('FireflyIII\Database\Category');
-            $category = $categoryRepository->firstOrCreate($data['category']);
-            if($category) {
+            $category           = $categoryRepository->firstOrCreate($data['category']);
+            if ($category) {
                 $model->categories()->sync([$category->id]);
             }
         }
@@ -545,6 +546,22 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         return $sum;
     }
 
+    public function getDepositsPaginated($limit = 50)
+    {
+        $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
+
+        $set   = $this->getUser()->transactionJournals()->transactionTypes(['Deposit'])->withRelevantData()->take($limit)->offset($offset)->orderBy(
+            'date', 'DESC'
+        )->get(['transaction_journals.*']);
+        $count = $this->getUser()->transactionJournals()->transactionTypes(['Deposit'])->count();
+        $items = [];
+        foreach ($set as $entry) {
+            $items[] = $entry;
+        }
+
+        return \Paginator::make($items, $count, $limit);
+    }
+
     /**
      * @param \Account $account
      * @param int      $count
@@ -568,12 +585,15 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         return $query;
     }
 
-    public function getWithdrawalsPaginated($limit = 50) {
+    public function getTransfersPaginated($limit = 50)
+    {
         $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
 
-        $set    = $this->getUser()->transactionJournals()->transactionTypes(['Withdrawal'])->withRelevantData()->take($limit)->offset($offset)->orderBy('date', 'DESC')->get(['transaction_journals.*']);
-        $count  = $this->getUser()->transactionJournals()->transactionTypes(['Withdrawal'])->count();
-        $items  = [];
+        $set   = $this->getUser()->transactionJournals()->transactionTypes(['Transfer'])->withRelevantData()->take($limit)->offset($offset)->orderBy(
+            'date', 'DESC'
+        )->get(['transaction_journals.*']);
+        $count = $this->getUser()->transactionJournals()->transactionTypes(['Transfer'])->count();
+        $items = [];
         foreach ($set as $entry) {
             $items[] = $entry;
         }
@@ -581,25 +601,15 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         return \Paginator::make($items, $count, $limit);
     }
 
-    public function getDepositsPaginated($limit = 50) {
+    public function getWithdrawalsPaginated($limit = 50)
+    {
         $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
 
-        $set    = $this->getUser()->transactionJournals()->transactionTypes(['Deposit'])->withRelevantData()->take($limit)->offset($offset)->orderBy('date', 'DESC')->get(['transaction_journals.*']);
-        $count  = $this->getUser()->transactionJournals()->transactionTypes(['Deposit'])->count();
-        $items  = [];
-        foreach ($set as $entry) {
-            $items[] = $entry;
-        }
-
-        return \Paginator::make($items, $count, $limit);
-    }
-
-    public function getTransfersPaginated($limit = 50) {
-        $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
-
-        $set    = $this->getUser()->transactionJournals()->transactionTypes(['Transfer'])->withRelevantData()->take($limit)->offset($offset)->orderBy('date', 'DESC')->get(['transaction_journals.*']);
-        $count  = $this->getUser()->transactionJournals()->transactionTypes(['Transfer'])->count();
-        $items  = [];
+        $set   = $this->getUser()->transactionJournals()->transactionTypes(['Withdrawal'])->withRelevantData()->take($limit)->offset($offset)->orderBy(
+            'date', 'DESC'
+        )->get(['transaction_journals.*']);
+        $count = $this->getUser()->transactionJournals()->transactionTypes(['Withdrawal'])->count();
+        $items = [];
         foreach ($set as $entry) {
             $items[] = $entry;
         }

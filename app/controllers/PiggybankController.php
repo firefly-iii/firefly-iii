@@ -110,7 +110,8 @@ class PiggybankController extends BaseController
          * Flash some data to fill the form.
          */
         $prefilled = ['name'       => $piggybank->name, 'account_id' => $piggybank->account_id, 'targetamount' => $piggybank->targetamount,
-                      'targetdate' => !is_null($piggybank->targetdate) ? $piggybank->targetdate->format('Y-m-d') : null,'reminder' => $piggybank->reminder, 'remind_me' => intval($piggybank->remind_me) == 1 ? true : false];
+                      'targetdate' => !is_null($piggybank->targetdate) ? $piggybank->targetdate->format('Y-m-d') : null, 'reminder' => $piggybank->reminder,
+                      'remind_me'  => intval($piggybank->remind_me) == 1 ? true : false];
         Session::flash('prefilled', $prefilled);
 
         return View::make('piggybanks.edit', compact('piggybank', 'accounts', 'periods', 'prefilled'))->with('title', 'Piggybanks')->with(
@@ -230,7 +231,7 @@ class PiggybankController extends BaseController
     public function show(Piggybank $piggybank)
     {
 
-        $events = $piggybank->piggybankevents()->orderBy('date', 'DESC')->orderBy('id','DESC')->get();
+        $events = $piggybank->piggybankevents()->orderBy('date', 'DESC')->orderBy('id', 'DESC')->get();
 
         /*
          * Number of reminders:
@@ -281,7 +282,7 @@ class PiggybankController extends BaseController
                 /*
                  * Create the relevant repetition per Event.
                  */
-                Event::fire('piggybank.storePiggybank',[$piggyBank]);
+                Event::fire('piggybank.storePiggybank', [$piggyBank]);
 
                 Session::flash('success', 'New piggy bank stored!');
 

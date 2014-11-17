@@ -2,36 +2,38 @@
 use Carbon\Carbon;
 use LaravelBook\Ardent\Ardent;
 
+
 /**
  * RecurringTransaction
  *
- * @property integer        $id
+ * @property integer $id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property integer        $user_id
- * @property string         $name
- * @property string         $match
- * @property float          $amount_max
- * @property float          $amount_min
+ * @property integer $user_id
+ * @property string $name
+ * @property string $match
+ * @property float $amount_min
+ * @property float $amount_max
  * @property \Carbon\Carbon $date
- * @property boolean        $active
- * @property boolean        $automatch
- * @property string         $repeat_freq
- * @property integer        $skip
- * @property-read \User     $user
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereMatch($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAmountMax($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAmountMin($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereDate($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereActive($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAutomatch($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereRepeatFreq($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereSkip($value)
+ * @property boolean $active
+ * @property boolean $automatch
+ * @property string $repeat_freq
+ * @property integer $skip
+ * @property-read \Illuminate\Database\Eloquent\Collection|\TransactionJournal[] $transactionjournals
+ * @property-read \User $user
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereCreatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereUpdatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereUserId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereName($value) 
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereMatch($value) 
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAmountMin($value) 
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAmountMax($value) 
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereDate($value) 
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereActive($value) 
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAutomatch($value) 
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereRepeatFreq($value) 
+ * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereSkip($value) 
  */
 class RecurringTransaction extends Ardent
 {
@@ -51,12 +53,22 @@ class RecurringTransaction extends Ardent
         return ['created_at', 'updated_at', 'date'];
     }
 
-    public function lastFoundMatch() {
-        $last = $this->transactionjournals()->orderBy('date','DESC')->first();
-        if($last) {
+    public function lastFoundMatch()
+    {
+        $last = $this->transactionjournals()->orderBy('date', 'DESC')->first();
+        if ($last) {
             return $last->date;
         }
+
         return null;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transactionjournals()
+    {
+        return $this->hasMany('TransactionJournal');
     }
 
     /**
@@ -110,15 +122,8 @@ class RecurringTransaction extends Ardent
             $start = $dateKit->addPeriod($start, $this->repeat_freq, 0);
             $counter++;
         }
-        return $finalDate;
-    }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function transactionjournals()
-    {
-        return $this->hasMany('TransactionJournal');
+        return $finalDate;
     }
 
     /**

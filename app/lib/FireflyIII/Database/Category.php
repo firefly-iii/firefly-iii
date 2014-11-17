@@ -46,15 +46,16 @@ class Category implements CUD, CommonDatabaseCalls, CategoryInterface
      */
     public function store(array $data)
     {
-        $category = new \Category;
-        $category->name = $data['name'];
+        $category        = new \Category;
+        $category->name  = $data['name'];
         $category->class = 'Category';
         $category->user()->associate($this->getUser());
-        if(!$category->validate()) {
+        if (!$category->validate()) {
             var_dump($category->errors());
             exit();
         }
         $category->save();
+
         return $category;
     }
 

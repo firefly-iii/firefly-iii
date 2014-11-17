@@ -206,13 +206,13 @@ class BudgetController extends BaseController
             $limits = [$repetition->limit];
             // get all transaction journals for this budget and limit repetition.
             $journals = [];
-            $subTitle = $budget->name.' in ' . $repetition->startdate->format('F Y');
+            $subTitle = $budget->name . ' in ' . $repetition->startdate->format('F Y');
             $journals = $repos->getTransactionJournalsInRepetition($budget, $repetition, 50);
         }
         $hideBudget = true;
 
 
-        return View::make('budgets.show', compact('limits', 'budget', 'repetition', 'journals','subTitle','hideBudget'));
+        return View::make('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle', 'hideBudget'));
     }
 
     /**
