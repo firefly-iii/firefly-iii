@@ -6,42 +6,42 @@ use LaravelBook\Ardent\Ardent as Ardent;
 /**
  * Piggybank
  *
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $account_id
- * @property string $name
- * @property float $targetamount
- * @property \Carbon\Carbon $startdate
- * @property \Carbon\Carbon $targetdate
- * @property boolean $repeats
- * @property string $rep_length
- * @property integer $rep_every
- * @property integer $rep_times
- * @property string $reminder
- * @property integer $reminder_skip
- * @property integer $order
- * @property boolean $remind_me
- * @property-read \Account $account
+ * @property integer                                                              $id
+ * @property \Carbon\Carbon                                                       $created_at
+ * @property \Carbon\Carbon                                                       $updated_at
+ * @property integer                                                              $account_id
+ * @property string                                                               $name
+ * @property float                                                                $targetamount
+ * @property \Carbon\Carbon                                                       $startdate
+ * @property \Carbon\Carbon                                                       $targetdate
+ * @property boolean                                                              $repeats
+ * @property string                                                               $rep_length
+ * @property integer                                                              $rep_every
+ * @property integer                                                              $rep_times
+ * @property string                                                               $reminder
+ * @property integer                                                              $reminder_skip
+ * @property integer                                                              $order
+ * @property boolean                                                              $remind_me
+ * @property-read \Account                                                        $account
  * @property-read \Illuminate\Database\Eloquent\Collection|\PiggybankRepetition[] $piggybankrepetitions
- * @property-read \Illuminate\Database\Eloquent\Collection|\PiggybankEvent[] $piggybankevents
- * @property-read \Illuminate\Database\Eloquent\Collection|\Transaction[] $transactions
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereAccountId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereName($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereTargetamount($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereStartdate($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereTargetdate($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepeats($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepLength($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepEvery($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepTimes($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereReminder($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereReminderSkip($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereOrder($value) 
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRemindMe($value) 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\PiggybankEvent[]      $piggybankevents
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Transaction[]         $transactions
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereAccountId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereTargetamount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereStartdate($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereTargetdate($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepeats($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepLength($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepEvery($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepTimes($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereReminder($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereReminderSkip($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereOrder($value)
+ * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRemindMe($value)
  */
 class Piggybank extends Ardent
 {
@@ -71,24 +71,14 @@ class Piggybank extends Ardent
         return $this->belongsTo('Account');
     }
 
+    public function amountPerReminder() {
+        return 0;
+
+    }
+
     public function countFutureReminders()
     {
-        /** @var \FireflyIII\Shared\Toolkit\Date $dateKit */
-        $dateKit = App::make('FireflyIII\Shared\Toolkit\Date');
-
-        if (is_null($this->reminder)) {
-            return 0;
-        }
-
-        $start     = new Carbon;
-        $end       = !is_null($this->targetdate) ? clone $this->targetdate : new Carbon;
-        $reminders = 0;
-        while ($start <= $end) {
-            $reminders++;
-            $start = $dateKit->addPeriod($start, $this->reminder, $this->reminder_skip);
-        }
-
-        return $reminders;
+        return 0;
     }
 
     public function createRepetition(Carbon $start = null, Carbon $target = null)
@@ -99,7 +89,6 @@ class Piggybank extends Ardent
         $rep->targetdate    = $target;
         $rep->currentamount = 0;
         $rep->save();
-        \Event::fire('piggybanks.repetition', [$rep]);
 
         return $rep;
     }
