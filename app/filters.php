@@ -9,7 +9,14 @@ App::before(
             /** @var \FireflyIII\Shared\Toolkit\Filter $toolkit */
             $filter = App::make('FireflyIII\Shared\Toolkit\Filter');
             $filter->setSessionDateRange();
-            //Event::fire('recurring.verify');
+
+            /** @var \FireflyIII\Shared\Toolkit\Reminders $toolkit */
+            $reminderKit = App::make('FireflyIII\Shared\Toolkit\Reminders');
+
+            $reminderKit->updateReminders();
+
+            View::share('reminders',$reminderKit->getReminders());
+
         }
 
     }

@@ -12,6 +12,33 @@
     <!-- /.navbar-header -->
 
     <ul class="nav navbar-top-links navbar-right">
+
+        <!-- reminders -->
+        @if(count($reminders) > 0)
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="fa fa-bell fa-fw"></i>  <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-alerts">
+                @foreach($reminders as $index => $reminder)
+                <li>
+                    <a href="{{route('reminders.show',$reminder['id'])}}">
+                        <div>
+                            <i class="fa {{$reminder['icon']}} fa-fw"></i> {{{$reminder['title']}}}
+                            <span class="pull-right text-muted small">{{{$reminder['text']}}}</span>
+                        </div>
+                    </a>
+                </li>
+                @if($index+1 != count($reminders))
+                    <li class="divider"></li>
+                @endif
+                @endforeach
+            </ul>
+            <!-- /.dropdown-alerts -->
+        </li>
+        @endif
+        <!-- /.dropdown -->
+
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                 <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
@@ -24,6 +51,9 @@
             </ul>
             <!-- /.dropdown-user -->
         </li>
+
+
+
         <!-- /.dropdown -->
     </ul>
     <!-- /.navbar-top-links -->
