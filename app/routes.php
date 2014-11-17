@@ -201,6 +201,9 @@ Route::group(
         Route::get('/reports', ['uses' => 'ReportController@index', 'as' => 'reports.index']);
         Route::get('/reports/{year}', ['uses' => 'ReportController@year', 'as' => 'reports.year']);
 
+        // reminder controller
+        Route::get('/reminders/{reminder}',['uses' => 'ReminderController@show','as' => 'reminders.show']);
+
         // search controller:
         Route::get('/search', ['uses' => 'SearchController@index', 'as' => 'search']);
 

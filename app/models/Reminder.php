@@ -49,4 +49,24 @@ class Reminder extends Ardent
     {
         return $this->belongsTo('User');
     }
+
+    /**
+     * @param $value
+     *
+     * @return mixed
+     */
+    public function getDataAttribute($value)
+    {
+        return json_decode($value);
+    }
+
+    /**
+     * @param $value
+     */
+    public function setDataAttribute($value)
+    {
+        $this->attributes['data'] = json_encode($value);
+    }
+
+
 } 
