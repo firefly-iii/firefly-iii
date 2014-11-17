@@ -52,6 +52,10 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
         $data['startdate']     = isset($data['startdate']) ? $data['startdate'] : Carbon::now()->format('Y-m-d');
         $data['targetdate']    = isset($data['targetdate']) && $data['targetdate'] != '' ? $data['targetdate'] : null;
 
+        if ($data['remind_me'] == 0) {
+            $data['reminder'] = null;
+        }
+
 
         $piggybank = new \Piggybank($data);
         if (!$piggybank->validate()) {
@@ -81,6 +85,11 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
         $model->order         = isset($data['order']) ? $data['order'] : 0;
         $model->remind_me     = isset($data['remind_me']) ? intval($data['remind_me']) : 0;
         $model->reminder      = isset($data['reminder']) ? $data['reminder'] : 'month';
+
+        if ($model->remind_me == 0) {
+            $model->reminder = null;
+        }
+
         if (!$model->validate()) {
             var_dump($model->errors());
             exit();

@@ -74,14 +74,6 @@ class User extends Ardent implements UserInterface, RemindableInterface
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function reminders()
-    {
-        return $this->hasMany('Reminder');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
     public function categories()
     {
         return $this->hasMany('Category');

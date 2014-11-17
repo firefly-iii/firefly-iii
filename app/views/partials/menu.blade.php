@@ -14,6 +14,7 @@
     <ul class="nav navbar-top-links navbar-right">
 
         <!-- reminders -->
+        {{--
         @if(count($reminders) > 0)
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -37,6 +38,7 @@
             <!-- /.dropdown-alerts -->
         </li>
         @endif
+        --}}
         <!-- /.dropdown -->
 
         <li class="dropdown">

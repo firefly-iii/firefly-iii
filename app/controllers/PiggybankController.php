@@ -236,12 +236,9 @@ class PiggybankController extends BaseController
         /*
          * Number of reminders:
          */
+
+        $amountPerReminder = $piggybank->amountPerReminder();
         $remindersCount = $piggybank->countFutureReminders();
-        if ($remindersCount > 0) {
-            $amountPerReminder = ($piggybank->targetamount - $piggybank->currentRelevantRep()->currentamount) / $remindersCount;
-        } else {
-            $amountPerReminder = ($piggybank->targetamount - $piggybank->currentRelevantRep()->currentamount);
-        }
 
         return View::make('piggybanks.show', compact('amountPerReminder', 'remindersCount', 'piggybank', 'events'))->with('title', 'Piggy banks')->with(
             'mainTitleIcon', 'fa-sort-amount-asc'
