@@ -85,6 +85,7 @@ class Date
                 $currentEnd->addYear()->subDay();
                 break;
         }
+
         return $currentEnd;
     }
 

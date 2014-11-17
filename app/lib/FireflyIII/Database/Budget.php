@@ -198,10 +198,12 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     public function getTransactionJournalsInRepetition(\Budget $budget, \LimitRepetition $repetition, $limit = 50)
     {
         $start = $repetition->startdate;
-        $end = $repetition->enddate;
+        $end   = $repetition->enddate;
 
         $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
-        $set    = $budget->transactionJournals()->withRelevantData()->before($end)->after($start)->take($limit)->offset($offset)->orderBy('date', 'DESC')->get(['transaction_journals.*']);
+        $set    = $budget->transactionJournals()->withRelevantData()->before($end)->after($start)->take($limit)->offset($offset)->orderBy('date', 'DESC')->get(
+            ['transaction_journals.*']
+        );
         $count  = $budget->transactionJournals()->before($end)->after($start)->count();
         $items  = [];
         foreach ($set as $entry) {

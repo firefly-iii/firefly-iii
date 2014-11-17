@@ -22,17 +22,17 @@ interface RecurringInterface
 
     /**
      * @param \RecurringTransaction $recurring
-     *
-     * @return bool
-     */
-    public function scanEverything(\RecurringTransaction $recurring);
-
-    /**
-     * @param \RecurringTransaction $recurring
      * @param \TransactionJournal   $journal
      *
      * @return bool
      */
-    public function scan(\RecurringTransaction $recurring,\TransactionJournal $journal);
+    public function scan(\RecurringTransaction $recurring, \TransactionJournal $journal);
+
+    /**
+     * @param \RecurringTransaction $recurring
+     *
+     * @return bool
+     */
+    public function scanEverything(\RecurringTransaction $recurring);
 
 } 

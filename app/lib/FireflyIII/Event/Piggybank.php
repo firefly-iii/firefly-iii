@@ -92,6 +92,18 @@ class Piggybank
      *
      */
 
+    public function storePiggybank(\Piggybank $piggybank)
+    {
+        if (intval($piggybank->repeats) == 0) {
+            $repetition = new \PiggybankRepetition;
+            $repetition->piggybank()->associate($piggybank);
+            $repetition->startdate     = $piggybank->startdate;
+            $repetition->targetdate    = $piggybank->targetdate;
+            $repetition->currentamount = 0;
+            $repetition->save();
+        }
+    }
+
     /**
      * @param \TransactionJournal $journal
      * @param int                 $piggybankId
@@ -156,17 +168,6 @@ class Piggybank
                 }
                 $event->save();
             }
-        }
-    }
-
-    public function storePiggybank(\Piggybank $piggybank) {
-        if(intval($piggybank->repeats) == 0) {
-            $repetition = new \PiggybankRepetition;
-            $repetition->piggybank()->associate($piggybank);
-            $repetition->startdate = $piggybank->startdate;
-            $repetition->targetdate = $piggybank->targetdate;
-            $repetition->currentamount = 0;
-            $repetition->save();
         }
     }
 
