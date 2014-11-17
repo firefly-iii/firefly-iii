@@ -86,6 +86,7 @@ class TransactionJournal extends Ardent
     }
 
     /**
+     * TODO remove this method in favour of something in the FireflyIII libraries.
      * @return float
      */
     public function getAmount()

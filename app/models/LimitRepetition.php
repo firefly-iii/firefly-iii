@@ -45,6 +45,10 @@ class LimitRepetition extends Ardent
 
     }
 
+    /**
+     * TODO remove this method in favour of something in the FireflyIII libraries.
+     * @return float
+     */
     public function spentInRepetition()
     {
         $sum = \DB::table('transactions')->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')->leftJoin(
@@ -69,6 +73,8 @@ class LimitRepetition extends Ardent
     }
 
     /**
+     * TODO remove this method in favour of something in the FireflyIII libraries.
+     *
      * Returns a string used to sort this particular repetition
      * based on the date and period it falls into. Ie. the limit
      * repeats monthly and the start date is 12 dec 2012, this will
@@ -105,6 +111,8 @@ class LimitRepetition extends Ardent
     }
 
     /**
+     * TODO remove this method in favour of something in the FireflyIII libraries.
+     *
      * Same as above, just with a more natural view. So "March 2012".
      */
     public function periodShow()

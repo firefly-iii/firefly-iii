@@ -32,12 +32,5 @@ class Budget extends Component
         return $this->hasMany('Limit', 'component_id');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany|\TransactionJournal
-     */
-    public function transactionjournals()
-    {
-        return $this->belongsToMany('TransactionJournal', 'component_transaction_journal', 'component_id');
-    }
 
 } 

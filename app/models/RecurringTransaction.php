@@ -72,6 +72,8 @@ class RecurringTransaction extends Ardent
     }
 
     /**
+     * TODO remove this method in favour of something in the FireflyIII libraries.
+     *
      * Find the next expected match based on the set journals and the date stuff from the recurring
      * transaction.
      */

@@ -34,6 +34,11 @@ class PiggybankRepetition extends Ardent
         return ['created_at', 'updated_at', 'targetdate', 'startdate'];
     }
 
+    /**
+     * TODO remove this method in favour of something in the FireflyIII libraries.
+     *
+     * @return float|int
+     */
     public function pct()
     {
         $total = $this->piggybank->targetamount;

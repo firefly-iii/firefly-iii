@@ -50,19 +50,6 @@ class Reminder extends Ardent
         return $this->belongsTo('User');
     }
 
-    /**
-     * Expected data in this value:
-     *
-     * type: Piggybank, Test
-     * action_uri: where to go when the user wants to do this?
-     * text: full text to present to user
-     * amount: any relevant amount.
-     * model: id of relevant model.
-     *
-     * @param $value
-     *
-     * @return mixed
-     */
     public function getDataAttribute($value)
     {
         return json_decode($value);
