@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
-class ExpandRemindersTable extends Migration
+class EventTableAdditions1 extends Migration
 {
 
     /**
@@ -22,10 +23,13 @@ class ExpandRemindersTable extends Migration
      */
     public function up()
     {
+        // remove some fields:
         Schema::table(
             'reminders', function (Blueprint $table) {
-                $table->string('title');
-                $table->text('data');
+                $table->dropColumn('title');
+                $table->dropColumn('data');
+                $table->integer('remembersable_id')->unsigned()->nullable();
+                $table->string('remembersable_type');
             }
         );
     }

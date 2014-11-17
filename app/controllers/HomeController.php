@@ -21,10 +21,6 @@ class HomeController extends BaseController
      */
     public function index()
     {
-        //        Event::fire('limits.check');
-        //        Event::fire('piggybanks.check');
-        //        Event::fire('recurring.check');
-
         // count, maybe Firefly needs some introducing text to show:
         /** @var \FireflyIII\Database\Account $acct */
         $acct = App::make('FireflyIII\Database\Account');

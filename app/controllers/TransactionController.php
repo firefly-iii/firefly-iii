@@ -103,7 +103,7 @@ class TransactionController extends BaseController
         /*
          * Trigger creation of new piggy bank event
          */
-        Event::fire('piggybank.destroyTransfer', [$transactionJournal]);
+        Event::fire('piggybank.destroyTransfer', [$transactionJournal]); // new and used.
 
         /** @var \FireflyIII\Database\TransactionJournal $repository */
         $repository = App::make('FireflyIII\Database\TransactionJournal');
@@ -320,7 +320,7 @@ class TransactionController extends BaseController
                  * piggy bank and store an event.
                  */
                 if (!is_null(Input::get('piggybank_id')) && intval(Input::get('piggybank_id')) > 0) {
-                    Event::fire('piggybank.storeTransfer', [$journal, intval(Input::get('piggybank_id'))]);
+                    Event::fire('piggybank.storeTransfer', [$journal, intval(Input::get('piggybank_id'))]); // new and used.
                 }
 
                 if ($data['post_submit_action'] == 'create_another') {
@@ -363,8 +363,7 @@ class TransactionController extends BaseController
                 if ($messageBag->count() == 0) {
                     // has been saved, return to index:
                     Session::flash('success', 'Transaction updated!');
-                    //                    Event::fire('journals.update', [$journal]);
-                    Event::fire('piggybank.updateTransfer', [$journal]);
+                    Event::fire('piggybank.updateTransfer', [$journal]); // new and used.
 
                     if (Input::get('post_submit_action') == 'return_to_edit') {
                         return Redirect::route('transactions.edit', $journal->id)->withInput();
