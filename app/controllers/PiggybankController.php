@@ -27,7 +27,7 @@ class PiggybankController extends BaseController
      */
     public function add(Piggybank $piggybank)
     {
-        /** @var \FireflyIII\Database\Piggybank $acct */
+        /** @var \FireflyIII\Database\Piggybank $repos */
         $repos = App::make('FireflyIII\Database\Piggybank');
 
         $leftOnAccount = $repos->leftOnAccount($piggybank->account);
@@ -109,9 +109,13 @@ class PiggybankController extends BaseController
         /*
          * Flash some data to fill the form.
          */
-        $prefilled = ['name'       => $piggybank->name, 'account_id' => $piggybank->account_id, 'targetamount' => $piggybank->targetamount,
-                      'targetdate' => !is_null($piggybank->targetdate) ? $piggybank->targetdate->format('Y-m-d') : null, 'reminder' => $piggybank->reminder,
-                      'remind_me'  => intval($piggybank->remind_me) == 1 ? true : false];
+        $prefilled = ['name'         => $piggybank->name,
+                      'account_id'   => $piggybank->account_id,
+                      'targetamount' => $piggybank->targetamount,
+                      'targetdate'   => !is_null($piggybank->targetdate) ? $piggybank->targetdate->format('Y-m-d') : null,
+                      'reminder'     => $piggybank->reminder,
+                      'remind_me'    => intval($piggybank->remind_me) == 1 || !is_null($piggybank->reminder) ? true : false
+        ];
         Session::flash('prefilled', $prefilled);
 
         return View::make('piggybanks.edit', compact('piggybank', 'accounts', 'periods', 'prefilled'))->with('title', 'Piggybanks')->with(
@@ -238,7 +242,7 @@ class PiggybankController extends BaseController
          */
 
         $amountPerReminder = $piggybank->amountPerReminder();
-        $remindersCount = $piggybank->countFutureReminders();
+        $remindersCount    = $piggybank->countFutureReminders();
 
         return View::make('piggybanks.show', compact('amountPerReminder', 'remindersCount', 'piggybank', 'events'))->with('title', 'Piggy banks')->with(
             'mainTitleIcon', 'fa-sort-amount-asc'

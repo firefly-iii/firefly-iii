@@ -14,12 +14,12 @@
  * @property-read \Illuminate\Database\Eloquent\Collection|\Limit[] $limits
  * @property-read \Illuminate\Database\Eloquent\Collection|\Transaction[] $transactions
  * @property-read \User $user
- * @method static \Illuminate\Database\Query\Builder|\Category whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Category whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Category whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Category whereName($value) 
- * @method static \Illuminate\Database\Query\Builder|\Category whereUserId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Category whereClass($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Category whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Category whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Category whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Category whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\Category whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Category whereClass($value)
  */
 class Category extends Component
 {

@@ -19,14 +19,14 @@ use LaravelBook\Ardent\Ardent as Ardent;
  * @property-read \Budget $budget
  * @property-read \Component $component
  * @property-read \Illuminate\Database\Eloquent\Collection|\LimitRepetition[] $limitrepetitions
- * @method static \Illuminate\Database\Query\Builder|\Limit whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereComponentId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereStartdate($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereAmount($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereRepeats($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereRepeatFreq($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Limit whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Limit whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Limit whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Limit whereComponentId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Limit whereStartdate($value)
+ * @method static \Illuminate\Database\Query\Builder|\Limit whereAmount($value)
+ * @method static \Illuminate\Database\Query\Builder|\Limit whereRepeats($value)
+ * @method static \Illuminate\Database\Query\Builder|\Limit whereRepeatFreq($value)
  */
 class Limit extends Ardent
 {
