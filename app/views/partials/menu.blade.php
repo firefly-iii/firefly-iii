@@ -67,7 +67,7 @@
                 <!-- /.nav-second-level -->
             </li>
             <li>
-                <a @if(!(strpos($r,'budget')) === false) class="active" @endif href="{{route('budgets.index')}}"><i class="fa fa-tasks fa-fw"></i> Budgets</a>
+                <a @if(!(strpos($r,'budgets') === false)) class="active" @endif href="{{route('budgets.index')}}"><i class="fa fa-tasks fa-fw"></i> Budgets</a>
             </li>
             <li>
                 <a @if($r == 'categories.index') class="active" @endif href="{{route('categories.index')}}"><i class="fa fa-bar-chart fa-fw"></i> Categories</a>
@@ -76,49 +76,67 @@
                 <a href="#"><i class="fa fa-tags fa-fw"></i> Tags</a>
             </li>
             <li>
-                <a @if($r == 'reports.index') class="active" @endif href="{{route('reports.index')}}"><i class="fa fa-line-chart fa-fw"></i> Reports</a>
+                <a @if(!(strpos($r,'reports') === false)) class="active" @endif href="{{route('reports.index')}}"><i class="fa fa-line-chart fa-fw"></i> Reports</a>
             </li>
-            <li>
+            <?php
+            $isTransactions = $r == 'transactions.index';
+            $isWithdrawal = $r == 'transactions.index' && isset($what) && $what == 'withdrawal';
+            $isDeposit = $r == 'transactions.index' && isset($what) && $what == 'deposit';
+            $isTransfer = $r == 'transactions.index' && isset($what) && $what == 'transfers';
+            ?>
+            <li @if($isTransactions) class="active" @endif>
                 <a href="#"><i class="fa fa-repeat fa-fw"></i> Transactions<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a href="{{route('transactions.index','withdrawal')}}"><i class="fa fa-long-arrow-left fa-fw"></i> Expenses</a>
+                        <a @if($isWithdrawal)class="active"@endif href="{{route('transactions.index','withdrawal')}}"><i class="fa fa-long-arrow-left fa-fw"></i> Expenses</a>
                     </li>
                     <li>
-                        <a href="{{route('transactions.index','deposit')}}"><i class="fa fa-long-arrow-right fa-fw"></i> Revenue / income</a>
+                        <a @if($isDeposit)class="active"@endif href="{{route('transactions.index','deposit')}}"><i class="fa fa-long-arrow-right fa-fw"></i> Revenue / income</a>
                     </li>
                     <li>
-                        <a href="{{route('transactions.index','transfers')}}"><i class="fa fa-arrows-h fa-fw"></i> Transfers</a>
+                        <a @if($isTransfer)class="active"@endif href="{{route('transactions.index','transfers')}}"><i class="fa fa-arrows-h fa-fw"></i> Transfers</a>
                     </li>
                 </ul>
 
             </li>
-            <li>
+            <?php
+            $isMM = !(strpos($r,'piggybanks') === false) || !(strpos($r,'recurring') === false);
+            $isPiggy = !(strpos($r,'piggybanks') === false);
+            $isRec= !(strpos($r,'recurring') === false) && strpos($r,'recurring.create') === false;
+            ?>
+            <li @if($isMM)class="active"@endif>
                 <a href="#"><i class="fa fa-euro fa-fw"></i> Money management<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a href="{{route('piggybanks.index')}}"><i class="fa fa-sort-amount-asc fa-fw"></i> Piggy banks</a>
+                        <a @if($isPiggy)class="active"@endif href="{{route('piggybanks.index')}}"><i class="fa fa-sort-amount-asc fa-fw"></i> Piggy banks</a>
                     </li>
                     <li>
-                        <a href="{{route('recurring.index')}}"><i class="fa fa-rotate-right fa-fw"></i> Recurring transactions</a>
+                        <a @if($isRec)class="active"@endif href="{{route('recurring.index')}}"><i class="fa fa-rotate-right fa-fw"></i> Recurring transactions</a>
                     </li>
                 </ul>
                 <!-- /.nav-second-level -->
             </li>
-            <li>
+            <?php
+            $creating = !(strpos($r,'.create') === false);
+            $isWithdrawal = $r == 'transactions.create' && isset($what) && $what == 'withdrawal';
+            $isDeposit = $r == 'transactions.create' && isset($what) && $what == 'deposit';
+            $isTransfer = $r == 'transactions.create' && isset($what) && $what == 'transfer';
+            $isRecurring = $r == 'recurring.create';
+            ?>
+            <li @if($creating)class="active"@endif>
                 <a href="#"><i class="fa fa-plus fa-fw"></i> Create new<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a href="{{route('transactions.create','withdrawal')}}"><i class="fa fa-long-arrow-left fa-fw"></i> Withdrawal</a>
+                        <a @if($isWithdrawal)class="active"@endif href="{{route('transactions.create','withdrawal')}}"><i class="fa fa-long-arrow-left fa-fw"></i> Withdrawal</a>
                     </li>
                     <li>
-                        <a href="{{route('transactions.create','deposit')}}"><i class="fa fa-long-arrow-right fa-fw"></i> Deposit</a>
+                        <a @if($isDeposit)class="active"@endif href="{{route('transactions.create','deposit')}}"><i class="fa fa-long-arrow-right fa-fw"></i> Deposit</a>
                     </li>
                     <li>
-                        <a href="{{route('transactions.create','transfer')}}"><i class="fa fa-arrows-h fa-fw"></i> Transfer</a>
+                        <a @if($isTransfer)class="active"@endif href="{{route('transactions.create','transfer')}}"><i class="fa fa-arrows-h fa-fw"></i> Transfer</a>
                     </li>
                     <li>
-                        <a href="{{route('recurring.create')}}"><i class="fa fa-rotate-right fa-fw"></i> Recurring transaction</a>
+                        <a @if($isRecurring)class="active"@endif href="{{route('recurring.create')}}"><i class="fa fa-rotate-right fa-fw"></i> Recurring transaction</a>
                     </li>
                 </ul>
                 <!-- /.nav-second-level -->
