@@ -3,6 +3,7 @@
 namespace FireflyIII\Shared\Toolkit;
 
 use Carbon\Carbon;
+use FireflyIII\Exception\FireflyException;
 use Illuminate\Support\Collection;
 
 /**
@@ -13,13 +14,52 @@ use Illuminate\Support\Collection;
 class Reminders
 {
 
+    /**
+     * @param \Reminder $reminder
+     *
+     * @return int
+     * @throws FireflyException
+     */
+    public function amountForReminder(\Reminder $reminder) {
+
+        /** @var \FireflyIII\Shared\Toolkit\Date $dateKit */
+        $dateKit = \App::make('FireflyIII\Shared\Toolkit\Date');
+
+        switch(get_class($reminder->remindersable)) {
+
+            case 'Piggybank':
+                $start     = new Carbon;
+                $end       = !is_null($reminder->remindersable->targetdate) ? clone $reminder->remindersable->targetdate : new Carbon;
+                $reminders = 0;
+                while ($start <= $end) {
+                    $reminders++;
+                    $start = $dateKit->addPeriod($start, $reminder->remindersable->reminder, $reminder->remindersable->reminder_skip);
+                }
+                /*
+                 * Now find amount yet to save.
+                 */
+                $repetition = $reminder->remindersable->currentRelevantRep();
+                $leftToSave = floatval($reminder->remindersable->targetamount) - floatval($repetition->currentamount);
+                $reminders = $reminders == 0 ? 1 : $reminders;
+                return $leftToSave / $reminders;
+                break;
+            default:
+                throw new FireflyException('Cannot handle class '. get_class($reminder->remindersable).' in amountForReminder.');
+                break;
+        }
+
+
+
+        return 50;
+    }
 
     /**
      *
      */
     public function getReminders()
     {
-        return [];
+        $reminders = \Auth::user()->reminders()->get();
+        return $reminders;
         //        $reminders = \Auth::user()->reminders()->where('active', true)->get();
         //        $return    = [];
         //        /** @var \Reminder $reminder */

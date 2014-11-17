@@ -9,21 +9,21 @@ use LaravelBook\Ardent\Ardent;
 /**
  * User
  *
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property string $email
- * @property string $password
- * @property string $reset
- * @property string $remember_token
- * @property boolean $migrated
- * @property-read \Illuminate\Database\Eloquent\Collection|\Account[] $accounts
- * @property-read \Illuminate\Database\Eloquent\Collection|\Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\Component[] $components
- * @property-read \Illuminate\Database\Eloquent\Collection|\Preference[] $preferences
+ * @property integer                                                               $id
+ * @property \Carbon\Carbon                                                        $created_at
+ * @property \Carbon\Carbon                                                        $updated_at
+ * @property string                                                                $email
+ * @property string                                                                $password
+ * @property string                                                                $reset
+ * @property string                                                                $remember_token
+ * @property boolean                                                               $migrated
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Account[]              $accounts
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Budget[]               $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Category[]             $categories
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Component[]            $components
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Preference[]           $preferences
  * @property-read \Illuminate\Database\Eloquent\Collection|\RecurringTransaction[] $recurringtransactions
- * @property-read \Illuminate\Database\Eloquent\Collection|\TransactionJournal[] $transactionjournals
+ * @property-read \Illuminate\Database\Eloquent\Collection|\TransactionJournal[]   $transactionjournals
  * @method static \Illuminate\Database\Query\Builder|\User whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\User whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\User whereUpdatedAt($value)
@@ -107,6 +107,15 @@ class User extends Ardent implements UserInterface, RemindableInterface
     {
         return $this->hasMany('RecurringTransaction');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function reminders()
+    {
+        return $this->hasMany('Reminder');
+    }
+
 
     /**
      * @param $value
