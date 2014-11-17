@@ -14,7 +14,6 @@ App::before(
             $reminderKit = App::make('FireflyIII\Shared\Toolkit\Reminders');
 
             $reminderKit->updateReminders();
-
             View::share('reminders',$reminderKit->getReminders());
 
         }

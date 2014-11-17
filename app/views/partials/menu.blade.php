@@ -14,7 +14,6 @@
     <ul class="nav navbar-top-links navbar-right">
 
         <!-- reminders -->
-        {{--
         @if(count($reminders) > 0)
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -23,10 +22,17 @@
             <ul class="dropdown-menu dropdown-alerts">
                 @foreach($reminders as $index => $reminder)
                 <li>
-                    <a href="{{route('reminders.show',$reminder['id'])}}">
+                    <a href="{{route('reminders.show',$reminder->id)}}">
                         <div>
-                            <i class="fa {{$reminder['icon']}} fa-fw"></i> {{{$reminder['title']}}}
-                            <span class="pull-right text-muted small">{{$reminder['text']}}</span>
+                            <i class="fa fa-clock-o fa-fw"></i>
+                            <!-- may be a title, may be a name or a description -->
+                            @if($reminder->remindersable->title)
+                                {{{$reminder->remindersable->title}}}
+                            @endif
+                            @if($reminder->remindersable->name)
+                                {{{$reminder->remindersable->name}}}
+                            @endif
+                            <span class="pull-right text-muted small"></span>
                         </div>
                     </a>
                 </li>
@@ -38,7 +44,6 @@
             <!-- /.dropdown-alerts -->
         </li>
         @endif
-        --}}
         <!-- /.dropdown -->
 
         <li class="dropdown">
