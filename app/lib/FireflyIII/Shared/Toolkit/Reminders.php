@@ -1,6 +1,7 @@
 <?php
 
 namespace FireflyIII\Shared\Toolkit;
+
 use Carbon\Carbon;
 
 /**
@@ -8,27 +9,40 @@ use Carbon\Carbon;
  *
  * @package FireflyIII\Shared\Toolkit
  */
-class Reminders {
+class Reminders
+{
 
 
-    public function updateReminders() {
-        $reminders = \Auth::user()->reminders()->get();
+    public function updateReminders()
+    {
+        $today           = Carbon::now()->format('Y-m-d');
+        $reminders       = \Auth::user()->reminders()
+                                ->where('startdate', '<=', $today)
+                                ->where('enddate', '>=', $today)
+                                ->where('active', '=', 1)
+                                ->get();
         $hasTestReminder = false;
+
         /** @var \Reminder $reminder */
-        foreach($reminders as $reminder) {
-            if($reminder->title == 'Test' && $reminder->active == true) {
+        foreach ($reminders as $reminder) {
+            if ($reminder->title == 'Test' && intval($reminder->active) == 1) {
                 $hasTestReminder = true;
             }
         }
-        if(!$hasTestReminder) {
+        if (!$hasTestReminder) {
             $reminder = new \Reminder;
             $reminder->user()->associate(\Auth::user());
-            $reminder->title = 'Test';
+            $reminder->title     = 'Test';
             $reminder->startdate = new Carbon;
-            $reminder->enddate = Carbon::now()->addDays(4);
+            $reminder->active    = 1;
+            $reminder->enddate   = Carbon::now()->addDays(4);
 
-            $data = [1 => 2, 'money' => 100, 'amount' => 2.45,'type' => 'Test'];
-
+            $data           = ['type'       => 'Test',
+                               'action_uri' => route('index'),
+                               'text'       => 'hello!',
+                               'amount'     => 50,
+                               'icon'       => 'fa-bomb'
+            ];
             $reminder->data = $data;
             $reminder->save();
         }
@@ -37,19 +51,20 @@ class Reminders {
     /**
      *
      */
-    public function getReminders() {
-        $reminders = \Auth::user()->reminders()->where('active',true)->get();
-        $return = [];
+    public function getReminders()
+    {
+        $reminders = \Auth::user()->reminders()->where('active', true)->get();
+        $return    = [];
         /** @var \Reminder $reminder */
-        foreach($reminders as $reminder) {
+        foreach ($reminders as $reminder) {
             $set = [
                 'id' => $reminder->id
             ];
-            switch($reminder->data->type) {
+            switch ($reminder->data->type) {
                 case 'Test':
-                    $set['title'] = 'Test reminder #'.$reminder->id;
-                    $set['icon'] = 'fa-bomb';
-                    $set['text'] = 'Bla bla';
+                    $set['title'] = $reminder->title;
+                    $set['icon']  = $reminder->data->icon;
+                    $set['text']  = mf(floatval($reminder->data->amount));
 
             }
             $return[] = $set;

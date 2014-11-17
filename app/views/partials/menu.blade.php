@@ -25,7 +25,7 @@
                     <a href="{{route('reminders.show',$reminder['id'])}}">
                         <div>
                             <i class="fa {{$reminder['icon']}} fa-fw"></i> {{{$reminder['title']}}}
-                            <span class="pull-right text-muted small">{{{$reminder['text']}}}</span>
+                            <span class="pull-right text-muted small">{{$reminder['text']}}</span>
                         </div>
                     </a>
                 </li>
