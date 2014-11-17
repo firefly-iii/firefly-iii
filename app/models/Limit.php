@@ -47,14 +47,6 @@ class Limit extends Ardent
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function component()
-    {
-        return $this->belongsTo('Component', 'component_id');
-    }
-
-    /**
      * Create a new repetition for this limit, starting on
      * the given date.
      *

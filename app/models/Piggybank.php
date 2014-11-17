@@ -71,16 +71,34 @@ class Piggybank extends Ardent
         return $this->belongsTo('Account');
     }
 
+    /**
+     * TODO remove this method in favour of something in the FireflyIII libraries.
+     *
+     * @return int
+     */
     public function amountPerReminder() {
         return 0;
 
     }
 
+    /**
+     * TODO remove this method in favour of something in the FireflyIII libraries.
+     *
+     * @return int
+     */
     public function countFutureReminders()
     {
         return 0;
     }
 
+    /**
+     * TODO remove this method in favour of something in the FireflyIII libraries.
+     *
+     * @param Carbon $start
+     * @param Carbon $target
+     *
+     * @return PiggybankRepetition
+     */
     public function createRepetition(Carbon $start = null, Carbon $target = null)
     {
         $rep = new \PiggybankRepetition;
@@ -94,6 +112,8 @@ class Piggybank extends Ardent
     }
 
     /**
+     * TODO remove this method in favour of something in the FireflyIII libraries.
+     *
      * Grabs the PiggyBankRepetition that's currently relevant / active
      *
      * @returns \PiggybankRepetition
@@ -167,6 +187,8 @@ class Piggybank extends Ardent
     }
 
     /**
+     * TODO remove this method in favour of something in the FireflyIII libraries.
+     *
      * Same but for specific date.
      *
      * @param Carbon $date

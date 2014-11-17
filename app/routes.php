@@ -221,7 +221,7 @@ Route::group(
         // user controller
         Route::get('/logout', ['uses' => 'UserController@logout', 'as' => 'logout']);
 
-        //Route::post('budgets/amount/{budget}', ['uses' => 'BudgetController@amount']);
+        Route::post('budgets/amount/{budget}', ['uses' => 'BudgetController@amount']);
 
 
     }

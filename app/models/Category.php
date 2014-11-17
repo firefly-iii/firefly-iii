@@ -25,24 +25,5 @@ class Category extends Component
 {
     protected $isSubclass = true;
 
-    /**
-     * @return Carbon
-     */
-    public function lastActionDate()
-    {
-        $transaction = $this->transactionjournals()->orderBy('updated_at', 'DESC')->first();
-        if (is_null($transaction)) {
-            return null;
-        }
 
-        return $transaction->date;
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function transactionjournals()
-    {
-        return $this->belongsToMany('TransactionJournal', 'component_transaction_journal', 'component_id');
-    }
-} 
+}
