@@ -33,7 +33,5 @@
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 {{HTML::script('assets/javascript/firefly/gcharts.options.js')}}
 {{HTML::script('assets/javascript/firefly/gcharts.js')}}
-
-
-<script src="assets/javascript/firefly/categories.js"></script>
+{{HTML::script('assets/javascript/firefly/categories.js')}}
 @stop

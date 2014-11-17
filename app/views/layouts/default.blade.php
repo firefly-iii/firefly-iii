@@ -59,15 +59,6 @@
     </div>
 </div>
 
-<div class="modal fade" id="reminderModal" tabindex="-1" role="dialog"
-     aria-labelledby="reminderModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
 {{HTML::script('assets/javascript/jquery/jquery-2.1.1.min.js')}}
 {{HTML::script('assets/javascript/bootstrap/bootstrap.min.js')}}
 {{HTML::script('assets/javascript/metisMenu/jquery.metisMenu.min.js')}}

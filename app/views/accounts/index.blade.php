@@ -39,5 +39,5 @@
 {{HTML::script('assets/javascript/firefly/gcharts.js')}}
 
 
-<script src="assets/javascript/firefly/accounts.js"></script>
+{{HTML::script('assets/javascript/firefly/accounts.js')}}
 @stop
