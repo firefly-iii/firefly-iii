@@ -73,6 +73,7 @@ class Date
             case 'weekly':
                 $currentEnd->addWeek()->subDay();
                 break;
+            case 'month':
             case 'monthly':
                 $currentEnd->addMonth()->subDay();
                 break;
@@ -110,6 +111,7 @@ class Date
             case 'weekly':
                 $date->startOfWeek();
                 break;
+            case 'month':
             case 'monthly':
                 $date->startOfMonth();
                 break;
