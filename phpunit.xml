@@ -24,7 +24,6 @@
             <directory suffix=".php">./app/helpers</directory>
             <exclude>
                 <file>./app/controllers/BaseController.php</file>
-                <file>./app/controllers/MigrationController.php</file>
             </exclude>
         </whitelist>
 

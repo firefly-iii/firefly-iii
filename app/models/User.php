@@ -42,6 +42,7 @@ class User extends Ardent implements UserInterface, RemindableInterface
     public static $rules
         = ['email' => 'required|email|unique:users,email', 'migrated' => 'required|boolean', 'password' => 'required|between:60,60',
            'reset' => 'between:32,32',];
+    protected $fillable = ['email'];
     /**
      * The attributes excluded from the model's JSON form.
      *
