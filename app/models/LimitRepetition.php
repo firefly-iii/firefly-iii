@@ -7,14 +7,14 @@ use LaravelBook\Ardent\Ardent as Ardent;
 /**
  * LimitRepetition
  *
- * @property integer $id
+ * @property integer        $id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
- * @property integer $limit_id
+ * @property integer        $limit_id
  * @property \Carbon\Carbon $startdate
  * @property \Carbon\Carbon $enddate
- * @property float $amount
- * @property-read \Limit $limit
+ * @property float          $amount
+ * @property-read \Limit    $limit
  * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereUpdatedAt($value)
@@ -26,7 +26,12 @@ use LaravelBook\Ardent\Ardent as Ardent;
 class LimitRepetition extends Ardent
 {
     public static $rules
-        = ['limit_id' => 'required|exists:limits,id', 'startdate' => 'required|date', 'enddate' => 'required|date', 'amount' => 'numeric|required|min:0.01',];
+        = [
+            'limit_id'  => 'required|exists:limits,id',
+            'startdate' => 'required|date',
+            'enddate'   => 'required|date',
+            'amount'    => 'numeric|required|min:0.01',
+        ];
 
     /**
      * @return array
@@ -37,6 +42,8 @@ class LimitRepetition extends Ardent
     }
 
     /**
+     * TODO see if this scope is still used.
+     *
      * How much money is left in this?
      */
     public function leftInRepetition()
@@ -47,6 +54,7 @@ class LimitRepetition extends Ardent
 
     /**
      * TODO remove this method in favour of something in the FireflyIII libraries.
+     *
      * @return float
      */
     public function spentInRepetition()

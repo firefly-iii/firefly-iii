@@ -6,21 +6,21 @@ use LaravelBook\Ardent\Ardent;
 /**
  * RecurringTransaction
  *
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $user_id
- * @property string $name
- * @property string $match
- * @property float $amount_min
- * @property float $amount_max
- * @property \Carbon\Carbon $date
- * @property boolean $active
- * @property boolean $automatch
- * @property string $repeat_freq
- * @property integer $skip
+ * @property integer                                                             $id
+ * @property \Carbon\Carbon                                                      $created_at
+ * @property \Carbon\Carbon                                                      $updated_at
+ * @property integer                                                             $user_id
+ * @property string                                                              $name
+ * @property string                                                              $match
+ * @property float                                                               $amount_min
+ * @property float                                                               $amount_max
+ * @property \Carbon\Carbon                                                      $date
+ * @property boolean                                                             $active
+ * @property boolean                                                             $automatch
+ * @property string                                                              $repeat_freq
+ * @property integer                                                             $skip
  * @property-read \Illuminate\Database\Eloquent\Collection|\TransactionJournal[] $transactionjournals
- * @property-read \User $user
+ * @property-read \User                                                          $user
  * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereUpdatedAt($value)
@@ -39,9 +39,17 @@ class RecurringTransaction extends Ardent
 {
 
     public static $rules
-        = ['user_id'     => 'required|exists:users,id', 'name' => 'required|between:1,255', 'match' => 'required', 'amount_max' => 'required|between:0,65536',
-           'amount_min'  => 'required|between:0,65536', 'date' => 'required|date', 'active' => 'required|between:0,1', 'automatch' => 'required|between:0,1',
-           'repeat_freq' => 'required|in:daily,weekly,monthly,quarterly,half-year,yearly', 'skip' => 'required|between:0,31',];
+        = [
+            'user_id'     => 'required|exists:users,id',
+            'name'        => 'required|between:1,255',
+            'match'       => 'required',
+            'amount_max'  => 'required|between:0,65536',
+            'amount_min'  => 'required|between:0,65536',
+            'date'        => 'required|date',
+            'active'      => 'required|between:0,1',
+            'automatch'   => 'required|between:0,1',
+            'repeat_freq' => 'required|in:daily,weekly,monthly,quarterly,half-year,yearly',
+            'skip'        => 'required|between:0,31',];
 
     protected $fillable = ['user_id', 'name', 'match', 'amount_min', 'amount_max', 'date', 'repeat_freq', 'skip', 'active', 'automatch'];
 
@@ -53,6 +61,10 @@ class RecurringTransaction extends Ardent
         return ['created_at', 'updated_at', 'date'];
     }
 
+    /**
+     * TODO remove this method in favour of something in the FireflyIII libraries.
+     * @return null
+     */
     public function lastFoundMatch()
     {
         $last = $this->transactionjournals()->orderBy('date', 'DESC')->first();

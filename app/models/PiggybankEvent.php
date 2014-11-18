@@ -6,14 +6,14 @@ use LaravelBook\Ardent\Ardent as Ardent;
 /**
  * PiggybankEvent
  *
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $piggybank_id
- * @property \Carbon\Carbon $date
- * @property float $amount
- * @property integer $transaction_journal_id
- * @property-read \Piggybank $piggybank
+ * @property integer                  $id
+ * @property \Carbon\Carbon           $created_at
+ * @property \Carbon\Carbon           $updated_at
+ * @property integer                  $piggybank_id
+ * @property \Carbon\Carbon           $date
+ * @property float                    $amount
+ * @property integer                  $transaction_journal_id
+ * @property-read \Piggybank          $piggybank
  * @property-read \TransactionJournal $transactionJournal
  * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\PiggybankEvent whereCreatedAt($value)
@@ -27,7 +27,11 @@ class PiggybankEvent extends Ardent
 {
 
     public static $rules
-        = ['piggybank_id' => 'required|exists:piggybanks,id', 'date' => 'required|date', 'amount' => 'required|numeric'];
+        = [
+            'piggybank_id' => 'required|exists:piggybanks,id',
+            'date'         => 'required|date',
+            'amount'       => 'required|numeric'
+        ];
 
     /**
      * @return array
