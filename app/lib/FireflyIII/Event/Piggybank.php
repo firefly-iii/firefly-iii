@@ -110,6 +110,9 @@ class Piggybank
      */
     public function storeTransfer(\TransactionJournal $journal, $piggybankId = 0)
     {
+        if ($piggybankId == 0 || is_null($piggybankId)) {
+            return;
+        }
         /** @var \FireflyIII\Database\Piggybank $repository */
         $repository = \App::make('FireflyIII\Database\Piggybank');
 
@@ -176,12 +179,16 @@ class Piggybank
      */
     public function subscribe(Dispatcher $events)
     {
+        // triggers on piggy bank events:
         $events->listen('piggybank.addMoney', 'FireflyIII\Event\Piggybank@addMoney');
         $events->listen('piggybank.removeMoney', 'FireflyIII\Event\Piggybank@removeMoney');
-        $events->listen('piggybank.storeTransfer', 'FireflyIII\Event\Piggybank@storeTransfer');
+
         $events->listen('piggybank.storePiggybank', 'FireflyIII\Event\Piggybank@storePiggybank');
-        $events->listen('piggybank.destroyTransfer', 'FireflyIII\Event\Piggybank@destroyTransfer');
-        $events->listen('piggybank.updateTransfer', 'FireflyIII\Event\Piggybank@updateTransfer');
+
+        // triggers when others are updated.
+        $events->listen('transactionJournal.store', 'FireflyIII\Event\Piggybank@storeTransfer');
+        $events->listen('transactionJournal.update', 'FireflyIII\Event\Piggybank@updateTransfer');
+        $events->listen('transactionJournal.destroy', 'FireflyIII\Event\Piggybank@destroyTransfer');
     }
 
     public function updateTransfer(\TransactionJournal $journal)
