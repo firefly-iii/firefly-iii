@@ -29,7 +29,8 @@
     "require-dev": {
         "barryvdh/laravel-debugbar": "@stable",
         "barryvdh/laravel-ide-helper": "@stable",
-        "doctrine/dbal": "~2.3"
+        "doctrine/dbal": "~2.3",
+        "satooshi/php-coveralls": "dev-master"
     },
     "autoload": {
         "classmap": [
