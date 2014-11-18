@@ -5,6 +5,7 @@ use LaravelBook\Ardent\Builder;
 
 
 /**
+ *
  * Account
  *
  * @property integer                                                      $id

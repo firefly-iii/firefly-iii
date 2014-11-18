@@ -133,9 +133,6 @@ class TransactionController extends BaseController
     public function edit(TransactionJournal $journal)
     {
         /*
-         * TODO the piggybank id must be filled in when relevant.
-         */
-        /*
          * All the repositories we need:
          */
         /** @var \FireflyIII\Shared\Toolkit\Form $form */
@@ -178,7 +175,12 @@ class TransactionController extends BaseController
         /*
          * Data to properly display the edit form.
          */
-        $prefilled = ['date' => $journal->date->format('Y-m-d'), 'category' => '', 'budget_id' => 0, 'piggybank_id' => $piggyBankId];
+        $prefilled = [
+            'date'         => $journal->date->format('Y-m-d'),
+            'category'     => '',
+            'budget_id'    => 0,
+            'piggybank_id' => $piggyBankId
+        ];
 
         /*
          * Fill in the category.
@@ -218,6 +220,9 @@ class TransactionController extends BaseController
                     $prefilled['account_from_id'] = $journal->transactions[1]->account->id;
                     $prefilled['account_to_id']   = $journal->transactions[0]->account->id;
                     $prefilled['amount']          = floatval($journal->transactions[0]->amount);
+                }
+                if ($journal->piggybankevents()->count() > 0) {
+                    $prefilled['piggybank_id'] = $journal->piggybankevents()->first()->piggybank_id;
                 }
                 break;
         }
@@ -348,6 +353,9 @@ class TransactionController extends BaseController
      */
     public function update(TransactionJournal $journal)
     {
+        /*
+         * TODO if the piggybank_id is set to 0, does this undo all piggy bank event(s)?
+         */
         /** @var \FireflyIII\Database\TransactionJournal $repos */
         $repos = App::make('FireflyIII\Database\TransactionJournal');
 

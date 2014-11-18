@@ -40,7 +40,7 @@ class BudgetController extends BaseController
             /*
              * A newly stored limit also created a limit repetition.
              */
-            Event::fire('limits.store', [$limit]); // TODO Nothing responds here!
+            Event::fire('limits.store', [$limit]);
 
         } else {
             if ($amount > 0) {
@@ -49,7 +49,7 @@ class BudgetController extends BaseController
                 /*
                  * An updated limit also updates the associated limit repetitions.
                  */
-                Event::fire('limits.update', [$limit]); // TODO Nothing responds here!
+                Event::fire('limits.update', [$limit]);
             } else {
                 $limit->delete();
             }
