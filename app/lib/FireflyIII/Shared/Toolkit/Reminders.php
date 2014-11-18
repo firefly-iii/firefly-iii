@@ -20,12 +20,13 @@ class Reminders
      * @return int
      * @throws FireflyException
      */
-    public function amountForReminder(\Reminder $reminder) {
+    public function amountForReminder(\Reminder $reminder)
+    {
 
         /** @var \FireflyIII\Shared\Toolkit\Date $dateKit */
         $dateKit = \App::make('FireflyIII\Shared\Toolkit\Date');
 
-        switch(get_class($reminder->remindersable)) {
+        switch (get_class($reminder->remindersable)) {
 
             case 'Piggybank':
                 $start     = new Carbon;
@@ -40,14 +41,14 @@ class Reminders
                  */
                 $repetition = $reminder->remindersable->currentRelevantRep();
                 $leftToSave = floatval($reminder->remindersable->targetamount) - floatval($repetition->currentamount);
-                $reminders = $reminders == 0 ? 1 : $reminders;
+                $reminders  = $reminders == 0 ? 1 : $reminders;
+
                 return $leftToSave / $reminders;
                 break;
             default:
-                throw new FireflyException('Cannot handle class '. get_class($reminder->remindersable).' in amountForReminder.');
+                throw new FireflyException('Cannot handle class ' . get_class($reminder->remindersable) . ' in amountForReminder.');
                 break;
         }
-
 
 
         return 50;
@@ -58,7 +59,12 @@ class Reminders
      */
     public function getReminders()
     {
-        $reminders = \Auth::user()->reminders()->get();
+        $reminders = \Auth::user()->reminders()
+                          ->where('active', 1)
+                          ->where('startdate', '<=', Carbon::now()->format('Y-m-d'))
+                          ->where('enddate', '>=', Carbon::now()->format('Y-m-d'))
+                          ->get();
+
         return $reminders;
         //        $reminders = \Auth::user()->reminders()->where('active', true)->get();
         //        $return    = [];
