@@ -8,20 +8,20 @@ use LaravelBook\Ardent\Builder;
 /**
  * Transaction
  *
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $account_id
- * @property integer $piggybank_id
- * @property integer $transaction_journal_id
- * @property string $description
- * @property float $amount
- * @property-read \Account $account
- * @property-read \Illuminate\Database\Eloquent\Collection|\Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\Category[] $categories
+ * @property integer                                                    $id
+ * @property \Carbon\Carbon                                             $created_at
+ * @property \Carbon\Carbon                                             $updated_at
+ * @property integer                                                    $account_id
+ * @property integer                                                    $piggybank_id
+ * @property integer                                                    $transaction_journal_id
+ * @property string                                                     $description
+ * @property float                                                      $amount
+ * @property-read \Account                                              $account
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Budget[]    $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Category[]  $categories
  * @property-read \Illuminate\Database\Eloquent\Collection|\Component[] $components
- * @property-read \Piggybank $piggybank
- * @property-read \TransactionJournal $transactionJournal
+ * @property-read \Piggybank                                            $piggybank
+ * @property-read \TransactionJournal                                   $transactionJournal
  * @method static \Illuminate\Database\Query\Builder|\Transaction whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Transaction whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Transaction whereUpdatedAt($value)
@@ -40,8 +40,10 @@ use LaravelBook\Ardent\Builder;
 class Transaction extends Ardent
 {
     public static $rules
-        = ['account_id'             => 'numeric|required|exists:accounts,id', 'piggybank_id' => 'numeric|exists:piggybanks,id',
-           'transaction_journal_id' => 'numeric|required|exists:transaction_journals,id', 'description' => 'between:1,255',
+        = ['account_id'             => 'numeric|required|exists:accounts,id',
+           'piggybank_id'           => 'numeric|exists:piggybanks,id',
+           'transaction_journal_id' => 'numeric|required|exists:transaction_journals,id',
+           'description'            => 'between:1,255',
            'amount'                 => 'required|between:-65536,65536|not_in:0,0.00',];
 
 

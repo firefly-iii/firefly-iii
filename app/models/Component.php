@@ -26,14 +26,18 @@ class Component extends SingleTableInheritanceEntity
 {
 
     public static $rules
-                                 = ['user_id' => 'exists:users,id|required', 'name' => ['required', 'between:1,100', 'min:1', 'alphabasic'],
-                                    'class'   => 'required',];
+                                 = [
+            'user_id' => 'exists:users,id|required',
+            'name'    => 'required|between:1,100|alphabasic',
+            'class'   => 'required',
+        ];
     protected     $fillable      = ['name', 'user_id'];
     protected     $subclassField = 'class';
     protected     $table         = 'components';
 
     /**
      * TODO remove this method in favour of something in the FireflyIII libraries.
+     *
      * @return Carbon
      */
     public function lastActionDate()
@@ -51,7 +55,7 @@ class Component extends SingleTableInheritanceEntity
      */
     public function transactionjournals()
     {
-        return $this->belongsToMany('TransactionJournal','component_transaction_journal','component_id');
+        return $this->belongsToMany('TransactionJournal', 'component_transaction_journal', 'component_id');
     }
 
 

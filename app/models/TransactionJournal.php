@@ -8,27 +8,27 @@ use LaravelBook\Ardent\Builder;
 /**
  * TransactionJournal
  *
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $user_id
- * @property integer $transaction_type_id
- * @property integer $recurring_transaction_id
- * @property integer $transaction_currency_id
- * @property string $description
- * @property boolean $completed
- * @property \Carbon\Carbon $date
+ * @property integer                                                         $id
+ * @property \Carbon\Carbon                                                  $created_at
+ * @property \Carbon\Carbon                                                  $updated_at
+ * @property integer                                                         $user_id
+ * @property integer                                                         $transaction_type_id
+ * @property integer                                                         $recurring_transaction_id
+ * @property integer                                                         $transaction_currency_id
+ * @property string                                                          $description
+ * @property boolean                                                         $completed
+ * @property \Carbon\Carbon                                                  $date
  * @property-read \Illuminate\Database\Eloquent\Collection|\
  *             'Budget[] $budgets
  * @property-read \Illuminate\Database\Eloquent\Collection|\
  *             'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\Component[] $components
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Component[]      $components
  * @property-read \Illuminate\Database\Eloquent\Collection|\PiggybankEvent[] $piggybankevents
- * @property-read \RecurringTransaction $recurringTransaction
- * @property-read \TransactionCurrency $transactionCurrency
- * @property-read \TransactionType $transactionType
- * @property-read \Illuminate\Database\Eloquent\Collection|\Transaction[] $transactions
- * @property-read \User $user
+ * @property-read \RecurringTransaction                                      $recurringTransaction
+ * @property-read \TransactionCurrency                                       $transactionCurrency
+ * @property-read \TransactionType                                           $transactionType
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Transaction[]    $transactions
+ * @property-read \User                                                      $user
  * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereUpdatedAt($value)
@@ -57,8 +57,11 @@ class TransactionJournal extends Ardent
 {
 
     public static $rules
-        = ['transaction_type_id' => 'required|exists:transaction_types,id', 'transaction_currency_id' => 'required|exists:transaction_currencies,id',
-           'description'         => 'required|between:1,255', 'date' => 'required|date', 'completed' => 'required|between:0,1'];
+        = ['transaction_type_id'     => 'required|exists:transaction_types,id',
+           'transaction_currency_id' => 'required|exists:transaction_currencies,id',
+           'description'             => 'required|between:1,255',
+           'date'                    => 'required|date',
+           'completed'               => 'required|between:0,1'];
 
 
     /**
@@ -91,6 +94,7 @@ class TransactionJournal extends Ardent
 
     /**
      * TODO remove this method in favour of something in the FireflyIII libraries.
+     *
      * @return float
      */
     public function getAmount()

@@ -144,6 +144,7 @@ class Account extends Ardent
     }
 
     /**
+     * TODO see if this scope is still used.
      * @param Builder $query
      * @param array   $types
      */

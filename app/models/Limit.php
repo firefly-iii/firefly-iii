@@ -8,16 +8,16 @@ use LaravelBook\Ardent\Ardent as Ardent;
 /**
  * Limit
  *
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $component_id
- * @property \Carbon\Carbon $startdate
- * @property float $amount
- * @property boolean $repeats
- * @property string $repeat_freq
- * @property-read \Budget $budget
- * @property-read \Component $component
+ * @property integer                                                          $id
+ * @property \Carbon\Carbon                                                   $created_at
+ * @property \Carbon\Carbon                                                   $updated_at
+ * @property integer                                                          $component_id
+ * @property \Carbon\Carbon                                                   $startdate
+ * @property float                                                            $amount
+ * @property boolean                                                          $repeats
+ * @property string                                                           $repeat_freq
+ * @property-read \Budget                                                     $budget
+ * @property-read \Component                                                  $component
  * @property-read \Illuminate\Database\Eloquent\Collection|\LimitRepetition[] $limitrepetitions
  * @method static \Illuminate\Database\Query\Builder|\Limit whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Limit whereCreatedAt($value)
@@ -32,8 +32,12 @@ class Limit extends Ardent
 {
 
     public static $rules
-        = ['component_id' => 'required|exists:components,id', 'startdate' => 'required|date', 'amount' => 'numeric|required|min:0.01',
-           'repeats'      => 'required|boolean', 'repeat_freq' => 'required|in:daily,weekly,monthly,quarterly,half-year,yearly'
+        = [
+            'component_id' => 'required|exists:components,id',
+            'startdate'    => 'required|date',
+            'amount'       => 'numeric|required|min:0.01',
+            'repeats'      => 'required|boolean',
+            'repeat_freq'  => 'required|in:daily,weekly,monthly,quarterly,half-year,yearly'
 
         ];
 
@@ -47,6 +51,7 @@ class Limit extends Ardent
     }
 
     /**
+     * TODO see if this method is still used.
      * Create a new repetition for this limit, starting on
      * the given date.
      *
