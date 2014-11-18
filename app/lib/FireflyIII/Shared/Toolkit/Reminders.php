@@ -117,7 +117,7 @@ class Reminders
                 // break when no longer relevant:
                 continue;
             }
-            $end = $dateKit->endOfPeriod($start, $piggybank->reminder);
+            $end = $dateKit->endOfPeriod(clone $start, $piggybank->reminder);
             // should have a reminder for this period:
             /** @var \Collection $reminders */
             $reminders = $piggybank->reminders()->dateIs($start, $end)->get();
