@@ -93,7 +93,7 @@ Event::subscribe('FireflyIII\Event\Budget');
 
 // TODO event that creates a relationship between transaction journals and recurring events when created.
 // TODO event that updates the relationship between transaction journals and recurring events when edited.
-// TODO event that creates a LimitRepetition when a Limit is created.
+// event that creates a LimitRepetition when a Limit is created.
 // event for when a transfer gets created and set an associated piggy bank; save as Piggy bank event.
 // when this transfer gets edited, retro-actively edit the event and THUS also the piggy bank.
 // event for when a transfer gets deleted; also delete related piggy bank event.
@@ -105,4 +105,9 @@ Event::subscribe('FireflyIII\Event\Budget');
 // TODO think about reminders.
 // TODO an event that triggers and creates a limit + limit repetition when a budget is created, or something?
 // TODO has many through needs to be added wherever relevant. Account > journals, etc.
+// TODO check all models for "external" methods once more.
+// TODO Auth::user() should be used very sparsely.
+// TODO direct calls to models are BAD
+// TODO cleanup everything related to reminders because it still feels a bit sloppy.
+// TODO use a Database\Reminder thing instead of self-made ORM.
 return $app;

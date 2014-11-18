@@ -18,6 +18,7 @@
             @endif
         </p>
         <p>
+            <!-- TODO implement all options -->
             <a href="#" class="btn btn-primary"><i class="fa fa-fw fa-thumbs-o-up"></i> I want to do this</a>
             <a href="#" class="btn btn-success"><i class="fa fa-smile-o fa-fw"></i> I already did this</a>
             <a href="#" class="btn btn-danger"><i class="fa fa-fw fa-clock-o"></i> Not this time</a>

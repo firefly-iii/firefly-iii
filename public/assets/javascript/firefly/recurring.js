@@ -7,8 +7,8 @@ $(document).ready(function () {
                 googleTable('table/recurring/' + recurringID + '/transactions', 'transaction-table');
             }
         }
-        if (typeof(googleLineChart) == 'function' && typeof(recurringID) != 'undefined') {
-            googleLineChart('chart/recurring/' + recurringID, 'recurring-overview');
+        if (typeof(googleComboChart) == 'function' && typeof(recurringID) != 'undefined') {
+            googleComboChart('chart/recurring/' + recurringID, 'recurring-overview');
         }
     }
 );

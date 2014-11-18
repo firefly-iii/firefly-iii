@@ -66,24 +66,6 @@ class Reminders
                           ->get();
 
         return $reminders;
-        //        $reminders = \Auth::user()->reminders()->where('active', true)->get();
-        //        $return    = [];
-        //        /** @var \Reminder $reminder */
-        //        foreach ($reminders as $reminder) {
-        //            $set = ['id' => $reminder->id];
-        //            switch ($reminder->data->type) {
-        //                case 'Test':
-        //                case 'Piggybank':
-        //                    $set['title'] = $reminder->title;
-        //                    $set['icon']  = $reminder->data->icon;
-        //                    $set['text']  = mf(floatval($reminder->data->amount));
-        //                    break;
-        //
-        //            }
-        //            $return[] = $set;
-        //        }
-        //
-        //        return $return;
     }
 
     public function updateReminders()
