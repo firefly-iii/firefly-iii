@@ -4,6 +4,7 @@
 
 App::before(
     function ($request) {
+        $reminders = [];
 
         if (Auth::check()) {
             /** @var \FireflyIII\Shared\Toolkit\Filter $toolkit */
@@ -14,9 +15,10 @@ App::before(
             $reminderKit = App::make('FireflyIII\Shared\Toolkit\Reminders');
 
             $reminderKit->updateReminders();
-            View::share('reminders',$reminderKit->getReminders());
+            $reminders = $reminderKit->getReminders();
 
         }
+        View::share('reminders', $reminders);
 
     }
 );
