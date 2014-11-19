@@ -22,7 +22,7 @@
             <a href="{{route('recurring.show',$entry->id)}}" title="{{{$entry->name}}}">{{{$entry->name}}}</a>
         </td>
         <td>
-            @foreach(explode(' ',$entry->match) as $match)
+            @foreach(explode(',',$entry->match) as $match)
             <span class="label label-info">{{{$match}}}</span>
             @endforeach
         </td>

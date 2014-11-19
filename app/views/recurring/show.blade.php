@@ -38,7 +38,7 @@
                     <tr>
                         <td colspan="2">
                         Matching on
-                            @foreach(explode(' ',$recurring->match) as $word)
+                            @foreach(explode(',',$recurring->match) as $word)
                                 <span class="label label-info">{{{$word}}}</span>
                             @endforeach
                             between {{mf($recurring->amount_min)}} and {{mf($recurring->amount_max)}}.
