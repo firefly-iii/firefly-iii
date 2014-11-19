@@ -10,18 +10,18 @@
          verbose="true"
          stopOnFailure="true"
          strict="false"
-         syntaxCheck="false"
->
+         syntaxCheck="false">
 
 
     <filter>
-        <whitelist>
+        <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./app/models</directory>
             <directory suffix=".php">./app/controllers</directory>
             <directory suffix=".php">./app/events</directory>
             <directory suffix=".php">./app/extensions</directory>
             <directory suffix=".php">./app/queue</directory>
             <directory suffix=".php">./app/helpers</directory>
+            <directory suffix=".php">./app/lib/FireflyIII</directory>
             <exclude>
                 <file>./app/controllers/BaseController.php</file>
             </exclude>
