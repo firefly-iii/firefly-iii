@@ -223,11 +223,14 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         /*
          * Store the budget.
          */
+        \Log::info('Before budget id.');
         if (isset($data['budget_id']) && intval($data['budget_id']) > 0) {
             /** @var \FireflyIII\Database\Budget $budgetRepository */
             $budgetRepository = \App::make('FireflyIII\Database\Budget');
             $budget           = $budgetRepository->find(intval($data['budget_id']));
+            \Log::info('Isset budget id!');
             if ($budget) {
+                \Log::info('Sync!');
                 $model->budgets()->sync([$budget->id]);
             }
         }
