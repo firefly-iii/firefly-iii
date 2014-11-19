@@ -61,7 +61,7 @@ class Form
          */
         if (\Session::has('prefilled')) {
             $prefilled = \Session::get('prefilled');
-            //$value     = isset($prefilled[$name]) && is_null($value) ? $prefilled[$name] : $value;
+            $value     = isset($prefilled[$name]) && is_null($value) ? $prefilled[$name] : $value;
 
         }
 
