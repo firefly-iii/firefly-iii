@@ -35,4 +35,16 @@ class TransactionJournal
         $events->listen('transactionJournal.store', 'FireflyIII\Event\TransactionJournal@store');
         $events->listen('transactionJournal.update', 'FireflyIII\Event\TransactionJournal@update');
     }
+
+    public function update(\TransactionJournal $journal)
+    {
+        /** @var \FireflyIII\Database\Recurring $repository */
+        $repository = \App::make('FireflyIII\Database\Recurring');
+        $set        = $repository->get();
+
+        /** @var \RecurringTransaction $entry */
+        foreach ($set as $entry) {
+            $repository->scan($entry, $journal);
+        }
+    }
 } 
