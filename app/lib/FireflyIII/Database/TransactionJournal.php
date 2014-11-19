@@ -137,7 +137,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
                 $journal->budgets()->save($budget);
             }
         }
-        if (strlen($data['category']) > 0) {
+        if (isset($data['category']) && strlen($data['category']) > 0) {
             /** @var \FireflyIII\Database\Category $categoryRepository */
             $categoryRepository = \App::make('FireflyIII\Database\Category');
             $category           = $categoryRepository->firstOrCreate($data['category']);
