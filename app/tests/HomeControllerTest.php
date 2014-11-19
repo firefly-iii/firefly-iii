@@ -25,8 +25,9 @@ class HomeControllerTest extends TestCase
      */
     public function testFlush()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete('This test has not been implemented yet.');
+
+        $response = $this->call('GET', '/flush');
+        $this->assertRedirectedToRoute('index');
     }
 
     /**
@@ -37,10 +38,26 @@ class HomeControllerTest extends TestCase
     {
         $this->be(new User(['email' => 'test@example.com']));
 
+
         $response = $this->call('GET', '/');
         $this->assertResponseOk();
 
         $this->assertTrue(true);
+    }
+    /**
+     * @covers HomeController::index
+     * @todo   Implement testIndex().
+     */
+    public function testIndexWithAccounts()
+    {
+        $user = new User(['email' => 'test@example.com']);
+        $this->be($user);
+
+        $pref = new Preference(['user_id' => $user->id,'name' => 'frontpageAccounts', 'data' => [1]]);
+        $pref->save();
+
+        $response = $this->call('GET', '/');
+        $this->assertResponseOk();
     }
 
     /**
