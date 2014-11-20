@@ -114,6 +114,7 @@ class Reminders
                 $reminder            = new \Reminder;
                 $reminder->startdate = $start;
                 $reminder->enddate   = $end;
+                $reminder->active    = 1;
                 $reminder->user()->associate($repository->getUser());
                 $reminder->remindersable()->associate($piggybank);
                 $reminder->save();
