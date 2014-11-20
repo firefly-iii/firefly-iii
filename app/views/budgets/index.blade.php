@@ -19,8 +19,8 @@
 
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12">
-                        <div class="progress">
-                            <div class="progress-bar" id="progress-bar-default" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                        <div class="progress progress-striped">
+                            <div class="progress-bar progress-bar-info" id="progress-bar-default" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
                             <div class="progress-bar progress-bar-danger" id="progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
                             <div class="progress-bar progress-bar-warning" id="progress-bar-warning" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
                         </div>
@@ -33,12 +33,12 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12">
-                        <div class="progress">
+                        <div class="progress progress-striped">
                             @if($overspent)
                                 <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{$spentPCT}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$spentPCT}}%;"></div>
                                 <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{100-$spentPCT}}" aria-valuemin="0" aria-valuemax="100" style="width: {{100-$spentPCT}}%;"></div>
                             @else
-                                <div class="progress-bar" role="progressbar" aria-valuenow="{{$spentPCT}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$spentPCT}}%;"></div>
+                                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{$spentPCT}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$spentPCT}}%;"></div>
                             @endif
                         </div>
                     </div>
