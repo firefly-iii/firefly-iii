@@ -26,8 +26,8 @@ class EventTableAdditions1 extends Migration
         // remove some fields:
         Schema::table(
             'reminders', function (Blueprint $table) {
-                $table->integer('remembersable_id')->unsigned()->nullable();
-                $table->string('remembersable_type')->nullable();
+                $table->integer('remindersable_id')->unsigned()->nullable();
+                $table->string('remindersable_type')->nullable();
             }
         );
     }
