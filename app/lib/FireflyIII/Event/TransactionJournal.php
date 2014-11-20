@@ -20,6 +20,7 @@ class TransactionJournal
         $repository = \App::make('FireflyIII\Database\Recurring');
         $set        = $repository->get();
 
+
         /** @var \RecurringTransaction $entry */
         foreach ($set as $entry) {
             $repository->scan($entry, $journal);
@@ -41,6 +42,8 @@ class TransactionJournal
         /** @var \FireflyIII\Database\Recurring $repository */
         $repository = \App::make('FireflyIII\Database\Recurring');
         $set        = $repository->get();
+        $journal->recurring_transaction_id = null;
+        $journal->save();
 
         /** @var \RecurringTransaction $entry */
         foreach ($set as $entry) {
