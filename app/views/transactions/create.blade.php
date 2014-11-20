@@ -69,7 +69,7 @@
 
                         <!-- RELATE THIS TRANSFER TO A PIGGY BANK -->
                         @if($what == 'transfer' && count($piggies) > 0)
-                            {{Form::ffSelect('piggybank_id',$piggies,0)}}
+                            {{Form::ffSelect('piggybank_id',$piggies)}}
                         @endif
                     </div>
                 </div>
