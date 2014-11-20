@@ -203,6 +203,8 @@ Route::group(
 
         // reminder controller
         Route::get('/reminders/{reminder}',['uses' => 'ReminderController@show','as' => 'reminders.show']);
+        Route::get('/reminders/{reminder}/dismiss',['uses' => 'ReminderController@dismiss','as' => 'reminders.dismiss']);
+        Route::get('/reminders/{reminder}/act',['uses' => 'ReminderController@act','as' => 'reminders.act']);
 
         // search controller:
         Route::get('/search', ['uses' => 'SearchController@index', 'as' => 'search']);
