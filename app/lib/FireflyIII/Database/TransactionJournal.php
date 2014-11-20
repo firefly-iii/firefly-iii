@@ -221,17 +221,15 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         }
 
         /*
-         * Store the budget.
+         * Update the budget and the category.
          */
-        \Log::info('Before budget id.');
+        $components = [];
         if (isset($data['budget_id']) && intval($data['budget_id']) > 0) {
             /** @var \FireflyIII\Database\Budget $budgetRepository */
             $budgetRepository = \App::make('FireflyIII\Database\Budget');
             $budget           = $budgetRepository->find(intval($data['budget_id']));
-            \Log::info('Isset budget id!');
             if ($budget) {
-                \Log::info('Sync!');
-                $model->budgets()->sync([$budget->id]);
+                $components[] = $budget->id;
             }
         }
         if (strlen($data['category']) > 0) {
@@ -239,9 +237,10 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
             $categoryRepository = \App::make('FireflyIII\Database\Category');
             $category           = $categoryRepository->firstOrCreate($data['category']);
             if ($category) {
-                $model->categories()->sync([$category->id]);
+                $components[] = $category->id;
             }
         }
+        $model->components()->sync($components);
 
         /*
          * Now we can update the transactions related to this journal.
