@@ -20,7 +20,7 @@
                                 @else
                                 class="progress-bar progress-bar-info"
                                 @endif
-                                role="progressbar" aria-valuenow="{{$piggybank->percentage}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$piggybank->percentage}}%;">
+                                role="progressbar" aria-valuenow="{{$piggybank->percentage}}" aria-valuemin="0" aria-valuemax="100" style="min-width: 40px;width: {{$piggybank->percentage}}%;">
                                     {{$piggybank->percentage}}%
                                 </div>
                             </div>
