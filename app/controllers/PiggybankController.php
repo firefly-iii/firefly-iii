@@ -283,7 +283,7 @@ class PiggybankController extends BaseController
                 /*
                  * Create the relevant repetition per Event.
                  */
-                Event::fire('piggybank.storePiggybank', [$piggyBank]); // new and used.
+                Event::fire('piggybank.store', [$piggyBank]); // new and used.
 
                 Session::flash('success', 'New piggy bank stored!');
 
@@ -333,6 +333,7 @@ class PiggybankController extends BaseController
                 }
                 // store!
                 $repos->update($piggyBank, $data);
+                Event::fire('piggybank.update', [$piggyBank]); // new and used.
                 Session::flash('success', 'Piggy bank updated!');
 
                 if ($data['post_submit_action'] == 'return_to_edit') {

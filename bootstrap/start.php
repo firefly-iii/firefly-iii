@@ -92,14 +92,14 @@ Event::subscribe('FireflyIII\Event\Piggybank');
 Event::subscribe('FireflyIII\Event\Budget');
 Event::subscribe('FireflyIII\Event\TransactionJournal');
 
-// TODO event that creates a relationship between transaction journals and recurring events when created.
-// TODO event that updates the relationship between transaction journals and recurring events when edited.
+// event that creates a relationship between transaction journals and recurring events when created.
+// event that updates the relationship between transaction journals and recurring events when edited.
 // event that creates a LimitRepetition when a Limit is created.
 // event for when a transfer gets created and set an associated piggy bank; save as Piggy bank event.
 // when this transfer gets edited, retro-actively edit the event and THUS also the piggy bank.
 // event for when a transfer gets deleted; also delete related piggy bank event.
 // event to create the first repetition (for non-repeating piggy banks) when the piggy bank is created.
-// TODO event for when the non-repeating piggy bank is updated because the single repetition must also be changed.
+// event for when the non-repeating piggy bank is updated because the single repetition must also be changed.
 // (also make piggy bank events "invalid" when they start falling outside of the date-scope of the piggy bank,
 // although this not changes the amount in the piggy bank).
 // TODO check if recurring transactions are being updated when journals are updated (aka no longer fitting, thus removed).

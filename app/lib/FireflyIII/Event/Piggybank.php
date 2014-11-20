@@ -88,10 +88,6 @@ class Piggybank
         }
     }
 
-    /*
-     *
-     */
-
     public function storePiggybank(\Piggybank $piggybank)
     {
         if (intval($piggybank->repeats) == 0) {
@@ -103,6 +99,10 @@ class Piggybank
             $repetition->save();
         }
     }
+
+    /*
+     *
+     */
 
     /**
      * @param \TransactionJournal $journal
@@ -182,13 +182,23 @@ class Piggybank
         // triggers on piggy bank events:
         $events->listen('piggybank.addMoney', 'FireflyIII\Event\Piggybank@addMoney');
         $events->listen('piggybank.removeMoney', 'FireflyIII\Event\Piggybank@removeMoney');
+        $events->listen('piggybank.store', 'FireflyIII\Event\Piggybank@storePiggybank');
+        $events->listen('piggybank.update', 'FireflyIII\Event\Piggybank@updatePiggybank');
 
-        $events->listen('piggybank.storePiggybank', 'FireflyIII\Event\Piggybank@storePiggybank');
 
         // triggers when others are updated.
         $events->listen('transactionJournal.store', 'FireflyIII\Event\Piggybank@storeTransfer');
         $events->listen('transactionJournal.update', 'FireflyIII\Event\Piggybank@updateTransfer');
         $events->listen('transactionJournal.destroy', 'FireflyIII\Event\Piggybank@destroyTransfer');
+    }
+
+    public function updatePiggybank(\Piggybank $piggybank)
+    {
+        // get the repetition:
+        $repetition             = $piggybank->currentRelevantRep();
+        $repetition->startdate  = $piggybank->startdate;
+        $repetition->targetdate = $piggybank->targetdate;
+        $repetition->save();
     }
 
     public function updateTransfer(\TransactionJournal $journal)
