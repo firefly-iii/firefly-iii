@@ -407,7 +407,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         //        }
 
 
-        $validator = \Validator::make([$model], \Transaction::$rules);
+        $validator = \Validator::make([$model], \TransactionJournal::$rules);
         if ($validator->invalid()) {
             $errors->merge($errors);
         }

@@ -102,13 +102,17 @@ Event::subscribe('FireflyIII\Event\TransactionJournal');
 // event for when the non-repeating piggy bank is updated because the single repetition must also be changed.
 // (also make piggy bank events "invalid" when they start falling outside of the date-scope of the piggy bank,
 // although this not changes the amount in the piggy bank).
-// TODO check if recurring transactions are being updated when journals are updated (aka no longer fitting, thus removed).
-// TODO think about reminders.
-// TODO an event that triggers and creates a limit + limit repetition when a budget is created, or something?
-// TODO has many through needs to be added wherever relevant. Account > journals, etc.
-// TODO check all models for "external" methods once more.
-// TODO Auth::user() should be used very sparsely.
-// TODO direct calls to models are BAD
-// TODO cleanup everything related to reminders because it still feels a bit sloppy.
-// TODO use a Database\Reminder thing instead of self-made ORM.
+// check if recurring transactions are being updated when journals are updated (aka no longer fitting, thus removed).
+// think about reminders.
+// an event that triggers and creates a limit + limit repetition when a budget is created, or something?
+// has many through needs to be added wherever relevant. Account > journals, etc.
+// check all models for "external" methods once more.
+// Auth::user() should be used very sparsely.
+// direct calls to models are BAD
+// cleanup everything related to reminders because it still feels a bit sloppy.
+// use a Database\Reminder thing instead of self-made ORM.
+// TODO create static calls instead of all the App::make() things.
+// TODO see if the various has-many-throughs actually get used.
+// TODO set very tight rules on all models
+// TODO create custom uniquely rules.
 return $app;

@@ -84,12 +84,9 @@ class HomeController extends BaseController
      */
     public function sessionNext()
     {
-        /** @var \FireflyIII\Shared\Toolkit\Navigation $navigation */
-        $navigation = App::make('FireflyIII\Shared\Toolkit\Navigation');
-        $navigation->next();
+        Navigation::next();
 
         return Redirect::back();
-        //return Redirect::route('index');
     }
 
     /**
@@ -97,11 +94,8 @@ class HomeController extends BaseController
      */
     public function sessionPrev()
     {
-        /** @var \FireflyIII\Shared\Toolkit\Navigation $navigation */
-        $navigation = App::make('FireflyIII\Shared\Toolkit\Navigation');
-        $navigation->prev();
+        Navigation::prev();
 
         return Redirect::back();
-        //return Redirect::route('index');
     }
 }

@@ -48,13 +48,10 @@ class PiggybankController extends BaseController
         /** @var \FireflyIII\Database\Account $acct */
         $acct = App::make('FireflyIII\Database\Account');
 
-        /** @var \FireflyIII\Shared\Toolkit\Form $toolkit */
-        $toolkit = App::make('FireflyIII\Shared\Toolkit\Form');
-
         $periods = Config::get('firefly.piggybank_periods');
 
 
-        $accounts = $toolkit->makeSelectList($acct->getAssetAccounts());
+        $accounts = FFForm::makeSelectList($acct->getAssetAccounts());
 
         return View::make('piggybanks.create', compact('accounts', 'periods'))->with('title', 'Piggy banks')->with('mainTitleIcon', 'fa-sort-amount-asc')->with(
             'subTitle', 'Create new piggy bank'
@@ -99,12 +96,9 @@ class PiggybankController extends BaseController
         /** @var \FireflyIII\Database\Account $acct */
         $acct = App::make('FireflyIII\Database\Account');
 
-        /** @var \FireflyIII\Shared\Toolkit\Form $toolkit */
-        $toolkit = App::make('FireflyIII\Shared\Toolkit\Form');
-
         $periods = Config::get('firefly.piggybank_periods');
 
-        $accounts = $toolkit->makeSelectList($acct->getAssetAccounts());
+        $accounts = FFForm::makeSelectList($acct->getAssetAccounts());
 
         /*
          * Flash some data to fill the form.
