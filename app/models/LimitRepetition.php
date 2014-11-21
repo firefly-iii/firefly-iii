@@ -80,6 +80,7 @@ class LimitRepetition extends Ardent
         return $this->belongsTo('Limit');
     }
 
+
     /**
      * TODO remove this method in favour of something in the FireflyIII libraries.
      *

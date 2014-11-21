@@ -145,6 +145,7 @@ class Account extends Ardent
 
     /**
      * TODO see if this scope is still used.
+     *
      * @param Builder $query
      * @param array   $types
      */
@@ -155,6 +156,11 @@ class Account extends Ardent
             $this->joinedAccountTypes = true;
         }
         $query->whereIn('account_types.type', $types);
+    }
+
+    public function transactionjournals()
+    {
+        return $this->hasManyThrough('TransactionJournal', 'Transaction');
     }
 
     /**
