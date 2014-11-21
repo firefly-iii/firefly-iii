@@ -13,15 +13,16 @@ use FireflyIII\Exception\FireflyException;
 class Date
 {
     /**
-     * @param Carbon $date
+     * @param Carbon $theDate
      * @param        $repeatFreq
      * @param        $skip
      *
      * @return Carbon
      * @throws FireflyException
      */
-    public function addPeriod(Carbon $date, $repeatFreq, $skip)
+    public function addPeriod(Carbon $theDate, $repeatFreq, $skip)
     {
+        $date = clone $theDate;
         // TODO clone the dates so referred date won't be altered.
         $add = ($skip + 1);
         switch ($repeatFreq) {
@@ -56,13 +57,15 @@ class Date
     }
 
     /**
-     * @param Carbon $currentEnd
+     * @param Carbon $theCurrentEnd
      * @param        $repeatFreq
      *
+     * @return mixed
      * @throws FireflyException
      */
-    public function endOfPeriod(Carbon $currentEnd, $repeatFreq)
+    public function endOfPeriod(Carbon $theCurrentEnd, $repeatFreq)
     {
+        $currentEnd = clone $theCurrentEnd;
         switch ($repeatFreq) {
             default:
                 throw new FireflyException('Cannot do endOfPeriod for $repeat_freq ' . $repeatFreq);
@@ -93,14 +96,15 @@ class Date
     }
 
     /**
-     * @param Carbon $date
+     * @param Carbon $theDate
      * @param        $repeatFreq
      *
      * @return Carbon
      * @throws FireflyException
      */
-    public function startOfPeriod(Carbon $date, $repeatFreq)
+    public function startOfPeriod(Carbon $theDate, $repeatFreq)
     {
+        $date = clone $theDate;
         switch ($repeatFreq) {
             default:
                 throw new FireflyException('Cannot do startOfPeriod for $repeat_freq ' . $repeatFreq);
@@ -133,43 +137,4 @@ class Date
 
         return $date;
     }
-
-    /**
-     * @param Carbon $date
-     * @param        $repeatFreq
-     * @param int    $substract
-     *
-     * @return Carbon
-     * @throws FireflyException
-     */
-    public function substractPeriod(Carbon $date, $repeatFreq, $substract = 1)
-    {
-        switch ($repeatFreq) {
-            default:
-                throw new FireflyException('Cannot do addPeriod for $repeat_freq ' . $repeatFreq);
-                break;
-            case 'daily':
-                $date->subDays($substract);
-                break;
-            case 'weekly':
-                $date->subWeeks($substract);
-                break;
-            case 'monthly':
-                $date->subMonths($substract);
-                break;
-            case 'quarterly':
-                $months = $substract * 3;
-                $date->subMonths($months);
-                break;
-            case 'half-year':
-                $months = $substract * 6;
-                $date->subMonths($months);
-                break;
-            case 'yearly':
-                $date->subYears($substract);
-                break;
-        }
-
-        return $date;
-    }
-} 
+}
