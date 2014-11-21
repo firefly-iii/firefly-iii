@@ -15,7 +15,7 @@
             </div>
         </td>
         <td><a href="{{route('accounts.show',$account->id)}}">{{{$account->name}}}</a></td>
-        <td>{{mf($account->balance())}}</td>
+        <td>{{mf(Steam::balance($account))}}</td>
         <td>
             @if($account->active)
                 <i class="fa fa-fw fa-check"></i>
