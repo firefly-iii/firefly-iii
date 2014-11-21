@@ -58,26 +58,6 @@ class Account extends Ardent
     }
 
     /**
-     * Get an accounts current balance.
-     *
-     * TODO remove this method in favour of something in the FireflyIII libraries.
-     *
-     * @param \Carbon\Carbon $date
-     *
-     * @return float
-     */
-    public function balance(\Carbon\Carbon $date = null)
-    {
-        $date = is_null($date) ? new \Carbon\Carbon : $date;
-
-        return floatval(
-            $this->transactions()->leftJoin(
-                'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-            )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount')
-        );
-    }
-
-    /**
      * Transactions.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

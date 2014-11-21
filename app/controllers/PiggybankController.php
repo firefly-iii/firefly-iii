@@ -137,7 +137,7 @@ class PiggybankController extends BaseController
              */
             $account = $piggybank->account;
             if (!isset($accounts[$account->id])) {
-                $accounts[$account->id] = ['name'              => $account->name, 'balance' => $account->balance(),
+                $accounts[$account->id] = ['name'              => $account->name, 'balance' => Steam::balance($account),
                                            'leftForPiggybanks' => $repos->leftOnAccount($account), 'sumOfSaved' => $piggybank->savedSoFar,
                                            'sumOfTargets'      => floatval($piggybank->targetamount), 'leftToSave' => $piggybank->leftToSave];
             } else {

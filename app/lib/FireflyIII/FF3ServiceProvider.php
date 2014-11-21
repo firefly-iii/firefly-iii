@@ -66,6 +66,15 @@ class FF3ServiceProvider extends ServiceProvider
             }
         );
 
+        /*
+         * For models, various stuff:
+         */
+        $this->app->bind(
+            'steam', function() {
+                return new \FireflyIII\Shared\Toolkit\Steam;
+            }
+        );
+
         // preferences:
         $this->app->bind('FireflyIII\Shared\Preferences\PreferencesInterface', 'FireflyIII\Shared\Preferences\Preferences');
 
@@ -81,6 +90,7 @@ class FF3ServiceProvider extends ServiceProvider
                 $loader->alias('DateKit', 'FireflyIII\Shared\Facade\DateKit');
                 $loader->alias('Navigation', 'FireflyIII\Shared\Facade\Navigation');
                 $loader->alias('FFForm', 'FireflyIII\Shared\Facade\FFForm');
+                $loader->alias('Steam', 'FireflyIII\Shared\Facade\Steam');
             }
         );
 

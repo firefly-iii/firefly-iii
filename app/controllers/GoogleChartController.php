@@ -29,7 +29,7 @@ class GoogleChartController extends BaseController
             if ($current > Carbon::now()) {
                 $row[] = null;
             } else {
-                $row[] = $account->balance($current);
+                $row[] = Steam::balance($account, $current);
             }
 
             $chart->addRowArray($row);
@@ -203,12 +203,7 @@ class GoogleChartController extends BaseController
             $row = [clone $current];
 
             foreach ($accounts as $account) {
-                //if ($current > Carbon::now()) {
-                //  $row[] = 0;
-                //} else {
-                $row[] = $account->balance($current);
-                //}
-
+                $row[] = Steam::balance($account, $current);
             }
 
             $chart->addRowArray($row);
@@ -573,8 +568,7 @@ class GoogleChartController extends BaseController
                 /*
                  * Get end of period for $current:
                  */
-                $currentEnd = clone $current;
-                DateKit::endOfPeriod($currentEnd, $entry->repeat_freq);
+                $currentEnd = DateKit::endOfPeriod($current, $entry->repeat_freq);
 
                 /*
                  * In the current session range?
@@ -599,7 +593,7 @@ class GoogleChartController extends BaseController
                 /*
                  * Add some time for the next loop!
                  */
-                DateKit::addPeriod($current, $entry->repeat_freq, intval($entry->skip));
+                $current = DateKit::addPeriod($current, $entry->repeat_freq, intval($entry->skip));
 
             }
 
