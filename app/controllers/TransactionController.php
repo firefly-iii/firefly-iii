@@ -351,9 +351,6 @@ class TransactionController extends BaseController
      */
     public function update(TransactionJournal $journal)
     {
-        /*
-         * TODO if the piggybank_id is set to 0, does this undo all piggy bank event(s)?
-         */
         /** @var \FireflyIII\Database\TransactionJournal $repos */
         $repos = App::make('FireflyIII\Database\TransactionJournal');
 

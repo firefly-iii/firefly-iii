@@ -111,8 +111,8 @@ Event::subscribe('FireflyIII\Event\TransactionJournal');
 // direct calls to models are BAD
 // cleanup everything related to reminders because it still feels a bit sloppy.
 // use a Database\Reminder thing instead of self-made ORM.
-// TODO create static calls instead of all the App::make() things.
-// TODO see if the various has-many-throughs actually get used.
-// TODO set very tight rules on all models
-// TODO create custom uniquely rules.
+// create static calls instead of all the App::make() things.
+// see if the various has-many-throughs actually get used.
+// set very tight rules on all models
+// create custom uniquely rules.
 return $app;
