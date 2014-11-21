@@ -21,7 +21,7 @@ class TransactionCurrency extends Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function transactionjournals()
+    public function transactionJournals()
     {
         return $this->hasMany('TransactionJournal');
     }

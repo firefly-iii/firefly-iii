@@ -40,9 +40,13 @@ class User extends Ardent implements UserInterface, RemindableInterface
 
 
     public static $rules
-        = ['email' => 'required|email|unique:users,email', 'migrated' => 'required|boolean', 'password' => 'required|between:60,60',
-           'reset' => 'between:32,32',];
-    protected $fillable = ['email'];
+                            = [
+            'email'    => 'required|email|unique:users,email',
+            'migrated' => 'required|boolean',
+            'password' => 'required|between:60,60',
+            'reset'    => 'between:32,32',
+        ];
+    protected     $fillable = ['email'];
     /**
      * The attributes excluded from the model's JSON form.
      *
@@ -91,6 +95,10 @@ class User extends Ardent implements UserInterface, RemindableInterface
     public function piggybanks()
     {
         return $this->hasManyThrough('Piggybank', 'Account');
+    }
+    public function transactions()
+    {
+        return $this->hasManyThrough('TransactionJournal', 'Transaction');
     }
 
     /**

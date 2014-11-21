@@ -58,7 +58,6 @@ class Component extends SingleTableInheritanceEntity
         return $this->belongsToMany('TransactionJournal', 'component_transaction_journal', 'component_id');
     }
 
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
