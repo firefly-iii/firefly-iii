@@ -34,8 +34,6 @@ class TransactionController extends BaseController
         /*
          * The repositories we need:
          */
-        /** @var \FireflyIII\Shared\Toolkit\Form $form */
-        $form = App::make('FireflyIII\Shared\Toolkit\Form');
 
         /** @var \FireflyIII\Database\Account $accountRepository */
         $accountRepository = App::make('FireflyIII\Database\Account');
@@ -47,14 +45,14 @@ class TransactionController extends BaseController
         $piggyRepository = App::make('FireflyIII\Database\Piggybank');
 
         // get asset accounts with names and id's .
-        $assetAccounts = $form->makeSelectList($accountRepository->getAssetAccounts());
+        $assetAccounts = FFForm::makeSelectList($accountRepository->getAssetAccounts());
 
         // get budgets as a select list.
-        $budgets    = $form->makeSelectList($budgetRepository->get());
+        $budgets    = FFForm::makeSelectList($budgetRepository->get());
         $budgets[0] = '(no budget)';
 
         // get the piggy banks.
-        $piggies    = $form->makeSelectList($piggyRepository->get());
+        $piggies    = FFForm::makeSelectList($piggyRepository->get());
         $piggies[0] = '(no piggy bank)';
 
         /*
@@ -135,8 +133,6 @@ class TransactionController extends BaseController
         /*
          * All the repositories we need:
          */
-        /** @var \FireflyIII\Shared\Toolkit\Form $form */
-        $form = App::make('FireflyIII\Shared\Toolkit\Form');
 
         /** @var \FireflyIII\Database\Account $accountRepository */
         $accountRepository = App::make('FireflyIII\Database\Account');
@@ -152,10 +148,10 @@ class TransactionController extends BaseController
         $what = strtolower($journal->transactiontype->type);
 
         // get asset accounts with names and id's.
-        $accounts = $form->makeSelectList($accountRepository->getAssetAccounts());
+        $accounts = FFForm::makeSelectList($accountRepository->getAssetAccounts());
 
         // get budgets as a select list.
-        $budgets    = $form->makeSelectList($budgetRepository->get());
+        $budgets    = FFForm::makeSelectList($budgetRepository->get());
         $budgets[0] = '(no budget)';
 
         /*
@@ -163,7 +159,7 @@ class TransactionController extends BaseController
          * of the transactions in the journal has this field, it should all fill in nicely.
          */
         // get the piggy banks.
-        $piggies     = $form->makeSelectList($piggyRepository->get());
+        $piggies     = FFForm::makeSelectList($piggyRepository->get());
         $piggies[0]  = '(no piggy bank)';
         $piggyBankId = 0;
         foreach ($journal->transactions as $t) {

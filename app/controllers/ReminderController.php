@@ -21,20 +21,15 @@ class ReminderController extends BaseController
     {
 
         $amount = null;
-        $actionURL = '#';
         if (get_class($reminder->remindersable) == 'Piggybank') {
-            /** @var \FireflyIII\Shared\Toolkit\Reminders $toolkit */
-            $reminderKit = App::make('FireflyIII\Shared\Toolkit\Reminders');
 
-            $amount = $reminderKit->amountForReminder($reminder);
+            $amount = Reminders::amountForReminder($reminder);
         }
 
         return View::make('reminders.show', compact('reminder', 'amount'));
     }
 
     public function act(Reminder $reminder) {
-        /** @var \FireflyIII\Shared\Toolkit\Reminders $toolkit */
-        $reminderKit = App::make('FireflyIII\Shared\Toolkit\Reminders');
 
         switch(get_class($reminder->remindersable)) {
             default:
@@ -42,7 +37,7 @@ class ReminderController extends BaseController
                 break;
             break;
             case 'Piggybank':
-                $amount = $reminderKit->amountForReminder($reminder);
+                $amount = Reminders::amountForReminder($reminder);
                 $prefilled = [
                     'amount' => round($amount,2),
                     'description' => 'Money for ' . $reminder->remindersable->name,

@@ -238,7 +238,7 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     public function transactionsWithoutBudgetInDateRange(Carbon $start, Carbon $end)
     {
         // Add expenses that have no budget:
-        return \Auth::user()->transactionjournals()->whereNotIn(
+        return $this->getUser()->transactionjournals()->whereNotIn(
             'transaction_journals.id', function ($query) use ($start, $end) {
                 $query->select('transaction_journals.id')->from('transaction_journals')->leftJoin(
                     'component_transaction_journal', 'component_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'

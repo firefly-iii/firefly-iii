@@ -67,9 +67,7 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
         /*
          * Jump to the start of the period.
          */
-        /** @var \FireflyIII\Shared\Toolkit\Date $toolkit */
-        $toolkit         = \App::make('FireflyIII\Shared\Toolkit\Date');
-        $date            = $toolkit->startOfPeriod($date, $data['repeat_freq']);
+        $date            = DateKit::startOfPeriod($date, $data['repeat_freq']);
         $recurring->date = $date;
         $recurring->skip = intval($data['skip']);
 

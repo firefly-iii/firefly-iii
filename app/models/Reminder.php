@@ -15,7 +15,7 @@ use LaravelBook\Ardent\Ardent;
  * @property boolean $active
  * @property integer $remembersable_id
  * @property string $remembersable_type
- * @property-read \ $remindersable
+ * @property-read \Piggybank $remindersable
  * @property-read \User $user
  * @property mixed $data
  * @method static \Illuminate\Database\Query\Builder|\Reminder whereId($value) 
@@ -62,6 +62,8 @@ class Reminder extends Eloquent
     {
         return $this->belongsTo('User');
     }
+
+
     public function scopeDateIs($query, Carbon $start, Carbon $end)
     {
         return $query->where('startdate', $start->format('Y-m-d'))->where('enddate', $end->format('Y-m-d'));

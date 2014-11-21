@@ -499,9 +499,6 @@ class GoogleChartController extends BaseController
     public function recurringOverview(RecurringTransaction $recurring)
     {
 
-        /** @var \FireflyIII\Shared\Toolkit\Date $dateKit */
-        $dateKit = App::make('FireflyIII\Shared\Toolkit\Date');
-
         /** @var \Grumpydictator\Gchart\GChart $chart */
         $chart = App::make('gchart');
         $chart->addColumn('Date', 'date');
@@ -526,7 +523,7 @@ class GoogleChartController extends BaseController
             }
             unset($result);
             $chart->addRow(clone $start, $recurring->amount_max, $recurring->amount_min, $amount);
-            $start = $dateKit->addPeriod($start, $recurring->repeat_freq, 0);
+            $start = DateKit::addPeriod($start, $recurring->repeat_freq, 0);
         }
 
         $chart->generate();
@@ -557,9 +554,6 @@ class GoogleChartController extends BaseController
         /** @var \FireflyIII\Database\Recurring $rcr */
         $rcr = App::make('FireflyIII\Database\Recurring');
 
-        /** @var \FireflyIII\Shared\Toolkit\Date $dateKit */
-        $dateKit = App::make('FireflyIII\Shared\Toolkit\Date');
-
         $recurring = $rcr->get();
 
         /** @var \RecurringTransaction $entry */
@@ -580,7 +574,7 @@ class GoogleChartController extends BaseController
                  * Get end of period for $current:
                  */
                 $currentEnd = clone $current;
-                $dateKit->endOfPeriod($currentEnd, $entry->repeat_freq);
+                DateKit::endOfPeriod($currentEnd, $entry->repeat_freq);
 
                 /*
                  * In the current session range?
@@ -605,7 +599,7 @@ class GoogleChartController extends BaseController
                 /*
                  * Add some time for the next loop!
                  */
-                $dateKit->addPeriod($current, $entry->repeat_freq, intval($entry->skip));
+                DateKit::addPeriod($current, $entry->repeat_freq, intval($entry->skip));
 
             }
 

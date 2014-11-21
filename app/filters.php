@@ -7,16 +7,9 @@ App::before(
         $reminders = [];
 
         if (Auth::check()) {
-            /** @var \FireflyIII\Shared\Toolkit\Filter $toolkit */
-            $filter = App::make('FireflyIII\Shared\Toolkit\Filter');
-            $filter->setSessionDateRange();
-
-            /** @var \FireflyIII\Shared\Toolkit\Reminders $toolkit */
-            $reminderKit = App::make('FireflyIII\Shared\Toolkit\Reminders');
-
-            $reminderKit->updateReminders();
-            $reminders = $reminderKit->getReminders();
-
+            Filter::setSessionDateRange();
+            Reminders::updateReminders();
+            $reminders = Reminders::getReminders();
         }
         View::share('reminders', $reminders);
 

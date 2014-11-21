@@ -13,11 +13,9 @@ class Budget
      */
     public function storeOrUpdateLimit(\Limit $limit)
     {
-        /** @var \FireflyIII\Shared\Toolkit\Date $dateKit */
-        $dateKit = \App::make('FireflyIII\Shared\Toolkit\Date');
 
 
-        $end = $dateKit->addPeriod(clone $limit->startdate, $limit->repeat_freq, 0);
+        $end = DateKit::addPeriod(clone $limit->startdate, $limit->repeat_freq, 0);
         $end->subDay();
 
         $set = $limit->limitrepetitions()->where('startdate', $limit->startdate->format('Y-m-d'))->where('enddate', $end->format('Y-m-d'))->get();

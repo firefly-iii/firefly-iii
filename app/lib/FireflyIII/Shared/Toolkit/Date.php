@@ -22,6 +22,7 @@ class Date
      */
     public function addPeriod(Carbon $date, $repeatFreq, $skip)
     {
+        // TODO clone the dates so referred date won't be altered.
         $add = ($skip + 1);
         switch ($repeatFreq) {
             default:
