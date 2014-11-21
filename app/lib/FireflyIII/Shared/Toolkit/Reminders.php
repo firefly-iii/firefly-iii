@@ -31,7 +31,7 @@ class Reminders
                 $reminders = 0;
                 while ($start <= $end) {
                     $reminders++;
-                    $start = DateKit::addPeriod($start, $reminder->remindersable->reminder, $reminder->remindersable->reminder_skip);
+                    $start = \DateKit::addPeriod($start, $reminder->remindersable->reminder, $reminder->remindersable->reminder_skip);
                 }
                 /*
                  * Now find amount yet to save.
@@ -90,12 +90,12 @@ class Reminders
              */
             /** @var \PiggybankRepetition $repetition */
             $repetition = $piggybank->currentRelevantRep();
-            $start      = DateKit::startOfPeriod(Carbon::now(), $piggybank->reminder);
+            $start      = \DateKit::startOfPeriod(Carbon::now(), $piggybank->reminder);
             if ($repetition->targetdate && $repetition->targetdate <= Carbon::now()) {
                 // break when no longer relevant:
                 continue;
             }
-            $end = DateKit::endOfPeriod(clone $start, $piggybank->reminder);
+            $end = \DateKit::endOfPeriod(clone $start, $piggybank->reminder);
             // should have a reminder for this period:
             /** @var \Collection $reminders */
             $reminders = $piggybank->reminders()->dateIs($start, $end)->get();
