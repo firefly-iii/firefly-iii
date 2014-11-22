@@ -74,7 +74,7 @@
                     </tr>
                     <tr>
                         <td>New balance</td>
-                        <td>{{mf($t->account->balanceBeforeJournal($journal))}} &rarr; {{mf($t->account->balanceBeforeJournal($journal) + $t->amount)}}</td>
+                        <td>{{mf($t->before)}} &rarr; {{mf($t->after)}}</td>
                     </tr>
                     @if(!is_null($t->description))
                     <tr>

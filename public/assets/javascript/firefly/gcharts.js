@@ -1,9 +1,6 @@
 google.load('visualization', '1.1', {'packages': ['corechart', 'bar', 'sankey', 'table']});
 
-/*
-TODO manage the combination of default options AND custom options.
- */
-function googleLineChart(URL, container) {
+function googleLineChart(URL, container, options) {
     if ($('#' + container).length == 1) {
         $.getJSON(URL).success(function (data) {
             /*
@@ -31,7 +28,7 @@ function googleLineChart(URL, container) {
             /*
              Draw it:
              */
-            chart.draw(gdata, defaultLineChartOptions);
+            chart.draw(gdata, options || defaultLineChartOptions);
 
         }).fail(function () {
             $('#' + container).addClass('google-chart-error');
@@ -41,7 +38,7 @@ function googleLineChart(URL, container) {
     }
 }
 
-function googleBarChart(URL, container) {
+function googleBarChart(URL, container, options) {
     if ($('#' + container).length == 1) {
         $.getJSON(URL).success(function (data) {
             /*
@@ -69,7 +66,7 @@ function googleBarChart(URL, container) {
             /*
              Draw it:
              */
-            chart.draw(gdata, defaultBarChartOptions);
+            chart.draw(gdata, options || defaultBarChartOptions);
 
         }).fail(function () {
             $('#' + container).addClass('google-chart-error');
@@ -79,7 +76,7 @@ function googleBarChart(URL, container) {
     }
 }
 
-function googleColumnChart(URL, container) {
+function googleColumnChart(URL, container, options) {
     if ($('#' + container).length == 1) {
         $.getJSON(URL).success(function (data) {
             /*
@@ -106,7 +103,7 @@ function googleColumnChart(URL, container) {
             /*
              Draw it:
              */
-            chart.draw(gdata, defaultColumnChartOptions);
+            chart.draw(gdata, options || defaultColumnChartOptions);
 
         }).fail(function () {
             $('#' + container).addClass('google-chart-error');
@@ -116,7 +113,7 @@ function googleColumnChart(URL, container) {
     }
 }
 
-function googleStackedColumnChart(URL, container) {
+function googleStackedColumnChart(URL, container, options) {
     if ($('#' + container).length == 1) {
         $.getJSON(URL).success(function (data) {
             /*
@@ -143,7 +140,7 @@ function googleStackedColumnChart(URL, container) {
             /*
              Draw it:
              */
-            chart.draw(gdata, defaultStackedColumnChartOptions);
+            chart.draw(gdata, options || defaultStackedColumnChartOptions);
 
         }).fail(function () {
             $('#' + container).addClass('google-chart-error');
@@ -153,7 +150,7 @@ function googleStackedColumnChart(URL, container) {
     }
 }
 
-function googleComboChart(URL, container) {
+function googleComboChart(URL, container, options) {
     if ($('#' + container).length == 1) {
         $.getJSON(URL).success(function (data) {
             /*
@@ -180,7 +177,7 @@ function googleComboChart(URL, container) {
             /*
              Draw it:
              */
-            chart.draw(gdata, defaultComboChartOptions);
+            chart.draw(gdata, options || defaultComboChartOptions);
 
         }).fail(function () {
             $('#' + container).addClass('google-chart-error');
@@ -190,7 +187,7 @@ function googleComboChart(URL, container) {
     }
 }
 
-function googlePieChart(URL, container) {
+function googlePieChart(URL, container, options) {
     if ($('#' + container).length == 1) {
         $.getJSON(URL).success(function (data) {
             /*
@@ -218,7 +215,7 @@ function googlePieChart(URL, container) {
             /*
              Draw it:
              */
-            chart.draw(gdata, defaultPieChartOptions);
+            chart.draw(gdata, options || defaultPieChartOptions);
 
         }).fail(function () {
             $('#' + container).addClass('google-chart-error');
@@ -228,7 +225,7 @@ function googlePieChart(URL, container) {
     }
 }
 
-function googleSankeyChart(URL, container) {
+function googleSankeyChart(URL, container, options) {
     if ($('#' + container).length == 1) {
         $.getJSON(URL).success(function (data) {
             /*
@@ -258,7 +255,7 @@ function googleSankeyChart(URL, container) {
             /*
              Draw it:
              */
-            chart.draw(gdata, defaultSankeyChartOptions);
+            chart.draw(gdata, options || defaultSankeyChartOptions);
 
         }).fail(function () {
             $('#' + container).addClass('google-chart-error');
