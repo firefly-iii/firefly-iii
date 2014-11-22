@@ -7,6 +7,7 @@ return [
     'piggybank_periods'    => [
         'week'  => 'Week',
         'month' => 'Month',
+        'quarter' => 'Quarter',
         'year'  => 'Year'
     ],
     'periods_to_text'      => [
