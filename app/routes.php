@@ -199,6 +199,7 @@ Route::group(
 
         // repeated expenses controller:
         Route::get('/repeatedexpenses', ['uses' => 'RepeatedExpenseController@index', 'as' => 'repeated.index']);
+        Route::get('/repeatedexpenses/create', ['uses' => 'RepeatedExpenseController@create', 'as' => 'repeated.create']);
 
         // report controller:
         Route::get('/reports', ['uses' => 'ReportController@index', 'as' => 'reports.index']);
@@ -258,6 +259,8 @@ Route::group(
         Route::post('/piggybanks/add/{piggybank}', ['uses' => 'PiggybankController@postAdd', 'as' => 'piggybanks.add']); # add money
         Route::post('/piggybanks/remove/{piggybank}', ['uses' => 'PiggybankController@postRemove', 'as' => 'piggybanks.remove']); # remove money.
 
+        // repeated expense controller
+        Route::post('/repeatedexpense/store', ['uses' => 'RepeatedExpenseController@store', 'as' => 'repeated.store']);
 
         // preferences controller
         Route::post('/preferences', ['uses' => 'PreferencesController@postIndex']);
