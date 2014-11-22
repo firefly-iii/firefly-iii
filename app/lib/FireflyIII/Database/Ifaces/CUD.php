@@ -44,14 +44,4 @@ interface CUD
      */
     public function validate(array $model);
 
-    /**
-     * Validates a model. Returns an array containing MessageBags
-     * errors/warnings/successes.
-     *
-     * @param Ardent $model
-     *
-     * @return array
-     */
-    public function validateObject(Ardent $model);
-
-} 
+}

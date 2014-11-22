@@ -15,7 +15,7 @@ use LaravelBook\Ardent\Ardent;
  *
  * @package FireflyIII\Database
  */
-class AccountType implements AccountTypeInterface, CUD, CommonDatabaseCalls
+class AccountType implements CUD, CommonDatabaseCalls
 {
 
     /**
@@ -63,20 +63,6 @@ class AccountType implements AccountTypeInterface, CUD, CommonDatabaseCalls
     public function validate(array $model)
     {
         // TODO: Implement validate() method.
-        throw new NotImplementedException;
-    }
-
-    /**
-     * Validates a model. Returns an array containing MessageBags
-     * errors/warnings/successes.
-     *
-     * @param Ardent $model
-     *
-     * @return array
-     */
-    public function validateObject(Ardent $model)
-    {
-        // TODO: Implement validateObject() method.
         throw new NotImplementedException;
     }
 

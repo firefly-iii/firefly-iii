@@ -81,11 +81,10 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
 
     /**
      * @param array $types
-     * @param array $parameters
      *
      * @return Collection
      */
-    public function getAccountsByType(array $types, array $parameters = [])
+    public function getAccountsByType(array $types)
     {
         /*
          * Basic query:
@@ -103,10 +102,9 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
         /*
          * Not used, but useful for the balance within a certain month / year.
          */
-        $balanceOnDate = isset($parameters['date']) ? $parameters['date'] : Carbon::now();
         $query->where(
-            function ($q) use ($balanceOnDate) {
-                $q->where('transaction_journals.date', '<=', $balanceOnDate->format('Y-m-d'));
+            function ($q) {
+                $q->where('transaction_journals.date', '<=', Carbon::now()->format('Y-m-d'));
                 $q->orWhereNull('transaction_journals.date');
             }
         );
@@ -118,23 +116,6 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
          */
         $query->orderBy('name', 'ASC');
 
-        /*
-         * If present, process parameters for searching.
-         */
-        if (isset($parameters['search'])) {
-            $query->where('name', 'LIKE', '%' . e($parameters['search']['value'] . '%'));
-        }
-
-        /*
-         * If present, start at $start:
-         */
-        if (isset($parameters['start'])) {
-            $query->skip(intval($parameters['start']));
-        }
-        if (isset($parameters['length'])) {
-            $query->take(intval($parameters['length']));
-        }
-
         return $query->get(['accounts.*', \DB::Raw('SUM(`transactions`.`amount`) as `balance`')]);
     }
 
@@ -145,43 +126,28 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
      *
      * @return Collection
      */
-    public function getAssetAccounts(array $parameters = [])
+    public function getAssetAccounts()
     {
-        return $this->getAccountsByType(['Default account', 'Asset account'], $parameters);
+        return $this->getAccountsByType(['Default account', 'Asset account']);
 
     }
 
     /**
-     * Get all default accounts.
-     *
      * @return Collection
      */
-    public function getDefaultAccounts()
+    public function getExpenseAccounts()
     {
-        // TODO: Implement getDefaultAccounts() method.
-        throw new NotImplementedException;
-    }
-
-    /**
-     * @param array $parameters
-     *
-     * @return Collection
-     */
-    public function getExpenseAccounts(array $parameters = [])
-    {
-        return $this->getAccountsByType(['Expense account', 'Beneficiary account'], $parameters);
+        return $this->getAccountsByType(['Expense account', 'Beneficiary account']);
     }
 
     /**
      * Get all revenue accounts.
      *
-     * @param array $parameters
-     *
      * @return Collection
      */
-    public function getRevenueAccounts(array $parameters = [])
+    public function getRevenueAccounts()
     {
-        return $this->getAccountsByType(['Revenue account'], $parameters);
+        return $this->getAccountsByType(['Revenue account']);
     }
 
     /**
@@ -395,20 +361,6 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
         }
 
         return ['errors' => $errors, 'warnings' => $warnings, 'successes' => $successes];
-    }
-
-    /**
-     * Validates a model. Returns an array containing MessageBags
-     * errors/warnings/successes.
-     *
-     * @param Ardent $model
-     *
-     * @return array
-     */
-    public function validateObject(Ardent $model)
-    {
-        // TODO: Implement validateObject() method.
-        throw new NotImplementedException;
     }
 
     /**

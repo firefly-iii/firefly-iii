@@ -15,7 +15,7 @@ use LaravelBook\Ardent\Ardent;
  *
  * @package FireflyIII\Database
  */
-class Category implements CUD, CommonDatabaseCalls, CategoryInterface
+class Category implements CUD, CommonDatabaseCalls
 {
     use SwitchUser;
 
@@ -116,20 +116,6 @@ class Category implements CUD, CommonDatabaseCalls, CategoryInterface
         }
 
         return ['errors' => $errors, 'warnings' => $warnings, 'successes' => $successes];
-    }
-
-    /**
-     * Validates a model. Returns an array containing MessageBags
-     * errors/warnings/successes.
-     *
-     * @param Ardent $model
-     *
-     * @return array
-     */
-    public function validateObject(Ardent $model)
-    {
-        // TODO: Implement validateObject() method.
-        throw new NotImplementedException;
     }
 
     /**

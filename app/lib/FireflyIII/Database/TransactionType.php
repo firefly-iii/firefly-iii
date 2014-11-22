@@ -16,7 +16,7 @@ use LaravelBook\Ardent\Ardent;
  *
  * @package FireflyIII\Database
  */
-class TransactionType implements TransactionTypeInterface, CUD, CommonDatabaseCalls
+class TransactionType implements CUD, CommonDatabaseCalls
 {
 
     /**
@@ -64,20 +64,6 @@ class TransactionType implements TransactionTypeInterface, CUD, CommonDatabaseCa
     public function validate(array $model)
     {
         // TODO: Implement validate() method.
-        throw new NotImplementedException;
-    }
-
-    /**
-     * Validates a model. Returns an array containing MessageBags
-     * errors/warnings/successes.
-     *
-     * @param Ardent $model
-     *
-     * @return array
-     */
-    public function validateObject(Ardent $model)
-    {
-        // TODO: Implement validateObject() method.
         throw new NotImplementedException;
     }
 
