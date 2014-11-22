@@ -55,8 +55,8 @@ class RepeatedExpenseController extends BaseController
 
                 // number of bars:
                 $piggyBank->barCount = floor(12 / $piggyBank->parts);
-                $amountPerBar        = $piggyBank->targetamount / $piggyBank->parts;
-                $currentAmount       = $amountPerBar;
+                $amountPerBar        = floatval($piggyBank->targetamount) / $piggyBank->parts;
+                $currentAmount       = floatval($amountPerBar);
                 $bars                = [];
                 $currentDate         = clone $piggyBank->currentRep->startdate;
                 for ($i = 0; $i < $piggyBank->parts; $i++) {
