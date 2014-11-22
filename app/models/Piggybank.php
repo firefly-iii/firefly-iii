@@ -53,7 +53,7 @@ class Piggybank extends Ardent
            'startdate'     => 'date', // when you started
            'targetdate'    => 'date', // when its due
            'repeats'       => 'required|boolean', // does it repeat?
-           'rep_length'    => 'in:day,week,month,year', // how long is the period?
+           'rep_length'    => 'in:day,week,month,quarter,year', // how long is the period?
            'rep_every'     => 'required|min:1|max:100', // how often does it repeat? every 3 years.
            'rep_times'     => 'min:1|max:100', // how many times do you want to save this amount? eg. 3 times
            'reminder'      => 'in:day,week,month,year', // want a reminder to put money in this?
