@@ -277,6 +277,21 @@ class TransactionController extends BaseController
      */
     public function show(TransactionJournal $journal)
     {
+        $journal->transactions->each(
+            function(\Transaction $t) use ($journal) {
+                $t->before = floatval(
+                    $t->account->transactions()->leftJoin(
+                        'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
+                    )->where('transaction_journals.date', '<=', $journal->date->format('Y-m-d'))->where(
+                        'transaction_journals.created_at', '<=', $journal->created_at->format('Y-m-d H:i:s')
+                    )->where('transaction_journals.id', '!=', $journal->id)->sum('transactions.amount')
+                );
+                $t->after = $t->before + $t->amount;
+            }
+        );
+
+
+
         return View::make('transactions.show')->with('journal', $journal)->with(
             'subTitle', $journal->transactionType->type . ' "' . $journal->description . '"'
         );

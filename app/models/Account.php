@@ -66,26 +66,6 @@ class Account extends Ardent
     {
         return $this->hasMany('Transaction');
     }
-
-    /**
-     *
-     * TODO remove this method in favour of something in the FireflyIII libraries.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return float
-     */
-    public function balanceBeforeJournal(TransactionJournal $journal)
-    {
-        return floatval(
-            $this->transactions()->leftJoin(
-                'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-            )->where('transaction_journals.date', '<=', $journal->date->format('Y-m-d'))->where(
-                'transaction_journals.created_at', '<=', $journal->created_at->format('Y-m-d H:i:s')
-            )->where('transaction_journals.id', '!=', $journal->id)->sum('transactions.amount')
-        );
-    }
-
     /**
      * TODO remove this method in favour of something in the FireflyIII libraries.
      *

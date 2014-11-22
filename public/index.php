@@ -20,9 +20,7 @@
 
 require __DIR__.'/../bootstrap/autoload.php';
 
-/*
- * TODO: add "Create new X" button to any list there is: categories, accounts, piggies, etc.
- */
+
 
 /*
 |--------------------------------------------------------------------------
