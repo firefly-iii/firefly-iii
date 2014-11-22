@@ -47,7 +47,9 @@
                             {{$subTitle}}
                         </small>
                     @endif
+                        <small class="pull-right"><a href="#"><i class="fa fa-question-circle"></i></a></small>
                 </h1>
+
             </div>
             <!-- /.col-lg-12 -->
         </div>
