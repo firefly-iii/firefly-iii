@@ -185,6 +185,14 @@ class Piggybank
         $events->listen('piggybank.store', 'FireflyIII\Event\Piggybank@storePiggybank');
         $events->listen('piggybank.update', 'FireflyIII\Event\Piggybank@updatePiggybank');
 
+        \App::before(
+            function ($request) {
+                $this->validateRepeatedExpenses();
+            }
+        );
+
+        //$events->listen('piggybank.boo', 'FireflyIII\Event\Piggybank@updatePiggybank');
+
 
         // triggers when others are updated.
         $events->listen('transactionJournal.store', 'FireflyIII\Event\Piggybank@storeTransfer');
@@ -192,12 +200,59 @@ class Piggybank
         $events->listen('transactionJournal.destroy', 'FireflyIII\Event\Piggybank@destroyTransfer');
     }
 
-    public function updatePiggybank(\Piggybank $piggybank)
+    /**
+     * Validates the presence of repetitions for all repeated expenses!
+     */
+    public function validateRepeatedExpenses()
+    {
+        /** @var \FireflyIII\Database\RepeatedExpense $repository */
+        $repository = \App::make('FireflyIII\Database\RepeatedExpense');
+
+        $list = $repository->get();
+
+        /** @var \Piggybank $entry */
+        foreach ($list as $entry) {
+            $start  = $entry->startdate;
+            $target = $entry->targetdate;
+            // find a repetition on this date:
+            $count = $entry->piggybankrepetitions()->starts($start)->targets($target)->count();
+            if ($count == 0) {
+                $repetition = new \PiggybankRepetition;
+                $repetition->piggybank()->associate($entry);
+                $repetition->startdate     = $start;
+                $repetition->targetdate    = $target;
+                $repetition->currentamount = 0;
+                $repetition->save();
+            }
+            // then continue and do something in the current relevant timeframe.
+            $today         = Carbon::now();
+            $currentTarget = clone $target;
+            $currentStart  = null;
+            while ($currentTarget < $today) {
+                $currentStart  = \DateKit::subtractPeriod($currentTarget, $entry->rep_length, 0);
+                $currentTarget = \DateKit::addPeriod($currentTarget, $entry->rep_length, 0);
+                // create if not exists:
+                $count = $entry->piggybankrepetitions()->starts($currentStart)->targets($currentTarget)->count();
+                if ($count == 0) {
+                    $repetition = new \PiggybankRepetition;
+                    $repetition->piggybank()->associate($entry);
+                    $repetition->startdate     = $currentStart;
+                    $repetition->targetdate    = $currentTarget;
+                    $repetition->currentamount = 0;
+                    $repetition->save();
+                }
+
+            }
+
+        }
+    }
+
+    public function updatePiggybank(\Piggybank $piggyBank)
     {
         // get the repetition:
-        $repetition             = $piggybank->currentRelevantRep();
-        $repetition->startdate  = $piggybank->startdate;
-        $repetition->targetdate = $piggybank->targetdate;
+        $repetition             = $piggyBank->currentRelevantRep();
+        $repetition->startdate  = $piggyBank->startdate;
+        $repetition->targetdate = $piggyBank->targetdate;
         $repetition->save();
     }
 
