@@ -1,6 +1,7 @@
 <?php
-use LaravelBook\Ardent\Ardent as Ardent;
-
+use Carbon\Carbon;
+use LaravelBook\Ardent\Ardent;
+use LaravelBook\Ardent\Builder;
 
 /**
  * PiggybankRepetition
@@ -61,6 +62,13 @@ class PiggybankRepetition extends Ardent
     public function piggybank()
     {
         return $this->belongsTo('Piggybank');
+    }
+
+    public function scopeStarts(Builder $query, Carbon $date) {
+        $query->where('startdate',$date->format('Y-m-d'));
+    }
+    public function scopeTargets(Builder $query, Carbon $date) {
+        $query->where('targetdate',$date->format('Y-m-d'));
     }
 
 

@@ -119,38 +119,4 @@ class LimitRepetition extends Ardent
         }
     }
 
-    /**
-     * TODO remove this method in favour of something in the FireflyIII libraries.
-     *
-     * Same as above, just with a more natural view. So "March 2012".
-     */
-    public function periodShow()
-    {
-        if (is_null($this->repeat_freq)) {
-            $this->repeat_freq = $this->limit->repeat_freq;
-        }
-        switch ($this->repeat_freq) {
-            default:
-                throw new FireflyException('No date formats for frequency "' . $this->repeat_freq . '"!');
-                break;
-            case 'daily':
-                return $this->startdate->format('j F Y');
-                break;
-            case 'weekly':
-                return $this->startdate->format('\W\e\e\k W, Y');
-                break;
-            case 'monthly':
-                return $this->startdate->format('F Y');
-                break;
-            case 'half-year':
-            case 'quarterly':
-                return $this->startdate->format('M Y') . ' - ' . $this->enddate->format('M Y');
-                break;
-            case 'yearly':
-                return $this->startdate->format('Y');
-                break;
-        }
-    }
-
-
 } 
