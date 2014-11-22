@@ -44,6 +44,9 @@ class TransactionController extends BaseController
         /** @var \FireflyIII\Database\Piggybank $piggyRepository */
         $piggyRepository = App::make('FireflyIII\Database\Piggybank');
 
+        /** @var \FireflyIII\Database\RepeatedExpense $repRepository */
+        $repRepository = App::make('FireflyIII\Database\RepeatedExpense');
+
         // get asset accounts with names and id's .
         $assetAccounts = FFForm::makeSelectList($accountRepository->getAssetAccounts());
 
@@ -52,7 +55,8 @@ class TransactionController extends BaseController
         $budgets[0] = '(no budget)';
 
         // get the piggy banks.
-        $piggies    = FFForm::makeSelectList($piggyRepository->get());
+        $list = $piggyRepository->get()->merge($repRepository->get());
+        $piggies    = FFForm::makeSelectList($list);
         $piggies[0] = '(no piggy bank)';
 
         /*
