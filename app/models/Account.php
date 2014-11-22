@@ -64,20 +64,6 @@ class Account extends Ardent
     {
         return $this->hasMany('Transaction');
     }
-    /**
-     * TODO remove this method in favour of something in the FireflyIII libraries.
-     *
-     * @return Carbon
-     */
-    public function lastActionDate()
-    {
-        $transaction = $this->transactions()->orderBy('updated_at', 'DESC')->first();
-        if (is_null($transaction)) {
-            return null;
-        }
-
-        return $transaction->updated_at;
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -88,21 +74,6 @@ class Account extends Ardent
     }
 
     /**
-     * TODO remove this method in favour of something in the FireflyIII libraries.
-     *
-     * @param \Carbon\Carbon $date
-     *
-     * @return null
-     */
-    public function predict(
-        /** @noinspection PhpUnusedParameterInspection */
-        \Carbon\Carbon $date
-    ) {
-        return null;
-    }
-
-    /**
-     * TODO see if this scope is still used.
      *
      * @param Builder $query
      * @param array   $types
@@ -116,6 +87,9 @@ class Account extends Ardent
         $query->whereIn('account_types.type', $types);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
     public function transactionjournals()
     {
         return $this->hasManyThrough('TransactionJournal', 'Transaction');

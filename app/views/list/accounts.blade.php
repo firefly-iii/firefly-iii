@@ -24,9 +24,8 @@
             @endif
         </td>
         <td>
-            <?php $active = $account->lastActionDate(); ?>
-            @if($active)
-                {{{$active->format('j F Y')}}}
+            @if($account->lastActionDate)
+                {{{$account->lastActionDate->format('j F Y')}}}
             @else
                 <em>Never</em>
             @endif
