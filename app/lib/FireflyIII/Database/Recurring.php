@@ -178,20 +178,6 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
     }
 
     /**
-     * Validates a model. Returns an array containing MessageBags
-     * errors/warnings/successes.
-     *
-     * @param Ardent $model
-     *
-     * @return array
-     */
-    public function validateObject(Ardent $model)
-    {
-        // TODO: Implement validateObject() method.
-        throw new NotImplementedException;
-    }
-
-    /**
      * Returns an object with id $id.
      *
      * @param int $id

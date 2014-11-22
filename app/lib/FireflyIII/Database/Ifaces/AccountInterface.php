@@ -43,12 +43,6 @@ interface AccountInterface
     public function countRevenueAccounts();
 
     /**
-     * @param array $parameters
-     *
-     * @return Collection
-     */
-
-    /**
      * @param \Account $account
      *
      * @return \Account|null
@@ -59,38 +53,29 @@ interface AccountInterface
      * Get all accounts of the selected types. Is also capable of handling DataTables' parameters.
      *
      * @param array $types
-     * @param array $parameters
      *
      * @return Collection
      */
-    public function getAccountsByType(array $types, array $parameters = []);
+    public function getAccountsByType(array $types);
 
     /**
      * Get all asset accounts. The parameters are optional and are provided by the DataTables plugin.
      *
-     * @param array $parameters
-     *
      * @return Collection
      */
-    public function getAssetAccounts(array $parameters = []);
+    public function getAssetAccounts();
 
     /**
-     * Get all default accounts.
-     *
      * @return Collection
      */
-    public function getDefaultAccounts();
-
-    public function getExpenseAccounts(array $parameters = []);
+    public function getExpenseAccounts();
 
     /**
      * Get all revenue accounts.
      *
-     * @param array $parameters
-     *
      * @return Collection
      */
-    public function getRevenueAccounts(array $parameters = []);
+    public function getRevenueAccounts();
 
     /**
      * @param \Account $account

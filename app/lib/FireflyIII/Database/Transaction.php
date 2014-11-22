@@ -16,7 +16,7 @@ use LaravelBook\Ardent\Ardent;
  *
  * @package FireflyIII\Database
  */
-class Transaction implements TransactionInterface, CUD, CommonDatabaseCalls
+class Transaction implements CUD, CommonDatabaseCalls
 {
     use SwitchUser;
 
@@ -133,20 +133,6 @@ class Transaction implements TransactionInterface, CUD, CommonDatabaseCalls
         }
 
         return ['errors' => $errors, 'warnings' => $warnings, 'successes' => $successes];
-    }
-
-    /**
-     * Validates a model. Returns an array containing MessageBags
-     * errors/warnings/successes.
-     *
-     * @param Ardent $model
-     *
-     * @return array
-     */
-    public function validateObject(Ardent $model)
-    {
-        // TODO: Implement validateObject() method.
-        throw new NotImplementedException;
     }
 
     /**
