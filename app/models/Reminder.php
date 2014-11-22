@@ -30,8 +30,8 @@ use LaravelBook\Ardent\Ardent;
  * @method static \Reminder dateIs($start, $end)
  * @property integer $remindersable_id
  * @property string $remindersable_type
- * @method static \Illuminate\Database\Query\Builder|\Reminder whereRemindersableId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Reminder whereRemindersableType($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Reminder whereRemindersableId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Reminder whereRemindersableType($value)
  */
 class Reminder extends Eloquent
 {
