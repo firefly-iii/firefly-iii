@@ -196,6 +196,18 @@ class AccountController extends BaseController
                 break;
         }
 
+        $accounts->each(
+            function (Account $account) {
+                $transaction = $account->transactions()->orderBy('updated_at', 'DESC')->first();
+
+                if (is_null($transaction)) {
+                    $account->lastActionDate = null;
+                }
+
+                $account->lastActionDate = $transaction->updated_at;
+            }
+        );
+
         return View::make('accounts.index', compact('what', 'subTitleIcon', 'subTitle', 'accounts'));
     }
 
