@@ -32,6 +32,7 @@ use LaravelBook\Ardent\Ardent;
  * @method static \Illuminate\Database\Query\Builder|\User whereReset($value)
  * @method static \Illuminate\Database\Query\Builder|\User whereRememberToken($value)
  * @method static \Illuminate\Database\Query\Builder|\User whereMigrated($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Reminder[] $reminders
  */
 class User extends Ardent implements UserInterface, RemindableInterface
 {
