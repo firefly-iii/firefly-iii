@@ -23,11 +23,11 @@
             <div class="panel-body">
                 <div class="row">
                     @for($i=0;$i<$entry->parts;$i++)
-                    <!-- {{$entry->currentRep->currentamount}} <= {{$entry->bars[$i]['amount']}} -->
+                    <!-- {{$entry->currentRep->currentamount}} < {{$entry->bars[$i]['amount']}} -->
                     <div class="col-lg-{{$entry->barCount}} col-md-{{$entry->barCount}} col-sm-{{$entry->barCount}}">
                         <div class="progress">
-                            @if($entry->currentRep->currentamount <= $entry->bars[$i]['amount'])
-                                <!-- TRUE (smaller or equal) -->
+                            @if($entry->currentRep->currentamount < $entry->bars[$i]['amount'])
+                                <!-- TRUE (smaller) -->
                                 <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">{{mf($entry->bars[$i]['amount'],false)}}</div>
                             @else
                                 <!-- FALSE (larger) -->
