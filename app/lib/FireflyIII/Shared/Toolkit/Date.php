@@ -23,7 +23,7 @@ class Date
     public function addPeriod(Carbon $theDate, $repeatFreq, $skip)
     {
         $date = clone $theDate;
-        $add = ($skip + 1);
+        $add  = ($skip + 1);
         switch ($repeatFreq) {
             default:
                 throw new FireflyException('Cannot do addPeriod for $repeat_freq ' . $repeatFreq);
@@ -47,6 +47,7 @@ class Date
                 $months = $add * 6;
                 $date->addMonths($months);
                 break;
+            case 'year':
             case 'yearly':
                 $date->addYears($add);
                 break;
@@ -94,6 +95,28 @@ class Date
         return $currentEnd;
     }
 
+    public function periodShow(Carbon $date, $repeatFrequency)
+    {
+        switch ($repeatFrequency) {
+            default:
+                throw new FireflyException('No date formats for frequency "' . $repeatFrequency . '"!');
+                break;
+            case 'daily':
+                return $date->format('j F Y');
+                break;
+            case 'weekly':
+                return $date->format('\W\e\e\k W, Y');
+                break;
+            case 'monthly':
+            case 'month':
+                return $date->format('F Y');
+                break;
+            case 'yearly':
+                return $date->format('Y');
+                break;
+        }
+    }
+
     /**
      * @param Carbon $theDate
      * @param        $repeatFreq
@@ -136,4 +159,46 @@ class Date
 
         return $date;
     }
+
+    /**
+     * @param Carbon $date
+     * @param        $repeatFreq
+     * @param int    $subtract
+     *
+     * @return Carbon
+     * @throws FireflyException
+     */
+    public function subtractPeriod(Carbon $theDate, $repeatFreq, $subtract = 1)
+    {
+        $date = clone $theDate;
+        switch ($repeatFreq) {
+            default:
+                throw new FireflyException('Cannot do subtractPeriod for $repeat_freq ' . $repeatFreq);
+                break;
+            case 'daily':
+                $date->subDays($subtract);
+                break;
+            case 'weekly':
+                $date->subWeeks($subtract);
+                break;
+            case 'monthly':
+                $date->subMonths($subtract);
+                break;
+            case 'quarterly':
+                $months = $subtract * 3;
+                $date->subMonths($months);
+                break;
+            case 'half-year':
+                $months = $subtract * 6;
+                $date->subMonths($months);
+                break;
+            case 'year':
+            case 'yearly':
+                $date->subYears($subtract);
+                break;
+        }
+
+        return $date;
+    }
 }
+

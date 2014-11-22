@@ -1,15 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 11/11/14
- * Time: 11:17
- */
 
 namespace FireflyIII\Shared\Toolkit;
 
 use Carbon\Carbon;
-use Firefly\Exception\FireflyException;
+use FireflyIII\Exception\FireflyException;
 
 /**
  * Class Filter
