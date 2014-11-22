@@ -197,6 +197,9 @@ Route::group(
         Route::get('/recurring/delete/{recurring}', ['uses' => 'RecurringController@delete', 'as' => 'recurring.delete']);
         Route::get('/recurring/show/{recurring}', ['uses' => 'RecurringController@show', 'as' => 'recurring.show']);
 
+        // repeated expenses controller:
+        Route::get('/repeatedexpenses', ['uses' => 'RepeatedExpenseController@index', 'as' => 'repeated.index']);
+
         // report controller:
         Route::get('/reports', ['uses' => 'ReportController@index', 'as' => 'reports.index']);
         Route::get('/reports/{year}', ['uses' => 'ReportController@year', 'as' => 'reports.year']);
