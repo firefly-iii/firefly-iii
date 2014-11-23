@@ -39,6 +39,7 @@ class Date
             case 'monthly':
                 $date->addMonths($add);
                 break;
+            case 'quarter':
             case 'quarterly':
                 $months = $add * 3;
                 $date->addMonths($months);
@@ -142,6 +143,7 @@ class Date
             case 'monthly':
                 $date->startOfMonth();
                 break;
+            case 'quarter':
             case 'quarterly':
                 $date->firstOfQuarter();
                 break;
@@ -184,6 +186,7 @@ class Date
             case 'monthly':
                 $date->subMonths($subtract);
                 break;
+            case 'quarter':
             case 'quarterly':
                 $months = $subtract * 3;
                 $date->subMonths($months);
