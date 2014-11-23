@@ -205,10 +205,14 @@ class Piggybank
      */
     public function validateRepeatedExpenses()
     {
+        if(!\Auth::check()) {
+            return;
+        }
         /** @var \FireflyIII\Database\RepeatedExpense $repository */
         $repository = \App::make('FireflyIII\Database\RepeatedExpense');
 
-        $list = $repository->get();
+        $list  = $repository->get();
+        $today = Carbon::now();
 
         /** @var \Piggybank $entry */
         foreach ($list as $entry) {
@@ -225,7 +229,7 @@ class Piggybank
                 $repetition->save();
             }
             // then continue and do something in the current relevant timeframe.
-            $today         = Carbon::now();
+
             $currentTarget = clone $target;
             $currentStart  = null;
             while ($currentTarget < $today) {
@@ -243,7 +247,6 @@ class Piggybank
                 }
 
             }
-
         }
     }
 

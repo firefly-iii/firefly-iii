@@ -46,29 +46,35 @@ class RepeatedExpenseController extends BaseController
                             throw new FireflyException('Cannot handle "' . $piggyBank->reminder . '" reminders for repeated expenses');
                             break;
                         case 'month':
-                            $piggyBank->parts = $piggyBank->currentRep->startdate->diffInMonths($piggyBank->currentRep->targetdate);
+                            $start = clone $piggyBank->currentRep->startdate;
+                            $start->startOfMonth();
+                            $end = clone $piggyBank->currentRep->targetdate;
+                            $end->endOfMonth();
+                            $piggyBank->parts = $start->diffInMonths($end);
+                            unset($start, $end);
                             break;
                     }
+
                 } else {
                     $piggyBank->parts = 1;
                 }
 
                 // number of bars:
-                $piggyBank->barCount = floor(12 / $piggyBank->parts);
+                $piggyBank->barCount = floor(12 / $piggyBank->parts) == 0 ? 1 : floor(12 / $piggyBank->parts);
                 $amountPerBar        = floatval($piggyBank->targetamount) / $piggyBank->parts;
                 $currentAmount       = floatval($amountPerBar);
                 $bars                = [];
                 $currentDate         = clone $piggyBank->currentRep->startdate;
                 for ($i = 0; $i < $piggyBank->parts; $i++) {
                     // niet elke keer een andere dinges pakken? om target te redden?
-
+                    if (!is_null($piggyBank->reminder)) {
+                        $currentDate = \DateKit::addPeriod($currentDate, $piggyBank->reminder, 0);
+                    }
                     $bars[] = [
                         'amount' => $currentAmount,
                         'date'   => $currentDate
                     ];
-                    if (!is_null($piggyBank->reminder)) {
-                        $currentDate = \DateKit::addPeriod($currentDate, $piggyBank->reminder, 0);
-                    }
+
 
                     $currentAmount += $amountPerBar;
                 }

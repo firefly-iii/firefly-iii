@@ -200,6 +200,7 @@ Route::group(
         // repeated expenses controller:
         Route::get('/repeatedexpenses', ['uses' => 'RepeatedExpenseController@index', 'as' => 'repeated.index']);
         Route::get('/repeatedexpenses/create', ['uses' => 'RepeatedExpenseController@create', 'as' => 'repeated.create']);
+        Route::get('/repeatedexpenses/show/{repeated}', ['uses' => 'RepeatedExpenseController@show', 'as' => 'repeated.show']);
 
         // report controller:
         Route::get('/reports', ['uses' => 'ReportController@index', 'as' => 'reports.index']);

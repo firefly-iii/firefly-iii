@@ -18,7 +18,7 @@
     <div class="col-lg-12 col-sm-12 col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <a href="#" title="{{{$entry->name}}}">{{{$entry->name}}}</a> ({{mf($entry->currentRep->currentamount)}})
+                <a href="{{route('repeated.show',$entry->id)}}" title="{{{$entry->name}}}">{{{$entry->name}}}</a> ({{mf($entry->currentRep->currentamount)}})
             </div>
             <div class="panel-body">
                 <div class="row">
