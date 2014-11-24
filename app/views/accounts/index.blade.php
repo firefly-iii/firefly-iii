@@ -21,9 +21,7 @@
 
 
             </div>
-            <div class="panel-body">
                 @include('list.accounts')
-            </div>
         </div>
     </div>
 </div>

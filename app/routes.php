@@ -103,13 +103,27 @@ Route::bind(
     'piggybank', function ($value, $route) {
         if (Auth::check()) {
             return Piggybank::
-            where('piggybanks.id', $value)->leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where('accounts.user_id', Auth::user()->id)
-                            ->first(['piggybanks.*']);
+            where('piggybanks.id', $value)
+                ->leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')
+                ->where('accounts.user_id', Auth::user()->id)
+                ->where('repeats',0)->first(['piggybanks.*']);
         }
         return null;
     }
 );
 
+Route::bind(
+    'repeated', function ($value, $route) {
+        if (Auth::check()) {
+            return Piggybank::
+            where('piggybanks.id', $value)
+                            ->leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')
+                            ->where('accounts.user_id', Auth::user()->id)
+                            ->where('repeats',1)->first(['piggybanks.*']);
+        }
+        return null;
+    }
+);
 
 // protected routes:
 Route::group(

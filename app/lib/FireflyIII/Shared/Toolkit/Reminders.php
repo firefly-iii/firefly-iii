@@ -71,8 +71,13 @@ class Reminders
         /** @var \FireflyIII\Database\Piggybank $repository */
         $repository = \App::make('FireflyIII\Database\Piggybank');
 
+        /** @var \FireflyIII\Database\Piggybank $repeatedRepository */
+        $repeatedRepository = \App::make('FireflyIII\Database\RepeatedExpense');
+
         /** @var Collection $piggybanks */
-        $piggybanks = $repository->get();
+        $piggybanks = $repository->get()->merge($repeatedRepository->get());
+
+
         $set        = $piggybanks->filter(
             function (\Piggybank $piggybank) {
                 if (!is_null($piggybank->reminder)) {
