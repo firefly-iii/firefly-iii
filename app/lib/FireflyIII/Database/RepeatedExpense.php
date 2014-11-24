@@ -4,9 +4,11 @@ namespace FireflyIII\Database;
 
 
 use Carbon\Carbon;
+use FireflyIII\Collection\PiggybankPart;
 use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
 use FireflyIII\Database\Ifaces\CUD;
 use FireflyIII\Database\Ifaces\PiggybankInterface;
+use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
@@ -22,6 +24,212 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggybankInterface
     public function __construct()
     {
         $this->setUser(\Auth::user());
+    }
+
+    /**
+     * Based on the piggy bank, the reminder-setting and
+     * other variables this method tries to divide the piggy bank into equal parts. Each is
+     * accommodated by a reminder (if everything goes to plan).
+     *
+     * @return \PiggybankRepetition
+     */
+    public function calculateParts(\PiggybankRepetition $repetition)
+    {
+        \Log::debug('NOW in calculateParts()');
+        \Log::debug('Repetition id is ' . $repetition->id);
+        /** @var \Piggybank $piggyBank */
+        $piggyBank = $repetition->piggybank()->first();
+        \Log::debug('connected piggy bank is: ' . $piggyBank->name . ' (#' . $piggyBank->id . ')');
+
+        /*
+         * If no reminders are set, the repetition is split in exactly one part:
+         */
+        if (is_null($piggyBank->reminder)) {
+            $parts = 1;
+        } else {
+            /*
+             * Number of parts is the number of [reminder period]s between
+             * the start date and the target date
+             */
+            /** @var Carbon $start */
+            $start  = clone $repetition->startdate;
+            /** @var Carbon $target */
+            $target = clone $repetition->targetdate;
+
+            switch ($piggyBank->reminder) {
+                default:
+                    throw new FireflyException('Cannot handle "' . $piggyBank->reminder . '" reminders for repeated expenses (calculateParts)');
+                    break;
+                case 'week':
+                    $parts = $start->diffInWeeks($target);
+                    break;
+                case 'month':
+                    $parts = $start->diffInMonths($target);
+                    break;
+                case 'quarter':
+                    $parts = ceil($start->diffInMonths($target) / 3);
+                    break;
+                case 'year':
+                    $parts = $start->diffInYears($target);
+                    break;
+            }
+            $parts = $parts < 1 ? 1 : $parts;
+            unset($start, $target);
+
+
+            //            /*
+            //             * Otherwise, FF3 splits by the difference in time and the amount
+            //             * of reminders the user wants.
+            //             */
+            //            switch ($piggyBank->reminder) {
+            //                default:
+            //                    throw new FireflyException('Cannot handle "' . $piggyBank->reminder . '" reminders for repeated expenses (calculateParts)');
+            //                    break;
+            //                case 'week':
+            //                    $start = clone $repetition->startdate;
+            //                    $start->startOfWeek();
+            //                    $end = clone $repetition->targetdate;
+            //                    $end->endOfWeek();
+            //                    $parts = $start->diffInWeeks($end);
+            //                    unset($start, $end);
+            //                    break;
+            //                case 'month':
+            //                    $start = clone $repetition->startdate;
+            //                    $start->startOfMonth();
+            //                    $end = clone $repetition->targetdate;
+            //                    $end->endOfMonth();
+            //                    $parts = $start->diffInMonths($end);
+            //                    unset($start, $end);
+            //                    break;
+            //            }
+        }
+        $amountPerBar  = floatval($piggyBank->targetamount) / $parts;
+        $currentAmount = floatval($amountPerBar);
+        $currentStart  = clone $repetition->startdate;
+        $currentTarget = clone $repetition->targetdate;
+        $bars          = new Collection;
+
+        //        if($parts > 12) {
+        //            $parts = 12;
+        //            $currentStart = \DateKit::startOfPeriod(Carbon::now(), $piggyBank->reminder);
+        //            $currentEnd = \DateKit::endOfPeriod($currentEnd, $piggyBank->reminder);
+        //        }
+
+        for ($i = 0; $i < $parts; $i++) {
+            /*
+             * Jump one month ahead after the first instance:
+             */
+            //            if ($i > 0) {
+            //                $currentStart = \DateKit::addPeriod($currentStart, $piggyBank->reminder, 0);
+            //                /*
+            //                 * Jump to the start of the period too:
+            //                 */
+            //                $currentStart = \DateKit::startOfPeriod($currentStart, $piggyBank->reminder);
+            //
+            //            }
+
+
+            /*
+             * Move the current start to the actual start of
+             * the [period] once the first iteration has passed.
+             */
+            //            if ($i != 0) {
+            //                $currentStart = \DateKit::startOfPeriod($currentStart, $piggyBank->reminder);
+            //            }
+            //            if($i == 0 && !is_null($piggyBank->reminder)) {
+            //                $currentEnd = \DateKit::startOfPeriod($currentStart, $piggyBank->reminder);
+            //                $currentEnd = \DateKit::endOfPeriod($currentEnd, $piggyBank->reminder);
+            //            }
+
+            $part = new PiggybankPart;
+            $part->setRepetition($repetition);
+            $part->setAmount($currentAmount);
+            $part->setAmountPerBar($amountPerBar);
+            $part->setCurrentamount($repetition->currentamount);
+            $part->setStartdate($currentStart);
+            $part->setTargetdate($currentTarget);
+
+            //            if (!is_null($piggyBank->reminder)) {
+            //                $currentStart = \DateKit::addPeriod($currentStart, $piggyBank->reminder, 0);
+            //                $currentEnd   = \DateKit::endOfPeriod($currentStart, $piggyBank->reminder);
+            //            }
+
+
+            $bars->push($part);
+            $currentAmount += $amountPerBar;
+        }
+        $repetition->bars = $bars;
+
+        return $repetition;
+        exit;
+
+
+        $repetition->hello = 'World!';
+
+        return $repetition;
+
+        $return      = new Collection;
+        $repetitions = $piggyBank->piggybankrepetitions()->get();
+        /** @var \PiggybankRepetition $repetition */
+        foreach ($repetitions as $repetition) {
+
+
+            if (is_null($piggyBank->reminder)) {
+                // simple, one part "repetition".
+                $part = new PiggybankPart;
+                $part->setRepetition($repetition);
+            } else {
+                $part = new PiggybankPart;
+            }
+
+
+            // end!
+            $return->push($part);
+        }
+
+        exit;
+
+        return $return;
+        $piggyBank->currentRelevantRep(); // get the current relevant repetition.
+        if (!is_null($piggyBank->reminder)) {
+            switch ($piggyBank->reminder) {
+                default:
+                    throw new FireflyException('Cannot handle "' . $piggyBank->reminder . '" reminders for repeated expenses');
+                    break;
+                case 'month':
+                    $start = clone $piggyBank->currentRep->startdate;
+                    $start->startOfMonth();
+                    $end = clone $piggyBank->currentRep->targetdate;
+                    $end->endOfMonth();
+                    $piggyBank->parts = $start->diffInMonths($end);
+                    unset($start, $end);
+                    break;
+            }
+
+        } else {
+            $piggyBank->parts = 1;
+        }
+
+        // number of bars:
+        $piggyBank->barCount = floor(12 / $piggyBank->parts) == 0 ? 1 : floor(12 / $piggyBank->parts);
+        $amountPerBar        = floatval($piggyBank->targetamount) / $piggyBank->parts;
+        $currentAmount       = floatval($amountPerBar);
+        $bars                = [];
+        $currentStart        = clone $piggyBank->currentRep->startdate;
+        for ($i = 0; $i < $piggyBank->parts; $i++) {
+            // niet elke keer een andere dinges pakken? om target te redden?
+            if (!is_null($piggyBank->reminder)) {
+                $currentStart = \DateKit::addPeriod($currentStart, $piggyBank->reminder, 0);
+            }
+            $bars[] = [
+                'amount' => $currentAmount,
+                'date'   => $currentStart
+            ];
+
+
+            $currentAmount += $amountPerBar;
+        }
+        $piggyBank->bars = $bars;
     }
 
     /**
@@ -118,6 +326,10 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggybankInterface
                 new Carbon($model['targetdate']);
             } catch (\Exception $e) {
                 $errors->add('targetdate', 'Invalid date.');
+            }
+            $diff = Carbon::now()->diff(new Carbon($model['targetdate']));
+            if ($diff->days > 365) {
+                $errors->add('targetdate', 'First target date should a a year or less from now.');
             }
         } else {
             $errors->add('targetdate', 'Invalid target date.');

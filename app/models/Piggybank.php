@@ -42,7 +42,7 @@ use LaravelBook\Ardent\Ardent as Ardent;
  * @method static \Illuminate\Database\Query\Builder|\Piggybank whereReminderSkip($value)
  * @method static \Illuminate\Database\Query\Builder|\Piggybank whereOrder($value)
  * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRemindMe($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\Reminder[] $reminders
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Reminder[]            $reminders
  */
 class Piggybank extends Ardent
 {
@@ -56,7 +56,7 @@ class Piggybank extends Ardent
            'rep_length'    => 'in:day,week,month,quarter,year', // how long is the period?
            'rep_every'     => 'required|min:1|max:100', // how often does it repeat? every 3 years.
            'rep_times'     => 'min:1|max:100', // how many times do you want to save this amount? eg. 3 times
-           'reminder'      => 'in:day,week,month,year', // want a reminder to put money in this?
+           'reminder'      => 'in:day,week,quarter,month,year', // want a reminder to put money in this?
            'reminder_skip' => 'required|min:0|max:100', // every week? every 2 months?
            'remind_me'     => 'required|boolean', 'order' => 'required:min:1', // not yet used.
         ];
@@ -77,14 +77,10 @@ class Piggybank extends Ardent
      *
      * @return int
      */
-    public function amountPerReminder() {
+    public function amountPerReminder()
+    {
         return 0;
 
-    }
-
-    public function reminders()
-    {
-        return $this->morphMany('Reminder', 'remindersable');
     }
 
     /**
@@ -130,37 +126,44 @@ class Piggybank extends Ardent
             return $this->currentRep;
         }
         if ($this->repeats == 0) {
-            $rep              = $this->piggybankrepetitions()->first();
+            $rep = $this->piggybankrepetitions()->first(['piggybank_repetitions.*']);
             $this->currentRep = $rep;
-
             return $rep;
         } else {
-            $query            = $this->piggybankrepetitions()->where(
+            $query  = $this->piggybankrepetitions()->where(
                 function ($q) {
 
                     $q->where(
                         function ($q) {
-                            $today = new Carbon;
-                            $q->whereNull('startdate');
-                            $q->orWhere('startdate', '<=', $today->format('Y-m-d'));
+
+                            $q->where(
+                                function ($q) {
+                                    $today = new Carbon;
+                                    $q->whereNull('startdate');
+                                    $q->orWhere('startdate', '<=', $today->format('Y-m-d'));
+                                }
+                            )->where(
+                                function ($q) {
+                                    $today = new Carbon;
+                                    $q->whereNull('targetdate');
+                                    $q->orWhere('targetdate', '>=', $today->format('Y-m-d'));
+                                }
+                            );
                         }
-                    )->where(
+                    )->orWhere(
                         function ($q) {
                             $today = new Carbon;
-                            $q->whereNull('targetdate');
-                            $q->orWhere('targetdate', '>=', $today->format('Y-m-d'));
+                            $q->where('startdate', '>=', $today->format('Y-m-d'));
+                            $q->where('targetdate', '>=', $today->format('Y-m-d'));
                         }
                     );
+
                 }
-            )->orWhere(
-                function ($q) {
-                    $today = new Carbon;
-                    $q->where('startdate', '>=', $today->format('Y-m-d'));
-                    $q->where('targetdate', '>=', $today->format('Y-m-d'));
-                }
-            )->orderBy('startdate', 'ASC');
-            $result           = $query->first();
+            )
+                           ->orderBy('startdate', 'ASC');
+            $result = $query->first(['piggybank_repetitions.*']);
             $this->currentRep = $result;
+            \Log::debug('Found relevant rep in currentRelevantRep(): ' . $result->id);
 
             return $result;
         }
@@ -190,6 +193,11 @@ class Piggybank extends Ardent
     public function piggybankevents()
     {
         return $this->hasMany('PiggybankEvent');
+    }
+
+    public function reminders()
+    {
+        return $this->morphMany('Reminder', 'remindersable');
     }
 
     /**

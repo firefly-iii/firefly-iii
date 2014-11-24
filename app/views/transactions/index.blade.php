@@ -6,9 +6,7 @@
             <div class="panel-heading">
                 <i class="fa {{$subTitleIcon}}"></i> {{{$subTitle}}}
             </div>
-            <div class="panel-body">
                 @include('list.journals-full')
-            </div>
         </div>
     </div>
 </div>

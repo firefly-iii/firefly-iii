@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use FireflyIII\Exception\FireflyException;
 use Illuminate\Support\MessageBag;
 
@@ -35,56 +36,22 @@ class RepeatedExpenseController extends BaseController
         $repository = App::make('FireflyIII\Database\RepeatedExpense');
 
         $expenses = $repository->get();
-
         $expenses->each(
-            function (\Piggybank $piggyBank) {
-                // do something with "parts".
-                $piggyBank->currentRep = $piggyBank->currentRelevantRep();
-                if (!is_null($piggyBank->reminder)) {
-                    switch ($piggyBank->reminder) {
-                        default:
-                            throw new FireflyException('Cannot handle "' . $piggyBank->reminder . '" reminders for repeated expenses');
-                            break;
-                        case 'month':
-                            $start = clone $piggyBank->currentRep->startdate;
-                            $start->startOfMonth();
-                            $end = clone $piggyBank->currentRep->targetdate;
-                            $end->endOfMonth();
-                            $piggyBank->parts = $start->diffInMonths($end);
-                            unset($start, $end);
-                            break;
-                    }
-
-                } else {
-                    $piggyBank->parts = 1;
-                }
-
-                // number of bars:
-                $piggyBank->barCount = floor(12 / $piggyBank->parts) == 0 ? 1 : floor(12 / $piggyBank->parts);
-                $amountPerBar        = floatval($piggyBank->targetamount) / $piggyBank->parts;
-                $currentAmount       = floatval($amountPerBar);
-                $bars                = [];
-                $currentDate         = clone $piggyBank->currentRep->startdate;
-                for ($i = 0; $i < $piggyBank->parts; $i++) {
-                    // niet elke keer een andere dinges pakken? om target te redden?
-                    if (!is_null($piggyBank->reminder)) {
-                        $currentDate = \DateKit::addPeriod($currentDate, $piggyBank->reminder, 0);
-                    }
-                    $bars[] = [
-                        'amount' => $currentAmount,
-                        'date'   => $currentDate
-                    ];
-
-
-                    $currentAmount += $amountPerBar;
-                }
-                $piggyBank->bars = $bars;
-
+            function (Piggybank $piggyBank) use ($repository) {
+                $piggyBank->currentRelevantRep();
+                $piggyBank->currentRep = $repository->calculateParts($piggyBank->currentRep);
             }
-
         );
 
         return View::make('repeatedexpense.index', compact('expenses', 'subTitle'));
+    }
+
+    public function show(Piggybank $piggyBank)
+    {
+        $subTitle = $piggyBank->name;
+        $today    = Carbon::now();
+
+        return View::make('repeatedexpense.show', compact('piggyBank', 'today', 'subTitle'));
     }
 
     /**

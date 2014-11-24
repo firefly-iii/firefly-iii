@@ -82,12 +82,14 @@ class Date
             case 'monthly':
                 $currentEnd->addMonth()->subDay();
                 break;
+            case 'quarter':
             case 'quarterly':
                 $currentEnd->addMonths(3)->subDay();
                 break;
             case 'half-year':
                 $currentEnd->addMonths(6)->subDay();
                 break;
+            case 'year':
             case 'yearly':
                 $currentEnd->addYear()->subDay();
                 break;
@@ -154,6 +156,7 @@ class Date
                     $date->addMonths(6);
                 }
                 break;
+            case 'year':
             case 'yearly':
                 $date->startOfYear();
                 break;
