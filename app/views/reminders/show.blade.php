@@ -21,7 +21,7 @@
         <p>
             <a href="{{route('reminders.act',$reminder->id)}}" class="btn btn-primary"><i class="fa fa-fw fa-thumbs-o-up"></i> I want to do this</a>
             <a href="{{route('reminders.dismiss',$reminder->id)}}" class="btn btn-success"><i class="fa fa-smile-o fa-fw"></i> I already did this</a>
-            <a href="{{route('reminders.dismiss',$reminder->id)}}" class="btn btn-danger"><i class="fa fa-fw fa-clock-o"></i> Not this time</a>
+            <a href="{{route('reminders.notnow',$reminder->id)}}" class="btn btn-danger"><i class="fa fa-fw fa-clock-o"></i> Not this time</a>
 
         </p>
         </div>

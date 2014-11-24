@@ -7,17 +7,24 @@ use Carbon\Carbon;
 
 class PiggybankPart
 {
-    /** @var  int */
-    public $amount;
+    /** @var  float */
     public $amountPerBar;
-    /** @var  int */
+
+    /** @var  float */
     public $currentamount;
+
+    /** @var  float */
+    public $cumulativeAmount;
+
     /** @var  \Reminder */
     public $reminder;
+
     /** @var  \PiggybankRepetition */
     public $repetition;
+
     /** @var  Carbon */
     public $startdate;
+
     /** @var  Carbon */
     public $targetdate;
 
@@ -92,10 +99,10 @@ class PiggybankPart
 
     public function percentage()
     {
-        if ($this->getCurrentamount() < $this->getAmount()) {
+        if ($this->getCurrentamount() < $this->getCumulativeAmount()) {
             $pct = 0;
             // calculate halway point?
-            if ($this->getAmount() - $this->getCurrentamount() < $this->getAmountPerBar()) {
+            if ($this->getCumulativeAmount() - $this->getCurrentamount() < $this->getAmountPerBar()) {
                 $left = $this->getCurrentamount() % $this->getAmountPerBar();
                 $pct  = round($left / $this->getAmountPerBar() * 100);
             }
@@ -107,7 +114,7 @@ class PiggybankPart
     }
 
     /**
-     * @return int
+     * @return float
      */
     public function getCurrentamount()
     {
@@ -115,7 +122,7 @@ class PiggybankPart
     }
 
     /**
-     * @param int $currentamount
+     * @param float $currentamount
      */
     public function setCurrentamount($currentamount)
     {
@@ -123,23 +130,7 @@ class PiggybankPart
     }
 
     /**
-     * @return int
-     */
-    public function getAmount()
-    {
-        return $this->amount;
-    }
-
-    /**
-     * @param int $amount
-     */
-    public function setAmount($amount)
-    {
-        $this->amount = $amount;
-    }
-
-    /**
-     * @return mixed
+     * @return float
      */
     public function getAmountPerBar()
     {
@@ -147,10 +138,30 @@ class PiggybankPart
     }
 
     /**
-     * @param mixed $amountPerBar
+     * @param float $amountPerBar
      */
     public function setAmountPerBar($amountPerBar)
     {
         $this->amountPerBar = $amountPerBar;
     }
+
+    /**
+     * @return float
+     */
+    public function getCumulativeAmount()
+    {
+        return $this->cumulativeAmount;
+    }
+
+    /**
+     * @param float $cumulativeAmount
+     */
+    public function setCumulativeAmount($cumulativeAmount)
+    {
+        $this->cumulativeAmount = $cumulativeAmount;
+    }
+
+
+
+
 }
