@@ -85,6 +85,8 @@ class Reminders
                 }
             }
         );
+        $today = Carbon::now();
+        //$today = new Carbon('15-12-2014');
 
         /** @var \Piggybank $piggybank */
         foreach ($set as $piggybank) {
@@ -95,8 +97,8 @@ class Reminders
              */
             /** @var \PiggybankRepetition $repetition */
             $repetition = $piggybank->currentRelevantRep();
-            $start      = \DateKit::startOfPeriod(Carbon::now(), $piggybank->reminder);
-            if ($repetition->targetdate && $repetition->targetdate <= Carbon::now()) {
+            $start      = \DateKit::startOfPeriod($today, $piggybank->reminder);
+            if ($repetition->targetdate && $repetition->targetdate <= $today) {
                 // break when no longer relevant:
                 continue;
             }

@@ -12,12 +12,30 @@ class PiggybankPart
     public $amountPerBar;
     /** @var  int */
     public $currentamount;
+    /** @var  \Reminder */
+    public $reminder;
     /** @var  \PiggybankRepetition */
     public $repetition;
     /** @var  Carbon */
     public $startdate;
     /** @var  Carbon */
     public $targetdate;
+
+    /**
+     * @return \Reminder
+     */
+    public function getReminder()
+    {
+        return $this->reminder;
+    }
+
+    /**
+     * @param \Reminder $reminder
+     */
+    public function setReminder($reminder)
+    {
+        $this->reminder = $reminder;
+    }
 
     /**
      * @return \PiggybankRepetition
@@ -65,6 +83,11 @@ class PiggybankPart
     public function setTargetdate($targetdate)
     {
         $this->targetdate = $targetdate;
+    }
+
+    public function hasReminder()
+    {
+        return !is_null($this->reminder);
     }
 
     public function percentage()
@@ -130,6 +153,4 @@ class PiggybankPart
     {
         $this->amountPerBar = $amountPerBar;
     }
-
-
 }
