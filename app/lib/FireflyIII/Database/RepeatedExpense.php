@@ -95,9 +95,12 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggybankInterface
         $amountPerBar = floatval($piggyBank->targetamount) / $parts;
         $cumulative   = $amountPerBar;
         /** @var PiggybankPart $bar */
-        foreach ($bars as $bar) {
+        foreach ($bars as $index => $bar) {
             $bar->setAmountPerBar($amountPerBar);
             $bar->setCumulativeAmount($cumulative);
+            if($parts -1 == $index) {
+                $bar->setCumulativeAmount($piggyBank->targetamount);
+            }
 
             $reminder = $piggyBank->reminders()
                                   ->where('startdate', $bar->getStartdate()->format('Y-m-d'))
