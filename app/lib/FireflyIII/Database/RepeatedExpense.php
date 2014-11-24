@@ -117,6 +117,26 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggybankInterface
 
         for ($i = 0; $i < $parts; $i++) {
             /*
+             * If it's not the first repetition, jump the start date a [period]
+             * and jump the target date a [period]
+             */
+            if($i > 0) {
+                $currentStart = clone $currentTarget;
+                $currentStart->addDay();
+                $currentTarget = \DateKit::addPeriod($currentStart, $piggyBank->reminder,0);
+            }
+            /*
+             * If it's the first one, and has reminders, jump to the end of the [period]
+             */
+            if($i == 0 && !is_null($piggyBank->reminder)) {
+                $currentTarget = \DateKit::endOfX($currentStart, $piggyBank->reminder);
+            }
+            if($currentStart > $repetition->targetdate) {
+                break;
+            }
+
+
+            /*
              * Jump one month ahead after the first instance:
              */
             //            if ($i > 0) {
@@ -148,6 +168,17 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggybankInterface
             $part->setCurrentamount($repetition->currentamount);
             $part->setStartdate($currentStart);
             $part->setTargetdate($currentTarget);
+            if (!is_null($piggyBank->reminder)) {
+                // might be a reminder for this range?
+                $reminder = $piggyBank->reminders()
+                    ->where('startdate',$currentStart->format('Y-m-d'))
+                    ->where('enddate',$currentTarget->format('Y-m-d'))
+                    ->first();
+                if($reminder) {
+                    $part->setReminder($reminder);
+                }
+
+            }
 
             //            if (!is_null($piggyBank->reminder)) {
             //                $currentStart = \DateKit::addPeriod($currentStart, $piggyBank->reminder, 0);

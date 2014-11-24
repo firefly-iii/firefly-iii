@@ -51,7 +51,17 @@ class RepeatedExpenseController extends BaseController
         $subTitle = $piggyBank->name;
         $today    = Carbon::now();
 
-        return View::make('repeatedexpense.show', compact('piggyBank', 'today', 'subTitle'));
+        /** @var \FireflyIII\Database\RepeatedExpense $repository */
+        $repository = App::make('FireflyIII\Database\RepeatedExpense');
+
+        $repetitions = $piggyBank->piggybankrepetitions()->get();
+        $repetitions->each(
+            function (PiggybankRepetition $repetition) use ($repository) {
+                $repetition = $repository->calculateParts($repetition);
+            }
+        );
+
+        return View::make('repeatedexpense.show', compact('repetitions','piggyBank', 'today', 'subTitle'));
     }
 
     /**
