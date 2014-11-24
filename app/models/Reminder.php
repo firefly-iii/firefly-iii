@@ -13,6 +13,7 @@ use LaravelBook\Ardent\Ardent;
  * @property \Carbon\Carbon $startdate
  * @property \Carbon\Carbon $enddate
  * @property boolean $active
+ * @property boolean $notnow
  * @property integer $remembersable_id
  * @property string $remembersable_type
  * @property-read \Piggybank $remindersable

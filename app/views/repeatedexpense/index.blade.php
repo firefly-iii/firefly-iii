@@ -36,7 +36,7 @@ $barSize = floor(12 / $entry->currentRep->bars->count()) == 0 ? 1 : floor(12 / $
                 @foreach($entry->currentRep->bars as $bar)
                     <div class="col-lg-{{$barSize}} col-md-{{$barSize}} col-sm-{{$barSize}}">
                         <div class="progress">
-                            <!-- currentAmount:{{$bar->getCurrentAmount()}} getAmount:{{$bar->getAmount()}} -->
+                            <!-- currentAmount:{{$bar->getCurrentAmount()}} getAmount:{{$bar->getCumulativeAmount()}} -->
                                 <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{$bar->percentage()}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$bar->percentage()}}%;"></div>
                                 <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{100-$bar->percentage()}}" aria-valuemin="0" aria-valuemax="100" style="width: {{100-$bar->percentage()}}%;"></div>
                         </div>

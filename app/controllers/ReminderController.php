@@ -57,5 +57,12 @@ class ReminderController extends BaseController
         Session::flash('success','Reminder dismissed');
         return Redirect::route('index');
     }
+    public function notnow(Reminder $reminder) {
+        $reminder->active = 0;
+        $reminder->notnow = 1;
+        $reminder->save();
+        Session::flash('success','Reminder dismissed');
+        return Redirect::route('index');
+    }
 
 }

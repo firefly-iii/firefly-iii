@@ -86,7 +86,7 @@ class Reminders
             }
         );
         $today = Carbon::now();
-        //$today = new Carbon('15-12-2014');
+        //$today = new Carbon('14-12-2014');
 
         /** @var \Piggybank $piggybank */
         foreach ($set as $piggybank) {
