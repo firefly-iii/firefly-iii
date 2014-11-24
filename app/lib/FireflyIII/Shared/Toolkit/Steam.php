@@ -1,6 +1,7 @@
 <?php
 
 namespace FireflyIII\Shared\Toolkit;
+
 use Carbon\Carbon;
 
 /**
@@ -29,6 +30,22 @@ class Steam
                 'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
             )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount')
         );
+    }
+
+    /**
+     * @param \Piggybank           $piggyBank
+     * @param \PiggybankRepetition $repetition
+     *
+     * @return int
+     */
+    public function percentage(\Piggybank $piggyBank, \PiggybankRepetition $repetition)
+    {
+        $pct = $repetition->currentamount / $piggyBank->targetamount * 100;
+        if ($pct > 100) {
+            return 100;
+        } else {
+            return floor($pct);
+        }
     }
 
 } 
