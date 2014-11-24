@@ -43,9 +43,11 @@
                                 {{mf($rep->currentamount,false)}}
                             @endif
                             </div>
-                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{100-$bar->percentage()}}" aria-valuemin="0" aria-valuemax="100" style="width: {{100-$bar->percentage()}}%;">
-                            </div>
+                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{100-$bar->percentage()}}" aria-valuemin="0" aria-valuemax="100" style="width: {{100-$bar->percentage()}}%;"></div>
                     </div>
+                    <p class="small">
+                        {{$bar->getStartDate()->format('j F Y')}} &mdash; {{$bar->getTargetDate()->format('j F Y')}}
+                    </p>
 
                 </div>
             @endforeach

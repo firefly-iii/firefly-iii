@@ -39,7 +39,6 @@ class RepeatedExpenseController extends BaseController
         $expenses->each(
             function (Piggybank $piggyBank) use ($repository) {
                 $piggyBank->currentRelevantRep();
-                $piggyBank->currentRep = $repository->calculateParts($piggyBank->currentRep);
             }
         );
 
