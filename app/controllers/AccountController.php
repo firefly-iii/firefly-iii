@@ -202,9 +202,10 @@ class AccountController extends BaseController
 
                 if (is_null($transaction)) {
                     $account->lastActionDate = null;
+                } else {
+                    $account->lastActionDate = $transaction->updated_at;
                 }
 
-                $account->lastActionDate = $transaction->updated_at;
             }
         );
 
