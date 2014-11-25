@@ -23,13 +23,26 @@ class Steam
      */
     public function balance(\Account $account, Carbon $date = null)
     {
-        $date = is_null($date) ? Carbon::now() : $date;
+        $latest = false;
+        if (is_null($date)) {
+            $latest = true;
+            if (\Cache::has('account.' . $account->id . '.latestBalance')) {
+                \Log::debug('Cache has latest balance for ' . $account->name . ', and it is: ' . \Cache::get('account.' . $account->id . '.latestBalance'));
 
-        return floatval(
+                return \Cache::get('account.' . $account->id . '.latestBalance');
+            }
+        }
+        $date    = is_null($date) ? Carbon::now() : $date;
+        $balance = floatval(
             $account->transactions()->leftJoin(
                 'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
             )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount')
         );
+        if ($latest === true) {
+            \Cache::forever('account.' . $account->id . '.latestBalance', $balance);
+        }
+
+        return $balance;
     }
 
     /**

@@ -198,13 +198,18 @@ class AccountController extends BaseController
 
         $accounts->each(
             function (Account $account) {
-                //$transaction = $account->transactions()->orderBy('updated_at', 'DESC')->first();
-                $transaction = null;
-
-                if (is_null($transaction)) {
-                    $account->lastActionDate = null;
+                if (Cache::has('account.' . $account->id . '.lastActivityDate')) {
+                    \Log::debug('Cache has latest activity date for ' . $account->name . ', and it is: ' . \Cache::get('account.' . $account->id . '.lastActivityDate'));
+                    $account->lastActionDate = Cache::get('account.' . $account->id . '.lastActivityDate');
                 } else {
-                    $account->lastActionDate = $transaction->updated_at;
+                    $transaction = $account->transactions()->orderBy('updated_at', 'DESC')->first();
+                    if (is_null($transaction)) {
+                        $account->lastActionDate = null;
+                        Cache::forever('account.' . $account->id . '.lastActivityDate', 0);
+                    } else {
+                        $account->lastActionDate = $transaction->updated_at;
+                        Cache::forever('account.' . $account->id . '.lastActivityDate', $transaction->updated_at);
+                    }
                 }
 
             }
