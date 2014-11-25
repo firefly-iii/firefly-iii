@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 13/11/14
- * Time: 21:01
- */
 
 namespace FireflyIII\Search;
 

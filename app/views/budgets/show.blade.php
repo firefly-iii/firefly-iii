@@ -16,9 +16,7 @@
             <div class="panel-heading">
                 Transactions
             </div>
-            <div class="panel-body">
                 @include('list.journals-full')
-            </div>
         </div>
     </div>
     <div class="col-lg-3 col-md-3 col-sm-5">
