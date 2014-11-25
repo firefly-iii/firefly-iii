@@ -106,6 +106,14 @@ class TransactionController extends BaseController
          * Trigger creation of new piggy bank event
          */
         Event::fire('transactionJournal.destroy', [$transactionJournal]); // new and used.
+        /*
+         * Since this event will also destroy both transactions, trigger on those as
+         * well because we might want to update some caches and what-not.
+         */
+        /** @var Transaction $transaction */
+        foreach ($transactionJournal->transactions as $transaction) {
+            Event::fire('transaction.destroy', [$transaction]);
+        }
 
         /** @var \FireflyIII\Database\TransactionJournal $repository */
         $repository = App::make('FireflyIII\Database\TransactionJournal');
@@ -363,6 +371,13 @@ class TransactionController extends BaseController
                     $piggyID = intval(Input::get('piggybank_id'));
                 }
                 Event::fire('transactionJournal.store', [$journal, $piggyID]); // new and used.
+                /*
+                 * Also trigger on both transactions.
+                 */
+                /** @var Transaction $transaction */
+                foreach ($journal->transactions as $transaction) {
+                    Event::fire('transaction.store', [$transaction]);
+                }
 
                 if ($data['post_submit_action'] == 'create_another') {
                     return Redirect::route('transactions.create', $what)->withInput();
@@ -405,6 +420,14 @@ class TransactionController extends BaseController
                     // has been saved, return to index:
                     Session::flash('success', 'Transaction updated!');
                     Event::fire('transactionJournal.update', [$journal]); // new and used.
+
+                    /*
+                     * Also trigger on both transactions.
+                     */
+                    /** @var Transaction $transaction */
+                    foreach ($journal->transactions as $transaction) {
+                        Event::fire('transaction.update', [$transaction]);
+                    }
 
                     if (Input::get('post_submit_action') == 'return_to_edit') {
                         return Redirect::route('transactions.edit', $journal->id)->withInput();
