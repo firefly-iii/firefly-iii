@@ -55,7 +55,7 @@ class TransactionController extends BaseController
         $budgets[0] = '(no budget)';
 
         // get the piggy banks.
-        $list = $piggyRepository->get()->merge($repRepository->get());
+        $list       = $piggyRepository->get()->merge($repRepository->get());
         $piggies    = FFForm::makeSelectList($list);
         $piggies[0] = '(no piggy bank)';
 
@@ -196,18 +196,38 @@ class TransactionController extends BaseController
          */
         switch ($what) {
             case 'withdrawal':
-                $prefilled['account_id']      = $journal->transactions[0]->account->id;
-                $prefilled['expense_account'] = $journal->transactions[1]->account->name;
-                $prefilled['amount']          = floatval($journal->transactions[1]->amount);
-                $budget                       = $journal->budgets()->first();
+                if (floatval($journal->transactions[0]->amount) < 0) {
+                    // transactions[0] is the asset account that paid for the withdrawal.
+                    $prefilled['account_id']      = $journal->transactions[0]->account->id;
+                    $prefilled['expense_account'] = $journal->transactions[1]->account->name;
+                    $prefilled['amount']          = floatval($journal->transactions[1]->amount);
+                } else {
+                    // transactions[1] is the asset account that paid for the withdrawal.
+                    $prefilled['account_id']      = $journal->transactions[1]->account->id;
+                    $prefilled['expense_account'] = $journal->transactions[0]->account->name;
+                    $prefilled['amount']          = floatval($journal->transactions[0]->amount);
+                }
+
+
+                $budget = $journal->budgets()->first();
                 if (!is_null($budget)) {
                     $prefilled['budget_id'] = $budget->id;
                 }
                 break;
             case 'deposit':
-                $prefilled['account_id']      = $journal->transactions[1]->account->id;
-                $prefilled['revenue_account'] = $journal->transactions[0]->account->name;
-                $prefilled['amount']          = floatval($journal->transactions[1]->amount);
+                if (floatval($journal->transactions[0]->amount) < 0) {
+                    // transactions[0] contains the account the money came from.
+                    $prefilled['account_id']      = $journal->transactions[1]->account->id;
+                    $prefilled['revenue_account'] = $journal->transactions[0]->account->name;
+                    $prefilled['amount']          = floatval($journal->transactions[1]->amount);
+                } else {
+                    // transactions[1] contains the account the money came from.
+                    $prefilled['account_id']      = $journal->transactions[0]->account->id;
+                    $prefilled['revenue_account'] = $journal->transactions[1]->account->name;
+                    $prefilled['amount']          = floatval($journal->transactions[0]->amount);
+
+                }
+
                 break;
             case 'transfer':
                 if (floatval($journal->transactions[0]->amount) < 0) {
@@ -282,7 +302,7 @@ class TransactionController extends BaseController
     public function show(TransactionJournal $journal)
     {
         $journal->transactions->each(
-            function(\Transaction $t) use ($journal) {
+            function (\Transaction $t) use ($journal) {
                 $t->before = floatval(
                     $t->account->transactions()->leftJoin(
                         'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
@@ -290,10 +310,9 @@ class TransactionController extends BaseController
                         'transaction_journals.created_at', '<=', $journal->created_at->format('Y-m-d H:i:s')
                     )->where('transaction_journals.id', '!=', $journal->id)->sum('transactions.amount')
                 );
-                $t->after = $t->before + $t->amount;
+                $t->after  = $t->before + $t->amount;
             }
         );
-
 
 
         return View::make('transactions.show')->with('journal', $journal)->with(
