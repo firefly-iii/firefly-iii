@@ -6,6 +6,48 @@
  */
 class HomeController extends BaseController
 {
+    public function cleanup()
+    {
+        Auth::loginUsingId(1);
+        /** @var \FireflyIII\Database\TransactionJournal $repository */
+        $repository = App::make('FireflyIII\Database\TransactionJournal');
+
+        /** @var \FireflyIII\Database\Account $acct */
+        $acct = App::make('FireflyIII\Database\Account');
+
+
+        $journals = $repository->get();
+
+        /** @var TransactionJournal $journal */
+        foreach ($journals as $journal) {
+
+            if ($journal->TransactionType->type == 'Withdrawal') {
+                echo '#' . $journal->id . ': ' . e($journal->description);
+                /** @var Transaction $transaction */
+                foreach ($journal->transactions as $transaction) {
+                    if (floatval($transaction->amount) > 0) {
+                        // this is the one with the beneficiary account!
+                        if ($transaction->account->accountType->type == 'Beneficiary account') {
+                            echo ', <span style="color:red;">should be an expense account</span>';
+                            if (Input::get('update') == 'true') {
+                                $newAccount              = $acct->firstExpenseAccountOrCreate($transaction->account->name);
+                                $transaction->account_id = $newAccount->id;
+                                $transaction->save();
+
+                                echo '<span style="color:darkgreen">, updated!</span>';
+                            }
+                        }
+                    }
+                }
+                echo '<br />';
+            }
+
+
+        }
+
+        return '&nbsp;';
+    }
+
     /**
      * @return \Illuminate\Http\RedirectResponse
      */

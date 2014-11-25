@@ -460,7 +460,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      */
     public function get()
     {
-        return $this->getUser()->transactionjournals()->get();
+        return $this->getUser()->transactionjournals()->with(['TransactionType','transactions','transactions.account','transactions.account.accountType'])->get();
     }
 
     /**

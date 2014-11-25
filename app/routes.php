@@ -125,6 +125,7 @@ Route::bind(
     }
 );
 
+Route::get('/cleanup', ['uses' => 'HomeController@cleanup', 'as' => 'cleanup']);
 // protected routes:
 Route::group(
     ['before' => 'auth'], function () {
@@ -134,7 +135,7 @@ Route::group(
         Route::get('/prev', ['uses' => 'HomeController@sessionPrev', 'as' => 'sessionPrev']);
         Route::get('/next', ['uses' => 'HomeController@sessionNext', 'as' => 'sessionNext']);
         Route::get('/jump/{range}', ['uses' => 'HomeController@rangeJump', 'as' => 'rangeJump']);
-        Route::get('/cleanup', ['uses' => 'HomeController@cleanup', 'as' => 'cleanup']);
+
 
         // account controller:
         Route::get('/accounts/{what}', ['uses' => 'AccountController@index', 'as' => 'accounts.index'])->where('what', 'revenue|asset|expense');

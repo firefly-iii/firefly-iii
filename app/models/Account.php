@@ -36,7 +36,7 @@ class Account extends Ardent
      */
     public static $rules
         = [
-            'name'            => ['required', 'between:1,100', 'alphabasic'],
+            'name'            => ['required', 'between:1,100'],
             'user_id'         => 'required|exists:users,id',
             'account_type_id' => 'required|exists:account_types,id',
             'active'          => 'required|boolean'
