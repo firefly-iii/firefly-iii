@@ -30,7 +30,9 @@
         "barryvdh/laravel-debugbar": "@stable",
         "barryvdh/laravel-ide-helper": "@stable",
         "doctrine/dbal": "~2.3",
-        "satooshi/php-coveralls": "dev-master"
+        "satooshi/php-coveralls": "dev-master",
+        "mockery/mockery": "@stable",
+        "league/factory-muffin": "~2.0"
     },
     "autoload": {
         "classmap": [

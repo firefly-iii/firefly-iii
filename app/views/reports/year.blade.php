@@ -29,7 +29,6 @@
             <div class="panel-heading">
                 Summary
             </div>
-            <div class="panel-body">
                 <table class="table table-striped">
                     <tr>
                         <td></td>
@@ -62,7 +61,6 @@
                         <td>{{mf($inSum + $outSum)}}</td>
                     </tr>
                 </table>
-            </div>
         </div>
     </div>
 </div>

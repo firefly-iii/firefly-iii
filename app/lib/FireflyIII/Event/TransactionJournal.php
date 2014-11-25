@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 19/11/14
- * Time: 21:11
- */
-
 namespace FireflyIII\Event;
 
 

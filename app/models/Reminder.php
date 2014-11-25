@@ -34,7 +34,7 @@ use LaravelBook\Ardent\Ardent;
  * @method static \Illuminate\Database\Query\Builder|\Reminder whereRemindersableId($value)
  * @method static \Illuminate\Database\Query\Builder|\Reminder whereRemindersableType($value)
  */
-class Reminder extends Eloquent
+class Reminder extends Ardent
 {
 
     protected $table = 'reminders';

@@ -1,9 +1,11 @@
 <?php
+use Mockery as m;
 
 /**
  * Class TestCase
  */
-class TestCase extends Illuminate\Foundation\Testing\TestCase {
+class TestCase extends Illuminate\Foundation\Testing\TestCase
+{
     /**
      * Creates the application.
      *
@@ -11,15 +13,38 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
      */
     public function createApplication()
     {
-        $unitTesting = true;
+        $unitTesting     = true;
         $testEnvironment = 'testing';
-        return require __DIR__.'/../../bootstrap/start.php';
+
+        return require __DIR__ . '/../../bootstrap/start.php';
     }
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         Artisan::call('migrate');
         $this->seed();
+
+
         //$this->
+    }
+
+    public function mock($class)
+    {
+        $mock = Mockery::mock($class);
+
+        $this->app->instance($class, $mock);
+
+        return $mock;
+    }
+
+    static public function setupBeforeClass()
+    {
+        League\FactoryMuffin\Facade::loadFactories(__DIR__ . '/factories');
+    }
+
+    public function tearDown()
+    {
+        m::close();
     }
 }
