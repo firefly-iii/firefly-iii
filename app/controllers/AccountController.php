@@ -198,7 +198,8 @@ class AccountController extends BaseController
 
         $accounts->each(
             function (Account $account) {
-                $transaction = $account->transactions()->orderBy('updated_at', 'DESC')->first();
+                //$transaction = $account->transactions()->orderBy('updated_at', 'DESC')->first();
+                $transaction = null;
 
                 if (is_null($transaction)) {
                     $account->lastActionDate = null;
