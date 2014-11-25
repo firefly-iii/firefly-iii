@@ -125,7 +125,6 @@ Route::bind(
     }
 );
 
-Route::get('/cleanup', ['uses' => 'HomeController@cleanup', 'as' => 'cleanup']);
 // protected routes:
 Route::group(
     ['before' => 'auth'], function () {
