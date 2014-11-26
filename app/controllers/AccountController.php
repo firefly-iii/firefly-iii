@@ -199,7 +199,6 @@ class AccountController extends BaseController
         $accounts->each(
             function (Account $account) {
                 if (Cache::has('account.' . $account->id . '.lastActivityDate')) {
-                    \Log::debug('Cache has latest activity date for ' . $account->name . ', and it is: ' . \Cache::get('account.' . $account->id . '.lastActivityDate'));
                     $account->lastActionDate = Cache::get('account.' . $account->id . '.lastActivityDate');
                 } else {
                     $transaction = $account->transactions()->orderBy('updated_at', 'DESC')->first();
