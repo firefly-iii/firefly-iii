@@ -1,7 +1,7 @@
 @extends('layouts.default')
 @section('content')
 <div class="row">
- <div class="col-lg-6 col-md-6 col-sm-12">
+ <div class="col-lg-4 col-md-4 col-sm-4">
     <div class="panel panel-default">
         <div class="panel-heading">
             Yearly reports
@@ -15,5 +15,33 @@
         </div>
     </div>
  </div>
+ <div class="col-lg-4 col-md-4 col-sm-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Budget reports
+        </div>
+        <div class="panel-body">
+        <ul>
+        @foreach($months as $month)
+            <li><a href="{{route('reports.budgets',[$month['year'],$month['month']])}}">{{$month['formatted']}}</a></li>
+        @endforeach
+        </ul>
+        </div>
+    </div>
+ </div>
+ <div class="col-lg-4 col-md-4 col-sm-4">
+     <div class="panel panel-default">
+         <div class="panel-heading">
+             Unbalanced transactions
+         </div>
+         <div class="panel-body">
+         <ul>
+         @foreach($months as $month)
+             <li><a href="{{route('reports.unbalanced',[$month['year'],$month['month']])}}">{{$month['formatted']}}</a></li>
+         @endforeach
+         </ul>
+         </div>
+     </div>
+  </div>
 </div>
 @stop
