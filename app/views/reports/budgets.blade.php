@@ -74,9 +74,9 @@
                 Balance at end of month + left in all (relevant budgets)
             </div>
             <table class="table">
-            <?php $sum = 0;?>
+            <?php $sum = 0;$sumBudgets = 0;?>
             @foreach($account->budgetInfo as $budget)
-            <?php $sum += $budget['spent'];?>
+            <?php $sum += $budget['spent'];if($budget['budget_id'] != 0) {$sumBudgets += $budget['spent'];}?>
             <tr>
                 <td>{{$budget['budget_name']}}</td>
                 <td>{{mf($budget['budgeted'])}}</td>
@@ -93,6 +93,20 @@
                 <td></td>
             </tr>
             @endif
+            @if($sum != 0)
+                <tr>
+                    <td><em>Sum (budgets only)</em></td>
+                    <td></td>
+                    <td>{{mf($sumBudgets)}}</td>
+                    <td></td>
+                </tr>
+            @endif
+            <tr>
+                <td>Balance</td>
+                <td></td>
+                <td>{{mf(Steam::balance($account, $end))}}</td>
+                <td></td>
+            </tr>
             </table>
         </div>
     </div>
