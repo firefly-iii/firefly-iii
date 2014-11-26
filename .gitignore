@@ -14,3 +14,5 @@ index.html*
 app/storage/firefly-export*
 .vagrant
 firefly-iii-import-*.json
+
+tests/_output/*
