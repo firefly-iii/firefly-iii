@@ -250,4 +250,18 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
 
         return $sum;
     }
+
+    /**
+     * @param \Budget $budget
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return float
+     */
+    public function spentInPeriod(\Budget $budget, Carbon $start, Carbon $end)
+    {
+        $sum = floatval($budget->transactionjournals()->before($end)->after($start)->lessThan(0)->sum('amount')) * -1;
+
+        return $sum;
+    }
 }

@@ -467,5 +467,23 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
 
     }
 
+    /**
+     * @param \Account $account
+     * @param Carbon   $start
+     * @param Carbon   $end
+     *
+     * @return \Illuminate\Pagination\Paginator
+     */
+    public function getTransactionJournalsInRange(\Account $account, Carbon $start, Carbon $end)
+    {
+        $set    = $this->getUser()->transactionJournals()->transactionTypes(['Withdrawal'])->withRelevantData()->leftJoin(
+            'transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
+        )->where('transactions.account_id', $account->id)->before($end)->after($start)->orderBy('date', 'DESC')->get(
+            ['transaction_journals.*']
+        );
+        return $set;
+
+    }
+
 
 }
