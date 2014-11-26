@@ -27,7 +27,6 @@ class Steam
         if (is_null($date)) {
             $latest = true;
             if (\Cache::has('account.' . $account->id . '.latestBalance')) {
-                \Log::debug('Cache has latest balance for ' . $account->name . ', and it is: ' . \Cache::get('account.' . $account->id . '.latestBalance'));
 
                 return \Cache::get('account.' . $account->id . '.latestBalance');
             }
