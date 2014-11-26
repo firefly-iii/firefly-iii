@@ -58,6 +58,7 @@ class TransactionController extends BaseController
         $list       = $piggyRepository->get()->merge($repRepository->get());
         $piggies    = FFForm::makeSelectList($list);
         $piggies[0] = '(no piggy bank)';
+        asort($piggies);
 
         /*
          * respond to a possible given values in the URL.
