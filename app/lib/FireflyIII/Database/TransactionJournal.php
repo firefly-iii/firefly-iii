@@ -536,7 +536,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
 
     public function getDepositsPaginated($limit = 50)
     {
-        $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
+        $offset = intval(\Input::get('page')) > 0 ? (intval(\Input::get('page'))-1) * $limit : 0;
 
         $set   = $this->getUser()->transactionJournals()->transactionTypes(['Deposit'])->withRelevantData()->take($limit)->offset($offset)->orderBy(
             'date', 'DESC'
@@ -575,7 +575,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
 
     public function getTransfersPaginated($limit = 50)
     {
-        $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
+        $offset = intval(\Input::get('page')) > 0 ? (intval(\Input::get('page'))-1) * $limit : 0;
 
         $set   = $this->getUser()->transactionJournals()->transactionTypes(['Transfer'])->withRelevantData()->take($limit)->offset($offset)->orderBy(
             'date', 'DESC'
@@ -591,7 +591,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
 
     public function getWithdrawalsPaginated($limit = 50)
     {
-        $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
+        $offset = intval(\Input::get('page')) > 0 ? (intval(\Input::get('page'))-1) * $limit : 0;
 
         $set   = $this->getUser()->transactionJournals()->transactionTypes(['Withdrawal'])->withRelevantData()->take($limit)->offset($offset)->orderBy(
             'date', 'DESC'
