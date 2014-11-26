@@ -26,7 +26,7 @@ class Budget extends Component
 
     public function limitrepetitions()
     {
-        return $this->hasManyThrough('LimitRepetition', 'Limit');
+        return $this->hasManyThrough('LimitRepetition', 'Limit','component_id');
     }
 
     /**
