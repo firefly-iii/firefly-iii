@@ -157,15 +157,25 @@ class ReportController extends BaseController
         /** @var \FireflyIII\Database\TransactionJournal $journalRepository */
         $journalRepository = App::make('FireflyIII\Database\TransactionJournal');
 
-        $journals = $journalRepository->getInDateRange($start, $end);
-        $journals = $journals->filter(
+        $journals    = $journalRepository->getInDateRange($start, $end);
+        $withdrawals = $journals->filter(
             function (TransactionJournal $journal) {
                 if ($journal->transactionType->type == 'Withdrawal' && count($journal->budgets) == 0) {
                     return $journal;
                 }
             }
         );
-        $journals->each(
+
+        // filter again for transfers
+        $transfers = $journals->filter(
+            function (TransactionJournal $journal) {
+                if ($journal->transactionType->type == 'Transfer') {
+                    return $journal;
+                }
+            }
+        );
+
+        $withdrawals->each(
             function (TransactionJournal $journal) {
                 $collection = new Collection;
                 /** @var Transaction $transaction */
@@ -178,7 +188,7 @@ class ReportController extends BaseController
                                             ->where('transaction_journals.description', 'LIKE', '%' . e($journal->description) . '%')
                                             ->get(['transactions.*']);
                         /** @var Transaction $ct */
-                        foreach($counters as $ct) {
+                        foreach ($counters as $ct) {
                             $collection->push($ct->transactionjournal);
                         }
                     }
@@ -187,7 +197,32 @@ class ReportController extends BaseController
             }
         );
 
-        return View::make('reports.unbalanced', compact('start', 'end', 'title', 'subTitle', 'subTitleIcon', 'mainTitleIcon', 'journals'));
+        // same for transfers but the other way around! Yay!
+        $transfers->each(
+            function (TransactionJournal $journal) {
+                $collection = new Collection;
+                /** @var Transaction $transaction */
+                foreach ($journal->transactions as $transaction) {
+                    if (floatval($transaction->amount) < 0) {
+                        $account = $transaction->account;
+                        // TODO this has to be the most lame way of filtering ever.
+                        $descr = trim(str_replace('Geld voor','',$journal->description));
+                        // find counter transfer:
+                        $counters = $account->transactions()->where('amount', floatval($transaction->amount))
+                                            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                            ->where('transaction_journals.description', 'LIKE', '%' . $descr . '%')
+                                            ->get(['transactions.*']);
+                        /** @var Transaction $ct */
+                        foreach ($counters as $ct) {
+                            $collection->push($ct->transactionjournal);
+                        }
+                    }
+                }
+                $journal->counters = $collection;
+            }
+        );
+
+        return View::make('reports.unbalanced', compact('start','transfers', 'end', 'title', 'subTitle', 'subTitleIcon', 'mainTitleIcon', 'withdrawals'));
     }
 
     /**

@@ -1,7 +1,13 @@
 @extends('layouts.default')
 @section('content')
 <div class="row">
-    @foreach($journals as $journal)
+    <div class="col-lg-4 col-md-4 col-sm-6">
+        <h3>Transactions</h3>
+    </div>
+</div>
+
+<div class="row">
+    @foreach($withdrawals as $journal)
         <div class="col-lg-4 col-md-4 col-sm-6">
             <div class="panel
             @if($journal->counters->count() > 0)
@@ -35,6 +41,35 @@
         </div>
     @endforeach
 </div>
+<div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-6">
+        <h3>Transfers</h3>
+    </div>
+</div>
+
+<div class="row">
+    @foreach($transfers as $journal)
+        <div class="col-lg-4 col-md-4 col-sm-6">
+            <div class="panel
+            @if($journal->counters->count() > 0)
+                panel-default
+            @else
+                panel-danger
+            @endif
+            ">
+                <div class="panel-heading">
+                    {{{$journal->description}}}
+                </div>
+                <div class="panel-body">
+                    Bla bla?
+                </div>
+
+            </div>
+
+        </div>
+    @endforeach
+</div>
+
 
 
 @stop
