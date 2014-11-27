@@ -445,6 +445,26 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
 
     }
 
+    public function getAllTransactionJournals(\Account $account, $limit = 50)
+    {
+        $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
+        $set    = $this->getUser()->transactionJournals()->withRelevantData()->leftJoin(
+            'transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
+        )->where('transactions.account_id', $account->id)->take($limit)->offset($offset)->orderBy('date', 'DESC')->get(
+            ['transaction_journals.*']
+        );
+        $count  = $this->getUser()->transactionJournals()->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                       ->orderBy('date', 'DESC')->where('transactions.account_id', $account->id)->count();
+        $items  = [];
+        foreach ($set as $entry) {
+            $items[] = $entry;
+        }
+
+        return \Paginator::make($items, $count, $limit);
+
+
+    }
+
     public function getTransactionJournals(\Account $account, $limit = 50)
     {
         $start  = \Session::get('start');
@@ -476,11 +496,12 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
      */
     public function getTransactionJournalsInRange(\Account $account, Carbon $start, Carbon $end)
     {
-        $set    = $this->getUser()->transactionJournals()->transactionTypes(['Withdrawal'])->withRelevantData()->leftJoin(
+        $set = $this->getUser()->transactionJournals()->transactionTypes(['Withdrawal'])->withRelevantData()->leftJoin(
             'transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
         )->where('transactions.account_id', $account->id)->before($end)->after($start)->orderBy('date', 'DESC')->get(
             ['transaction_journals.*']
         );
+
         return $set;
 
     }
