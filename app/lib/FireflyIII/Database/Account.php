@@ -206,7 +206,6 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
             exit;
         }
 
-        return false;
     }
 
     /**
@@ -216,6 +215,10 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
      */
     public function destroy(Ardent $model)
     {
+        /*
+         * Trigger deletion:
+         */
+        \Event::fire('account.destroy', [$model]);
         $model->delete();
 
         return true;
@@ -256,6 +259,7 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
 
 
         /* Tell transaction journal to store a new one.*/
+        \Event::fire('account.store', [$account]);
 
 
         return $account;
@@ -274,7 +278,7 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
         $model->active = isset($data['active']) ? intval($data['active']) : 0;
         $model->save();
 
-        if (isset($data['openingbalance']) && isset($data['openingbalancedate'])) {
+        if (isset($data['openingbalance']) && isset($data['openingbalancedate']) && strlen($data['openingbalancedate']) > 0) {
             $openingBalance = $this->openingBalanceTransaction($model);
 
             $openingBalance->date = new Carbon($data['openingbalancedate']);
@@ -290,7 +294,7 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
                 $transaction->save();
             }
         }
-
+        \Event::fire('account.update', [$model]);
         return true;
     }
 
