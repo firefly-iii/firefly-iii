@@ -239,8 +239,6 @@ class AccountController extends BaseController
         }
 
         // get a paginated view of all transactions for this account:
-        Cannot handle account type
-
         $journals = $acct->getTransactionJournals($account, 10);
 
 
