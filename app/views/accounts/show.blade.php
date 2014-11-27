@@ -20,6 +20,7 @@
             </div>
             <div class="panel-body">
                 <p>
+                <!-- TODO clean up these methods and everything associated with them. -->
                     @if(Input::get('showAll') == 'true')
                         <a href="{{route('accounts.show',$account->id)}}" class="btn btn-default">Stick to date-range</a>
                     @else

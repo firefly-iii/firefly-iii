@@ -37,6 +37,19 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      */
     public function destroy(Ardent $model)
     {
+        /*
+         * Trigger deletion.
+         */
+        \Event::fire('transactionJournal.destroy', [$model]); // new and used.
+        /*
+         * Since this event will also destroy both transactions, trigger on those as
+         * well because we might want to update some caches and what-not.
+         */
+        /** @var Transaction $transaction */
+        foreach ($model->transactions as $transaction) {
+            \Event::fire('transaction.destroy', [$transaction]);
+        }
+
         $model->delete();
 
         return true;

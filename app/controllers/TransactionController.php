@@ -103,19 +103,6 @@ class TransactionController extends BaseController
     {
         $type = $transactionJournal->transactionType->type;
 
-        /*
-         * Trigger creation of new piggy bank event
-         */
-        Event::fire('transactionJournal.destroy', [$transactionJournal]); // new and used.
-        /*
-         * Since this event will also destroy both transactions, trigger on those as
-         * well because we might want to update some caches and what-not.
-         */
-        /** @var Transaction $transaction */
-        foreach ($transactionJournal->transactions as $transaction) {
-            Event::fire('transaction.destroy', [$transaction]);
-        }
-
         /** @var \FireflyIII\Database\TransactionJournal $repository */
         $repository = App::make('FireflyIII\Database\TransactionJournal');
         $repository->destroy($transactionJournal);

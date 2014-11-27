@@ -94,7 +94,7 @@ class AccountController extends BaseController
          */
         foreach ($journals as $id) {
             $journal = $jrnls->find($id);
-            $journal->delete();
+            $jrnls->destroy($journal);
         }
 
         /*
@@ -243,9 +243,9 @@ class AccountController extends BaseController
         $acct = App::make('FireflyIII\Database\Account');
         if (Input::get('showAll') == 'true') {
 
-            $journals = $acct->getAllTransactionJournals($account, 10);
+            $journals = $acct->getAllTransactionJournals($account, 50);
         } else {
-            $journals = $acct->getTransactionJournals($account, 10);
+            $journals = $acct->getTransactionJournals($account, 50);
         }
 
 
@@ -321,6 +321,7 @@ class AccountController extends BaseController
                 throw new FireflyException('Cannot handle account type "' . e($account->accountType->type) . '"');
                 break;
             case 'Default account':
+            case 'Asset account':
                 $data['what'] = 'asset';
                 break;
             case 'Expense account':
