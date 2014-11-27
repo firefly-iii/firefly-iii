@@ -14,6 +14,20 @@
     <div class="col-lg-4 col-md-6 col-sm-12">
         <!-- time based navigation -->
         @include('partials.date_nav')
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-clock-o fa-fw"></i> View options for {{{$account->name}}}
+            </div>
+            <div class="panel-body">
+                <p>
+                    @if(Input::get('showAll') == 'true')
+                        <a href="{{route('accounts.show',$account->id)}}" class="btn btn-default">Stick to date-range</a>
+                    @else
+                        <a href="{{route('accounts.show',$account->id)}}?showAll=true" class="btn btn-default">Show all transactions</a>
+                    @endif
+                </p>
+            </div>
+        </div>
     </div>
 </div>
 

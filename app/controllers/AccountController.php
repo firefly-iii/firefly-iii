@@ -241,8 +241,12 @@ class AccountController extends BaseController
         // get a paginated view of all transactions for this account:
         /** @var \FireflyIII\Database\Account $acct */
         $acct = App::make('FireflyIII\Database\Account');
-        
-        $journals = $acct->getTransactionJournals($account, 10);
+        if (Input::get('showAll') == 'true') {
+
+            $journals = $acct->getAllTransactionJournals($account, 10);
+        } else {
+            $journals = $acct->getTransactionJournals($account, 10);
+        }
 
 
         //$data = $this->_accounts->show($account, 40);
