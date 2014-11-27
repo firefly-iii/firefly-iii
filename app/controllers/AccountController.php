@@ -239,8 +239,7 @@ class AccountController extends BaseController
         }
 
         // get a paginated view of all transactions for this account:
-        /** @var \FireflyIII\Database\Account $acct */
-        $acct = App::make('FireflyIII\Database\Account');
+        Cannot handle account type
 
         $journals = $acct->getTransactionJournals($account, 10);
 
@@ -319,6 +318,7 @@ class AccountController extends BaseController
             case 'Default account':
                 $data['what'] = 'asset';
                 break;
+            case 'Expense account':
             case 'Beneficiary account':
                 $data['what'] = 'expense';
                 break;
