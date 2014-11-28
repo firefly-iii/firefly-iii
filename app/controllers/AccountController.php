@@ -229,13 +229,16 @@ class AccountController extends BaseController
             case 'Asset account':
             case 'Default account':
                 $subTitleIcon = 'fa-money';
+                $what         = 'asset';
                 break;
             case 'Expense account':
             case 'Beneficiary account':
                 $subTitleIcon = 'fa-shopping-cart';
+                $what         = 'expense';
                 break;
             case 'Revenue account':
                 $subTitleIcon = 'fa-download';
+                $what         = 'revenue';
                 break;
         }
 
@@ -254,7 +257,7 @@ class AccountController extends BaseController
         }
 
 
-        return View::make('accounts.show', compact('account', 'view', 'subTitleIcon', 'journals'))->with('account', $account)->with(
+        return View::make('accounts.show', compact('account', 'what', 'view', 'subTitleIcon', 'journals'))->with('account', $account)->with(
             'subTitle', 'Details for ' . strtolower($account->accountType->type) . ' "' . $account->name . '"'
         );
     }

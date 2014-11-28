@@ -23,6 +23,7 @@ Route::bind(
                 'user_id', Auth::user()->id
             )->first();
         }
+
         return null;
     }
 );
@@ -34,6 +35,7 @@ Route::bind(
             return RecurringTransaction::
             where('id', $value)->where('user_id', Auth::user()->id)->first();
         }
+
         return null;
     }
 );
@@ -43,6 +45,7 @@ Route::bind(
             return Budget::
             where('id', $value)->where('user_id', Auth::user()->id)->first();
         }
+
         return null;
     }
 );
@@ -53,6 +56,7 @@ Route::bind(
             return Component::
             where('id', $value)->where('user_id', Auth::user()->id)->first();
         }
+
         return null;
     }
 );
@@ -63,6 +67,7 @@ Route::bind(
             return Reminder::
             where('id', $value)->where('user_id', Auth::user()->id)->first();
         }
+
         return null;
     }
 );
@@ -73,6 +78,7 @@ Route::bind(
             return Category::
             where('id', $value)->where('user_id', Auth::user()->id)->first();
         }
+
         return null;
     }
 );
@@ -83,6 +89,7 @@ Route::bind(
             return TransactionJournal::
             where('id', $value)->where('user_id', Auth::user()->id)->first();
         }
+
         return null;
     }
 );
@@ -95,6 +102,7 @@ Route::bind(
                 'components', 'components.id', '=', 'limits.component_id'
             )->where('components.class', 'Budget')->where('components.user_id', Auth::user()->id)->first(['limit_repetitions.*']);
         }
+
         return null;
     }
 );
@@ -104,10 +112,11 @@ Route::bind(
         if (Auth::check()) {
             return Piggybank::
             where('piggybanks.id', $value)
-                ->leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')
-                ->where('accounts.user_id', Auth::user()->id)
-                ->where('repeats',0)->first(['piggybanks.*']);
+                            ->leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')
+                            ->where('accounts.user_id', Auth::user()->id)
+                            ->where('repeats', 0)->first(['piggybanks.*']);
         }
+
         return null;
     }
 );
@@ -119,8 +128,9 @@ Route::bind(
             where('piggybanks.id', $value)
                             ->leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')
                             ->where('accounts.user_id', Auth::user()->id)
-                            ->where('repeats',1)->first(['piggybanks.*']);
+                            ->where('repeats', 1)->first(['piggybanks.*']);
         }
+
         return null;
     }
 );
@@ -172,10 +182,13 @@ Route::group(
         Route::get('/chart/recurring/{recurring}', ['uses' => 'GoogleChartController@recurringOverview']);
         Route::get('/chart/reports/budgets/{year}', ['uses' => 'GoogleChartController@budgetsReportChart']);
         Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'GoogleChartController@budgetLimitSpending']);
-        Route::get('/chart/piggyhistory/{piggybank}',['uses' => 'GoogleChartController@piggyBankHistory']);
+        Route::get('/chart/piggyhistory/{piggybank}', ['uses' => 'GoogleChartController@piggyBankHistory']);
 
         // google chart for components (categories + budgets combined)
         Route::get('/chart/component/{component}/spending/{year}', ['uses' => 'GoogleChartController@componentsAndSpending']);
+
+        // help controller
+        Route::get('/help/{route}', ['uses' => 'HelpController@show', 'as' => 'help.show']);
 
         // home controller
         Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
@@ -224,10 +237,10 @@ Route::group(
         Route::get('/reports/unbalanced/{year}/{month}', ['uses' => 'ReportController@unbalanced', 'as' => 'reports.unbalanced']);
 
         // reminder controller
-        Route::get('/reminders/{reminder}',['uses' => 'ReminderController@show','as' => 'reminders.show']);
-        Route::get('/reminders/{reminder}/dismiss',['uses' => 'ReminderController@dismiss','as' => 'reminders.dismiss']);
-        Route::get('/reminders/{reminder}/notnow',['uses' => 'ReminderController@notnow','as' => 'reminders.notnow']);
-        Route::get('/reminders/{reminder}/act',['uses' => 'ReminderController@act','as' => 'reminders.act']);
+        Route::get('/reminders/{reminder}', ['uses' => 'ReminderController@show', 'as' => 'reminders.show']);
+        Route::get('/reminders/{reminder}/dismiss', ['uses' => 'ReminderController@dismiss', 'as' => 'reminders.dismiss']);
+        Route::get('/reminders/{reminder}/notnow', ['uses' => 'ReminderController@notnow', 'as' => 'reminders.notnow']);
+        Route::get('/reminders/{reminder}/act', ['uses' => 'ReminderController@act', 'as' => 'reminders.act']);
 
         // search controller:
         Route::get('/search', ['uses' => 'SearchController@index', 'as' => 'search']);

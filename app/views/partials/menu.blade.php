@@ -64,7 +64,6 @@
         <!-- /.dropdown -->
     </ul>
     <!-- /.navbar-top-links -->
-    <?php $r = Route::getCurrentRoute()->getName();?>
     <div class="navbar-default sidebar" role="navigation">
         <div class="sidebar-nav navbar-collapse">
             <ul class="nav" id="side-menu">
