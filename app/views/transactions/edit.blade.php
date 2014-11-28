@@ -1,5 +1,6 @@
 @extends('layouts.default')
 @section('content')
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $journal) }}
 {{Form::open(['class' => 'form-horizontal','url' => route('transactions.update',$journal->id)])}}
 
 

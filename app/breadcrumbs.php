@@ -1,4 +1,5 @@
 <?php
+use Carbon\Carbon;
 use DaveJamesMiller\Breadcrumbs\Generator;
 use FireflyIII\Exception\FireflyException;
 
@@ -208,13 +209,13 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'recurring.edit', function (Generator $breadcrumbs, RecurringTransaction $recurring) {
         $breadcrumbs->parent('recurring.show', $recurring);
-        $breadcrumbs->push('Edit '.$recurring->name, route('recurring.edit',$recurring->id));
+        $breadcrumbs->push('Edit ' . $recurring->name, route('recurring.edit', $recurring->id));
     }
 );
 Breadcrumbs::register(
     'recurring.delete', function (Generator $breadcrumbs, RecurringTransaction $recurring) {
         $breadcrumbs->parent('recurring.show', $recurring);
-        $breadcrumbs->push('Delete '.$recurring->name, route('recurring.delete',$recurring->id));
+        $breadcrumbs->push('Delete ' . $recurring->name, route('recurring.delete', $recurring->id));
     }
 );
 
@@ -266,6 +267,94 @@ Breadcrumbs::register(
     'repeated.show', function (Generator $breadcrumbs, Piggybank $piggybank) {
         $breadcrumbs->parent('repeated.index');
         $breadcrumbs->push($piggybank->name, route('repeated.show', $piggybank->id));
+
+    }
+);
+
+// reports
+Breadcrumbs::register(
+    'reports.index', function (Generator $breadcrumbs) {
+        $breadcrumbs->parent('home');
+        $breadcrumbs->push('Reports', route('reports.index'));
+    }
+);
+
+Breadcrumbs::register(
+    'reports.year', function (Generator $breadcrumbs, Carbon $date) {
+        $breadcrumbs->parent('reports.index');
+        $breadcrumbs->push($date->format('Y'), route('reports.year', $date->format('Y')));
+    }
+);
+Breadcrumbs::register(
+    'reports.budgets', function (Generator $breadcrumbs, Carbon $date) {
+        $breadcrumbs->parent('reports.index');
+        $breadcrumbs->push('Budgets in ' . $date->format('F Y'), route('reports.budgets', $date->format('Y')));
+    }
+);
+Breadcrumbs::register(
+    'reports.unbalanced', function (Generator $breadcrumbs, Carbon $date) {
+        $breadcrumbs->parent('reports.index');
+        $breadcrumbs->push('Unbalanced transactions in ' . $date->format('F Y'), route('reports.unbalanced', $date->format('Y')));
+    }
+);
+// search
+Breadcrumbs::register(
+    'search', function (Generator $breadcrumbs, $query) {
+        $breadcrumbs->parent('home');
+        $breadcrumbs->push('Search for "' . e($query) . '"', route('search'));
+    }
+);
+
+// transactions
+Breadcrumbs::register(
+    'transactions.index', function (Generator $breadcrumbs, $what) {
+        $breadcrumbs->parent('home');
+
+        switch ($what) {
+            case 'expenses':
+            case 'withdrawal':
+                $subTitle = 'Expenses';
+                break;
+            case 'revenue':
+            case 'deposit':
+                $subTitle = 'Revenue, income and deposits';
+                break;
+            case 'transfer':
+            case 'transfers':
+                $subTitle = 'Transfers';
+                break;
+            default:
+                throw new FireflyException('Cannot handle $what "'.e($what).'" in bread crumbs');
+        }
+
+        $breadcrumbs->push($subTitle, route('transactions.index', $what));
+    }
+);
+Breadcrumbs::register(
+    'transactions.create', function (Generator $breadcrumbs, $what) {
+        $breadcrumbs->parent('transactions.index', $what);
+        $breadcrumbs->push('Create new ' . $what, route('transactions.create', $what));
+    }
+);
+
+Breadcrumbs::register(
+    'transactions.edit', function (Generator $breadcrumbs, TransactionJournal $journal) {
+        $breadcrumbs->parent('transactions.show', $journal);
+        $breadcrumbs->push('Edit ' . $journal->description, route('transactions.edit', $journal->id));
+    }
+);
+Breadcrumbs::register(
+    'transactions.delete', function (Generator $breadcrumbs, TransactionJournal $journal) {
+        $breadcrumbs->parent('transactions.show', $journal);
+        $breadcrumbs->push('Delete ' . $journal->description, route('transactions.delete', $journal->id));
+    }
+);
+
+Breadcrumbs::register(
+    'transactions.show', function (Generator $breadcrumbs, TransactionJournal $journal) {
+
+        $breadcrumbs->parent('transactions.index', strtolower($journal->transactionType->type));
+        $breadcrumbs->push($journal->description, route('transactions.show', $journal->id));
 
     }
 );

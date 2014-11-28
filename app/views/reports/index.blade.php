@@ -1,5 +1,6 @@
 @extends('layouts.default')
 @section('content')
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName()) }}
 <div class="row">
  <div class="col-lg-4 col-md-4 col-sm-4">
     <div class="panel panel-default">
