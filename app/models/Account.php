@@ -92,7 +92,7 @@ class Account extends Ardent
      */
     public function transactionjournals()
     {
-        return $this->hasManyThrough('TransactionJournal', 'Transaction');
+        return $this->hasManyThrough('TransactionJournal', 'Transaction','transaction_journal_id','id');
     }
 
     /**
