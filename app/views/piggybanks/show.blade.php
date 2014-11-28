@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $piggybank) }}
 <div class="row">
     <div class="col-lg-8 col-md-8 col-sm-6">
         <div class="panel panel-default">

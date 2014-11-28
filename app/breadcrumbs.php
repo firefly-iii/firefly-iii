@@ -124,8 +124,43 @@ Breadcrumbs::register(
 
 Breadcrumbs::register(
     'categories.show', function (Generator $breadcrumbs, Category $category) {
-        $breadcrumbs->parent('budgets.index');
+        $breadcrumbs->parent('categories.index');
         $breadcrumbs->push($category->name, route('categories.show', $category->id));
+
+    }
+);
+
+// piggy banks
+Breadcrumbs::register(
+    'piggybanks.index', function (Generator $breadcrumbs) {
+        $breadcrumbs->parent('home');
+        $breadcrumbs->push('Piggy banks', route('piggybanks.index'));
+    }
+);
+Breadcrumbs::register(
+    'piggybanks.create', function (Generator $breadcrumbs) {
+        $breadcrumbs->parent('piggybanks.index');
+        $breadcrumbs->push('Create new piggy bank', route('piggybanks.create'));
+    }
+);
+
+Breadcrumbs::register(
+    'piggybanks.edit', function (Generator $breadcrumbs, Piggybank $piggybank) {
+        $breadcrumbs->parent('piggybanks.show', $piggybank);
+        $breadcrumbs->push('Edit '.$piggybank->name, route('piggybanks.edit',$piggybank->id));
+    }
+);
+Breadcrumbs::register(
+    'piggybanks.delete', function (Generator $breadcrumbs, Piggybank $piggybank) {
+        $breadcrumbs->parent('piggybanks.show', $piggybank);
+        $breadcrumbs->push('Delete '.$piggybank->name, route('piggybanks.delete',$piggybank->id));
+    }
+);
+
+Breadcrumbs::register(
+    'piggybanks.show', function (Generator $breadcrumbs, Piggybank $piggybank) {
+        $breadcrumbs->parent('piggybanks.index');
+        $breadcrumbs->push($piggybank->name, route('piggybanks.show', $piggybank->id));
 
     }
 );
