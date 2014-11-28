@@ -1,5 +1,6 @@
 @extends('layouts.default')
 @section('content')
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $what, $account) }}
 <div class="row">
     <div class="col-lg-8 col-md-6 col-sm-12">
         <div class="panel panel-default">
@@ -20,7 +21,6 @@
             </div>
             <div class="panel-body">
                 <p>
-                <!-- TODO clean up these methods and everything associated with them. -->
                     @if($view == 'all')
                         <a href="{{route('accounts.show',$account->id)}}/session" class="btn btn-default">Stick to date-range</a>
                     @else

@@ -12,7 +12,7 @@
                     All instructions will be sent to you.
                 </p>
                 {{Form::open(['id' => 'register'])}}
-                <div class="form-group">
+                <div class="form-group"> <!-- {{App::environment()}} -->
                     <label for="inputEmail">Email address</label>
                     <input type="email" class="form-control" id="inputEmail" name="email" placeholder="Enter email">
                 </div>

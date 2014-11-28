@@ -130,55 +130,6 @@
     </div>
 </div>
 
-
-
-@foreach($budgets as $budget)
-{{--
-<div class="row">
-    <div class="col-lg-9 col-sm-8 col-md-8">
-        <div class="row">
-            <div class="col-lg-3 col-md-4 col-sm-4">
-                {{$budget->name}}
-            </div>
-            <div class="col-lg-7 col-md-4 col-sm-4">
-
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-3">
-                 <span id="budget-range-display-{{$budget->id}}" data-id="{{$budget->id}}"></span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-7 col-lg-offset-3 col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4">
-                @if($budget->pct > 0)
-                    <!-- display a progress bar. -->
-                    <div class="progress" id="budget-progress-{{$budget->id}}" data-spent="{{$budget->spent}}" data-amount="{{$budget->limit}}">
-
-                    </div>
-                @else
-                    <!-- do NOT display a progress bar. -->
-                    <div style="display:none;" class="progress" id="budget-progress-{{$budget->id}}" data-spent="{{$budget->spent}}" data-amount="{{$budget->limit}}">
-
-                    </div>
-                @endif
-                <!--
-                    @if($budget->currentRep)
-                        @if($budget->currentRep->amount <= $budget->spent)
-                            Overspent on budget (budgeted: {{$budget->currentRep->amount}}, spent: {{$budget->spent}}).
-                        @else
-                            NOT overspent on budget (budgeted: {{$budget->currentRep->amount}}, spent: {{$budget->spent}}).
-
-                        @endif
-                    @else
-                        No limit.
-                    @endif
-                    -->
-            </div>
-        </div>
-    </div>
-</div>
---}}
-@endforeach
-
 <!-- DIALOG -->
 <div class="modal fade" id="monthlyBudgetModal">
 </div><!-- /.modal -->
