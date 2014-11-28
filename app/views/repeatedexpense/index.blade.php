@@ -1,5 +1,6 @@
 @extends('layouts.default')
 @section('content')
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName()) }}
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <p>
@@ -13,6 +14,7 @@
 
     </div>
 </div>
+<!-- TODO create update and destroy -->
 <div class="row">
 @foreach($expenses as $entry)
     <div class="col-lg-3 col-md-4 col-sm-6">
