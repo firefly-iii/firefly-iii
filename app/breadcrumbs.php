@@ -92,6 +92,40 @@ Breadcrumbs::register(
                 DateKit::periodShow($repetition->startdate, $repetition->limit->repeat_freq), route('budgets.show', $budget->id, $repetition->id)
             );
         }
-        //$breadcrumbs->push('Budgets', route('budgets.index'));
+    }
+);
+
+// categories
+Breadcrumbs::register(
+    'categories.index', function (Generator $breadcrumbs) {
+        $breadcrumbs->parent('home');
+        $breadcrumbs->push('Categories', route('categories.index'));
+    }
+);
+Breadcrumbs::register(
+    'categories.create', function (Generator $breadcrumbs) {
+        $breadcrumbs->parent('categories.index');
+        $breadcrumbs->push('Create new category', route('categories.create'));
+    }
+);
+
+Breadcrumbs::register(
+    'categories.edit', function (Generator $breadcrumbs, Category $category) {
+        $breadcrumbs->parent('categories.show', $category);
+        $breadcrumbs->push('Edit '.$category->name, route('categories.edit',$category->id));
+    }
+);
+Breadcrumbs::register(
+    'categories.delete', function (Generator $breadcrumbs, Category $category) {
+        $breadcrumbs->parent('categories.show', $category);
+        $breadcrumbs->push('Delete '.$category->name, route('categories.delete',$category->id));
+    }
+);
+
+Breadcrumbs::register(
+    'categories.show', function (Generator $breadcrumbs, Category $category) {
+        $breadcrumbs->parent('budgets.index');
+        $breadcrumbs->push($category->name, route('categories.show', $category->id));
+
     }
 );

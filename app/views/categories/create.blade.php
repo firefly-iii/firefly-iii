@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName()) }}
 {{Form::open(['class' => 'form-horizontal','url' => route('categories.store')])}}
 
 <div class="row">
