@@ -72,13 +72,13 @@ Breadcrumbs::register(
 
 Breadcrumbs::register(
     'budgets.edit', function (Generator $breadcrumbs, Budget $budget) {
-        $breadcrumbs->parent('budgets.index');
+        $breadcrumbs->parent('budgets.show', $budget);
         $breadcrumbs->push('Edit '.$budget->name, route('budgets.edit',$budget->id));
     }
 );
 Breadcrumbs::register(
     'budgets.delete', function (Generator $breadcrumbs, Budget $budget) {
-        $breadcrumbs->parent('budgets.index');
+        $breadcrumbs->parent('budgets.show', $budget);
         $breadcrumbs->push('Delete '.$budget->name, route('budgets.delete',$budget->id));
     }
 );
