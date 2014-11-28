@@ -141,7 +141,8 @@ Route::group(
         Route::get('/accounts/create/{what}', ['uses' => 'AccountController@create', 'as' => 'accounts.create'])->where('what', 'revenue|asset|expense');
         Route::get('/accounts/edit/{account}', ['uses' => 'AccountController@edit', 'as' => 'accounts.edit']);
         Route::get('/accounts/delete/{account}', ['uses' => 'AccountController@delete', 'as' => 'accounts.delete']);
-        Route::get('/accounts/show/{account}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
+        Route::get('/accounts/show/{account}/{view?}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
+
 
         // budget controller:
         Route::get('/budgets', ['uses' => 'BudgetController@index', 'as' => 'budgets.index']);
@@ -163,9 +164,9 @@ Route::group(
         Route::get('/chart/home/budgets', ['uses' => 'GoogleChartController@allBudgetsHomeChart']);
         Route::get('/chart/home/categories', ['uses' => 'GoogleChartController@allCategoriesHomeChart']);
         Route::get('/chart/home/recurring', ['uses' => 'GoogleChartController@recurringTransactionsOverview']);
-        Route::get('/chart/account/{account}', ['uses' => 'GoogleChartController@accountBalanceChart']);
-        Route::get('/chart/sankey/{account}/out', ['uses' => 'GoogleChartController@accountSankeyOutChart']);
-        Route::get('/chart/sankey/{account}/in', ['uses' => 'GoogleChartController@accountSankeyInChart']);
+        Route::get('/chart/account/{account}/{view?}', ['uses' => 'GoogleChartController@accountBalanceChart']);
+        Route::get('/chart/sankey/{account}/out/{view?}', ['uses' => 'GoogleChartController@accountSankeyOutChart']);
+        Route::get('/chart/sankey/{account}/in/{view?}', ['uses' => 'GoogleChartController@accountSankeyInChart']);
         Route::get('/chart/reports/income-expenses/{year}', ['uses' => 'GoogleChartController@yearInExp']);
         Route::get('/chart/reports/income-expenses-sum/{year}', ['uses' => 'GoogleChartController@yearInExpSum']);
         Route::get('/chart/recurring/{recurring}', ['uses' => 'GoogleChartController@recurringOverview']);
