@@ -24,7 +24,8 @@
         "laravel/framework": "4.2.*",
         "laravelbook/ardent": "~2.4",
         "davejamesmiller/laravel-breadcrumbs": "2.*",
-        "grumpydictator/gchart": "dev-master"
+        "grumpydictator/gchart": "dev-master",
+        "michelf/php-markdown": "1.*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "@stable",
