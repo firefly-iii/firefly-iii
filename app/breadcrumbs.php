@@ -323,6 +323,9 @@ Breadcrumbs::register(
             case 'transfers':
                 $subTitle = 'Transfers';
                 break;
+            case 'opening balance':
+                $subTitle = 'Opening balances';
+                break;
             default:
                 throw new FireflyException('Cannot handle $what "'.e($what).'" in bread crumbs');
         }
@@ -340,7 +343,7 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'transactions.edit', function (Generator $breadcrumbs, TransactionJournal $journal) {
         $breadcrumbs->parent('transactions.show', $journal);
-        $breadcrumbs->push('Edit ' . $journal->description, route('transactions.edit', $journal->id));
+        $breadcrumbs->push('Edit ' . $journal->description, route('transactions.edit', $journal ->id));
     }
 );
 Breadcrumbs::register(
