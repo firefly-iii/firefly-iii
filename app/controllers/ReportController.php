@@ -1,6 +1,5 @@
 <?php
 use Carbon\Carbon;
-use Illuminate\Support\Collection;
 
 /**
  * Class ReportController
@@ -177,7 +176,7 @@ class ReportController extends BaseController
          */
         $deposits = $journals->filter(
             function (TransactionJournal $journal) {
-                if ($journal->transactionType->type == 'Withdrawal' && count($journal->budgets) == 0) {
+                if ($journal->transactionType->type == 'Deposit' && count($journal->budgets) == 0) {
                     return $journal;
                 }
             }
@@ -220,22 +219,30 @@ class ReportController extends BaseController
          */
         $deposits = $deposits->filter(
             function (TransactionJournal $journal) {
+                echo 'Now at #'.$journal->id.': '.$journal->description.'<br>';
                 foreach ($journal->transactions as $transaction) {
+
                     if (floatval($transaction->amount) < 0) {
                         $account = $transaction->account;
                         // find counter transfer:
-                        $counters = $account->transactions()->where('amount', floatval($transaction->amount))
+                        $counters = $account->transactions()->where('amount', floatval($transaction->amount) * -1)
                                             ->where('account_id', '=', $transaction->account_id)
                                             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                                             ->where('transaction_journals.description', 'LIKE', '%' . e($journal->description) . '%')
-                                            ->count();
-                        if($counters == 0) {
+                                            ->get(['transactions.*']);
+                        /** @var Transaction $transaction */
+                        foreach($counters as $transaction) {
+                            echo 'Found possible counter: #'.$transaction->transaction_journal_id.': '.$transaction->transactionJournal->description.'<br>';
+                        }
+                        if($counters->count() == 0) {
                             return $journal;
                         }
                     }
                 }
+                echo '<br>';
             }
         );
+        exit;
 
         return View::make('reports.unbalanced', compact('start', 'end', 'title', 'subTitle', 'subTitleIcon', 'mainTitleIcon', 'withdrawals','deposits'));
     }
