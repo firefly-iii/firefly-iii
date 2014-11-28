@@ -1,5 +1,6 @@
 @extends('layouts.default')
 @section('content')
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $query) }}
 @if(!is_null($query))
 <div class="row">
     @if(isset($result['transactions']) && $result['transactions']->count() > 0)
