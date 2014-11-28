@@ -73,13 +73,13 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'budgets.edit', function (Generator $breadcrumbs, Budget $budget) {
         $breadcrumbs->parent('budgets.show', $budget);
-        $breadcrumbs->push('Edit '.$budget->name, route('budgets.edit',$budget->id));
+        $breadcrumbs->push('Edit ' . $budget->name, route('budgets.edit', $budget->id));
     }
 );
 Breadcrumbs::register(
     'budgets.delete', function (Generator $breadcrumbs, Budget $budget) {
         $breadcrumbs->parent('budgets.show', $budget);
-        $breadcrumbs->push('Delete '.$budget->name, route('budgets.delete',$budget->id));
+        $breadcrumbs->push('Delete ' . $budget->name, route('budgets.delete', $budget->id));
     }
 );
 
@@ -112,13 +112,13 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'categories.edit', function (Generator $breadcrumbs, Category $category) {
         $breadcrumbs->parent('categories.show', $category);
-        $breadcrumbs->push('Edit '.$category->name, route('categories.edit',$category->id));
+        $breadcrumbs->push('Edit ' . $category->name, route('categories.edit', $category->id));
     }
 );
 Breadcrumbs::register(
     'categories.delete', function (Generator $breadcrumbs, Category $category) {
         $breadcrumbs->parent('categories.show', $category);
-        $breadcrumbs->push('Delete '.$category->name, route('categories.delete',$category->id));
+        $breadcrumbs->push('Delete ' . $category->name, route('categories.delete', $category->id));
     }
 );
 
@@ -129,6 +129,7 @@ Breadcrumbs::register(
 
     }
 );
+
 
 // piggy banks
 Breadcrumbs::register(
@@ -147,13 +148,13 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'piggybanks.edit', function (Generator $breadcrumbs, Piggybank $piggybank) {
         $breadcrumbs->parent('piggybanks.show', $piggybank);
-        $breadcrumbs->push('Edit '.$piggybank->name, route('piggybanks.edit',$piggybank->id));
+        $breadcrumbs->push('Edit ' . $piggybank->name, route('piggybanks.edit', $piggybank->id));
     }
 );
 Breadcrumbs::register(
     'piggybanks.delete', function (Generator $breadcrumbs, Piggybank $piggybank) {
         $breadcrumbs->parent('piggybanks.show', $piggybank);
-        $breadcrumbs->push('Delete '.$piggybank->name, route('piggybanks.delete',$piggybank->id));
+        $breadcrumbs->push('Delete ' . $piggybank->name, route('piggybanks.delete', $piggybank->id));
     }
 );
 
@@ -161,6 +162,65 @@ Breadcrumbs::register(
     'piggybanks.show', function (Generator $breadcrumbs, Piggybank $piggybank) {
         $breadcrumbs->parent('piggybanks.index');
         $breadcrumbs->push($piggybank->name, route('piggybanks.show', $piggybank->id));
+
+    }
+);
+// preferences
+Breadcrumbs::register(
+    'preferences', function (Generator $breadcrumbs) {
+        $breadcrumbs->parent('home');
+        $breadcrumbs->push('Preferences', route('preferences'));
+
+    }
+);
+
+// profile
+Breadcrumbs::register(
+    'profile', function (Generator $breadcrumbs) {
+        $breadcrumbs->parent('home');
+        $breadcrumbs->push('Profile', route('profile'));
+
+    }
+);
+Breadcrumbs::register(
+    'change-password', function (Generator $breadcrumbs) {
+        $breadcrumbs->parent('profile');
+        $breadcrumbs->push('Change your password', route('change-password'));
+
+    }
+);
+
+// recurring transactions
+Breadcrumbs::register(
+    'recurring.index', function (Generator $breadcrumbs) {
+        $breadcrumbs->parent('home');
+        $breadcrumbs->push('Recurring transactions', route('recurring.index'));
+    }
+);
+Breadcrumbs::register(
+    'recurring.create', function (Generator $breadcrumbs) {
+        $breadcrumbs->parent('recurring.index');
+        $breadcrumbs->push('Create new recurring transaction', route('recurring.create'));
+    }
+);
+
+Breadcrumbs::register(
+    'recurring.edit', function (Generator $breadcrumbs, RecurringTransaction $recurring) {
+        $breadcrumbs->parent('recurring.show', $recurring);
+        $breadcrumbs->push('Edit '.$recurring->name, route('recurring.edit',$recurring->id));
+    }
+);
+Breadcrumbs::register(
+    'recurring.delete', function (Generator $breadcrumbs, RecurringTransaction $recurring) {
+        $breadcrumbs->parent('recurring.show', $recurring);
+        $breadcrumbs->push('Delete '.$recurring->name, route('recurring.delete',$recurring->id));
+    }
+);
+
+Breadcrumbs::register(
+    'recurring.show', function (Generator $breadcrumbs, RecurringTransaction $recurring) {
+        $breadcrumbs->parent('recurring.index');
+        $breadcrumbs->push($recurring->name, route('recurring.show', $recurring->id));
 
     }
 );
