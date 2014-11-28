@@ -165,6 +165,7 @@ Breadcrumbs::register(
 
     }
 );
+
 // preferences
 Breadcrumbs::register(
     'preferences', function (Generator $breadcrumbs) {
@@ -221,6 +222,50 @@ Breadcrumbs::register(
     'recurring.show', function (Generator $breadcrumbs, RecurringTransaction $recurring) {
         $breadcrumbs->parent('recurring.index');
         $breadcrumbs->push($recurring->name, route('recurring.show', $recurring->id));
+
+    }
+);
+
+// reminders
+Breadcrumbs::register(
+    'reminders.show', function (Generator $breadcrumbs, Reminder $reminder) {
+        $breadcrumbs->parent('home');
+        $breadcrumbs->push('Reminder #' . $reminder->id, route('reminders.show', $reminder->id));
+
+    }
+);
+
+// repeated expenses
+Breadcrumbs::register(
+    'repeated.index', function (Generator $breadcrumbs) {
+        $breadcrumbs->parent('home');
+        $breadcrumbs->push('Repeated expenses', route('repeated.index'));
+    }
+);
+Breadcrumbs::register(
+    'repeated.create', function (Generator $breadcrumbs) {
+        $breadcrumbs->parent('repeated.index');
+        $breadcrumbs->push('Create new repeated expense', route('repeated.create'));
+    }
+);
+
+Breadcrumbs::register(
+    'repeated.edit', function (Generator $breadcrumbs, Piggybank $piggybank) {
+        $breadcrumbs->parent('repeated.show', $piggybank);
+        $breadcrumbs->push('Edit ' . $piggybank->name, route('repeated.edit', $piggybank->id));
+    }
+);
+Breadcrumbs::register(
+    'repeated.delete', function (Generator $breadcrumbs, Piggybank $piggybank) {
+        $breadcrumbs->parent('repeated.show', $piggybank);
+        $breadcrumbs->push('Delete ' . $piggybank->name, route('repeated.delete', $piggybank->id));
+    }
+);
+
+Breadcrumbs::register(
+    'repeated.show', function (Generator $breadcrumbs, Piggybank $piggybank) {
+        $breadcrumbs->parent('repeated.index');
+        $breadcrumbs->push($piggybank->name, route('repeated.show', $piggybank->id));
 
     }
 );
