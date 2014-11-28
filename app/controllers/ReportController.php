@@ -157,7 +157,14 @@ class ReportController extends BaseController
         /** @var \FireflyIII\Database\TransactionJournal $journalRepository */
         $journalRepository = App::make('FireflyIII\Database\TransactionJournal');
 
-        $journals    = $journalRepository->getInDateRange($start, $end);
+        /*
+         * Get all journals from this month:
+         */
+        $journals = $journalRepository->getInDateRange($start, $end);
+
+        /*
+         * Filter withdrawals:
+         */
         $withdrawals = $journals->filter(
             function (TransactionJournal $journal) {
                 if ($journal->transactionType->type == 'Withdrawal' && count($journal->budgets) == 0) {
@@ -165,8 +172,19 @@ class ReportController extends BaseController
                 }
             }
         );
-
-        // filter again for transfers
+        /*
+         * Filter deposits.
+         */
+        $deposits = $journals->filter(
+            function (TransactionJournal $journal) {
+                if ($journal->transactionType->type == 'Withdrawal' && count($journal->budgets) == 0) {
+                    return $journal;
+                }
+            }
+        );
+        /*
+         * Filter transfers:
+         */
         $transfers = $journals->filter(
             function (TransactionJournal $journal) {
                 if ($journal->transactionType->type == 'Transfer') {
@@ -175,54 +193,51 @@ class ReportController extends BaseController
             }
         );
 
-        $withdrawals->each(
+        /*
+         * Filter withdrawals without a counter-transfer (into this account)
+         */
+        $withdrawals = $withdrawals->filter(
             function (TransactionJournal $journal) {
-                $collection = new Collection;
-                /** @var Transaction $transaction */
                 foreach ($journal->transactions as $transaction) {
                     if (floatval($transaction->amount) < 0) {
                         $account = $transaction->account;
                         // find counter transfer:
                         $counters = $account->transactions()->where('amount', floatval($transaction->amount) * -1)
+                                            ->where('account_id', '=', $transaction->account_id)
                                             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                                             ->where('transaction_journals.description', 'LIKE', '%' . e($journal->description) . '%')
-                                            ->get(['transactions.*']);
-                        /** @var Transaction $ct */
-                        foreach ($counters as $ct) {
-                            $collection->push($ct->transactionjournal);
+                                            ->count();
+                        if($counters == 0) {
+                            return $journal;
                         }
                     }
                 }
-                $journal->counters = $collection;
             }
         );
 
-        // same for transfers but the other way around! Yay!
-        $transfers->each(
+        /*
+         * Filter deposits without a counter-transfer (away from this account)
+         */
+        $deposits = $deposits->filter(
             function (TransactionJournal $journal) {
-                $collection = new Collection;
-                /** @var Transaction $transaction */
                 foreach ($journal->transactions as $transaction) {
                     if (floatval($transaction->amount) < 0) {
                         $account = $transaction->account;
-                        // TODO this has to be the most lame way of filtering ever.
-                        $descr = trim(str_replace('Geld voor','',$journal->description));
                         // find counter transfer:
                         $counters = $account->transactions()->where('amount', floatval($transaction->amount))
+                                            ->where('account_id', '=', $transaction->account_id)
                                             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                            ->where('transaction_journals.description', 'LIKE', '%' . $descr . '%')
-                                            ->get(['transactions.*']);
-                        /** @var Transaction $ct */
-                        foreach ($counters as $ct) {
-                            $collection->push($ct->transactionjournal);
+                                            ->where('transaction_journals.description', 'LIKE', '%' . e($journal->description) . '%')
+                                            ->count();
+                        if($counters == 0) {
+                            return $journal;
                         }
                     }
                 }
-                $journal->counters = $collection;
             }
         );
 
-        return View::make('reports.unbalanced', compact('start','transfers', 'end', 'title', 'subTitle', 'subTitleIcon', 'mainTitleIcon', 'withdrawals'));
+        return View::make('reports.unbalanced', compact('start', 'end', 'title', 'subTitle', 'subTitleIcon', 'mainTitleIcon', 'withdrawals','deposits'));
     }
 
     /**
