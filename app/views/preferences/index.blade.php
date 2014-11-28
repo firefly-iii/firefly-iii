@@ -1,5 +1,6 @@
 @extends('layouts.default')
 @section('content')
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName()) }}
 <!-- form -->
 {{Form::open(['class' => 'form-horizontal'])}}
 

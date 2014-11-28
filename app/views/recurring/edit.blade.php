@@ -1,5 +1,6 @@
 @extends('layouts.default')
 @section('content')
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $recurringTransaction) }}
 {{Form::model($recurringTransaction, ['class' => 'form-horizontal','url' => route('recurring.update', $recurringTransaction->id)])}}
 
 <div class="row">
