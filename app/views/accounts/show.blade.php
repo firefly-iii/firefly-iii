@@ -21,10 +21,10 @@
             <div class="panel-body">
                 <p>
                 <!-- TODO clean up these methods and everything associated with them. -->
-                    @if(Input::get('showAll') == 'true')
-                        <a href="{{route('accounts.show',$account->id)}}" class="btn btn-default">Stick to date-range</a>
+                    @if($view == 'all')
+                        <a href="{{route('accounts.show',$account->id)}}/session" class="btn btn-default">Stick to date-range</a>
                     @else
-                        <a href="{{route('accounts.show',$account->id)}}?showAll=true" class="btn btn-default">Show all transactions</a>
+                        <a href="{{route('accounts.show',$account->id)}}/all" class="btn btn-default">Show all transactions</a>
                     @endif
                 </p>
             </div>
@@ -74,6 +74,7 @@
 @section('scripts')
 <script type="text/javascript">
     var accountID = {{{$account->id}}};
+    var view = '{{{$view}}}';
 </script>
 <!-- load the libraries and scripts necessary for Google Charts: -->
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>

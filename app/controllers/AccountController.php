@@ -219,10 +219,11 @@ class AccountController extends BaseController
 
     /**
      * @param Account $account
+     * @param string  $view
      *
      * @return $this
      */
-    public function show(Account $account)
+    public function show(Account $account, $view = 'session')
     {
         switch ($account->accountType->type) {
             case 'Asset account':
@@ -241,16 +242,19 @@ class AccountController extends BaseController
         // get a paginated view of all transactions for this account:
         /** @var \FireflyIII\Database\Account $acct */
         $acct = App::make('FireflyIII\Database\Account');
-        if (Input::get('showAll') == 'true') {
+        switch ($view) {
+            default:
+            case 'session':
+                $journals = $acct->getTransactionJournals($account, 50);
+                break;
+            case 'all':
+                $journals = $acct->getAllTransactionJournals($account, 50);
 
-            $journals = $acct->getAllTransactionJournals($account, 50);
-        } else {
-            $journals = $acct->getTransactionJournals($account, 50);
+                break;
         }
 
 
-        //$data = $this->_accounts->show($account, 40);
-        return View::make('accounts.show', compact('account', 'subTitleIcon', 'journals'))->with('account', $account)->with(
+        return View::make('accounts.show', compact('account', 'view', 'subTitleIcon', 'journals'))->with('account', $account)->with(
             'subTitle', 'Details for ' . strtolower($account->accountType->type) . ' "' . $account->name . '"'
         );
     }

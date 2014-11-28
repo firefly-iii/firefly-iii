@@ -10,18 +10,39 @@ class GoogleChartController extends BaseController
     /**
      * @param Account $account
      */
-    public function accountBalanceChart(Account $account)
+    public function accountBalanceChart(Account $account, $view = 'session')
     {
         /** @var \Grumpydictator\Gchart\GChart $chart */
         $chart = App::make('gchart');
+
         $chart->addColumn('Day of month', 'date');
         $chart->addColumn('Balance for ' . $account->name, 'number');
 
         /*
          * Loop the date, then loop the accounts, then add balance.
          */
-        $start   = Session::get('start');
-        $end     = Session::get('end');
+        switch ($view) {
+            default:
+            case 'session':
+                $start = Session::get('start');
+                $end   = Session::get('end');
+                break;
+            case 'all':
+                $first = $account->transactionjournals()->orderBy('date', 'DESC')->first();
+                $last  = $account->transactionjournals()->orderBy('date', 'ASC')->first();
+                if (is_null($first)) {
+                    $start = Session::get('start');
+                } else {
+                    $start = clone $first->date;
+                }
+                if (is_null($last)) {
+                    $end = Session::get('end');
+                } else {
+                    $end = clone $last->date;
+                }
+                break;
+        }
+
         $current = clone $start;
 
         while ($end >= $current) {
@@ -47,7 +68,7 @@ class GoogleChartController extends BaseController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function accountSankeyInChart(Account $account)
+    public function accountSankeyInChart(Account $account, $view = 'session')
     {
         // collect all relevant entries.
         $set = [];
@@ -58,13 +79,34 @@ class GoogleChartController extends BaseController
         $chart->addColumn('To', 'string', 'domain');
         $chart->addColumn('Weight', 'number');
 
+        switch ($view) {
+            default:
+            case 'session':
+                $start = Session::get('start');
+                $end   = Session::get('end');
+                break;
+            case 'all':
+                $first = $account->transactionjournals()->orderBy('date', 'DESC')->first();
+                $last  = $account->transactionjournals()->orderBy('date', 'ASC')->first();
+                if (is_null($first)) {
+                    $start = Session::get('start');
+                } else {
+                    $start = clone $first->date;
+                }
+                if (is_null($last)) {
+                    $end = Session::get('end');
+                } else {
+                    $end = clone $last->date;
+                }
+                break;
+        }
+
+
         $transactions = $account->transactions()->with(
             ['transactionjournal', 'transactionjournal.transactions' => function ($q) {
                 $q->where('amount', '<', 0);
             }, 'transactionjournal.budgets', 'transactionjournal.transactiontype', 'transactionjournal.categories']
-        )->before(Session::get('end'))->after(
-            Session::get('start')
-        )->get();
+        )->before($end)->after($start)->get();
 
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
@@ -106,7 +148,7 @@ class GoogleChartController extends BaseController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function accountSankeyOutChart(Account $account)
+    public function accountSankeyOutChart(Account $account, $view = 'session')
     {
         // collect all relevant entries.
         $set = [];
