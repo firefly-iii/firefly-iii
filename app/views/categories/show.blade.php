@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $category) }}
 <div class="row">
     <div class="col-lg-9 col-md-9 col-sm-7">
         <div class="panel panel-default">
@@ -22,6 +22,7 @@
         </div>
     </div>
     <div class="col-lg-3 col-md-3 col-sm-5">
+    <!-- TODO do this -->
         BLa bla something here.
     </div>
 </div>
