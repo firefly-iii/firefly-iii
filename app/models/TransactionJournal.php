@@ -71,7 +71,6 @@ class TransactionJournal extends Ardent
            'date'                    => 'required|date',
            'completed'               => 'required|between:0,1'];
 
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -276,6 +275,11 @@ class TransactionJournal extends Ardent
     public function user()
     {
         return $this->belongsTo('User');
+    }
+
+    public function transactiongroups()
+    {
+        return $this->belongsToMany('TransactionGroup');
     }
 
 }

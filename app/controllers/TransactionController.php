@@ -2,6 +2,7 @@
 
 
 use FireflyIII\Exception\FireflyException;
+use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 
 /**
@@ -286,8 +287,25 @@ class TransactionController extends BaseController
                 break;
         }
 
-        return View::make('transactions.index', compact('subTitle', 'subTitleIcon', 'journals'))->with('what', $what);
+        return View::make('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'journals'));
 
+    }
+
+    public function relate(TransactionJournal $journal)
+    {
+        $groups  = $journal->transactiongroups()->get();
+        $members = new Collection;
+        /** @var TransactionGroup $group */
+        foreach ($groups as $group) {
+            /** @var TransactionJournal $jrnl */
+            foreach ($group->transactionjournals()->get() as $jrnl) {
+                if ($jrnl->id != $journal->id) {
+                    $members->push($jrnl);
+                }
+            }
+        }
+
+        return View::make('transactions.relate', compact('journal', 'members'));
     }
 
     /**
@@ -309,9 +327,18 @@ class TransactionController extends BaseController
                 $t->after  = $t->before + $t->amount;
             }
         );
+        $members = new Collection;
+        /** @var TransactionGroup $group */
+        foreach($journal->transactiongroups()->get() as $group) {
+            /** @var TransactionJournal $jrnl */
+            foreach($group->transactionjournals()->get() as $jrnl) {
+                if($jrnl->id != $journal->id) {
+                    $members->push($jrnl);
+                }
+            }
+        }
 
-
-        return View::make('transactions.show')->with('journal', $journal)->with(
+        return View::make('transactions.show', compact('journal', 'members'))->with(
             'subTitle', $journal->transactionType->type . ' "' . $journal->description . '"'
         );
     }

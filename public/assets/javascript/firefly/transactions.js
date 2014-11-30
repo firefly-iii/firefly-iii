@@ -18,4 +18,15 @@ $(document).ready(function () {
     if(typeof googleTablePaged != 'undefined') {
         googleTablePaged('table/transactions/' + what,'transaction-table');
     }
+    if($('#relateTransaction').length == 1) {
+        $('#relateTransaction').click(relateTransaction);
+    }
 });
+
+
+function relateTransaction(e) {
+    var target = $(e.target);
+    var ID = target.data('id');
+    $('#relationModal').empty().load('transaction/relate/' + ID).modal('show');
+    return false;
+}
