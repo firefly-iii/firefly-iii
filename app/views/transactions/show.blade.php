@@ -57,8 +57,34 @@
                     @include('list.piggybank-events',['events' => $journal->piggybankevents,'showPiggybank' => true])
                 </div>
             </div>
-
         @endif
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Related transactions
+            </div>
+                @if($members->count() == 0)
+                    <div class="panel-body">
+                        <p>
+                            <em>No related transactions</em>
+                        </p>
+                    </div>
+                @else
+                    <table class="table">
+                    @foreach($members as $jrnl)
+                        <tr>
+                            <td><input type="checkbox" checked="checked" data-id="{{$jrnl->id}}" class="relate-checkbox" /></td>
+                            <td><a href="#">{{{$jrnl->description}}}</a></td>
+                            <td>{{mf($jrnl->getAmount())}}</td>
+                        </tr>
+                    @endforeach
+                    </table>
+                @endif
+            <div class="panel-footer">
+            <p>
+                <a href="#" id="relateTransaction" data-id="{{$journal->id}}" class="btn btn-default"><i data-id="{{$journal->id}}" class="fa fa-compress"></i> Relate to another transaction</a>
+            </p>
+            </div>
+        </div>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12">
 
@@ -97,8 +123,13 @@
         </div>
     </div>
 </div>
+<!-- modal to relate transactions to each other -->
+<div class="modal fade" id="relationModal">
+
+</div>
 
 
 @stop
 @section('scripts')
+{{HTML::script('assets/javascript/firefly/transactions.js')}}
 @stop
