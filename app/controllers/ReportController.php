@@ -200,50 +200,17 @@ class ReportController extends BaseController
         //        );
 
         /*
-         * Filter withdrawals without a counter-transfer (into this account)
+         * TODO Filter withdrawals without a counter-transfer (into this account)
          */
-        $withdrawals = $withdrawals->filter(
-            function (TransactionJournal $journal) {
-                foreach ($journal->transactions as $transaction) {
-                    if (floatval($transaction->amount) < 0) {
-                        $account = $transaction->account;
-                        // find counter transfer:
-                        $counters = $account->transactions()->where('amount', floatval($transaction->amount) * -1)
-                                            ->where('account_id', '=', $transaction->account_id)
-                                            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                            ->where('transaction_journals.description', 'LIKE', '%' . e($journal->description) . '%')
-                                            ->get(['transactions.*']);
-                        if ($counters->count() == 0) {
-                            return $journal;
-                        }
-                    }
-                }
-            }
-        );
+
         /*
-         * Filter deposits without a counter-transfer (away from this account)
+         * TODO Filter deposits without a counter-transfer (away from this account)
          */
-        $deposits = $deposits->filter(
-            function (TransactionJournal $journal) {
-                foreach ($journal->transactions as $transaction) {
 
-                    if (floatval($transaction->amount) > 0) {
-                        $account = $transaction->account;
-                        // find counter transfer:
-                        $counters = $account->transactions()->where('amount', floatval($transaction->amount) * -1)
-                                            ->where('account_id', '=', $transaction->account_id)
-                                            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                            ->where('transaction_journals.description', 'LIKE', '%' . e($journal->description) . '%')
-                                            ->get(['transactions.*']);
-                        if ($counters->count() == 0) {
-                            return $journal;
-                        }
-                    }
-                }
-            }
-        );
+        $journals = $withdrawals->merge($deposits);
 
-        return View::make('reports.unbalanced', compact('start', 'end', 'title', 'subTitle', 'subTitleIcon', 'mainTitleIcon', 'withdrawals', 'deposits'));
+
+        return View::make('reports.unbalanced', compact('start', 'end', 'title', 'subTitle', 'subTitleIcon', 'mainTitleIcon', 'journals'));
     }
 
     /**
