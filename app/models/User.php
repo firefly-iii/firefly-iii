@@ -32,7 +32,7 @@ use LaravelBook\Ardent\Ardent;
  * @method static \Illuminate\Database\Query\Builder|\User whereReset($value)
  * @method static \Illuminate\Database\Query\Builder|\User whereRememberToken($value)
  * @method static \Illuminate\Database\Query\Builder|\User whereMigrated($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\Reminder[] $reminders
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Reminder[]             $reminders
  */
 class User extends Ardent implements UserInterface, RemindableInterface
 {
@@ -97,10 +97,6 @@ class User extends Ardent implements UserInterface, RemindableInterface
     {
         return $this->hasManyThrough('Piggybank', 'Account');
     }
-    public function transactions()
-    {
-        return $this->hasManyThrough('TransactionJournal', 'Transaction');
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -126,7 +122,6 @@ class User extends Ardent implements UserInterface, RemindableInterface
         return $this->hasMany('Reminder');
     }
 
-
     /**
      * @param $value
      */
@@ -141,6 +136,11 @@ class User extends Ardent implements UserInterface, RemindableInterface
     public function transactionjournals()
     {
         return $this->hasMany('TransactionJournal');
+    }
+
+    public function transactions()
+    {
+        return $this->hasManyThrough('TransactionJournal', 'Transaction');
     }
 
 }

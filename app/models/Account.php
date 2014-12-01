@@ -17,14 +17,14 @@ use LaravelBook\Ardent\Builder;
  * @property-read \Illuminate\Database\Eloquent\Collection|\Transaction[] $transactions
  * @property-read \Illuminate\Database\Eloquent\Collection|\Piggybank[] $piggybanks
  * @property-read \User $user
- * @method static \Illuminate\Database\Query\Builder|\Account whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Account whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Account whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Account whereUserId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Account whereAccountTypeId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Account whereName($value) 
- * @method static \Illuminate\Database\Query\Builder|\Account whereActive($value) 
- * @method static \Account accountTypeIn($types) 
+ * @method static \Illuminate\Database\Query\Builder|\Account whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Account whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Account whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Account whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Account whereAccountTypeId($value)
+ * @method static \Illuminate\Database\Query\Builder|\Account whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\Account whereActive($value)
+ * @method static \Account accountTypeIn($types)
  */
 class Account extends Ardent
 {
