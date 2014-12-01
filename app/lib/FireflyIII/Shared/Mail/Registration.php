@@ -1,5 +1,6 @@
 <?php
 namespace FireflyIII\Shared\Mail;
+use Swift_RfcComplianceException;
 
 /**
  * Class Registration
@@ -24,11 +25,13 @@ class Registration implements RegistrationInterface
 
 
         $data = ['password' => $password];
-        \Mail::send(
-            ['emails.user.register-html', 'emails.user.register-text'], $data, function ($message) use ($email) {
-                $message->to($email, $email)->subject('Welcome to Firefly!');
-            }
-        );
+        try {
+            \Mail::send(
+                ['emails.user.register-html', 'emails.user.register-text'], $data, function ($message) use ($email) {
+                    $message->to($email, $email)->subject('Welcome to Firefly!');
+                }
+            );
+        } catch(Swift_RfcComplianceException $e) {}
     }
 
     /**
