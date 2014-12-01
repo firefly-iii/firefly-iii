@@ -104,7 +104,7 @@ class Reminders
             }
             $end = \DateKit::endOfPeriod(clone $start, $piggybank->reminder);
             // should have a reminder for this period:
-            /** @var \Collection $reminders */
+            /** @var Collection $reminders */
             $reminders = $piggybank->reminders()->dateIs($start, $end)->get();
             if ($reminders->count() == 0) {
                 // create new!
@@ -113,7 +113,8 @@ class Reminders
                 $reminder->enddate   = $end;
                 $reminder->active    = 1;
                 $reminder->user()->associate($repository->getUser());
-                $reminder->remindersable()->associate($piggybank);
+                $reminder->remindersable_id= $piggybank->id;
+                $reminder->remindersable_type = 'Piggybank';
                 $reminder->save();
             }
         }

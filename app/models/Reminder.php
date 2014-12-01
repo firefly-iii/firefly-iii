@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use LaravelBook\Ardent\Ardent;
 
+
 /**
  * Reminder
  *
@@ -14,25 +15,22 @@ use LaravelBook\Ardent\Ardent;
  * @property \Carbon\Carbon $enddate
  * @property boolean $active
  * @property boolean $notnow
- * @property integer $remembersable_id
- * @property string $remembersable_type
- * @property-read \Piggybank $remindersable
- * @property-read \User $user
- * @property mixed $data
- * @method static \Illuminate\Database\Query\Builder|\Reminder whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Reminder whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Reminder whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Reminder whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\Reminder whereStartdate($value)
- * @method static \Illuminate\Database\Query\Builder|\Reminder whereEnddate($value)
- * @method static \Illuminate\Database\Query\Builder|\Reminder whereActive($value)
- * @method static \Illuminate\Database\Query\Builder|\Reminder whereRemembersableId($value)
- * @method static \Illuminate\Database\Query\Builder|\Reminder whereRemembersableType($value)
- * @method static \Reminder dateIs($start, $end)
  * @property integer $remindersable_id
  * @property string $remindersable_type
- * @method static \Illuminate\Database\Query\Builder|\Reminder whereRemindersableId($value)
- * @method static \Illuminate\Database\Query\Builder|\Reminder whereRemindersableType($value)
+ * @property-read \ $remindersable
+ * @property-read \User $user
+ * @property mixed $data
+ * @method static \Illuminate\Database\Query\Builder|\Reminder whereId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Reminder whereCreatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Reminder whereUpdatedAt($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Reminder whereUserId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Reminder whereStartdate($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Reminder whereEnddate($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Reminder whereActive($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Reminder whereNotnow($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Reminder whereRemindersableId($value) 
+ * @method static \Illuminate\Database\Query\Builder|\Reminder whereRemindersableType($value) 
+ * @method static \Reminder dateIs($start, $end) 
  */
 class Reminder extends Ardent
 {
