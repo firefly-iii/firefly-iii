@@ -38,7 +38,7 @@
                     <p>Spent {{mf($journal->getAmount())}}</p>
                     <p class="text-danger">No counter transaction!</p>
                     <p>
-                        <a href="#" class="btn btn-default">Add counter transaction</a>
+                        <a href="#"  data-id="{{{$journal->id}}}" class="relateTransaction btn btn-default">Add counter transaction</a>
                     </p>
                 </div>
             </div>
@@ -48,5 +48,6 @@
 @endif
 @stop
 @section('scripts')
-
+{{HTML::script('assets/javascript/firefly/reports.js')}}
+{{HTML::script('assets/javascript/firefly/related-manager.js')}}
 @stop

@@ -123,11 +123,6 @@
         </div>
     </div>
 </div>
-<!-- modal to relate transactions to each other -->
-<div class="modal fade" id="relationModal">
-
-</div>
-
 
 @stop
 @section('scripts')

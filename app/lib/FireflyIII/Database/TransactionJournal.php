@@ -473,7 +473,8 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      */
     public function get()
     {
-        return $this->getUser()->transactionjournals()->with(['TransactionType','transactions','transactions.account','transactions.account.accountType'])->get();
+        return $this->getUser()->transactionjournals()->with(['TransactionType', 'transactions', 'transactions.account', 'transactions.account.accountType'])
+                    ->get();
     }
 
     /**
@@ -549,7 +550,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
 
     public function getDepositsPaginated($limit = 50)
     {
-        $offset = intval(\Input::get('page')) > 0 ? (intval(\Input::get('page'))-1) * $limit : 0;
+        $offset = intval(\Input::get('page')) > 0 ? (intval(\Input::get('page')) - 1) * $limit : 0;
 
         $set   = $this->getUser()->transactionJournals()->transactionTypes(['Deposit'])->withRelevantData()->take($limit)->offset($offset)->orderBy(
             'date', 'DESC'
@@ -588,7 +589,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
 
     public function getTransfersPaginated($limit = 50)
     {
-        $offset = intval(\Input::get('page')) > 0 ? (intval(\Input::get('page'))-1) * $limit : 0;
+        $offset = intval(\Input::get('page')) > 0 ? (intval(\Input::get('page')) - 1) * $limit : 0;
 
         $set   = $this->getUser()->transactionJournals()->transactionTypes(['Transfer'])->withRelevantData()->take($limit)->offset($offset)->orderBy(
             'date', 'DESC'
@@ -604,7 +605,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
 
     public function getWithdrawalsPaginated($limit = 50)
     {
-        $offset = intval(\Input::get('page')) > 0 ? (intval(\Input::get('page'))-1) * $limit : 0;
+        $offset = intval(\Input::get('page')) > 0 ? (intval(\Input::get('page')) - 1) * $limit : 0;
 
         $set   = $this->getUser()->transactionJournals()->transactionTypes(['Withdrawal'])->withRelevantData()->take($limit)->offset($offset)->orderBy(
             'date', 'DESC'
@@ -616,5 +617,38 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         }
 
         return \Paginator::make($items, $count, $limit);
+    }
+
+    /**
+     * @param string              $query
+     * @param \TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public function searchRelated($query, \TransactionJournal $journal)
+    {
+        $start = clone $journal->date;
+        $end   = clone $journal->date;
+        $start->startOfMonth();
+        $end->endOfMonth();
+
+        // get already related transactions:
+        $exclude = [$journal->id];
+        foreach ($journal->transactiongroups()->get() as $group) {
+            foreach ($group->transactionjournals() as $jrnl) {
+                $exclude[] = $jrnl->id;
+            }
+        }
+        $exclude = array_unique($exclude);
+
+        $query = $this->getUser()->transactionjournals()
+                      ->withRelevantData()
+                      ->before($end)
+                      ->after($start)
+                      ->whereNotIn('id', $exclude)
+                      ->where('description', 'LIKE', '%' . $query . '%')
+                      ->get();
+
+        return $query;
     }
 }
