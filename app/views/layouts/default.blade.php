@@ -79,6 +79,11 @@
     </div>
 </div>
 
+<!-- modal to relate transactions to each other -->
+<div class="modal fade" id="relationModal">
+
+</div>
+
 {{HTML::script('assets/javascript/jquery/jquery-2.1.1.min.js')}}
 {{HTML::script('assets/javascript/bootstrap/bootstrap.min.js')}}
 {{HTML::script('assets/javascript/metisMenu/jquery.metisMenu.min.js')}}

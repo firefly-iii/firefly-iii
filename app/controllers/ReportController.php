@@ -174,7 +174,11 @@ class ReportController extends BaseController
         $withdrawals = $journals->filter(
             function (TransactionJournal $journal) {
                 if ($journal->transactionType->type == 'Withdrawal' && count($journal->budgets) == 0) {
-                    return $journal;
+
+                    // count groups related to balance.
+                    if ($journal->transactiongroups()->where('relation', 'balance')->count() == 0) {
+                        return $journal;
+                    }
                 }
             }
         );
@@ -184,10 +188,15 @@ class ReportController extends BaseController
         $deposits = $journals->filter(
             function (TransactionJournal $journal) {
                 if ($journal->transactionType->type == 'Deposit' && count($journal->budgets) == 0) {
-                    return $journal;
+                    // count groups related to balance.
+                    if ($journal->transactiongroups()->where('relation', 'balance')->count() == 0) {
+                        return $journal;
+                    }
                 }
             }
         );
+
+
         /*
          * Filter transfers (not yet used)
          */

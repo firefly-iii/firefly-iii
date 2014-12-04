@@ -23,6 +23,37 @@ class TransactionController extends BaseController
         View::share('mainTitleIcon', 'fa-repeat');
     }
 
+    public function alreadyRelated(TransactionJournal $journal)
+    {
+
+        $ids = [];
+        /** @var TransactionGroup $group */
+        foreach ($journal->transactiongroups()->get() as $group) {
+            /** @var TransactionJournal $jrnl */
+            foreach ($group->transactionjournals()->get() as $jrnl) {
+                if ($jrnl->id != $journal->id) {
+                    $ids[] = $jrnl->id;
+                }
+            }
+        }
+        $unique = array_unique($ids);
+        if (count($ids) > 0) {
+
+            /** @var \FireflyIII\Database\TransactionJournal $repository */
+            $repository = App::make('FireflyIII\Database\TransactionJournal');
+            $set        = $repository->getByIds($ids);
+            $set->each(
+                function (TransactionJournal $journal) {
+                    $journal->amount = mf($journal->getAmount());
+                }
+            );
+
+            return Response::json($set->toArray());
+        } else {
+            return (new Collection)->toArray();
+        }
+    }
+
     /**
      * Shows the view helping the user to create a new transaction journal.
      *
@@ -120,6 +151,33 @@ class TransactionController extends BaseController
                 return Redirect::route('transactions.index', 'transfers');
                 break;
         }
+    }
+
+    public function doRelate()
+    {
+        $id     = intval(Input::get('id'));
+        $sister = intval(Input::get('relateTo'));
+
+        /** @var \FireflyIII\Database\TransactionJournal $repository */
+        $repository = App::make('FireflyIII\Database\TransactionJournal');
+
+        $journal = $repository->find($id);
+        $sis     = $repository->find($sister);
+
+        if ($journal && $sis) {
+            $group           = new TransactionGroup;
+            $group->relation = 'balance';
+            $group->user_id  = $repository->getUser()->id;
+            $group->save();
+            $group->transactionjournals()->save($journal);
+            $group->transactionjournals()->save($sis);
+
+            return Response::json(true);
+        }
+
+        return Response::json(false);
+
+
     }
 
     /**
@@ -308,6 +366,24 @@ class TransactionController extends BaseController
         return View::make('transactions.relate', compact('journal', 'members'));
     }
 
+    public function relatedSearch(TransactionJournal $journal)
+    {
+        $search = e(trim(Input::get('searchValue')));
+
+        /** @var \FireflyIII\Database\TransactionJournal $repository */
+        $repository = App::make('FireflyIII\Database\TransactionJournal');
+
+        $result = $repository->searchRelated($search, $journal);
+        $result->each(
+            function (TransactionJournal $j) {
+                $j->amount = mf($j->getAmount());
+            }
+        );
+
+        return Response::json($result->toArray());
+        // build custom query. TODO move
+    }
+
     /**
      * @param TransactionJournal $journal
      *
@@ -329,10 +405,10 @@ class TransactionController extends BaseController
         );
         $members = new Collection;
         /** @var TransactionGroup $group */
-        foreach($journal->transactiongroups()->get() as $group) {
+        foreach ($journal->transactiongroups()->get() as $group) {
             /** @var TransactionJournal $jrnl */
-            foreach($group->transactionjournals()->get() as $jrnl) {
-                if($jrnl->id != $journal->id) {
+            foreach ($group->transactionjournals()->get() as $jrnl) {
+                if ($jrnl->id != $journal->id) {
                     $members->push($jrnl);
                 }
             }

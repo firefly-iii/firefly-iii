@@ -45,25 +45,6 @@ $(function () {
                 remote: 'reminders/dialog'
             }
         );
-
-        // trigger on the buttons in the popup
-
-
-        // get some data from somewhere:
-//        $.getJSON('json/reminders').success(function (data) {
-//
-//            var html = '';
-//            $.each(data,function(i,v) {
-//                html += v.txt;
-//            });
-//
-//            $('#reminderModal .modal-body').html(html);
-//            $('#reminderModal').modal();
-//        }).fail(function () {
-//            alert('Could not load reminders.');
-//        });
-//
-
     });
 
 });

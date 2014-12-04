@@ -110,6 +110,7 @@
 
 @endif
 
+
 @stop
 @section('scripts')
 <!-- load the libraries and scripts necessary for Google Charts: -->

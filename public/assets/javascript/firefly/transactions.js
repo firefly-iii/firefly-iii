@@ -27,6 +27,7 @@ $(document).ready(function () {
 function relateTransaction(e) {
     var target = $(e.target);
     var ID = target.data('id');
+    alert("TODO remove me");
     $('#relationModal').empty().load('transaction/relate/' + ID).modal('show');
     return false;
 }
