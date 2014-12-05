@@ -33,6 +33,7 @@
                     {{Form::ffDate('openingbalancedate', date('Y-m-d'))}}
                     @endif
                     {{Form::ffCheckbox('active','1',true)}}
+                    {{Form::ffSelect('account_role',Config::get('firefly.accountRoles'))}}
             </div>
         </div>
 
