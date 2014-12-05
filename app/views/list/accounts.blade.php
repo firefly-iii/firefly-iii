@@ -2,6 +2,7 @@
     <tr>
         <th>&nbsp;</th>
         <th>Name</th>
+        <th>Role</th>
         <th>Current balance</th>
         <th>Active</th>
         <th>Last activity</th>
@@ -15,6 +16,7 @@
             </div>
         </td>
         <td><a href="{{route('accounts.show',$account->id)}}">{{{$account->name}}}</a></td>
+        <td>{{{$account->accountRole}}}</td>
         <td>{{mf(Steam::balance($account))}}</td>
         <td>
             @if($account->active)

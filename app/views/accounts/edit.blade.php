@@ -28,6 +28,7 @@
                 @if($account->accounttype->type == 'Default account' || $account->accounttype->type == 'Asset account')
                 {{Form::ffBalance('openingbalance')}}
                 {{Form::ffDate('openingbalancedate')}}
+                {{Form::ffSelect('account_role',$roles)}}
                 @endif
             </div>
         </div>
