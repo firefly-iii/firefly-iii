@@ -131,11 +131,13 @@ class AccountController extends BaseController
      */
     public function edit(Account $account)
     {
+        $prefilled = [];
 
         switch ($account->accountType->type) {
             case 'Asset account':
             case 'Default account':
-                $subTitleIcon = 'fa-money';
+                $subTitleIcon              = 'fa-money';
+                $prefilled['account_role'] = $account->getMeta('accountRole');
                 break;
             case 'Expense account':
             case 'Beneficiary account':
@@ -154,14 +156,14 @@ class AccountController extends BaseController
         if (!is_null($openingBalance)) {
             $prefilled['openingbalancedate'] = $openingBalance->date->format('Y-m-d');
             $prefilled['openingbalance']     = floatval($openingBalance->transactions()->where('account_id', $account->id)->first()->amount);
-            Session::flash('prefilled', $prefilled);
         }
+        Session::flash('prefilled', $prefilled);
 
-        return View::make('accounts.edit')->with('account', $account)->with('openingBalance', $openingBalance)->with(compact('subTitleIcon'))->with(
+        return View::make('accounts.edit', compact('account', 'openingBalance', 'subTitleIcon'))->with(
             'subTitle', 'Edit ' . strtolower(
                 $account->accountType->type
             ) . ' "' . $account->name . '"'
-        );
+        )->with('roles', Config::get('firefly.accountRoles'));
     }
 
     /**
