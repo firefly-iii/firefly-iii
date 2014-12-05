@@ -1,22 +1,21 @@
 <?php
-use Carbon\Carbon;
 use LaravelBook\Ardent\Ardent as Ardent;
 use LaravelBook\Ardent\Builder;
 
 /**
  * Account
  *
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $user_id
- * @property integer $account_type_id
- * @property string $name
- * @property boolean $active
- * @property-read \AccountType $accountType
+ * @property integer                                                      $id
+ * @property \Carbon\Carbon                                               $created_at
+ * @property \Carbon\Carbon                                               $updated_at
+ * @property integer                                                      $user_id
+ * @property integer                                                      $account_type_id
+ * @property string                                                       $name
+ * @property boolean                                                      $active
+ * @property-read \AccountType                                            $accountType
  * @property-read \Illuminate\Database\Eloquent\Collection|\Transaction[] $transactions
- * @property-read \Illuminate\Database\Eloquent\Collection|\Piggybank[] $piggybanks
- * @property-read \User $user
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Piggybank[]   $piggybanks
+ * @property-read \User                                                   $user
  * @method static \Illuminate\Database\Query\Builder|\Account whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Account whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Account whereUpdatedAt($value)
@@ -56,13 +55,20 @@ class Account extends Ardent
     }
 
     /**
-     * Transactions.
+     * @param $fieldName
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return mixed
      */
-    public function transactions()
+    public function getMeta($fieldName)
     {
-        return $this->hasMany('Transaction');
+        foreach ($this->accountMeta as $meta) {
+            if ($meta->name == $fieldName) {
+                return $meta->data;
+            }
+        }
+
+        return null;
+
     }
 
     /**
@@ -88,11 +94,56 @@ class Account extends Ardent
     }
 
     /**
+     *
+     * @param Builder $query
+     */
+    public function scopeWithMeta(Builder $query)
+    {
+        $query->with(['accountmeta']);
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
     public function transactionjournals()
     {
-        return $this->hasManyThrough('TransactionJournal', 'Transaction','transaction_journal_id','id');
+        return $this->hasManyThrough('TransactionJournal', 'Transaction', 'transaction_journal_id', 'id');
+    }
+
+    /**
+     * Transactions.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transactions()
+    {
+        return $this->hasMany('Transaction');
+    }
+
+    public function updateMeta($fieldName, $fieldValue)
+    {
+        $meta = $this->accountMeta()->get();
+        /** @var AccountMeta $entry */
+        foreach ($meta as $entry) {
+            if ($entry->name == $fieldName) {
+                $entry->data = $fieldValue;
+                $entry->save();
+
+                return $entry;
+            }
+        }
+        $meta = new AccountMeta;
+        $meta->account()->associate($this);
+        $meta->name  = $fieldName;
+        $meta->data = $fieldValue;
+        $meta->save();
+
+        return $meta;
+    }
+
+    public function accountMeta()
+    {
+        return $this->hasMany('AccountMeta');
     }
 
     /**
