@@ -487,6 +487,25 @@ class TransactionController extends BaseController
         }
     }
 
+    public function unrelate(TransactionJournal $journal)
+    {
+        $groups    = $journal->transactiongroups()->get();
+        $relatedTo = intval(Input::get('relation'));
+        /** @var TransactionGroup $group */
+        foreach ($groups as $group) {
+            foreach ($group->transactionjournals()->get() as $jrnl) {
+                if ($jrnl->id == $relatedTo) {
+                    // remove from group:
+                    $group->transactionjournals()->detach($relatedTo);
+                }
+            }
+            if ($group->transactionjournals()->count() == 1) {
+                $group->delete();
+            }
+        }
+        return Response::json(true);
+
+    }
 
     /**
      * @param TransactionJournal $journal
