@@ -1,14 +1,13 @@
 <?php
-use Carbon\Carbon;
 
 return [
     'index_periods'        => ['1D', '1W', '1M', '3M', '6M', '1Y', 'custom'],
     'budget_periods'       => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
     'piggybank_periods'    => [
-        'week'  => 'Week',
-        'month' => 'Month',
+        'week'    => 'Week',
+        'month'   => 'Month',
         'quarter' => 'Quarter',
-        'year'  => 'Year'
+        'year'    => 'Year'
     ],
     'periods_to_text'      => [
         'weekly'    => 'A week',
@@ -16,6 +15,11 @@ return [
         'quarterly' => 'A quarter',
         'half-year' => 'Six months',
         'yearly'    => 'A year',
+    ],
+
+    'accountRoles'         => [
+        'default'       => 'Default expense account',
+        'sharedExpense' => 'Shared expense account'
     ],
 
     'range_to_text'        => [
