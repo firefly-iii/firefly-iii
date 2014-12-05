@@ -272,6 +272,7 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
             $this->storeInitialBalance($account, $data);
         }
 
+        // TODO this needs cleaning up and thinking over.
         switch ($account->accountType->type) {
             case 'Asset account':
             case 'Default account':
@@ -299,6 +300,7 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
         $model->name   = $data['name'];
         $model->active = isset($data['active']) ? intval($data['active']) : 0;
 
+        // TODO this needs cleaning up and thinking over.
         switch ($model->accountType->type) {
             case 'Asset account':
             case 'Default account':
@@ -310,7 +312,7 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
 
         if (isset($data['openingbalance']) && isset($data['openingbalancedate']) && strlen($data['openingbalancedate']) > 0) {
             $openingBalance = $this->openingBalanceTransaction($model);
-
+            // TODO this needs cleaning up and thinking over.
             if (is_null($openingBalance)) {
                 $this->storeInitialBalance($model, $data);
             } else {

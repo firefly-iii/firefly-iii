@@ -23,6 +23,7 @@ class TransactionController extends BaseController
         View::share('mainTitleIcon', 'fa-repeat');
     }
 
+    // TODO this needs cleaning up and thinking over.
     public function alreadyRelated(TransactionJournal $journal)
     {
 
@@ -153,6 +154,7 @@ class TransactionController extends BaseController
         }
     }
 
+    // TODO this needs cleaning up and thinking over.
     public function doRelate()
     {
         $id     = intval(Input::get('id'));
@@ -366,6 +368,7 @@ class TransactionController extends BaseController
         return View::make('transactions.relate', compact('journal', 'members'));
     }
 
+    // TODO this needs cleaning up and thinking over.
     public function relatedSearch(TransactionJournal $journal)
     {
         $search = e(trim(Input::get('searchValue')));
@@ -487,6 +490,7 @@ class TransactionController extends BaseController
         }
     }
 
+    // TODO this needs cleaning up and thinking over.
     public function unrelate(TransactionJournal $journal)
     {
         $groups    = $journal->transactiongroups()->get();
