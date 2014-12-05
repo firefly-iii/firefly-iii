@@ -163,7 +163,7 @@ class AccountController extends BaseController
             'subTitle', 'Edit ' . strtolower(
                 $account->accountType->type
             ) . ' "' . $account->name . '"'
-        )->with('roles', Config::get('firefly.accountRoles'));
+        );
     }
 
     /**

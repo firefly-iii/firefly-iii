@@ -272,6 +272,13 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
             $this->storeInitialBalance($account, $data);
         }
 
+        switch ($account->accountType->type) {
+            case 'Asset account':
+            case 'Default account':
+                $account->updateMeta('accountRole', $data['account_role']);
+                break;
+        }
+
 
         /* Tell transaction journal to store a new one.*/
         \Event::fire('account.store', [$account]);
