@@ -384,7 +384,6 @@ class TransactionController extends BaseController
         );
 
         return Response::json($result->toArray());
-        // build custom query. TODO move
     }
 
     /**

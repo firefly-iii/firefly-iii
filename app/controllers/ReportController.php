@@ -208,14 +208,6 @@ class ReportController extends BaseController
         //            }
         //        );
 
-        /*
-         * TODO Filter withdrawals without a counter-transfer (into this account)
-         */
-
-        /*
-         * TODO Filter deposits without a counter-transfer (away from this account)
-         */
-
         $journals = $withdrawals->merge($deposits);
 
 

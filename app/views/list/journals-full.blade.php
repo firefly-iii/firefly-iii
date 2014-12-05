@@ -3,8 +3,7 @@
 @endif
 <table class="table table-striped table-bordered">
     <tr>
-        <th>&nbsp;</th>
-        <th>&nbsp;</th>
+        <th colspan="2">&nbsp;</th>
         <th>Description</th>
         <th>Amount</th>
         <th>Date</th>
