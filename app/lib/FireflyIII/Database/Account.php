@@ -89,7 +89,7 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
         /*
          * Basic query:
          */
-        $query = $this->getUser()->accounts()->accountTypeIn($types);
+        $query = $this->getUser()->accounts()->accountTypeIn($types)->withMeta();
 
 
         /*
@@ -128,7 +128,22 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
      */
     public function getAssetAccounts()
     {
-        return $this->getAccountsByType(['Default account', 'Asset account']);
+        $list = $this->getAccountsByType(['Default account', 'Asset account']);
+        $list->each(
+            function (\Account $account) {
+                /** @var \AccountMeta $entry */
+                foreach ($account->accountmeta as $entry) {
+                    if ($entry->name == 'accountRole') {
+                        $account->accountRole = \Config::get('firefly.accountRoles.' . $entry->data);
+                    }
+                }
+                if (!isset($account->accountRole)) {
+                    $account->accountRole = 'Default expense account';
+                }
+            }
+        );
+
+        return $list;
 
     }
 
@@ -276,25 +291,38 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
     {
         $model->name   = $data['name'];
         $model->active = isset($data['active']) ? intval($data['active']) : 0;
+
+        switch ($model->accountType->type) {
+            case 'Asset account':
+            case 'Default account':
+                $model->updateMeta('accountRole', $data['account_role']);
+                break;
+        }
+
         $model->save();
 
         if (isset($data['openingbalance']) && isset($data['openingbalancedate']) && strlen($data['openingbalancedate']) > 0) {
             $openingBalance = $this->openingBalanceTransaction($model);
 
-            $openingBalance->date = new Carbon($data['openingbalancedate']);
-            $openingBalance->save();
-            $amount = floatval($data['openingbalance']);
-            /** @var \Transaction $transaction */
-            foreach ($openingBalance->transactions as $transaction) {
-                if ($transaction->account_id == $model->id) {
-                    $transaction->amount = $amount;
-                } else {
-                    $transaction->amount = $amount * -1;
+            if (is_null($openingBalance)) {
+                $this->storeInitialBalance($model, $data);
+            } else {
+                $openingBalance->date = new Carbon($data['openingbalancedate']);
+                $openingBalance->save();
+                $amount = floatval($data['openingbalance']);
+                /** @var \Transaction $transaction */
+                foreach ($openingBalance->transactions as $transaction) {
+                    if ($transaction->account_id == $model->id) {
+                        $transaction->amount = $amount;
+                    } else {
+                        $transaction->amount = $amount * -1;
+                    }
+                    $transaction->save();
                 }
-                $transaction->save();
             }
         }
         \Event::fire('account.update', [$model]);
+
         return true;
     }
 
@@ -328,6 +356,12 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
         $validator = \Validator::make([$model], \Account::$rules);
         if ($validator->invalid()) {
             $errors->merge($errors);
+        }
+
+        if (isset($model['account_role']) && !in_array($model['account_role'], array_keys(\Config::get('firefly.accountRoles')))) {
+            $errors->add('account_role', 'Invalid account role');
+        } else {
+            $successes->add('account_role', 'OK');
         }
 
         /*
