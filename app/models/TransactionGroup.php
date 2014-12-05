@@ -11,11 +11,11 @@ use LaravelBook\Ardent\Ardent;
  * @property string $relation
  * @property-read \Illuminate\Database\Eloquent\Collection|\TransactionJournal[] $transactionjournals
  * @property-read \User $user
- * @method static \Illuminate\Database\Query\Builder|\TransactionGroup whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\TransactionGroup whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\TransactionGroup whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\TransactionGroup whereUserId($value) 
- * @method static \Illuminate\Database\Query\Builder|\TransactionGroup whereRelation($value) 
+ * @method static \Illuminate\Database\Query\Builder|\TransactionGroup whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\TransactionGroup whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\TransactionGroup whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\TransactionGroup whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\TransactionGroup whereRelation($value)
  */
 class TransactionGroup extends Ardent
 {

@@ -21,8 +21,8 @@ use LaravelBook\Ardent\Builder;
  * @method static \Illuminate\Database\Query\Builder|\PiggybankRepetition whereStartdate($value)
  * @method static \Illuminate\Database\Query\Builder|\PiggybankRepetition whereTargetdate($value)
  * @method static \Illuminate\Database\Query\Builder|\PiggybankRepetition whereCurrentamount($value)
- * @method static \PiggybankRepetition starts($date) 
- * @method static \PiggybankRepetition targets($date) 
+ * @method static \PiggybankRepetition starts($date)
+ * @method static \PiggybankRepetition targets($date)
  */
 class PiggybankRepetition extends Ardent
 {

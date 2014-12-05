@@ -24,6 +24,8 @@ use LaravelBook\Ardent\Builder;
  * @method static \Illuminate\Database\Query\Builder|\Account whereName($value)
  * @method static \Illuminate\Database\Query\Builder|\Account whereActive($value)
  * @method static \Account accountTypeIn($types)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\AccountMeta[] $accountMeta
+ * @method static \Account withMeta() 
  */
 class Account extends Ardent
 {
@@ -42,6 +44,11 @@ class Account extends Ardent
 
         ];
 
+    /**
+     * Fillable fields.
+     *
+     * @var array
+     */
     protected $fillable = ['name', 'user_id', 'account_type_id', 'active'];
 
     /**
@@ -55,6 +62,7 @@ class Account extends Ardent
     }
 
     /**
+     *
      * @param $fieldName
      *
      * @return mixed
