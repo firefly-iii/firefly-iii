@@ -72,7 +72,7 @@
                     <table class="table">
                     @foreach($members as $jrnl)
                         <tr>
-                            <td><input type="checkbox" checked="checked" data-id="{{$jrnl->id}}" class="relate-checkbox" /></td>
+                            <td><input type="checkbox" checked="checked" data-relatedto="{{$journal->id}}" data-id="{{$jrnl->id}}" class="unrelate-checkbox" /></td>
                             <td><a href="#">{{{$jrnl->description}}}</a></td>
                             <td>{{mf($jrnl->getAmount())}}</td>
                         </tr>
@@ -81,7 +81,7 @@
                 @endif
             <div class="panel-footer">
             <p>
-                <a href="#" id="relateTransaction" data-id="{{$journal->id}}" class="btn btn-default"><i data-id="{{$journal->id}}" class="fa fa-compress"></i> Relate to another transaction</a>
+                <a href="#" data-id="{{$journal->id}}" class="relateTransaction btn btn-default"><i data-id="{{$journal->id}}" class="fa fa-compress"></i> Relate to another transaction</a>
             </p>
             </div>
         </div>
@@ -127,4 +127,5 @@
 @stop
 @section('scripts')
 {{HTML::script('assets/javascript/firefly/transactions.js')}}
+{{HTML::script('assets/javascript/firefly/related-manager.js')}}
 @stop

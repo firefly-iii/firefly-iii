@@ -1,7 +1,21 @@
 $(document).ready(function () {
     $('.relateTransaction').click(relateTransaction);
+    $('.unrelate-checkbox').click(unrelateTransaction);
 
 });
+
+function unrelateTransaction(e) {
+    var target = $(e.target);
+    var id = target.data('id');
+    var relatedTo = target.data('relatedto');
+
+    $.post('transactions/unrelate/' + relatedTo, {relation: id}).success(function (data) {
+        target.parent().parent().remove();
+    }).fail(function () {
+        alert('Could not!');
+    });
+
+}
 
 function relateTransaction(e) {
     var target = $(e.target);
@@ -12,7 +26,6 @@ function relateTransaction(e) {
     $('#relationModal').empty().load('transaction/relate/' + ID, function () {
 
         $('#relationModal').modal('show');
-        console.log($('#searchRelated').length + '!');
         getAlreadyRelatedTransactions(e, ID);
         $('#searchRelated').submit(function (e) {
             searchRelatedTransactions(e, ID);
@@ -20,7 +33,6 @@ function relateTransaction(e) {
             return false;
         });
     });
-    console.log($('#searchRelated').length);
 
 
     return false;
