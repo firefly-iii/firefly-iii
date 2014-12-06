@@ -9,6 +9,9 @@ class GoogleChartController extends BaseController
 
     /**
      * @param Account $account
+     * @param string  $view
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function accountBalanceChart(Account $account, $view = 'session')
     {
