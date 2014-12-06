@@ -2,34 +2,12 @@
 
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
-use LaravelBook\Ardent\Ardent as Ardent;
+use Watson\Validating\ValidatingTrait;
 
-/**
- * Limit
- *
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $component_id
- * @property \Carbon\Carbon $startdate
- * @property float $amount
- * @property boolean $repeats
- * @property string $repeat_freq
- * @property-read \Budget $budget
- * @property-read \Component $component
- * @property-read \Illuminate\Database\Eloquent\Collection|\LimitRepetition[] $limitrepetitions
- * @method static \Illuminate\Database\Query\Builder|\Limit whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereComponentId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereStartdate($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereAmount($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereRepeats($value) 
- * @method static \Illuminate\Database\Query\Builder|\Limit whereRepeatFreq($value) 
- */
-class Limit extends Ardent
+class Limit extends Eloquent
 {
 
+    use ValidatingTrait;
     public static $rules
         = [
             'component_id' => 'required|exists:components,id',
@@ -50,14 +28,7 @@ class Limit extends Ardent
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function component()
-    {
-        return $this->belongsTo('Component', 'component_id');
-    }
-
-    /**
+     * TODO see if this method is still used.
      * Create a new repetition for this limit, starting on
      * the given date.
      *
@@ -90,15 +61,15 @@ class Limit extends Ardent
         }
         $end->subDay();
         $count = $this->limitrepetitions()->where('startdate', $start->format('Y-m-d'))->where('enddate', $end->format('Y-m-d'))->count();
-        \Log::debug('All: '.$this->limitrepetitions()->count().' (#'.$this->id.')');
-        \Log::debug('Found ' . $count.' limit-reps for limit #' . $this->id.' with start '.$start->format('Y-m-d') .' and end ' . $end->format('Y-m-d'));
+        \Log::debug('All: ' . $this->limitrepetitions()->count() . ' (#' . $this->id . ')');
+        \Log::debug('Found ' . $count . ' limit-reps for limit #' . $this->id . ' with start ' . $start->format('Y-m-d') . ' and end ' . $end->format('Y-m-d'));
 
         if ($count == 0) {
 
-            $repetition = new \LimitRepetition();
+            $repetition            = new \LimitRepetition();
             $repetition->startdate = $start;
-            $repetition->enddate = $end;
-            $repetition->amount = $this->amount;
+            $repetition->enddate   = $end;
+            $repetition->amount    = $this->amount;
             $repetition->limit()->associate($this);
 
             try {
@@ -111,14 +82,16 @@ class Limit extends Ardent
                 \Log::error($e->getMessage());
             }
             if (isset($repetition->id)) {
-                \Event::fire('limits.repetition', [$repetition]);
+                \Event::fire('limits.repetition', [$repetition]); // not used, I guess?
             }
-        } else if($count == 1) {
-            // update this one:
-            $repetition = $this->limitrepetitions()->where('startdate', $start->format('Y-m-d'))->where('enddate', $end->format('Y-m-d'))->first();
-            $repetition->amount = $this->amount;
-            $repetition->save();
+        } else {
+            if ($count == 1) {
+                // update this one:
+                $repetition         = $this->limitrepetitions()->where('startdate', $start->format('Y-m-d'))->where('enddate', $end->format('Y-m-d'))->first();
+                $repetition->amount = $this->amount;
+                $repetition->save();
 
+            }
         }
     }
 

@@ -4,14 +4,14 @@
 
 App::before(
     function ($request) {
+        $reminders = [];
 
         if (Auth::check()) {
-            /** @var \Firefly\Helper\Toolkit\ToolkitInterface $toolkit */
-            $toolkit = App::make('Firefly\Helper\Toolkit\ToolkitInterface');
-            $toolkit->getDateRange();
-            $toolkit->checkImportJobs();
-            Event::fire('recurring.verify');
+            Filter::setSessionDateRange();
+            Reminders::updateReminders();
+            $reminders = Reminders::getReminders();
         }
+        View::share('reminders', $reminders);
 
     }
 );
@@ -68,6 +68,7 @@ Route::filter(
         if (Auth::check()) {
             return Redirect::to('/');
         }
+        return null;
     }
 );
 

@@ -1,5 +1,6 @@
 @extends('layouts.default')
 @section('content')
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $budget) }}
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <p class="lead">Use budgets to organize and limit your expenses.</p>

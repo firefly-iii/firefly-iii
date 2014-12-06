@@ -1,44 +1,44 @@
 @extends('layouts.default')
 @section('content')
-
-
-
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $category) }}
 <div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <p class="lead">Use categories to group your expenses</p>
-        <p class="text-info">
-            Use categories to group expenses by hobby, for certain types of groceries or what bills are for.
-            Expenses grouped in categories do not have to reoccur every month or every week, like budgets.
-        </p>
-        <p class="text-info">
-            This overview will show you the expenses you've made in each [period] and show you the actual
-            transactions for the currently selected period.
-        </p>
-    </div>
-</div><!-- TODO cleanup to match new theme & form -->
+    <div class="col-lg-9 col-md-9 col-sm-7">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Overview
+            </div>
+            <div class="panel-body">
+                <div id="componentOverview"></div>
+            </div>
+        </div>
 
-
-@include('partials.date_nav')
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <div id="chart"><img src="http://placehold.it/650x300" title="Placeholder" alt="" /></div>
+         <div class="panel panel-default">
+            <div class="panel-heading">
+                Transactions
+            </div>
+            <div class="panel-body">
+                @include('list.journals-full')
+            </div>
         </div>
     </div>
-
-
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <h4>Transactions<small> in current range</small></h4>
-            @include('lists.transactions',['journals' => $journals,'sum' => true])
-        </div>
+    <div class="col-lg-3 col-md-3 col-sm-5">
+    <!-- TODO do this -->
+        BLa bla something here.
     </div>
-
-
+</div>
 
 @stop
 @section('scripts')
 <script type="text/javascript">
-    var categoryID = {{$category->id}};
+    var componentID = {{$category->id}};
+    var year = {{Session::get('start')->format('Y')}};
+
 </script>
+
+<!-- load the libraries and scripts necessary for Google Charts: -->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+{{HTML::script('assets/javascript/firefly/gcharts.options.js')}}
+{{HTML::script('assets/javascript/firefly/gcharts.js')}}
 {{HTML::script('assets/javascript/firefly/categories.js')}}
+
 @stop

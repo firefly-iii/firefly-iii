@@ -1,0 +1,29 @@
+actor: Tester
+paths:
+    tests: tests
+    log: tests/_output
+    data: tests/_data
+    helpers: tests/_support
+settings:
+    bootstrap: _bootstrap.php
+    colors: true
+    memory_limit: 1024M
+modules:
+  config:
+    Db:
+      dsn: 'sqlite:tests/_data/testing.sqlite'
+      user: ''
+      password: ''
+      dump:
+      cleanup: false
+      populate: false
+coverage:
+  enabled: true
+  remote: true
+  whitelist:
+    include:
+      - app/controllers/*
+      - app/models/*
+      - app/lib/FireflyIII/*
+    exclude:
+      - app/controllers/BaseController.php

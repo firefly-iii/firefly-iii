@@ -1,10 +1,20 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateImportentriesTable extends Migration
 {
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('importentries');
+    }
 
     /**
      * Run the migrations.
@@ -23,21 +33,9 @@ class CreateImportentriesTable extends Migration
                 $table->integer('new')->unsigned();
 
                 // connect import map.
-                $table->foreign('importmap_id')
-                      ->references('id')->on('importmaps')
-                      ->onDelete('cascade');
+                $table->foreign('importmap_id')->references('id')->on('importmaps')->onDelete('cascade');
             }
         );
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('importentries');
     }
 
 }

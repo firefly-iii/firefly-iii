@@ -12,6 +12,16 @@ class CreateTransactionCurrenciesTable extends Migration
 {
 
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('transaction_currencies');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -22,19 +32,10 @@ class CreateTransactionCurrenciesTable extends Migration
             'transaction_currencies', function (Blueprint $table) {
                 $table->increments('id');
                 $table->timestamps();
+                $table->softDeletes();
                 $table->string('code', 3);
             }
         );
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('transaction_currencies');
     }
 
 }

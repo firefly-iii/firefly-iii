@@ -1,87 +1,31 @@
 <?php
-use LaravelBook\Ardent\Ardent as Ardent;
-use LaravelBook\Ardent\Builder;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
+use Watson\Validating\ValidatingTrait;
 
-/**
- * Account
- *
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $user_id
- * @property integer $account_type_id
- * @property string $name
- * @property boolean $active
- * @property-read \AccountType $accountType
- * @property-read \Illuminate\Database\Eloquent\Collection|\Transaction[] $transactions
- * @property-read \Illuminate\Database\Eloquent\Collection|\Piggybank[] $piggybanks
- * @property-read \User $user
- * @method static \Illuminate\Database\Query\Builder|\Account whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Account whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Account whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Account whereUserId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Account whereAccountTypeId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Account whereName($value) 
- * @method static \Illuminate\Database\Query\Builder|\Account whereActive($value) 
- * @method static \Account accountTypeIn($types) 
- */
-class Account extends Ardent
+class Account extends Eloquent
 {
-
+    use SoftDeletingTrait, ValidatingTrait;
     /**
      * Validation rules.
      *
      * @var array
      */
     public static $rules
-        = [
-            'name'            => ['required', 'between:1,100', 'alphabasic'],
+                         = [
+            'name'            => ['required', 'between:1,100'],
             'user_id'         => 'required|exists:users,id',
             'account_type_id' => 'required|exists:account_types,id',
             'active'          => 'required|boolean'
 
         ];
-
+    protected     $dates = ['deleted_at', 'created_at', 'updated_at'];
+    /**
+     * Fillable fields.
+     *
+     * @var array
+     */
     protected $fillable = ['name', 'user_id', 'account_type_id', 'active'];
-
-    /**
-     * Get an accounts current balance.
-     *
-     * @param \Carbon\Carbon $date
-     *
-     * @return float
-     */
-    public function balance(\Carbon\Carbon $date = null)
-    {
-        $date = is_null($date) ? new \Carbon\Carbon : $date;
-
-        return floatval(
-            $this->transactions()
-                 ->leftJoin(
-                     'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-                 )
-                 ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount')
-        );
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     *
-     * @return float
-     */
-    public function balanceBeforeJournal(TransactionJournal $journal)
-    {
-        return floatval(
-            $this->transactions()
-                 ->leftJoin(
-                     'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-                 )
-                 ->where('transaction_journals.date', '<=', $journal->date->format('Y-m-d'))
-                 ->where('transaction_journals.created_at', '<=', $journal->created_at->format('Y-m-d H:i:s'))
-                 ->where('transaction_journals.id', '!=', $journal->id)
-                 ->sum('transactions.amount')
-        );
-    }
 
     /**
      * Account type.
@@ -94,13 +38,21 @@ class Account extends Ardent
     }
 
     /**
-     * Transactions.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @param $fieldName
+     *
+     * @return mixed
      */
-    public function transactions()
+    public function getMeta($fieldName)
     {
-        return $this->hasMany('Transaction');
+        foreach ($this->accountMeta as $meta) {
+            if ($meta->name == $fieldName) {
+                return $meta->data;
+            }
+        }
+
+        return null;
+
     }
 
     /**
@@ -112,28 +64,7 @@ class Account extends Ardent
     }
 
     /**
-     * @param \Carbon\Carbon $date
      *
-     * @return null
-     */
-    public function predict(
-        /** @noinspection PhpUnusedParameterInspection */
-        \Carbon\Carbon $date
-    ) {
-        return null;
-    }
-
-    /**
-     * User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function user()
-    {
-        return $this->belongsTo('User');
-    }
-
-    /**
      * @param Builder $query
      * @param array   $types
      */
@@ -144,6 +75,61 @@ class Account extends Ardent
             $this->joinedAccountTypes = true;
         }
         $query->whereIn('account_types.type', $types);
+    }
+
+    /**
+     *
+     * @param Builder $query
+     */
+    public function scopeWithMeta(Builder $query)
+    {
+        $query->with(['accountmeta']);
+    }
+
+    /**
+     * Transactions.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transactions()
+    {
+        return $this->hasMany('Transaction');
+    }
+
+    public function updateMeta($fieldName, $fieldValue)
+    {
+        $meta = $this->accountMeta()->get();
+        /** @var AccountMeta $entry */
+        foreach ($meta as $entry) {
+            if ($entry->name == $fieldName) {
+                $entry->data = $fieldValue;
+                $entry->save();
+
+                return $entry;
+            }
+        }
+        $meta = new AccountMeta;
+        $meta->account()->associate($this);
+        $meta->name = $fieldName;
+        $meta->data = $fieldValue;
+        $meta->save();
+
+        return $meta;
+    }
+
+    public function accountMeta()
+    {
+        return $this->hasMany('AccountMeta');
+    }
+
+    /**
+     * User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo('User');
     }
 
 

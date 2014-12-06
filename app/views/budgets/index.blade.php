@@ -1,5 +1,6 @@
 @extends('layouts.default')
 @section('content')
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName()) }}
 <div class="row">
     <div class="col-lg-9 col-sm-8 col-md-8">
         <div class="panel panel-default">
@@ -19,10 +20,10 @@
 
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12">
-                        <div class="progress">
-                            <div class="progress-bar" id="progress-bar-default" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
-                            <div class="progress-bar progress-bar-danger" id="progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
-                            <div class="progress-bar progress-bar-warning" id="progress-bar-warning" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
+                        <div class="progress progress-striped">
+                            <div class="progress-bar progress-bar-info" id="progress-bar-default" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0;"></div>
+                            <div class="progress-bar progress-bar-danger" id="progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0;"></div>
+                            <div class="progress-bar progress-bar-warning" id="progress-bar-warning" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: 0;"></div>
                         </div>
                     </div>
                 </div>
@@ -33,12 +34,12 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12">
-                        <div class="progress">
+                        <div class="progress progress-striped">
                             @if($overspent)
                                 <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{$spentPCT}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$spentPCT}}%;"></div>
                                 <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{100-$spentPCT}}" aria-valuemin="0" aria-valuemax="100" style="width: {{100-$spentPCT}}%;"></div>
                             @else
-                                <div class="progress-bar" role="progressbar" aria-valuenow="{{$spentPCT}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$spentPCT}}%;"></div>
+                                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{$spentPCT}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$spentPCT}}%;"></div>
                             @endif
                         </div>
                     </div>
@@ -129,55 +130,6 @@
             </div>
     </div>
 </div>
-
-
-
-@foreach($budgets as $budget)
-{{--
-<div class="row">
-    <div class="col-lg-9 col-sm-8 col-md-8">
-        <div class="row">
-            <div class="col-lg-3 col-md-4 col-sm-4">
-                {{$budget->name}}
-            </div>
-            <div class="col-lg-7 col-md-4 col-sm-4">
-
-            </div>
-            <div class="col-lg-2 col-md-4 col-sm-3">
-                 <span id="budget-range-display-{{$budget->id}}" data-id="{{$budget->id}}"></span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-7 col-lg-offset-3 col-md-4 col-md-offset-4 col-sm-4 col-sm-offset-4">
-                @if($budget->pct > 0)
-                    <!-- display a progress bar. -->
-                    <div class="progress" id="budget-progress-{{$budget->id}}" data-spent="{{$budget->spent}}" data-amount="{{$budget->limit}}">
-
-                    </div>
-                @else
-                    <!-- do NOT display a progress bar. -->
-                    <div style="display:none;" class="progress" id="budget-progress-{{$budget->id}}" data-spent="{{$budget->spent}}" data-amount="{{$budget->limit}}">
-
-                    </div>
-                @endif
-                <!--
-                    @if($budget->currentRep)
-                        @if($budget->currentRep->amount <= $budget->spent)
-                            Overspent on budget (budgeted: {{$budget->currentRep->amount}}, spent: {{$budget->spent}}).
-                        @else
-                            NOT overspent on budget (budgeted: {{$budget->currentRep->amount}}, spent: {{$budget->spent}}).
-
-                        @endif
-                    @else
-                        No limit.
-                    @endif
-                    -->
-            </div>
-        </div>
-    </div>
-</div>
---}}
-@endforeach
 
 <!-- DIALOG -->
 <div class="modal fade" id="monthlyBudgetModal">

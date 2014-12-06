@@ -32,6 +32,7 @@ class CreateTransactionsTable extends Migration
             'transactions', function (Blueprint $table) {
                 $table->increments('id');
                 $table->timestamps();
+                $table->softDeletes();
                 $table->integer('account_id')->unsigned();
                 $table->integer('piggybank_id')->nullable()->unsigned();
                 $table->integer('transaction_journal_id')->unsigned();
@@ -39,19 +40,13 @@ class CreateTransactionsTable extends Migration
                 $table->decimal('amount', 10, 2);
 
                 // connect transactions to transaction journals
-                $table->foreign('transaction_journal_id')
-                    ->references('id')->on('transaction_journals')
-                    ->onDelete('cascade');
+                $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
 
                 // connect piggy banks
-                $table->foreign('piggybank_id')
-                    ->references('id')->on('piggybanks')
-                    ->onDelete('set null');
+                $table->foreign('piggybank_id')->references('id')->on('piggybanks')->onDelete('set null');
 
                 // connect account id:
-                $table->foreign('account_id')
-                    ->references('id')->on('accounts')
-                    ->onDelete('cascade');
+                $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
 
             }
         );

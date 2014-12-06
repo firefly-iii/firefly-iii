@@ -1,11 +1,12 @@
 @extends('layouts.default')
 @section('content')
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName()) }}
 <div class="row">
     @foreach($piggybanks as $piggybank)
         <div class="col-lg-6 col-md-6 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-fw fa-rocket"></i> <a href="#" title="{{{$piggybank->name}}}">{{{$piggybank->name}}}</a>
+                    <i class="fa fa-fw fa-rocket"></i> <a href="{{route('piggybanks.show',$piggybank->id)}}" title="{{{$piggybank->name}}}">{{{$piggybank->name}}}</a>
                 </div>
                 <div class="panel-body">
                     <div class="row">
@@ -20,7 +21,7 @@
                                 @else
                                 class="progress-bar progress-bar-info"
                                 @endif
-                                role="progressbar" aria-valuenow="{{$piggybank->percentage}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$piggybank->percentage}}%;">
+                                role="progressbar" aria-valuenow="{{$piggybank->percentage}}" aria-valuemin="0" aria-valuemax="100" style="min-width: 40px;width: {{$piggybank->percentage}}%;">
                                     {{$piggybank->percentage}}%
                                 </div>
                             </div>

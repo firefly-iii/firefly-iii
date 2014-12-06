@@ -12,6 +12,16 @@ class CreateComponentTransactionTable extends Migration
 {
 
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('component_transaction');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -25,26 +35,12 @@ class CreateComponentTransactionTable extends Migration
                 $table->integer('transaction_id')->unsigned();
 
                 // connect to components
-                $table->foreign('component_id')
-                    ->references('id')->on('components')
-                    ->onDelete('cascade');
+                $table->foreign('component_id')->references('id')->on('components')->onDelete('cascade');
 
                 // connect to transactions
-                $table->foreign('transaction_id')
-                    ->references('id')->on('transactions')
-                    ->onDelete('cascade');
+                $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
             }
         );
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('component_transaction');
     }
 
 }

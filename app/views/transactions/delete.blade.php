@@ -1,5 +1,6 @@
 @extends('layouts.default')
 @section('content')
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $journal) }}
 {{Form::open(['class' => 'form-horizontal','url' => route('transactions.destroy',$journal->id)])}}
 
 <div class="row">
@@ -23,13 +24,13 @@
                 <div class="btn-group">
                     <input type="submit" name="submit" value="Delete transaction" class="btn btn-danger" />
                     @if($journal->transactiontype->type == 'Withdrawal')
-                        <a href="{{route('transactions.expenses')}}" class="btn-default btn">Cancel</a>
+                        <a href="{{route('transactions.index','withdrawal')}}" class="btn-default btn">Cancel</a>
                     @endif
                     @if($journal->transactiontype->type == 'Deposit')
-                        <a href="{{route('transactions.revenue')}}" class="btn-default btn">Cancel</a>
+                        <a href="{{route('transactions.index','deposit')}}" class="btn-default btn">Cancel</a>
                     @endif
                     @if($journal->transactiontype->type == 'Transfer')
-                        <a href="{{route('transactions.transfers')}}" class="btn-default btn">Cancel</a>
+                        <a href="{{route('transactions.index','transfers')}}" class="btn-default btn">Cancel</a>
                     @endif
                 </div>
             </div>

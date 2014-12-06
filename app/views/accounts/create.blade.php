@@ -1,5 +1,6 @@
 @extends('layouts.default')
 @section('content')
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $what) }}
 {{Form::open(['class' => 'form-horizontal','route' => 'accounts.store'])}}
 {{Form::hidden('what',$what)}}
 <div class="row">
@@ -32,6 +33,7 @@
                     {{Form::ffDate('openingbalancedate', date('Y-m-d'))}}
                     @endif
                     {{Form::ffCheckbox('active','1',true)}}
+                    {{Form::ffSelect('account_role',Config::get('firefly.accountRoles'))}}
             </div>
         </div>
 

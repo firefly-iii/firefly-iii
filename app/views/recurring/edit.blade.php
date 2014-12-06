@@ -1,6 +1,7 @@
 @extends('layouts.default')
 @section('content')
-{{Form::open(['class' => 'form-horizontal','url' => route('recurring.update', $recurringTransaction->id)])}}
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $recurringTransaction) }}
+{{Form::model($recurringTransaction, ['class' => 'form-horizontal','url' => route('recurring.update', $recurringTransaction->id)])}}
 
 <div class="row">
     <div class="col-lg-6 col-md-12 col-sm-6">
@@ -10,12 +11,12 @@
                 <i class="fa fa-exclamation-circle"></i> Mandatory fields
             </div>
             <div class="panel-body">
-                {{Form::ffText('name',$recurringTransaction->name)}}
-                {{Form::ffTags('match',join(',',explode(' ',$recurringTransaction->match)))}}
-                {{Form::ffAmount('amount_min',$recurringTransaction->amount_min)}}
-                {{Form::ffAmount('amount_max',$recurringTransaction->amount_max)}}
+                {{Form::ffText('name')}}
+                {{Form::ffTags('match')}}
+                {{Form::ffAmount('amount_min')}}
+                {{Form::ffAmount('amount_max')}}
                 {{Form::ffDate('date',$recurringTransaction->date->format('Y-m-d'))}}
-                {{Form::ffSelect('repeat_freq',$periods,$recurringTransaction->repeat_freq)}}
+                {{Form::ffSelect('repeat_freq',$periods)}}
         </div>
     </div>
 
@@ -32,9 +33,9 @@
                 <i class="fa fa-smile-o"></i> Optional fields
             </div>
             <div class="panel-body">
-                {{Form::ffInteger('skip',$recurringTransaction->skip)}}
-                {{Form::ffCheckbox('automatch',1,$recurringTransaction->automatch)}}
-                {{Form::ffCheckbox('active',1,$recurringTransaction->active)}}
+                {{Form::ffInteger('skip')}}
+                {{Form::ffCheckbox('automatch',1)}}
+                {{Form::ffCheckbox('active',1)}}
 
             </div>
         </div>

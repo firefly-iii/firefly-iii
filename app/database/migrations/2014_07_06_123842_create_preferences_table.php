@@ -12,6 +12,16 @@ class CreatePreferencesTable extends Migration
 {
 
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('preferences');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -27,21 +37,9 @@ class CreatePreferencesTable extends Migration
                 $table->text('data');
 
                 // connect preferences to users
-                $table->foreign('user_id')
-                    ->references('id')->on('users')
-                    ->onDelete('cascade');
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             }
         );
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('preferences');
     }
 
 }

@@ -1,13 +1,6 @@
 @extends('layouts.default')
 @section('content')
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <p class="lead">
-            Bla text here.
-        </p>
-    </div>
-</div>
-
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $account) }}
 {{Form::model($account, ['class' => 'form-horizontal','url' => route('accounts.update',$account->id)])}}
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-12">
@@ -35,6 +28,7 @@
                 @if($account->accounttype->type == 'Default account' || $account->accounttype->type == 'Asset account')
                 {{Form::ffBalance('openingbalance')}}
                 {{Form::ffDate('openingbalancedate')}}
+                {{Form::ffSelect('account_role',Config::get('firefly.accountRoles'))}}
                 @endif
             </div>
         </div>

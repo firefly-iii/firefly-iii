@@ -1,13 +1,9 @@
 <?php
-use LaravelBook\Ardent\Ardent as Ardent;
+use Watson\Validating\ValidatingTrait;
 
-/**
- * AccountMeta
- *
- * @property-read \Account $account
- */
-class AccountMeta extends Ardent
+class AccountMeta extends Eloquent
 {
+    use ValidatingTrait;
     /**
      * @var array
      */
@@ -17,12 +13,11 @@ class AccountMeta extends Ardent
             'name'       => 'required|between:1,250',
             'data'       => 'required'
         ];
-
     /**
      * @var array
      */
     protected $fillable = ['account_id', 'name', 'date'];
-
+    protected $table    = 'account_meta';
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -30,6 +25,24 @@ class AccountMeta extends Ardent
     public function account()
     {
         return $this->belongsTo('Account');
+    }
+
+    /**
+     * @param $value
+     *
+     * @return mixed
+     */
+    public function getDataAttribute($value)
+    {
+        return json_decode($value);
+    }
+
+    /**
+     * @param $value
+     */
+    public function setDataAttribute($value)
+    {
+        $this->attributes['data'] = json_encode($value);
     }
 
 } 

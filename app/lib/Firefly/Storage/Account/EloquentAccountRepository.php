@@ -68,7 +68,7 @@ class EloquentAccountRepository implements AccountRepositoryInterface
 
         /**
          *
-         * TODO
+         *
          * Also delete: initial balance, initial balance account, and transactions
          */
 

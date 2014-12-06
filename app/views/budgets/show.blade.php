@@ -1,14 +1,14 @@
 @extends('layouts.default')
 @section('content')
-
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $budget, $repetition) }}
 <div class="row">
     <div class="col-lg-9 col-md-9 col-sm-7">
         <div class="panel panel-default">
             <div class="panel-heading">
-                Some stuff?
+                Overview
             </div>
             <div class="panel-body">
-                <div id="budgetOverview"></div>
+                <div id="componentOverview"></div>
             </div>
         </div>
 
@@ -16,9 +16,7 @@
             <div class="panel-heading">
                 Transactions
             </div>
-            <div class="panel-body">
-                <div id="transactions"></div>
-            </div>
+                @include('list.journals-full')
         </div>
     </div>
     <div class="col-lg-3 col-md-3 col-sm-5">
@@ -73,7 +71,7 @@
 @stop
 @section('scripts')
 <script type="text/javascript">
-    var budgetID = {{$budget->id}};
+    var componentID = {{$budget->id}};
     @if(!is_null($repetition))
         var repetitionID = {{$repetition->id}};
         var year = {{$repetition->startdate->format('Y')}};

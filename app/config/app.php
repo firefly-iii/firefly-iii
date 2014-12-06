@@ -39,9 +39,7 @@ return [
         'Illuminate\Workbench\WorkbenchServiceProvider',
         'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
         'Barryvdh\Debugbar\ServiceProvider',
-        'Firefly\Storage\StorageServiceProvider',
-        'Firefly\Helper\HelperServiceProvider',
-        'Firefly\Validation\ValidationServiceProvider',
+        'FireflyIII\FF3ServiceProvider',
         'DaveJamesMiller\Breadcrumbs\ServiceProvider',
         'Grumpydictator\Gchart\GchartServiceProvider',
     ],
@@ -86,8 +84,7 @@ return [
         'URL'               => 'Illuminate\Support\Facades\URL',
         'Validator'         => 'Illuminate\Support\Facades\Validator',
         'View'              => 'Illuminate\Support\Facades\View',
-        'Breadcrumbs'       => 'DaveJamesMiller\Breadcrumbs\Facade',
-        'Twig'              => 'TwigBridge\Facade\Twig',
+        'Breadcrumbs'       => 'DaveJamesMiller\Breadcrumbs\Facade'
 
     ],
 

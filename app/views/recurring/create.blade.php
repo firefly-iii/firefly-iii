@@ -1,5 +1,6 @@
 @extends('layouts.default')
 @section('content')
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName()) }}
 {{Form::open(['class' => 'form-horizontal','url' => route('recurring.store')])}}
 
 <div class="row">

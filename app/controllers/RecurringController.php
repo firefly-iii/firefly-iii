@@ -1,27 +1,18 @@
 <?php
-
-use Firefly\Exception\FireflyException;
-use Firefly\Storage\RecurringTransaction\RecurringTransactionRepositoryInterface as RTR;
-use Firefly\Helper\Controllers\RecurringInterface as RI;
+use FireflyIII\Exception\FireflyException;
+use Illuminate\Support\MessageBag;
 
 /**
  * Class RecurringController
  *
- * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class RecurringController extends BaseController
 {
-    protected $_repository;
-    protected $_helper;
-
     /**
-     * @param RTR $repository
-     * @param RI $helper
+     *
      */
-    public function __construct(RTR $repository, RI $helper)
+    public function __construct()
     {
-        $this->_repository = $repository;
-        $this->_helper     = $helper;
 
         View::share('title', 'Recurring transactions');
         View::share('mainTitleIcon', 'fa-rotate-right');
@@ -34,9 +25,7 @@ class RecurringController extends BaseController
     {
         $periods = \Config::get('firefly.periods_to_text');
 
-        return View::make('recurring.create')
-	        ->with('periods', $periods)
-	        ->with('subTitle', 'Create new');
+        return View::make('recurring.create')->with('periods', $periods)->with('subTitle', 'Create new');
     }
 
     /**
@@ -46,9 +35,9 @@ class RecurringController extends BaseController
      */
     public function delete(RecurringTransaction $recurringTransaction)
     {
-        return View::make('recurring.delete')
-	        ->with('recurringTransaction', $recurringTransaction)
-	        ->with('subTitle', 'Delete "' . $recurringTransaction->name . '"');
+        return View::make('recurring.delete')->with('recurringTransaction', $recurringTransaction)->with(
+            'subTitle', 'Delete "' . $recurringTransaction->name . '"'
+        );
     }
 
     /**
@@ -59,7 +48,11 @@ class RecurringController extends BaseController
     public function destroy(RecurringTransaction $recurringTransaction)
     {
         //Event::fire('recurring.destroy', [$recurringTransaction]);
-        $result = $this->_repository->destroy($recurringTransaction);
+
+        /** @var \FireflyIII\Database\Recurring $repository */
+        $repository = App::make('FireflyIII\Database\Recurring');
+
+        $result = $repository->destroy($recurringTransaction);
         if ($result === true) {
             Session::flash('success', 'The recurring transaction was deleted.');
         } else {
@@ -79,10 +72,9 @@ class RecurringController extends BaseController
     {
         $periods = \Config::get('firefly.periods_to_text');
 
-        return View::make('recurring.edit')
-	        ->with('periods', $periods)
-	        ->with('recurringTransaction', $recurringTransaction)
-	        ->with('subTitle', 'Edit "' . $recurringTransaction->name . '"');
+        return View::make('recurring.edit')->with('periods', $periods)->with('recurringTransaction', $recurringTransaction)->with(
+            'subTitle', 'Edit "' . $recurringTransaction->name . '"'
+        );
     }
 
     /**
@@ -90,150 +82,144 @@ class RecurringController extends BaseController
      */
     public function index()
     {
-        return View::make('recurring.index');
-    }
+        /** @var \FireflyIII\Database\Recurring $repos */
+        $repos = App::make('FireflyIII\Database\Recurring');
 
-    /**
-     *
-     */
-    public function show(RecurringTransaction $recurringTransaction)
-    {
-        return View::make('recurring.show')
-	        ->with('recurring', $recurringTransaction)
-	        ->with('subTitle', $recurringTransaction->name);
+        $recurring = $repos->get();
+
+        return View::make('recurring.index', compact('recurring'));
     }
 
     /**
      * @param RecurringTransaction $recurringTransaction
+     *
      * @return mixed
      */
     public function rescan(RecurringTransaction $recurringTransaction)
     {
         if (intval($recurringTransaction->active) == 0) {
             Session::flash('warning', 'Inactive recurring transactions cannot be scanned.');
+
             return Redirect::back();
         }
-        // do something!
-        /** @var \Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface $repo */
-        $repo = App::make('Firefly\Storage\TransactionJournal\TransactionJournalRepositoryInterface');
-        $set  = $repo->get();
 
-        /** @var TransactionJournal $journal */
-        foreach ($set as $journal) {
-            Event::fire('recurring.rescan', [$recurringTransaction, $journal]);
-        }
+        /** @var \FireflyIII\Database\Recurring $repos */
+        $repos = App::make('FireflyIII\Database\Recurring');
+        $repos->scanEverything($recurringTransaction);
+
         Session::flash('success', 'Rescanned everything.');
+
         return Redirect::back();
-
-
     }
 
+    /**
+     * @param RecurringTransaction $recurringTransaction
+     *
+     * @return mixed
+     */
+    public function show(RecurringTransaction $recurringTransaction)
+    {
+        $journals      = $recurringTransaction->transactionjournals()->withRelevantData()->orderBy('date', 'DESC')->get();
+        $hideRecurring = true;
+
+
+        return View::make('recurring.show', compact('journals', 'hideRecurring', 'finalDate'))->with('recurring', $recurringTransaction)->with(
+            'subTitle', $recurringTransaction->name
+        );
+    }
+
+    /**
+     * @return $this
+     * @throws FireflyException
+     */
     public function store()
     {
-        $data = Input::except(['_token', 'post_submit_action']);
-        switch (Input::get('post_submit_action')) {
+        $data = Input::except('_token');
+        /** @var \FireflyIII\Database\Recurring $repos */
+        $repos = App::make('FireflyIII\Database\Recurring');
+
+        switch ($data['post_submit_action']) {
             default:
-                throw new FireflyException('Method ' . Input::get('post_submit_action') . ' not implemented yet.');
+                throw new FireflyException('Cannot handle post_submit_action "' . e($data['post_submit_action']) . '"');
                 break;
-            case 'store':
             case 'create_another':
-                /*
-                 * Try to store:
-                 */
-                $messageBag = $this->_repository->store($data);
+            case 'store':
+                $messages = $repos->validate($data);
+                /** @var MessageBag $messages ['errors'] */
+                if ($messages['errors']->count() > 0) {
+                    Session::flash('warnings', $messages['warnings']);
+                    Session::flash('successes', $messages['successes']);
+                    Session::flash('error', 'Could not save recurring transaction: ' . $messages['errors']->first());
 
-                /*
-                 * Failure!
-                 */
-                if ($messageBag->count() > 0) {
-                    Session::flash('error', 'Could not save recurring transaction: ' . $messageBag->first());
-                    return Redirect::route('recurring.create')->withInput()->withErrors($messageBag);
+                    return Redirect::route('recurring.create')->withInput()->withErrors($messages['errors']);
                 }
+                // store!
+                $repos->store($data);
+                Session::flash('success', 'New recurring transaction stored!');
 
-                /*
-                 * Success!
-                 */
-                Session::flash('success', 'Recurring transaction "' . e(Input::get('name')) . '" saved!');
-
-                /*
-                 * Redirect to original location or back to the form.
-                 */
-                if (Input::get('post_submit_action') == 'create_another') {
+                if ($data['post_submit_action'] == 'create_another') {
                     return Redirect::route('recurring.create')->withInput();
                 } else {
                     return Redirect::route('recurring.index');
                 }
                 break;
             case 'validate_only':
-                $messageBags = $this->_helper->validate($data);
-
+                $messageBags = $repos->validate($data);
                 Session::flash('warnings', $messageBags['warnings']);
                 Session::flash('successes', $messageBags['successes']);
                 Session::flash('errors', $messageBags['errors']);
+
                 return Redirect::route('recurring.create')->withInput();
                 break;
         }
 
     }
 
+    /**
+     * @param RecurringTransaction $recurringTransaction
+     *
+     * @return $this
+     * @throws FireflyException
+     */
     public function update(RecurringTransaction $recurringTransaction)
     {
-        $data = Input::except(['_token', 'post_submit_action']);
+        /** @var \FireflyIII\Database\Recurring $repos */
+        $repos = App::make('FireflyIII\Database\Recurring');
+        $data  = Input::except('_token');
+
         switch (Input::get('post_submit_action')) {
-            case 'update':
-            case 'return_to_edit':
-                $messageBag = $this->_repository->update($recurringTransaction, $data);
-                if ($messageBag->count() == 0) {
-                    // has been saved, return to index:
-                    Session::flash('success', 'Recurring transaction updated!');
-
-                    if (Input::get('post_submit_action') == 'return_to_edit') {
-                        return Redirect::route('recurring.edit', $recurringTransaction->id)->withInput();
-                    } else {
-                        return Redirect::route('recurring.index');
-                    }
-                } else {
-                    Session::flash('error', 'Could not update recurring transaction: ' . $messageBag->first());
-
-                    return Redirect::route('transactions.edit', $recurringTransaction->id)->withInput()
-                                   ->withErrors($messageBag);
-                }
-
-
+            default:
+                throw new FireflyException('Cannot handle post_submit_action "' . e(Input::get('post_submit_action')) . '"');
                 break;
-            case 'validate_only':
-                $data        = Input::all();
-                $data['id']  = $recurringTransaction->id;
-                $messageBags = $this->_helper->validate($data);
+            case 'create_another':
+            case 'update':
+                $messages = $repos->validate($data);
+                /** @var MessageBag $messages ['errors'] */
+                if ($messages['errors']->count() > 0) {
+                    Session::flash('warnings', $messages['warnings']);
+                    Session::flash('successes', $messages['successes']);
+                    Session::flash('error', 'Could not save recurring transaction: ' . $messages['errors']->first());
 
+                    return Redirect::route('recurring.edit', $recurringTransaction->id)->withInput()->withErrors($messages['errors']);
+                }
+                // store!
+                $repos->update($recurringTransaction, $data);
+                Session::flash('success', 'Recurring transaction updated!');
+
+                if ($data['post_submit_action'] == 'create_another') {
+                    return Redirect::route('recurring.edit', $recurringTransaction->id);
+                } else {
+                    return Redirect::route('recurring.index');
+                }
+            case 'validate_only':
+                $messageBags = $repos->validate($data);
                 Session::flash('warnings', $messageBags['warnings']);
                 Session::flash('successes', $messageBags['successes']);
                 Session::flash('errors', $messageBags['errors']);
-                return Redirect::route('recurring.edit', $recurringTransaction->id)->withInput();
 
-                break;
-            // update
-            default:
-                throw new FireflyException('Method ' . Input::get('post_submit_action') . ' not implemented yet.');
+                return Redirect::route('recurring.edit', $recurringTransaction->id)->withInput();
                 break;
         }
 
-
-//        /** @var \RecurringTransaction $recurringTransaction */
-//        $recurringTransaction = $this->_repository->update($recurringTransaction, Input::all());
-//        if ($recurringTransaction->errors()->count() == 0) {
-//            Session::flash('success', 'The recurring transaction has been updated.');
-//            //Event::fire('recurring.update', [$recurringTransaction]);
-//
-//            return Redirect::route('recurring.index');
-//        } else {
-//            Session::flash(
-//                'error', 'Could not update the recurring transaction: ' . $recurringTransaction->errors()->first()
-//            );
-//
-//            return Redirect::route('recurring.edit', $recurringTransaction->id)->withInput()->withErrors(
-//                $recurringTransaction->errors()
-//            );
-//        }
     }
 }
