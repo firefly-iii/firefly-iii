@@ -1,1 +1,2 @@
 src_dir: .
+coverage_clover: tests/_output/coverage.xml
