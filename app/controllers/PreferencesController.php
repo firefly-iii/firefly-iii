@@ -3,7 +3,6 @@
 /**
  * Class PreferencesController
  *
- * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class PreferencesController extends BaseController
 {

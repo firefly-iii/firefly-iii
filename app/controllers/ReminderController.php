@@ -8,12 +8,21 @@ use FireflyIII\Exception\FireflyException;
 class ReminderController extends BaseController
 {
 
+    /**
+     *
+     */
     public function __construct()
     {
         View::share('title', 'Reminders');
         View::share('mainTitleIcon', 'fa-lightbulb-o');
     }
 
+    /**
+     * @param Reminder $reminder
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws FireflyException
+     */
     public function act(Reminder $reminder)
     {
 
@@ -38,6 +47,11 @@ class ReminderController extends BaseController
         }
     }
 
+    /**
+     * @param Reminder $reminder
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function dismiss(Reminder $reminder)
     {
         $reminder->active = 0;
@@ -47,6 +61,11 @@ class ReminderController extends BaseController
         return Redirect::route('index');
     }
 
+    /**
+     * @param Reminder $reminder
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function notnow(Reminder $reminder)
     {
         $reminder->active = 0;
@@ -59,6 +78,8 @@ class ReminderController extends BaseController
 
     /**
      * @param Reminder $reminder
+     *
+     * @return \Illuminate\View\View
      */
     public function show(Reminder $reminder)
     {

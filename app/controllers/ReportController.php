@@ -7,15 +7,19 @@ use Carbon\Carbon;
 class ReportController extends BaseController
 {
 
-
+    /**
+     * @param $year
+     * @param $month
+     *
+     * @return \Illuminate\View\View
+     */
     public function budgets($year, $month)
     {
         try {
-            $date = new Carbon($year . '-' . $month . '-01');
+            $start = new Carbon($year . '-' . $month . '-01');
         } catch (Exception $e) {
             App::abort(500);
         }
-        $start         = new Carbon($year . '-' . $month . '-01');
         $end           = clone $start;
         $title         = 'Reports';
         $subTitle      = 'Budgets in ' . $start->format('F Y');
@@ -145,6 +149,12 @@ class ReportController extends BaseController
         return View::make('reports.index', compact('years', 'months'))->with('title', 'Reports')->with('mainTitleIcon', 'fa-line-chart');
     }
 
+    /**
+     * @param $year
+     * @param $month
+     *
+     * @return \Illuminate\View\View
+     */
     public function unbalanced($year, $month)
     {
         try {

@@ -5,10 +5,12 @@ use Illuminate\Support\MessageBag;
 /**
  * Class RecurringController
  *
- * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class RecurringController extends BaseController
 {
+    /**
+     *
+     */
     public function __construct()
     {
 
@@ -126,6 +128,10 @@ class RecurringController extends BaseController
         );
     }
 
+    /**
+     * @return $this
+     * @throws FireflyException
+     */
     public function store()
     {
         $data = Input::except('_token');
@@ -169,6 +175,12 @@ class RecurringController extends BaseController
 
     }
 
+    /**
+     * @param RecurringTransaction $recurringTransaction
+     *
+     * @return $this
+     * @throws FireflyException
+     */
     public function update(RecurringTransaction $recurringTransaction)
     {
         /** @var \FireflyIII\Database\Recurring $repos */

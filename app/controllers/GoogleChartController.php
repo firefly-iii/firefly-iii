@@ -68,6 +68,7 @@ class GoogleChartController extends BaseController
 
     /**
      * @param Account $account
+     * @param string  $view
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -148,6 +149,7 @@ class GoogleChartController extends BaseController
 
     /**
      * @param Account $account
+     * @param string  $view
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -376,6 +378,12 @@ class GoogleChartController extends BaseController
 
     }
 
+    /**
+     * @param Budget          $budget
+     * @param LimitRepetition $repetition
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function budgetLimitSpending(\Budget $budget, \LimitRepetition $repetition)
     {
         $start = clone $repetition->startdate;
@@ -405,6 +413,8 @@ class GoogleChartController extends BaseController
     }
 
     /**
+     * @param $year
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function budgetsReportChart($year)
@@ -513,13 +523,17 @@ class GoogleChartController extends BaseController
 
     }
 
+    /**
+     * @param Piggybank $piggybank
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function piggyBankHistory(\Piggybank $piggybank)
     {
         /** @var \Grumpydictator\Gchart\GChart $chart */
         $chart = App::make('gchart');
         $chart->addColumn('Date', 'date');
         $chart->addColumn('Balance', 'number');
-        $sum = 0;
 
         $set = \DB::table('piggybank_events')->where('piggybank_id', $piggybank->id)->groupBy('date')->get(['date', DB::Raw('SUM(`amount`) AS `sum`')]);
 
@@ -535,6 +549,8 @@ class GoogleChartController extends BaseController
 
     /**
      * @param RecurringTransaction $recurring
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function recurringOverview(RecurringTransaction $recurring)
     {

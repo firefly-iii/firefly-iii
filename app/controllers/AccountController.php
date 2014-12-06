@@ -19,6 +19,8 @@ class AccountController extends BaseController
     }
 
     /**
+     * @param $what
+     *
      * @return \Illuminate\View\View
      */
     public function create($what)

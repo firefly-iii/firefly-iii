@@ -4,14 +4,23 @@ use Carbon\Carbon;
 use FireflyIII\Exception\FireflyException;
 use Illuminate\Support\MessageBag;
 
+/**
+ * Class RepeatedExpenseController
+ */
 class RepeatedExpenseController extends BaseController
 {
+    /**
+     *
+     */
     public function __construct()
     {
         View::share('title', 'Repeated expenses');
         View::share('mainTitleIcon', 'fa-rotate-left');
     }
 
+    /**
+     * @return $this
+     */
     public function create()
     {
         /** @var \FireflyIII\Database\Account $acct */
@@ -27,6 +36,9 @@ class RepeatedExpenseController extends BaseController
         );
     }
 
+    /**
+     * @return \Illuminate\View\View
+     */
     public function index()
     {
 
@@ -45,6 +57,11 @@ class RepeatedExpenseController extends BaseController
         return View::make('repeatedexpense.index', compact('expenses', 'subTitle'));
     }
 
+    /**
+     * @param Piggybank $piggyBank
+     *
+     * @return \Illuminate\View\View
+     */
     public function show(Piggybank $piggyBank)
     {
         $subTitle = $piggyBank->name;
@@ -56,7 +73,7 @@ class RepeatedExpenseController extends BaseController
         $repetitions = $piggyBank->piggybankrepetitions()->get();
         $repetitions->each(
             function (PiggybankRepetition $repetition) use ($repository) {
-                $repetition = $repository->calculateParts($repetition);
+                $repository->calculateParts($repetition);
             }
         );
 
@@ -64,7 +81,8 @@ class RepeatedExpenseController extends BaseController
     }
 
     /**
-     *
+     * @return $this
+     * @throws FireflyException
      */
     public function store()
     {
