@@ -23,7 +23,14 @@ class TransactionController extends BaseController
         View::share('mainTitleIcon', 'fa-repeat');
     }
 
-    // TODO this needs cleaning up and thinking over.
+    /**
+     *
+     * TODO this needs cleaning up and thinking over.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return array|\Illuminate\Http\JsonResponse
+     */
     public function alreadyRelated(TransactionJournal $journal)
     {
 
@@ -155,7 +162,11 @@ class TransactionController extends BaseController
         return Redirect::route('transactions.index', $return);
     }
 
-    // TODO this needs cleaning up and thinking over.
+    /**
+     * TODO this needs cleaning up and thinking over.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function doRelate()
     {
         $id     = intval(Input::get('id'));
@@ -352,6 +363,11 @@ class TransactionController extends BaseController
 
     }
 
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return \Illuminate\View\View
+     */
     public function relate(TransactionJournal $journal)
     {
         $groups  = $journal->transactiongroups()->get();
@@ -369,7 +385,13 @@ class TransactionController extends BaseController
         return View::make('transactions.relate', compact('journal', 'members'));
     }
 
-    // TODO this needs cleaning up and thinking over.
+    /**
+     * TODO this needs cleaning up and thinking over.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function relatedSearch(TransactionJournal $journal)
     {
         $search = e(trim(Input::get('searchValue')));
@@ -490,7 +512,14 @@ class TransactionController extends BaseController
         }
     }
 
-    // TODO this needs cleaning up and thinking over.
+    /**
+     * TODO this needs cleaning up and thinking over.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return \Illuminate\Http\JsonResponse
+     * @throws Exception
+     */
     public function unrelate(TransactionJournal $journal)
     {
         $groups    = $journal->transactiongroups()->get();

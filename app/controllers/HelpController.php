@@ -1,7 +1,15 @@
 <?php
 
+/**
+ * Class HelpController
+ */
 class HelpController extends BaseController
 {
+    /**
+     * @param $route
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show($route)
     {
         // no valid route

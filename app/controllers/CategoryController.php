@@ -90,7 +90,8 @@ class CategoryController extends BaseController
     }
 
     /**
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @return $this
+     * @throws FireflyException
      */
     public function store()
     {
@@ -137,7 +138,8 @@ class CategoryController extends BaseController
     /**
      * @param Category $category
      *
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @return $this
+     * @throws FireflyException
      */
     public function update(Category $category)
     {

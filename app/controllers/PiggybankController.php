@@ -59,7 +59,7 @@ class PiggybankController extends BaseController
     }
 
     /**
-     * @param Piggybank $piggyBank
+     * @param Piggybank $piggybank
      *
      * @return $this
      */
@@ -86,7 +86,7 @@ class PiggybankController extends BaseController
     }
 
     /**
-     * @param Piggybank $piggyBank
+     * @param Piggybank $piggybank
      *
      * @return $this
      */
@@ -117,6 +117,9 @@ class PiggybankController extends BaseController
         )->with('subTitle', 'Edit piggy bank "' . e($piggybank->name) . '"')->with('subTitleIcon', 'fa-pencil');
     }
 
+    /**
+     * @return $this
+     */
     public function index()
     {
         /** @var \FireflyIII\Database\Piggybank $repos */
@@ -226,6 +229,11 @@ class PiggybankController extends BaseController
         return View::make('piggybanks.remove', compact('piggybank'));
     }
 
+    /**
+     * @param Piggybank $piggybank
+     *
+     * @return $this
+     */
     public function show(Piggybank $piggybank)
     {
 
@@ -301,7 +309,8 @@ class PiggybankController extends BaseController
     /**
      * @param Piggybank $piggyBank
      *
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @return $this
+     * @throws FireflyException
      */
     public function update(Piggybank $piggyBank)
     {

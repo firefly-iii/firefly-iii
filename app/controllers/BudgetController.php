@@ -11,6 +11,9 @@ class BudgetController extends BaseController
 {
 
 
+    /**
+     *
+     */
     public function __construct()
     {
         View::share('title', 'Budgets');
@@ -18,9 +21,10 @@ class BudgetController extends BaseController
     }
 
     /**
-     * Update the amount for a budget's limitrepetition and/or create it.
-     *
      * @param Budget $budget
+     *
+     * @return \Illuminate\Http\JsonResponse
+     * @throws Exception
      */
     public function amount(Budget $budget)
     {
@@ -82,6 +86,11 @@ class BudgetController extends BaseController
         return View::make('budgets.delete')->with('budget', $budget)->with('subTitle', 'Delete budget "' . $budget->name . '"');
     }
 
+    /**
+     * @param Budget $budget
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(Budget $budget)
     {
         /** @var \FireflyIII\Database\Budget $repos */
@@ -115,7 +124,6 @@ class BudgetController extends BaseController
 
         /** @var \FireflyIII\Shared\Preferences\PreferencesInterface $preferences */
         $preferences = App::make('FireflyIII\Shared\Preferences\PreferencesInterface');
-        $date        = Session::get('start');
 
         /** @var \FireflyIII\Database\Budget $repos */
         $repos   = App::make('FireflyIII\Database\Budget');
@@ -205,7 +213,6 @@ class BudgetController extends BaseController
             // get nothing? i dunno
             $limits = [$repetition->limit];
             // get all transaction journals for this budget and limit repetition.
-            $journals = [];
             $subTitle = $budget->name . ' in ' . $repetition->startdate->format('F Y');
             $journals = $repos->getTransactionJournalsInRepetition($budget, $repetition, 50);
         }
@@ -216,7 +223,8 @@ class BudgetController extends BaseController
     }
 
     /**
-     * @return \Illuminate\Http\RedirectResponse
+     * @return $this
+     * @throws FireflyException
      */
     public function store()
     {
@@ -263,6 +271,7 @@ class BudgetController extends BaseController
     /**
      * @param Budget $budget
      *
+     * @return $this
      * @throws FireflyException
      */
     public function update(Budget $budget)
