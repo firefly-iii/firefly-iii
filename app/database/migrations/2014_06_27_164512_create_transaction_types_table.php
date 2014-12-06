@@ -32,6 +32,7 @@ class CreateTransactionTypesTable extends Migration
             'transaction_types', function (Blueprint $table) {
                 $table->increments('id');
                 $table->timestamps();
+                $table->softDeletes();
                 $table->string('type', 50);
             }
         );

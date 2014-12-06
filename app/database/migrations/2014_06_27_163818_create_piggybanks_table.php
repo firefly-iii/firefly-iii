@@ -38,10 +38,10 @@ class CreatePiggybanksTable extends Migration
                 $table->date('startdate')->nullable();
                 $table->date('targetdate')->nullable();
                 $table->boolean('repeats');
-                $table->enum('rep_length', ['day', 'week','quarter', 'month', 'year'])->nullable();
+                $table->enum('rep_length', ['day', 'week', 'quarter', 'month', 'year'])->nullable();
                 $table->smallInteger('rep_every')->unsigned();
                 $table->smallInteger('rep_times')->unsigned()->nullable();
-                $table->enum('reminder', ['day', 'week','quarter', 'month', 'year'])->nullable();
+                $table->enum('reminder', ['day', 'week', 'quarter', 'month', 'year'])->nullable();
                 $table->smallInteger('reminder_skip')->unsigned();
                 $table->boolean('remind_me');
                 $table->integer('order')->unsigned();

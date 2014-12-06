@@ -32,6 +32,7 @@ class CreateComponentsTable extends Migration
             'components', function (Blueprint $table) {
                 $table->increments('id');
                 $table->timestamps();
+                $table->softDeletes();
                 $table->string('name', 50);
                 $table->integer('user_id')->unsigned();
                 $table->string('class', 20);

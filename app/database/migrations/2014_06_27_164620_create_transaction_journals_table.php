@@ -32,6 +32,7 @@ class CreateTransactionJournalsTable extends Migration
             'transaction_journals', function (Blueprint $table) {
                 $table->increments('id');
                 $table->timestamps();
+                $table->softDeletes();
                 $table->integer('user_id')->unsigned();
                 $table->integer('transaction_type_id')->unsigned();
                 $table->integer('recurring_transaction_id')->unsigned()->nullable();
