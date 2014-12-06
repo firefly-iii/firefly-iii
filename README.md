@@ -1,4 +1,4 @@
-firefly-iii
+Firefly III
 ===========
 
 [![Build Status](https://travis-ci.org/JC5/firefly-iii.svg?branch=master)](https://travis-ci.org/JC5/firefly-iii)

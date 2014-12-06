@@ -183,7 +183,6 @@ class ReportController extends BaseController
 
                 return null;
             }
-
         );
         /*
          * Filter deposits.
