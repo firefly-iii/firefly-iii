@@ -32,6 +32,7 @@ class CreateAccountsTable extends Migration
             'accounts', function (Blueprint $table) {
                 $table->increments('id');
                 $table->timestamps();
+                $table->softDeletes();
                 $table->integer('user_id')->unsigned();
                 $table->integer('account_type_id')->unsigned();
                 $table->string('name', 100);

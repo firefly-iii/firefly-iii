@@ -32,6 +32,7 @@ class CreateTransactionsTable extends Migration
             'transactions', function (Blueprint $table) {
                 $table->increments('id');
                 $table->timestamps();
+                $table->softDeletes();
                 $table->integer('account_id')->unsigned();
                 $table->integer('piggybank_id')->nullable()->unsigned();
                 $table->integer('transaction_journal_id')->unsigned();

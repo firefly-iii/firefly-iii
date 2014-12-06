@@ -31,11 +31,12 @@ class Transactiongroupsjoin extends Migration
                 $table->integer('transaction_group_id')->unsigned();
                 $table->integer('transaction_journal_id')->unsigned();
 
-                $table->foreign('transaction_group_id','tr_grp_id')->references('id')->on('transaction_groups')->onDelete('cascade');
-                $table->foreign('transaction_journal_id','tr_trj_id')->references('id')->on('transaction_journals')->onDelete('cascade');
+                $table->foreign('transaction_group_id', 'tr_grp_id')->references('id')->on('transaction_groups')->onDelete('cascade');
+                $table->foreign('transaction_journal_id', 'tr_trj_id')->references('id')->on('transaction_journals')->onDelete('cascade');
 
-                $table->unique(['transaction_group_id','transaction_journal_id'],'tt_joined');
-            });
+                $table->unique(['transaction_group_id', 'transaction_journal_id'], 'tt_joined');
+            }
+        );
     }
 
 }

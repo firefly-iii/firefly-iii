@@ -27,6 +27,7 @@ class Transactiongroups extends Migration
             'transaction_groups', function (Blueprint $table) {
                 $table->increments('id');
                 $table->timestamps();
+                $table->softDeletes();
                 $table->integer('user_id')->unsigned();
                 $table->enum('relation', ['balance']);
 
