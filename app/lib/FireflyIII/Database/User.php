@@ -46,7 +46,7 @@ class User
 
         if (!$user->save()) {
             \Log::error('Invalid user with data: ' . isset($data['email']) ? $data['email'] : '(no email!)');
-            \Session::flash('error', 'Input invalid, please try again: ' . $user->errors()->first());
+            \Session::flash('error', 'Input invalid, please try again: ' . $user->getErrors()->first());
 
             return false;
         }

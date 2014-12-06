@@ -1,30 +1,11 @@
 <?php
 
 use FireflyIII\Exception\FireflyException;
-use LaravelBook\Ardent\Ardent as Ardent;
+use Watson\Validating\ValidatingTrait;
 
-
-/**
- * LimitRepetition
- *
- * @property integer        $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer        $limit_id
- * @property \Carbon\Carbon $startdate
- * @property \Carbon\Carbon $enddate
- * @property float          $amount
- * @property-read \Limit    $limit
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereLimitId($value)
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereStartdate($value)
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereEnddate($value)
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereAmount($value)
- */
-class LimitRepetition extends Ardent
+class LimitRepetition extends Eloquent
 {
+    use ValidatingTrait;
     public static $rules
         = [
             'limit_id'  => 'required|exists:limits,id',
@@ -39,6 +20,14 @@ class LimitRepetition extends Ardent
     public function getDates()
     {
         return ['created_at', 'updated_at', 'startdate', 'enddate'];
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function limit()
+    {
+        return $this->belongsTo('Limit');
     }
 
     /**
@@ -71,15 +60,6 @@ class LimitRepetition extends Ardent
 
         return floatval($sum);
     }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function limit()
-    {
-        return $this->belongsTo('Limit');
-    }
-
 
     /**
      * TODO remove this method in favour of something in the FireflyIII libraries.

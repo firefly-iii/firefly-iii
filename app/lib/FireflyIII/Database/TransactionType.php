@@ -9,7 +9,7 @@ use FireflyIII\Database\Ifaces\TransactionTypeInterface;
 use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
-use LaravelBook\Ardent\Ardent;
+
 
 /**
  * Class TransactionType
@@ -20,11 +20,11 @@ class TransactionType implements CUD, CommonDatabaseCalls
 {
 
     /**
-     * @param Ardent $model
+     * @param \Eloquent $model
      *
      * @return bool
      */
-    public function destroy(Ardent $model)
+    public function destroy(\Eloquent $model)
     {
         // TODO: Implement destroy() method.
         throw new NotImplementedException;
@@ -33,7 +33,7 @@ class TransactionType implements CUD, CommonDatabaseCalls
     /**
      * @param array $data
      *
-     * @return Ardent
+     * @return \Eloquent
      */
     public function store(array $data)
     {
@@ -42,12 +42,12 @@ class TransactionType implements CUD, CommonDatabaseCalls
     }
 
     /**
-     * @param Ardent $model
+     * @param \Eloquent $model
      * @param array  $data
      *
      * @return bool
      */
-    public function update(Ardent $model, array $data)
+    public function update(\Eloquent $model, array $data)
     {
         // TODO: Implement update() method.
         throw new NotImplementedException;
@@ -72,7 +72,7 @@ class TransactionType implements CUD, CommonDatabaseCalls
      *
      * @param int $id
      *
-     * @return Ardent
+     * @return \Eloquent
      */
     public function find($id)
     {

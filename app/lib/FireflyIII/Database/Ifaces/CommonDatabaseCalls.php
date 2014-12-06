@@ -3,7 +3,7 @@
 namespace FireflyIII\Database\Ifaces;
 
 use Illuminate\Support\Collection;
-use LaravelBook\Ardent\Ardent;
+
 
 
 /**
@@ -18,7 +18,7 @@ interface CommonDatabaseCalls
      *
      * @param int $id
      *
-     * @return Ardent
+     * @return \Eloquent
      */
     public function find($id);
 

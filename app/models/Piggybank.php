@@ -1,51 +1,10 @@
 <?php
 use Carbon\Carbon;
-use LaravelBook\Ardent\Ardent as Ardent;
+use Watson\Validating\ValidatingTrait;
 
-
-/**
- * Piggybank
- *
- * @property integer                                                              $id
- * @property \Carbon\Carbon                                                       $created_at
- * @property \Carbon\Carbon                                                       $updated_at
- * @property integer                                                              $account_id
- * @property string                                                               $name
- * @property float                                                                $targetamount
- * @property \Carbon\Carbon                                                       $startdate
- * @property \Carbon\Carbon                                                       $targetdate
- * @property boolean                                                              $repeats
- * @property string                                                               $rep_length
- * @property integer                                                              $rep_every
- * @property integer                                                              $rep_times
- * @property string                                                               $reminder
- * @property integer                                                              $reminder_skip
- * @property integer                                                              $order
- * @property boolean                                                              $remind_me
- * @property-read \Account                                                        $account
- * @property-read \Illuminate\Database\Eloquent\Collection|\PiggybankRepetition[] $piggybankrepetitions
- * @property-read \Illuminate\Database\Eloquent\Collection|\PiggybankEvent[]      $piggybankevents
- * @property-read \Illuminate\Database\Eloquent\Collection|\Transaction[]         $transactions
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereAccountId($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereTargetamount($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereStartdate($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereTargetdate($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepeats($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepLength($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepEvery($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRepTimes($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereReminder($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereReminderSkip($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereOrder($value)
- * @method static \Illuminate\Database\Query\Builder|\Piggybank whereRemindMe($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\Reminder[]            $reminders
- */
-class Piggybank extends Ardent
+class Piggybank extends Eloquent
 {
+    use ValidatingTrait;
     public static $rules
         = ['account_id'    => 'required|exists:accounts,id', // link to Account
            'name'          => 'required|between:1,255', // name
@@ -126,11 +85,12 @@ class Piggybank extends Ardent
             return $this->currentRep;
         }
         if ($this->repeats == 0) {
-            $rep = $this->piggybankrepetitions()->first(['piggybank_repetitions.*']);
+            $rep              = $this->piggybankrepetitions()->first(['piggybank_repetitions.*']);
             $this->currentRep = $rep;
+
             return $rep;
         } else {
-            $query  = $this->piggybankrepetitions()->where(
+            $query            = $this->piggybankrepetitions()->where(
                 function ($q) {
 
                     $q->where(
@@ -160,8 +120,8 @@ class Piggybank extends Ardent
 
                 }
             )
-                           ->orderBy('startdate', 'ASC');
-            $result = $query->first(['piggybank_repetitions.*']);
+                                     ->orderBy('startdate', 'ASC');
+            $result           = $query->first(['piggybank_repetitions.*']);
             $this->currentRep = $result;
             \Log::debug('Found relevant rep in currentRelevantRep(): ' . $result->id);
 

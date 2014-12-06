@@ -548,10 +548,10 @@ class TransactionController extends BaseController
                         return Redirect::route('transactions.index', $data['what']);
                     }
                 } else {
-                    Session::flash('error', 'Could not update transaction: ' . $journal->errors()->first());
+                    Session::flash('error', 'Could not update transaction: ' . $journal->getErrors()->first());
 
                     return Redirect::route('transactions.edit', $journal->id)->withInput()->withErrors(
-                        $journal->errors()
+                        $journal->getErrors()
                     );
                 }
 

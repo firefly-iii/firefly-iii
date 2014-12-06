@@ -1,26 +1,9 @@
 <?php
-use LaravelBook\Ardent\Ardent as Ardent;
+use Watson\Validating\ValidatingTrait;
 
-
-/**
- * AccountMeta
- *
- * @property-read \Account $account
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $account_id
- * @property string $name
- * @property string $data
- * @method static \Illuminate\Database\Query\Builder|\AccountMeta whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\AccountMeta whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\AccountMeta whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\AccountMeta whereAccountId($value) 
- * @method static \Illuminate\Database\Query\Builder|\AccountMeta whereName($value) 
- * @method static \Illuminate\Database\Query\Builder|\AccountMeta whereData($value) 
- */
-class AccountMeta extends Ardent
+class AccountMeta extends Eloquent
 {
+    use ValidatingTrait;
     /**
      * @var array
      */

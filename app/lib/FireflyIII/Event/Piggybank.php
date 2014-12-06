@@ -20,8 +20,8 @@ class Piggybank
             $event->piggybank()->associate($piggybank);
             $event->amount = floatval($amount);
             $event->date   = new Carbon;
-            if (!$event->validate()) {
-                var_dump($event->errors());
+            if (!$event->isValid()) {
+                var_dump($event->getErrors());
                 exit();
             }
             $event->save();
@@ -60,8 +60,8 @@ class Piggybank
             $event->piggybank()->associate($piggyBank);
             $event->amount = floatval($relevantTransaction->amount * -1);
             $event->date   = new Carbon;
-            if (!$event->validate()) {
-                var_dump($event->errors());
+            if (!$event->isValid()) {
+                var_dump($event->getErrors());
                 exit();
             }
             $event->save();
@@ -80,8 +80,8 @@ class Piggybank
             $event->piggybank()->associate($piggybank);
             $event->amount = floatval($amount);
             $event->date   = new Carbon;
-            if (!$event->validate()) {
-                var_dump($event->errors());
+            if (!$event->isValid()) {
+                var_dump($event->getErrors());
                 exit();
             }
             $event->save();
@@ -165,8 +165,8 @@ class Piggybank
                 $event->transactionjournal()->associate($journal);
                 $event->amount = floatval($relevantTransaction->amount);
                 $event->date   = new Carbon;
-                if (!$event->validate()) {
-                    var_dump($event->errors());
+                if (!$event->isValid()) {
+                    var_dump($event->getErrors());
                     exit();
                 }
                 $event->save();
@@ -300,8 +300,8 @@ class Piggybank
             $event->transactionJournal()->associate($journal);
             $event->amount = $diff;
             $event->date   = new Carbon;
-            if (!$event->validate()) {
-                var_dump($event->errors());
+            if (!$event->isValid()) {
+                var_dump($event->getErrors());
                 exit();
             }
             $event->save();

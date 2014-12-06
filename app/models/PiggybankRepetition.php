@@ -1,31 +1,11 @@
 <?php
 use Carbon\Carbon;
-use LaravelBook\Ardent\Ardent;
-use LaravelBook\Ardent\Builder;
+use Illuminate\Database\Eloquent\Builder;
+use Watson\Validating\ValidatingTrait;
 
-/**
- * PiggybankRepetition
- *
- * @property integer         $id
- * @property \Carbon\Carbon  $created_at
- * @property \Carbon\Carbon  $updated_at
- * @property integer         $piggybank_id
- * @property \Carbon\Carbon  $startdate
- * @property \Carbon\Carbon  $targetdate
- * @property float           $currentamount
- * @property-read \Piggybank $piggybank
- * @method static \Illuminate\Database\Query\Builder|\PiggybankRepetition whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\PiggybankRepetition whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\PiggybankRepetition whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\PiggybankRepetition wherePiggybankId($value)
- * @method static \Illuminate\Database\Query\Builder|\PiggybankRepetition whereStartdate($value)
- * @method static \Illuminate\Database\Query\Builder|\PiggybankRepetition whereTargetdate($value)
- * @method static \Illuminate\Database\Query\Builder|\PiggybankRepetition whereCurrentamount($value)
- * @method static \PiggybankRepetition starts($date)
- * @method static \PiggybankRepetition targets($date)
- */
-class PiggybankRepetition extends Ardent
+class PiggybankRepetition extends Eloquent
 {
+    use ValidatingTrait;
     public static $rules
         = [
             'piggybank_id'  => 'required|exists:piggybanks,id',
@@ -66,11 +46,14 @@ class PiggybankRepetition extends Ardent
         return $this->belongsTo('Piggybank');
     }
 
-    public function scopeStarts(Builder $query, Carbon $date) {
-        $query->where('startdate',$date->format('Y-m-d'));
+    public function scopeStarts(Builder $query, Carbon $date)
+    {
+        $query->where('startdate', $date->format('Y-m-d'));
     }
-    public function scopeTargets(Builder $query, Carbon $date) {
-        $query->where('targetdate',$date->format('Y-m-d'));
+
+    public function scopeTargets(Builder $query, Carbon $date)
+    {
+        $query->where('targetdate', $date->format('Y-m-d'));
     }
 
 

@@ -2,35 +2,12 @@
 
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
-use LaravelBook\Ardent\Ardent as Ardent;
+use Watson\Validating\ValidatingTrait;
 
-
-/**
- * Limit
- *
- * @property integer                                                          $id
- * @property \Carbon\Carbon                                                   $created_at
- * @property \Carbon\Carbon                                                   $updated_at
- * @property integer                                                          $component_id
- * @property \Carbon\Carbon                                                   $startdate
- * @property float                                                            $amount
- * @property boolean                                                          $repeats
- * @property string                                                           $repeat_freq
- * @property-read \Budget                                                     $budget
- * @property-read \Component                                                  $component
- * @property-read \Illuminate\Database\Eloquent\Collection|\LimitRepetition[] $limitrepetitions
- * @method static \Illuminate\Database\Query\Builder|\Limit whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Limit whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Limit whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Limit whereComponentId($value)
- * @method static \Illuminate\Database\Query\Builder|\Limit whereStartdate($value)
- * @method static \Illuminate\Database\Query\Builder|\Limit whereAmount($value)
- * @method static \Illuminate\Database\Query\Builder|\Limit whereRepeats($value)
- * @method static \Illuminate\Database\Query\Builder|\Limit whereRepeatFreq($value)
- */
-class Limit extends Ardent
+class Limit extends Eloquent
 {
 
+    use ValidatingTrait;
     public static $rules
         = [
             'component_id' => 'required|exists:components,id',

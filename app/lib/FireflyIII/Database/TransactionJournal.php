@@ -4,14 +4,13 @@ namespace FireflyIII\Database;
 
 
 use Carbon\Carbon;
-use Firefly\Exception\FireflyException;
 use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
 use FireflyIII\Database\Ifaces\CUD;
 use FireflyIII\Database\Ifaces\TransactionJournalInterface;
+use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
-use LaravelBook\Ardent\Ardent;
 
 /**
  * Class TransactionJournal
@@ -31,11 +30,11 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
     }
 
     /**
-     * @param Ardent $model
+     * @param \Eloquent $model
      *
      * @return bool
      */
-    public function destroy(Ardent $model)
+    public function destroy(\Eloquent $model)
     {
         /*
          * Trigger deletion.
@@ -58,7 +57,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
     /**
      * @param array $data
      *
-     * @return Ardent
+     * @return \Eloquent
      */
     public function store(array $data)
     {
@@ -88,8 +87,8 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         /*
          * This must be enough to store the journal:
          */
-        if (!$journal->validate()) {
-            \Log::error($journal->errors()->all());
+        if (!$journal->isValid()) {
+            \Log::error($journal->getErrors()->all());
             throw new FireflyException('store() transaction journal failed, but it should not!');
         }
         $journal->save();
@@ -171,12 +170,12 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
     }
 
     /**
-     * @param Ardent $model
+     * @param \Eloquent $model
      * @param array  $data
      *
      * @return bool
      */
-    public function update(Ardent $model, array $data)
+    public function update(\Eloquent $model, array $data)
     {
         /** @var \FireflyIII\Database\TransactionType $typeRepository */
         $typeRepository = \App::make('FireflyIII\Database\TransactionType');
@@ -202,8 +201,8 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         /*
          * This must be enough to store the journal:
          */
-        if (!$model->validate()) {
-            \Log::error($model->errors()->all());
+        if (!$model->isValid()) {
+            \Log::error($model->getErrors()->all());
             throw new FireflyException('store() transaction journal failed, but it should not!');
         }
         $model->save();
@@ -269,7 +268,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
                 $transaction->account()->associate($data['from']);
                 $transaction->amount = $amount * -1;
             }
-            if (!$transaction->validate()) {
+            if (!$transaction->isValid()) {
                 throw new FireflyException('Could not validate transaction while saving.');
             }
             $transaction->save();
@@ -446,7 +445,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      *
      * @param int $id
      *
-     * @return Ardent
+     * @return \Eloquent
      */
     public function find($id)
     {

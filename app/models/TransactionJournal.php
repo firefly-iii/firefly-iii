@@ -1,77 +1,13 @@
 <?php
 
 use Carbon\Carbon;
-use LaravelBook\Ardent\Ardent;
-use LaravelBook\Ardent\Builder;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
+use Watson\Validating\ValidatingTrait;
 
-
-/**
- * TransactionJournal
- *
- * @property integer                                                         $id
- * @property \Carbon\Carbon                                                  $created_at
- * @property \Carbon\Carbon                                                  $updated_at
- * @property integer                                                         $user_id
- * @property integer                                                         $transaction_type_id
- * @property integer                                                         $recurring_transaction_id
- * @property integer                                                         $transaction_currency_id
- * @property string                                                          $description
- * @property boolean                                                         $completed
- * @property \Carbon\Carbon                                                  $date
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *             'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *             'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\Component[]      $components
- * @property-read \Illuminate\Database\Eloquent\Collection|\PiggybankEvent[] $piggybankevents
- * @property-read \RecurringTransaction                                      $recurringTransaction
- * @property-read \TransactionCurrency                                       $transactionCurrency
- * @property-read \TransactionType                                           $transactionType
- * @property-read \Illuminate\Database\Eloquent\Collection|\Transaction[]    $transactions
- * @property-read \User                                                      $user
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereTransactionTypeId($value)
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereRecurringTransactionId($value)
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereTransactionCurrencyId($value)
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereDescription($value)
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereCompleted($value)
- * @method static \Illuminate\Database\Query\Builder|\TransactionJournal whereDate($value)
- * @method static \TransactionJournal accountIs($account)
- * @method static \TransactionJournal after($date)
- * @method static \TransactionJournal before($date)
- * @method static \TransactionJournal defaultSorting()
- * @method static \TransactionJournal lessThan($amount)
- * @method static \TransactionJournal moreThan($amount)
- * @method static \TransactionJournal onDate($date)
- * @method static \TransactionJournal transactionTypes($types)
- * @method static \TransactionJournal withRelevantData()
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *             'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *             'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *             'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *             'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *             'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *             'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *             'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *             'Category[] $categories
- * @property-read \Illuminate\Database\Eloquent\Collection|\TransactionGroup[] $transactiongroups
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *             'Budget[] $budgets
- * @property-read \Illuminate\Database\Eloquent\Collection|\
- *             'Category[] $categories
- */
-class TransactionJournal extends Ardent
+class TransactionJournal extends Eloquent
 {
+    use SoftDeletingTrait, ValidatingTrait;
 
     public static $rules
         = ['transaction_type_id'     => 'required|exists:transaction_types,id',
@@ -268,6 +204,11 @@ class TransactionJournal extends Ardent
         return $this->belongsTo('TransactionType');
     }
 
+    public function transactiongroups()
+    {
+        return $this->belongsToMany('TransactionGroup');
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -284,11 +225,6 @@ class TransactionJournal extends Ardent
     public function user()
     {
         return $this->belongsTo('User');
-    }
-
-    public function transactiongroups()
-    {
-        return $this->belongsToMany('TransactionGroup');
     }
 
 }

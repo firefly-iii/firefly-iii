@@ -1,49 +1,25 @@
 <?php
-use LaravelBook\Ardent\Ardent as Ardent;
-use LaravelBook\Ardent\Builder;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
+use Watson\Validating\ValidatingTrait;
 
-/**
- * Account
- *
- * @property integer                                                      $id
- * @property \Carbon\Carbon                                               $created_at
- * @property \Carbon\Carbon                                               $updated_at
- * @property integer                                                      $user_id
- * @property integer                                                      $account_type_id
- * @property string                                                       $name
- * @property boolean                                                      $active
- * @property-read \AccountType                                            $accountType
- * @property-read \Illuminate\Database\Eloquent\Collection|\Transaction[] $transactions
- * @property-read \Illuminate\Database\Eloquent\Collection|\Piggybank[]   $piggybanks
- * @property-read \User                                                   $user
- * @method static \Illuminate\Database\Query\Builder|\Account whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\Account whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Account whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Account whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\Account whereAccountTypeId($value)
- * @method static \Illuminate\Database\Query\Builder|\Account whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\Account whereActive($value)
- * @method static \Account accountTypeIn($types)
- * @property-read \Illuminate\Database\Eloquent\Collection|\AccountMeta[] $accountMeta
- * @method static \Account withMeta() 
- */
-class Account extends Ardent
+class Account extends Eloquent
 {
-
+    use SoftDeletingTrait, ValidatingTrait;
     /**
      * Validation rules.
      *
      * @var array
      */
     public static $rules
-        = [
+                         = [
             'name'            => ['required', 'between:1,100'],
             'user_id'         => 'required|exists:users,id',
             'account_type_id' => 'required|exists:account_types,id',
             'active'          => 'required|boolean'
 
         ];
-
+    protected     $dates = ['deleted_at', 'created_at', 'updated_at'];
     /**
      * Fillable fields.
      *
@@ -134,7 +110,7 @@ class Account extends Ardent
         }
         $meta = new AccountMeta;
         $meta->account()->associate($this);
-        $meta->name  = $fieldName;
+        $meta->name = $fieldName;
         $meta->data = $fieldValue;
         $meta->save();
 

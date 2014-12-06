@@ -8,7 +8,6 @@ use FireflyIII\Database\Ifaces\CUD;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
-use LaravelBook\Ardent\Ardent;
 
 /**
  * Class Budget
@@ -28,11 +27,11 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     }
 
     /**
-     * @param Ardent $model
+     * @param \Eloquent $model
      *
      * @return bool
      */
-    public function destroy(Ardent $model)
+    public function destroy(\Eloquent $model)
     {
         $model->delete();
 
@@ -42,7 +41,7 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     /**
      * @param array $data
      *
-     * @return Ardent
+     * @return \Eloquent
      */
     public function store(array $data)
     {
@@ -51,8 +50,8 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
         $budget        = new \Budget($data);
         $budget->class = 'Budget';
 
-        if (!$budget->validate()) {
-            var_dump($budget->errors()->all());
+        if (!$budget->isValid()) {
+            var_dump($budget->getErrors()->all());
             exit;
         }
         $budget->save();
@@ -61,16 +60,16 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     }
 
     /**
-     * @param Ardent $model
+     * @param \Eloquent $model
      * @param array  $data
      *
      * @return bool
      */
-    public function update(Ardent $model, array $data)
+    public function update(\Eloquent $model, array $data)
     {
         $model->name = $data['name'];
-        if (!$model->validate()) {
-            var_dump($model->errors()->all());
+        if (!$model->isValid()) {
+            var_dump($model->getErrors()->all());
             exit;
         }
 
@@ -124,7 +123,7 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
      *
      * @param int $id
      *
-     * @return Ardent
+     * @return \Eloquent
      */
     public function find($id)
     {

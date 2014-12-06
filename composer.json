@@ -22,10 +22,10 @@
     },
     "require": {
         "laravel/framework": "4.2.*",
-        "laravelbook/ardent": "~2.4",
         "davejamesmiller/laravel-breadcrumbs": "2.*",
         "grumpydictator/gchart": "dev-master",
-        "michelf/php-markdown": "1.*"
+        "michelf/php-markdown": "1.*",
+        "watson/validating": "0.10.*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "@stable",

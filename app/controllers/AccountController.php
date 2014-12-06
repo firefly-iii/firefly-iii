@@ -60,54 +60,18 @@ class AccountController extends BaseController
     {
 
         $type = $account->accountType->type;
+        $name = $account->name;
 
         /** @var \FireflyIII\Database\Account $acct */
         $acct = App::make('FireflyIII\Database\Account');
 
-        /** @var \FireflyIII\Database\TransactionJournal $jrnls */
-        $jrnls = App::make('FireflyIII\Database\TransactionJournal');
+        // find the initial balance account (the only other account that should be deleted)
+        // find all journals for both accounts (or just the one) and delete them.
+        // the rest will take care of itself.
+        // in the least amount of queries possible.
 
-        /*
-         * Find the "initial balance account", should it exist:
-         */
-        $initialBalance = $acct->findInitialBalanceAccount($account);
-
-        /*
-         * Get all the transaction journals that are part of this/these account(s):
-         */
-        $journals = [];
-        if ($initialBalance) {
-            $transactions = $initialBalance->transactions()->get();
-            /** @var \Transaction $transaction */
-            foreach ($transactions as $transaction) {
-                $journals[] = $transaction->transaction_journal_id;
-            }
-        }
-        /** @var \Transaction $transaction */
-        foreach ($account->transactions() as $transaction) {
-            $journals[] = $transaction->transaction_journal_id;
-        }
-
-        $journals = array_unique($journals);
-
-        /*
-         * Delete the journals. Should get rid of the transactions as well.
-         */
-        foreach ($journals as $id) {
-            $journal = $jrnls->find($id);
-            $jrnls->destroy($journal);
-        }
-
-        /*
-         * Delete the initial balance as well.
-         */
-        if ($initialBalance) {
-            $acct->destroy($initialBalance);
-        }
-        $name = $account->name;
-
+        // and it can be done in ONE query! or maybe two.
         $acct->destroy($account);
-
 
         $return = 'asset';
         switch ($type) {
@@ -123,8 +87,6 @@ class AccountController extends BaseController
         Session::flash('success', 'The ' . $return . ' account "' . e($name) . '" was deleted.');
 
         return Redirect::route('accounts.index', $return);
-
-
     }
 
     /**
