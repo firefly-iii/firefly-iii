@@ -1,14 +1,12 @@
 <?php
 namespace FireflyIII\Shared;
 
-use LaravelBook\Ardent\Ardent;
-
 /**
  * Class SingleTableInheritanceEntity
  *
  * @package FireflyIII\Shared
  */
-abstract class SingleTableInheritanceEntity extends Ardent
+abstract class SingleTableInheritanceEntity extends \Eloquent
 {
     /**
      * must be overridden and set to true in subclasses

@@ -9,7 +9,6 @@ use FireflyIII\Database\Ifaces\CUD;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
-use LaravelBook\Ardent\Ardent;
 
 /**
  * Class Account
@@ -224,17 +223,58 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
     }
 
     /**
-     * @param Ardent $model
+     * @param \Eloquent $model
      *
      * @return bool
      */
-    public function destroy(Ardent $model)
+    public function destroy(\Eloquent $model)
     {
+
+        // delete journals:
+        $journals = \TransactionJournal::whereIn(
+            'id', function ($query) use ($model) {
+                $query->select('transaction_journal_id')
+                      ->from('transactions')->whereIn(
+                        'account_id', function ($query) use ($model) {
+                            $query
+                                ->select('id')
+                                ->from('accounts')
+                                ->where(
+                                    function ($q) use ($model) {
+                                        $q->where('id', $model->id);
+                                        $q->orWhere(
+                                            function ($q) use ($model) {
+                                                $q->where('accounts.name', 'LIKE', '%' . $model->name . '%');
+                                                // TODO magic number!
+                                                $q->where('accounts.account_type_id', 3);
+                                                $q->where('accounts.active', 0);
+                                            }
+                                        );
+                                    }
+                                )->where('accounts.user_id', $this->getUser()->id);
+                        }
+                    )->get();
+            }
+        )->delete();
+
         /*
          * Trigger deletion:
          */
         \Event::fire('account.destroy', [$model]);
-        $model->delete();
+
+        // delete accounts:
+        \Account::where(
+            function ($q) use ($model) {
+                $q->where('id', $model->id);
+                $q->orWhere(
+                    function ($q) use ($model) {
+                        $q->where('accounts.name', 'LIKE', '%' . $model->name . '%');
+                        // TODO magic number!
+                        $q->where('accounts.account_type_id', 3);
+                        $q->where('accounts.active', 0);
+                    }
+                );
+            })->delete();
 
         return true;
 
@@ -243,7 +283,7 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
     /**
      * @param array $data
      *
-     * @return Ardent
+     * @return \Eloquent
      */
     public function store(array $data)
     {
@@ -263,8 +303,8 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
 
         $data    = array_except($data, ['_token', 'what']);
         $account = new \Account($data);
-        if (!$account->validate()) {
-            var_dump($account->errors()->all());
+        if (!$account->isValid()) {
+            var_dump($account->getErrors()->all());
             exit;
         }
         $account->save();
@@ -290,12 +330,12 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
     }
 
     /**
-     * @param Ardent $model
+     * @param \Eloquent $model
      * @param array  $data
      *
      * @return bool
      */
-    public function update(Ardent $model, array $data)
+    public function update(\Eloquent $model, array $data)
     {
         $model->name   = $data['name'];
         $model->active = isset($data['active']) ? intval($data['active']) : 0;
@@ -415,7 +455,7 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
      *
      * @param int $id
      *
-     * @return Ardent
+     * @return \Eloquent
      */
     public function find($id)
     {

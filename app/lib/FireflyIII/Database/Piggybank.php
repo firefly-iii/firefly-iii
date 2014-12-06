@@ -2,14 +2,14 @@
 namespace FireflyIII\Database;
 
 use Carbon\Carbon;
-use Firefly\Exception\FireflyException;
+use FireflyIII\Exception\FireflyException;
 use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
 use FireflyIII\Database\Ifaces\CUD;
 use FireflyIII\Database\Ifaces\PiggybankInterface;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
-use LaravelBook\Ardent\Ardent;
+
 
 /**
  * Class Piggybank
@@ -29,11 +29,11 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
     }
 
     /**
-     * @param Ardent $model
+     * @param \Eloquent $model
      *
      * @return bool
      */
-    public function destroy(Ardent $model)
+    public function destroy(\Eloquent $model)
     {
         $model->delete();
     }
@@ -41,7 +41,7 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
     /**
      * @param array $data
      *
-     * @return Ardent
+     * @return \Eloquent
      */
     public function store(array $data)
     {
@@ -58,8 +58,8 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
 
 
         $piggybank = new \Piggybank($data);
-        if (!$piggybank->validate()) {
-            var_dump($piggybank->errors()->all());
+        if (!$piggybank->isValid()) {
+            var_dump($piggybank->getErrors()->all());
             exit;
         }
         $piggybank->save();
@@ -68,12 +68,12 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
     }
 
     /**
-     * @param Ardent $model
+     * @param \Eloquent $model
      * @param array  $data
      *
      * @return bool
      */
-    public function update(Ardent $model, array $data)
+    public function update(\Eloquent $model, array $data)
     {
         /** @var \Piggybank $model */
         $model->name          = $data['name'];
@@ -90,8 +90,8 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
             $model->reminder = null;
         }
 
-        if (!$model->validate()) {
-            var_dump($model->errors());
+        if (!$model->isValid()) {
+            var_dump($model->getErrors());
             exit();
         }
 
@@ -188,7 +188,7 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
      *
      * @param int $id
      *
-     * @return Ardent
+     * @return \Eloquent
      */
     public function find($id)
     {

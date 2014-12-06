@@ -2,14 +2,14 @@
 
 namespace FireflyIII\Database;
 
-use Firefly\Exception\FireflyException;
+use FireflyIII\Exception\FireflyException;
 use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
 use FireflyIII\Database\Ifaces\CUD;
 use FireflyIII\Database\Ifaces\TransactionInterface;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
-use LaravelBook\Ardent\Ardent;
+
 
 /**
  * Class Transaction
@@ -21,11 +21,11 @@ class Transaction implements CUD, CommonDatabaseCalls
     use SwitchUser;
 
     /**
-     * @param Ardent $model
+     * @param \Eloquent $model
      *
      * @return bool
      */
-    public function destroy(Ardent $model)
+    public function destroy(\Eloquent $model)
     {
         // TODO: Implement destroy() method.
         throw new NotImplementedException;
@@ -34,7 +34,7 @@ class Transaction implements CUD, CommonDatabaseCalls
     /**
      * @param array $data
      *
-     * @return Ardent
+     * @return \Eloquent
      */
     public function store(array $data)
     {
@@ -48,22 +48,22 @@ class Transaction implements CUD, CommonDatabaseCalls
         if (isset($data['description'])) {
             $transaction->description = $data['description'];
         }
-        if ($transaction->validate()) {
+        if ($transaction->isValid()) {
             $transaction->save();
         } else {
-            throw new FireflyException($transaction->errors()->first());
+            throw new FireflyException($transaction->getErrors()->first());
         }
 
         return $transaction;
     }
 
     /**
-     * @param Ardent $model
+     * @param \Eloquent $model
      * @param array  $data
      *
      * @return bool
      */
-    public function update(Ardent $model, array $data)
+    public function update(\Eloquent $model, array $data)
     {
         // TODO: Implement update() method.
         throw new NotImplementedException;
@@ -140,7 +140,7 @@ class Transaction implements CUD, CommonDatabaseCalls
      *
      * @param int $id
      *
-     * @return Ardent
+     * @return \Eloquent
      */
     public function find($id)
     {

@@ -8,7 +8,7 @@ use FireflyIII\Database\Ifaces\CUD;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
-use LaravelBook\Ardent\Ardent;
+
 
 /**
  * Class Category
@@ -28,11 +28,11 @@ class Category implements CUD, CommonDatabaseCalls
     }
 
     /**
-     * @param Ardent $model
+     * @param \Eloquent $model
      *
      * @return bool
      */
-    public function destroy(Ardent $model)
+    public function destroy(\Eloquent $model)
     {
         $model->delete();
 
@@ -42,7 +42,7 @@ class Category implements CUD, CommonDatabaseCalls
     /**
      * @param array $data
      *
-     * @return Ardent
+     * @return \Eloquent
      */
     public function store(array $data)
     {
@@ -50,8 +50,8 @@ class Category implements CUD, CommonDatabaseCalls
         $category->name  = $data['name'];
         $category->class = 'Category';
         $category->user()->associate($this->getUser());
-        if (!$category->validate()) {
-            var_dump($category->errors());
+        if (!$category->isValid()) {
+            var_dump($category->getErrors());
             exit();
         }
         $category->save();
@@ -60,16 +60,16 @@ class Category implements CUD, CommonDatabaseCalls
     }
 
     /**
-     * @param Ardent $model
+     * @param \Eloquent $model
      * @param array  $data
      *
      * @return bool
      */
-    public function update(Ardent $model, array $data)
+    public function update(\Eloquent $model, array $data)
     {
         $model->name = $data['name'];
-        if (!$model->validate()) {
-            var_dump($model->errors()->all());
+        if (!$model->isValid()) {
+            var_dump($model->getErrors()->all());
             exit;
         }
 
@@ -107,7 +107,7 @@ class Category implements CUD, CommonDatabaseCalls
         $validator = \Validator::make($model, \Component::$rules);
 
         if ($validator->invalid()) {
-            $errors->merge($validator->errors());
+            $errors->merge($validator->getErrors());
         }
 
 
@@ -123,7 +123,7 @@ class Category implements CUD, CommonDatabaseCalls
      *
      * @param int $id
      *
-     * @return Ardent
+     * @return \Eloquent
      */
     public function find($id)
     {

@@ -4,7 +4,7 @@ namespace FireflyIII\Exception;
 /**
  * Class ValidationException
  *
- * @package Firefly\Exception
+ * @package FireflyIII\Exception
  */
 class ValidationException extends \Exception
 {

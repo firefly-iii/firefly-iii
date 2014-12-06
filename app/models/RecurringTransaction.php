@@ -1,43 +1,11 @@
 <?php
 use Carbon\Carbon;
-use LaravelBook\Ardent\Ardent;
+use Watson\Validating\ValidatingTrait;
 
-
-/**
- * RecurringTransaction
- *
- * @property integer                                                             $id
- * @property \Carbon\Carbon                                                      $created_at
- * @property \Carbon\Carbon                                                      $updated_at
- * @property integer                                                             $user_id
- * @property string                                                              $name
- * @property string                                                              $match
- * @property float                                                               $amount_min
- * @property float                                                               $amount_max
- * @property \Carbon\Carbon                                                      $date
- * @property boolean                                                             $active
- * @property boolean                                                             $automatch
- * @property string                                                              $repeat_freq
- * @property integer                                                             $skip
- * @property-read \Illuminate\Database\Eloquent\Collection|\TransactionJournal[] $transactionjournals
- * @property-read \User                                                          $user
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereId($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereUpdatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereUserId($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereName($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereMatch($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAmountMin($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAmountMax($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereDate($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereActive($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereAutomatch($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereRepeatFreq($value)
- * @method static \Illuminate\Database\Query\Builder|\RecurringTransaction whereSkip($value)
- */
-class RecurringTransaction extends Ardent
+class RecurringTransaction extends Eloquent
 {
 
+    use ValidatingTrait;
     public static $rules
         = [
             'user_id'     => 'required|exists:users,id',
@@ -63,6 +31,7 @@ class RecurringTransaction extends Ardent
 
     /**
      * TODO remove this method in favour of something in the FireflyIII libraries.
+     *
      * @return null
      */
     public function lastFoundMatch()

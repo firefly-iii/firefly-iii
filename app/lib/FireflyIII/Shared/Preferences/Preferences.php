@@ -3,7 +3,7 @@ namespace FireflyIII\Shared\Preferences;
 /**
  * Class PreferencesHelper
  *
- * @package Firefly\Helper\Preferences
+ * @package FireflyIII\Shared\Preferences
  */
 class Preferences implements PreferencesInterface
 {

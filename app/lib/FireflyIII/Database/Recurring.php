@@ -10,7 +10,7 @@ use FireflyIII\Database\Ifaces\RecurringInterface;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
-use LaravelBook\Ardent\Ardent;
+
 use stdObject;
 
 /**
@@ -31,11 +31,11 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
     }
 
     /**
-     * @param Ardent $model
+     * @param \Eloquent $model
      *
      * @return bool
      */
-    public function destroy(Ardent $model)
+    public function destroy(\Eloquent $model)
     {
         $model->delete();
 
@@ -45,7 +45,7 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
     /**
      * @param array $data
      *
-     * @return Ardent
+     * @return \Eloquent
      */
     public function store(array $data)
     {
@@ -71,8 +71,8 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
         $recurring->date = $date;
         $recurring->skip = intval($data['skip']);
 
-        if (!$recurring->validate()) {
-            var_dump($recurring->errors());
+        if (!$recurring->isValid()) {
+            var_dump($recurring->getErrors());
             exit();
         }
 
@@ -82,12 +82,12 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
     }
 
     /**
-     * @param Ardent $model
+     * @param \Eloquent $model
      * @param array  $data
      *
      * @return bool
      */
-    public function update(Ardent $model, array $data)
+    public function update(\Eloquent $model, array $data)
     {
         var_dump($data);
 
@@ -104,8 +104,8 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
         $model->repeat_freq = $data['repeat_freq'];
         $model->skip        = intval($data['skip']);
 
-        if (!$model->validate()) {
-            var_dump($model->errors());
+        if (!$model->isValid()) {
+            var_dump($model->getErrors());
             exit();
         }
 
@@ -182,7 +182,7 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
      *
      * @param int $id
      *
-     * @return Ardent
+     * @return \Eloquent
      */
     public function find($id)
     {

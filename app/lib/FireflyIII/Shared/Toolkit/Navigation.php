@@ -1,6 +1,7 @@
 <?php
 
 namespace FireflyIII\Shared\Toolkit;
+use FireflyIII\Exception\FireflyException;
 
 /**
  * Class Navigation
@@ -11,7 +12,7 @@ class Navigation
 {
     /**
      * @return bool
-     * @throws \Firefly\Exception\FireflyException
+     * @throws FireflyException
      */
     public function next()
     {
@@ -39,7 +40,7 @@ class Navigation
 
     /**
      * @return bool
-     * @throws \Firefly\Exception\FireflyException
+     * @throws FireflyException
      */
     public function prev()
     {

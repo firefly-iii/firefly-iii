@@ -11,7 +11,7 @@ use FireflyIII\Database\Ifaces\PiggybankInterface;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
-use LaravelBook\Ardent\Ardent;
+
 
 class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggybankInterface
 {
@@ -272,11 +272,11 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggybankInterface
     }
 
     /**
-     * @param Ardent $model
+     * @param \Eloquent $model
      *
      * @return bool
      */
-    public function destroy(Ardent $model)
+    public function destroy(\Eloquent $model)
     {
         // TODO: Implement destroy() method.
         throw new NotImplementedException;
@@ -285,7 +285,7 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggybankInterface
     /**
      * @param array $data
      *
-     * @return Ardent
+     * @return \Eloquent
      */
     public function store(array $data)
     {
@@ -305,8 +305,8 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggybankInterface
 
 
         $repeated = new \Piggybank($data);
-        if (!$repeated->validate()) {
-            var_dump($repeated->errors()->all());
+        if (!$repeated->isValid()) {
+            var_dump($repeated->getErrors()->all());
             exit;
         }
         $repeated->save();
@@ -315,12 +315,12 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggybankInterface
     }
 
     /**
-     * @param Ardent $model
+     * @param \Eloquent $model
      * @param array  $data
      *
      * @return bool
      */
-    public function update(Ardent $model, array $data)
+    public function update(\Eloquent $model, array $data)
     {
         // TODO: Implement update() method.
         throw new NotImplementedException;
@@ -425,7 +425,7 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggybankInterface
      *
      * @param int $id
      *
-     * @return Ardent
+     * @return \Eloquent
      */
     public function find($id)
     {

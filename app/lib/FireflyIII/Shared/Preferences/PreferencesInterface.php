@@ -4,7 +4,7 @@ namespace FireflyIII\Shared\Preferences;
 /**
  * Interface PreferencesHelperInterface
  *
- * @package Firefly\Helper\Preferences
+ * @package FireflyIII\Shared\Preferences
  */
 interface PreferencesInterface
 {
