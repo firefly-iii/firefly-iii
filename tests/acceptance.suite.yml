@@ -11,4 +11,4 @@ modules:
         - AcceptanceHelper
     config:
         PhpBrowser:
-            url: 'http://localhost/myapp/'
+            url: 'http://firefly.app/'

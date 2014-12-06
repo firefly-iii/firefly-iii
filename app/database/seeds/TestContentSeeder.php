@@ -7,7 +7,7 @@ class TestContentSeeder extends Seeder
 
     public function run()
     {
-        if (App::environment() == 'homestead') {
+        if (App::environment() == 'testing') {
 
             $assetType   = AccountType::whereType('Asset account')->first();
             $expenseType = AccountType::whereType('Expense account')->first();

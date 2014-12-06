@@ -93,6 +93,7 @@ Event::subscribe('FireflyIII\Event\Budget');
 Event::subscribe('FireflyIII\Event\TransactionJournal');
 Event::subscribe('FireflyIII\Event\Transaction');
 Event::subscribe('FireflyIII\Event\Account');
+Event::subscribe('FireflyIII\Event\Event');
 
 // event that creates a relationship between transaction journals and recurring events when created.
 // event that updates the relationship between transaction journals and recurring events when edited.
