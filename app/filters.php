@@ -68,6 +68,7 @@ Route::filter(
         if (Auth::check()) {
             return Redirect::to('/');
         }
+        return null;
     }
 );
 

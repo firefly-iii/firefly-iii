@@ -92,6 +92,7 @@ class UserController extends BaseController
             return View::make('user.registered');
         }
 
+
         return View::make('user.register');
     }
 

@@ -108,8 +108,6 @@ class TransactionType implements CUD, CommonDatabaseCalls
 
 
         }
-
-        return null;
     }
 
     /**

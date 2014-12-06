@@ -109,8 +109,6 @@ class AccountType implements CUD, CommonDatabaseCalls
                 break;
 
         }
-
-        return null;
     }
 
     /**
