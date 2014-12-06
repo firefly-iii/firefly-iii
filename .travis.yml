@@ -13,3 +13,5 @@ script:
 
 after_script:
   - php vendor/bin/coveralls
+
+after_success: coveralls
