@@ -32,6 +32,7 @@ class CreateTransactionCurrenciesTable extends Migration
             'transaction_currencies', function (Blueprint $table) {
                 $table->increments('id');
                 $table->timestamps();
+                $table->softDeletes();
                 $table->string('code', 3);
             }
         );

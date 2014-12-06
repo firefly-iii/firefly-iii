@@ -9,9 +9,23 @@ settings:
     colors: true
     memory_limit: 1024M
 modules:
-    config:
-        Db:
-            dsn: ''
-            user: ''
-            password: ''
-            dump: tests/_data/dump.sql
+  config:
+    Db:
+      dsn: 'sqlite:tests/_data/testing.sqlite'
+      user: ''
+      password: ''
+      dump:
+      cleanup: false
+      populate: false
+coverage:
+  enabled: true
+whitelist:
+  include:
+    - app/*
+  exclude:
+    - app/storage/*
+  blacklist:
+    include:
+      - app/controllers/*
+    exclude:
+      - app/controllers/BaseController.php

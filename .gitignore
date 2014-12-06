@@ -16,3 +16,4 @@ app/storage/firefly-export*
 firefly-iii-import-*.json
 
 tests/_output/*
+testing.sqlite
