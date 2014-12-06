@@ -1,34 +1,17 @@
 <?php
-use LaravelBook\Ardent\Ardent as Ardent;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Watson\Validating\ValidatingTrait;
 
-/**
- * PiggybankRepetition
- *
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $piggybank_id
- * @property \Carbon\Carbon $startdate
- * @property \Carbon\Carbon $targetdate
- * @property float $currentamount
- * @property-read \Piggybank $piggybank
- * @method static \Illuminate\Database\Query\Builder|\PiggybankRepetition whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\PiggybankRepetition whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\PiggybankRepetition whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\PiggybankRepetition wherePiggybankId($value) 
- * @method static \Illuminate\Database\Query\Builder|\PiggybankRepetition whereStartdate($value) 
- * @method static \Illuminate\Database\Query\Builder|\PiggybankRepetition whereTargetdate($value) 
- * @method static \Illuminate\Database\Query\Builder|\PiggybankRepetition whereCurrentamount($value) 
- */
-class PiggybankRepetition extends Ardent
+class PiggybankRepetition extends Eloquent
 {
+    use ValidatingTrait;
     public static $rules
         = [
             'piggybank_id'  => 'required|exists:piggybanks,id',
             'targetdate'    => 'date',
             'startdate'     => 'date',
-            'currentamount' => 'required|numeric'
-        ];
+            'currentamount' => 'required|numeric'];
 
     /**
      * @return array
@@ -38,6 +21,11 @@ class PiggybankRepetition extends Ardent
         return ['created_at', 'updated_at', 'targetdate', 'startdate'];
     }
 
+    /**
+     * TODO remove this method in favour of something in the FireflyIII libraries.
+     *
+     * @return float|int
+     */
     public function pct()
     {
         $total = $this->piggybank->targetamount;
@@ -56,6 +44,16 @@ class PiggybankRepetition extends Ardent
     public function piggybank()
     {
         return $this->belongsTo('Piggybank');
+    }
+
+    public function scopeStarts(Builder $query, Carbon $date)
+    {
+        $query->where('startdate', $date->format('Y-m-d'));
+    }
+
+    public function scopeTargets(Builder $query, Carbon $date)
+    {
+        $query->where('targetdate', $date->format('Y-m-d'));
     }
 
 

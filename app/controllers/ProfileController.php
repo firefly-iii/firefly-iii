@@ -1,7 +1,5 @@
 <?php
 
-use Firefly\Storage\User\UserRepositoryInterface as URI;
-
 /**
  * Class ProfileController
  */
@@ -9,11 +7,13 @@ class ProfileController extends BaseController
 {
 
     /**
-     * @param URI $user
+     * @return \Illuminate\View\View
      */
-    public function __construct(URI $user)
+    public function changePassword()
     {
-        $this->user = $user;
+        return View::make('profile.change-password')->with('title', Auth::user()->email)->with('subTitle', 'Change your password')->with(
+            'mainTitleIcon', 'fa-user'
+        );
     }
 
     /**
@@ -22,21 +22,7 @@ class ProfileController extends BaseController
      */
     public function index()
     {
-        return View::make('profile.index')
-	        ->with('title', 'Profile')
-	        ->with('subTitle', Auth::user()->email)
-	        ->with('mainTitleIcon', 'fa-user');
-    }
-
-    /**
-     * @return \Illuminate\View\View
-     */
-    public function changePassword()
-    {
-        return View::make('profile.change-password')
-	        ->with('title', Auth::user()->email)
-	        ->with('subTitle', 'Change your password')
-	        ->with('mainTitleIcon', 'fa-user');
+        return View::make('profile.index')->with('title', 'Profile')->with('subTitle', Auth::user()->email)->with('mainTitleIcon', 'fa-user');
     }
 
     /**
@@ -70,8 +56,9 @@ class ProfileController extends BaseController
         }
 
         // update the user with the new password.
-        /** @noinspection PhpParamsInspection */
-        $this->user->updatePassword(Auth::user(), Input::get('new1'));
+        /** @var \FireflyIII\Database\User $repository */
+        $repository = \App::make('FireflyIII\Database\User');
+        $repository->updatePassword(Auth::user(), Input::get('new1'));
 
         Session::flash('success', 'Password changed!');
 

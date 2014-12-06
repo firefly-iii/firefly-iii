@@ -46,9 +46,9 @@ class EloquentBudgetTrigger
      */
     public function subscribe(Dispatcher $events)
     {
-        $events->listen('budgets.destroy', 'Firefly\Trigger\Budgets\EloquentBudgetTrigger@destroy');
-        $events->listen('budgets.store', 'Firefly\Trigger\Budgets\EloquentBudgetTrigger@store');
-        $events->listen('budgets.update', 'Firefly\Trigger\Budgets\EloquentBudgetTrigger@update');
+//        $events->listen('budgets.destroy', 'Firefly\Trigger\Budgets\EloquentBudgetTrigger@destroy');
+//        $events->listen('budgets.store', 'Firefly\Trigger\Budgets\EloquentBudgetTrigger@store');
+//        $events->listen('budgets.update', 'Firefly\Trigger\Budgets\EloquentBudgetTrigger@update');
 
     }
 

@@ -33,9 +33,7 @@ class CreateRemindersTable extends Migration
                 $table->boolean('active');
 
                 // connect reminders to users
-                $table->foreign('user_id')
-                    ->references('id')->on('users')
-                    ->onDelete('cascade');
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             }
         );
     }

@@ -1,20 +1,17 @@
 $(function () {
     updateRanges();
-    $('input[type="range"]').change(updateSingleRange);
+    //$('input[type="range"]').change(updateSingleRange);
     $('input[type="range"]').on('input', updateSingleRange);
-    $('input[type="number"]').on('change', updateSingleRange);
+    //$('input[type="number"]').on('change', updateSingleRange);
     $('input[type="number"]').on('input', updateSingleRange);
     $('.updateIncome').on('click', updateIncome);
 
 
-    if (typeof(googleTable) == 'function') {
-        if (typeof budgetID != 'undefined' && typeof repetitionID == 'undefined') {
-            googleTable('table/budget/' + budgetID + '/0/transactions', 'transactions');
-            googleColumnChart('chart/budgets/'+budgetID+'/spending/2014','budgetOverview');
-
-        } else if (typeof budgetID != 'undefined' && typeof repetitionID != 'undefined') {
-            googleTable('table/budget/' + budgetID + '/' + repetitionID + '/transactions', 'transactions');
-        }
+    if (typeof componentID != 'undefined' && typeof repetitionID == 'undefined') {
+        googleColumnChart('chart/component/' + componentID + '/spending/' + year, 'componentOverview');
+    }
+    if (typeof componentID != 'undefined' && typeof repetitionID != 'undefined') {
+        googleLineChart('chart/budget/' + componentID + '/' + repetitionID, 'componentOverview');
     }
 
 });
@@ -59,6 +56,7 @@ function updateSingleRange(e) {
 
     // send a post to Firefly to update the amount:
     console.log('Value is: ' + value);
+    console.log('POST! with ID ' + id + ' AND value ' + value);
     $.post('budgets/amount/' + id, {amount: value}).success(function (data) {
         console.log('Budget ' + data.name + ' updated!');
         // update the link if relevant:
@@ -162,7 +160,6 @@ function updateRanges() {
         // we gaan er X overheen,
 
         var pct = totalAmount / sum * 100;
-        console.log(pct)
         var danger = 100 - pct;
         var err = 100 - danger;
         $('#progress-bar-default').css('width', 0);

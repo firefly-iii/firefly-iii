@@ -1,6 +1,7 @@
 <?php
 
 namespace FireflyIII\Database\Ifaces;
+
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
@@ -12,6 +13,13 @@ use Illuminate\Support\Collection;
 interface TransactionJournalInterface
 {
     /**
+     * Get the very first transaction journal.
+     *
+     * @return mixed
+     */
+    public function first();
+
+    /**
      * @param Carbon $start
      * @param Carbon $end
      *
@@ -20,10 +28,11 @@ interface TransactionJournalInterface
     public function getInDateRange(Carbon $start, Carbon $end);
 
     /**
-     * Get the very first transaction journal.
-     * @return mixed
+     * @param Carbon $date
+     *
+     * @return float
      */
-    public function first();
+    public function getSumOfExpensesByMonth(Carbon $date);
 
     /**
      * @param Carbon $date
@@ -31,12 +40,5 @@ interface TransactionJournalInterface
      * @return float
      */
     public function getSumOfIncomesByMonth(Carbon $date);
-
-    /**
-     * @param Carbon $date
-     *
-     * @return float
-     */
-    public function getSumOfExpensesByMonth(Carbon $date);
 
 } 

@@ -1,6 +1,6 @@
 <?php
 
-use Firefly\Exception\FireflyException;
+use FireflyIII\Exception\FireflyException;
 use Illuminate\Support\MessageBag;
 
 /**
@@ -19,102 +19,8 @@ class AccountController extends BaseController
     }
 
     /**
-     * @param string $what
+     * @param $what
      *
-     * @return View
-     * @throws FireflyException
-     */
-    public function index($what = 'default')
-    {
-        switch ($what) {
-            default:
-                throw new FireflyException('Cannot handle account type "' . e($what) . '".');
-                break;
-            case 'asset':
-                $subTitleIcon = 'fa-money';
-                $subTitle = 'Asset accounts';
-                break;
-            case 'expense':
-                $subTitleIcon = 'fa-shopping-cart';
-                $subTitle = 'Expense accounts';
-                break;
-            case 'revenue':
-                $subTitleIcon = 'fa-download';
-                $subTitle = 'Revenue accounts';
-                break;
-        }
-        return View::make('accounts.index')
-	        ->with('what', $what)
-	        ->with(compact('subTitleIcon'))
-	        ->with(compact('subTitle'));
-    }
-
-
-    /**
-     * @param string $what
-     *
-     * @return \Illuminate\Http\JsonResponse
-     * @throws FireflyException
-     */
-    public function json($what = 'default')
-    {
-        /** @var \FireflyIII\Database\Account $acct */
-        $acct = App::make('FireflyIII\Database\Account');
-
-        /** @var \FireflyIII\Shared\Json\Json $json */
-        $json = App::make('FireflyIII\Shared\Json\Json');
-
-        $parameters = $json->dataTableParameters();
-
-        switch ($what) {
-            default:
-                throw new FireflyException('Cannot handle account type "' . e($what) . '".');
-                break;
-            case 'asset':
-                $accounts = $acct->getAssetAccounts($parameters);
-                $count    = $acct->countAssetAccounts();
-                break;
-            case 'expense':
-                $accounts = $acct->getExpenseAccounts($parameters);
-                $count    = $acct->countExpenseAccounts();
-                break;
-            case 'revenue':
-                $accounts = $acct->getRevenueAccounts($parameters);
-                $count    = $acct->countRevenueAccounts();
-                break;
-        }
-
-        /*
-         * Output the set compatible with data tables:
-         */
-        $return = [
-            'draw'            => intval(Input::get('draw')),
-            'recordsTotal'    => $count,
-            'recordsFiltered' => $accounts->count(),
-            'data'            => [],
-        ];
-
-        /*
-         * Loop the accounts:
-         */
-        /** @var \Account $account */
-        foreach ($accounts as $account) {
-            $entry            = [
-                'name'    => ['name' => $account->name, 'url' => route('accounts.show', $account->id)],
-                'balance' => $account->balance(),
-                'id'      => [
-                    'edit'   => route('accounts.edit', $account->id),
-                    'delete' => route('accounts.delete', $account->id),
-                ]
-            ];
-            $return['data'][] = $entry;
-        }
-
-
-        return Response::jsoN($return);
-    }
-
-    /**
      * @return \Illuminate\View\View
      */
     public function create($what)
@@ -130,11 +36,9 @@ class AccountController extends BaseController
                 $subTitleIcon = 'fa-download';
                 break;
         }
+        $subTitle = 'Create a new ' . $what . ' account';
 
-        return View::make('accounts.create')
-	        ->with('subTitle', 'Create a new ' . $what . ' account')
-	        ->with('what', $what)
-	        ->with(compact('subTitleIcon'));
+        return View::make('accounts.create', compact('subTitleIcon', 'what', 'subTitle'));
     }
 
     /**
@@ -144,10 +48,9 @@ class AccountController extends BaseController
      */
     public function delete(Account $account)
     {
-        return View::make('accounts.delete')->with('account', $account)
-                   ->with(
-                       'subTitle', 'Delete ' . strtolower($account->accountType->type) . ' "' . $account->name . '"'
-                   );
+        $subTitle = 'Delete ' . strtolower($account->accountType->type) . ' "' . $account->name . '"';
+
+        return View::make('accounts.delete', compact('account', 'subTitle'));
     }
 
     /**
@@ -159,69 +62,27 @@ class AccountController extends BaseController
     {
 
         $type = $account->accountType->type;
+        $name = $account->name;
 
         /** @var \FireflyIII\Database\Account $acct */
         $acct = App::make('FireflyIII\Database\Account');
 
-        /** @var \FireflyIII\Database\TransactionJournal $jrnls */
-        $jrnls = App::make('FireflyIII\Database\TransactionJournal');
-
-        /*
-         * Find the "initial balance account", should it exist:
-         */
-        $initialBalance = $acct->findInitialBalanceAccount($account);
-
-        /*
-         * Get all the transaction journals that are part of this/these account(s):
-         */
-        $journals = [];
-        if ($initialBalance) {
-            $transactions = $initialBalance->transactions()->get();
-            /** @var \Transaction $transaction */
-            foreach ($transactions as $transaction) {
-                $journals[] = $transaction->transaction_journal_id;
-            }
-        }
-        /** @var \Transaction $transaction */
-        foreach ($account->transactions() as $transaction) {
-            $journals[] = $transaction->transaction_journal_id;
-        }
-
-        $journals = array_unique($journals);
-
-        /*
-         * Delete the journals. Should get rid of the transactions as well.
-         */
-        foreach ($journals as $id) {
-            $journal = $jrnls->find($id);
-            $journal->delete();
-        }
-
-        /*
-         * Delete it
-         */
-        if ($initialBalance) {
-            $acct->destroy($initialBalance);
-        }
-
         $acct->destroy($account);
 
-        Session::flash('success', 'The account was deleted.');
+        $return = 'asset';
         switch ($type) {
-            case 'Asset account':
-            case 'Default account':
-                return Redirect::route('accounts.index', 'asset');
-                break;
             case 'Expense account':
             case 'Beneficiary account':
-                return Redirect::route('accounts.index', 'expense');
+                $return = 'expense';
                 break;
             case 'Revenue account':
-                return Redirect::route('accounts.index', 'revenue');
+                $return = 'revenue';
                 break;
         }
 
+        Session::flash('success', 'The ' . $return . ' account "' . e($name) . '" was deleted.');
 
+        return Redirect::route('accounts.index', $return);
     }
 
     /**
@@ -231,11 +92,13 @@ class AccountController extends BaseController
      */
     public function edit(Account $account)
     {
+        $prefilled = [];
 
         switch ($account->accountType->type) {
             case 'Asset account':
             case 'Default account':
-                $subTitleIcon = 'fa-money';
+                $subTitleIcon              = 'fa-money';
+                $prefilled['account_role'] = $account->getMeta('accountRole');
                 break;
             case 'Expense account':
             case 'Beneficiary account':
@@ -254,46 +117,112 @@ class AccountController extends BaseController
         if (!is_null($openingBalance)) {
             $prefilled['openingbalancedate'] = $openingBalance->date->format('Y-m-d');
             $prefilled['openingbalance']     = floatval($openingBalance->transactions()->where('account_id', $account->id)->first()->amount);
-            Session::flash('prefilled', $prefilled);
         }
+        Session::flash('prefilled', $prefilled);
 
-        return View::make('accounts.edit')
-	        ->with('account', $account)
-	        ->with('openingBalance', $openingBalance)
-            ->with(compact('subTitleIcon'))
-	        ->with('subTitle', 'Edit ' . strtolower(
+        return View::make('accounts.edit', compact('account', 'openingBalance', 'subTitleIcon'))->with(
+            'subTitle', 'Edit ' . strtolower(
                 $account->accountType->type
             ) . ' "' . $account->name . '"'
         );
     }
 
     /**
+     * @param string $what
+     *
+     * @return View
+     * @throws FireflyException
+     */
+    public function index($what = 'default')
+    {
+        /** @var \FireflyIII\Database\Account $acct */
+        $acct = App::make('FireflyIII\Database\Account');
+
+        switch ($what) {
+            default:
+                throw new FireflyException('Cannot handle account type "' . e($what) . '".');
+                break;
+            case 'asset':
+                $subTitleIcon = 'fa-money';
+                $subTitle     = 'Asset accounts';
+                $accounts     = $acct->getAssetAccounts();
+                break;
+            case 'expense':
+                $subTitleIcon = 'fa-shopping-cart';
+                $subTitle     = 'Expense accounts';
+                $accounts     = $acct->getExpenseAccounts();
+                break;
+            case 'revenue':
+                $subTitleIcon = 'fa-download';
+                $subTitle     = 'Revenue accounts';
+                $accounts     = $acct->getRevenueAccounts();
+                break;
+        }
+
+        $accounts->each(
+            function (Account $account) {
+                if (Cache::has('account.' . $account->id . '.lastActivityDate')) {
+                    $account->lastActionDate = Cache::get('account.' . $account->id . '.lastActivityDate');
+                } else {
+                    $transaction = $account->transactions()->orderBy('updated_at', 'DESC')->first();
+                    if (is_null($transaction)) {
+                        $account->lastActionDate = null;
+                        Cache::forever('account.' . $account->id . '.lastActivityDate', 0);
+                    } else {
+                        $account->lastActionDate = $transaction->updated_at;
+                        Cache::forever('account.' . $account->id . '.lastActivityDate', $transaction->updated_at);
+                    }
+                }
+
+            }
+        );
+
+        return View::make('accounts.index', compact('what', 'subTitleIcon', 'subTitle', 'accounts'));
+    }
+
+    /**
      * @param Account $account
+     * @param string  $view
      *
      * @return $this
      */
-    public function show(Account $account)
+    public function show(Account $account, $view = 'session')
     {
         switch ($account->accountType->type) {
             case 'Asset account':
             case 'Default account':
                 $subTitleIcon = 'fa-money';
+                $what         = 'asset';
                 break;
             case 'Expense account':
             case 'Beneficiary account':
                 $subTitleIcon = 'fa-shopping-cart';
+                $what         = 'expense';
                 break;
             case 'Revenue account':
                 $subTitleIcon = 'fa-download';
+                $what         = 'revenue';
+                break;
+        }
+
+        // get a paginated view of all transactions for this account:
+        /** @var \FireflyIII\Database\Account $acct */
+        $acct = App::make('FireflyIII\Database\Account');
+        switch ($view) {
+            default:
+            case 'session':
+                $journals = $acct->getTransactionJournals($account, 50);
+                break;
+            case 'all':
+                $journals = $acct->getAllTransactionJournals($account, 50);
+
                 break;
         }
 
 
-        //$data = $this->_accounts->show($account, 40);
-        return View::make('accounts.show')
-            ->with('account', $account)
-            ->with('subTitle', 'Details for ' . strtolower($account->accountType->type) . ' "' . $account->name . '"')
-	        ->with(compact('subTitleIcon'));
+        return View::make('accounts.show', compact('account', 'what', 'view', 'subTitleIcon', 'journals'))->with('account', $account)->with(
+            'subTitle', 'Details for ' . strtolower($account->accountType->type) . ' "' . $account->name . '"'
+        );
     }
 
     /**
@@ -312,7 +241,7 @@ class AccountController extends BaseController
             default:
                 throw new FireflyException('Cannot handle post_submit_action "' . e($data['post_submit_action']) . '"');
                 break;
-            case 'create_another':
+            case 'return_to_edit':
             case 'store':
                 $messages = $acct->validate($data);
                 /** @var MessageBag $messages ['errors'] */
@@ -320,6 +249,7 @@ class AccountController extends BaseController
                     Session::flash('warnings', $messages['warnings']);
                     Session::flash('successes', $messages['successes']);
                     Session::flash('error', 'Could not save account: ' . $messages['errors']->first());
+
                     return Redirect::route('accounts.create', $data['what'])->withInput()->withErrors($messages['errors']);
                 }
                 // store!
@@ -337,6 +267,7 @@ class AccountController extends BaseController
                 Session::flash('warnings', $messageBags['warnings']);
                 Session::flash('successes', $messageBags['successes']);
                 Session::flash('errors', $messageBags['errors']);
+
                 return Redirect::route('accounts.create', $data['what'])->withInput();
                 break;
         }
@@ -360,8 +291,10 @@ class AccountController extends BaseController
                 throw new FireflyException('Cannot handle account type "' . e($account->accountType->type) . '"');
                 break;
             case 'Default account':
+            case 'Asset account':
                 $data['what'] = 'asset';
                 break;
+            case 'Expense account':
             case 'Beneficiary account':
                 $data['what'] = 'expense';
                 break;
@@ -382,6 +315,7 @@ class AccountController extends BaseController
                     Session::flash('warnings', $messages['warnings']);
                     Session::flash('successes', $messages['successes']);
                     Session::flash('error', 'Could not save account: ' . $messages['errors']->first());
+
                     return Redirect::route('accounts.edit', $account->id)->withInput()->withErrors($messages['errors']);
                 }
                 // store!
@@ -391,13 +325,14 @@ class AccountController extends BaseController
                 if ($data['post_submit_action'] == 'create_another') {
                     return Redirect::route('accounts.edit', $account->id);
                 } else {
-                    return Redirect::route('accounts.index',$data['what']);
+                    return Redirect::route('accounts.index', $data['what']);
                 }
             case 'validate_only':
                 $messageBags = $acct->validate($data);
                 Session::flash('warnings', $messageBags['warnings']);
                 Session::flash('successes', $messageBags['successes']);
                 Session::flash('errors', $messageBags['errors']);
+
                 return Redirect::route('accounts.edit', $account->id)->withInput();
                 break;
         }

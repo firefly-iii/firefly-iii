@@ -1,39 +1,20 @@
 <?php
+use Watson\Validating\ValidatingTrait;
 
-use LaravelBook\Ardent\Ardent;
-
-/**
- * Preference
- *
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $user_id
- * @property string $name
- * @property string $data
- * @property-read \User $user
- * @method static \Illuminate\Database\Query\Builder|\Preference whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Preference whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Preference whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\Preference whereUserId($value) 
- * @method static \Illuminate\Database\Query\Builder|\Preference whereName($value) 
- * @method static \Illuminate\Database\Query\Builder|\Preference whereData($value) 
- */
-class Preference extends Ardent
+class Preference extends Eloquent
 {
+    use ValidatingTrait;
     public static $rules
-        = [
-            'user_id' => 'required|exists:users,id',
-            'name'    => 'required|between:1,255',
-            'data'    => 'required'
-        ];
+        = ['user_id' => 'required|exists:users,id', 'name' => 'required|between:1,255', 'data' => 'required'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @param $value
+     *
+     * @return mixed
      */
-    public function user()
+    public function getDataAttribute($value)
     {
-        return $this->belongsTo('User');
+        return json_decode($value);
     }
 
     /**
@@ -45,13 +26,11 @@ class Preference extends Ardent
     }
 
     /**
-     * @param $value
-     *
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function getDataAttribute($value)
+    public function user()
     {
-        return json_decode($value);
+        return $this->belongsTo('User');
     }
 
 } 

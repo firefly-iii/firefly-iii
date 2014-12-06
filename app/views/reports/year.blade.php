@@ -1,5 +1,6 @@
 @extends('layouts.default')
 @section('content')
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $date) }}
 <div class="row">
  <div class="col-lg-10 col-md-8 col-sm-12">
     <div class="panel panel-default">
@@ -27,9 +28,8 @@
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                Summary
+                Summary (without shared accounts)
             </div>
-            <div class="panel-body">
                 <table class="table table-striped">
                     <tr>
                         <td></td>
@@ -62,7 +62,48 @@
                         <td>{{mf($inSum + $outSum)}}</td>
                     </tr>
                 </table>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Summary (shared accounts only)
             </div>
+                <table class="table table-striped">
+                    <tr>
+                        <td></td>
+                            @foreach($summary as $entry)
+                                <th>{{$entry['month']}}</th>
+                        @endforeach
+                        <th>Sum</th>
+                    </tr>
+                    <tr>
+                        <th>In</th>
+                        <?php $inSum = 0;?>
+                        @foreach($summary as $entry)
+                            <td>{{mf($entry['incomeShared'])}}</td>
+                            <?php $inSum+=$entry['incomeShared'];?>
+                        @endforeach
+                        <td>{{mf($inSum)}}</td>
+                    </tr>
+                        <th>Out</th>
+                        <?php $outSum = 0;?>
+                        @foreach($summary as $entry)
+                            <td>{{mf($entry['expenseShared']*-1)}}</td>
+                            <?php $outSum+=$entry['expenseShared']*-1;?>
+                        @endforeach
+                        <td>{{mf($outSum)}}</td>
+                    <tr>
+                        <th>Difference</th>
+                        @foreach($summary as $entry)
+                            <td>{{mf($entry['incomeShared']- $entry['expenseShared'])}}</td>
+                        @endforeach
+                        <td>{{mf($inSum + $outSum)}}</td>
+                    </tr>
+                </table>
         </div>
     </div>
 </div>

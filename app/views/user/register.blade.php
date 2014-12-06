@@ -11,8 +11,8 @@
                     Registering an account on Firefly requires an e-mail address.
                     All instructions will be sent to you.
                 </p>
-                {{Form::open()}}
-                <div class="form-group">
+                {{Form::open(['id' => 'register'])}}
+                <div class="form-group"> <!-- {{App::environment()}} -->
                     <label for="inputEmail">Email address</label>
                     <input type="email" class="form-control" id="inputEmail" name="email" placeholder="Enter email">
                 </div>

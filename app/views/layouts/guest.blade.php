@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <base href="{{URL::route('index')}}/">
-    <title>Firefly</title>
+    <title>Firefly III</title>
 
         {{HTML::style('assets/stylesheets/bootstrap/bootstrap.min.css')}}
         {{HTML::style('assets/stylesheets/metisMenu/metisMenu.min.css')}}
@@ -18,6 +18,8 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <!-- {{App::environment()}} -->
 </head>
 <body>
 <div class="container">
@@ -25,4 +27,4 @@
     @yield('content')
 </div>
 </body>
-</html><!-- TODO main update title and title-tag -->
+</html>

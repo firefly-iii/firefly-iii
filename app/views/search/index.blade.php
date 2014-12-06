@@ -1,7 +1,8 @@
 @extends('layouts.default')
 @section('content')
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $query) }}
 @if(!is_null($query))
-<div class="row"><!-- TODO cleanup for new forms and layout and see if it actually still works. -->
+<div class="row">
     @if(isset($result['transactions']) && $result['transactions']->count() > 0)
     <div class="col-lg-6 col-md-12 col-sm-12">
         <div class="panel panel-default">
@@ -9,7 +10,7 @@
                 <i class="fa fa-repeat"></i> Transactions ({{$result['transactions']->count()}})
             </div>
             <div class="panel-body">
-                @include('transactions.journals-small-noaccount',['transactions' => $result['transactions']])
+                @include('...lists.old.journals-small-noaccount',['transactions' => $result['transactions']])
             </div>
         </div>
     </div>

@@ -2,13 +2,14 @@
 namespace FireflyIII\Database;
 
 use Carbon\Carbon;
-use FireflyIII\Exception\NotImplementedException;
-use Illuminate\Support\MessageBag;
-use LaravelBook\Ardent\Ardent;
-use Illuminate\Support\Collection;
+use FireflyIII\Exception\FireflyException;
 use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
 use FireflyIII\Database\Ifaces\CUD;
 use FireflyIII\Database\Ifaces\PiggybankInterface;
+use FireflyIII\Exception\NotImplementedException;
+use Illuminate\Support\Collection;
+use Illuminate\Support\MessageBag;
+
 
 /**
  * Class Piggybank
@@ -20,23 +21,6 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
     use SwitchUser;
 
     /**
-     * @param \Account $account
-     *
-     * @return float
-     */
-    public function leftOnAccount(\Account $account)
-    {
-        $balance = $account->balance();
-        /** @var \Piggybank $p */
-        foreach ($account->piggybanks()->get() as $p) {
-            $balance -= $p->currentRelevantRep()->currentamount;
-        }
-
-        return $balance;
-
-    }
-
-    /**
      *
      */
     public function __construct()
@@ -45,26 +29,75 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
     }
 
     /**
-     * @param Ardent $model
+     * @param \Eloquent $model
      *
      * @return bool
      */
-    public function destroy(Ardent $model)
+    public function destroy(\Eloquent $model)
     {
         $model->delete();
     }
 
     /**
-     * Validates a model. Returns an array containing MessageBags
-     * errors/warnings/successes.
+     * @param array $data
      *
-     * @param Ardent $model
-     *
-     * @return array
+     * @return \Eloquent
      */
-    public function validateObject(Ardent $model)
+    public function store(array $data)
     {
-        // TODO: Implement validateObject() method.
+        $data['rep_every']     = isset($data['rep_every']) ? $data['rep_every'] : 0;
+        $data['reminder_skip'] = isset($data['reminder_skip']) ? $data['reminder_skip'] : 0;
+        $data['order']         = isset($data['order']) ? $data['order'] : 0;
+        $data['remind_me']     = isset($data['remind_me']) ? intval($data['remind_me']) : 0;
+        $data['startdate']     = isset($data['startdate']) ? $data['startdate'] : Carbon::now()->format('Y-m-d');
+        $data['targetdate']    = isset($data['targetdate']) && $data['targetdate'] != '' ? $data['targetdate'] : null;
+
+        if ($data['remind_me'] == 0) {
+            $data['reminder'] = null;
+        }
+
+
+        $piggybank = new \Piggybank($data);
+        if (!$piggybank->isValid()) {
+            var_dump($piggybank->getErrors()->all());
+            exit;
+        }
+        $piggybank->save();
+
+        return $piggybank;
+    }
+
+    /**
+     * @param \Eloquent $model
+     * @param array  $data
+     *
+     * @return bool
+     */
+    public function update(\Eloquent $model, array $data)
+    {
+        /** @var \Piggybank $model */
+        $model->name          = $data['name'];
+        $model->account_id    = intval($data['account_id']);
+        $model->targetamount  = floatval($data['targetamount']);
+        $model->targetdate    = isset($data['targetdate']) && $data['targetdate'] != '' ? $data['targetdate'] : null;
+        $model->rep_every     = isset($data['rep_every']) ? $data['rep_every'] : 0;
+        $model->reminder_skip = isset($data['reminder_skip']) ? $data['reminder_skip'] : 0;
+        $model->order         = isset($data['order']) ? $data['order'] : 0;
+        $model->remind_me     = isset($data['remind_me']) ? intval($data['remind_me']) : 0;
+        $model->reminder      = isset($data['reminder']) ? $data['reminder'] : 'month';
+
+        if ($model->remind_me == 0) {
+            $model->reminder = null;
+        }
+
+        if (!$model->isValid()) {
+            var_dump($model->getErrors());
+            exit();
+        }
+
+        $model->save();
+
+        return true;
     }
 
     /**
@@ -105,7 +138,7 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
             try {
                 new Carbon($model['targetdate']);
             } catch (\Exception $e) {
-                $errors->add('date', 'Invalid date.');
+                $errors->add('targetdate', 'Invalid date.');
             }
         }
         if (floatval($model['targetamount']) < 0.01) {
@@ -147,36 +180,7 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
             }
         }
 
-        return [
-            'errors'    => $errors,
-            'warnings'  => $warnings,
-            'successes' => $successes
-        ];
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return Ardent
-     */
-    public function store(array $data)
-    {
-        $data['rep_every']     = isset($data['rep_every']) ? $data['rep_every'] : 0;
-        $data['reminder_skip'] = isset($data['reminder_skip']) ? $data['reminder_skip'] : 0;
-        $data['order']         = isset($data['order']) ? $data['order'] : 0;
-        $data['remind_me']     = isset($data['remind_me']) ? intval($data['remind_me']) : 0;
-        $data['startdate']     = isset($data['startdate']) ? $data['startdate'] : Carbon::now()->format('Y-m-d');
-        $data['targetdate']    = isset($data['targetdate']) && $data['targetdate'] != '' ? $data['targetdate'] : null;
-
-
-        $piggybank = new \Piggybank($data);
-        if (!$piggybank->validate()) {
-            var_dump($piggybank->errors()->all());
-            exit;
-        }
-        $piggybank->save();
-        \Event::fire('piggybanks.store', [$piggybank]);
-        $piggybank->save();
+        return ['errors' => $errors, 'warnings' => $warnings, 'successes' => $successes];
     }
 
     /**
@@ -184,11 +188,26 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
      *
      * @param int $id
      *
-     * @return Ardent
+     * @return \Eloquent
      */
     public function find($id)
     {
-        // TODO: Implement find() method.
+        return \Piggybank::
+        leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where('piggybanks.id', '=', $id)->where('accounts.user_id', $this->getUser()->id)
+                         ->first(['piggybanks.*']);
+    }
+
+    /**
+     * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
+     *
+     * @param $what
+     *
+     * @return \AccountType|null
+     */
+    public function findByWhat($what)
+    {
+        // TODO: Implement findByWhat() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -209,42 +228,35 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
     public function getByIds(array $ids)
     {
         // TODO: Implement getByIds() method.
+        throw new NotImplementedException;
     }
 
-    /**
-     * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
-     *
-     * @param $what
-     *
-     * @return \AccountType|null
-     */
-    public function findByWhat($what)
+    public function findRepetitionByDate(\Piggybank $piggybank, Carbon $date)
     {
-        // TODO: Implement findByWhat() method.
-    }
-
-    /**
-     * @param Ardent $model
-     * @param array  $data
-     *
-     * @return bool
-     */
-    public function update(Ardent $model, array $data)
-    {
-        /** @var \Piggybank $model */
-        $model->name          = $data['name'];
-        $model->account_id    = intval($data['account_id']);
-        $model->targetamount  = floatval($data['targetamount']);
-        $model->targetdate    = isset($data['targetdate']) && $data['targetdate'] != '' ? $data['targetdate'] : null;
-        $model->rep_every     = isset($data['rep_every']) ? $data['rep_every'] : 0;
-        $model->reminder_skip = isset($data['reminder_skip']) ? $data['reminder_skip'] : 0;
-        $model->order         = isset($data['order']) ? $data['order'] : 0;
-        $model->remind_me     = isset($data['remind_me']) ? intval($data['remind_me']) : 0;
-        if(!$model->validate()) {
-            var_dump($model->errors());
-            exit();
+        $reps = $piggybank->piggybankrepetitions()->get();
+        if ($reps->count() == 1) {
+            return $reps->first();
         }
-        $model->save();
-        return true;
+        if ($reps->count() == 0) {
+            throw new FireflyException('Should always find a piggy bank repetition.');
+        }
+        throw new NotImplementedException;
+    }
+
+    /**
+     * @param \Account $account
+     *
+     * @return float
+     */
+    public function leftOnAccount(\Account $account)
+    {
+        $balance = \Steam::balance($account);
+        /** @var \Piggybank $p */
+        foreach ($account->piggybanks()->get() as $p) {
+            $balance -= $p->currentRelevantRep()->currentamount;
+        }
+
+        return $balance;
+
     }
 }

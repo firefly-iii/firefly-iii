@@ -51,6 +51,29 @@ var defaultBarChartOptions = {
     },
 };
 
+var defaultComboChartOptions = {
+    height: 300,
+    chartArea: {
+        left: 75,
+        top: 10,
+        width: '100%',
+        height: '90%'
+    },
+    vAxis: {
+        minValue: 0,
+        format: '\u20AC #'
+    },
+    legend: {
+        position: 'none'
+    },
+    series: {
+        0: {type: 'line'},
+        1: {type: 'line'},
+        2: {type: 'bars'}
+    },
+    bar: {groupWidth: 20}
+};
+
 var defaultColumnChartOptions = {
     height: 400,
     chartArea: {
@@ -116,8 +139,3 @@ var defaultPieChartOptions = {
 var defaultSankeyChartOptions = {
     height: 400
 }
-var defaultTableOptions = {
-    allowHtml: true,
-    page: 'enable',
-    pageSize: 50
-};

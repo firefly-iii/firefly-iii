@@ -99,7 +99,7 @@ class EloquentRecurringTrigger
      */
     public function subscribe(Dispatcher $events)
     {
-        $events->listen('recurring.rescan', 'Firefly\Trigger\Recurring\EloquentRecurringTrigger@rescan');
+        //$events->listen('recurring.rescan', 'Firefly\Trigger\Recurring\EloquentRecurringTrigger@rescan');
     }
 
     /**

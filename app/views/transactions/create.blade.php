@@ -1,5 +1,6 @@
 @extends('layouts.default')
 @section('content')
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $what) }}
 {{Form::open(['class' => 'form-horizontal','url' => route('transactions.store',$what)])}}
 {{Form::hidden('reminder',Input::get('reminder_id'))}}
 
@@ -69,7 +70,7 @@
 
                         <!-- RELATE THIS TRANSFER TO A PIGGY BANK -->
                         @if($what == 'transfer' && count($piggies) > 0)
-                            {{Form::ffSelect('piggybank_id',$piggies,0)}}
+                            {{Form::ffSelect('piggybank_id',$piggies)}}
                         @endif
                     </div>
                 </div>
@@ -91,7 +92,5 @@
 @stop
 @section('scripts')
 {{HTML::script('assets/javascript/typeahead/bootstrap3-typeahead.min.js')}}
-{{HTML::script('assets/javascript/datatables/jquery.dataTables.min.js')}}
-{{HTML::script('assets/javascript/datatables/dataTables.bootstrap.js')}}
 {{HTML::script('assets/javascript/firefly/transactions.js')}}
 @stop

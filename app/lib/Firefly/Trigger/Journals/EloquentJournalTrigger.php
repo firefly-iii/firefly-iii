@@ -45,8 +45,8 @@ class EloquentJournalTrigger
      */
     public function subscribe(Dispatcher $events)
     {
-        $events->listen('journals.store', 'Firefly\Trigger\Journals\EloquentJournalTrigger@store');
-        $events->listen('journals.update', 'Firefly\Trigger\Journals\EloquentJournalTrigger@update');
+//        $events->listen('journals.store', 'Firefly\Trigger\Journals\EloquentJournalTrigger@store');
+//        $events->listen('journals.update', 'Firefly\Trigger\Journals\EloquentJournalTrigger@update');
 
     }
 

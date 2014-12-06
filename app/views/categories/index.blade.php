@@ -1,38 +1,36 @@
 @extends('layouts.default')
 @section('content')
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName()) }}
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <p class="lead">Use categories to group your expenses</p>
-        <p class="text-info">
-            Use categories to group expenses by hobby, for certain types of groceries or what bills are for.
-            Expenses grouped in categories do not have to reoccur every month or every week, like budgets.
-        </p>
-        <p>
-            <a href="{{route('categories.create')}}" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Create a new category</a>
-        </p>
-    </div>
-</div><!-- TODO cleanup to match new theme & form -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa {{{$mainTitleIcon}}}"></i> Categories
 
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <table class="table table-striped">
-            <tr>
-
-            </tr>
-            @foreach($categories as $category)
-            <tr>
-                <td>
-                    <a href="{{route('categories.show',$category->id)}}">{{{$category->name}}}</a>
-                </td>
-                <td>
-                    <div class="btn-group btn-group-xs">
-                        <a href="{{route('categories.edit',$category->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
-                        <a href="{{route('categories.delete',$category->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                <!-- ACTIONS MENU -->
+                <div class="pull-right">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                            Actions
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu pull-right" role="menu">
+                            <li><a href="{{route('categories.create')}}"><i class="fa fa-plus fa-fw"></i> New category</a></li>
+                        </ul>
                     </div>
-                </td>
-            </tr>
-            @endforeach
-        </table>
+                </div>
+
+
+            </div>
+                @include('list.categories')
+        </div>
     </div>
 </div>
+@stop
+@section('scripts')
+<!-- load the libraries and scripts necessary for Google Charts: -->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+{{HTML::script('assets/javascript/firefly/gcharts.options.js')}}
+{{HTML::script('assets/javascript/firefly/gcharts.js')}}
+{{HTML::script('assets/javascript/firefly/categories.js')}}
 @stop

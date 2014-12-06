@@ -12,6 +12,16 @@ class CreateLimitsTable extends Migration
 {
 
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('limits');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -31,21 +41,9 @@ class CreateLimitsTable extends Migration
                 $table->unique(['component_id', 'startdate', 'repeat_freq']);
 
                 // connect component
-                $table->foreign('component_id')
-                    ->references('id')->on('components')
-                    ->onDelete('cascade');
+                $table->foreign('component_id')->references('id')->on('components')->onDelete('cascade');
             }
         );
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('limits');
     }
 
 }

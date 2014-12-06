@@ -1,33 +1,38 @@
 <?php
 
 namespace FireflyIII\Database\Ifaces;
-use Illuminate\Support\MessageBag;
-use LaravelBook\Ardent\Ardent;
+
+
 
 /**
  * Interface CUD
+ *
  * @package FireflyIII\Database
  */
 interface CUD
 {
 
     /**
-     * @param Ardent $model
+     * @param \Eloquent $model
      *
      * @return bool
      */
-    public function destroy(Ardent $model);
-
+    public function destroy(\Eloquent $model);
 
     /**
-     * Validates a model. Returns an array containing MessageBags
-     * errors/warnings/successes.
+     * @param array $data
      *
-     * @param Ardent $model
-     *
-     * @return array
+     * @return \Eloquent
      */
-    public function validateObject(Ardent $model);
+    public function store(array $data);
+
+    /**
+     * @param \Eloquent $model
+     * @param array  $data
+     *
+     * @return bool
+     */
+    public function update(\Eloquent $model, array $data);
 
     /**
      * Validates an array. Returns an array containing MessageBags
@@ -39,19 +44,4 @@ interface CUD
      */
     public function validate(array $model);
 
-    /**
-     * @param array $data
-     *
-     * @return Ardent
-     */
-    public function store(array $data);
-
-    /**
-     * @param Ardent $model
-     * @param array  $data
-     *
-     * @return bool
-     */
-    public function update(Ardent $model, array $data);
-
-} 
+}

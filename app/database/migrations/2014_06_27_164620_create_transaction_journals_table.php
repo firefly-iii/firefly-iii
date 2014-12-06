@@ -12,6 +12,16 @@ class CreateTransactionJournalsTable extends Migration
 {
 
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('transaction_journals');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -22,6 +32,7 @@ class CreateTransactionJournalsTable extends Migration
             'transaction_journals', function (Blueprint $table) {
                 $table->increments('id');
                 $table->timestamps();
+                $table->softDeletes();
                 $table->integer('user_id')->unsigned();
                 $table->integer('transaction_type_id')->unsigned();
                 $table->integer('recurring_transaction_id')->unsigned()->nullable();
@@ -31,36 +42,18 @@ class CreateTransactionJournalsTable extends Migration
                 $table->date('date');
 
                 // connect transaction journals to transaction types
-                $table->foreign('transaction_type_id')
-                    ->references('id')->on('transaction_types')
-                    ->onDelete('cascade');
+                $table->foreign('transaction_type_id')->references('id')->on('transaction_types')->onDelete('cascade');
 
                 // connect transaction journals to recurring transactions
-                $table->foreign('recurring_transaction_id')
-                    ->references('id')->on('recurring_transactions')
-                    ->onDelete('set null');
+                $table->foreign('recurring_transaction_id')->references('id')->on('recurring_transactions')->onDelete('set null');
 
                 // connect transaction journals to transaction currencies
-                $table->foreign('transaction_currency_id')
-                    ->references('id')->on('transaction_currencies')
-                    ->onDelete('cascade');
+                $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
 
                 // connect users
-                $table->foreign('user_id')
-                    ->references('id')->on('users')
-                    ->onDelete('cascade');
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             }
         );
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('transaction_journals');
     }
 
 }

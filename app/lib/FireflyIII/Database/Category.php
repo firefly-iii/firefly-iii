@@ -2,19 +2,20 @@
 namespace FireflyIII\Database;
 
 use Carbon\Carbon;
-use Illuminate\Support\MessageBag;
-use LaravelBook\Ardent\Ardent;
-use Illuminate\Support\Collection;
+use FireflyIII\Database\Ifaces\CategoryInterface;
 use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
 use FireflyIII\Database\Ifaces\CUD;
-use FireflyIII\Database\Ifaces\CategoryInterface;
+use FireflyIII\Exception\NotImplementedException;
+use Illuminate\Support\Collection;
+use Illuminate\Support\MessageBag;
+
 
 /**
  * Class Category
  *
  * @package FireflyIII\Database
  */
-class Category implements CUD, CommonDatabaseCalls, CategoryInterface
+class Category implements CUD, CommonDatabaseCalls
 {
     use SwitchUser;
 
@@ -27,26 +28,55 @@ class Category implements CUD, CommonDatabaseCalls, CategoryInterface
     }
 
     /**
-     * @param Ardent $model
+     * @param \Eloquent $model
      *
      * @return bool
      */
-    public function destroy(Ardent $model)
+    public function destroy(\Eloquent $model)
     {
-        // TODO: Implement destroy() method.
+        $model->delete();
+
+        return true;
     }
 
     /**
-     * Validates a model. Returns an array containing MessageBags
-     * errors/warnings/successes.
+     * @param array $data
      *
-     * @param Ardent $model
-     *
-     * @return array
+     * @return \Eloquent
      */
-    public function validateObject(Ardent $model)
+    public function store(array $data)
     {
-        // TODO: Implement validateObject() method.
+        $category        = new \Category;
+        $category->name  = $data['name'];
+        $category->class = 'Category';
+        $category->user()->associate($this->getUser());
+        if (!$category->isValid()) {
+            var_dump($category->getErrors());
+            exit();
+        }
+        $category->save();
+
+        return $category;
+    }
+
+    /**
+     * @param \Eloquent $model
+     * @param array  $data
+     *
+     * @return bool
+     */
+    public function update(\Eloquent $model, array $data)
+    {
+        $model->name = $data['name'];
+        if (!$model->isValid()) {
+            var_dump($model->getErrors()->all());
+            exit;
+        }
+
+
+        $model->save();
+
+        return true;
     }
 
     /**
@@ -59,17 +89,33 @@ class Category implements CUD, CommonDatabaseCalls, CategoryInterface
      */
     public function validate(array $model)
     {
-        // TODO: Implement validate() method.
-    }
+        $warnings  = new MessageBag;
+        $successes = new MessageBag;
+        $errors    = new MessageBag;
 
-    /**
-     * @param array $data
-     *
-     * @return Ardent
-     */
-    public function store(array $data)
-    {
-        // TODO: Implement store() method.
+        if (isset($model['name'])) {
+            if (strlen($model['name']) < 1) {
+                $errors->add('name', 'Name is too short');
+            }
+            if (strlen($model['name']) > 200) {
+                $errors->add('name', 'Name is too long');
+
+            }
+        } else {
+            $errors->add('name', 'Name is mandatory');
+        }
+        $validator = \Validator::make($model, \Component::$rules);
+
+        if ($validator->invalid()) {
+            $errors->merge($validator->getErrors());
+        }
+
+
+        if (!$errors->has('name')) {
+            $successes->add('name', 'OK');
+        }
+
+        return ['errors' => $errors, 'warnings' => $warnings, 'successes' => $successes];
     }
 
     /**
@@ -77,31 +123,12 @@ class Category implements CUD, CommonDatabaseCalls, CategoryInterface
      *
      * @param int $id
      *
-     * @return Ardent
+     * @return \Eloquent
      */
     public function find($id)
     {
         // TODO: Implement find() method.
-    }
-
-    /**
-     * Returns all objects.
-     *
-     * @return Collection
-     */
-    public function get()
-    {
-        // TODO: Implement get() method.
-    }
-
-    /**
-     * @param array $ids
-     *
-     * @return Collection
-     */
-    public function getByIds(array $ids)
-    {
-        // TODO: Implement getByIds() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -114,16 +141,73 @@ class Category implements CUD, CommonDatabaseCalls, CategoryInterface
     public function findByWhat($what)
     {
         // TODO: Implement findByWhat() method.
+        throw new NotImplementedException;
     }
 
     /**
-     * @param Ardent $model
-     * @param array  $data
+     * Returns all objects.
      *
-     * @return bool
+     * @return Collection
      */
-    public function update(Ardent $model, array $data)
+    public function get()
     {
-        // TODO: Implement update() method.
+        return $this->getUser()->categories()->orderBy('name', 'ASC')->get();
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return Collection
+     */
+    public function getByIds(array $ids)
+    {
+        // TODO: Implement getByIds() method.
+        throw new NotImplementedException;
+    }
+
+    public function firstOrCreate($name)
+    {
+        return \Category::firstOrCreate(['user_id' => $this->getUser()->id, 'name' => $name]);
+    }
+
+    public function getTransactionJournals(\Category $category, $limit = 50)
+    {
+        $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
+        $set    = $category->transactionJournals()->withRelevantData()->take($limit)->offset($offset)->orderBy('date', 'DESC')->get(['transaction_journals.*']);
+        $count  = $category->transactionJournals()->count();
+        $items  = [];
+        foreach ($set as $entry) {
+            $items[] = $entry;
+        }
+
+        return \Paginator::make($items, $count, $limit);
+
+    }
+
+    /**
+     * @param \Category $budget
+     * @param Carbon    $date
+     *
+     * @return null
+     */
+    public function repetitionOnStartingOnDate(\Category $category, Carbon $date)
+    {
+        return null;
+    }
+
+    /**
+     * @param \Category $category
+     * @param Carbon    $date
+     *
+     * @return float
+     */
+    public function spentInMonth(\Category $category, Carbon $date)
+    {
+        $end = clone $date;
+        $date->startOfMonth();
+        $end->endOfMonth();
+        $sum = floatval($category->transactionjournals()->before($end)->after($date)->lessThan(0)->sum('amount')) * -1;
+
+        return $sum;
     }
 }

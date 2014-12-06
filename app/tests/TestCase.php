@@ -1,24 +1,19 @@
 <?php
-use League\FactoryMuffin\Facade as f;
+use Mockery as m;
 
 /**
  * Class TestCase
  */
 class TestCase extends Illuminate\Foundation\Testing\TestCase
 {
-
     /**
      * Creates the application.
      *
      * @return \Symfony\Component\HttpKernel\HttpKernelInterface
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function createApplication()
     {
-        /** @noinspection PhpUnusedLocalVariableInspection */
-        $unitTesting = true;
-
-        /** @noinspection PhpUnusedLocalVariableInspection */
+        $unitTesting     = true;
         $testEnvironment = 'testing';
 
         return require __DIR__ . '/../../bootstrap/start.php';
@@ -27,14 +22,13 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     public function setUp()
     {
         parent::setUp();
-        f::loadFactories(__DIR__ . '/factories');
+        Artisan::call('migrate');
+        $this->seed();
+
+
+        //$this->
     }
 
-    /**
-     * @param $class
-     *
-     * @return \Mockery\MockInterface
-     */
     public function mock($class)
     {
         $mock = Mockery::mock($class);
@@ -44,4 +38,13 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         return $mock;
     }
 
+    static public function setupBeforeClass()
+    {
+        League\FactoryMuffin\Facade::loadFactories(__DIR__ . '/factories');
+    }
+
+    public function tearDown()
+    {
+        m::close();
+    }
 }

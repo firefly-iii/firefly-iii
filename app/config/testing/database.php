@@ -4,8 +4,9 @@ return [
     'connections' => [
         'sqlite' => [
             'driver'   => 'sqlite',
-            'database' => ':memory:',
+            'database' => 'tests/_data/testing.sqlite',
             'prefix'   => ''
-        ],
+        ]
+
     ]
 ];

@@ -2,44 +2,71 @@
 
 namespace FireflyIII\Database;
 
-use Firefly\Exception\FireflyException;
-use FireflyIII\Exception\NotImplementedException;
-use Illuminate\Support\Collection;
-use Illuminate\Support\MessageBag;
-use LaravelBook\Ardent\Ardent;
+use FireflyIII\Exception\FireflyException;
 use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
 use FireflyIII\Database\Ifaces\CUD;
 use FireflyIII\Database\Ifaces\TransactionInterface;
+use FireflyIII\Exception\NotImplementedException;
+use Illuminate\Support\Collection;
+use Illuminate\Support\MessageBag;
+
+
 /**
  * Class Transaction
  *
  * @package FireflyIII\Database
  */
-class Transaction implements TransactionInterface, CUD, CommonDatabaseCalls
+class Transaction implements CUD, CommonDatabaseCalls
 {
     use SwitchUser;
 
     /**
-     * @param Ardent $model
+     * @param \Eloquent $model
      *
      * @return bool
      */
-    public function destroy(Ardent $model)
+    public function destroy(\Eloquent $model)
     {
         // TODO: Implement destroy() method.
+        throw new NotImplementedException;
     }
 
     /**
-     * Validates a model. Returns an array containing MessageBags
-     * errors/warnings/successes.
+     * @param array $data
      *
-     * @param Ardent $model
-     *
-     * @return array
+     * @return \Eloquent
      */
-    public function validateObject(Ardent $model)
+    public function store(array $data)
     {
-        // TODO: Implement validateObject() method.
+        $transaction = new \Transaction;
+        $transaction->account()->associate($data['account']);
+        $transaction->transactionJournal()->associate($data['transaction_journal']);
+        $transaction->amount = floatval($data['amount']);
+        if (isset($data['piggybank'])) {
+            $transaction->piggybank()->associate($data['piggybank']);
+        }
+        if (isset($data['description'])) {
+            $transaction->description = $data['description'];
+        }
+        if ($transaction->isValid()) {
+            $transaction->save();
+        } else {
+            throw new FireflyException($transaction->getErrors()->first());
+        }
+
+        return $transaction;
+    }
+
+    /**
+     * @param \Eloquent $model
+     * @param array  $data
+     *
+     * @return bool
+     */
+    public function update(\Eloquent $model, array $data)
+    {
+        // TODO: Implement update() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -105,37 +132,7 @@ class Transaction implements TransactionInterface, CUD, CommonDatabaseCalls
             $successes->add('amount', 'OK');
         }
 
-        return [
-            'errors'    => $errors,
-            'warnings'  => $warnings,
-            'successes' => $successes
-        ];
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return Ardent
-     */
-    public function store(array $data)
-    {
-        // TODO: Implement store() method.
-        $transaction = new \Transaction;
-        $transaction->account()->associate($data['account']);
-        $transaction->transactionJournal()->associate($data['transaction_journal']);
-        $transaction->amount = floatval($data['amount']);
-        if (isset($data['piggybank'])) {
-            $transaction->piggybank()->associate($data['piggybank']);
-        }
-        if (isset($data['description'])) {
-            $transaction->description = $data['description'];
-        }
-        if ($transaction->validate()) {
-            $transaction->save();
-        } else {
-            throw new FireflyException($transaction->errors()->first());
-        }
-        return $transaction;
+        return ['errors' => $errors, 'warnings' => $warnings, 'successes' => $successes];
     }
 
     /**
@@ -143,21 +140,12 @@ class Transaction implements TransactionInterface, CUD, CommonDatabaseCalls
      *
      * @param int $id
      *
-     * @return Ardent
+     * @return \Eloquent
      */
     public function find($id)
     {
         // TODO: Implement find() method.
-    }
-
-    /**
-     * Returns all objects.
-     *
-     * @return Collection
-     */
-    public function get()
-    {
-        // TODO: Implement get() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -170,17 +158,18 @@ class Transaction implements TransactionInterface, CUD, CommonDatabaseCalls
     public function findByWhat($what)
     {
         // TODO: Implement findByWhat() method.
+        throw new NotImplementedException;
     }
 
     /**
-     * @param Ardent $model
-     * @param array  $data
+     * Returns all objects.
      *
-     * @return bool
+     * @return Collection
      */
-    public function update(Ardent $model, array $data)
+    public function get()
     {
-        // TODO: Implement update() method.
+        // TODO: Implement get() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -191,5 +180,6 @@ class Transaction implements TransactionInterface, CUD, CommonDatabaseCalls
     public function getByIds(array $ids)
     {
         // TODO: Implement getByIds() method.
+        throw new NotImplementedException;
     }
 }

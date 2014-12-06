@@ -1,28 +1,11 @@
 <?php
 
-use LaravelBook\Ardent\Ardent as Ardent;
+use FireflyIII\Exception\FireflyException;
+use Watson\Validating\ValidatingTrait;
 
-/**
- * LimitRepetition
- *
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $limit_id
- * @property \Carbon\Carbon $startdate
- * @property \Carbon\Carbon $enddate
- * @property float $amount
- * @property-read \Limit $limit
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereId($value) 
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereCreatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereUpdatedAt($value) 
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereLimitId($value) 
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereStartdate($value) 
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereEnddate($value) 
- * @method static \Illuminate\Database\Query\Builder|\LimitRepetition whereAmount($value) 
- */
-class LimitRepetition extends Ardent
+class LimitRepetition extends Eloquent
 {
+    use ValidatingTrait;
     public static $rules
         = [
             'limit_id'  => 'required|exists:limits,id',
@@ -39,29 +22,6 @@ class LimitRepetition extends Ardent
         return ['created_at', 'updated_at', 'startdate', 'enddate'];
     }
 
-    public function spentInRepetition() {
-        $sum = \DB::table('transactions')
-                  ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                  ->leftJoin('component_transaction_journal', 'component_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                  ->leftJoin('components', 'components.id', '=', 'component_transaction_journal.component_id')
-                  ->leftJoin('limits', 'limits.component_id', '=', 'components.id')
-                  ->leftJoin('limit_repetitions', 'limit_repetitions.limit_id', '=', 'limits.id')
-                  ->where('transaction_journals.date', '>=', $this->startdate->format('Y-m-d'))
-                  ->where('transaction_journals.date', '<=', $this->enddate->format('Y-m-d'))
-                  ->where('transactions.amount', '>', 0)
-                  ->where('limit_repetitions.id', '=', $this->id)->sum('transactions.amount');
-        return floatval($sum);
-    }
-
-    /**
-     * How much money is left in this?
-     */
-    public function leftInRepetition()
-    {
-        return floatval($this->amount - $this->spentInRepetition());
-
-    }
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -71,6 +31,39 @@ class LimitRepetition extends Ardent
     }
 
     /**
+     * TODO see if this scope is still used.
+     *
+     * How much money is left in this?
+     */
+    public function leftInRepetition()
+    {
+        return floatval($this->amount - $this->spentInRepetition());
+
+    }
+
+    /**
+     * TODO remove this method in favour of something in the FireflyIII libraries.
+     *
+     * @return float
+     */
+    public function spentInRepetition()
+    {
+        $sum = \DB::table('transactions')->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')->leftJoin(
+            'component_transaction_journal', 'component_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
+        )->leftJoin('components', 'components.id', '=', 'component_transaction_journal.component_id')->leftJoin(
+            'limits', 'limits.component_id', '=', 'components.id'
+        )->leftJoin('limit_repetitions', 'limit_repetitions.limit_id', '=', 'limits.id')->where(
+            'transaction_journals.date', '>=', $this->startdate->format('Y-m-d')
+        )->where('transaction_journals.date', '<=', $this->enddate->format('Y-m-d'))->where('transactions.amount', '>', 0)->where(
+            'limit_repetitions.id', '=', $this->id
+        )->sum('transactions.amount');
+
+        return floatval($sum);
+    }
+
+    /**
+     * TODO remove this method in favour of something in the FireflyIII libraries.
+     *
      * Returns a string used to sort this particular repetition
      * based on the date and period it falls into. Ie. the limit
      * repeats monthly and the start date is 12 dec 2012, this will
@@ -83,10 +76,7 @@ class LimitRepetition extends Ardent
         }
         switch ($this->repeat_freq) {
             default:
-                throw new \Firefly\Exception\FireflyException(
-                    'No date formats for frequency "' . $this->repeat_freq
-                    . '"!'
-                );
+                throw new FireflyException('No date formats for frequency "' . $this->repeat_freq . '"!');
                 break;
             case 'daily':
                 return $this->startdate->format('Ymd') . '-5';
@@ -108,40 +98,5 @@ class LimitRepetition extends Ardent
                 break;
         }
     }
-
-    /**
-     * Same as above, just with a more natural view. So "March 2012".
-     */
-    public function periodShow()
-    {
-        if (is_null($this->repeat_freq)) {
-            $this->repeat_freq = $this->limit->repeat_freq;
-        }
-        switch ($this->repeat_freq) {
-            default:
-                throw new \Firefly\Exception\FireflyException(
-                    'No date formats for frequency "' . $this->repeat_freq
-                    . '"!'
-                );
-                break;
-            case 'daily':
-                return $this->startdate->format('j F Y');
-                break;
-            case 'weekly':
-                return $this->startdate->format('\W\e\e\k W, Y');
-                break;
-            case 'monthly':
-                return $this->startdate->format('F Y');
-                break;
-            case 'half-year':
-            case 'quarterly':
-                return $this->startdate->format('M Y') . ' - ' . $this->enddate->format('M Y');
-                break;
-            case 'yearly':
-                return $this->startdate->format('Y');
-                break;
-        }
-    }
-
 
 } 

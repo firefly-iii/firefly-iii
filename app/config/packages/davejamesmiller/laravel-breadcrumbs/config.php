@@ -1,5 +1,5 @@
 <?php
 
-return array(
+return [
     'view' => 'laravel-breadcrumbs::bootstrap3',
-);
+];

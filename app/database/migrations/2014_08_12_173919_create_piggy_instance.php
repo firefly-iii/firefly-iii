@@ -7,6 +7,16 @@ class CreatePiggyInstance extends Migration
 {
 
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('piggybank_repetitions');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -25,21 +35,9 @@ class CreatePiggyInstance extends Migration
                 $table->unique(['piggybank_id', 'startdate', 'targetdate']);
 
                 // connect instance to piggybank.
-                $table->foreign('piggybank_id')
-                    ->references('id')->on('piggybanks')
-                    ->onDelete('cascade');
+                $table->foreign('piggybank_id')->references('id')->on('piggybanks')->onDelete('cascade');
             }
         );
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('piggybank_repetitions');
     }
 
 }

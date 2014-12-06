@@ -14,7 +14,7 @@ interface BudgetInterface
 {
     /**
      * @param \Budget $budget
-     * @param Carbon $date
+     * @param Carbon  $date
      *
      * @return \LimitRepetition|null
      */

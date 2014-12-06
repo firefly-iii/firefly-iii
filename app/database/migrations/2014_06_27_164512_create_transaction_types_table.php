@@ -12,6 +12,16 @@ class CreateTransactionTypesTable extends Migration
 {
 
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('transaction_types');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -22,19 +32,10 @@ class CreateTransactionTypesTable extends Migration
             'transaction_types', function (Blueprint $table) {
                 $table->increments('id');
                 $table->timestamps();
+                $table->softDeletes();
                 $table->string('type', 50);
             }
         );
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('transaction_types');
     }
 
 }

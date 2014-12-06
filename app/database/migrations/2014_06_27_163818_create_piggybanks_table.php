@@ -12,6 +12,16 @@ class CreatePiggybanksTable extends Migration
 {
 
     /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('piggybanks');
+    }
+
+    /**
      * Run the migrations.
      *
      * @return void
@@ -28,32 +38,20 @@ class CreatePiggybanksTable extends Migration
                 $table->date('startdate')->nullable();
                 $table->date('targetdate')->nullable();
                 $table->boolean('repeats');
-                $table->enum('rep_length', ['day', 'week', 'month', 'year'])->nullable();
+                $table->enum('rep_length', ['day', 'week', 'quarter', 'month', 'year'])->nullable();
                 $table->smallInteger('rep_every')->unsigned();
                 $table->smallInteger('rep_times')->unsigned()->nullable();
-                $table->enum('reminder', ['day', 'week', 'month', 'year'])->nullable();
+                $table->enum('reminder', ['day', 'week', 'quarter', 'month', 'year'])->nullable();
                 $table->smallInteger('reminder_skip')->unsigned();
                 $table->boolean('remind_me');
                 $table->integer('order')->unsigned();
 
                 // connect account to piggybank.
-                $table->foreign('account_id')
-                    ->references('id')->on('accounts')
-                    ->onDelete('cascade');
+                $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
                 $table->unique(['account_id', 'name']);
 
             }
         );
-    }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::drop('piggybanks');
     }
 
 }
