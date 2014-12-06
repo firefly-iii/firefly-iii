@@ -34,8 +34,9 @@ class AccountController extends BaseController
                 $subTitleIcon = 'fa-download';
                 break;
         }
+        $subTitle = 'Create a new ' . $what . ' account';
 
-        return View::make('accounts.create')->with('subTitle', 'Create a new ' . $what . ' account')->with('what', $what)->with(compact('subTitleIcon'));
+        return View::make('accounts.create', compact('subTitleIcon', 'what', 'subTitle'));
     }
 
     /**
@@ -45,9 +46,9 @@ class AccountController extends BaseController
      */
     public function delete(Account $account)
     {
-        return View::make('accounts.delete')->with('account', $account)->with(
-            'subTitle', 'Delete ' . strtolower($account->accountType->type) . ' "' . $account->name . '"'
-        );
+        $subTitle = 'Delete ' . strtolower($account->accountType->type) . ' "' . $account->name . '"';
+
+        return View::make('accounts.delete', compact('account', 'subTitle'));
     }
 
     /**
@@ -98,28 +99,30 @@ class AccountController extends BaseController
         }
 
         /*
-         * Delete it
+         * Delete the initial balance as well.
          */
         if ($initialBalance) {
             $acct->destroy($initialBalance);
         }
+        $name = $account->name;
 
         $acct->destroy($account);
 
-        Session::flash('success', 'The account was deleted.');
+
+        $return = 'asset';
         switch ($type) {
-            case 'Asset account':
-            case 'Default account':
-                return Redirect::route('accounts.index', 'asset');
-                break;
             case 'Expense account':
             case 'Beneficiary account':
-                return Redirect::route('accounts.index', 'expense');
+                $return = 'expense';
                 break;
             case 'Revenue account':
-                return Redirect::route('accounts.index', 'revenue');
+                $return = 'revenue';
                 break;
         }
+
+        Session::flash('success', 'The ' . $return . ' account "' . e($name) . '" was deleted.');
+
+        return Redirect::route('accounts.index', $return);
 
 
     }

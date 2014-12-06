@@ -111,14 +111,6 @@ class Account extends Ardent
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
-     */
-    public function transactionjournals()
-    {
-        return $this->hasManyThrough('TransactionJournal', 'Transaction', 'transaction_journal_id', 'id');
-    }
-
-    /**
      * Transactions.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

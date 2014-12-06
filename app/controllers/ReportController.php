@@ -221,23 +221,67 @@ class ReportController extends BaseController
      */
     public function year($year)
     {
+        Config::set('app.debug',false);
         try {
             $date = new Carbon('01-01-' . $year);
         } catch (Exception $e) {
             App::abort(500);
         }
         $date = new Carbon('01-01-' . $year);
+
         /** @var \FireflyIII\Database\TransactionJournal $tj */
         $tj = App::make('FireflyIII\Database\TransactionJournal');
 
+        /** @var \FireflyIII\Database\Account $accountRepository */
+        $accountRepository = App::make('FireflyIII\Database\Account');
+
+        /** @var \FireflyIII\Database\Report $reportRepository */
+        $reportRepository = App::make('FireflyIII\Database\Report');
+
+        $accounts = $accountRepository->getAssetAccounts();
+
         // get some sums going
         $summary = [];
+
+        /** @var \Account $account */
+        $accounts->each(
+            function (\Account $account) {
+                if ($account->getMeta('accountRole') == 'sharedExpense') {
+                    $account->sharedExpense = true;
+                } else {
+                    $account->sharedExpense = false;
+                }
+            }
+        );
 
 
         $end = clone $date;
         $end->endOfYear();
         while ($date < $end) {
-            $summary[] = ['month' => $date->format('F'), 'income' => $tj->getSumOfIncomesByMonth($date), 'expense' => $tj->getSumOfExpensesByMonth($date),];
+            $month = $date->format('F');
+
+            $income        = 0;
+            $incomeShared  = 0;
+            $expense       = 0;
+            $expenseShared = 0;
+
+            foreach ($accounts as $account) {
+                if ($account->sharedExpense === true) {
+                    $incomeShared += $reportRepository->getIncomeByMonth($account, $date);
+                    $expenseShared += $reportRepository->getExpenseByMonth($account, $date);
+                } else {
+                    $income += $reportRepository->getIncomeByMonth($account, $date);
+                    $expense += $reportRepository->getExpenseByMonth($account, $date);
+                }
+            }
+
+            $summary[] = [
+                'month'   => $month,
+                'income'  => $income,
+                'expense' => $expense,
+                'incomeShared'  => $incomeShared,
+                'expenseShared' => $expenseShared,
+            ];
             $date->addMonth();
         }
 
