@@ -180,7 +180,10 @@ class ReportController extends BaseController
                         return $journal;
                     }
                 }
+
+                return null;
             }
+
         );
         /*
          * Filter deposits.
@@ -193,6 +196,8 @@ class ReportController extends BaseController
                         return $journal;
                     }
                 }
+
+                return null;
             }
         );
 
@@ -221,7 +226,7 @@ class ReportController extends BaseController
      */
     public function year($year)
     {
-        Config::set('app.debug',false);
+        Config::set('app.debug', false);
         try {
             $date = new Carbon('01-01-' . $year);
         } catch (Exception $e) {
@@ -276,9 +281,9 @@ class ReportController extends BaseController
             }
 
             $summary[] = [
-                'month'   => $month,
-                'income'  => $income,
-                'expense' => $expense,
+                'month'         => $month,
+                'income'        => $income,
+                'expense'       => $expense,
                 'incomeShared'  => $incomeShared,
                 'expenseShared' => $expenseShared,
             ];

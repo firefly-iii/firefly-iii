@@ -21,7 +21,7 @@ class HomeController extends BaseController
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
 
-            if ($journal->TransactionType->type == 'Withdrawal') {
+            if ($journal->transactionType->type == 'Withdrawal') {
                 echo '#' . $journal->id . ': ' . e($journal->description);
                 /** @var Transaction $transaction */
                 foreach ($journal->transactions as $transaction) {

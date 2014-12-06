@@ -140,18 +140,19 @@ class TransactionController extends BaseController
         $repository = App::make('FireflyIII\Database\TransactionJournal');
         $repository->destroy($transactionJournal);
 
+        $return = 'withdrawal';
+
 
         switch ($type) {
-            case 'Withdrawal':
-                return Redirect::route('transactions.index', 'withdrawal');
-                break;
             case 'Deposit':
-                return Redirect::route('transactions.index', 'deposit');
+                $return = 'deposit';
                 break;
             case 'Transfer':
-                return Redirect::route('transactions.index', 'transfers');
+                $return = 'transfers';
                 break;
         }
+
+        return Redirect::route('transactions.index', $return);
     }
 
     // TODO this needs cleaning up and thinking over.
@@ -506,6 +507,7 @@ class TransactionController extends BaseController
                 $group->delete();
             }
         }
+
         return Response::json(true);
 
     }

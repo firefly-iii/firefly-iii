@@ -65,12 +65,6 @@ class AccountController extends BaseController
         /** @var \FireflyIII\Database\Account $acct */
         $acct = App::make('FireflyIII\Database\Account');
 
-        // find the initial balance account (the only other account that should be deleted)
-        // find all journals for both accounts (or just the one) and delete them.
-        // the rest will take care of itself.
-        // in the least amount of queries possible.
-
-        // and it can be done in ONE query! or maybe two.
         $acct->destroy($account);
 
         $return = 'asset';

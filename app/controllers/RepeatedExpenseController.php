@@ -60,7 +60,7 @@ class RepeatedExpenseController extends BaseController
             }
         );
 
-        return View::make('repeatedexpense.show', compact('repetitions','piggyBank', 'today', 'subTitle'));
+        return View::make('repeatedexpense.show', compact('repetitions', 'piggyBank', 'today', 'subTitle'));
     }
 
     /**
