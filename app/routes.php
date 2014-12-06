@@ -2,7 +2,8 @@
 
 // models:
 Route::bind(
-    'account', function ($value, $route) {
+    'account',
+    function ($value, $route) {
         if (Auth::check()) {
             $account = Account::
             leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')->where('account_types.editable', 1)->where('accounts.id', $value)

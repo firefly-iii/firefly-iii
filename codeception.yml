@@ -19,13 +19,11 @@ modules:
       populate: false
 coverage:
   enabled: true
-whitelist:
-  include:
-    - app/*
-  exclude:
-    - app/storage/*
-  blacklist:
+  remote: true
+  whitelist:
     include:
       - app/controllers/*
+      - app/models/*
+      - app/lib/FireflyIII/*
     exclude:
       - app/controllers/BaseController.php

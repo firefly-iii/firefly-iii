@@ -34,7 +34,8 @@
         "satooshi/php-coveralls": "dev-master",
         "mockery/mockery": "@stable",
         "league/factory-muffin": "~2.0",
-        "codeception/codeception": "*"
+        "codeception/codeception": "*",
+        "codeception/c3": "2.*"
 
     },
     "autoload": {
@@ -53,11 +54,13 @@
     "scripts": {
         "post-install-cmd": [
             "php artisan clear-compiled",
-            "php artisan optimize"
+            "php artisan optimize",
+            "Codeception\\c3\\Installer::copyC3ToRoot"
         ],
         "post-update-cmd": [
             "php artisan clear-compiled",
-            "php artisan optimize"
+            "php artisan optimize",
+            "Codeception\\c3\\Installer::copyC3ToRoot"
         ],
         "post-create-project-cmd": [
             "php artisan key:generate"

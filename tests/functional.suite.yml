@@ -8,5 +8,8 @@ class_name: FunctionalTester
 modules:
     enabled: [Db, Filesystem, FunctionalHelper, Laravel4]
     config:
+      Db:
+        populate: false
+        cleanup: false
       Laravel4:
         environment: 'testing'

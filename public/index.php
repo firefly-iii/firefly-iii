@@ -6,6 +6,15 @@
  * @author   Taylor Otwell <taylorotwell@gmail.com>
  */
 
+
+/**
+ * Adding c3.php for code coverage during codeception tests
+ * ref: https://github.com/Codeception/c3
+ */
+if (file_exists(__DIR__ . '/../c3.php')) {
+    require __DIR__ . '/../c3.php';
+}
+
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader
@@ -18,8 +27,7 @@
 |
 */
 
-require __DIR__.'/../bootstrap/autoload.php';
-
+require __DIR__ . '/../bootstrap/autoload.php';
 
 
 /*
@@ -34,7 +42,7 @@ require __DIR__.'/../bootstrap/autoload.php';
 |
 */
 
-$app = require_once __DIR__.'/../bootstrap/start.php';
+$app = require_once __DIR__ . '/../bootstrap/start.php';
 
 /*
 |--------------------------------------------------------------------------

@@ -4,4 +4,4 @@ $I->wantTo('register a new account');
 $I->amOnPage('/register');
 $I->submitForm('#register', ['email' => 'noreply@gmail.com']);
 $I->see('Password sent!');
-$I->seeInDatabase('users', ['email' => 'noreply@gmail.com']);
+$I->seeRecord('users', ['email' => 'noreply@gmail.com']);

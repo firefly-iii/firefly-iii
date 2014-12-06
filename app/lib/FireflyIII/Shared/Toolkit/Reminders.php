@@ -83,6 +83,7 @@ class Reminders
                 if (!is_null($piggybank->reminder)) {
                     return $piggybank;
                 }
+                return null;
             }
         );
         $today = Carbon::now();

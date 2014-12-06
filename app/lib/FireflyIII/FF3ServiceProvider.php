@@ -1,6 +1,12 @@
 <?php
 namespace FireflyIII;
 
+use FireflyIII\Shared\Toolkit\Date;
+use FireflyIII\Shared\Toolkit\Filter;
+use FireflyIII\Shared\Toolkit\Form;
+use FireflyIII\Shared\Toolkit\Navigation;
+use FireflyIII\Shared\Toolkit\Reminders;
+use FireflyIII\Shared\Toolkit\Steam;
 use FireflyIII\Shared\Validation\FireflyValidator;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
@@ -42,27 +48,27 @@ class FF3ServiceProvider extends ServiceProvider
 
         $this->app->bind(
             'reminders', function () {
-                return new \FireflyIII\Shared\Toolkit\Reminders;
+                return new Reminders;
             }
         );
         $this->app->bind(
             'filter', function () {
-                return new \FireflyIII\Shared\Toolkit\Filter;
+                return new Filter;
             }
         );
         $this->app->bind(
             'datekit', function () {
-                return new \FireflyIII\Shared\Toolkit\Date;
+                return new Date;
             }
         );
         $this->app->bind(
             'navigation', function () {
-                return new \FireflyIII\Shared\Toolkit\Navigation;
+                return new Navigation;
             }
         );
         $this->app->bind(
             'ffform', function () {
-                return new \FireflyIII\Shared\Toolkit\Form;
+                return new Form;
             }
         );
 
@@ -70,8 +76,8 @@ class FF3ServiceProvider extends ServiceProvider
          * For models, various stuff:
          */
         $this->app->bind(
-            'steam', function() {
-                return new \FireflyIII\Shared\Toolkit\Steam;
+            'steam', function () {
+                return new Steam;
             }
         );
 

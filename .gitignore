@@ -17,3 +17,4 @@ firefly-iii-import-*.json
 
 tests/_output/*
 testing.sqlite
+c3.php

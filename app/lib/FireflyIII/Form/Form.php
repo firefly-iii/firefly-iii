@@ -276,6 +276,9 @@ class Form
      *
      * @param $type
      * @param $name
+     *
+     * @return string
+     * @throws FireflyException
      */
     public static function ffOptionsList($type, $name)
     {

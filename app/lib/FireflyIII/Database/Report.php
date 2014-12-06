@@ -67,6 +67,7 @@ class Report implements ReportInterface
                             }
                         }
                     }
+                    return null;
                 }
             );
         } else {
@@ -86,6 +87,7 @@ class Report implements ReportInterface
                             }
                         }
                     }
+                    return null;
                 }
             );
         }
@@ -148,6 +150,7 @@ class Report implements ReportInterface
                             }
                         }
                     }
+                    return null;
                 }
             );
         } else {
@@ -157,6 +160,7 @@ class Report implements ReportInterface
                     if ($journal->transactionType->type == 'Deposit') {
                         return $journal;
                     }
+                    return null;
                 }
             );
         }
