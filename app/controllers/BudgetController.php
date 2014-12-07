@@ -1,8 +1,8 @@
 <?php
 
+use FireflyIII\Database\Budget as BudgetRepository;
 use FireflyIII\Exception\FireflyException;
 use Illuminate\Support\MessageBag;
-
 
 /**
  * Class BudgetController
@@ -10,12 +10,15 @@ use Illuminate\Support\MessageBag;
 class BudgetController extends BaseController
 {
 
+    /** @var BudgetRepository */
+    protected $_repository;
 
     /**
-     *
+     * @param BudgetRepository $repository
      */
-    public function __construct()
+    public function __construct(BudgetRepository $repository)
     {
+        $this->_repository = $repository;
         View::share('title', 'Budgets');
         View::share('mainTitleIcon', 'fa-tasks');
     }
@@ -30,34 +33,8 @@ class BudgetController extends BaseController
     {
         $amount = intval(Input::get('amount'));
         $date   = Session::get('start');
-        /** @var \Limit $limit */
-        $limit = $budget->limits()->where('startdate', $date->format('Y-m-d'))->first();
-        if (!$limit) {
-            // create one!
-            $limit = new Limit;
-            $limit->budget()->associate($budget);
-            $limit->startdate   = $date;
-            $limit->amount      = $amount;
-            $limit->repeat_freq = 'monthly';
-            $limit->repeats     = 0;
-            $limit->save();
-            /*
-             * A newly stored limit also created a limit repetition.
-             */
-            Event::fire('limits.store', [$limit]);
+        $limit  = $this->_repository->updateLimitAmount($budget, $date, $amount);
 
-        } else {
-            if ($amount > 0) {
-                $limit->amount = $amount;
-                $limit->save();
-                /*
-                 * An updated limit also updates the associated limit repetitions.
-                 */
-                Event::fire('limits.update', [$limit]);
-            } else {
-                $limit->delete();
-            }
-        }
         // try to find the limit repetition for this limit:
         $repetition = $limit->limitrepetitions()->first();
         if ($repetition) {
@@ -83,7 +60,9 @@ class BudgetController extends BaseController
      */
     public function delete(Budget $budget)
     {
-        return View::make('budgets.delete')->with('budget', $budget)->with('subTitle', 'Delete budget "' . $budget->name . '"');
+        $subTitle = 'Delete budget "' . e($budget->name) . '"';
+
+        return View::make('budgets.delete', compact('budget', 'subTitle'));
     }
 
     /**
@@ -93,10 +72,7 @@ class BudgetController extends BaseController
      */
     public function destroy(Budget $budget)
     {
-        /** @var \FireflyIII\Database\Budget $repos */
-        $repos = App::make('FireflyIII\Database\Budget');
-        // remove budget
-        $repos->destroy($budget);
+        $this->_repository->destroy($budget);
         Session::flash('success', 'The budget was deleted.');
 
         return Redirect::route('budgets.index');
@@ -110,9 +86,9 @@ class BudgetController extends BaseController
      */
     public function edit(Budget $budget)
     {
-        Session::flash('preFilled', ['name' => $budget->name]);
+        $subTitle = 'Edit budget "' . $budget->name . '"';
 
-        return View::make('budgets.edit')->with('budget', $budget)->with('subTitle', 'Edit budget "' . $budget->name . '"');
+        return View::make('budgets.edit', compact('budget', 'subTitle'));
 
     }
 

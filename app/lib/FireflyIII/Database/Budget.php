@@ -61,7 +61,7 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
 
     /**
      * @param \Eloquent $model
-     * @param array  $data
+     * @param array     $data
      *
      * @return bool
      */
@@ -262,5 +262,59 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
         $sum = floatval($budget->transactionjournals()->before($end)->after($start)->lessThan(0)->sum('amount')) * -1;
 
         return $sum;
+    }
+
+    /**
+     * @param \Budget $budget
+     * @param Carbon  $date
+     * @param         $amount
+     *
+     * @return \Limit
+     * @throws \Exception
+     */
+    public function updateLimitAmount(\Budget $budget, Carbon $date, $amount)
+    {
+        /** @var \Limit $limit */
+        $limit = $this->limitOnStartingOnDate($budget, $date);
+        if (!$limit) {
+            // create one!
+            $limit = new \Limit;
+            $limit->budget()->associate($budget);
+            $limit->startdate  = $date;
+            $limit->amount     = $amount;
+            $limit->repeat_freq = 'monthly';
+            $limit->repeats    = 0;
+            $limit->save();
+            /*
+             * A newly stored limit also created a limit repetition.
+             */
+            \Event::fire('limits.store', [$limit]);
+        } else {
+            if ($amount > 0) {
+                $limit->amount = $amount;
+                $limit->save();
+                /*
+                 * An updated limit also updates the associated limit repetitions.
+                 */
+                \Event::fire('limits.update', [$limit]);
+            } else {
+                $limit->delete();
+            }
+        }
+
+        return $limit;
+
+
+    }
+
+    /**
+     * @param \Budget $budget
+     * @param Carbon  $date
+     *
+     * @return \Limit
+     */
+    public function limitOnStartingOnDate(\Budget $budget, Carbon $date)
+    {
+        return $budget->limits()->where('startdate', $date->format('Y-m-d'))->first();
     }
 }
