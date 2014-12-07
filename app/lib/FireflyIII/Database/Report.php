@@ -42,7 +42,7 @@ class Report implements ReportInterface
         $sum = 0;
 
         // get all journals.
-        $journals = \TransactionJournal::whereIn(
+        $journals = \TransactionJournal::with(['transactionType','transactions'])->whereIn(
             'id', function ($query) use ($account, $start, $end) {
                 $query->select('transaction_journal_id')
                       ->from('transactions')
@@ -125,7 +125,7 @@ class Report implements ReportInterface
         $sum = 0;
 
         // get all journals.
-        $journals = \TransactionJournal::whereIn(
+        $journals = \TransactionJournal::with(['transactionType','transactions'])->whereIn(
             'id', function ($query) use ($account, $start, $end) {
                 $query->select('transaction_journal_id')
                       ->from('transactions')

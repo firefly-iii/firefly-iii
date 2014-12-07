@@ -13,3 +13,4 @@ modules:
         cleanup: false
       Laravel4:
         environment: 'testing'
+        filters: false

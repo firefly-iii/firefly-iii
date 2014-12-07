@@ -18,3 +18,4 @@ firefly-iii-import-*.json
 tests/_output/*
 testing.sqlite
 c3.php
+_ide_helper_models.php

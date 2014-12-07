@@ -103,14 +103,14 @@ class TransactionController extends BaseController
         /*
          * respond to a possible given values in the URL.
          */
-        $prefilled = Session::has('prefilled') ? Session::get('prefilled') : [];
+        $preFilled = Session::has('preFilled') ? Session::get('preFilled') : [];
         $respondTo = ['account_id', 'account_from_id'];
         foreach ($respondTo as $r) {
             if (!is_null(Input::get($r))) {
-                $prefilled[$r] = Input::get($r);
+                $preFilled[$r] = Input::get($r);
             }
         }
-        Session::put('prefilled', $prefilled);
+        Session::put('preFilled', $preFilled);
 
         return View::make('transactions.create')->with('accounts', $assetAccounts)->with('budgets', $budgets)->with('what', $what)->with('piggies', $piggies)
                    ->with('subTitle', 'Add a new ' . $what);
@@ -244,7 +244,7 @@ class TransactionController extends BaseController
         /*
          * Data to properly display the edit form.
          */
-        $prefilled = [
+        $preFilled = [
             'date'         => $journal->date->format('Y-m-d'),
             'category'     => '',
             'budget_id'    => 0,
@@ -256,7 +256,7 @@ class TransactionController extends BaseController
          */
         $category = $journal->categories()->first();
         if (!is_null($category)) {
-            $prefilled['category'] = $category->name;
+            $preFilled['category'] = $category->name;
         }
 
         /*
@@ -267,33 +267,33 @@ class TransactionController extends BaseController
             case 'withdrawal':
                 if (floatval($journal->transactions[0]->amount) < 0) {
                     // transactions[0] is the asset account that paid for the withdrawal.
-                    $prefilled['account_id']      = $journal->transactions[0]->account->id;
-                    $prefilled['expense_account'] = $journal->transactions[1]->account->name;
-                    $prefilled['amount']          = floatval($journal->transactions[1]->amount);
+                    $preFilled['account_id']      = $journal->transactions[0]->account->id;
+                    $preFilled['expense_account'] = $journal->transactions[1]->account->name;
+                    $preFilled['amount']          = floatval($journal->transactions[1]->amount);
                 } else {
                     // transactions[1] is the asset account that paid for the withdrawal.
-                    $prefilled['account_id']      = $journal->transactions[1]->account->id;
-                    $prefilled['expense_account'] = $journal->transactions[0]->account->name;
-                    $prefilled['amount']          = floatval($journal->transactions[0]->amount);
+                    $preFilled['account_id']      = $journal->transactions[1]->account->id;
+                    $preFilled['expense_account'] = $journal->transactions[0]->account->name;
+                    $preFilled['amount']          = floatval($journal->transactions[0]->amount);
                 }
 
 
                 $budget = $journal->budgets()->first();
                 if (!is_null($budget)) {
-                    $prefilled['budget_id'] = $budget->id;
+                    $preFilled['budget_id'] = $budget->id;
                 }
                 break;
             case 'deposit':
                 if (floatval($journal->transactions[0]->amount) < 0) {
                     // transactions[0] contains the account the money came from.
-                    $prefilled['account_id']      = $journal->transactions[1]->account->id;
-                    $prefilled['revenue_account'] = $journal->transactions[0]->account->name;
-                    $prefilled['amount']          = floatval($journal->transactions[1]->amount);
+                    $preFilled['account_id']      = $journal->transactions[1]->account->id;
+                    $preFilled['revenue_account'] = $journal->transactions[0]->account->name;
+                    $preFilled['amount']          = floatval($journal->transactions[1]->amount);
                 } else {
                     // transactions[1] contains the account the money came from.
-                    $prefilled['account_id']      = $journal->transactions[0]->account->id;
-                    $prefilled['revenue_account'] = $journal->transactions[1]->account->name;
-                    $prefilled['amount']          = floatval($journal->transactions[0]->amount);
+                    $preFilled['account_id']      = $journal->transactions[0]->account->id;
+                    $preFilled['revenue_account'] = $journal->transactions[1]->account->name;
+                    $preFilled['amount']          = floatval($journal->transactions[0]->amount);
 
                 }
 
@@ -301,17 +301,17 @@ class TransactionController extends BaseController
             case 'transfer':
                 if (floatval($journal->transactions[0]->amount) < 0) {
                     // zero = from account.
-                    $prefilled['account_from_id'] = $journal->transactions[0]->account->id;
-                    $prefilled['account_to_id']   = $journal->transactions[1]->account->id;
-                    $prefilled['amount']          = floatval($journal->transactions[1]->amount);
+                    $preFilled['account_from_id'] = $journal->transactions[0]->account->id;
+                    $preFilled['account_to_id']   = $journal->transactions[1]->account->id;
+                    $preFilled['amount']          = floatval($journal->transactions[1]->amount);
                 } else {
                     // one = from account
-                    $prefilled['account_from_id'] = $journal->transactions[1]->account->id;
-                    $prefilled['account_to_id']   = $journal->transactions[0]->account->id;
-                    $prefilled['amount']          = floatval($journal->transactions[0]->amount);
+                    $preFilled['account_from_id'] = $journal->transactions[1]->account->id;
+                    $preFilled['account_to_id']   = $journal->transactions[0]->account->id;
+                    $preFilled['amount']          = floatval($journal->transactions[0]->amount);
                 }
                 if ($journal->piggybankevents()->count() > 0) {
-                    $prefilled['piggybank_id'] = $journal->piggybankevents()->first()->piggybank_id;
+                    $preFilled['piggybank_id'] = $journal->piggybankevents()->first()->piggybank_id;
                 }
                 break;
         }
@@ -322,7 +322,7 @@ class TransactionController extends BaseController
 
         return View::make('transactions.edit')->with('journal', $journal)->with('accounts', $accounts)->with(
             'what', $what
-        )->with('budgets', $budgets)->with('data', $prefilled)->with('piggies', $piggies)->with(
+        )->with('budgets', $budgets)->with('data', $preFilled)->with('piggies', $piggies)->with(
             'subTitle', 'Edit ' . $what . ' "' . $journal->description . '"'
         );
     }

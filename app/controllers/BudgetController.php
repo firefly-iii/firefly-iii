@@ -110,7 +110,7 @@ class BudgetController extends BaseController
      */
     public function edit(Budget $budget)
     {
-        Session::flash('prefilled', ['name' => $budget->name]);
+        Session::flash('preFilled', ['name' => $budget->name]);
 
         return View::make('budgets.edit')->with('budget', $budget)->with('subTitle', 'Edit budget "' . $budget->name . '"');
 
