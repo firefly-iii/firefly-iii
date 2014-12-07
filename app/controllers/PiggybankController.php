@@ -103,16 +103,16 @@ class PiggybankController extends BaseController
         /*
          * Flash some data to fill the form.
          */
-        $prefilled = ['name'         => $piggybank->name,
+        $preFilled = ['name'         => $piggybank->name,
                       'account_id'   => $piggybank->account_id,
                       'targetamount' => $piggybank->targetamount,
                       'targetdate'   => !is_null($piggybank->targetdate) ? $piggybank->targetdate->format('Y-m-d') : null,
                       'reminder'     => $piggybank->reminder,
                       'remind_me'    => intval($piggybank->remind_me) == 1 || !is_null($piggybank->reminder) ? true : false
         ];
-        Session::flash('prefilled', $prefilled);
+        Session::flash('preFilled', $preFilled);
 
-        return View::make('piggybanks.edit', compact('piggybank', 'accounts', 'periods', 'prefilled'))->with('title', 'Piggybanks')->with(
+        return View::make('piggybanks.edit', compact('piggybank', 'accounts', 'periods', 'preFilled'))->with('title', 'Piggybanks')->with(
             'mainTitleIcon', 'fa-sort-amount-asc'
         )->with('subTitle', 'Edit piggy bank "' . e($piggybank->name) . '"')->with('subTitleIcon', 'fa-pencil');
     }

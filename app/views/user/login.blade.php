@@ -10,7 +10,7 @@
 
 
 
-        {{Form::open()}}
+        {{Form::open(['id' => 'login'])}}
         <div class="form-group">
             <input type="email" class="form-control" id="inputEmail" name="email" placeholder="E-mail">
         </div>

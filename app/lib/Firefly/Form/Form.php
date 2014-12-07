@@ -229,10 +229,10 @@ class Form
         $options['placeholder'] = ucfirst($name);
 
         /*
-         * Get prefilled value:
+         * Get pre filled value:
          */
         if (\Session::has('prefilled')) {
-            $prefilled = \Session::get('prefilled');
+            $preFilled = \Session::get('preFilled');
             $value     = isset($prefilled[$name]) && is_null($value) ? $prefilled[$name] : $value;
         }
 

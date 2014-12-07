@@ -327,7 +327,6 @@ Route::group(
         // user controller
         Route::get('/login', ['uses' => 'UserController@login', 'as' => 'login']);
         Route::get('/register', ['uses' => 'UserController@register', 'as' => 'register']);
-        Route::get('/verify/{verification}', ['uses' => 'UserController@verify', 'as' => 'verify']);
         Route::get('/reset/{reset}', ['uses' => 'UserController@reset', 'as' => 'reset']);
         Route::get('/remindme', ['uses' => 'UserController@remindme', 'as' => 'remindme']);
 
@@ -340,8 +339,8 @@ Route::group(
     ['before' => 'csrf|guest'], function () {
 
         // user controller
-        Route::post('/login', ['uses' => 'UserController@postLogin']);
-        Route::post('/register', ['uses' => 'UserController@postRegister']);
-        Route::post('/remindme', ['uses' => 'UserController@postRemindme']);
+        Route::post('/login', ['uses' => 'UserController@postLogin','as' => 'login.post']);
+        Route::post('/register', ['uses' => 'UserController@postRegister','as' => 'register.post']);
+        Route::post('/remindme', ['uses' => 'UserController@postRemindme','as' => 'remindme.post']);
     }
 );

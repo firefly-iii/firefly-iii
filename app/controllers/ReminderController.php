@@ -33,13 +33,13 @@ class ReminderController extends BaseController
                 break;
             case 'Piggybank':
                 $amount    = Reminders::amountForReminder($reminder);
-                $prefilled = [
+                $preFilled = [
                     'amount'        => round($amount, 2),
                     'description'   => 'Money for ' . $reminder->remindersable->name,
                     'piggybank_id'  => $reminder->remindersable_id,
                     'account_to_id' => $reminder->remindersable->account_id
                 ];
-                Session::flash('prefilled', $prefilled);
+                Session::flash('preFilled', $preFilled);
 
                 return Redirect::route('transactions.create', 'transfer');
                 break;
