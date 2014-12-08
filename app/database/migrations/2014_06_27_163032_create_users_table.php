@@ -36,8 +36,6 @@ class CreateUsersTable extends Migration
                 $table->string('password', 60);
                 $table->string('reset', 32)->nullable();
                 $table->string('remember_token', 255)->nullable();
-                $table->boolean('migrated');
-
                 $table->unique('email');
             }
         );

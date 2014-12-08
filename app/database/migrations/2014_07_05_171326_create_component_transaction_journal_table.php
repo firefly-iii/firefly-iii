@@ -39,6 +39,9 @@ class CreateComponentTransactionJournalTable extends Migration
 
                 // link transaction journals with transaction_journal_id
                 $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
+
+                // combo must be unique:
+                $table->unique(['component_id', 'transaction_journal_id'],'cid_tjid_unique');
             }
         );
     }

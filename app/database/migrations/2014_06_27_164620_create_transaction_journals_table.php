@@ -41,6 +41,9 @@ class CreateTransactionJournalsTable extends Migration
                 $table->boolean('completed');
                 $table->date('date');
 
+                // connect users
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
                 // connect transaction journals to transaction types
                 $table->foreign('transaction_type_id')->references('id')->on('transaction_types')->onDelete('cascade');
 
@@ -50,8 +53,7 @@ class CreateTransactionJournalsTable extends Migration
                 // connect transaction journals to transaction currencies
                 $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
 
-                // connect users
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
             }
         );
     }

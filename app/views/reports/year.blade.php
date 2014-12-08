@@ -25,85 +25,72 @@
 </div>
 
 <div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="col-lg-6 col-md-6 col-sm-6">
         <div class="panel panel-default">
             <div class="panel-heading">
-                Summary (without shared accounts)
+                Account balance
             </div>
-                <table class="table table-striped">
-                    <tr>
-                        <td></td>
-                            @foreach($summary as $entry)
-                                <th>{{$entry['month']}}</th>
-                        @endforeach
-                        <th>Sum</th>
-                    </tr>
-                    <tr>
-                        <th>In</th>
-                        <?php $inSum = 0;?>
-                        @foreach($summary as $entry)
-                            <td>{{mf($entry['income'])}}</td>
-                            <?php $inSum+=$entry['income'];?>
-                        @endforeach
-                        <td>{{mf($inSum)}}</td>
-                    </tr>
-                        <th>Out</th>
-                        <?php $outSum = 0;?>
-                        @foreach($summary as $entry)
-                            <td>{{mf($entry['expense']*-1)}}</td>
-                            <?php $outSum+=$entry['expense']*-1;?>
-                        @endforeach
-                        <td>{{mf($outSum)}}</td>
-                    <tr>
-                        <th>Difference</th>
-                        @foreach($summary as $entry)
-                            <td>{{mf($entry['income']- $entry['expense'])}}</td>
-                        @endforeach
-                        <td>{{mf($inSum + $outSum)}}</td>
-                    </tr>
-                </table>
+            <table class="table">
+            <?php
+            $start = 0;
+            $end   = 0;
+            $diff  = 0;
+            ?>
+                @foreach($balances as $balance)
+                <?php
+                $start += $balance['start'];
+                $end   += $balance['end'];
+                $diff  += ($balance['end']-$balance['start']);
+                ?>
+                <tr>
+                    <td>
+                        <a href="{{route('accounts.show',$balance['account']->id)}}">{{{$balance['account']->name}}}</a>
+                        @if($balance['shared'])
+                        <small><em>shared</em></small>
+                        @endif
+                    </td>
+                    <td>{{mf($balance['start'])}}</td>
+                    <td>{{mf($balance['end'])}}</td>
+                    <td>{{mf($balance['end']-$balance['start'])}}</td>
+                </tr>
+                @endforeach
+                <tr>
+                    <td><em>Sum of sums</em></td>
+                    <td>{{mf($start)}}</td>
+                    <td>{{mf($end)}}</td>
+                    <td>{{mf($diff)}}</td>
+                </tr>
+            </table>
         </div>
     </div>
-</div>
-
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="col-lg-3 col-md-3 col-sm-3">
         <div class="panel panel-default">
             <div class="panel-heading">
-                Summary (shared accounts only)
+                Income
             </div>
-                <table class="table table-striped">
-                    <tr>
-                        <td></td>
-                            @foreach($summary as $entry)
-                                <th>{{$entry['month']}}</th>
-                        @endforeach
-                        <th>Sum</th>
-                    </tr>
-                    <tr>
-                        <th>In</th>
-                        <?php $inSum = 0;?>
-                        @foreach($summary as $entry)
-                            <td>{{mf($entry['incomeShared'])}}</td>
-                            <?php $inSum+=$entry['incomeShared'];?>
-                        @endforeach
-                        <td>{{mf($inSum)}}</td>
-                    </tr>
-                        <th>Out</th>
-                        <?php $outSum = 0;?>
-                        @foreach($summary as $entry)
-                            <td>{{mf($entry['expenseShared']*-1)}}</td>
-                            <?php $outSum+=$entry['expenseShared']*-1;?>
-                        @endforeach
-                        <td>{{mf($outSum)}}</td>
-                    <tr>
-                        <th>Difference</th>
-                        @foreach($summary as $entry)
-                            <td>{{mf($entry['incomeShared']- $entry['expenseShared'])}}</td>
-                        @endforeach
-                        <td>{{mf($inSum + $outSum)}}</td>
-                    </tr>
-                </table>
+            <table class="table">
+            @foreach($groupedIncomes as $income)
+            <tr>
+                <td><a href="{{route('accounts.show',$income->account_id)}}">{{{$income->name}}}</a></td>
+                <td>{{mf(floatval($income->sum)*-1)}}</td>
+            </tr>
+            @endforeach
+            </table>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Expenses
+            </div>
+            <table class="table">
+                @foreach($groupedExpenses as $expense)
+                <tr>
+                    <td><a href="{{route('accounts.show',$expense->account_id)}}">{{{$expense->name}}}</a></td>
+                    <td>{{mf(floatval($expense->sum)*-1)}}</td>
+                </tr>
+                @endforeach
+            </table>
         </div>
     </div>
 </div>
@@ -115,7 +102,7 @@
                 Budgets
             </div>
             <div class="panel-body">
-                <div id="budgets"></div>
+                <!-- <div id="budgets"></div> -->
             </div>
         </div>
     </div>

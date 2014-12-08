@@ -48,6 +48,8 @@ class CreatePiggybanksTable extends Migration
 
                 // connect account to piggybank.
                 $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
+
+                // for an account, the name must be unique.
                 $table->unique(['account_id', 'name']);
 
             }

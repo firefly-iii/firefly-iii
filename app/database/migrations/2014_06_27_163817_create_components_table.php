@@ -40,6 +40,7 @@ class CreateComponentsTable extends Migration
                 // connect components to users
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
+                // for a user, the component type & name must be unique.
                 $table->unique(['user_id', 'class', 'name']);
             }
         );

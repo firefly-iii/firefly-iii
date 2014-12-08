@@ -87,6 +87,10 @@ class FF3ServiceProvider extends ServiceProvider
         // registration and user mail:
         $this->app->bind('FireflyIII\Shared\Mail\RegistrationInterface', 'FireflyIII\Shared\Mail\Registration');
 
+        // reports
+        $this->app->bind('FireflyIII\Report\ReportInterface', 'FireflyIII\Report\Report');
+
+
         // Shortcut so developers don't need to add an Alias in app/config/app.php
         $this->app->booting(
             function () {

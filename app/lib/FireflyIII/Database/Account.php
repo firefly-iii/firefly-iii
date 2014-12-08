@@ -88,57 +88,47 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
         /*
          * Basic query:
          */
-        $query = $this->getUser()->accounts()->accountTypeIn($types)->withMeta();
+        $query = $this->getUser()->accounts()->accountTypeIn($types)->withMeta()->orderBy('name', 'ASC');;
+        $set = $query->get(['accounts.*']);
 
-
-        /*
-         * Without an opening balance, the rest of these queries will fail.
-         */
-
-        $query->leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id');
-        $query->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id');
-
-        /*
-         * Not used, but useful for the balance within a certain month / year.
-         */
-        $query->where(
-            function ($q) {
-                $q->where('transaction_journals.date', '<=', Carbon::now()->format('Y-m-d'));
-                $q->orWhereNull('transaction_journals.date');
+        $set->each(
+            function (\Account $account) {
+                /*
+                 * Get last activity date.
+                 */
+                $account->lastActivityDate = $this->getLastActivity($account);
             }
         );
 
-        $query->groupBy('accounts.id');
-
-        /*
-         * If present, process parameters for sorting:
-         */
-        $query->orderBy('name', 'ASC');
-
-        return $query->get(['accounts.*', \DB::Raw('SUM(`transactions`.`amount`) as `balance`')]);
+        return $set;
     }
 
     /**
      * Get all asset accounts. Optional JSON based parameters.
      *
-     * @param array $parameters
+     * @param array $metaFilter
      *
      * @return Collection
      */
-    public function getAssetAccounts()
+    public function getAssetAccounts($metaFilter = [])
     {
         $list = $this->getAccountsByType(['Default account', 'Asset account']);
         $list->each(
             function (\Account $account) {
+
+                // get accountRole:
+
                 /** @var \AccountMeta $entry */
-                foreach ($account->accountmeta as $entry) {
-                    if ($entry->name == 'accountRole') {
-                        $account->accountRole = \Config::get('firefly.accountRoles.' . $entry->data);
-                    }
+                $accountRole = $account->accountmeta()->whereName('accountRole')->first();
+                if (!$accountRole) {
+                    $accountRole             = new \AccountMeta;
+                    $accountRole->account_id = $account->id;
+                    $accountRole->name       = 'accountRole';
+                    $accountRole->data       = 'defaultExpense';
+                    $accountRole->save();
+
                 }
-                if (!isset($account->accountRole)) {
-                    $account->accountRole = 'Default expense account';
-                }
+                $account->accountRole = $accountRole->data;
             }
         );
 
@@ -274,7 +264,8 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
                         $q->where('accounts.active', 0);
                     }
                 );
-            })->delete();
+            }
+        )->delete();
 
         return true;
 
@@ -331,7 +322,7 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
 
     /**
      * @param \Eloquent $model
-     * @param array  $data
+     * @param array     $data
      *
      * @return bool
      */
@@ -552,19 +543,49 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
 
     }
 
-    public function getTransactionJournals(\Account $account, $limit = 50)
+    /**
+     * @param \Account $account
+     *
+     * @return int
+     */
+    public function getLastActivity(\Account $account)
     {
-        $start  = \Session::get('start');
-        $end    = \Session::get('end');
+        $lastActivityKey = 'account.' . $account->id . '.lastActivityDate';
+        if (\Cache::has($lastActivityKey)) {
+            return \Cache::get($lastActivityKey);
+        }
+
+        $transaction = $account->transactions()
+                               ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                               ->orderBy('transaction_journals.date', 'DESC')->first();
+        if ($transaction) {
+            $date = $transaction->transactionJournal->date;
+        } else {
+            $date = 0;
+        }
+        \Cache::forever($lastActivityKey, $date);
+
+        return $date;
+    }
+
+    public function getTransactionJournals(\Account $account, $limit = 50, $range = 'session')
+    {
         $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
-        $set    = $this->getUser()->transactionJournals()->withRelevantData()->leftJoin(
-            'transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
-        )->where('transactions.account_id', $account->id)->take($limit)->offset($offset)->before($end)->after($start)->orderBy('date', 'DESC')->get(
-            ['transaction_journals.*']
-        );
-        $count  = $this->getUser()->transactionJournals()->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                       ->before($end)->after($start)->orderBy('date', 'DESC')->where('transactions.account_id', $account->id)->count();
         $items  = [];
+        $query  = $this->getUser()
+                       ->transactionJournals()
+                       ->withRelevantData()
+                       ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                       ->where('transactions.account_id', $account->id)
+                       ->orderBy('date', 'DESC');
+
+        if ($range == 'session') {
+            $query->before(\Session::get('end'));
+            $query->after(\Session::get('start'));
+        }
+        $count = $query->count();
+        $set   = $query->take($limit)->offset($offset)->get(['transaction_journals.*']);
+
         foreach ($set as $entry) {
             $items[] = $entry;
         }

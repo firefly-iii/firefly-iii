@@ -7,7 +7,7 @@
     </div>
 </div>
 
-{{Form::open(['class' => 'form-horizontal','url' => route('budgets.update',$budget->id)])}}
+{{Form::model($budget, ['class' => 'form-horizontal','url' => route('budgets.update',$budget->id)])}}
 <div class="row">
     <div class="col-lg-6 col-md-12 col-sm-6">
         <div class="panel panel-primary">

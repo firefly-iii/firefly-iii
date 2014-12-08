@@ -44,6 +44,7 @@ class CreateAccountsTable extends Migration
                 // connect accounts to account_types
                 $table->foreign('account_type_id')->references('id')->on('account_types')->onDelete('cascade');
 
+                // for a user, the account name must be unique.
                 $table->unique(['user_id', 'account_type_id', 'name']);
             }
         );
