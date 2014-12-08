@@ -3,7 +3,12 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateAccountMeta extends Migration
+/**
+ * Class CreateAccountMetaTable
+ *
+ * @SuppressWarnings(PHPMD.ShortMethodName)
+ */
+class CreateAccountMetaTable extends Migration
 {
 
     /**
@@ -32,6 +37,8 @@ class CreateAccountMeta extends Migration
                 $table->integer('account_id')->unsigned();
                 $table->string('name');
                 $table->text('data');
+
+                $table->unique(['account_id', 'name']);
 
 
             }

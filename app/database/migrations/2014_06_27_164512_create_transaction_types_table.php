@@ -34,6 +34,9 @@ class CreateTransactionTypesTable extends Migration
                 $table->timestamps();
                 $table->softDeletes();
                 $table->string('type', 50);
+
+                // type must be unique.
+                $table->unique(['type']);
             }
         );
     }

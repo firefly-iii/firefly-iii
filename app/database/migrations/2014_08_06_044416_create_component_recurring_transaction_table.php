@@ -4,11 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
- * Class RecurringTransactionsToComponents
+ * Class CreateComponentRecurringTransactionTable
  *
  * @SuppressWarnings(PHPMD.ShortMethodName)
  */
-class RecurringTransactionsToComponents extends Migration
+class CreateComponentRecurringTransactionTable extends Migration
 {
 
     /**
@@ -40,6 +40,10 @@ class RecurringTransactionsToComponents extends Migration
 
                 // link transaction journals with transaction_journal_id
                 $table->foreign('recurring_transaction_id')->references('id')->on('recurring_transactions')->onDelete('cascade');
+
+                // component and recurring transaction must be unique.
+                $table->unique(['component_id','recurring_transaction_id'],'cid_rtid_unique');
+
             }
         );
     }
