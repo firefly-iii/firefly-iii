@@ -39,6 +39,9 @@ class CreateComponentTransactionTable extends Migration
 
                 // connect to transactions
                 $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
+
+                // combo must be unique:
+                $table->unique(['component_id', 'transaction_id']);
             }
         );
     }

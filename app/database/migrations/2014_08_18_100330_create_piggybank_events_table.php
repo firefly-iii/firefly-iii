@@ -3,7 +3,12 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreatePiggyInstance extends Migration
+/**
+ * Class CreatePiggybankEventsTable
+ *
+ * @SuppressWarnings(PHPMD.ShortMethodName)
+ */
+class CreatePiggybankEventsTable extends Migration
 {
 
     /**
@@ -13,7 +18,7 @@ class CreatePiggyInstance extends Migration
      */
     public function down()
     {
-        Schema::drop('piggybank_repetitions');
+        Schema::drop('piggybank_events');
     }
 
     /**
@@ -24,18 +29,20 @@ class CreatePiggyInstance extends Migration
     public function up()
     {
         Schema::create(
-            'piggybank_repetitions', function (Blueprint $table) {
+            'piggybank_events', function (Blueprint $table) {
                 $table->increments('id');
                 $table->timestamps();
                 $table->integer('piggybank_id')->unsigned();
-                $table->date('startdate')->nullable();
-                $table->date('targetdate')->nullable();
-                $table->decimal('currentamount', 10, 2);
+                $table->integer('transaction_journal_id')->unsigned()->nullable();
 
-                $table->unique(['piggybank_id', 'startdate', 'targetdate']);
+                $table->date('date');
+                $table->decimal('amount', 10, 2);
 
                 // connect instance to piggybank.
                 $table->foreign('piggybank_id')->references('id')->on('piggybanks')->onDelete('cascade');
+
+                // connect to journal:
+                $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('set null');
             }
         );
     }
