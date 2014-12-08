@@ -18,8 +18,8 @@ return [
     ],
 
     'accountRoles'         => [
-        'default'       => 'Default expense account',
-        'sharedExpense' => 'Shared expense account'
+        'defaultExpense' => 'Default expense account',
+        'sharedExpense'  => 'Shared expense account'
     ],
 
     'range_to_text'        => [

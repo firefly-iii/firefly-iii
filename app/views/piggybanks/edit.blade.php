@@ -30,8 +30,8 @@
             </div>
             <div class="panel-body">
                 {{Form::ffDate('targetdate')}}
-                {{Form::ffCheckbox('remind_me','1',$prefilled['remind_me'],['label' => 'Remind me'])}}
-                {{Form::ffSelect('reminder',$periods,$prefilled['reminder'],['label' => 'Remind every'])}}
+                {{Form::ffCheckbox('remind_me','1',$preFilled['remind_me'],['label' => 'Remind me'])}}
+                {{Form::ffSelect('reminder',$periods,$preFilled['reminder'],['label' => 'Remind every'])}}
             </div>
         </div>
 

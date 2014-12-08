@@ -38,6 +38,9 @@ class CreatePreferencesTable extends Migration
 
                 // connect preferences to users
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+                // only one preference per name per user
+                $table->unique(['user_id', 'name']);
             }
         );
     }

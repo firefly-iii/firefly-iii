@@ -34,6 +34,9 @@ class CreateTransactionCurrenciesTable extends Migration
                 $table->timestamps();
                 $table->softDeletes();
                 $table->string('code', 3);
+
+                // code must be unique.
+                $table->unique(['code']);
             }
         );
     }

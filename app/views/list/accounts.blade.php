@@ -26,8 +26,8 @@
             @endif
         </td>
         <td>
-            @if($account->lastActionDate)
-                {{{$account->lastActionDate->format('j F Y')}}}
+            @if($account->lastActivityDate)
+                {{{$account->lastActivityDate->format('j F Y')}}}
             @else
                 <em>Never</em>
             @endif

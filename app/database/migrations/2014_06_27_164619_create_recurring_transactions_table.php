@@ -44,6 +44,10 @@ class CreateRecurringTransactionsTable extends Migration
                 $table->enum('repeat_freq', ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly']);
                 $table->smallInteger('skip')->unsigned();
 
+                // connect user id to users
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+                // for a user, the name must be unique
                 $table->unique(['user_id', 'name']);
 
 

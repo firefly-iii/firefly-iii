@@ -23,13 +23,13 @@ class Steam
      */
     public function balance(\Account $account, Carbon $date = null)
     {
-        $latest = false;
         if (is_null($date)) {
-            $latest = true;
-            if (\Cache::has('account.' . $account->id . '.latestBalance')) {
-
-                return \Cache::get('account.' . $account->id . '.latestBalance');
-            }
+            $key = 'account.' . $account->id . '.latestBalance';
+        } else {
+            $key = 'account.' . $account->id . '.balanceOn' . $date->format('dmy');
+        }
+        if (\Cache::has($key)) {
+            return \Cache::get($key);
         }
         $date    = is_null($date) ? Carbon::now() : $date;
         $balance = floatval(
@@ -37,9 +37,7 @@ class Steam
                 'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
             )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount')
         );
-        if ($latest === true) {
-            \Cache::forever('account.' . $account->id . '.latestBalance', $balance);
-        }
+        \Cache::put($key, $balance, 20160);
 
         return $balance;
     }

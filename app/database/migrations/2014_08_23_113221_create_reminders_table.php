@@ -3,6 +3,11 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
+/**
+ * Class CreateRemindersTable
+ *
+ * @SuppressWarnings(PHPMD.ShortMethodName)
+ */
 class CreateRemindersTable extends Migration
 {
 
@@ -31,6 +36,9 @@ class CreateRemindersTable extends Migration
                 $table->date('startdate');
                 $table->date('enddate')->nullable();
                 $table->boolean('active');
+                $table->boolean('notnow')->default(0);
+                $table->integer('remindersable_id')->unsigned()->nullable();
+                $table->string('remindersable_type')->nullable();
 
                 // connect reminders to users
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -171,7 +171,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
 
     /**
      * @param \Eloquent $model
-     * @param array  $data
+     * @param array     $data
      *
      * @return bool
      */
@@ -484,6 +484,19 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
     public function getByIds(array $ids)
     {
         return $this->getUser()->transactionjournals()->with('transactions')->whereIn('id', $ids)->orderBy('date', 'ASC')->get();
+    }
+
+    /**
+     * @return Carbon
+     */
+    public function firstDate()
+    {
+        $journal = $this->first();
+        if ($journal) {
+            return $journal->date;
+        }
+
+        return Carbon::now();
     }
 
     /**

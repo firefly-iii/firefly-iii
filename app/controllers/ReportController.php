@@ -1,11 +1,41 @@
 <?php
 use Carbon\Carbon;
+use FireflyIII\Database\Account as AccountRepository;
+use FireflyIII\Database\Report as ReportRepository;
+use FireflyIII\Database\TransactionJournal as TransactionJournalRepository;
+use FireflyIII\Report\ReportInterface as ReportHelper;
 
 /**
  * Class ReportController
  */
 class ReportController extends BaseController
 {
+    /** @var AccountRepository */
+    protected $_accounts;
+
+    /** @var TransactionJournalRepository */
+    protected $_journals;
+
+    /** @var ReportHelper */
+    protected $_reports;
+
+    /** @var ReportRepository */
+    protected $_repository;
+
+    /**
+     * @param AccountRepository            $accounts
+     * @param TransactionJournalRepository $journals
+     * @param ReportHelper                 $reports
+     * @param ReportRepository             $repository
+     */
+    public function __construct(AccountRepository $accounts, TransactionJournalRepository $journals, ReportHelper $reports, ReportRepository $repository)
+    {
+        $this->_accounts   = $accounts;
+        $this->_journals   = $journals;
+        $this->_reports    = $reports;
+        $this->_repository = $repository;
+
+    }
 
     /**
      * @param $year
@@ -115,38 +145,13 @@ class ReportController extends BaseController
      */
     public function index()
     {
-        /** @var \FireflyIII\Database\TransactionJournal $journals */
-        $journals = App::make('FireflyIII\Database\TransactionJournal');
-        /** @var TransactionJournal $journal */
-        $journal = $journals->first();
-        if (is_null($journal)) {
-            $date = Carbon::now();
-        } else {
-            $date = clone $journal->date;
-        }
-        $years  = [];
-        $months = [];
-        while ($date <= Carbon::now()) {
-            $years[] = $date->format('Y');
-            $date->addYear();
-        }
-        // months
-        if (is_null($journal)) {
-            $date = Carbon::now();
-        } else {
-            $date = clone $journal->date;
-        }
-        while ($date <= Carbon::now()) {
-            $months[] = [
-                'formatted' => $date->format('F Y'),
-                'month'     => intval($date->format('m')),
-                'year'      => intval($date->format('Y')),
-            ];
-            $date->addMonth();
-        }
+        $start         = $this->_journals->firstDate();
+        $months        = $this->_reports->listOfMonths(clone $start);
+        $years         = $this->_reports->listOfYears(clone $start);
+        $title         = 'Reports';
+        $mainTitleIcon = 'fa-line-chart';
 
-
-        return View::make('reports.index', compact('years', 'months'))->with('title', 'Reports')->with('mainTitleIcon', 'fa-line-chart');
+        return View::make('reports.index', compact('years', 'months', 'title', 'mainTitleIcon'));
     }
 
     /**
@@ -235,39 +240,42 @@ class ReportController extends BaseController
      */
     public function year($year)
     {
-        Config::set('app.debug', false);
         try {
-            $date = new Carbon('01-01-' . $year);
+            new Carbon('01-01-' . $year);
         } catch (Exception $e) {
             App::abort(500);
         }
-        $date = new Carbon('01-01-' . $year);
+        $date          = new Carbon('01-01-' . $year);
+        $title         = 'Reports';
+        $subTitle      = $year;
+        $subTitleIcon  = 'fa-bar-chart';
+        $mainTitleIcon = 'fa-line-chart';
 
-        /** @var \FireflyIII\Database\TransactionJournal $tj */
-        $tj = App::make('FireflyIII\Database\TransactionJournal');
+        $balances        = $this->_reports->yearBalanceReport($date);
+        $groupedIncomes  = $this->_reports->groupByRevenue($date, 'income');
+        $groupedExpenses = $this->_reports->groupByRevenue($date, 'expense');
 
-        /** @var \FireflyIII\Database\Account $accountRepository */
-        $accountRepository = App::make('FireflyIII\Database\Account');
 
-        /** @var \FireflyIII\Database\Report $reportRepository */
-        $reportRepository = App::make('FireflyIII\Database\Report');
+        return View::make(
+            'reports.year', compact('date', 'groupedIncomes', 'groupedExpenses', 'year', 'balances', 'title', 'subTitle', 'subTitleIcon', 'mainTitleIcon')
+        );
+
+
+        /*
+         * For this year, get:
+         * - the sum of all expenses.
+         * - the sum of all incomes
+         * - per month, the sum of all expenses
+         * - per month, the sum of all incomes
+         * - 2x for shared and not-shared alike.
+         *
+         * - balance difference for all accounts.
+         */
 
         $accounts = $accountRepository->getAssetAccounts();
 
         // get some sums going
         $summary = [];
-
-        /** @var \Account $account */
-        $accounts->each(
-            function (\Account $account) {
-                if ($account->getMeta('accountRole') == 'sharedExpense') {
-                    $account->sharedExpense = true;
-                } else {
-                    $account->sharedExpense = false;
-                }
-            }
-        );
-
 
         $end = clone $date;
         $end->endOfYear();
@@ -280,7 +288,7 @@ class ReportController extends BaseController
             $expenseShared = 0;
 
             foreach ($accounts as $account) {
-                if ($account->sharedExpense === true) {
+                if ($account->accountRole == 'sharedExpense') {
                     $incomeShared += $reportRepository->getIncomeByMonth($account, $date);
                     $expenseShared += $reportRepository->getExpenseByMonth($account, $date);
                 } else {
