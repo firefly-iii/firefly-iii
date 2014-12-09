@@ -3,6 +3,7 @@
 namespace FireflyIII\Report;
 
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 /**
  * Interface ReportInterface
@@ -12,12 +13,22 @@ use Carbon\Carbon;
 interface ReportInterface
 {
     /**
-     * @param Carbon $date
-     * @param string $direction
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param int $limit
      *
-     * @return mixed
+     * @return Collection
      */
-    public function groupByRevenue(Carbon $date, $direction = 'income');
+    public function revenueGroupedByAccount(Carbon $start, Carbon $end, $limit = 15);
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param int $limit
+     *
+     * @return Collection
+     */
+    public function expensesGroupedByAccount(Carbon $start, Carbon $end, $limit = 15);
 
     /**
      * @param Carbon $start

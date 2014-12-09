@@ -245,74 +245,21 @@ class ReportController extends BaseController
         } catch (Exception $e) {
             App::abort(500);
         }
-        $date          = new Carbon('01-01-' . $year);
+        $date = new Carbon('01-01-' . $year);
+        $end  = clone $date;
+        $end->endOfYear();
         $title         = 'Reports';
         $subTitle      = $year;
         $subTitleIcon  = 'fa-bar-chart';
         $mainTitleIcon = 'fa-line-chart';
 
         $balances        = $this->_reports->yearBalanceReport($date);
-        $groupedIncomes  = $this->_reports->groupByRevenue($date, 'income');
-        $groupedExpenses = $this->_reports->groupByRevenue($date, 'expense');
-
+        $groupedIncomes  = $this->_reports->revenueGroupedByAccount($date, $end, 15);
+        $groupedExpenses = $this->_reports->expensesGroupedByAccount($date, $end, 15);
 
         return View::make(
             'reports.year', compact('date', 'groupedIncomes', 'groupedExpenses', 'year', 'balances', 'title', 'subTitle', 'subTitleIcon', 'mainTitleIcon')
         );
-
-
-        /*
-         * For this year, get:
-         * - the sum of all expenses.
-         * - the sum of all incomes
-         * - per month, the sum of all expenses
-         * - per month, the sum of all incomes
-         * - 2x for shared and not-shared alike.
-         *
-         * - balance difference for all accounts.
-         */
-
-        $accounts = $accountRepository->getAssetAccounts();
-
-        // get some sums going
-        $summary = [];
-
-        $end = clone $date;
-        $end->endOfYear();
-        while ($date < $end) {
-            $month = $date->format('F');
-
-            $income        = 0;
-            $incomeShared  = 0;
-            $expense       = 0;
-            $expenseShared = 0;
-
-            foreach ($accounts as $account) {
-                if ($account->accountRole == 'sharedExpense') {
-                    $incomeShared += $reportRepository->getIncomeByMonth($account, $date);
-                    $expenseShared += $reportRepository->getExpenseByMonth($account, $date);
-                } else {
-                    $income += $reportRepository->getIncomeByMonth($account, $date);
-                    $expense += $reportRepository->getExpenseByMonth($account, $date);
-                }
-            }
-
-            $summary[] = [
-                'month'         => $month,
-                'income'        => $income,
-                'expense'       => $expense,
-                'incomeShared'  => $incomeShared,
-                'expenseShared' => $expenseShared,
-            ];
-            $date->addMonth();
-        }
-
-
-        // draw some charts etc.
-        return View::make('reports.year', compact('summary', 'date'))->with('title', 'Reports')->with('mainTitleIcon', 'fa-line-chart')->with('subTitle', $year)
-                   ->with(
-                       'subTitleIcon', 'fa-bar-chart'
-                   )->with('year', $year);
     }
 
 }
