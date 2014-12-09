@@ -40,7 +40,6 @@ class User
     {
         $user           = new \User;
         $user->email    = isset($data['email']) ? $data['email'] : null;
-        $user->migrated = 0;
         $user->reset    = \Str::random(32);
         $user->password = \Hash::make(\Str::random(12));
 
