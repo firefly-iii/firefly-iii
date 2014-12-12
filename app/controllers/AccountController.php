@@ -236,7 +236,7 @@ class AccountController extends BaseController
         }
         // go back to update screen.
         if ($data['post_submit_action'] == 'return_to_edit') {
-            return Redirect::route('accounts.edit', $account->id);
+            return Redirect::route('accounts.edit', $account->id)->withInput(['post_submit_action' => 'return_to_edit']);
         }
 
         return Redirect::route('accounts.index', $data['what']);
