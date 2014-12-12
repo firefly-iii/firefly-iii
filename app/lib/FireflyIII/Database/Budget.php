@@ -166,6 +166,40 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
         throw new NotImplementedException;
     }
 
+    /**
+     * Returns all the transaction journals for a limit, possibly limited by a limit repetition.
+     *
+     * @param \Budget          $budget
+     * @param \LimitRepetition $repetition
+     * @param int              $take
+     *
+     * @return \Illuminate\Pagination\Paginator
+     */
+    public function getJournals(\Budget $budget, \LimitRepetition $repetition = null, $take = 50)
+    {
+        $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $take : 0;
+
+
+        $setQuery   = $budget->transactionJournals()->withRelevantData()->take($take)->offset($offset)->orderBy('date', 'DESC');
+        $countQuery = $budget->transactionJournals();
+
+
+        if (!is_null($repetition)) {
+            $setQuery->before($repetition->startdate)->after($repetition->enddate);
+            $countQuery->before($repetition->startdate)->after($repetition->enddate);
+        }
+
+
+        $set   = $setQuery->get(['transaction_journals.*']);
+        $count = $countQuery->count();
+        $items = [];
+        foreach ($set as $entry) {
+            $items[] = $entry;
+        }
+
+        return \Paginator::make($items, $count, $take);
+    }
+
     public function getTransactionJournals(\Budget $budget, $limit = 50)
     {
         $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
@@ -265,11 +299,14 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     }
 
     /**
+     * This method updates the amount (envelope) for the given date and budget. This results in a (new) limit (aka an envelope)
+     * for that budget. Returned to the user is the new limit repetition.
+     *
      * @param \Budget $budget
      * @param Carbon  $date
      * @param         $amount
      *
-     * @return \Limit
+     * @return \LimitRepetition
      * @throws \Exception
      */
     public function updateLimitAmount(\Budget $budget, Carbon $date, $amount)
@@ -280,10 +317,10 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
             // create one!
             $limit = new \Limit;
             $limit->budget()->associate($budget);
-            $limit->startdate  = $date;
-            $limit->amount     = $amount;
+            $limit->startdate   = $date;
+            $limit->amount      = $amount;
             $limit->repeat_freq = 'monthly';
-            $limit->repeats    = 0;
+            $limit->repeats     = 0;
             $limit->save();
             /*
              * A newly stored limit also created a limit repetition.
@@ -302,7 +339,7 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
             }
         }
 
-        return $limit;
+        return $limit->limitrepetitions()->first();
 
 
     }

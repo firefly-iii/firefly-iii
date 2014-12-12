@@ -14,7 +14,7 @@
                     </div>
                     <div class="col-lg-6 col-md-4 col-sm-3" style="text-align:right;">
                         <small>Income {{\Session::get('start')->format('F Y')}}:
-                        <a href="#" class="updateIncome"><span id="totalAmount" data-value="{{$budgetAmount->data}}">{{mf($budgetAmount->data)}}</span></a></small>
+                        <a href="#" class="updateIncome"><span id="totalAmount" data-value="{{$amount}}">{{mf($amount)}}</span></a></small>
                     </div>
                 </div>
 
@@ -59,7 +59,7 @@
     <div class="col-lg-3 col-sm-4 col-md-6" style="height:180px;">
         <div class="panel panel-default">
             <div class="panel-heading">
-                @if($budget->currentRep)
+                @if(isset($budget->currentRep))
                     <a href="{{route('budgets.show',[$budget->id,$budget->currentRep->id])}}" id="budget-link-{{$budget->id}}">{{{$budget->name}}}</a>
                 @else
                     <a href="{{route('budgets.show',$budget->id)}}" id="budget-link-{{$budget->id}}">{{{$budget->name}}}</a>
@@ -99,10 +99,10 @@
                 <span id="budget-description-{{$budget->id}}">Budgeted: </span>
                 <!-- budget-info-X holds the input and the euro-sign: -->
                 <span id="budget-info-{{$budget->id}}">
-                @if($budget->limit > $budget->spent)
-                    <span class="text-success">&euro;</span> <input type="number" min="0" max="900" data-id="{{$budget->id}}" step="1" value="{{$budget->limit}}" style="width:50px;color:#3c763d;" />
+                @if($budget->currentRep->amount > $budget->spent)
+                    <span class="text-success">&euro;</span> <input type="number" min="0" max="900" data-id="{{$budget->id}}" step="1" value="{{$budget->currentRep->amount}}" style="width:90px;color:#3c763d;" />
                 @else
-                    <span class="text-danger">&euro;</span> <input type="number" min="0" max="900"  data-id="{{$budget->id}}" step="1" value="{{$budget->limit}}" style="width:50px;color:#a94442;" />
+                    <span class="text-danger">&euro;</span> <input type="number" min="0" max="900"  data-id="{{$budget->id}}" step="1" value="{{$budget->currentRep->amount}}" style="width:90px;color:#a94442;" />
                 @endif
                 </span>
             @else

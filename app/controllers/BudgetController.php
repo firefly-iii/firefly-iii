@@ -1,24 +1,31 @@
 <?php
 
 use FireflyIII\Database\Budget as BudgetRepository;
-use FireflyIII\Exception\FireflyException;
-use Illuminate\Support\MessageBag;
+use FireflyIII\Shared\Preferences\PreferencesInterface as Pref;
 
 /**
  * Class BudgetController
+ *
+ * @SuppressWarnings("CamelCase")
+ * @SuppressWarnings("TooManyMethods")
+ * @SuppressWarnings("CouplingBetweenObjects")
  */
 class BudgetController extends BaseController
 {
 
+    /** @var Pref */
+    protected $_preferences;
     /** @var BudgetRepository */
     protected $_repository;
 
     /**
      * @param BudgetRepository $repository
+     * @param Pref             $preferences
      */
-    public function __construct(BudgetRepository $repository)
+    public function __construct(BudgetRepository $repository, Pref $preferences)
     {
-        $this->_repository = $repository;
+        $this->_repository  = $repository;
+        $this->_preferences = $preferences;
         View::share('title', 'Budgets');
         View::share('mainTitleIcon', 'fa-tasks');
     }
@@ -31,17 +38,11 @@ class BudgetController extends BaseController
      */
     public function amount(Budget $budget)
     {
-        $amount = intval(Input::get('amount'));
-        $date   = Session::get('start');
-        $limit  = $this->_repository->updateLimitAmount($budget, $date, $amount);
+        $amount          = intval(Input::get('amount'));
+        $date            = Session::get('start');
+        $limitRepetition = $this->_repository->updateLimitAmount($budget, $date, $amount);
 
-        // try to find the limit repetition for this limit:
-        $repetition = $limit->limitrepetitions()->first();
-        if ($repetition) {
-            return Response::json(['name' => $budget->name, 'repetition' => $repetition->id]);
-        } else {
-            return Response::json(['name' => $budget->name, 'repetition' => null]);
-        }
+        return Response::json(['name' => $budget->name, 'repetition' => $limitRepetition->id]);
 
     }
 
@@ -72,8 +73,9 @@ class BudgetController extends BaseController
      */
     public function destroy(Budget $budget)
     {
+        Session::flash('success', 'Budget "' . e($budget->name) . '" was deleted.');
         $this->_repository->destroy($budget);
-        Session::flash('success', 'The budget was deleted.');
+
 
         return Redirect::route('budgets.index');
 
@@ -86,67 +88,39 @@ class BudgetController extends BaseController
      */
     public function edit(Budget $budget)
     {
-        $subTitle = 'Edit budget "' . $budget->name . '"';
+        $subTitle = 'Edit budget "' . e($budget->name) . '"';
 
         return View::make('budgets.edit', compact('budget', 'subTitle'));
 
     }
 
     /**
+     * The index of the budget controller contains all budgets and the current relevant limit repetition.
+     *
      * @return $this
      */
     public function index()
     {
+        $budgets = $this->_repository->get();
 
-        /** @var \FireflyIII\Shared\Preferences\PreferencesInterface $preferences */
-        $preferences = App::make('FireflyIII\Shared\Preferences\PreferencesInterface');
-
-        /** @var \FireflyIII\Database\Budget $repos */
-        $repos   = App::make('FireflyIII\Database\Budget');
-        $budgets = $repos->get();
-
-        // get the limits for the current month.
-        $date  = \Session::get('start');
-        $spent = 0;
-        /** @var \Budget $budget */
-        foreach ($budgets as $budget) {
-
-            $budget->spent = $repos->spentInMonth($budget, $date);
-            $spent += $budget->spent;
-            $budget->pct   = 0;
-            $budget->limit = 0;
-
-            /** @var \Limit $limit */
-            foreach ($budget->limits as $limit) {
-                /** @var \LimitRepetition $repetition */
-                foreach ($limit->limitrepetitions as $repetition) {
-                    if ($repetition->startdate == $date) {
-                        $budget->currentRep = $repetition;
-                        $budget->limit      = floatval($repetition->amount);
-                        if ($budget->limit > $budget->spent) {
-                            // not overspent:
-                            $budget->pct = 30;
-                        } else {
-                            $budget->pct = 50;
-                        }
-
-                    }
-                }
+        // loop the budgets:
+        $budgets->each(
+            function (Budget $budget) {
+                /** @noinspection PhpUndefinedFieldInspection */
+                $budget->spent = $this->_repository->spentInMonth($budget, \Session::get('start'));
+                /** @noinspection PhpUndefinedFieldInspection */
+                $budget->currentRep = $budget->limitrepetitions()->where('limit_repetitions.startdate', \Session::get('start')->format('Y-m-d'))->first(
+                    ['limit_repetitions.*']
+                );
             }
-        }
+        );
 
-        $budgetAmount = $preferences->get('budgetIncomeTotal' . $date->format('FY'), 1000);
-        $amount       = floatval($budgetAmount->data);
-        $overspent    = $spent > $amount;
-        if ($overspent) {
-            // overspent on total amount
-            $spentPCT = ceil($amount / $spent * 100);
-        } else {
-            // not overspent on total amount.
-            $spentPCT = ceil($spent / $amount * 100);
-        }
+        $spent     = $budgets->sum('spent');
+        $amount    = $this->_preferences->get('budgetIncomeTotal' . \Session::get('start')->format('FY'), 1000)->data;
+        $overspent = $spent > $amount;
+        $spentPCT  = $overspent ? ceil($amount / $spent * 100) : ceil($spent / $amount * 100);
 
-        return View::make('budgets.index', compact('budgets', 'spent', 'spentPCT', 'overspent'))->with('budgetAmount', $budgetAmount);
+        return View::make('budgets.index', compact('budgets', 'spent', 'spentPCT', 'overspent', 'amount'));
     }
 
     /**
@@ -154,12 +128,7 @@ class BudgetController extends BaseController
      */
     public function postUpdateIncome()
     {
-        /** @var \FireflyIII\Shared\Preferences\PreferencesInterface $preferences */
-        $preferences = App::make('FireflyIII\Shared\Preferences\PreferencesInterface');
-        $date        = Session::get('start');
-
-        $value = intval(Input::get('amount'));
-        $preferences->set('budgetIncomeTotal' . $date->format('FY'), $value);
+        $this->_preferences->set('budgetIncomeTotal' . Session::get('start')->format('FY'), intval(Input::get('amount')));
 
         return Redirect::route('budgets.index');
     }
@@ -175,121 +144,93 @@ class BudgetController extends BaseController
         if (!is_null($repetition) && $repetition->limit->budget->id != $budget->id) {
             App::abort(500);
         }
-        /** @var \FireflyIII\Database\Budget $repos */
-        $repos = App::make('FireflyIII\Database\Budget');
 
-        if (is_null($repetition)) {
-            // get all other repetitions:
-            $limits = $budget->limits()->orderBy('startdate', 'DESC')->get();
-            // get all transaction journals for this budget.
-            $journals = $repos->getTransactionJournals($budget, 50);
+        $journals = $this->_repository->getJournals($budget, $repetition);
+        $limits   = $repetition ? $budget->limits()->orderBy('startdate', 'DESC')->get() : [$repetition->limit];
+        $subTitle = $repetition ? e($budget->name) . ' in ' . $repetition->startdate->format('F Y') : e($budget->name);
 
-            $subTitle = $budget->name;
-        } else {
-            // get nothing? i dunno
-            $limits = [$repetition->limit];
-            // get all transaction journals for this budget and limit repetition.
-            $subTitle = $budget->name . ' in ' . $repetition->startdate->format('F Y');
-            $journals = $repos->getTransactionJournalsInRepetition($budget, $repetition, 50);
-        }
-        $hideBudget = true;
-
-
-        return View::make('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle', 'hideBudget'));
+        return View::make('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle'));
     }
 
     /**
-     * @return $this
-     * @throws FireflyException
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
     public function store()
     {
-        /** @var \FireflyIII\Database\Budget $repos */
-        $repos = App::make('FireflyIII\Database\Budget');
-        $data  = Input::except('_token');
+        $data = Input::except('_token');
 
-        switch ($data['post_submit_action']) {
-            default:
-                throw new FireflyException('Cannot handle post_submit_action "' . e($data['post_submit_action']) . '"');
-                break;
-            case 'create_another':
-            case 'store':
-                $messages = $repos->validate($data);
-                /** @var MessageBag $messages ['errors'] */
-                if ($messages['errors']->count() > 0) {
-                    Session::flash('warnings', $messages['warnings']);
-                    Session::flash('successes', $messages['successes']);
-                    Session::flash('error', 'Could not save budget: ' . $messages['errors']->first());
+        // always validate:
+        $messages = $this->_repository->validate($data);
 
-                    return Redirect::route('budgets.create')->withInput()->withErrors($messages['errors']);
-                }
-                // store!
-                $repos->store($data);
-                Session::flash('success', 'New budget stored!');
-
-                if ($data['post_submit_action'] == 'create_another') {
-                    return Redirect::route('budgets.create');
-                } else {
-                    return Redirect::route('budgets.index');
-                }
-                break;
-            case 'validate_only':
-                $messageBags = $repos->validate($data);
-                Session::flash('warnings', $messageBags['warnings']);
-                Session::flash('successes', $messageBags['successes']);
-                Session::flash('errors', $messageBags['errors']);
-
-                return Redirect::route('budgets.create')->withInput();
-                break;
+        // flash messages:
+        Session::flash('warnings', $messages['warnings']);
+        Session::flash('successes', $messages['successes']);
+        Session::flash('errors', $messages['errors']);
+        if ($messages['errors']->count() > 0) {
+            Session::flash('error', 'Could not store budget: ' . $messages['errors']->first());
         }
+
+        // return to create screen:
+        if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
+            return Redirect::route('budgets.create')->withInput();
+        }
+
+        // store:
+        $this->_repository->store($data);
+        Session::flash('success', 'Budget "' . e($data['name']) . '" stored.');
+        if ($data['post_submit_action'] == 'store') {
+            return Redirect::route('budgets.index');
+        }
+        
+        // create another.
+        if ($data['post_submit_action'] == 'create_another') {
+            return Redirect::route('budgets.create')->withInput();
+        }
+
+        return Redirect::route('budgets.index');
     }
+
 
     /**
      * @param Budget $budget
      *
-     * @return $this
-     * @throws FireflyException
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
     public function update(Budget $budget)
     {
 
-        /** @var \FireflyIII\Database\Budget $repos */
-        $repos = App::make('FireflyIII\Database\Budget');
-        $data  = Input::except('_token');
+        $data = Input::except('_token');
 
-        switch (Input::get('post_submit_action')) {
-            default:
-                throw new FireflyException('Cannot handle post_submit_action "' . e(Input::get('post_submit_action')) . '"');
-                break;
-            case 'return_to_edit':
-            case 'update':
-                $messages = $repos->validate($data);
-                /** @var MessageBag $messages ['errors'] */
-                if ($messages['errors']->count() > 0) {
-                    Session::flash('warnings', $messages['warnings']);
-                    Session::flash('successes', $messages['successes']);
-                    Session::flash('error', 'Could not save budget: ' . $messages['errors']->first());
+        // always validate:
+        $messages = $this->_repository->validate($data);
 
-                    return Redirect::route('budgets.edit', $budget->id)->withInput()->withErrors($messages['errors']);
-                }
-                // store!
-                $repos->update($budget, $data);
-                Session::flash('success', 'Budget updated!');
-
-                if ($data['post_submit_action'] == 'return_to_edit') {
-                    return Redirect::route('budgets.edit', $budget->id);
-                } else {
-                    return Redirect::route('budgets.index');
-                }
-            case 'validate_only':
-                $messageBags = $repos->validate($data);
-                Session::flash('warnings', $messageBags['warnings']);
-                Session::flash('successes', $messageBags['successes']);
-                Session::flash('errors', $messageBags['errors']);
-
-                return Redirect::route('budgets.edit', $budget->id)->withInput();
-                break;
+        // flash messages:
+        Session::flash('warnings', $messages['warnings']);
+        Session::flash('successes', $messages['successes']);
+        Session::flash('errors', $messages['errors']);
+        if ($messages['errors']->count() > 0) {
+            Session::flash('error', 'Could not update budget: ' . $messages['errors']->first());
         }
+
+        // return to update screen:
+        if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
+            return Redirect::route('budgets.edit', $budget->id)->withInput();
+        }
+
+        // update
+        $this->_repository->update($budget, $data);
+        Session::flash('success', 'Budget "' . e($data['name']) . '" updated.');
+
+        // go back to list
+        if ($data['post_submit_action'] == 'update') {
+            return Redirect::route('budgets.index');
+        }
+        // go back to update screen.
+        if ($data['post_submit_action'] == 'return_to_edit') {
+            return Redirect::route('budgets.edit', $budget->id)->withInput(['post_submit_action' => 'return_to_edit']);
+        }
+
+        return Redirect::route('budgets.index');
     }
 
     /**
@@ -297,11 +238,7 @@ class BudgetController extends BaseController
      */
     public function updateIncome()
     {
-        $date = Session::get('start');
-        /** @var \FireflyIII\Shared\Preferences\PreferencesInterface $preferences */
-        $preferences  = App::make('FireflyIII\Shared\Preferences\PreferencesInterface');
-        $budgetAmount = $preferences->get('budgetIncomeTotal' . $date->format('FY'), 1000);
-
-        return View::make('budgets.income')->with('amount', $budgetAmount)->with('date', $date);
+        $budgetAmount = $this->_preferences->get('budgetIncomeTotal' . Session::get('start')->format('FY'), 1000);
+        return View::make('budgets.income')->with('amount', $budgetAmount);
     }
 }
