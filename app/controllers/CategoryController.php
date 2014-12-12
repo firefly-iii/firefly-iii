@@ -1,4 +1,5 @@
 <?php
+use FireflyIII\Database\Category as CategoryRepository;
 use FireflyIII\Exception\FireflyException;
 use Illuminate\Support\MessageBag;
 
@@ -7,13 +8,19 @@ use Illuminate\Support\MessageBag;
  */
 class CategoryController extends BaseController
 {
+
+    /** @var CategoryRepository */
+    protected $_repository;
+
     /**
-     *
+     * @param CategoryRepository $repository
      */
-    public function __construct()
+    public function __construct(CategoryRepository $repository)
     {
         View::share('title', 'Categories');
         View::share('mainTitleIcon', 'fa-bar-chart');
+
+        $this->_repository = $repository;
     }
 
     /**
@@ -41,11 +48,9 @@ class CategoryController extends BaseController
      */
     public function destroy(Category $category)
     {
-        /** @var \FireflyIII\Database\Category $repos */
-        $repos = App::make('FireflyIII\Database\Category');
+        Session::flash('success', 'Category "' . e($category->name) . '" was deleted.');
+        $this->_repository->destroy($category);
 
-        $repos->destroy($category);
-        Session::flash('success', 'The category was deleted.');
 
         return Redirect::route('categories.index');
     }
@@ -65,9 +70,7 @@ class CategoryController extends BaseController
      */
     public function index()
     {
-        /** @var \FireflyIII\Database\Category $repos */
-        $repos      = App::make('FireflyIII\Database\Category');
-        $categories = $repos->get();
+        $categories = $this->_repository->get();
 
         return View::make('categories.index', compact('categories'));
     }
@@ -79,12 +82,8 @@ class CategoryController extends BaseController
      */
     public function show(Category $category)
     {
-        $hideCategory = true;
-
-        /** @var \FireflyIII\Database\Category $repos */
-        $repos = App::make('FireflyIII\Database\Category');
-
-        $journals = $repos->getTransactionJournals($category, 50);
+        $hideCategory = true; // used in list.
+        $journals     = $this->_repository->getTransactionJournals($category, 50);
 
         return View::make('categories.show', compact('category', 'journals', 'hideCategory'));
     }
