@@ -185,8 +185,8 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
 
 
         if (!is_null($repetition)) {
-            $setQuery->before($repetition->startdate)->after($repetition->enddate);
-            $countQuery->before($repetition->startdate)->after($repetition->enddate);
+            $setQuery->after($repetition->startdate)->before($repetition->enddate);
+            $countQuery->after($repetition->startdate)->before($repetition->enddate);
         }
 
 

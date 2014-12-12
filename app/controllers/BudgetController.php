@@ -145,11 +145,12 @@ class BudgetController extends BaseController
             App::abort(500);
         }
 
-        $journals = $this->_repository->getJournals($budget, $repetition);
-        $limits   = $repetition ? $budget->limits()->orderBy('startdate', 'DESC')->get() : [$repetition->limit];
-        $subTitle = $repetition ? e($budget->name) . ' in ' . $repetition->startdate->format('F Y') : e($budget->name);
+        $hideBudget = true; // used in transaction list.
+        $journals   = $this->_repository->getJournals($budget, $repetition);
+        $limits     = $repetition ? $budget->limits()->orderBy('startdate', 'DESC')->get() : [$repetition->limit];
+        $subTitle   = $repetition ? e($budget->name) . ' in ' . $repetition->startdate->format('F Y') : e($budget->name);
 
-        return View::make('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle'));
+        return View::make('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle', 'hideBudget'));
     }
 
     /**
@@ -181,7 +182,7 @@ class BudgetController extends BaseController
         if ($data['post_submit_action'] == 'store') {
             return Redirect::route('budgets.index');
         }
-        
+
         // create another.
         if ($data['post_submit_action'] == 'create_another') {
             return Redirect::route('budgets.create')->withInput();
@@ -239,6 +240,7 @@ class BudgetController extends BaseController
     public function updateIncome()
     {
         $budgetAmount = $this->_preferences->get('budgetIncomeTotal' . Session::get('start')->format('FY'), 1000);
+
         return View::make('budgets.income')->with('amount', $budgetAmount);
     }
 }
