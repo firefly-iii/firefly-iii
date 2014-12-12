@@ -6,6 +6,10 @@ use FireflyIII\Shared\Preferences\PreferencesInterface as Pref;
 /**
  * Class BudgetController
  *
+ * TODO move AJAX methods to their own BudgetAjaxControlle
+ * TODO Find out what constitutes proper camelCase
+ * TODO How is object coupling counted?
+ *
  * @SuppressWarnings("CamelCase")
  * @SuppressWarnings("TooManyMethods")
  * @SuppressWarnings("CouplingBetweenObjects")

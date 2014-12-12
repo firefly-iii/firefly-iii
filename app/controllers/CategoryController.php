@@ -1,9 +1,13 @@
 <?php
 use FireflyIII\Database\Category as CategoryRepository;
 use FireflyIII\Exception\FireflyException;
-use Illuminate\Support\MessageBag;
 
 /**
+ *
+ * TODO Find out what constitutes proper camelCase
+ *
+ * @SuppressWarnings("CamelCase")
+ *
  * Class CategoryController
  */
 class CategoryController extends BaseController
@@ -94,44 +98,37 @@ class CategoryController extends BaseController
      */
     public function store()
     {
-        $data = Input::all();
-        /** @var \FireflyIII\Database\Category $repos */
-        $repos = App::make('FireflyIII\Database\Category');
+        $data = Input::except('_token');
 
-        switch ($data['post_submit_action']) {
-            default:
-                throw new FireflyException('Cannot handle post_submit_action "' . e($data['post_submit_action']) . '"');
-                break;
-            case 'create_another':
-            case 'store':
-                $messages = $repos->validate($data);
-                /** @var MessageBag $messages ['errors'] */
-                if ($messages['errors']->count() > 0) {
-                    Session::flash('warnings', $messages['warnings']);
-                    Session::flash('successes', $messages['successes']);
-                    Session::flash('error', 'Could not save category: ' . $messages['errors']->first());
+        // always validate:
+        $messages = $this->_repository->validate($data);
 
-                    return Redirect::route('categories.create')->withInput()->withErrors($messages['errors']);
-                }
-                // store!
-                $repos->store($data);
-                Session::flash('success', 'New category stored!');
-
-                if ($data['post_submit_action'] == 'create_another') {
-                    return Redirect::route('categories.create')->withInput();
-                } else {
-                    return Redirect::route('categories.index');
-                }
-                break;
-            case 'validate_only':
-                $messageBags = $repos->validate($data);
-                Session::flash('warnings', $messageBags['warnings']);
-                Session::flash('successes', $messageBags['successes']);
-                Session::flash('errors', $messageBags['errors']);
-
-                return Redirect::route('categories.create')->withInput();
-                break;
+        // flash messages:
+        Session::flash('warnings', $messages['warnings']);
+        Session::flash('successes', $messages['successes']);
+        Session::flash('errors', $messages['errors']);
+        if ($messages['errors']->count() > 0) {
+            Session::flash('error', 'Could not store category: ' . $messages['errors']->first());
         }
+
+        // return to create screen:
+        if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
+            return Redirect::route('categories.create')->withInput();
+        }
+
+        // store:
+        $this->_repository->store($data);
+        Session::flash('success', 'Category "' . e($data['name']) . '" stored.');
+        if ($data['post_submit_action'] == 'store') {
+            return Redirect::route('categories.index');
+        }
+
+        // create another.
+        if ($data['post_submit_action'] == 'create_another') {
+            return Redirect::route('categories.create')->withInput();
+        }
+
+        return Redirect::route('categories.index');
     }
 
     /**
@@ -142,43 +139,38 @@ class CategoryController extends BaseController
      */
     public function update(Category $category)
     {
-        /** @var \FireflyIII\Database\Category $repos */
-        $repos = App::make('FireflyIII\Database\Category');
-        $data  = Input::except('_token');
+        $data = Input::except('_token');
 
-        switch (Input::get('post_submit_action')) {
-            default:
-                throw new FireflyException('Cannot handle post_submit_action "' . e(Input::get('post_submit_action')) . '"');
-                break;
-            case 'return_to_edit':
-            case 'update':
-                $messages = $repos->validate($data);
-                /** @var MessageBag $messages ['errors'] */
-                if ($messages['errors']->count() > 0) {
-                    Session::flash('warnings', $messages['warnings']);
-                    Session::flash('successes', $messages['successes']);
-                    Session::flash('error', 'Could not save category: ' . $messages['errors']->first());
+        // always validate:
+        $messages = $this->_repository->validate($data);
 
-                    return Redirect::route('categories.edit', $category->id)->withInput()->withErrors($messages['errors']);
-                }
-                // store!
-                $repos->update($category, $data);
-                Session::flash('success', 'Category updated!');
-
-                if ($data['post_submit_action'] == 'return_to_edit') {
-                    return Redirect::route('categories.edit', $category->id);
-                } else {
-                    return Redirect::route('categories.index');
-                }
-            case 'validate_only':
-                $messageBags = $repos->validate($data);
-                Session::flash('warnings', $messageBags['warnings']);
-                Session::flash('successes', $messageBags['successes']);
-                Session::flash('errors', $messageBags['errors']);
-
-                return Redirect::route('categories.edit', $category->id)->withInput();
-                break;
+        // flash messages:
+        Session::flash('warnings', $messages['warnings']);
+        Session::flash('successes', $messages['successes']);
+        Session::flash('errors', $messages['errors']);
+        if ($messages['errors']->count() > 0) {
+            Session::flash('error', 'Could not update category: ' . $messages['errors']->first());
         }
+
+        // return to update screen:
+        if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
+            return Redirect::route('categories.edit', $category->id)->withInput();
+        }
+
+        // update
+        $this->_repository->update($category, $data);
+        Session::flash('success', 'Category "' . e($data['name']) . '" updated.');
+
+        // go back to list
+        if ($data['post_submit_action'] == 'update') {
+            return Redirect::route('categories.index');
+        }
+        // go back to update screen.
+        if ($data['post_submit_action'] == 'return_to_edit') {
+            return Redirect::route('categories.edit', $category->id)->withInput(['post_submit_action' => 'return_to_edit']);
+        }
+
+        return Redirect::route('categories.index');
 
 
     }
