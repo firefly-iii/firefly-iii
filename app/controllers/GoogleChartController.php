@@ -1,11 +1,24 @@
 <?php
 use Carbon\Carbon;
+use Grumpydictator\Gchart\GChart as GChart;
 
 /**
  * Class GoogleChartController
  */
 class GoogleChartController extends BaseController
 {
+
+    /** @var GChart */
+    protected $_chart;
+
+    /**
+     * @param GChart $chart
+     */
+    public function __construct(GChart $chart)
+    {
+        $this->_chart = $chart;
+
+    }
 
     /**
      * @param Account $account
@@ -15,55 +28,35 @@ class GoogleChartController extends BaseController
      */
     public function accountBalanceChart(Account $account, $view = 'session')
     {
-        /** @var \Grumpydictator\Gchart\GChart $chart */
-        $chart = App::make('gchart');
+        $this->_chart->addColumn('Day of month', 'date');
+        $this->_chart->addColumn('Balance for ' . $account->name, 'number');
 
-        $chart->addColumn('Day of month', 'date');
-        $chart->addColumn('Balance for ' . $account->name, 'number');
+        $start = Session::get('start');
+        $end   = Session::get('end');
+        $count = $account->transactions()->count();
 
-        /*
-         * Loop the date, then loop the accounts, then add balance.
-         */
-        switch ($view) {
-            default:
-            case 'session':
-                $start = Session::get('start');
-                $end   = Session::get('end');
-                break;
-            case 'all':
-                $first = $account->transactionjournals()->orderBy('date', 'DESC')->first();
-                $last  = $account->transactionjournals()->orderBy('date', 'ASC')->first();
-                if (is_null($first)) {
-                    $start = Session::get('start');
-                } else {
-                    $start = clone $first->date;
-                }
-                if (is_null($last)) {
-                    $end = Session::get('end');
-                } else {
-                    $end = clone $last->date;
-                }
-                break;
+        if ($view == 'all' && $count > 0) {
+            $first = $account->transactions()->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')->orderBy(
+                'date', 'ASC'
+            )->first(['transaction_journals.date']);
+            $last  = $account->transactions()->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')->orderBy(
+                'date', 'DESC'
+            )->first(['transaction_journals.date']);
+            $start = new Carbon($first->date);
+            $end   = new Carbon($last->date);
         }
 
         $current = clone $start;
 
         while ($end >= $current) {
-            $row = [clone $current];
-            if ($current > Carbon::now()) {
-                $row[] = null;
-            } else {
-                $row[] = Steam::balance($account, $current);
-            }
-
-            $chart->addRowArray($row);
+            $this->_chart->addRow(clone $current, $current > Carbon::now() ? null : Steam::balance($account, $current));
             $current->addDay();
         }
 
 
-        $chart->generate();
+        $this->_chart->generate();
 
-        return Response::json($chart->getData());
+        return Response::json($this->_chart->getData());
     }
 
     /**

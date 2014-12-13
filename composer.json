@@ -23,7 +23,7 @@
     "require": {
         "laravel/framework": "4.2.*",
         "davejamesmiller/laravel-breadcrumbs": "2.*",
-        "grumpydictator/gchart": "dev-master",
+        "grumpydictator/gchart": "1.*",
         "michelf/php-markdown": "1.*",
         "watson/validating": "0.10.*"
     },
