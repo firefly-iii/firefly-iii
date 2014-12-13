@@ -580,8 +580,8 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
                        ->orderBy('date', 'DESC');
 
         if ($range == 'session') {
-            $query->before(\Session::get('end'));
-            $query->after(\Session::get('start'));
+            $query->before(\Session::get('end', \Carbon\Carbon::now()->startOfMonth()));
+            $query->after(\Session::get('start', \Carbon\Carbon::now()->startOfMonth()));
         }
         $count = $query->count();
         $set   = $query->take($limit)->offset($offset)->get(['transaction_journals.*']);
