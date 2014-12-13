@@ -4,6 +4,9 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * Class Cleanup
+ */
 class Cleanup extends Command
 {
 
@@ -21,9 +24,7 @@ class Cleanup extends Command
     protected $name = 'firefly:cleanup';
 
     /**
-     * Create a new command instance.
      *
-     * @return void
      */
     public function __construct()
     {

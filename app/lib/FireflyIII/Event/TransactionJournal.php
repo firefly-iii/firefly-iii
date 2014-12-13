@@ -14,7 +14,6 @@ class TransactionJournal
 
     /**
      * @param \TransactionJournal $journal
-     * @param int                 $id
      */
     public function store(\TransactionJournal $journal)
     {

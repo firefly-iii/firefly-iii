@@ -1,6 +1,12 @@
 <?php
 
 if (!function_exists('mf')) {
+    /**
+     * @param      $n
+     * @param bool $coloured
+     *
+     * @return string
+     */
     function mf($n, $coloured = true)
     {
 
