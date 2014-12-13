@@ -330,7 +330,7 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
         $limit = $this->limitOnStartingOnDate($budget, $date);
         if (!$limit) {
             // create one!
-            $limit = new \Limit;
+            $limit = new \BudgetLimit;
             $limit->budget()->associate($budget);
             $limit->startdate   = $date;
             $limit->amount      = $amount;
@@ -367,6 +367,6 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
      */
     public function limitOnStartingOnDate(\Budget $budget, Carbon $date)
     {
-        return $budget->limits()->where('startdate', $date->format('Y-m-d'))->first();
+        return $budget->budgetLimits()->where('startdate', $date->format('Y-m-d'))->first();
     }
 }

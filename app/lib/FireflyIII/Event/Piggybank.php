@@ -43,8 +43,8 @@ class Piggybank
     {
         if ($journal->piggybankevents()->count() > 0) {
 
-            /** @var \FireflyIII\Database\Piggybank $repository */
-            $repository = \App::make('FireflyIII\Database\Piggybank');
+            /** @var \FireflyIII\Database\PiggyBank\PiggyBank $repository */
+            $repository = \App::make('FireflyIII\Database\PiggyBank\PiggyBank');
 
             /** @var \Piggybank $piggyBank */
             $piggyBank = $journal->piggybankevents()->first()->piggybank()->first();
@@ -127,8 +127,8 @@ class Piggybank
         if ($piggybankId == 0 || is_null($piggybankId)) {
             return;
         }
-        /** @var \FireflyIII\Database\Piggybank $repository */
-        $repository = \App::make('FireflyIII\Database\Piggybank');
+        /** @var \FireflyIII\Database\PiggyBank\PiggyBank $repository */
+        $repository = \App::make('FireflyIII\Database\PiggyBank\PiggyBank');
 
         /** @var \Piggybank $piggyBank */
         $piggyBank = $repository->find($piggybankId);
@@ -222,8 +222,8 @@ class Piggybank
         if(!\Auth::check()) {
             return;
         }
-        /** @var \FireflyIII\Database\RepeatedExpense $repository */
-        $repository = \App::make('FireflyIII\Database\RepeatedExpense');
+        /** @var \FireflyIII\Database\PiggyBank\RepeatedExpense $repository */
+        $repository = \App::make('FireflyIII\Database\PiggyBank\RepeatedExpense');
 
         $list  = $repository->get();
         $today = Carbon::now();
@@ -290,8 +290,8 @@ class Piggybank
             $event    = $journal->piggybankevents()->orderBy('date', 'DESC')->orderBy('id', 'DESC')->first();
             $eventSum = floatval($journal->piggybankevents()->orderBy('date', 'DESC')->orderBy('id', 'DESC')->sum('amount'));
 
-            /** @var \FireflyIII\Database\Piggybank $repository */
-            $repository = \App::make('FireflyIII\Database\Piggybank');
+            /** @var \FireflyIII\Database\PiggyBank\PiggyBank $repository */
+            $repository = \App::make('FireflyIII\Database\PiggyBank\PiggyBank');
 
             /** @var \Piggybank $piggyBank */
             $piggyBank = $journal->piggybankevents()->first()->piggybank()->first();

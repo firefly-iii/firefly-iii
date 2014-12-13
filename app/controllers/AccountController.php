@@ -1,6 +1,6 @@
 <?php
 
-use FireflyIII\Database\Account as AccountRepository;
+use FireflyIII\Database\Account\Account as AccountRepository;
 use FireflyIII\Exception\FireflyException;
 
 /**
@@ -101,7 +101,7 @@ class AccountController extends BaseController
 
         Session::flash('success', 'The ' . $typeName . ' account "' . e($name) . '" was deleted.');
 
-        return Redirect::route('accounts.index', $type);
+        return Redirect::route('accounts.index', $typeName);
     }
 
     /**
@@ -209,6 +209,7 @@ class AccountController extends BaseController
     {
         $data         = Input::except('_token');
         $data['what'] = $this->_shortNamesByFullName[$account->accountType->type];
+
 
         // always validate:
         $messages = $this->_repository->validate($data);

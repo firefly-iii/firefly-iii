@@ -21,8 +21,8 @@ class PreferencesController extends BaseController
      */
     public function index()
     {
-        /** @var \FireflyIII\Database\Account $acct */
-        $acct = App::make('FireflyIII\Database\Account');
+        /** @var \FireflyIII\Database\Account\Account $acct */
+        $acct = App::make('FireflyIII\Database\Account\Account');
 
         /** @var \FireflyIII\Shared\Preferences\Preferences $preferences */
         $preferences = App::make('FireflyIII\Shared\Preferences\Preferences');

@@ -49,8 +49,8 @@ class RecurringController extends BaseController
     {
         //Event::fire('recurring.destroy', [$recurringTransaction]);
 
-        /** @var \FireflyIII\Database\Recurring $repository */
-        $repository = App::make('FireflyIII\Database\Recurring');
+        /** @var \FireflyIII\Database\RecurringTransaction\RecurringTransaction $repository */
+        $repository = App::make('FireflyIII\Database\RecurringTransaction\RecurringTransaction');
 
         $result = $repository->destroy($recurringTransaction);
         if ($result === true) {
@@ -82,8 +82,8 @@ class RecurringController extends BaseController
      */
     public function index()
     {
-        /** @var \FireflyIII\Database\Recurring $repos */
-        $repos = App::make('FireflyIII\Database\Recurring');
+        /** @var \FireflyIII\Database\RecurringTransaction\RecurringTransaction $repos */
+        $repos = App::make('FireflyIII\Database\RecurringTransaction\RecurringTransaction');
 
         $recurring = $repos->get();
 
@@ -103,8 +103,8 @@ class RecurringController extends BaseController
             return Redirect::back();
         }
 
-        /** @var \FireflyIII\Database\Recurring $repos */
-        $repos = App::make('FireflyIII\Database\Recurring');
+        /** @var \FireflyIII\Database\RecurringTransaction\RecurringTransaction $repos */
+        $repos = App::make('FireflyIII\Database\RecurringTransaction\RecurringTransaction');
         $repos->scanEverything($recurringTransaction);
 
         Session::flash('success', 'Rescanned everything.');
@@ -135,8 +135,8 @@ class RecurringController extends BaseController
     public function store()
     {
         $data = Input::except('_token');
-        /** @var \FireflyIII\Database\Recurring $repos */
-        $repos = App::make('FireflyIII\Database\Recurring');
+        /** @var \FireflyIII\Database\RecurringTransaction\RecurringTransaction $repos */
+        $repos = App::make('FireflyIII\Database\RecurringTransaction\RecurringTransaction');
 
         switch ($data['post_submit_action']) {
             default:
@@ -183,8 +183,8 @@ class RecurringController extends BaseController
      */
     public function update(RecurringTransaction $recurringTransaction)
     {
-        /** @var \FireflyIII\Database\Recurring $repos */
-        $repos = App::make('FireflyIII\Database\Recurring');
+        /** @var \FireflyIII\Database\RecurringTransaction\RecurringTransaction $repos */
+        $repos = App::make('FireflyIII\Database\RecurringTransaction\RecurringTransaction');
         $data  = Input::except('_token');
 
         switch (Input::get('post_submit_action')) {

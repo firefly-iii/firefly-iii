@@ -297,7 +297,7 @@ class Form
             case 'update':
                 $store = '<div class="form-group"><label for="' . $name . 'update" class="col-sm-4 control-label">Store</label>';
                 $store .= '<div class="col-sm-8"><div class="radio"><label>';
-                $store .= \Form::radio('post_submit_action', 'update', $previousValue == 'update', ['id' => $name . '_update']);
+                $store .= \Form::radio('post_submit_action', 'update', $previousValue == 'update' || $previousValue == 'store', ['id' => $name . '_update']);
                 $store .= 'Update ' . $name . '</label></div></div></div>';
                 break;
             default:

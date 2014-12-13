@@ -495,8 +495,8 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
      */
     public function firstExpenseAccountOrCreate($name)
     {
-        /** @var \FireflyIII\Database\AccountType $accountTypeRepos */
-        $accountTypeRepos = \App::make('FireflyIII\Database\AccountType');
+        /** @var \FireflyIII\Database\AccountType\AccountType $accountTypeRepos */
+        $accountTypeRepos = \App::make('FireflyIII\Database\AccountType\AccountType');
 
         $accountType = $accountTypeRepos->findByWhat('expense');
 
@@ -524,8 +524,8 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
      */
     public function firstRevenueAccountOrCreate($name)
     {
-        /** @var \FireflyIII\Database\AccountType $accountTypeRepos */
-        $accountTypeRepos = \App::make('FireflyIII\Database\AccountType');
+        /** @var \FireflyIII\Database\AccountType\AccountType $accountTypeRepos */
+        $accountTypeRepos = \App::make('FireflyIII\Database\AccountType\AccountType');
 
         $accountType = $accountTypeRepos->findByWhat('revenue');
 

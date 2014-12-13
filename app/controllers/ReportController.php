@@ -1,9 +1,8 @@
 <?php
 use Carbon\Carbon;
-use FireflyIII\Database\Account as AccountRepository;
-use FireflyIII\Database\Report as ReportRepository;
-use FireflyIII\Database\TransactionJournal as TransactionJournalRepository;
-use FireflyIII\Report\ReportInterface as ReportHelper;
+use FireflyIII\Database\Account\Account as AccountRepository;
+use FireflyIII\Database\TransactionJournal\TransactionJournal as TransactionJournalRepository;
+use FireflyIII\Report\ReportInterface as Report;
 
 /**
  * @SuppressWarnings("CamelCase")
@@ -18,23 +17,18 @@ class ReportController extends BaseController
     /** @var TransactionJournalRepository */
     protected $_journals;
 
-    /** @var ReportHelper */
-    protected $_reports;
-
-    /** @var ReportRepository */
+    /** @var Report */
     protected $_repository;
 
     /**
      * @param AccountRepository            $accounts
      * @param TransactionJournalRepository $journals
-     * @param ReportHelper                 $reports
-     * @param ReportRepository             $repository
+     * @param Report                       $repository
      */
-    public function __construct(AccountRepository $accounts, TransactionJournalRepository $journals, ReportHelper $reports, ReportRepository $repository)
+    public function __construct(AccountRepository $accounts, TransactionJournalRepository $journals, Report $repository)
     {
         $this->_accounts   = $accounts;
         $this->_journals   = $journals;
-        $this->_reports    = $reports;
         $this->_repository = $repository;
 
     }
@@ -62,11 +56,11 @@ class ReportController extends BaseController
 
 
         // get a list of all budgets and expenses.
-        /** @var \FireflyIII\Database\Budget $budgetRepository */
-        $budgetRepository = App::make('FireflyIII\Database\Budget');
+        /** @var \FireflyIII\Database\Budget\Budget $budgetRepository */
+        $budgetRepository = App::make('FireflyIII\Database\Budget\Budget');
 
-        /** @var \FireflyIII\Database\Account $accountRepository */
-        $accountRepository = App::make('FireflyIII\Database\Account');
+        /** @var \FireflyIII\Database\Account\Account $accountRepository */
+        $accountRepository = App::make('FireflyIII\Database\Account\Account');
 
 
         $budgets = $budgetRepository->get();
@@ -76,8 +70,8 @@ class ReportController extends BaseController
             function (Budget $budget) use ($start, $end, $budgetRepository) {
                 $limitRepetitions = $budget->limitrepetitions()->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d'))->where(
                     'enddate', '<=', $end->format(
-                        'Y-m-d'
-                    )
+                    'Y-m-d'
+                )
                 )->get();
                 $repInfo          = [];
                 /** @var LimitRepetition $repetition */
@@ -94,7 +88,7 @@ class ReportController extends BaseController
                     }
                     $pctDisplay = $spent / floatval($repetition->amount) * 100;
                     $repInfo[]  = [
-                        'date'        => DateKit::periodShow($repetition->startdate, $repetition->limit->repeat_freq),
+                        'date'        => DateKit::periodShow($repetition->startdate, $repetition->budgetLimit->repeat_freq),
                         'spent'       => $spent,
                         'budgeted'    => floatval($repetition->amount),
                         'left'        => floatval($repetition->amount) - $spent,
@@ -148,8 +142,8 @@ class ReportController extends BaseController
     public function index()
     {
         $start         = $this->_journals->firstDate();
-        $months        = $this->_reports->listOfMonths(clone $start);
-        $years         = $this->_reports->listOfYears(clone $start);
+        $months        = $this->_repository->listOfMonths(clone $start);
+        $years         = $this->_repository->listOfYears(clone $start);
         $title         = 'Reports';
         $mainTitleIcon = 'fa-line-chart';
 
@@ -177,8 +171,8 @@ class ReportController extends BaseController
         $subTitleIcon  = 'fa-bar-chart';
         $end->endOfMonth();
 
-        /** @var \FireflyIII\Database\TransactionJournal $journalRepository */
-        $journalRepository = App::make('FireflyIII\Database\TransactionJournal');
+        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $journalRepository */
+        $journalRepository = App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
 
         /*
          * Get all journals from this month:
@@ -255,9 +249,9 @@ class ReportController extends BaseController
         $subTitleIcon  = 'fa-bar-chart';
         $mainTitleIcon = 'fa-line-chart';
 
-        $balances        = $this->_reports->yearBalanceReport($date);
-        $groupedIncomes  = $this->_reports->revenueGroupedByAccount($date, $end, 15);
-        $groupedExpenses = $this->_reports->expensesGroupedByAccount($date, $end, 15);
+        $balances        = $this->_repository->yearBalanceReport($date);
+        $groupedIncomes  = $this->_repository->revenueGroupedByAccount($date, $end, 15);
+        $groupedExpenses = $this->_repository->expensesGroupedByAccount($date, $end, 15);
 
         return View::make(
             'reports.year', compact('date', 'groupedIncomes', 'groupedExpenses', 'year', 'balances', 'title', 'subTitle', 'subTitleIcon', 'mainTitleIcon')

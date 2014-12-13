@@ -68,11 +68,11 @@ class Reminders
         /*
          * Reminder capable objects are (so far) only piggy banks.
          */
-        /** @var \FireflyIII\Database\Piggybank $repository */
-        $repository = \App::make('FireflyIII\Database\Piggybank');
+        /** @var \FireflyIII\Database\PiggyBank\PiggyBank $repository */
+        $repository = \App::make('FireflyIII\Database\PiggyBank\PiggyBank');
 
-        /** @var \FireflyIII\Database\Piggybank $repeatedRepository */
-        $repeatedRepository = \App::make('FireflyIII\Database\RepeatedExpense');
+        /** @var \FireflyIII\Database\PiggyBank\RepeatedExpense $repeatedRepository */
+        $repeatedRepository = \App::make('FireflyIII\Database\PiggyBank\RepeatedExpense');
 
         /** @var Collection $piggybanks */
         $piggybanks = $repository->get()->merge($repeatedRepository->get());

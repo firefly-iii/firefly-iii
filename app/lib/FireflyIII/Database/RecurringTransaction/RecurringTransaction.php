@@ -321,8 +321,8 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
         // get all journals that (may) be relevant.
         // this is usually almost all of them.
 
-        /** @var \FireflyIII\Database\TransactionJournal $journalRepository */
-        $journalRepository = \App::make('FireflyIII\Database\TransactionJournal');
+        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $journalRepository */
+        $journalRepository = \App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
 
         $set = \DB::table('transactions')->where('amount', '>', 0)->where('amount', '>=', $recurring->amount_min)->where('amount', '<=', $recurring->amount_max)
                   ->get(['transaction_journal_id']);

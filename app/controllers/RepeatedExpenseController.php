@@ -23,8 +23,8 @@ class RepeatedExpenseController extends BaseController
      */
     public function create()
     {
-        /** @var \FireflyIII\Database\Account $acct */
-        $acct = App::make('FireflyIII\Database\Account');
+        /** @var \FireflyIII\Database\Account\Account $acct */
+        $acct = App::make('FireflyIII\Database\Account\Account');
 
         $periods = Config::get('firefly.piggybank_periods');
 
@@ -44,8 +44,8 @@ class RepeatedExpenseController extends BaseController
 
         $subTitle = 'Overview';
 
-        /** @var \FireflyIII\Database\RepeatedExpense $repository */
-        $repository = App::make('FireflyIII\Database\RepeatedExpense');
+        /** @var \FireflyIII\Database\PiggyBank\RepeatedExpense $repository */
+        $repository = App::make('FireflyIII\Database\PiggyBank\RepeatedExpense');
 
         $expenses = $repository->get();
         $expenses->each(
@@ -67,8 +67,8 @@ class RepeatedExpenseController extends BaseController
         $subTitle = $piggyBank->name;
         $today    = Carbon::now();
 
-        /** @var \FireflyIII\Database\RepeatedExpense $repository */
-        $repository = App::make('FireflyIII\Database\RepeatedExpense');
+        /** @var \FireflyIII\Database\PiggyBank\RepeatedExpense $repository */
+        $repository = App::make('FireflyIII\Database\PiggyBank\RepeatedExpense');
 
         $repetitions = $piggyBank->piggybankrepetitions()->get();
         $repetitions->each(
@@ -88,8 +88,8 @@ class RepeatedExpenseController extends BaseController
     {
         $data            = Input::all();
         $data['repeats'] = 1;
-        /** @var \FireflyIII\Database\RepeatedExpense $repository */
-        $repository = App::make('FireflyIII\Database\RepeatedExpense');
+        /** @var \FireflyIII\Database\PiggyBank\RepeatedExpense $repository */
+        $repository = App::make('FireflyIII\Database\PiggyBank\RepeatedExpense');
 
         switch ($data['post_submit_action']) {
             default:
