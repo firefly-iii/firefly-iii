@@ -35,7 +35,9 @@
         "mockery/mockery": "@stable",
         "league/factory-muffin": "~2.0",
         "codeception/codeception": "*",
-        "codeception/c3": "2.*"
+        "codeception/c3": "2.*",
+        "sebastian/phpcpd": "*",
+        "sebastian/phpdcd": "*"
 
     },
     "autoload": {
