@@ -176,8 +176,6 @@ Route::group(
         Route::get('/chart/home/categories', ['uses' => 'GoogleChartController@allCategoriesHomeChart']);
         Route::get('/chart/home/recurring', ['uses' => 'GoogleChartController@recurringTransactionsOverview']);
         Route::get('/chart/account/{account}/{view?}', ['uses' => 'GoogleChartController@accountBalanceChart']);
-        Route::get('/chart/sankey/{account}/out/{view?}', ['uses' => 'GoogleChartController@accountSankeyOutChart']);
-        Route::get('/chart/sankey/{account}/in/{view?}', ['uses' => 'GoogleChartController@accountSankeyInChart']);
         Route::get('/chart/reports/income-expenses/{year}', ['uses' => 'GoogleChartController@yearInExp']);
         Route::get('/chart/reports/income-expenses-sum/{year}', ['uses' => 'GoogleChartController@yearInExpSum']);
         Route::get('/chart/recurring/{recurring}', ['uses' => 'GoogleChartController@recurringOverview']);

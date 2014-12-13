@@ -1,6 +1,7 @@
 <?php
 use Carbon\Carbon;
 use Grumpydictator\Gchart\GChart as GChart;
+use Illuminate\Database\Query\JoinClause;
 
 /**
  * Class GoogleChartController
@@ -31,7 +32,8 @@ class GoogleChartController extends BaseController
         $this->_chart->addColumn('Day of month', 'date');
         $this->_chart->addColumn('Balance for ' . $account->name, 'number');
 
-        $start = Session::get('start',Carbon::now()->startOfMonth());
+        // TODO this can be combined in some method, it's
+        $start = Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end');
         $count = $account->transactions()->count();
 
@@ -57,150 +59,6 @@ class GoogleChartController extends BaseController
         $this->_chart->generate();
 
         return Response::json($this->_chart->getData());
-    }
-
-    /**
-     * @param Account $account
-     * @param string  $view
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function accountSankeyInChart(Account $account, $view = 'session')
-    {
-        // collect all relevant entries.
-        $set = [];
-
-        /** @var \Grumpydictator\Gchart\GChart $chart */
-        $chart = App::make('gchart');
-        $chart->addColumn('From', 'string');
-        $chart->addColumn('To', 'string', 'domain');
-        $chart->addColumn('Weight', 'number');
-
-        switch ($view) {
-            default:
-            case 'session':
-                $start = Session::get('start',Carbon::now()->startOfMonth());
-                $end   = Session::get('end');
-                break;
-            case 'all':
-                $first = $account->transactionjournals()->orderBy('date', 'DESC')->first();
-                $last  = $account->transactionjournals()->orderBy('date', 'ASC')->first();
-                if (is_null($first)) {
-                    $start = Session::get('start',Carbon::now()->startOfMonth());
-                } else {
-                    $start = clone $first->date;
-                }
-                if (is_null($last)) {
-                    $end = Session::get('end');
-                } else {
-                    $end = clone $last->date;
-                }
-                break;
-        }
-
-
-        $transactions = $account->transactions()->with(
-            ['transactionjournal', 'transactionjournal.transactions' => function ($q) {
-                $q->where('amount', '<', 0);
-            }, 'transactionjournal.budgets', 'transactionjournal.transactiontype', 'transactionjournal.categories']
-        )->before($end)->after($start)->get();
-
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $amount = floatval($transaction->amount);
-            $type   = $transaction->transactionJournal->transactionType->type;
-
-            if ($amount > 0 && $type != 'Transfer') {
-
-                $otherAccount = $transaction->transactionJournal->transactions[0]->account->name;
-                $categoryName = isset($transaction->transactionJournal->categories[0]) ? $transaction->transactionJournal->categories[0]->name : '(no cat)';
-                $set[]        = [$otherAccount, $categoryName, $amount];
-                $set[]        = [$categoryName, $account->name, $amount];
-            }
-        }
-        // loop the set, group everything together:
-        $grouped = [];
-        foreach ($set as $entry) {
-            $key = $entry[0] . $entry[1];
-            if (isset($grouped[$key])) {
-                $grouped[$key][2] += $entry[2];
-            } else {
-                $grouped[$key] = $entry;
-            }
-        }
-
-        // add rows to the chart:
-        foreach ($grouped as $entry) {
-            $chart->addRow($entry[0], $entry[1], $entry[2]);
-        }
-
-        $chart->generate();
-
-        return Response::json($chart->getData());
-
-    }
-
-    /**
-     * @param Account $account
-     * @param string  $view
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function accountSankeyOutChart(Account $account, $view = 'session')
-    {
-        // collect all relevant entries.
-        $set = [];
-
-        /** @var \Grumpydictator\Gchart\GChart $chart */
-        $chart = App::make('gchart');
-        $chart->addColumn('From', 'string');
-        $chart->addColumn('To', 'string', 'domain');
-        $chart->addColumn('Weight', 'number');
-
-        $transactions = $account->transactions()->with(
-            ['transactionjournal', 'transactionjournal.transactions', 'transactionjournal.budgets', 'transactionjournal.transactiontype',
-             'transactionjournal.categories']
-        )->before(Session::get('end'))->after(
-            Session::get('start',Carbon::now()->startOfMonth())
-        )->get();
-
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $amount = floatval($transaction->amount);
-            $type   = $transaction->transactionJournal->transactionType->type;
-
-            if ($amount < 0 && $type != 'Transfer') {
-
-                // from account to a budget (if present).
-                $budgetName = isset($transaction->transactionJournal->budgets[0]) ? $transaction->transactionJournal->budgets[0]->name : '(no budget)';
-                $set[]      = [$account->name, $budgetName, $amount * -1];
-
-                // from budget to category.
-                $categoryName = isset($transaction->transactionJournal->categories[0]) ? ' ' . $transaction->transactionJournal->categories[0]->name
-                    : '(no cat)';
-                $set[]        = [$budgetName, $categoryName, $amount * -1];
-            }
-        }
-        // loop the set, group everything together:
-        $grouped = [];
-        foreach ($set as $entry) {
-            $key = $entry[0] . $entry[1];
-            if (isset($grouped[$key])) {
-                $grouped[$key][2] += $entry[2];
-            } else {
-                $grouped[$key] = $entry;
-            }
-        }
-
-        // add rows to the chart:
-        foreach ($grouped as $entry) {
-            $chart->addRow($entry[0], $entry[1], $entry[2]);
-        }
-
-        $chart->generate();
-
-        return Response::json($chart->getData());
-
     }
 
     /**
@@ -235,7 +93,7 @@ class GoogleChartController extends BaseController
         /*
          * Loop the date, then loop the accounts, then add balance.
          */
-        $start   = Session::get('start',Carbon::now()->startOfMonth());
+        $start   = Session::get('start', Carbon::now()->startOfMonth());
         $end     = Session::get('end');
         $current = clone $start;
 
@@ -281,14 +139,14 @@ class GoogleChartController extends BaseController
              * Is there a repetition starting on this particular date? We can use that.
              */
             /** @var \LimitRepetition $repetition */
-            $repetition = $bdt->repetitionOnStartingOnDate($budget, Session::get('start',Carbon::now()->startOfMonth()));
+            $repetition = $bdt->repetitionOnStartingOnDate($budget, Session::get('start', Carbon::now()->startOfMonth()));
 
             /*
              * If there is, use it. Otherwise, forget it.
              */
             if (is_null($repetition)) {
                 // use the session start and end for our search query
-                $searchStart = Session::get('start',Carbon::now()->startOfMonth());
+                $searchStart = Session::get('start', Carbon::now()->startOfMonth());
                 $searchEnd   = Session::get('end');
                 // the limit is zero:
                 $limit = 0;
@@ -315,7 +173,7 @@ class GoogleChartController extends BaseController
          * Finally, get all transactions WITHOUT a budget and add those as well.
          * (yes this method is oddly specific).
          */
-        $noBudgetSet = $bdt->transactionsWithoutBudgetInDateRange(Session::get('start',Carbon::now()->startOfMonth()), Session::get('end'));
+        $noBudgetSet = $bdt->transactionsWithoutBudgetInDateRange(Session::get('start', Carbon::now()->startOfMonth()), Session::get('end'));
         $sum         = $noBudgetSet->sum('amount') * -1;
         $chart->addRow('No budget', 0, $sum);
 
@@ -343,7 +201,7 @@ class GoogleChartController extends BaseController
         /*
          * Get the journals:
          */
-        $journals = $tj->getInDateRange(Session::get('start',Carbon::now()->startOfMonth()), Session::get('end'));
+        $journals = $tj->getInDateRange(Session::get('start', Carbon::now()->startOfMonth()), Session::get('end'));
 
         /** @var \TransactionJournal $journal */
         foreach ($journals as $journal) {
@@ -627,7 +485,7 @@ class GoogleChartController extends BaseController
                 /*
                  * In the current session range?
                  */
-                if (\Session::get('end') >= $current and $currentEnd >= \Session::get('start',Carbon::now()->startOfMonth())) {
+                if (\Session::get('end') >= $current and $currentEnd >= \Session::get('start', Carbon::now()->startOfMonth())) {
                     /*
                      * Lets see if we've already spent money on this recurring transaction (it hath recurred).
                      */
