@@ -1,9 +1,7 @@
 <?php
 
-namespace FireflyIII\Database;
+namespace FireflyIII\Database\TransactionCurrency;
 
-
-use FireflyIII\Database\Ifaces\TransactionCurrencyInterface;
 
 /**
  * Class TransactionType

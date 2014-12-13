@@ -1,10 +1,10 @@
 <?php
-namespace FireflyIII\Database;
+namespace FireflyIII\Database\Category;
 
 use Carbon\Carbon;
-use FireflyIII\Database\Ifaces\CategoryInterface;
-use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
-use FireflyIII\Database\Ifaces\CUD;
+use FireflyIII\Database\CommonDatabaseCalls;
+use FireflyIII\Database\CUD;
+use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;

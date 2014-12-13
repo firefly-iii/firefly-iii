@@ -1,6 +1,6 @@
 <?php
 
-namespace FireflyIII\Database\Ifaces;
+namespace FireflyIII\Database\Account;
 
 use Illuminate\Support\Collection;
 

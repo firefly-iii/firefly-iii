@@ -1,6 +1,6 @@
 <?php
 
-namespace FireflyIII\Database;
+namespace FireflyIII\Database\User;
 
 
 /**

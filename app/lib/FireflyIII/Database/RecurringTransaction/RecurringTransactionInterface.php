@@ -1,6 +1,6 @@
 <?php
 
-namespace FireflyIII\Database\Ifaces;
+namespace FireflyIII\Database\RecurringTransaction;
 
 use Carbon\Carbon;
 
@@ -9,7 +9,7 @@ use Carbon\Carbon;
  *
  * @package FireflyIII\Database
  */
-interface RecurringInterface
+interface RecurringTransactionInterface
 {
     /**
      * @param \RecurringTransaction $recurring

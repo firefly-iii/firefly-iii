@@ -1,11 +1,11 @@
 <?php
-namespace FireflyIII\Database;
+namespace FireflyIII\Database\PiggyBank;
 
 use Carbon\Carbon;
+use FireflyIII\Database\CommonDatabaseCalls;
+use FireflyIII\Database\CUD;
+use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\FireflyException;
-use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
-use FireflyIII\Database\Ifaces\CUD;
-use FireflyIII\Database\Ifaces\PiggybankInterface;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
@@ -16,7 +16,7 @@ use Illuminate\Support\MessageBag;
  *
  * @package FireflyIII\Database
  */
-class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
+class PiggyBank implements CUD, CommonDatabaseCalls, PiggybankInterface
 {
     use SwitchUser;
 

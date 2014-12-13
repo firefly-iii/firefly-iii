@@ -1,11 +1,11 @@
 <?php
 
-namespace FireflyIII\Database;
+namespace FireflyIII\Database\Account;
 
 use Carbon\Carbon;
-use FireflyIII\Database\Ifaces\AccountInterface;
-use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
-use FireflyIII\Database\Ifaces\CUD;
+use FireflyIII\Database\CommonDatabaseCalls;
+use FireflyIII\Database\CUD;
+use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
@@ -70,8 +70,8 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
      */
     public function findInitialBalanceAccount(\Account $account)
     {
-        /** @var \FireflyIII\Database\AccountType $acctType */
-        $acctType = \App::make('FireflyIII\Database\AccountType');
+        /** @var \FireflyIII\Database\AccountType\AccountType $acctType */
+        $acctType = \App::make('FireflyIII\Database\AccountType\AccountType');
 
         $accountType = $acctType->findByWhat('initial');
 
@@ -182,8 +182,8 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
          */
         $balance = floatval($data['openingbalance']);
         $date    = new Carbon($data['openingbalancedate']);
-        /** @var \FireflyIII\Database\TransactionJournal $tj */
-        $tj = \App::make('FireflyIII\Database\TransactionJournal');
+        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $tj */
+        $tj = \App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
         if ($balance < 0) {
             // first transaction draws money from the new account to the opposing
             $from = $account;
@@ -282,8 +282,8 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
         /*
          * Find account type.
          */
-        /** @var \FireflyIII\Database\AccountType $acctType */
-        $acctType = \App::make('FireflyIII\Database\AccountType');
+        /** @var \FireflyIII\Database\AccountType\AccountType $acctType */
+        $acctType = \App::make('FireflyIII\Database\AccountType\AccountType');
 
         $accountType = $acctType->findByWhat($data['what']);
 
