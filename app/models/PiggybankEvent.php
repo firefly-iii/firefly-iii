@@ -1,6 +1,9 @@
 <?php
 use Watson\Validating\ValidatingTrait;
 
+/**
+ * Class PiggybankEvent
+ */
 class PiggybankEvent extends Eloquent
 {
 

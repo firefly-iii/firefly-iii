@@ -4,6 +4,9 @@ use FireflyIII\Shared\SingleTableInheritanceEntity;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Watson\Validating\ValidatingTrait;
 
+/**
+ * Class Component
+ */
 class Component extends SingleTableInheritanceEntity
 {
 
@@ -13,10 +16,12 @@ class Component extends SingleTableInheritanceEntity
             'name'    => 'required|between:1,100|alphabasic',
             'class'   => 'required',
         ];
+    // @codingStandardsIgnoreStart
     protected     $dates         = ['deleted_at', 'created_at', 'updated_at'];
     protected     $fillable      = ['name', 'user_id'];
     protected     $subclassField = 'class';
     protected     $table         = 'components';
+    // @codingStandardsIgnoreEnd
     use SoftDeletingTrait, ValidatingTrait;
 
     /**

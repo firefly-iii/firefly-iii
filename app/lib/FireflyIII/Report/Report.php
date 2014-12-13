@@ -9,6 +9,8 @@ use Illuminate\Support\Collection;
 /**
  * Class Report
  *
+ * @SuppressWarnings("CamelCase")
+ *
  * @package FireflyIII\Report
  */
 class Report implements ReportInterface

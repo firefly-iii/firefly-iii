@@ -6,6 +6,8 @@ use FireflyIII\Database\TransactionJournal as TransactionJournalRepository;
 use FireflyIII\Report\ReportInterface as ReportHelper;
 
 /**
+ * @SuppressWarnings("CamelCase")
+ *
  * Class ReportController
  */
 class ReportController extends BaseController
@@ -163,7 +165,7 @@ class ReportController extends BaseController
     public function unbalanced($year, $month)
     {
         try {
-            $date = new Carbon($year . '-' . $month . '-01');
+            new Carbon($year . '-' . $month . '-01');
         } catch (Exception $e) {
             App::abort(500);
         }

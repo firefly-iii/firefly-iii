@@ -21,6 +21,7 @@ class AccountType implements CUD, CommonDatabaseCalls
      * @param \Eloquent $model
      *
      * @return bool
+     * @throws NotImplementedException
      */
     public function destroy(\Eloquent $model)
     {
@@ -32,6 +33,7 @@ class AccountType implements CUD, CommonDatabaseCalls
      * @param array $data
      *
      * @return \Eloquent
+     * @throws NotImplementedException
      */
     public function store(array $data)
     {
@@ -41,9 +43,10 @@ class AccountType implements CUD, CommonDatabaseCalls
 
     /**
      * @param \Eloquent $model
-     * @param array  $data
+     * @param array     $data
      *
      * @return bool
+     * @throws NotImplementedException
      */
     public function update(\Eloquent $model, array $data)
     {
@@ -58,6 +61,7 @@ class AccountType implements CUD, CommonDatabaseCalls
      * @param array $model
      *
      * @return array
+     * @throws NotImplementedException
      */
     public function validate(array $model)
     {
@@ -71,6 +75,7 @@ class AccountType implements CUD, CommonDatabaseCalls
      * @param int $id
      *
      * @return \Eloquent
+     * @throws NotImplementedException
      */
     public function find($id)
     {
@@ -115,6 +120,7 @@ class AccountType implements CUD, CommonDatabaseCalls
      * Returns all objects.
      *
      * @return Collection
+     * @throws NotImplementedException
      */
     public function get()
     {
@@ -126,6 +132,7 @@ class AccountType implements CUD, CommonDatabaseCalls
      * @param array $ids
      *
      * @return Collection
+     * @throws NotImplementedException
      */
     public function getByIds(array $ids)
     {

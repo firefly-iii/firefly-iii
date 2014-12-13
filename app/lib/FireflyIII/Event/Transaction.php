@@ -5,14 +5,25 @@ namespace FireflyIII\Event;
 
 use Illuminate\Events\Dispatcher;
 
+/**
+ * Class Transaction
+ *
+ * @package FireflyIII\Event
+ */
 class Transaction
 {
+    /**
+     * @param \Transaction $transaction
+     */
     public function destroy(\Transaction $transaction)
     {
         \Cache::forget('account.' . $transaction->account_id . '.latestBalance');
         \Cache::forget('account.' . $transaction->account_id . '.lastActivityDate');
     }
 
+    /**
+     * @param \Transaction $transaction
+     */
     public function store(\Transaction $transaction)
     {
         \Cache::forget('account.' . $transaction->account_id . '.latestBalance');
@@ -30,6 +41,9 @@ class Transaction
         $events->listen('transaction.destroy', 'FireflyIII\Event\Transaction@destroy');
     }
 
+    /**
+     * @param \Transaction $transaction
+     */
     public function update(\Transaction $transaction)
     {
         \Cache::forget('account.' . $transaction->account_id . '.latestBalance');

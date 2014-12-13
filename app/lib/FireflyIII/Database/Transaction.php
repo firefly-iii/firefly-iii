@@ -24,6 +24,7 @@ class Transaction implements CUD, CommonDatabaseCalls
      * @param \Eloquent $model
      *
      * @return bool
+     * @throws NotImplementedException
      */
     public function destroy(\Eloquent $model)
     {
@@ -35,6 +36,7 @@ class Transaction implements CUD, CommonDatabaseCalls
      * @param array $data
      *
      * @return \Eloquent
+     * @throws FireflyException
      */
     public function store(array $data)
     {
@@ -59,9 +61,10 @@ class Transaction implements CUD, CommonDatabaseCalls
 
     /**
      * @param \Eloquent $model
-     * @param array  $data
+     * @param array     $data
      *
      * @return bool
+     * @throws NotImplementedException
      */
     public function update(\Eloquent $model, array $data)
     {
@@ -141,6 +144,7 @@ class Transaction implements CUD, CommonDatabaseCalls
      * @param int $id
      *
      * @return \Eloquent
+     * @throws NotImplementedException
      */
     public function find($id)
     {
@@ -154,6 +158,7 @@ class Transaction implements CUD, CommonDatabaseCalls
      * @param $what
      *
      * @return \AccountType|null
+     * @throws NotImplementedException
      */
     public function findByWhat($what)
     {
@@ -165,6 +170,7 @@ class Transaction implements CUD, CommonDatabaseCalls
      * Returns all objects.
      *
      * @return Collection
+     * @throws NotImplementedException
      */
     public function get()
     {
@@ -176,6 +182,7 @@ class Transaction implements CUD, CommonDatabaseCalls
      * @param array $ids
      *
      * @return Collection
+     * @throws NotImplementedException
      */
     public function getByIds(array $ids)
     {

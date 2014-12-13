@@ -17,8 +17,6 @@ class TestContentSeeder extends Seeder
             $revenueType = AccountType::whereType('Revenue account')->first();
             $ibType      = AccountType::whereType('Initial balance account')->first();
 
-            $euro = TransactionCurrency::whereCode('EUR')->first();
-
             $obType     = TransactionType::whereType('Opening balance')->first();
             $withdrawal = TransactionType::whereType('Withdrawal')->first();
             $transfer   = TransactionType::whereType('Transfer')->first();
@@ -132,11 +130,15 @@ class TestContentSeeder extends Seeder
      * @param                 $description
      * @param                 $date
      *
+     * @param Budget          $budget
+     * @param Category        $category
+     *
      * @return TransactionJournal
      */
     public function createTransaction(
         Account $from, Account $to, $amount, TransactionType $type, $description, $date, Budget $budget = null, Category $category = null
-    ) {
+    )
+    {
         $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
         $euro = TransactionCurrency::whereCode('EUR')->first();
 

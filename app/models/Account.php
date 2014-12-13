@@ -3,6 +3,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Watson\Validating\ValidatingTrait;
 
+/**
+ * Class Account
+ */
 class Account extends Eloquent
 {
     use SoftDeletingTrait, ValidatingTrait;
@@ -12,20 +15,17 @@ class Account extends Eloquent
      * @var array
      */
     public static $rules
-                         = [
+        = [
             'name'            => ['required', 'between:1,100'],
             'user_id'         => 'required|exists:users,id',
             'account_type_id' => 'required|exists:account_types,id',
             'active'          => 'required|boolean'
 
         ];
-    protected     $dates = ['deleted_at', 'created_at', 'updated_at'];
-    /**
-     * Fillable fields.
-     *
-     * @var array
-     */
+    // @codingStandardsIgnoreStart
+    protected $dates    = ['deleted_at', 'created_at', 'updated_at'];
     protected $fillable = ['name', 'user_id', 'account_type_id', 'active'];
+    // @codingStandardsIgnoreEnd
 
     /**
      * Account type.
@@ -96,6 +96,12 @@ class Account extends Eloquent
         return $this->hasMany('Transaction');
     }
 
+    /**
+     * @param $fieldName
+     * @param $fieldValue
+     *
+     * @return AccountMeta
+     */
     public function updateMeta($fieldName, $fieldValue)
     {
         $meta = $this->accountMeta()->get();
@@ -117,6 +123,9 @@ class Account extends Eloquent
         return $meta;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function accountMeta()
     {
         return $this->hasMany('AccountMeta');

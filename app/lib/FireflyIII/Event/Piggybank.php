@@ -6,6 +6,11 @@ namespace FireflyIII\Event;
 use Carbon\Carbon;
 use Illuminate\Events\Dispatcher;
 
+/**
+ * Class Piggybank
+ *
+ * @package FireflyIII\Event
+ */
 class Piggybank
 {
 
@@ -21,13 +26,19 @@ class Piggybank
             $event->amount = floatval($amount);
             $event->date   = new Carbon;
             if (!$event->isValid()) {
-                var_dump($event->getErrors());
-                exit();
+                \Log::error($event->getErrors());
+                \App::abort(500);
             }
             $event->save();
         }
     }
 
+    /**
+     * @param \TransactionJournal $journal
+     *
+     * @throws \FireflyIII\Exception\FireflyException
+     * @throws \FireflyIII\Exception\NotImplementedException
+     */
     public function destroyTransfer(\TransactionJournal $journal)
     {
         if ($journal->piggybankevents()->count() > 0) {
@@ -88,6 +99,9 @@ class Piggybank
         }
     }
 
+    /**
+     * @param \Piggybank $piggybank
+     */
     public function storePiggybank(\Piggybank $piggybank)
     {
         if (intval($piggybank->repeats) == 0) {
@@ -250,6 +264,9 @@ class Piggybank
         }
     }
 
+    /**
+     * @param \Piggybank $piggyBank
+     */
     public function updatePiggybank(\Piggybank $piggyBank)
     {
         // get the repetition:
@@ -259,6 +276,12 @@ class Piggybank
         $repetition->save();
     }
 
+    /**
+     * @param \TransactionJournal $journal
+     *
+     * @throws \FireflyIII\Exception\FireflyException
+     * @throws \FireflyIII\Exception\NotImplementedException
+     */
     public function updateTransfer(\TransactionJournal $journal)
     {
 

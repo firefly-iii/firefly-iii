@@ -58,6 +58,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      * @param array $data
      *
      * @return \Eloquent
+     * @throws FireflyException
      */
     public function store(array $data)
     {
@@ -174,6 +175,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      * @param array     $data
      *
      * @return bool
+     * @throws FireflyException
      */
     public function update(\Eloquent $model, array $data)
     {
@@ -185,9 +187,6 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
 
         /** @var \FireflyIII\Database\TransactionCurrency $currencyRepository */
         $currencyRepository = \App::make('FireflyIII\Database\TransactionCurrency');
-
-        /** @var \FireflyIII\Database\Transaction $transactionRepository */
-        $transactionRepository = \App::make('FireflyIII\Database\Transaction');
 
         $journalType = $typeRepository->findByWhat($data['what']);
         $currency    = $currencyRepository->findByCode($data['currency']);
@@ -284,6 +283,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      * @param array $model
      *
      * @return array
+     * @throws FireflyException
      */
     public function validate(array $model)
     {
@@ -350,7 +350,6 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         /*
          * Many checks to catch invalid or not-existing accounts.
          */
-        $accountError = false;
         switch (true) {
             // this combination is often seen in withdrawals.
             case (isset($model['account_id']) && isset($model['expense_account'])):
@@ -458,6 +457,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      * @param $what
      *
      * @return \AccountType|null
+     * @throws NotImplementedException
      */
     public function findByWhat($what)
     {
@@ -560,6 +560,11 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         return $sum;
     }
 
+    /**
+     * @param int $limit
+     *
+     * @return \Illuminate\Pagination\Paginator
+     */
     public function getDepositsPaginated($limit = 50)
     {
         $offset = intval(\Input::get('page')) > 0 ? (intval(\Input::get('page')) - 1) * $limit : 0;
@@ -599,6 +604,11 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         return $query;
     }
 
+    /**
+     * @param int $limit
+     *
+     * @return \Illuminate\Pagination\Paginator
+     */
     public function getTransfersPaginated($limit = 50)
     {
         $offset = intval(\Input::get('page')) > 0 ? (intval(\Input::get('page')) - 1) * $limit : 0;
@@ -615,6 +625,11 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         return \Paginator::make($items, $count, $limit);
     }
 
+    /**
+     * @param int $limit
+     *
+     * @return \Illuminate\Pagination\Paginator
+     */
     public function getWithdrawalsPaginated($limit = 50)
     {
         $offset = intval(\Input::get('page')) > 0 ? (intval(\Input::get('page')) - 1) * $limit : 0;

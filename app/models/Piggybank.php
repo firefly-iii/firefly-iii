@@ -2,6 +2,9 @@
 use Carbon\Carbon;
 use Watson\Validating\ValidatingTrait;
 
+/**
+ * Class Piggybank
+ */
 class Piggybank extends Eloquent
 {
     use ValidatingTrait;
@@ -155,6 +158,9 @@ class Piggybank extends Eloquent
         return $this->hasMany('PiggybankEvent');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
     public function reminders()
     {
         return $this->morphMany('Reminder', 'remindersable');
@@ -197,6 +203,9 @@ class Piggybank extends Eloquent
         return $result;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function transactions()
     {
         return $this->hasMany('Transaction');

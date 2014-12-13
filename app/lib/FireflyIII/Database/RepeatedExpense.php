@@ -13,6 +13,11 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 
 
+/**
+ * Class RepeatedExpense
+ *
+ * @package FireflyIII\Database
+ */
 class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggybankInterface
 {
     use SwitchUser;
@@ -29,6 +34,8 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggybankInterface
      * Based on the piggy bank, the reminder-setting and
      * other variables this method tries to divide the piggy bank into equal parts. Each is
      * accommodated by a reminder (if everything goes to plan).
+     *
+     * @param \PiggybankRepetition $repetition
      *
      * @return \PiggybankRepetition
      */
@@ -98,7 +105,7 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggybankInterface
         foreach ($bars as $index => $bar) {
             $bar->setAmountPerBar($amountPerBar);
             $bar->setCumulativeAmount($cumulative);
-            if($parts -1 == $index) {
+            if ($parts - 1 == $index) {
                 $bar->setCumulativeAmount($piggyBank->targetamount);
             }
 
@@ -275,6 +282,7 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggybankInterface
      * @param \Eloquent $model
      *
      * @return bool
+     * @throws NotImplementedException
      */
     public function destroy(\Eloquent $model)
     {
@@ -316,9 +324,10 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggybankInterface
 
     /**
      * @param \Eloquent $model
-     * @param array  $data
+     * @param array     $data
      *
      * @return bool
+     * @throws NotImplementedException
      */
     public function update(\Eloquent $model, array $data)
     {
@@ -426,6 +435,7 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggybankInterface
      * @param int $id
      *
      * @return \Eloquent
+     * @throws NotImplementedException
      */
     public function find($id)
     {
@@ -439,6 +449,7 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggybankInterface
      * @param $what
      *
      * @return \AccountType|null
+     * @throws NotImplementedException
      */
     public function findByWhat($what)
     {
@@ -460,6 +471,7 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggybankInterface
      * @param array $ids
      *
      * @return Collection
+     * @throws NotImplementedException
      */
     public function getByIds(array $ids)
     {
@@ -471,6 +483,7 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggybankInterface
      * @param \Account $account
      *
      * @return float
+     * @throws NotImplementedException
      */
     public function leftOnAccount(\Account $account)
     {

@@ -29,9 +29,9 @@ class HelpController extends BaseController
         }
 
         // get the help-content from Github:
-        $URL = 'https://raw.githubusercontent.com/JC5/firefly-iii-help/master/' . e($route) . '.md';
+        $uri = 'https://raw.githubusercontent.com/JC5/firefly-iii-help/master/' . e($route) . '.md';
         try {
-            $content = file_get_contents($URL);
+            $content = file_get_contents($uri);
         } catch (ErrorException $e) {
             $content = '<p>There is no help for this route.</p>';
         }

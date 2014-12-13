@@ -143,6 +143,13 @@ class Date
         return $currentEnd;
     }
 
+    /**
+     * @param Carbon $date
+     * @param        $repeatFrequency
+     *
+     * @return string
+     * @throws FireflyException
+     */
     public function periodShow(Carbon $date, $repeatFrequency)
     {
         switch ($repeatFrequency) {
@@ -216,12 +223,13 @@ class Date
     }
 
     /**
-     * @param Carbon $date
+     * @param Carbon $theDate
      * @param        $repeatFreq
      * @param int    $subtract
      *
      * @return Carbon
      * @throws FireflyException
+     * @internal param Carbon $date
      */
     public function subtractPeriod(Carbon $theDate, $repeatFreq, $subtract = 1)
     {

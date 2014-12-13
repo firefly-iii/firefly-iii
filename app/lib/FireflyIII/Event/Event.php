@@ -4,9 +4,19 @@ namespace FireflyIII\Event;
 use Illuminate\Events\Dispatcher;
 
 
+/**
+ * Class Event
+ *
+ * @package FireflyIII\Event
+ */
 class Event
 {
 
+    /**
+     * @param \Account $account
+     *
+     * @throws \Exception
+     */
     public function deleteAccount(\Account $account)
     {
         // get piggy banks

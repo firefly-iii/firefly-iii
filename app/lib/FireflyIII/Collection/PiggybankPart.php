@@ -5,6 +5,11 @@ namespace FireflyIII\Collection;
 
 use Carbon\Carbon;
 
+/**
+ * Class PiggybankPart
+ *
+ * @package FireflyIII\Collection
+ */
 class PiggybankPart
 {
     /** @var  float */
@@ -92,11 +97,17 @@ class PiggybankPart
         $this->targetdate = $targetdate;
     }
 
+    /**
+     * @return bool
+     */
     public function hasReminder()
     {
         return !is_null($this->reminder);
     }
 
+    /**
+     * @return float|int
+     */
     public function percentage()
     {
         if ($this->getCurrentamount() < $this->getCumulativeAmount()) {

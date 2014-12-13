@@ -6,6 +6,9 @@ use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\UserTrait;
 use Watson\Validating\ValidatingTrait;
 
+/**
+ * Class User
+ */
 class User extends Eloquent implements UserInterface, RemindableInterface
 {
 
@@ -13,24 +16,16 @@ class User extends Eloquent implements UserInterface, RemindableInterface
 
 
     public static $rules
-                            = [
+        = [
             'email'    => 'required|email|unique:users,email',
             'password' => 'required|between:60,60',
             'reset'    => 'between:32,32',
         ];
-    protected     $fillable = ['email'];
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = ['remember_token'];
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
-    protected $table = 'users';
+    // @codingStandardsIgnoreStart
+    protected $fillable = ['email'];
+    protected $hidden   = ['remember_token'];
+    protected $table    = 'users';
+    // @codingStandardsIgnoreEnd
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -64,6 +59,9 @@ class User extends Eloquent implements UserInterface, RemindableInterface
         return $this->hasMany('Component');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
     public function piggybanks()
     {
         return $this->hasManyThrough('Piggybank', 'Account');
@@ -109,6 +107,9 @@ class User extends Eloquent implements UserInterface, RemindableInterface
         return $this->hasMany('TransactionJournal');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
     public function transactions()
     {
         return $this->hasManyThrough('TransactionJournal', 'Transaction');

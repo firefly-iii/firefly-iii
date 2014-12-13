@@ -2,6 +2,9 @@
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Watson\Validating\ValidatingTrait;
 
+/**
+ * Class TransactionGroup
+ */
 class TransactionGroup extends Eloquent
 {
     use SoftDeletingTrait, ValidatingTrait;

@@ -124,6 +124,7 @@ class Category implements CUD, CommonDatabaseCalls
      * @param int $id
      *
      * @return \Eloquent
+     * @throws NotImplementedException
      */
     public function find($id)
     {
@@ -137,6 +138,7 @@ class Category implements CUD, CommonDatabaseCalls
      * @param $what
      *
      * @return \AccountType|null
+     * @throws NotImplementedException
      */
     public function findByWhat($what)
     {
@@ -158,6 +160,7 @@ class Category implements CUD, CommonDatabaseCalls
      * @param array $ids
      *
      * @return Collection
+     * @throws NotImplementedException
      */
     public function getByIds(array $ids)
     {
@@ -165,11 +168,22 @@ class Category implements CUD, CommonDatabaseCalls
         throw new NotImplementedException;
     }
 
+    /**
+     * @param $name
+     *
+     * @return static
+     */
     public function firstOrCreate($name)
     {
         return \Category::firstOrCreate(['user_id' => $this->getUser()->id, 'name' => $name]);
     }
 
+    /**
+     * @param \Category $category
+     * @param int       $limit
+     *
+     * @return \Illuminate\Pagination\Paginator
+     */
     public function getTransactionJournals(\Category $category, $limit = 50)
     {
         $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
@@ -185,10 +199,11 @@ class Category implements CUD, CommonDatabaseCalls
     }
 
     /**
-     * @param \Category $budget
+     * @param \Category $category
      * @param Carbon    $date
      *
      * @return null
+     * @internal param \Category $budget
      */
     public function repetitionOnStartingOnDate(\Category $category, Carbon $date)
     {

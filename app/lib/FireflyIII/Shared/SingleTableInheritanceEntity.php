@@ -13,13 +13,10 @@ abstract class SingleTableInheritanceEntity extends \Eloquent
      *
      * @var bool
      */
-    protected $isSubclass = false;
-    /**
-     * The field that stores the subclass
-     *
-     * @var string
-     */
+    // @codingStandardsIgnoreStart
+    protected $isSubclass    = false;
     protected $subclassField = null;
+    // @codingStandardsIgnoreEnd
 
     /**
      * @param array $attributes
@@ -77,9 +74,8 @@ abstract class SingleTableInheritanceEntity extends \Eloquent
      *
      * @return bool
      */
-    public function save(
-        array $rules = [], array $customMessages = [], array $options = [], \Closure $beforeSave = null, \Closure $afterSave = null
-    ) {
+    public function save(array $rules = [], array $customMessages = [], array $options = [], \Closure $beforeSave = null, \Closure $afterSave = null)
+    {
         if ($this->subclassField) {
             $this->attributes[$this->subclassField] = get_class($this);
         }

@@ -5,35 +5,40 @@ namespace FireflyIII\Event;
 use Illuminate\Database\QueryException;
 use Illuminate\Events\Dispatcher;
 
+/**
+ * Class Budget
+ *
+ * @package FireflyIII\Event
+ */
 class Budget
 {
 
     /**
-     * @param \Limit $limit
+     * @param \BudgetLimit $budgetLimit
      */
-    public function storeOrUpdateLimit(\Limit $limit)
+    public function storeOrUpdateLimit(\BudgetLimit $budgetLimit)
     {
 
 
-        $end = \DateKit::addPeriod(clone $limit->startdate, $limit->repeat_freq, 0);
+        $end = \DateKit::addPeriod(clone $budgetLimit->startdate, $budgetLimit->repeat_freq, 0);
         $end->subDay();
 
-        $set = $limit->limitrepetitions()->where('startdate', $limit->startdate->format('Y-m-d'))->where('enddate', $end->format('Y-m-d'))->get();
+        $set = $budgetLimit->limitrepetitions()->where('startdate', $budgetLimit->startdate->format('Y-m-d'))->where('enddate', $end->format('Y-m-d'))->get();
         /*
          * Create new LimitRepetition:
          */
         if ($set->count() == 0) {
 
             $repetition            = new \LimitRepetition();
-            $repetition->startdate = $limit->startdate;
+            $repetition->startdate = $budgetLimit->startdate;
             $repetition->enddate   = $end;
-            $repetition->amount    = $limit->amount;
-            $repetition->limit()->associate($limit);
+            $repetition->amount    = $budgetLimit->amount;
+            $repetition->budgetLimit()->associate($budgetLimit);
 
             try {
                 $repetition->save();
             } catch (QueryException $e) {
-                \Log::error('Trying to save new Limitrepetition failed!');
+                \Log::error('Trying to save new LimitRepetition failed!');
                 \Log::error($e->getMessage());
             }
         } else {
@@ -42,7 +47,7 @@ class Budget
                  * Update existing one.
                  */
                 $repetition         = $set->first();
-                $repetition->amount = $limit->amount;
+                $repetition->amount = $budgetLimit->amount;
                 $repetition->save();
 
             }

@@ -5,6 +5,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Watson\Validating\ValidatingTrait;
 
+/**
+ * Class TransactionJournal
+ */
 class TransactionJournal extends Eloquent
 {
     use SoftDeletingTrait, ValidatingTrait;
@@ -46,6 +49,8 @@ class TransactionJournal extends Eloquent
 
     /**
      * TODO remove this method in favour of something in the FireflyIII libraries.
+     *
+     * @param Account $account
      *
      * @return float
      */
@@ -123,11 +128,18 @@ class TransactionJournal extends Eloquent
         return $query->where('date', '<=', $date->format('Y-m-d'));
     }
 
+    /**
+     * @param Builder $query
+     */
     public function scopeDefaultSorting(Builder $query)
     {
         $query->orderBy('date', 'DESC')->orderBy('transaction_journals.id', 'DESC');
     }
 
+    /**
+     * @param Builder $query
+     * @param         $amount
+     */
     public function scopeLessThan(Builder $query, $amount)
     {
         if (is_null($this->joinedTransactions)) {
@@ -140,6 +152,10 @@ class TransactionJournal extends Eloquent
         $query->where('transactions.amount', '<=', $amount);
     }
 
+    /**
+     * @param Builder $query
+     * @param         $amount
+     */
     public function scopeMoreThan(Builder $query, $amount)
     {
         if (is_null($this->joinedTransactions)) {
@@ -163,6 +179,10 @@ class TransactionJournal extends Eloquent
         return $query->where('date', '=', $date->format('Y-m-d'));
     }
 
+    /**
+     * @param Builder $query
+     * @param array   $types
+     */
     public function scopeTransactionTypes(Builder $query, array $types)
     {
         if (is_null($this->joinedTransactionTypes)) {
@@ -207,6 +227,9 @@ class TransactionJournal extends Eloquent
         return $this->belongsTo('TransactionType');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function transactiongroups()
     {
         return $this->belongsToMany('TransactionGroup');
