@@ -99,8 +99,8 @@ Route::bind(
     'limitrepetition', function ($value, $route) {
         if (Auth::check()) {
             return LimitRepetition::
-            where('limit_repetitions.id', $value)->leftjoin('budgetlimits', 'budgetlimits.id', '=', 'limit_repetitions.limit_id')->leftJoin(
-                'components', 'components.id', '=', 'budgetlimits.component_id'
+            where('limit_repetitions.id', $value)->leftjoin('budget_limits', 'budget_limits.id', '=', 'limit_repetitions.budget_limit_id')->leftJoin(
+                'components', 'components.id', '=', 'budget_limits.component_id'
             )->where('components.class', 'Budget')->where('components.user_id', Auth::user()->id)->first(['limit_repetitions.*']);
         }
 

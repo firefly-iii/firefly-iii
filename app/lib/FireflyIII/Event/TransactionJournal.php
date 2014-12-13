@@ -18,8 +18,8 @@ class TransactionJournal
      */
     public function store(\TransactionJournal $journal)
     {
-        /** @var \FireflyIII\Database\Recurring $repository */
-        $repository = \App::make('FireflyIII\Database\Recurring');
+        /** @var \FireflyIII\Database\RecurringTransaction\RecurringTransaction $repository */
+        $repository = \App::make('FireflyIII\Database\RecurringTransaction\RecurringTransaction');
         $set        = $repository->get();
 
 
@@ -44,8 +44,8 @@ class TransactionJournal
      */
     public function update(\TransactionJournal $journal)
     {
-        /** @var \FireflyIII\Database\Recurring $repository */
-        $repository = \App::make('FireflyIII\Database\Recurring');
+        /** @var \FireflyIII\Database\RecurringTransaction\RecurringTransaction $repository */
+        $repository = \App::make('FireflyIII\Database\RecurringTransaction\RecurringTransaction');
         $set        = $repository->get();
         $journal->recurring_transaction_id = null;
         $journal->save();

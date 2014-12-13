@@ -75,8 +75,8 @@ class GoogleChartController extends BaseController
         $preferences = App::make('FireflyIII\Shared\Preferences\Preferences');
         $pref        = $preferences->get('frontpageAccounts', []);
 
-        /** @var \FireflyIII\Database\Account $acct */
-        $acct = App::make('FireflyIII\Database\Account');
+        /** @var \FireflyIII\Database\Account\Account $acct */
+        $acct = App::make('FireflyIII\Database\Account\Account');
         if (count($pref->data) > 0) {
             $accounts = $acct->getByIds($pref->data);
         } else {
@@ -124,8 +124,8 @@ class GoogleChartController extends BaseController
         $this->_chart->addColumn('Budgeted', 'number');
         $this->_chart->addColumn('Spent', 'number');
 
-        /** @var \FireflyIII\Database\Budget $bdt */
-        $bdt     = App::make('FireflyIII\Database\Budget');
+        /** @var \FireflyIII\Database\Budget\Budget $bdt */
+        $bdt     = App::make('FireflyIII\Database\Budget\Budget');
         $budgets = $bdt->get();
 
         /*
@@ -194,8 +194,8 @@ class GoogleChartController extends BaseController
         $chart->addColumn('Category', 'string');
         $chart->addColumn('Spent', 'number');
 
-        /** @var \FireflyIII\Database\TransactionJournal $tj */
-        $tj = App::make('FireflyIII\Database\TransactionJournal');
+        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $tj */
+        $tj = App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
 
         /*
          * Get the journals:
@@ -279,8 +279,8 @@ class GoogleChartController extends BaseController
         /** @var \Grumpydictator\Gchart\GChart $chart */
         $chart = App::make('gchart');
 
-        /** @var \FireflyIII\Database\Budget $bdt */
-        $bdt     = App::make('FireflyIII\Database\Budget');
+        /** @var \FireflyIII\Database\Budget\Budget $bdt */
+        $bdt     = App::make('FireflyIII\Database\Budget\Budget');
         $budgets = $bdt->get();
 
         $chart->addColumn('Month', 'date');
@@ -335,11 +335,11 @@ class GoogleChartController extends BaseController
         }
 
         if ($component->class == 'Budget') {
-            /** @var \FireflyIII\Database\Budget $repos */
-            $repos = App::make('FireflyIII\Database\Budget');
+            /** @var \FireflyIII\Database\Budget\Budget $repos */
+            $repos = App::make('FireflyIII\Database\Budget\Budget');
         } else {
-            /** @var \FireflyIII\Database\Category $repos */
-            $repos = App::make('FireflyIII\Database\Category');
+            /** @var \FireflyIII\Database\Category\Category $repos */
+            $repos = App::make('FireflyIII\Database\Category\Category');
         }
 
         /** @var \Grumpydictator\Gchart\GChart $chart */
@@ -457,8 +457,8 @@ class GoogleChartController extends BaseController
         $chart->addColumn('Name', 'string');
         $chart->addColumn('Amount', 'number');
 
-        /** @var \FireflyIII\Database\Recurring $rcr */
-        $rcr = App::make('FireflyIII\Database\Recurring');
+        /** @var \FireflyIII\Database\RecurringTransaction\RecurringTransaction $rcr */
+        $rcr = App::make('FireflyIII\Database\RecurringTransaction\RecurringTransaction');
 
         $recurring = $rcr->get();
 
@@ -537,8 +537,8 @@ class GoogleChartController extends BaseController
         $chart->addColumn('Income', 'number');
         $chart->addColumn('Expenses', 'number');
 
-        /** @var \FireflyIII\Database\TransactionJournal $tj */
-        $tj = App::make('FireflyIII\Database\TransactionJournal');
+        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $tj */
+        $tj = App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
 
         $end = clone $start;
         $end->endOfYear();
@@ -577,8 +577,8 @@ class GoogleChartController extends BaseController
         $chart->addColumn('Income', 'number');
         $chart->addColumn('Expenses', 'number');
 
-        /** @var \FireflyIII\Database\TransactionJournal $tj */
-        $tj = App::make('FireflyIII\Database\TransactionJournal');
+        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $tj */
+        $tj = App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
 
         $end = clone $start;
         $end->endOfYear();

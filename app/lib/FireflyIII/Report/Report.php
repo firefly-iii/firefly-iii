@@ -4,6 +4,7 @@ namespace FireflyIII\Report;
 
 use Carbon\Carbon;
 use FireflyIII\Database\Account\Account as AccountRepository;
+use FireflyIII\Database\SwitchUser;
 use Illuminate\Support\Collection;
 
 // todo add methods to itnerface
@@ -17,6 +18,9 @@ use Illuminate\Support\Collection;
  */
 class Report implements ReportInterface
 {
+
+    use SwitchUser;
+
     /** @var AccountRepository */
     protected $_accounts;
 
@@ -198,7 +202,6 @@ class Report implements ReportInterface
         return $report;
     }
 
-    use SwitchUser;
 
 
     /**

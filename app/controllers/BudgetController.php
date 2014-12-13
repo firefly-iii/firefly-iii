@@ -1,7 +1,7 @@
 <?php
 
 use Carbon\Carbon;
-use FireflyIII\Database\Budget as BudgetRepository;
+use FireflyIII\Database\Budget\Budget as BudgetRepository;
 use FireflyIII\Shared\Preferences\PreferencesInterface as Pref;
 
 /**
@@ -148,13 +148,13 @@ class BudgetController extends BaseController
      */
     public function show(Budget $budget, LimitRepetition $repetition = null)
     {
-        if (!is_null($repetition) && $repetition->budgetlimit->budget->id != $budget->id) {
+        if (!is_null($repetition) && $repetition->budgetLimit->budget->id != $budget->id) {
             App::abort(500);
         }
 
         $hideBudget = true; // used in transaction list.
         $journals   = $this->_repository->getJournals($budget, $repetition);
-        $limits     = $repetition ? [$repetition->limit] : $budget->budgetlimits()->orderBy('startdate', 'DESC')->get();
+        $limits     = $repetition ? [$repetition->budgetLimit] : $budget->budgetLimits()->orderBy('startdate', 'DESC')->get();
         $subTitle   = $repetition ? e($budget->name) . ' in ' . $repetition->startdate->format('F Y') : e($budget->name);
 
         return View::make('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle', 'hideBudget'));

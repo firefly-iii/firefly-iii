@@ -27,8 +27,8 @@ class PiggybankController extends BaseController
      */
     public function add(Piggybank $piggybank)
     {
-        /** @var \FireflyIII\Database\Piggybank $repos */
-        $repos = App::make('FireflyIII\Database\Piggybank');
+        /** @var \FireflyIII\Database\PiggyBank\PiggyBank $repos */
+        $repos = App::make('FireflyIII\Database\PiggyBank\PiggyBank');
 
         $leftOnAccount = $repos->leftOnAccount($piggybank->account);
         $savedSoFar    = $piggybank->currentRelevantRep()->currentamount;
@@ -45,8 +45,8 @@ class PiggybankController extends BaseController
     public function create()
     {
 
-        /** @var \FireflyIII\Database\Account $acct */
-        $acct = App::make('FireflyIII\Database\Account');
+        /** @var \FireflyIII\Database\Account\Account $acct */
+        $acct = App::make('FireflyIII\Database\Account\Account');
 
         $periods = Config::get('firefly.piggybank_periods');
 
@@ -77,8 +77,8 @@ class PiggybankController extends BaseController
      */
     public function destroy(Piggybank $piggyBank)
     {
-        /** @var \FireflyIII\Database\Piggybank $acct */
-        $repos = App::make('FireflyIII\Database\Piggybank');
+        /** @var \FireflyIII\Database\PiggyBank\PiggyBank $acct */
+        $repos = App::make('FireflyIII\Database\PiggyBank\PiggyBank');
         $repos->destroy($piggyBank);
         Session::flash('success', 'Piggy bank deleted.');
 
@@ -93,8 +93,8 @@ class PiggybankController extends BaseController
     public function edit(Piggybank $piggybank)
     {
 
-        /** @var \FireflyIII\Database\Account $acct */
-        $acct = App::make('FireflyIII\Database\Account');
+        /** @var \FireflyIII\Database\Account\Account $acct */
+        $acct = App::make('FireflyIII\Database\Account\Account');
 
         $periods = Config::get('firefly.piggybank_periods');
 
@@ -122,8 +122,8 @@ class PiggybankController extends BaseController
      */
     public function index()
     {
-        /** @var \FireflyIII\Database\Piggybank $repos */
-        $repos = App::make('FireflyIII\Database\Piggybank');
+        /** @var \FireflyIII\Database\PiggyBank\PiggyBank $repos */
+        $repos = App::make('FireflyIII\Database\PiggyBank\PiggyBank');
 
         /** @var Collection $piggybanks */
         $piggybanks = $repos->get();
@@ -164,8 +164,8 @@ class PiggybankController extends BaseController
     {
         $amount = round(floatval(Input::get('amount')), 2);
 
-        /** @var \FireflyIII\Database\Piggybank $acct */
-        $repos = App::make('FireflyIII\Database\Piggybank');
+        /** @var \FireflyIII\Database\PiggyBank\PiggyBank $acct */
+        $repos = App::make('FireflyIII\Database\PiggyBank\PiggyBank');
 
         $leftOnAccount = $repos->leftOnAccount($piggybank->account);
         $savedSoFar    = $piggybank->currentRelevantRep()->currentamount;
@@ -261,8 +261,8 @@ class PiggybankController extends BaseController
     {
         $data            = Input::all();
         $data['repeats'] = 0;
-        /** @var \FireflyIII\Database\Piggybank $repos */
-        $repos = App::make('FireflyIII\Database\Piggybank');
+        /** @var \FireflyIII\Database\PiggyBank\PiggyBank $repos */
+        $repos = App::make('FireflyIII\Database\PiggyBank\PiggyBank');
 
         switch ($data['post_submit_action']) {
             default:
@@ -315,8 +315,8 @@ class PiggybankController extends BaseController
     public function update(Piggybank $piggyBank)
     {
 
-        /** @var \FireflyIII\Database\Piggybank $repos */
-        $repos = App::make('FireflyIII\Database\Piggybank');
+        /** @var \FireflyIII\Database\PiggyBank\PiggyBank $repos */
+        $repos = App::make('FireflyIII\Database\PiggyBank\PiggyBank');
         $data  = Input::except('_token');
 
         switch (Input::get('post_submit_action')) {

@@ -1,5 +1,5 @@
 <?php
-use FireflyIII\Database\Category as CategoryRepository;
+use FireflyIII\Database\Category\Category as CategoryRepository;
 use FireflyIII\Exception\FireflyException;
 
 /**

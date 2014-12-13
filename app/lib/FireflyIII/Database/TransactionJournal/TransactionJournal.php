@@ -62,17 +62,17 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      */
     public function store(array $data)
     {
-        /** @var \FireflyIII\Database\TransactionType $typeRepository */
-        $typeRepository = \App::make('FireflyIII\Database\TransactionType');
+        /** @var \FireflyIII\Database\TransactionType\TransactionType $typeRepository */
+        $typeRepository = \App::make('FireflyIII\Database\TransactionType\TransactionType');
 
-        /** @var \FireflyIII\Database\Account $accountRepository */
-        $accountRepository = \App::make('FireflyIII\Database\Account');
+        /** @var \FireflyIII\Database\Account\Account $accountRepository */
+        $accountRepository = \App::make('FireflyIII\Database\Account\Account');
 
-        /** @var \FireflyIII\Database\TransactionCurrency $currencyRepository */
-        $currencyRepository = \App::make('FireflyIII\Database\TransactionCurrency');
+        /** @var \FireflyIII\Database\TransactionCurrency\TransactionCurrency $currencyRepository */
+        $currencyRepository = \App::make('FireflyIII\Database\TransactionCurrency\TransactionCurrency');
 
-        /** @var \FireflyIII\Database\Transaction $transactionRepository */
-        $transactionRepository = \App::make('FireflyIII\Database\Transaction');
+        /** @var \FireflyIII\Database\Transaction\Transaction $transactionRepository */
+        $transactionRepository = \App::make('FireflyIII\Database\Transaction\Transaction');
 
         $journalType = $typeRepository->findByWhat($data['what']);
         $currency    = $currencyRepository->findByCode($data['currency']);
@@ -143,16 +143,16 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
          * Store the budget.
          */
         if (isset($data['budget_id']) && intval($data['budget_id']) > 0) {
-            /** @var \FireflyIII\Database\Budget $budgetRepository */
-            $budgetRepository = \App::make('FireflyIII\Database\Budget');
+            /** @var \FireflyIII\Database\Budget\Budget $budgetRepository */
+            $budgetRepository = \App::make('FireflyIII\Database\Budget\Budget');
             $budget           = $budgetRepository->find(intval($data['budget_id']));
             if ($budget) {
                 $journal->budgets()->save($budget);
             }
         }
         if (isset($data['category']) && strlen($data['category']) > 0) {
-            /** @var \FireflyIII\Database\Category $categoryRepository */
-            $categoryRepository = \App::make('FireflyIII\Database\Category');
+            /** @var \FireflyIII\Database\Category\Category $categoryRepository */
+            $categoryRepository = \App::make('FireflyIII\Database\Category\Category');
             $category           = $categoryRepository->firstOrCreate($data['category']);
             if ($category) {
                 $journal->categories()->save($category);
@@ -179,14 +179,14 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      */
     public function update(\Eloquent $model, array $data)
     {
-        /** @var \FireflyIII\Database\TransactionType $typeRepository */
-        $typeRepository = \App::make('FireflyIII\Database\TransactionType');
+        /** @var \FireflyIII\Database\TransactionType\TransactionType $typeRepository */
+        $typeRepository = \App::make('FireflyIII\Database\TransactionType\TransactionType');
 
-        /** @var \FireflyIII\Database\Account $accountRepository */
-        $accountRepository = \App::make('FireflyIII\Database\Account');
+        /** @var \FireflyIII\Database\Account\Account $accountRepository */
+        $accountRepository = \App::make('FireflyIII\Database\Account\Account');
 
-        /** @var \FireflyIII\Database\TransactionCurrency $currencyRepository */
-        $currencyRepository = \App::make('FireflyIII\Database\TransactionCurrency');
+        /** @var \FireflyIII\Database\TransactionCurrency\TransactionCurrency $currencyRepository */
+        $currencyRepository = \App::make('FireflyIII\Database\TransactionCurrency\TransactionCurrency');
 
         $journalType = $typeRepository->findByWhat($data['what']);
         $currency    = $currencyRepository->findByCode($data['currency']);
@@ -236,16 +236,16 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
          */
         $components = [];
         if (isset($data['budget_id']) && intval($data['budget_id']) > 0) {
-            /** @var \FireflyIII\Database\Budget $budgetRepository */
-            $budgetRepository = \App::make('FireflyIII\Database\Budget');
+            /** @var \FireflyIII\Database\Budget\Budget $budgetRepository */
+            $budgetRepository = \App::make('FireflyIII\Database\Budget\Budget');
             $budget           = $budgetRepository->find(intval($data['budget_id']));
             if ($budget) {
                 $components[] = $budget->id;
             }
         }
         if (strlen($data['category']) > 0) {
-            /** @var \FireflyIII\Database\Category $categoryRepository */
-            $categoryRepository = \App::make('FireflyIII\Database\Category');
+            /** @var \FireflyIII\Database\Category\Category $categoryRepository */
+            $categoryRepository = \App::make('FireflyIII\Database\Category\Category');
             $category           = $categoryRepository->firstOrCreate($data['category']);
             if ($category) {
                 $components[] = $category->id;

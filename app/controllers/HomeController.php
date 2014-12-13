@@ -23,11 +23,11 @@ class HomeController extends BaseController
     public function index()
     {
         // count, maybe Firefly needs some introducing text to show:
-        /** @var \FireflyIII\Database\Account $acct */
-        $acct = App::make('FireflyIII\Database\Account');
+        /** @var \FireflyIII\Database\Account\Account $acct */
+        $acct = App::make('FireflyIII\Database\Account\Account');
 
-        /** @var \FireflyIII\Database\TransactionJournal $jrnls */
-        $jrnls = App::make('FireflyIII\Database\TransactionJournal');
+        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $jrnls */
+        $jrnls = App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
 
         /** @var \FireflyIII\Shared\Preferences\PreferencesInterface $preferences */
         $preferences = App::make('FireflyIII\Shared\Preferences\PreferencesInterface');
