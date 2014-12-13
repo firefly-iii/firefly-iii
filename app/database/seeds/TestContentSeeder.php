@@ -2,6 +2,9 @@
 
 use Carbon\Carbon;
 
+/**
+ * Class TestContentSeeder
+ */
 class TestContentSeeder extends Seeder
 {
 
@@ -27,6 +30,7 @@ class TestContentSeeder extends Seeder
                 // create two asset accounts.
                 $checking = Account::create(['user_id' => $user->id, 'account_type_id' => $assetType->id, 'name' => 'Checking account', 'active' => 1]);
                 $savings  = Account::create(['user_id' => $user->id, 'account_type_id' => $assetType->id, 'name' => 'Savings account', 'active' => 1]);
+                $deleteMe = Account::create(['user_id' => $user->id, 'account_type_id' => $assetType->id, 'name' => 'Delete me', 'active' => 1]);
 
                 // create two budgets:
                 $groceriesBudget = Budget::create(['user_id' => $user->id, 'name' => 'Groceries']);

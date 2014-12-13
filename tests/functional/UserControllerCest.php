@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Class UserControllerCest
+ *
+ * @SuppressWarnings("CamelCase")
+ * @SuppressWarnings("short")
+ */
 class UserControllerCest
 {
     /**
@@ -24,8 +30,21 @@ class UserControllerCest
         $I->wantTo('login');
         $I->amOnPage('/login');
         $I->see('Sign In');
-        $I->submitForm('#login', ['email' => 'functional@example.com','password' => 'functional']);
+        $I->submitForm('#login', ['email' => 'functional@example.com', 'password' => 'functional']);
         $I->see('functional@example.com');
+
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function loginFails(FunctionalTester $I)
+    {
+        $I->wantTo('fail the login');
+        $I->amOnPage('/login');
+        $I->see('Sign In');
+        $I->submitForm('#login', ['email' => 'functional@example.com', 'password' => 'wrong']);
+        $I->see('No good');
 
     }
 
@@ -57,7 +76,7 @@ class UserControllerCest
         $I->wantTo('post-register a new account');
         $I->amOnPage('/register');
         $token = $I->grabValueFrom('input[name=_token]');
-        $I->submitForm('#register', ['email' => 'noreply@gmail.com','_token' => $token]);
+        $I->submitForm('#register', ['email' => 'noreply@gmail.com', '_token' => $token]);
         $I->see('Password sent!');
         $I->seeRecord('users', ['email' => 'noreply@gmail.com']);
         // @codingStandardsIgnoreEnd
