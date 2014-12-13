@@ -1,4 +1,5 @@
 <?php
+use Carbon\Carbon;
 
 /**
  * Class HomeController
@@ -33,8 +34,8 @@ class HomeController extends BaseController
 
         $count = $acct->countAssetAccounts();
 
-        $start = Session::get('start');
-        $end   = Session::get('end');
+        $start = Session::get('start', Carbon::now()->startOfMonth());
+        $end   = Session::get('end', Carbon::now()->endOfMonth());
 
 
         // get the preference for the home accounts to show:

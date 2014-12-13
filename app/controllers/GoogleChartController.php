@@ -31,7 +31,7 @@ class GoogleChartController extends BaseController
         $this->_chart->addColumn('Day of month', 'date');
         $this->_chart->addColumn('Balance for ' . $account->name, 'number');
 
-        $start = Session::get('start');
+        $start = Session::get('start',Carbon::now()->startOfMonth());
         $end   = Session::get('end');
         $count = $account->transactions()->count();
 
@@ -79,14 +79,14 @@ class GoogleChartController extends BaseController
         switch ($view) {
             default:
             case 'session':
-                $start = Session::get('start');
+                $start = Session::get('start',Carbon::now()->startOfMonth());
                 $end   = Session::get('end');
                 break;
             case 'all':
                 $first = $account->transactionjournals()->orderBy('date', 'DESC')->first();
                 $last  = $account->transactionjournals()->orderBy('date', 'ASC')->first();
                 if (is_null($first)) {
-                    $start = Session::get('start');
+                    $start = Session::get('start',Carbon::now()->startOfMonth());
                 } else {
                     $start = clone $first->date;
                 }
@@ -161,7 +161,7 @@ class GoogleChartController extends BaseController
             ['transactionjournal', 'transactionjournal.transactions', 'transactionjournal.budgets', 'transactionjournal.transactiontype',
              'transactionjournal.categories']
         )->before(Session::get('end'))->after(
-            Session::get('start')
+            Session::get('start',Carbon::now()->startOfMonth())
         )->get();
 
         /** @var Transaction $transaction */
@@ -235,7 +235,7 @@ class GoogleChartController extends BaseController
         /*
          * Loop the date, then loop the accounts, then add balance.
          */
-        $start   = Session::get('start');
+        $start   = Session::get('start',Carbon::now()->startOfMonth());
         $end     = Session::get('end');
         $current = clone $start;
 
@@ -281,14 +281,14 @@ class GoogleChartController extends BaseController
              * Is there a repetition starting on this particular date? We can use that.
              */
             /** @var \LimitRepetition $repetition */
-            $repetition = $bdt->repetitionOnStartingOnDate($budget, Session::get('start'));
+            $repetition = $bdt->repetitionOnStartingOnDate($budget, Session::get('start',Carbon::now()->startOfMonth()));
 
             /*
              * If there is, use it. Otherwise, forget it.
              */
             if (is_null($repetition)) {
                 // use the session start and end for our search query
-                $searchStart = Session::get('start');
+                $searchStart = Session::get('start',Carbon::now()->startOfMonth());
                 $searchEnd   = Session::get('end');
                 // the limit is zero:
                 $limit = 0;
@@ -315,7 +315,7 @@ class GoogleChartController extends BaseController
          * Finally, get all transactions WITHOUT a budget and add those as well.
          * (yes this method is oddly specific).
          */
-        $noBudgetSet = $bdt->transactionsWithoutBudgetInDateRange(Session::get('start'), Session::get('end'));
+        $noBudgetSet = $bdt->transactionsWithoutBudgetInDateRange(Session::get('start',Carbon::now()->startOfMonth()), Session::get('end'));
         $sum         = $noBudgetSet->sum('amount') * -1;
         $chart->addRow('No budget', 0, $sum);
 
@@ -343,7 +343,7 @@ class GoogleChartController extends BaseController
         /*
          * Get the journals:
          */
-        $journals = $tj->getInDateRange(Session::get('start'), Session::get('end'));
+        $journals = $tj->getInDateRange(Session::get('start',Carbon::now()->startOfMonth()), Session::get('end'));
 
         /** @var \TransactionJournal $journal */
         foreach ($journals as $journal) {
@@ -627,7 +627,7 @@ class GoogleChartController extends BaseController
                 /*
                  * In the current session range?
                  */
-                if (\Session::get('end') >= $current and $currentEnd >= \Session::get('start')) {
+                if (\Session::get('end') >= $current and $currentEnd >= \Session::get('start',Carbon::now()->startOfMonth())) {
                     /*
                      * Lets see if we've already spent money on this recurring transaction (it hath recurred).
                      */

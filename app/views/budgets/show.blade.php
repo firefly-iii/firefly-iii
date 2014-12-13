@@ -76,7 +76,7 @@
         var repetitionID = {{$repetition->id}};
         var year = {{$repetition->startdate->format('Y')}};
     @else
-        var year = {{Session::get('start')->format('Y')}};
+        var year = {{Session::get('start',\Carbon\Carbon::now()->startOfMonth())->format('Y')}};
     @endif
 
 </script>

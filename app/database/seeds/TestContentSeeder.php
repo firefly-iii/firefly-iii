@@ -37,7 +37,7 @@ class TestContentSeeder extends Seeder
                 $billsBudget     = Budget::create(['user_id' => $user->id, 'name' => 'Bills']);
 
                 // create two categories:
-                $dailyGroceries = Category::create(['user_id' => $user->id, 'name' => 'Daily groceries']);
+                $dailyGroceries = Category::create(['user_id' => $user->id, 'name' => 'DailyGroceries']);
                 $lunch          = Category::create(['user_id' => $user->id, 'name' => 'Lunch']);
                 $house          = Category::create(['user_id' => $user->id, 'name' => 'House']);
 
