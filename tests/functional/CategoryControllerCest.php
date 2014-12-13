@@ -1,13 +1,12 @@
 <?php
-use Carbon\Carbon;
 
 /**
  * @SuppressWarnings("CamelCase")
  * @SuppressWarnings("short")
  *
- * Class AccountControllerCest
+ * Class CategoryControllerCest
  */
-class AccountControllerCest
+class CategoryControllerCest
 {
     /**
      * @param FunctionalTester $I
@@ -22,7 +21,6 @@ class AccountControllerCest
     public function _before(FunctionalTester $I)
     {
         $I->amLoggedAs(['email' => 'thegrumpydictator@gmail.com', 'password' => 'james']);
-
     }
 
     /**
@@ -30,10 +28,8 @@ class AccountControllerCest
      */
     public function create(FunctionalTester $I)
     {
-        // @codingStandardsIgnoreStart
-        $I->wantTo('create a new asset account');
-        $I->amOnPage('/accounts/create/asset');
-        $I->see('Create a new asset account');
+        $I->wantTo('create a new category');
+        $I->amOnPage('/categories/create');
     }
 
     /**
@@ -41,9 +37,8 @@ class AccountControllerCest
      */
     public function delete(FunctionalTester $I)
     {
-        $I->wantTo('delete an asset account');
-        $I->amOnPage('/accounts/delete/3');
-        $I->see('Delete account "Delete me"');
+        $I->wantTo('delete a category');
+        $I->amOnPage('/categories/delete/1');
     }
 
     /**
@@ -51,7 +46,8 @@ class AccountControllerCest
      */
     public function destroy(FunctionalTester $I)
     {
-        $I->wantTo('destroy an asset account');
+        $I->wantTo('destroy a category');
+
     }
 
     /**
@@ -59,9 +55,8 @@ class AccountControllerCest
      */
     public function edit(FunctionalTester $I)
     {
-        $I->wantTo('delete an asset account');
-        $I->amOnPage('/accounts/edit/3');
-        $I->see('Edit asset account "Delete me"');
+        $I->wantTo('edit a category');
+        $I->amOnPage('/categories/edit/1');
     }
 
     /**
@@ -69,10 +64,8 @@ class AccountControllerCest
      */
     public function index(FunctionalTester $I)
     {
-        $I->wantTo('see a list of accounts');
-        $I->amOnPage('/accounts/asset');
-        $I->see('Checking account');
-        $I->see('Delete me');
+        $I->wantTo('show all categories');
+        $I->amOnPage('/categories');
     }
 
     /**
@@ -80,10 +73,8 @@ class AccountControllerCest
      */
     public function show(FunctionalTester $I)
     {
-        $I->wantTo('see one account');
-        $I->amOnPage('/accounts/show/3');
-        $I->see('Details for');
-        $I->see('Delete me');
+        $I->wantTo('show a category');
+        $I->amOnPage('/categories/delete/1');
     }
 
     /**
@@ -91,7 +82,7 @@ class AccountControllerCest
      */
     public function store(FunctionalTester $I)
     {
-        $I->wantTo('store a new asset account');
+        $I->wantTo('store a category');
     }
 
     /**
@@ -99,7 +90,7 @@ class AccountControllerCest
      */
     public function update(FunctionalTester $I)
     {
-        $I->wantTo('update an asset account');
+        $I->wantTo('update a category');
     }
 
 }

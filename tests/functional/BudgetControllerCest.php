@@ -1,13 +1,12 @@
 <?php
-use Carbon\Carbon;
 
 /**
  * @SuppressWarnings("CamelCase")
  * @SuppressWarnings("short")
  *
- * Class AccountControllerCest
+ * Class BudgetControllerCest
  */
-class AccountControllerCest
+class BudgetControllerCest
 {
     /**
      * @param FunctionalTester $I
@@ -22,7 +21,15 @@ class AccountControllerCest
     public function _before(FunctionalTester $I)
     {
         $I->amLoggedAs(['email' => 'thegrumpydictator@gmail.com', 'password' => 'james']);
+    }
 
+    /**
+     * @param FunctionalTester $I
+     */
+    public function amount(FunctionalTester $I)
+    {
+        $I->wantTo('update the amount for a budget and limit repetition');
+        $I->amOnPage('/budgets/income');
     }
 
     /**
@@ -30,10 +37,8 @@ class AccountControllerCest
      */
     public function create(FunctionalTester $I)
     {
-        // @codingStandardsIgnoreStart
-        $I->wantTo('create a new asset account');
-        $I->amOnPage('/accounts/create/asset');
-        $I->see('Create a new asset account');
+        $I->wantTo('create a budget');
+        $I->amOnRoute('budgets.create');
     }
 
     /**
@@ -41,9 +46,8 @@ class AccountControllerCest
      */
     public function delete(FunctionalTester $I)
     {
-        $I->wantTo('delete an asset account');
-        $I->amOnPage('/accounts/delete/3');
-        $I->see('Delete account "Delete me"');
+        $I->wantTo('delete a budget');
+        $I->amOnPage('/budgets/delete/1');
     }
 
     /**
@@ -51,7 +55,7 @@ class AccountControllerCest
      */
     public function destroy(FunctionalTester $I)
     {
-        $I->wantTo('destroy an asset account');
+        $I->wantTo('destroy a budget');
     }
 
     /**
@@ -59,9 +63,8 @@ class AccountControllerCest
      */
     public function edit(FunctionalTester $I)
     {
-        $I->wantTo('delete an asset account');
-        $I->amOnPage('/accounts/edit/3');
-        $I->see('Edit asset account "Delete me"');
+        $I->wantTo('edit a budget');
+        $I->amOnPage('/budgets/edit/1');
     }
 
     /**
@@ -69,10 +72,16 @@ class AccountControllerCest
      */
     public function index(FunctionalTester $I)
     {
-        $I->wantTo('see a list of accounts');
-        $I->amOnPage('/accounts/asset');
-        $I->see('Checking account');
-        $I->see('Delete me');
+        $I->wantTo('show all budgets');
+        $I->amOnPage('/budgets');
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function postUpdateIncome(FunctionalTester $I)
+    {
+        $I->wantTo('process the update to my monthly income');
     }
 
     /**
@@ -80,10 +89,8 @@ class AccountControllerCest
      */
     public function show(FunctionalTester $I)
     {
-        $I->wantTo('see one account');
-        $I->amOnPage('/accounts/show/3');
-        $I->see('Details for');
-        $I->see('Delete me');
+        $I->wantTo('show a budget');
+        $I->amOnPage('/budgets/show/1');
     }
 
     /**
@@ -91,7 +98,7 @@ class AccountControllerCest
      */
     public function store(FunctionalTester $I)
     {
-        $I->wantTo('store a new asset account');
+        $I->wantTo('store a budget');
     }
 
     /**
@@ -99,7 +106,14 @@ class AccountControllerCest
      */
     public function update(FunctionalTester $I)
     {
-        $I->wantTo('update an asset account');
+        $I->wantTo('update a budget');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
+    public function updateIncome(FunctionalTester $I)
+    {
+        $I->wantTo('update my monthly income');
+    }
 }
