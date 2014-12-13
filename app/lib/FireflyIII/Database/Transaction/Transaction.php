@@ -1,11 +1,11 @@
 <?php
 
-namespace FireflyIII\Database;
+namespace FireflyIII\Database\Transaction;
 
+use FireflyIII\Database\CommonDatabaseCalls;
+use FireflyIII\Database\CUD;
+use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\FireflyException;
-use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
-use FireflyIII\Database\Ifaces\CUD;
-use FireflyIII\Database\Ifaces\TransactionInterface;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;

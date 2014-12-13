@@ -1,11 +1,10 @@
 <?php
 
-namespace FireflyIII\Database;
+namespace FireflyIII\Database\AccountType;
 
 use FireflyIII\Exception\FireflyException;
-use FireflyIII\Database\Ifaces\AccountTypeInterface;
-use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
-use FireflyIII\Database\Ifaces\CUD;
+use FireflyIII\Database\CommonDatabaseCalls;
+use FireflyIII\Database\CUD;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace FireflyIII\Database;
+namespace FireflyIII\Database\TransactionJournal;
 
 
 use Carbon\Carbon;
-use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
-use FireflyIII\Database\Ifaces\CUD;
-use FireflyIII\Database\Ifaces\TransactionJournalInterface;
+use FireflyIII\Database\CommonDatabaseCalls;
+use FireflyIII\Database\CUD;
+use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;

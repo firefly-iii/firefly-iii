@@ -1,24 +1,22 @@
 <?php
 
-namespace FireflyIII\Database;
+namespace FireflyIII\Database\RecurringTransaction;
 
 
 use Carbon\Carbon;
-use FireflyIII\Database\Ifaces\CommonDatabaseCalls;
-use FireflyIII\Database\Ifaces\CUD;
-use FireflyIII\Database\Ifaces\RecurringInterface;
+use FireflyIII\Database\CommonDatabaseCalls;
+use FireflyIII\Database\CUD;
+use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
-
-use stdObject;
 
 /**
  * Class Recurring
  *
  * @package FireflyIII\Database
  */
-class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
+class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransactionInterface
 {
     use SwitchUser;
 
@@ -83,7 +81,7 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
 
     /**
      * @param \Eloquent $model
-     * @param array  $data
+     * @param array     $data
      *
      * @return bool
      */
