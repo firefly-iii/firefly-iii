@@ -29,6 +29,11 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         //$this->
     }
 
+    /**
+     * @param $class
+     *
+     * @return m\MockInterface
+     */
     public function mock($class)
     {
         $mock = Mockery::mock($class);

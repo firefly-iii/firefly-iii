@@ -19,6 +19,9 @@ class Transaction
     {
         \Cache::forget('account.' . $transaction->account_id . '.latestBalance');
         \Cache::forget('account.' . $transaction->account_id . '.lastActivityDate');
+
+        // delete transaction:
+        $transaction->delete();
     }
 
     /**

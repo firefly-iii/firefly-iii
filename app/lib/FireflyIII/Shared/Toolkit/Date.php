@@ -130,7 +130,7 @@ class Date
             case 'half-year':
                 $month = intval($theCurrentEnd->format('m'));
                 $currentEnd->endOfYear();
-                if($month <= 6) {
+                if ($month <= 6) {
                     $currentEnd->subMonths(6);
                 }
                 break;

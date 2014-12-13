@@ -219,7 +219,7 @@ class Piggybank
      */
     public function validateRepeatedExpenses()
     {
-        if(!\Auth::check()) {
+        if (!\Auth::check()) {
             return;
         }
         /** @var \FireflyIII\Database\PiggyBank\RepeatedExpense $repository */
