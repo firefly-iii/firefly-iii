@@ -1,6 +1,9 @@
 <?php
 use Watson\Validating\ValidatingTrait;
 
+/**
+ * Class Preference
+ */
 class Preference extends Eloquent
 {
     use ValidatingTrait;

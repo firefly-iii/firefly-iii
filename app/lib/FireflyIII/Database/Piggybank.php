@@ -203,6 +203,7 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
      * @param $what
      *
      * @return \AccountType|null
+     * @throws NotImplementedException
      */
     public function findByWhat($what)
     {
@@ -224,6 +225,7 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
      * @param array $ids
      *
      * @return Collection
+     * @throws NotImplementedException
      */
     public function getByIds(array $ids)
     {
@@ -231,7 +233,16 @@ class Piggybank implements CUD, CommonDatabaseCalls, PiggybankInterface
         throw new NotImplementedException;
     }
 
-    public function findRepetitionByDate(\Piggybank $piggybank, Carbon $date)
+    /**
+     * @param \Piggybank $piggybank
+     * @param Carbon     $date
+     *
+     * @return mixed
+     * @throws FireflyException
+     * @throws NotImplementedException
+     */
+    public function findRepetitionByDate(\Piggybank $piggybank, /** @noinspection PhpUnusedParameterInspection */
+                                         Carbon $date)
     {
         $reps = $piggybank->piggybankrepetitions()->get();
         if ($reps->count() == 1) {

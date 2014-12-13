@@ -1,6 +1,9 @@
 <?php
 use Watson\Validating\ValidatingTrait;
 
+/**
+ * Class AccountMeta
+ */
 class AccountMeta extends Eloquent
 {
     use ValidatingTrait;
@@ -16,8 +19,10 @@ class AccountMeta extends Eloquent
     /**
      * @var array
      */
+    // @codingStandardsIgnoreStart
     protected $fillable = ['account_id', 'name', 'date'];
     protected $table    = 'account_meta';
+    // @codingStandardsIgnoreEnd
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

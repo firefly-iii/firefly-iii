@@ -38,7 +38,6 @@ class CategoryControllerCest
     public function delete(FunctionalTester $I)
     {
         $I->wantTo('delete a category');
-        $I->amOnPage('/categories/delete/1');
     }
 
     /**
@@ -56,7 +55,6 @@ class CategoryControllerCest
     public function edit(FunctionalTester $I)
     {
         $I->wantTo('edit a category');
-        $I->amOnPage('/categories/edit/1');
     }
 
     /**
@@ -74,7 +72,6 @@ class CategoryControllerCest
     public function show(FunctionalTester $I)
     {
         $I->wantTo('show a category');
-        $I->amOnPage('/categories/delete/1');
     }
 
     /**

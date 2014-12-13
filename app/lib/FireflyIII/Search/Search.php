@@ -5,6 +5,11 @@ namespace FireflyIII\Search;
 
 use Illuminate\Support\Collection;
 
+/**
+ * Class Search
+ *
+ * @package FireflyIII\Search
+ */
 class Search
 {
     /**

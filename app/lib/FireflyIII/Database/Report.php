@@ -12,6 +12,11 @@ namespace FireflyIII\Database;
 use Carbon\Carbon;
 use FireflyIII\Database\Ifaces\ReportInterface;
 
+/**
+ * Class Report
+ *
+ * @package FireflyIII\Database
+ */
 class Report implements ReportInterface
 {
     use SwitchUser;

@@ -5,6 +5,11 @@ namespace FireflyIII\Database\Ifaces;
 
 use Carbon\Carbon;
 
+/**
+ * Interface ReportInterface
+ *
+ * @package FireflyIII\Database\Ifaces
+ */
 interface ReportInterface
 {
 

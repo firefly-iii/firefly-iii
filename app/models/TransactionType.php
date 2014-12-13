@@ -3,6 +3,9 @@
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Watson\Validating\ValidatingTrait;
 
+/**
+ * Class TransactionType
+ */
 class TransactionType extends Eloquent
 {
     use SoftDeletingTrait, ValidatingTrait;

@@ -13,10 +13,13 @@ interface RecurringInterface
 {
     /**
      * @param \RecurringTransaction $recurring
-     * @param Carbon                $current
-     * @param Carbon                $currentEnd
+     * @param Carbon                $start
+     * @param Carbon                $end
      *
-     * @return \TransactionJournal|null
+     * @return null|\TransactionJournal
+     * @internal param Carbon $current
+     * @internal param Carbon $currentEnd
+     *
      */
     public function getJournalForRecurringInRange(\RecurringTransaction $recurring, Carbon $start, Carbon $end);
 

@@ -1,5 +1,6 @@
 <?php
 namespace FireflyIII\Shared\Mail;
+
 use Swift_RfcComplianceException;
 
 /**
@@ -28,10 +29,11 @@ class Registration implements RegistrationInterface
         try {
             \Mail::send(
                 ['emails.user.register-html', 'emails.user.register-text'], $data, function ($message) use ($email) {
-                    $message->to($email, $email)->subject('Welcome to Firefly!');
-                }
+                $message->to($email, $email)->subject('Welcome to Firefly!');
+            }
             );
-        } catch(Swift_RfcComplianceException $e) {}
+        } catch (Swift_RfcComplianceException $e) {
+        }
     }
 
     /**
@@ -49,8 +51,8 @@ class Registration implements RegistrationInterface
         $data = ['reset' => $reset];
         \Mail::send(
             ['emails.user.remindme-html', 'emails.user.remindme-text'], $data, function ($message) use ($email) {
-                $message->to($email, $email)->subject('Forgot your password?');
-            }
+            $message->to($email, $email)->subject('Forgot your password?');
+        }
         );
 
 
@@ -72,8 +74,8 @@ class Registration implements RegistrationInterface
 
         \Mail::send(
             ['emails.user.verify-html', 'emails.user.verify-text'], $data, function ($message) use ($email) {
-                $message->to($email, $email)->subject('Verify your e-mail address.');
-            }
+            $message->to($email, $email)->subject('Verify your e-mail address.');
+        }
         );
     }
 

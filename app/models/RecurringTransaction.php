@@ -2,6 +2,9 @@
 use Carbon\Carbon;
 use Watson\Validating\ValidatingTrait;
 
+/**
+ * Class RecurringTransaction
+ */
 class RecurringTransaction extends Eloquent
 {
 
@@ -18,8 +21,9 @@ class RecurringTransaction extends Eloquent
             'automatch'   => 'required|between:0,1',
             'repeat_freq' => 'required|in:daily,weekly,monthly,quarterly,half-year,yearly',
             'skip'        => 'required|between:0,31',];
-
+    // @codingStandardsIgnoreStart
     protected $fillable = ['user_id', 'name', 'match', 'amount_min', 'amount_max', 'date', 'repeat_freq', 'skip', 'active', 'automatch'];
+    // @codingStandardsIgnoreEnd
 
     /**
      * @return array

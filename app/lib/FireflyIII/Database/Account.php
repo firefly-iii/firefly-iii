@@ -221,7 +221,7 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
     {
 
         // delete journals:
-        $journals = \TransactionJournal::whereIn(
+        \TransactionJournal::whereIn(
             'id', function ($query) use ($model) {
                 $query->select('transaction_journal_id')
                       ->from('transactions')->whereIn(
@@ -454,10 +454,9 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
     }
 
     /**
-     * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
-     *
      * @param $what
      *
+     * @throws NotImplementedException
      * @return \AccountType|null
      */
     public function findByWhat($what)
@@ -470,6 +469,7 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
      * Returns all objects.
      *
      * @return Collection
+     * @throws NotImplementedException
      */
     public function get()
     {
@@ -487,6 +487,12 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
         return $this->getUser()->accounts()->whereIn('id', $ids)->get();
     }
 
+    /**
+     * @param $name
+     *
+     * @return static
+     * @throws \FireflyIII\Exception\FireflyException
+     */
     public function firstExpenseAccountOrCreate($name)
     {
         /** @var \FireflyIII\Database\AccountType $accountTypeRepos */
@@ -510,6 +516,12 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
 
     }
 
+    /**
+     * @param $name
+     *
+     * @return static
+     * @throws \FireflyIII\Exception\FireflyException
+     */
     public function firstRevenueAccountOrCreate($name)
     {
         /** @var \FireflyIII\Database\AccountType $accountTypeRepos */
@@ -523,6 +535,12 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
 
     }
 
+    /**
+     * @param \Account $account
+     * @param int      $limit
+     *
+     * @return \Illuminate\Pagination\Paginator
+     */
     public function getAllTransactionJournals(\Account $account, $limit = 50)
     {
         $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
@@ -568,6 +586,13 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
         return $date;
     }
 
+    /**
+     * @param \Account $account
+     * @param int      $limit
+     * @param string   $range
+     *
+     * @return \Illuminate\Pagination\Paginator
+     */
     public function getTransactionJournals(\Account $account, $limit = 50, $range = 'session')
     {
         $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
@@ -580,8 +605,8 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
                        ->orderBy('date', 'DESC');
 
         if ($range == 'session') {
-            $query->before(\Session::get('end', \Carbon\Carbon::now()->startOfMonth()));
-            $query->after(\Session::get('start', \Carbon\Carbon::now()->startOfMonth()));
+            $query->before(\Session::get('end', Carbon::now()->startOfMonth()));
+            $query->after(\Session::get('start', Carbon::now()->startOfMonth()));
         }
         $count = $query->count();
         $set   = $query->take($limit)->offset($offset)->get(['transaction_journals.*']);

@@ -287,18 +287,17 @@ class Form
         /*
          * Store.
          */
-        $store = '';
         switch ($type) {
             case 'create':
-                $store = '<div class="form-group"><label for="default" class="col-sm-4 control-label">Store</label>';
+                $store = '<div class="form-group"><label for="' . $name . '_store" class="col-sm-4 control-label">Store</label>';
                 $store .= '<div class="col-sm-8"><div class="radio"><label>';
-                $store .= \Form::radio('post_submit_action', 'store', $previousValue == 'store');
+                $store .= \Form::radio('post_submit_action', 'store', $previousValue == 'store', ['id' => $name . '_store']);
                 $store .= 'Store ' . $name . '</label></div></div></div>';
                 break;
             case 'update':
-                $store = '<div class="form-group"><label for="default" class="col-sm-4 control-label">Store</label>';
+                $store = '<div class="form-group"><label for="' . $name . 'update" class="col-sm-4 control-label">Store</label>';
                 $store .= '<div class="col-sm-8"><div class="radio"><label>';
-                $store .= \Form::radio('post_submit_action', 'update', $previousValue == 'store');
+                $store .= \Form::radio('post_submit_action', 'update', $previousValue == 'update', ['id' => $name . '_update']);
                 $store .= 'Update ' . $name . '</label></div></div></div>';
                 break;
             default:
@@ -309,9 +308,9 @@ class Form
         /*
          * validate is always the same:
          */
-        $validate = '<div class="form-group"><label for="validate_only" class="col-sm-4 control-label">Validate only';
+        $validate = '<div class="form-group"><label for="' . $name . 'validate_only" class="col-sm-4 control-label">Validate only';
         $validate .= '</label><div class="col-sm-8"><div class="radio"><label>';
-        $validate .= \Form::radio('post_submit_action', 'validate_only', $previousValue == 'validate_only');
+        $validate .= \Form::radio('post_submit_action', 'validate_only', $previousValue == 'validate_only', ['id' => $name . '_validate_only']);
         $validate .= 'Only validate, do not save</label></div></div></div>';
 
         /*
@@ -319,15 +318,15 @@ class Form
          */
         switch ($type) {
             case 'create':
-                $return = '<div class="form-group"><label for="return_to_form" class="col-sm-4 control-label">';
+                $return = '<div class="form-group"><label for="' . $name . 'return_to_form" class="col-sm-4 control-label">';
                 $return .= 'Return here</label><div class="col-sm-8"><div class="radio"><label>';
-                $return .= \Form::radio('post_submit_action', 'create_another', $previousValue == 'create_another');
+                $return .= \Form::radio('post_submit_action', 'create_another', $previousValue == 'create_another', ['id' => $name . '_create_another']);
                 $return .= 'After storing, return here to create another one.</label></div></div></div>';
                 break;
             case 'update':
-                $return = '<div class="form-group"><label for="return_to_edit" class="col-sm-4 control-label">';
+                $return = '<div class="form-group"><label for="' . $name . 'return_to_edit" class="col-sm-4 control-label">';
                 $return .= 'Return here</label><div class="col-sm-8"><div class="radio"><label>';
-                $return .= \Form::radio('post_submit_action', 'return_to_edit', $previousValue == 'return_to_edit');
+                $return .= \Form::radio('post_submit_action', 'return_to_edit', $previousValue == 'return_to_edit', ['id' => $name . '_return_to_edit']);
                 $return .= 'After updating, return here.</label></div></div></div>';
                 break;
             default:

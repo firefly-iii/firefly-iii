@@ -45,11 +45,11 @@ class TransactionController extends BaseController
             }
         }
         $unique = array_unique($ids);
-        if (count($ids) > 0) {
+        if (count($unique) > 0) {
 
             /** @var \FireflyIII\Database\TransactionJournal $repository */
             $repository = App::make('FireflyIII\Database\TransactionJournal');
-            $set        = $repository->getByIds($ids);
+            $set        = $repository->getByIds($unique);
             $set->each(
                 function (TransactionJournal $journal) {
                     $journal->amount = mf($journal->getAmount());
@@ -544,6 +544,7 @@ class TransactionController extends BaseController
     /**
      * @param TransactionJournal $journal
      *
+     * @return $this
      * @throws FireflyException
      */
     public function update(TransactionJournal $journal)

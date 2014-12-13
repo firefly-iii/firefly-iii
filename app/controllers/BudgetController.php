@@ -7,7 +7,7 @@ use FireflyIII\Shared\Preferences\PreferencesInterface as Pref;
 /**
  * Class BudgetController
  *
- * TODO move AJAX methods to their own BudgetAjaxControlle
+ * TODO move AJAX methods to their own BudgetAjaxController
  * TODO Find out what constitutes proper camelCase
  * TODO How is object coupling counted?
  *
@@ -44,7 +44,7 @@ class BudgetController extends BaseController
     public function amount(Budget $budget)
     {
         $amount          = intval(Input::get('amount'));
-        $date            = Session::get('start',Carbon::now()->startOfMonth());
+        $date            = Session::get('start', Carbon::now()->startOfMonth());
         $limitRepetition = $this->_repository->updateLimitAmount($budget, $date, $amount);
 
         return Response::json(['name' => $budget->name, 'repetition' => $limitRepetition->id]);
@@ -112,16 +112,18 @@ class BudgetController extends BaseController
         $budgets->each(
             function (Budget $budget) {
                 /** @noinspection PhpUndefinedFieldInspection */
-                $budget->spent = $this->_repository->spentInMonth($budget, \Session::get('start',Carbon::now()->startOfMonth()));
+                $budget->spent = $this->_repository->spentInMonth($budget, \Session::get('start', Carbon::now()->startOfMonth()));
                 /** @noinspection PhpUndefinedFieldInspection */
-                $budget->currentRep = $budget->limitrepetitions()->where('limit_repetitions.startdate', \Session::get('start',Carbon::now()->startOfMonth())->format('Y-m-d'))->first(
+                $budget->currentRep = $budget->limitrepetitions()->where(
+                    'limit_repetitions.startdate', \Session::get('start', Carbon::now()->startOfMonth())->format('Y-m-d')
+                )->first(
                     ['limit_repetitions.*']
                 );
             }
         );
 
         $spent     = $budgets->sum('spent');
-        $amount    = $this->_preferences->get('budgetIncomeTotal' . \Session::get('start',Carbon::now()->startOfMonth())->format('FY'), 1000)->data;
+        $amount    = $this->_preferences->get('budgetIncomeTotal' . \Session::get('start', Carbon::now()->startOfMonth())->format('FY'), 1000)->data;
         $overspent = $spent > $amount;
         $spentPCT  = $overspent ? ceil($amount / $spent * 100) : ceil($spent / $amount * 100);
 
@@ -133,7 +135,7 @@ class BudgetController extends BaseController
      */
     public function postUpdateIncome()
     {
-        $this->_preferences->set('budgetIncomeTotal' . Session::get('start',Carbon::now()->startOfMonth())->format('FY'), intval(Input::get('amount')));
+        $this->_preferences->set('budgetIncomeTotal' . Session::get('start', Carbon::now()->startOfMonth())->format('FY'), intval(Input::get('amount')));
 
         return Redirect::route('budgets.index');
     }
@@ -146,13 +148,13 @@ class BudgetController extends BaseController
      */
     public function show(Budget $budget, LimitRepetition $repetition = null)
     {
-        if (!is_null($repetition) && $repetition->limit->budget->id != $budget->id) {
+        if (!is_null($repetition) && $repetition->budgetlimit->budget->id != $budget->id) {
             App::abort(500);
         }
 
         $hideBudget = true; // used in transaction list.
         $journals   = $this->_repository->getJournals($budget, $repetition);
-        $limits     = $repetition ? [$repetition->limit] : $budget->limits()->orderBy('startdate', 'DESC')->get();
+        $limits     = $repetition ? [$repetition->limit] : $budget->budgetlimits()->orderBy('startdate', 'DESC')->get();
         $subTitle   = $repetition ? e($budget->name) . ' in ' . $repetition->startdate->format('F Y') : e($budget->name);
 
         return View::make('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle', 'hideBudget'));
@@ -244,7 +246,7 @@ class BudgetController extends BaseController
      */
     public function updateIncome()
     {
-        $budgetAmount = $this->_preferences->get('budgetIncomeTotal' . Session::get('start',Carbon::now()->startOfMonth())->format('FY'), 1000);
+        $budgetAmount = $this->_preferences->get('budgetIncomeTotal' . Session::get('start', Carbon::now()->startOfMonth())->format('FY'), 1000);
 
         return View::make('budgets.income')->with('amount', $budgetAmount);
     }

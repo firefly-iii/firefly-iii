@@ -1,9 +1,10 @@
 <?php
 use Carbon\Carbon;
 use Grumpydictator\Gchart\GChart as GChart;
-use Illuminate\Database\Query\JoinClause;
 
 /**
+ * @SuppressWarnings("CamelCase")
+ *
  * Class GoogleChartController
  */
 class GoogleChartController extends BaseController
@@ -119,11 +120,9 @@ class GoogleChartController extends BaseController
      */
     public function allBudgetsHomeChart()
     {
-        /** @var \Grumpydictator\Gchart\GChart $chart */
-        $chart = App::make('gchart');
-        $chart->addColumn('Budget', 'string');
-        $chart->addColumn('Budgeted', 'number');
-        $chart->addColumn('Spent', 'number');
+        $this->_chart->addColumn('Budget', 'string');
+        $this->_chart->addColumn('Budgeted', 'number');
+        $this->_chart->addColumn('Spent', 'number');
 
         /** @var \FireflyIII\Database\Budget $bdt */
         $bdt     = App::make('FireflyIII\Database\Budget');
@@ -165,7 +164,7 @@ class GoogleChartController extends BaseController
              */
             $expenses = floatval($budget->transactionjournals()->before($searchEnd)->after($searchStart)->lessThan(0)->sum('amount')) * -1;
             if ($expenses > 0) {
-                $chart->addRow($budget->name, $limit, $expenses);
+                $this->_chart->addRow($budget->name, $limit, $expenses);
             }
         }
 
@@ -175,12 +174,12 @@ class GoogleChartController extends BaseController
          */
         $noBudgetSet = $bdt->transactionsWithoutBudgetInDateRange(Session::get('start', Carbon::now()->startOfMonth()), Session::get('end'));
         $sum         = $noBudgetSet->sum('amount') * -1;
-        $chart->addRow('No budget', 0, $sum);
+        $this->_chart->addRow('No budget', 0, $sum);
 
 
-        $chart->generate();
+        $this->_chart->generate();
 
-        return Response::json($chart->getData());
+        return Response::json($this->_chart->getData());
     }
 
     /**

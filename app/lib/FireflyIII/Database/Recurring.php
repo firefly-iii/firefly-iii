@@ -183,6 +183,7 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
      * @param int $id
      *
      * @return \Eloquent
+     * @throws NotImplementedException
      */
     public function find($id)
     {
@@ -196,6 +197,7 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
      * @param $what
      *
      * @return \AccountType|null
+     * @throws NotImplementedException
      */
     public function findByWhat($what)
     {
@@ -217,6 +219,7 @@ class Recurring implements CUD, CommonDatabaseCalls, RecurringInterface
      * @param array $ids
      *
      * @return Collection
+     * @throws NotImplementedException
      */
     public function getByIds(array $ids)
     {

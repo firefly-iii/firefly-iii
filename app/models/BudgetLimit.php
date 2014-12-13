@@ -4,7 +4,10 @@ use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Watson\Validating\ValidatingTrait;
 
-class Limit extends Eloquent
+/**
+ * Class Limit
+ */
+class BudgetLimit extends Eloquent
 {
 
     use ValidatingTrait;
@@ -61,8 +64,6 @@ class Limit extends Eloquent
         }
         $end->subDay();
         $count = $this->limitrepetitions()->where('startdate', $start->format('Y-m-d'))->where('enddate', $end->format('Y-m-d'))->count();
-        \Log::debug('All: ' . $this->limitrepetitions()->count() . ' (#' . $this->id . ')');
-        \Log::debug('Found ' . $count . ' limit-reps for limit #' . $this->id . ' with start ' . $start->format('Y-m-d') . ' and end ' . $end->format('Y-m-d'));
 
         if ($count == 0) {
 
@@ -70,7 +71,7 @@ class Limit extends Eloquent
             $repetition->startdate = $start;
             $repetition->enddate   = $end;
             $repetition->amount    = $this->amount;
-            $repetition->limit()->associate($this);
+            $repetition->budgetLimit()->associate($this);
 
             try {
                 $repetition->save();

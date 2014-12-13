@@ -3,16 +3,27 @@
 use FireflyIII\Exception\FireflyException;
 use Watson\Validating\ValidatingTrait;
 
+/**
+ * Class LimitRepetition
+ */
 class LimitRepetition extends Eloquent
 {
     use ValidatingTrait;
     public static $rules
         = [
-            'limit_id'  => 'required|exists:limits,id',
-            'startdate' => 'required|date',
-            'enddate'   => 'required|date',
-            'amount'    => 'numeric|required|min:0.01',
+            'budgetlimit_id' => 'required|exists:budgetlimits,id',
+            'startdate'      => 'required|date',
+            'enddate'        => 'required|date',
+            'amount'         => 'numeric|required|min:0.01',
         ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function budgetLimit()
+    {
+        return $this->belongsTo('BudgetLimit');
+    }
 
     /**
      * @return array
@@ -20,14 +31,6 @@ class LimitRepetition extends Eloquent
     public function getDates()
     {
         return ['created_at', 'updated_at', 'startdate', 'enddate'];
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function limit()
-    {
-        return $this->belongsTo('Limit');
     }
 
     /**
@@ -51,8 +54,8 @@ class LimitRepetition extends Eloquent
         $sum = \DB::table('transactions')->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')->leftJoin(
             'component_transaction_journal', 'component_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
         )->leftJoin('components', 'components.id', '=', 'component_transaction_journal.component_id')->leftJoin(
-            'limits', 'limits.component_id', '=', 'components.id'
-        )->leftJoin('limit_repetitions', 'limit_repetitions.limit_id', '=', 'limits.id')->where(
+            'budgetlimits', 'budgetlimits.component_id', '=', 'components.id'
+        )->leftJoin('limit_repetitions', 'limit_repetitions.limit_id', '=', 'budgetlimits.id')->where(
             'transaction_journals.date', '>=', $this->startdate->format('Y-m-d')
         )->where('transaction_journals.date', '<=', $this->enddate->format('Y-m-d'))->where('transactions.amount', '>', 0)->where(
             'limit_repetitions.id', '=', $this->id

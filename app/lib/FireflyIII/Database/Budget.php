@@ -136,6 +136,7 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
      * @param $what
      *
      * @return \AccountType|null
+     * @throws NotImplementedException
      */
     public function findByWhat($what)
     {
@@ -159,6 +160,7 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
      * @param array $ids
      *
      * @return Collection
+     * @throws NotImplementedException
      */
     public function getByIds(array $ids)
     {
@@ -200,6 +202,12 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
         return \Paginator::make($items, $count, $take);
     }
 
+    /**
+     * @param \Budget $budget
+     * @param int     $limit
+     *
+     * @return \Illuminate\Pagination\Paginator
+     */
     public function getTransactionJournals(\Budget $budget, $limit = 50)
     {
         $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
@@ -214,6 +222,13 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
 
     }
 
+    /**
+     * @param \Budget          $budget
+     * @param \LimitRepetition $repetition
+     * @param int              $limit
+     *
+     * @return \Illuminate\Pagination\Paginator
+     */
     public function getTransactionJournalsInRepetition(\Budget $budget, \LimitRepetition $repetition, $limit = 50)
     {
         $start = $repetition->startdate;
@@ -241,8 +256,8 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     public function repetitionOnStartingOnDate(\Budget $budget, Carbon $date)
     {
         return \LimitRepetition::
-        leftJoin('limits', 'limit_repetitions.limit_id', '=', 'limits.id')->leftJoin(
-            'components', 'limits.component_id', '=', 'components.id'
+        leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')->leftJoin(
+            'components', 'budget_limits.component_id', '=', 'components.id'
         )->where('limit_repetitions.startdate', $date->format('Y-m-d'))->where(
             'components.id', $budget->id
         )->first(['limit_repetitions.*']);
