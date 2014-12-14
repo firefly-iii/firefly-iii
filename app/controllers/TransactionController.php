@@ -71,10 +71,6 @@ class TransactionController extends BaseController
      */
     public function create($what = 'deposit')
     {
-        /*
-         * The repositories we need:
-         */
-
         /** @var \FireflyIII\Database\Account\Account $accountRepository */
         $accountRepository = App::make('FireflyIII\Database\Account\Account');
 
@@ -100,9 +96,6 @@ class TransactionController extends BaseController
         $piggies[0] = '(no piggy bank)';
         asort($piggies);
 
-        /*
-         * respond to a possible given values in the URL.
-         */
         $preFilled = Session::has('preFilled') ? Session::get('preFilled') : [];
         $respondTo = ['account_id', 'account_from_id'];
         foreach ($respondTo as $r) {
@@ -222,24 +215,8 @@ class TransactionController extends BaseController
 
         // get asset accounts with names and id's.
         $accounts = FFForm::makeSelectList($accountRepository->getAssetAccounts());
-
-        // get budgets as a select list.
-        $budgets    = FFForm::makeSelectList($budgetRepository->get());
-        $budgets[0] = '(no budget)';
-
-        /*
-         * Get all piggy banks plus (if any) the relevant piggy bank. Since just one
-         * of the transactions in the journal has this field, it should all fill in nicely.
-         */
-        // get the piggy banks.
-        $piggies     = FFForm::makeSelectList($piggyRepository->get());
-        $piggies[0]  = '(no piggy bank)';
-        $piggyBankId = 0;
-        foreach ($journal->transactions as $t) {
-            if (!is_null($t->piggybank_id)) {
-                $piggyBankId = $t->piggybank_id;
-            }
-        }
+        $budgets  = FFForm::makeSelectList($budgetRepository->get(), true);
+        $piggies  = FFForm::makeSelectList($piggyRepository->get(), true);
 
         /*
          * Data to properly display the edit form.
@@ -248,7 +225,7 @@ class TransactionController extends BaseController
             'date'         => $journal->date->format('Y-m-d'),
             'category'     => '',
             'budget_id'    => 0,
-            'piggybank_id' => $piggyBankId
+            'piggybank_id' => 0
         ];
 
         /*
@@ -482,11 +459,7 @@ class TransactionController extends BaseController
                  * Trigger a search for the related (if selected)
                  * piggy bank and store an event.
                  */
-                $piggyID = null;
-                if (!is_null(Input::get('piggybank_id')) && intval(Input::get('piggybank_id')) > 0) {
-                    $piggyID = intval(Input::get('piggybank_id'));
-                }
-                Event::fire('transactionJournal.store', [$journal, $piggyID]); // new and used.
+                Event::fire('transactionJournal.store', [$journal, Input::get('piggybank_id')]); // new and used.
                 /*
                  * Also trigger on both transactions.
                  */

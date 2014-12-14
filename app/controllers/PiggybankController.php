@@ -316,8 +316,11 @@ class PiggybankController extends BaseController
     {
 
         /** @var \FireflyIII\Database\PiggyBank\PiggyBank $repos */
-        $repos = App::make('FireflyIII\Database\PiggyBank\PiggyBank');
-        $data  = Input::except('_token');
+        $repos                 = App::make('FireflyIII\Database\PiggyBank\PiggyBank');
+        $data                  = Input::except('_token');
+        $data['rep_every']     = 0;
+        $data['reminder_skip'] = 0;
+        $data['order']         = 0;
 
         switch (Input::get('post_submit_action')) {
             default:

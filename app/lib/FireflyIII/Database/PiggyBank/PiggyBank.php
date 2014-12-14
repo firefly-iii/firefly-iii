@@ -42,34 +42,22 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggybankInterface
      * @param array $data
      *
      * @return \Eloquent
+     * @throws FireflyException
      */
     public function store(array $data)
     {
-        $data['rep_every']     = isset($data['rep_every']) ? $data['rep_every'] : 0;
-        $data['reminder_skip'] = isset($data['reminder_skip']) ? $data['reminder_skip'] : 0;
-        $data['order']         = isset($data['order']) ? $data['order'] : 0;
-        $data['remind_me']     = isset($data['remind_me']) ? intval($data['remind_me']) : 0;
-        $data['startdate']     = isset($data['startdate']) ? $data['startdate'] : Carbon::now()->format('Y-m-d');
-        $data['targetdate']    = isset($data['targetdate']) && $data['targetdate'] != '' ? $data['targetdate'] : null;
-
-        if ($data['remind_me'] == 0) {
+        if (!isset($data['remind_me']) || (isset($data['remind_me']) && $data['remind_me'] == 0)) {
             $data['reminder'] = null;
         }
+        $piggyBank = new \Piggybank($data);
+        $piggyBank->save();
 
-
-        $piggybank = new \Piggybank($data);
-        if (!$piggybank->isValid()) {
-            var_dump($piggybank->getErrors()->all());
-            exit;
-        }
-        $piggybank->save();
-
-        return $piggybank;
+        return $piggyBank;
     }
 
     /**
      * @param \Eloquent $model
-     * @param array  $data
+     * @param array     $data
      *
      * @return bool
      */
@@ -80,19 +68,14 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggybankInterface
         $model->account_id    = intval($data['account_id']);
         $model->targetamount  = floatval($data['targetamount']);
         $model->targetdate    = isset($data['targetdate']) && $data['targetdate'] != '' ? $data['targetdate'] : null;
-        $model->rep_every     = isset($data['rep_every']) ? $data['rep_every'] : 0;
-        $model->reminder_skip = isset($data['reminder_skip']) ? $data['reminder_skip'] : 0;
-        $model->order         = isset($data['order']) ? $data['order'] : 0;
-        $model->remind_me     = isset($data['remind_me']) ? intval($data['remind_me']) : 0;
+        $model->rep_every     = intval($data['rep_every']);
+        $model->reminder_skip = intval($data['reminder_skip']);
+        $model->order         = intval($data['order']);
+        $model->remind_me     = intval($data['remind_me']);
         $model->reminder      = isset($data['reminder']) ? $data['reminder'] : 'month';
 
         if ($model->remind_me == 0) {
             $model->reminder = null;
-        }
-
-        if (!$model->isValid()) {
-            var_dump($model->getErrors());
-            exit();
         }
 
         $model->save();
@@ -241,8 +224,7 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggybankInterface
      * @throws FireflyException
      * @throws NotImplementedException
      */
-    public function findRepetitionByDate(\Piggybank $piggybank, /** @noinspection PhpUnusedParameterInspection */
-                                         Carbon $date)
+    public function findRepetitionByDate(\Piggybank $piggybank, Carbon $date)
     {
         $reps = $piggybank->piggybankrepetitions()->get();
         if ($reps->count() == 1) {

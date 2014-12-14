@@ -38,6 +38,11 @@ class PiggybankPart
      */
     public function getReminder()
     {
+        if(is_null($this->reminder)) {
+            $this->reminder = $this->repetition->piggybank->reminders()->where('startdate', $bar->getStartdate()->format('Y-m-d'))->where(
+                'enddate', $bar->getTargetdate()->format('Y-m-d')
+            )->first();
+        }
         return $this->reminder;
     }
 

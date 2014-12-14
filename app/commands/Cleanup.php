@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
+//use Symfony\Component\Console\Input\InputArgument;
+//use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class Cleanup
@@ -15,13 +15,17 @@ class Cleanup extends Command
      *
      * @var string
      */
+    // @codingStandardsIgnoreStart
     protected $description = 'Clean caches, regenerate some stuff.';
+    // @codingStandardsIgnoreEnd
     /**
      * The console command name.
      *
      * @var string
      */
+    // @codingStandardsIgnoreStart
     protected $name = 'firefly:cleanup';
+    // @codingStandardsIgnoreEnd
 
     /**
      *
@@ -43,7 +47,7 @@ class Cleanup extends Command
         $this->info('Cleared compiled...');
         Artisan::call('ide-helper:generate');
         $this->info('IDE helper, done...');
-        Artisan::call('ide-helper:models', ['write']);
+        Artisan::call('ide-helper:models', ['nowrite']);
         $this->info('IDE models, done...');
         Artisan::call('optimize');
         $this->info('Optimized...');

@@ -7,6 +7,7 @@ use FireflyIII\Report\ReportInterface as Report;
 /**
  * @SuppressWarnings("CamelCase")
  *
+ *
  * Class ReportController
  */
 class ReportController extends BaseController
@@ -34,109 +35,6 @@ class ReportController extends BaseController
     }
 
     /**
-     * @param $year
-     * @param $month
-     *
-     * @return \Illuminate\View\View
-     */
-    public function budgets($year, $month)
-    {
-        try {
-            $start = new Carbon($year . '-' . $month . '-01');
-        } catch (Exception $e) {
-            App::abort(500);
-        }
-        $end           = clone $start;
-        $title         = 'Reports';
-        $subTitle      = 'Budgets in ' . $start->format('F Y');
-        $mainTitleIcon = 'fa-line-chart';
-        $subTitleIcon  = 'fa-bar-chart';
-
-        $end->endOfMonth();
-
-
-        // get a list of all budgets and expenses.
-        /** @var \FireflyIII\Database\Budget\Budget $budgetRepository */
-        $budgetRepository = App::make('FireflyIII\Database\Budget\Budget');
-
-        /** @var \FireflyIII\Database\Account\Account $accountRepository */
-        $accountRepository = App::make('FireflyIII\Database\Account\Account');
-
-
-        $budgets = $budgetRepository->get();
-
-        // calculate some stuff:
-        $budgets->each(
-            function (Budget $budget) use ($start, $end, $budgetRepository) {
-                $limitRepetitions = $budget->limitrepetitions()->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d'))->where(
-                    'enddate', '<=', $end->format(
-                    'Y-m-d'
-                )
-                )->get();
-                $repInfo          = [];
-                /** @var LimitRepetition $repetition */
-                foreach ($limitRepetitions as $repetition) {
-                    $spent = $budgetRepository->spentInPeriod($budget, $start, $end);
-                    if ($spent > floatval($repetition->amount)) {
-                        // overspent!
-                        $overspent = true;
-                        $pct       = floatval($repetition->amount) / $spent * 100;
-
-                    } else {
-                        $overspent = false;
-                        $pct       = $spent / floatval($repetition->amount) * 100;
-                    }
-                    $pctDisplay = $spent / floatval($repetition->amount) * 100;
-                    $repInfo[]  = [
-                        'date'        => DateKit::periodShow($repetition->startdate, $repetition->budgetLimit->repeat_freq),
-                        'spent'       => $spent,
-                        'budgeted'    => floatval($repetition->amount),
-                        'left'        => floatval($repetition->amount) - $spent,
-                        'pct'         => ceil($pct),
-                        'pct_display' => ceil($pctDisplay),
-                        'overspent'   => $overspent,
-                    ];
-                }
-                $budget->repInfo = $repInfo;
-
-            }
-        );
-
-        $accounts = $accountRepository->getAssetAccounts();
-
-        $accounts->each(
-            function (Account $account) use ($start, $end, $accountRepository) {
-                $journals = $accountRepository->getTransactionJournalsInRange($account, $start, $end);
-                $budgets  = [];
-                /** @var TransactionJournal $journal */
-                foreach ($journals as $journal) {
-                    $budgetId   = isset($journal->budgets[0]) ? $journal->budgets[0]->id : 0;
-                    $budgetName = isset($journal->budgets[0]) ? $journal->budgets[0]->name : '(no budget)';
-                    if (!isset($budgets[$budgetId])) {
-                        $arr                = [
-                            'budget_id'   => $budgetId,
-                            'budget_name' => $budgetName,
-                            'spent'       => floatval($journal->getAmount()),
-                            'budgeted'    => 0,
-                        ];
-                        $budgets[$budgetId] = $arr;
-                    } else {
-                        $budgets[$budgetId]['spent'] += floatval($journal->getAmount());
-                    }
-                }
-                foreach ($budgets as $budgetId => $budget) {
-                    $budgets[$budgetId]['left'] = $budget['budgeted'] - $budget['spent'];
-                }
-                $account->budgetInfo = $budgets;
-            }
-        );
-
-
-        return View::make('reports.budgets', compact('start', 'end', 'title', 'subTitle', 'subTitleIcon', 'mainTitleIcon', 'budgets', 'accounts'));
-
-    }
-
-    /**
      *
      */
     public function index()
@@ -153,6 +51,9 @@ class ReportController extends BaseController
     /**
      * @param $year
      * @param $month
+     *
+     * @SuppressWarnings("CyclomaticComplexity")
+     * @SuppressWarnings("MethodLength")
      *
      * @return \Illuminate\View\View
      */
@@ -173,58 +74,34 @@ class ReportController extends BaseController
 
         /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $journalRepository */
         $journalRepository = App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
+        $journals          = $journalRepository->getInDateRange($start, $end);
 
-        /*
-         * Get all journals from this month:
-         */
-        $journals = $journalRepository->getInDateRange($start, $end);
-
-        /*
-         * Filter withdrawals:
-         */
         $withdrawals = $journals->filter(
             function (TransactionJournal $journal) {
-                if ($journal->transactionType->type == 'Withdrawal' && count($journal->budgets) == 0) {
-
-                    // count groups related to balance.
-                    if ($journal->transactiongroups()->where('relation', 'balance')->count() == 0) {
-                        return $journal;
-                    }
+                $relations = $journal->transactiongroups()->where('relation', 'balance')->count();
+                $budgets   = $journal->budgets()->count();
+                $type      = $journal->transactionType->type;
+                if ($type == 'Withdrawal' && $budgets == 0 && $relations == 0) {
+                    return $journal;
                 }
 
                 return null;
             }
         );
-        /*
-         * Filter deposits.
-         */
         $deposits = $journals->filter(
             function (TransactionJournal $journal) {
-                if ($journal->transactionType->type == 'Deposit' && count($journal->budgets) == 0) {
-                    // count groups related to balance.
-                    if ($journal->transactiongroups()->where('relation', 'balance')->count() == 0) {
-                        return $journal;
-                    }
+                $relations = $journal->transactiongroups()->where('relation', 'balance')->count();
+                $budgets   = $journal->budgets()->count();
+                $type      = $journal->transactionType->type;
+                if ($type == 'Deposit' && $budgets == 0 && $relations == 0) {
+                    return $journal;
                 }
 
                 return null;
             }
         );
 
-
-        /*
-         * Filter transfers (not yet used)
-         */
-        //        $transfers = $journals->filter(
-        //            function (TransactionJournal $journal) {
-        //                if ($journal->transactionType->type == 'Transfer') {
-        //                    return $journal;
-        //                }
-        //            }
-        //        );
-
         $journals = $withdrawals->merge($deposits);
-
 
         return View::make('reports.unbalanced', compact('start', 'end', 'title', 'subTitle', 'subTitleIcon', 'mainTitleIcon', 'journals'));
     }

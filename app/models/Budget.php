@@ -5,7 +5,9 @@
  */
 class Budget extends Component
 {
+    // @codingStandardsIgnoreStart
     protected $isSubclass = true;
+    // @codingStandardsIgnoreEnd
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough

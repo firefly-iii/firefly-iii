@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use FireflyIII\Database\CommonDatabaseCalls;
 use FireflyIII\Database\CUD;
 use FireflyIII\Database\SwitchUser;
+use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
@@ -43,6 +44,7 @@ class Category implements CUD, CommonDatabaseCalls
      * @param array $data
      *
      * @return \Eloquent
+     * @throws FireflyException
      */
     public function store(array $data)
     {
@@ -51,8 +53,8 @@ class Category implements CUD, CommonDatabaseCalls
         $category->class = 'Category';
         $category->user()->associate($this->getUser());
         if (!$category->isValid()) {
-            var_dump($category->getErrors());
-            exit();
+            \Log::error('Could not store category: ' . $category->getErrors()->toJson());
+            throw new FireflyException($category->getErrors()->first());
         }
         $category->save();
 
@@ -61,16 +63,17 @@ class Category implements CUD, CommonDatabaseCalls
 
     /**
      * @param \Eloquent $model
-     * @param array  $data
+     * @param array     $data
      *
      * @return bool
+     * @throws FireflyException
      */
     public function update(\Eloquent $model, array $data)
     {
         $model->name = $data['name'];
         if (!$model->isValid()) {
-            var_dump($model->getErrors()->all());
-            exit;
+            \Log::error('Could not store category: ' . $model->getErrors()->toJson());
+            throw new FireflyException($model->getErrors()->first());
         }
 
 
@@ -91,25 +94,8 @@ class Category implements CUD, CommonDatabaseCalls
     {
         $warnings  = new MessageBag;
         $successes = new MessageBag;
-        $errors    = new MessageBag;
-
-        if (isset($model['name'])) {
-            if (strlen($model['name']) < 1) {
-                $errors->add('name', 'Name is too short');
-            }
-            if (strlen($model['name']) > 200) {
-                $errors->add('name', 'Name is too long');
-
-            }
-        } else {
-            $errors->add('name', 'Name is mandatory');
-        }
         $validator = \Validator::make($model, \Component::$rules);
-
-        if ($validator->invalid()) {
-            $errors->merge($validator->getErrors());
-        }
-
+        $errors    = $validator->errors();
 
         if (!$errors->has('name')) {
             $successes->add('name', 'OK');
@@ -171,7 +157,7 @@ class Category implements CUD, CommonDatabaseCalls
     /**
      * @param $name
      *
-     * @return static
+     * @return \Category
      */
     public function firstOrCreate($name)
     {
@@ -203,11 +189,12 @@ class Category implements CUD, CommonDatabaseCalls
      * @param Carbon    $date
      *
      * @return null
+     * @throws NotImplementedException
      * @internal param \Category $budget
      */
     public function repetitionOnStartingOnDate(\Category $category, Carbon $date)
     {
-        return null;
+        throw new NotImplementedException;
     }
 
     /**

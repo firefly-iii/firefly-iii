@@ -73,7 +73,7 @@ class RepeatedExpenseController extends BaseController
         $repetitions = $piggyBank->piggybankrepetitions()->get();
         $repetitions->each(
             function (PiggybankRepetition $repetition) use ($repository) {
-                $repository->calculateParts($repetition);
+                $repetition->bars = $repository->calculateParts($repetition);
             }
         );
 

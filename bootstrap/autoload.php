@@ -28,6 +28,7 @@ require __DIR__ . '/../vendor/autoload.php';
 */
 
 if (file_exists($compiled = __DIR__ . '/compiled.php')) {
+    /** @noinspection PhpIncludeInspection */
     require $compiled;
 }
 

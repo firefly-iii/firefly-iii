@@ -18,6 +18,9 @@ class TransactionJournal extends Eloquent
            'description'             => 'required|between:1,255',
            'date'                    => 'required|date',
            'completed'               => 'required|between:0,1'];
+    protected     $fillable
+        = ['transaction_type_id', 'transaction_currency_id', 'user_id',
+           'description', 'date', 'completed'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
