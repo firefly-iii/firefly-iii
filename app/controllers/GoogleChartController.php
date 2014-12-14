@@ -374,7 +374,7 @@ class GoogleChartController extends BaseController
         $chart->addColumn('Date', 'date');
         $chart->addColumn('Balance', 'number');
 
-        $set = \DB::table('piggybank_events')->where('piggybank_id', $piggybank->id)->groupBy('date')->get(['date', DB::Raw('SUM(`amount`) AS `sum`')]);
+        $set = \DB::table('piggy_bank_events')->where('piggybank_id', $piggybank->id)->groupBy('date')->get(['date', DB::Raw('SUM(`amount`) AS `sum`')]);
 
         foreach ($set as $entry) {
             $chart->addRow(new Carbon($entry->date), floatval($entry->sum));
