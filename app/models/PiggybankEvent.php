@@ -2,18 +2,18 @@
 use Watson\Validating\ValidatingTrait;
 
 /**
- * Class PiggybankEvent
+ * Class PiggyBankEvent
  */
-class PiggybankEvent extends Eloquent
+class PiggyBankEvent extends Eloquent
 {
 
-    use ValidatingTrait;
     public static $rules
         = [
             'piggybank_id' => 'required|exists:piggybanks,id',
             'date'         => 'required|date',
             'amount'       => 'required|numeric'
         ];
+    use ValidatingTrait;
 
     /**
      * @return array

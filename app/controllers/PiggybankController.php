@@ -321,6 +321,7 @@ class PiggybankController extends BaseController
         $data['rep_every']     = 0;
         $data['reminder_skip'] = 0;
         $data['order']         = 0;
+        $data['remind_me']     = isset($data['remind_me']) ? 1 : 0;
 
         switch (Input::get('post_submit_action')) {
             default:

@@ -21,7 +21,7 @@ class Piggybank
     public function addMoney(\Piggybank $piggybank, $amount = 0.0)
     {
         if ($amount > 0) {
-            $event = new \PiggybankEvent;
+            $event = new \PiggyBankEvent;
             $event->piggybank()->associate($piggybank);
             $event->amount = floatval($amount);
             $event->date   = new Carbon;
@@ -67,7 +67,7 @@ class Piggybank
             $repetition->save();
 
 
-            $event = new \PiggybankEvent;
+            $event = new \PiggyBankEvent;
             $event->piggybank()->associate($piggyBank);
             $event->amount = floatval($relevantTransaction->amount * -1);
             $event->date   = new Carbon;
@@ -83,7 +83,7 @@ class Piggybank
     {
         $amount = $amount * -1;
         if ($amount < 0) {
-            $event = new \PiggybankEvent;
+            $event = new \PiggyBankEvent;
             $event->piggybank()->associate($piggybank);
             $event->amount = floatval($amount);
             $event->date   = new Carbon;
@@ -170,7 +170,7 @@ class Piggybank
                 $repetition->currentamount += floatval($relevantTransaction->amount);
                 $repetition->save();
 
-                $event = new \PiggybankEvent;
+                $event = new \PiggyBankEvent;
                 $event->piggybank()->associate($piggyBank);
                 $event->transactionjournal()->associate($journal);
                 $event->amount = floatval($relevantTransaction->amount);
@@ -316,7 +316,7 @@ class Piggybank
             $repetition->save();
 
 
-            $event = new \PiggybankEvent;
+            $event = new \PiggyBankEvent;
             $event->piggybank()->associate($piggyBank);
             $event->transactionJournal()->associate($journal);
             $event->amount = $diff;
