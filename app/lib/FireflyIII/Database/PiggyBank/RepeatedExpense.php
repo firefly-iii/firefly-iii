@@ -37,245 +37,64 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggybankInterface
      *
      * @param \PiggybankRepetition $repetition
      *
-     * @return \PiggybankRepetition
+     * @return Collection
      */
     public function calculateParts(\PiggybankRepetition $repetition)
     {
-        \Log::debug('NOW in calculateParts()');
-        \Log::debug('Repetition id is ' . $repetition->id);
         /** @var \Piggybank $piggyBank */
-        $piggyBank = $repetition->piggybank()->first();
-        $bars      = new Collection;
-        \Log::debug('connected piggy bank is: ' . $piggyBank->name . ' (#' . $piggyBank->id . ')');
-
-        /*
-         * If no reminders are set, the repetition is split in exactly one part:
-         */
-        if (is_null($piggyBank->reminder)) {
-            $part = new PiggybankPart;
-            $part->setRepetition($repetition);
-            $part->setAmountPerBar(floatval($piggyBank->targetamount));
-            $part->setCurrentamount($repetition->currentamount);
-            $part->setCumulativeAmount($piggyBank->targetamount);
-            $part->setStartdate(clone $repetition->startdate);
-            $part->setTargetdate(clone $repetition->targetdate);
-            $bars->push($part);
-            $repetition->bars = $bars;
-
-            return $repetition;
-        }
+        $piggyBank    = $repetition->piggybank()->first();
+        $bars         = new Collection;
         $currentStart = clone $repetition->startdate;
-        /*
-         * Loop between start and target instead of counting manually.
-         */
-        $index = 0;
-        //echo 'Looping!<br>';
-        //echo $repetition->startdate . ' until ' . $repetition->targetdate . '<br>';
+
+        if (is_null($piggyBank->reminder)) {
+            $entry = ['repetition'    => $repetition, 'amountPerBar' => floatval($piggyBank->targetamount),
+                      'currentAmount' => floatval($repetition->currentamount), 'cumulativeAmount' => floatval($piggyBank->targetamount),
+                      'startDate'     => clone $repetition->startdate, 'targetDate' => clone $repetition->targetdate];
+            $bars->push($this->createPiggyBankPart($entry));
+
+            return $bars;
+        }
+
         while ($currentStart < $repetition->targetdate) {
-            $currentTarget = \DateKit::endOfX($currentStart, $piggyBank->reminder);
-            if ($currentTarget > $repetition->targetdate) {
-                $currentTarget = clone $repetition->targetdate;
-            }
-
-            // create a part:
-            $part = new PiggybankPart;
-            $part->setRepetition($repetition);
-            $part->setCurrentamount($repetition->currentamount);
-            $part->setStartdate($currentStart);
-            $part->setTargetdate($currentTarget);
-            $bars->push($part);
-            //echo 'Loop #' . $index . ', from ' . $currentStart . ' until ' . $currentTarget . '<br />';
-
-
-            /*
-             * Jump to the next period by adding a day.
-             */
+            $currentTarget = \DateKit::endOfX($currentStart, $piggyBank->reminder, $repetition->targetdate);
+            $entry         = ['repetition'       => $repetition, 'amountPerBar' => null, 'currentAmount' => floatval($repetition->currentamount),
+                              'cumulativeAmount' => null, 'startDate' => $currentStart, 'targetDate' => $currentTarget];
+            $bars->push($this->createPiggyBankPart($entry));
             $currentStart = clone $currentTarget;
-            $currentStart->addDay();//\DateKit::addPeriod($currentTarget, $piggyBank->reminder, 0);
-            $index++;
+            $currentStart->addDay();
 
         }
-        /*
-         * Loop parts again to add some
-         */
-        $parts        = $bars->count();
-        $amountPerBar = floatval($piggyBank->targetamount) / $parts;
+        $amountPerBar = floatval($piggyBank->targetamount) / $bars->count();
         $cumulative   = $amountPerBar;
         /** @var PiggybankPart $bar */
         foreach ($bars as $index => $bar) {
             $bar->setAmountPerBar($amountPerBar);
             $bar->setCumulativeAmount($cumulative);
-            if ($parts - 1 == $index) {
+            if ($bars->count() - 1 == $index) {
                 $bar->setCumulativeAmount($piggyBank->targetamount);
             }
-
-            $reminder = $piggyBank->reminders()
-                                  ->where('startdate', $bar->getStartdate()->format('Y-m-d'))
-                                  ->where('enddate', $bar->getTargetdate()->format('Y-m-d'))
-                                  ->first();
-            if ($reminder) {
-                $bar->setReminder($reminder);
-            }
-
             $cumulative += $amountPerBar;
         }
 
-        $repetition->bars = $bars;
+        return $bars;
+    }
 
-        return $repetition;
-        //
-        //        //        if($parts > 12) {
-        //        //            $parts = 12;
-        //        //            $currentStart = \DateKit::startOfPeriod(Carbon::now(), $piggyBank->reminder);
-        //        //            $currentEnd = \DateKit::endOfPeriod($currentEnd, $piggyBank->reminder);
-        //        //        }
-        //
-        //        for ($i = 0; $i < $parts; $i++) {
-        //            /*
-        //             * If it's not the first repetition, jump the start date a [period]
-        //             * and jump the target date a [period]
-        //             */
-        //            if ($i > 0) {
-        //                $currentStart = clone $currentTarget;
-        //                $currentStart->addDay();
-        //                $currentTarget = \DateKit::addPeriod($currentStart, $piggyBank->reminder, 0);
-        //            }
-        //            /*
-        //             * If it's the first one, and has reminders, jump to the end of the [period]
-        //             */
-        //            if ($i == 0 && !is_null($piggyBank->reminder)) {
-        //                $currentTarget = \DateKit::endOfX($currentStart, $piggyBank->reminder);
-        //            }
-        //            if ($currentStart > $repetition->targetdate) {
-        //                break;
-        //            }
-        //
-        //
-        //            /*
-        //             * Jump one month ahead after the first instance:
-        //             */
-        //            //            if ($i > 0) {
-        //            //                $currentStart = \DateKit::addPeriod($currentStart, $piggyBank->reminder, 0);
-        //            //                /*
-        //            //                 * Jump to the start of the period too:
-        //            //                 */
-        //            //                $currentStart = \DateKit::startOfPeriod($currentStart, $piggyBank->reminder);
-        //            //
-        //            //            }
-        //
-        //
-        //            /*
-        //             * Move the current start to the actual start of
-        //             * the [period] once the first iteration has passed.
-        //             */
-        //            //            if ($i != 0) {
-        //            //                $currentStart = \DateKit::startOfPeriod($currentStart, $piggyBank->reminder);
-        //            //            }
-        //            //            if($i == 0 && !is_null($piggyBank->reminder)) {
-        //            //                $currentEnd = \DateKit::startOfPeriod($currentStart, $piggyBank->reminder);
-        //            //                $currentEnd = \DateKit::endOfPeriod($currentEnd, $piggyBank->reminder);
-        //            //            }
-        //
-        //            $part = new PiggybankPart;
-        //            $part->setRepetition($repetition);
-        //            $part->setAmount($currentAmount);
-        //            $part->setAmountPerBar($amountPerBar);
-        //            $part->setCurrentamount($repetition->currentamount);
-        //            $part->setStartdate($currentStart);
-        //            $part->setTargetdate($currentTarget);
-        //            if (!is_null($piggyBank->reminder)) {
-        //                // might be a reminder for this range?
-        //                $reminder = $piggyBank->reminders()
-        //                                      ->where('startdate', $currentStart->format('Y-m-d'))
-        //                                      ->where('enddate', $currentTarget->format('Y-m-d'))
-        //                                      ->first();
-        //                if ($reminder) {
-        //                    $part->setReminder($reminder);
-        //                }
-        //
-        //            }
-        //
-        //            //            if (!is_null($piggyBank->reminder)) {
-        //            //                $currentStart = \DateKit::addPeriod($currentStart, $piggyBank->reminder, 0);
-        //            //                $currentEnd   = \DateKit::endOfPeriod($currentStart, $piggyBank->reminder);
-        //            //            }
-        //
-        //
-        //            $bars->push($part);
-        //            $currentAmount += $amountPerBar;
-        //        }
-        //        $repetition->bars = $bars;
-        //
-        //        return $repetition;
-        //        exit;
-        //
-        //
-        //        $repetition->hello = 'World!';
-        //
-        //        return $repetition;
-        //
-        //        $return      = new Collection;
-        //        $repetitions = $piggyBank->piggybankrepetitions()->get();
-        //        /** @var \PiggybankRepetition $repetition */
-        //        foreach ($repetitions as $repetition) {
-        //
-        //
-        //            if (is_null($piggyBank->reminder)) {
-        //                // simple, one part "repetition".
-        //                $part = new PiggybankPart;
-        //                $part->setRepetition($repetition);
-        //            } else {
-        //                $part = new PiggybankPart;
-        //            }
-        //
-        //
-        //            // end!
-        //            $return->push($part);
-        //        }
-        //
-        //        exit;
-        //
-        //        return $return;
-        //        $piggyBank->currentRelevantRep(); // get the current relevant repetition.
-        //        if (!is_null($piggyBank->reminder)) {
-        //            switch ($piggyBank->reminder) {
-        //                default:
-        //                    throw new FireflyException('Cannot handle "' . $piggyBank->reminder . '" reminders for repeated expenses');
-        //                    break;
-        //                case 'month':
-        //                    $start = clone $piggyBank->currentRep->startdate;
-        //                    $start->startOfMonth();
-        //                    $end = clone $piggyBank->currentRep->targetdate;
-        //                    $end->endOfMonth();
-        //                    $piggyBank->parts = $start->diffInMonths($end);
-        //                    unset($start, $end);
-        //                    break;
-        //            }
-        //
-        //        } else {
-        //            $piggyBank->parts = 1;
-        //        }
-        //
-        //        // number of bars:
-        //        $piggyBank->barCount = floor(12 / $piggyBank->parts) == 0 ? 1 : floor(12 / $piggyBank->parts);
-        //        $amountPerBar        = floatval($piggyBank->targetamount) / $piggyBank->parts;
-        //        $currentAmount       = floatval($amountPerBar);
-        //        $bars                = [];
-        //        $currentStart        = clone $piggyBank->currentRep->startdate;
-        //        for ($i = 0; $i < $piggyBank->parts; $i++) {
-        //            // niet elke keer een andere dinges pakken? om target te redden?
-        //            if (!is_null($piggyBank->reminder)) {
-        //                $currentStart = \DateKit::addPeriod($currentStart, $piggyBank->reminder, 0);
-        //            }
-        //            $bars[] = [
-        //                'amount' => $currentAmount,
-        //                'date'   => $currentStart
-        //            ];
-        //
-        //
-        //            $currentAmount += $amountPerBar;
-        //        }
-        //        $piggyBank->bars = $bars;
+    /**
+     * @param array $data
+     *
+     * @return PiggybankPart
+     */
+    public function createPiggyBankPart(array $data)
+    {
+        $part = new PiggybankPart;
+        $part->setRepetition($data['repetition']);
+        $part->setAmountPerBar($data['amountPerBar']);
+        $part->setCurrentamount($data['currentAmount']);
+        $part->setCumulativeAmount($data['cumulativeAmount']);
+        $part->setStartdate($data['startDate']);
+        $part->setTargetdate($data['targetDate']);
+
+        return $part;
     }
 
     /**

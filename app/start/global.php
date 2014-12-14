@@ -127,4 +127,5 @@ App::down(
 |
 */
 
+/** @noinspection PhpIncludeInspection */
 require app_path() . '/filters.php';

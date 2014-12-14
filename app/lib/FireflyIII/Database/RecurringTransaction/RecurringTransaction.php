@@ -47,7 +47,6 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
      */
     public function store(array $data)
     {
-        var_dump($data);
         $recurring = new \RecurringTransaction;
         $recurring->user()->associate($this->getUser());
         $recurring->name       = $data['name'];
@@ -58,21 +57,16 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
         $date = new Carbon($data['date']);
 
 
-        $recurring->active      = isset($data['active']) && intval($data['active']) == 1 ? 1 : 0;
-        $recurring->automatch   = isset($data['automatch']) && intval($data['automatch']) == 1 ? 1 : 0;
+        $recurring->active      = intval($data['active']);
+        $recurring->automatch   = intval($data['automatch']);
         $recurring->repeat_freq = $data['repeat_freq'];
 
         /*
          * Jump to the start of the period.
          */
-        $date            = DateKit::startOfPeriod($date, $data['repeat_freq']);
+        $date            = \DateKit::startOfPeriod($date, $data['repeat_freq']);
         $recurring->date = $date;
         $recurring->skip = intval($data['skip']);
-
-        if (!$recurring->isValid()) {
-            var_dump($recurring->getErrors());
-            exit();
-        }
 
         $recurring->save();
 
@@ -87,8 +81,6 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
      */
     public function update(\Eloquent $model, array $data)
     {
-        var_dump($data);
-
         $model->name       = $data['name'];
         $model->match      = $data['match'];
         $model->amount_max = floatval($data['amount_max']);
@@ -97,16 +89,10 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
         $date = new Carbon($data['date']);
 
         $model->date        = $date;
-        $model->active      = isset($data['active']) && intval($data['active']) == 1 ? 1 : 0;
-        $model->automatch   = isset($data['automatch']) && intval($data['automatch']) == 1 ? 1 : 0;
+        $model->active      = intval($data['active']);
+        $model->automatch   = intval($data['automatch']);
         $model->repeat_freq = $data['repeat_freq'];
         $model->skip        = intval($data['skip']);
-
-        if (!$model->isValid()) {
-            var_dump($model->getErrors());
-            exit();
-        }
-
         $model->save();
 
         return true;

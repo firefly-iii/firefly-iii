@@ -58,4 +58,13 @@ class Steam
         }
     }
 
+    public function removeEmptyBudgetLimits()
+    {
+        $user = \Auth::user();
+        if ($user) {
+            \BudgetLimit::leftJoin('components', 'components.id', '=', 'budget_limits.component_id')->where('components.user_id', $user->id)
+                        ->where('budget_limits.amount', 0)->delete();
+        }
+    }
+
 } 

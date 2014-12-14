@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use FireflyIII\Database\CommonDatabaseCalls;
 use FireflyIII\Database\CUD;
 use FireflyIII\Database\SwitchUser;
+use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
@@ -42,6 +43,7 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
      * @param array $data
      *
      * @return \Eloquent
+     * @throws FireflyException
      */
     public function store(array $data)
     {
@@ -51,8 +53,8 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
         $budget->class = 'Budget';
 
         if (!$budget->isValid()) {
-            var_dump($budget->getErrors()->all());
-            exit;
+            \Log::error('Could not store budget: ' . $budget->getErrors()->toJson());
+            throw new FireflyException($budget->getErrors()->first());
         }
         $budget->save();
 
@@ -68,12 +70,6 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     public function update(\Eloquent $model, array $data)
     {
         $model->name = $data['name'];
-        if (!$model->isValid()) {
-            var_dump($model->getErrors()->all());
-            exit;
-        }
-
-
         $model->save();
 
         return true;
@@ -91,25 +87,8 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     {
         $warnings  = new MessageBag;
         $successes = new MessageBag;
-        $errors    = new MessageBag;
-
-        if (isset($model['name'])) {
-            if (strlen($model['name']) < 1) {
-                $errors->add('name', 'Name is too short');
-            }
-            if (strlen($model['name']) > 200) {
-                $errors->add('name', 'Name is too long');
-
-            }
-        } else {
-            $errors->add('name', 'Name is mandatory');
-        }
         $validator = \Validator::make($model, \Component::$rules);
-
-        if ($validator->invalid()) {
-            $errors->merge($validator->errors());
-        }
-
+        $errors    = $validator->errors();
 
         if (!$errors->has('name')) {
             $successes->add('name', 'OK');
@@ -274,12 +253,12 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
         // Add expenses that have no budget:
         return $this->getUser()->transactionjournals()->whereNotIn(
             'transaction_journals.id', function ($query) use ($start, $end) {
-                $query->select('transaction_journals.id')->from('transaction_journals')->leftJoin(
-                    'component_transaction_journal', 'component_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
-                )->leftJoin('components', 'components.id', '=', 'component_transaction_journal.component_id')->where(
-                    'transaction_journals.date', '>=', $start->format('Y-m-d')
-                )->where('transaction_journals.date', '<=', $end->format('Y-m-d'))->where('components.class', 'Budget');
-            }
+            $query->select('transaction_journals.id')->from('transaction_journals')->leftJoin(
+                'component_transaction_journal', 'component_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
+            )->leftJoin('components', 'components.id', '=', 'component_transaction_journal.component_id')->where(
+                'transaction_journals.date', '>=', $start->format('Y-m-d')
+            )->where('transaction_journals.date', '<=', $end->format('Y-m-d'))->where('components.class', 'Budget');
+        }
         )->before($end)->after($start)->lessThan(0)->transactionTypes(['Withdrawal'])->get();
     }
 

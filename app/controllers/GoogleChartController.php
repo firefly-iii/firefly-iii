@@ -67,9 +67,7 @@ class GoogleChartController extends BaseController
      */
     public function allAccountsBalanceChart()
     {
-        /** @var \Grumpydictator\Gchart\GChart $chart */
-        $chart = App::make('gchart');
-        $chart->addColumn('Day of the month', 'date');
+        $this->_chart->addColumn('Day of the month', 'date');
 
         /** @var \FireflyIII\Shared\Preferences\Preferences $preferences */
         $preferences = App::make('FireflyIII\Shared\Preferences\Preferences');
@@ -83,35 +81,26 @@ class GoogleChartController extends BaseController
             $accounts = $acct->getAssetAccounts();
         }
 
-
-        /*
-         * Add a column for each account.
-         */
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $chart->addColumn('Balance for ' . $account->name, 'number');
+            $this->_chart->addColumn('Balance for ' . $account->name, 'number');
         }
-        /*
-         * Loop the date, then loop the accounts, then add balance.
-         */
         $start   = Session::get('start', Carbon::now()->startOfMonth());
         $end     = Session::get('end');
         $current = clone $start;
 
         while ($end >= $current) {
             $row = [clone $current];
-
             foreach ($accounts as $account) {
                 $row[] = Steam::balance($account, $current);
             }
-
-            $chart->addRowArray($row);
+            $this->_chart->addRowArray($row);
             $current->addDay();
         }
 
-        $chart->generate();
+        $this->_chart->generate();
 
-        return Response::json($chart->getData());
+        return Response::json($this->_chart->getData());
 
     }
 
@@ -537,16 +526,16 @@ class GoogleChartController extends BaseController
         $chart->addColumn('Income', 'number');
         $chart->addColumn('Expenses', 'number');
 
-        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $tj */
-        $tj = App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
+        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $repository */
+        $repository = App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
 
         $end = clone $start;
         $end->endOfYear();
         while ($start < $end) {
 
             // total income:
-            $income  = $tj->getSumOfIncomesByMonth($start);
-            $expense = $tj->getSumOfExpensesByMonth($start);
+            $income  = $repository->getSumOfIncomesByMonth($start);
+            $expense = $repository->getSumOfExpensesByMonth($start);
 
             $chart->addRow(clone $start, $income, $expense);
             $start->addMonth();
@@ -577,8 +566,8 @@ class GoogleChartController extends BaseController
         $chart->addColumn('Income', 'number');
         $chart->addColumn('Expenses', 'number');
 
-        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $tj */
-        $tj = App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
+        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $repository */
+        $repository = App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
 
         $end = clone $start;
         $end->endOfYear();
@@ -588,8 +577,8 @@ class GoogleChartController extends BaseController
         while ($start < $end) {
 
             // total income:
-            $income += $tj->getSumOfIncomesByMonth($start);
-            $expense += $tj->getSumOfExpensesByMonth($start);
+            $income += $repository->getSumOfIncomesByMonth($start);
+            $expense += $repository->getSumOfExpensesByMonth($start);
             $count++;
 
             $start->addMonth();

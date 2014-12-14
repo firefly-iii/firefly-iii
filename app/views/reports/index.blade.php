@@ -24,7 +24,7 @@
         <div class="panel-body">
         <ul>
         @foreach($months as $month)
-            <li><a href="{{route('reports.budgets',[$month['year'],$month['month']])}}">{{$month['formatted']}}</a></li>
+            <li><a href="#{{$month['year']}}-{{$month['month']}}">{{$month['formatted']}}</a></li>
         @endforeach
         </ul>
         </div>

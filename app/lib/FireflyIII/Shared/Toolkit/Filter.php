@@ -17,41 +17,14 @@ class Filter
      */
     public function setSessionDateRange()
     {
-        /*
-         * Get the current range.
-         */
-        $range = $this->setSessionRangeValue();
-        $start = \Session::has('start') ? \Session::get('start') : new Carbon;
-
-        /*
-         * Force start date to at the start of the $range.
-         * Ie. the start of the week, month, year. This also to protect against nefarious users
-         * who change their session data (I just wanted to use the word "nefarious").
-         */
-        $start = $this->updateStartDate($range, $start);
-
-        /*
-         * Force end date to at the END of the $range. Always based on $start.
-         * Ie. the END of the week, month, year.
-         */
-        $end = $this->updateEndDate($range, $start);
-        #\Log::debug('After update, session end is  : ' . $end->format('Y-m-d'));
-
-        /*
-         * get the name of the month, depending on the range. Purely for astetics
-         */
+        $range  = $this->setSessionRangeValue();
+        $start  = \Session::has('start') ? \Session::get('start') : new Carbon;
+        $start  = $this->updateStartDate($range, $start);
+        $end    = $this->updateEndDate($range, $start);
         $period = $this->periodName($range, $start);
+        $prev   = $this->previous($range, clone $start);
+        $next   = $this->next($range, clone $start);
 
-        /*
-         * Get the date for the previous and next period.
-         * Ie. next week, next month, etc.
-         */
-        $prev = $this->previous($range, clone $start);
-        $next = $this->next($range, clone $start);
-
-        /*
-         * Save everything in the session:
-         */
         \Session::put('start', $start);
         \Session::put('end', $end);
         \Session::put('range', $range);
@@ -90,6 +63,7 @@ class Filter
     /**
      * @param        $range
      * @param Carbon $start
+     * @SuppressWarnings("Cyclomatic")
      *
      * @return Carbon
      * @throws FireflyException
@@ -215,6 +189,7 @@ class Filter
     /**
      * @param        $range
      * @param Carbon $date
+     * @SuppressWarnings("CyclomaticComplexity")
      *
      * @return Carbon
      * @throws FireflyException

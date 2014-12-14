@@ -16,37 +16,33 @@ class Form
      *
      * @param Collection $set
      * @param null       $titleField
+     * @param bool       $addEmpty
+     * @SuppressWarnings("CyclomaticComplexity")
      *
      * @return mixed
      */
-    public function makeSelectList(Collection $set, $titleField = null)
+    public function makeSelectList(Collection $set, $titleField = null, $addEmpty = false)
     {
         $selectList = [];
-        /** @var Model $entry */
+        if ($addEmpty) {
+            $selectList[0] = '(none)';
+        }
+        $fields = ['title', 'name', 'description'];
+        /** @var \Eloquent $entry */
         foreach ($set as $entry) {
+            /** @noinspection PhpUndefinedFieldInspection */
             $id    = intval($entry->id);
-            $title = null;
-            if (is_null($titleField)) {
-                // try 'title' field.
-                if (isset($entry->title)) {
-                    $title = $entry->title;
-                }
-                // try 'name' field
-                if (is_null($title)) {
-                    $title = $entry->name;
-                }
+            $title = $titleField;
 
-                // try 'description' field
-                if (is_null($title)) {
-                    $title = $entry->description;
+            foreach ($fields as $field) {
+                if (is_null($title) && isset($entry->$field)) {
+                    $title = $entry->$field;
                 }
-            } else {
-                $title = $entry->$titleField;
             }
             $selectList[$id] = $title;
         }
 
+
         return $selectList;
     }
-
-} 
+}

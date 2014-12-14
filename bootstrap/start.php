@@ -2,25 +2,25 @@
 
 if (!function_exists('mf')) {
     /**
-     * @param      $n
+     * @param      $amount
      * @param bool $coloured
      *
      * @return string
      */
-    function mf($n, $coloured = true)
+    function mf($amount, $coloured = true)
     {
 
-        $n      = floatval($n);
-        $n      = round($n, 2);
-        $string = number_format($n, 2, ',', '.');
+        $amount = floatval($amount);
+        $amount = round($amount, 2);
+        $string = number_format($amount, 2, ',', '.');
 
-        if ($coloured === true && $n === 0.0) {
+        if ($coloured === true && $amount === 0.0) {
             return '<span style="color:#999">&#8364; ' . $string . '</span>';
         }
-        if ($coloured === true && $n > 0) {
+        if ($coloured === true && $amount > 0) {
             return '<span class="text-success">&#8364; ' . $string . '</span>';
         }
-        if ($coloured === true && $n < 0) {
+        if ($coloured === true && $amount < 0) {
             return '<span class="text-danger">&#8364; ' . $string . '</span>';
         }
 
@@ -74,6 +74,7 @@ $app->bindInstallPaths(require __DIR__ . '/paths.php');
 
 $framework = $app['path.base'] . '/vendor/laravel/framework/src';
 
+/** @noinspection PhpIncludeInspection */
 require $framework . '/Illuminate/Foundation/start.php';
 
 
