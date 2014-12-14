@@ -9,6 +9,7 @@ App::before(
         if (Auth::check()) {
             Filter::setSessionDateRange();
             Reminders::updateReminders();
+            Steam::removeEmptyBudgetLimits();
             $reminders = Reminders::getReminders();
         }
         View::share('reminders', $reminders);
