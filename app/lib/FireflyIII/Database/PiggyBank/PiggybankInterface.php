@@ -3,11 +3,11 @@
 namespace FireflyIII\Database\PiggyBank;
 
 /**
- * Interface PiggybankInterface
+ * Interface PiggyBankInterface
  *
  * @package FireflyIII\Database\Ifaces
  */
-interface PiggybankInterface
+interface PiggyBankInterface
 {
 
     /**
