@@ -29,7 +29,8 @@ class Steam
             $key = 'account.' . $account->id . '.balanceOn' . $date->format('dmy');
         }
         if (\Cache::has($key)) {
-            return \Cache::get($key);
+            // TODO find a way to reliably remove cache entries for accounts.
+            #return \Cache::get($key);
         }
         $date    = is_null($date) ? Carbon::now() : $date;
         $balance = floatval(
