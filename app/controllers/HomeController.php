@@ -48,7 +48,7 @@ class HomeController extends BaseController
 
         $transactions = [];
         foreach ($accounts as $account) {
-            $set = $jrnls->getInDateRangeAccount($account, 10, $start, $end);
+            $set = $jrnls->getInDateRangeAccount($account, $start, $end, 10);
             if (count($set) > 0) {
                 $transactions[] = [$set, $account];
             }

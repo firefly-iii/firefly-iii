@@ -138,8 +138,7 @@ class TestContentSeeder extends Seeder
      */
     public function createTransaction(
         Account $from, Account $to, $amount, TransactionType $type, $description, $date, Budget $budget = null, Category $category = null
-    )
-    {
+    ) {
         $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
         $euro = TransactionCurrency::whereCode('EUR')->first();
 
@@ -161,7 +160,6 @@ class TestContentSeeder extends Seeder
                 'transaction_journal_id' => $journal->id,
                 'amount'                 => $amount * -1
             ]
-
         );
         Transaction::create(
             [
@@ -169,7 +167,6 @@ class TestContentSeeder extends Seeder
                 'transaction_journal_id' => $journal->id,
                 'amount'                 => $amount
             ]
-
         );
         if (!is_null($budget)) {
             $journal->budgets()->save($budget);

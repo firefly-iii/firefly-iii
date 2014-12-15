@@ -14,13 +14,10 @@ class PiggybankPart
 {
     /** @var  float */
     public $amountPerBar;
-
-    /** @var  float */
-    public $currentamount;
-
     /** @var  float */
     public $cumulativeAmount;
-
+    /** @var  float */
+    public $currentamount;
     /** @var  \Reminder */
     public $reminder;
 
@@ -38,11 +35,12 @@ class PiggybankPart
      */
     public function getReminder()
     {
-        if(is_null($this->reminder)) {
+        if (is_null($this->reminder)) {
             $this->reminder = $this->repetition->piggybank->reminders()->where('startdate', $bar->getStartdate()->format('Y-m-d'))->where(
                 'enddate', $bar->getTargetdate()->format('Y-m-d')
             )->first();
         }
+
         return $this->reminder;
     }
 
@@ -148,22 +146,6 @@ class PiggybankPart
     /**
      * @return float
      */
-    public function getAmountPerBar()
-    {
-        return $this->amountPerBar;
-    }
-
-    /**
-     * @param float $amountPerBar
-     */
-    public function setAmountPerBar($amountPerBar)
-    {
-        $this->amountPerBar = $amountPerBar;
-    }
-
-    /**
-     * @return float
-     */
     public function getCumulativeAmount()
     {
         return $this->cumulativeAmount;
@@ -177,7 +159,21 @@ class PiggybankPart
         $this->cumulativeAmount = $cumulativeAmount;
     }
 
+    /**
+     * @return float
+     */
+    public function getAmountPerBar()
+    {
+        return $this->amountPerBar;
+    }
 
+    /**
+     * @param float $amountPerBar
+     */
+    public function setAmountPerBar($amountPerBar)
+    {
+        $this->amountPerBar = $amountPerBar;
+    }
 
 
 }

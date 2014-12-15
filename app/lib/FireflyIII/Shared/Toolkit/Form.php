@@ -15,7 +15,6 @@ class Form
      * Takes any collection and tries to make a sensible select list compatible array of it.
      *
      * @param Collection $set
-     * @param null       $titleField
      * @param bool       $addEmpty
      * @SuppressWarnings("CyclomaticComplexity")
      *

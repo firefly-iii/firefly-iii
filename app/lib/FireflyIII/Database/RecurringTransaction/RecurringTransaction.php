@@ -102,6 +102,11 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
      * Validates an array. Returns an array containing MessageBags
      * errors/warnings/successes.
      *
+     * ignored because this method will be gone soon.
+     * @SuppressWarnings("Cyclomatic")
+     * @SuppressWarnings("NPath")
+     * @SuppressWarnings("MethodLength")
+     *
      * @param array $model
      *
      * @return array
