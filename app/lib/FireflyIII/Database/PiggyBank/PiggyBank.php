@@ -87,6 +87,12 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggyBankInterface
      * Validates an array. Returns an array containing MessageBags
      * errors/warnings/successes.
      *
+     * Ignore PHPMD rules because Laravel 5.0 will make this method superfluous anyway.
+     *
+     * @SuppressWarnings("Cyclomatic")
+     * @SuppressWarnings("NPath")
+     * @SuppressWarnings("MethodLength")
+     *
      * @param array $model
      *
      * @return array

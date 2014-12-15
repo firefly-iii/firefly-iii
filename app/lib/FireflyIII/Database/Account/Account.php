@@ -223,28 +223,28 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
         // delete journals:
         \TransactionJournal::whereIn(
             'id', function ($query) use ($model) {
-                $query->select('transaction_journal_id')
-                      ->from('transactions')->whereIn(
-                        'account_id', function ($query) use ($model) {
-                            $query
-                                ->select('id')
-                                ->from('accounts')
-                                ->where(
+            $query->select('transaction_journal_id')
+                  ->from('transactions')->whereIn(
+                    'account_id', function ($query) use ($model) {
+                    $query
+                        ->select('id')
+                        ->from('accounts')
+                        ->where(
+                            function ($q) use ($model) {
+                                $q->where('id', $model->id);
+                                $q->orWhere(
                                     function ($q) use ($model) {
-                                        $q->where('id', $model->id);
-                                        $q->orWhere(
-                                            function ($q) use ($model) {
-                                                $q->where('accounts.name', 'LIKE', '%' . $model->name . '%');
-                                                // TODO magic number!
-                                                $q->where('accounts.account_type_id', 3);
-                                                $q->where('accounts.active', 0);
-                                            }
-                                        );
+                                        $q->where('accounts.name', 'LIKE', '%' . $model->name . '%');
+                                        // TODO magic number!
+                                        $q->where('accounts.account_type_id', 3);
+                                        $q->where('accounts.active', 0);
                                     }
-                                )->where('accounts.user_id', $this->getUser()->id);
-                        }
-                    )->get();
-            }
+                                );
+                            }
+                        )->where('accounts.user_id', $this->getUser()->id);
+                }
+                )->get();
+        }
         )->delete();
 
         /*

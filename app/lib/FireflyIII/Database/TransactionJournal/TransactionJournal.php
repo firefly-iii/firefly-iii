@@ -194,6 +194,11 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      * Validates an array. Returns an array containing MessageBags
      * errors/warnings/successes.
      *
+     * ignored because this method will be gone soon.
+     * @SuppressWarnings("Cyclomatic")
+     * @SuppressWarnings("NPath")
+     * @SuppressWarnings("MethodLength")
+     *
      * @param array $model
      *
      * @return array
@@ -614,13 +619,13 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
 
     /**
      * @param \Account $account
-     * @param int      $count
      * @param Carbon   $start
      * @param Carbon   $end
+     * @param int      $count
      *
      * @return Collection
      */
-    public function getInDateRangeAccount(\Account $account, $count = 20, Carbon $start, Carbon $end)
+    public function getInDateRangeAccount(\Account $account, Carbon $start, Carbon $end, $count = 20)
     {
 
         $accountID = $account->id;
