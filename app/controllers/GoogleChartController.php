@@ -449,7 +449,7 @@ class GoogleChartController extends BaseController
         /** @var \FireflyIII\Database\RecurringTransaction\RecurringTransaction $rcr */
         $rcr = App::make('FireflyIII\Database\RecurringTransaction\RecurringTransaction');
 
-        $recurring = $rcr->get();
+        $recurring = $rcr->getActive();
 
         /** @var \RecurringTransaction $entry */
         foreach ($recurring as $entry) {

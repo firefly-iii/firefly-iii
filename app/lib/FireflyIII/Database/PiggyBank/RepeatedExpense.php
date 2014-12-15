@@ -18,7 +18,7 @@ use Illuminate\Support\MessageBag;
  *
  * @package FireflyIII\Database
  */
-class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggybankInterface
+class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggyBankInterface
 {
     use SwitchUser;
 

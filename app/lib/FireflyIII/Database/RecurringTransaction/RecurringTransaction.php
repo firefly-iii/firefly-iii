@@ -212,6 +212,16 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
     }
 
     /**
+     * Returns all objects.
+     *
+     * @return Collection
+     */
+    public function getActive()
+    {
+        return $this->getUser()->recurringtransactions()->where('active', 1)->get();
+    }
+
+    /**
      * @param \RecurringTransaction $recurring
      * @param Carbon                $start
      * @param Carbon                $end

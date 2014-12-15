@@ -16,7 +16,7 @@ use Illuminate\Support\MessageBag;
  *
  * @package FireflyIII\Database
  */
-class PiggyBank implements CUD, CommonDatabaseCalls, PiggybankInterface
+class PiggyBank implements CUD, CommonDatabaseCalls, PiggyBankInterface
 {
     use SwitchUser;
 
