@@ -31,10 +31,11 @@ class ChangesForV321 extends Migration
 
         // create column in "transactions"
         // create foreign key in "transactions"
+        // TODO skipped because not supported in SQLite
         Schema::table(
             'transactions', function (Blueprint $table) {
-            $table->integer('piggybank_id')->nullable()->unsigned();
-            $table->foreign('piggybank_id')->references('id')->on('piggybanks')->onDelete('set null');
+            #$table->integer('piggybank_id')->nullable()->unsigned();
+            #$table->foreign('piggybank_id')->references('id')->on('piggybanks')->onDelete('set null');
         }
         );
     }
@@ -59,11 +60,12 @@ class ChangesForV321 extends Migration
 
         // drop foreign key in "transactions"
         // drop column in "transactions"
+        // TODO skipped because not supported in SQLite
         Schema::table(
             'transactions', function (Blueprint $table) {
-            $table->dropForeign('transactions_piggybank_id_foreign');
-            $table->dropIndex('transactions_piggybank_id_foreign');
-            $table->dropColumn('piggybank_id');
+            #$table->dropForeign('transactions_piggybank_id_foreign');
+            #$table->dropIndex('transactions_piggybank_id_foreign');
+            #$table->dropColumn('piggybank_id');
         }
         );
 

@@ -1,5 +1,4 @@
 <?php
-use Carbon\Carbon;
 
 /**
  * @SuppressWarnings("CamelCase")
@@ -52,6 +51,12 @@ class AccountControllerCest
     public function destroy(FunctionalTester $I)
     {
         $I->wantTo('destroy an asset account');
+        $I->amOnPage('/accounts/delete/3');
+        $I->see('Delete account "Delete me"');
+        $I->submitForm('#destroy', []);
+        // TODO I dont believe this actually works.
+        $I->dontSeeRecord('accounts', ['id' => 3, 'deleted_at' => null]);
+        resetToClean::clean();
     }
 
     /**

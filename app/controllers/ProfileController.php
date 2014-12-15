@@ -57,8 +57,8 @@ class ProfileController extends BaseController
         }
 
         // update the user with the new password.
-        /** @var \FireflyIII\Database\User $repository */
-        $repository = \App::make('FireflyIII\Database\User');
+        /** @var \FireflyIII\Database\User\User $repository */
+        $repository = \App::make('FireflyIII\Database\User\User');
         $repository->updatePassword(Auth::user(), Input::get('new1'));
 
         Session::flash('success', 'Password changed!');
