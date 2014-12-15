@@ -8,6 +8,18 @@ settings:
     bootstrap: _bootstrap.php
     colors: true
     memory_limit: 1024M
+extensions:
+    enabled:
+        - Codeception\Extension\PhpBuiltinServer
+    config:
+        Codeception\Extension\PhpBuiltinServer:
+            hostname: localhost
+            port: 8000
+            documentRoot: public
+            startDelay: 1
+            phpIni: /etc/php5/fpm/php.ini
+
+
 modules:
   config:
     Db:

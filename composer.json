@@ -37,7 +37,8 @@
         "codeception/codeception": "*",
         "codeception/c3": "2.*",
         "sebastian/phpcpd": "*",
-        "sebastian/phpdcd": "*"
+        "sebastian/phpdcd": "*",
+        "codeception/phpbuiltinserver": "*"
 
     },
     "autoload": {
