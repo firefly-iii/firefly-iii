@@ -70,6 +70,9 @@ class RecurringTransaction extends Eloquent
          * The date Firefly tries to find. If this stays null, it's "unknown".
          */
         $finalDate = null;
+        if ($this->active == 0) {
+            return $finalDate;
+        }
 
         /*
          * $today is the start of the next period, to make sure FF3 won't miss anything

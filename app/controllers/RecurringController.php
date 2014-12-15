@@ -184,8 +184,10 @@ class RecurringController extends BaseController
     public function update(RecurringTransaction $recurringTransaction)
     {
         /** @var \FireflyIII\Database\RecurringTransaction\RecurringTransaction $repos */
-        $repos = App::make('FireflyIII\Database\RecurringTransaction\RecurringTransaction');
-        $data  = Input::except('_token');
+        $repos             = App::make('FireflyIII\Database\RecurringTransaction\RecurringTransaction');
+        $data              = Input::except('_token');
+        $data['active']    = isset($data['active']) ? 1 : 0;
+        $data['automatch'] = isset($data['automatch']) ? 1 : 0;
 
         switch (Input::get('post_submit_action')) {
             default:
