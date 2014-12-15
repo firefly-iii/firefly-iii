@@ -214,9 +214,11 @@ class TransactionController extends BaseController
         $what = strtolower($journal->transactiontype->type);
 
         // get asset accounts with names and id's.
-        $accounts = FFForm::makeSelectList($accountRepository->getAssetAccounts());
+
         $budgets  = FFForm::makeSelectList($budgetRepository->get(), true);
+        $accounts = FFForm::makeSelectList($accountRepository->getAssetAccounts());
         $piggies  = FFForm::makeSelectList($piggyRepository->get(), true);
+
 
         /*
          * Data to properly display the edit form.

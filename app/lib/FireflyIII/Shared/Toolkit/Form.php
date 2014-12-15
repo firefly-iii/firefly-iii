@@ -21,7 +21,7 @@ class Form
      *
      * @return mixed
      */
-    public function makeSelectList(Collection $set, $titleField = null, $addEmpty = false)
+    public function makeSelectList(Collection $set, $addEmpty = false)
     {
         $selectList = [];
         if ($addEmpty) {
@@ -32,7 +32,7 @@ class Form
         foreach ($set as $entry) {
             /** @noinspection PhpUndefinedFieldInspection */
             $id    = intval($entry->id);
-            $title = $titleField;
+            $title = null;
 
             foreach ($fields as $field) {
                 if (is_null($title) && isset($entry->$field)) {
