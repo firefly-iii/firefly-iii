@@ -39,6 +39,7 @@ class BudgetControllerCest
     {
         $I->wantTo('create a budget');
         $I->amOnRoute('budgets.create');
+        $I->see('Create a new budget');
     }
 
     /**
@@ -47,7 +48,8 @@ class BudgetControllerCest
     public function delete(FunctionalTester $I)
     {
         $I->wantTo('delete a budget');
-        $I->amOnPage('/budgets/delete/1');
+        $I->amOnPage('/budgets/delete/3');
+        $I->see('Delete budget "Delete me"');
     }
 
     /**
@@ -56,6 +58,12 @@ class BudgetControllerCest
     public function destroy(FunctionalTester $I)
     {
         $I->wantTo('destroy a budget');
+        #$I->amOnPage('/budgets/delete/3');
+        #$I->see('Delete budget "Delete me"');
+        #$I->submitForm('#destroy', []);
+        #$I->see('Budget &quot;Delete me&quot; was deleted.');
+        #$I->dontSeeInDatabase('components', ['name' => 'Delete me', 'class' => 'Budget','deleted_at' => null]);
+        //resetToClean::clean();
     }
 
     /**

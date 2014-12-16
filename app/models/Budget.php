@@ -1,13 +1,15 @@
 <?php
 
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
+
 /**
  * Class Budget
  */
 class Budget extends Component
 {
-    // @codingStandardsIgnoreStart
     protected $isSubclass = true;
-    // @codingStandardsIgnoreEnd
+
+    use SoftDeletingTrait;
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
