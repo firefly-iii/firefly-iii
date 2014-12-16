@@ -16,13 +16,11 @@ class Component extends SingleTableInheritanceEntity
             'name'    => 'required|between:1,100|alphabasic',
             'class'   => 'required',
         ];
-    // @codingStandardsIgnoreStart
     protected     $dates         = ['deleted_at', 'created_at', 'updated_at'];
     protected     $fillable      = ['name', 'user_id'];
     protected     $subclassField = 'class';
     protected     $table         = 'components';
-    // @codingStandardsIgnoreEnd
-    use SoftDeletingTrait, ValidatingTrait;
+    use ValidatingTrait;
 
     /**
      * TODO remove this method in favour of something in the FireflyIII libraries.
