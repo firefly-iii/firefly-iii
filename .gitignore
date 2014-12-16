@@ -17,3 +17,7 @@ tests/_output/*
 testing.sqlite
 _ide_helper_models.php
 clean.sqlite
+tests/acceptance/AcceptanceTester.php
+tests/functional/FunctionalTester.php
+tests/unit/UnitTester.php
+pi.php
