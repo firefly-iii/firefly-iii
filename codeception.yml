@@ -31,7 +31,7 @@ modules:
       populate: false
 coverage:
   enabled: true
-  remote: true
+  remote: false
   whitelist:
     include:
       - app/controllers/*
