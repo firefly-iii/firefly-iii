@@ -191,12 +191,8 @@ class AccountController extends BaseController
         if ($data['post_submit_action'] == 'store') {
             return Redirect::route('accounts.index', $data['what']);
         }
-        // create another.
-        if ($data['post_submit_action'] == 'create_another') {
-            return Redirect::route('accounts.create', $data['what'])->withInput();
-        }
 
-        return Redirect::route('accounts.index', $data['what']);
+        return Redirect::route('accounts.create', $data['what'])->withInput();
     }
 
     /**
@@ -235,11 +231,8 @@ class AccountController extends BaseController
         if ($data['post_submit_action'] == 'update') {
             return Redirect::route('accounts.index', $data['what']);
         }
-        // go back to update screen.
-        if ($data['post_submit_action'] == 'return_to_edit') {
-            return Redirect::route('accounts.edit', $account->id)->withInput(['post_submit_action' => 'return_to_edit']);
-        }
 
-        return Redirect::route('accounts.index', $data['what']);
+        // go back to update screen.
+        return Redirect::route('accounts.edit', $account->id)->withInput(['post_submit_action' => 'return_to_edit']);
     }
 }
