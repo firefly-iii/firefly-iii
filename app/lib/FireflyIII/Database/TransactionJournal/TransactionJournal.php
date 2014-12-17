@@ -117,6 +117,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
             \Log::error($model->getErrors()->all());
             throw new FireflyException('store() transaction journal failed, but it should not!');
         }
+        throw new NotImplementedException('Still have to fix the budget/category change to components.');
         $model->save();
 
         /*
@@ -147,6 +148,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         /*
          * Update the budget and the category.
          */
+
         $components = [];
         if (isset($data['budget_id']) && intval($data['budget_id']) > 0) {
             /** @var \FireflyIII\Database\Budget\Budget $budgetRepository */

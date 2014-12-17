@@ -236,9 +236,9 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     {
         return \LimitRepetition::
         leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')->leftJoin(
-            'components', 'budget_limits.component_id', '=', 'components.id'
+            'budgets', 'budget_limits.budget_id', '=', 'budgets.id'
         )->where('limit_repetitions.startdate', $date->format('Y-m-d'))->where(
-            'components.id', $budget->id
+            'budgets.id', $budget->id
         )->first(['limit_repetitions.*']);
     }
 
@@ -254,10 +254,10 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
         return $this->getUser()->transactionjournals()->whereNotIn(
             'transaction_journals.id', function ($query) use ($start, $end) {
             $query->select('transaction_journals.id')->from('transaction_journals')->leftJoin(
-                'component_transaction_journal', 'component_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
-            )->leftJoin('components', 'components.id', '=', 'component_transaction_journal.component_id')->where(
+                'budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
+            )->leftJoin('budgets', 'budgets.id', '=', 'budget_transaction_journal.budget_id')->where(
                 'transaction_journals.date', '>=', $start->format('Y-m-d')
-            )->where('transaction_journals.date', '<=', $end->format('Y-m-d'))->where('components.class', 'Budget');
+            )->where('transaction_journals.date', '<=', $end->format('Y-m-d'));
         }
         )->before($end)->after($start)->lessThan(0)->transactionTypes(['Withdrawal'])->get();
     }

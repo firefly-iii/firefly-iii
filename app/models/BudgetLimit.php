@@ -13,7 +13,7 @@ class BudgetLimit extends Eloquent
     use ValidatingTrait;
     public static $rules
         = [
-            'component_id' => 'required|exists:components,id',
+            'budget_id' => 'required|exists:budgets,id',
             'startdate'    => 'required|date',
             'amount'       => 'numeric|required|min:0.01',
             'repeats'      => 'required|boolean',
@@ -27,7 +27,7 @@ class BudgetLimit extends Eloquent
      */
     public function budget()
     {
-        return $this->belongsTo('Budget', 'component_id');
+        return $this->belongsTo('Budget', 'budget_id');
     }
 
     /**

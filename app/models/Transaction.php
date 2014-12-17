@@ -27,29 +27,6 @@ class Transaction extends Eloquent
         return $this->belongsTo('Account');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function budgets()
-    {
-        return $this->belongsToMany('Budget', 'component_transaction', 'transaction_id', 'component_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function categories()
-    {
-        return $this->belongsToMany('Category', 'component_transaction', 'transaction_id', 'component_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function components()
-    {
-        return $this->belongsToMany('Component');
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

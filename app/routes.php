@@ -185,7 +185,8 @@ Route::group(
         Route::get('/chart/piggyhistory/{piggybank}', ['uses' => 'GoogleChartController@piggyBankHistory']);
 
         // google chart for components (categories + budgets combined)
-        Route::get('/chart/component/{component}/spending/{year}', ['uses' => 'GoogleChartController@componentsAndSpending']);
+        Route::get('/chart/budget/{budget}/spending/{year}', ['uses' => 'GoogleChartController@budgetsAndSpending']);
+        Route::get('/chart/category/{category}/spending/{year}', ['uses' => 'GoogleChartController@categoriesAndSpending']);
 
         // help controller
         Route::get('/help/{route}', ['uses' => 'HelpController@show', 'as' => 'help.show']);
