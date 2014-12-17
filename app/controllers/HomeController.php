@@ -17,6 +17,52 @@ class HomeController extends BaseController
         return Redirect::route('index');
     }
 
+    public function repair() {
+        Component::where('class', 'Budget')->get()->each(
+            function (Component $c) {
+                $entry  = [
+                    'user_id' => $c->user_id,
+                    'name'    => $c->name
+
+                ];
+                $budget = Budget::firstOrCreate($entry);
+                Log::debug('Migrated budget #' . $budget->id . ': ' . $budget->name);
+                // create entry in budget_transaction_journal
+                $connections = DB::table('component_transaction_journal')->where('component_id', $c->id)->get();
+                foreach ($connections as $connection) {
+                    DB::table('budget_transaction_journal')->insert(
+                        [
+                            'budget_id'              => $budget->id,
+                            'transaction_journal_id' => $connection->transaction_journal_id
+                        ]
+                    );
+                }
+            }
+        );
+
+        Component::where('class', 'Category')->get()->each(
+            function (Component $c) {
+                $entry    = [
+                    'user_id' => $c->user_id,
+                    'name'    => $c->name
+
+                ];
+                $category = Category::firstOrCreate($entry);
+                Log::debug('Migrated category #' . $category->id . ': ' . $category->name);
+                // create entry in category_transaction_journal
+                $connections = DB::table('component_transaction_journal')->where('component_id', $c->id)->get();
+                foreach ($connections as $connection) {
+                    DB::table('category_transaction_journal')->insert(
+                        [
+                            'category_id'            => $category->id,
+                            'transaction_journal_id' => $connection->transaction_journal_id
+                        ]
+                    );
+                }
+            }
+        );
+    }
+
     /**
      * @return $this|\Illuminate\View\View
      */
