@@ -10,7 +10,7 @@ class TestContentSeeder extends Seeder
 
     public function run()
     {
-        if (App::environment() == 'testing') {
+        if (App::environment() == 'testing' || App::environment() == 'homestead') {
 
             $assetType   = AccountType::whereType('Asset account')->first();
             $expenseType = AccountType::whereType('Expense account')->first();
@@ -39,6 +39,14 @@ class TestContentSeeder extends Seeder
                 $dailyGroceries = Category::create(['user_id' => $user->id, 'name' => 'DailyGroceries']);
                 $lunch          = Category::create(['user_id' => $user->id, 'name' => 'Lunch']);
                 $house          = Category::create(['user_id' => $user->id, 'name' => 'House']);
+
+                Component::create(['user_id' => $user->id, 'name' => 'Some Component 1', 'class' => 'Budget']);
+                Component::create(['user_id' => $user->id, 'name' => 'Some Component 2', 'class' => 'Budget']);
+                Component::create(['user_id' => $user->id, 'name' => 'Some Component 3', 'class' => 'Budget']);
+                Component::create(['user_id' => $user->id, 'name' => 'Some Component 4', 'class' => 'Category']);
+                Component::create(['user_id' => $user->id, 'name' => 'Some Component 5', 'class' => 'Category']);
+                Component::create(['user_id' => $user->id, 'name' => 'Some Component 6', 'class' => 'Category']);
+                Component::create(['user_id' => $user->id, 'name' => 'Some Component 7', 'class' => 'Category']);
 
                 // create some expense accounts.
                 $ah          = Account::create(['user_id' => $user->id, 'account_type_id' => $expenseType->id, 'name' => 'Albert Heijn', 'active' => 1]);
