@@ -143,6 +143,7 @@ Route::group(
 
         // some date routes used for (well duh) date-based navigation.
         Route::get('/prev', ['uses' => 'HomeController@sessionPrev', 'as' => 'sessionPrev']);
+        Route::get('/repair', ['uses' => 'HomeController@repair']);
         Route::get('/next', ['uses' => 'HomeController@sessionNext', 'as' => 'sessionNext']);
         Route::get('/jump/{range}', ['uses' => 'HomeController@rangeJump', 'as' => 'rangeJump']);
 
