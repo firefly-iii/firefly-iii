@@ -7,7 +7,7 @@ use Watson\Validating\ValidatingTrait;
 /**
  * Class Component
  */
-class Component extends SingleTableInheritanceEntity
+class Component extends Eloquent
 {
 
     public static $rules
@@ -17,48 +17,22 @@ class Component extends SingleTableInheritanceEntity
             'class'   => 'required',
         ];
     protected     $dates         = ['deleted_at', 'created_at', 'updated_at'];
-    protected     $fillable      = ['name', 'user_id'];
-    protected     $subclassField = 'class';
+    protected     $fillable      = ['name', 'user_id','class'];
     protected     $table         = 'components';
     use ValidatingTrait;
 
-    /**
-     * TODO remove this method in favour of something in the FireflyIII libraries.
-     *
-     * @return Carbon
-     */
-    public function lastActionDate()
-    {
-        $transaction = $this->transactionjournals()->orderBy('updated_at', 'DESC')->first();
-        if (is_null($transaction)) {
-            return null;
-        }
-
-        return $transaction->date;
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function transactionjournals()
-    {
-        return $this->belongsToMany('TransactionJournal', 'component_transaction_journal', 'component_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function transactions()
-    {
-        return $this->belongsToMany('Transaction');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function user()
-    {
-        return $this->belongsTo('User');
-    }
-
+//    /**
+//     *  remove this method in favour of something in the FireflyIII libraries.
+//     *
+//     * @return Carbon
+//     */
+//    public function lastActionDate()
+//    {
+//        $transaction = $this->transactionjournals()->orderBy('updated_at', 'DESC')->first();
+//        if (is_null($transaction)) {
+//            return null;
+//        }
+//
+//        return $transaction->date;
+//    }
 } 
