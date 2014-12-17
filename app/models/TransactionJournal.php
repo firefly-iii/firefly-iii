@@ -42,13 +42,6 @@ class TransactionJournal extends Eloquent
         );
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function components()
-    {
-        return $this->belongsToMany('Component');
-    }
 
     /**
      * TODO remove this method in favour of something in the FireflyIII libraries.
@@ -208,9 +201,7 @@ class TransactionJournal extends Eloquent
         $query->with(
             ['transactions'                    => function ($q) {
                 $q->orderBy('amount', 'ASC');
-            }, 'transactiontype', 'components' => function ($q) {
-                $q->orderBy('class');
-            }, 'transactions.account.accounttype', 'recurringTransaction', 'budgets', 'categories']
+            }, 'transactiontype', 'budgets','categories', 'transactions.account.accounttype', 'recurringTransaction', 'budgets', 'categories']
         );
     }
 
