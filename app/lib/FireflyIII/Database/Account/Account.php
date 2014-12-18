@@ -221,7 +221,7 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
     {
 
         // delete journals:
-        \TransactionJournal::whereIn(
+        $journals = \TransactionJournal::whereIn(
             'id', function ($query) use ($model) {
             $query->select('transaction_journal_id')
                   ->from('transactions')->whereIn(
@@ -245,7 +245,22 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
                 }
                 )->get();
         }
-        )->delete();
+        )->get();
+        /*
+         * Get all transactions.
+         */
+        $transactions = [];
+        /** @var \TransactionJournal $journal */
+        foreach ($journals as $journal) {
+            /** @var \Transaction $t */
+            foreach ($journal->transactions as $t) {
+                $transactions[] = intval($t->id);
+            }
+            $journal->delete();
+        }
+        // also delete transactions.
+        \Transaction::whereIn('id', $transactions)->delete();
+
 
         /*
          * Trigger deletion:
@@ -506,7 +521,7 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
 
             // find or create cash account:
             return \Account::firstOrCreate(
-                ['name' => 'Cash account', 'account_type_id' => $cashAccountType->id, 'active' => 1, 'user_id' => $this->getUser()->id,]
+                ['name' => 'Cash account', 'account_type_id' => $cashAccountType->id, 'active' => 0, 'user_id' => $this->getUser()->id,]
             );
         }
 
