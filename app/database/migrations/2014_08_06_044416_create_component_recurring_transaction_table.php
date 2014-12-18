@@ -18,7 +18,7 @@ class CreateComponentRecurringTransactionTable extends Migration
      */
     public function down()
     {
-        Schema::drop('component_recurring_transaction');
+        Schema::dropIfExists('component_recurring_transaction');
     }
 
     /**
