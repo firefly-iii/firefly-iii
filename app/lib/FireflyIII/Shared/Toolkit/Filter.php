@@ -63,7 +63,6 @@ class Filter
     /**
      * @param        $range
      * @param Carbon $start
-     * @SuppressWarnings("Cyclomatic")
      *
      * @return Carbon
      * @throws FireflyException
@@ -189,7 +188,6 @@ class Filter
     /**
      * @param        $range
      * @param Carbon $date
-     * @SuppressWarnings("CyclomaticComplexity")
      *
      * @return Carbon
      * @throws FireflyException

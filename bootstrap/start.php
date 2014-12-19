@@ -21,9 +21,8 @@ if (!function_exists('mf')) {
             if ($amount > 0) {
                 return '<span class="text-success">&#8364; ' . $string . '</span>';
             }
-            if ($amount < 0) {
-                return '<span class="text-danger">&#8364; ' . $string . '</span>';
-            }
+
+            return '<span class="text-danger">&#8364; ' . $string . '</span>';
         }
 
         return '&#8364; ' . $string;

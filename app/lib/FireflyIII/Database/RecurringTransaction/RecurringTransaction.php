@@ -103,9 +103,6 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
      * errors/warnings/successes.
      *
      * ignored because this method will be gone soon.
-     * @SuppressWarnings("Cyclomatic")
-     * @SuppressWarnings("NPath")
-     * @SuppressWarnings("MethodLength")
      *
      * @param array $model
      *
@@ -169,12 +166,12 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
     /**
      * Returns an object with id $id.
      *
-     * @param int $id
+     * @param int $objectId
      *
      * @return \Eloquent
      * @throws NotImplementedException
      */
-    public function find($id)
+    public function find($objectId)
     {
         // TODO: Implement find() method.
         throw new NotImplementedException;

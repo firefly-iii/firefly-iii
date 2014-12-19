@@ -16,11 +16,11 @@ interface CommonDatabaseCalls
     /**
      * Returns an object with id $id.
      *
-     * @param int $id
+     * @param int $objectId
      *
      * @return \Eloquent
      */
-    public function find($id);
+    public function find($objectId);
 
     /**
      * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
@@ -39,10 +39,10 @@ interface CommonDatabaseCalls
     public function get();
 
     /**
-     * @param array $ids
+     * @param array $objectIds
      *
      * @return Collection
      */
-    public function getByIds(array $ids);
+    public function getByIds(array $objectIds);
 
 }

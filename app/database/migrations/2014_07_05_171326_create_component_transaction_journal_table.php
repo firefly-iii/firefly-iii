@@ -6,7 +6,6 @@ use Illuminate\Database\Schema\Blueprint;
 /**
  * Class CreateComponentTransactionJournalTable
  *
- * @SuppressWarnings(PHPMD.ShortMethodName)
  */
 class CreateComponentTransactionJournalTable extends Migration
 {

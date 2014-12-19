@@ -459,13 +459,13 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
     /**
      * Returns an object with id $id.
      *
-     * @param int $id
+     * @param int $objectId
      *
      * @return \Eloquent
      */
-    public function find($id)
+    public function find($objectId)
     {
-        return $this->getUser()->accounts()->find($id);
+        return $this->getUser()->accounts()->find($objectId);
     }
 
     /**

@@ -3,8 +3,6 @@ use Carbon\Carbon;
 use Grumpydictator\Gchart\GChart as GChart;
 
 /**
- * @SuppressWarnings("CamelCase")
- *
  * Class GoogleChartController
  */
 class GoogleChartController extends BaseController
@@ -33,7 +31,7 @@ class GoogleChartController extends BaseController
         $this->_chart->addColumn('Day of month', 'date');
         $this->_chart->addColumn('Balance for ' . $account->name, 'number');
 
-        // TODO this can be combined in some method, it's
+        // TODO this can be combined in some method, it's coming up quite often, is it?
         $start = Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end');
         $count = $account->transactions()->count();
@@ -48,6 +46,7 @@ class GoogleChartController extends BaseController
             $start = new Carbon($first->date);
             $end   = new Carbon($last->date);
         }
+        // todo until this part.
 
         $current = clone $start;
 
@@ -117,55 +116,31 @@ class GoogleChartController extends BaseController
         $bdt     = App::make('FireflyIII\Database\Budget\Budget');
         $budgets = $bdt->get();
 
-        /*
-         * Loop budgets:
-         */
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-
-            /*
-             * Is there a repetition starting on this particular date? We can use that.
-             */
             /** @var \LimitRepetition $repetition */
             $repetition = $bdt->repetitionOnStartingOnDate($budget, Session::get('start', Carbon::now()->startOfMonth()));
-
-            /*
-             * If there is, use it. Otherwise, forget it.
-             */
             if (is_null($repetition)) {
                 // use the session start and end for our search query
                 $searchStart = Session::get('start', Carbon::now()->startOfMonth());
                 $searchEnd   = Session::get('end');
-                // the limit is zero:
-                $limit = 0;
-
+                $limit       = 0; // the limit is zero:
             } else {
                 // use the limit's start and end for our search query
                 $searchStart = $repetition->startdate;
                 $searchEnd   = $repetition->enddate;
-                // the limit is the repetitions limit:
-                $limit = floatval($repetition->amount);
+                $limit       = floatval($repetition->amount); // the limit is the repetitions limit:
             }
 
-            /*
-             * No matter the result of the search for the repetition, get all the transactions associated
-             * with the budget, and sum up the expenses made.
-             */
             $expenses = floatval($budget->transactionjournals()->before($searchEnd)->after($searchStart)->lessThan(0)->sum('amount')) * -1;
             if ($expenses > 0) {
                 $this->_chart->addRow($budget->name, $limit, $expenses);
             }
         }
 
-        /*
-         * Finally, get all transactions WITHOUT a budget and add those as well.
-         * (yes this method is oddly specific).
-         */
         $noBudgetSet = $bdt->transactionsWithoutBudgetInDateRange(Session::get('start', Carbon::now()->startOfMonth()), Session::get('end'));
         $sum         = $noBudgetSet->sum('amount') * -1;
         $this->_chart->addRow('No budget', 0, $sum);
-
-
         $this->_chart->generate();
 
         return Response::json($this->_chart->getData());

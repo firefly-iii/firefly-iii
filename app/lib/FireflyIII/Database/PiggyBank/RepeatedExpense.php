@@ -153,9 +153,6 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggyBankInterface
      *
      *
      * ignored because this method will be gone soon.
-     * @SuppressWarnings("Cyclomatic")
-     * @SuppressWarnings("NPath")
-     * @SuppressWarnings("MethodLength")
      *
      * @param array $model
      *
@@ -250,12 +247,12 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggyBankInterface
     /**
      * Returns an object with id $id.
      *
-     * @param int $id
+     * @param int $objectId
      *
      * @return \Eloquent
      * @throws NotImplementedException
      */
-    public function find($id)
+    public function find($objectId)
     {
         // TODO: Implement find() method.
         throw new NotImplementedException;

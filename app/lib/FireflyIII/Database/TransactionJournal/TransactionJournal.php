@@ -108,7 +108,6 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         $this->storeCategory($data, $model);
 
         /*
-         * TODO move to transaction thing.
          * Now we can update the transactions related to this journal.
          */
         $amount = floatval($data['amount']);
@@ -136,9 +135,6 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      * errors/warnings/successes.
      *
      * ignored because this method will be gone soon.
-     * @SuppressWarnings("Cyclomatic")
-     * @SuppressWarnings("NPath")
-     * @SuppressWarnings("MethodLength")
      *
      * @param array $model
      *
@@ -255,27 +251,6 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
                 throw new FireflyException('Cannot validate accounts for transaction journal.');
                 break;
         }
-
-        //        if (isset($model['to_id']) && intval($model['to_id']) < 1) {
-        //            $errors->add('account_to', 'Invalid to-account');
-        //        }
-        //
-        //        if (isset($model['from_id']) && intval($model['from_id']) < 1) {
-        //            $errors->add('account_from', 'Invalid from-account');
-        //
-        //        }
-        //        if (isset($model['account_id']) && intval($model['account_id']) < 1) {
-        //            $errors->add('account_id', 'Invalid account!');
-        //        }
-        //        if (isset($model['to']) && !($model['to'] instanceof \Account)) {
-        //            $errors->add('account_to', 'Invalid to-account');
-        //        }
-        //        if (isset($model['from']) && !($model['from'] instanceof \Account)) {
-        //            $errors->add('account_from', 'Invalid from-account');
-        //        }
-        //        if (!isset($model['amount']) || (isset($model['amount']) && floatval($model['amount']) < 0)) {
-        //            $errors->add('amount', 'Invalid amount');
-        //        }
 
 
         $validator = \Validator::make([$model], \TransactionJournal::$rules);
@@ -419,13 +394,13 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
     /**
      * Returns an object with id $id.
      *
-     * @param int $id
+     * @param int $objectId
      *
      * @return \Eloquent
      */
-    public function find($id)
+    public function find($objectId)
     {
-        return $this->getUser()->transactionjournals()->find($id);
+        return $this->getUser()->transactionjournals()->find($objectId);
     }
 
     /**

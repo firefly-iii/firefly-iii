@@ -12,7 +12,6 @@ use Illuminate\Support\Collection;
 /**
  * Class Report
  *
- * @SuppressWarnings("CamelCase")
  *
  * @package FireflyIII\Report
  */

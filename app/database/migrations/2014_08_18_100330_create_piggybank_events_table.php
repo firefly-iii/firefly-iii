@@ -6,7 +6,6 @@ use Illuminate\Database\Schema\Blueprint;
 /**
  * Class CreatePiggybankEventsTable
  *
- * @SuppressWarnings(PHPMD.ShortMethodName)
  */
 class CreatePiggybankEventsTable extends Migration
 {

@@ -73,12 +73,12 @@ class TransactionType implements CUD, CommonDatabaseCalls
     /**
      * Returns an object with id $id.
      *
-     * @param int $id
+     * @param int $objectId
      *
      * @return \Eloquent
      * @throws NotImplementedException
      */
-    public function find($id)
+    public function find($objectId)
     {
         // TODO: Implement find() method.
         throw new NotImplementedException;

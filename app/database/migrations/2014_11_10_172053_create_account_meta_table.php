@@ -6,7 +6,6 @@ use Illuminate\Database\Schema\Blueprint;
 /**
  * Class CreateAccountMetaTable
  *
- * @SuppressWarnings(PHPMD.ShortMethodName)
  */
 class CreateAccountMetaTable extends Migration
 {

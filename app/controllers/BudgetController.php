@@ -11,9 +11,6 @@ use FireflyIII\Shared\Preferences\PreferencesInterface as Pref;
  * TODO Find out what constitutes proper camelCase
  * TODO How is object coupling counted?
  *
- * @SuppressWarnings("CamelCase")
- * @SuppressWarnings("TooManyMethods")
- * @SuppressWarnings("CouplingBetweenObjects")
  */
 class BudgetController extends BaseController
 {
