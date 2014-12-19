@@ -17,19 +17,4 @@ class Component extends Eloquent
     protected     $fillable      = ['name', 'user_id','class'];
     protected     $table         = 'components';
     use ValidatingTrait;
-
-//    /**
-//     *  remove this method in favour of something in the FireflyIII libraries.
-//     *
-//     * @return Carbon
-//     */
-//    public function lastActionDate()
-//    {
-//        $transaction = $this->transactionjournals()->orderBy('updated_at', 'DESC')->first();
-//        if (is_null($transaction)) {
-//            return null;
-//        }
-//
-//        return $transaction->date;
-//    }
 } 
