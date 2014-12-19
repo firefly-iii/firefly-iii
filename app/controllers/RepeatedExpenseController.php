@@ -1,21 +1,25 @@
 <?php
 
 use Carbon\Carbon;
+use FireflyIII\Database\PiggyBank\RepeatedExpense as Repository;
 use FireflyIII\Exception\FireflyException;
-use Illuminate\Support\MessageBag;
 
 /**
  * Class RepeatedExpenseController
  */
 class RepeatedExpenseController extends BaseController
 {
+    /** @var  Repository */
+    protected $_repository;
+
     /**
-     *
+     * @param Repository $repository
      */
-    public function __construct()
+    public function __construct(Repository $repository)
     {
         View::share('title', 'Repeated expenses');
         View::share('mainTitleIcon', 'fa-rotate-left');
+        $this->_repository = $repository;
     }
 
     /**
@@ -86,50 +90,36 @@ class RepeatedExpenseController extends BaseController
      */
     public function store()
     {
-        $data            = Input::all();
+        $data            = Input::except('_token');
         $data['repeats'] = 1;
-        /** @var \FireflyIII\Database\PiggyBank\RepeatedExpense $repository */
-        $repository = App::make('FireflyIII\Database\PiggyBank\RepeatedExpense');
 
-        switch ($data['post_submit_action']) {
-            default:
-                throw new FireflyException('Cannot handle post_submit_action "' . e($data['post_submit_action']) . '"');
-                break;
-            case 'create_another':
-            case 'store':
-                $messages = $repository->validate($data);
-                /** @var MessageBag $messages ['errors'] */
-                if ($messages['errors']->count() > 0) {
-                    Session::flash('warnings', $messages['warnings']);
-                    Session::flash('successes', $messages['successes']);
-                    Session::flash('error', 'Could not save repeated expense: ' . $messages['errors']->first());
+        // always validate:
+        $messages = $this->_repository->validate($data);
 
-                    return Redirect::route('repeated.create')->withInput()->withErrors($messages['errors']);
-                }
-                // store!
-                $repeated = $repository->store($data);
-
-                /*
-                 * Create the relevant repetition per Event.
-                 */
-                Event::fire('piggybank.store', [$repeated]); // new and used.
-
-                Session::flash('success', 'New repeated expense stored!');
-
-                if ($data['post_submit_action'] == 'create_another') {
-                    return Redirect::route('repeated.create')->withInput();
-                } else {
-                    return Redirect::route('repeated.index');
-                }
-                break;
-            case 'validate_only':
-                $messageBags = $repository->validate($data);
-                Session::flash('warnings', $messageBags['warnings']);
-                Session::flash('successes', $messageBags['successes']);
-                Session::flash('errors', $messageBags['errors']);
-
-                return Redirect::route('repeated.create')->withInput();
-                break;
+        // flash messages:
+        Session::flash('warnings', $messages['warnings']);
+        Session::flash('successes', $messages['successes']);
+        Session::flash('errors', $messages['errors']);
+        if ($messages['errors']->count() > 0) {
+            Session::flash('error', 'Could not validate repeated expense: ' . $messages['errors']->first());
         }
+        // return to create screen:
+        if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
+            return Redirect::route('repeated.create')->withInput();
+        }
+
+        // store:
+        $this->_repository->store($data);
+        Session::flash('success', 'Budget "' . e($data['name']) . '" stored.');
+        if ($data['post_submit_action'] == 'store') {
+            return Redirect::route('repeated.index');
+        }
+
+        // create another.
+        if ($data['post_submit_action'] == 'create_another') {
+            return Redirect::route('repeated.create')->withInput();
+        }
+
+        return Redirect::route('repeated.index');
     }
 } 

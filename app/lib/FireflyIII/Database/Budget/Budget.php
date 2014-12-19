@@ -235,11 +235,10 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     public function repetitionOnStartingOnDate(\Budget $budget, Carbon $date)
     {
         return \LimitRepetition::
-        leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')->leftJoin(
-            'budgets', 'budget_limits.budget_id', '=', 'budgets.id'
-        )->where('limit_repetitions.startdate', $date->format('Y-m-d'))->where(
-            'budgets.id', $budget->id
-        )->first(['limit_repetitions.*']);
+        leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
+            ->where('limit_repetitions.startdate', $date->format('Y-m-d'))
+            ->where('budget_limits.budget_id', $budget->id)
+            ->first(['limit_repetitions.*']);
     }
 
     /**
@@ -251,15 +250,22 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     public function transactionsWithoutBudgetInDateRange(Carbon $start, Carbon $end)
     {
         // Add expenses that have no budget:
-        return $this->getUser()->transactionjournals()->whereNotIn(
-            'transaction_journals.id', function ($query) use ($start, $end) {
-            $query->select('transaction_journals.id')->from('transaction_journals')->leftJoin(
-                'budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
-            )->leftJoin('budgets', 'budgets.id', '=', 'budget_transaction_journal.budget_id')->where(
-                'transaction_journals.date', '>=', $start->format('Y-m-d')
-            )->where('transaction_journals.date', '<=', $end->format('Y-m-d'));
+        return $this->getUser()
+            ->transactionjournals()
+            ->whereNotIn('transaction_journals.id', function ($query) use ($start, $end) {
+                $query
+                    ->select('transaction_journals.id')
+                    ->from('transaction_journals')
+                    ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                    ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                    ->where('transaction_journals.date', '<=', $end->format('Y-m-d'));
         }
-        )->before($end)->after($start)->lessThan(0)->transactionTypes(['Withdrawal'])->get();
+        )
+            ->before($end)
+            ->after($start)
+            ->lessThan(0)
+            ->transactionTypes(['Withdrawal'])
+            ->get();
     }
 
     /**

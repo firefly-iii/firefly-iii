@@ -55,8 +55,8 @@ class ChangesForV321 extends Migration
         $this->moveCategoriesBack(); // 2.
         $this->updateComponentInBudgetLimits(); // 3.
         $this->dropBudgetIdColumnInBudgetLimits(); // 4.
-        $createJournalComponents = new CreateComponentTransactionJournalTable;  // 5.
-        $createJournalComponents->up();
+        $createComponents = new CreateComponentTransactionJournalTable;  // 5.
+        $createComponents->up();
         $this->moveBackEntriesForBudgetsInJoinedTable(); // 6.
         $this->moveBackEntriesForCategoriesInJoinedTable(); // 7.
         $this->dropBudgetJournalTable(); // 8.
