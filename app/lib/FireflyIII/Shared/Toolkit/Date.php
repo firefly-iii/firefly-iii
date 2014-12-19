@@ -9,7 +9,6 @@ use FireflyIII\Exception\FireflyException;
  * Class Date
  *
  * @package FireflyIII\Shared\Toolkit
- * @SuppressWarnings("ExcessiveClassComplexity")
  */
 class Date
 {
@@ -17,7 +16,6 @@ class Date
      * @param Carbon $theDate
      * @param        $repeatFreq
      * @param        $skip
-     * @SuppressWarnings("Cyclomatic")
      *
      * @return Carbon
      * @throws FireflyException
@@ -63,7 +61,6 @@ class Date
     /**
      * @param Carbon $theCurrentEnd
      * @param        $repeatFreq
-     * @SuppressWarnings("Cyclomatic")
      *
      * @return mixed
      * @throws FireflyException
@@ -106,8 +103,6 @@ class Date
      * @param Carbon $theCurrentEnd
      * @param        $repeatFreq
      * @param Carbon $maxDate
-     * @SuppressWarnings("Cyclomatic")
-     * @SuppressWarnings("MethodLength")
      *
      * @return mixed
      * @throws FireflyException
@@ -156,7 +151,6 @@ class Date
     /**
      * @param Carbon $date
      * @param        $repeatFrequency
-     * @SuppressWarnings("Cyclomatic")
      *
      * @return string
      * @throws FireflyException
@@ -191,7 +185,6 @@ class Date
     /**
      * @param Carbon $theDate
      * @param        $repeatFreq
-     * @SuppressWarnings("Cyclomatic")
      *
      * @return Carbon
      * @throws FireflyException
@@ -238,7 +231,6 @@ class Date
      * @param Carbon $theDate
      * @param        $repeatFreq
      * @param int    $subtract
-     * @SuppressWarnings("Cyclomatic")
      *
      * @return Carbon
      * @throws FireflyException

@@ -4,7 +4,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
- * SuppressWarnings(PHPMD.ShortMethodName)
  * Down:
  * 1. Create new Components based on Budgets.
  * 2. Create new Components based on Categories

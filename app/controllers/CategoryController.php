@@ -6,8 +6,6 @@ use FireflyIII\Exception\FireflyException;
  *
  * TODO Find out what constitutes proper camelCase
  *
- * @SuppressWarnings("CamelCase")
- *
  * Class CategoryController
  */
 class CategoryController extends BaseController

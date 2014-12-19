@@ -100,13 +100,13 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     /**
      * Returns an object with id $id.
      *
-     * @param int $id
+     * @param int $objectId
      *
      * @return \Eloquent
      */
-    public function find($id)
+    public function find($objectId)
     {
-        return $this->getUser()->budgets()->find($id);
+        return $this->getUser()->budgets()->find($objectId);
     }
 
     /**

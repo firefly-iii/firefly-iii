@@ -16,7 +16,6 @@ class Form
      *
      * @param Collection $set
      * @param bool       $addEmpty
-     * @SuppressWarnings("CyclomaticComplexity")
      *
      * @return mixed
      */

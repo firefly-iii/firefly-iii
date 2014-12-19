@@ -27,7 +27,6 @@ class ProfileController extends BaseController
 
     /**
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
-     * @SuppressWarnings("CyclomaticComplexity")
      */
     public function postChangePassword()
     {

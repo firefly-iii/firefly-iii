@@ -89,10 +89,6 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggyBankInterface
      *
      * Ignore PHPMD rules because Laravel 5.0 will make this method superfluous anyway.
      *
-     * @SuppressWarnings("Cyclomatic")
-     * @SuppressWarnings("NPath")
-     * @SuppressWarnings("MethodLength")
-     *
      * @param array $model
      *
      * @return array
@@ -175,14 +171,14 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggyBankInterface
     /**
      * Returns an object with id $id.
      *
-     * @param int $id
+     * @param int $objectId
      *
      * @return \Eloquent
      */
-    public function find($id)
+    public function find($objectId)
     {
         return \Piggybank::
-        leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where('piggybanks.id', '=', $id)->where('accounts.user_id', $this->getUser()->id)
+        leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where('piggybanks.id', '=', $objectId)->where('accounts.user_id', $this->getUser()->id)
                          ->first(['piggybanks.*']);
     }
 
@@ -246,6 +242,7 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggyBankInterface
                 if ($date >= $rep->startdate && $date <= $rep->targetdate) {
                     return $rep;
                 }
+                return null;
             }
         );
         if ($repetitions->count() == 0) {

@@ -5,8 +5,6 @@ use FireflyIII\Database\TransactionJournal\TransactionJournal as TransactionJour
 use FireflyIII\Report\ReportInterface as Report;
 
 /**
- * @SuppressWarnings("CamelCase")
- *
  *
  * Class ReportController
  */
@@ -51,9 +49,6 @@ class ReportController extends BaseController
     /**
      * @param $year
      * @param $month
-     *
-     * @SuppressWarnings("CyclomaticComplexity")
-     * @SuppressWarnings("MethodLength")
      *
      * @return \Illuminate\View\View
      */
