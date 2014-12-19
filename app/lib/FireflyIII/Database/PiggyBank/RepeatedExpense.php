@@ -117,12 +117,10 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggyBankInterface
     public function store(array $data)
     {
 
-        $data['rep_every']     = isset($data['rep_every']) ? $data['rep_every'] : 0;
-        $data['reminder_skip'] = isset($data['reminder_skip']) ? $data['reminder_skip'] : 0;
-        $data['order']         = isset($data['order']) ? $data['order'] : 0;
-        $data['remind_me']     = isset($data['remind_me']) ? intval($data['remind_me']) : 0;
-        $data['startdate']     = isset($data['startdate']) ? $data['startdate'] : Carbon::now()->format('Y-m-d');
-        $data['targetdate']    = isset($data['targetdate']) && $data['targetdate'] != '' ? $data['targetdate'] : null;
+        $data['rep_every']     = intval($data['rep_every']);
+        $data['reminder_skip'] = intval($data['reminder_skip']);
+        $data['order']         = intval($data['order']);
+        $data['remind_me']     = intval($data['remind_me']);
         $data['account_id']    = intval($data['account_id']);
 
 
@@ -130,12 +128,7 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggyBankInterface
             $data['reminder'] = null;
         }
 
-
         $repeated = new \Piggybank($data);
-        if (!$repeated->isValid()) {
-            var_dump($repeated->getErrors()->all());
-            exit;
-        }
         $repeated->save();
 
         return $repeated;

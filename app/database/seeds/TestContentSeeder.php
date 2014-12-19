@@ -49,7 +49,7 @@ class TestContentSeeder extends Seeder
                 Component::create(['user_id' => $user->id, 'name' => 'Some Component 7', 'class' => 'Category']);
 
                 // create some expense accounts.
-                $ah          = Account::create(['user_id' => $user->id, 'account_type_id' => $expenseType->id, 'name' => 'Albert Heijn', 'active' => 1]);
+                $albert      = Account::create(['user_id' => $user->id, 'account_type_id' => $expenseType->id, 'name' => 'Albert Heijn', 'active' => 1]);
                 $plus        = Account::create(['user_id' => $user->id, 'account_type_id' => $expenseType->id, 'name' => 'PLUS', 'active' => 1]);
                 $vitens      = Account::create(['user_id' => $user->id, 'account_type_id' => $expenseType->id, 'name' => 'Vitens', 'active' => 1]);
                 $greenchoice = Account::create(['user_id' => $user->id, 'account_type_id' => $expenseType->id, 'name' => 'Greenchoice', 'active' => 1]);
@@ -59,7 +59,7 @@ class TestContentSeeder extends Seeder
                 // create three revenue accounts.
                 $employer = Account::create(['user_id' => $user->id, 'account_type_id' => $revenueType->id, 'name' => 'Employer', 'active' => 1]);
                 $taxes    = Account::create(['user_id' => $user->id, 'account_type_id' => $revenueType->id, 'name' => 'IRS', 'active' => 1]);
-                $job      = Account::create(['user_id' => $user->id, 'account_type_id' => $revenueType->id, 'name' => 'Job', 'active' => 1]);
+                Account::create(['user_id' => $user->id, 'account_type_id' => $revenueType->id, 'name' => 'Job', 'active' => 1]);
 
                 // put money in the two accounts (initial balance)
                 $ibChecking = Account::create(
@@ -98,7 +98,7 @@ class TestContentSeeder extends Seeder
                         $groceriesStart->addDay();
                         if (intval($groceriesStart->format('d')) % 2 == 0) {
                             $this->createTransaction(
-                                $checking, $ah, $amt, $withdrawal, 'Groceries', $groceriesStart->format('Y-m-d'), $groceriesBudget, $dailyGroceries
+                                $checking, $albert, $amt, $withdrawal, 'Groceries', $groceriesStart->format('Y-m-d'), $groceriesBudget, $dailyGroceries
                             );
                         }
                         $groceriesStart->addDay();

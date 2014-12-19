@@ -300,64 +300,6 @@ class GoogleChartController extends BaseController
     }
 
     /**
-     * @param $year
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function budgetsReportChart($year)
-    {
-
-        try {
-            $start = new Carbon('01-01-' . $year);
-        } catch (Exception $e) {
-            App::abort(500);
-        }
-
-        /** @var \Grumpydictator\Gchart\GChart $chart */
-        $chart = App::make('gchart');
-
-        /** @var \FireflyIII\Database\Budget\Budget $bdt */
-        $bdt     = App::make('FireflyIII\Database\Budget\Budget');
-        $budgets = $bdt->get();
-
-        $chart->addColumn('Month', 'date');
-        /** @var \Budget $budget */
-        foreach ($budgets as $budget) {
-            $chart->addColumn($budget->name, 'number');
-        }
-        $chart->addColumn('No budget', 'number');
-
-        /*
-         * Loop budgets this year.
-         */
-        $end = clone $start;
-        $end->endOfYear();
-        while ($start <= $end) {
-            $row = [clone $start];
-
-            foreach ($budgets as $budget) {
-                $row[] = $bdt->spentInMonth($budget, $start);
-            }
-
-            /*
-             * Without a budget:
-             */
-            $endOfMonth = clone $start;
-            $endOfMonth->endOfMonth();
-            $set   = $bdt->transactionsWithoutBudgetInDateRange($start, $endOfMonth);
-            $row[] = floatval($set->sum('amount')) * -1;
-
-            $chart->addRowArray($row);
-            $start->addMonth();
-        }
-
-
-        $chart->generate();
-
-        return Response::json($chart->getData());
-    }
-
-    /**
      * @param Category  $component
      * @param           $year
      *

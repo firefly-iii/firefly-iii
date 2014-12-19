@@ -92,78 +92,20 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      */
     public function update(\Eloquent $model, array $data)
     {
-        /** @var \FireflyIII\Database\TransactionType\TransactionType $typeRepository */
-        $typeRepository = \App::make('FireflyIII\Database\TransactionType\TransactionType');
-
-        /** @var \FireflyIII\Database\Account\Account $accountRepository */
-        $accountRepository = \App::make('FireflyIII\Database\Account\Account');
-
-        /** @var \FireflyIII\Database\TransactionCurrency\TransactionCurrency $currencyRepository */
-        $currencyRepository = \App::make('FireflyIII\Database\TransactionCurrency\TransactionCurrency');
-
-        $journalType = $typeRepository->findByWhat($data['what']);
-        $currency    = $currencyRepository->findByCode($data['currency']);
+        $journalType        = $this->getJournalType($data['what']);
+        $currency           = $this->getJournalCurrency($data['currency']);
+        $model->description = $data['description'];
+        $model->date        = $data['date'];
 
         $model->transactionType()->associate($journalType);
         $model->transactionCurrency()->associate($currency);
         $model->user()->associate($this->getUser());
-        $model->description = $data['description'];
-        $model->date        = $data['date'];
-
-        /*
-         * This must be enough to store the journal:
-         */
-        if (!$model->isValid()) {
-            \Log::error($model->getErrors()->all());
-            throw new FireflyException('store() transaction journal failed, but it should not!');
-        }
         $model->save();
 
-        /*
-         * Still need to find the accounts related to the transactions.
-         * This depends on the type of transaction.
-         */
-        switch ($data['what']) {
-            case 'withdrawal':
-                $data['from'] = $accountRepository->find($data['account_id']);
-                $data['to']   = $accountRepository->firstExpenseAccountOrCreate($data['expense_account']);
-                break;
-            case 'opening':
-                break;
-            case 'deposit':
-                $data['to']   = $accountRepository->find($data['account_id']);
-                $data['from'] = $accountRepository->firstRevenueAccountOrCreate($data['revenue_account']);
-                break;
-            case 'transfer':
-                $data['from'] = $accountRepository->find($data['account_from_id']);
-                $data['to']   = $accountRepository->find($data['account_to_id']);
-                break;
+        list($fromAccount, $toAccount) = $this->storeAccounts($data);
 
-            default:
-                throw new FireflyException('Cannot save transaction journal with accounts based on $what "' . $data['what'] . '".');
-                break;
-        }
-
-        /*
-         * Update the budget and the category.
-         */
-
-        if (isset($data['budget_id']) && intval($data['budget_id']) > 0) {
-            /** @var \FireflyIII\Database\Budget\Budget $budgetRepository */
-            $budgetRepository = \App::make('FireflyIII\Database\Budget\Budget');
-            $budget           = $budgetRepository->find(intval($data['budget_id']));
-            if ($budget) {
-                $model->budgets()->sync([$budget->id]);
-            }
-        }
-        if (strlen($data['category']) > 0) {
-            /** @var \FireflyIII\Database\Category\Category $categoryRepository */
-            $categoryRepository = \App::make('FireflyIII\Database\Category\Category');
-            $category           = $categoryRepository->firstOrCreate($data['category']);
-            if ($category) {
-                $model->categories()->sync([$category->id]);
-            }
-        }
+        $this->storeBudget($data, $model);
+        $this->storeCategory($data, $model);
 
         /*
          * TODO move to transaction thing.
@@ -174,10 +116,10 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         foreach ($model->transactions()->get() as $transaction) {
             if (floatval($transaction->amount) > 0) {
                 // the TO transaction.
-                $transaction->account()->associate($data['to']);
+                $transaction->account()->associate($toAccount);
                 $transaction->amount = $amount;
             } else {
-                $transaction->account()->associate($data['from']);
+                $transaction->account()->associate($fromAccount);
                 $transaction->amount = $amount * -1;
             }
             if (!$transaction->isValid()) {
@@ -443,8 +385,8 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
     }
 
     /**
-     * @param array               $data
-     * @param \TransactionJournal $journal
+     * @param array                         $data
+     * @param \TransactionJournal|\Eloquent $journal
      */
     public function storeBudget($data, \TransactionJournal $journal)
     {
@@ -453,14 +395,14 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
             $budgetRepository = \App::make('FireflyIII\Database\Budget\Budget');
             $budget           = $budgetRepository->find(intval($data['budget_id']));
             if ($budget) {
-                $journal->budgets()->save($budget);
+                $journal->budgets()->sync([$budget->id]);
             }
         }
     }
 
     /**
-     * @param array               $data
-     * @param \TransactionJournal $journal
+     * @param array                         $data
+     * @param \TransactionJournal|\Eloquent $journal
      */
     public function storeCategory(array $data, \TransactionJournal $journal)
     {

@@ -232,6 +232,7 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggyBankInterface
      */
     public function findRepetitionByDate(\Piggybank $piggybank, Carbon $date)
     {
+        /** @var Collection $reps */
         $reps = $piggybank->piggybankrepetitions()->get();
         if ($reps->count() == 1) {
             return $reps->first();
@@ -239,7 +240,19 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggyBankInterface
         if ($reps->count() == 0) {
             throw new FireflyException('Should always find a piggy bank repetition.');
         }
-        throw new NotImplementedException;
+        // should filter the one we need:
+        $repetitions = $reps->filter(
+            function (\PiggybankRepetition $rep) use ($date) {
+                if ($date >= $rep->startdate && $date <= $rep->targetdate) {
+                    return $rep;
+                }
+            }
+        );
+        if ($repetitions->count() == 0) {
+            return null;
+        }
+
+        return $repetitions->first();
     }
 
     /**

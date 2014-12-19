@@ -175,7 +175,7 @@ class BudgetController extends BaseController
         Session::flash('successes', $messages['successes']);
         Session::flash('errors', $messages['errors']);
         if ($messages['errors']->count() > 0) {
-            Session::flash('error', 'Could not store budget: ' . $messages['errors']->first());
+            Session::flash('error', 'Could not validate budget: ' . $messages['errors']->first());
         }
 
         // return to create screen:

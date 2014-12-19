@@ -80,22 +80,6 @@ class HomeController extends BaseController
         return Redirect::back();
     }
 
-    public function repair()
-    {
-        BudgetLimit::get()->each(
-            function (BudgetLimit $bl) {
-                $component = Component::find($bl->component_id);
-                if ($component) {
-                    $budget = Budget::whereName($component->name)->whereUserId($component->user_id)->first();
-                    if ($budget) {
-                        $bl->budget_id = $budget->id;
-                        $bl->save();
-                    }
-                }
-            }
-        );
-    }
-
     /**
      * @return \Illuminate\Http\RedirectResponse
      */

@@ -71,15 +71,9 @@ class Reminders
 
 
         $today = Carbon::now();
-        //$today = new Carbon('14-12-2014');
 
         /** @var \Piggybank $piggybank */
         foreach ($set as $piggyBank) {
-            /*
-             * Try to find a reminder that is valid in the current [period]
-             * aka between [start of period] and [end of period] as denoted
-             * by the piggy's repeat_freq.
-             */
             /** @var \PiggybankRepetition $repetition */
             $repetition = $piggyBank->currentRelevantRep();
             $start      = \DateKit::startOfPeriod($today, $piggyBank->reminder);

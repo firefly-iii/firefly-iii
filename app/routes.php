@@ -98,10 +98,11 @@ Route::bind(
 Route::bind(
     'limitrepetition', function ($value, $route) {
         if (Auth::check()) {
-            return LimitRepetition::
-            where('limit_repetitions.id', $value)->leftjoin('budget_limits', 'budget_limits.id', '=', 'limit_repetitions.budget_limit_id')->leftJoin(
-                'budgets', 'budgets.id', '=', 'budget_limits.budget_id'
-            )->where('budgets.user_id', Auth::user()->id)->first(['limit_repetitions.*']);
+            return LimitRepetition::where('limit_repetitions.id', $value)
+                ->leftjoin('budget_limits', 'budget_limits.id', '=', 'limit_repetitions.budget_limit_id')
+                ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+                ->where('budgets.user_id', Auth::user()->id)
+                ->first(['limit_repetitions.*']);
         }
 
         return null;
@@ -180,7 +181,6 @@ Route::group(
         Route::get('/chart/reports/income-expenses/{year}', ['uses' => 'GoogleChartController@yearInExp']);
         Route::get('/chart/reports/income-expenses-sum/{year}', ['uses' => 'GoogleChartController@yearInExpSum']);
         Route::get('/chart/recurring/{recurring}', ['uses' => 'GoogleChartController@recurringOverview']);
-        Route::get('/chart/reports/budgets/{year}', ['uses' => 'GoogleChartController@budgetsReportChart']);
         Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'GoogleChartController@budgetLimitSpending']);
         Route::get('/chart/piggyhistory/{piggybank}', ['uses' => 'GoogleChartController@piggyBankHistory']);
 
