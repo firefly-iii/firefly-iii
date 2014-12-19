@@ -380,7 +380,7 @@ class ChangesForV321 extends Migration
     {
         Schema::table(
             'budget_limits', function (Blueprint $table) {
-            $table->integer('budget_id')->unsigned()->after('updated_at');
+            $table->integer('budget_id', false, true)->nullable()->after('updated_at');
             $table->foreign('budget_id', 'bid_foreign')->references('id')->on('budgets')->onDelete('cascade');
         }
         );
