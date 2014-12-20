@@ -48,10 +48,7 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
      */
     public function store(array $data)
     {
-        $data['user_id'] = $this->getUser()->id;
-
         $budget        = new \Budget($data);
-        $budget->class = 'Budget';
 
         if (!$budget->isValid()) {
             \Log::error('Could not store budget: ' . $budget->getErrors()->toJson());
@@ -88,8 +85,9 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     {
         $warnings  = new MessageBag;
         $successes = new MessageBag;
-        $validator = \Validator::make($model, \Component::$rules);
-        $errors    = $validator->errors();
+        $budget = new \Budget($model);
+        $budget->isValid();
+        $errors    = $budget->getErrors();
 
         if (!$errors->has('name')) {
             $successes->add('name', 'OK');

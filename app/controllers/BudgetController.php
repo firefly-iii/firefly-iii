@@ -146,7 +146,7 @@ class BudgetController extends BaseController
     public function show(Budget $budget, LimitRepetition $repetition = null)
     {
         if (!is_null($repetition) && $repetition->budgetLimit->budget->id != $budget->id) {
-            return View::make('error')->with('message','Invalid selection.');
+            return View::make('error')->with('message', 'Invalid selection.');
         }
 
         $hideBudget = true; // used in transaction list.
@@ -162,7 +162,8 @@ class BudgetController extends BaseController
      */
     public function store()
     {
-        $data = Input::except('_token');
+        $data            = Input::except('_token');
+        $data['user_id'] = Auth::user()->id;
 
         // always validate:
         $messages = $this->_repository->validate($data);
@@ -188,11 +189,7 @@ class BudgetController extends BaseController
         }
 
         // create another.
-        if ($data['post_submit_action'] == 'create_another') {
-            return Redirect::route('budgets.create')->withInput();
-        }
-
-        return Redirect::route('budgets.index');
+        return Redirect::route('budgets.create')->withInput();
     }
 
 
@@ -204,7 +201,8 @@ class BudgetController extends BaseController
     public function update(Budget $budget)
     {
 
-        $data = Input::except('_token');
+        $data            = Input::except('_token');
+        $data['user_id'] = Auth::user()->id;
 
         // always validate:
         $messages = $this->_repository->validate($data);
@@ -230,12 +228,8 @@ class BudgetController extends BaseController
         if ($data['post_submit_action'] == 'update') {
             return Redirect::route('budgets.index');
         }
-        // go back to update screen.
-        if ($data['post_submit_action'] == 'return_to_edit') {
-            return Redirect::route('budgets.edit', $budget->id)->withInput(['post_submit_action' => 'return_to_edit']);
-        }
 
-        return Redirect::route('budgets.index');
+        return Redirect::route('budgets.edit', $budget->id)->withInput(['post_submit_action' => 'return_to_edit']);
     }
 
     /**
