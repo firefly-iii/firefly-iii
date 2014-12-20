@@ -70,8 +70,6 @@ class BudgetControllerCest
         $I->see('Delete budget "Delete me"');
         $I->submitForm('#destroy', []);
         $I->see('Budget &quot;Delete me&quot; was deleted.');
-        #$I->dontSeeInDatabase('budgets', ['name' => 'Delete me','deleted_at' => null]);
-        resetToClean::clean();
     }
 
     /**
@@ -80,7 +78,8 @@ class BudgetControllerCest
     public function edit(FunctionalTester $I)
     {
         $I->wantTo('edit a budget');
-        $I->amOnPage('/budgets/edit/1');
+        $I->amOnPage('/budgets/edit/3');
+        $I->see('Edit budget "Delete me"');
     }
 
     /**
@@ -111,7 +110,8 @@ class BudgetControllerCest
     public function show(FunctionalTester $I)
     {
         $I->wantTo('show a budget');
-        $I->amOnPage('/budgets/show/1');
+        $I->amOnPage('/budgets/show/3');
+        $I->see('Delete me');
     }
 
     /**

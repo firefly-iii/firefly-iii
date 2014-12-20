@@ -48,13 +48,14 @@ class TestContentSeeder extends Seeder
 
                 // and because we have no filters, some repetitions:
                 $repOne = LimitRepetition::create(['budget_limit_id' => $limitOne->id, 'startdate' => '2014-01-01', 'enddate' => '2014-01-31', 'amount' => 200]);
-                $repOne = LimitRepetition::create(['budget_limit_id' => $limitTwo->id, 'startdate' => '2014-01-01', 'enddate' => '2014-01-31', 'amount' => 200]);
-                $repOne = LimitRepetition::create(['budget_limit_id' => $limitThree->id, 'startdate' => '2014-01-01', 'enddate' => '2014-01-31', 'amount' => 200]);
+                $repTwo = LimitRepetition::create(['budget_limit_id' => $limitTwo->id, 'startdate' => '2014-01-01', 'enddate' => '2014-01-31', 'amount' => 200]);
+                $repThree = LimitRepetition::create(['budget_limit_id' => $limitThree->id, 'startdate' => '2014-01-01', 'enddate' => '2014-01-31', 'amount' => 200]);
 
                 // create two categories:
                 $dailyGroceries = Category::create(['user_id' => $user->id, 'name' => 'DailyGroceries']);
                 $lunch          = Category::create(['user_id' => $user->id, 'name' => 'Lunch']);
                 $house          = Category::create(['user_id' => $user->id, 'name' => 'House']);
+                $deleteMe= Category::create(['user_id' => $user->id, 'name' => 'Delete me']);
 
                 Component::create(['user_id' => $user->id, 'name' => 'Some Component 1', 'class' => 'Budget']);
                 Component::create(['user_id' => $user->id, 'name' => 'Some Component 2', 'class' => 'Budget']);

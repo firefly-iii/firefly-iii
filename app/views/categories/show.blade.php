@@ -31,7 +31,7 @@
 @section('scripts')
 <script type="text/javascript">
     var componentID = {{$category->id}};
-    var year = {{Session::get('start')->format('Y')}};
+    var year = {{Session::get('start',\Carbon\Carbon::now()->startOfMonth())->format('Y')}};
 
 </script>
 
