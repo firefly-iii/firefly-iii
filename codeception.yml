@@ -11,12 +11,12 @@ settings:
 modules:
   config:
     Db:
-      dsn: 'sqlite:tests/_data/testing.sqlite'
+      dsn: 'sqlite:tests/_data/db.sqlite'
       user: ''
       password: ''
-      dump:
-      cleanup: false
-      populate: false
+      dump: tests/_data/dump.sql
+      cleanup: true
+      populate: true
 coverage:
   enabled: true
   remote: false
