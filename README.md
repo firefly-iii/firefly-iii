@@ -1,7 +1,7 @@
 Firefly III
 ===========
 
-[![Build Status](https://travis-ci.org/JC5/firefly-iii.svg?branch=master)](https://travis-ci.org/JC5/firefly-iii)
+[![Build Status](https://travis-ci.org/JC5/firefly-iii.svg?branch=develop)](https://travis-ci.org/JC5/firefly-iii)
 [![Project Status](http://stillmaintained.com/JC5/firefly-iii.png?a=b)](http://stillmaintained.com/JC5/firefly-iii)
 
 [![Latest Stable Version](https://poser.pugx.org/grumpydictator/firefly-iii/v/stable.svg)](https://packagist.org/packages/grumpydictator/firefly-iii)
@@ -17,13 +17,15 @@ laptop and [Firefly II](https://github.com/JC5/Firefly) is live.
 
 ## Current features
 
-- [A double-entry bookkeeping system](http://en.wikipedia.org/wiki/Double-entry_bookkeeping_system).
+- [A double-entry bookkeeping system](http://en.wikipedia.org/wiki/Double-entry_bookkeeping_system);
 - You can store, edit and remove withdrawals, deposits and transfers. This allows you full financial management;
 - It's possible to create, change and manage money using _budgets_;
 - Organize transactions using categories;
 - Save towards a goal using piggy banks;
 - Predict and anticipate large expenses using "repeated expenses" (ie. yearly taxes);
-- Predict and anticipate bills using "recurring transactions" (rent for example).
+- Predict and anticipate bills using "recurring transactions" (rent for example);
+- View basic income / expense reports.
+- 
 
 Everything is organised:
 

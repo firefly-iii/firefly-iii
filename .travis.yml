@@ -8,6 +8,7 @@ install:
   - composer install
 
 script:
+  - ./tests/_data/db.sh
   - php vendor/bin/codecept build
   - php vendor/bin/codecept run --coverage --coverage-xml
 
