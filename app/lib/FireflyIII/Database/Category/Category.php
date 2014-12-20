@@ -48,9 +48,8 @@ class Category implements CUD, CommonDatabaseCalls
      */
     public function store(array $data)
     {
-        $category        = new \Category;
-        $category->name  = $data['name'];
-        $category->class = 'Category';
+        $category       = new \Category;
+        $category->name = $data['name'];
         $category->user()->associate($this->getUser());
         if (!$category->isValid()) {
             \Log::error('Could not store category: ' . $category->getErrors()->toJson());
@@ -71,12 +70,6 @@ class Category implements CUD, CommonDatabaseCalls
     public function update(Eloquent $model, array $data)
     {
         $model->name = $data['name'];
-        if (!$model->isValid()) {
-            \Log::error('Could not store category: ' . $model->getErrors()->toJson());
-            throw new FireflyException($model->getErrors()->first());
-        }
-
-
         $model->save();
 
         return true;
@@ -94,8 +87,9 @@ class Category implements CUD, CommonDatabaseCalls
     {
         $warnings  = new MessageBag;
         $successes = new MessageBag;
-        $validator = \Validator::make($model, \Component::$rules);
-        $errors    = $validator->errors();
+        $category  = new \Category($model);
+        $category->isValid();
+        $errors = $category->getErrors();
 
         if (!$errors->has('name')) {
             $successes->add('name', 'OK');

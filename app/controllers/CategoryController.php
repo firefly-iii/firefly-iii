@@ -96,7 +96,8 @@ class CategoryController extends BaseController
      */
     public function store()
     {
-        $data = Input::except('_token');
+        $data            = Input::except('_token');
+        $data['user_id'] = Auth::user()->id;
 
         // always validate:
         $messages = $this->_repository->validate($data);
@@ -121,12 +122,7 @@ class CategoryController extends BaseController
             return Redirect::route('categories.index');
         }
 
-        // create another.
-        if ($data['post_submit_action'] == 'create_another') {
-            return Redirect::route('categories.create')->withInput();
-        }
-
-        return Redirect::route('categories.index');
+        return Redirect::route('categories.create')->withInput();
     }
 
     /**
@@ -137,7 +133,8 @@ class CategoryController extends BaseController
      */
     public function update(Category $category)
     {
-        $data = Input::except('_token');
+        $data            = Input::except('_token');
+        $data['user_id'] = Auth::user()->id;
 
         // always validate:
         $messages = $this->_repository->validate($data);
@@ -163,12 +160,9 @@ class CategoryController extends BaseController
         if ($data['post_submit_action'] == 'update') {
             return Redirect::route('categories.index');
         }
-        // go back to update screen.
-        if ($data['post_submit_action'] == 'return_to_edit') {
-            return Redirect::route('categories.edit', $category->id)->withInput(['post_submit_action' => 'return_to_edit']);
-        }
 
-        return Redirect::route('categories.index');
+        // go back to update screen.
+        return Redirect::route('categories.edit', $category->id)->withInput(['post_submit_action' => 'return_to_edit']);
 
 
     }
