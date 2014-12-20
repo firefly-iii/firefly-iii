@@ -7,6 +7,7 @@ use FireflyIII\Database\CUD;
 use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 
@@ -28,11 +29,11 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     }
 
     /**
-     * @param \Eloquent $model
+     * @param Eloquent $model
      *
      * @return bool
      */
-    public function destroy(\Eloquent $model)
+    public function destroy(Eloquent $model)
     {
         $model->delete();
 
@@ -62,12 +63,12 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     }
 
     /**
-     * @param \Eloquent $model
-     * @param array     $data
+     * @param Eloquent $model
+     * @param array    $data
      *
      * @return bool
      */
-    public function update(\Eloquent $model, array $data)
+    public function update(Eloquent $model, array $data)
     {
         $model->name = $data['name'];
         $model->save();
@@ -236,9 +237,9 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     {
         return \LimitRepetition::
         leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
-            ->where('limit_repetitions.startdate', $date->format('Y-m-d'))
-            ->where('budget_limits.budget_id', $budget->id)
-            ->first(['limit_repetitions.*']);
+                               ->where('limit_repetitions.startdate', $date->format('Y-m-d'))
+                               ->where('budget_limits.budget_id', $budget->id)
+                               ->first(['limit_repetitions.*']);
     }
 
     /**
@@ -251,21 +252,22 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     {
         // Add expenses that have no budget:
         return $this->getUser()
-            ->transactionjournals()
-            ->whereNotIn('transaction_journals.id', function ($query) use ($start, $end) {
-                $query
-                    ->select('transaction_journals.id')
-                    ->from('transaction_journals')
-                    ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                    ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                    ->where('transaction_journals.date', '<=', $end->format('Y-m-d'));
-        }
-        )
-            ->before($end)
-            ->after($start)
-            ->lessThan(0)
-            ->transactionTypes(['Withdrawal'])
-            ->get();
+                    ->transactionjournals()
+                    ->whereNotIn(
+                        'transaction_journals.id', function ($query) use ($start, $end) {
+                        $query
+                            ->select('transaction_journals.id')
+                            ->from('transaction_journals')
+                            ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                            ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'));
+                    }
+                    )
+                    ->before($end)
+                    ->after($start)
+                    ->lessThan(0)
+                    ->transactionTypes(['Withdrawal'])
+                    ->get();
     }
 
     /**
@@ -321,7 +323,9 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
             $limit->amount      = $amount;
             $limit->repeat_freq = 'monthly';
             $limit->repeats     = 0;
-            $limit->save();
+            $result             = $limit->save();
+            \Log::info('Created new limit? ' . boolval($result));
+            \Log::info('ID: ' . $limit->id);
             /*
              * A newly stored limit also created a limit repetition.
              */

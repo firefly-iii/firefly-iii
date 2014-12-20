@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Database\TransactionCurrency;
 
-
 /**
  * Class TransactionType
  *

@@ -5,7 +5,6 @@ namespace FireflyIII\Database;
 use Illuminate\Support\Collection;
 
 
-
 /**
  * Interface CommonDatabaseCalls
  *

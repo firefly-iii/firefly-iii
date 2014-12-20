@@ -4,6 +4,9 @@
 
 App::before(
     function ($request) {
+
+        // put IP in session if not already there.
+
         $reminders = [];
 
         if (Auth::check()) {

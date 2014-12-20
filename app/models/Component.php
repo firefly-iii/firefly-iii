@@ -1,6 +1,6 @@
 <?php
 use Watson\Validating\ValidatingTrait;
-
+use \Illuminate\Database\Eloquent\Model as Eloquent;
 /**
  * Class Component
  */

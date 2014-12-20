@@ -4,6 +4,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Watson\Validating\ValidatingTrait;
+use \Illuminate\Database\Eloquent\Model as Eloquent;
 
 /**
  * Class TransactionJournal

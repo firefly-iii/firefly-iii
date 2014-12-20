@@ -36,8 +36,8 @@ class PiggybankPart
     public function getReminder()
     {
         if (is_null($this->reminder)) {
-            $this->reminder = $this->repetition->piggybank->reminders()->where('startdate', $bar->getStartdate()->format('Y-m-d'))->where(
-                'enddate', $bar->getTargetdate()->format('Y-m-d')
+            $this->reminder = $this->repetition->piggybank->reminders()->where('startdate', $this->getStartdate()->format('Y-m-d'))->where(
+                'enddate', $this->getTargetdate()->format('Y-m-d')
             )->first();
         }
 
@@ -50,22 +50,6 @@ class PiggybankPart
     public function setReminder($reminder)
     {
         $this->reminder = $reminder;
-    }
-
-    /**
-     * @return \PiggybankRepetition
-     */
-    public function getRepetition()
-    {
-        return $this->repetition;
-    }
-
-    /**
-     * @param \PiggybankRepetition $repetition
-     */
-    public function setRepetition($repetition)
-    {
-        $this->repetition = $repetition;
     }
 
     /**
@@ -98,6 +82,22 @@ class PiggybankPart
     public function setTargetdate($targetdate)
     {
         $this->targetdate = $targetdate;
+    }
+
+    /**
+     * @return \PiggybankRepetition
+     */
+    public function getRepetition()
+    {
+        return $this->repetition;
+    }
+
+    /**
+     * @param \PiggybankRepetition $repetition
+     */
+    public function setRepetition($repetition)
+    {
+        $this->repetition = $repetition;
     }
 
     /**

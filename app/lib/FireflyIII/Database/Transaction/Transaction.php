@@ -7,9 +7,9 @@ use FireflyIII\Database\CUD;
 use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
-
 
 /**
  * Class Transaction
@@ -21,12 +21,12 @@ class Transaction implements CUD, CommonDatabaseCalls
     use SwitchUser;
 
     /**
-     * @param \Eloquent $model
+     * @param Eloquent $model
      *
      * @return bool
      * @throws NotImplementedException
      */
-    public function destroy(\Eloquent $model)
+    public function destroy(Eloquent $model)
     {
         // TODO: Implement destroy() method.
         throw new NotImplementedException;
@@ -60,13 +60,13 @@ class Transaction implements CUD, CommonDatabaseCalls
     }
 
     /**
-     * @param \Eloquent $model
-     * @param array     $data
+     * @param Eloquent $model
+     * @param array    $data
      *
      * @return bool
      * @throws NotImplementedException
      */
-    public function update(\Eloquent $model, array $data)
+    public function update(Eloquent $model, array $data)
     {
         // TODO: Implement update() method.
         throw new NotImplementedException;
