@@ -1,24 +1,14 @@
 <?php
-//exec('php artisan migrate --seed --env=testing');
-// This is global bootstrap for autoloading
-//
-//
-//$db = realpath(__DIR__ . '/_data') . '/testing.sqlite';
-//if (!file_exists($db)) {
-//    echo 'Recreating database...' . "\n";
-//    exec('touch ' . $db);
-//
-//} else {
-//    echo 'Database exists!' . "\n";
-//}
-//echo 'Copy database to clean database (turned off)...' . "\n";
-//exec('cp ' . $db . ' ' . realpath(__DIR__ . '/_data') . '/clean.sqlite');
-//
-//
-///**
-// * Class resetToClean
-// * @SuppressWarnings("CamelCase")
-// */
+$db = realpath(__DIR__ . '/_data') . '/db.sqlite';
+if(!file_exists($db)) {
+    exec('touch '.$db);
+    exec('php artisan migrate --seed --env=testing');
+    exec('sqlite3 tests/_data/db.sqlite .dump > tests/_data/dump.sql');
+}
+
+/**
+ * Class resetToClean
+ */
 class resetToClean
 {
     /**

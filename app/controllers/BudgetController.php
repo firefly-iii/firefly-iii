@@ -146,7 +146,7 @@ class BudgetController extends BaseController
     public function show(Budget $budget, LimitRepetition $repetition = null)
     {
         if (!is_null($repetition) && $repetition->budgetLimit->budget->id != $budget->id) {
-            App::abort(500);
+            return View::make('error')->with('message','Invalid selection.');
         }
 
         $hideBudget = true; // used in transaction list.

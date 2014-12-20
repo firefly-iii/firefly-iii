@@ -117,6 +117,16 @@ class BudgetControllerCest
     /**
      * @param FunctionalTester $I
      */
+    public function showInvalidRepetition(FunctionalTester $I)
+    {
+        $I->wantTo('show a budget with a repetition that does not match the budget.');
+        $I->amOnPage('/budgets/show/1/3');
+        $I->see('Invalid selection');
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
     public function store(FunctionalTester $I)
     {
         $I->wantTo('store a budget');
