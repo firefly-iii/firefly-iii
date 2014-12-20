@@ -109,7 +109,7 @@ class AccountControllerCest
     public function storeValidateOnly(FunctionalTester $I)
     {
         $I->amOnPage('/accounts/create/asset');
-        $I->wantTo('store a new asset account');
+        $I->wantTo('validate a new asset account');
         $I->see('Create a new asset account');
         $I->submitForm(
             '#store', ['name' => 'New through tests.', 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'validate_only']

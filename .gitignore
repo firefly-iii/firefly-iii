@@ -21,3 +21,5 @@ tests/acceptance/AcceptanceTester.php
 tests/functional/FunctionalTester.php
 tests/unit/UnitTester.php
 pi.php
+tests/_data/db.sqlite
+tests/_data/dump.sql
