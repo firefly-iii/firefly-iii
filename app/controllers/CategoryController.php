@@ -4,7 +4,8 @@ use FireflyIII\Exception\FireflyException;
 
 /**
  *
- * TODO Find out what constitutes proper camelCase
+ * @SuppressWarnings("CamelCase") // I'm fine with this.
+ * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
  *
  * Class CategoryController
  */

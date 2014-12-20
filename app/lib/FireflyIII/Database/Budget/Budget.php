@@ -48,7 +48,7 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
      */
     public function store(array $data)
     {
-        $budget        = new \Budget($data);
+        $budget = new \Budget($data);
 
         if (!$budget->isValid()) {
             \Log::error('Could not store budget: ' . $budget->getErrors()->toJson());
@@ -85,9 +85,9 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     {
         $warnings  = new MessageBag;
         $successes = new MessageBag;
-        $budget = new \Budget($model);
+        $budget    = new \Budget($model);
         $budget->isValid();
-        $errors    = $budget->getErrors();
+        $errors = $budget->getErrors();
 
         if (!$errors->has('name')) {
             $successes->add('name', 'OK');
@@ -178,6 +178,17 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
         }
 
         return \Paginator::make($items, $count, $take);
+    }
+
+    /**
+     * @param \Budget $budget
+     * @param Carbon  $date
+     *
+     * @return \LimitRepetition
+     */
+    public function getRepetitionByDate(\Budget $budget, Carbon $date)
+    {
+        return $budget->limitrepetitions()->where('limit_repetitions.startdate', $date)->first(['limit_repetitions.*']);
     }
 
     /**

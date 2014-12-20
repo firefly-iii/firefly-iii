@@ -1,6 +1,7 @@
 <?php
 use Carbon\Carbon;
 use Grumpydictator\Gchart\GChart as GChart;
+use Illuminate\Database\Query\JoinClause;
 
 /**
  * Class GoogleChartController
@@ -51,7 +52,7 @@ class GoogleChartController extends BaseController
         $current = clone $start;
 
         while ($end >= $current) {
-            $this->_chart->addRow(clone $current, $current > Carbon::now() ? null : Steam::balance($account, $current));
+            $this->_chart->addRow(clone $current, Steam::balance($account, $current));
             $current->addDay();
         }
 
@@ -85,7 +86,7 @@ class GoogleChartController extends BaseController
             $this->_chart->addColumn('Balance for ' . $account->name, 'number');
         }
         $start   = Session::get('start', Carbon::now()->startOfMonth());
-        $end     = Session::get('end');
+        $end     = Session::get('end', Carbon::now()->endOfMonth());
         $current = clone $start;
 
         while ($end >= $current) {
@@ -151,44 +152,35 @@ class GoogleChartController extends BaseController
      */
     public function allCategoriesHomeChart()
     {
-        $data = [];
+        $this->_chart->addColumn('Category', 'string');
+        $this->_chart->addColumn('Spent', 'number');
 
-        /** @var \Grumpydictator\Gchart\GChart $chart */
-        $chart = App::make('gchart');
-        $chart->addColumn('Category', 'string');
-        $chart->addColumn('Spent', 'number');
-
-        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $tj */
-        $tj = App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
-
-        /*
-         * Get the journals:
-         */
-        $journals = $tj->getInDateRange(Session::get('start', Carbon::now()->startOfMonth()), Session::get('end'));
-
-        /** @var \TransactionJournal $journal */
-        foreach ($journals as $journal) {
-            if ($journal->transactionType->type == 'Withdrawal') {
-                $amount   = $journal->getAmount();
-                $category = $journal->categories()->first();
-                if (!is_null($category)) {
-                    if (isset($data[$category->name])) {
-                        $data[$category->name] += $amount;
-                    } else {
-                        $data[$category->name] = $amount;
-                    }
-                }
+        // query!
+        $set = \TransactionJournal::leftJoin(
+            'transactions',
+            function (JoinClause $join) {
+                $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('amount', '>', 0);
             }
+        )
+                                  ->leftJoin(
+                                      'category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
+                                  )
+                                  ->leftJoin('categories', 'categories.id', '=', 'category_transaction_journal.category_id')
+                                  ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                  ->before(Session::get('end', Carbon::now()->endOfMonth()))
+                                  ->after(Session::get('start', Carbon::now()->startOfMonth()))
+                                  ->where('transaction_types.type', 'Withdrawal')
+                                  ->groupBy('categories.id')
+                                  ->orderBy('sum', 'DESC')
+                                  ->get(['categories.id', 'categories.name', DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
+        foreach ($set as $entry) {
+            $entry->name = strlen($entry->name) == 0 ? '(no category)' : $entry->name;
+            $this->_chart->addRow($entry->name, floatval($entry->sum));
         }
-        arsort($data);
-        foreach ($data as $key => $entry) {
-            $chart->addRow($key, $entry);
-        }
 
+        $this->_chart->generate();
 
-        $chart->generate();
-
-        return Response::json($chart->getData());
+        return Response::json($this->_chart->getData());
 
     }
 
@@ -203,10 +195,8 @@ class GoogleChartController extends BaseController
         $start = clone $repetition->startdate;
         $end   = $repetition->enddate;
 
-        /** @var \Grumpydictator\Gchart\GChart $chart */
-        $chart = App::make('gchart');
-        $chart->addColumn('Day', 'date');
-        $chart->addColumn('Left', 'number');
+        $this->_chart->addColumn('Day', 'date');
+        $this->_chart->addColumn('Left', 'number');
 
 
         $amount = $repetition->amount;
@@ -217,12 +207,12 @@ class GoogleChartController extends BaseController
              */
             $sum = floatval($budget->transactionjournals()->lessThan(0)->transactionTypes(['Withdrawal'])->onDate($start)->sum('amount'));
             $amount += $sum;
-            $chart->addRow(clone $start, $amount);
+            $this->_chart->addRow(clone $start, $amount);
             $start->addDay();
         }
-        $chart->generate();
+        $this->_chart->generate();
 
-        return Response::json($chart->getData());
+        return Response::json($this->_chart->getData());
 
     }
 
@@ -243,16 +233,13 @@ class GoogleChartController extends BaseController
         /** @var \FireflyIII\Database\Budget\Budget $repos */
         $repos = App::make('FireflyIII\Database\Budget\Budget');
 
-        /** @var \Grumpydictator\Gchart\GChart $chart */
-        $chart = App::make('gchart');
-        $chart->addColumn('Month', 'date');
-        $chart->addColumn('Budgeted', 'number');
-        $chart->addColumn('Spent', 'number');
+        $this->_chart->addColumn('Month', 'date');
+        $this->_chart->addColumn('Budgeted', 'number');
+        $this->_chart->addColumn('Spent', 'number');
 
         $end = clone $start;
         $end->endOfYear();
         while ($start <= $end) {
-
             $spent      = $repos->spentInMonth($component, $start);
             $repetition = $repos->repetitionOnStartingOnDate($component, $start);
             if ($repetition) {
@@ -261,15 +248,15 @@ class GoogleChartController extends BaseController
                 $budgeted = null;
             }
 
-            $chart->addRow(clone $start, $budgeted, $spent);
+            $this->_chart->addRow(clone $start, $budgeted, $spent);
 
             $start->addMonth();
         }
 
 
-        $chart->generate();
+        $this->_chart->generate();
 
-        return Response::json($chart->getData());
+        return Response::json($this->_chart->getData());
 
 
     }
@@ -291,11 +278,9 @@ class GoogleChartController extends BaseController
         /** @var \FireflyIII\Database\Category\Category $repos */
         $repos = App::make('FireflyIII\Database\Category\Category');
 
-        /** @var \Grumpydictator\Gchart\GChart $chart */
-        $chart = App::make('gchart');
-        $chart->addColumn('Month', 'date');
-        $chart->addColumn('Budgeted', 'number');
-        $chart->addColumn('Spent', 'number');
+        $this->_chart->addColumn('Month', 'date');
+        $this->_chart->addColumn('Budgeted', 'number');
+        $this->_chart->addColumn('Spent', 'number');
 
         $end = clone $start;
         $end->endOfYear();
@@ -304,15 +289,15 @@ class GoogleChartController extends BaseController
             $spent    = $repos->spentInMonth($component, $start);
             $budgeted = null;
 
-            $chart->addRow(clone $start, $budgeted, $spent);
+            $this->_chart->addRow(clone $start, $budgeted, $spent);
 
             $start->addMonth();
         }
 
 
-        $chart->generate();
+        $this->_chart->generate();
 
-        return Response::json($chart->getData());
+        return Response::json($this->_chart->getData());
 
 
     }
@@ -324,20 +309,18 @@ class GoogleChartController extends BaseController
      */
     public function piggyBankHistory(\Piggybank $piggybank)
     {
-        /** @var \Grumpydictator\Gchart\GChart $chart */
-        $chart = App::make('gchart');
-        $chart->addColumn('Date', 'date');
-        $chart->addColumn('Balance', 'number');
+        $this->_chart->addColumn('Date', 'date');
+        $this->_chart->addColumn('Balance', 'number');
 
         $set = \DB::table('piggy_bank_events')->where('piggybank_id', $piggybank->id)->groupBy('date')->get(['date', DB::Raw('SUM(`amount`) AS `sum`')]);
 
         foreach ($set as $entry) {
-            $chart->addRow(new Carbon($entry->date), floatval($entry->sum));
+            $this->_chart->addRow(new Carbon($entry->date), floatval($entry->sum));
         }
 
-        $chart->generate();
+        $this->_chart->generate();
 
-        return Response::json($chart->getData());
+        return Response::json($this->_chart->getData());
 
     }
 
@@ -349,12 +332,10 @@ class GoogleChartController extends BaseController
     public function recurringOverview(RecurringTransaction $recurring)
     {
 
-        /** @var \Grumpydictator\Gchart\GChart $chart */
-        $chart = App::make('gchart');
-        $chart->addColumn('Date', 'date');
-        $chart->addColumn('Max amount', 'number');
-        $chart->addColumn('Min amount', 'number');
-        $chart->addColumn('Current entry', 'number');
+        $this->_chart->addColumn('Date', 'date');
+        $this->_chart->addColumn('Max amount', 'number');
+        $this->_chart->addColumn('Min amount', 'number');
+        $this->_chart->addColumn('Current entry', 'number');
 
         // get first transaction or today for start:
         $first = $recurring->transactionjournals()->orderBy('date', 'ASC')->first();
@@ -372,13 +353,13 @@ class GoogleChartController extends BaseController
                 $amount = 0;
             }
             unset($result);
-            $chart->addRow(clone $start, $recurring->amount_max, $recurring->amount_min, $amount);
+            $this->_chart->addRow(clone $start, $recurring->amount_max, $recurring->amount_min, $amount);
             $start = DateKit::addPeriod($start, $recurring->repeat_freq, 0);
         }
 
-        $chart->generate();
+        $this->_chart->generate();
 
-        return Response::json($chart->getData());
+        return Response::json($this->_chart->getData());
 
     }
 
@@ -388,53 +369,24 @@ class GoogleChartController extends BaseController
      */
     public function recurringTransactionsOverview()
     {
-
-        /*
-         * Set of paid transaction journals.
-         * Set of unpaid recurring transactions.
-         */
         $paid   = ['items' => [], 'amount' => 0];
         $unpaid = ['items' => [], 'amount' => 0];
-
-        /** @var \Grumpydictator\Gchart\GChart $chart */
-        $chart = App::make('gchart');
-        $chart->addColumn('Name', 'string');
-        $chart->addColumn('Amount', 'number');
+        $this->_chart->addColumn('Name', 'string');
+        $this->_chart->addColumn('Amount', 'number');
 
         /** @var \FireflyIII\Database\RecurringTransaction\RecurringTransaction $rcr */
-        $rcr = App::make('FireflyIII\Database\RecurringTransaction\RecurringTransaction');
-
+        $rcr       = App::make('FireflyIII\Database\RecurringTransaction\RecurringTransaction');
         $recurring = $rcr->getActive();
-
         /** @var \RecurringTransaction $entry */
         foreach ($recurring as $entry) {
-            /*
-             * Start another loop starting at the $date.
-             */
-            $start = clone $entry->date;
-            $end   = Carbon::now();
-
-            /*
-             * The jump we make depends on the $repeat_freq
-             */
+            $start   = clone $entry->date;
+            $end     = Carbon::now();
             $current = clone $start;
-
             while ($current <= $end) {
-                /*
-                 * Get end of period for $current:
-                 */
                 $currentEnd = DateKit::endOfPeriod($current, $entry->repeat_freq);
-
-                /*
-                 * In the current session range?
-                 */
-                if (\Session::get('end') >= $current and $currentEnd >= \Session::get('start', Carbon::now()->startOfMonth())) {
-                    /*
-                     * Lets see if we've already spent money on this recurring transaction (it hath recurred).
-                     */
+                if (\Session::get('end', Carbon::now()->end§OfMonth()) >= $current and $currentEnd >= \Session::get('start', Carbon::now()->startOfMonth())) {
                     /** @var TransactionJournal $set */
                     $journal = $rcr->getJournalForRecurringInRange($entry, $current, $currentEnd);
-
                     if (is_null($journal)) {
                         $unpaid['items'][] = $entry->name;
                         $unpaid['amount'] += (($entry->amount_max + $entry->amount_min) / 2);
@@ -444,23 +396,15 @@ class GoogleChartController extends BaseController
                         $paid['amount'] += $amount;
                     }
                 }
-
-                /*
-                 * Add some time for the next loop!
-                 */
                 $current = DateKit::addPeriod($current, $entry->repeat_freq, intval($entry->skip));
-
             }
-
         }
         /** @var \RecurringTransaction $entry */
-        $chart->addRow('Unpaid: ' . join(', ', $unpaid['items']), $unpaid['amount']);
-        $chart->addRow('Paid: ' . join(', ', $paid['items']), $paid['amount']);
+        $this->_chart->addRow('Unpaid: ' . join(', ', $unpaid['items']), $unpaid['amount']);
+        $this->_chart->addRow('Paid: ' . join(', ', $paid['items']), $paid['amount']);
+        $this->_chart->generate();
 
-        $chart->generate();
-
-        return Response::json($chart->getData());
-
+        return Response::json($this->_chart->getData());
     }
 
     /**
@@ -475,11 +419,9 @@ class GoogleChartController extends BaseController
         } catch (Exception $e) {
             App::abort(500);
         }
-        /** @var \Grumpydictator\Gchart\GChart $chart */
-        $chart = App::make('gchart');
-        $chart->addColumn('Month', 'date');
-        $chart->addColumn('Income', 'number');
-        $chart->addColumn('Expenses', 'number');
+        $this->_chart->addColumn('Month', 'date');
+        $this->_chart->addColumn('Income', 'number');
+        $this->_chart->addColumn('Expenses', 'number');
 
         /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $repository */
         $repository = App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
@@ -492,14 +434,14 @@ class GoogleChartController extends BaseController
             $income  = $repository->getSumOfIncomesByMonth($start);
             $expense = $repository->getSumOfExpensesByMonth($start);
 
-            $chart->addRow(clone $start, $income, $expense);
+            $this->_chart->addRow(clone $start, $income, $expense);
             $start->addMonth();
         }
 
 
-        $chart->generate();
+        $this->_chart->generate();
 
-        return Response::json($chart->getData());
+        return Response::json($this->_chart->getData());
 
     }
 
@@ -515,11 +457,9 @@ class GoogleChartController extends BaseController
         } catch (Exception $e) {
             App::abort(500);
         }
-        /** @var \Grumpydictator\Gchart\GChart $chart */
-        $chart = App::make('gchart');
-        $chart->addColumn('Summary', 'string');
-        $chart->addColumn('Income', 'number');
-        $chart->addColumn('Expenses', 'number');
+        $this->_chart->addColumn('Summary', 'string');
+        $this->_chart->addColumn('Income', 'number');
+        $this->_chart->addColumn('Expenses', 'number');
 
         /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $repository */
         $repository = App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
@@ -538,14 +478,14 @@ class GoogleChartController extends BaseController
 
             $start->addMonth();
         }
-        $chart->addRow('Sum', $income, $expense);
+        $this->_chart->addRow('Sum', $income, $expense);
         $count = $count > 0 ? $count : 1;
-        $chart->addRow('Average', ($income / $count), ($expense / $count));
+        $this->_chart->addRow('Average', ($income / $count), ($expense / $count));
 
 
-        $chart->generate();
+        $this->_chart->generate();
 
-        return Response::json($chart->getData());
+        return Response::json($this->_chart->getData());
 
     }
 } 

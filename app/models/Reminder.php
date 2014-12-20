@@ -10,9 +10,7 @@ class Reminder extends Eloquent
 {
     use ValidatingTrait;
 
-    // @codingStandardsIgnoreStart
     protected $table = 'reminders';
-    // @codingStandardsIgnoreEnd
 
     /**
      * @param $value

@@ -32,7 +32,6 @@ class ProfileController extends BaseController
     {
 
         // old, new1, new2
-        /** @noinspection PhpUndefinedFieldInspection */
         if (!Hash::check(Input::get('old'), Auth::user()->password)) {
             Session::flash('error', 'Invalid current password!');
 
