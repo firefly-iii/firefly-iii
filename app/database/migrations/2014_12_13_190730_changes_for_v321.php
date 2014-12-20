@@ -22,6 +22,7 @@ use Illuminate\Database\Schema\Blueprint;
  * 15. Do not recreate component_recurring_transaction
  * 16. Do not recreate component_transaction
  * 17. Do not recreate field 'piggybank_id' in 'transactions'
+ * 18. Recreate component_id in limits
  *
  *
  * Up:
@@ -41,7 +42,7 @@ use Illuminate\Database\Schema\Blueprint;
  * 13. Drop table component_recurring_transaction
  * 14. Drop table component_transaction
  * 15. Drop field 'piggybank_id' from 'transactions'
- *
+ * 16. Drop component_id from budget_limits.
  *
  * Class ChangesForV321
  */
@@ -230,6 +231,7 @@ class ChangesForV321 extends Migration
         $this->dropComponentRecurringTransactionTable(); // 13.
         $this->dropComponentTransactionTable(); // 14.
         $this->dropPiggyBankIdFromTransactions(); // 15.
+        $this->dropComponentIdFromBudgetLimits(); // 16.
 
 
         //        $this->doRenameInLimitRepetitions();
@@ -427,6 +429,16 @@ class ChangesForV321 extends Migration
                 $table->dropForeign('transactions_piggybank_id_foreign');
                 $table->dropColumn('piggybank_id');
             }
+        }
+        );
+    }
+
+    public function dropComponentIdFromBudgetLimits()
+    {
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->dropForeign('limits_component_id_foreign');
+            $table->dropColumn('component_id');
         }
         );
     }

@@ -3,7 +3,7 @@
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Watson\Validating\ValidatingTrait;
-
+use \Illuminate\Database\Eloquent\Model as Eloquent;
 /**
  * Class Limit
  */

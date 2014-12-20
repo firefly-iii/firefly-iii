@@ -7,9 +7,9 @@ use FireflyIII\Database\CUD;
 use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
-
 
 /**
  * Class Piggybank
@@ -29,11 +29,11 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggyBankInterface
     }
 
     /**
-     * @param \Eloquent $model
+     * @param Eloquent $model
      *
      * @return bool
      */
-    public function destroy(\Eloquent $model)
+    public function destroy(Eloquent $model)
     {
         $model->delete();
     }
@@ -56,12 +56,12 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggyBankInterface
     }
 
     /**
-     * @param \Eloquent $model
-     * @param array     $data
+     * @param Eloquent $model
+     * @param array    $data
      *
      * @return bool
      */
-    public function update(\Eloquent $model, array $data)
+    public function update(Eloquent $model, array $data)
     {
         /** @var \Piggybank $model */
         $model->name          = $data['name'];
@@ -178,7 +178,9 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggyBankInterface
     public function find($objectId)
     {
         return \Piggybank::
-        leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where('piggybanks.id', '=', $objectId)->where('accounts.user_id', $this->getUser()->id)
+        leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where('piggybanks.id', '=', $objectId)->where(
+            'accounts.user_id', $this->getUser()->id
+        )
                          ->first(['piggybanks.*']);
     }
 
@@ -242,6 +244,7 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggyBankInterface
                 if ($date >= $rep->startdate && $date <= $rep->targetdate) {
                     return $rep;
                 }
+
                 return null;
             }
         );

@@ -29,7 +29,15 @@ class BudgetControllerCest
     public function amount(FunctionalTester $I)
     {
         $I->wantTo('update the amount for a budget and limit repetition');
-        $I->amOnPage('/budgets/income');
+        $I->amOnPage('/budgets');
+
+        ///budgets/income
+
+        $I->sendAjaxPostRequest('/budgets/amount/1', ['amount' => 100]);
+        $I->canSeeResponseCodeIs(200);
+        $I->see('Groceries');
+        $I->seeInDatabase('budgets', ['id' => 1]);
+        #$I->seeInDatabase('budget_limits', ['budget_id' => 1, 'amount' => 100.00]);
     }
 
     /**
@@ -58,12 +66,12 @@ class BudgetControllerCest
     public function destroy(FunctionalTester $I)
     {
         $I->wantTo('destroy a budget');
-        #$I->amOnPage('/budgets/delete/3');
-        #$I->see('Delete budget "Delete me"');
-        #$I->submitForm('#destroy', []);
-        #$I->see('Budget &quot;Delete me&quot; was deleted.');
-        #$I->dontSeeInDatabase('components', ['name' => 'Delete me', 'class' => 'Budget','deleted_at' => null]);
-        //resetToClean::clean();
+        $I->amOnPage('/budgets/delete/3');
+        $I->see('Delete budget "Delete me"');
+        $I->submitForm('#destroy', []);
+        $I->see('Budget &quot;Delete me&quot; was deleted.');
+        #$I->dontSeeInDatabase('budgets', ['name' => 'Delete me','deleted_at' => null]);
+        resetToClean::clean();
     }
 
     /**
@@ -89,7 +97,12 @@ class BudgetControllerCest
      */
     public function postUpdateIncome(FunctionalTester $I)
     {
+        $date = date('FY');
         $I->wantTo('process the update to my monthly income');
+        $I->amOnPage('/budgets/income');
+        $I->see('Update (expected) income for');
+        $I->submitForm('#income', ['amount' => 1200]);
+        $I->seeRecord('preferences', ['name' => 'budgetIncomeTotal' . $date, 'data' => 1200]);
     }
 
     /**

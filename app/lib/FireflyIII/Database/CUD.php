@@ -2,6 +2,7 @@
 
 namespace FireflyIII\Database;
 
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
 
 /**
@@ -13,26 +14,26 @@ interface CUD
 {
 
     /**
-     * @param \Eloquent $model
+     * @param Eloquent $model
      *
      * @return bool
      */
-    public function destroy(\Eloquent $model);
+    public function destroy(Eloquent $model);
 
     /**
      * @param array $data
      *
-     * @return \Eloquent
+     * @return Eloquent
      */
     public function store(array $data);
 
     /**
-     * @param \Eloquent $model
-     * @param array  $data
+     * @param Eloquent $model
+     * @param array    $data
      *
      * @return bool
      */
-    public function update(\Eloquent $model, array $data);
+    public function update(Eloquent $model, array $data);
 
     /**
      * Validates an array. Returns an array containing MessageBags

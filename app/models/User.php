@@ -5,6 +5,7 @@ use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\UserTrait;
 use Watson\Validating\ValidatingTrait;
+use \Illuminate\Database\Eloquent\Model as Eloquent;
 
 /**
  * Class User

@@ -9,6 +9,7 @@ use FireflyIII\Database\CUD;
 use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 
@@ -30,11 +31,11 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
     }
 
     /**
-     * @param \Eloquent $model
+     * @param Eloquent $model
      *
      * @return bool
      */
-    public function destroy(\Eloquent $model)
+    public function destroy(Eloquent $model)
     {
         /*
          * Trigger deletion.
@@ -84,13 +85,13 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
     }
 
     /**
-     * @param \Eloquent $model
-     * @param array     $data
+     * @param Eloquent $model
+     * @param array    $data
      *
      * @return bool
      * @throws FireflyException
      */
-    public function update(\Eloquent $model, array $data)
+    public function update(Eloquent $model, array $data)
     {
         $journalType        = $this->getJournalType($data['what']);
         $currency           = $this->getJournalCurrency($data['currency']);

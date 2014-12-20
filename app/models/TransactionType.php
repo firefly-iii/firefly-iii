@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Watson\Validating\ValidatingTrait;
+use \Illuminate\Database\Eloquent\Model as Eloquent;
 
 /**
  * Class TransactionType
