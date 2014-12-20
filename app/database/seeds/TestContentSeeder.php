@@ -33,7 +33,23 @@ class TestContentSeeder extends Seeder
                 // create two budgets:
                 $groceriesBudget = Budget::create(['user_id' => $user->id, 'name' => 'Groceries']);
                 $billsBudget     = Budget::create(['user_id' => $user->id, 'name' => 'Bills']);
-                Budget::create(['user_id' => $user->id, 'name' => 'Delete me']);
+                $deleteBudget    = Budget::create(['user_id' => $user->id, 'name' => 'Delete me']);
+
+                // some limits:
+                $limitOne = BudgetLimit::create(
+                    ['startdate' => '2014-01-01', 'amount' => 200, 'repeats' => 0, 'repeat_freq' => 'monthly', 'budget_id' => $groceriesBudget->id]
+                );
+                $limitTwo = BudgetLimit::create(
+                    ['startdate' => '2014-01-01', 'amount' => 200, 'repeats' => 0, 'repeat_freq' => 'monthly', 'budget_id' => $billsBudget->id]
+                );
+                $limitThree = BudgetLimit::create(
+                    ['startdate' => '2014-01-01', 'amount' => 200, 'repeats' => 0, 'repeat_freq' => 'monthly', 'budget_id' => $deleteBudget->id]
+                );
+
+                // and because we have no filters, some repetitions:
+                $repOne = LimitRepetition::create(['budget_limit_id' => $limitOne->id, 'startdate' => '2014-01-01', 'enddate' => '2014-01-31', 'amount' => 200]);
+                $repOne = LimitRepetition::create(['budget_limit_id' => $limitTwo->id, 'startdate' => '2014-01-01', 'enddate' => '2014-01-31', 'amount' => 200]);
+                $repOne = LimitRepetition::create(['budget_limit_id' => $limitThree->id, 'startdate' => '2014-01-01', 'enddate' => '2014-01-31', 'amount' => 200]);
 
                 // create two categories:
                 $dailyGroceries = Category::create(['user_id' => $user->id, 'name' => 'DailyGroceries']);
