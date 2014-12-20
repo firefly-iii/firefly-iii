@@ -213,7 +213,6 @@ class Piggybank
             $currentTarget = clone $target;
             $currentStart  = null;
             while ($currentTarget < $today) {
-                /** @noinspection PhpInternalEntityUsedInspection */
                 $currentStart  = \DateKit::subtractPeriod($currentTarget, $entry->rep_length, 0);
                 $currentTarget = \DateKit::addPeriod($currentTarget, $entry->rep_length, 0);
                 // create if not exists:
@@ -254,7 +253,6 @@ class Piggybank
 
         if ($journal->piggybankevents()->count() > 0) {
 
-            /** @noinspection PhpUnusedLocalVariableInspection */
             $event    = $journal->piggybankevents()->orderBy('date', 'DESC')->orderBy('id', 'DESC')->first();
             $eventSum = floatval($journal->piggybankevents()->orderBy('date', 'DESC')->orderBy('id', 'DESC')->sum('amount'));
 

@@ -22,11 +22,9 @@ class User extends Eloquent implements UserInterface, RemindableInterface
             'password' => 'required|between:60,60',
             'reset'    => 'between:32,32',
         ];
-    // @codingStandardsIgnoreStart
     protected $fillable = ['email'];
     protected $hidden   = ['remember_token'];
     protected $table    = 'users';
-    // @codingStandardsIgnoreEnd
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

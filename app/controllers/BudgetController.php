@@ -7,9 +7,10 @@ use FireflyIII\Shared\Preferences\PreferencesInterface as Pref;
 /**
  * Class BudgetController
  *
- * TODO move AJAX methods to their own BudgetAjaxController
- * TODO Find out what constitutes proper camelCase
- * TODO How is object coupling counted?
+ * @SuppressWarnings("CamelCase") // I'm fine with this.
+ * @SuppressWarnings("TooManyMethods") // I'm also fine with this.
+ * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
+ * @SuppressWarnings("CouplingBetweenObjects") // There's only so much I can remove.
  *
  */
 class BudgetController extends BaseController
@@ -98,6 +99,7 @@ class BudgetController extends BaseController
 
     /**
      * The index of the budget controller contains all budgets and the current relevant limit repetition.
+     * TODO move currentRep to the repository.
      *
      * @return $this
      */
@@ -108,14 +110,8 @@ class BudgetController extends BaseController
         // loop the budgets:
         $budgets->each(
             function (Budget $budget) {
-                /** @noinspection PhpUndefinedFieldInspection */
-                $budget->spent = $this->_repository->spentInMonth($budget, \Session::get('start', Carbon::now()->startOfMonth()));
-                /** @noinspection PhpUndefinedFieldInspection */
-                $budget->currentRep = $budget->limitrepetitions()->where(
-                    'limit_repetitions.startdate', \Session::get('start', Carbon::now()->startOfMonth())->format('Y-m-d')
-                )->first(
-                    ['limit_repetitions.*']
-                );
+                $budget->spent      = $this->_repository->spentInMonth($budget, \Session::get('start', Carbon::now()->startOfMonth()));
+                $budget->currentRep = $this->_repository->getRepetitionByDate($budget, \Session::get('start', Carbon::now()->startOfMonth()));
             }
         );
 

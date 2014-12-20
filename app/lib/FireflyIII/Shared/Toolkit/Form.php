@@ -28,7 +28,6 @@ class Form
         $fields = ['title', 'name', 'description'];
         /** @var \Eloquent $entry */
         foreach ($set as $entry) {
-            /** @noinspection PhpUndefinedFieldInspection */
             $id    = intval($entry->id);
             $title = null;
 

@@ -23,10 +23,8 @@ class Account extends Eloquent
             'active'          => 'required|boolean'
 
         ];
-    // @codingStandardsIgnoreStart
     protected $dates    = ['deleted_at', 'created_at', 'updated_at'];
     protected $fillable = ['name', 'user_id', 'account_type_id', 'active'];
-    // @codingStandardsIgnoreEnd
 
     /**
      * Account type.
