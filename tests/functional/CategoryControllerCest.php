@@ -80,7 +80,7 @@ class CategoryControllerCest
     public function show(FunctionalTester $I)
     {
         $I->wantTo('show a category');
-        $I->amOnPage('/categories/show/3');
+        $I->amOnPage('/categories/show/4');
         $I->see('Delete me');
     }
 
