@@ -13,7 +13,7 @@ use Illuminate\Support\MessageBag;
 /**
  * Class Account
  *
- * @package FireflyIII\Database
+ * @package    FireflyIII\Database
  * @implements FireflyIII\Database\Account\AccountInterface
  */
 class Account implements CUD, CommonDatabaseCalls, AccountInterface
@@ -260,7 +260,9 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
             $journal->delete();
         }
         // also delete transactions.
-        \Transaction::whereIn('id', $transactions)->delete();
+        if (count($transactions) > 0) {
+            \Transaction::whereIn('id', $transactions)->delete();
+        }
 
 
         /*
