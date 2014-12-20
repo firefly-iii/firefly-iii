@@ -27,7 +27,7 @@ class BudgetLimit extends Eloquent
      */
     public function budget()
     {
-        return $this->belongsTo('Budget', 'budget_id');
+        return $this->belongsTo('Budget','budget_id');
     }
 
     /**

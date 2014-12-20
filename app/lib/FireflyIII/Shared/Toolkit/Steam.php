@@ -63,8 +63,7 @@ class Steam
     {
         $user = \Auth::user();
         if ($user) {
-            \BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')->where('budgets.user_id', $user->id)
-                        ->where('budget_limits.amount', 0)->delete();
+            \BudgetLimit::where('amount', 0)->delete();
         }
     }
 
