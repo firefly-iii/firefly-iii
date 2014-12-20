@@ -5,6 +5,11 @@ use Illuminate\Database\Query\JoinClause;
 
 /**
  * Class GoogleChartController
+ * @SuppressWarnings("CamelCase") // I'm fine with this.
+ * @SuppressWarnings("TooManyMethods") // I'm also fine with this.
+ * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
+ * @SuppressWarnings("MethodLength") // There is one with 45 lines and im gonna move it.
+ * @SuppressWarnings("CouplingBetweenObjects") // There's only so much I can remove.
  */
 class GoogleChartController extends BaseController
 {
@@ -156,6 +161,7 @@ class GoogleChartController extends BaseController
         $this->_chart->addColumn('Spent', 'number');
 
         // query!
+        // TODO move to some helper.
         $set = \TransactionJournal::leftJoin(
             'transactions',
             function (JoinClause $join) {
@@ -364,6 +370,8 @@ class GoogleChartController extends BaseController
     }
 
     /**
+     * TODO move to helper.
+     *
      * @return \Illuminate\Http\JsonResponse
      * @throws \FireflyIII\Exception\FireflyException
      */
@@ -371,35 +379,41 @@ class GoogleChartController extends BaseController
     {
         $paid   = ['items' => [], 'amount' => 0];
         $unpaid = ['items' => [], 'amount' => 0];
+        $start  = Session::get('start', Carbon::now()->startOfMonth());
+        $end    = Session::get('end', Carbon::now()->endOfMonth());
         $this->_chart->addColumn('Name', 'string');
         $this->_chart->addColumn('Amount', 'number');
+        $set = \RecurringTransaction::
+        leftJoin(
+            'transaction_journals', function (JoinClause $join) use ($start, $end) {
+            $join->on('recurring_transactions.id', '=', 'transaction_journals.recurring_transaction_id')
+                 ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                 ->where('transaction_journals.date', '<=', $end->format('Y-m-d'));
+        }
+        )
+                                    ->leftJoin(
+                                        'transactions', function (JoinClause $join) {
+                                        $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '>', 0);
+                                    }
+                                    )
+                                    ->where('active', 1)
+                                    ->groupBy('recurring_transactions.id')
+                                    ->get(
+                                        ['recurring_transactions.id', 'recurring_transactions.name', 'transaction_journals.description',
+                                         'transaction_journals.id as journalId',
+                                         DB::Raw('SUM(`recurring_transactions`.`amount_min` + `recurring_transactions`.`amount_max`) / 2 as `averageAmount`'),
+                                         'transactions.amount AS actualAmount']
+                                    );
 
-        /** @var \FireflyIII\Database\RecurringTransaction\RecurringTransaction $rcr */
-        $rcr       = App::make('FireflyIII\Database\RecurringTransaction\RecurringTransaction');
-        $recurring = $rcr->getActive();
-        /** @var \RecurringTransaction $entry */
-        foreach ($recurring as $entry) {
-            $start   = clone $entry->date;
-            $end     = Carbon::now();
-            $current = clone $start;
-            while ($current <= $end) {
-                $currentEnd = DateKit::endOfPeriod($current, $entry->repeat_freq);
-                if (\Session::get('end', Carbon::now()->end§OfMonth()) >= $current and $currentEnd >= \Session::get('start', Carbon::now()->startOfMonth())) {
-                    /** @var TransactionJournal $set */
-                    $journal = $rcr->getJournalForRecurringInRange($entry, $current, $currentEnd);
-                    if (is_null($journal)) {
-                        $unpaid['items'][] = $entry->name;
-                        $unpaid['amount'] += (($entry->amount_max + $entry->amount_min) / 2);
-                    } else {
-                        $amount          = $journal->getAmount();
-                        $paid['items'][] = $journal->description;
-                        $paid['amount'] += $amount;
-                    }
-                }
-                $current = DateKit::addPeriod($current, $entry->repeat_freq, intval($entry->skip));
+        foreach ($set as $entry) {
+            if (intval($entry->journalId) == 0) {
+                $unpaid['items'][] = $entry->name;
+                $unpaid['amount'] += floatval($entry->averageAmount);
+            } else {
+                $paid['items'][] = $entry->description;
+                $paid['amount'] += floatval($entry->actualAmount);
             }
         }
-        /** @var \RecurringTransaction $entry */
         $this->_chart->addRow('Unpaid: ' . join(', ', $unpaid['items']), $unpaid['amount']);
         $this->_chart->addRow('Paid: ' . join(', ', $paid['items']), $paid['amount']);
         $this->_chart->generate();
