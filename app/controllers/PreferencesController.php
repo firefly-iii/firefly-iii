@@ -3,6 +3,8 @@
 /**
  * Class PreferencesController
  *
+ * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
+ *
  */
 class PreferencesController extends BaseController
 {
@@ -30,9 +32,10 @@ class PreferencesController extends BaseController
         $accounts       = $acct->getAssetAccounts();
         $viewRange      = $preferences->get('viewRange', '1M');
         $viewRangeValue = $viewRange->data;
-        $frontpage      = $preferences->get('frontpageAccounts', []);
+        $frontPage      = $preferences->get('frontpageAccounts', []);
 
-        return View::make('preferences.index')->with('accounts', $accounts)->with('frontpageAccounts', $frontpage)->with('viewRange', $viewRangeValue);
+
+        return View::make('preferences.index')->with('accounts', $accounts)->with('frontpageAccounts', $frontPage)->with('viewRange', $viewRangeValue);
     }
 
     /**
