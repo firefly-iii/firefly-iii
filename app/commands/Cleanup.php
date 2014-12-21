@@ -15,17 +15,13 @@ class Cleanup extends Command
      *
      * @var string
      */
-    // @codingStandardsIgnoreStart
     protected $description = 'Clean caches, regenerate some stuff.';
-    // @codingStandardsIgnoreEnd
     /**
      * The console command name.
      *
      * @var string
      */
-    // @codingStandardsIgnoreStart
     protected $name = 'firefly:cleanup';
-    // @codingStandardsIgnoreEnd
 
     /**
      *
