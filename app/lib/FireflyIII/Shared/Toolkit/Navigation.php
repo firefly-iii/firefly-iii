@@ -1,6 +1,7 @@
 <?php
 
 namespace FireflyIII\Shared\Toolkit;
+use Carbon\Carbon;
 use FireflyIII\Exception\FireflyException;
 
 /**
@@ -23,7 +24,7 @@ class Navigation
         $filter = new Filter;
 
         $range = $filter->setSessionRangeValue();
-        $start = \Session::get('start');
+        $start = \Session::get('start', Carbon::now()->startOfMonth());
 
         /*
          * Add some period to $start.
@@ -50,7 +51,7 @@ class Navigation
         $filter = new Filter;
 
         $range = $filter->setSessionRangeValue();
-        $start = \Session::get('start');
+        $start = \Session::get('start', Carbon::now()->startOfMonth());
 
         /*
          * Substract some period to $start.
