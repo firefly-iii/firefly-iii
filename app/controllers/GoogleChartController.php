@@ -1,7 +1,7 @@
 <?php
 use Carbon\Carbon;
+use FireflyIII\Chart\ChartInterface;
 use Grumpydictator\Gchart\GChart as GChart;
-use Illuminate\Database\Query\JoinClause;
 
 /**
  * Class GoogleChartController
@@ -16,13 +16,23 @@ class GoogleChartController extends BaseController
 
     /** @var GChart */
     protected $_chart;
+    /** @var  Carbon */
+    protected $_end;
+    /** @var ChartInterface */
+    protected $_repository;
+    /** @var  Carbon */
+    protected $_start;
 
     /**
-     * @param GChart $chart
+     * @param GChart         $chart
+     * @param ChartInterface $repository
      */
-    public function __construct(GChart $chart)
+    public function __construct(GChart $chart, ChartInterface $repository)
     {
-        $this->_chart = $chart;
+        $this->_chart      = $chart;
+        $this->_repository = $repository;
+        $this->_start      = Session::get('start', Carbon::now()->startOfMonth());
+        $this->_end        = Session::get('end', Carbon::now()->endOfMonth());
 
     }
 
@@ -38,8 +48,8 @@ class GoogleChartController extends BaseController
         $this->_chart->addColumn('Balance for ' . $account->name, 'number');
 
         // TODO this can be combined in some method, it's coming up quite often, is it?
-        $start = Session::get('start', Carbon::now()->startOfMonth());
-        $end   = Session::get('end');
+        $start = $this->_start;
+        $end   = $this->_end;
         $count = $account->transactions()->count();
 
         if ($view == 'all' && $count > 0) {
@@ -79,22 +89,16 @@ class GoogleChartController extends BaseController
         $pref        = $preferences->get('frontpageAccounts', []);
 
         /** @var \FireflyIII\Database\Account\Account $acct */
-        $acct = App::make('FireflyIII\Database\Account\Account');
-        if (count($pref->data) > 0) {
-            $accounts = $acct->getByIds($pref->data);
-        } else {
-            $accounts = $acct->getAssetAccounts();
-        }
+        $acct     = App::make('FireflyIII\Database\Account\Account');
+        $accounts = count($pref->data) > 0 ? $acct->getByIds($pref->data) : $acct->getAssetAccounts();
 
         /** @var Account $account */
         foreach ($accounts as $account) {
             $this->_chart->addColumn('Balance for ' . $account->name, 'number');
         }
-        $start   = Session::get('start', Carbon::now()->startOfMonth());
-        $end     = Session::get('end', Carbon::now()->endOfMonth());
-        $current = clone $start;
+        $current = clone $this->_start;
 
-        while ($end >= $current) {
+        while ($this->_end >= $current) {
             $row = [clone $current];
             foreach ($accounts as $account) {
                 $row[] = Steam::balance($account, $current);
@@ -118,20 +122,27 @@ class GoogleChartController extends BaseController
         $this->_chart->addColumn('Budgeted', 'number');
         $this->_chart->addColumn('Spent', 'number');
 
+        Log::debug('Now in allBudgetsHomeChart()');
+
         /** @var \FireflyIII\Database\Budget\Budget $bdt */
         $bdt     = App::make('FireflyIII\Database\Budget\Budget');
         $budgets = $bdt->get();
 
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
+
+            Log::debug('Now working budget #'.$budget->id.', '.$budget->name);
+
             /** @var \LimitRepetition $repetition */
-            $repetition = $bdt->repetitionOnStartingOnDate($budget, Session::get('start', Carbon::now()->startOfMonth()));
+            $repetition = $bdt->repetitionOnStartingOnDate($budget, $this->_start);
             if (is_null($repetition)) {
+                \Log::debug('Budget #'.$budget->id.' has no repetition on ' . $this->_start->format('Y-m-d'));
                 // use the session start and end for our search query
-                $searchStart = Session::get('start', Carbon::now()->startOfMonth());
-                $searchEnd   = Session::get('end');
+                $searchStart = $this->_start;
+                $searchEnd   = $this->_end;
                 $limit       = 0; // the limit is zero:
             } else {
+                \Log::debug('Budget #'.$budget->id.' has a repetition on ' . $this->_start->format('Y-m-d').'!');
                 // use the limit's start and end for our search query
                 $searchStart = $repetition->startdate;
                 $searchEnd   = $repetition->enddate;
@@ -144,7 +155,7 @@ class GoogleChartController extends BaseController
             }
         }
 
-        $noBudgetSet = $bdt->transactionsWithoutBudgetInDateRange(Session::get('start', Carbon::now()->startOfMonth()), Session::get('end'));
+        $noBudgetSet = $bdt->transactionsWithoutBudgetInDateRange($this->_start, $this->_end);
         $sum         = $noBudgetSet->sum('amount') * -1;
         $this->_chart->addRow('No budget', 0, $sum);
         $this->_chart->generate();
@@ -161,24 +172,8 @@ class GoogleChartController extends BaseController
         $this->_chart->addColumn('Spent', 'number');
 
         // query!
-        // TODO move to some helper.
-        $set = \TransactionJournal::leftJoin(
-            'transactions',
-            function (JoinClause $join) {
-                $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('amount', '>', 0);
-            }
-        )
-                                  ->leftJoin(
-                                      'category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
-                                  )
-                                  ->leftJoin('categories', 'categories.id', '=', 'category_transaction_journal.category_id')
-                                  ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                  ->before(Session::get('end', Carbon::now()->endOfMonth()))
-                                  ->after(Session::get('start', Carbon::now()->startOfMonth()))
-                                  ->where('transaction_types.type', 'Withdrawal')
-                                  ->groupBy('categories.id')
-                                  ->orderBy('sum', 'DESC')
-                                  ->get(['categories.id', 'categories.name', DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
+        $set = $this->_repository->getCategorySummary($this->_start, $this->_end);
+
         foreach ($set as $entry) {
             $entry->name = strlen($entry->name) == 0 ? '(no category)' : $entry->name;
             $this->_chart->addRow($entry->name, floatval($entry->sum));
@@ -191,6 +186,8 @@ class GoogleChartController extends BaseController
     }
 
     /**
+     * TODO still in use?
+     *
      * @param Budget          $budget
      * @param LimitRepetition $repetition
      *
@@ -223,6 +220,8 @@ class GoogleChartController extends BaseController
     }
 
     /**
+     * TODO still in use?
+     *
      * @param Budget    $component
      * @param           $year
      *
@@ -231,9 +230,9 @@ class GoogleChartController extends BaseController
     public function budgetsAndSpending(Budget $component, $year)
     {
         try {
-            $start = new Carbon('01-01-' . $year);
+            new Carbon('01-01-' . $year);
         } catch (Exception $e) {
-            App::abort(500);
+            return View::make('error')->with('message', 'Invalid year.');
         }
 
         /** @var \FireflyIII\Database\Budget\Budget $repos */
@@ -243,7 +242,8 @@ class GoogleChartController extends BaseController
         $this->_chart->addColumn('Budgeted', 'number');
         $this->_chart->addColumn('Spent', 'number');
 
-        $end = clone $start;
+        $start = new Carbon('01-01-' . $year);
+        $end   = clone $start;
         $end->endOfYear();
         while ($start <= $end) {
             $spent      = $repos->spentInMonth($component, $start);
@@ -268,6 +268,8 @@ class GoogleChartController extends BaseController
     }
 
     /**
+     * TODO still in use?
+     *
      * @param Category  $component
      * @param           $year
      *
@@ -276,9 +278,9 @@ class GoogleChartController extends BaseController
     public function categoriesAndSpending(Category $component, $year)
     {
         try {
-            $start = new Carbon('01-01-' . $year);
+            new Carbon('01-01-' . $year);
         } catch (Exception $e) {
-            App::abort(500);
+            return View::make('error')->with('message', 'Invalid year.');
         }
 
         /** @var \FireflyIII\Database\Category\Category $repos */
@@ -288,7 +290,8 @@ class GoogleChartController extends BaseController
         $this->_chart->addColumn('Budgeted', 'number');
         $this->_chart->addColumn('Spent', 'number');
 
-        $end = clone $start;
+        $start = new Carbon('01-01-' . $year);
+        $end   = clone $start;
         $end->endOfYear();
         while ($start <= $end) {
 
@@ -370,7 +373,7 @@ class GoogleChartController extends BaseController
     }
 
     /**
-     * TODO move to helper.
+     * TODO query move to helper.
      *
      * @return \Illuminate\Http\JsonResponse
      * @throws \FireflyIII\Exception\FireflyException
@@ -379,31 +382,10 @@ class GoogleChartController extends BaseController
     {
         $paid   = ['items' => [], 'amount' => 0];
         $unpaid = ['items' => [], 'amount' => 0];
-        $start  = Session::get('start', Carbon::now()->startOfMonth());
-        $end    = Session::get('end', Carbon::now()->endOfMonth());
         $this->_chart->addColumn('Name', 'string');
         $this->_chart->addColumn('Amount', 'number');
-        $set = \RecurringTransaction::
-        leftJoin(
-            'transaction_journals', function (JoinClause $join) use ($start, $end) {
-            $join->on('recurring_transactions.id', '=', 'transaction_journals.recurring_transaction_id')
-                 ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                 ->where('transaction_journals.date', '<=', $end->format('Y-m-d'));
-        }
-        )
-                                    ->leftJoin(
-                                        'transactions', function (JoinClause $join) {
-                                        $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '>', 0);
-                                    }
-                                    )
-                                    ->where('active', 1)
-                                    ->groupBy('recurring_transactions.id')
-                                    ->get(
-                                        ['recurring_transactions.id', 'recurring_transactions.name', 'transaction_journals.description',
-                                         'transaction_journals.id as journalId',
-                                         DB::Raw('SUM(`recurring_transactions`.`amount_min` + `recurring_transactions`.`amount_max`) / 2 as `averageAmount`'),
-                                         'transactions.amount AS actualAmount']
-                                    );
+
+        $set = $this->_repository->getRecurringSummary($this->_start, $this->_end);
 
         foreach ($set as $entry) {
             if (intval($entry->journalId) == 0) {
@@ -422,6 +404,8 @@ class GoogleChartController extends BaseController
     }
 
     /**
+     * TODO see reports for better way to do this.
+     *
      * @param $year
      *
      * @return \Illuminate\Http\JsonResponse
@@ -431,7 +415,7 @@ class GoogleChartController extends BaseController
         try {
             $start = new Carbon('01-01-' . $year);
         } catch (Exception $e) {
-            App::abort(500);
+            return View::make('error')->with('message', 'Invalid year.');
         }
         $this->_chart->addColumn('Month', 'date');
         $this->_chart->addColumn('Income', 'number');
@@ -460,6 +444,8 @@ class GoogleChartController extends BaseController
     }
 
     /**
+     * TODO see reports for better way to do this.
+     *
      * @param $year
      *
      * @return \Illuminate\Http\JsonResponse
@@ -469,7 +455,7 @@ class GoogleChartController extends BaseController
         try {
             $start = new Carbon('01-01-' . $year);
         } catch (Exception $e) {
-            App::abort(500);
+            return View::make('error')->with('message', 'Invalid year.');
         }
         $this->_chart->addColumn('Summary', 'string');
         $this->_chart->addColumn('Income', 'number');

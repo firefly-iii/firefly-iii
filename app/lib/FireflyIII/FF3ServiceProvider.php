@@ -96,6 +96,9 @@ class FF3ServiceProvider extends ServiceProvider
 
         // reports
         $this->app->bind('FireflyIII\Report\ReportInterface', 'FireflyIII\Report\Report');
+
+        // chart
+        $this->app->bind('FireflyIII\Chart\ChartInterface', 'FireflyIII\Chart\Chart');
     }
 
     public function registerAliases()
