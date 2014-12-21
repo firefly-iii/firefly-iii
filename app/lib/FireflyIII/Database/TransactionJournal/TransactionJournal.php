@@ -387,7 +387,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
             $categoryRepository = \App::make('FireflyIII\Database\Category\Category');
             $category           = $categoryRepository->firstOrCreate($data['category']);
             if ($category) {
-                $journal->categories()->save($category);
+                $journal->categories()->sync([$category->id]);
             }
         }
     }
