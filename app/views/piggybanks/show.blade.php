@@ -56,7 +56,7 @@
                                 @if(is_null($piggybank->startdate))
                                     <em>No start date</em>
                                 @endif
-                                @if(!is_string($piggybank->startdate))
+                                @if(is_object($piggybank->startdate))
                                     {{$piggybank->startdate->format('jS F Y')}}
                                 @endif
                             </td>
@@ -67,7 +67,7 @@
                                 @if(is_null($piggybank->targetdate))
                                     <em>No target date</em>
                                 @endif
-                                @if(!is_string($piggybank->targetdate))
+                                @if(is_object($piggybank->targetdate))
                                     {{$piggybank->targetdate->format('jS F Y')}}
                                 @endif
                             </td>
