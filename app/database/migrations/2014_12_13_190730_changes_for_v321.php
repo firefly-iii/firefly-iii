@@ -7,22 +7,24 @@ use Illuminate\Database\Schema\Blueprint;
  * Down:
  * 1. Create new Components based on Budgets.
  * 2. Create new Components based on Categories
- * 3. Update all budget_limits entries (component_id).
- * 4. Drop column 'budget_id' in budget_limits.
- * 5. Create table journal_components.
- * 6. create entries for budgets in journal_components.
- * 7. create entries for categories in journal_components.
- * 8. drop table budget_journals
- * 9. drop table category_journals
- * 10. drop table budgets
- * 11. drop table categories.
- * 12. rename budget_limits to limits.
- * 13. Rename piggy_bank_events to piggybank_events
- * 14. Rename field 'budget_limit_id' to 'limit_id' in 'limit_repetitions'
- * 15. Do not recreate component_recurring_transaction
- * 16. Do not recreate component_transaction
- * 17. Do not recreate field 'piggybank_id' in 'transactions'
- * 18. Recreate component_id in limits
+ * 3. Recreate component_id in limits
+ * 4. Update all budget_limits entries (component_id).
+ * 5. Add the foreign key to component_id in budget_limits
+ * 6. Drop column 'budget_id' in budget_limits.
+ * 7. Create table journal_components.
+ * 8. create entries for budgets in journal_components.
+ * 9. create entries for categories in journal_components.
+ * 10. drop table budget_journals
+ * 11. drop table category_journals
+ * 12. drop table budgets
+ * 13. drop table categories.
+ * 14. rename budget_limits to limits.
+ * 15. Rename piggy_bank_events to piggybank_events
+ * 16. Rename field 'budget_limit_id' to 'limit_id' in 'limit_repetitions'
+ * 17. Do not recreate component_recurring_transaction
+ * 18. Do not recreate component_transaction
+ * 19. Do not recreate field 'piggybank_id' in 'transactions'
+ *
  *
  *
  * Up:
@@ -42,7 +44,7 @@ use Illuminate\Database\Schema\Blueprint;
  * 13. Drop table component_recurring_transaction
  * 14. Drop table component_transaction
  * 15. Drop field 'piggybank_id' from 'transactions'
- * 16. Drop component_id from budget_limits.
+ * 16. Drop field 'component_id' from 'budget_limits'
  *
  * Class ChangesForV321
  */
@@ -53,21 +55,40 @@ class ChangesForV321 extends Migration
 
         $this->moveBudgetsBack(); // 1.
         $this->moveCategoriesBack(); // 2.
-        $this->updateComponentInBudgetLimits(); // 3.
-        $this->dropBudgetIdColumnInBudgetLimits(); // 4.
-        $createComponents = new CreateComponentTransactionJournalTable;  // 5.
+        $this->createComponentId(); // 3.
+        $this->updateComponentInBudgetLimits(); // 4.
+        $this->createComponentIdForeignKey(); // 5.
+        $this->dropBudgetIdColumnInBudgetLimits(); // 6.
+        $createComponents = new CreateComponentTransactionJournalTable;  // 7.
         $createComponents->up();
-        $this->moveBackEntriesForBudgetsInJoinedTable(); // 6.
-        $this->moveBackEntriesForCategoriesInJoinedTable(); // 7.
-        $this->dropBudgetJournalTable(); // 8.
-        $this->dropCategoryJournalTable(); // 9.
-        $this->dropBudgetTable(); // 10.
-        $this->dropCategoryTable(); // 11.
-        $this->renameBudgetLimits(); // 12.
-        $this->renamePiggyBankEvents(); // 13.
-        $this->renameBudgetLimitToBudgetInRepetitions(); // 14.
-        // 15, 16, 17
+        $this->moveBackEntriesForBudgetsInJoinedTable(); // 8.
+        $this->moveBackEntriesForCategoriesInJoinedTable(); // 9.
+        $this->dropBudgetJournalTable(); // 10.
+        $this->dropCategoryJournalTable(); // 11.
+        $this->dropBudgetTable(); // 12.
+        $this->dropCategoryTable(); // 13.
+        $this->renameBudgetLimits(); // 14.
+        $this->renamePiggyBankEvents(); // 15.
+        $this->renameBudgetLimitToBudgetInRepetitions(); // 16.
+        // 17, 18, 19
 
+
+    }
+
+    public function createComponentId() {
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->integer('component_id')->unsigned();
+        }
+        );
+    }
+
+    public function createComponentIdForeignKey() {
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->foreign('component_id')->references('id')->on('components')->onDelete('cascade');
+        }
+        );
     }
 
     public function moveBudgetsBack()
