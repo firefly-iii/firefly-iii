@@ -76,13 +76,13 @@ class TestContentSeeder extends Seeder
                 Component::create(['user_id' => $user->id, 'name' => 'Some Component 7', 'class' => 'Category']);
 
                 // piggy bank
-                $piggy          = Piggybank::create(
+                $piggy               = Piggybank::create(
                     [
                         'account_id'    => $savings->id,
                         'name'          => 'New camera',
                         'targetamount'  => 2000,
                         'startdate'     => Carbon::now()->format('Y-m-d'),
-                        'targetdate'    => '',
+                        'targetdate'    => null,
                         'repeats'       => 0,
                         'rep_length'    => null,
                         'rep_every'     => 0,
@@ -93,7 +93,15 @@ class TestContentSeeder extends Seeder
                         'order'         => 0,
                     ]
                 );
-                $piggyBankEvent = PiggyBankEvent::create(['piggybank_id' => 1, 'date' => $startDate->format('Y-m-d'), 'amount' => 100]);
+                $piggyBankEvent      = PiggyBankEvent::create(['piggybank_id' => 1, 'date' => $startDate->format('Y-m-d'), 'amount' => 100]);
+                $piggyBankRepetition = PiggybankRepetition::create(
+                    [
+                        'piggybank_id'  => $piggy->id,
+                        'startdate'     => Carbon::now()->format('Y-m-d'),
+                        'targetdate'    => null,
+                        'currentamount' => 0
+                    ]
+                );
 
                 // recurring transaction
                 $recurring = \RecurringTransaction::create(
