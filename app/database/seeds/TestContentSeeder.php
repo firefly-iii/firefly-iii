@@ -38,27 +38,30 @@ class TestContentSeeder extends Seeder
                 // some limits:
                 $startDate  = Carbon::now()->startOfMonth();
                 $endDate    = Carbon::now()->endOfMonth();
+                $secondStart = Carbon::now()->subMonth()->startOfMonth();
+                $secondEnd = Carbon::now()->subMonth()->endOfMonth();
                 $limitOne   = BudgetLimit::create(
-                    ['startdate' => $startDate->format('Y-m-d'), 'amount' => 200, 'repeats' => 0, 'repeat_freq' => 'monthly',
+                    ['startdate' => $startDate->format('Y-m-d'), 'amount' => 201, 'repeats' => 0, 'repeat_freq' => 'monthly',
                      'budget_id' => $groceriesBudget->id]
                 );
                 $limitTwo   = BudgetLimit::create(
-                    ['startdate' => $startDate->format('Y-m-d'), 'amount' => 200, 'repeats' => 0, 'repeat_freq' => 'monthly',
+                    ['startdate' => $secondStart->format('Y-m-d'), 'amount' => 202, 'repeats' => 0, 'repeat_freq' => 'monthly',
                      'budget_id' => $billsBudget->id]
                 );
                 $limitThree = BudgetLimit::create(
-                    ['startdate' => '2014-01-01', 'amount' => 200, 'repeats' => 0, 'repeat_freq' => 'monthly', 'budget_id' => $deleteBudget->id]
+                    ['startdate' => '2014-01-01', 'amount' => 203, 'repeats' => 0, 'repeat_freq' => 'monthly',
+                     'budget_id' => $deleteBudget->id]
                 );
 
                 // and because we have no filters, some repetitions:
                 $repOne   = LimitRepetition::create(
-                    ['budget_limit_id' => $limitOne->id, 'startdate' => $startDate->format('Y-m-d'), 'enddate' => $endDate->format('Y-m-d'), 'amount' => 200]
+                    ['budget_limit_id' => $limitOne->id, 'startdate' => $startDate->format('Y-m-d'), 'enddate' => $endDate->format('Y-m-d'), 'amount' => 201]
                 );
                 $repTwo   = LimitRepetition::create(
-                    ['budget_limit_id' => $limitTwo->id, 'startdate' => $startDate->format('Y-m-d'), 'enddate' => $endDate->format('Y-m-d'), 'amount' => 200]
+                    ['budget_limit_id' => $limitTwo->id, 'startdate' => $secondStart->format('Y-m-d'), 'enddate' => $secondEnd->format('Y-m-d'), 'amount' => 202]
                 );
                 $repThree = LimitRepetition::create(
-                    ['budget_limit_id' => $limitThree->id, 'startdate' => '2014-01-01', 'enddate' => '2014-01-31', 'amount' => 200]
+                    ['budget_limit_id' => $limitThree->id, 'startdate' => '2014-01-01', 'enddate' => '2014-01-31', 'amount' => 203]
                 );
 
                 // create two categories:
