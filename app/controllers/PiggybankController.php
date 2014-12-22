@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use FireflyIII\Database\PiggyBank\PiggyBank as Repository;
 use FireflyIII\Exception\FireflyException;
 use Illuminate\Support\Collection;
@@ -27,6 +28,8 @@ class PiggybankController extends BaseController
     public function __construct(Repository $repository)
     {
         $this->_repository = $repository;
+        View::share('title', 'Piggy banks');
+        View::share('mainTitleIcon', 'fa-sort-amount-asc');
     }
 
     /**
@@ -44,10 +47,10 @@ class PiggybankController extends BaseController
         $leftOnAccount = $repos->leftOnAccount($piggybank->account);
         $savedSoFar    = $piggybank->currentRelevantRep()->currentamount;
         $leftToSave    = $piggybank->targetamount - $savedSoFar;
-        $amount        = min($leftOnAccount, $leftToSave);
+        $maxAmount     = min($leftOnAccount, $leftToSave);
 
 
-        return View::make('piggybanks.add', compact('piggybank'))->with('maxAmount', $amount);
+        return View::make('piggybanks.add', compact('piggybank', 'maxAmount'));
     }
 
     /**
@@ -59,14 +62,12 @@ class PiggybankController extends BaseController
         /** @var \FireflyIII\Database\Account\Account $acct */
         $acct = App::make('FireflyIII\Database\Account\Account');
 
-        $periods = Config::get('firefly.piggybank_periods');
+        $periods      = Config::get('firefly.piggybank_periods');
+        $accounts     = FFForm::makeSelectList($acct->getAssetAccounts());
+        $subTitle     = 'Create new piggy bank';
+        $subTitleIcon = 'fa-plus';
 
-
-        $accounts = FFForm::makeSelectList($acct->getAssetAccounts());
-
-        return View::make('piggybanks.create', compact('accounts', 'periods'))->with('title', 'Piggy banks')->with('mainTitleIcon', 'fa-sort-amount-asc')->with(
-            'subTitle', 'Create new piggy bank'
-        )->with('subTitleIcon', 'fa-plus');
+        return View::make('piggybanks.create', compact('accounts', 'periods', 'subTitle', 'subTitleIcon'));
     }
 
     /**
@@ -76,9 +77,9 @@ class PiggybankController extends BaseController
      */
     public function delete(Piggybank $piggybank)
     {
-        return View::make('piggybanks.delete')->with('piggybank', $piggybank)->with('subTitle', 'Delete "' . $piggybank->name . '"')->with(
-            'title', 'Piggy banks'
-        )->with('mainTitleIcon', 'fa-sort-amount-asc');
+        $subTitle = 'Delete "' . e($piggybank->name) . '"';
+
+        return View::make('piggybanks.delete', compact('piggybank', 'subTitle'));
     }
 
     /**
@@ -88,10 +89,9 @@ class PiggybankController extends BaseController
      */
     public function destroy(Piggybank $piggyBank)
     {
-        /** @var \FireflyIII\Database\PiggyBank\PiggyBank $acct */
-        $repos = App::make('FireflyIII\Database\PiggyBank\PiggyBank');
-        $repos->destroy($piggyBank);
-        Session::flash('success', 'Piggy bank deleted.');
+
+        Session::flash('success', 'Piggy bank "' . e($piggyBank->name) . '" deleted.');
+        $this->_repository->destroy($piggyBank);
 
         return Redirect::route('piggybanks.index');
     }
@@ -107,25 +107,30 @@ class PiggybankController extends BaseController
         /** @var \FireflyIII\Database\Account\Account $acct */
         $acct = App::make('FireflyIII\Database\Account\Account');
 
-        $periods = Config::get('firefly.piggybank_periods');
-
-        $accounts = FFForm::makeSelectList($acct->getAssetAccounts());
+        $periods      = Config::get('firefly.piggybank_periods');
+        $accounts     = FFForm::makeSelectList($acct->getAssetAccounts());
+        $subTitle     = 'Edit piggy bank "' . e($piggybank->name) . '"';
+        $subTitleIcon = 'fa-pencil';
 
         /*
          * Flash some data to fill the form.
          */
+        if (is_null($piggybank->targetdate)) {
+            $targetDate = null;
+        } else {
+            $targetDate = new Carbon($piggybank->targetdate);
+            $targetDate = $targetDate->format('Y-m-d');
+        }
         $preFilled = ['name'         => $piggybank->name,
                       'account_id'   => $piggybank->account_id,
                       'targetamount' => $piggybank->targetamount,
-                      'targetdate'   => !is_null($piggybank->targetdate) ? $piggybank->targetdate->format('Y-m-d') : null,
+                      'targetdate'   => $targetDate,
                       'reminder'     => $piggybank->reminder,
                       'remind_me'    => intval($piggybank->remind_me) == 1 || !is_null($piggybank->reminder) ? true : false
         ];
         Session::flash('preFilled', $preFilled);
 
-        return View::make('piggybanks.edit', compact('piggybank', 'accounts', 'periods', 'preFilled'))->with('title', 'Piggybanks')->with(
-            'mainTitleIcon', 'fa-sort-amount-asc'
-        )->with('subTitle', 'Edit piggy bank "' . e($piggybank->name) . '"')->with('subTitleIcon', 'fa-pencil');
+        return View::make('piggybanks.edit', compact('subTitle', 'subTitleIcon', 'piggybank', 'accounts', 'periods', 'preFilled'));
     }
 
     /**
@@ -161,7 +166,7 @@ class PiggybankController extends BaseController
             }
         }
 
-        return View::make('piggybanks.index', compact('piggybanks', 'accounts'))->with('title', 'Piggy banks')->with('mainTitleIcon', 'fa-sort-amount-asc');
+        return View::make('piggybanks.index', compact('piggybanks', 'accounts'));
     }
 
     /**
@@ -256,12 +261,9 @@ class PiggybankController extends BaseController
 
         $amountPerReminder = $piggybank->amountPerReminder();
         $remindersCount    = $piggybank->countFutureReminders();
+        $subTitle          = e($piggybank->name);
 
-        return View::make('piggybanks.show', compact('amountPerReminder', 'remindersCount', 'piggybank', 'events'))->with('title', 'Piggy banks')->with(
-            'mainTitleIcon', 'fa-sort-amount-asc'
-        )->with(
-            'subTitle', $piggybank->name
-        );
+        return View::make('piggybanks.show', compact('amountPerReminder', 'remindersCount', 'piggybank', 'events', 'subTitle'));
 
     }
 
