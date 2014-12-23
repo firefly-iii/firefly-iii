@@ -29,6 +29,18 @@
                 @endforeach
             </div>
         </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-credit-card fa-fw"></i> Budget settings
+            </div>
+            <div class="panel-body">
+                <p class="text-info">
+                    What's the maximum amount of money a budget envelope may contain?
+                </p>
+                {{Form::ffAmount('budgetMaximum',$budgetMaximum,['label' => 'Budget maximum'])}}
+            </div>
+        </div>
+
     </div>
     <div class="col-lg-6 col-md-6 col-sm-6">
         <div class="panel panel-default">
