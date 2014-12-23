@@ -115,12 +115,14 @@ class BudgetController extends BaseController
             }
         );
 
-        $spent     = $budgets->sum('spent');
-        $amount    = $this->_preferences->get('budgetIncomeTotal' . \Session::get('start', Carbon::now()->startOfMonth())->format('FY'), 1000)->data;
-        $overspent = $spent > $amount;
-        $spentPCT  = $overspent ? ceil($amount / $spent * 100) : ceil($spent / $amount * 100);
+        $spent         = $budgets->sum('spent');
+        $amount        = $this->_preferences->get('budgetIncomeTotal' . \Session::get('start', Carbon::now()->startOfMonth())->format('FY'), 1000)->data;
+        $overspent     = $spent > $amount;
+        $spentPCT      = $overspent ? ceil($amount / $spent * 100) : ceil($spent / $amount * 100);
+        $budgetMax     = $this->_preferences->get('budgetMaximum', 1000);
+        $budgetMaximum = $budgetMax->data;
 
-        return View::make('budgets.index', compact('budgets', 'spent', 'spentPCT', 'overspent', 'amount'));
+        return View::make('budgets.index', compact('budgetMaximum', 'budgets', 'spent', 'spentPCT', 'overspent', 'amount'));
     }
 
     /**
