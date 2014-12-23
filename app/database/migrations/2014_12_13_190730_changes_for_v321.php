@@ -75,22 +75,6 @@ class ChangesForV321 extends Migration
 
     }
 
-    public function createComponentId() {
-        Schema::table(
-            'budget_limits', function (Blueprint $table) {
-            $table->integer('component_id')->unsigned();
-        }
-        );
-    }
-
-    public function createComponentIdForeignKey() {
-        Schema::table(
-            'budget_limits', function (Blueprint $table) {
-            $table->foreign('component_id')->references('id')->on('components')->onDelete('cascade');
-        }
-        );
-    }
-
     public function moveBudgetsBack()
     {
         Budget::get()->each(
@@ -121,6 +105,15 @@ class ChangesForV321 extends Migration
         );
     }
 
+    public function createComponentId()
+    {
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->integer('component_id')->unsigned();
+        }
+        );
+    }
+
     public function updateComponentInBudgetLimits()
     {
         BudgetLimit::get()->each(
@@ -135,6 +128,15 @@ class ChangesForV321 extends Migration
                     }
                 }
             }
+        );
+    }
+
+    public function createComponentIdForeignKey()
+    {
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->foreign('component_id','limits_component_id_foreign')->references('id')->on('components')->onDelete('cascade');
+        }
         );
     }
 
@@ -411,18 +413,28 @@ class ChangesForV321 extends Migration
 
     public function moveComponentIdToBudgetId()
     {
+        \Log::debug('Now in moveComponentIdToBudgetId()');
         BudgetLimit::get()->each(
             function (BudgetLimit $bl) {
+                \Log::debug('Now at budgetLimit #' . $bl->id . ' with component_id: ' . $bl->component_id);
                 $component = Component::find($bl->component_id);
                 if ($component) {
+                    \Log::debug('Found component with id #' . $component->id . ' and name ' . $component->name);
                     $budget = Budget::whereName($component->name)->whereUserId($component->user_id)->first();
                     if ($budget) {
+                        \Log::debug('Found a budget with ID #' . $budget->id . ' and name ' . $budget->name);
                         $bl->budget_id = $budget->id;
                         $bl->save();
+                        \Log::debug('Connected budgetLimit #' . $bl->id . ' to budget_id' . $budget->id);
+                    } else {
+                        \Log::debug('Could not find a matching budget with name ' . $component->name);
                     }
+                } else {
+                    \Log::debug('Could not find a component with id ' . $bl->component_id);
                 }
             }
         );
+        \Log::debug('Done with moveComponentIdToBudgetId()');
 
     }
 

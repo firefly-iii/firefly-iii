@@ -262,7 +262,9 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggyBankInterface
      */
     public function leftOnAccount(\Account $account)
     {
+        \Log::debug('Now in leftOnAccount() for account #'.$account->id.' ('.$account->name.')');
         $balance = \Steam::balance($account);
+        \Log::debug('Steam says: ' . $balance);
         /** @var \Piggybank $p */
         foreach ($account->piggybanks()->get() as $p) {
             $balance -= $p->currentRelevantRep()->currentamount;

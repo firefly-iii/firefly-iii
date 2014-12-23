@@ -1,7 +1,8 @@
 <?php
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 use Watson\Validating\ValidatingTrait;
-use \Illuminate\Database\Eloquent\Model as Eloquent;
+
 /**
  * Class Piggybank
  */
@@ -90,6 +91,7 @@ class Piggybank extends Eloquent
         if ($this->repeats == 0) {
             $rep              = $this->piggybankrepetitions()->first(['piggybank_repetitions.*']);
             $this->currentRep = $rep;
+            \Log::debug('currentRelevantRep() reports $rep is null: ' . boolstr(is_null($rep)));
 
             return $rep;
         } else {

@@ -96,12 +96,41 @@ class TestContentSeeder extends Seeder
                         'order'         => 0,
                     ]
                 );
-                $piggyBankEvent      = PiggyBankEvent::create(['piggybank_id' => 1, 'date' => $startDate->format('Y-m-d'), 'amount' => 100]);
-                $piggyBankRepetition = PiggybankRepetition::create(
+                PiggyBankEvent::create(['piggybank_id' => 1, 'date' => $startDate->format('Y-m-d'), 'amount' => 100]);
+                PiggybankRepetition::create(
                     [
                         'piggybank_id'  => $piggy->id,
                         'startdate'     => Carbon::now()->format('Y-m-d'),
                         'targetdate'    => null,
+                        'currentamount' => 0
+                    ]
+                );
+
+                // piggy bank
+                $piggyTargeted               = Piggybank::create(
+                    [
+                        'account_id'    => $savings->id,
+                        'name'          => 'New clothes',
+                        'targetamount'  => 2000,
+                        'startdate'     => Carbon::now()->format('Y-m-d'),
+                        'targetdate'    => Carbon::now()->addMonths(4)->format('Y-m-d'),
+                        'repeats'       => 0,
+                        'rep_length'    => null,
+                        'rep_every'     => 0,
+                        'rep_times'     => null,
+                        'reminder'      => null,
+                        'reminder_skip' => 0,
+                        'remind_me'     => 0,
+                        'order'         => 0,
+                    ]
+                );
+
+                PiggyBankEvent::create(['piggybank_id' => $piggyTargeted->id, 'date' => $startDate->format('Y-m-d'), 'amount' => 100]);
+                PiggybankRepetition::create(
+                    [
+                        'piggybank_id'  => $piggyTargeted->id,
+                        'startdate'     => Carbon::now()->format('Y-m-d'),
+                        'targetdate'    => Carbon::now()->addMonths(4)->format('Y-m-d'),
                         'currentamount' => 0
                     ]
                 );

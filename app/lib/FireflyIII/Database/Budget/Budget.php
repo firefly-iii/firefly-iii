@@ -334,7 +334,7 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
             $limit->repeat_freq = 'monthly';
             $limit->repeats     = 0;
             $result             = $limit->save();
-            \Log::info('Created new limit? ' . boolval($result));
+            \Log::info('Created new limit? ' . boolstr($result));
             \Log::info('ID: ' . $limit->id);
             /*
              * A newly stored limit also created a limit repetition.
