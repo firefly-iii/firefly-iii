@@ -41,14 +41,21 @@ class PiggybankController extends BaseController
      */
     public function add(Piggybank $piggybank)
     {
-        /** @var \FireflyIII\Database\PiggyBank\PiggyBank $repos */
-        $repos = App::make('FireflyIII\Database\PiggyBank\PiggyBank');
+        \Log::debug('Now in add() for piggy bank #' . $piggybank->id . ' (' . $piggybank->name . ')');
+        \Log::debug('Z');
+        \Log::debug('currentRelevantRep is null: ' . boolstr($piggybank->currentRelevantRep()));
+        $leftOnAccount = $this->_repository->leftOnAccount($piggybank->account);
+        \Log::debug('A');
 
-        $leftOnAccount = $repos->leftOnAccount($piggybank->account);
-        $savedSoFar    = $piggybank->currentRelevantRep()->currentamount;
-        $leftToSave    = $piggybank->targetamount - $savedSoFar;
-        $maxAmount     = min($leftOnAccount, $leftToSave);
+        $savedSoFar = $piggybank->currentRelevantRep()->currentamount;
+        \Log::debug('B');
+        $leftToSave = $piggybank->targetamount - $savedSoFar;
+        \Log::debug('C');
+        $maxAmount = min($leftOnAccount, $leftToSave);
+        \Log::debug('D');
 
+
+        \Log::debug('Now going to view for piggy bank #' . $piggybank->id . ' (' . $piggybank->name . ')');
 
         return View::make('piggybanks.add', compact('piggybank', 'maxAmount'));
     }
@@ -115,7 +122,7 @@ class PiggybankController extends BaseController
         /*
          * Flash some data to fill the form.
          */
-        if (is_null($piggybank->targetdate)) {
+        if (is_null($piggybank->targetdate) || $piggybank->targetdate == '') {
             $targetDate = null;
         } else {
             $targetDate = new Carbon($piggybank->targetdate);
@@ -138,11 +145,8 @@ class PiggybankController extends BaseController
      */
     public function index()
     {
-        /** @var \FireflyIII\Database\PiggyBank\PiggyBank $repos */
-        $repos = App::make('FireflyIII\Database\PiggyBank\PiggyBank');
-
         /** @var Collection $piggybanks */
-        $piggybanks = $repos->get();
+        $piggybanks = $this->_repository->get();
 
         $accounts = [];
         /** @var Piggybank $piggybank */
@@ -156,9 +160,14 @@ class PiggybankController extends BaseController
              */
             $account = $piggybank->account;
             if (!isset($accounts[$account->id])) {
-                $accounts[$account->id] = ['name'              => $account->name, 'balance' => Steam::balance($account),
-                                           'leftForPiggybanks' => $repos->leftOnAccount($account), 'sumOfSaved' => $piggybank->savedSoFar,
-                                           'sumOfTargets'      => floatval($piggybank->targetamount), 'leftToSave' => $piggybank->leftToSave];
+                $accounts[$account->id] = [
+                    'name'              => $account->name,
+                    'balance'           => Steam::balance($account),
+                    'leftForPiggybanks' => $this->_repository->leftOnAccount($account),
+                    'sumOfSaved'        => $piggybank->savedSoFar,
+                    'sumOfTargets'      => floatval($piggybank->targetamount),
+                    'leftToSave'        => $piggybank->leftToSave
+                ];
             } else {
                 $accounts[$account->id]['sumOfSaved'] += $piggybank->savedSoFar;
                 $accounts[$account->id]['sumOfTargets'] += floatval($piggybank->targetamount);
