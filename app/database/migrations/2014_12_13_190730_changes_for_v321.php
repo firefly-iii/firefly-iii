@@ -24,6 +24,7 @@ use Illuminate\Database\Schema\Blueprint;
  * 17. Do not recreate component_recurring_transaction
  * 18. Do not recreate component_transaction
  * 19. Do not recreate field 'piggybank_id' in 'transactions'
+ * 20. Drop fields from currency table.
  *
  *
  *
@@ -45,6 +46,7 @@ use Illuminate\Database\Schema\Blueprint;
  * 14. Drop table component_transaction
  * 15. Drop field 'piggybank_id' from 'transactions'
  * 16. Drop field 'component_id' from 'budget_limits'
+ * 17. Expand currency table with new fields.
  *
  * Class ChangesForV321
  */
@@ -71,6 +73,7 @@ class ChangesForV321 extends Migration
         $this->renamePiggyBankEvents(); // 15.
         $this->renameBudgetLimitToBudgetInRepetitions(); // 16.
         // 17, 18, 19
+        $this->dropFieldsFromCurrencyTable(); // 20.
 
 
     }
@@ -135,7 +138,7 @@ class ChangesForV321 extends Migration
     {
         Schema::table(
             'budget_limits', function (Blueprint $table) {
-            $table->foreign('component_id','limits_component_id_foreign')->references('id')->on('components')->onDelete('cascade');
+            $table->foreign('component_id', 'limits_component_id_foreign')->references('id')->on('components')->onDelete('cascade');
         }
         );
     }
@@ -232,6 +235,17 @@ class ChangesForV321 extends Migration
         );
     }
 
+    public function dropFieldsFromCurrencyTable()
+    {
+
+        Schema::table(
+            'transaction_currencies', function (Blueprint $table) {
+            $table->dropColumn('symbol');
+            $table->dropColumn('name');
+        }
+        );
+    }
+
     /**
      * Run the migrations.
      *
@@ -255,6 +269,7 @@ class ChangesForV321 extends Migration
         $this->dropComponentTransactionTable(); // 14.
         $this->dropPiggyBankIdFromTransactions(); // 15.
         $this->dropComponentIdFromBudgetLimits(); // 16.
+        $this->expandCurrencyTable(); // 17.
 
 
         //        $this->doRenameInLimitRepetitions();
@@ -472,6 +487,16 @@ class ChangesForV321 extends Migration
             'budget_limits', function (Blueprint $table) {
             $table->dropForeign('limits_component_id_foreign');
             $table->dropColumn('component_id');
+        }
+        );
+    }
+
+    public function expandCurrencyTable()
+    {
+        Schema::table(
+            'transaction_currencies', function (Blueprint $table) {
+            $table->string('name', 48);
+            $table->string('symbol', 4);
         }
         );
     }
