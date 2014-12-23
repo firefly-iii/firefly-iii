@@ -85,9 +85,9 @@
             <!-- the range in which the budget can be set -->
             <p>
                 @if($budget->currentRep)
-                    <input type="range" data-id="{{$budget->id}}" data-spent="{{$budget->spent}}" id="budget-range-{{$budget->id}}" max="900" min="0" value="{{$budget->currentRep->amount}}" />
+                    <input type="range" data-id="{{$budget->id}}" data-spent="{{$budget->spent}}" id="budget-range-{{$budget->id}}" max="{{$budgetMaximum}}" min="0" value="{{$budget->currentRep->amount}}" />
                 @else
-                    <input type="range" data-id="{{$budget->id}}" data-spent="{{$budget->spent}}" id="budget-range-{{$budget->id}}" max="900" min="0" value="0" />
+                    <input type="range" data-id="{{$budget->id}}" data-spent="{{$budget->spent}}" id="budget-range-{{$budget->id}}" max="{{$budgetMaximum}}" min="0" value="0" />
                 @endif
             </p>
             <!-- some textual info about the budget. Updates dynamically. -->
@@ -100,15 +100,15 @@
                 <!-- budget-info-X holds the input and the euro-sign: -->
                 <span id="budget-info-{{$budget->id}}">
                 @if($budget->currentRep->amount > $budget->spent)
-                    <span class="text-success">&euro;</span> <input type="number" min="0" max="900" data-id="{{$budget->id}}" step="1" value="{{$budget->currentRep->amount}}" style="width:90px;color:#3c763d;" />
+                    <span class="text-success">&euro;</span> <input type="number" min="0" max="{{$budgetMaximum}}" data-id="{{$budget->id}}" step="1" value="{{$budget->currentRep->amount}}" style="width:90px;color:#3c763d;" />
                 @else
-                    <span class="text-danger">&euro;</span> <input type="number" min="0" max="900"  data-id="{{$budget->id}}" step="1" value="{{$budget->currentRep->amount}}" style="width:90px;color:#a94442;" />
+                    <span class="text-danger">&euro;</span> <input type="number" min="0" max="{{$budgetMaximum}}"  data-id="{{$budget->id}}" step="1" value="{{$budget->currentRep->amount}}" style="width:90px;color:#a94442;" />
                 @endif
                 </span>
             @else
                 <span id="budget-description-{{$budget->id}}"><em>No budget</em></span>
                 <span id="budget-info-{{$budget->id}}">
-                    <span class="text-success" style="display:none;">&euro;</span> <input data-id="{{$budget->id}}" type="number" min="0" max="900" step="1" value="0" style="width:50px;color:#3c763d;display:none;" />
+                    <span class="text-success" style="display:none;">&euro;</span> <input data-id="{{$budget->id}}" type="number" min="0" max="{{$budgetMaximum}}" step="1" value="0" style="width:50px;color:#3c763d;display:none;" />
                 </span>
             @endif
             </span>
