@@ -172,6 +172,9 @@ Route::group(
         Route::get('/categories/delete/{category}', ['uses' => 'CategoryController@delete', 'as' => 'categories.delete']);
         Route::get('/categories/show/{category}', ['uses' => 'CategoryController@show', 'as' => 'categories.show']);
 
+        // currency controller
+        Route::get('/currency',['uses' => 'CurrencyController@index','as' => 'currency.index']);
+
         // google chart controller
         Route::get('/chart/home/account', ['uses' => 'GoogleChartController@allAccountsBalanceChart']);
         Route::get('/chart/home/budgets', ['uses' => 'GoogleChartController@allBudgetsHomeChart']);
