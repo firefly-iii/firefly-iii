@@ -23,6 +23,7 @@ class Steam
      */
     public function balance(\Account $account, Carbon $date = null)
     {
+        \Log::debug('Now in Steam::balance() for account #' . $account->id.' ('.$account->name.')');
         if (is_null($date)) {
             $key = 'account.' . $account->id . '.latestBalance';
         } else {
@@ -33,6 +34,7 @@ class Steam
             #return \Cache::get($key);
         }
         $date    = is_null($date) ? Carbon::now() : $date;
+        \Log::debug('Now reached the moment we fire the query.');
         $balance = floatval(
             $account->transactions()->leftJoin(
                 'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
