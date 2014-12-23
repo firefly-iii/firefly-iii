@@ -58,6 +58,8 @@ class PiggyBankControllerCest
         $I->wantTo('destroy a piggy bank');
         $I->amOnPage('/piggybanks/delete/1');
         $I->see('Delete &quot;New camera&quot;');
+        $I->submitForm('#destroy', []);
+        $I->see('Piggy bank &quot;New camera&quot; deleted.');
     }
 
     /**
@@ -68,6 +70,16 @@ class PiggyBankControllerCest
         $I->wantTo('edit a piggy bank');
         $I->amOnPage('/piggybanks/edit/1');
         $I->see('Edit piggy bank "New camera"');
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function editWithTargetDate(FunctionalTester $I)
+    {
+        $I->wantTo('edit a piggy bank with a target date');
+        $I->amOnPage('/piggybanks/edit/2');
+        $I->see('Edit piggy bank "New clothes"');
     }
 
     /**

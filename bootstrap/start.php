@@ -28,6 +28,24 @@ if (!function_exists('mf')) {
         return '&#8364; ' . $string;
     }
 }
+if (!function_exists('boolstr')) {
+    /**
+     * @param $boolean
+     *
+     * @return string
+     */
+    function boolstr($boolean)
+    {
+        if (is_bool($boolean) && $boolean === true) {
+            return 'BOOLEAN TRUE';
+        }
+        if (is_bool($boolean) && $boolean === false) {
+            return 'BOOLEAN FALSE';
+        }
+
+        return 'NO BOOLEAN: ' . $boolean;
+    }
+}
 
 
 $app = new Illuminate\Foundation\Application;
