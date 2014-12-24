@@ -495,8 +495,8 @@ class ChangesForV321 extends Migration
     {
         Schema::table(
             'transaction_currencies', function (Blueprint $table) {
-            $table->string('name', 48);
-            $table->string('symbol', 4);
+            $table->string('name', 48)->nullable();
+            $table->string('symbol', 4)->nullable();
         }
         );
     }
