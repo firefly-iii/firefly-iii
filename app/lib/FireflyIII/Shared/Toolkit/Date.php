@@ -24,6 +24,7 @@ class Date
     {
         $date = clone $theDate;
         $add  = ($skip + 1);
+
         switch ($repeatFreq) {
             default:
                 throw new FireflyException('Cannot do addPeriod for $repeat_freq ' . $repeatFreq);
@@ -101,11 +102,12 @@ class Date
     /**
      * @param Carbon $theCurrentEnd
      * @param        $repeatFreq
+     * @param Carbon $maxDate
      *
      * @return mixed
      * @throws FireflyException
      */
-    public function endOfX(Carbon $theCurrentEnd, $repeatFreq)
+    public function endOfX(Carbon $theCurrentEnd, $repeatFreq, Carbon $maxDate)
     {
         $currentEnd = clone $theCurrentEnd;
         switch ($repeatFreq) {
@@ -130,7 +132,7 @@ class Date
             case 'half-year':
                 $month = intval($theCurrentEnd->format('m'));
                 $currentEnd->endOfYear();
-                if($month <= 6) {
+                if ($month <= 6) {
                     $currentEnd->subMonths(6);
                 }
                 break;
@@ -139,10 +141,20 @@ class Date
                 $currentEnd->endOfYear();
                 break;
         }
+        if ($currentEnd > $maxDate) {
+            return clone $maxDate;
+        }
 
         return $currentEnd;
     }
 
+    /**
+     * @param Carbon $date
+     * @param        $repeatFrequency
+     *
+     * @return string
+     * @throws FireflyException
+     */
     public function periodShow(Carbon $date, $repeatFrequency)
     {
         switch ($repeatFrequency) {
@@ -216,7 +228,7 @@ class Date
     }
 
     /**
-     * @param Carbon $date
+     * @param Carbon $theDate
      * @param        $repeatFreq
      * @param int    $subtract
      *

@@ -90,7 +90,7 @@ Breadcrumbs::register(
         $breadcrumbs->push($budget->name, route('budgets.show', $budget->id));
         if (!is_null($repetition)) {
             $breadcrumbs->push(
-                DateKit::periodShow($repetition->startdate, $repetition->limit->repeat_freq), route('budgets.show', $budget->id, $repetition->id)
+                DateKit::periodShow($repetition->startdate, $repetition->budgetlimit->repeat_freq), route('budgets.show', $budget->id, $repetition->id)
             );
         }
     }

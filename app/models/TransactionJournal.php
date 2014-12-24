@@ -4,7 +4,11 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Watson\Validating\ValidatingTrait;
+use \Illuminate\Database\Eloquent\Model as Eloquent;
 
+/**
+ * Class TransactionJournal
+ */
 class TransactionJournal extends Eloquent
 {
     use SoftDeletingTrait, ValidatingTrait;
@@ -15,6 +19,9 @@ class TransactionJournal extends Eloquent
            'description'             => 'required|between:1,255',
            'date'                    => 'required|date',
            'completed'               => 'required|between:0,1'];
+    protected     $fillable
+        = ['transaction_type_id', 'transaction_currency_id', 'user_id',
+           'description', 'date', 'completed'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -22,7 +29,7 @@ class TransactionJournal extends Eloquent
     public function budgets()
     {
         return $this->belongsToMany(
-            'Budget', 'component_transaction_journal', 'transaction_journal_id', 'component_id'
+            'Budget', 'budget_transaction_journal', 'transaction_journal_id', 'budget_id'
         );
     }
 
@@ -32,20 +39,15 @@ class TransactionJournal extends Eloquent
     public function categories()
     {
         return $this->belongsToMany(
-            'Category', 'component_transaction_journal', 'transaction_journal_id', 'component_id'
+            'Category', 'category_transaction_journal', 'transaction_journal_id', 'category_id'
         );
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function components()
-    {
-        return $this->belongsToMany('Component');
-    }
 
     /**
      * TODO remove this method in favour of something in the FireflyIII libraries.
+     *
+     * @param Account $account
      *
      * @return float
      */
@@ -123,11 +125,18 @@ class TransactionJournal extends Eloquent
         return $query->where('date', '<=', $date->format('Y-m-d'));
     }
 
+    /**
+     * @param Builder $query
+     */
     public function scopeDefaultSorting(Builder $query)
     {
         $query->orderBy('date', 'DESC')->orderBy('transaction_journals.id', 'DESC');
     }
 
+    /**
+     * @param Builder $query
+     * @param         $amount
+     */
     public function scopeLessThan(Builder $query, $amount)
     {
         if (is_null($this->joinedTransactions)) {
@@ -140,6 +149,10 @@ class TransactionJournal extends Eloquent
         $query->where('transactions.amount', '<=', $amount);
     }
 
+    /**
+     * @param Builder $query
+     * @param         $amount
+     */
     public function scopeMoreThan(Builder $query, $amount)
     {
         if (is_null($this->joinedTransactions)) {
@@ -163,6 +176,10 @@ class TransactionJournal extends Eloquent
         return $query->where('date', '=', $date->format('Y-m-d'));
     }
 
+    /**
+     * @param Builder $query
+     * @param array   $types
+     */
     public function scopeTransactionTypes(Builder $query, array $types)
     {
         if (is_null($this->joinedTransactionTypes)) {
@@ -185,9 +202,7 @@ class TransactionJournal extends Eloquent
         $query->with(
             ['transactions'                    => function ($q) {
                 $q->orderBy('amount', 'ASC');
-            }, 'transactiontype', 'components' => function ($q) {
-                $q->orderBy('class');
-            }, 'transactions.account.accounttype', 'recurringTransaction', 'budgets', 'categories']
+            }, 'transactiontype', 'budgets','categories', 'transactions.account.accounttype', 'recurringTransaction', 'budgets', 'categories']
         );
     }
 
@@ -207,6 +222,9 @@ class TransactionJournal extends Eloquent
         return $this->belongsTo('TransactionType');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function transactiongroups()
     {
         return $this->belongsToMany('TransactionGroup');

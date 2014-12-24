@@ -2,7 +2,9 @@
 
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Watson\Validating\ValidatingTrait;
-
+/**
+ * Class AccountType
+ */
 class AccountType extends Eloquent
 {
     use ValidatingTrait;

@@ -1,7 +1,11 @@
 <?php
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 use Watson\Validating\ValidatingTrait;
 
+/**
+ * Class Piggybank
+ */
 class Piggybank extends Eloquent
 {
     use ValidatingTrait;
@@ -87,6 +91,7 @@ class Piggybank extends Eloquent
         if ($this->repeats == 0) {
             $rep              = $this->piggybankrepetitions()->first(['piggybank_repetitions.*']);
             $this->currentRep = $rep;
+            \Log::debug('currentRelevantRep() reports $rep is null: ' . boolstr(is_null($rep)));
 
             return $rep;
         } else {
@@ -155,6 +160,9 @@ class Piggybank extends Eloquent
         return $this->hasMany('PiggybankEvent');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
     public function reminders()
     {
         return $this->morphMany('Reminder', 'remindersable');
@@ -197,6 +205,9 @@ class Piggybank extends Eloquent
         return $result;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function transactions()
     {
         return $this->hasMany('Transaction');

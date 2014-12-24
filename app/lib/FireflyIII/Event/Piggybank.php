@@ -6,6 +6,11 @@ namespace FireflyIII\Event;
 use Carbon\Carbon;
 use Illuminate\Events\Dispatcher;
 
+/**
+ * Class Piggybank
+ *
+ * @package FireflyIII\Event
+ */
 class Piggybank
 {
 
@@ -16,24 +21,30 @@ class Piggybank
     public function addMoney(\Piggybank $piggybank, $amount = 0.0)
     {
         if ($amount > 0) {
-            $event = new \PiggybankEvent;
+            $event = new \PiggyBankEvent;
             $event->piggybank()->associate($piggybank);
             $event->amount = floatval($amount);
             $event->date   = new Carbon;
             if (!$event->isValid()) {
-                var_dump($event->getErrors());
-                exit();
+                \Log::error($event->getErrors());
+                \App::abort(500);
             }
             $event->save();
         }
     }
 
+    /**
+     * @param \TransactionJournal $journal
+     *
+     * @throws \FireflyIII\Exception\FireflyException
+     * @throws \FireflyIII\Exception\NotImplementedException
+     */
     public function destroyTransfer(\TransactionJournal $journal)
     {
         if ($journal->piggybankevents()->count() > 0) {
 
-            /** @var \FireflyIII\Database\Piggybank $repository */
-            $repository = \App::make('FireflyIII\Database\Piggybank');
+            /** @var \FireflyIII\Database\PiggyBank\PiggyBank $repository */
+            $repository = \App::make('FireflyIII\Database\PiggyBank\PiggyBank');
 
             /** @var \Piggybank $piggyBank */
             $piggyBank = $journal->piggybankevents()->first()->piggybank()->first();
@@ -56,14 +67,10 @@ class Piggybank
             $repetition->save();
 
 
-            $event = new \PiggybankEvent;
+            $event = new \PiggyBankEvent;
             $event->piggybank()->associate($piggyBank);
             $event->amount = floatval($relevantTransaction->amount * -1);
             $event->date   = new Carbon;
-            if (!$event->isValid()) {
-                var_dump($event->getErrors());
-                exit();
-            }
             $event->save();
         }
     }
@@ -76,18 +83,17 @@ class Piggybank
     {
         $amount = $amount * -1;
         if ($amount < 0) {
-            $event = new \PiggybankEvent;
+            $event = new \PiggyBankEvent;
             $event->piggybank()->associate($piggybank);
             $event->amount = floatval($amount);
             $event->date   = new Carbon;
-            if (!$event->isValid()) {
-                var_dump($event->getErrors());
-                exit();
-            }
             $event->save();
         }
     }
 
+    /**
+     * @param \Piggybank $piggybank
+     */
     public function storePiggybank(\Piggybank $piggybank)
     {
         if (intval($piggybank->repeats) == 0) {
@@ -110,67 +116,41 @@ class Piggybank
      */
     public function storeTransfer(\TransactionJournal $journal, $piggybankId = 0)
     {
-        if ($piggybankId == 0 || is_null($piggybankId)) {
+        if (intval($piggybankId) == 0) {
             return;
         }
-        /** @var \FireflyIII\Database\Piggybank $repository */
-        $repository = \App::make('FireflyIII\Database\Piggybank');
+        /** @var \FireflyIII\Database\PiggyBank\PiggyBank $repository */
+        $repository = \App::make('FireflyIII\Database\PiggyBank\PiggyBank');
 
         /** @var \Piggybank $piggyBank */
         $piggyBank = $repository->find($piggybankId);
 
-        /** @var \PiggybankRepetition $repetition */
-        $repetition = $repository->findRepetitionByDate($piggyBank, $journal->date);
-
-        \Log::debug(
-            'Connecting transfer "' . $journal->description . '" (#' . $journal->id . ') to piggy bank "' . $piggyBank->name . '" (#' . $piggyBank->id . ').'
-        );
-
-        // some variables to double check the connection.
-        $start               = $piggyBank->startdate;
-        $end                 = $piggyBank->targetdate;
-        $amount              = floatval($piggyBank->targetamount);
-        $leftToSave          = $amount - floatval($repetition->currentamount);
-        $relevantTransaction = null;
-        /** @var \Transaction $transaction */
-        foreach ($journal->transactions as $transaction) {
-            if ($transaction->account_id == $piggyBank->account_id) {
-                $relevantTransaction = $transaction;
-            }
-        }
-        if (is_null($relevantTransaction)) {
+        if ($journal->transactions()->where('account_id', $piggyBank->account_id)->count() == 0) {
             return;
         }
-        \Log::debug('Relevant transaction is #' . $relevantTransaction->id . ' with amount ' . $relevantTransaction->amount);
-
-        // if FF3 should save this connection depends on some variables:
-        if ($start && $end && $journal->date >= $start && $journal->date <= $end) {
-            if ($relevantTransaction->amount < 0) { // amount removed from account, so removed from piggy bank.
-                \Log::debug('Remove from piggy bank.');
-                $continue = ($relevantTransaction->amount * -1 <= floatval($repetition->currentamount));
-                \Log::debug(
-                    'relevantTransaction.amount *-1 = ' . ($relevantTransaction->amount * -1) . ' >= current = ' . floatval($repetition->currentamount)
-                );
-            } else { // amount added
-                \Log::debug('Add from piggy bank.');
-                $continue = $relevantTransaction->amount <= $leftToSave;
-            }
-            if ($continue) {
-                \Log::debug('Update repetition.');
-                $repetition->currentamount += floatval($relevantTransaction->amount);
-                $repetition->save();
-
-                $event = new \PiggybankEvent;
-                $event->piggybank()->associate($piggyBank);
-                $event->transactionjournal()->associate($journal);
-                $event->amount = floatval($relevantTransaction->amount);
-                $event->date   = new Carbon;
-                if (!$event->isValid()) {
-                    var_dump($event->getErrors());
-                    exit();
-                }
-                $event->save();
-            }
+        /** @var \PiggybankRepetition $repetition */
+        $repetition  = $repository->findRepetitionByDate($piggyBank, $journal->date);
+        $amount      = floatval($piggyBank->targetamount);
+        $leftToSave  = $amount - floatval($repetition->currentamount);
+        $transaction = $journal->transactions()->where('account_id', $piggyBank->account_id)->first();
+        // must be in range of journal. Continue determines if we can move it.
+        if (floatval($transaction->amount < 0)) {
+            // amount removed from account, so removed from piggy bank.
+            $continue = ($transaction->amount * -1 <= floatval($repetition->currentamount));
+        } else {
+            // amount added
+            $continue = $transaction->amount <= $leftToSave;
+        }
+        if ($continue) {
+            \Log::debug('Update repetition.');
+            $repetition->currentamount += floatval($transaction->amount);
+            $repetition->save();
+            $event = new \PiggyBankEvent;
+            $event->piggybank()->associate($piggyBank);
+            $event->transactionjournal()->associate($journal);
+            $event->amount = floatval($transaction->amount);
+            $event->date   = new Carbon;
+            $event->save();
         }
     }
 
@@ -186,7 +166,7 @@ class Piggybank
         $events->listen('piggybank.update', 'FireflyIII\Event\Piggybank@updatePiggybank');
 
         \App::before(
-            function ($request) {
+            function () {
                 $this->validateRepeatedExpenses();
             }
         );
@@ -205,11 +185,11 @@ class Piggybank
      */
     public function validateRepeatedExpenses()
     {
-        if(!\Auth::check()) {
+        if (!\Auth::check()) {
             return;
         }
-        /** @var \FireflyIII\Database\RepeatedExpense $repository */
-        $repository = \App::make('FireflyIII\Database\RepeatedExpense');
+        /** @var \FireflyIII\Database\PiggyBank\RepeatedExpense $repository */
+        $repository = \App::make('FireflyIII\Database\PiggyBank\RepeatedExpense');
 
         $list  = $repository->get();
         $today = Carbon::now();
@@ -250,6 +230,9 @@ class Piggybank
         }
     }
 
+    /**
+     * @param \Piggybank $piggyBank
+     */
     public function updatePiggybank(\Piggybank $piggyBank)
     {
         // get the repetition:
@@ -259,6 +242,12 @@ class Piggybank
         $repetition->save();
     }
 
+    /**
+     * @param \TransactionJournal $journal
+     *
+     * @throws \FireflyIII\Exception\FireflyException
+     * @throws \FireflyIII\Exception\NotImplementedException
+     */
     public function updateTransfer(\TransactionJournal $journal)
     {
 
@@ -267,8 +256,8 @@ class Piggybank
             $event    = $journal->piggybankevents()->orderBy('date', 'DESC')->orderBy('id', 'DESC')->first();
             $eventSum = floatval($journal->piggybankevents()->orderBy('date', 'DESC')->orderBy('id', 'DESC')->sum('amount'));
 
-            /** @var \FireflyIII\Database\Piggybank $repository */
-            $repository = \App::make('FireflyIII\Database\Piggybank');
+            /** @var \FireflyIII\Database\PiggyBank\PiggyBank $repository */
+            $repository = \App::make('FireflyIII\Database\PiggyBank\PiggyBank');
 
             /** @var \Piggybank $piggyBank */
             $piggyBank = $journal->piggybankevents()->first()->piggybank()->first();
@@ -295,7 +284,7 @@ class Piggybank
             $repetition->save();
 
 
-            $event = new \PiggybankEvent;
+            $event = new \PiggyBankEvent;
             $event->piggybank()->associate($piggyBank);
             $event->transactionJournal()->associate($journal);
             $event->amount = $diff;

@@ -5,8 +5,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 /**
  * Class CreateUsersTable
- *
- * @SuppressWarnings(PHPMD.ShortMethodName)
  */
 class CreateUsersTable extends Migration
 {

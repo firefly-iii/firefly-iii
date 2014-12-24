@@ -1,6 +1,9 @@
 <?php
 use Watson\Validating\ValidatingTrait;
-
+use \Illuminate\Database\Eloquent\Model as Eloquent;
+/**
+ * Class AccountMeta
+ */
 class AccountMeta extends Eloquent
 {
     use ValidatingTrait;

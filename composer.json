@@ -23,7 +23,7 @@
     "require": {
         "laravel/framework": "4.2.*",
         "davejamesmiller/laravel-breadcrumbs": "2.*",
-        "grumpydictator/gchart": "dev-master",
+        "grumpydictator/gchart": "1.*",
         "michelf/php-markdown": "1.*",
         "watson/validating": "0.10.*"
     },
@@ -35,7 +35,10 @@
         "mockery/mockery": "@stable",
         "league/factory-muffin": "~2.0",
         "codeception/codeception": "*",
-        "codeception/c3": "2.*"
+        "codeception/c3": "2.*",
+        "sebastian/phpcpd": "*",
+        "sebastian/phpdcd": "*",
+        "codeception/phpbuiltinserver": "*"
 
     },
     "autoload": {

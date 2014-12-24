@@ -45,11 +45,11 @@ class TransactionController extends BaseController
             }
         }
         $unique = array_unique($ids);
-        if (count($ids) > 0) {
+        if (count($unique) > 0) {
 
-            /** @var \FireflyIII\Database\TransactionJournal $repository */
-            $repository = App::make('FireflyIII\Database\TransactionJournal');
-            $set        = $repository->getByIds($ids);
+            /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $repository */
+            $repository = App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
+            $set        = $repository->getByIds($unique);
             $set->each(
                 function (TransactionJournal $journal) {
                     $journal->amount = mf($journal->getAmount());
@@ -71,21 +71,17 @@ class TransactionController extends BaseController
      */
     public function create($what = 'deposit')
     {
-        /*
-         * The repositories we need:
-         */
+        /** @var \FireflyIII\Database\Account\Account $accountRepository */
+        $accountRepository = App::make('FireflyIII\Database\Account\Account');
 
-        /** @var \FireflyIII\Database\Account $accountRepository */
-        $accountRepository = App::make('FireflyIII\Database\Account');
+        /** @var \FireflyIII\Database\Budget\Budget $budgetRepository */
+        $budgetRepository = App::make('FireflyIII\Database\Budget\Budget');
 
-        /** @var \FireflyIII\Database\Budget $budgetRepository */
-        $budgetRepository = App::make('FireflyIII\Database\Budget');
+        /** @var \FireflyIII\Database\PiggyBank\PiggyBank $piggyRepository */
+        $piggyRepository = App::make('FireflyIII\Database\PiggyBank\PiggyBank');
 
-        /** @var \FireflyIII\Database\Piggybank $piggyRepository */
-        $piggyRepository = App::make('FireflyIII\Database\Piggybank');
-
-        /** @var \FireflyIII\Database\RepeatedExpense $repRepository */
-        $repRepository = App::make('FireflyIII\Database\RepeatedExpense');
+        /** @var \FireflyIII\Database\PiggyBank\RepeatedExpense $repRepository */
+        $repRepository = App::make('FireflyIII\Database\PiggyBank\RepeatedExpense');
 
         // get asset accounts with names and id's .
         $assetAccounts = FFForm::makeSelectList($accountRepository->getAssetAccounts());
@@ -100,9 +96,6 @@ class TransactionController extends BaseController
         $piggies[0] = '(no piggy bank)';
         asort($piggies);
 
-        /*
-         * respond to a possible given values in the URL.
-         */
         $preFilled = Session::has('preFilled') ? Session::get('preFilled') : [];
         $respondTo = ['account_id', 'account_from_id'];
         foreach ($respondTo as $r) {
@@ -143,8 +136,8 @@ class TransactionController extends BaseController
     {
         $type = $transactionJournal->transactionType->type;
 
-        /** @var \FireflyIII\Database\TransactionJournal $repository */
-        $repository = App::make('FireflyIII\Database\TransactionJournal');
+        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $repository */
+        $repository = App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
         $repository->destroy($transactionJournal);
 
         $return = 'withdrawal';
@@ -172,8 +165,8 @@ class TransactionController extends BaseController
         $id     = intval(Input::get('id'));
         $sister = intval(Input::get('relateTo'));
 
-        /** @var \FireflyIII\Database\TransactionJournal $repository */
-        $repository = App::make('FireflyIII\Database\TransactionJournal');
+        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $repository */
+        $repository = App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
 
         $journal = $repository->find($id);
         $sis     = $repository->find($sister);
@@ -207,39 +200,25 @@ class TransactionController extends BaseController
          * All the repositories we need:
          */
 
-        /** @var \FireflyIII\Database\Account $accountRepository */
-        $accountRepository = App::make('FireflyIII\Database\Account');
+        /** @var \FireflyIII\Database\Account\Account $accountRepository */
+        $accountRepository = App::make('FireflyIII\Database\Account\Account');
 
-        /** @var \FireflyIII\Database\Budget $budgetRepository */
-        $budgetRepository = App::make('FireflyIII\Database\Budget');
+        /** @var \FireflyIII\Database\Budget\Budget $budgetRepository */
+        $budgetRepository = App::make('FireflyIII\Database\Budget\Budget');
 
-        /** @var \FireflyIII\Database\Piggybank $piggyRepository */
-        $piggyRepository = App::make('FireflyIII\Database\Piggybank');
+        /** @var \FireflyIII\Database\PiggyBank\PiggyBank $piggyRepository */
+        $piggyRepository = App::make('FireflyIII\Database\PiggyBank\PiggyBank');
 
 
         // type is useful for display:
         $what = strtolower($journal->transactiontype->type);
 
         // get asset accounts with names and id's.
+
+        $budgets  = FFForm::makeSelectList($budgetRepository->get(), true);
         $accounts = FFForm::makeSelectList($accountRepository->getAssetAccounts());
+        $piggies  = FFForm::makeSelectList($piggyRepository->get(), true);
 
-        // get budgets as a select list.
-        $budgets    = FFForm::makeSelectList($budgetRepository->get());
-        $budgets[0] = '(no budget)';
-
-        /*
-         * Get all piggy banks plus (if any) the relevant piggy bank. Since just one
-         * of the transactions in the journal has this field, it should all fill in nicely.
-         */
-        // get the piggy banks.
-        $piggies     = FFForm::makeSelectList($piggyRepository->get());
-        $piggies[0]  = '(no piggy bank)';
-        $piggyBankId = 0;
-        foreach ($journal->transactions as $t) {
-            if (!is_null($t->piggybank_id)) {
-                $piggyBankId = $t->piggybank_id;
-            }
-        }
 
         /*
          * Data to properly display the edit form.
@@ -248,7 +227,7 @@ class TransactionController extends BaseController
             'date'         => $journal->date->format('Y-m-d'),
             'category'     => '',
             'budget_id'    => 0,
-            'piggybank_id' => $piggyBankId
+            'piggybank_id' => 0
         ];
 
         /*
@@ -335,8 +314,8 @@ class TransactionController extends BaseController
     public function index($what)
     {
 
-        /** @var \FireflyIII\Database\TransactionJournal $repository */
-        $repository = App::make('FireflyIII\Database\TransactionJournal');
+        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $repository */
+        $repository = App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
 
         switch ($what) {
             case 'expenses':
@@ -396,8 +375,8 @@ class TransactionController extends BaseController
     {
         $search = e(trim(Input::get('searchValue')));
 
-        /** @var \FireflyIII\Database\TransactionJournal $repository */
-        $repository = App::make('FireflyIII\Database\TransactionJournal');
+        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $repository */
+        $repository = App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
 
         $result = $repository->searchRelated($search, $journal);
         $result->each(
@@ -456,8 +435,8 @@ class TransactionController extends BaseController
         $data['what']     = $what;
         $data['currency'] = 'EUR';
 
-        /** @var \FireflyIII\Database\TransactionJournal $repository */
-        $repository = App::make('FireflyIII\Database\TransactionJournal');
+        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $repository */
+        $repository = App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
 
         switch ($data['post_submit_action']) {
             default:
@@ -482,11 +461,7 @@ class TransactionController extends BaseController
                  * Trigger a search for the related (if selected)
                  * piggy bank and store an event.
                  */
-                $piggyID = null;
-                if (!is_null(Input::get('piggybank_id')) && intval(Input::get('piggybank_id')) > 0) {
-                    $piggyID = intval(Input::get('piggybank_id'));
-                }
-                Event::fire('transactionJournal.store', [$journal, $piggyID]); // new and used.
+                Event::fire('transactionJournal.store', [$journal, Input::get('piggybank_id')]); // new and used.
                 /*
                  * Also trigger on both transactions.
                  */
@@ -544,12 +519,13 @@ class TransactionController extends BaseController
     /**
      * @param TransactionJournal $journal
      *
+     * @return $this
      * @throws FireflyException
      */
     public function update(TransactionJournal $journal)
     {
-        /** @var \FireflyIII\Database\TransactionJournal $repos */
-        $repos = App::make('FireflyIII\Database\TransactionJournal');
+        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $repos */
+        $repos = App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
 
         $data             = Input::except('_token');
         $data['currency'] = 'EUR';

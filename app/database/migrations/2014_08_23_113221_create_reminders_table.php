@@ -6,7 +6,6 @@ use Illuminate\Database\Schema\Blueprint;
 /**
  * Class CreateRemindersTable
  *
- * @SuppressWarnings(PHPMD.ShortMethodName)
  */
 class CreateRemindersTable extends Migration
 {

@@ -4,7 +4,7 @@ return [
     'connections' => [
         'sqlite' => [
             'driver'   => 'sqlite',
-            'database' => 'tests/_data/testing.sqlite',
+            'database' => realpath(__DIR__.'/../../../tests/_data/db.sqlite'),
             'prefix'   => ''
         ]
 

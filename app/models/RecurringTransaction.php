@@ -1,26 +1,27 @@
 <?php
 use Carbon\Carbon;
 use Watson\Validating\ValidatingTrait;
-
+use \Illuminate\Database\Eloquent\Model as Eloquent;
+/**
+ * Class RecurringTransaction
+ */
 class RecurringTransaction extends Eloquent
 {
 
     use ValidatingTrait;
-    public static $rules
+    protected $rules
         = [
             'user_id'     => 'required|exists:users,id',
-            'name'        => 'required|between:1,255',
+            'name'        => 'required|between:1,255|min:1',
             'match'       => 'required',
             'amount_max'  => 'required|between:0,65536',
             'amount_min'  => 'required|between:0,65536',
             'date'        => 'required|date',
-            'active'      => 'required|between:0,1',
-            'automatch'   => 'required|between:0,1',
+            'active'      => 'between:0,1',
+            'automatch'   => 'between:0,1',
             'repeat_freq' => 'required|in:daily,weekly,monthly,quarterly,half-year,yearly',
             'skip'        => 'required|between:0,31',];
-
     protected $fillable = ['user_id', 'name', 'match', 'amount_min', 'amount_max', 'date', 'repeat_freq', 'skip', 'active', 'automatch'];
-
     /**
      * @return array
      */
@@ -66,6 +67,9 @@ class RecurringTransaction extends Eloquent
          * The date Firefly tries to find. If this stays null, it's "unknown".
          */
         $finalDate = null;
+        if ($this->active == 0) {
+            return $finalDate;
+        }
 
         /*
          * $today is the start of the next period, to make sure FF3 won't miss anything

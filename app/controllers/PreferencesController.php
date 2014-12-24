@@ -3,6 +3,8 @@
 /**
  * Class PreferencesController
  *
+ * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
+ *
  */
 class PreferencesController extends BaseController
 {
@@ -21,8 +23,8 @@ class PreferencesController extends BaseController
      */
     public function index()
     {
-        /** @var \FireflyIII\Database\Account $acct */
-        $acct = App::make('FireflyIII\Database\Account');
+        /** @var \FireflyIII\Database\Account\Account $acct */
+        $acct = App::make('FireflyIII\Database\Account\Account');
 
         /** @var \FireflyIII\Shared\Preferences\Preferences $preferences */
         $preferences = App::make('FireflyIII\Shared\Preferences\Preferences');
@@ -30,9 +32,13 @@ class PreferencesController extends BaseController
         $accounts       = $acct->getAssetAccounts();
         $viewRange      = $preferences->get('viewRange', '1M');
         $viewRangeValue = $viewRange->data;
-        $frontpage      = $preferences->get('frontpageAccounts', []);
+        $frontPage      = $preferences->get('frontpageAccounts', []);
+        $budgetMax      = $preferences->get('budgetMaximum', 1000);
+        $budgetMaximum  = $budgetMax->data;
 
-        return View::make('preferences.index')->with('accounts', $accounts)->with('frontpageAccounts', $frontpage)->with('viewRange', $viewRangeValue);
+        return View::make('preferences.index', compact('budgetMaximum'))->with('accounts', $accounts)->with('frontpageAccounts', $frontPage)->with(
+            'viewRange', $viewRangeValue
+        );
     }
 
     /**
@@ -40,7 +46,6 @@ class PreferencesController extends BaseController
      */
     public function postIndex()
     {
-
         /** @var \FireflyIII\Shared\Preferences\Preferences $preferences */
         $preferences = App::make('FireflyIII\Shared\Preferences\Preferences');
 
@@ -57,6 +62,11 @@ class PreferencesController extends BaseController
         Session::forget('start');
         Session::forget('end');
         Session::forget('range');
+
+        // budget maximum:
+        $budgetMaximum = intval(Input::get('budgetMaximum'));
+        $preferences->set('budgetMaximum', $budgetMaximum);
+
 
         Session::flash('success', 'Preferences saved!');
 

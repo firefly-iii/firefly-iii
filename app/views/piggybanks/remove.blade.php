@@ -1,4 +1,4 @@
-<form style="display: inline;" action="{{route('piggybanks.remove',$piggybank->id)}}" method="POST">
+<form style="display: inline;" id="remove" action="{{route('piggybanks.remove',$piggybank->id)}}" method="POST">
 {{Form::token()}}
     <div class="modal-dialog">
         <div class="modal-content">

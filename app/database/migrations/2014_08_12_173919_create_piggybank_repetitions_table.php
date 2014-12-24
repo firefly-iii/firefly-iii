@@ -6,7 +6,6 @@ use Illuminate\Database\Schema\Blueprint;
 /**
  * Class CreatePiggyInstance
  *
- * @SuppressWarnings(PHPMD.ShortMethodName)
  */
 class CreatePiggybankRepetitionsTable extends Migration
 {

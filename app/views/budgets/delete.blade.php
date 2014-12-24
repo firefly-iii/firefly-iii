@@ -1,7 +1,7 @@
 @extends('layouts.default')
 @section('content')
 {{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $budget) }}
-{{Form::open(['class' => 'form-horizontal','url' => route('budgets.destroy',$budget->id)])}}
+{{Form::open(['class' => 'form-horizontal','id' => 'destroy','url' => route('budgets.destroy',$budget->id)])}}
 <div class="row">
     <div class="col-lg-6 col-md-12 col-sm-12">
         <div class="panel panel-red">

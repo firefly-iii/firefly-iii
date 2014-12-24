@@ -6,7 +6,6 @@ use Illuminate\Database\Schema\Blueprint;
 /**
  * Class CreatePreferencesTable
  *
- * @SuppressWarnings(PHPMD.ShortMethodName)
  */
 class CreatePreferencesTable extends Migration
 {

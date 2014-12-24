@@ -1,4 +1,5 @@
 <?php
+use Carbon\Carbon;
 
 /**
  * Class HomeController
@@ -22,19 +23,19 @@ class HomeController extends BaseController
     public function index()
     {
         // count, maybe Firefly needs some introducing text to show:
-        /** @var \FireflyIII\Database\Account $acct */
-        $acct = App::make('FireflyIII\Database\Account');
+        /** @var \FireflyIII\Database\Account\Account $acct */
+        $acct = App::make('FireflyIII\Database\Account\Account');
 
-        /** @var \FireflyIII\Database\TransactionJournal $jrnls */
-        $jrnls = App::make('FireflyIII\Database\TransactionJournal');
+        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $jrnls */
+        $jrnls = App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
 
         /** @var \FireflyIII\Shared\Preferences\PreferencesInterface $preferences */
         $preferences = App::make('FireflyIII\Shared\Preferences\PreferencesInterface');
 
         $count = $acct->countAssetAccounts();
 
-        $start = Session::get('start');
-        $end   = Session::get('end');
+        $start = Session::get('start', Carbon::now()->startOfMonth());
+        $end   = Session::get('end', Carbon::now()->endOfMonth());
 
 
         // get the preference for the home accounts to show:
@@ -47,7 +48,7 @@ class HomeController extends BaseController
 
         $transactions = [];
         foreach ($accounts as $account) {
-            $set = $jrnls->getInDateRangeAccount($account, 10, $start, $end);
+            $set = $jrnls->getInDateRangeAccount($account, $start, $end, 10);
             if (count($set) > 0) {
                 $transactions[] = [$set, $account];
             }
@@ -76,7 +77,7 @@ class HomeController extends BaseController
             Session::forget('range');
         }
 
-        return Redirect::back();
+        return Redirect::intended('/');
     }
 
     /**
@@ -86,7 +87,7 @@ class HomeController extends BaseController
     {
         Navigation::next();
 
-        return Redirect::back();
+        return Redirect::intended('/');
     }
 
     /**
@@ -96,6 +97,6 @@ class HomeController extends BaseController
     {
         Navigation::prev();
 
-        return Redirect::back();
+        return Redirect::intended('/');
     }
 }

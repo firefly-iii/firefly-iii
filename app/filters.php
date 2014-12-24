@@ -4,11 +4,15 @@
 
 App::before(
     function ($request) {
+
+        // put IP in session if not already there.
+
         $reminders = [];
 
         if (Auth::check()) {
             Filter::setSessionDateRange();
             Reminders::updateReminders();
+            Steam::removeEmptyBudgetLimits();
             $reminders = Reminders::getReminders();
         }
         View::share('reminders', $reminders);

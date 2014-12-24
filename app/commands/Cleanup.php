@@ -1,9 +1,12 @@
 <?php
 
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
+//use Symfony\Component\Console\Input\InputArgument;
+//use Symfony\Component\Console\Input\InputOption;
 
+/**
+ * Class Cleanup
+ */
 class Cleanup extends Command
 {
 
@@ -21,9 +24,7 @@ class Cleanup extends Command
     protected $name = 'firefly:cleanup';
 
     /**
-     * Create a new command instance.
      *
-     * @return void
      */
     public function __construct()
     {
@@ -42,7 +43,7 @@ class Cleanup extends Command
         $this->info('Cleared compiled...');
         Artisan::call('ide-helper:generate');
         $this->info('IDE helper, done...');
-        Artisan::call('ide-helper:models', ['write']);
+        Artisan::call('ide-helper:models', ['nowrite']);
         $this->info('IDE models, done...');
         Artisan::call('optimize');
         $this->info('Optimized...');

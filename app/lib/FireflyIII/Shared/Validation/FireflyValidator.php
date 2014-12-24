@@ -10,6 +10,13 @@ use Illuminate\Validation\Validator;
  */
 class FireflyValidator extends Validator
 {
+    /**
+     * @param $attribute
+     * @param $value
+     * @param $parameters
+     *
+     * @return bool
+     */
     public function validateAlphabasic($attribute, $value, $parameters)
     {
         $pattern = '/[^[:alnum:]_\-\.\& \(\)\'"]/iu';

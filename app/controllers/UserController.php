@@ -71,8 +71,8 @@ class UserController extends BaseController
             return View::make('error')->with('message', 'Not possible');
         }
 
-        /** @var \FireflyIII\Database\User $repository */
-        $repository = App::make('FireflyIII\Database\User');
+        /** @var \FireflyIII\Database\User\User $repository */
+        $repository = App::make('FireflyIII\Database\User\User');
 
         /** @var \FireflyIII\Shared\Mail\RegistrationInterface $email */
         $email = App::make('FireflyIII\Shared\Mail\RegistrationInterface');
@@ -105,8 +105,8 @@ class UserController extends BaseController
     public function postRemindme()
     {
 
-        /** @var \FireflyIII\Database\User $repository */
-        $repository = App::make('FireflyIII\Database\User');
+        /** @var \FireflyIII\Database\User\User $repository */
+        $repository = App::make('FireflyIII\Database\User\User');
 
         /** @var \FireflyIII\Shared\Mail\RegistrationInterface $email */
         $email = App::make('FireflyIII\Shared\Mail\RegistrationInterface');
@@ -163,8 +163,8 @@ class UserController extends BaseController
     public function reset($reset)
     {
 
-        /** @var \FireflyIII\Database\User $repository */
-        $repository = App::make('FireflyIII\Database\User');
+        /** @var \FireflyIII\Database\User\User $repository */
+        $repository = App::make('FireflyIII\Database\User\User');
 
         /** @var \FireflyIII\Shared\Mail\RegistrationInterface $email */
         $email = App::make('FireflyIII\Shared\Mail\RegistrationInterface');
