@@ -312,16 +312,16 @@ class GoogleChartController extends BaseController
     }
 
     /**
-     * @param Piggybank $piggybank
+     * @param Piggybank $piggyBank
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function piggyBankHistory(\Piggybank $piggybank)
+    public function piggyBankHistory(\Piggybank $piggyBank)
     {
         $this->_chart->addColumn('Date', 'date');
         $this->_chart->addColumn('Balance', 'number');
 
-        $set = \DB::table('piggy_bank_events')->where('piggybank_id', $piggybank->id)->groupBy('date')->get(['date', DB::Raw('SUM(`amount`) AS `sum`')]);
+        $set = \DB::table('piggy_bank_events')->where('piggybank_id', $piggyBank->id)->groupBy('date')->get(['date', DB::Raw('SUM(`amount`) AS `sum`')]);
 
         foreach ($set as $entry) {
             $this->_chart->addRow(new Carbon($entry->date), floatval($entry->sum));

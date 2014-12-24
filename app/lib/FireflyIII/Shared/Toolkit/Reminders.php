@@ -72,7 +72,7 @@ class Reminders
 
         $today = Carbon::now();
 
-        /** @var \Piggybank $piggybank */
+        /** @var \Piggybank $piggyBank */
         foreach ($set as $piggyBank) {
             /** @var \PiggybankRepetition $repetition */
             $repetition = $piggyBank->currentRelevantRep();

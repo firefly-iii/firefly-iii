@@ -2,52 +2,52 @@
 @section('content')
 {{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName()) }}
 <div class="row">
-    @foreach($piggybanks as $piggybank)
+    @foreach($piggyBanks as $piggyBank)
         <div class="col-lg-6 col-md-6 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-fw fa-rocket"></i> <a href="{{route('piggybanks.show',$piggybank->id)}}" title="{{{$piggybank->name}}}">{{{$piggybank->name}}}</a>
+                    <i class="fa fa-fw fa-rocket"></i> <a href="{{route('piggybanks.show',$piggyBank->id)}}" title="{{{$piggyBank->name}}}">{{{$piggyBank->name}}}</a>
                 </div>
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            {{mf($piggybank->savedSoFar,true)}}
+                            {{mf($piggyBank->savedSoFar,true)}}
                         </div>
                         <div class="col-lg-8 col-md-6 col-sm-4">
                             <div class="progress progress-striped">
                                 <div
-                                @if($piggybank->percentage == 100)
+                                @if($piggyBank->percentage == 100)
                                 class="progress-bar progress-bar-success"
                                 @else
                                 class="progress-bar progress-bar-info"
                                 @endif
-                                role="progressbar" aria-valuenow="{{$piggybank->percentage}}" aria-valuemin="0" aria-valuemax="100" style="min-width: 40px;width: {{$piggybank->percentage}}%;">
-                                    {{$piggybank->percentage}}%
+                                role="progressbar" aria-valuenow="{{$piggyBank->percentage}}" aria-valuemin="0" aria-valuemax="100" style="min-width: 40px;width: {{$piggyBank->percentage}}%;">
+                                    {{$piggyBank->percentage}}%
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            {{mf($piggybank->targetamount,true)}}
+                            {{mf($piggyBank->targetamount,true)}}
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-2 col-md-3 col-sm-4">
                             <div class="btn-group btn-group-xs">
-                                @if($piggybank->leftToSave > 0)
-                                    <a href="#" class="btn btn-default addMoney" data-id="{{{$piggybank->id}}}"><span data-id="{{{$piggybank->id}}}" class="glyphicon glyphicon-plus"></span></a>
+                                @if($piggyBank->leftToSave > 0)
+                                    <a href="#" class="btn btn-default addMoney" data-id="{{{$piggyBank->id}}}"><span data-id="{{{$piggyBank->id}}}" class="glyphicon glyphicon-plus"></span></a>
                                 @endif
-                                <a href="#" class="btn btn-default removeMoney" data-id="{{{$piggybank->id}}}"><span data-id="{{{$piggybank->id}}}" class="glyphicon glyphicon-minus"></span></a>
+                                <a href="#" class="btn btn-default removeMoney" data-id="{{{$piggyBank->id}}}"><span data-id="{{{$piggyBank->id}}}" class="glyphicon glyphicon-minus"></span></a>
                             </div>
                         </div>
                         <div class="col-lg-8 col-md-6 col-sm-4">
                             <div class="btn-group btn-group-xs">
-                                <a href="{{route('piggybanks.edit',$piggybank->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
-                                <a href="{{route('piggybanks.delete',$piggybank->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                                <a href="{{route('piggybanks.edit',$piggyBank->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
+                                <a href="{{route('piggybanks.delete',$piggyBank->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
                             </div>
                         </div>
                         <div class="col-lg-2 col-md-3 col-sm-4">
-                            @if($piggybank->leftToSave > 0)
-                                {{mf($piggybank->leftToSave)}}
+                            @if($piggyBank->leftToSave > 0)
+                                {{mf($piggyBank->leftToSave)}}
                             @endif
                         </div>
                     </div>
