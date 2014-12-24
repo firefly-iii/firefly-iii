@@ -52,6 +52,7 @@
 <script type="text/javascript">
     var accountID = {{{$account->id}}};
     var view = '{{{$range}}}';
+    var currencyCode = '{{getCurrencyCode()}}';
 </script>
 <!-- load the libraries and scripts necessary for Google Charts: -->
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>

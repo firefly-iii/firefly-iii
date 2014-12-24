@@ -48,6 +48,9 @@
 @endif
 @stop
 @section('scripts')
+<script type="text/javascript">
+    var currencyCode = '{{getCurrencyCode()}}';
+</script>
 {{HTML::script('assets/javascript/firefly/reports.js')}}
 {{HTML::script('assets/javascript/firefly/related-manager.js')}}
 @stop
