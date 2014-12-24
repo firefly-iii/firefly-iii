@@ -2,7 +2,7 @@
 @section('content')
 {{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName()) }}
 <!-- form -->
-{{Form::open(['class' => 'form-horizontal'])}}
+{{Form::open(['class' => 'form-horizontal','id' => 'preferences'])}}
 
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-6">
