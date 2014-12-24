@@ -16,12 +16,19 @@
                     @if(count($currencies) > 0)
                         @foreach($currencies as $currency)
                             <li>
-                                <a href="#"><i class="fa fa-fw fa-pencil"></i></a>
-                                <a href="#"><i class="fa fa-fw fa-trash"></i></a>
-                                {{{$currency->name}}} ({{{$currency->code}}}) ({{{$currency->symbol}}})</li>
+                                <a href="{{route('currency.edit',$currency->id)}}"><i class="fa fa-fw fa-pencil"></i></a>
+                                <a href="{{route('currency.delete',$currency->id)}}"><i class="fa fa-fw fa-trash"></i></a>
+                                {{{$currency->name}}} ({{{$currency->code}}}) ({{{$currency->symbol}}})
+                                @if($currency->id == $defaultCurrency->id)
+                                    <span class="label label-success">default</span>
+                                @else
+                                    <span class="label label-default"><a style="color:#fff" href="{{route('currency.default',$currency->id)}}">make default</a></span>
+
+                                @endif
+                            </li>
                         @endforeach
                     @endif
-                        <li><a href="#"><i class="fa fa-fw fa-plus-circle"></i> Add another currency</a></li>
+                        <li><a href="{{route('currency.create')}}"><i class="fa fa-fw fa-plus-circle"></i> Add another currency</a></li>
                     </ul>
                 </div>
             </div>
