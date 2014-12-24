@@ -54,7 +54,7 @@
                     Piggy banks
                 </div>
                 <div class="panel-body">
-                    @include('list.piggyBank-events',['events' => $journal->piggyBankEvents,'showPiggyBank' => true])
+                    @include('list.piggy-bank-events',['events' => $journal->piggyBankEvents,'showPiggyBank' => true])
                 </div>
             </div>
         @endif

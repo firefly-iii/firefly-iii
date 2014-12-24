@@ -106,7 +106,7 @@
                     <i class="fa fa-fw fa-clock-o"></i> Table
                 </div>
                 <div class="panel-body">
-                    @include('list.piggyBank-events')
+                    @include('list.piggy-bank-events')
                 </div>
             </div>
     </div>
