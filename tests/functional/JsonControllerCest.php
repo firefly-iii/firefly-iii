@@ -1,12 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 21/12/14
- * Time: 18:05
- */
 
 /**
+ *
+ * @SuppressWarnings("CamelCase")
+ * @SuppressWarnings("short")
+ *
  * Class JsonControllerCest
  */
 class JsonControllerCest

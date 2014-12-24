@@ -1,6 +1,10 @@
 <?php
 
 /**
+ *
+ * @SuppressWarnings("CamelCase")
+ * @SuppressWarnings("short")
+ *
  * Class PiggybankControllerCest
  */
 class PiggyBankControllerCest
