@@ -52,6 +52,7 @@ class PiggyBankControllerCest
         $I->wantTo('delete a piggy bank');
         $I->amOnPage('/piggy_banks/delete/1');
         $I->see('Delete &quot;New camera&quot;');
+
     }
 
     /**
@@ -64,6 +65,7 @@ class PiggyBankControllerCest
         $I->see('Delete &quot;New camera&quot;');
         $I->submitForm('#destroy', []);
         $I->see('Piggy bank &quot;New camera&quot; deleted.');
+
     }
 
     /**
@@ -242,13 +244,13 @@ class PiggyBankControllerCest
         $I->see('Edit piggy bank "New camera"');
         $I->submitForm(
             '#update', [
-            'name'               => 'Updated camera',
-            'account_id'         => 2,
-            'targetamount'       => 2000,
-            'targetdate'         => '',
-            'reminder'           => 'week',
-            'post_submit_action' => 'update',
-        ]
+                         'name'               => 'Updated camera',
+                         'account_id'         => 2,
+                         'targetamount'       => 2000,
+                         'targetdate'         => '',
+                         'reminder'           => 'week',
+                         'post_submit_action' => 'update',
+                     ]
         );
         $I->see('Piggy bank &quot;Updated camera&quot; updated.');
 
@@ -311,13 +313,13 @@ class PiggyBankControllerCest
         $I->see('Edit piggy bank "New camera"');
         $I->submitForm(
             '#update', [
-            'name'               => '',
-            'account_id'         => 2,
-            'targetamount'       => 2000,
-            'targetdate'         => '',
-            'reminder'           => 'week',
-            'post_submit_action' => 'update',
-        ]
+                         'name'               => '',
+                         'account_id'         => 2,
+                         'targetamount'       => 2000,
+                         'targetdate'         => '',
+                         'reminder'           => 'week',
+                         'post_submit_action' => 'update',
+                     ]
         );
         $I->see('Name is too short');
         $I->seeInDatabase('piggy_banks', ['name' => 'New camera']);

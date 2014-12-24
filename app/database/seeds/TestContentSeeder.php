@@ -160,7 +160,7 @@ class TestContentSeeder extends Seeder
                         'amount_min'  => 500,
                         'amount_max'  => 700,
                         'date'        => '2014-01-12',
-                        'active'      => 1,
+                        'active'      => 0,
                         'automatch'   => 1,
                         'repeat_freq' => 'monthly',
                         'skip'        => 0,
