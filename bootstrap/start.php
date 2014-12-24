@@ -9,6 +9,7 @@ if (!function_exists('mf')) {
      */
     function mf($amount, $coloured = true)
     {
+        $currencySymbol = getCurrencySymbol();
 
         $amount = floatval($amount);
         $amount = round($amount, 2);
@@ -16,18 +17,51 @@ if (!function_exists('mf')) {
 
         if ($coloured === true) {
             if ($amount === 0.0) {
-                return '<span style="color:#999">&#8364; ' . $string . '</span>';
+                return '<span style="color:#999">'.$currencySymbol.' ' . $string . '</span>';
             }
             if ($amount > 0) {
-                return '<span class="text-success">&#8364; ' . $string . '</span>';
+                return '<span class="text-success">'.$currencySymbol.' ' . $string . '</span>';
             }
 
-            return '<span class="text-danger">&#8364; ' . $string . '</span>';
+            return '<span class="text-danger">'.$currencySymbol.' ' . $string . '</span>';
         }
-
-        return '&#8364; ' . $string;
+        // &#8364;
+        return $currencySymbol.' ' . $string;
     }
 }
+
+if (!function_exists('getCurrencySymbol')) {
+    /**
+     * @return string
+     */
+    function getCurrencySymbol()
+    {
+        if (defined('FFCURRENCYSYMBOL')) {
+            return FFCURRENCYSYMBOL;
+        }
+        if (Cache::has('FFCURRENCYSYMBOL')) {
+            define('FFCURRENCYSYMBOL', Cache::get('FFCURRENCYSYMBOL'));
+
+            return FFCURRENCYSYMBOL;
+        }
+
+        /** @var \FireflyIII\Database\TransactionCurrency\TransactionCurrency $currencies */
+        $currencies = App::make('FireflyIII\Database\TransactionCurrency\TransactionCurrency');
+
+        /** @var \FireflyIII\Shared\Preferences\Preferences $preferences */
+        $preferences = App::make('FireflyIII\Shared\Preferences\Preferences');
+
+        $currencyPreference = $preferences->get('currencyPreference', 'EUR');
+        $currency           = $currencies->findByCode($currencyPreference->data);
+
+        Cache::forever('FFCURRENCYSYMBOL', $currency->symbol);
+
+        define('FFCURRENCYSYMBOL', $currency->symbol);
+
+        return $currency->symbol;
+    }
+}
+
 if (!function_exists('boolstr')) {
     /**
      * @param $boolean
