@@ -10,9 +10,8 @@ class TransactionCurrencySeeder extends Seeder
     {
         DB::table('transaction_currencies')->delete();
 
-        TransactionCurrency::create(
-            ['code' => 'EUR']
-        );
+        TransactionCurrency::create(['code' => 'EUR','name' => 'Euro','symbol' => '&#8364;']);
+        TransactionCurrency::create(['code' => 'USD','name' => 'US Dollar','symbol' => '$']);
     }
 
 } 
