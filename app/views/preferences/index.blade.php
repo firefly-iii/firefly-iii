@@ -17,10 +17,10 @@
                         <div class="col-sm-10">
                             <div class="checkbox">
                                 <label>
-                                    @if(in_array($account->id,$frontpageAccounts->data) || count($frontpageAccounts->data) == 0)
-                                        <input type="checkbox" name="frontpageAccounts[]" value="{{$account->id}}" checked> {{{$account->name}}}
+                                    @if(in_array($account->id,$frontPageAccounts->data) || count($frontPageAccounts->data) == 0)
+                                        <input type="checkbox" name="frontPageAccounts[]" value="{{$account->id}}" checked> {{{$account->name}}}
                                     @else
-                                    <input type="checkbox" name="frontpageAccounts[]" value="{{$account->id}}"> {{{$account->name}}}
+                                    <input type="checkbox" name="frontPageAccounts[]" value="{{$account->id}}"> {{{$account->name}}}
                                     @endif
                                 </label>
                             </div>

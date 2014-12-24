@@ -32,7 +32,7 @@ class Transaction extends Eloquent
      */
     public function piggyBank()
     {
-        return $this->belongsTo('Piggybank');
+        return $this->belongsTo('PiggyBank');
     }
 
     /**

@@ -86,7 +86,7 @@ class GoogleChartController extends BaseController
 
         /** @var \FireflyIII\Shared\Preferences\Preferences $preferences */
         $preferences = App::make('FireflyIII\Shared\Preferences\Preferences');
-        $pref        = $preferences->get('frontpageAccounts', []);
+        $pref        = $preferences->get('frontPageAccounts', []);
 
         /** @var \FireflyIII\Database\Account\Account $acct */
         $acct     = App::make('FireflyIII\Database\Account\Account');

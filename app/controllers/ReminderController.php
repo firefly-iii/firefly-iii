@@ -31,7 +31,7 @@ class ReminderController extends BaseController
                 throw new FireflyException('Cannot act on reminder for ' . get_class($reminder->remindersable));
                 break;
                 break;
-            case 'Piggybank':
+            case 'PiggyBank':
                 $amount    = Reminders::amountForReminder($reminder);
                 $preFilled = [
                     'amount'        => round($amount, 2),
@@ -85,7 +85,7 @@ class ReminderController extends BaseController
     {
 
         $amount = null;
-        if (get_class($reminder->remindersable) == 'Piggybank') {
+        if (get_class($reminder->remindersable) == 'PiggyBank') {
 
             $amount = Reminders::amountForReminder($reminder);
         }
