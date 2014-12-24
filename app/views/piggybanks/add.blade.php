@@ -1,10 +1,10 @@
-<form style="display: inline;" id="add" action="{{route('piggybanks.add',$piggybank->id)}}" method="POST">
+<form style="display: inline;" id="add" action="{{route('piggybanks.add',$piggyBank->id)}}" method="POST">
 {{Form::token()}}
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel">Add money to {{{$piggybank->name}}}</h4>
+                <h4 class="modal-title" id="myModalLabel">Add money to {{{$piggyBank->name}}}</h4>
             </div>
             <div class="modal-body">
                 <p>

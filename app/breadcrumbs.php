@@ -134,35 +134,35 @@ Breadcrumbs::register(
 
 // piggy banks
 Breadcrumbs::register(
-    'piggybanks.index', function (Generator $breadcrumbs) {
+    'piggyBanks.index', function (Generator $breadcrumbs) {
         $breadcrumbs->parent('home');
-        $breadcrumbs->push('Piggy banks', route('piggybanks.index'));
+        $breadcrumbs->push('Piggy banks', route('piggyBanks.index'));
     }
 );
 Breadcrumbs::register(
-    'piggybanks.create', function (Generator $breadcrumbs) {
-        $breadcrumbs->parent('piggybanks.index');
-        $breadcrumbs->push('Create new piggy bank', route('piggybanks.create'));
-    }
-);
-
-Breadcrumbs::register(
-    'piggybanks.edit', function (Generator $breadcrumbs, Piggybank $piggybank) {
-        $breadcrumbs->parent('piggybanks.show', $piggybank);
-        $breadcrumbs->push('Edit ' . $piggybank->name, route('piggybanks.edit', $piggybank->id));
-    }
-);
-Breadcrumbs::register(
-    'piggybanks.delete', function (Generator $breadcrumbs, Piggybank $piggybank) {
-        $breadcrumbs->parent('piggybanks.show', $piggybank);
-        $breadcrumbs->push('Delete ' . $piggybank->name, route('piggybanks.delete', $piggybank->id));
+    'piggyBanks.create', function (Generator $breadcrumbs) {
+        $breadcrumbs->parent('piggyBanks.index');
+        $breadcrumbs->push('Create new piggy bank', route('piggyBanks.create'));
     }
 );
 
 Breadcrumbs::register(
-    'piggybanks.show', function (Generator $breadcrumbs, Piggybank $piggybank) {
-        $breadcrumbs->parent('piggybanks.index');
-        $breadcrumbs->push($piggybank->name, route('piggybanks.show', $piggybank->id));
+    'piggyBanks.edit', function (Generator $breadcrumbs, Piggybank $piggyBank) {
+        $breadcrumbs->parent('piggyBanks.show', $piggyBank);
+        $breadcrumbs->push('Edit ' . $piggyBank->name, route('piggyBanks.edit', $piggyBank->id));
+    }
+);
+Breadcrumbs::register(
+    'piggyBanks.delete', function (Generator $breadcrumbs, Piggybank $piggyBank) {
+        $breadcrumbs->parent('piggyBanks.show', $piggyBank);
+        $breadcrumbs->push('Delete ' . $piggyBank->name, route('piggyBanks.delete', $piggyBank->id));
+    }
+);
+
+Breadcrumbs::register(
+    'piggyBanks.show', function (Generator $breadcrumbs, Piggybank $piggyBank) {
+        $breadcrumbs->parent('piggyBanks.index');
+        $breadcrumbs->push($piggyBank->name, route('piggyBanks.show', $piggyBank->id));
 
     }
 );
@@ -251,22 +251,22 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
-    'repeated.edit', function (Generator $breadcrumbs, Piggybank $piggybank) {
-        $breadcrumbs->parent('repeated.show', $piggybank);
-        $breadcrumbs->push('Edit ' . $piggybank->name, route('repeated.edit', $piggybank->id));
+    'repeated.edit', function (Generator $breadcrumbs, Piggybank $piggyBank) {
+        $breadcrumbs->parent('repeated.show', $piggyBank);
+        $breadcrumbs->push('Edit ' . $piggyBank->name, route('repeated.edit', $piggyBank->id));
     }
 );
 Breadcrumbs::register(
-    'repeated.delete', function (Generator $breadcrumbs, Piggybank $piggybank) {
-        $breadcrumbs->parent('repeated.show', $piggybank);
-        $breadcrumbs->push('Delete ' . $piggybank->name, route('repeated.delete', $piggybank->id));
+    'repeated.delete', function (Generator $breadcrumbs, Piggybank $piggyBank) {
+        $breadcrumbs->parent('repeated.show', $piggyBank);
+        $breadcrumbs->push('Delete ' . $piggyBank->name, route('repeated.delete', $piggyBank->id));
     }
 );
 
 Breadcrumbs::register(
-    'repeated.show', function (Generator $breadcrumbs, Piggybank $piggybank) {
+    'repeated.show', function (Generator $breadcrumbs, Piggybank $piggyBank) {
         $breadcrumbs->parent('repeated.index');
-        $breadcrumbs->push($piggybank->name, route('repeated.show', $piggybank->id));
+        $breadcrumbs->push($piggyBank->name, route('repeated.show', $piggyBank->id));
 
     }
 );

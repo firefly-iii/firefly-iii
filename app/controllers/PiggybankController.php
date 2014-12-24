@@ -35,29 +35,21 @@ class PiggybankController extends BaseController
     /**
      * Add money to piggy bank
      *
-     * @param Piggybank $piggybank
+     * @param Piggybank $piggyBank
      *
      * @return $this
      */
-    public function add(Piggybank $piggybank)
+    public function add(Piggybank $piggyBank)
     {
-        \Log::debug('Now in add() for piggy bank #' . $piggybank->id . ' (' . $piggybank->name . ')');
-        \Log::debug('Z');
-        \Log::debug('currentRelevantRep is null: ' . boolstr($piggybank->currentRelevantRep()));
-        $leftOnAccount = $this->_repository->leftOnAccount($piggybank->account);
-        \Log::debug('A');
-
-        $savedSoFar = $piggybank->currentRelevantRep()->currentamount;
-        \Log::debug('B');
-        $leftToSave = $piggybank->targetamount - $savedSoFar;
-        \Log::debug('C');
+        $leftOnAccount = $this->_repository->leftOnAccount($piggyBank->account);
+        $savedSoFar = $piggyBank->currentRelevantRep()->currentamount;
+        $leftToSave = $piggyBank->targetamount - $savedSoFar;
         $maxAmount = min($leftOnAccount, $leftToSave);
-        \Log::debug('D');
 
 
-        \Log::debug('Now going to view for piggy bank #' . $piggybank->id . ' (' . $piggybank->name . ')');
+        \Log::debug('Now going to view for piggy bank #' . $piggyBank->id . ' (' . $piggyBank->name . ')');
 
-        return View::make('piggybanks.add', compact('piggybank', 'maxAmount'));
+        return View::make('piggybanks.add', compact('piggyBank', 'maxAmount'));
     }
 
     /**
@@ -78,15 +70,15 @@ class PiggybankController extends BaseController
     }
 
     /**
-     * @param Piggybank $piggybank
+     * @param Piggybank $piggyBank
      *
      * @return $this
      */
-    public function delete(Piggybank $piggybank)
+    public function delete(Piggybank $piggyBank)
     {
-        $subTitle = 'Delete "' . e($piggybank->name) . '"';
+        $subTitle = 'Delete "' . e($piggyBank->name) . '"';
 
-        return View::make('piggybanks.delete', compact('piggybank', 'subTitle'));
+        return View::make('piggybanks.delete', compact('piggyBank', 'subTitle'));
     }
 
     /**
@@ -104,11 +96,11 @@ class PiggybankController extends BaseController
     }
 
     /**
-     * @param Piggybank $piggybank
+     * @param Piggybank $piggyBank
      *
      * @return $this
      */
-    public function edit(Piggybank $piggybank)
+    public function edit(Piggybank $piggyBank)
     {
 
         /** @var \FireflyIII\Database\Account\Account $acct */
@@ -116,28 +108,28 @@ class PiggybankController extends BaseController
 
         $periods      = Config::get('firefly.piggybank_periods');
         $accounts     = FFForm::makeSelectList($acct->getAssetAccounts());
-        $subTitle     = 'Edit piggy bank "' . e($piggybank->name) . '"';
+        $subTitle     = 'Edit piggy bank "' . e($piggyBank->name) . '"';
         $subTitleIcon = 'fa-pencil';
 
         /*
          * Flash some data to fill the form.
          */
-        if (is_null($piggybank->targetdate) || $piggybank->targetdate == '') {
+        if (is_null($piggyBank->targetdate) || $piggyBank->targetdate == '') {
             $targetDate = null;
         } else {
-            $targetDate = new Carbon($piggybank->targetdate);
+            $targetDate = new Carbon($piggyBank->targetdate);
             $targetDate = $targetDate->format('Y-m-d');
         }
-        $preFilled = ['name'         => $piggybank->name,
-                      'account_id'   => $piggybank->account_id,
-                      'targetamount' => $piggybank->targetamount,
+        $preFilled = ['name'         => $piggyBank->name,
+                      'account_id'   => $piggyBank->account_id,
+                      'targetamount' => $piggyBank->targetamount,
                       'targetdate'   => $targetDate,
-                      'reminder'     => $piggybank->reminder,
-                      'remind_me'    => intval($piggybank->remind_me) == 1 || !is_null($piggybank->reminder) ? true : false
+                      'reminder'     => $piggyBank->reminder,
+                      'remind_me'    => intval($piggyBank->remind_me) == 1 || !is_null($piggyBank->reminder) ? true : false
         ];
         Session::flash('preFilled', $preFilled);
 
-        return View::make('piggybanks.edit', compact('subTitle', 'subTitleIcon', 'piggybank', 'accounts', 'periods', 'preFilled'));
+        return View::make('piggybanks.edit', compact('subTitle', 'subTitleIcon', 'piggyBank', 'accounts', 'periods', 'preFilled'));
     }
 
     /**
@@ -145,134 +137,134 @@ class PiggybankController extends BaseController
      */
     public function index()
     {
-        /** @var Collection $piggybanks */
-        $piggybanks = $this->_repository->get();
+        /** @var Collection $piggyBanks */
+        $piggyBanks = $this->_repository->get();
 
         $accounts = [];
-        /** @var Piggybank $piggybank */
-        foreach ($piggybanks as $piggybank) {
-            $piggybank->savedSoFar = floatval($piggybank->currentRelevantRep()->currentamount);
-            $piggybank->percentage = intval($piggybank->savedSoFar / $piggybank->targetamount * 100);
-            $piggybank->leftToSave = $piggybank->targetamount - $piggybank->savedSoFar;
+        /** @var Piggybank $piggyBank */
+        foreach ($piggyBanks as $piggyBank) {
+            $piggyBank->savedSoFar = floatval($piggyBank->currentRelevantRep()->currentamount);
+            $piggyBank->percentage = intval($piggyBank->savedSoFar / $piggyBank->targetamount * 100);
+            $piggyBank->leftToSave = $piggyBank->targetamount - $piggyBank->savedSoFar;
 
             /*
              * Fill account information:
              */
-            $account = $piggybank->account;
+            $account = $piggyBank->account;
             if (!isset($accounts[$account->id])) {
                 $accounts[$account->id] = [
                     'name'              => $account->name,
                     'balance'           => Steam::balance($account),
                     'leftForPiggybanks' => $this->_repository->leftOnAccount($account),
-                    'sumOfSaved'        => $piggybank->savedSoFar,
-                    'sumOfTargets'      => floatval($piggybank->targetamount),
-                    'leftToSave'        => $piggybank->leftToSave
+                    'sumOfSaved'        => $piggyBank->savedSoFar,
+                    'sumOfTargets'      => floatval($piggyBank->targetamount),
+                    'leftToSave'        => $piggyBank->leftToSave
                 ];
             } else {
-                $accounts[$account->id]['sumOfSaved'] += $piggybank->savedSoFar;
-                $accounts[$account->id]['sumOfTargets'] += floatval($piggybank->targetamount);
-                $accounts[$account->id]['leftToSave'] += $piggybank->leftToSave;
+                $accounts[$account->id]['sumOfSaved'] += $piggyBank->savedSoFar;
+                $accounts[$account->id]['sumOfTargets'] += floatval($piggyBank->targetamount);
+                $accounts[$account->id]['leftToSave'] += $piggyBank->leftToSave;
             }
         }
 
-        return View::make('piggybanks.index', compact('piggybanks', 'accounts'));
+        return View::make('piggybanks.index', compact('piggyBanks', 'accounts'));
     }
 
     /**
      * POST add money to piggy bank
      *
-     * @param Piggybank $piggybank
+     * @param Piggybank $piggyBank
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postAdd(Piggybank $piggybank)
+    public function postAdd(Piggybank $piggyBank)
     {
         $amount = round(floatval(Input::get('amount')), 2);
 
         /** @var \FireflyIII\Database\PiggyBank\PiggyBank $acct */
         $repos = App::make('FireflyIII\Database\PiggyBank\PiggyBank');
 
-        $leftOnAccount = $repos->leftOnAccount($piggybank->account);
-        $savedSoFar    = $piggybank->currentRelevantRep()->currentamount;
-        $leftToSave    = $piggybank->targetamount - $savedSoFar;
+        $leftOnAccount = $repos->leftOnAccount($piggyBank->account);
+        $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount;
+        $leftToSave    = $piggyBank->targetamount - $savedSoFar;
         $maxAmount     = round(min($leftOnAccount, $leftToSave), 2);
 
         if ($amount <= $maxAmount) {
-            $repetition = $piggybank->currentRelevantRep();
+            $repetition = $piggyBank->currentRelevantRep();
             $repetition->currentamount += $amount;
             $repetition->save();
 
             /*
              * Create event!
              */
-            Event::fire('piggybank.addMoney', [$piggybank, $amount]); // new and used.
+            Event::fire('piggybank.addMoney', [$piggyBank, $amount]); // new and used.
 
-            Session::flash('success', 'Added ' . mf($amount, false) . ' to "' . e($piggybank->name) . '".');
+            Session::flash('success', 'Added ' . mf($amount, false) . ' to "' . e($piggyBank->name) . '".');
         } else {
-            Session::flash('error', 'Could not add ' . mf($amount, false) . ' to "' . e($piggybank->name) . '".');
+            Session::flash('error', 'Could not add ' . mf($amount, false) . ' to "' . e($piggyBank->name) . '".');
         }
 
         return Redirect::route('piggybanks.index');
     }
 
     /**
-     * @param Piggybank $piggybank
+     * @param Piggybank $piggyBank
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postRemove(Piggybank $piggybank)
+    public function postRemove(Piggybank $piggyBank)
     {
         $amount = floatval(Input::get('amount'));
 
-        $savedSoFar = $piggybank->currentRelevantRep()->currentamount;
+        $savedSoFar = $piggyBank->currentRelevantRep()->currentamount;
 
         if ($amount <= $savedSoFar) {
-            $repetition = $piggybank->currentRelevantRep();
+            $repetition = $piggyBank->currentRelevantRep();
             $repetition->currentamount -= $amount;
             $repetition->save();
 
             /*
              * Create event!
              */
-            Event::fire('piggybank.removeMoney', [$piggybank, $amount]); // new and used.
+            Event::fire('piggybank.removeMoney', [$piggyBank, $amount]); // new and used.
 
-            Session::flash('success', 'Removed ' . mf($amount, false) . ' from "' . e($piggybank->name) . '".');
+            Session::flash('success', 'Removed ' . mf($amount, false) . ' from "' . e($piggyBank->name) . '".');
         } else {
-            Session::flash('error', 'Could not remove ' . mf($amount, false) . ' from "' . e($piggybank->name) . '".');
+            Session::flash('error', 'Could not remove ' . mf($amount, false) . ' from "' . e($piggyBank->name) . '".');
         }
 
         return Redirect::route('piggybanks.index');
     }
 
     /**
-     * @param Piggybank $piggybank
+     * @param Piggybank $piggyBank
      *
      * @return \Illuminate\View\View
      */
-    public function remove(Piggybank $piggybank)
+    public function remove(Piggybank $piggyBank)
     {
-        return View::make('piggybanks.remove')->with('piggybank', $piggybank);
+        return View::make('piggybanks.remove',compact('piggyBank'));
     }
 
     /**
-     * @param Piggybank $piggybank
+     * @param Piggybank $piggyBank
      *
      * @return $this
      */
-    public function show(Piggybank $piggybank)
+    public function show(Piggybank $piggyBank)
     {
 
-        $events = $piggybank->piggybankevents()->orderBy('date', 'DESC')->orderBy('id', 'DESC')->get();
+        $events = $piggyBank->piggybankevents()->orderBy('date', 'DESC')->orderBy('id', 'DESC')->get();
 
         /*
          * Number of reminders:
          */
 
-        $amountPerReminder = $piggybank->amountPerReminder();
-        $remindersCount    = $piggybank->countFutureReminders();
-        $subTitle          = e($piggybank->name);
+        $amountPerReminder = $piggyBank->amountPerReminder();
+        $remindersCount    = $piggyBank->countFutureReminders();
+        $subTitle          = e($piggyBank->name);
 
-        return View::make('piggybanks.show', compact('amountPerReminder', 'remindersCount', 'piggybank', 'events', 'subTitle'));
+        return View::make('piggybanks.show', compact('amountPerReminder', 'remindersCount', 'piggyBank', 'events', 'subTitle'));
 
     }
 

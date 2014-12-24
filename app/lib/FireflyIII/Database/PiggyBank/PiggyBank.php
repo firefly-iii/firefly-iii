@@ -221,17 +221,17 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggyBankInterface
     }
 
     /**
-     * @param \Piggybank $piggybank
+     * @param \Piggybank $piggyBank
      * @param Carbon     $date
      *
      * @return mixed
      * @throws FireflyException
      * @throws NotImplementedException
      */
-    public function findRepetitionByDate(\Piggybank $piggybank, Carbon $date)
+    public function findRepetitionByDate(\Piggybank $piggyBank, Carbon $date)
     {
         /** @var Collection $reps */
-        $reps = $piggybank->piggybankrepetitions()->get();
+        $reps = $piggyBank->piggybankrepetitions()->get();
         if ($reps->count() == 1) {
             return $reps->first();
         }

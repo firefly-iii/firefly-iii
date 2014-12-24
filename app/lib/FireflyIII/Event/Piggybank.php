@@ -15,14 +15,14 @@ class Piggybank
 {
 
     /**
-     * @param \Piggybank $piggybank
+     * @param \Piggybank $piggyBank
      * @param float      $amount
      */
-    public function addMoney(\Piggybank $piggybank, $amount = 0.0)
+    public function addMoney(\Piggybank $piggyBank, $amount = 0.0)
     {
         if ($amount > 0) {
             $event = new \PiggyBankEvent;
-            $event->piggybank()->associate($piggybank);
+            $event->piggybank()->associate($piggyBank);
             $event->amount = floatval($amount);
             $event->date   = new Carbon;
             if (!$event->isValid()) {
@@ -76,15 +76,15 @@ class Piggybank
     }
 
     /**
-     * @param \Piggybank $piggybank
+     * @param \Piggybank $piggyBank
      * @param float      $amount
      */
-    public function removeMoney(\Piggybank $piggybank, $amount = 0.0)
+    public function removeMoney(\Piggybank $piggyBank, $amount = 0.0)
     {
         $amount = $amount * -1;
         if ($amount < 0) {
             $event = new \PiggyBankEvent;
-            $event->piggybank()->associate($piggybank);
+            $event->piggybank()->associate($piggyBank);
             $event->amount = floatval($amount);
             $event->date   = new Carbon;
             $event->save();
@@ -92,15 +92,15 @@ class Piggybank
     }
 
     /**
-     * @param \Piggybank $piggybank
+     * @param \Piggybank $piggyBank
      */
-    public function storePiggybank(\Piggybank $piggybank)
+    public function storePiggybank(\Piggybank $piggyBank)
     {
-        if (intval($piggybank->repeats) == 0) {
+        if (intval($piggyBank->repeats) == 0) {
             $repetition = new \PiggybankRepetition;
-            $repetition->piggybank()->associate($piggybank);
-            $repetition->startdate     = $piggybank->startdate;
-            $repetition->targetdate    = $piggybank->targetdate;
+            $repetition->piggybank()->associate($piggyBank);
+            $repetition->startdate     = $piggyBank->startdate;
+            $repetition->targetdate    = $piggyBank->targetdate;
             $repetition->currentamount = 0;
             $repetition->save();
         }
@@ -112,18 +112,18 @@ class Piggybank
 
     /**
      * @param \TransactionJournal $journal
-     * @param int                 $piggybankId
+     * @param int                 $piggyBankId
      */
-    public function storeTransfer(\TransactionJournal $journal, $piggybankId = 0)
+    public function storeTransfer(\TransactionJournal $journal, $piggyBankId = 0)
     {
-        if (intval($piggybankId) == 0) {
+        if (intval($piggyBankId) == 0) {
             return;
         }
         /** @var \FireflyIII\Database\PiggyBank\PiggyBank $repository */
         $repository = \App::make('FireflyIII\Database\PiggyBank\PiggyBank');
 
         /** @var \Piggybank $piggyBank */
-        $piggyBank = $repository->find($piggybankId);
+        $piggyBank = $repository->find($piggyBankId);
 
         if ($journal->transactions()->where('account_id', $piggyBank->account_id)->count() == 0) {
             return;

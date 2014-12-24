@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $piggybank) }}
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $piggyBank) }}
 <div class="row">
     <div class="col-lg-8 col-md-8 col-sm-6">
         <div class="panel panel-default">
@@ -25,8 +25,8 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu pull-right" role="menu">
-                                <li><a href="{{route('piggybanks.edit',$piggybank->id)}}"><i class="fa fa-pencil fa-fw"></i> Edit</a></li>
-                                <li><a href="{{route('piggybanks.delete',$piggybank->id)}}"><i class="fa fa-trash fa-fw"></i> Delete</a></li>
+                                <li><a href="{{route('piggybanks.edit',$piggyBank->id)}}"><i class="fa fa-pencil fa-fw"></i> Edit</a></li>
+                                <li><a href="{{route('piggybanks.delete',$piggyBank->id)}}"><i class="fa fa-trash fa-fw"></i> Delete</a></li>
                             </ul>
                         </div>
                     </div>
@@ -36,54 +36,54 @@
                     <table class="table table-bordered table-striped">
                         <tr>
                             <td>Account</td>
-                            <td><a href="{{route('accounts.show',$piggybank->account_id)}}">{{{$piggybank->account->name}}}</a></td>
+                            <td><a href="{{route('accounts.show',$piggyBank->account_id)}}">{{{$piggyBank->account->name}}}</a></td>
                         </tr>
                         <tr>
                             <td>Target amount</td>
-                            <td>{{mf($piggybank->targetamount)}}</td>
+                            <td>{{mf($piggyBank->targetamount)}}</td>
                         </tr>
                         <tr>
                             <td>Saved so far</td>
-                            <td>{{mf($piggybank->currentRelevantRep()->currentamount)}}</td>
+                            <td>{{mf($piggyBank->currentRelevantRep()->currentamount)}}</td>
                         </tr>
                         <tr>
                             <td>Left to save</td>
-                            <td>{{mf($piggybank->targetamount-$piggybank->currentRelevantRep()->currentamount)}}</td>
+                            <td>{{mf($piggyBank->targetamount-$piggyBank->currentRelevantRep()->currentamount)}}</td>
                         </tr>
                         <tr>
                             <td>Start date</td>
                             <td>
-                                @if(is_null($piggybank->startdate))
+                                @if(is_null($piggyBank->startdate))
                                     <em>No start date</em>
                                 @endif
-                                @if(is_object($piggybank->startdate))
-                                    {{$piggybank->startdate->format('jS F Y')}}
+                                @if(is_object($piggyBank->startdate))
+                                    {{$piggyBank->startdate->format('jS F Y')}}
                                 @endif
                             </td>
                         </tr>
                         <tr>
                             <td>Target date</td>
                             <td>
-                                @if(is_null($piggybank->targetdate))
+                                @if(is_null($piggyBank->targetdate))
                                     <em>No target date</em>
                                 @endif
-                                @if(is_object($piggybank->targetdate))
-                                    {{$piggybank->targetdate->format('jS F Y')}}
+                                @if(is_object($piggyBank->targetdate))
+                                    {{$piggyBank->targetdate->format('jS F Y')}}
                                 @endif
                             </td>
                         </tr>
-                        @if(!is_null($piggybank->reminder))
+                        @if(!is_null($piggyBank->reminder))
                         <tr>
                             <td>Reminder</td>
                             <td>
-                                @if(intval($piggybank->remind_me) == 0)
+                                @if(intval($piggyBank->remind_me) == 0)
                                     <em>(no reminder)</em>
                                 @else
                                     Every
-                                    @if($piggybank->reminder_skip != 0)
-                                        {{$piggybank->reminder_skip}}
+                                    @if($piggyBank->reminder_skip != 0)
+                                        {{$piggyBank->reminder_skip}}
                                     @endif
-                                    {{$piggybank->reminder}}(s)
+                                    {{$piggyBank->reminder}}(s)
                                 @endif
                             </td>
                         </tr>
@@ -116,7 +116,7 @@
 
 @section('scripts')
 <script type="text/javascript">
-var piggyBankID = {{{$piggybank->id}}};
+var piggyBankID = {{{$piggyBank->id}}};
 </script>
 
 <!-- load the libraries and scripts necessary for Google Charts: -->
