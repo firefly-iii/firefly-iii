@@ -105,6 +105,20 @@ class PiggyBankControllerCest
         $I->wantTo('process adding money to a piggy bank');
         $I->amOnPage('/piggybanks/add/1');
         $I->see('Add money to New camera');
+        $I->submitForm('#add', ['amount' => 100]);
+        $I->see(',00 to &quot;New camera&quot;.');
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function postAddTooMuch(FunctionalTester $I)
+    {
+        $I->wantTo('try to add too much money to a piggy bank');
+        $I->amOnPage('/piggybanks/add/1');
+        $I->see('Add money to New camera');
+        $I->submitForm('#add', ['amount' => 100000]);
+        $I->see(',00 to &quot;New camera&quot;.');
     }
 
     /**
@@ -113,9 +127,32 @@ class PiggyBankControllerCest
     public function postRemove(FunctionalTester $I)
     {
         $I->wantTo('process removing money from a piggy bank');
+        $I->amOnPage('/piggybanks/add/1');
+        $I->see('Add money to New camera');
+        $I->submitForm('#add', ['amount' => 100]);
+        $I->see(',00 to &quot;New camera&quot;.');
         $I->amOnPage('/piggybanks/remove/1');
         $I->see('Remove money from New camera');
+        $I->submitForm('#remove', ['amount' => 50]);
+        $I->see(',00 from &quot;New camera&quot;.');
     }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function postRemoveFail(FunctionalTester $I)
+    {
+        $I->wantTo('process removing too much money from a piggy bank');
+        $I->amOnPage('/piggybanks/add/1');
+        $I->see('Add money to New camera');
+        $I->submitForm('#add', ['amount' => 100]);
+        $I->see(',00 to &quot;New camera&quot;.');
+        $I->amOnPage('/piggybanks/remove/1');
+        $I->see('Remove money from New camera');
+        $I->submitForm('#remove', ['amount' => 500]);
+        $I->see(',00 from &quot;New camera&quot;.');
+    }
+
 
     /**
      * @param FunctionalTester $I
@@ -145,6 +182,54 @@ class PiggyBankControllerCest
         $I->wantTo('store a new piggy bank');
         $I->amOnPage('/piggybanks/create');
         $I->see('Create new piggy bank');
+        $I->submitForm(
+            '#store', ['name'          => 'Some new piggy bank',
+                       'rep_every'     => 0,
+                       'reminder_skip' => 0,
+                       'remind_me'     => 0,
+                       'order'         => 3,
+                       'account_id'    => 1, 'targetamount' => 1000]
+        );
+        $I->see('Piggy bank &quot;Some new piggy bank&quot; stored.');
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function storeAndReturn(FunctionalTester $I)
+    {
+        $I->wantTo('store a new piggy bank and return');
+        $I->amOnPage('/piggybanks/create');
+        $I->see('Create new piggy bank');
+        $I->submitForm(
+            '#store', ['name'               => 'Some new piggy bank',
+                       'rep_every'          => 0,
+                       'reminder_skip'      => 0,
+                       'post_submit_action' => 'create_another',
+                       'remind_me'          => 0,
+                       'order'              => 3,
+                       'account_id'         => 1, 'targetamount' => 1000]
+        );
+        $I->see('Piggy bank &quot;Some new piggy bank&quot; stored.');
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function storeFail(FunctionalTester $I)
+    {
+        $I->wantTo('fail storing a new piggy bank');
+        $I->amOnPage('/piggybanks/create');
+        $I->see('Create new piggy bank');
+        $I->submitForm(
+            '#store', ['name'          => null,
+                       'rep_every'     => 0,
+                       'reminder_skip' => 0,
+                       'remind_me'     => 0,
+                       'order'         => 3,
+                       'account_id'    => 1, 'targetamount' => 1000]
+        );
+        $I->see('Name is too short');
     }
 
     /**
@@ -155,6 +240,88 @@ class PiggyBankControllerCest
         $I->wantTo('update a piggy bank');
         $I->amOnPage('/piggybanks/edit/1');
         $I->see('Edit piggy bank "New camera"');
+        $I->submitForm(
+            '#update', [
+            'name'               => 'Updated camera',
+            'account_id'         => 2,
+            'targetamount'       => 2000,
+            'targetdate'         => '',
+            'reminder'           => 'week',
+            'post_submit_action' => 'update',
+        ]
+        );
+        $I->see('Piggy bank &quot;Updated camera&quot; updated.');
+
+
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function updateAndReturn(FunctionalTester $I)
+    {
+        $I->wantTo('update a piggy bank and return');
+        $I->amOnPage('/piggybanks/edit/1');
+        $I->see('Edit piggy bank "New camera"');
+        $I->submitForm(
+            '#update', [
+                         'name'               => 'Updated camera',
+                         'account_id'         => 2,
+                         'targetamount'       => 2000,
+                         'targetdate'         => '',
+                         'reminder'           => 'week',
+                         'post_submit_action' => 'return_to_edit',
+                     ]
+        );
+        $I->see('Piggy bank &quot;Updated camera&quot; updated.');
+
+
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function updateValidateOnly(FunctionalTester $I)
+    {
+        $I->wantTo('validate a piggy bank');
+        $I->amOnPage('/piggybanks/edit/1');
+        $I->see('Edit piggy bank "New camera"');
+        $I->submitForm(
+            '#update', [
+                         'name'               => 'Updated camera',
+                         'account_id'         => 2,
+                         'targetamount'       => 2000,
+                         'targetdate'         => '',
+                         'reminder'           => 'week',
+                         'post_submit_action' => 'validate_only',
+                     ]
+        );
+        $I->see('Updated camera');
+
+
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function updateFail(FunctionalTester $I)
+    {
+        $I->wantTo('update a piggy bank and fail');
+        $I->amOnPage('/piggybanks/edit/1');
+        $I->see('Edit piggy bank "New camera"');
+        $I->submitForm(
+            '#update', [
+            'name'               => '',
+            'account_id'         => 2,
+            'targetamount'       => 2000,
+            'targetdate'         => '',
+            'reminder'           => 'week',
+            'post_submit_action' => 'update',
+        ]
+        );
+        $I->see('Name is too short');
+        $I->seeInDatabase('piggybanks', ['name' => 'New camera']);
+
     }
 
 }
