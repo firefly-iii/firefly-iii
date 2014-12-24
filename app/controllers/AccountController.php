@@ -1,6 +1,6 @@
 <?php
 
-use FireflyIII\Database\Account as AccountRepository;
+use FireflyIII\Database\Account\Account as AccountRepository;
 use FireflyIII\Exception\FireflyException;
 
 /**
@@ -101,7 +101,7 @@ class AccountController extends BaseController
 
         Session::flash('success', 'The ' . $typeName . ' account "' . e($name) . '" was deleted.');
 
-        return Redirect::route('accounts.index', $type);
+        return Redirect::route('accounts.index', $typeName);
     }
 
     /**
@@ -191,12 +191,8 @@ class AccountController extends BaseController
         if ($data['post_submit_action'] == 'store') {
             return Redirect::route('accounts.index', $data['what']);
         }
-        // create another.
-        if ($data['post_submit_action'] == 'create_another') {
-            return Redirect::route('accounts.create', $data['what'])->withInput();
-        }
 
-        return Redirect::route('accounts.index', $data['what']);
+        return Redirect::route('accounts.create', $data['what'])->withInput();
     }
 
     /**
@@ -209,6 +205,7 @@ class AccountController extends BaseController
     {
         $data         = Input::except('_token');
         $data['what'] = $this->_shortNamesByFullName[$account->accountType->type];
+
 
         // always validate:
         $messages = $this->_repository->validate($data);
@@ -234,11 +231,8 @@ class AccountController extends BaseController
         if ($data['post_submit_action'] == 'update') {
             return Redirect::route('accounts.index', $data['what']);
         }
-        // go back to update screen.
-        if ($data['post_submit_action'] == 'return_to_edit') {
-            return Redirect::route('accounts.edit', $account->id);
-        }
 
-        return Redirect::route('accounts.index', $data['what']);
+        // go back to update screen.
+        return Redirect::route('accounts.edit', $account->id)->withInput(['post_submit_action' => 'return_to_edit']);
     }
 }

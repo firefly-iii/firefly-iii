@@ -5,7 +5,11 @@ use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\UserTrait;
 use Watson\Validating\ValidatingTrait;
+use \Illuminate\Database\Eloquent\Model as Eloquent;
 
+/**
+ * Class User
+ */
 class User extends Eloquent implements UserInterface, RemindableInterface
 {
 
@@ -13,25 +17,14 @@ class User extends Eloquent implements UserInterface, RemindableInterface
 
 
     public static $rules
-                            = [
+        = [
             'email'    => 'required|email|unique:users,email',
-            'migrated' => 'required|boolean',
             'password' => 'required|between:60,60',
             'reset'    => 'between:32,32',
         ];
-    protected     $fillable = ['email'];
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = ['remember_token'];
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
-    protected $table = 'users';
+    protected $fillable = ['email'];
+    protected $hidden   = ['remember_token'];
+    protected $table    = 'users';
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -58,13 +51,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
-    public function components()
-    {
-        return $this->hasMany('Component');
-    }
-
     public function piggybanks()
     {
         return $this->hasManyThrough('Piggybank', 'Account');
@@ -110,6 +98,9 @@ class User extends Eloquent implements UserInterface, RemindableInterface
         return $this->hasMany('TransactionJournal');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
     public function transactions()
     {
         return $this->hasManyThrough('TransactionJournal', 'Transaction');

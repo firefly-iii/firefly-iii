@@ -6,7 +6,6 @@ use Illuminate\Database\Schema\Blueprint;
 /**
  * Class CreatePiggybanksTable
  *
- * @SuppressWarnings(PHPMD.ShortMethodName)
  */
 class CreatePiggybanksTable extends Migration
 {
@@ -46,7 +45,7 @@ class CreatePiggybanksTable extends Migration
                 $table->boolean('remind_me');
                 $table->integer('order')->unsigned();
 
-                // connect account to piggybank.
+                // connect account to piggy bank.
                 $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
 
                 // for an account, the name must be unique.

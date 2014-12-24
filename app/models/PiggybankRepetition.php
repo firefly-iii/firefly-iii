@@ -2,7 +2,10 @@
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Watson\Validating\ValidatingTrait;
-
+use \Illuminate\Database\Eloquent\Model as Eloquent;
+/**
+ * Class PiggybankRepetition
+ */
 class PiggybankRepetition extends Eloquent
 {
     use ValidatingTrait;
@@ -46,11 +49,19 @@ class PiggybankRepetition extends Eloquent
         return $this->belongsTo('Piggybank');
     }
 
+    /**
+     * @param Builder $query
+     * @param Carbon  $date
+     */
     public function scopeStarts(Builder $query, Carbon $date)
     {
         $query->where('startdate', $date->format('Y-m-d'));
     }
 
+    /**
+     * @param Builder $query
+     * @param Carbon  $date
+     */
     public function scopeTargets(Builder $query, Carbon $date)
     {
         $query->where('targetdate', $date->format('Y-m-d'));

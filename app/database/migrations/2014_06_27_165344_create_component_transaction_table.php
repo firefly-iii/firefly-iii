@@ -6,7 +6,6 @@ use Illuminate\Database\Schema\Blueprint;
 /**
  * Class CreateComponentTransactionTable
  *
- * @SuppressWarnings(PHPMD.ShortMethodName)
  */
 class CreateComponentTransactionTable extends Migration
 {
@@ -18,7 +17,7 @@ class CreateComponentTransactionTable extends Migration
      */
     public function down()
     {
-        Schema::drop('component_transaction');
+        Schema::dropIfExists('component_transaction');
     }
 
     /**

@@ -1,8 +1,9 @@
 Firefly III
 ===========
 
-[![Build Status](https://travis-ci.org/JC5/firefly-iii.svg?branch=master)](https://travis-ci.org/JC5/firefly-iii)
-![Still maintained?](http://stillmaintained.com/JC5/firefly-iii.png)
+[![Build Status](https://travis-ci.org/JC5/firefly-iii.svg?branch=develop)](https://travis-ci.org/JC5/firefly-iii)
+[![Project Status](http://stillmaintained.com/JC5/firefly-iii.png?a=b)](http://stillmaintained.com/JC5/firefly-iii)
+[![Coverage Status](https://coveralls.io/repos/JC5/firefly-iii/badge.png?branch=master)](https://coveralls.io/r/JC5/firefly-iii?branch=master)
 
 [![Latest Stable Version](https://poser.pugx.org/grumpydictator/firefly-iii/v/stable.svg)](https://packagist.org/packages/grumpydictator/firefly-iii)
 [![Total Downloads](https://poser.pugx.org/grumpydictator/firefly-iii/downloads.svg)](https://packagist.org/packages/grumpydictator/firefly-iii)
@@ -17,13 +18,15 @@ laptop and [Firefly II](https://github.com/JC5/Firefly) is live.
 
 ## Current features
 
-- [A double-entry bookkeeping system](http://en.wikipedia.org/wiki/Double-entry_bookkeeping_system).
+- [A double-entry bookkeeping system](http://en.wikipedia.org/wiki/Double-entry_bookkeeping_system);
 - You can store, edit and remove withdrawals, deposits and transfers. This allows you full financial management;
 - It's possible to create, change and manage money using _budgets_;
 - Organize transactions using categories;
 - Save towards a goal using piggy banks;
 - Predict and anticipate large expenses using "repeated expenses" (ie. yearly taxes);
-- Predict and anticipate bills using "recurring transactions" (rent for example).
+- Predict and anticipate bills using "recurring transactions" (rent for example);
+- View basic income / expense reports.
+- Lots of help text in case you don't get it;
 
 Everything is organised:
 
@@ -37,15 +40,13 @@ Everything is organised:
 Firefly III will feature, but does not feature yet:
 
 - Financial reporting showing you how well you are doing;
-- Lots of help text in case you don't get it;
 - More control over other resources outside of personal finance
   - Accounts shared with a partner (household accounts)
   - Debts
   - Credit cards
-- More test-coverage (aka: actual test coverage);
+- More test-coverage;
 - Firefly will be able to split transactions; a single purchase can be split in multiple entries, for more fine-grained control.
 - Firefly will be able to join transactions.
-- Transfers and transactions are combined into one internal datatype which is more consistent with what you're actually doing: moving money from A to B. The fact that A or B or both are yours should not matter.
 - Any other features I might not have thought of.
 
 Some stuff has been removed:
@@ -64,13 +65,9 @@ Some stuff has been removed:
 ![Reports](http://i.imgur.com/EnEIyQI.png)
 
 ## Current state
-I have the basics up and running. Test coverage is currently non-existent.
+I have the basics up and running. Test coverage is currently coming, slowly.
 
 Although I have not checked extensively, some forms and views have CSRF vulnerabilities. This is because not all
 views escape all characters by default. Will be fixed.
-
-The current layout / look & feel is a pretty basic Bootstrap3 template. I am currently working on a more consistent,
-expanded layout which will feature shiny AJAX things and data tables and all the Web 3.0 goodies you've come to expect
-from social media sites.
 
 Questions, ideas or other things to contribute? [Let me know](https://github.com/JC5/firefly-iii/issues/new)!

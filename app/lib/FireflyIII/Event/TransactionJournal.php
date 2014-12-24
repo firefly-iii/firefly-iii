@@ -4,13 +4,21 @@ namespace FireflyIII\Event;
 
 use Illuminate\Events\Dispatcher;
 
+/**
+ * Class TransactionJournal
+ *
+ * @package FireflyIII\Event
+ */
 class TransactionJournal
 {
 
-    public function store(\TransactionJournal $journal, $id = 0)
+    /**
+     * @param \TransactionJournal $journal
+     */
+    public function store(\TransactionJournal $journal)
     {
-        /** @var \FireflyIII\Database\Recurring $repository */
-        $repository = \App::make('FireflyIII\Database\Recurring');
+        /** @var \FireflyIII\Database\RecurringTransaction\RecurringTransaction $repository */
+        $repository = \App::make('FireflyIII\Database\RecurringTransaction\RecurringTransaction');
         $set        = $repository->get();
 
 
@@ -30,10 +38,13 @@ class TransactionJournal
         $events->listen('transactionJournal.update', 'FireflyIII\Event\TransactionJournal@update');
     }
 
+    /**
+     * @param \TransactionJournal $journal
+     */
     public function update(\TransactionJournal $journal)
     {
-        /** @var \FireflyIII\Database\Recurring $repository */
-        $repository = \App::make('FireflyIII\Database\Recurring');
+        /** @var \FireflyIII\Database\RecurringTransaction\RecurringTransaction $repository */
+        $repository = \App::make('FireflyIII\Database\RecurringTransaction\RecurringTransaction');
         $set        = $repository->get();
         $journal->recurring_transaction_id = null;
         $journal->save();

@@ -17,19 +17,14 @@ class Preferences implements PreferencesInterface
     public function get($name, $default = null)
     {
         $pref = \Preference::where('user_id', \Auth::user()->id)->where('name', $name)->first();
-        if (is_null($default) && is_null($pref)) {
+        if (is_null($pref) && is_null($default)) {
             // return NULL
             return null;
         }
         if (!is_null($pref)) {
             return $pref;
         }
-        if (!is_null($default) && is_null($pref)) {
-            // create preference, return that:
-            return $this->set($name, $default);
-        }
-
-        return null;
+        return $this->set($name, $default);
 
     }
 

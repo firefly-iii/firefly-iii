@@ -32,7 +32,6 @@ class ProfileController extends BaseController
     {
 
         // old, new1, new2
-        /** @noinspection PhpUndefinedFieldInspection */
         if (!Hash::check(Input::get('old'), Auth::user()->password)) {
             Session::flash('error', 'Invalid current password!');
 
@@ -56,8 +55,8 @@ class ProfileController extends BaseController
         }
 
         // update the user with the new password.
-        /** @var \FireflyIII\Database\User $repository */
-        $repository = \App::make('FireflyIII\Database\User');
+        /** @var \FireflyIII\Database\User\User $repository */
+        $repository = \App::make('FireflyIII\Database\User\User');
         $repository->updatePassword(Auth::user(), Input::get('new1'));
 
         Session::flash('success', 'Password changed!');

@@ -5,14 +5,25 @@ namespace FireflyIII\Event;
 
 use Illuminate\Events\Dispatcher;
 
+/**
+ * Class Account
+ *
+ * @package FireflyIII\Event
+ */
 class Account
 {
+    /**
+     * @param \Account $account
+     */
     public function destroy(\Account $account)
     {
         \Cache::forget('account.' . $account->id . '.latestBalance');
         \Cache::forget('account.' . $account->id . '.lastActivityDate');
     }
 
+    /**
+     * @param \Account $account
+     */
     public function store(\Account $account)
     {
 
@@ -31,6 +42,9 @@ class Account
         $events->listen('account.destroy', 'FireflyIII\Event\Account@destroy');
     }
 
+    /**
+     * @param \Account $account
+     */
     public function update(\Account $account)
     {
         \Cache::forget('account.' . $account->id . '.latestBalance');

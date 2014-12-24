@@ -31,10 +31,9 @@
 @section('scripts')
 <script type="text/javascript">
     var componentID = {{$category->id}};
-    var year = {{Session::get('start')->format('Y')}};
-
+    var year = {{Session::get('start',\Carbon\Carbon::now()->startOfMonth())->format('Y')}};
+    var currencyCode = '{{getCurrencyCode()}}';
 </script>
-
 <!-- load the libraries and scripts necessary for Google Charts: -->
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 {{HTML::script('assets/javascript/firefly/gcharts.options.js')}}

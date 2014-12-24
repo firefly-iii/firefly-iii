@@ -117,7 +117,7 @@
 
 <script type="text/javascript">
 var year = '{{$year}}';
-
+var currencyCode = '{{getCurrencyCode()}}';
 </script>
 
 {{HTML::script('assets/javascript/firefly/reports.js')}}

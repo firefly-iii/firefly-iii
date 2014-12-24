@@ -1,7 +1,7 @@
 @extends('layouts.default')
 @section('content')
 {{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $category) }}
-{{Form::model($category, ['class' => 'form-horizontal','url' => route('categories.update',$category->id)])}}
+{{Form::model($category, ['class' => 'form-horizontal','id' => 'update','url' => route('categories.update',$category->id)])}}
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-12">
         <div class="panel panel-primary">

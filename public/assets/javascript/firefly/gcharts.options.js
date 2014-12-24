@@ -136,6 +136,3 @@ var defaultPieChartOptions = {
     colors: ["#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043", "#9e9d24", "#5c6bc0", "#f06292", "#00796b", "#c2185b"]
 };
 
-var defaultSankeyChartOptions = {
-    height: 400
-}

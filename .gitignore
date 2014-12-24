@@ -1,7 +1,6 @@
 /bootstrap/compiled.php
 /vendor
 composer.phar
-composer.lock
 .env.*.php
 .env.php
 .DS_Store
@@ -14,8 +13,13 @@ index.html*
 app/storage/firefly-export*
 .vagrant
 firefly-iii-import-*.json
-
 tests/_output/*
 testing.sqlite
-c3.php
 _ide_helper_models.php
+clean.sqlite
+tests/acceptance/AcceptanceTester.php
+tests/functional/FunctionalTester.php
+tests/unit/UnitTester.php
+pi.php
+tests/_data/db.sqlite
+tests/_data/dump.sql

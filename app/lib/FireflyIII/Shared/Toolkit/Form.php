@@ -15,38 +15,31 @@ class Form
      * Takes any collection and tries to make a sensible select list compatible array of it.
      *
      * @param Collection $set
-     * @param null       $titleField
+     * @param bool       $addEmpty
      *
      * @return mixed
      */
-    public function makeSelectList(Collection $set, $titleField = null)
+    public function makeSelectList(Collection $set, $addEmpty = false)
     {
         $selectList = [];
-        /** @var Model $entry */
+        if ($addEmpty) {
+            $selectList[0] = '(none)';
+        }
+        $fields = ['title', 'name', 'description'];
+        /** @var \Eloquent $entry */
         foreach ($set as $entry) {
             $id    = intval($entry->id);
             $title = null;
-            if (is_null($titleField)) {
-                // try 'title' field.
-                if (isset($entry->title)) {
-                    $title = $entry->title;
-                }
-                // try 'name' field
-                if (is_null($title)) {
-                    $title = $entry->name;
-                }
 
-                // try 'description' field
-                if (is_null($title)) {
-                    $title = $entry->description;
+            foreach ($fields as $field) {
+                if (is_null($title) && isset($entry->$field)) {
+                    $title = $entry->$field;
                 }
-            } else {
-                $title = $entry->$titleField;
             }
             $selectList[$id] = $title;
         }
 
+
         return $selectList;
     }
-
-} 
+}

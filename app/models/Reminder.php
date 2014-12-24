@@ -2,13 +2,21 @@
 
 use Carbon\Carbon;
 use Watson\Validating\ValidatingTrait;
-
+use \Illuminate\Database\Eloquent\Model as Eloquent;
+/**
+ * Class Reminder
+ */
 class Reminder extends Eloquent
 {
     use ValidatingTrait;
 
     protected $table = 'reminders';
 
+    /**
+     * @param $value
+     *
+     * @return mixed
+     */
     public function getDataAttribute($value)
     {
         return json_decode($value);
@@ -32,6 +40,13 @@ class Reminder extends Eloquent
         return $this->morphTo();
     }
 
+    /**
+     * @param        $query
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return mixed
+     */
     public function scopeDateIs($query, Carbon $start, Carbon $end)
     {
         return $query->where('startdate', $start->format('Y-m-d'))->where('enddate', $end->format('Y-m-d'));

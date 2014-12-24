@@ -47,7 +47,7 @@ Log::useDailyFiles(storage_path('logs') . DIRECTORY_SEPARATOR . 'laravel.log', 3
 
 App::error(
     function (Exception $exception, $code) {
-        Log::error($exception);
+        Log::error($code . ': ' . $exception);
     }
 );
 
@@ -71,48 +71,48 @@ App::down(
 // forms:
 \Form::macro(
     'ffText', function ($name, $value = null, array $options = []) {
-        return \FireflyIII\Form\Form::ffText($name, $value, $options);
-    }
+    return \FireflyIII\Form\Form::ffText($name, $value, $options);
+}
 );
 \Form::macro(
     'ffSelect', function ($name, array $list = [], $selected = null, array $options = []) {
-        return \FireflyIII\Form\Form::ffSelect($name, $list, $selected, $options);
-    }
+    return \FireflyIII\Form\Form::ffSelect($name, $list, $selected, $options);
+}
 );
 \Form::macro(
     'ffInteger', function ($name, $value = null, array $options = []) {
-        return \FireflyIII\Form\Form::ffInteger($name, $value, $options);
-    }
+    return \FireflyIII\Form\Form::ffInteger($name, $value, $options);
+}
 );
 \Form::macro(
     'ffAmount', function ($name, $value = null, array $options = []) {
-        return \FireflyIII\Form\Form::ffAmount($name, $value, $options);
-    }
+    return \FireflyIII\Form\Form::ffAmount($name, $value, $options);
+}
 );
 \Form::macro(
     'ffBalance', function ($name, $value = null, array $options = []) {
-        return \FireflyIII\Form\Form::ffBalance($name, $value, $options);
-    }
+    return \FireflyIII\Form\Form::ffBalance($name, $value, $options);
+}
 );
 \Form::macro(
     'ffDate', function ($name, $value = null, array $options = []) {
-        return \FireflyIII\Form\Form::ffDate($name, $value, $options);
-    }
+    return \FireflyIII\Form\Form::ffDate($name, $value, $options);
+}
 );
 \Form::macro(
     'ffTags', function ($name, $value = null, array $options = []) {
-        return \FireflyIII\Form\Form::ffTags($name, $value, $options);
-    }
+    return \FireflyIII\Form\Form::ffTags($name, $value, $options);
+}
 );
 \Form::macro(
     'ffCheckbox', function ($name, $value = 1, $checked = null, $options = []) {
-        return \FireflyIII\Form\Form::ffCheckbox($name, $value, $checked, $options);
-    }
+    return \FireflyIII\Form\Form::ffCheckbox($name, $value, $checked, $options);
+}
 );
 \Form::macro(
     'ffOptionsList', function ($type, $name) {
-        return \FireflyIII\Form\Form::ffOptionsList($type, $name);
-    }
+    return \FireflyIII\Form\Form::ffOptionsList($type, $name);
+}
 );
 
 

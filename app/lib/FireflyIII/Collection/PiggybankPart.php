@@ -5,17 +5,19 @@ namespace FireflyIII\Collection;
 
 use Carbon\Carbon;
 
+/**
+ * Class PiggybankPart
+ *
+ * @package FireflyIII\Collection
+ */
 class PiggybankPart
 {
     /** @var  float */
     public $amountPerBar;
-
-    /** @var  float */
-    public $currentamount;
-
     /** @var  float */
     public $cumulativeAmount;
-
+    /** @var  float */
+    public $currentamount;
     /** @var  \Reminder */
     public $reminder;
 
@@ -33,6 +35,12 @@ class PiggybankPart
      */
     public function getReminder()
     {
+        if (is_null($this->reminder)) {
+            $this->reminder = $this->repetition->piggybank->reminders()->where('startdate', $this->getStartdate()->format('Y-m-d'))->where(
+                'enddate', $this->getTargetdate()->format('Y-m-d')
+            )->first();
+        }
+
         return $this->reminder;
     }
 
@@ -42,22 +50,6 @@ class PiggybankPart
     public function setReminder($reminder)
     {
         $this->reminder = $reminder;
-    }
-
-    /**
-     * @return \PiggybankRepetition
-     */
-    public function getRepetition()
-    {
-        return $this->repetition;
-    }
-
-    /**
-     * @param \PiggybankRepetition $repetition
-     */
-    public function setRepetition($repetition)
-    {
-        $this->repetition = $repetition;
     }
 
     /**
@@ -92,11 +84,33 @@ class PiggybankPart
         $this->targetdate = $targetdate;
     }
 
+    /**
+     * @return \PiggybankRepetition
+     */
+    public function getRepetition()
+    {
+        return $this->repetition;
+    }
+
+    /**
+     * @param \PiggybankRepetition $repetition
+     */
+    public function setRepetition($repetition)
+    {
+        $this->repetition = $repetition;
+    }
+
+    /**
+     * @return bool
+     */
     public function hasReminder()
     {
         return !is_null($this->reminder);
     }
 
+    /**
+     * @return float|int
+     */
     public function percentage()
     {
         if ($this->getCurrentamount() < $this->getCumulativeAmount()) {
@@ -132,22 +146,6 @@ class PiggybankPart
     /**
      * @return float
      */
-    public function getAmountPerBar()
-    {
-        return $this->amountPerBar;
-    }
-
-    /**
-     * @param float $amountPerBar
-     */
-    public function setAmountPerBar($amountPerBar)
-    {
-        $this->amountPerBar = $amountPerBar;
-    }
-
-    /**
-     * @return float
-     */
     public function getCumulativeAmount()
     {
         return $this->cumulativeAmount;
@@ -161,7 +159,21 @@ class PiggybankPart
         $this->cumulativeAmount = $cumulativeAmount;
     }
 
+    /**
+     * @return float
+     */
+    public function getAmountPerBar()
+    {
+        return $this->amountPerBar;
+    }
 
+    /**
+     * @param float $amountPerBar
+     */
+    public function setAmountPerBar($amountPerBar)
+    {
+        $this->amountPerBar = $amountPerBar;
+    }
 
 
 }

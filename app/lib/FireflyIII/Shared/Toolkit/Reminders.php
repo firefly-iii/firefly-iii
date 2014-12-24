@@ -64,57 +64,35 @@ class Reminders
 
     public function updateReminders()
     {
-
-        /*
-         * Reminder capable objects are (so far) only piggy banks.
-         */
-        /** @var \FireflyIII\Database\Piggybank $repository */
-        $repository = \App::make('FireflyIII\Database\Piggybank');
-
-        /** @var \FireflyIII\Database\Piggybank $repeatedRepository */
-        $repeatedRepository = \App::make('FireflyIII\Database\RepeatedExpense');
-
-        /** @var Collection $piggybanks */
-        $piggybanks = $repository->get()->merge($repeatedRepository->get());
+        /** @var Collection $set */
+        $set = \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')
+                         ->where('accounts.user_id', \Auth::user()->id)
+                         ->whereNotNull('reminder')->get(['piggybanks.*']);
 
 
-        $set        = $piggybanks->filter(
-            function (\Piggybank $piggybank) {
-                if (!is_null($piggybank->reminder)) {
-                    return $piggybank;
-                }
-                return null;
-            }
-        );
         $today = Carbon::now();
-        //$today = new Carbon('14-12-2014');
 
         /** @var \Piggybank $piggybank */
-        foreach ($set as $piggybank) {
-            /*
-             * Try to find a reminder that is valid in the current [period]
-             * aka between [start of period] and [end of period] as denoted
-             * by the piggy's repeat_freq.
-             */
+        foreach ($set as $piggyBank) {
             /** @var \PiggybankRepetition $repetition */
-            $repetition = $piggybank->currentRelevantRep();
-            $start      = \DateKit::startOfPeriod($today, $piggybank->reminder);
+            $repetition = $piggyBank->currentRelevantRep();
+            $start      = \DateKit::startOfPeriod($today, $piggyBank->reminder);
             if ($repetition->targetdate && $repetition->targetdate <= $today) {
                 // break when no longer relevant:
                 continue;
             }
-            $end = \DateKit::endOfPeriod(clone $start, $piggybank->reminder);
+            $end = \DateKit::endOfPeriod(clone $start, $piggyBank->reminder);
             // should have a reminder for this period:
             /** @var Collection $reminders */
-            $reminders = $piggybank->reminders()->dateIs($start, $end)->get();
+            $reminders = $piggyBank->reminders()->dateIs($start, $end)->get();
             if ($reminders->count() == 0) {
                 // create new!
                 $reminder            = new \Reminder;
                 $reminder->startdate = $start;
                 $reminder->enddate   = $end;
                 $reminder->active    = 1;
-                $reminder->user()->associate($repository->getUser());
-                $reminder->remindersable_id= $piggybank->id;
+                $reminder->user()->associate(\Auth::getUser());
+                $reminder->remindersable_id   = $piggyBank->id;
                 $reminder->remindersable_type = 'Piggybank';
                 $reminder->save();
             }

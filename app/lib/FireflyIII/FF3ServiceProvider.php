@@ -45,42 +45,49 @@ class FF3ServiceProvider extends ServiceProvider
     {
         // FORMAT:
         #$this->app->bind('Interface', 'Class');
+        $this->registerFacades();
+        $this->registerInterfaces();
+        $this->registerAliases();
 
+
+    }
+
+    public function registerFacades()
+    {
         $this->app->bind(
             'reminders', function () {
-                return new Reminders;
-            }
+            return new Reminders;
+        }
         );
         $this->app->bind(
             'filter', function () {
-                return new Filter;
-            }
+            return new Filter;
+        }
         );
         $this->app->bind(
             'datekit', function () {
-                return new Date;
-            }
+            return new Date;
+        }
         );
         $this->app->bind(
             'navigation', function () {
-                return new Navigation;
-            }
+            return new Navigation;
+        }
         );
         $this->app->bind(
             'ffform', function () {
-                return new Form;
-            }
+            return new Form;
+        }
         );
-
-        /*
-         * For models, various stuff:
-         */
         $this->app->bind(
             'steam', function () {
-                return new Steam;
-            }
+            return new Steam;
+        }
         );
+    }
 
+    public function registerInterfaces()
+    {
         // preferences:
         $this->app->bind('FireflyIII\Shared\Preferences\PreferencesInterface', 'FireflyIII\Shared\Preferences\Preferences');
 
@@ -90,7 +97,12 @@ class FF3ServiceProvider extends ServiceProvider
         // reports
         $this->app->bind('FireflyIII\Report\ReportInterface', 'FireflyIII\Report\Report');
 
+        // chart
+        $this->app->bind('FireflyIII\Chart\ChartInterface', 'FireflyIII\Chart\Chart');
+    }
 
+    public function registerAliases()
+    {
         // Shortcut so developers don't need to add an Alias in app/config/app.php
         $this->app->booting(
             function () {
@@ -103,7 +115,6 @@ class FF3ServiceProvider extends ServiceProvider
                 $loader->alias('Steam', 'FireflyIII\Shared\Facade\Steam');
             }
         );
-
     }
 
 }

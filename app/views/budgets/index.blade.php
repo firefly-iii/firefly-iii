@@ -5,7 +5,7 @@
     <div class="col-lg-9 col-sm-8 col-md-8">
         <div class="panel panel-default">
             <div class="panel-heading">
-                {{\Session::get('start')->format('F Y')}}
+                {{\Session::get('start', \Carbon\Carbon::now()->startOfMonth())->format('F Y')}}
             </div>
             <div class="panel-body">
                 <div class="row">
@@ -13,8 +13,8 @@
                         <small>Budgeted: <span id="budgetedAmount" data-value="300">{{mf(300)}}</span></small>
                     </div>
                     <div class="col-lg-6 col-md-4 col-sm-3" style="text-align:right;">
-                        <small>Income {{\Session::get('start')->format('F Y')}}:
-                        <a href="#" class="updateIncome"><span id="totalAmount" data-value="{{$budgetAmount->data}}">{{mf($budgetAmount->data)}}</span></a></small>
+                        <small>Income {{\Session::get('start', \Carbon\Carbon::now()->startOfMonth())->format('F Y')}}:
+                        <a href="#" class="updateIncome"><span id="totalAmount" data-value="{{$amount}}">{{mf($amount)}}</span></a></small>
                     </div>
                 </div>
 
@@ -59,7 +59,7 @@
     <div class="col-lg-3 col-sm-4 col-md-6" style="height:180px;">
         <div class="panel panel-default">
             <div class="panel-heading">
-                @if($budget->currentRep)
+                @if(isset($budget->currentRep))
                     <a href="{{route('budgets.show',[$budget->id,$budget->currentRep->id])}}" id="budget-link-{{$budget->id}}">{{{$budget->name}}}</a>
                 @else
                     <a href="{{route('budgets.show',$budget->id)}}" id="budget-link-{{$budget->id}}">{{{$budget->name}}}</a>
@@ -85,9 +85,9 @@
             <!-- the range in which the budget can be set -->
             <p>
                 @if($budget->currentRep)
-                    <input type="range" data-id="{{$budget->id}}" data-spent="{{$budget->spent}}" id="budget-range-{{$budget->id}}" max="900" min="0" value="{{$budget->currentRep->amount}}" />
+                    <input type="range" data-id="{{$budget->id}}" data-spent="{{$budget->spent}}" id="budget-range-{{$budget->id}}" max="{{$budgetMaximum}}" min="0" value="{{$budget->currentRep->amount}}" />
                 @else
-                    <input type="range" data-id="{{$budget->id}}" data-spent="{{$budget->spent}}" id="budget-range-{{$budget->id}}" max="900" min="0" value="0" />
+                    <input type="range" data-id="{{$budget->id}}" data-spent="{{$budget->spent}}" id="budget-range-{{$budget->id}}" max="{{$budgetMaximum}}" min="0" value="0" />
                 @endif
             </p>
             <!-- some textual info about the budget. Updates dynamically. -->
@@ -99,16 +99,16 @@
                 <span id="budget-description-{{$budget->id}}">Budgeted: </span>
                 <!-- budget-info-X holds the input and the euro-sign: -->
                 <span id="budget-info-{{$budget->id}}">
-                @if($budget->limit > $budget->spent)
-                    <span class="text-success">&euro;</span> <input type="number" min="0" max="900" data-id="{{$budget->id}}" step="1" value="{{$budget->limit}}" style="width:50px;color:#3c763d;" />
+                @if($budget->currentRep->amount > $budget->spent)
+                    <span class="text-success">{{getCurrencySymbol()}}</span> <input type="number" min="0" max="{{$budgetMaximum}}" data-id="{{$budget->id}}" step="1" value="{{$budget->currentRep->amount}}" style="width:90px;color:#3c763d;" />
                 @else
-                    <span class="text-danger">&euro;</span> <input type="number" min="0" max="900"  data-id="{{$budget->id}}" step="1" value="{{$budget->limit}}" style="width:50px;color:#a94442;" />
+                    <span class="text-danger">{{getCurrencySymbol()}}</span> <input type="number" min="0" max="{{$budgetMaximum}}"  data-id="{{$budget->id}}" step="1" value="{{$budget->currentRep->amount}}" style="width:90px;color:#a94442;" />
                 @endif
                 </span>
             @else
                 <span id="budget-description-{{$budget->id}}"><em>No budget</em></span>
                 <span id="budget-info-{{$budget->id}}">
-                    <span class="text-success" style="display:none;">&euro;</span> <input data-id="{{$budget->id}}" type="number" min="0" max="900" step="1" value="0" style="width:50px;color:#3c763d;display:none;" />
+                    <span class="text-success" style="display:none;">{{getCurrencySymbol()}}</span> <input data-id="{{$budget->id}}" type="number" min="0" max="{{$budgetMaximum}}" step="1" value="0" style="width:50px;color:#3c763d;display:none;" />
                 </span>
             @endif
             </span>

@@ -34,29 +34,6 @@
 
 
 <div class="row">
-    <div class="col-lg-6 col-md-12 col-sm-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                Out
-            </div>
-            <div class="panel-body">
-                <div id="account-out-sankey"></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-6 col-md-12 col-sm-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                In
-            </div>
-            <div class="panel-body">
-                <div id="account-in-sankey"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -75,6 +52,7 @@
 <script type="text/javascript">
     var accountID = {{{$account->id}}};
     var view = '{{{$range}}}';
+    var currencyCode = '{{getCurrencyCode()}}';
 </script>
 <!-- load the libraries and scripts necessary for Google Charts: -->
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
