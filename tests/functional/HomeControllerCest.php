@@ -1,6 +1,9 @@
 <?php
 
 /**
+ *
+ * @SuppressWarnings("CamelCase")
+ * @SuppressWarnings("short")
  * Class HomeControllerCest
  */
 class HomeControllerCest

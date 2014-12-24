@@ -1,6 +1,10 @@
 <?php
 
 /**
+ *
+ * @SuppressWarnings("CamelCase")
+ * @SuppressWarnings("short")
+ *
  * Class CurrencyControllerCest
  */
 class CurrencyControllerCest
@@ -53,6 +57,9 @@ class CurrencyControllerCest
         $I->see('Currency &quot;US Dollar&quot; deleted');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function defaultCurrency(FunctionalTester $I)
     {
         $I->wantTo('make US Dollar the default currency');
