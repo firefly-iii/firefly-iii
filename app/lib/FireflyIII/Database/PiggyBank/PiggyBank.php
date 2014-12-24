@@ -36,6 +36,7 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggyBankInterface
     public function destroy(Eloquent $model)
     {
         $model->delete();
+
     }
 
     /**
