@@ -35,7 +35,9 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
     public function store(array $data)
     {
         $currency = new \TransactionCurrency($data);
+        \Log::debug('Is valid? ' . boolstr($currency->isValid()));
         $currency->save();
+
         return $currency;
     }
 
@@ -48,8 +50,9 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
     public function update(Eloquent $model, array $data)
     {
         $model->symbol = $data['symbol'];
-        $model->code = $data['code'];
-        $model->name = $data['name'];
+        $model->code   = $data['code'];
+        $model->name   = $data['name'];
+        \Log::debug('Is valid? ' . boolstr($model->isValid()));
         $model->save();
 
         return true;
@@ -67,10 +70,15 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
     {
         $warnings  = new MessageBag;
         $successes = new MessageBag;
+        \Log::debug('Now in TransactionCurrency::validate()');
 
         $currency = new \TransactionCurrency($model);
         $currency->isValid();
         $errors = $currency->getErrors();
+
+        \Log::debug('Data: ' . json_encode($model));
+        \Log::debug('Error-content: ' . json_encode($errors->all()));
+        \Log::debug('Error count is: ' . $errors->count());
 
         $fields = ['name', 'code', 'symbol'];
         foreach ($fields as $field) {

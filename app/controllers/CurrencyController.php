@@ -2,6 +2,10 @@
 use FireflyIII\Database\TransactionCurrency\TransactionCurrency as Repository;
 
 /**
+ *
+ * @SuppressWarnings("CamelCase") // I'm fine with this.
+ * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
+ *
  * Class CurrencyController
  */
 class CurrencyController extends BaseController
@@ -46,6 +50,8 @@ class CurrencyController extends BaseController
         $currencyPreference       = $preferences->get('currencyPreference', 'EUR');
         $currencyPreference->data = $currency->code;
         $currencyPreference->save();
+
+        Session::flash('success', $currency->name.' is now the default currency.');
         Cache::forget('FFCURRENCYSYMBOL');
         Cache::forget('FFCURRENCYCODE');
 
@@ -139,7 +145,7 @@ class CurrencyController extends BaseController
 
     public function update(TransactionCurrency $currency)
     {
-        $data            = Input::except('_token');
+        $data = Input::except('_token');
 
         // always validate:
         $messages = $this->_repository->validate($data);

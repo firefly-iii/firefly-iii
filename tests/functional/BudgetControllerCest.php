@@ -89,6 +89,7 @@ class BudgetControllerCest
     {
         $I->wantTo('show all budgets');
         $I->amOnPage('/budgets');
+        $I->see('Budgets');
     }
 
     /**
@@ -147,7 +148,6 @@ class BudgetControllerCest
         $I->see('Create a new budget');
         $I->submitForm('#store', ['name' => 'New budget.', 'post_submit_action' => 'validate_only']);
         $I->dontSeeRecord('budgets', ['name' => 'New budget.']);
-        resetToClean::clean();
     }
 
     /**
@@ -160,7 +160,6 @@ class BudgetControllerCest
         $I->see('Create a new budget');
         $I->submitForm('#store', ['name' => 'New budget.', 'post_submit_action' => 'create_another']);
         $I->seeRecord('budgets', ['name' => 'New budget.']);
-        resetToClean::clean();
     }
 
     /**
@@ -171,10 +170,11 @@ class BudgetControllerCest
         $I->amOnPage('/budgets/create');
         $I->wantTo('make storing a new budget fail.');
         $I->see('Create a new budget');
-        $I->submitForm('#store', ['name' => null,  'post_submit_action' => 'validate_only']);
+        $I->submitForm('#store', ['name' => null,  'post_submit_action' => 'store']);
         $I->dontSeeRecord('budgets', ['name' => 'New budget.']);
-        resetToClean::clean();
     }
+
+
     /**
      * @param FunctionalTester $I
      */
