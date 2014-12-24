@@ -116,13 +116,13 @@ Route::bind(
 );
 
 Route::bind(
-    'piggybank', function ($value, $route) {
+    'piggy_bank', function ($value, $route) {
     if (Auth::check()) {
-        return Piggybank::
-        where('piggybanks.id', $value)
-                        ->leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')
+        return PiggyBank::
+        where('piggy_banks.id', $value)
+                        ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
                         ->where('accounts.user_id', Auth::user()->id)
-                        ->where('repeats', 0)->first(['piggybanks.*']);
+                        ->where('repeats', 0)->first(['piggy_banks.*']);
     }
 
     return null;
@@ -132,11 +132,11 @@ Route::bind(
 Route::bind(
     'repeated', function ($value, $route) {
     if (Auth::check()) {
-        return Piggybank::
-        where('piggybanks.id', $value)
-                        ->leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')
+        return PiggyBank::
+        where('piggy_banks.id', $value)
+                        ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
                         ->where('accounts.user_id', Auth::user()->id)
-                        ->where('repeats', 1)->first(['piggybanks.*']);
+                        ->where('repeats', 1)->first(['piggy_banks.*']);
     }
 
     return null;
@@ -195,7 +195,7 @@ Route::group(
     Route::get('/chart/reports/income-expenses-sum/{year}', ['uses' => 'GoogleChartController@yearInExpSum']);
     Route::get('/chart/recurring/{recurring}', ['uses' => 'GoogleChartController@recurringOverview']);
     Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'GoogleChartController@budgetLimitSpending']);
-    Route::get('/chart/piggyhistory/{piggybank}', ['uses' => 'GoogleChartController@piggyBankHistory']);
+    Route::get('/chart/piggy_history/{piggy_bank}', ['uses' => 'GoogleChartController@piggyBankHistory']);
 
     // google chart for components (categories + budgets combined)
     Route::get('/chart/budget/{budget}/spending/{year}', ['uses' => 'GoogleChartController@budgetsAndSpending']);
@@ -215,14 +215,14 @@ Route::group(
 
 
     // piggy bank controller
-    Route::get('/piggybanks', ['uses' => 'PiggybankController@index', 'as' => 'piggybanks.index']);
-    Route::get('/piggybanks/add/{piggybank}', ['uses' => 'PiggybankController@add']); # add money
-    Route::get('/piggybanks/remove/{piggybank}', ['uses' => 'PiggybankController@remove']); #remove money
+    Route::get('/piggy_banks', ['uses' => 'PiggybankController@index', 'as' => 'piggy_banks.index']);
+    Route::get('/piggy_banks/add/{piggy_bank}', ['uses' => 'PiggybankController@add']); # add money
+    Route::get('/piggy_banks/remove/{piggy_bank}', ['uses' => 'PiggybankController@remove']); #remove money
 
-    Route::get('/piggybanks/create', ['uses' => 'PiggybankController@create', 'as' => 'piggybanks.create']);
-    Route::get('/piggybanks/edit/{piggybank}', ['uses' => 'PiggybankController@edit', 'as' => 'piggybanks.edit']);
-    Route::get('/piggybanks/delete/{piggybank}', ['uses' => 'PiggybankController@delete', 'as' => 'piggybanks.delete']);
-    Route::get('/piggybanks/show/{piggybank}', ['uses' => 'PiggybankController@show', 'as' => 'piggybanks.show']);
+    Route::get('/piggy_banks/create', ['uses' => 'PiggybankController@create', 'as' => 'piggy_banks.create']);
+    Route::get('/piggy_banks/edit/{piggy_bank}', ['uses' => 'PiggybankController@edit', 'as' => 'piggy_banks.edit']);
+    Route::get('/piggy_banks/delete/{piggy_bank}', ['uses' => 'PiggybankController@delete', 'as' => 'piggy_banks.delete']);
+    Route::get('/piggy_banks/show/{piggy_bank}', ['uses' => 'PiggybankController@show', 'as' => 'piggy_banks.show']);
 
     // preferences controller
     Route::get('/preferences', ['uses' => 'PreferencesController@index', 'as' => 'preferences']);
@@ -308,11 +308,11 @@ Route::group(
     Route::post('/currency/destroy/{currency}', ['uses' => 'CurrencyController@destroy', 'as' => 'currency.destroy']);
 
     // piggy bank controller
-    Route::post('/piggybanks/store', ['uses' => 'PiggybankController@store', 'as' => 'piggybanks.store']);
-    Route::post('/piggybanks/update/{piggybank}', ['uses' => 'PiggybankController@update', 'as' => 'piggybanks.update']);
-    Route::post('/piggybanks/destroy/{piggybank}', ['uses' => 'PiggybankController@destroy', 'as' => 'piggybanks.destroy']);
-    Route::post('/piggybanks/add/{piggybank}', ['uses' => 'PiggybankController@postAdd', 'as' => 'piggybanks.add']); # add money
-    Route::post('/piggybanks/remove/{piggybank}', ['uses' => 'PiggybankController@postRemove', 'as' => 'piggybanks.remove']); # remove money.
+    Route::post('/piggy_banks/store', ['uses' => 'PiggybankController@store', 'as' => 'piggy_banks.store']);
+    Route::post('/piggy_banks/update/{piggy_bank}', ['uses' => 'PiggybankController@update', 'as' => 'piggy_banks.update']);
+    Route::post('/piggy_banks/destroy/{piggy_bank}', ['uses' => 'PiggybankController@destroy', 'as' => 'piggy_banks.destroy']);
+    Route::post('/piggy_banks/add/{piggy_bank}', ['uses' => 'PiggybankController@postAdd', 'as' => 'piggy_banks.add']); # add money
+    Route::post('/piggy_banks/remove/{piggy_bank}', ['uses' => 'PiggybankController@postRemove', 'as' => 'piggy_banks.remove']); # remove money.
 
     // repeated expense controller
     Route::post('/repeatedexpense/store', ['uses' => 'RepeatedExpenseController@store', 'as' => 'repeated.store']);

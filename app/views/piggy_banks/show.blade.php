@@ -8,7 +8,7 @@
                 <i class="fa fa-fw fa-clock-o"></i> Events
             </div>
             <div class="panel-body">
-                <div id="piggybank-history"></div>
+                <div id="piggy-bank-history"></div>
             </div>
         </div>
     </div>
@@ -25,8 +25,8 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu pull-right" role="menu">
-                                <li><a href="{{route('piggybanks.edit',$piggyBank->id)}}"><i class="fa fa-pencil fa-fw"></i> Edit</a></li>
-                                <li><a href="{{route('piggybanks.delete',$piggyBank->id)}}"><i class="fa fa-trash fa-fw"></i> Delete</a></li>
+                                <li><a href="{{route('piggy_banks.edit',$piggyBank->id)}}"><i class="fa fa-pencil fa-fw"></i> Edit</a></li>
+                                <li><a href="{{route('piggy_banks.delete',$piggyBank->id)}}"><i class="fa fa-trash fa-fw"></i> Delete</a></li>
                             </ul>
                         </div>
                     </div>
@@ -106,7 +106,7 @@
                     <i class="fa fa-fw fa-clock-o"></i> Table
                 </div>
                 <div class="panel-body">
-                    @include('list.piggybank-events')
+                    @include('list.piggyBank-events')
                 </div>
             </div>
     </div>
@@ -123,5 +123,5 @@ var piggyBankID = {{{$piggyBank->id}}};
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 {{HTML::script('assets/javascript/firefly/gcharts.options.js')}}
 {{HTML::script('assets/javascript/firefly/gcharts.js')}}
-{{HTML::script('assets/javascript/firefly/piggybanks.js')}}
+{{HTML::script('assets/javascript/firefly/piggy_banks.js')}}
 @stop

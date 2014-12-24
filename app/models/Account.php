@@ -57,9 +57,9 @@ class Account extends Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function piggybanks()
+    public function piggyBanks()
     {
-        return $this->hasMany('Piggybank');
+        return $this->hasMany('PiggyBank');
     }
 
     /**

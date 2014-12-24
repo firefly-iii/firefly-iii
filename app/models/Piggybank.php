@@ -4,9 +4,9 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 use Watson\Validating\ValidatingTrait;
 
 /**
- * Class Piggybank
+ * Class PiggyBank
  */
-class Piggybank extends Eloquent
+class PiggyBank extends Eloquent
 {
     use ValidatingTrait;
     public static $rules
@@ -62,12 +62,12 @@ class Piggybank extends Eloquent
      * @param Carbon $start
      * @param Carbon $target
      *
-     * @return PiggybankRepetition
+     * @return PiggyBankRepetition
      */
     public function createRepetition(Carbon $start = null, Carbon $target = null)
     {
-        $rep = new \PiggybankRepetition;
-        $rep->piggybank()->associate($this);
+        $rep = new \PiggyBankRepetition;
+        $rep->piggyBank()->associate($this);
         $rep->startdate     = $start;
         $rep->targetdate    = $target;
         $rep->currentamount = 0;
@@ -81,7 +81,7 @@ class Piggybank extends Eloquent
      *
      * Grabs the PiggyBankRepetition that's currently relevant / active
      *
-     * @returns \PiggybankRepetition
+     * @returns \PiggyBankRepetition
      */
     public function currentRelevantRep()
     {
@@ -89,13 +89,13 @@ class Piggybank extends Eloquent
             return $this->currentRep;
         }
         if ($this->repeats == 0) {
-            $rep              = $this->piggybankrepetitions()->first(['piggybank_repetitions.*']);
+            $rep              = $this->piggyBankRepetitions()->first(['piggy_bank_repetitions.*']);
             $this->currentRep = $rep;
             \Log::debug('currentRelevantRep() reports $rep is null: ' . boolstr(is_null($rep)));
 
             return $rep;
         } else {
-            $query            = $this->piggybankrepetitions()->where(
+            $query            = $this->piggyBankRepetitions()->where(
                 function ($q) {
 
                     $q->where(
@@ -126,7 +126,7 @@ class Piggybank extends Eloquent
                 }
             )
                                      ->orderBy('startdate', 'ASC');
-            $result           = $query->first(['piggybank_repetitions.*']);
+            $result           = $query->first(['piggy_bank_repetitions.*']);
             $this->currentRep = $result;
             \Log::debug('Found relevant rep in currentRelevantRep(): ' . $result->id);
 
@@ -139,9 +139,9 @@ class Piggybank extends Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function piggybankrepetitions()
+    public function piggyBankRepetitions()
     {
-        return $this->hasMany('PiggybankRepetition');
+        return $this->hasMany('PiggyBankRepetition');
     }
 
     /**
@@ -155,9 +155,9 @@ class Piggybank extends Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function piggybankevents()
+    public function piggyBankEvents()
     {
-        return $this->hasMany('PiggybankEvent');
+        return $this->hasMany('PiggyBankEvent');
     }
 
     /**
@@ -175,11 +175,11 @@ class Piggybank extends Eloquent
      *
      * @param Carbon $date
      *
-     * @returns \PiggybankRepetition
+     * @returns \PiggyBankRepetition
      */
     public function repetitionForDate(Carbon $date)
     {
-        $query  = $this->piggybankrepetitions()->where(
+        $query  = $this->piggyBankRepetitions()->where(
             function ($q) use ($date) {
 
                 $q->where(

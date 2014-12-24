@@ -147,20 +147,20 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
-    'piggyBanks.edit', function (Generator $breadcrumbs, Piggybank $piggyBank) {
+    'piggyBanks.edit', function (Generator $breadcrumbs, PiggyBank $piggyBank) {
         $breadcrumbs->parent('piggyBanks.show', $piggyBank);
         $breadcrumbs->push('Edit ' . $piggyBank->name, route('piggyBanks.edit', $piggyBank->id));
     }
 );
 Breadcrumbs::register(
-    'piggyBanks.delete', function (Generator $breadcrumbs, Piggybank $piggyBank) {
+    'piggyBanks.delete', function (Generator $breadcrumbs, PiggyBank $piggyBank) {
         $breadcrumbs->parent('piggyBanks.show', $piggyBank);
         $breadcrumbs->push('Delete ' . $piggyBank->name, route('piggyBanks.delete', $piggyBank->id));
     }
 );
 
 Breadcrumbs::register(
-    'piggyBanks.show', function (Generator $breadcrumbs, Piggybank $piggyBank) {
+    'piggyBanks.show', function (Generator $breadcrumbs, PiggyBank $piggyBank) {
         $breadcrumbs->parent('piggyBanks.index');
         $breadcrumbs->push($piggyBank->name, route('piggyBanks.show', $piggyBank->id));
 
@@ -251,20 +251,20 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
-    'repeated.edit', function (Generator $breadcrumbs, Piggybank $piggyBank) {
+    'repeated.edit', function (Generator $breadcrumbs, PiggyBank $piggyBank) {
         $breadcrumbs->parent('repeated.show', $piggyBank);
         $breadcrumbs->push('Edit ' . $piggyBank->name, route('repeated.edit', $piggyBank->id));
     }
 );
 Breadcrumbs::register(
-    'repeated.delete', function (Generator $breadcrumbs, Piggybank $piggyBank) {
+    'repeated.delete', function (Generator $breadcrumbs, PiggyBank $piggyBank) {
         $breadcrumbs->parent('repeated.show', $piggyBank);
         $breadcrumbs->push('Delete ' . $piggyBank->name, route('repeated.delete', $piggyBank->id));
     }
 );
 
 Breadcrumbs::register(
-    'repeated.show', function (Generator $breadcrumbs, Piggybank $piggyBank) {
+    'repeated.show', function (Generator $breadcrumbs, PiggyBank $piggyBank) {
         $breadcrumbs->parent('repeated.index');
         $breadcrumbs->push($piggyBank->name, route('repeated.show', $piggyBank->id));
 

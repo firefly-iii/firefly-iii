@@ -36,7 +36,7 @@ class ReminderController extends BaseController
                 $preFilled = [
                     'amount'        => round($amount, 2),
                     'description'   => 'Money for ' . $reminder->remindersable->name,
-                    'piggybank_id'  => $reminder->remindersable_id,
+                    'piggy_bank_id'  => $reminder->remindersable_id,
                     'account_to_id' => $reminder->remindersable->account_id
                 ];
                 Session::flash('preFilled', $preFilled);

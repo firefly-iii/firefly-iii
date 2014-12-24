@@ -30,7 +30,7 @@ class RepeatedExpenseController extends BaseController
         /** @var \FireflyIII\Database\Account\Account $acct */
         $acct = App::make('FireflyIII\Database\Account\Account');
 
-        $periods = Config::get('firefly.piggybank_periods');
+        $periods = Config::get('firefly.piggy_bank_periods');
 
 
         $accounts = FFForm::makeSelectList($acct->getAssetAccounts());
@@ -53,7 +53,7 @@ class RepeatedExpenseController extends BaseController
 
         $expenses = $repository->get();
         $expenses->each(
-            function (Piggybank $piggyBank) use ($repository) {
+            function (PiggyBank $piggyBank) use ($repository) {
                 $piggyBank->currentRelevantRep();
             }
         );
@@ -62,11 +62,11 @@ class RepeatedExpenseController extends BaseController
     }
 
     /**
-     * @param Piggybank $piggyBank
+     * @param PiggyBank $piggyBank
      *
      * @return \Illuminate\View\View
      */
-    public function show(Piggybank $piggyBank)
+    public function show(PiggyBank $piggyBank)
     {
         $subTitle = $piggyBank->name;
         $today    = Carbon::now();
@@ -74,9 +74,9 @@ class RepeatedExpenseController extends BaseController
         /** @var \FireflyIII\Database\PiggyBank\RepeatedExpense $repository */
         $repository = App::make('FireflyIII\Database\PiggyBank\RepeatedExpense');
 
-        $repetitions = $piggyBank->piggybankrepetitions()->get();
+        $repetitions = $piggyBank->piggyBankRepetitions()->get();
         $repetitions->each(
-            function (PiggybankRepetition $repetition) use ($repository) {
+            function (PiggyBankRepetition $repetition) use ($repository) {
                 $repetition->bars = $repository->calculateParts($repetition);
             }
         );

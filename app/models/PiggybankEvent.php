@@ -9,7 +9,7 @@ class PiggyBankEvent extends Eloquent
 
     public static $rules
         = [
-            'piggybank_id' => 'required|exists:piggybanks,id',
+            'piggy_bank_id' => 'required|exists:piggy_banks,id',
             'date'         => 'required|date',
             'amount'       => 'required|numeric'
         ];
@@ -26,9 +26,9 @@ class PiggyBankEvent extends Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function piggybank()
+    public function piggyBank()
     {
-        return $this->belongsTo('Piggybank');
+        return $this->belongsTo('PiggyBank');
     }
 
     /**

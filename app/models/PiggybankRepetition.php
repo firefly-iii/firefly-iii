@@ -4,14 +4,14 @@ use Illuminate\Database\Eloquent\Builder;
 use Watson\Validating\ValidatingTrait;
 use \Illuminate\Database\Eloquent\Model as Eloquent;
 /**
- * Class PiggybankRepetition
+ * Class PiggyBankRepetition
  */
-class PiggybankRepetition extends Eloquent
+class PiggyBankRepetition extends Eloquent
 {
     use ValidatingTrait;
     public static $rules
         = [
-            'piggybank_id'  => 'required|exists:piggybanks,id',
+            'piggy_bank_id'  => 'required|exists:piggy_banks,id',
             'targetdate'    => 'date',
             'startdate'     => 'date',
             'currentamount' => 'required|numeric'];
@@ -31,7 +31,7 @@ class PiggybankRepetition extends Eloquent
      */
     public function pct()
     {
-        $total = $this->piggybank->targetamount;
+        $total = $this->piggyBank->targetamount;
         $saved = $this->currentamount;
         if ($total == 0) {
             return 0;
@@ -44,9 +44,9 @@ class PiggybankRepetition extends Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function piggybank()
+    public function piggyBank()
     {
-        return $this->belongsTo('Piggybank');
+        return $this->belongsTo('PiggyBank');
     }
 
     /**

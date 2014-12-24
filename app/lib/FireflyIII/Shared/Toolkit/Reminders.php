@@ -65,16 +65,16 @@ class Reminders
     public function updateReminders()
     {
         /** @var Collection $set */
-        $set = \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')
+        $set = \PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
                          ->where('accounts.user_id', \Auth::user()->id)
-                         ->whereNotNull('reminder')->get(['piggybanks.*']);
+                         ->whereNotNull('reminder')->get(['piggy_banks.*']);
 
 
         $today = Carbon::now();
 
-        /** @var \Piggybank $piggyBank */
+        /** @var \PiggyBank $piggyBank */
         foreach ($set as $piggyBank) {
-            /** @var \PiggybankRepetition $repetition */
+            /** @var \PiggyBankRepetition $repetition */
             $repetition = $piggyBank->currentRelevantRep();
             $start      = \DateKit::startOfPeriod($today, $piggyBank->reminder);
             if ($repetition->targetdate && $repetition->targetdate <= $today) {

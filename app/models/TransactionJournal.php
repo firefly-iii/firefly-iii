@@ -77,9 +77,9 @@ class TransactionJournal extends Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function piggybankevents()
+    public function piggyBankEvents()
     {
-        return $this->hasMany('PiggybankEvent');
+        return $this->hasMany('PiggyBankEvent');
     }
 
     /**

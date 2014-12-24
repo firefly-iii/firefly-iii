@@ -131,7 +131,7 @@ class GoogleChartControllerCest
     public function piggyBankHistory(FunctionalTester $I)
     {
         $I->wantTo('see the chart for the history of a piggy bank');
-        $I->amOnPage('/chart/piggyhistory/1');
+        $I->amOnPage('/chart/piggy_history/1');
         $I->seeResponseCodeIs(200);
     }
 

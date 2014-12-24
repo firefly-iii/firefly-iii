@@ -20,10 +20,10 @@ class Event
     public function deleteAccount(\Account $account)
     {
         // get piggy banks
-        $piggies = $account->piggybanks()->get();
+        $piggies = $account->piggyBanks()->get();
 
         // get reminders for each
-        /** @var \Piggybank $piggyBank */
+        /** @var \PiggyBank $piggyBank */
         foreach ($piggies as $piggyBank) {
             $reminders = $piggyBank->reminders()->get();
             /** @var \Reminder $reminder */

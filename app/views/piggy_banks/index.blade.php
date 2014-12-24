@@ -6,7 +6,7 @@
         <div class="col-lg-6 col-md-6 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-fw fa-rocket"></i> <a href="{{route('piggybanks.show',$piggyBank->id)}}" title="{{{$piggyBank->name}}}">{{{$piggyBank->name}}}</a>
+                    <i class="fa fa-fw fa-rocket"></i> <a href="{{route('piggy_banks.show',$piggyBank->id)}}" title="{{{$piggyBank->name}}}">{{{$piggyBank->name}}}</a>
                 </div>
                 <div class="panel-body">
                     <div class="row">
@@ -41,8 +41,8 @@
                         </div>
                         <div class="col-lg-8 col-md-6 col-sm-4">
                             <div class="btn-group btn-group-xs">
-                                <a href="{{route('piggybanks.edit',$piggyBank->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
-                                <a href="{{route('piggybanks.delete',$piggyBank->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                                <a href="{{route('piggy_banks.edit',$piggyBank->id)}}" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
+                                <a href="{{route('piggy_banks.delete',$piggyBank->id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
                             </div>
                         </div>
                         <div class="col-lg-2 col-md-3 col-sm-4">
@@ -63,7 +63,7 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-lg-8 col-md-6 col-sm-4 col-lg-offset-2 col-md-offset-3 col-sm-offset-4">
-                        <a href="{{route('piggybanks.create')}}" class="btn btn-success">Create new piggy bank</a>
+                        <a href="{{route('piggy_banks.create')}}" class="btn btn-success">Create new piggy bank</a>
                     </div>
                 </div>
             </div>
@@ -109,5 +109,5 @@
 
 @stop
 @section('scripts')
-{{HTML::script('assets/javascript/firefly/piggybanks.js')}}
+{{HTML::script('assets/javascript/firefly/piggy_banks.js')}}
 @stop

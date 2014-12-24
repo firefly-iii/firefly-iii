@@ -227,7 +227,7 @@ class TransactionController extends BaseController
             'date'         => $journal->date->format('Y-m-d'),
             'category'     => '',
             'budget_id'    => 0,
-            'piggybank_id' => 0
+            'piggy_bank_id' => 0
         ];
 
         /*
@@ -289,8 +289,8 @@ class TransactionController extends BaseController
                     $preFilled['account_to_id']   = $journal->transactions[0]->account->id;
                     $preFilled['amount']          = floatval($journal->transactions[0]->amount);
                 }
-                if ($journal->piggybankevents()->count() > 0) {
-                    $preFilled['piggybank_id'] = $journal->piggybankevents()->first()->piggybank_id;
+                if ($journal->piggyBankEvents()->count() > 0) {
+                    $preFilled['piggy_bank_id'] = $journal->piggyBankEvents()->first()->piggy_bank_id;
                 }
                 break;
         }
@@ -461,7 +461,7 @@ class TransactionController extends BaseController
                  * Trigger a search for the related (if selected)
                  * piggy bank and store an event.
                  */
-                Event::fire('transactionJournal.store', [$journal, Input::get('piggybank_id')]); // new and used.
+                Event::fire('transactionJournal.store', [$journal, Input::get('piggy_bank_id')]); // new and used.
                 /*
                  * Also trigger on both transactions.
                  */
