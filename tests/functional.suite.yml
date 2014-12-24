@@ -10,7 +10,7 @@ modules:
     config:
       Db:
         populate: false
-        cleanup: false
+        cleanup: true
       Laravel4:
         environment: 'testing'
         filters: false
