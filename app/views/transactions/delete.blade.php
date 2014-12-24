@@ -16,7 +16,7 @@
                 associated data.
                 </p>
                 <p class="text-success">
-                    This action will not destroy categories, piggybanks, accounts, etc.
+                    This action will not destroy categories, piggy banks, accounts, etc.
                 </p>
                 <p class="text-danger">
                     Are you sure?

@@ -4,7 +4,7 @@ namespace FireflyIII\Database\PiggyBank;
 
 
 use Carbon\Carbon;
-use FireflyIII\Collection\PiggybankPart;
+use FireflyIII\Collection\PiggyBankPart;
 use FireflyIII\Database\CommonDatabaseCalls;
 use FireflyIII\Database\CUD;
 use FireflyIII\Database\SwitchUser;
@@ -35,14 +35,14 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggyBankInterface
      * other variables this method tries to divide the piggy bank into equal parts. Each is
      * accommodated by a reminder (if everything goes to plan).
      *
-     * @param \PiggybankRepetition $repetition
+     * @param \PiggyBankRepetition $repetition
      *
      * @return Collection
      */
-    public function calculateParts(\PiggybankRepetition $repetition)
+    public function calculateParts(\PiggyBankRepetition $repetition)
     {
-        /** @var \Piggybank $piggyBank */
-        $piggyBank    = $repetition->piggybank()->first();
+        /** @var \PiggyBank $piggyBank */
+        $piggyBank    = $repetition->piggyBank()->first();
         $bars         = new Collection;
         $currentStart = clone $repetition->startdate;
 
@@ -66,7 +66,7 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggyBankInterface
         }
         $amountPerBar = floatval($piggyBank->targetamount) / $bars->count();
         $cumulative   = $amountPerBar;
-        /** @var PiggybankPart $bar */
+        /** @var PiggyBankPart $bar */
         foreach ($bars as $index => $bar) {
             $bar->setAmountPerBar($amountPerBar);
             $bar->setCumulativeAmount($cumulative);
@@ -82,11 +82,11 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggyBankInterface
     /**
      * @param array $data
      *
-     * @return PiggybankPart
+     * @return PiggyBankPart
      */
     public function createPiggyBankPart(array $data)
     {
-        $part = new PiggybankPart;
+        $part = new PiggyBankPart;
         $part->setRepetition($data['repetition']);
         $part->setAmountPerBar($data['amountPerBar']);
         $part->setCurrentamount($data['currentAmount']);
@@ -128,7 +128,7 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggyBankInterface
             $data['reminder'] = null;
         }
 
-        $repeated = new \Piggybank($data);
+        $repeated = new \PiggyBank($data);
         $repeated->save();
 
         return $repeated;
@@ -200,11 +200,11 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggyBankInterface
         if (floatval($model['targetamount']) < 0.01) {
             $errors->add('targetamount', 'Amount should be above 0.01.');
         }
-        if (!in_array(ucfirst($model['reminder']), \Config::get('firefly.piggybank_periods'))) {
+        if (!in_array(ucfirst($model['reminder']), \Config::get('firefly.piggy_bank_periods'))) {
             $errors->add('reminder', 'Invalid reminder period (' . $model['reminder'] . ')');
         }
 
-        if (!in_array(ucfirst($model['rep_length']), \Config::get('firefly.piggybank_periods'))) {
+        if (!in_array(ucfirst($model['rep_length']), \Config::get('firefly.piggy_bank_periods'))) {
             $errors->add('rep_length', 'Invalid repeat period (' . $model['rep_length'] . ')');
         }
 
@@ -228,7 +228,7 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggyBankInterface
             }
         }
 
-        $validator = \Validator::make($model, \Piggybank::$rules);
+        $validator = \Validator::make($model, \PiggyBank::$rules);
         if ($validator->invalid()) {
             $errors->merge($errors);
         }
@@ -279,7 +279,7 @@ class RepeatedExpense implements CUD, CommonDatabaseCalls, PiggyBankInterface
      */
     public function get()
     {
-        return $this->getUser()->piggybanks()->where('repeats', 1)->get();
+        return $this->getUser()->piggyBanks()->where('repeats', 1)->get();
     }
 
     /**

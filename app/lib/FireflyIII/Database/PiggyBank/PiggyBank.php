@@ -12,7 +12,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 
 /**
- * Class Piggybank
+ * Class PiggyBank
  *
  * @package FireflyIII\Database
  */
@@ -49,7 +49,7 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggyBankInterface
         if (!isset($data['remind_me']) || (isset($data['remind_me']) && $data['remind_me'] == 0)) {
             $data['reminder'] = null;
         }
-        $piggyBank = new \Piggybank($data);
+        $piggyBank = new \PiggyBank($data);
         $piggyBank->save();
 
         return $piggyBank;
@@ -63,7 +63,7 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggyBankInterface
      */
     public function update(Eloquent $model, array $data)
     {
-        /** @var \Piggybank $model */
+        /** @var \PiggyBank $model */
         $model->name          = $data['name'];
         $model->account_id    = intval($data['account_id']);
         $model->targetamount  = floatval($data['targetamount']);
@@ -129,7 +129,7 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggyBankInterface
         if (floatval($model['targetamount']) < 0.01) {
             $errors->add('targetamount', 'Amount should be above 0.01.');
         }
-        if (!in_array(ucfirst($model['reminder']), \Config::get('firefly.piggybank_periods'))) {
+        if (!in_array(ucfirst($model['reminder']), \Config::get('firefly.piggy_bank_periods'))) {
             $errors->add('reminder', 'Invalid reminder period (' . $model['reminder'] . ')');
         }
         // check period.
@@ -152,7 +152,7 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggyBankInterface
             }
         }
 
-        $validator = \Validator::make($model, \Piggybank::$rules);
+        $validator = \Validator::make($model, \PiggyBank::$rules);
         if ($validator->invalid()) {
             $errors->merge($errors);
         }
@@ -177,11 +177,11 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggyBankInterface
      */
     public function find($objectId)
     {
-        return \Piggybank::
-        leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')->where('piggybanks.id', '=', $objectId)->where(
+        return \PiggyBank::
+        leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')->where('piggy_banks.id', '=', $objectId)->where(
             'accounts.user_id', $this->getUser()->id
         )
-                         ->first(['piggybanks.*']);
+                         ->first(['piggy_banks.*']);
     }
 
     /**
@@ -205,7 +205,7 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggyBankInterface
      */
     public function get()
     {
-        return $this->getUser()->piggybanks()->where('repeats', 0)->get();
+        return $this->getUser()->piggyBanks()->where('repeats', 0)->get();
     }
 
     /**
@@ -221,17 +221,17 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggyBankInterface
     }
 
     /**
-     * @param \Piggybank $piggyBank
+     * @param \PiggyBank $piggyBank
      * @param Carbon     $date
      *
      * @return mixed
      * @throws FireflyException
      * @throws NotImplementedException
      */
-    public function findRepetitionByDate(\Piggybank $piggyBank, Carbon $date)
+    public function findRepetitionByDate(\PiggyBank $piggyBank, Carbon $date)
     {
         /** @var Collection $reps */
-        $reps = $piggyBank->piggybankrepetitions()->get();
+        $reps = $piggyBank->piggyBankRepetitions()->get();
         if ($reps->count() == 1) {
             return $reps->first();
         }
@@ -240,7 +240,7 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggyBankInterface
         }
         // should filter the one we need:
         $repetitions = $reps->filter(
-            function (\PiggybankRepetition $rep) use ($date) {
+            function (\PiggyBankRepetition $rep) use ($date) {
                 if ($date >= $rep->startdate && $date <= $rep->targetdate) {
                     return $rep;
                 }
@@ -265,8 +265,8 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggyBankInterface
         \Log::debug('Now in leftOnAccount() for account #'.$account->id.' ('.$account->name.')');
         $balance = \Steam::balance($account);
         \Log::debug('Steam says: ' . $balance);
-        /** @var \Piggybank $p */
-        foreach ($account->piggybanks()->get() as $p) {
+        /** @var \PiggyBank $p */
+        foreach ($account->piggyBanks()->get() as $p) {
             $balance -= $p->currentRelevantRep()->currentamount;
         }
 

@@ -137,8 +137,8 @@
 
             </li>
             <?php
-            $isMM = !(strpos($r,'piggybanks') === false) || !(strpos($r,'recurring') === false) |  !(strpos($r,'repeated') === false);
-            $isPiggy = !(strpos($r,'piggybanks') === false);
+            $isMM = !(strpos($r,'piggy_banks') === false) || !(strpos($r,'recurring') === false) |  !(strpos($r,'repeated') === false);
+            $isPiggy = !(strpos($r,'piggy_banks') === false);
             $isRec = !(strpos($r,'recurring') === false) && strpos($r,'recurring.create') === false;
             $isRep = !(strpos($r,'repeated') === false);
             ?>
@@ -146,7 +146,7 @@
                 <a href="#"><i class="fa fa-euro fa-fw"></i> Money management<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a @if($isPiggy)class="active"@endif href="{{route('piggybanks.index')}}"><i class="fa fa-sort-amount-asc fa-fw"></i> Piggy banks</a>
+                        <a @if($isPiggy)class="active"@endif href="{{route('piggy_banks.index')}}"><i class="fa fa-sort-amount-asc fa-fw"></i> Piggy banks</a>
                     </li>
                     <li>
                         <a @if($isRec)class="active"@endif href="{{route('recurring.index')}}"><i class="fa fa-rotate-right fa-fw"></i> Recurring transactions</a>

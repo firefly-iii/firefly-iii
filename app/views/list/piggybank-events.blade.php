@@ -1,6 +1,6 @@
 <table class="table table-bordered table-striped">
     <tr>
-        @if(isset($showPiggybank) && $showPiggybank === true)
+        @if(isset($showPiggyBank) && $showPiggyBank === true)
             <th>Piggy bank</th>
         @endif
         <th>Date</th>
@@ -8,9 +8,9 @@
     </tr>
     @foreach($events as $event)
     <tr>
-        @if(isset($showPiggybank) && $showPiggybank === true)
+        @if(isset($showPiggyBank) && $showPiggyBank === true)
         <td>
-            <a href="{{route('piggybanks.show',$event->piggybank_id)}}">{{{$event->piggybank->name}}}</a>
+            <a href="{{route('piggyBanks.show',$event->piggyBank_id)}}">{{{$event->piggyBank->name}}}</a>
         </td>
         @endif
         <td>

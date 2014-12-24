@@ -6,11 +6,11 @@ namespace FireflyIII\Collection;
 use Carbon\Carbon;
 
 /**
- * Class PiggybankPart
+ * Class PiggyBankPart
  *
  * @package FireflyIII\Collection
  */
-class PiggybankPart
+class PiggyBankPart
 {
     /** @var  float */
     public $amountPerBar;
@@ -21,7 +21,7 @@ class PiggybankPart
     /** @var  \Reminder */
     public $reminder;
 
-    /** @var  \PiggybankRepetition */
+    /** @var  \PiggyBankRepetition */
     public $repetition;
 
     /** @var  Carbon */
@@ -36,7 +36,7 @@ class PiggybankPart
     public function getReminder()
     {
         if (is_null($this->reminder)) {
-            $this->reminder = $this->repetition->piggybank->reminders()->where('startdate', $this->getStartdate()->format('Y-m-d'))->where(
+            $this->reminder = $this->repetition->piggyBank->reminders()->where('startdate', $this->getStartdate()->format('Y-m-d'))->where(
                 'enddate', $this->getTargetdate()->format('Y-m-d')
             )->first();
         }
@@ -85,7 +85,7 @@ class PiggybankPart
     }
 
     /**
-     * @return \PiggybankRepetition
+     * @return \PiggyBankRepetition
      */
     public function getRepetition()
     {
@@ -93,7 +93,7 @@ class PiggybankPart
     }
 
     /**
-     * @param \PiggybankRepetition $repetition
+     * @param \PiggyBankRepetition $repetition
      */
     public function setRepetition($repetition)
     {

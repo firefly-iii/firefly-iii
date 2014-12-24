@@ -13,7 +13,6 @@ class Transaction extends Eloquent
     use SoftDeletingTrait, ValidatingTrait;
     public static $rules
         = ['account_id'             => 'numeric|required|exists:accounts,id',
-           'piggybank_id'           => 'numeric|exists:piggybanks,id',
            'transaction_journal_id' => 'numeric|required|exists:transaction_journals,id',
            'description'            => 'between:1,255',
            'amount'                 => 'required|between:-65536,65536|not_in:0,0.00',];
@@ -31,7 +30,7 @@ class Transaction extends Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function piggybank()
+    public function piggyBank()
     {
         return $this->belongsTo('Piggybank');
     }

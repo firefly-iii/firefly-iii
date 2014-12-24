@@ -46,12 +46,12 @@ class Steam
     }
 
     /**
-     * @param \Piggybank           $piggyBank
-     * @param \PiggybankRepetition $repetition
+     * @param \PiggyBank           $piggyBank
+     * @param \PiggyBankRepetition $repetition
      *
      * @return int
      */
-    public function percentage(\Piggybank $piggyBank, \PiggybankRepetition $repetition)
+    public function percentage(\PiggyBank $piggyBank, \PiggyBankRepetition $repetition)
     {
         $pct = $repetition->currentamount / $piggyBank->targetamount * 100;
         if ($pct > 100) {

@@ -5,7 +5,7 @@
  * @SuppressWarnings("CamelCase")
  * @SuppressWarnings("short")
  *
- * Class PiggybankControllerCest
+ * Class PiggyBankControllerCest
  */
 class PiggyBankControllerCest
 {
@@ -30,7 +30,7 @@ class PiggyBankControllerCest
     public function add(FunctionalTester $I)
     {
         $I->wantTo('add money to a piggy bank');
-        $I->amOnPage('/piggybanks/add/1');
+        $I->amOnPage('/piggy_banks/add/1');
         $I->see('Add money to New camera');
     }
 
@@ -40,7 +40,7 @@ class PiggyBankControllerCest
     public function create(FunctionalTester $I)
     {
         $I->wantTo('create a piggy bank');
-        $I->amOnPage('/piggybanks/create');
+        $I->amOnPage('/piggy_banks/create');
         $I->see('Create new piggy bank');
     }
 
@@ -50,7 +50,7 @@ class PiggyBankControllerCest
     public function delete(FunctionalTester $I)
     {
         $I->wantTo('delete a piggy bank');
-        $I->amOnPage('/piggybanks/delete/1');
+        $I->amOnPage('/piggy_banks/delete/1');
         $I->see('Delete &quot;New camera&quot;');
     }
 
@@ -60,7 +60,7 @@ class PiggyBankControllerCest
     public function destroy(FunctionalTester $I)
     {
         $I->wantTo('destroy a piggy bank');
-        $I->amOnPage('/piggybanks/delete/1');
+        $I->amOnPage('/piggy_banks/delete/1');
         $I->see('Delete &quot;New camera&quot;');
         $I->submitForm('#destroy', []);
         $I->see('Piggy bank &quot;New camera&quot; deleted.');
@@ -72,7 +72,7 @@ class PiggyBankControllerCest
     public function edit(FunctionalTester $I)
     {
         $I->wantTo('edit a piggy bank');
-        $I->amOnPage('/piggybanks/edit/1');
+        $I->amOnPage('/piggy_banks/edit/1');
         $I->see('Edit piggy bank "New camera"');
     }
 
@@ -82,7 +82,7 @@ class PiggyBankControllerCest
     public function editWithTargetDate(FunctionalTester $I)
     {
         $I->wantTo('edit a piggy bank with a target date');
-        $I->amOnPage('/piggybanks/edit/2');
+        $I->amOnPage('/piggy_banks/edit/2');
         $I->see('Edit piggy bank "New clothes"');
     }
 
@@ -92,7 +92,7 @@ class PiggyBankControllerCest
     public function index(FunctionalTester $I)
     {
         $I->wantTo('view all piggy banks');
-        $I->amOnPage('/piggybanks');
+        $I->amOnPage('/piggy_banks');
         $I->see('Piggy banks');
         $I->see('New camera');
     }
@@ -103,7 +103,7 @@ class PiggyBankControllerCest
     public function postAdd(FunctionalTester $I)
     {
         $I->wantTo('process adding money to a piggy bank');
-        $I->amOnPage('/piggybanks/add/1');
+        $I->amOnPage('/piggy_banks/add/1');
         $I->see('Add money to New camera');
         $I->submitForm('#add', ['amount' => 100]);
         $I->see(',00 to &quot;New camera&quot;.');
@@ -115,7 +115,7 @@ class PiggyBankControllerCest
     public function postAddTooMuch(FunctionalTester $I)
     {
         $I->wantTo('try to add too much money to a piggy bank');
-        $I->amOnPage('/piggybanks/add/1');
+        $I->amOnPage('/piggy_banks/add/1');
         $I->see('Add money to New camera');
         $I->submitForm('#add', ['amount' => 100000]);
         $I->see(',00 to &quot;New camera&quot;.');
@@ -127,11 +127,11 @@ class PiggyBankControllerCest
     public function postRemove(FunctionalTester $I)
     {
         $I->wantTo('process removing money from a piggy bank');
-        $I->amOnPage('/piggybanks/add/1');
+        $I->amOnPage('/piggy_banks/add/1');
         $I->see('Add money to New camera');
         $I->submitForm('#add', ['amount' => 100]);
         $I->see(',00 to &quot;New camera&quot;.');
-        $I->amOnPage('/piggybanks/remove/1');
+        $I->amOnPage('/piggy_banks/remove/1');
         $I->see('Remove money from New camera');
         $I->submitForm('#remove', ['amount' => 50]);
         $I->see(',00 from &quot;New camera&quot;.');
@@ -143,11 +143,11 @@ class PiggyBankControllerCest
     public function postRemoveFail(FunctionalTester $I)
     {
         $I->wantTo('process removing too much money from a piggy bank');
-        $I->amOnPage('/piggybanks/add/1');
+        $I->amOnPage('/piggy_banks/add/1');
         $I->see('Add money to New camera');
         $I->submitForm('#add', ['amount' => 100]);
         $I->see(',00 to &quot;New camera&quot;.');
-        $I->amOnPage('/piggybanks/remove/1');
+        $I->amOnPage('/piggy_banks/remove/1');
         $I->see('Remove money from New camera');
         $I->submitForm('#remove', ['amount' => 500]);
         $I->see(',00 from &quot;New camera&quot;.');
@@ -160,7 +160,7 @@ class PiggyBankControllerCest
     public function remove(FunctionalTester $I)
     {
         $I->wantTo('removing money from a piggy bank');
-        $I->amOnPage('/piggybanks/remove/1');
+        $I->amOnPage('/piggy_banks/remove/1');
         $I->see('Remove money from New camera');
     }
 
@@ -170,7 +170,7 @@ class PiggyBankControllerCest
     public function show(FunctionalTester $I)
     {
         $I->wantTo('view a piggy bank');
-        $I->amOnPage('/piggybanks/show/1');
+        $I->amOnPage('/piggy_banks/show/1');
         $I->see('New camera');
     }
 
@@ -180,7 +180,7 @@ class PiggyBankControllerCest
     public function store(FunctionalTester $I)
     {
         $I->wantTo('store a new piggy bank');
-        $I->amOnPage('/piggybanks/create');
+        $I->amOnPage('/piggy_banks/create');
         $I->see('Create new piggy bank');
         $I->submitForm(
             '#store', ['name'          => 'Some new piggy bank',
@@ -199,7 +199,7 @@ class PiggyBankControllerCest
     public function storeAndReturn(FunctionalTester $I)
     {
         $I->wantTo('store a new piggy bank and return');
-        $I->amOnPage('/piggybanks/create');
+        $I->amOnPage('/piggy_banks/create');
         $I->see('Create new piggy bank');
         $I->submitForm(
             '#store', ['name'               => 'Some new piggy bank',
@@ -219,7 +219,7 @@ class PiggyBankControllerCest
     public function storeFail(FunctionalTester $I)
     {
         $I->wantTo('fail storing a new piggy bank');
-        $I->amOnPage('/piggybanks/create');
+        $I->amOnPage('/piggy_banks/create');
         $I->see('Create new piggy bank');
         $I->submitForm(
             '#store', ['name'          => null,
@@ -238,7 +238,7 @@ class PiggyBankControllerCest
     public function update(FunctionalTester $I)
     {
         $I->wantTo('update a piggy bank');
-        $I->amOnPage('/piggybanks/edit/1');
+        $I->amOnPage('/piggy_banks/edit/1');
         $I->see('Edit piggy bank "New camera"');
         $I->submitForm(
             '#update', [
@@ -261,7 +261,7 @@ class PiggyBankControllerCest
     public function updateAndReturn(FunctionalTester $I)
     {
         $I->wantTo('update a piggy bank and return');
-        $I->amOnPage('/piggybanks/edit/1');
+        $I->amOnPage('/piggy_banks/edit/1');
         $I->see('Edit piggy bank "New camera"');
         $I->submitForm(
             '#update', [
@@ -284,7 +284,7 @@ class PiggyBankControllerCest
     public function updateValidateOnly(FunctionalTester $I)
     {
         $I->wantTo('validate a piggy bank');
-        $I->amOnPage('/piggybanks/edit/1');
+        $I->amOnPage('/piggy_banks/edit/1');
         $I->see('Edit piggy bank "New camera"');
         $I->submitForm(
             '#update', [
@@ -307,7 +307,7 @@ class PiggyBankControllerCest
     public function updateFail(FunctionalTester $I)
     {
         $I->wantTo('update a piggy bank and fail');
-        $I->amOnPage('/piggybanks/edit/1');
+        $I->amOnPage('/piggy_banks/edit/1');
         $I->see('Edit piggy bank "New camera"');
         $I->submitForm(
             '#update', [
@@ -320,7 +320,7 @@ class PiggyBankControllerCest
         ]
         );
         $I->see('Name is too short');
-        $I->seeInDatabase('piggybanks', ['name' => 'New camera']);
+        $I->seeInDatabase('piggy_banks', ['name' => 'New camera']);
 
     }
 

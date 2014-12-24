@@ -48,13 +48,13 @@
             </div>
         </div>
         <!-- events, if present -->
-        @if(count($journal->piggybankevents) > 0)
+        @if(count($journal->piggyBankEvents) > 0)
             <div class="panel panel-default">
                 <div class="panel-heading">
                     Piggy banks
                 </div>
                 <div class="panel-body">
-                    @include('list.piggybank-events',['events' => $journal->piggybankevents,'showPiggybank' => true])
+                    @include('list.piggyBank-events',['events' => $journal->piggyBankEvents,'showPiggyBank' => true])
                 </div>
             </div>
         @endif

@@ -44,8 +44,8 @@ class Transaction implements CUD, CommonDatabaseCalls
         $transaction->account()->associate($data['account']);
         $transaction->transactionJournal()->associate($data['transaction_journal']);
         $transaction->amount = floatval($data['amount']);
-        if (isset($data['piggybank'])) {
-            $transaction->piggybank()->associate($data['piggybank']);
+        if (isset($data['piggyBank'])) {
+            $transaction->piggyBank()->associate($data['piggyBank']);
         }
         if (isset($data['description'])) {
             $transaction->description = $data['description'];

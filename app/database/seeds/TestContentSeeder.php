@@ -79,7 +79,7 @@ class TestContentSeeder extends Seeder
                 Component::create(['user_id' => $user->id, 'name' => 'Some Component 7', 'class' => 'Category']);
 
                 // piggy bank
-                $piggy               = Piggybank::create(
+                $piggy               = PiggyBank::create(
                     [
                         'account_id'    => $savings->id,
                         'name'          => 'New camera',
@@ -96,10 +96,10 @@ class TestContentSeeder extends Seeder
                         'order'         => 0,
                     ]
                 );
-                PiggyBankEvent::create(['piggybank_id' => 1, 'date' => $startDate->format('Y-m-d'), 'amount' => 100]);
-                PiggybankRepetition::create(
+                PiggyBankEvent::create(['piggy_bank_id' => 1, 'date' => $startDate->format('Y-m-d'), 'amount' => 100]);
+                PiggyBankRepetition::create(
                     [
-                        'piggybank_id'  => $piggy->id,
+                        'piggy_bank_id'  => $piggy->id,
                         'startdate'     => Carbon::now()->format('Y-m-d'),
                         'targetdate'    => null,
                         'currentamount' => 0
@@ -107,7 +107,7 @@ class TestContentSeeder extends Seeder
                 );
 
                 // piggy bank
-                $piggyTargeted               = Piggybank::create(
+                $piggyTargeted               = PiggyBank::create(
                     [
                         'account_id'    => $savings->id,
                         'name'          => 'New clothes',
@@ -125,10 +125,10 @@ class TestContentSeeder extends Seeder
                     ]
                 );
 
-                PiggyBankEvent::create(['piggybank_id' => $piggyTargeted->id, 'date' => $startDate->format('Y-m-d'), 'amount' => 100]);
-                PiggybankRepetition::create(
+                PiggyBankEvent::create(['piggy_bank_id' => $piggyTargeted->id, 'date' => $startDate->format('Y-m-d'), 'amount' => 100]);
+                PiggyBankRepetition::create(
                     [
-                        'piggybank_id'  => $piggyTargeted->id,
+                        'piggy_bank_id'  => $piggyTargeted->id,
                         'startdate'     => Carbon::now()->format('Y-m-d'),
                         'targetdate'    => Carbon::now()->addMonths(4)->format('Y-m-d'),
                         'currentamount' => 0
