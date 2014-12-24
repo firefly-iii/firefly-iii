@@ -25,7 +25,7 @@ class Reminders
 
         switch (get_class($reminder->remindersable)) {
 
-            case 'Piggybank':
+            case 'PiggyBank':
                 $start     = new Carbon;
                 $end       = !is_null($reminder->remindersable->targetdate) ? clone $reminder->remindersable->targetdate : new Carbon;
                 $reminders = 0;
@@ -93,7 +93,7 @@ class Reminders
                 $reminder->active    = 1;
                 $reminder->user()->associate(\Auth::getUser());
                 $reminder->remindersable_id   = $piggyBank->id;
-                $reminder->remindersable_type = 'Piggybank';
+                $reminder->remindersable_type = 'PiggyBank';
                 $reminder->save();
             }
         }

@@ -91,7 +91,7 @@
                     <tr>
                         <td><a href="{{route('accounts.show',$id)}}">{{{$info['name']}}}</a></td>
                         <td>{{mf($info['balance'])}}</td>
-                        <td>{{mf($info['leftForPiggybanks'])}}</td>
+                        <td>{{mf($info['leftForPiggyBanks'])}}</td>
                         <td>{{mf($info['sumOfTargets'])}}</td>
                         <td>{{mf($info['sumOfSaved'])}}</td>
                         <td>{{mf($info['leftToSave'])}}</td>

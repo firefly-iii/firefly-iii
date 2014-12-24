@@ -55,7 +55,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface
      */
     public function piggyBanks()
     {
-        return $this->hasManyThrough('Piggybank', 'Account');
+        return $this->hasManyThrough('PiggyBank', 'Account');
     }
 
     /**

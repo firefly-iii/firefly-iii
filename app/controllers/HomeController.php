@@ -39,7 +39,7 @@ class HomeController extends BaseController
 
 
         // get the preference for the home accounts to show:
-        $frontpage = $preferences->get('frontpageAccounts', []);
+        $frontpage = $preferences->get('frontPageAccounts', []);
         if ($frontpage->data == []) {
             $accounts = $acct->getAssetAccounts();
         } else {
