@@ -17,16 +17,17 @@ if (!function_exists('mf')) {
 
         if ($coloured === true) {
             if ($amount === 0.0) {
-                return '<span style="color:#999">'.$currencySymbol.' ' . $string . '</span>';
+                return '<span style="color:#999">' . $currencySymbol . ' ' . $string . '</span>';
             }
             if ($amount > 0) {
-                return '<span class="text-success">'.$currencySymbol.' ' . $string . '</span>';
+                return '<span class="text-success">' . $currencySymbol . ' ' . $string . '</span>';
             }
 
-            return '<span class="text-danger">'.$currencySymbol.' ' . $string . '</span>';
+            return '<span class="text-danger">' . $currencySymbol . ' ' . $string . '</span>';
         }
+
         // &#8364;
-        return $currencySymbol.' ' . $string;
+        return $currencySymbol . ' ' . $string;
     }
 }
 
@@ -59,6 +60,38 @@ if (!function_exists('getCurrencySymbol')) {
         define('FFCURRENCYSYMBOL', $currency->symbol);
 
         return $currency->symbol;
+    }
+}
+
+if (!function_exists('getCurrencyCode')) {
+    /**
+     * @return string
+     */
+    function getCurrencyCode()
+    {
+        if (defined('FFCURRENCYCODE')) {
+            return FFCURRENCYCODE;
+        }
+        if (Cache::has('FFCURRENCYCODE')) {
+            define('FFCURRENCYCODE', Cache::get('FFCURRENCYCODE'));
+
+            return FFCURRENCYCODE;
+        }
+
+        /** @var \FireflyIII\Database\TransactionCurrency\TransactionCurrency $currencies */
+        $currencies = App::make('FireflyIII\Database\TransactionCurrency\TransactionCurrency');
+
+        /** @var \FireflyIII\Shared\Preferences\Preferences $preferences */
+        $preferences = App::make('FireflyIII\Shared\Preferences\Preferences');
+
+        $currencyPreference = $preferences->get('currencyPreference', 'EUR');
+        $currency           = $currencies->findByCode($currencyPreference->data);
+
+        Cache::forever('FFCURRENCYCODE', $currency->code);
+
+        define('FFCURRENCYCODE', $currency->code);
+
+        return $currency->code;
     }
 }
 
