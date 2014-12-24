@@ -496,9 +496,10 @@ class ChangesForV321 extends Migration
         Schema::table(
             'transaction_currencies', function (Blueprint $table) {
             $table->string('name', 48)->nullable();
-            $table->string('symbol', 4)->nullable();
+            $table->string('symbol', 8)->nullable();
         }
         );
+        \DB::update('UPDATE `transaction_currencies` SET `symbol` = "&#8364;", `name` = "Euro" WHERE `code` = "EUR";');
     }
 
     //
