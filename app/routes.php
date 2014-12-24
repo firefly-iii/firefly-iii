@@ -215,14 +215,14 @@ Route::group(
 
 
     // piggy bank controller
-    Route::get('/piggy_banks', ['uses' => 'PiggybankController@index', 'as' => 'piggy_banks.index']);
-    Route::get('/piggy_banks/add/{piggy_bank}', ['uses' => 'PiggybankController@add']); # add money
-    Route::get('/piggy_banks/remove/{piggy_bank}', ['uses' => 'PiggybankController@remove']); #remove money
+    Route::get('/piggy_banks', ['uses' => 'PiggyBankController@index', 'as' => 'piggy_banks.index']);
+    Route::get('/piggy_banks/add/{piggy_bank}', ['uses' => 'PiggyBankController@add']); # add money
+    Route::get('/piggy_banks/remove/{piggy_bank}', ['uses' => 'PiggyBankController@remove']); #remove money
 
-    Route::get('/piggy_banks/create', ['uses' => 'PiggybankController@create', 'as' => 'piggy_banks.create']);
-    Route::get('/piggy_banks/edit/{piggy_bank}', ['uses' => 'PiggybankController@edit', 'as' => 'piggy_banks.edit']);
-    Route::get('/piggy_banks/delete/{piggy_bank}', ['uses' => 'PiggybankController@delete', 'as' => 'piggy_banks.delete']);
-    Route::get('/piggy_banks/show/{piggy_bank}', ['uses' => 'PiggybankController@show', 'as' => 'piggy_banks.show']);
+    Route::get('/piggy_banks/create', ['uses' => 'PiggyBankController@create', 'as' => 'piggy_banks.create']);
+    Route::get('/piggy_banks/edit/{piggy_bank}', ['uses' => 'PiggyBankController@edit', 'as' => 'piggy_banks.edit']);
+    Route::get('/piggy_banks/delete/{piggy_bank}', ['uses' => 'PiggyBankController@delete', 'as' => 'piggy_banks.delete']);
+    Route::get('/piggy_banks/show/{piggy_bank}', ['uses' => 'PiggyBankController@show', 'as' => 'piggy_banks.show']);
 
     // preferences controller
     Route::get('/preferences', ['uses' => 'PreferencesController@index', 'as' => 'preferences']);
@@ -308,11 +308,11 @@ Route::group(
     Route::post('/currency/destroy/{currency}', ['uses' => 'CurrencyController@destroy', 'as' => 'currency.destroy']);
 
     // piggy bank controller
-    Route::post('/piggy_banks/store', ['uses' => 'PiggybankController@store', 'as' => 'piggy_banks.store']);
-    Route::post('/piggy_banks/update/{piggy_bank}', ['uses' => 'PiggybankController@update', 'as' => 'piggy_banks.update']);
-    Route::post('/piggy_banks/destroy/{piggy_bank}', ['uses' => 'PiggybankController@destroy', 'as' => 'piggy_banks.destroy']);
-    Route::post('/piggy_banks/add/{piggy_bank}', ['uses' => 'PiggybankController@postAdd', 'as' => 'piggy_banks.add']); # add money
-    Route::post('/piggy_banks/remove/{piggy_bank}', ['uses' => 'PiggybankController@postRemove', 'as' => 'piggy_banks.remove']); # remove money.
+    Route::post('/piggy_banks/store', ['uses' => 'PiggyBankController@store', 'as' => 'piggy_banks.store']);
+    Route::post('/piggy_banks/update/{piggy_bank}', ['uses' => 'PiggyBankController@update', 'as' => 'piggy_banks.update']);
+    Route::post('/piggy_banks/destroy/{piggy_bank}', ['uses' => 'PiggyBankController@destroy', 'as' => 'piggy_banks.destroy']);
+    Route::post('/piggy_banks/add/{piggy_bank}', ['uses' => 'PiggyBankController@postAdd', 'as' => 'piggy_banks.add']); # add money
+    Route::post('/piggy_banks/remove/{piggy_bank}', ['uses' => 'PiggyBankController@postRemove', 'as' => 'piggy_banks.remove']); # remove money.
 
     // repeated expense controller
     Route::post('/repeatedexpense/store', ['uses' => 'RepeatedExpenseController@store', 'as' => 'repeated.store']);
