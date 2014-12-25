@@ -235,8 +235,8 @@ class GoogleChartController extends BaseController
             return View::make('error')->with('message', 'Invalid year.');
         }
 
-        /** @var \FireflyIII\Database\Budget\Budget $repos */
-        $repos = App::make('FireflyIII\Database\Budget\Budget');
+        /** @var \FireflyIII\Database\Budget\Budget $budgetRepository */
+        $budgetRepository = App::make('FireflyIII\Database\Budget\Budget');
 
         $this->_chart->addColumn('Month', 'date');
         $this->_chart->addColumn('Budgeted', 'number');
@@ -246,8 +246,8 @@ class GoogleChartController extends BaseController
         $end   = clone $start;
         $end->endOfYear();
         while ($start <= $end) {
-            $spent      = $repos->spentInMonth($component, $start);
-            $repetition = $repos->repetitionOnStartingOnDate($component, $start);
+            $spent      = $budgetRepository->spentInMonth($component, $start);
+            $repetition = $budgetRepository->repetitionOnStartingOnDate($component, $start);
             if ($repetition) {
                 $budgeted = floatval($repetition->amount);
             } else {
@@ -283,8 +283,8 @@ class GoogleChartController extends BaseController
             return View::make('error')->with('message', 'Invalid year.');
         }
 
-        /** @var \FireflyIII\Database\Category\Category $repos */
-        $repos = App::make('FireflyIII\Database\Category\Category');
+        /** @var \FireflyIII\Database\Category\Category $categoryRepository */
+        $categoryRepository = App::make('FireflyIII\Database\Category\Category');
 
         $this->_chart->addColumn('Month', 'date');
         $this->_chart->addColumn('Budgeted', 'number');
@@ -295,7 +295,7 @@ class GoogleChartController extends BaseController
         $end->endOfYear();
         while ($start <= $end) {
 
-            $spent    = $repos->spentInMonth($component, $start);
+            $spent    = $categoryRepository->spentInMonth($component, $start);
             $budgeted = null;
 
             $this->_chart->addRow(clone $start, $budgeted, $spent);

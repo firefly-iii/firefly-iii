@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Shared\Toolkit;
 
-use Illuminate\Support\Collection;
 
 /**
  * Class Form
@@ -14,12 +13,12 @@ class Form
     /**
      * Takes any collection and tries to make a sensible select list compatible array of it.
      *
-     * @param Collection $set
-     * @param bool       $addEmpty
+     * @param \Illuminate\Support\Collection $set
+     * @param bool                           $addEmpty
      *
      * @return mixed
      */
-    public function makeSelectList(Collection $set, $addEmpty = false)
+    public function makeSelectList(\Illuminate\Support\Collection $set, $addEmpty = false)
     {
         $selectList = [];
         if ($addEmpty) {

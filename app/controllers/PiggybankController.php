@@ -42,9 +42,9 @@ class PiggyBankController extends BaseController
     public function add(PiggyBank $piggyBank)
     {
         $leftOnAccount = $this->_repository->leftOnAccount($piggyBank->account);
-        $savedSoFar = $piggyBank->currentRelevantRep()->currentamount;
-        $leftToSave = $piggyBank->targetamount - $savedSoFar;
-        $maxAmount = min($leftOnAccount, $leftToSave);
+        $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount;
+        $leftToSave    = $piggyBank->targetamount - $savedSoFar;
+        $maxAmount     = min($leftOnAccount, $leftToSave);
 
 
         \Log::debug('Now going to view for piggy bank #' . $piggyBank->id . ' (' . $piggyBank->name . ')');
@@ -182,9 +182,9 @@ class PiggyBankController extends BaseController
         $amount = round(floatval(Input::get('amount')), 2);
 
         /** @var \FireflyIII\Database\PiggyBank\PiggyBank $acct */
-        $repos = App::make('FireflyIII\Database\PiggyBank\PiggyBank');
+        $piggyRepository = App::make('FireflyIII\Database\PiggyBank\PiggyBank');
 
-        $leftOnAccount = $repos->leftOnAccount($piggyBank->account);
+        $leftOnAccount = $piggyRepository->leftOnAccount($piggyBank->account);
         $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount;
         $leftToSave    = $piggyBank->targetamount - $savedSoFar;
         $maxAmount     = round(min($leftOnAccount, $leftToSave), 2);
@@ -243,7 +243,7 @@ class PiggyBankController extends BaseController
      */
     public function remove(PiggyBank $piggyBank)
     {
-        return View::make('piggy_banks.remove',compact('piggyBank'));
+        return View::make('piggy_banks.remove', compact('piggyBank'));
     }
 
     /**
