@@ -100,6 +100,7 @@ class RecurringControllerCest
     {
         $I->wantTo('show a recurring transaction');
         $I->amOnPage('/recurring/show/1');
+        $I->see('Huur');
     }
 
     /**
@@ -109,6 +110,84 @@ class RecurringControllerCest
     {
         $I->wantTo('store a recurring transaction');
         $I->amOnPage('/recurring/create');
+        $I->submitForm(
+            '#store', [
+                        'name'               => 'Some recurring',
+                        'match'              => 'one,two',
+                        'amount_min'         => 10,
+                        'amount_max'         => 20,
+                        'post_submit_action' => 'store',
+                        'date'               => date('Y-m-d'),
+                        'repeat_freq'        => 'monthly',
+                        'skip'               => 0
+                    ]
+        );
+        $I->see('Recurring transaction &quot;Some recurring&quot; stored.');
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function storeFail(FunctionalTester $I)
+    {
+        $I->wantTo('store a recurring transaction and fail');
+        $I->amOnPage('/recurring/create');
+        $I->submitForm(
+            '#store', [
+                        'name'        => 'Some recurring',
+                        'match'       => '',
+                        'amount_min'  => 10,
+                        'amount_max'  => 20,
+                        'date'        => date('Y-m-d'),
+                        'repeat_freq' => 'monthly',
+                        'skip'        => 0
+                    ]
+        );
+        $I->dontSeeInDatabase('recurring_transactions', ['name' => 'Some recurring']);
+        $I->see('Could not store recurring transaction');
+    }
+
+    public function storeRecreate(FunctionalTester $I)
+    {
+        $I->wantTo('validate a recurring transaction and create another one');
+        $I->amOnPage('/recurring/create');
+        $I->submitForm(
+            '#store', [
+                        'name'               => 'Some recurring',
+                        'match'              => 'one,two',
+                        'amount_min'         => 10,
+                        'amount_max'         => 20,
+                        'post_submit_action' => 'create_another',
+                        'date'               => date('Y-m-d'),
+                        'repeat_freq'        => 'monthly',
+                        'skip'               => 0,
+
+                    ]
+        );
+        $I->see('Recurring transaction &quot;Some recurring&quot; stored.');
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function storeValidate(FunctionalTester $I)
+    {
+        $I->wantTo('validate a recurring transaction');
+        $I->amOnPage('/recurring/create');
+        $I->submitForm(
+            '#store', [
+                        'name'               => 'Some recurring',
+                        'match'              => 'one,two',
+                        'amount_min'         => 10,
+                        'amount_max'         => 20,
+                        'post_submit_action' => 'validate_only',
+                        'date'               => date('Y-m-d'),
+                        'repeat_freq'        => 'monthly',
+                        'skip'               => 0,
+
+                    ]
+        );
+        $I->see('form-group has-success has-feedback');
     }
 
     /**
@@ -118,6 +197,61 @@ class RecurringControllerCest
     {
         $I->wantTo('update a recurring transaction');
         $I->amOnPage('/recurring/edit/1');
+        $I->submitForm(
+            '#update', [
+                         'name'        => 'Some recurring',
+                         'match'       => 'bla,bla',
+                         'amount_min'  => 10,
+                         'amount_max'  => 20,
+                         'date'        => date('Y-m-d'),
+                         'repeat_freq' => 'monthly',
+                         'skip'        => 0
+                     ]
+        );
+        $I->see('Recurring transaction &quot;Some recurring&quot; updated.');
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function updateReturn(FunctionalTester $I)
+    {
+        $I->wantTo('update a recurring transaction and return to edit it');
+        $I->amOnPage('/recurring/edit/1');
+        $I->submitForm(
+            '#update', [
+                         'name'        => 'Some recurring',
+                         'match'       => 'bla,bla',
+                         'amount_min'  => 10,
+                         'amount_max'  => 20,
+                         'post_submit_action' => 'return_to_edit',
+                         'date'        => date('Y-m-d'),
+                         'repeat_freq' => 'monthly',
+                         'skip'        => 0
+                     ]
+        );
+        $I->see('Recurring transaction &quot;Some recurring&quot; updated.');
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function updateFail(FunctionalTester $I)
+    {
+        $I->wantTo('update a recurring transaction and fail');
+        $I->amOnPage('/recurring/edit/1');
+        $I->submitForm(
+            '#update', [
+                         'name'        => 'Some recurring',
+                         'match'       => '',
+                         'amount_min'  => 10,
+                         'amount_max'  => 20,
+                         'date'        => date('Y-m-d'),
+                         'repeat_freq' => 'monthly',
+                         'skip'        => 0
+                     ]
+        );
+        $I->see('Could not update recurring transaction');
     }
 
 }
