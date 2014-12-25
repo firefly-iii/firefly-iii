@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
+ *
  * Class ProfileController
  */
 class ProfileController extends BaseController
