@@ -5,6 +5,7 @@ namespace FireflyIII\Report;
 use Carbon\Carbon;
 use FireflyIII\Database\Account\Account as AccountRepository;
 use FireflyIII\Database\SwitchUser;
+use FireflyIII\Database\TransactionJournal\TransactionJournal as JournalRepository;
 use Illuminate\Support\Collection;
 
 // todo add methods to itnerface
@@ -23,12 +24,16 @@ class Report implements ReportInterface
     /** @var AccountRepository */
     protected $_accounts;
 
+    /** @var JournalRepository */
+    protected $_journals;
+
     /**
      * @param AccountRepository $accounts
      */
-    public function __construct(AccountRepository $accounts)
+    public function __construct(AccountRepository $accounts, JournalRepository $journals)
     {
         $this->_accounts = $accounts;
+        $this->_journals = $journals;
 
     }
 
@@ -73,6 +78,30 @@ class Report implements ReportInterface
                                   ->get(['t_to.account_id as account_id', 'ac_to.name as name', \DB::Raw('SUM(t_to.amount) as `sum`')]);
 
 
+    }
+
+    /**
+     * @param Carbon $date
+     * @param bool   $shared
+     *
+     * @return Collection
+     */
+    public function getIncomeForMonth(Carbon $date, $shared = false)
+    {
+        $start = clone $date;
+        $start->startOfMonth();
+        $end = clone $date;
+        $end->endOfMonth();
+        $userId = $this->_accounts->getUser()->id;
+
+        $list = \TransactionJournal::withRelevantData()
+                                   ->transactionTypes(['Deposit'])
+                                   ->where('user_id', $userId)
+                                   ->orderBy('date','DESC')
+                                   ->before($end)->after($start)->get(['transaction_journals.*']);
+
+
+        return $list;
     }
 
     /**

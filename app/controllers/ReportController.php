@@ -30,6 +30,9 @@ class ReportController extends BaseController
         $this->_journals   = $journals;
         $this->_repository = $repository;
 
+        View::share('title', 'Reports');
+        View::share('mainTitleIcon', 'fa-line-chart');
+
     }
 
     /**
@@ -44,6 +47,33 @@ class ReportController extends BaseController
         $mainTitleIcon = 'fa-line-chart';
 
         return View::make('reports.index', compact('years', 'months', 'title', 'mainTitleIcon'));
+    }
+
+    /**
+     * @param string $year
+     * @param string $month
+     *
+     * @return \Illuminate\View\View
+     */
+    public function month($year = '2014', $month = '1')
+    {
+        try {
+            new Carbon($year . '-' . $month . '-01');
+        } catch (Exception $e) {
+            View::make('error')->with('message', 'Invalid date');
+        }
+        $date         = new Carbon($year . '-' . $month . '-01');
+        $subTitle     = 'Report for ' . $date->format('F Y');
+        $subTitleIcon = 'fa-calendar';
+        $income = $this->_repository->getIncomeForMonth($date,false);
+
+//        var_dump($income->toArray());
+//        exit;
+
+
+
+
+        return View::make('reports.month', compact('date', 'subTitle', 'subTitleIcon','income'));
     }
 
     /**
@@ -83,7 +113,7 @@ class ReportController extends BaseController
                 return null;
             }
         );
-        $deposits = $journals->filter(
+        $deposits    = $journals->filter(
             function (TransactionJournal $journal) {
                 $relations = $journal->transactiongroups()->where('relation', 'balance')->count();
                 $budgets   = $journal->budgets()->count();

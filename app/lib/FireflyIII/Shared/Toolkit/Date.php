@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Shared\Toolkit;
 
-use Carbon\Carbon;
 use FireflyIII\Exception\FireflyException;
 
 /**
@@ -13,14 +12,14 @@ use FireflyIII\Exception\FireflyException;
 class Date
 {
     /**
-     * @param Carbon $theDate
-     * @param        $repeatFreq
-     * @param        $skip
+     * @param \Carbon\Carbon $theDate
+     * @param                $repeatFreq
+     * @param                $skip
      *
-     * @return Carbon
+     * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function addPeriod(Carbon $theDate, $repeatFreq, $skip)
+    public function addPeriod(\Carbon\Carbon $theDate, $repeatFreq, $skip)
     {
         $date = clone $theDate;
         $add  = ($skip + 1);
@@ -59,13 +58,13 @@ class Date
     }
 
     /**
-     * @param Carbon $theCurrentEnd
-     * @param        $repeatFreq
+     * @param \Carbon\Carbon $theCurrentEnd
+     * @param                $repeatFreq
      *
-     * @return mixed
+     * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function endOfPeriod(Carbon $theCurrentEnd, $repeatFreq)
+    public function endOfPeriod(\Carbon\Carbon $theCurrentEnd, $repeatFreq)
     {
         $currentEnd = clone $theCurrentEnd;
         switch ($repeatFreq) {
@@ -100,14 +99,14 @@ class Date
     }
 
     /**
-     * @param Carbon $theCurrentEnd
-     * @param        $repeatFreq
-     * @param Carbon $maxDate
+     * @param \Carbon\Carbon $theCurrentEnd
+     * @param                $repeatFreq
+     * @param \Carbon\Carbon $maxDate
      *
-     * @return mixed
+     * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function endOfX(Carbon $theCurrentEnd, $repeatFreq, Carbon $maxDate)
+    public function endOfX(\Carbon\Carbon $theCurrentEnd, $repeatFreq, \Carbon\Carbon $maxDate)
     {
         $currentEnd = clone $theCurrentEnd;
         switch ($repeatFreq) {
@@ -149,13 +148,13 @@ class Date
     }
 
     /**
-     * @param Carbon $date
-     * @param        $repeatFrequency
+     * @param \Carbon\Carbon $date
+     * @param                $repeatFrequency
      *
      * @return string
      * @throws FireflyException
      */
-    public function periodShow(Carbon $date, $repeatFrequency)
+    public function periodShow(\Carbon\Carbon $date, $repeatFrequency)
     {
         switch ($repeatFrequency) {
             default:
@@ -183,13 +182,13 @@ class Date
     }
 
     /**
-     * @param Carbon $theDate
-     * @param        $repeatFreq
+     * @param \Carbon\Carbon $theDate
+     * @param                $repeatFreq
      *
-     * @return Carbon
+     * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function startOfPeriod(Carbon $theDate, $repeatFreq)
+    public function startOfPeriod(\Carbon\Carbon $theDate, $repeatFreq)
     {
         $date = clone $theDate;
         switch ($repeatFreq) {
@@ -228,14 +227,14 @@ class Date
     }
 
     /**
-     * @param Carbon $theDate
-     * @param        $repeatFreq
-     * @param int    $subtract
+     * @param \Carbon\Carbon $theDate
+     * @param                $repeatFreq
+     * @param int            $subtract
      *
-     * @return Carbon
+     * @return \Carbon\Carbon
      * @throws FireflyException
      */
-    public function subtractPeriod(Carbon $theDate, $repeatFreq, $subtract = 1)
+    public function subtractPeriod(\Carbon\Carbon $theDate, $repeatFreq, $subtract = 1)
     {
         $date = clone $theDate;
         switch ($repeatFreq) {

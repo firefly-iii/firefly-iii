@@ -50,4 +50,12 @@ interface ReportInterface
      * @return array
      */
     public function yearBalanceReport(Carbon $date);
+
+    /**
+     * @param Carbon $date
+     * @param bool   $shared
+     *
+     * @return Collection
+     */
+    public function getIncomeForMonth(Carbon $date, $shared = false);
 } 

@@ -247,7 +247,8 @@ Route::group(
     // report controller:
     Route::get('/reports', ['uses' => 'ReportController@index', 'as' => 'reports.index']);
     Route::get('/reports/{year}', ['uses' => 'ReportController@year', 'as' => 'reports.year']);
-    Route::get('/reports/unbalanced/{year}/{month}', ['uses' => 'ReportController@unbalanced', 'as' => 'reports.unbalanced']);
+    Route::get('/reports/{year}/{month}', ['uses' => 'ReportController@month', 'as' => 'reports.month']);
+    #Route::get('/reports/unbalanced/{year}/{month}', ['uses' => 'ReportController@unbalanced', 'as' => 'reports.unbalanced']);
 
     // reminder controller
     Route::get('/reminders/{reminder}', ['uses' => 'ReminderController@show', 'as' => 'reminders.show']);
