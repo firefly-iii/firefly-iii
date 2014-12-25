@@ -210,7 +210,8 @@ class PiggyBankControllerCest
                        'post_submit_action' => 'create_another',
                        'remind_me'          => 0,
                        'order'              => 3,
-                       'account_id'         => 1, 'targetamount' => 1000]
+                       'account_id'         => 1,
+                       'targetamount' => 1000]
         );
         $I->see('Piggy bank &quot;Some new piggy bank&quot; stored.');
     }
@@ -229,7 +230,9 @@ class PiggyBankControllerCest
                        'reminder_skip' => 0,
                        'remind_me'     => 0,
                        'order'         => 3,
-                       'account_id'    => 1, 'targetamount' => 1000]
+                       'account_id'    => 1,
+                       'post_submit_action' => 'store',
+                       'targetamount' => 1000]
         );
         $I->see('Name is too short');
     }

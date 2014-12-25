@@ -195,7 +195,7 @@ class RecurringController extends BaseController
         }
 
         // go back to update screen.
-        return Redirect::route('piggy_banks.edit', $recurringTransaction->id)->withInput(['post_submit_action' => 'return_to_edit']);
+        return Redirect::route('recurring.edit', $recurringTransaction->id)->withInput(['post_submit_action' => 'return_to_edit']);
 
     }
 }
