@@ -1,9 +1,10 @@
 <?php
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\QueryException;
 use Watson\Validating\ValidatingTrait;
-use \Illuminate\Database\Eloquent\Model as Eloquent;
+
 /**
  * Class Limit
  */
@@ -13,11 +14,11 @@ class BudgetLimit extends Eloquent
     use ValidatingTrait;
     public static $rules
         = [
-            'budget_id' => 'required|exists:budgets,id',
-            'startdate'    => 'required|date',
-            'amount'       => 'numeric|required|min:0.01',
-            'repeats'      => 'required|boolean',
-            'repeat_freq'  => 'required|in:daily,weekly,monthly,quarterly,half-year,yearly'
+            'budget_id'   => 'required|exists:budgets,id',
+            'startdate'   => 'required|date',
+            'amount'      => 'numeric|required|min:0.01',
+            'repeats'     => 'required|boolean',
+            'repeat_freq' => 'required|in:daily,weekly,monthly,quarterly,half-year,yearly'
 
         ];
 
@@ -27,7 +28,7 @@ class BudgetLimit extends Eloquent
      */
     public function budget()
     {
-        return $this->belongsTo('Budget','budget_id');
+        return $this->belongsTo('Budget');
     }
 
     /**
