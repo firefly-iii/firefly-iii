@@ -1,10 +1,13 @@
 <table class="table table-bordered">
+    <?php $tableSum = 0;?>
     @foreach($journals as $journal)
+
     <tr>
         <td>
             <a href="{{route('transactions.show',$journal->id)}}" title="{{{$journal->description}}}">{{{$journal->description}}}</a>
         </td>
         <td>
+            <?php $tableSum += floatval($journal->transactions[1]->amount);?>
             @if($journal->transactiontype->type == 'Withdrawal')
             <span class="text-danger">{{mf($journal->transactions[1]->amount,false)}}</span>
             @endif
@@ -26,6 +29,12 @@
             @endif
         </td>
     </tr>
-
     @endforeach
+    @if(isset($displaySum) && $displaySum === true)
+    <tr>
+        <td><em>Sum</em></td>
+        <td colspan="3">{{mf($tableSum)}}</td>
+
+    </tr>
+    @endif
 </table>

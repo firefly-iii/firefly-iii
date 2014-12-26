@@ -62,18 +62,20 @@ class ReportController extends BaseController
         } catch (Exception $e) {
             View::make('error')->with('message', 'Invalid date');
         }
-        $date         = new Carbon($year . '-' . $month . '-01');
+        $date  = new Carbon($year . '-' . $month . '-01');
         $subTitle     = 'Report for ' . $date->format('F Y');
         $subTitleIcon = 'fa-calendar';
-        $income = $this->_repository->getIncomeForMonth($date,false);
+        $displaySum   = true; // to show sums in report.
+        $income       = $this->_repository->getIncomeForMonth($date);
+        $expenses     = $this->_repository->getExpenseGroupedForMonth($date, 10);
+        $budgets      = $this->_repository->getBudgetsForMonth($date);
+        $categories   = $this->_repository->getCategoriesForMonth($date, 10);
+        $accounts     = $this->_repository->getAccountsForMonth($date);
 
-//        var_dump($income->toArray());
-//        exit;
-
-
-
-
-        return View::make('reports.month', compact('date', 'subTitle', 'subTitleIcon','income'));
+        return View::make(
+            'reports.month',
+            compact('accounts', 'categories', 'budgets', 'expenses', 'subTitle', 'displaySum', 'subTitleIcon', 'income')
+        );
     }
 
     /**

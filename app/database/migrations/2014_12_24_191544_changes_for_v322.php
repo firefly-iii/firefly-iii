@@ -13,7 +13,29 @@ class ChangesForV322 extends Migration
      */
     public function down()
     {
-        // TODO
+        // rename tables:
+        Schema::rename('piggy_bank_repetitions', 'piggybank_repetitions');
+        Schema::rename('piggy_banks', 'piggybanks');
+
+        // rename fields
+        Schema::table(
+            'piggy_bank_events', function (Blueprint $table) {
+            $table->renameColumn('piggy_bank_id', 'piggybank_id');
+        }
+        );
+
+        Schema::table(
+            'piggybank_repetitions', function (Blueprint $table) {
+            $table->renameColumn('piggy_bank_id', 'piggybank_id');
+        }
+        );
+
+        // remove soft delete to piggy banks
+        Schema::table(
+            'piggybanks', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        }
+        );
     }
 
 
@@ -27,6 +49,19 @@ class ChangesForV322 extends Migration
         // rename tables:
         Schema::rename('piggybank_repetitions', 'piggy_bank_repetitions');
         Schema::rename('piggybanks', 'piggy_banks');
+
+        // drop an invalid index.
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->dropIndex('limits_component_id_startdate_repeat_freq_unique');
+        }
+        );
+        // recreate it the correct way:
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->unique(['budget_id', 'startdate', 'repeat_freq'], 'unique_bl_combi');
+        }
+        );
 
         // rename fields
         Schema::table(
