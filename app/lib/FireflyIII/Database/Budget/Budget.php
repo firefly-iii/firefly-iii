@@ -247,9 +247,9 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     {
         return \LimitRepetition::
         leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
-                                  ->where('limit_repetitions.startdate', $date->format('Y-m-d 00:00:00'))
-                                  ->where('budget_limits.budget_id', $budget->id)
-                                  ->first(['limit_repetitions.*']);
+                               ->where('limit_repetitions.startdate', $date->format('Y-m-d 00:00:00'))
+                               ->where('budget_limits.budget_id', $budget->id)
+                               ->first(['limit_repetitions.*']);
     }
 
     /**
@@ -366,6 +366,9 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
      */
     public function limitOnStartingOnDate(\Budget $budget, Carbon $date)
     {
-        return $budget->budgetLimits()->where('startdate', $date->format('Y-m-d'))->first();
+        return $budget->budgetLimits()->where('startdate', $date->format('Y-m-d 00:00:00'))->first();
+
+
+
     }
 }

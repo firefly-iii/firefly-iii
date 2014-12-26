@@ -36,7 +36,7 @@ class Category extends Eloquent
      */
     public function transactionjournals()
     {
-        return $this->belongsToMany('TransactionJournal', 'budget_transaction_journal', 'budget_id');
+        return $this->belongsToMany('TransactionJournal', 'category_transaction_journal', 'category_id');
     }
 
     /**
