@@ -43,9 +43,17 @@
                         <th>Spent</th>
                         <th>Left</th>
                     </tr>
-                    <?php $sum = 0;?>
+                    <?php
+                        $sumSpent = 0;
+                        $sumEnvelope = 0;
+                        $sumLeft = 0;
+                    ?>
                     @foreach($budgets as $budget)
-                        <?php $sum += floatval($budget->spent);?>
+                        <?php
+                            $sumSpent += floatval($budget->spent);
+                            $sumEnvelope += floatval($budget->budget_amount);
+                            $sumLeft += floatval($budget->budget_amount) - floatval($budget->spent);
+                        ?>
                     <tr>
                         <td>
                             @if($budget->id > 0)
@@ -60,8 +68,10 @@
                     </tr>
                     @endforeach
                     <tr>
-                        <td colspan="2"><em>Sum</em></td>
-                        <td colspan="2">{{mf($sum)}}</td>
+                        <td><em>Sum</em></td>
+                        <td>{{mf($sumEnvelope)}}</td>
+                        <td>{{mf($sumSpent)}}</td>
+                        <td>{{mf($sumLeft)}}</td>
                     </tr>
                 </table>
             <div class="panel-body">
