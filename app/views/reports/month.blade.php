@@ -2,13 +2,13 @@
 @section('content')
 {{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName()) }}
 <div class="row">
-    <div class="col-lg-6 col-md-6 col-sm-12">
+    <div class="col-lg-5 col-md-5 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">Income</div>
             @include('list.journals-small',['journals' => $income])
         </div>
     </div>
-    <div class="col-lg-6 col-md-6 col-sm-12">
+    <div class="col-lg-4 col-md-4 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">Expenses (top 10)</div>
             <table class="table table-bordered">
@@ -31,6 +31,31 @@
             </table>
         </div>
     </div>
+    <div class="col-lg-3 col-md-4 col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">Sums</div>
+            <?php
+                $in = 0;
+                foreach($income as $entry) {
+                    $in += floatval($entry->transactions[1]->amount);
+                }
+            ?>
+            <table class="table table-bordered">
+                <tr>
+                    <td>In</td>
+                    <td>{{mf($in)}}</td>
+                </tr>
+                <tr>
+                    <td>Out</td>
+                    <td>{{mf($sum)}}</td>
+                </tr>
+                <tr>
+                    <td>Difference</td>
+                    <td>{{mf($sum + $in)}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
 </div>
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-12">
@@ -48,23 +73,23 @@
                         $sumEnvelope = 0;
                         $sumLeft = 0;
                     ?>
-                    @foreach($budgets as $budget)
+                    @foreach($budgets as $id => $budget)
                         <?php
-                            $sumSpent += floatval($budget->spent);
-                            $sumEnvelope += floatval($budget->budget_amount);
-                            $sumLeft += floatval($budget->budget_amount) - floatval($budget->spent);
+                            $sumSpent += $budget['spent'];
+                            $sumEnvelope += $budget['amount'];
+                            $sumLeft += $budget['amount'] + $budget['spent'];
                         ?>
                     <tr>
                         <td>
-                            @if($budget->id > 0)
-                                <a href="{{route('budgets.show',$budget->id)}}">{{{$budget->name}}}</a>
+                            @if($id > 0)
+                                <a href="{{route('budgets.show',$id)}}">{{{$budget['name']}}}</a>
                             @else
-                                <em>{{{$budget->name}}}</em>
+                                <em>{{{$budget['name']}}}</em>
                             @endif
                         </td>
-                        <td>{{mf($budget->budget_amount)}}</td>
-                        <td>{{mf($budget->spent,false)}}</td>
-                        <td>{{mf(floatval($budget->budget_amount) - floatval($budget->spent))}}</td>
+                        <td>{{mf($budget['amount'])}}</td>
+                        <td>{{mf($budget['spent'],false)}}</td>
+                        <td>{{mf($budget['amount'] + $budget['spent'])}}</td>
                     </tr>
                     @endforeach
                     <tr>
@@ -74,9 +99,6 @@
                         <td>{{mf($sumLeft)}}</td>
                     </tr>
                 </table>
-            <div class="panel-body">
-                <em>This list does not take in account outgoing transfers to shared accounts.</em>
-            </div>
         </div>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12">
@@ -88,17 +110,17 @@
                     <th>Spent</th>
                 </tr>
                 <?php $sum = 0;?>
-                @foreach($categories as $category)
-                    <?php $sum += floatval($category->sum);?>
+                @foreach($categories as $id => $category)
+                    <?php $sum += floatval($category['amount']);?>
                     <tr>
                         <td>
-                            @if($category->id > 0)
-                                <a href="{{route('categories.show',$category->id)}}">{{{$category->name}}}</a>
+                            @if($id > 0)
+                                <a href="{{route('categories.show',$id)}}">{{{$category['name']}}}</a>
                             @else
-                                <em>{{{$category->name}}}</em>
+                                <em>{{{$category['name']}}}</em>
                             @endif
                         </td>
-                        <td>{{mf($category->sum,false)}}</td>
+                        <td>{{mf($category['amount'],false)}}</td>
                     </tr>
                 @endforeach
                 <tr>
@@ -106,9 +128,6 @@
                     <td>{{mf($sum)}}</td>
                 </tr>
             </table>
-            <div class="panel-body">
-                <em>This list does not take in account outgoing transfers to shared accounts.</em>
-            </div>
         </div>
     </div>
 </div>
@@ -122,17 +141,17 @@
                     $sumEnd = 0;
                     $sumDiff = 0;
                 ?>
-            @foreach($accounts as $account)
+            @foreach($accounts as $id => $account)
                 <?php
-                    $sumStart += $account->startBalance;
-                    $sumEnd += $account->endBalance;
-                    $sumDiff += $account->difference;
+                    $sumStart += $account['startBalance'];
+                    $sumEnd += $account['endBalance'];
+                    $sumDiff += $account['difference'];
                 ?>
                 <tr>
-                    <td><a href="#">{{{$account->name}}}</a></td>
-                    <td>{{mf($account->startBalance)}}</td>
-                    <td>{{mf($account->endBalance)}}</td>
-                    <td>{{mf($account->difference)}}</td>
+                    <td><a href="{{route('accounts.show',$id)}}">{{{$account['name']}}}</a></td>
+                    <td>{{mf($account['startBalance'])}}</td>
+                    <td>{{mf($account['endBalance'])}}</td>
+                    <td>{{mf($account['difference'])}}</td>
                 </tr>
             @endforeach
                 <tr>

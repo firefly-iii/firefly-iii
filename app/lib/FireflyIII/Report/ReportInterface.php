@@ -33,20 +33,27 @@ interface ReportInterface
      *
      * @return Collection
      */
-    public function getTransfersToSharedAccounts(Carbon $date);
+    public function getTransfersToSharedGroupedByAccounts(Carbon $date);
+
+    /**
+     * @param Carbon $date
+     *
+     * @return Collection
+     */
+    public function getPiggyBanksForMonth(Carbon $date);
 
     /**
      * @param Carbon $date
      * @param int $limit
      *
-     * @return Collection
+     * @return array
      */
     public function getCategoriesForMonth(Carbon $date, $limit = 15);
 
     /**
      * @param Carbon $date
      *
-     * @return Collection
+     * @return array
      */
     public function getAccountsForMonth(Carbon $date);
 
@@ -57,6 +64,7 @@ interface ReportInterface
      * @return Collection
      */
     public function getExpenseGroupedForMonth(Carbon $date,  $limit = 15);
+
 
     /**
      * @param Carbon $date
