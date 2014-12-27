@@ -6,11 +6,12 @@ use Carbon\Carbon;
 use FireflyIII\Database\Account\Account as AccountRepository;
 use FireflyIII\Database\SwitchUser;
 use FireflyIII\Database\TransactionJournal\TransactionJournal as JournalRepository;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use stdClass;
 
-// todo add methods to itnerface
+// todo add methods to interface
 
 /**
  * Class Report
@@ -25,9 +26,12 @@ class Report implements ReportInterface
 
     /** @var AccountRepository */
     protected $_accounts;
-
+    /** @var  \FireflyIII\Report\ReportHelperInterface */
+    protected $_helper;
     /** @var JournalRepository */
     protected $_journals;
+    /** @var  \FireflyIII\Report\ReportQueryInterface */
+    protected $_queries;
 
     /**
      * @param AccountRepository $accounts
@@ -36,10 +40,15 @@ class Report implements ReportInterface
     {
         $this->_accounts = $accounts;
         $this->_journals = $journals;
+        $this->_queries  = \App::make('FireflyIII\Report\ReportQueryInterface');
+        $this->_helper   = \App::make('FireflyIII\Report\ReportHelperInterface');
+
 
     }
 
     /**
+     * TODO Used in yearly report, so not ready for cleanup.
+     *
      * @param Carbon $start
      * @param Carbon $end
      * @param int    $limit
@@ -76,7 +85,7 @@ class Report implements ReportInterface
                                   ->where('acm_from.data', '!=', '"sharedExpense"')
                                   ->before($end)->after($start)
                                   ->where('transaction_journals.user_id', \Auth::user()->id)
-                                  ->groupBy('account_id')->orderBy('sum', 'DESC')->limit(15)
+                                  ->groupBy('account_id')->orderBy('sum', 'DESC')->limit($limit)
                                   ->get(['t_to.account_id as account_id', 'ac_to.name as name', \DB::Raw('SUM(t_to.amount) as `sum`')]);
 
 
@@ -85,7 +94,7 @@ class Report implements ReportInterface
     /**
      * @param Carbon $date
      *
-     * @return Collection
+     * @return array
      */
     public function getAccountsForMonth(Carbon $date)
     {
@@ -93,31 +102,21 @@ class Report implements ReportInterface
         $start->startOfMonth();
         $end = clone $date;
         $end->endOfMonth();
-        $list = \Auth::user()->accounts()
-                     ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                     ->leftJoin(
-                         'account_meta', function (JoinClause $join) {
-                         $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', "accountRole");
-                     }
-                     )
-                     ->whereIn('account_types.type', ['Default account', 'Cash account', 'Asset account'])
-                     ->where('active', 1)
-                     ->where(
-                         function ($query) {
-                             $query->where('account_meta.data', '!=', '"sharedExpense"');
-                             $query->orWhereNull('account_meta.data');
-                         }
-                     )
-                     ->get(['accounts.*']);
-        $list->each(
-            function (\Account $account) use ($start, $end) {
-                $account->startBalance = \Steam::balance($account, $start);
-                $account->endBalance   = \Steam::balance($account, $end);
-                $account->difference   = $account->endBalance - $account->startBalance;
-            }
-        );
+        $list     = $this->_queries->accountList();
+        $accounts = [];
+        /** @var \Account $account */
+        foreach ($list as $account) {
+            $id            = intval($account->id);
+            $accounts[$id] = [
+                'name'         => $account->name,
+                'startBalance' => \Steam::balance($account, $start),
+                'endBalance'   => \Steam::balance($account, $end)
+            ];
 
-        return $list;
+            $accounts[$id]['difference'] = $accounts[$id]['endBalance'] - $accounts[$id]['startBalance'];
+        }
+
+        return $accounts;
     }
 
     /**
@@ -132,74 +131,29 @@ class Report implements ReportInterface
         $end = clone $date;
         $end->endOfMonth();
         // all budgets
-        /** @var Collection $budgets */
-        $budgets = \Auth::user()->budgets()
-                        ->leftJoin(
-                            'budget_limits', function (JoinClause $join) use ($date) {
-                            $join->on('budget_limits.budget_id', '=', 'budgets.id')->where('budget_limits.startdate', '=', $date->format('Y-m-d'));
-                        }
-                        )
-                        ->get(['budgets.*', 'budget_limits.amount as budget_amount']);
-        $amounts = \Auth::user()->transactionjournals()
-                        ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                        ->leftJoin('budgets', 'budget_transaction_journal.budget_id', '=', 'budgets.id')
-                        ->leftJoin(
-                            'transactions', function (JoinClause $join) {
-                            $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
-                        }
-                        )
-                        ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                        ->leftJoin(
-                            'account_meta', function (JoinClause $join) {
-                            $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
-                        }
-                        )
-                        ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
-                        ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                        ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                        ->where('account_meta.data', '!=', '"sharedExpense"')
-                        ->where('transaction_types.type', 'Withdrawal')
-                        ->groupBy('budgets.id')
-                        ->orderBy('name','ASC')
-                        ->get(['budgets.id', 'budgets.name', \DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
+        $set                   = $this->_queries->getAllBudgets($date);
+        $budgets               = $this->_helper->makeArray($set);
+        $amountSet             = $this->_queries->journalsByBudget($start, $end);
+        $amounts               = $this->_helper->makeArray($amountSet);
+        $combined              = $this->_helper->mergeArrays($budgets, $amounts);
+        $combined[0]['spent']  = isset($combined[0]['spent']) ? $combined[0]['spent'] : 0.0;
+        $combined[0]['amount'] = isset($combined[0]['amount']) ? $combined[0]['amount'] : 0.0;
+        $combined[0]['name']   = 'No budget';
 
-
-        $spentNoBudget = 0;
-        foreach ($budgets as $budget) {
-            $budget->spent = 0;
-            foreach ($amounts as $amount) {
-                if (intval($budget->id) == intval($amount->id)) {
-                    $budget->spent = floatval($amount->sum) * -1;
-                }
-                if (is_null($amount->id)) {
-                    $spentNoBudget = floatval($amount->sum) * -1;
-                }
-            }
+        // find transactions to shared expense accounts, which are without a budget by default:
+        $transfers = $this->_queries->sharedExpenses($start, $end);
+        foreach ($transfers as $transfer) {
+            $combined[0]['spent'] += floatval($transfer->amount) * -1;
         }
 
-        $noBudget                = new stdClass;
-        $noBudget->id            = 0;
-        $noBudget->name          = '(no budget)';
-        $noBudget->budget_amount = 0;
-        $noBudget->spent         = $spentNoBudget;
-
-        // also get transfers to expense accounts (which are without a budget, and grouped).
-        $transfers = $this->getTransfersToSharedAccounts($date);
-        foreach($transfers as $transfer) {
-            $noBudget->spent += floatval($transfer->sum) * -1;
-        }
-
-
-        $budgets->push($noBudget);
-
-        return $budgets;
+        return $combined;
     }
 
     /**
      * @param Carbon $date
      * @param int    $limit
      *
-     * @return Collection
+     * @return array
      */
     public function getCategoriesForMonth(Carbon $date, $limit = 15)
     {
@@ -208,58 +162,21 @@ class Report implements ReportInterface
         $end = clone $date;
         $end->endOfMonth();
         // all categories.
-        $amounts         = \Auth::user()->transactionjournals()
-                                ->leftJoin(
-                                    'category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
-                                )
-                                ->leftJoin('categories', 'category_transaction_journal.category_id', '=', 'categories.id')
-                                ->leftJoin(
-                                    'transactions', function (JoinClause $join) {
-                                    $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
-                                }
-                                )
-                                ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                                ->leftJoin(
-                                    'account_meta', function (JoinClause $join) {
-                                    $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
-                                }
-                                )
-                                ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
-                                ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                                ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                                ->where('account_meta.data', '!=', '"sharedExpense"')
-                                ->where('transaction_types.type', 'Withdrawal')
-                                ->groupBy('categories.id')
-                                ->orderBy('sum')
-                                ->get(['categories.id', 'categories.name', \DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
-        $spentNoCategory = 0;
-        foreach ($amounts as $amount) {
-            if (is_null($amount->id)) {
-                $spentNoCategory = floatval($amount->sum) * -1;
-            }
-        }
-        $noCategory       = new stdClass;
-        $noCategory->id   = 0;
-        $noCategory->name = '(no category)';
-        $noCategory->sum  = $spentNoCategory;
-        $amounts->push($noCategory);
+        $result     = $this->_queries->journalsByCategory($start, $end);
+        $categories = $this->_helper->makeArray($result);
 
-        $return       = new Collection;
-        $bottom       = new stdClass();
-        $bottom->name = 'Others';
-        $bottom->id   = 0;
-        $bottom->sum  = 0;
+        // all transfers
+        $result    = $this->_queries->sharedExpensesByCategory($start, $end);
+        $transfers = $this->_helper->makeArray($result);
+        $merged    = $this->_helper->mergeArrays($categories, $transfers);
 
-        foreach ($amounts as $index => $entry) {
-            if ($index < $limit) {
-                $return->push($entry);
-            } else {
-                $bottom->sum += floatval($entry->sum);
-            }
-        }
-        $return->push($bottom);
+        // sort.
+        $sorted = $this->_helper->sortNegativeArray($merged);
 
-        return $return;
+        // limit to $limit:
+        $cut = $this->_helper->limitArray($sorted, $limit);
+
+        return $cut;
     }
 
     /**
@@ -314,7 +231,7 @@ class Report implements ReportInterface
                                                 \DB::Raw('SUM(`transactions`.`amount`) * -1 AS `sum`')
                                             ]
                                         );
-        $transfers = $this->getTransfersToSharedAccounts($date);
+        $transfers = $this->getTransfersToSharedGroupedByAccounts($date);
         // merge $transfers into $set
         foreach ($transfers as $transfer) {
             if (!is_null($transfer->account_id)) {
@@ -409,7 +326,40 @@ class Report implements ReportInterface
      *
      * @return Collection
      */
-    public function getTransfersToSharedAccounts(Carbon $date)
+    public function getPiggyBanksForMonth(Carbon $date)
+    {
+        $start = clone $date;
+        $start->startOfMonth();
+        $end = clone $date;
+        $end->endOfMonth();
+
+        $set = \PiggyBank::
+        leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
+                         ->where('accounts.user_id', \Auth::user()->id)
+                         ->where('repeats', 0)
+                         ->where(
+                             function (Builder $query) use ($start, $end) {
+                                 $query->whereNull('piggy_banks.deleted_at');
+                                 $query->orWhere(
+                                     function (Builder $query) use ($start, $end) {
+                                         $query->whereNotNull('piggy_banks.deleted_at');
+                                         $query->where('piggy_banks.deleted_at', '>=', $start->format('Y-m-d 00:00:00'));
+                                         $query->where('piggy_banks.deleted_at', '<=', $end->format('Y-m-d 00:00:00'));
+                                     }
+                                 );
+                             }
+                         )
+                         ->get(['piggy_banks.*']);
+
+
+    }
+
+    /**
+     * @param Carbon $date
+     *
+     * @return Collection
+     */
+    public function getTransfersToSharedGroupedByAccounts(Carbon $date)
     {
         $start = clone $date;
         $start->startOfMonth();
@@ -436,6 +386,7 @@ class Report implements ReportInterface
                                   ->where('date', '<=', $end->format('Y-m-d'))
                                   ->where('transaction_types.type', 'Transfer')
                                   ->where('transaction_journals.user_id', \Auth::user()->id)
+                                  ->groupBy('accounts.name')
                                   ->get(
                                       [
                                           'transactions.account_id',
@@ -444,6 +395,7 @@ class Report implements ReportInterface
                                       ]
                                   );
     }
+
 
     /**
      * @param Carbon $start

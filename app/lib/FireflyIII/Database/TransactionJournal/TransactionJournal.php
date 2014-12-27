@@ -389,7 +389,12 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
             if ($category) {
                 $journal->categories()->sync([$category->id]);
             }
+
+            return;
         }
+        $journal->categories()->sync([]);
+
+        return;
     }
 
     /**
