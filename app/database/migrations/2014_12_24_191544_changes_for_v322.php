@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
@@ -50,10 +51,18 @@ class ChangesForV322 extends Migration
         Schema::rename('piggybank_repetitions', 'piggy_bank_repetitions');
         Schema::rename('piggybanks', 'piggy_banks');
 
-        // drop an invalid index.
+        // drop an invalid index (how, in sqlite?).
         Schema::table(
             'budget_limits', function (Blueprint $table) {
-            $table->dropIndex('limits_component_id_startdate_repeat_freq_unique');
+
+//            try {
+                //$table->dropUnique('limits_component_id_startdate_repeat_freq_unique');
+//            } catch (QueryException $e) {
+                //$table->dropUnique('unique_ci_combi');
+//            } catch (PDOException $e) {
+//                $table->dropUnique('unique_ci_combi');
+//            }
+
         }
         );
         // recreate it the correct way:
