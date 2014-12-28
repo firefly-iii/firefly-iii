@@ -6,8 +6,11 @@ Route::bind(
     function ($value, $route) {
         if (Auth::check()) {
             $account = Account::
-            leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')->where('account_types.editable', 1)->where('accounts.id', $value)
-                              ->where('user_id', Auth::user()->id)->first(['accounts.*']);
+            leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                              ->where('account_types.editable', 1)
+                              ->where('accounts.id', $value)
+                              ->where('user_id', Auth::user()->id)
+                              ->first(['accounts.*']);
             if ($account) {
                 return $account;
             }
