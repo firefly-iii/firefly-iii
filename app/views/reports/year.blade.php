@@ -84,10 +84,10 @@
                 Expenses
             </div>
             <table class="table">
-                @foreach($groupedExpenses as $expense)
+                @foreach($groupedExpenses as $id => $expense)
                 <tr>
-                    <td><a href="{{route('accounts.show',$expense->account_id)}}">{{{$expense->name}}}</a></td>
-                    <td>{{mf(floatval($expense->sum)*-1)}}</td>
+                    <td><a href="{{route('accounts.show',$id)}}">{{{$expense['name']}}}</a></td>
+                    <td>{{mf(floatval($expense['amount'])*-1)}}</td>
                 </tr>
                 @endforeach
             </table>

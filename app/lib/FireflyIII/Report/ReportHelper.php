@@ -116,4 +116,25 @@ class ReportHelper implements ReportHelperInterface
 
         return $array;
     }
+
+    /**
+     * Sort an array where all 'amount' keys are positive floats.
+     *
+     * @param array $array
+     *
+     * @return array
+     */
+    public function sortArray(array $array) {
+        uasort(
+            $array, function ($left, $right) {
+            if ($left['amount'] == $right['amount']) {
+                return 0;
+            }
+
+            return ($left['amount'] < $right['amount']) ? 1 : -1;
+        }
+        );
+        return $array;
+
+    }
 }

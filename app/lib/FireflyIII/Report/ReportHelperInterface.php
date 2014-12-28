@@ -52,4 +52,13 @@ interface ReportHelperInterface
      */
     public function sortNegativeArray(array $array);
 
+    /**
+     * Sort an array where all 'amount' keys are positive floats.
+     *
+     * @param array $array
+     *
+     * @return array
+     */
+    public function sortArray(array $array);
+
 }

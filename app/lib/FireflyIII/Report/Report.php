@@ -9,7 +9,6 @@ use FireflyIII\Database\TransactionJournal\TransactionJournal as JournalReposito
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
-use stdClass;
 
 // todo add methods to interface
 
@@ -47,8 +46,6 @@ class Report implements ReportInterface
     }
 
     /**
-     * TODO Used in yearly report, so not ready for cleanup.
-     *
      * @param Carbon $start
      * @param Carbon $end
      * @param int    $limit
@@ -57,37 +54,49 @@ class Report implements ReportInterface
      */
     public function expensesGroupedByAccount(Carbon $start, Carbon $end, $limit = 15)
     {
-        return \TransactionJournal::
-        leftJoin(
-            'transactions as t_from', function ($join) {
-            $join->on('t_from.transaction_journal_id', '=', 'transaction_journals.id')->where('t_from.amount', '<', 0);
-        }
-        )
-                                  ->leftJoin('accounts as ac_from', 't_from.account_id', '=', 'ac_from.id')
-                                  ->leftJoin(
-                                      'account_meta as acm_from', function ($join) {
-                                      $join->on('ac_from.id', '=', 'acm_from.account_id')->where('acm_from.name', '=', 'accountRole');
-                                  }
-                                  )
-                                  ->leftJoin(
-                                      'transactions as t_to', function ($join) {
-                                      $join->on('t_to.transaction_journal_id', '=', 'transaction_journals.id')->where('t_to.amount', '>', 0);
-                                  }
-                                  )
-                                  ->leftJoin('accounts as ac_to', 't_to.account_id', '=', 'ac_to.id')
-                                  ->leftJoin(
-                                      'account_meta as acm_to', function ($join) {
-                                      $join->on('ac_to.id', '=', 'acm_to.account_id')->where('acm_to.name', '=', 'accountRole');
-                                  }
-                                  )
-                                  ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                  ->where('transaction_types.type', 'Withdrawal')
-                                  ->where('acm_from.data', '!=', '"sharedExpense"')
-                                  ->before($end)->after($start)
-                                  ->where('transaction_journals.user_id', \Auth::user()->id)
-                                  ->groupBy('account_id')->orderBy('sum', 'DESC')->limit($limit)
-                                  ->get(['t_to.account_id as account_id', 'ac_to.name as name', \DB::Raw('SUM(t_to.amount) as `sum`')]);
+        $result  = $this->_queries->journalsByExpenseAccount($start, $end);
+        $array   = $this->_helper->makeArray($result);
+        $limited = $this->_helper->limitArray($array, $limit);
 
+        return $limited;
+
+    }
+
+    /**
+     * Gets all the users shared and non-shared accounts combined with various meta-data
+     * to display the amount of money spent that month compared to what's been spend within
+     * budgets.
+     *
+     * @param Carbon $date
+     *
+     * @return Collection
+     */
+    public function getAccountListBudgetOverview(Carbon $date)
+    {
+        $start = clone $date;
+        $start->startOfMonth();
+        $end = clone $date;
+        $end->endOfMonth();
+        $start->subDay();
+        $accounts = $this->_queries->getAllAccounts($start, $end);
+
+        $accounts->each(
+            function (\Account $account) use ($start, $end) {
+                $budgets        = $this->_queries->getBudgetSummary($account, $start, $end);
+                $balancedAmount = $this->_queries->balancedTransactionsSum($account, $start, $end);
+                $array          = [];
+                foreach ($budgets as $budget) {
+                    $id         = intval($budget->id);
+                    $data       = $budget->toArray();
+                    $array[$id] = $data;
+                }
+                $account->budgetInformation = $array;
+                $account->balancedAmount    = $balancedAmount;
+
+            }
+        );
+
+        return $accounts;
 
     }
 
@@ -191,78 +200,27 @@ class Report implements ReportInterface
         $start->startOfMonth();
         $end = clone $date;
         $end->endOfMonth();
-        $userId = $this->_accounts->getUser()->id;
 
-        $set       = \TransactionJournal::
-        leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                        ->leftJoin(
-                                            'transactions', function (JoinClause $join) {
-                                            $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where(
-                                                'transactions.amount', '>', 0
-                                            );
-                                        }
-                                        )
-                                        ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                                        ->leftJoin(
-                                            'transactions AS otherTransactions', function (JoinClause $join) {
-                                            $join->on('transaction_journals.id', '=', 'otherTransactions.transaction_journal_id')->where(
-                                                'otherTransactions.amount', '<', 0
-                                            );
-                                        }
-                                        )
-                                        ->leftJoin('accounts as otherAccounts', 'otherAccounts.id', '=', 'otherTransactions.account_id')
-                                        ->leftJoin(
-                                            'account_meta', function (JoinClause $join) {
-                                            $join->on('otherAccounts.id', '=', 'account_meta.account_id')->where('account_meta.name', '=', 'accountRole');
-                                        }
-                                        )
-                                        ->where('date', '>=', $start->format('Y-m-d'))
-                                        ->where('date', '<=', $end->format('Y-m-d'))
-                                        ->where('account_meta.data', '!=', '"sharedExpense"')
-                                        ->where('transaction_types.type', 'Withdrawal')
-                                        ->whereNull('transaction_journals.deleted_at')
-                                        ->where('transaction_journals.user_id', $userId)
-                                        ->groupBy('account_id')
-                                        ->orderBy('sum', 'ASC')
-                                        ->get(
-                                            [
-                                                'transactions.account_id',
-                                                'accounts.name',
-                                                \DB::Raw('SUM(`transactions`.`amount`) * -1 AS `sum`')
-                                            ]
-                                        );
-        $transfers = $this->getTransfersToSharedGroupedByAccounts($date);
-        // merge $transfers into $set
+        $set      = $this->_queries->journalsByExpenseAccount($start, $end);
+        $expenses = $this->_helper->makeArray($set);
+
+        $alt       = $this->_queries->sharedExpenses($start, $end);
+        $transfers = $this->_helper->makeArray($alt);
+
+        $expenses[-1] = [
+            'amount' => 0,
+            'name'   => 'Transfers to shared',
+            'spent'  => 0
+        ];
+
         foreach ($transfers as $transfer) {
-            if (!is_null($transfer->account_id)) {
-                $set->push($transfer);
-            }
-        }
-        // sort the list.
-        $set                = $set->sortBy(
-            function ($entry) {
-                return floatval($entry->sum);
-            }
-        );
-        $return             = new Collection;
-        $bottom             = new stdClass();
-        $bottom->name       = 'Others';
-        $bottom->account_id = 0;
-        $bottom->sum        = 0;
-
-        $count = 0;
-        foreach ($set as $entry) {
-            if ($count < $limit) {
-                $return->push($entry);
-            } else {
-                $bottom->sum += floatval($entry->sum);
-            }
-            $count++;
+            $expenses[-1]['amount'] += $transfer['amount'];
         }
 
-        $return->push($bottom);
+        $expenses = $this->_helper->sortArray($expenses);
+        $limited  = $this->_helper->limitArray($expenses, $limit);
 
-        return $return;
+        return $limited;
 
     }
 
@@ -280,8 +238,8 @@ class Report implements ReportInterface
         $end->endOfMonth();
         $userId = $this->_accounts->getUser()->id;
 
-        $list = \TransactionJournal::withRelevantData()
-                                   ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+
+        $list = \TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                                    ->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
                                    ->leftJoin(
                                        'account_meta', function (JoinClause $join) {
@@ -291,6 +249,7 @@ class Report implements ReportInterface
                                    ->transactionTypes(['Deposit'])
                                    ->where('transaction_journals.user_id', $userId)
                                    ->where('transactions.amount', '>', 0)
+                                   ->where('transaction_journals.user_id', \Auth::user()->id)
                                    ->where('account_meta.data', '!=', '"sharedExpense"')
                                    ->orderBy('date', 'ASC')
                                    ->before($end)->after($start)->get(['transaction_journals.*']);
@@ -353,49 +312,6 @@ class Report implements ReportInterface
 
 
     }
-
-    /**
-     * @param Carbon $date
-     *
-     * @return Collection
-     */
-    public function getTransfersToSharedGroupedByAccounts(Carbon $date)
-    {
-        $start = clone $date;
-        $start->startOfMonth();
-        $end = clone $date;
-        $end->endOfMonth();
-
-        return \TransactionJournal::
-        leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                  ->leftJoin(
-                                      'transactions', function (JoinClause $join) {
-                                      $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where(
-                                          'transactions.amount', '>', 0
-                                      );
-                                  }
-                                  )
-                                  ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                                  ->leftJoin(
-                                      'account_meta', function (JoinClause $join) {
-                                      $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
-                                  }
-                                  )
-                                  ->where('account_meta.data', '"sharedExpense"')
-                                  ->where('date', '>=', $start->format('Y-m-d'))
-                                  ->where('date', '<=', $end->format('Y-m-d'))
-                                  ->where('transaction_types.type', 'Transfer')
-                                  ->where('transaction_journals.user_id', \Auth::user()->id)
-                                  ->groupBy('accounts.name')
-                                  ->get(
-                                      [
-                                          'transactions.account_id',
-                                          'accounts.name',
-                                          \DB::Raw('SUM(`transactions`.`amount`) * -1 AS `sum`')
-                                      ]
-                                  );
-    }
-
 
     /**
      * @param Carbon $start
