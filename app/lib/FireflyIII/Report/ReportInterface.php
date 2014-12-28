@@ -22,33 +22,15 @@ interface ReportInterface
     public function expensesGroupedByAccount(Carbon $start, Carbon $end, $limit = 15);
 
     /**
+     * Gets all the users shared and non-shared accounts combined with various meta-data
+     * to display the amount of money spent that month compared to what's been spend within
+     * budgets.
+     *
      * @param Carbon $date
      *
      * @return Collection
      */
-    public function getBudgetsForMonth(Carbon $date);
-
-    /**
-     * @param Carbon $date
-     *
-     * @return Collection
-     */
-    public function getTransfersToSharedGroupedByAccounts(Carbon $date);
-
-    /**
-     * @param Carbon $date
-     *
-     * @return Collection
-     */
-    public function getPiggyBanksForMonth(Carbon $date);
-
-    /**
-     * @param Carbon $date
-     * @param int $limit
-     *
-     * @return array
-     */
-    public function getCategoriesForMonth(Carbon $date, $limit = 15);
+    public function getAccountListBudgetOverview(Carbon $date);
 
     /**
      * @param Carbon $date
@@ -59,12 +41,26 @@ interface ReportInterface
 
     /**
      * @param Carbon $date
+     *
+     * @return Collection
+     */
+    public function getBudgetsForMonth(Carbon $date);
+
+    /**
+     * @param Carbon $date
+     * @param int    $limit
+     *
+     * @return array
+     */
+    public function getCategoriesForMonth(Carbon $date, $limit = 15);
+
+    /**
+     * @param Carbon $date
      * @param int    $limit
      *
      * @return Collection
      */
-    public function getExpenseGroupedForMonth(Carbon $date,  $limit = 15);
-
+    public function getExpenseGroupedForMonth(Carbon $date, $limit = 15);
 
     /**
      * @param Carbon $date
@@ -73,6 +69,13 @@ interface ReportInterface
      * @return Collection
      */
     public function getIncomeForMonth(Carbon $date, $shared = false);
+
+    /**
+     * @param Carbon $date
+     *
+     * @return Collection
+     */
+    public function getPiggyBanksForMonth(Carbon $date);
 
     /**
      * @param Carbon $start

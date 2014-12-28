@@ -13,15 +13,15 @@
             <div class="panel-heading">Expenses (top 10)</div>
             <table class="table table-bordered">
                 <?php $sum = 0;?>
-                @foreach($expenses as $expense)
-                    <?php $sum += floatval($expense->sum);?>
+                @foreach($expenses as $id => $expense)
+                    <?php $sum += floatval($expense['amount']);?>
                     <tr>
-                        @if($expense->account_id != 0)
-                        <td><a href="{{route('accounts.show',$expense->account_id)}}">{{{$expense->name}}}</a></td>
+                        @if($id > 0)
+                        <td><a href="{{route('accounts.show',$id)}}">{{{$expense['name']}}}</a></td>
                         @else
-                        <td><em>{{{$expense->name}}}</em></td>
+                        <td><em>{{{$expense['name']}}}</em></td>
                         @endif
-                        <td>{{mf($expense->sum)}}</td>
+                        <td>{{mf($expense['amount'])}}</td>
                     </tr>
                 @endforeach
                 <tr>
@@ -51,7 +51,7 @@
                 </tr>
                 <tr>
                     <td>Difference</td>
-                    <td>{{mf($sum + $in)}}</td>
+                    <td>{{mf($in - $sum)}}</td>
                 </tr>
             </table>
         </div>

@@ -1,6 +1,5 @@
 <?php
 use Carbon\Carbon;
-use FireflyIII\Database\Account\Account as AccountRepository;
 use FireflyIII\Database\TransactionJournal\TransactionJournal as TransactionJournalRepository;
 use FireflyIII\Report\ReportInterface as Report;
 
@@ -10,28 +9,50 @@ use FireflyIII\Report\ReportInterface as Report;
  */
 class ReportController extends BaseController
 {
-    /** @var AccountRepository */
-    protected $_accounts;
-
+    /** @var \FireflyIII\Database\Budget\Budget */
+    protected $_budgets;
     /** @var TransactionJournalRepository */
     protected $_journals;
-
     /** @var Report */
     protected $_repository;
 
     /**
-     * @param AccountRepository            $accounts
      * @param TransactionJournalRepository $journals
      * @param Report                       $repository
      */
-    public function __construct(AccountRepository $accounts, TransactionJournalRepository $journals, Report $repository)
+    public function __construct(TransactionJournalRepository $journals, Report $repository)
     {
-        $this->_accounts   = $accounts;
         $this->_journals   = $journals;
         $this->_repository = $repository;
+        /** @var \FireflyIII\Database\Budget\Budget _budgets */
+        $this->_budgets = App::make('FireflyIII\Database\Budget\Budget');
+
 
         View::share('title', 'Reports');
         View::share('mainTitleIcon', 'fa-line-chart');
+
+    }
+
+    /**
+     * @param string $year
+     * @param string $month
+     *
+     * @return \Illuminate\View\View
+     */
+    public function budget($year = '2014', $month = '1')
+    {
+        try {
+            new Carbon($year . '-' . $month . '-01');
+        } catch (Exception $e) {
+            View::make('error')->with('message', 'Invalid date');
+        }
+        $date     = new Carbon($year . '-' . $month . '-01');
+        $dayEarly = clone $date;
+        $dayEarly = $dayEarly->subDay();
+        $accounts = $this->_repository->getAccountListBudgetOverview($date);
+        $budgets  = $this->_repository->getBudgetsForMonth($date);
+
+        return View::make('reports.budget', compact('accounts', 'budgets', 'dayEarly'));
 
     }
 
@@ -62,7 +83,7 @@ class ReportController extends BaseController
         } catch (Exception $e) {
             View::make('error')->with('message', 'Invalid date');
         }
-        $date  = new Carbon($year . '-' . $month . '-01');
+        $date         = new Carbon($year . '-' . $month . '-01');
         $subTitle     = 'Report for ' . $date->format('F Y');
         $subTitleIcon = 'fa-calendar';
         $displaySum   = true; // to show sums in report.
@@ -77,61 +98,6 @@ class ReportController extends BaseController
             'reports.month',
             compact('accounts', 'categories', 'budgets', 'expenses', 'subTitle', 'displaySum', 'subTitleIcon', 'income')
         );
-    }
-
-    /**
-     * @param $year
-     * @param $month
-     *
-     * @return \Illuminate\View\View
-     */
-    public function unbalanced($year, $month)
-    {
-        try {
-            new Carbon($year . '-' . $month . '-01');
-        } catch (Exception $e) {
-            App::abort(500);
-        }
-        $start         = new Carbon($year . '-' . $month . '-01');
-        $end           = clone $start;
-        $title         = 'Reports';
-        $subTitle      = 'Unbalanced transactions in ' . $start->format('F Y');
-        $mainTitleIcon = 'fa-line-chart';
-        $subTitleIcon  = 'fa-bar-chart';
-        $end->endOfMonth();
-
-        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $journalRepository */
-        $journalRepository = App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
-        $journals          = $journalRepository->getInDateRange($start, $end);
-
-        $withdrawals = $journals->filter(
-            function (TransactionJournal $journal) {
-                $relations = $journal->transactiongroups()->where('relation', 'balance')->count();
-                $budgets   = $journal->budgets()->count();
-                $type      = $journal->transactionType->type;
-                if ($type == 'Withdrawal' && $budgets == 0 && $relations == 0) {
-                    return $journal;
-                }
-
-                return null;
-            }
-        );
-        $deposits    = $journals->filter(
-            function (TransactionJournal $journal) {
-                $relations = $journal->transactiongroups()->where('relation', 'balance')->count();
-                $budgets   = $journal->budgets()->count();
-                $type      = $journal->transactionType->type;
-                if ($type == 'Deposit' && $budgets == 0 && $relations == 0) {
-                    return $journal;
-                }
-
-                return null;
-            }
-        );
-
-        $journals = $withdrawals->merge($deposits);
-
-        return View::make('reports.unbalanced', compact('start', 'end', 'title', 'subTitle', 'subTitleIcon', 'mainTitleIcon', 'journals'));
     }
 
     /**

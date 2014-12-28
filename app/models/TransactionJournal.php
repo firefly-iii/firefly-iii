@@ -111,7 +111,7 @@ class TransactionJournal extends Eloquent
      */
     public function scopeAfter($query, Carbon $date)
     {
-        return $query->where('date', '>=', $date->format('Y-m-d'));
+        return $query->where('transaction_journals.date', '>=', $date->format('Y-m-d 00:00:00'));
     }
 
     /**
@@ -122,7 +122,7 @@ class TransactionJournal extends Eloquent
      */
     public function scopeBefore($query, Carbon $date)
     {
-        return $query->where('date', '<=', $date->format('Y-m-d'));
+        return $query->where('transaction_journals.date', '<=', $date->format('Y-m-d 00:00:00'));
     }
 
     /**
