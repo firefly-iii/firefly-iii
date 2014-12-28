@@ -52,7 +52,7 @@ class ReportController extends BaseController
         $accounts = $this->_repository->getAccountListBudgetOverview($date);
         $budgets  = $this->_repository->getBudgetsForMonth($date);
 
-        return View::make('reports.budget', compact('accounts', 'budgets', 'dayEarly'));
+        return View::make('reports.budget', compact('date', 'accounts', 'budgets', 'dayEarly'));
 
     }
 
@@ -96,7 +96,7 @@ class ReportController extends BaseController
 
         return View::make(
             'reports.month',
-            compact('accounts', 'categories', 'budgets', 'expenses', 'subTitle', 'displaySum', 'subTitleIcon', 'income')
+            compact('date', 'accounts', 'categories', 'budgets', 'expenses', 'subTitle', 'displaySum', 'subTitleIcon', 'income')
         );
     }
 

@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName()) }}
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $date) }}
 <div class="row">
     <div class="col-lg-5 col-md-5 col-sm-12">
         <div class="panel panel-default">
