@@ -206,7 +206,7 @@ class PiggyBank implements CUD, CommonDatabaseCalls, PiggyBankInterface
      */
     public function get()
     {
-        return $this->getUser()->piggyBanks()->where('repeats', 0)->get();
+        return $this->getUser()->piggyBanks()->where('repeats', 0)->orderBy('name')->get();
     }
 
     /**
