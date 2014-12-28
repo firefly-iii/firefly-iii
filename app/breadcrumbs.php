@@ -31,6 +31,9 @@ Breadcrumbs::register(
             case 'Asset account':
                 $what = 'asset';
                 break;
+            case 'Cash account':
+                $what = 'cash';
+                break;
             case 'Expense account':
             case 'Beneficiary account':
                 $what = 'expense';

@@ -28,6 +28,7 @@ class AccountController extends BaseController
             'Expense account'     => 'expense',
             'Beneficiary account' => 'expense',
             'Revenue account'     => 'revenue',
+            'Cash account'        => 'cash',
         ];
 
     /** @var array */
@@ -36,6 +37,7 @@ class AccountController extends BaseController
             'asset'               => 'fa-money',
             'Asset account'       => 'fa-money',
             'Default account'     => 'fa-money',
+            'Cash account'        => 'fa-money',
             'expense'             => 'fa-shopping-cart',
             'Expense account'     => 'fa-shopping-cart',
             'Beneficiary account' => 'fa-shopping-cart',
