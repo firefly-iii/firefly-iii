@@ -70,7 +70,7 @@
                 <i class="fa fa-line-chart"></i> Bills
             </div>
             <div class="panel-body">
-                <div id="bill-chart"></div>
+                <div id="bills-chart"></div>
             </div>
         </div>
 
