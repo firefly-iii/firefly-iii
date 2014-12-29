@@ -24,7 +24,7 @@ class BillController extends BaseController
         $this->_repository = $repository;
 
         View::share('title', 'Bills');
-        View::share('mainTitleIcon', 'fa-rotate-right');
+        View::share('mainTitleIcon', 'fa-calendar-o');
     }
 
     /**
