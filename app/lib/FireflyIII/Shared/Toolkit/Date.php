@@ -26,7 +26,7 @@ class Date
 
         switch ($repeatFreq) {
             default:
-                throw new FireflyException('Cannot do addPeriod for $repeat_freq ' . $repeatFreq);
+                throw new FireflyException('Cannot do addPeriod for $repeat_freq "' . $repeatFreq . '"');
                 break;
             case 'daily':
                 $date->addDays($add);

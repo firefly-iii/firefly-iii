@@ -97,6 +97,8 @@ class TestContentSeeder extends Seeder
                         'order'         => 0,
                     ]
                 );
+
+
                 PiggyBankEvent::create(['piggy_bank_id' => 1, 'date' => $startDate->format('Y-m-d'), 'amount' => 100]);
                 PiggyBankRepetition::create(
                     [
@@ -136,6 +138,59 @@ class TestContentSeeder extends Seeder
                     ]
                 );
 
+                // weekly reminder piggy bank
+                $weekly = PiggyBank::create(
+                    [
+                        'account_id'    => $savings->id,
+                        'name'          => 'Weekly reminder for clothes',
+                        'targetamount'  => 2000,
+                        'startdate'     => Carbon::now()->format('Y-m-d'),
+                        'targetdate'    => Carbon::now()->addYear()->subDay()->format('Y-m-d'),
+                        'repeats'       => 0,
+                        'rep_length'    => null,
+                        'rep_every'     => 0,
+                        'rep_times'     => null,
+                        'reminder'      => 'week',
+                        'reminder_skip' => 0,
+                        'remind_me'     => 1,
+                        'order'         => 0,
+                    ]
+                );
+                PiggyBankRepetition::create(
+                    [
+                        'piggy_bank_id' => $weekly->id,
+                        'startdate'     => Carbon::now()->format('Y-m-d'),
+                        'targetdate'    => Carbon::now()->addYear()->subDay()->format('Y-m-d'),
+                        'currentamount' => 0
+                    ]
+                );
+
+                // a fake reminder for this piggy bank:
+                Reminder::create(
+                    [
+                        'user_id'            => $user->id,
+                        'startdate'          => $startDate->format('Y-m-d'),
+                        'enddate'            => Carbon::now()->addWeek()->format('Y-m-d'),
+                        'active'             => 1,
+                        'notnow'             => 0,
+                        'remindersable_id'   => $weekly->id,
+                        'remindersable_type' => 'PiggyBank'
+                    ]
+                );
+
+                // a fake reminder for this piggy bank:
+                Reminder::create(
+                    [
+                        'user_id'            => $user->id,
+                        'startdate'          => $startDate->format('Y-m-d'),
+                        'enddate'            => Carbon::now()->addWeek()->format('Y-m-d'),
+                        'active'             => 1,
+                        'notnow'             => 0,
+                        'remindersable_id'   => 40,
+                        'remindersable_type' => 'Transaction'
+                    ]
+                );
+
                 // bill
                 $firstBill = \Bill::create(
                     [
@@ -167,6 +222,7 @@ class TestContentSeeder extends Seeder
                         'skip'        => 0,
                     ]
                 );
+
 
                 // create some expense accounts.
                 $albert      = Account::create(['user_id' => $user->id, 'account_type_id' => $expenseType->id, 'name' => 'Albert Heijn', 'active' => 1]);
