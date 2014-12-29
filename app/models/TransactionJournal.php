@@ -85,9 +85,9 @@ class TransactionJournal extends Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function recurringTransaction()
+    public function bill()
     {
-        return $this->belongsTo('RecurringTransaction');
+        return $this->belongsTo('Bill');
     }
 
     /**
@@ -202,7 +202,7 @@ class TransactionJournal extends Eloquent
         $query->with(
             ['transactions'                    => function ($q) {
                 $q->orderBy('amount', 'ASC');
-            }, 'transactiontype', 'budgets','categories', 'transactions.account.accounttype', 'recurringTransaction', 'budgets', 'categories']
+            }, 'transactiontype', 'budgets','categories', 'transactions.account.accounttype', 'bill', 'budgets', 'categories']
         );
     }
 

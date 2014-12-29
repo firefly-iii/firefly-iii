@@ -48,12 +48,12 @@ class Chart implements ChartInterface
      *
      * @return Collection
      */
-    public function getRecurringSummary(Carbon $start, Carbon $end)
+    public function getBillsSummary(Carbon $start, Carbon $end)
     {
-        return \RecurringTransaction::
+        return \Bill::
         leftJoin(
             'transaction_journals', function (JoinClause $join) use ($start, $end) {
-            $join->on('recurring_transactions.id', '=', 'transaction_journals.recurring_transaction_id')
+            $join->on('bills.id', '=', 'transaction_journals.bill_id')
                  ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
                  ->where('transaction_journals.date', '<=', $end->format('Y-m-d'));
         }
@@ -64,11 +64,11 @@ class Chart implements ChartInterface
                                     }
                                     )
                                     ->where('active', 1)
-                                    ->groupBy('recurring_transactions.id')
+                                    ->groupBy('bills.id')
                                     ->get(
-                                        ['recurring_transactions.id', 'recurring_transactions.name', 'transaction_journals.description',
+                                        ['bills.id', 'bills.name', 'transaction_journals.description',
                                          'transaction_journals.id as journalId',
-                                         \DB::Raw('SUM(`recurring_transactions`.`amount_min` + `recurring_transactions`.`amount_max`) / 2 as `averageAmount`'),
+                                         \DB::Raw('SUM(`bills`.`amount_min` + `bills`.`amount_max`) / 2 as `averageAmount`'),
                                          'transactions.amount AS actualAmount']
                                     );
     }

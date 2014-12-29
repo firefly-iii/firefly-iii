@@ -69,9 +69,9 @@ class User extends Eloquent implements UserInterface, RemindableInterface
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function recurringtransactions()
+    public function bills()
     {
-        return $this->hasMany('RecurringTransaction');
+        return $this->hasMany('Bill');
     }
 
     /**

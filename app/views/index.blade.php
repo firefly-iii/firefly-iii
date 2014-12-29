@@ -67,10 +67,10 @@
         <!-- REMINDERS -->
         <div class="panel panel-default">
             <div class="panel-heading">
-                <i class="fa fa-line-chart"></i> Recurring transactions
+                <i class="fa fa-line-chart"></i> Bills
             </div>
             <div class="panel-body">
-                <div id="recurring-chart"></div>
+                <div id="bill-chart"></div>
             </div>
         </div>
 

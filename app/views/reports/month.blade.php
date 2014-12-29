@@ -181,7 +181,7 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="panel panel-default">
-            <div class="panel-heading">Recurring transactions</div>
+            <div class="panel-heading">Bills</div>
             <div class="panel-body">Body</div>
         </div>
     </div>

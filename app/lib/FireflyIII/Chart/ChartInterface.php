@@ -26,6 +26,6 @@ interface ChartInterface
      *
      * @return Collection
      */
-    public function getRecurringSummary(Carbon $start, Carbon $end);
+    public function getBillsSummary(Carbon $start, Carbon $end);
 
 }

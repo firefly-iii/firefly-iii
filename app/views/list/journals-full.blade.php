@@ -15,8 +15,8 @@
         @if(!isset($hideCategory) || (isset($hideCategory) && $hideCategory=== false))
             <th><i class="fa fa-bar-chart fa-fw" title="Category"></i></th>
         @endif
-        @if(!isset($hideRecurring) || (isset($hideRecurring) && $hideRecurring=== false))
-            <th><i class="fa fa-fw fa-rotate-right" title="Recurring transaction"></i></th>
+        @if(!isset($hideBill) || (isset($hideBill) && $hideBill=== false))
+            <th><i class="fa fa-fw fa-rotate-right" title="Bill"></i></th>
         @endif
     </tr>
     @foreach($journals as $journal)
@@ -100,10 +100,10 @@
             @endif
         </td>
         @endif
-        @if(!isset($hideRecurring) || (isset($hideRecurring) && $hideRecurring=== false))
+        @if(!isset($hideBill) || (isset($hideBill) && $hideBill=== false))
         <td>
-            @if($journal->recurringTransaction)
-                <a href="{{route('recurring.show',$journal->recurring_transaction_id)}}">{{{$journal->recurringTransaction->name}}}</a>
+            @if($journal->bill)
+                <a href="{{route('bills.show',$journal->bill_id)}}">{{{$journal->bill->name}}}</a>
             @endif
         </td>
         @endif
