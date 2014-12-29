@@ -6,7 +6,7 @@
     <div class="panel panel-primary">
         <div class="panel-heading">
             A reminder about
-            @if(get_class($reminder->remindersable) == 'Piggybank')
+            @if(get_class($reminder->remindersable) == 'PiggyBank')
             your piggy bank labelled "{{{$reminder->remindersable->name}}}"
             @endif
         </div>
@@ -22,7 +22,7 @@
         <p>
             <a href="{{route('reminders.act',$reminder->id)}}" class="btn btn-primary"><i class="fa fa-fw fa-thumbs-o-up"></i> I want to do this</a>
             <a href="{{route('reminders.dismiss',$reminder->id)}}" class="btn btn-success"><i class="fa fa-smile-o fa-fw"></i> I already did this</a>
-            <a href="{{route('reminders.notnow',$reminder->id)}}" class="btn btn-danger"><i class="fa fa-fw fa-clock-o"></i> Not this time</a>
+            <a href="{{route('reminders.notNow',$reminder->id)}}" class="btn btn-danger"><i class="fa fa-fw fa-clock-o"></i> Not this time</a>
 
         </p>
         </div>

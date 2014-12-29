@@ -257,7 +257,7 @@ Route::group(
     // reminder controller
     Route::get('/reminders/{reminder}', ['uses' => 'ReminderController@show', 'as' => 'reminders.show']);
     Route::get('/reminders/{reminder}/dismiss', ['uses' => 'ReminderController@dismiss', 'as' => 'reminders.dismiss']);
-    Route::get('/reminders/{reminder}/notnow', ['uses' => 'ReminderController@notnow', 'as' => 'reminders.notnow']);
+    Route::get('/reminders/{reminder}/notNow', ['uses' => 'ReminderController@notNow', 'as' => 'reminders.notNow']);
     Route::get('/reminders/{reminder}/act', ['uses' => 'ReminderController@act', 'as' => 'reminders.act']);
 
     // search controller:

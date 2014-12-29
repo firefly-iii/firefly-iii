@@ -26,25 +26,22 @@ class ReminderController extends BaseController
     public function act(Reminder $reminder)
     {
 
-        switch (get_class($reminder->remindersable)) {
-            default:
-                throw new FireflyException('Cannot act on reminder for ' . get_class($reminder->remindersable));
-                break;
-                break;
-            case 'PiggyBank':
-                $amount    = Reminders::amountForReminder($reminder);
-                $preFilled = [
-                    'amount'        => round($amount, 2),
-                    'description'   => 'Money for ' . $reminder->remindersable->name,
-                    'piggy_bank_id'  => $reminder->remindersable_id,
-                    'account_to_id' => $reminder->remindersable->account_id
-                ];
-                Session::flash('preFilled', $preFilled);
+        $class = get_class($reminder->remindersable);
 
-                return Redirect::route('transactions.create', 'transfer');
-                break;
+        if ($class == 'PiggyBank') {
+            $amount    = Reminders::amountForReminder($reminder);
+            $preFilled = [
+                'amount'        => round($amount, 2),
+                'description'   => 'Money for ' . $reminder->remindersable->name,
+                'piggy_bank_id' => $reminder->remindersable_id,
+                'account_to_id' => $reminder->remindersable->account_id
+            ];
+            Session::flash('preFilled', $preFilled);
 
+            return Redirect::route('transactions.create', 'transfer');
         }
+
+        return View::make('error')->with('message', 'This reminder has an invalid class connected to it.');
     }
 
     /**
@@ -66,7 +63,7 @@ class ReminderController extends BaseController
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function notnow(Reminder $reminder)
+    public function notNow(Reminder $reminder)
     {
         $reminder->active = 0;
         $reminder->notnow = 1;
