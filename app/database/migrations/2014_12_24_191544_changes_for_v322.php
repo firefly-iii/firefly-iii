@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
@@ -37,6 +36,51 @@ class ChangesForV322 extends Migration
             $table->dropSoftDeletes();
         }
         );
+
+        // drop keys from bills (foreign bills_uid_for and unique uid_name_unique)
+        Schema::table(
+            'bills', function (Blueprint $table) {
+            $table->dropForeign('bills_uid_for');
+            $table->dropUnique('uid_name_unique');
+        }
+        );
+        // drop foreign key from transaction_journals (bill_id_foreign)
+        Schema::table(
+            'transaction_journals', function (Blueprint $table) {
+            $table->dropForeign('bill_id_foreign');
+
+        }
+        );
+
+        // drop foreign key from budget_limits:
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->dropForeign('bid_foreign');
+            $table->dropUnique('unique_bl_combi');
+        }
+        );
+
+        // rename bills to recurring_transactions
+        Schema::rename('bills', 'recurring_transactions');
+        // recreate foreign key recurring_transactions_user_id_foreign in recurring_transactions
+        // recreate unique recurring_transactions_user_id_name_unique in recurring_transactions
+        Schema::table(
+            'recurring_transactions', function (Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unique(['user_id', 'name']);
+        }
+        );
+
+        // rename bill_id to recurring_transaction_id
+        // recreate foreign transaction_journals_recurring_transaction_id_foreign in transaction_journals
+        Schema::table(
+            'transaction_journals', function (Blueprint $table) {
+            $table->renameColumn('bill_id', 'recurring_transaction_id');
+            $table->foreign('recurring_transaction_id')->references('id')->on('recurring_transactions')->onDelete('set null');
+        }
+        );
+
+
     }
 
 
@@ -55,13 +99,13 @@ class ChangesForV322 extends Migration
         Schema::table(
             'budget_limits', function (Blueprint $table) {
 
-//            try {
-                //$table->dropUnique('limits_component_id_startdate_repeat_freq_unique');
-//            } catch (QueryException $e) {
-                //$table->dropUnique('unique_ci_combi');
-//            } catch (PDOException $e) {
-//                $table->dropUnique('unique_ci_combi');
-//            }
+            //            try {
+            //$table->dropUnique('limits_component_id_startdate_repeat_freq_unique');
+            //            } catch (QueryException $e) {
+            //$table->dropUnique('unique_ci_combi');
+            //            } catch (PDOException $e) {
+            //                $table->dropUnique('unique_ci_combi');
+            //            }
 
         }
         );
@@ -91,6 +135,48 @@ class ChangesForV322 extends Migration
             $table->softDeletes();
         }
         );
+
+        // rename everything related to recurring transactions, aka bills:
+        Schema::table(
+            'transaction_journals', function (Blueprint $table) {
+
+
+            // drop relation
+            $table->dropForeign('transaction_journals_recurring_transaction_id_foreign');
+            // rename column
+            $table->renameColumn('recurring_transaction_id', 'bill_id');
+
+        }
+        );
+
+        Schema::table(
+            'recurring_transactions', function (Blueprint $table) {
+            $table->dropForeign('recurring_transactions_user_id_foreign');
+            $table->dropUnique('recurring_transactions_user_id_name_unique');
+        }
+        );
+        // rename table:
+        Schema::rename('recurring_transactions', 'bills');
+
+        // recreate foreign relation:
+        Schema::table(
+            'transaction_journals', function (Blueprint $table) {
+            $table->foreign('bill_id', 'bill_id_foreign')->references('id')->on('bills')->onDelete('set null');
+        }
+        );
+
+        // recreate more foreign relations.
+        Schema::table(
+            'bills', function (Blueprint $table) {
+            // connect user id to users
+            $table->foreign('user_id', 'bills_uid_for')->references('id')->on('users')->onDelete('cascade');
+
+            // for a user, the name must be unique
+            $table->unique(['user_id', 'name'], 'uid_name_unique');
+        }
+        );
+
+
     }
 
 }

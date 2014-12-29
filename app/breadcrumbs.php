@@ -195,37 +195,37 @@ Breadcrumbs::register(
 }
 );
 
-// recurring transactions
+// bills
 Breadcrumbs::register(
-    'recurring.index', function (Generator $breadcrumbs) {
+    'bills.index', function (Generator $breadcrumbs) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push('Recurring transactions', route('recurring.index'));
+    $breadcrumbs->push('Bills', route('bills.index'));
 }
 );
 Breadcrumbs::register(
-    'recurring.create', function (Generator $breadcrumbs) {
-    $breadcrumbs->parent('recurring.index');
-    $breadcrumbs->push('Create new recurring transaction', route('recurring.create'));
-}
-);
-
-Breadcrumbs::register(
-    'recurring.edit', function (Generator $breadcrumbs, RecurringTransaction $recurring) {
-    $breadcrumbs->parent('recurring.show', $recurring);
-    $breadcrumbs->push('Edit ' . $recurring->name, route('recurring.edit', $recurring->id));
-}
-);
-Breadcrumbs::register(
-    'recurring.delete', function (Generator $breadcrumbs, RecurringTransaction $recurring) {
-    $breadcrumbs->parent('recurring.show', $recurring);
-    $breadcrumbs->push('Delete ' . $recurring->name, route('recurring.delete', $recurring->id));
+    'bills.create', function (Generator $breadcrumbs) {
+    $breadcrumbs->parent('bills.index');
+    $breadcrumbs->push('Create new bill', route('bills.create'));
 }
 );
 
 Breadcrumbs::register(
-    'recurring.show', function (Generator $breadcrumbs, RecurringTransaction $recurring) {
-    $breadcrumbs->parent('recurring.index');
-    $breadcrumbs->push($recurring->name, route('recurring.show', $recurring->id));
+    'bills.edit', function (Generator $breadcrumbs, Bill $bill) {
+    $breadcrumbs->parent('bills.show', $bill);
+    $breadcrumbs->push('Edit ' . $bill->name, route('bills.edit', $bill->id));
+}
+);
+Breadcrumbs::register(
+    'bills.delete', function (Generator $breadcrumbs, Bill $bill) {
+    $breadcrumbs->parent('bills.show', $bill);
+    $breadcrumbs->push('Delete ' . $bill->name, route('bills.delete', $bill->id));
+}
+);
+
+Breadcrumbs::register(
+    'bills.show', function (Generator $breadcrumbs, Bill $bill) {
+    $breadcrumbs->parent('bills.index');
+    $breadcrumbs->push($bill->name, route('bills.show', $bill->id));
 
 }
 );

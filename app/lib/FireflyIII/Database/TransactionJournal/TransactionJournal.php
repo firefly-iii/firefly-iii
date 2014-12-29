@@ -153,8 +153,8 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         if (!isset($model['what'])) {
             $errors->add('description', 'Internal error: need to know type of transaction!');
         }
-        if (isset($model['recurring_transaction_id']) && intval($model['recurring_transaction_id']) < 0) {
-            $errors->add('recurring_transaction_id', 'Recurring transaction is invalid.');
+        if (isset($model['bill_id']) && intval($model['bill_id']) < 0) {
+            $errors->add('bill_id', 'Bill is invalid.');
         }
         if (!isset($model['description'])) {
             $errors->add('description', 'This field is mandatory.');

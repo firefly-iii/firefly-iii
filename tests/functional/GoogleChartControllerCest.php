@@ -138,30 +138,30 @@ class GoogleChartControllerCest
     /**
      * @param FunctionalTester $I
      */
-    public function recurringOverview(FunctionalTester $I)
+    public function billOverview(FunctionalTester $I)
     {
-        $I->wantTo('see the chart for the history of a recurring transaction');
-        $I->amOnPage('/chart/recurring/1');
+        $I->wantTo('see the chart for the history of a bill');
+        $I->amOnPage('/chart/bills/1');
         $I->seeResponseCodeIs(200);
     }
 
     /**
      * @param FunctionalTester $I
      */
-    public function emptyRecurringOverview(FunctionalTester $I)
+    public function emptyBillOverview(FunctionalTester $I)
     {
-        $I->wantTo('see the chart for the history of an empty recurring transaction');
-        $I->amOnPage('/chart/recurring/2');
+        $I->wantTo('see the chart for the history of an empty bill');
+        $I->amOnPage('/chart/bills/2');
         $I->seeResponseCodeIs(200);
     }
 
     /**
      * @param FunctionalTester $I
      */
-    public function recurringTransactionsOverview(FunctionalTester $I)
+    public function billsOverview(FunctionalTester $I)
     {
-        $I->wantTo('see the chart for which recurring transactions I have yet to pay');
-        $I->amOnPage('/chart/home/recurring');
+        $I->wantTo('see the chart for which bills I have yet to pay');
+        $I->amOnPage('/chart/home/bills');
         $I->seeResponseCodeIs(200);
     }
 

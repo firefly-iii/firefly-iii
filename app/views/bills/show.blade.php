@@ -1,19 +1,19 @@
 @extends('layouts.default')
 @section('content')
-{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $recurring) }}
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $bill) }}
 <div class="row">
     <div class="col-lg-6 col-sm-12 col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <i class="fa fa-rotate-right"></i> {{{$recurring->name}}}
+                <i class="fa fa-rotate-right"></i> {{{$bill->name}}}
 
-                @if($recurring->active)
+                @if($bill->active)
                     <span class="glyphicon glyphicon-ok" title="Active"></span>
                 @else
                     <span class="glyphicon glyphicon-remove" title="Inactive"></span>
                 @endif
 
-                @if($recurring->automatch)
+                @if($bill->automatch)
                     <span class="glyphicon glyphicon-ok" title="Automatically matched by Firefly"></span>
                 @else
                     <span class="glyphicon glyphicon-remove" title="Not automatically matched by Firefly"></span>
@@ -27,8 +27,8 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu pull-right" role="menu">
-                            <li><a href="{{route('recurring.edit',$recurring->id)}}"><span class="glyphicon glyphicon-pencil"></span> edit</a></li>
-                            <li><a href="{{route('recurring.delete',$recurring->id)}}"><span class="glyphicon glyphicon-trash"></span> delete</a></li>
+                            <li><a href="{{route('bills.edit',$bill->id)}}"><span class="glyphicon glyphicon-pencil"></span> edit</a></li>
+                            <li><a href="{{route('bills.delete',$bill->id)}}"><span class="glyphicon glyphicon-trash"></span> delete</a></li>
                         </ul>
                     </div>
                 </div>
@@ -39,17 +39,17 @@
                     <tr>
                         <td colspan="2">
                         Matching on
-                            @foreach(explode(',',$recurring->match) as $word)
+                            @foreach(explode(',',$bill->match) as $word)
                                 <span class="label label-info">{{{$word}}}</span>
                             @endforeach
-                            between {{mf($recurring->amount_min)}} and {{mf($recurring->amount_max)}}.
-                            Repeats {{$recurring->repeat_freq}}.</td>
+                            between {{mf($bill->amount_min)}} and {{mf($bill->amount_max)}}.
+                            Repeats {{$bill->repeat_freq}}.</td>
 
                     </tr>
                     <tr>
                         <td>Next expected match</td>
                         <td>
-                        <?php $nextExpectedMatch = $recurring->nextExpectedMatch();?>
+                        <?php $nextExpectedMatch = $bill->nextExpectedMatch();?>
                             @if($nextExpectedMatch)
                                 {{$nextExpectedMatch->format('j F Y')}}
                             @else
@@ -68,7 +68,7 @@
             </div>
             <div class="panel-body">
                 <p>
-                    <a href="{{route('recurring.rescan',$recurring->id)}}" class="btn btn-default">Rescan old transactions</a>
+                    <a href="{{route('bills.rescan',$bill->id)}}" class="btn btn-default">Rescan old transactions</a>
                 </p>
             </div>
         </div>
@@ -82,7 +82,7 @@
                 Chart
             </div>
             <div class="panel-body">
-                <div id="recurring-overview"></div>
+                <div id="bill-overview"></div>
             </div>
         </div>
     </div>
@@ -105,7 +105,7 @@
 
 @section('scripts')
 <script type="text/javascript">
-    var recurringID = {{{$recurring->id}}};
+    var billID = {{{$bill->id}}};
     var currencyCode = '{{getCurrencyCode()}}';
 </script>
 <!-- load the libraries and scripts necessary for Google Charts: -->
@@ -113,5 +113,5 @@
 {{HTML::script('assets/javascript/firefly/gcharts.options.js')}}
 {{HTML::script('assets/javascript/firefly/gcharts.js')}}
 
-{{HTML::script('assets/javascript/firefly/recurring.js')}}
+{{HTML::script('assets/javascript/firefly/bills.js')}}
 @stop

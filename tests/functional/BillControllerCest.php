@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Class RecurringControllerCest
+ * Class BillControllerCest
  */
-class RecurringControllerCest
+class BillControllerCest
 {
 
     /**
@@ -26,8 +26,8 @@ class RecurringControllerCest
      */
     public function create(FunctionalTester $I)
     {
-        $I->wantTo('create a recurring transaction');
-        $I->amOnPage('/recurring/create');
+        $I->wantTo('create a bill');
+        $I->amOnPage('/bills/create');
     }
 
     /**
@@ -35,8 +35,8 @@ class RecurringControllerCest
      */
     public function delete(FunctionalTester $I)
     {
-        $I->wantTo('delete a recurring transaction');
-        $I->amOnPage('/recurring/delete/1');
+        $I->wantTo('delete a bill');
+        $I->amOnPage('/bills/delete/1');
         $I->see('Delete "Huur"');
     }
 
@@ -45,11 +45,11 @@ class RecurringControllerCest
      */
     public function destroy(FunctionalTester $I)
     {
-        $I->wantTo('destroy a recurring transaction');
-        $I->amOnPage('/recurring/delete/1');
+        $I->wantTo('destroy a bill');
+        $I->amOnPage('/bills/delete/1');
         $I->see('Delete "Huur"');
         $I->submitForm('#destroy', []);
-        $I->see('The recurring transaction was deleted.');
+        $I->see('The bill was deleted.');
 
     }
 
@@ -58,8 +58,8 @@ class RecurringControllerCest
      */
     public function edit(FunctionalTester $I)
     {
-        $I->wantTo('edit a recurring transaction');
-        $I->amOnPage('/recurring/edit/1');
+        $I->wantTo('edit a bill');
+        $I->amOnPage('/bills/edit/1');
 
 
     }
@@ -69,8 +69,8 @@ class RecurringControllerCest
      */
     public function index(FunctionalTester $I)
     {
-        $I->wantTo('see all recurring transactions');
-        $I->amOnPage('/recurring');
+        $I->wantTo('see all bills');
+        $I->amOnPage('/bills');
     }
 
     /**
@@ -78,8 +78,8 @@ class RecurringControllerCest
      */
     public function rescan(FunctionalTester $I)
     {
-        $I->wantTo('rescan a recurring transaction');
-        $I->amOnPage('/recurring/rescan/1');
+        $I->wantTo('rescan a bill');
+        $I->amOnPage('/bills/rescan/1');
         $I->see('Rescanned everything.');
     }
 
@@ -88,9 +88,9 @@ class RecurringControllerCest
      */
     public function rescanInactive(FunctionalTester $I)
     {
-        $I->wantTo('rescan an inactive recurring transaction');
-        $I->amOnPage('/recurring/rescan/2');
-        $I->see('Inactive recurring transactions cannot be scanned.');
+        $I->wantTo('rescan an inactive bill');
+        $I->amOnPage('/bills/rescan/2');
+        $I->see('Inactive bills cannot be scanned.');
     }
 
     /**
@@ -98,8 +98,8 @@ class RecurringControllerCest
      */
     public function show(FunctionalTester $I)
     {
-        $I->wantTo('show a recurring transaction');
-        $I->amOnPage('/recurring/show/1');
+        $I->wantTo('show a bill');
+        $I->amOnPage('/bills/show/1');
         $I->see('Huur');
     }
 
@@ -108,11 +108,11 @@ class RecurringControllerCest
      */
     public function store(FunctionalTester $I)
     {
-        $I->wantTo('store a recurring transaction');
-        $I->amOnPage('/recurring/create');
+        $I->wantTo('store a bill');
+        $I->amOnPage('/bills/create');
         $I->submitForm(
             '#store', [
-                        'name'               => 'Some recurring',
+                        'name'               => 'Some bill',
                         'match'              => 'one,two',
                         'amount_min'         => 10,
                         'amount_max'         => 20,
@@ -122,7 +122,7 @@ class RecurringControllerCest
                         'skip'               => 0
                     ]
         );
-        $I->see('Recurring transaction &quot;Some recurring&quot; stored.');
+        $I->see('Bill &quot;Some bill&quot; stored.');
     }
 
     /**
@@ -130,11 +130,11 @@ class RecurringControllerCest
      */
     public function storeFail(FunctionalTester $I)
     {
-        $I->wantTo('store a recurring transaction and fail');
-        $I->amOnPage('/recurring/create');
+        $I->wantTo('store a bill and fail');
+        $I->amOnPage('/bills/create');
         $I->submitForm(
             '#store', [
-                        'name'        => 'Some recurring',
+                        'name'        => 'Some bill',
                         'match'       => '',
                         'amount_min'  => 10,
                         'amount_max'  => 20,
@@ -143,17 +143,17 @@ class RecurringControllerCest
                         'skip'        => 0
                     ]
         );
-        $I->dontSeeInDatabase('recurring_transactions', ['name' => 'Some recurring']);
-        $I->see('Could not store recurring transaction');
+        $I->dontSeeInDatabase('bills', ['name' => 'Some bill']);
+        $I->see('Could not store bill');
     }
 
     public function storeRecreate(FunctionalTester $I)
     {
-        $I->wantTo('validate a recurring transaction and create another one');
-        $I->amOnPage('/recurring/create');
+        $I->wantTo('validate a bill and create another one');
+        $I->amOnPage('/bills/create');
         $I->submitForm(
             '#store', [
-                        'name'               => 'Some recurring',
+                        'name'               => 'Some bill',
                         'match'              => 'one,two',
                         'amount_min'         => 10,
                         'amount_max'         => 20,
@@ -164,7 +164,7 @@ class RecurringControllerCest
 
                     ]
         );
-        $I->see('Recurring transaction &quot;Some recurring&quot; stored.');
+        $I->see('Bill &quot;Some bill&quot; stored.');
     }
 
     /**
@@ -172,11 +172,11 @@ class RecurringControllerCest
      */
     public function storeValidate(FunctionalTester $I)
     {
-        $I->wantTo('validate a recurring transaction');
-        $I->amOnPage('/recurring/create');
+        $I->wantTo('validate a bill');
+        $I->amOnPage('/bills/create');
         $I->submitForm(
             '#store', [
-                        'name'               => 'Some recurring',
+                        'name'               => 'Some bill',
                         'match'              => 'one,two',
                         'amount_min'         => 10,
                         'amount_max'         => 20,
@@ -195,11 +195,11 @@ class RecurringControllerCest
      */
     public function update(FunctionalTester $I)
     {
-        $I->wantTo('update a recurring transaction');
-        $I->amOnPage('/recurring/edit/1');
+        $I->wantTo('update a bill');
+        $I->amOnPage('/bills/edit/1');
         $I->submitForm(
             '#update', [
-                         'name'        => 'Some recurring',
+                         'name'        => 'Some bill',
                          'match'       => 'bla,bla',
                          'amount_min'  => 10,
                          'amount_max'  => 20,
@@ -208,7 +208,7 @@ class RecurringControllerCest
                          'skip'        => 0
                      ]
         );
-        $I->see('Recurring transaction &quot;Some recurring&quot; updated.');
+        $I->see('Bill &quot;Some bill&quot; updated.');
     }
 
     /**
@@ -216,11 +216,11 @@ class RecurringControllerCest
      */
     public function updateReturn(FunctionalTester $I)
     {
-        $I->wantTo('update a recurring transaction and return to edit it');
-        $I->amOnPage('/recurring/edit/1');
+        $I->wantTo('update a bill and return to edit it');
+        $I->amOnPage('/bills/edit/1');
         $I->submitForm(
             '#update', [
-                         'name'        => 'Some recurring',
+                         'name'        => 'Some bill',
                          'match'       => 'bla,bla',
                          'amount_min'  => 10,
                          'amount_max'  => 20,
@@ -230,7 +230,7 @@ class RecurringControllerCest
                          'skip'        => 0
                      ]
         );
-        $I->see('Recurring transaction &quot;Some recurring&quot; updated.');
+        $I->see('Bill &quot;Some bill&quot; updated.');
     }
 
     /**
@@ -238,11 +238,11 @@ class RecurringControllerCest
      */
     public function updateFail(FunctionalTester $I)
     {
-        $I->wantTo('update a recurring transaction and fail');
-        $I->amOnPage('/recurring/edit/1');
+        $I->wantTo('update a bill and fail');
+        $I->amOnPage('/bills/edit/1');
         $I->submitForm(
             '#update', [
-                         'name'        => 'Some recurring',
+                         'name'        => 'Some bill',
                          'match'       => '',
                          'amount_min'  => 10,
                          'amount_max'  => 20,
@@ -251,7 +251,7 @@ class RecurringControllerCest
                          'skip'        => 0
                      ]
         );
-        $I->see('Could not update recurring transaction');
+        $I->see('Could not update bill');
     }
 
 }

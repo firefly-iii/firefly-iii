@@ -1,6 +1,6 @@
 <?php
 
-namespace FireflyIII\Database\RecurringTransaction;
+namespace FireflyIII\Database\Bill;
 
 
 use Carbon\Carbon;
@@ -13,11 +13,11 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 
 /**
- * Class Recurring
+ * Class Bill
  *
  * @package FireflyIII\Database
  */
-class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransactionInterface
+class Bill implements CUD, CommonDatabaseCalls, BillInterface
 {
     use SwitchUser;
 
@@ -48,30 +48,30 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
      */
     public function store(array $data)
     {
-        $recurring = new \RecurringTransaction;
-        $recurring->user()->associate($this->getUser());
-        $recurring->name       = $data['name'];
-        $recurring->match      = $data['match'];
-        $recurring->amount_max = floatval($data['amount_max']);
-        $recurring->amount_min = floatval($data['amount_min']);
+        $bill = new \Bill;
+        $bill->user()->associate($this->getUser());
+        $bill->name       = $data['name'];
+        $bill->match      = $data['match'];
+        $bill->amount_max = floatval($data['amount_max']);
+        $bill->amount_min = floatval($data['amount_min']);
 
         $date = new Carbon($data['date']);
 
 
-        $recurring->active      = intval($data['active']);
-        $recurring->automatch   = intval($data['automatch']);
-        $recurring->repeat_freq = $data['repeat_freq'];
+        $bill->active      = intval($data['active']);
+        $bill->automatch   = intval($data['automatch']);
+        $bill->repeat_freq = $data['repeat_freq'];
 
         /*
          * Jump to the start of the period.
          */
         $date            = \DateKit::startOfPeriod($date, $data['repeat_freq']);
-        $recurring->date = $date;
-        $recurring->skip = intval($data['skip']);
+        $bill->date = $date;
+        $bill->skip = intval($data['skip']);
 
-        $recurring->save();
+        $bill->save();
 
-        return $recurring;
+        return $bill;
     }
 
     /**
@@ -118,7 +118,7 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
             $errors->add('amount_max', 'Maximum amount can not be less than minimum amount.');
             $errors->add('amount_min', 'Minimum amount can not be more than maximum amount.');
         }
-        $object = new \RecurringTransaction($model);
+        $object = new \Bill($model);
         $object->isValid();
         $errors->merge($object->getErrors());
 
@@ -167,7 +167,7 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
      */
     public function get()
     {
-        return $this->getUser()->recurringtransactions()->get();
+        return $this->getUser()->bills()->get();
     }
 
     /**
@@ -189,35 +189,35 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
      */
     public function getActive()
     {
-        return $this->getUser()->recurringtransactions()->where('active', 1)->get();
+        return $this->getUser()->bills()->where('active', 1)->get();
     }
 
     /**
-     * @param \RecurringTransaction $recurring
+     * @param \Bill $bill
      * @param Carbon                $start
      * @param Carbon                $end
      *
      * @return \TransactionJournal|null
      */
-    public function getJournalForRecurringInRange(\RecurringTransaction $recurring, Carbon $start, Carbon $end)
+    public function getJournalForBillInRange(\Bill $bill, Carbon $start, Carbon $end)
     {
-        return $this->getUser()->transactionjournals()->where('recurring_transaction_id', $recurring->id)->after($start)->before($end)->first();
+        return $this->getUser()->transactionjournals()->where('bill_id', $bill->id)->after($start)->before($end)->first();
 
     }
 
     /**
-     * @param \RecurringTransaction $recurring
+     * @param \Bill $bill
      * @param \TransactionJournal   $journal
      *
      * @return bool
      */
-    public function scan(\RecurringTransaction $recurring, \TransactionJournal $journal)
+    public function scan(\Bill $bill, \TransactionJournal $journal)
     {
         /*
          * Match words.
          */
         $wordMatch   = false;
-        $matches     = explode(',', $recurring->match);
+        $matches     = explode(',', $bill->match);
         $description = strtolower($journal->description);
 
         /*
@@ -261,8 +261,8 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
         if (count($transactions) > 1) {
 
             $amount = max(floatval($transactions[0]->amount), floatval($transactions[1]->amount));
-            $min    = floatval($recurring->amount_min);
-            $max    = floatval($recurring->amount_max);
+            $min    = floatval($bill->amount_min);
+            $max    = floatval($bill->amount_max);
             if ($amount >= $min && $amount <= $max) {
                 $amountMatch = true;
                 \Log::debug('Amount match is true!');
@@ -273,17 +273,17 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
          * If both, update!
          */
         if ($wordMatch && $amountMatch) {
-            $journal->recurringTransaction()->associate($recurring);
+            $journal->bill()->associate($bill);
             $journal->save();
         }
     }
 
     /**
-     * @param \RecurringTransaction $recurring
+     * @param \Bill $bill
      *
      * @return bool
      */
-    public function scanEverything(\RecurringTransaction $recurring)
+    public function scanEverything(\Bill $bill)
     {
         // get all journals that (may) be relevant.
         // this is usually almost all of them.
@@ -291,7 +291,7 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
         /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $journalRepository */
         $journalRepository = \App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
 
-        $set = \DB::table('transactions')->where('amount', '>', 0)->where('amount', '>=', $recurring->amount_min)->where('amount', '<=', $recurring->amount_max)
+        $set = \DB::table('transactions')->where('amount', '>', 0)->where('amount', '>=', $bill->amount_min)->where('amount', '<=', $bill->amount_max)
                   ->get(['transaction_journal_id']);
         $ids = [];
 
@@ -303,7 +303,7 @@ class RecurringTransaction implements CUD, CommonDatabaseCalls, RecurringTransac
             $journals = $journalRepository->getByIds($ids);
             /** @var \TransactionJournal $journal */
             foreach ($journals as $journal) {
-                $this->scan($recurring, $journal);
+                $this->scan($bill, $journal);
             }
         }
 

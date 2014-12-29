@@ -36,19 +36,19 @@ class TestContentSeeder extends Seeder
                 $deleteBudget    = Budget::create(['user_id' => $user->id, 'name' => 'Delete me']);
 
                 // some limits:
-                $startDate  = Carbon::now()->startOfMonth();
-                $endDate    = Carbon::now()->endOfMonth();
+                $startDate   = Carbon::now()->startOfMonth();
+                $endDate     = Carbon::now()->endOfMonth();
                 $secondStart = Carbon::now()->subMonth()->startOfMonth();
-                $secondEnd = Carbon::now()->subMonth()->endOfMonth();
-                $limitOne   = BudgetLimit::create(
+                $secondEnd   = Carbon::now()->subMonth()->endOfMonth();
+                $limitOne    = BudgetLimit::create(
                     ['startdate' => $startDate->format('Y-m-d'), 'amount' => 201, 'repeats' => 0, 'repeat_freq' => 'monthly',
                      'budget_id' => $groceriesBudget->id]
                 );
-                $limitTwo   = BudgetLimit::create(
+                $limitTwo    = BudgetLimit::create(
                     ['startdate' => $secondStart->format('Y-m-d'), 'amount' => 202, 'repeats' => 0, 'repeat_freq' => 'monthly',
                      'budget_id' => $billsBudget->id]
                 );
-                $limitThree = BudgetLimit::create(
+                $limitThree  = BudgetLimit::create(
                     ['startdate' => '2014-01-01', 'amount' => 203, 'repeats' => 0, 'repeat_freq' => 'monthly',
                      'budget_id' => $deleteBudget->id]
                 );
@@ -58,7 +58,8 @@ class TestContentSeeder extends Seeder
                     ['budget_limit_id' => $limitOne->id, 'startdate' => $startDate->format('Y-m-d'), 'enddate' => $endDate->format('Y-m-d'), 'amount' => 201]
                 );
                 $repTwo   = LimitRepetition::create(
-                    ['budget_limit_id' => $limitTwo->id, 'startdate' => $secondStart->format('Y-m-d'), 'enddate' => $secondEnd->format('Y-m-d'), 'amount' => 202]
+                    ['budget_limit_id' => $limitTwo->id, 'startdate' => $secondStart->format('Y-m-d'), 'enddate' => $secondEnd->format('Y-m-d'),
+                     'amount'          => 202]
                 );
                 $repThree = LimitRepetition::create(
                     ['budget_limit_id' => $limitThree->id, 'startdate' => '2014-01-01', 'enddate' => '2014-01-31', 'amount' => 203]
@@ -79,7 +80,7 @@ class TestContentSeeder extends Seeder
                 Component::create(['user_id' => $user->id, 'name' => 'Some Component 7', 'class' => 'Category']);
 
                 // piggy bank
-                $piggy               = PiggyBank::create(
+                $piggy = PiggyBank::create(
                     [
                         'account_id'    => $savings->id,
                         'name'          => 'New camera',
@@ -99,7 +100,7 @@ class TestContentSeeder extends Seeder
                 PiggyBankEvent::create(['piggy_bank_id' => 1, 'date' => $startDate->format('Y-m-d'), 'amount' => 100]);
                 PiggyBankRepetition::create(
                     [
-                        'piggy_bank_id'  => $piggy->id,
+                        'piggy_bank_id' => $piggy->id,
                         'startdate'     => Carbon::now()->format('Y-m-d'),
                         'targetdate'    => null,
                         'currentamount' => 0
@@ -107,7 +108,7 @@ class TestContentSeeder extends Seeder
                 );
 
                 // piggy bank
-                $piggyTargeted               = PiggyBank::create(
+                $piggyTargeted = PiggyBank::create(
                     [
                         'account_id'    => $savings->id,
                         'name'          => 'New clothes',
@@ -128,15 +129,15 @@ class TestContentSeeder extends Seeder
                 PiggyBankEvent::create(['piggy_bank_id' => $piggyTargeted->id, 'date' => $startDate->format('Y-m-d'), 'amount' => 100]);
                 PiggyBankRepetition::create(
                     [
-                        'piggy_bank_id'  => $piggyTargeted->id,
+                        'piggy_bank_id' => $piggyTargeted->id,
                         'startdate'     => Carbon::now()->format('Y-m-d'),
                         'targetdate'    => Carbon::now()->addMonths(4)->format('Y-m-d'),
                         'currentamount' => 0
                     ]
                 );
 
-                // recurring transaction
-                $recurring = \RecurringTransaction::create(
+                // bill
+                $firstBill = \Bill::create(
                     [
                         'user_id'     => $user->id,
                         'name'        => 'Huur',
@@ -151,8 +152,8 @@ class TestContentSeeder extends Seeder
                     ]
                 );
 
-                // recurring transaction
-                $secondRecurring = \RecurringTransaction::create(
+                // bill
+                $secondBill = \Bill::create(
                     [
                         'user_id'     => $user->id,
                         'name'        => 'Gas licht',
@@ -198,7 +199,7 @@ class TestContentSeeder extends Seeder
                 while ($start <= $end) {
                     $this->createTransaction(
                         $checking, $portaal, 500, $withdrawal, 'Huur Portaal for ' . $start->format('F Y'), $start->format('Y-m-') . '01', $billsBudget, $house,
-                        $recurring
+                        $firstBill
                     );
                     $this->createTransaction(
                         $checking, $vitens, 12, $withdrawal, 'Water for ' . $start->format('F Y'), $start->format('Y-m-') . '02', $billsBudget, $house
@@ -261,28 +262,27 @@ class TestContentSeeder extends Seeder
      *
      * @param Budget               $budget
      * @param Category             $category
-     * @param RecurringTransaction $recurring
+     * @param Bill                 $bill
      *
      * @return TransactionJournal
      */
     public function createTransaction(
-        Account $from, Account $to, $amount, TransactionType $type, $description, $date, Budget $budget = null, Category $category = null,
-        $recurring = null
+        Account $from, Account $to, $amount, TransactionType $type, $description, $date, Budget $budget = null, Category $category = null, Bill $bill = null
     ) {
-        $user        = User::whereEmail('thegrumpydictator@gmail.com')->first();
-        $euro        = TransactionCurrency::whereCode('EUR')->first();
-        $recurringID = is_null($recurring) ? null : $recurring->id;
+        $user   = User::whereEmail('thegrumpydictator@gmail.com')->first();
+        $euro   = TransactionCurrency::whereCode('EUR')->first();
+        $billID = is_null($bill) ? null : $bill->id;
 
         /** @var TransactionJournal $journal */
         $journal = TransactionJournal::create(
             [
-                'user_id'                  => $user->id,
-                'transaction_type_id'      => $type->id,
-                'transaction_currency_id'  => $euro->id,
-                'recurring_transaction_id' => $recurringID,
-                'description'              => $description,
-                'completed'                => 1,
-                'date'                     => $date
+                'user_id'                 => $user->id,
+                'transaction_type_id'     => $type->id,
+                'transaction_currency_id' => $euro->id,
+                'bill_id'                 => $billID,
+                'description'             => $description,
+                'completed'               => 1,
+                'date'                    => $date
             ]
         );
 

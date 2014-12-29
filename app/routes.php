@@ -34,9 +34,9 @@ Route::bind(
 
 
 Route::bind(
-    'recurring', function ($value, $route) {
+    'bill', function ($value, $route) {
     if (Auth::check()) {
-        return RecurringTransaction::
+        return Bill::
         where('id', $value)->where('user_id', Auth::user()->id)->first();
     }
 
@@ -192,11 +192,11 @@ Route::group(
     Route::get('/chart/home/account', ['uses' => 'GoogleChartController@allAccountsBalanceChart']);
     Route::get('/chart/home/budgets', ['uses' => 'GoogleChartController@allBudgetsHomeChart']);
     Route::get('/chart/home/categories', ['uses' => 'GoogleChartController@allCategoriesHomeChart']);
-    Route::get('/chart/home/recurring', ['uses' => 'GoogleChartController@recurringTransactionsOverview']);
+    Route::get('/chart/home/bills', ['uses' => 'GoogleChartController@billsOverview']);
     Route::get('/chart/account/{account}/{view?}', ['uses' => 'GoogleChartController@accountBalanceChart']);
     Route::get('/chart/reports/income-expenses/{year}', ['uses' => 'GoogleChartController@yearInExp']);
     Route::get('/chart/reports/income-expenses-sum/{year}', ['uses' => 'GoogleChartController@yearInExpSum']);
-    Route::get('/chart/recurring/{recurring}', ['uses' => 'GoogleChartController@recurringOverview']);
+    Route::get('/chart/bills/{bill}', ['uses' => 'GoogleChartController@billOverview']);
     Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'GoogleChartController@budgetLimitSpending']);
     Route::get('/chart/piggy_history/{piggy_bank}', ['uses' => 'GoogleChartController@piggyBankHistory']);
 
@@ -234,13 +234,13 @@ Route::group(
     Route::get('/profile', ['uses' => 'ProfileController@index', 'as' => 'profile']);
     Route::get('/profile/change-password', ['uses' => 'ProfileController@changePassword', 'as' => 'change-password']);
 
-    // recurring transactions controller
-    Route::get('/recurring', ['uses' => 'RecurringController@index', 'as' => 'recurring.index']);
-    Route::get('/recurring/rescan/{recurring}', ['uses' => 'RecurringController@rescan', 'as' => 'recurring.rescan']); # rescan for matching.
-    Route::get('/recurring/create', ['uses' => 'RecurringController@create', 'as' => 'recurring.create']);
-    Route::get('/recurring/edit/{recurring}', ['uses' => 'RecurringController@edit', 'as' => 'recurring.edit']);
-    Route::get('/recurring/delete/{recurring}', ['uses' => 'RecurringController@delete', 'as' => 'recurring.delete']);
-    Route::get('/recurring/show/{recurring}', ['uses' => 'RecurringController@show', 'as' => 'recurring.show']);
+    // bills controller
+    Route::get('/bills', ['uses' => 'BillController@index', 'as' => 'bills.index']);
+    Route::get('/bills/rescan/{bill}', ['uses' => 'BillController@rescan', 'as' => 'bills.rescan']); # rescan for matching.
+    Route::get('/bills/create', ['uses' => 'BillController@create', 'as' => 'bills.create']);
+    Route::get('/bills/edit/{bill}', ['uses' => 'BillController@edit', 'as' => 'bills.edit']);
+    Route::get('/bills/delete/{bill}', ['uses' => 'BillController@delete', 'as' => 'bills.delete']);
+    Route::get('/bills/show/{bill}', ['uses' => 'BillController@show', 'as' => 'bills.show']);
 
     // repeated expenses controller:
     Route::get('/repeatedexpenses', ['uses' => 'RepeatedExpenseController@index', 'as' => 'repeated.index']);
@@ -328,10 +328,10 @@ Route::group(
     // profile controller
     Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword']);
 
-    // recurring controller
-    Route::post('/recurring/store', ['uses' => 'RecurringController@store', 'as' => 'recurring.store']);
-    Route::post('/recurring/update/{recurring}', ['uses' => 'RecurringController@update', 'as' => 'recurring.update']);
-    Route::post('/recurring/destroy/{recurring}', ['uses' => 'RecurringController@destroy', 'as' => 'recurring.destroy']);
+    // bills controller
+    Route::post('/bills/store', ['uses' => 'BillController@store', 'as' => 'bills.store']);
+    Route::post('/bills/update/{bill}', ['uses' => 'BillController@update', 'as' => 'bills.update']);
+    Route::post('/bills/destroy/{bill}', ['uses' => 'BillController@destroy', 'as' => 'bills.destroy']);
 
     // transaction controller:
     Route::post('/transactions/store/{what}', ['uses' => 'TransactionController@store', 'as' => 'transactions.store'])->where(

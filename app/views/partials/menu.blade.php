@@ -137,9 +137,9 @@
 
             </li>
             <?php
-            $isMM = !(strpos($r,'piggy_banks') === false) || !(strpos($r,'recurring') === false) |  !(strpos($r,'repeated') === false);
+            $isMM = !(strpos($r,'piggy_banks') === false) || !(strpos($r,'bills') === false) |  !(strpos($r,'repeated') === false);
             $isPiggy = !(strpos($r,'piggy_banks') === false);
-            $isRec = !(strpos($r,'recurring') === false) && strpos($r,'recurring.create') === false;
+            $isBill = !(strpos($r,'bills') === false) && strpos($r,'bills.create') === false;
             $isRep = !(strpos($r,'repeated') === false);
             ?>
             <li @if($isMM)class="active"@endif>
@@ -149,7 +149,7 @@
                         <a @if($isPiggy)class="active"@endif href="{{route('piggy_banks.index')}}"><i class="fa fa-sort-amount-asc fa-fw"></i> Piggy banks</a>
                     </li>
                     <li>
-                        <a @if($isRec)class="active"@endif href="{{route('recurring.index')}}"><i class="fa fa-rotate-right fa-fw"></i> Recurring transactions</a>
+                        <a @if($isBill)class="active"@endif href="{{route('bills.index')}}"><i class="fa fa-rotate-right fa-fw"></i> Bills</a>
                     </li>
                     <li>
                         <a @if($isRep)class="active"@endif href="{{route('repeated.index')}}"><i class="fa fa-rotate-left fa-fw"></i> Repeated expenses</a>
@@ -162,7 +162,7 @@
             $isWithdrawal = $r == 'transactions.create' && isset($what) && $what == 'withdrawal';
             $isDeposit = $r == 'transactions.create' && isset($what) && $what == 'deposit';
             $isTransfer = $r == 'transactions.create' && isset($what) && $what == 'transfer';
-            $isRecurring = $r == 'recurring.create';
+            $isBill = $r == 'bills.create';
             ?>
             <li @if($creating)class="active"@endif>
                 <a href="#"><i class="fa fa-plus fa-fw"></i> Create new<span class="fa arrow"></span></a>
@@ -177,7 +177,7 @@
                         <a @if($isTransfer)class="active"@endif href="{{route('transactions.create','transfer')}}"><i class="fa fa-arrows-h fa-fw"></i> Transfer</a>
                     </li>
                     <li>
-                        <a @if($isRecurring)class="active"@endif href="{{route('recurring.create')}}"><i class="fa fa-rotate-right fa-fw"></i> Recurring transaction</a>
+                        <a @if($isBill)class="active"@endif href="{{route('bills.create')}}"><i class="fa fa-rotate-right fa-fw"></i> Bills</a>
                     </li>
                 </ul>
                 <!-- /.nav-second-level -->

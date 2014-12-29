@@ -3,9 +3,9 @@ use Carbon\Carbon;
 use Watson\Validating\ValidatingTrait;
 use \Illuminate\Database\Eloquent\Model as Eloquent;
 /**
- * Class RecurringTransaction
+ * Class Bill
  */
-class RecurringTransaction extends Eloquent
+class Bill extends Eloquent
 {
 
     use ValidatingTrait;
@@ -57,8 +57,7 @@ class RecurringTransaction extends Eloquent
     /**
      * TODO remove this method in favour of something in the FireflyIII libraries.
      *
-     * Find the next expected match based on the set journals and the date stuff from the recurring
-     * transaction.
+     * Find the next expected match based on the set journals and the date stuff from the bill.
      */
     public function nextExpectedMatch()
     {
@@ -78,18 +77,15 @@ class RecurringTransaction extends Eloquent
         $today = DateKit::addPeriod(new Carbon, $this->repeat_freq, 0);
 
         /*
-         * FF3 loops from the $start of the recurring transaction, and to make sure
+         * FF3 loops from the $start of the bill, and to make sure
          * $skip works, it adds one (for modulo).
          */
         $skip  = $this->skip + 1;
         $start = DateKit::startOfPeriod(new Carbon, $this->repeat_freq);
         /*
          * go back exactly one month/week/etc because FF3 does not care about 'next'
-         * recurring transactions if they're too far into the past.
+         * bills if they're too far into the past.
          */
-        //        echo 'Repeat freq is: ' . $recurringTransaction->repeat_freq . '<br />';
-
-        //        echo 'Start: ' . $start . ' <br />';
 
         $counter = 0;
         while ($start <= $today) {

@@ -334,11 +334,11 @@ class GoogleChartController extends BaseController
     }
 
     /**
-     * @param RecurringTransaction $recurring
+     * @param Bill $bill
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function recurringOverview(RecurringTransaction $recurring)
+    public function billOverview(Bill $bill)
     {
 
         $this->_chart->addColumn('Date', 'date');
@@ -347,7 +347,7 @@ class GoogleChartController extends BaseController
         $this->_chart->addColumn('Current entry', 'number');
 
         // get first transaction or today for start:
-        $first = $recurring->transactionjournals()->orderBy('date', 'ASC')->first();
+        $first = $bill->transactionjournals()->orderBy('date', 'ASC')->first();
         if ($first) {
             $start = $first->date;
         } else {
@@ -355,15 +355,15 @@ class GoogleChartController extends BaseController
         }
         $end = new Carbon;
         while ($start <= $end) {
-            $result = $recurring->transactionjournals()->before($end)->after($start)->first();
+            $result = $bill->transactionjournals()->before($end)->after($start)->first();
             if ($result) {
                 $amount = $result->getAmount();
             } else {
                 $amount = 0;
             }
             unset($result);
-            $this->_chart->addRow(clone $start, $recurring->amount_max, $recurring->amount_min, $amount);
-            $start = DateKit::addPeriod($start, $recurring->repeat_freq, 0);
+            $this->_chart->addRow(clone $start, $bill->amount_max, $bill->amount_min, $amount);
+            $start = DateKit::addPeriod($start, $bill->repeat_freq, 0);
         }
 
         $this->_chart->generate();
@@ -378,14 +378,14 @@ class GoogleChartController extends BaseController
      * @return \Illuminate\Http\JsonResponse
      * @throws \FireflyIII\Exception\FireflyException
      */
-    public function recurringTransactionsOverview()
+    public function billsOverview()
     {
         $paid   = ['items' => [], 'amount' => 0];
         $unpaid = ['items' => [], 'amount' => 0];
         $this->_chart->addColumn('Name', 'string');
         $this->_chart->addColumn('Amount', 'number');
 
-        $set = $this->_repository->getRecurringSummary($this->_start, $this->_end);
+        $set = $this->_repository->getBillsSummary($this->_start, $this->_end);
 
         foreach ($set as $entry) {
             if (intval($entry->journalId) == 0) {

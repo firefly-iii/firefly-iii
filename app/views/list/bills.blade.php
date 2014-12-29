@@ -10,16 +10,16 @@
         <th>Will be automatched</th>
         <th>Repeats every</th>
     </tr>
-    @foreach($recurring as $entry)
+    @foreach($bills as $entry)
     <tr>
         <td>
             <div class="btn-group btn-group-xs">
-                <a href="{{route('recurring.edit',$entry->id)}}" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-pencil"></span></a>
-                <a href="{{route('recurring.delete',$entry->id)}}" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span></a>
+                <a href="{{route('bills.edit',$entry->id)}}" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a href="{{route('bills.delete',$entry->id)}}" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span></a>
             </div>
         </td>
         <td>
-            <a href="{{route('recurring.show',$entry->id)}}" title="{{{$entry->name}}}">{{{$entry->name}}}</a>
+            <a href="{{route('bills.show',$entry->id)}}" title="{{{$entry->name}}}">{{{$entry->name}}}</a>
         </td>
         <td>
             @foreach(explode(',',$entry->match) as $match)

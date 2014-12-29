@@ -9,7 +9,7 @@
             <!-- TODO add menu -->
         </div>
         <div class="panel-body">
-            @include('list.recurring')
+            @include('list.bills')
         </div>
         </div>
     </div>

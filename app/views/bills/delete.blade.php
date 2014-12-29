@@ -1,12 +1,12 @@
 @extends('layouts.default')
 @section('content')
-{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $recurringTransaction) }}
-{{Form::open(['class' => 'form-horizontal','id' => 'destroy','url' => route('recurring.destroy',$recurringTransaction->id)])}}
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $bill) }}
+{{Form::open(['class' => 'form-horizontal','id' => 'destroy','url' => route('bills.destroy',$bill->id)])}}
 <div class="row">
     <div class="col-lg-6 col-md-12 col-sm-12">
         <div class="panel panel-red">
             <div class="panel-heading">
-                Delete recurring transaction "{{{$recurringTransaction->name}}}"
+                Delete bill "{{{$bill->name}}}"
             </div>
             <div class="panel-body">
                 <p>
