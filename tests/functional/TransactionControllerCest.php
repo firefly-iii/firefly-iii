@@ -34,15 +34,6 @@ class TransactionControllerCest
         $I->see('Delete withdrawal "Huur Portaal for January 2014"');
     }
 
-    public function destroyWithdrawal(FunctionalTester $I)
-    {
-        $I->wantTo('destroy a withdrawal');
-        $I->amOnPage('/transaction/delete/3');
-        $I->submitForm('#destroy', []);
-        $I->see('Transaction &quot;Huur Portaal for January 2014&quot; destroyed.');
-
-    }
-
     public function destroyDeposit(FunctionalTester $I)
     {
         $I->wantTo('destroy a deposit');
@@ -58,6 +49,15 @@ class TransactionControllerCest
         $I->amOnPage('/transaction/delete/406');
         $I->submitForm('#destroy', []);
         $I->see('Transaction &quot;Money for new PC&quot; destroyed.');
+
+    }
+
+    public function destroyWithdrawal(FunctionalTester $I)
+    {
+        $I->wantTo('destroy a withdrawal');
+        $I->amOnPage('/transaction/delete/3');
+        $I->submitForm('#destroy', []);
+        $I->see('Transaction &quot;Huur Portaal for January 2014&quot; destroyed.');
 
     }
 
@@ -101,6 +101,61 @@ class TransactionControllerCest
     {
         $I->wantTo('store a transaction');
         $I->amOnPage('/transactions/create/withdrawal');
+        $I->submitForm(
+            '#store', [
+                        'reminder'           => '',
+                        'description'        => 'Test',
+                        'account_id'         => 1,
+                        'expense_account'    => 'Zomaar',
+                        'amount'             => 100,
+                        'date'               => '2014-12-30',
+                        'budget_id'          => 3,
+                        'category'           => 'Categorrr',
+                        'post_submit_action' => 'store'
+                    ]
+        );
+        $I->see('Transaction &quot;Test&quot; stored.');
+    }
+
+    public function storeAndReturn(FunctionalTester $I)
+    {
+        $I->wantTo('store a transaction');
+        $I->amOnPage('/transactions/create/withdrawal');
+        $I->submitForm(
+            '#store', [
+                        'reminder'           => '',
+                        'description'        => 'Test',
+                        'account_id'         => 1,
+                        'expense_account'    => 'Zomaar',
+                        'amount'             => 100,
+                        'date'               => '2014-12-30',
+                        'budget_id'          => 3,
+                        'category'           => 'Categorrr',
+                        'post_submit_action' => 'create_another'
+                    ]
+        );
+        $I->see('Transaction &quot;Test&quot; stored.');
+    }
+
+
+    public function storeAndFail(FunctionalTester $I)
+    {
+        $I->wantTo('store a transaction and fail');
+        $I->amOnPage('/transactions/create/withdrawal');
+        $I->submitForm(
+            '#store', [
+                        'reminder'           => '',
+                        'description'        => '',
+                        'account_id'         => 1,
+                        'expense_account'    => 'Zomaar',
+                        'amount'             => 100,
+                        'date'               => '2014-12-30',
+                        'budget_id'          => 3,
+                        'category'           => 'Categorrr',
+                        'post_submit_action' => 'store'
+                    ]
+        );
+        $I->see('Could not store transaction: This field is mandatory.');
     }
 
     public function update(FunctionalTester $I)
@@ -118,6 +173,46 @@ class TransactionControllerCest
                          'budget_id'          => 2,
                          'category'           => 'House',
                          'post_submit_action' => 'update'
+                     ]
+        );
+        $I->see('Huur Portaal for January 2014!');
+    }
+
+    public function updateAndFail(FunctionalTester $I)
+    {
+        $I->wantTo('update a transaction and fail');
+        $I->amOnPage('/transaction/edit/3');
+        $I->see('Huur Portaal for January 2014');
+        $I->submitForm(
+            '#update', [
+                         'description'        => '',
+                         'account_id'         => 1,
+                         'expense_account'    => 'Portaal',
+                         'amount'             => 500,
+                         'date'               => '2014-01-01',
+                         'budget_id'          => 2,
+                         'category'           => 'House',
+                         'post_submit_action' => 'update'
+                     ]
+        );
+        $I->see('Could not update transaction: This field is mandatory.');
+    }
+
+    public function updateAndReturn(FunctionalTester $I)
+    {
+        $I->wantTo('update a transaction and return to the edit screen');
+        $I->amOnPage('/transaction/edit/3');
+        $I->see('Huur Portaal for January 2014');
+        $I->submitForm(
+            '#update', [
+                         'description'        => 'Huur Portaal for January 2014!',
+                         'account_id'         => 1,
+                         'expense_account'    => 'Portaal',
+                         'amount'             => 500,
+                         'date'               => '2014-01-01',
+                         'budget_id'          => 2,
+                         'category'           => 'House',
+                         'post_submit_action' => 'return_to_edit'
                      ]
         );
         $I->see('Huur Portaal for January 2014!');
