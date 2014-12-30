@@ -2,7 +2,12 @@
 
 /**
  * Class RepeatedExpenseControllerCest
+ *
+ * @SuppressWarnings("CamelCase")
+ * @SuppressWarnings("short")
  */
+
+
 class RepeatedExpenseControllerCest
 {
     /**
@@ -20,6 +25,9 @@ class RepeatedExpenseControllerCest
         $I->amLoggedAs(['email' => 'thegrumpydictator@gmail.com', 'password' => 'james']);
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function create(FunctionalTester $I)
     {
         $I->wantTo('create a recurring transaction');
@@ -27,6 +35,9 @@ class RepeatedExpenseControllerCest
         $I->see('Create new repeated expense');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function delete(FunctionalTester $I)
     {
         $I->wantTo('delete a recurring transaction');
@@ -34,6 +45,9 @@ class RepeatedExpenseControllerCest
         $I->see('Delete "Nieuwe kleding"');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function destroy(FunctionalTester $I)
     {
         $I->wantTo('destroy a recurring transaction');
@@ -42,6 +56,9 @@ class RepeatedExpenseControllerCest
         $I->dontSeeInDatabase('piggy_banks', ['id' => 5]);
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function edit(FunctionalTester $I)
     {
         $I->wantTo('edit a recurring transaction');
@@ -50,6 +67,9 @@ class RepeatedExpenseControllerCest
 
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function index(FunctionalTester $I)
     {
         $I->wantTo('see all recurring transactions');
@@ -58,6 +78,9 @@ class RepeatedExpenseControllerCest
         $I->see('Nieuwe kleding');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function show(FunctionalTester $I)
     {
         $I->wantTo('view a recurring transaction');
@@ -65,6 +88,9 @@ class RepeatedExpenseControllerCest
         $I->see('Nieuwe kleding');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function store(FunctionalTester $I)
     {
         $I->wantTo('store a recurring transaction');
@@ -86,6 +112,9 @@ class RepeatedExpenseControllerCest
         $I->see('Piggy bank "TestRepeatedExpense" stored.');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function update(FunctionalTester $I)
     {
         $I->wantTo('update a recurring transaction');
@@ -107,6 +136,9 @@ class RepeatedExpenseControllerCest
         $I->see('Repeated expense &quot;Nieuwe kleding!&quot; updated.');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function updateAndReturnToEdit(FunctionalTester $I)
     {
         $I->wantTo('update a recurring transaction and return to edit screen');
@@ -128,6 +160,9 @@ class RepeatedExpenseControllerCest
         $I->see('Repeated expense &quot;Nieuwe kleding!&quot; updated.');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function updateFail(FunctionalTester $I)
     {
         $I->wantTo('try to update a recurring transaction and fail');

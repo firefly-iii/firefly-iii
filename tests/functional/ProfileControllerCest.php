@@ -2,6 +2,9 @@
 
 /**
  * Class ProfileControllerCest
+ *
+ * @SuppressWarnings("CamelCase")
+ * @SuppressWarnings("short")
  */
 class ProfileControllerCest
 {

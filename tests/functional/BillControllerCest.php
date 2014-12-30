@@ -2,6 +2,9 @@
 
 /**
  * Class BillControllerCest
+ *
+ * @SuppressWarnings("CamelCase")
+ * @SuppressWarnings("short")
  */
 class BillControllerCest
 {
@@ -147,6 +150,9 @@ class BillControllerCest
         $I->see('Could not store bill');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function storeRecreate(FunctionalTester $I)
     {
         $I->wantTo('validate a bill and create another one');

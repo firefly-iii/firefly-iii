@@ -175,46 +175,6 @@ class PiggyBankShared
 
 
         return ['errors' => $errors, 'warnings' => $warnings, 'successes' => $successes];
-
-        exit;
-
-        if (!in_array(ucfirst($model['reminder']), \Config::get('firefly.piggy_bank_periods'))) {
-            $errors->add('reminder', 'Invalid reminder period (' . $model['reminder'] . ')');
-        }
-        // check period.
-        if (!$errors->has('reminder') && !$errors->has('targetdate') && isset($model['remind_me']) && intval($model['remind_me']) == 1) {
-            $today  = new Carbon;
-            $target = new Carbon($model['targetdate']);
-            switch ($model['reminder']) {
-                case 'week':
-                    $today->addWeek();
-                    break;
-                case 'month':
-                    $today->addMonth();
-                    break;
-                case 'year':
-                    $today->addYear();
-                    break;
-            }
-            if ($today > $target) {
-                $errors->add('reminder', 'Target date is too close to today to set reminders.');
-            }
-        }
-
-        $validator = \Validator::make($model, \PiggyBank::$rules);
-        if ($validator->invalid()) {
-            $errors->merge($errors);
-        }
-
-        // add ok messages.
-        $list = ['name', 'account_id', 'targetamount', 'targetdate', 'remind_me', 'reminder'];
-        foreach ($list as $entry) {
-            if (!$errors->has($entry) && !$warnings->has($entry)) {
-                $successes->add($entry, 'OK');
-            }
-        }
-
-        return ['errors' => $errors, 'warnings' => $warnings, 'successes' => $successes];
     }
 
 }

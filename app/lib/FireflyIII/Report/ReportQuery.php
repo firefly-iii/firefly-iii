@@ -231,7 +231,7 @@ class ReportQuery implements ReportQueryInterface
                     ->where('account_meta.data', '!=', '"sharedExpense"')
                     ->where('transaction_types.type', 'Withdrawal')
                     ->groupBy('budgets.id')
-                    ->orderBy('name', 'ASC')
+                    ->orderBy('budgets.name', 'ASC')
                     ->get(['budgets.id', 'budgets.name', \DB::Raw('SUM(`transactions`.`amount`) AS `spent`')]);
     }
 
