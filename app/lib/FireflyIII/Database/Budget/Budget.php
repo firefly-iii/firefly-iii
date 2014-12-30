@@ -238,6 +238,7 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
 
     /**
      * This method includes the time because otherwise, SQLite doesn't understand it.
+     *
      * @param \Budget $budget
      * @param Carbon  $date
      *
@@ -367,7 +368,6 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     public function limitOnStartingOnDate(\Budget $budget, Carbon $date)
     {
         return $budget->budgetLimits()->where('startdate', $date->format('Y-m-d 00:00:00'))->first();
-
 
 
     }

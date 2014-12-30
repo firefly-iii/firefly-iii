@@ -37,6 +37,16 @@ class ReminderControllerCest
     /**
      * @param FunctionalTester $I
      */
+    public function actOnInvalid(FunctionalTester $I)
+    {
+        $I->wantTo('act on an invalid reminder');
+        $I->amOnPage('/reminders/2/act');
+        $I->see('This reminder has an invalid class connected to it.');
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
     public function dismiss(FunctionalTester $I)
     {
         $I->wantTo('dismiss a reminder');
@@ -63,16 +73,6 @@ class ReminderControllerCest
         $I->amOnPage('/reminders/1');
         $I->see('A reminder about');
         $I->see('your piggy bank labelled "Weekly reminder for clothes"');
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
-    public function actOnInvalid(FunctionalTester $I)
-    {
-        $I->wantTo('act on an invalid reminder');
-        $I->amOnPage('/reminders/2/act');
-        $I->see('This reminder has an invalid class connected to it.');
     }
 
 }

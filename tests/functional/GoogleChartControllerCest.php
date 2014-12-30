@@ -26,20 +26,20 @@ class GoogleChartControllerCest
     /**
      * @param FunctionalTester $I
      */
-    public function accountBalanceChart(FunctionalTester $I)
+    public function accountAllBalanceChart(FunctionalTester $I)
     {
-        $I->wantTo('see the session balance chart of an account.');
-        $I->amOnPage('chart/account/1/session');
+        $I->wantTo('see the complete balance chart of an account.');
+        $I->amOnPage('chart/account/1/all');
         $I->seeResponseCodeIs(200);
     }
 
     /**
      * @param FunctionalTester $I
      */
-    public function accountAllBalanceChart(FunctionalTester $I)
+    public function accountBalanceChart(FunctionalTester $I)
     {
-        $I->wantTo('see the complete balance chart of an account.');
-        $I->amOnPage('chart/account/1/all');
+        $I->wantTo('see the session balance chart of an account.');
+        $I->amOnPage('chart/account/1/session');
         $I->seeResponseCodeIs(200);
     }
 
@@ -70,6 +70,26 @@ class GoogleChartControllerCest
     {
         $I->wantTo('see the chart with all categories on it');
         $I->amOnPage('/chart/home/categories');
+        $I->seeResponseCodeIs(200);
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function billOverview(FunctionalTester $I)
+    {
+        $I->wantTo('see the chart for the history of a bill');
+        $I->amOnPage('/chart/bills/1');
+        $I->seeResponseCodeIs(200);
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function billsOverview(FunctionalTester $I)
+    {
+        $I->wantTo('see the chart for which bills I have yet to pay');
+        $I->amOnPage('/chart/home/bills');
         $I->seeResponseCodeIs(200);
     }
 
@@ -128,26 +148,6 @@ class GoogleChartControllerCest
     /**
      * @param FunctionalTester $I
      */
-    public function piggyBankHistory(FunctionalTester $I)
-    {
-        $I->wantTo('see the chart for the history of a piggy bank');
-        $I->amOnPage('/chart/piggy_history/1');
-        $I->seeResponseCodeIs(200);
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
-    public function billOverview(FunctionalTester $I)
-    {
-        $I->wantTo('see the chart for the history of a bill');
-        $I->amOnPage('/chart/bills/1');
-        $I->seeResponseCodeIs(200);
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
     public function emptyBillOverview(FunctionalTester $I)
     {
         $I->wantTo('see the chart for the history of an empty bill');
@@ -158,10 +158,10 @@ class GoogleChartControllerCest
     /**
      * @param FunctionalTester $I
      */
-    public function billsOverview(FunctionalTester $I)
+    public function piggyBankHistory(FunctionalTester $I)
     {
-        $I->wantTo('see the chart for which bills I have yet to pay');
-        $I->amOnPage('/chart/home/bills');
+        $I->wantTo('see the chart for the history of a piggy bank');
+        $I->amOnPage('/chart/piggy_history/1');
         $I->seeResponseCodeIs(200);
     }
 

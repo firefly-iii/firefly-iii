@@ -1,6 +1,7 @@
 <?php
 
 namespace FireflyIII\Shared\Toolkit;
+
 use Carbon\Carbon;
 use FireflyIII\Exception\FireflyException;
 

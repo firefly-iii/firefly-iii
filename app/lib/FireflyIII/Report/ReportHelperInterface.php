@@ -44,15 +44,6 @@ interface ReportHelperInterface
     public function mergeArrays(array $one, array $two);
 
     /**
-     * Sort an array where all 'amount' keys are negative floats.
-     *
-     * @param array $array
-     *
-     * @return array
-     */
-    public function sortNegativeArray(array $array);
-
-    /**
      * Sort an array where all 'amount' keys are positive floats.
      *
      * @param array $array
@@ -60,5 +51,14 @@ interface ReportHelperInterface
      * @return array
      */
     public function sortArray(array $array);
+
+    /**
+     * Sort an array where all 'amount' keys are negative floats.
+     *
+     * @param array $array
+     *
+     * @return array
+     */
+    public function sortNegativeArray(array $array);
 
 }

@@ -6,7 +6,6 @@ use FireflyIII\Database\CommonDatabaseCalls;
 use FireflyIII\Database\CUD;
 use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
-use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Support\Collection;
 
 /**

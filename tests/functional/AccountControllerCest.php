@@ -71,6 +71,19 @@ class AccountControllerCest
     /**
      * @param FunctionalTester $I
      */
+    public function failUpdate(FunctionalTester $I)
+    {
+        $I->wantTo('update an asset account and fail');
+        $I->amOnPage('/accounts/edit/3');
+        $I->see('Edit asset account "Delete me"');
+        $I->submitForm('#update', ['name' => '', 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'update']);
+        $I->seeRecord('accounts', ['name' => 'Delete me']);
+
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
     public function index(FunctionalTester $I)
     {
         $I->wantTo('see a list of accounts');
@@ -106,21 +119,6 @@ class AccountControllerCest
     /**
      * @param FunctionalTester $I
      */
-    public function storeValidateOnly(FunctionalTester $I)
-    {
-        $I->amOnPage('/accounts/create/asset');
-        $I->wantTo('validate a new asset account');
-        $I->see('Create a new asset account');
-        $I->submitForm(
-            '#store', ['name' => 'New through tests.', 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'validate_only']
-        );
-        $I->dontSeeRecord('accounts', ['name' => 'New through tests.']);
-        resetToClean::clean();
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
     public function storeAndCreateAnother(FunctionalTester $I)
     {
         $I->amOnPage('/accounts/create/asset');
@@ -149,6 +147,21 @@ class AccountControllerCest
     /**
      * @param FunctionalTester $I
      */
+    public function storeValidateOnly(FunctionalTester $I)
+    {
+        $I->amOnPage('/accounts/create/asset');
+        $I->wantTo('validate a new asset account');
+        $I->see('Create a new asset account');
+        $I->submitForm(
+            '#store', ['name' => 'New through tests.', 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'validate_only']
+        );
+        $I->dontSeeRecord('accounts', ['name' => 'New through tests.']);
+        resetToClean::clean();
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
     public function update(FunctionalTester $I)
     {
         $I->wantTo('update an asset account');
@@ -157,34 +170,6 @@ class AccountControllerCest
         $I->submitForm('#update', ['name' => 'Update me', 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'update']);
         $I->seeRecord('accounts', ['name' => 'Update me']);
         resetToClean::clean();
-
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
-    public function failUpdate(FunctionalTester $I)
-    {
-        $I->wantTo('update an asset account and fail');
-        $I->amOnPage('/accounts/edit/3');
-        $I->see('Edit asset account "Delete me"');
-        $I->submitForm('#update', ['name' => '', 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'update']);
-        $I->seeRecord('accounts', ['name' => 'Delete me']);
-
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
-    public function validateUpdateOnly(FunctionalTester $I)
-    {
-        $I->wantTo('update an asset account and validate only');
-        $I->amOnPage('/accounts/edit/2');
-        $I->see('Edit asset account "Savings account"');
-        $I->submitForm(
-            '#update', ['name' => 'Savings accountXX', 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'validate_only']
-        );
-        $I->dontSeeRecord('accounts', ['name' => 'Savings accountXX']);
 
     }
 
@@ -201,6 +186,21 @@ class AccountControllerCest
         );
         $I->seeRecord('accounts', ['name' => 'Savings accountXX']);
         resetToClean::clean();
+
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function validateUpdateOnly(FunctionalTester $I)
+    {
+        $I->wantTo('update an asset account and validate only');
+        $I->amOnPage('/accounts/edit/2');
+        $I->see('Edit asset account "Savings account"');
+        $I->submitForm(
+            '#update', ['name' => 'Savings accountXX', 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'validate_only']
+        );
+        $I->dontSeeRecord('accounts', ['name' => 'Savings accountXX']);
 
     }
 

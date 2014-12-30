@@ -220,28 +220,6 @@ class BillControllerCest
     /**
      * @param FunctionalTester $I
      */
-    public function updateReturn(FunctionalTester $I)
-    {
-        $I->wantTo('update a bill and return to edit it');
-        $I->amOnPage('/bills/edit/1');
-        $I->submitForm(
-            '#update', [
-                         'name'        => 'Some bill',
-                         'match'       => 'bla,bla',
-                         'amount_min'  => 10,
-                         'amount_max'  => 20,
-                         'post_submit_action' => 'return_to_edit',
-                         'date'        => date('Y-m-d'),
-                         'repeat_freq' => 'monthly',
-                         'skip'        => 0
-                     ]
-        );
-        $I->see('Bill &quot;Some bill&quot; updated.');
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
     public function updateFail(FunctionalTester $I)
     {
         $I->wantTo('update a bill and fail');
@@ -258,6 +236,28 @@ class BillControllerCest
                      ]
         );
         $I->see('Could not update bill');
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function updateReturn(FunctionalTester $I)
+    {
+        $I->wantTo('update a bill and return to edit it');
+        $I->amOnPage('/bills/edit/1');
+        $I->submitForm(
+            '#update', [
+                         'name'               => 'Some bill',
+                         'match'              => 'bla,bla',
+                         'amount_min'         => 10,
+                         'amount_max'         => 20,
+                         'post_submit_action' => 'return_to_edit',
+                         'date'               => date('Y-m-d'),
+                         'repeat_freq'        => 'monthly',
+                         'skip'               => 0
+                     ]
+        );
+        $I->see('Bill &quot;Some bill&quot; updated.');
     }
 
 }
