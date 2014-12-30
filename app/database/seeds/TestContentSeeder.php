@@ -194,6 +194,41 @@ class TestContentSeeder extends Seeder
                     ]
                 );
 
+                // recurring transaction
+                $recurring = PiggyBank::create(
+                    [
+                        'account_id'    => $savings->id,
+                        'name'          => 'Nieuwe kleding',
+                        'targetamount'  => 1000,
+                        'startdate'     => Carbon::now()->subMonth()->format('Y-m-d'),
+                        'targetdate'    => Carbon::now()->format('Y-m-d'),
+                        'repeats'       => 1,
+                        'rep_length'    => 'month',
+                        'rep_every'     => 0,
+                        'rep_times'     => 0,
+                        'reminder'      => 'month',
+                        'reminder_skip' => 0,
+                        'remind_me'     => 1,
+                        'order'         => 0,
+                    ]
+                );
+                PiggyBankRepetition::create(
+                    [
+                        'piggy_bank_id' => $recurring->id,
+                        'startdate'     => Carbon::now()->format('Y-m-d'),
+                        'targetdate'    => Carbon::now()->addMonth()->format('Y-m-d'),
+                        'currentamount' => 0
+                    ]
+                );
+                PiggyBankRepetition::create(
+                    [
+                        'piggy_bank_id' => $recurring->id,
+                        'startdate'     => Carbon::now()->subMonth()->format('Y-m-d'),
+                        'targetdate'    => Carbon::now()->format('Y-m-d'),
+                        'currentamount' => 0
+                    ]
+                );
+
                 // bill
                 $firstBill = \Bill::create(
                     [
