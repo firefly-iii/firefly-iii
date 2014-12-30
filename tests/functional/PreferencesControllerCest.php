@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class PreferencesControllerCest
+ */
 class PreferencesControllerCest
 {
     /**

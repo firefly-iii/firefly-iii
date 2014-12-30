@@ -241,12 +241,15 @@ class Date
             default:
                 throw new FireflyException('Cannot do subtractPeriod for $repeat_freq ' . $repeatFreq);
                 break;
+            case 'day':
             case 'daily':
                 $date->subDays($subtract);
                 break;
+            case 'week':
             case 'weekly':
                 $date->subWeeks($subtract);
                 break;
+            case 'month':
             case 'monthly':
                 $date->subMonths($subtract);
                 break;

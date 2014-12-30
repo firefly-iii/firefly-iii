@@ -1,12 +1,34 @@
 @extends('layouts.default')
 @section('content')
 {{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName()) }}
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <p>
+            <a href="{{route('piggy_banks.create')}}" class="btn btn-success">Create new piggy bank</a>
+        </p>
+    </div>
+</div>
 @foreach($piggyBanks as $piggyBank)
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-fw fa-rocket"></i> <a href="{{route('piggy_banks.show',$piggyBank->id)}}" title="{{{$piggyBank->name}}}">{{{$piggyBank->name}}}</a>
+
+                <!-- ACTIONS MENU -->
+                <div class="pull-right">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                            Actions
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu pull-right" role="menu">
+                            <li><a href="{{route('piggy_banks.edit',$piggyBank->id)}}"><i class="fa fa-pencil fa-fw"></i> Edit</a></li>
+                            <li><a href="{{route('piggy_banks.delete',$piggyBank->id)}}"><i class="fa fa-trash fa-fw"></i> Delete</a></li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
             <div class="panel-body">
                 <div class="row">
@@ -61,19 +83,10 @@
 </div>
 @endforeach
 <div class="row">
-    <div class="col-lg-6 col-md-6 col-sm-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-fw fa-plus"></i> Create piggy bank
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-lg-8 col-md-6 col-sm-4 col-lg-offset-2 col-md-offset-3 col-sm-offset-4">
-                        <a href="{{route('piggy_banks.create')}}" class="btn btn-success">Create new piggy bank</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <p>
+            <a href="{{route('piggy_banks.create')}}" class="btn btn-success">Create new piggy bank</a>
+        </p>
     </div>
 </div>
 
