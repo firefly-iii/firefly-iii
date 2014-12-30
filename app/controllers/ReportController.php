@@ -44,7 +44,7 @@ class ReportController extends BaseController
         try {
             new Carbon($year . '-' . $month . '-01');
         } catch (Exception $e) {
-            View::make('error')->with('message', 'Invalid date');
+            return View::make('error')->with('message', 'Invalid date');
         }
         $date     = new Carbon($year . '-' . $month . '-01');
         $dayEarly = clone $date;
@@ -81,7 +81,7 @@ class ReportController extends BaseController
         try {
             new Carbon($year . '-' . $month . '-01');
         } catch (Exception $e) {
-            View::make('error')->with('message', 'Invalid date');
+            return View::make('error')->with('message', 'Invalid date.');
         }
         $date         = new Carbon($year . '-' . $month . '-01');
         $subTitle     = 'Report for ' . $date->format('F Y');
@@ -110,7 +110,7 @@ class ReportController extends BaseController
         try {
             new Carbon('01-01-' . $year);
         } catch (Exception $e) {
-            App::abort(500);
+            return View::make('error')->with('message', 'Invalid date.');
         }
         $date = new Carbon('01-01-' . $year);
         $end  = clone $date;

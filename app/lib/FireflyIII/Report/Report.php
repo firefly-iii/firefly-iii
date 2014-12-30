@@ -388,7 +388,7 @@ class Report implements ReportInterface
                                   ->where('acm_to.data', '!=', '"sharedExpense"')
                                   ->before($end)->after($start)
                                   ->where('transaction_journals.user_id', \Auth::user()->id)
-                                  ->groupBy('account_id')->orderBy('sum')->limit(15)
+                                  ->groupBy('t_from.account_id')->orderBy('sum')->limit(15)
                                   ->get(['t_from.account_id as account_id', 'ac_from.name as name', \DB::Raw('SUM(t_from.amount) as `sum`')]);
 
 

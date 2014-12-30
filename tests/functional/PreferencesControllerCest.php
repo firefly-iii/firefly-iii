@@ -2,6 +2,10 @@
 
 /**
  * Class PreferencesControllerCest
+ *
+ * @SuppressWarnings("CamelCase")
+ * @SuppressWarnings("short")
+ *
  */
 class PreferencesControllerCest
 {
