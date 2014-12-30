@@ -15,6 +15,7 @@ class HelpController extends BaseController
         $helpText  = '<p>There is no help for this route!</p>';
         $helpTitle = 'Help';
         if (!Route::has($route)) {
+            \Log::error('No such route: ' . $route);
             return Response::json(['title' => $helpTitle, 'text' => $helpText]);
         }
 
@@ -27,16 +28,20 @@ class HelpController extends BaseController
         }
 
         $uri = 'https://raw.githubusercontent.com/JC5/firefly-iii-help/master/' . e($route) . '.md';
+        \Log::debug('URL is: ' . $uri);
         try {
             $content = file_get_contents($uri);
         } catch (ErrorException $e) {
-            $content = '<p>There is no help for this route.</p>';
-        }
-        if (strlen($content) == 0) {
-            $content = '<p>There is no help for this route.</p>';
+            $content = '<p>There is no help for this route!</p>';
+            \Log::error(trim($e->getMessage()));
         }
         \Log::debug('Found help for ' . $route);
-        \Log::debug('Help text length is ' . strlen($content));
+        \Log::debug('Help text length for route ' . $route . ' is ' . strlen($content));
+        \Log::debug('Help text IS: "' . $content . '".');
+        if (strlen(trim($content)) == 0) {
+            $content = '<p>There is no help for this route.</p>';
+        }
+
         $helpText  = \Michelf\Markdown::defaultTransform($content);
         $helpTitle = $route;
 
