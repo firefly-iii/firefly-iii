@@ -9,6 +9,9 @@ use Watson\Validating\ValidatingTrait;
 class PiggyBank extends Eloquent
 {
     use ValidatingTrait;
+    public    $fillable
+        = ['account_id', 'name', 'targetamount', 'startdate', 'targetdate', 'repeats', 'rep_length', 'rep_every', 'rep_times', 'reminder', 'reminder_skip',
+           'remind_me', 'order'];
     protected $rules
         = ['account_id'    => 'required|exists:accounts,id', // link to Account
            'name'          => 'required|between:1,255', // name
@@ -23,9 +26,6 @@ class PiggyBank extends Eloquent
            'reminder_skip' => 'required|min:0|max:100', // every week? every 2 months?
            'remind_me'     => 'required|boolean', 'order' => 'required:min:1', // not yet used.
         ];
-    public        $fillable
-        = ['account_id', 'name', 'targetamount', 'startdate', 'targetdate', 'repeats', 'rep_length', 'rep_every', 'rep_times', 'reminder', 'reminder_skip',
-           'remind_me', 'order'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -95,7 +95,7 @@ class PiggyBank extends Eloquent
 
             return $rep;
         } else {
-            $query            = $this->piggyBankRepetitions()->where(
+            $query  = $this->piggyBankRepetitions()->where(
                 function ($q) {
 
                     $q->where(
@@ -105,28 +105,28 @@ class PiggyBank extends Eloquent
                                 function ($q) {
                                     $today = new Carbon;
                                     $q->whereNull('startdate');
-                                    $q->orWhere('startdate', '<=', $today->format('Y-m-d'));
+                                    $q->orWhere('startdate', '<=', $today->format('Y-m-d 00:00:00'));
                                 }
                             )->where(
                                 function ($q) {
                                     $today = new Carbon;
                                     $q->whereNull('targetdate');
-                                    $q->orWhere('targetdate', '>=', $today->format('Y-m-d'));
+                                    $q->orWhere('targetdate', '>=', $today->format('Y-m-d 00:00:00'));
                                 }
                             );
                         }
                     )->orWhere(
                         function ($q) {
                             $today = new Carbon;
-                            $q->where('startdate', '>=', $today->format('Y-m-d'));
-                            $q->where('targetdate', '>=', $today->format('Y-m-d'));
+                            $q->where('startdate', '>=', $today->format('Y-m-d 00:00:00'));
+                            $q->where('targetdate', '>=', $today->format('Y-m-d 00:00:00'));
                         }
                     );
 
                 }
-            )
-                                     ->orderBy('startdate', 'ASC');
-            $result           = $query->first(['piggy_bank_repetitions.*']);
+            )->orderBy('startdate', 'ASC');
+            $result = $query->first(['piggy_bank_repetitions.*']);
+            \Log::debug('Result is null: ' . boolstr(is_null($result)));
             $this->currentRep = $result;
             \Log::debug('Found relevant rep in currentRelevantRep(): ' . $result->id);
 
