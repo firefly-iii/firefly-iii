@@ -17,7 +17,7 @@ class SearchController extends BaseController
         $subTitle = null;
         $rawQuery = null;
         $result   = [];
-        if (!is_null(Input::get('q'))) {
+        if (!is_null(Input::get('q')) && strlen(Input::get('q')) > 0) {
             $rawQuery = trim(Input::get('q'));
             $words    = explode(' ', $rawQuery);
             $subTitle = 'Results for "' . e($rawQuery) . '"';
