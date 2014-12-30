@@ -58,13 +58,13 @@
         </td>
         <td>
             @if($journal->transactiontype->type == 'Withdrawal')
-            <span class="text-danger">{{mf($journal->transactions[1]->amount,false)}}</span>
+            <span class="text-danger">{{mft($journal->transactions[1],false)}}</span>
             @endif
             @if($journal->transactiontype->type == 'Deposit')
-            <span class="text-success">{{mf($journal->transactions[1]->amount,false)}}</span>
+            <span class="text-success">{{mft($journal->transactions[1],false)}}</span>
             @endif
             @if($journal->transactiontype->type == 'Transfer')
-            <span class="text-info">{{mf($journal->transactions[1]->amount,false)}}</span>
+            <span class="text-info">{{mft($journal->transactions[1],false)}}</span>
             @endif
         </td>
         <td>

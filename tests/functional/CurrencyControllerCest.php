@@ -41,8 +41,8 @@ class CurrencyControllerCest
     public function delete(FunctionalTester $I)
     {
         $I->wantTo('delete a currency');
-        $I->amOnPage('/currency/delete/2');
-        $I->see('Delete currency "US Dollar"');
+        $I->amOnPage('/currency/delete/3');
+        $I->see('Delete currency "Hungarian forint"');
     }
 
     /**
@@ -51,10 +51,10 @@ class CurrencyControllerCest
     public function destroy(FunctionalTester $I)
     {
         $I->wantTo('destroy a currency');
-        $I->amOnPage('/currency/delete/2');
-        $I->see('Delete currency "US Dollar"');
+        $I->amOnPage('/currency/delete/3');
+        $I->see('Delete currency "Hungarian forint"');
         $I->submitForm('#destroy', []);
-        $I->see('Currency &quot;US Dollar&quot; deleted');
+        $I->see('Currency &quot;Hungarian forint&quot; deleted');
     }
 
     /**
