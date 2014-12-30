@@ -22,6 +22,9 @@ class TestContentSeeder extends Seeder
             $transfer   = TransactionType::whereType('Transfer')->first();
             $deposit    = TransactionType::whereType('Deposit')->first();
 
+            $euro   = TransactionCurrency::whereCode('EUR')->first();
+            $dollar = TransactionCurrency::whereCode('USD')->first();
+
             $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
 
             if ($user) {
@@ -245,8 +248,8 @@ class TestContentSeeder extends Seeder
                     ['user_id' => $user->id, 'account_type_id' => $ibType->id, 'name' => 'Savings account initial balance', 'active' => 0]
                 );
 
-                $this->createTransaction($ibChecking, $checking, 4000, $obType, 'Initial Balance for Checking account', '2014-01-01');
-                $this->createTransaction($ibSavings, $savings, 10000, $obType, 'Initial Balance for Savings account', '2014-01-01');
+                $this->createTransaction($ibChecking, $checking, 4000, $obType, 'Initial Balance for Checking account', '2014-01-01', $euro);
+                $this->createTransaction($ibSavings, $savings, 10000, $obType, 'Initial Balance for Savings account', '2014-01-01', $euro);
 
 
                 // create some expenses and incomes and what-not (for every month):
@@ -254,14 +257,16 @@ class TestContentSeeder extends Seeder
                 $end   = Carbon::now()->endOfMonth()->addDay();
                 while ($start <= $end) {
                     $this->createTransaction(
-                        $checking, $portaal, 500, $withdrawal, 'Huur Portaal for ' . $start->format('F Y'), $start->format('Y-m-') . '01', $billsBudget, $house,
+                        $checking, $portaal, 500, $withdrawal, 'Huur Portaal for ' . $start->format('F Y'), $start->format('Y-m-') . '01', $euro, $billsBudget,
+                        $house,
                         $firstBill
                     );
                     $this->createTransaction(
-                        $checking, $vitens, 12, $withdrawal, 'Water for ' . $start->format('F Y'), $start->format('Y-m-') . '02', $billsBudget, $house
+                        $checking, $vitens, 12, $withdrawal, 'Water for ' . $start->format('F Y'), $start->format('Y-m-') . '02', $euro, $billsBudget, $house
                     );
                     $this->createTransaction(
-                        $checking, $greenchoice, 110, $withdrawal, 'Power for ' . $start->format('F Y'), $start->format('Y-m-') . '02', $billsBudget, $house
+                        $checking, $greenchoice, 110, $withdrawal, 'Power for ' . $start->format('F Y'), $start->format('Y-m-') . '02', $euro, $billsBudget,
+                        $house
                     );
 
                     // spend on groceries
@@ -270,22 +275,24 @@ class TestContentSeeder extends Seeder
                         $amt         = rand(100, 300) / 10;
                         $lunchAmount = rand(30, 60) / 10;
                         $this->createTransaction(
-                            $checking, $plus, $lunchAmount, $withdrawal, 'Lunch', $groceriesStart->format('Y-m-d'), $groceriesBudget, $lunch
+                            $checking, $plus, $lunchAmount, $withdrawal, 'Lunch', $groceriesStart->format('Y-m-d'), $dollar, $groceriesBudget, $lunch
                         );
                         $groceriesStart->addDay();
                         if (intval($groceriesStart->format('d')) % 2 == 0) {
                             $this->createTransaction(
-                                $checking, $albert, $amt, $withdrawal, 'Groceries', $groceriesStart->format('Y-m-d'), $groceriesBudget, $dailyGroceries
+                                $checking, $albert, $amt, $withdrawal, 'Groceries', $groceriesStart->format('Y-m-d'), $euro, $groceriesBudget, $dailyGroceries
                             );
                         }
                         $groceriesStart->addDay();
                     }
 
                     // get income:
-                    $this->createTransaction($employer, $checking, rand(1400, 1600), $deposit, 'Salary', $start->format('Y-m-') . '23');
+                    $this->createTransaction($employer, $checking, rand(1400, 1600), $deposit, 'Salary', $start->format('Y-m-') . '23', $dollar);
 
                     // pay taxes:
-                    $this->createTransaction($checking, $taxes, rand(50, 70), $withdrawal, 'Taxes in ' . $start->format('F Y'), $start->format('Y-m-') . '27');
+                    $this->createTransaction(
+                        $checking, $taxes, rand(50, 70), $withdrawal, 'Taxes in ' . $start->format('F Y'), $start->format('Y-m-') . '27', $euro
+                    );
 
                     // some other stuff.
 
@@ -295,8 +302,8 @@ class TestContentSeeder extends Seeder
                 }
 
                 // create some big expenses, move some money around.
-                $this->createTransaction($savings, $checking, 1259, $transfer, 'Money for new PC', $end->format('Y-m') . '-11');
-                $this->createTransaction($checking, $store, 1259, $withdrawal, 'New PC', $end->format('Y-m') . '-12');
+                $this->createTransaction($savings, $checking, 1259, $transfer, 'Money for new PC', $end->format('Y-m') . '-11', $dollar);
+                $this->createTransaction($checking, $store, 1259, $withdrawal, 'New PC', $end->format('Y-m') . '-12', $euro);
 
                 // create two budgets
 
@@ -315,6 +322,7 @@ class TestContentSeeder extends Seeder
      * @param TransactionType      $type
      * @param                      $description
      * @param                      $date
+     * @param TransactionCurrency  $currency
      *
      * @param Budget               $budget
      * @param Category             $category
@@ -323,18 +331,20 @@ class TestContentSeeder extends Seeder
      * @return TransactionJournal
      */
     public function createTransaction(
-        Account $from, Account $to, $amount, TransactionType $type, $description, $date, Budget $budget = null, Category $category = null, Bill $bill = null
+        Account $from, Account $to, $amount, TransactionType $type, $description, $date, TransactionCurrency $currency, Budget $budget = null,
+        Category $category = null, Bill $bill = null
     ) {
-        $user   = User::whereEmail('thegrumpydictator@gmail.com')->first();
-        $euro   = TransactionCurrency::whereCode('EUR')->first();
+        $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
+
         $billID = is_null($bill) ? null : $bill->id;
+
 
         /** @var TransactionJournal $journal */
         $journal = TransactionJournal::create(
             [
                 'user_id'                 => $user->id,
                 'transaction_type_id'     => $type->id,
-                'transaction_currency_id' => $euro->id,
+                'transaction_currency_id' => $currency->id,
                 'bill_id'                 => $billID,
                 'description'             => $description,
                 'completed'               => 1,
