@@ -32,6 +32,11 @@ class HelpController extends BaseController
         } catch (ErrorException $e) {
             $content = '<p>There is no help for this route.</p>';
         }
+        if (strlen($content) == 0) {
+            $content = '<p>There is no help for this route.</p>';
+        }
+        \Log::debug('Found help for ' . $route);
+        \Log::debug('Help text length is ' . strlen($content));
         $helpText  = \Michelf\Markdown::defaultTransform($content);
         $helpTitle = $route;
 

@@ -4,24 +4,34 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <p>
-        <a class="btn btn-lg btn-success" href="{{route('repeated.create')}}">Create new repeated expense</a>
+        <a class="btn btn-success" href="{{route('repeated.create')}}">Create new repeated expense</a>
         </p>
 
     </div>
 </div>
+<!-- TODO create update and destroy -->
+
+@foreach($expenses as $entry)
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-
-    </div>
-</div>
-<!-- TODO create update and destroy -->
-<div class="row">
-@foreach($expenses as $entry)
-    <div class="col-lg-3 col-md-4 col-sm-6">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <a href="{{route('repeated.show',$entry->id)}}" title="{{{$entry->name}}}">{{{$entry->name}}}</a>
                 ({{mf($entry->targetamount)}})
+
+                <!-- ACTIONS MENU -->
+                <div class="pull-right">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                            Actions
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu pull-right" role="menu">
+                            <li><a href="{{route('repeated.edit',$entry->id)}}"><i class="fa fa-pencil fa-fw"></i> Edit</a></li>
+                            <li><a href="{{route('repeated.delete',$entry->id)}}"><i class="fa fa-trash fa-fw"></i> Delete</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
             <div class="panel-body">
                 <div class="progress progress-striped">
@@ -40,7 +50,16 @@
             </div>
         </div>
     </div>
+</div>
     @endforeach
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <p>
+            <a class="btn btn-success" href="{{route('repeated.create')}}">Create new repeated expense</a>
+        </p>
+
+    </div>
 </div>
 
 

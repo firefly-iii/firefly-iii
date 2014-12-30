@@ -9,10 +9,10 @@ use Watson\Validating\ValidatingTrait;
 class PiggyBank extends Eloquent
 {
     use ValidatingTrait;
-    public static $rules
+    protected $rules
         = ['account_id'    => 'required|exists:accounts,id', // link to Account
            'name'          => 'required|between:1,255', // name
-           'targetamount'  => 'required|min:0', // amount you want to save
+           'targetamount'  => 'required|min:0.01|numeric', // amount you want to save
            'startdate'     => 'date', // when you started
            'targetdate'    => 'date', // when its due
            'repeats'       => 'required|boolean', // does it repeat?

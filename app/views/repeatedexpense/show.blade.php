@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $piggyBank) }}
+{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $repeatedExpense) }}
 <div class="row">
 <div class="col-lg-12 col-md-12 col-sm-12">
     @foreach($repetitions as $rep)
@@ -21,7 +21,7 @@
         </div>
         <div class="panel-body">
             <p>
-                Target amount: {{mf($piggyBank->targetamount)}}. Currently saved: {{mf($rep->currentamount)}}.
+                Target amount: {{mf($repeatedExpense->targetamount)}}. Currently saved: {{mf($rep->currentamount)}}.
             </p>
             <div class="row">
             @foreach($rep->bars as $bar)

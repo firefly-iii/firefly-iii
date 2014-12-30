@@ -42,12 +42,22 @@
             </tr>
             @foreach($budgets as $id => $budget)
             <tr>
-                <td>{{{$budget['name']}}}</td>
+                <td>{{{$budget['name']}}}
+                @if($id == 0)
+                    <i class="fa fa-fw fa-question-circle" data-toggle="tooltip" data-placement="top" title="The calculation used here is slightly different from the row below. The numbers should match."></i>
+                @endif
+                </td>
                 <td>{{mf($budget['amount'])}}</td>
                 <?php $spent = 0;?>
                 @foreach($accounts as $account)
                     @if(isset($account->budgetInformation[$id]))
-                        <td>{{mf($account->budgetInformation[$id]['amount'])}}</td>
+                        <td>
+                            @if($id == 0)
+                            <a href="#">{{mf($account->budgetInformation[$id]['amount'])}}</a>
+                            @else
+                                {{mf($account->budgetInformation[$id]['amount'])}}
+                            @endif
+                        </td>
                         <?php
                         $spent += floatval($account->budgetInformation[$id]['amount']);
                         $accountSums[$account->id] += floatval($account->budgetInformation[$id]['amount']);
@@ -61,10 +71,14 @@
             </tr>
             @endforeach
             <tr>
-                <td colspan="2">Without budget</td>
+                <td colspan="2">Without budget
+                    <i class="fa fa-fw fa-question-circle" data-toggle="tooltip" data-placement="top" title="The calculation used here is slightly different from the row above. The numbers should match."></i>
+                </td>
                 @foreach($accounts as $account)
                     @if(isset($account->budgetInformation[0]))
-                        <td>{{mf($account->budgetInformation[0]['amount'])}}</td>
+                        <td>
+                            <a href="#">{{mf($account->budgetInformation[0]['amount'])}}</a>
+                        </td>
                     @else
                         <td>{{mf(0)}}</td>
                     @endif
@@ -74,7 +88,9 @@
             <tr>
                 <td colspan="2">Balanced by transfers</td>
                 @foreach($accounts as $account)
-                    <td>{{mf($account->balancedAmount)}}</td>
+                    <td>
+                        <a href="#">{{mf($account->balancedAmount)}}</a>
+                    </td>
                 @endforeach
                 <td colspan="2">&nbsp;</td>
             </tr>
@@ -101,7 +117,9 @@
                     $accountSums[$account->id] += $account->balancedAmount;
                     ?>
                     @if(isset($account->budgetInformation[0]))
-                        <td>{{mf($account->budgetInformation[0]['amount'] + $account->balancedAmount)}}</td>
+                        <td>
+                            <a href="#">{{mf($account->budgetInformation[0]['amount'] + $account->balancedAmount)}}</a>
+                        </td>
                     @else
                         <td>{{mf(0)}}</td>
                     @endif
@@ -126,4 +144,13 @@
         </table>
     </div>
 </div>
+
+<!-- modal to show various budget information -->
+<div class="modal fade" id="budgetModal">
+
+</div>
+
+@stop
+@section('scripts')
+{{HTML::script('assets/javascript/firefly/reports.js')}}
 @stop
