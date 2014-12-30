@@ -102,13 +102,15 @@ class TestContentSeeder extends Seeder
                 );
 
 
+
+
                 PiggyBankEvent::create(['piggy_bank_id' => 1, 'date' => $startDate->format('Y-m-d'), 'amount' => 100]);
                 PiggyBankRepetition::create(
                     [
                         'piggy_bank_id' => $piggy->id,
                         'startdate'     => Carbon::now()->format('Y-m-d'),
                         'targetdate'    => null,
-                        'currentamount' => 0
+                        'currentamount' => 100
                     ]
                 );
 
@@ -337,10 +339,35 @@ class TestContentSeeder extends Seeder
                 }
 
                 // create some big expenses, move some money around.
-                $this->createTransaction($savings, $checking, 1259, $transfer, 'Money for new PC', $end->format('Y-m') . '-11', $dollar);
-                $this->createTransaction($checking, $store, 1259, $withdrawal, 'New PC', $end->format('Y-m') . '-12', $euro);
+                $one = $this->createTransaction($savings, $checking, 1259, $transfer, 'Money for new PC', $end->format('Y-m') . '-11', $dollar);
+                $two = $this->createTransaction($checking, $store, 1259, $withdrawal, 'New PC', $end->format('Y-m') . '-12', $euro);
 
-                // create two budgets
+                // create a group for these two:
+                $group = TransactionGroup::create(
+                    [
+                        'user_id'  => $user->id,
+                        'relation' => 'balance'
+                    ]
+                );
+                $group->transactionjournals()->save($one);
+                $group->transactionjournals()->save($two);
+
+
+                // piggy bank event
+                // add money to this piggy bank
+                // create a piggy bank event to match:
+                $intoPiggy = $this->createTransaction(
+                    $checking, $savings, 100, $transfer, 'Money for piggy',
+                    Carbon::now()->addDay()->format('Y-m-d'), $euro, $groceriesBudget, $house
+                );
+                $event     = PiggyBankEvent::create(
+                    [
+                        'piggy_bank_id'          => $piggy->id,
+                        'transaction_journal_id' => $intoPiggy->id,
+                        'date'                   => Carbon::now()->addDay()->format('Y-m-d'),
+                        'amount'                 => 100
+                    ]
+                );
 
                 // create two categories
 

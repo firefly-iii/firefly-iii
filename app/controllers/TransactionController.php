@@ -39,6 +39,8 @@ class TransactionController extends BaseController
      *
      * @param TransactionJournal $journal
      *
+     * @codeCoverageIgnore
+     *
      * @return array|\Illuminate\Http\JsonResponse
      */
     public function alreadyRelated(TransactionJournal $journal)
@@ -130,8 +132,10 @@ class TransactionController extends BaseController
     {
         $type   = $transactionJournal->transactionType->type;
         $return = 'withdrawal';
-        $this->_repository->destroy($transactionJournal);
 
+        Session::flash('success', 'Transaction "' . e($transactionJournal->description) . '" destroyed.');
+
+        $this->_repository->destroy($transactionJournal);
 
         switch ($type) {
             case 'Deposit':
@@ -149,6 +153,8 @@ class TransactionController extends BaseController
      * TODO this needs cleaning up and thinking over.
      *
      * @return \Illuminate\Http\JsonResponse
+     * @codeCoverageIgnore
+     *
      */
     public function doRelate()
     {
@@ -259,6 +265,8 @@ class TransactionController extends BaseController
      * @param TransactionJournal $journal
      *
      * @return \Illuminate\View\View
+     * @codeCoverageIgnore
+     *
      */
     public function relate(TransactionJournal $journal)
     {
@@ -281,6 +289,8 @@ class TransactionController extends BaseController
      * TODO this needs cleaning up and thinking over.
      *
      * @param TransactionJournal $journal
+     *
+     * @codeCoverageIgnore
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -385,6 +395,7 @@ class TransactionController extends BaseController
      *
      * @param TransactionJournal $journal
      *
+     * @codeCoverageIgnore
      * @return \Illuminate\Http\JsonResponse
      * @throws Exception
      */
@@ -420,39 +431,24 @@ class TransactionController extends BaseController
         $data             = Input::except('_token');
         $data['currency'] = 'EUR';
         $data['what']     = strtolower($journal->transactionType->type);
+        $messages         = $this->_repository->validate($data);
 
-        // always validate:
-        $messages = $this->_repository->validate($data);
-
-        // flash messages:
         Session::flash('warnings', $messages['warnings']);
         Session::flash('successes', $messages['successes']);
         Session::flash('errors', $messages['errors']);
         if ($messages['errors']->count() > 0) {
             Session::flash('error', 'Could not update transaction: ' . $messages['errors']->first());
         }
-
-
-        // return to update screen:
         if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
             return Redirect::route('transactions.edit', $journal->id)->withInput();
         }
-
-        // update
         $this->_repository->update($journal, $data);
         Session::flash('success', 'Transaction "' . e($data['description']) . '" updated.');
-
         Event::fire('transactionJournal.update', [$journal]); // new and used.
-
-        /*
-         * Also trigger on both transactions.
-         */
         /** @var Transaction $transaction */
         foreach ($journal->transactions()->get() as $transaction) {
             Event::fire('transaction.update', [$transaction]);
         }
-
-        // go back to list
         if ($data['post_submit_action'] == 'update') {
             return Redirect::route('transactions.index', $data['what']);
         }
