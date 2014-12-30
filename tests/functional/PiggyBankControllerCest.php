@@ -211,7 +211,7 @@ class PiggyBankControllerCest
                        'remind_me'          => 0,
                        'order'              => 3,
                        'account_id'         => 1,
-                       'targetamount' => 1000]
+                       'targetamount'       => 1000]
         );
         $I->see('Piggy bank &quot;Some new piggy bank&quot; stored.');
     }
@@ -225,14 +225,14 @@ class PiggyBankControllerCest
         $I->amOnPage('/piggy_banks/create');
         $I->see('Create new piggy bank');
         $I->submitForm(
-            '#store', ['name'          => null,
-                       'rep_every'     => 0,
-                       'reminder_skip' => 0,
-                       'remind_me'     => 0,
-                       'order'         => 3,
-                       'account_id'    => 1,
+            '#store', ['name'               => null,
+                       'rep_every'          => 0,
+                       'reminder_skip'      => 0,
+                       'remind_me'          => 0,
+                       'order'              => 3,
+                       'account_id'         => 1,
                        'post_submit_action' => 'store',
-                       'targetamount' => 1000]
+                       'targetamount'       => 1000]
         );
         $I->see('The name field is required.');
     }
@@ -286,29 +286,6 @@ class PiggyBankControllerCest
     /**
      * @param FunctionalTester $I
      */
-    public function updateValidateOnly(FunctionalTester $I)
-    {
-        $I->wantTo('validate a piggy bank');
-        $I->amOnPage('/piggy_banks/edit/1');
-        $I->see('Edit piggy bank "New camera"');
-        $I->submitForm(
-            '#update', [
-                         'name'               => 'Updated camera',
-                         'account_id'         => 2,
-                         'targetamount'       => 2000,
-                         'targetdate'         => '',
-                         'reminder'           => 'week',
-                         'post_submit_action' => 'validate_only',
-                     ]
-        );
-        $I->see('Updated camera');
-
-
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
     public function updateFail(FunctionalTester $I)
     {
         $I->wantTo('update a piggy bank and fail');
@@ -326,6 +303,29 @@ class PiggyBankControllerCest
         );
         $I->see('The name field is required.');
         $I->seeInDatabase('piggy_banks', ['name' => 'New camera']);
+
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function updateValidateOnly(FunctionalTester $I)
+    {
+        $I->wantTo('validate a piggy bank');
+        $I->amOnPage('/piggy_banks/edit/1');
+        $I->see('Edit piggy bank "New camera"');
+        $I->submitForm(
+            '#update', [
+                         'name'               => 'Updated camera',
+                         'account_id'         => 2,
+                         'targetamount'       => 2000,
+                         'targetdate'         => '',
+                         'reminder'           => 'week',
+                         'post_submit_action' => 'validate_only',
+                     ]
+        );
+        $I->see('Updated camera');
+
 
     }
 

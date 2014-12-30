@@ -109,7 +109,6 @@ class RepeatedExpenseControllerCest
                     ]
         );
 
-//        $I->seeInDatabase('piggy_banks', ['name' => 'TestRepeatedExpense']);
         $I->see('Piggy bank &quot;TestRepeatedExpense&quot; stored.');
     }
 

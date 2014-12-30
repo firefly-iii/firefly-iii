@@ -44,8 +44,8 @@ class ReportQuery implements ReportQueryInterface
      * and are balanced by a transfer to make up for it.
      *
      * @param \Account $account
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon   $start
+     * @param Carbon   $end
      *
      * @return Collection
      */
@@ -97,8 +97,8 @@ class ReportQuery implements ReportQueryInterface
      * and are balanced by a transfer to make up for it.
      *
      * @param \Account $account
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Carbon   $start
+     * @param Carbon   $end
      *
      * @return float
      */

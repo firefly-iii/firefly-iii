@@ -58,18 +58,18 @@ class Chart implements ChartInterface
                  ->where('transaction_journals.date', '<=', $end->format('Y-m-d'));
         }
         )
-                                    ->leftJoin(
-                                        'transactions', function (JoinClause $join) {
-                                        $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '>', 0);
-                                    }
-                                    )
-                                    ->where('active', 1)
-                                    ->groupBy('bills.id')
-                                    ->get(
-                                        ['bills.id', 'bills.name', 'transaction_journals.description',
-                                         'transaction_journals.id as journalId',
-                                         \DB::Raw('SUM(`bills`.`amount_min` + `bills`.`amount_max`) / 2 as `averageAmount`'),
-                                         'transactions.amount AS actualAmount']
-                                    );
+                    ->leftJoin(
+                        'transactions', function (JoinClause $join) {
+                        $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '>', 0);
+                    }
+                    )
+                    ->where('active', 1)
+                    ->groupBy('bills.id')
+                    ->get(
+                        ['bills.id', 'bills.name', 'transaction_journals.description',
+                         'transaction_journals.id as journalId',
+                         \DB::Raw('SUM(`bills`.`amount_min` + `bills`.`amount_max`) / 2 as `averageAmount`'),
+                         'transactions.amount AS actualAmount']
+                    );
     }
 }

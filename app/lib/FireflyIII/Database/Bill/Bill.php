@@ -65,7 +65,7 @@ class Bill implements CUD, CommonDatabaseCalls, BillInterface
         /*
          * Jump to the start of the period.
          */
-        $date            = \DateKit::startOfPeriod($date, $data['repeat_freq']);
+        $date       = \DateKit::startOfPeriod($date, $data['repeat_freq']);
         $bill->date = $date;
         $bill->skip = intval($data['skip']);
 
@@ -193,9 +193,9 @@ class Bill implements CUD, CommonDatabaseCalls, BillInterface
     }
 
     /**
-     * @param \Bill $bill
-     * @param Carbon                $start
-     * @param Carbon                $end
+     * @param \Bill  $bill
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return \TransactionJournal|null
      */
@@ -206,8 +206,8 @@ class Bill implements CUD, CommonDatabaseCalls, BillInterface
     }
 
     /**
-     * @param \Bill $bill
-     * @param \TransactionJournal   $journal
+     * @param \Bill               $bill
+     * @param \TransactionJournal $journal
      *
      * @return bool
      */

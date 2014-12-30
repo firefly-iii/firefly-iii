@@ -44,8 +44,8 @@ class TransactionJournal
     public function update(\TransactionJournal $journal)
     {
         /** @var \FireflyIII\Database\Bill\Bill $repository */
-        $repository = \App::make('FireflyIII\Database\Bill\Bill');
-        $set        = $repository->get();
+        $repository       = \App::make('FireflyIII\Database\Bill\Bill');
+        $set              = $repository->get();
         $journal->bill_id = null;
         $journal->save();
 

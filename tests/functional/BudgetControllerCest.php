@@ -85,6 +85,19 @@ class BudgetControllerCest
     /**
      * @param FunctionalTester $I
      */
+    public function failUpdate(FunctionalTester $I)
+    {
+        $I->wantTo('update a budget and fail');
+        $I->amOnPage('/budgets/edit/3');
+        $I->see('Edit budget "Delete me"');
+        $I->submitForm('#update', ['name' => '', 'post_submit_action' => 'update']);
+        $I->seeRecord('budgets', ['name' => 'Delete me']);
+
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
     public function index(FunctionalTester $I)
     {
         $I->wantTo('show all budgets');
@@ -141,18 +154,6 @@ class BudgetControllerCest
     /**
      * @param FunctionalTester $I
      */
-    public function storeValidateOnly(FunctionalTester $I)
-    {
-        $I->amOnPage('/budgets/create');
-        $I->wantTo('validate a new budget');
-        $I->see('Create a new budget');
-        $I->submitForm('#store', ['name' => 'New budget.', 'post_submit_action' => 'validate_only']);
-        $I->dontSeeRecord('budgets', ['name' => 'New budget.']);
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
     public function storeAndCreateAnother(FunctionalTester $I)
     {
         $I->amOnPage('/budgets/create');
@@ -170,10 +171,21 @@ class BudgetControllerCest
         $I->amOnPage('/budgets/create');
         $I->wantTo('make storing a new budget fail.');
         $I->see('Create a new budget');
-        $I->submitForm('#store', ['name' => null,  'post_submit_action' => 'store']);
+        $I->submitForm('#store', ['name' => null, 'post_submit_action' => 'store']);
         $I->dontSeeRecord('budgets', ['name' => 'New budget.']);
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
+    public function storeValidateOnly(FunctionalTester $I)
+    {
+        $I->amOnPage('/budgets/create');
+        $I->wantTo('validate a new budget');
+        $I->see('Create a new budget');
+        $I->submitForm('#store', ['name' => 'New budget.', 'post_submit_action' => 'validate_only']);
+        $I->dontSeeRecord('budgets', ['name' => 'New budget.']);
+    }
 
     /**
      * @param FunctionalTester $I
@@ -192,14 +204,26 @@ class BudgetControllerCest
     /**
      * @param FunctionalTester $I
      */
-    public function failUpdate(FunctionalTester $I)
+    public function updateAndReturn(FunctionalTester $I)
     {
-        $I->wantTo('update a budget and fail');
+        $I->wantTo('update a budget and return to form');
         $I->amOnPage('/budgets/edit/3');
         $I->see('Edit budget "Delete me"');
-        $I->submitForm('#update', ['name' => '', 'post_submit_action' => 'update']);
-        $I->seeRecord('budgets', ['name' => 'Delete me']);
+        $I->submitForm(
+            '#update', ['name' => 'Savings accountXX', 'post_submit_action' => 'return_to_edit']
+        );
+        $I->seeRecord('budgets', ['name' => 'Savings accountXX']);
 
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function updateIncome(FunctionalTester $I)
+    {
+        $I->amOnPage('/budgets/income');
+        $I->wantTo('update my monthly income');
+        $I->see('Update (expected) income for ');
     }
 
     /**
@@ -216,30 +240,5 @@ class BudgetControllerCest
         $I->dontSeeRecord('budgets', ['name' => 'Savings accountXX']);
         $I->seeRecord('budgets', ['name' => 'Delete me']);
 
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
-    public function updateAndReturn(FunctionalTester $I)
-    {
-        $I->wantTo('update a budget and return to form');
-        $I->amOnPage('/budgets/edit/3');
-        $I->see('Edit budget "Delete me"');
-        $I->submitForm(
-            '#update', ['name' => 'Savings accountXX',  'post_submit_action' => 'return_to_edit']
-        );
-        $I->seeRecord('budgets', ['name' => 'Savings accountXX']);
-
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
-    public function updateIncome(FunctionalTester $I)
-    {
-        $I->amOnPage('/budgets/income');
-        $I->wantTo('update my monthly income');
-        $I->see('Update (expected) income for ');
     }
 }

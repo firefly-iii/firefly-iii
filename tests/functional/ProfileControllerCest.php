@@ -88,6 +88,26 @@ class ProfileControllerCest
     /**
      * @param FunctionalTester $I
      */
+    public function postChangePasswordNoMatch(FunctionalTester $I)
+    {
+        $I->wantTo('submit a new password but make a mistake in filling it in twice.');
+        $I->amOnPage('/profile/change-password');
+        $I->see('thegrumpydictator@gmail.com');
+        $I->see('Change your password');
+
+        $I->submitForm(
+            '#change-password', [
+                                  'old'  => 'james',
+                                  'new1' => 'blabla',
+                                  'new2' => 'bla'
+                              ]
+        );
+        $I->see('New passwords do not match!');
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
     public function postChangePasswordNoNewPassword(FunctionalTester $I)
     {
         $I->wantTo('submit a new password and forget to fill in a new one.');
@@ -124,26 +144,6 @@ class ProfileControllerCest
                               ]
         );
         $I->see('The idea is to change your password.');
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
-    public function postChangePasswordNoMatch(FunctionalTester $I)
-    {
-        $I->wantTo('submit a new password but make a mistake in filling it in twice.');
-        $I->amOnPage('/profile/change-password');
-        $I->see('thegrumpydictator@gmail.com');
-        $I->see('Change your password');
-
-        $I->submitForm(
-            '#change-password', [
-                                  'old'  => 'james',
-                                  'new1' => 'blabla',
-                                  'new2' => 'bla'
-                              ]
-        );
-        $I->see('New passwords do not match!');
     }
 
 

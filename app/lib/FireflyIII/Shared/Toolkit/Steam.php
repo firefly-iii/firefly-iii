@@ -23,7 +23,7 @@ class Steam
      */
     public function balance(\Account $account, Carbon $date = null)
     {
-        \Log::debug('Now in Steam::balance() for account #' . $account->id.' ('.$account->name.')');
+        \Log::debug('Now in Steam::balance() for account #' . $account->id . ' (' . $account->name . ')');
         if (is_null($date)) {
             $key = 'account.' . $account->id . '.latestBalance';
         } else {
@@ -33,7 +33,7 @@ class Steam
             // TODO find a way to reliably remove cache entries for accounts.
             #return \Cache::get($key);
         }
-        $date    = is_null($date) ? Carbon::now() : $date;
+        $date = is_null($date) ? Carbon::now() : $date;
         \Log::debug('Now reached the moment we fire the query.');
         $balance = floatval(
             $account->transactions()->leftJoin(

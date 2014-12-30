@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Database\PiggyBank;
 
-use Carbon\Carbon;
 use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Database\Eloquent\Model as Eloquent;
