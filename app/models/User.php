@@ -16,7 +16,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface
     use UserTrait, RemindableTrait, ValidatingTrait;
 
 
-    public static $rules
+    protected $rules
         = [
             'email'    => 'required|email|unique:users,email',
             'password' => 'required|between:60,60',
