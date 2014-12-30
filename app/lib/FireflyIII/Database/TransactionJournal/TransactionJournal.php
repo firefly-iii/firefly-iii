@@ -128,7 +128,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
             $transaction->save();
         }
 
-        return new MessageBag;
+        return true;
     }
 
     /**
