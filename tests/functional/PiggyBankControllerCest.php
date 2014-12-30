@@ -234,7 +234,7 @@ class PiggyBankControllerCest
                        'post_submit_action' => 'store',
                        'targetamount' => 1000]
         );
-        $I->see('Name is too short');
+        $I->see('The name field is required.');
     }
 
     /**
@@ -324,7 +324,7 @@ class PiggyBankControllerCest
                          'post_submit_action' => 'update',
                      ]
         );
-        $I->see('Name is too short');
+        $I->see('The name field is required.');
         $I->seeInDatabase('piggy_banks', ['name' => 'New camera']);
 
     }

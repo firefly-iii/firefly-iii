@@ -321,6 +321,7 @@ class PiggyBankController extends BaseController
         $data['order']         = 0;
         $data['remind_me']     = isset($data['remind_me']) ? 1 : 0;
         $data['user_id']       = Auth::user()->id;
+        $data['repeats']       = 0;
 
         // always validate:
         $messages = $this->_repository->validate($data);
