@@ -33,7 +33,7 @@ class UserController extends BaseController
         Auth::logout();
         Session::flush();
 
-        return Redirect::route('index');
+        return Redirect::route('login');
     }
 
     /**
@@ -67,9 +67,6 @@ class UserController extends BaseController
      */
     public function postRegister()
     {
-        if (Config::get('auth.allow_register') !== true) {
-            return View::make('error')->with('message', 'Not possible');
-        }
 
         /** @var \FireflyIII\Database\User\User $repository */
         $repository = App::make('FireflyIII\Database\User\User');
@@ -136,9 +133,6 @@ class UserController extends BaseController
      */
     public function register()
     {
-        if (Config::get('auth.allow_register') !== true) {
-            return View::make('error')->with('message', 'Not possible');
-        }
 
         return View::make('user.register');
     }
