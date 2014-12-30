@@ -96,14 +96,12 @@ class PiggyBank
      */
     public function storePiggyBank(\PiggyBank $piggyBank)
     {
-        if (intval($piggyBank->repeats) == 0) {
-            $repetition = new \PiggyBankRepetition;
-            $repetition->piggyBank()->associate($piggyBank);
-            $repetition->startdate     = $piggyBank->startdate;
-            $repetition->targetdate    = $piggyBank->targetdate;
-            $repetition->currentamount = 0;
-            $repetition->save();
-        }
+        $repetition = new \PiggyBankRepetition;
+        $repetition->piggyBank()->associate($piggyBank);
+        $repetition->startdate     = $piggyBank->startdate;
+        $repetition->targetdate    = $piggyBank->targetdate;
+        $repetition->currentamount = 0;
+        $repetition->save();
     }
 
     /*

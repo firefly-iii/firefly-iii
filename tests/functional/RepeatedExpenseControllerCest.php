@@ -1,4 +1,5 @@
 <?php
+use Carbon\Carbon;
 
 /**
  * Class RepeatedExpenseControllerCest
@@ -6,8 +7,6 @@
  * @SuppressWarnings("CamelCase")
  * @SuppressWarnings("short")
  */
-
-
 class RepeatedExpenseControllerCest
 {
     /**
@@ -30,7 +29,7 @@ class RepeatedExpenseControllerCest
      */
     public function create(FunctionalTester $I)
     {
-        $I->wantTo('create a recurring transaction');
+        $I->wantTo('create a repeated expense');
         $I->amOnPage('/repeatedexpenses/create');
         $I->see('Create new repeated expense');
     }
@@ -40,7 +39,7 @@ class RepeatedExpenseControllerCest
      */
     public function delete(FunctionalTester $I)
     {
-        $I->wantTo('delete a recurring transaction');
+        $I->wantTo('delete a repeated expense');
         $I->amOnPage('/repeatedexpenses/delete/4');
         $I->see('Delete "Nieuwe kleding"');
     }
@@ -50,7 +49,7 @@ class RepeatedExpenseControllerCest
      */
     public function destroy(FunctionalTester $I)
     {
-        $I->wantTo('destroy a recurring transaction');
+        $I->wantTo('destroy a repeated expense');
         $I->amOnPage('/repeatedexpenses/delete/4');
         $I->submitForm('#destroy', []);
         $I->dontSeeInDatabase('piggy_banks', ['id' => 5]);
@@ -61,7 +60,7 @@ class RepeatedExpenseControllerCest
      */
     public function edit(FunctionalTester $I)
     {
-        $I->wantTo('edit a recurring transaction');
+        $I->wantTo('edit a repeated expense');
         $I->amOnPage('/repeatedexpenses/edit/4');
         $I->see('Edit repeated expense "Nieuwe kleding"');
 
@@ -72,7 +71,7 @@ class RepeatedExpenseControllerCest
      */
     public function index(FunctionalTester $I)
     {
-        $I->wantTo('see all recurring transactions');
+        $I->wantTo('see all repeated expenses');
         $I->amOnPage('/repeatedexpenses');
         $I->see('Overview');
         $I->see('Nieuwe kleding');
@@ -83,7 +82,7 @@ class RepeatedExpenseControllerCest
      */
     public function show(FunctionalTester $I)
     {
-        $I->wantTo('view a recurring transaction');
+        $I->wantTo('view a repeated expense');
         $I->amOnPage('/repeatedexpenses/show/4');
         $I->see('Nieuwe kleding');
     }
@@ -93,14 +92,14 @@ class RepeatedExpenseControllerCest
      */
     public function store(FunctionalTester $I)
     {
-        $I->wantTo('store a recurring transaction');
+        $I->wantTo('store a repeated expense');
         $I->amOnPage('/repeatedexpenses/create');
         $I->submitForm(
             '#store', [
                         'name'               => 'TestRepeatedExpense',
                         'account_id'         => 1,
                         'targetamount'       => 1000,
-                        'targetdate'         => '2014-05-01',
+                        'targetdate'         => Carbon::now()->format('Y-m-d'),
                         'rep_length'         => 'month',
                         'rep_every'          => 0,
                         'rep_times'          => 0,
@@ -109,7 +108,9 @@ class RepeatedExpenseControllerCest
                         'post_submit_action' => 'store',
                     ]
         );
-        $I->see('Piggy bank "TestRepeatedExpense" stored.');
+
+//        $I->seeInDatabase('piggy_banks', ['name' => 'TestRepeatedExpense']);
+        $I->see('Piggy bank &quot;TestRepeatedExpense&quot; stored.');
     }
 
     /**
@@ -117,7 +118,7 @@ class RepeatedExpenseControllerCest
      */
     public function update(FunctionalTester $I)
     {
-        $I->wantTo('update a recurring transaction');
+        $I->wantTo('update a repeated expense');
         $I->amOnPage('/repeatedexpenses/edit/4');
         $I->submitForm(
             '#update', [
@@ -141,7 +142,7 @@ class RepeatedExpenseControllerCest
      */
     public function updateAndReturnToEdit(FunctionalTester $I)
     {
-        $I->wantTo('update a recurring transaction and return to edit screen');
+        $I->wantTo('update a repeated expense and return to edit screen');
         $I->amOnPage('/repeatedexpenses/edit/4');
         $I->submitForm(
             '#update', [
@@ -165,7 +166,7 @@ class RepeatedExpenseControllerCest
      */
     public function updateFail(FunctionalTester $I)
     {
-        $I->wantTo('try to update a recurring transaction and fail');
+        $I->wantTo('try to update a repeated expense and fail');
         $I->amOnPage('/repeatedexpenses/edit/4');
         $I->submitForm(
             '#update', [
