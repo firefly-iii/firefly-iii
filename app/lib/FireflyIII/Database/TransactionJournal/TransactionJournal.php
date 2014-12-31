@@ -590,8 +590,8 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         // get already related transactions:
         $exclude = [$journal->id];
         foreach ($journal->transactiongroups()->get() as $group) {
-            foreach ($group->transactionjournals() as $jrnl) {
-                $exclude[] = $jrnl->id;
+            foreach ($group->transactionjournals() as $current) {
+                $exclude[] = $current->id;
             }
         }
         $exclude = array_unique($exclude);

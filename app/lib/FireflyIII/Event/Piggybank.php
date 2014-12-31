@@ -203,7 +203,7 @@ class PiggyBank
                 $repetition->currentamount = 0;
                 $repetition->save();
             }
-            // then continue and do something in the current relevant timeframe.
+            // then continue and do something in the current relevant time frame.
 
             $currentTarget = clone $target;
             $currentStart  = null;

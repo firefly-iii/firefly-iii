@@ -25,7 +25,7 @@ interface ReportHelperInterface
 
     /**
      * Turns a collection into an array. Needs the field 'id' for the key,
-     * and saves 'name', 'amount','spent' (if present) as a subarray.
+     * and saves 'name', 'amount','spent' (if present) as a sub array.
      *
      * @param Collection $collection
      *

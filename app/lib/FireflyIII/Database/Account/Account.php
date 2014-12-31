@@ -514,14 +514,14 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
      */
     public function firstExpenseAccountOrCreate($name)
     {
-        /** @var \FireflyIII\Database\AccountType\AccountType $accountTypeRepos */
-        $accountTypeRepos = \App::make('FireflyIII\Database\AccountType\AccountType');
+        /** @var \FireflyIII\Database\AccountType\AccountType $accountTypeRepository */
+        $accountTypeRepository = \App::make('FireflyIII\Database\AccountType\AccountType');
 
-        $accountType = $accountTypeRepos->findByWhat('expense');
+        $accountType = $accountTypeRepository->findByWhat('expense');
 
         // if name is "", find cash account:
         if (strlen($name) == 0) {
-            $cashAccountType = $accountTypeRepos->findByWhat('cash');
+            $cashAccountType = $accountTypeRepository->findByWhat('cash');
 
             // find or create cash account:
             return \Account::firstOrCreate(
@@ -543,10 +543,10 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
      */
     public function firstRevenueAccountOrCreate($name)
     {
-        /** @var \FireflyIII\Database\AccountType\AccountType $accountTypeRepos */
-        $accountTypeRepos = \App::make('FireflyIII\Database\AccountType\AccountType');
+        /** @var \FireflyIII\Database\AccountType\AccountType $accountTypeRepository */
+        $accountTypeRepository = \App::make('FireflyIII\Database\AccountType\AccountType');
 
-        $accountType = $accountTypeRepos->findByWhat('revenue');
+        $accountType = $accountTypeRepository->findByWhat('revenue');
 
         $data = ['user_id' => $this->getUser()->id, 'account_type_id' => $accountType->id, 'name' => $name, 'active' => 1];
 
