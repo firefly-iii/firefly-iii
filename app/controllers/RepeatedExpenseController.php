@@ -5,6 +5,10 @@ use FireflyIII\Database\PiggyBank\RepeatedExpense as Repository;
 use FireflyIII\Exception\FireflyException;
 
 /**
+ * @SuppressWarnings("CamelCase") // I'm fine with this.
+ * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
+ * @SuppressWarnings("CouplingBetweenObjects") // There's only so much I can remove.
+ *
  * Class RepeatedExpenseController
  */
 class RepeatedExpenseController extends BaseController
@@ -28,11 +32,8 @@ class RepeatedExpenseController extends BaseController
     public function create()
     {
         /** @var \FireflyIII\Database\Account\Account $acct */
-        $acct = App::make('FireflyIII\Database\Account\Account');
-
-        $periods = Config::get('firefly.piggy_bank_periods');
-
-
+        $acct     = App::make('FireflyIII\Database\Account\Account');
+        $periods  = Config::get('firefly.piggy_bank_periods');
         $accounts = FFForm::makeSelectList($acct->getAssetAccounts());
 
         return View::make('repeatedExpense.create', compact('accounts', 'periods'))->with('subTitle', 'Create new repeated expense')->with(
@@ -122,10 +123,10 @@ class RepeatedExpenseController extends BaseController
      */
     public function show(PiggyBank $repeatedExpense)
     {
-        $subTitle = $repeatedExpense->name;
-        $today    = Carbon::now();
-
+        $subTitle    = $repeatedExpense->name;
+        $today       = Carbon::now();
         $repetitions = $repeatedExpense->piggyBankRepetitions()->get();
+
         $repetitions->each(
             function (PiggyBankRepetition $repetition) {
                 $repetition->bars = $this->_repository->calculateParts($repetition);
@@ -154,7 +155,6 @@ class RepeatedExpenseController extends BaseController
         // always validate:
         $messages = $this->_repository->validate($data);
 
-        // flash messages:
         Session::flash('warnings', $messages['warnings']);
         Session::flash('successes', $messages['successes']);
         Session::flash('errors', $messages['errors']);
@@ -199,7 +199,6 @@ class RepeatedExpenseController extends BaseController
         // always validate:
         $messages = $this->_repository->validate($data);
 
-        // flash messages:
         Session::flash('warnings', $messages['warnings']);
         Session::flash('successes', $messages['successes']);
         Session::flash('errors', $messages['errors']);

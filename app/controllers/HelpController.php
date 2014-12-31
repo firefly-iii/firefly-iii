@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
+ *
  * Class HelpController
  */
 class HelpController extends BaseController
@@ -16,10 +18,9 @@ class HelpController extends BaseController
         $helpTitle = 'Help';
         if (!Route::has($route)) {
             \Log::error('No such route: ' . $route);
+
             return Response::json(['title' => $helpTitle, 'text' => $helpText]);
         }
-
-        // content in cache
         if (Cache::has('help.' . $route . '.title') && Cache::has('help.' . $route . '.text')) {
             $helpText  = Cache::get('help.' . $route . '.text');
             $helpTitle = Cache::get('help.' . $route . '.title');
@@ -30,19 +31,18 @@ class HelpController extends BaseController
         $uri = 'https://raw.githubusercontent.com/JC5/firefly-iii-help/master/' . e($route) . '.md';
         \Log::debug('URL is: ' . $uri);
         try {
-            $content = file_get_contents($uri);
+            $helpText = file_get_contents($uri);
         } catch (ErrorException $e) {
-            $content = '<p>There is no help for this route!</p>';
             \Log::error(trim($e->getMessage()));
         }
         \Log::debug('Found help for ' . $route);
-        \Log::debug('Help text length for route ' . $route . ' is ' . strlen($content));
-        \Log::debug('Help text IS: "' . $content . '".');
-        if (strlen(trim($content)) == 0) {
-            $content = '<p>There is no help for this route.</p>';
+        \Log::debug('Help text length for route ' . $route . ' is ' . strlen($helpText));
+        \Log::debug('Help text IS: "' . $helpText . '".');
+        if (strlen(trim($helpText)) == 0) {
+            $helpText = '<p>There is no help for this route.</p>';
         }
 
-        $helpText  = \Michelf\Markdown::defaultTransform($content);
+        $helpText  = \Michelf\Markdown::defaultTransform($helpText);
         $helpTitle = $route;
 
         Cache::put('help.' . $route . '.text', $helpText, 10080); // a week.

@@ -239,6 +239,8 @@ class PiggyBankController extends BaseController
     /**
      * @param PiggyBank $piggyBank
      *
+     * @SuppressWarnings("Unused")
+     *
      * @return \Illuminate\View\View
      */
     public function remove(PiggyBank $piggyBank)
@@ -326,7 +328,6 @@ class PiggyBankController extends BaseController
         // always validate:
         $messages = $this->_repository->validate($data);
 
-        // flash messages:
         Session::flash('warnings', $messages['warnings']);
         Session::flash('successes', $messages['successes']);
         Session::flash('errors', $messages['errors']);

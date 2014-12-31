@@ -94,7 +94,7 @@ class UserController extends BaseController
      *
      * @return \Illuminate\View\View
      */
-    public function postRemindme()
+    public function postRemindMe()
     {
 
         /** @var \FireflyIII\Database\User\User $repository */
@@ -108,7 +108,7 @@ class UserController extends BaseController
         if (!$user) {
             Session::flash('error', 'No good!');
 
-            return View::make('user.remindme');
+            return View::make('user.remindMe');
         }
         $email->sendResetVerification($user);
 
@@ -132,9 +132,9 @@ class UserController extends BaseController
      *
      * @return \Illuminate\View\View
      */
-    public function remindme()
+    public function remindMe()
     {
-        return View::make('user.remindme');
+        return View::make('user.remindMe');
     }
 
     /**
@@ -160,7 +160,7 @@ class UserController extends BaseController
             return View::make('user.registered');
         }
 
-        return View::make('error')->with('message', 'Yo no hablo reset code!');
+        return View::make('error')->with('message', 'No reset code found!');
     }
 
 }

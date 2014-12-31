@@ -7,7 +7,7 @@
                 <h3 class="panel-title">Firefly III &mdash; Reset your password</h3>
             </div>
             <div class="panel-body">
-                {{Form::open(['id' => 'remindme'])}}
+                {{Form::open(['id' => 'remindMe'])}}
                 <div class="form-group">
                     <label for="inputEmail">Email address</label>
                     <input type="email" class="form-control" id="inputEmail" name="email" placeholder="Enter email">

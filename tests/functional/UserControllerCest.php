@@ -90,8 +90,8 @@ class UserControllerCest
     public function postRemindme(FunctionalTester $I)
     {
         $I->wantTo('get a password reminder');
-        $I->amOnRoute('remindme');
-        $I->submitForm('#remindme', ['email' => 'functional@example.com']);
+        $I->amOnRoute('remindMe');
+        $I->submitForm('#remindMe', ['email' => 'functional@example.com']);
         $I->see('You\'re about to get an e-mail.');
     }
 
@@ -101,8 +101,8 @@ class UserControllerCest
     public function postRemindmeFail(FunctionalTester $I)
     {
         $I->wantTo('get a password reminder and fail');
-        $I->amOnRoute('remindme');
-        $I->submitForm('#remindme', ['email' => 'abcdee']);
+        $I->amOnRoute('remindMe');
+        $I->submitForm('#remindMe', ['email' => 'abcdee']);
         $I->see('No good!');
     }
 
@@ -120,10 +120,10 @@ class UserControllerCest
     /**
      * @param FunctionalTester $I
      */
-    public function remindme(FunctionalTester $I)
+    public function remindMe(FunctionalTester $I)
     {
         $I->wantTo('reminded of my password');
-        $I->amOnRoute('remindme');
+        $I->amOnRoute('remindMe');
         $I->see('Firefly III &mdash; Reset your password');
     }
 

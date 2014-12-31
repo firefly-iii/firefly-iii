@@ -29,7 +29,7 @@
             @if(Config::get('auth.allow_register') === true)
                 <a href="{{route('register')}}" class="btn btn-default">Register</a>
             @endif
-            <a href="{{route('remindme')}}" class="btn btn-default">Forgot your password?</a>
+            <a href="{{route('remindMe')}}" class="btn btn-default">Forgot your password?</a>
         </div>
         {{Form::close()}}
     </div>

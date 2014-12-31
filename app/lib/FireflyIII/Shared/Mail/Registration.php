@@ -51,7 +51,7 @@ class Registration implements RegistrationInterface
         $data = ['reset' => $reset];
         try {
             \Mail::send(
-                ['emails.user.remindme-html', 'emails.user.remindme-text'], $data, function ($message) use ($email) {
+                ['emails.user.remindMe-html', 'emails.user.remindMe-text'], $data, function ($message) use ($email) {
                 $message->to($email, $email)->subject('Forgot your password?');
             }
             );

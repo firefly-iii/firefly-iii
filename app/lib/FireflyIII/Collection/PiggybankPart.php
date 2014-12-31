@@ -115,7 +115,7 @@ class PiggyBankPart
     {
         if ($this->getCurrentamount() < $this->getCumulativeAmount()) {
             $pct = 0;
-            // calculate halway point?
+            // calculate halfway point?
             if ($this->getCumulativeAmount() - $this->getCurrentamount() < $this->getAmountPerBar()) {
                 $left = $this->getCurrentamount() % $this->getAmountPerBar();
                 $pct  = round($left / $this->getAmountPerBar() * 100);
