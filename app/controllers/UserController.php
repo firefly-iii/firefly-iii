@@ -79,14 +79,9 @@ class UserController extends BaseController
 
         //$user = $this->user->register(Input::all());
         if ($user) {
-            if (Config::get('auth.verify_mail') === true) {
-                $email->sendVerificationMail($user);
+            $email->sendVerificationMail($user);
 
-                return View::make('user.verification-pending');
-            }
-            $email->sendPasswordMail($user);
-
-            return View::make('user.registered');
+            return View::make('user.verification-pending');
         }
 
 
@@ -115,14 +110,9 @@ class UserController extends BaseController
 
             return View::make('user.remindme');
         }
-        if (Config::get('auth.verify_reset') === true) {
-            $email->sendResetVerification($user);
+        $email->sendResetVerification($user);
 
-            return View::make('user.verification-pending');
-        }
-        $email->sendPasswordMail($user);
-
-        return View::make('user.registered');
+        return View::make('user.verification-pending');
 
     }
 

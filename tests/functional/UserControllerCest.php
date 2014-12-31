@@ -68,7 +68,7 @@ class UserControllerCest
         $I->wantTo('post-register a new account');
         $I->amOnPage('/register');
         $I->submitForm('#register', ['email' => 'noreply@gmail.com']);
-        $I->see('Password sent!');
+        $I->see('You\'re about to get an e-mail. Please follow its instructions.');
         $I->seeRecord('users', ['email' => 'noreply@gmail.com']);
     }
 
