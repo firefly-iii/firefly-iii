@@ -45,7 +45,7 @@ class ReportHelper implements ReportHelperInterface
 
     /**
      * Turns a collection into an array. Needs the field 'id' for the key,
-     * and saves only 'name' and 'amount' as a subarray.
+     * and saves only 'name' and 'amount' as a sub array.
      *
      * @param Collection $collection
      *

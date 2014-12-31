@@ -1,6 +1,7 @@
 <?php
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Watson\Validating\ValidatingTrait;
 
 /**
@@ -8,7 +9,7 @@ use Watson\Validating\ValidatingTrait;
  */
 class PiggyBank extends Eloquent
 {
-    use ValidatingTrait;
+    use ValidatingTrait, SoftDeletingTrait;
     public    $fillable
         = ['account_id', 'name', 'targetamount', 'startdate', 'targetdate', 'repeats', 'rep_length', 'rep_every', 'rep_times', 'reminder', 'reminder_skip',
            'remind_me', 'order'];

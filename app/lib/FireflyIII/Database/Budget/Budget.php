@@ -237,7 +237,7 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     }
 
     /**
-     * This method includes the time because otherwise, SQLite doesn't understand it.
+     * This method includes the time because otherwise, SQLite does not understand it.
      *
      * @param \Budget $budget
      * @param Carbon  $date

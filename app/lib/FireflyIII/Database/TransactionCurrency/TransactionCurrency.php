@@ -94,6 +94,7 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
      * Returns an object with id $id.
      *
      * @param int $objectId
+     * @throws NotImplementedException
      *
      * @return \Eloquent
      */
@@ -107,6 +108,7 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
      * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
      *
      * @param $what
+     * @throws NotImplementedException
      *
      * @return \AccountType|null
      */
@@ -128,6 +130,7 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
 
     /**
      * @param array $objectIds
+     * @throws NotImplementedException
      *
      * @return Collection
      */

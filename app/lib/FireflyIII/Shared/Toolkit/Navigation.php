@@ -55,7 +55,7 @@ class Navigation
         $start = \Session::get('start', Carbon::now()->startOfMonth());
 
         /*
-         * Substract some period to $start.
+         * Subtract some period to $start.
          */
         $prev = $filter->previous($range, clone $start);
 

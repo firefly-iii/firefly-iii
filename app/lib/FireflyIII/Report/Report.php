@@ -34,6 +34,7 @@ class Report implements ReportInterface
 
     /**
      * @param AccountRepository $accounts
+     * @param JournalRepository $journals
      */
     public function __construct(AccountRepository $accounts, JournalRepository $journals)
     {
