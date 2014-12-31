@@ -95,25 +95,16 @@ class TransactionType implements CUD, CommonDatabaseCalls
      */
     public function findByWhat($what)
     {
-        switch ($what) {
-            case 'opening':
-                return \TransactionType::whereType('Opening balance')->first();
-                break;
-            case 'transfer':
-                return \TransactionType::whereType('Transfer')->first();
-                break;
-            case 'withdrawal':
-                return \TransactionType::whereType('Withdrawal')->first();
-                break;
-            case 'deposit':
-                return \TransactionType::whereType('Deposit')->first();
-                break;
-            default:
-                throw new FireflyException('Cannot find transaction type described as "' . e($what) . '".');
-                break;
-
-
+        $translation = [
+            'opening'    => 'Opening balance',
+            'transfer'   => 'Transfer',
+            'withdrawal' => 'Withdrawal',
+            'deposit'    => 'Deposit',
+        ];
+        if(!isset($translation[$what])) {
+            throw new FireflyException('Cannot find transaction type described as "' . e($what) . '".');
         }
+        return \TransactionType::whereType($translation[$what])->first();
     }
 
     /**

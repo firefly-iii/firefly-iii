@@ -63,11 +63,12 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      */
     public function store(array $data)
     {
-        $journalType = $this->getJournalType($data['what']);
-        $currency    = $this->getJournalCurrency($data['currency']);
-        $journal     = new \TransactionJournal(
-            ['transaction_type_id' => $journalType->id, 'transaction_currency_id' => $currency->id, 'user_id' => $this->getUser()->id,
-             'description'         => $data['description'], 'date' => $data['date'], 'completed' => 0]
+        $currency = $this->getJournalCurrency($data['currency']);
+        $journal  = new \TransactionJournal(
+            [
+                'transaction_type_id'     => $data['transaction_type_id'],
+                'transaction_currency_id' => $currency->id, 'user_id' => $this->getUser()->id,
+                'description'             => $data['description'], 'date' => $data['date'], 'completed' => 0]
         );
         $journal->save();
 
@@ -147,39 +148,14 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
 
         $warnings  = new MessageBag;
         $successes = new MessageBag;
-        $errors    = new MessageBag;
 
+        $journal = new \TransactionJournal($model);
+        $journal->isValid();
+        $errors = $journal->getErrors();
 
         if (!isset($model['what'])) {
             $errors->add('description', 'Internal error: need to know type of transaction!');
         }
-        if (isset($model['bill_id']) && intval($model['bill_id']) < 0) {
-            $errors->add('bill_id', 'Bill is invalid.');
-        }
-        if (!isset($model['description'])) {
-            $errors->add('description', 'This field is mandatory.');
-        }
-        if (isset($model['description']) && strlen($model['description']) == 0) {
-            $errors->add('description', 'This field is mandatory.');
-        }
-        if (isset($model['description']) && strlen($model['description']) > 255) {
-            $errors->add('description', 'Description is too long.');
-        }
-
-        if (!isset($model['currency'])) {
-            $errors->add('description', 'Internal error: currency is mandatory!');
-        }
-        if (isset($model['date']) && !($model['date'] instanceof Carbon) && strlen($model['date']) > 0) {
-            try {
-                new Carbon($model['date']);
-            } catch (\Exception $e) {
-                $errors->add('date', 'This date is invalid.');
-            }
-        }
-        if (!isset($model['date'])) {
-            $errors->add('date', 'This date is invalid.');
-        }
-
         /*
          * Amount:
          */
@@ -254,12 +230,6 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         }
 
 
-        $validator = \Validator::make([$model], \TransactionJournal::$rules);
-        if ($validator->invalid()) {
-            $errors->merge($errors);
-        }
-
-
         /*
          * Add "OK"
          */
@@ -273,20 +243,6 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         return ['errors' => $errors, 'warnings' => $warnings, 'successes' => $successes];
 
 
-    }
-
-    /**
-     * @param $type
-     *
-     * @return \AccountType|null
-     * @throws FireflyException
-     */
-    public function getJournalType($type)
-    {
-        /** @var \FireflyIII\Database\TransactionType\TransactionType $typeRepository */
-        $typeRepository = \App::make('FireflyIII\Database\TransactionType\TransactionType');
-
-        return $typeRepository->findByWhat($type);
     }
 
     /**
@@ -395,6 +351,20 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         $journal->categories()->sync([]);
 
         return;
+    }
+
+    /**
+     * @param $type
+     *
+     * @return \TransactionType|null
+     * @throws FireflyException
+     */
+    public function getJournalType($type)
+    {
+        /** @var \FireflyIII\Database\TransactionType\TransactionType $typeRepository */
+        $typeRepository = \App::make('FireflyIII\Database\TransactionType\TransactionType');
+
+        return $typeRepository->findByWhat($type);
     }
 
     /**

@@ -134,7 +134,7 @@ class UserControllerCest
     {
         $I->wantTo('reset my password and fail');
         $I->amOnPage('/reset/123');
-        $I->see('Yo no hablo reset code!');
+        $I->see('No reset code found!');
     }
 
     /**
