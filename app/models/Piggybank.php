@@ -59,26 +59,6 @@ class PiggyBank extends Eloquent
     /**
      * TODO remove this method in favour of something in the FireflyIII libraries.
      *
-     * @param Carbon $start
-     * @param Carbon $target
-     *
-     * @return PiggyBankRepetition
-     */
-    public function createRepetition(Carbon $start = null, Carbon $target = null)
-    {
-        $rep = new \PiggyBankRepetition;
-        $rep->piggyBank()->associate($this);
-        $rep->startdate     = $start;
-        $rep->targetdate    = $target;
-        $rep->currentamount = 0;
-        $rep->save();
-
-        return $rep;
-    }
-
-    /**
-     * TODO remove this method in favour of something in the FireflyIII libraries.
-     *
      * Grabs the PiggyBankRepetition that's currently relevant / active
      *
      * @returns \PiggyBankRepetition
@@ -168,42 +148,6 @@ class PiggyBank extends Eloquent
         return $this->morphMany('Reminder', 'remindersable');
     }
 
-    /**
-     * TODO remove this method in favour of something in the FireflyIII libraries.
-     *
-     * Same but for specific date.
-     *
-     * @param Carbon $date
-     *
-     * @returns \PiggyBankRepetition
-     */
-    public function repetitionForDate(Carbon $date)
-    {
-        $query  = $this->piggyBankRepetitions()->where(
-            function ($q) use ($date) {
-
-                $q->where(
-                    function ($q) use ($date) {
-                        $q->whereNull('startdate');
-                        $q->orWhere('startdate', '<=', $date->format('Y-m-d'));
-                    }
-                )->where(
-                    function ($q) use ($date) {
-                        $q->whereNull('targetdate');
-                        $q->orWhere('targetdate', '>=', $date->format('Y-m-d'));
-                    }
-                );
-            }
-        )->orWhere(
-            function ($q) use ($date) {
-                $q->where('startdate', '>=', $date->format('Y-m-d'));
-                $q->where('targetdate', '>=', $date->format('Y-m-d'));
-            }
-        )->orderBy('startdate', 'ASC');
-        $result = $query->first();
-
-        return $result;
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

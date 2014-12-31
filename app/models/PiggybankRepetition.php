@@ -25,23 +25,6 @@ class PiggyBankRepetition extends Eloquent
     }
 
     /**
-     * TODO remove this method in favour of something in the FireflyIII libraries.
-     *
-     * @return float|int
-     */
-    public function pct()
-    {
-        $total = $this->piggyBank->targetamount;
-        $saved = $this->currentamount;
-        if ($total == 0) {
-            return 0;
-        }
-        $pct = round(($saved / $total) * 100, 1);
-
-        return $pct;
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function piggyBank()
