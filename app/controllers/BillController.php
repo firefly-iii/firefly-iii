@@ -118,7 +118,7 @@ class BillController extends BaseController
         $hideBill = true;
 
 
-        return View::make('bills.show', compact('journals', 'hideBills'))->with('bill', $bill)->with(
+        return View::make('bills.show', compact('journals', 'hideBill', 'bill'))->with(
             'subTitle', $bill->name
         );
     }

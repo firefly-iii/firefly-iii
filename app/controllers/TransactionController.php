@@ -7,6 +7,13 @@ use FireflyIII\Helper\TransactionJournal\HelperInterface as Helper;
 use Illuminate\Support\Collection;
 
 /**
+ *
+ * @SuppressWarnings("CamelCase") // I'm fine with this.
+ * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
+ * @SuppressWarnings("CouplingBetweenObjects") // There's only so much I can remove.
+ * @SuppressWarnings("TooManyMethods") // I'm also fine with this.
+ * @SuppressWarnings("ExcessiveClassComplexity")
+ *
  * Class TransactionController
  *
  */
@@ -158,10 +165,10 @@ class TransactionController extends BaseController
      */
     public function doRelate()
     {
-        $id     = intval(Input::get('id'));
+        $brother     = intval(Input::get('id'));
         $sister = intval(Input::get('relateTo'));
 
-        $journal = $this->_repository->find($id);
+        $journal = $this->_repository->find($brother);
         $sis     = $this->_repository->find($sister);
 
         if ($journal && $sis) {
@@ -358,7 +365,6 @@ class TransactionController extends BaseController
         // always validate:
         $messages = $this->_repository->validate($data);
 
-        // flash messages:
         Session::flash('warnings', $messages['warnings']);
         Session::flash('successes', $messages['successes']);
         Session::flash('errors', $messages['errors']);

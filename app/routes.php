@@ -368,7 +368,7 @@ Route::group(
     Route::get('/login', ['uses' => 'UserController@login', 'as' => 'login']);
     Route::get('/register', ['uses' => 'UserController@register', 'as' => 'register','before' => 'allow-register']);
     Route::get('/reset/{reset}', ['uses' => 'UserController@reset', 'as' => 'reset']);
-    Route::get('/remindme', ['uses' => 'UserController@remindme', 'as' => 'remindme']);
+    Route::get('/remindMe', ['uses' => 'UserController@remindMe', 'as' => 'remindMe']);
 
 
 }
@@ -381,6 +381,6 @@ Route::group(
     // user controller
     Route::post('/login', ['uses' => 'UserController@postLogin', 'as' => 'login.post']);
     Route::post('/register', ['uses' => 'UserController@postRegister', 'as' => 'register.post','before' => 'allow-register']);
-    Route::post('/remindme', ['uses' => 'UserController@postRemindme', 'as' => 'remindme.post']);
+    Route::post('/remindMe', ['uses' => 'UserController@postRemindMe', 'as' => 'remindMe.post']);
 }
 );

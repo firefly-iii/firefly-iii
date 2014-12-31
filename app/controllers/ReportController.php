@@ -5,6 +5,8 @@ use FireflyIII\Report\ReportInterface as Report;
 
 /**
  *
+ * @SuppressWarnings("CamelCase") // I'm fine with this.
+ *
  * Class ReportController
  */
 class ReportController extends BaseController
@@ -92,7 +94,7 @@ class ReportController extends BaseController
         $budgets      = $this->_repository->getBudgetsForMonth($date);
         $categories   = $this->_repository->getCategoriesForMonth($date, 10);
         $accounts     = $this->_repository->getAccountsForMonth($date);
-        $piggyBanks   = $this->_repository->getPiggyBanksForMonth($date);
+        //$piggyBanks   = $this->_repository->getPiggyBanksForMonth($date);
 
         return View::make(
             'reports.month',
