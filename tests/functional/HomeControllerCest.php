@@ -48,6 +48,25 @@ class HomeControllerCest
     /**
      * @param FunctionalTester $I
      */
+    public function indexWithPrefs(FunctionalTester $I)
+    {
+        $I->wantTo('see the home page of Firefly using pre-set accounts');
+        \Preference::whereName('frontPageAccounts')->delete();
+        \Preference::create(
+            [
+                'user_id' => 1,
+                'name'    => 'frontPageAccounts',
+                'data'    => '[1,2]'
+            ]
+        );
+        $I->amOnPage('/');
+        $I->canSeeResponseCodeIs(200);
+        $I->see('Firefly');
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
     public function rangeJump(FunctionalTester $I)
     {
         $I->wantTo('switch to another date range');
