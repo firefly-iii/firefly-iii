@@ -92,7 +92,7 @@ class BillControllerCest
     public function rescanInactive(FunctionalTester $I)
     {
         $I->wantTo('rescan an inactive bill');
-        $I->amOnPage('/bills/rescan/2');
+        $I->amOnPage('/bills/rescan/3');
         $I->see('Inactive bills cannot be scanned.');
     }
 

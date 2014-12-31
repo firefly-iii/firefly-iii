@@ -263,6 +263,22 @@ class TestContentSeeder extends Seeder
                     ]
                 );
 
+                // bill
+                $thirdBill = \Bill::create(
+                    [
+                        'user_id'     => $user->id,
+                        'name'        => 'Something something',
+                        'match'       => 'mumble,mumble',
+                        'amount_min'  => 500,
+                        'amount_max'  => 700,
+                        'date'        => '2014-01-01',
+                        'active'      => 0,
+                        'automatch'   => 1,
+                        'repeat_freq' => 'monthly',
+                        'skip'        => 0,
+                    ]
+                );
+
 
                 // create some expense accounts.
                 $albert      = Account::create(['user_id' => $user->id, 'account_type_id' => $expenseType->id, 'name' => 'Albert Heijn', 'active' => 1]);
