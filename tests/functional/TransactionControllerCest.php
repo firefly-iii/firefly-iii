@@ -155,7 +155,7 @@ class TransactionControllerCest
                         'post_submit_action' => 'store'
                     ]
         );
-        $I->see('Could not store transaction: This field is mandatory.');
+        $I->see('Could not store transaction: The description field is required.');
     }
 
     public function update(FunctionalTester $I)
@@ -195,7 +195,7 @@ class TransactionControllerCest
                          'post_submit_action' => 'update'
                      ]
         );
-        $I->see('Could not update transaction: This field is mandatory.');
+        $I->see('Could not update transaction: The description field is required.');
     }
 
     public function updateAndReturn(FunctionalTester $I)

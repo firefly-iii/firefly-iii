@@ -165,8 +165,8 @@ class TransactionController extends BaseController
      */
     public function doRelate()
     {
-        $brother     = intval(Input::get('id'));
-        $sister = intval(Input::get('relateTo'));
+        $brother = intval(Input::get('id'));
+        $sister  = intval(Input::get('relateTo'));
 
         $journal = $this->_repository->find($brother);
         $sis     = $this->_repository->find($sister);
@@ -358,9 +358,14 @@ class TransactionController extends BaseController
      */
     public function store($what)
     {
-        $data             = Input::except('_token');
-        $data['what']     = $what;
-        $data['currency'] = 'EUR'; // TODO allow custom currency
+        $data                            = Input::except('_token');
+        $transactionType                 = $this->_repository->getJournalType($what);
+        $transactionCurrency             = $this->_repository->getJournalCurrency('EUR');
+        $data['transaction_type_id']     = $transactionType->id;
+        $data['transaction_currency_id'] = $transactionCurrency->id;
+        $data['completed']               = 0;
+        $data['what']                    = $what;
+        $data['currency']                = 'EUR'; // TODO allow custom currency
 
         // always validate:
         $messages = $this->_repository->validate($data);
@@ -434,10 +439,13 @@ class TransactionController extends BaseController
      */
     public function update(TransactionJournal $journal)
     {
-        $data             = Input::except('_token');
-        $data['currency'] = 'EUR';
-        $data['what']     = strtolower($journal->transactionType->type);
-        $messages         = $this->_repository->validate($data);
+        $data                            = Input::except('_token');
+        $data['currency']                = 'EUR';
+        $data['what']                    = strtolower($journal->transactionType->type);
+        $data['transaction_type_id']     = $journal->transaction_type_id;
+        $data['transaction_currency_id'] = $journal->transaction_currency_id;
+        $data['completed']               = 1;
+        $messages                        = $this->_repository->validate($data);
 
         Session::flash('warnings', $messages['warnings']);
         Session::flash('successes', $messages['successes']);

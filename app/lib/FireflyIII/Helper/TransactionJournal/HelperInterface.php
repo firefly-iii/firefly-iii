@@ -23,6 +23,13 @@ interface HelperInterface
     public function getAssetAccount($what, Collection $transactions);
 
     /**
+     * @param $what
+     *
+     * @return int
+     */
+    public function getTransactionTypeIdByWhat($what);
+
+    /**
      * @return Collection
      */
     public function getAssetAccounts();

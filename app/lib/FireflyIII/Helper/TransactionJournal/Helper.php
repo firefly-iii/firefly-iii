@@ -11,6 +11,16 @@ use Illuminate\Support\Collection;
  */
 class Helper implements HelperInterface
 {
+
+    /**
+     * @param $what
+     *
+     * @return int
+     */
+    public function getTransactionTypeIdByWhat($what) {
+
+    }
+
     /**
      *
      * Get the account_id, which is the asset account that paid for the transaction.

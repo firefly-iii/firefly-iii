@@ -13,7 +13,7 @@ class TransactionJournal extends Eloquent
 {
     use SoftDeletingTrait, ValidatingTrait;
 
-    public static $rules
+    protected $rules
         = ['transaction_type_id'     => 'required|exists:transaction_types,id',
            'transaction_currency_id' => 'required|exists:transaction_currencies,id',
            'description'             => 'required|between:1,255',
