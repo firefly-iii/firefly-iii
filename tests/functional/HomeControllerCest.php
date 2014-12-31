@@ -50,15 +50,15 @@ class HomeControllerCest
      */
     public function indexWithPrefs(FunctionalTester $I)
     {
-        $I->wantTo('see the home page of Firefly using pre-set accounts');
         \Preference::whereName('frontPageAccounts')->delete();
         \Preference::create(
             [
                 'user_id' => 1,
                 'name'    => 'frontPageAccounts',
-                'data'    => '[1,2]'
+                'data'    => [1,2]
             ]
         );
+        $I->wantTo('see the home page of Firefly using pre-set accounts');
         $I->amOnPage('/');
         $I->canSeeResponseCodeIs(200);
         $I->see('Firefly');

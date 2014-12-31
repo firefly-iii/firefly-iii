@@ -115,6 +115,56 @@ class RepeatedExpenseControllerCest
     /**
      * @param FunctionalTester $I
      */
+    public function storeFail(FunctionalTester $I)
+    {
+        $I->wantTo('store a repeated expense and fail');
+        $I->amOnPage('/repeatedexpenses/create');
+        $I->submitForm(
+            '#store', [
+                        'name'               => '',
+                        'account_id'         => 1,
+                        'targetamount'       => 1000,
+                        'targetdate'         => Carbon::now()->format('Y-m-d'),
+                        'rep_length'         => 'month',
+                        'rep_every'          => 0,
+                        'rep_times'          => 0,
+                        'remind_me'          => 1,
+                        'reminder'           => 'month',
+                        'post_submit_action' => 'store',
+                    ]
+        );
+
+        $I->see('Could not store repeated expense: The name field is required.');
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function storeAndReturn(FunctionalTester $I)
+    {
+        $I->wantTo('store a repeated expense and return');
+        $I->amOnPage('/repeatedexpenses/create');
+        $I->submitForm(
+            '#store', [
+                        'name'               => 'TestRepeatedExpense',
+                        'account_id'         => 1,
+                        'targetamount'       => 1000,
+                        'targetdate'         => Carbon::now()->format('Y-m-d'),
+                        'rep_length'         => 'month',
+                        'rep_every'          => 0,
+                        'rep_times'          => 0,
+                        'remind_me'          => 1,
+                        'reminder'           => 'month',
+                        'post_submit_action' => 'create_another',
+                    ]
+        );
+
+        $I->see('Piggy bank &quot;TestRepeatedExpense&quot; stored.');
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
     public function update(FunctionalTester $I)
     {
         $I->wantTo('update a repeated expense');
