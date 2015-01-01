@@ -46,16 +46,15 @@ class TransactionTest extends TestCase
     {
         $transaction = f::create('Transaction');
         $amount      = floatval($transaction->amount);
-        $amount--;
-        $this->assertCount(1, Transaction::moreThan($amount)->get());
+        $amount++;
+        $this->assertCount(1, Transaction::lessThan($amount)->get());
     }
 
     public function testMoreThan()
     {
         $transaction = f::create('Transaction');
         $amount      = floatval($transaction->amount);
-        $amount++;
-
+        $amount--;
         $this->assertCount(1, Transaction::moreThan($amount)->get());
     }
 
