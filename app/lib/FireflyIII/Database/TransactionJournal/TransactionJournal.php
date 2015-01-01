@@ -453,16 +453,15 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      */
     public function getSumOfExpensesByMonth(Carbon $date)
     {
-        $end = clone $date;
-        $date->startOfMonth();
-        $end->endOfMonth();
+        /** @var \FireflyIII\Report\ReportInterface $reportRepository */
+        $reportRepository = \App::make('FireflyIII\Report\ReportInterface');
 
-        $sum = \DB::table('transactions')->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')->leftJoin(
-            'transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id'
-        )->where('amount', '>', 0)->where('transaction_types.type', '=', 'Withdrawal')->where('transaction_journals.date', '>=', $date->format('Y-m-d'))->where(
-            'transaction_journals.date', '<=', $end->format('Y-m-d')
-        )->sum('transactions.amount');
-        $sum = floatval($sum);
+        $set = $reportRepository->getExpenseGroupedForMonth($date, 200);
+        $sum = 0;
+        foreach ($set as $entry) {
+            $sum += $entry['amount'];
+        }
+        
 
         return $sum;
     }
