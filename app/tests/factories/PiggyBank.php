@@ -4,7 +4,9 @@ League\FactoryMuffin\Facade::define(
     'PiggyBank', [
                    'account_id'    => 'factory|Account',
                    'name'          => 'word',
-                   'targetamount'  => 'numberBetween|10;400',
+                   'targetamount'  => function () {
+                       return rand(1, 400);
+                   },
                    'startdate'     => 'date|Y-m-d',
                    'targetdate'    => 'date|Y-m-d',
                    'repeats'       => 'boolean',
@@ -13,16 +15,20 @@ League\FactoryMuffin\Facade::define(
 
                        return $set[rand(0, count($set) - 1)];
                    },
-                   'rep_every'     => 'numberBetween:0,3',
-                   'rep_times'     => 'numberBetween:0,3',
+                   'rep_every'     => function() {return rand(0,3);},
+                   'rep_times'     => function() {return rand(0,3);},
                    'reminder'      => function () {
                        $set = ['day', 'week', 'quarter', 'month', 'year'];
 
                        return $set[rand(0, count($set) - 1)];
                    },
-                   'reminder_skip' => 'numberBetween:0,3',
+                   'reminder_skip' => function () {
+                       return rand(0, 3);
+                   },
                    'remind_me'     => 'boolean',
-                   'order'         => 'numberBetween:0,10',
+                   'order'         => function () {
+                       return rand(0, 10);
+                   },
 
                ]
 );
