@@ -29,9 +29,13 @@ class ReminderControllerCest
      */
     public function act(FunctionalTester $I)
     {
-        $I->wantTo('act on a reminder');
-        $I->amOnPage('/reminders/1/act');
-        $I->see('Money for Weekly reminder for clothes');
+        $reminder = Reminder::leftJoin('piggy_banks', 'piggy_banks.id', '=', 'reminders.remindersable_id')->where('piggy_banks.reminder','!=','')->first(
+            ['reminders.*']
+        );
+
+        $I->wantTo('act on reminder ' . boolstr(is_null($reminder)));
+        $I->amOnPage('/reminders/' . $reminder->id . '/act');
+        $I->see('Money for Nieuwe spullen');
     }
 
     /**
@@ -69,10 +73,14 @@ class ReminderControllerCest
      */
     public function show(FunctionalTester $I)
     {
+        $reminder = Reminder::leftJoin('piggy_banks', 'piggy_banks.id', '=', 'reminders.remindersable_id')->where('piggy_banks.reminder','!=','')->first(
+            ['reminders.*']
+        );
+
         $I->wantTo('see a reminder');
-        $I->amOnPage('/reminders/1');
+        $I->amOnPage('/reminders/'.$reminder->id);
         $I->see('A reminder about');
-        $I->see('your piggy bank labelled "Weekly reminder for clothes"');
+        $I->see('your piggy bank labelled "Nieuwe spullen"');
     }
 
 }

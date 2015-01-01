@@ -3,394 +3,175 @@
 use Carbon\Carbon;
 
 /**
+ *
+ * @SuppressWarnings("CamelCase") // I'm fine with this.
+ *
  * Class TestContentSeeder
  */
 class TestContentSeeder extends Seeder
 {
+    /** @var  string */
+    public $eom;
+    /** @var  string */
+    public $neom;
+    /** @var  string */
+    public $nsom;
+    /** @var  string */
+    public $som;
+    /** @var  string */
+    public $today;
+    /** @var  string */
+    public $yaeom;
+    /** @var  string */
+    public $yasom;
+    /** @var Carbon */
+    protected $_endOfMonth;
+    /** @var Carbon */
+    protected $_nextEndOfMonth;
+    /** @var Carbon */
+    protected $_nextStartOfMonth;
+    /** @var Carbon */
+    protected $_startOfMonth;
+    /** @var  Carbon */
+    protected $_today;
+    /** @var  Carbon */
+    protected $_yearAgoEndOfMonth;
+    /** @var  Carbon */
+    protected $_yearAgoStartOfMonth;
 
+    /**
+     *
+     */
+    public function __construct()
+    {
+        $this->_startOfMonth = Carbon::now()->startOfMonth();
+        $this->som           = $this->_startOfMonth->format('Y-m-d');
+
+        $this->_endOfMonth = Carbon::now()->endOfMonth();
+        $this->eom         = $this->_endOfMonth->format('Y-m-d');
+
+        $this->_nextStartOfMonth = Carbon::now()->addMonth()->startOfMonth();
+        $this->nsom              = $this->_nextStartOfMonth->format('Y-m-d');
+
+        $this->_nextEndOfMonth = Carbon::now()->addMonth()->endOfMonth();
+        $this->neom            = $this->_nextEndOfMonth->format('Y-m-d');
+
+        $this->_yearAgoStartOfMonth = Carbon::now()->subYear()->startOfMonth();
+        $this->yasom                = $this->_yearAgoStartOfMonth->format('Y-m-d');
+
+        $this->_yearAgoEndOfMonth = Carbon::now()->subYear()->startOfMonth();
+        $this->yaeom              = $this->_yearAgoEndOfMonth->format('Y-m-d');
+
+
+        $this->_today = Carbon::now();
+        $this->today  = $this->_today->format('Y-m-d');
+    }
+
+    /**
+     * Dates are always this month, the start of this month or earlier.
+     */
     public function run()
     {
         if (App::environment() == 'testing' || App::environment() == 'homestead') {
 
-            $assetType   = AccountType::whereType('Asset account')->first();
-            $expenseType = AccountType::whereType('Expense account')->first();
-            $revenueType = AccountType::whereType('Revenue account')->first();
-            $ibType      = AccountType::whereType('Initial balance account')->first();
-
-            $obType     = TransactionType::whereType('Opening balance')->first();
-            $withdrawal = TransactionType::whereType('Withdrawal')->first();
-            $transfer   = TransactionType::whereType('Transfer')->first();
-            $deposit    = TransactionType::whereType('Deposit')->first();
-
-            $euro   = TransactionCurrency::whereCode('EUR')->first();
-            $dollar = TransactionCurrency::whereCode('USD')->first();
-
             $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
 
-            if ($user) {
-                // create two asset accounts.
-                $checking = Account::create(['user_id' => $user->id, 'account_type_id' => $assetType->id, 'name' => 'Checking account', 'active' => 1]);
-                $savings  = Account::create(['user_id' => $user->id, 'account_type_id' => $assetType->id, 'name' => 'Savings account', 'active' => 1]);
-                Account::create(['user_id' => $user->id, 'account_type_id' => $assetType->id, 'name' => 'Delete me', 'active' => 1]);
+            // create initial accounts and various other stuff:
+            $this->createAssetAccounts($user);
+            $this->createBudgets($user);
+            $this->createCategories($user);
+            $this->createPiggyBanks($user);
+            $this->createReminders($user);
+            $this->createRecurringTransactions($user);
+            $this->createBills($user);
+            $this->createExpenseAccounts($user);
+            $this->createRevenueAccounts($user);
 
-                // create two budgets:
-                $groceriesBudget = Budget::create(['user_id' => $user->id, 'name' => 'Groceries']);
-                $billsBudget     = Budget::create(['user_id' => $user->id, 'name' => 'Bills']);
-                $deleteBudget    = Budget::create(['user_id' => $user->id, 'name' => 'Delete me']);
-
-                // some limits:
-                $startDate   = Carbon::now()->startOfMonth();
-                $endDate     = Carbon::now()->endOfMonth();
-                $secondStart = Carbon::now()->subMonth()->startOfMonth();
-                $secondEnd   = Carbon::now()->subMonth()->endOfMonth();
-                $limitOne    = BudgetLimit::create(
-                    ['startdate' => $startDate->format('Y-m-d'), 'amount' => 201, 'repeats' => 0, 'repeat_freq' => 'monthly',
-                     'budget_id' => $groceriesBudget->id]
-                );
-                $limitTwo    = BudgetLimit::create(
-                    ['startdate' => $secondStart->format('Y-m-d'), 'amount' => 202, 'repeats' => 0, 'repeat_freq' => 'monthly',
-                     'budget_id' => $billsBudget->id]
-                );
-                $limitThree  = BudgetLimit::create(
-                    ['startdate' => '2014-01-01', 'amount' => 203, 'repeats' => 0, 'repeat_freq' => 'monthly',
-                     'budget_id' => $deleteBudget->id]
-                );
-
-                // and because we have no filters, some repetitions:
-                $repOne   = LimitRepetition::create(
-                    ['budget_limit_id' => $limitOne->id, 'startdate' => $startDate->format('Y-m-d'), 'enddate' => $endDate->format('Y-m-d'), 'amount' => 201]
-                );
-                $repTwo   = LimitRepetition::create(
-                    ['budget_limit_id' => $limitTwo->id, 'startdate' => $secondStart->format('Y-m-d'), 'enddate' => $secondEnd->format('Y-m-d'),
-                     'amount'          => 202]
-                );
-                $repThree = LimitRepetition::create(
-                    ['budget_limit_id' => $limitThree->id, 'startdate' => '2014-01-01', 'enddate' => '2014-01-31', 'amount' => 203]
-                );
-
-                // create two categories:
-                $dailyGroceries = Category::create(['user_id' => $user->id, 'name' => 'DailyGroceries']);
-                $lunch          = Category::create(['user_id' => $user->id, 'name' => 'Lunch']);
-                $house          = Category::create(['user_id' => $user->id, 'name' => 'House']);
-                $deleteMe       = Category::create(['user_id' => $user->id, 'name' => 'Delete me']);
-
-                Component::create(['user_id' => $user->id, 'name' => 'Some Component 1', 'class' => 'Budget']);
-                Component::create(['user_id' => $user->id, 'name' => 'Some Component 2', 'class' => 'Budget']);
-                Component::create(['user_id' => $user->id, 'name' => 'Some Component 3', 'class' => 'Budget']);
-                Component::create(['user_id' => $user->id, 'name' => 'Some Component 4', 'class' => 'Category']);
-                Component::create(['user_id' => $user->id, 'name' => 'Some Component 5', 'class' => 'Category']);
-                Component::create(['user_id' => $user->id, 'name' => 'Some Component 6', 'class' => 'Category']);
-                Component::create(['user_id' => $user->id, 'name' => 'Some Component 7', 'class' => 'Category']);
-
-                // piggy bank
-                $piggy = PiggyBank::create(
-                    [
-                        'account_id'    => $savings->id,
-                        'name'          => 'New camera',
-                        'targetamount'  => 2000,
-                        'startdate'     => Carbon::now()->format('Y-m-d'),
-                        'targetdate'    => null,
-                        'repeats'       => 0,
-                        'rep_length'    => null,
-                        'rep_every'     => 0,
-                        'rep_times'     => null,
-                        'reminder'      => null,
-                        'reminder_skip' => 0,
-                        'remind_me'     => 0,
-                        'order'         => 0,
-                    ]
-                );
+            // get some objects from the database:
+            $checking   = Account::whereName('Checking account')->orderBy('id', 'DESC')->first();
+            $savings    = Account::whereName('Savings account')->orderBy('id', 'DESC')->first();
+            $landLord   = Account::whereName('Land lord')->orderBy('id', 'DESC')->first();
+            $utilities  = Account::whereName('Utilities company')->orderBy('id', 'DESC')->first();
+            $television = Account::whereName('TV company')->orderBy('id', 'DESC')->first();
+            $phone      = Account::whereName('Phone agency')->orderBy('id', 'DESC')->first();
+            $employer   = Account::whereName('Employer')->orderBy('id', 'DESC')->first();
 
 
+            $bills     = Budget::whereName('Bills')->orderBy('id', 'DESC')->first();
+            $groceries = Budget::whereName('Groceries')->orderBy('id', 'DESC')->first();
+
+            $house = Category::whereName('House')->orderBy('id', 'DESC')->first();
 
 
-                PiggyBankEvent::create(['piggy_bank_id' => 1, 'date' => $startDate->format('Y-m-d'), 'amount' => 100]);
-                PiggyBankRepetition::create(
-                    [
-                        'piggy_bank_id' => $piggy->id,
-                        'startdate'     => Carbon::now()->format('Y-m-d'),
-                        'targetdate'    => null,
-                        'currentamount' => 100
-                    ]
-                );
+            $withdrawal = TransactionType::whereType('Withdrawal')->first();
+            $deposit    = TransactionType::whereType('Deposit')->first();
+            $transfer   = TransactionType::whereType('Transfer')->first();
 
-                // piggy bank
-                $piggyTargeted = PiggyBank::create(
-                    [
-                        'account_id'    => $savings->id,
-                        'name'          => 'New clothes',
-                        'targetamount'  => 2000,
-                        'startdate'     => Carbon::now()->format('Y-m-d'),
-                        'targetdate'    => Carbon::now()->addMonths(4)->format('Y-m-d'),
-                        'repeats'       => 0,
-                        'rep_length'    => null,
-                        'rep_every'     => 0,
-                        'rep_times'     => null,
-                        'reminder'      => null,
-                        'reminder_skip' => 0,
-                        'remind_me'     => 0,
-                        'order'         => 0,
-                    ]
-                );
-
-                PiggyBankEvent::create(['piggy_bank_id' => $piggyTargeted->id, 'date' => $startDate->format('Y-m-d'), 'amount' => 100]);
-                PiggyBankRepetition::create(
-                    [
-                        'piggy_bank_id' => $piggyTargeted->id,
-                        'startdate'     => Carbon::now()->format('Y-m-d'),
-                        'targetdate'    => Carbon::now()->addMonths(4)->format('Y-m-d'),
-                        'currentamount' => 0
-                    ]
-                );
-
-                // weekly reminder piggy bank
-                $weekly = PiggyBank::create(
-                    [
-                        'account_id'    => $savings->id,
-                        'name'          => 'Weekly reminder for clothes',
-                        'targetamount'  => 2000,
-                        'startdate'     => Carbon::now()->format('Y-m-d'),
-                        'targetdate'    => Carbon::now()->addYear()->subDay()->format('Y-m-d'),
-                        'repeats'       => 0,
-                        'rep_length'    => null,
-                        'rep_every'     => 0,
-                        'rep_times'     => null,
-                        'reminder'      => 'week',
-                        'reminder_skip' => 0,
-                        'remind_me'     => 1,
-                        'order'         => 0,
-                    ]
-                );
-                PiggyBankRepetition::create(
-                    [
-                        'piggy_bank_id' => $weekly->id,
-                        'startdate'     => Carbon::now()->format('Y-m-d'),
-                        'targetdate'    => Carbon::now()->addYear()->subDay()->format('Y-m-d'),
-                        'currentamount' => 0
-                    ]
-                );
-
-                // a fake reminder for this piggy bank:
-                Reminder::create(
-                    [
-                        'user_id'            => $user->id,
-                        'startdate'          => $startDate->format('Y-m-d'),
-                        'enddate'            => Carbon::now()->addWeek()->format('Y-m-d'),
-                        'active'             => 1,
-                        'notnow'             => 0,
-                        'remindersable_id'   => $weekly->id,
-                        'remindersable_type' => 'PiggyBank'
-                    ]
-                );
-
-                // a fake reminder for this piggy bank:
-                Reminder::create(
-                    [
-                        'user_id'            => $user->id,
-                        'startdate'          => $startDate->format('Y-m-d'),
-                        'enddate'            => Carbon::now()->addWeek()->format('Y-m-d'),
-                        'active'             => 1,
-                        'notnow'             => 0,
-                        'remindersable_id'   => 40,
-                        'remindersable_type' => 'Transaction'
-                    ]
-                );
-
-                // recurring transaction
-                $recurring = PiggyBank::create(
-                    [
-                        'account_id'    => $savings->id,
-                        'name'          => 'Nieuwe kleding',
-                        'targetamount'  => 1000,
-                        'startdate'     => Carbon::now()->subMonth()->format('Y-m-d'),
-                        'targetdate'    => Carbon::now()->format('Y-m-d'),
-                        'repeats'       => 1,
-                        'rep_length'    => 'month',
-                        'rep_every'     => 0,
-                        'rep_times'     => 0,
-                        'reminder'      => 'month',
-                        'reminder_skip' => 0,
-                        'remind_me'     => 1,
-                        'order'         => 0,
-                    ]
-                );
-                PiggyBankRepetition::create(
-                    [
-                        'piggy_bank_id' => $recurring->id,
-                        'startdate'     => Carbon::now()->format('Y-m-d'),
-                        'targetdate'    => Carbon::now()->addMonth()->format('Y-m-d'),
-                        'currentamount' => 0
-                    ]
-                );
-                PiggyBankRepetition::create(
-                    [
-                        'piggy_bank_id' => $recurring->id,
-                        'startdate'     => Carbon::now()->subMonth()->format('Y-m-d'),
-                        'targetdate'    => Carbon::now()->format('Y-m-d'),
-                        'currentamount' => 0
-                    ]
-                );
-
-                // bill
-                $firstBill = \Bill::create(
-                    [
-                        'user_id'     => $user->id,
-                        'name'        => 'Huur',
-                        'match'       => 'huur,portaal',
-                        'amount_min'  => 500,
-                        'amount_max'  => 700,
-                        'date'        => '2014-01-01',
-                        'active'      => 1,
-                        'automatch'   => 1,
-                        'repeat_freq' => 'monthly',
-                        'skip'        => 0,
-                    ]
-                );
-
-                // bill
-                $secondBill = \Bill::create(
-                    [
-                        'user_id'     => $user->id,
-                        'name'        => 'Gas licht',
-                        'match'       => 'no,match',
-                        'amount_min'  => 500,
-                        'amount_max'  => 700,
-                        'date'        => '2014-01-01',
-                        'active'      => 1,
-                        'automatch'   => 1,
-                        'repeat_freq' => 'monthly',
-                        'skip'        => 0,
-                    ]
-                );
-
-                // bill
-                $thirdBill = \Bill::create(
-                    [
-                        'user_id'     => $user->id,
-                        'name'        => 'Something something',
-                        'match'       => 'mumble,mumble',
-                        'amount_min'  => 500,
-                        'amount_max'  => 700,
-                        'date'        => '2014-01-01',
-                        'active'      => 0,
-                        'automatch'   => 1,
-                        'repeat_freq' => 'monthly',
-                        'skip'        => 0,
-                    ]
-                );
+            $euro = TransactionCurrency::whereCode('EUR')->first();
 
 
-                // create some expense accounts.
-                $albert      = Account::create(['user_id' => $user->id, 'account_type_id' => $expenseType->id, 'name' => 'Albert Heijn', 'active' => 1]);
-                $plus        = Account::create(['user_id' => $user->id, 'account_type_id' => $expenseType->id, 'name' => 'PLUS', 'active' => 1]);
-                $vitens      = Account::create(['user_id' => $user->id, 'account_type_id' => $expenseType->id, 'name' => 'Vitens', 'active' => 1]);
-                $greenchoice = Account::create(['user_id' => $user->id, 'account_type_id' => $expenseType->id, 'name' => 'Greenchoice', 'active' => 1]);
-                $portaal     = Account::create(['user_id' => $user->id, 'account_type_id' => $expenseType->id, 'name' => 'Portaal', 'active' => 1]);
-                $store       = Account::create(['user_id' => $user->id, 'account_type_id' => $expenseType->id, 'name' => 'Buy More', 'active' => 1]);
+            $current = clone $this->_yearAgoStartOfMonth;
+            while ($current < $this->_startOfMonth) {
+                $cur       = $current->format('Y-m-d');
+                $formatted = $current->format('F Y');
 
-                // create three revenue accounts.
-                $employer = Account::create(['user_id' => $user->id, 'account_type_id' => $revenueType->id, 'name' => 'Employer', 'active' => 1]);
-                $taxes    = Account::create(['user_id' => $user->id, 'account_type_id' => $revenueType->id, 'name' => 'IRS', 'active' => 1]);
-                Account::create(['user_id' => $user->id, 'account_type_id' => $revenueType->id, 'name' => 'Job', 'active' => 1]);
+                // create expenses for rent, utilities, TV, phone on the 1st of the month.
+                $this->createTransaction($checking, $landLord, 800, $withdrawal, 'Rent for ' . $formatted, $cur, $euro, $bills, $house);
+                $this->createTransaction($checking, $utilities, 150, $withdrawal, 'Utilities for ' . $formatted, $cur, $euro, $bills, $house);
+                $this->createTransaction($checking, $television, 50, $withdrawal, 'TV for ' . $formatted, $cur, $euro, $bills, $house);
+                $this->createTransaction($checking, $phone, 50, $withdrawal, 'Phone bill for ' . $formatted, $cur, $euro, $bills, $house);
 
-                // put money in the two accounts (initial balance)
-                $ibChecking = Account::create(
-                    ['user_id' => $user->id, 'account_type_id' => $ibType->id, 'name' => 'Checking account initial balance', 'active' => 0]
-                );
-                $ibSavings  = Account::create(
-                    ['user_id' => $user->id, 'account_type_id' => $ibType->id, 'name' => 'Savings account initial balance', 'active' => 0]
-                );
+                // income from job:
+                $this->createTransaction($employer, $checking, rand(3500, 4000), $deposit, 'Salary for ' . $formatted, $cur, $euro);
+                $this->createTransaction($checking, $savings, 2000, $transfer, 'Salary to savings account in ' . $formatted, $cur, $euro);
 
-                $this->createTransaction($ibChecking, $checking, 4000, $obType, 'Initial Balance for Checking account', '2014-01-01', $euro);
-                $this->createTransaction($ibSavings, $savings, 10000, $obType, 'Initial Balance for Savings account', '2014-01-01', $euro);
+                $this->createGroceries($current);
+                $this->createBigExpense(clone $current);
 
-
-                // create some expenses and incomes and what-not (for every month):
-                $start = new Carbon('2014-01-01');
-                $end   = Carbon::now()->endOfMonth()->addDay();
-                while ($start <= $end) {
-                    $this->createTransaction(
-                        $checking, $portaal, 500, $withdrawal, 'Huur Portaal for ' . $start->format('F Y'), $start->format('Y-m-') . '01', $euro, $billsBudget,
-                        $house,
-                        $firstBill
-                    );
-                    $this->createTransaction(
-                        $checking, $vitens, 12, $withdrawal, 'Water for ' . $start->format('F Y'), $start->format('Y-m-') . '02', $euro, $billsBudget, $house
-                    );
-                    $this->createTransaction(
-                        $checking, $greenchoice, 110, $withdrawal, 'Power for ' . $start->format('F Y'), $start->format('Y-m-') . '02', $euro, $billsBudget,
-                        $house
-                    );
-
-                    // spend on groceries
-                    $groceriesStart = clone $start;
-                    for ($i = 0; $i < 13; $i++) {
-                        $amt         = rand(100, 300) / 10;
-                        $lunchAmount = rand(30, 60) / 10;
-                        $this->createTransaction(
-                            $checking, $plus, $lunchAmount, $withdrawal, 'Lunch', $groceriesStart->format('Y-m-d'), $dollar, $groceriesBudget, $lunch
-                        );
-                        $groceriesStart->addDay();
-                        if (intval($groceriesStart->format('d')) % 2 == 0) {
-                            $this->createTransaction(
-                                $checking, $albert, $amt, $withdrawal, 'Groceries', $groceriesStart->format('Y-m-d'), $euro, $groceriesBudget, $dailyGroceries
-                            );
-                        }
-                        $groceriesStart->addDay();
-                    }
-
-                    // get income:
-                    $this->createTransaction($employer, $checking, rand(1400, 1600), $deposit, 'Salary', $start->format('Y-m-') . '23', $dollar);
-
-                    // pay taxes:
-                    $this->createTransaction(
-                        $checking, $taxes, rand(50, 70), $withdrawal, 'Taxes in ' . $start->format('F Y'), $start->format('Y-m-') . '27', $euro
-                    );
-
-                    // some other stuff.
-
-
-                    $start->addMonth();
-
-                }
-
-                // create some big expenses, move some money around.
-                $one = $this->createTransaction($savings, $checking, 1259, $transfer, 'Money for new PC', $end->format('Y-m') . '-11', $dollar);
-                $two = $this->createTransaction($checking, $store, 1259, $withdrawal, 'New PC', $end->format('Y-m') . '-12', $euro);
-
-                // create a group for these two:
-                $group = TransactionGroup::create(
-                    [
-                        'user_id'  => $user->id,
-                        'relation' => 'balance'
-                    ]
-                );
-                $group->transactionjournals()->save($one);
-                $group->transactionjournals()->save($two);
-
-
-                // piggy bank event
-                // add money to this piggy bank
-                // create a piggy bank event to match:
-                $intoPiggy = $this->createTransaction(
-                    $checking, $savings, 100, $transfer, 'Money for piggy',
-                    Carbon::now()->addDay()->format('Y-m-d'), $euro, $groceriesBudget, $house
-                );
-                $event     = PiggyBankEvent::create(
-                    [
-                        'piggy_bank_id'          => $piggy->id,
-                        'transaction_journal_id' => $intoPiggy->id,
-                        'date'                   => Carbon::now()->addDay()->format('Y-m-d'),
-                        'amount'                 => 100
-                    ]
-                );
-
-                // create two categories
-
-                // create
+                echo 'Created test-content for ' . $current->format('F Y') . "\n";
+                $current->addMonth();
             }
 
+
+            // piggy bank event
+            // add money to this piggy bank
+            // create a piggy bank event to match:
+            $piggyBank = PiggyBank::whereName('New camera')->orderBy('id', 'DESC')->first();
+            $intoPiggy = $this->createTransaction($checking, $savings, 100, $transfer, 'Money for piggy', $this->yaeom, $euro, $groceries, $house);
+            PiggyBankEvent::create(
+                [
+                    'piggy_bank_id'          => $piggyBank->id,
+                    'transaction_journal_id' => $intoPiggy->id,
+                    'date'                   => $this->yaeom,
+                    'amount'                 => 100
+                ]
+            );
         }
+    }
+
+    /**
+     * @param User $user
+     */
+    public function createAssetAccounts(User $user)
+    {
+        $assetType = AccountType::whereType('Asset account')->first();
+        $ibType    = AccountType::whereType('Initial balance account')->first();
+        $obType    = TransactionType::whereType('Opening balance')->first();
+        $euro      = TransactionCurrency::whereCode('EUR')->first();
+
+
+        $acc_a = Account::create(['user_id' => $user->id, 'account_type_id' => $assetType->id, 'name' => 'Checking account', 'active' => 1]);
+        $acc_b = Account::create(['user_id' => $user->id, 'account_type_id' => $assetType->id, 'name' => 'Savings account', 'active' => 1]);
+        $acc_c = Account::create(['user_id' => $user->id, 'account_type_id' => $assetType->id, 'name' => 'Delete me', 'active' => 1]);
+
+        $acc_d = Account::create(['user_id' => $user->id, 'account_type_id' => $ibType->id, 'name' => 'Checking account initial balance', 'active' => 0]);
+        $acc_e = Account::create(['user_id' => $user->id, 'account_type_id' => $ibType->id, 'name' => 'Savings account initial balance', 'active' => 0]);
+        $acc_f = Account::create(['user_id' => $user->id, 'account_type_id' => $ibType->id, 'name' => 'Delete me initial balance', 'active' => 0]);
+
+
+        $this->createTransaction($acc_d, $acc_a, 4000, $obType, 'Initial Balance for Checking account', $this->yasom, $euro);
+        $this->createTransaction($acc_e, $acc_b, 10000, $obType, 'Initial Balance for Savings account', $this->yasom, $euro);
+        $this->createTransaction($acc_f, $acc_c, 100, $obType, 'Initial Balance for Delete me', $this->yasom, $euro);
     }
 
     /**
@@ -420,30 +201,14 @@ class TestContentSeeder extends Seeder
         /** @var TransactionJournal $journal */
         $journal = TransactionJournal::create(
             [
-                'user_id'                 => $user->id,
-                'transaction_type_id'     => $type->id,
-                'transaction_currency_id' => $currency->id,
-                'bill_id'                 => $billID,
-                'description'             => $description,
-                'completed'               => 1,
-                'date'                    => $date
+                'user_id'     => $user->id, 'transaction_type_id' => $type->id, 'transaction_currency_id' => $currency->id, 'bill_id' => $billID,
+                'description' => $description, 'completed' => 1, 'date' => $date
             ]
         );
 
-        Transaction::create(
-            [
-                'account_id'             => $from->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => $amount * -1
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $to->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => $amount
-            ]
-        );
+        Transaction::create(['account_id' => $from->id, 'transaction_journal_id' => $journal->id, 'amount' => $amount * -1]);
+        Transaction::create(['account_id' => $to->id, 'transaction_journal_id' => $journal->id, 'amount' => $amount]);
+
         if (!is_null($budget)) {
             $journal->budgets()->save($budget);
         }
@@ -452,5 +217,334 @@ class TestContentSeeder extends Seeder
         }
 
         return $journal;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function createBudgets(User $user)
+    {
+
+        $groceries      = Budget::create(['user_id' => $user->id, 'name' => 'Groceries']);
+        $bills          = Budget::create(['user_id' => $user->id, 'name' => 'Bills']);
+        $deleteMe       = Budget::create(['user_id' => $user->id, 'name' => 'Delete me']);
+        $groceriesLimit = BudgetLimit::create(
+            ['startdate' => $this->som, 'amount' => 201, 'repeats' => 0, 'repeat_freq' => 'monthly', 'budget_id' => $groceries->id]
+        );
+        $billsLimit     = BudgetLimit::create(
+            ['startdate' => $this->som, 'amount' => 202, 'repeats' => 0, 'repeat_freq' => 'monthly', 'budget_id' => $bills->id]
+        );
+        $deleteMeLimit  = BudgetLimit::create(
+            ['startdate' => $this->som, 'amount' => 203, 'repeats' => 0, 'repeat_freq' => 'monthly', 'budget_id' => $deleteMe->id]
+        );
+
+        // and because we have no filters, some repetitions:
+        LimitRepetition::create(['budget_limit_id' => $groceriesLimit->id, 'startdate' => $this->som, 'enddate' => $this->eom, 'amount' => 201]);
+        LimitRepetition::create(['budget_limit_id' => $billsLimit->id, 'startdate' => $this->som, 'enddate' => $this->eom, 'amount' => 202]);
+        LimitRepetition::create(['budget_limit_id' => $deleteMeLimit->id, 'startdate' => $this->som, 'enddate' => $this->eom, 'amount' => 203]);
+    }
+
+    /**
+     * @param User $user
+     */
+    public function createCategories(User $user)
+    {
+        Category::create(['user_id' => $user->id, 'name' => 'DailyGroceries']);
+        Category::create(['user_id' => $user->id, 'name' => 'Lunch']);
+        Category::create(['user_id' => $user->id, 'name' => 'House']);
+        Category::create(['user_id' => $user->id, 'name' => 'Delete me']);
+
+    }
+
+    /**
+     * @param User $user
+     */
+    public function createPiggyBanks(User $user)
+    {
+        // account:
+        $savings = Account::whereName('Savings account')->orderBy('id', 'DESC')->first();
+
+        // some dates:
+        $endDate  = clone $this->_startOfMonth;
+        $nextYear = clone $this->_startOfMonth;
+
+        $endDate->addMonths(4);
+        $nextYear->addYear()->subDay();
+
+        $next = $nextYear->format('Y-m-d');
+        $end  = $endDate->format('Y-m-d');
+
+        // piggy bank
+        $newCamera = PiggyBank::create(
+            [
+                'account_id'    => $savings->id,
+                'name'          => 'New camera',
+                'targetamount'  => 2000,
+                'startdate'     => $this->som,
+                'targetdate'    => null,
+                'repeats'       => 0,
+                'rep_length'    => null,
+                'rep_every'     => 0,
+                'rep_times'     => null,
+                'reminder'      => null,
+                'reminder_skip' => 0,
+                'remind_me'     => 0,
+                'order'         => 0,
+            ]
+        );
+        // and some events!
+        PiggyBankEvent::create(['piggy_bank_id' => $newCamera->id, 'date' => $this->som, 'amount' => 100]);
+        PiggyBankRepetition::create(['piggy_bank_id' => $newCamera->id, 'startdate' => $this->som, 'targetdate' => null, 'currentamount' => 100]);
+
+
+        $newClothes = PiggyBank::create(
+            [
+                'account_id'    => $savings->id,
+                'name'          => 'New clothes',
+                'targetamount'  => 2000,
+                'startdate'     => $this->som,
+                'targetdate'    => $end,
+                'repeats'       => 0,
+                'rep_length'    => null,
+                'rep_every'     => 0,
+                'rep_times'     => null,
+                'reminder'      => null,
+                'reminder_skip' => 0,
+                'remind_me'     => 0,
+                'order'         => 0,
+            ]
+        );
+
+        PiggyBankEvent::create(['piggy_bank_id' => $newClothes->id, 'date' => $this->som, 'amount' => 100]);
+        PiggyBankRepetition::create(['piggy_bank_id' => $newClothes->id, 'startdate' => $this->som, 'targetdate' => $end, 'currentamount' => 100]);
+
+        // weekly reminder piggy bank
+        $weekly = PiggyBank::create(
+            [
+                'account_id'    => $savings->id,
+                'name'          => 'Weekly reminder for clothes',
+                'targetamount'  => 2000,
+                'startdate'     => $this->som,
+                'targetdate'    => $next,
+                'repeats'       => 0,
+                'rep_length'    => null,
+                'rep_every'     => 0,
+                'rep_times'     => null,
+                'reminder'      => 'week',
+                'reminder_skip' => 0,
+                'remind_me'     => 1,
+                'order'         => 0,
+            ]
+        );
+        PiggyBankRepetition::create(['piggy_bank_id' => $weekly->id, 'startdate' => $this->som, 'targetdate' => $next, 'currentamount' => 0]);
+    }
+
+    /**
+     * @param User $user
+     */
+    public function createReminders(User $user)
+    {
+        // for weekly piggy bank (clothes)
+        $nextWeek  = clone $this->_startOfMonth;
+        $piggyBank = PiggyBank::whereName('New clothes')->orderBy('id', 'DESC')->first();
+        $nextWeek->addWeek();
+        $week = $nextWeek->format('Y-m-d');
+
+        Reminder::create(
+            ['user_id'          => $user->id, 'startdate' => $this->som, 'enddate' => $week, 'active' => 1, 'notnow' => 0,
+             'remindersable_id' => $piggyBank->id, 'remindersable_type' => 'PiggyBank']
+        );
+
+        // a fake reminder::
+        Reminder::create(
+            ['user_id'            => $user->id, 'startdate' => $this->som, 'enddate' => $week, 'active' => 0, 'notnow' => 0, 'remindersable_id' => 40,
+             'remindersable_type' => 'Transaction']
+        );
+    }
+
+    /**
+     * @param User $user
+     */
+    public function createRecurringTransactions(User $user)
+    {
+        // account:
+        $savings = Account::whereName('Savings account')->orderBy('id', 'DESC')->first();
+
+        $recurring = PiggyBank::create(
+            [
+                'account_id'    => $savings->id,
+                'name'          => 'Nieuwe spullen',
+                'targetamount'  => 1000,
+                'startdate'     => $this->som,
+                'targetdate'    => $this->eom,
+                'repeats'       => 1,
+                'rep_length'    => 'month',
+                'rep_every'     => 0,
+                'rep_times'     => 0,
+                'reminder'      => 'month',
+                'reminder_skip' => 0,
+                'remind_me'     => 1,
+                'order'         => 0,
+            ]
+        );
+        PiggyBankRepetition::create(['piggy_bank_id' => $recurring->id, 'startdate' => $this->som, 'targetdate' => $this->eom, 'currentamount' => 0]);
+        PiggyBankRepetition::create(
+            ['piggy_bank_id' => $recurring->id, 'startdate' => $this->nsom, 'targetdate' => $this->neom, 'currentamount' => 0]
+        );
+        Reminder::create(
+            ['user_id'          => $user->id, 'startdate' => $this->som, 'enddate' => $this->neom, 'active' => 1, 'notnow' => 0,
+             'remindersable_id' => $recurring->id, 'remindersable_type' => 'PiggyBank']
+        );
+    }
+
+    /**
+     * @param $user
+     */
+    public function createBills($user)
+    {
+        // bill
+        Bill::create(
+            [
+                'user_id'     => $user->id, 'name' => 'Huur', 'match' => 'huur,portaal', 'amount_min' => 500,
+                'amount_max'  => 700,
+                'date'        => $this->som,
+                'active'      => 1,
+                'automatch'   => 1,
+                'repeat_freq' => 'monthly',
+                'skip'        => 0,
+            ]
+        );
+
+        // bill
+        Bill::create(
+            [
+                'user_id'     => $user->id,
+                'name'        => 'Gas licht',
+                'match'       => 'no,match',
+                'amount_min'  => 500,
+                'amount_max'  => 700,
+                'date'        => $this->som,
+                'active'      => 1,
+                'automatch'   => 1,
+                'repeat_freq' => 'monthly',
+                'skip'        => 0,
+            ]
+        );
+
+        // bill
+        Bill::create(
+            [
+                'user_id'     => $user->id,
+                'name'        => 'Something something',
+                'match'       => 'mumble,mumble',
+                'amount_min'  => 500,
+                'amount_max'  => 700,
+                'date'        => $this->som,
+                'active'      => 0,
+                'automatch'   => 1,
+                'repeat_freq' => 'monthly',
+                'skip'        => 0,
+            ]
+        );
+
+    }
+
+    /**
+     * @param $user
+     */
+    public function createExpenseAccounts($user)
+    {
+        //// create expenses for rent, utilities, water, TV, phone on the 1st of the month.
+        $expenseType = AccountType::whereType('Expense account')->first();
+
+        Account::create(['user_id' => $user->id, 'account_type_id' => $expenseType->id, 'name' => 'Land lord', 'active' => 1]);
+        Account::create(['user_id' => $user->id, 'account_type_id' => $expenseType->id, 'name' => 'Utilities company', 'active' => 1]);
+        Account::create(['user_id' => $user->id, 'account_type_id' => $expenseType->id, 'name' => 'Water company', 'active' => 1]);
+        Account::create(['user_id' => $user->id, 'account_type_id' => $expenseType->id, 'name' => 'TV company', 'active' => 1]);
+        Account::create(['user_id' => $user->id, 'account_type_id' => $expenseType->id, 'name' => 'Phone agency', 'active' => 1]);
+        Account::create(['user_id' => $user->id, 'account_type_id' => $expenseType->id, 'name' => 'Super savers', 'active' => 1]);
+        Account::create(['user_id' => $user->id, 'account_type_id' => $expenseType->id, 'name' => 'Groceries House', 'active' => 1]);
+        Account::create(['user_id' => $user->id, 'account_type_id' => $expenseType->id, 'name' => 'Lunch House', 'active' => 1]);
+
+
+        Account::create(['user_id' => $user->id, 'account_type_id' => $expenseType->id, 'name' => 'Buy More', 'active' => 1]);
+
+    }
+
+    /**
+     * @param $user
+     */
+    public function createRevenueAccounts($user)
+    {
+        $revenueType = AccountType::whereType('Revenue account')->first();
+
+        Account::create(['user_id' => $user->id, 'account_type_id' => $revenueType->id, 'name' => 'Employer', 'active' => 1]);
+        Account::create(['user_id' => $user->id, 'account_type_id' => $revenueType->id, 'name' => 'IRS', 'active' => 1]);
+        Account::create(['user_id' => $user->id, 'account_type_id' => $revenueType->id, 'name' => 'Second job employer', 'active' => 1]);
+
+    }
+
+    /**
+     * @param Carbon $date
+     */
+    public function createGroceries(Carbon $date)
+    {
+        // variables we need:
+        $checking   = Account::whereName('Checking account')->orderBy('id', 'DESC')->first();
+        $shopOne    = Account::whereName('Groceries House')->orderBy('id', 'DESC')->first();
+        $shopTwo    = Account::whereName('Super savers')->orderBy('id', 'DESC')->first();
+        $lunchHouse = Account::whereName('Lunch House')->orderBy('id', 'DESC')->first();
+        $lunch      = Category::whereName('Lunch')->orderBy('id', 'DESC')->first();
+        $daily      = Category::whereName('DailyGroceries')->orderBy('id', 'DESC')->first();
+        $euro       = TransactionCurrency::whereCode('EUR')->first();
+        $withdrawal = TransactionType::whereType('Withdrawal')->first();
+        $groceries  = Budget::whereName('Groceries')->orderBy('id', 'DESC')->first();
+
+
+        $shops = [$shopOne, $shopTwo];
+
+        // create groceries and lunch (daily, between 5 and 10 euro).
+        $mStart = clone $date;
+        $mEnd   = clone $date;
+        $mEnd->endOfMonth();
+        while ($mStart <= $mEnd) {
+            $mFormat = $mStart->format('Y-m-d');
+            $shop    = $shops[rand(0, 1)];
+
+            $this->createTransaction($checking, $shop, (rand(500, 1000) / 100), $withdrawal, 'Groceries', $mFormat, $euro, $groceries, $daily);
+            $this->createTransaction($checking, $lunchHouse, (rand(200, 600) / 100), $withdrawal, 'Lunch', $mFormat, $euro, $groceries, $lunch);
+
+            $mStart->addDay();
+        }
+    }
+
+    public function createBigExpense($date)
+    {
+        $date->addDays(12);
+        $dollar     = TransactionCurrency::whereCode('USD')->first();
+        $checking   = Account::whereName('Checking account')->orderBy('id', 'DESC')->first();
+        $savings    = Account::whereName('Savings account')->orderBy('id', 'DESC')->first();
+        $buyMore    = Account::whereName('Buy More')->orderBy('id', 'DESC')->first();
+        $withdrawal = TransactionType::whereType('Withdrawal')->first();
+        $transfer   = TransactionType::whereType('Transfer')->first();
+        $user       = User::whereEmail('thegrumpydictator@gmail.com')->first();
+
+
+        // create some big expenses, move some money around.
+        $amount = rand(500, 2000);
+        $one    = $this->createTransaction(
+            $savings, $checking, $amount, $transfer, 'Money for big expense in ' . $date->format('F Y'), $date->format('Y-m-d'), $dollar
+        );
+        $two    = $this->createTransaction(
+            $checking, $buyMore, $amount, $withdrawal, 'Big expense in ' . $date->format('F Y'), $date->format('Y-m-d'), $dollar
+        );
+        $group  = TransactionGroup::create(
+            [
+                'user_id'  => $user->id,
+                'relation' => 'balance'
+            ]
+        );
+        $group->transactionjournals()->save($one);
+        $group->transactionjournals()->save($two);
     }
 } 
