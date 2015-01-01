@@ -27,19 +27,21 @@ class TransactionControllerCest
         $I->see('Add a new withdrawal');
     }
 
-    public function delete(FunctionalTester $I)
+    public function deleteWithdrawal(FunctionalTester $I)
     {
+        $journal = TransactionJournal::where('description', 'LIKE', '%Rent for %')->first();
         $I->wantTo('delete a transaction');
-        $I->amOnPage('/transaction/delete/3');
-        $I->see('Delete withdrawal "Huur Portaal for January 2014"');
+        $I->amOnPage('/transaction/delete/' . $journal->id);
+        $I->see('Delete withdrawal "' . $journal->description . '"');
     }
 
     public function destroyDeposit(FunctionalTester $I)
     {
+        $journal = TransactionJournal::where('description', 'LIKE', '%Salary for %')->first();
         $I->wantTo('destroy a deposit');
-        $I->amOnPage('/transaction/delete/32');
+        $I->amOnPage('/transaction/delete/' . $journal->id);
         $I->submitForm('#destroy', []);
-        $I->see('Transaction &quot;Salary&quot; destroyed.');
+        $I->see('Transaction &quot;' . $journal->description . '&quot; destroyed.');
 
     }
 
@@ -47,20 +49,21 @@ class TransactionControllerCest
     {
         $I->wantTo('destroy a transfer');
 
-        $journal = TransactionJournal::whereDescription('Money for new PC')->first();
+        $journal = TransactionJournal::where('description', 'LIKE', '%Money for big expense in%')->first();
 
         $I->amOnPage('/transaction/delete/' . $journal->id);
         $I->submitForm('#destroy', []);
-        $I->see('Transaction &quot;Money for new PC&quot; destroyed.');
+        $I->see('Transaction &quot;' . $journal->description . '&quot; destroyed.');
 
     }
 
     public function destroyWithdrawal(FunctionalTester $I)
     {
+        $journal = TransactionJournal::where('description', 'LIKE', '%Rent for %')->first();
         $I->wantTo('destroy a withdrawal');
-        $I->amOnPage('/transaction/delete/3');
+        $I->amOnPage('/transaction/delete/' . $journal->id);
         $I->submitForm('#destroy', []);
-        $I->see('Transaction &quot;Huur Portaal for January 2014&quot; destroyed.');
+        $I->see('Transaction &quot;' . $journal->description . '&quot; destroyed.');
 
     }
 
@@ -95,12 +98,12 @@ class TransactionControllerCest
 
     public function show(FunctionalTester $I)
     {
-        $journal = TransactionJournal::whereDescription('Money for new PC')->first();
+        $journal = TransactionJournal::where('description', 'LIKE', '%Rent for %')->first();
 
         $I->wantTo('see a transaction');
         $I->amOnPage('/transaction/show/' . $journal->id);
-        $I->see('Transfer "Money for new PC"');
-        $I->see('1.259');
+        $I->see($journal->description);
+        $I->see(intval($journal->getAmount()));
     }
 
     public function store(FunctionalTester $I)
@@ -165,29 +168,33 @@ class TransactionControllerCest
 
     public function update(FunctionalTester $I)
     {
+        $journal = TransactionJournal::where('description', 'LIKE', '%Salary for %')->first();
+
         $I->wantTo('update a transaction');
-        $I->amOnPage('/transaction/edit/3');
-        $I->see('Huur Portaal for January 2014');
+        $I->amOnPage('/transaction/edit/' . $journal->id);
+        $I->see($journal->description);
         $I->submitForm(
             '#update', [
-                         'description'        => 'Huur Portaal for January 2014!',
+                         'description'        => $journal->description . '!',
                          'account_id'         => 1,
                          'expense_account'    => 'Portaal',
                          'amount'             => 500,
-                         'date'               => '2014-01-01',
-                         'budget_id'          => 2,
-                         'category'           => 'House',
+                         'date'               => $journal->date->format('Y-m-d'),
+                         'budget_id'          => is_null($journal->budgets()->first()) ? 0 : $journal->budgets()->first()->id,
+                         'category'           => is_null($journal->categories()->first()) ? '' : $journal->categories()->first()->id,
                          'post_submit_action' => 'update'
                      ]
         );
-        $I->see('Huur Portaal for January 2014!');
+        $I->see($journal->description . '!');
     }
 
     public function updateAndFail(FunctionalTester $I)
     {
+        $journal = TransactionJournal::where('description', 'LIKE', '%Salary for %')->first();
+
         $I->wantTo('update a transaction and fail');
-        $I->amOnPage('/transaction/edit/3');
-        $I->see('Huur Portaal for January 2014');
+        $I->amOnPage('/transaction/edit/' . $journal->id);
+        $I->see($journal->description);
         $I->submitForm(
             '#update', [
                          'description'        => '',
@@ -205,22 +212,23 @@ class TransactionControllerCest
 
     public function updateAndReturn(FunctionalTester $I)
     {
+        $journal = TransactionJournal::where('description', 'LIKE', '%Salary for %')->first();
         $I->wantTo('update a transaction and return to the edit screen');
-        $I->amOnPage('/transaction/edit/3');
-        $I->see('Huur Portaal for January 2014');
+        $I->amOnPage('/transaction/edit/' . $journal->id);
+        $I->see($journal->description);
         $I->submitForm(
             '#update', [
-                         'description'        => 'Huur Portaal for January 2014!',
+                         'description'        => $journal->description . '!',
                          'account_id'         => 1,
                          'expense_account'    => 'Portaal',
                          'amount'             => 500,
-                         'date'               => '2014-01-01',
-                         'budget_id'          => 2,
-                         'category'           => 'House',
+                         'date'               => $journal->date->format('Y-m-d'),
+                         'budget_id'          => is_null($journal->budgets()->first()) ? 0 : $journal->budgets()->first()->id,
+                         'category'           => is_null($journal->categories()->first()) ? '' : $journal->categories()->first()->id,
                          'post_submit_action' => 'return_to_edit'
                      ]
         );
-        $I->see('Huur Portaal for January 2014!');
+        $I->see($journal->description . '!');
     }
 
 

@@ -29,7 +29,7 @@ class TransactionJournal extends Eloquent
     public function budgets()
     {
         return $this->belongsToMany(
-            'Budget', 'budget_transaction_journal', 'transaction_journal_id', 'budget_id'
+            'Budget'
         );
     }
 
@@ -39,7 +39,7 @@ class TransactionJournal extends Eloquent
     public function categories()
     {
         return $this->belongsToMany(
-            'Category', 'category_transaction_journal', 'transaction_journal_id', 'category_id'
+            'Category'
         );
     }
 
