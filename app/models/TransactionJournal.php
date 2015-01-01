@@ -127,14 +127,6 @@ class TransactionJournal extends Eloquent
 
     /**
      * @param Builder $query
-     */
-    public function scopeDefaultSorting(Builder $query)
-    {
-        $query->orderBy('date', 'DESC')->orderBy('transaction_journals.id', 'DESC');
-    }
-
-    /**
-     * @param Builder $query
      * @param         $amount
      */
     public function scopeLessThan(Builder $query, $amount)
