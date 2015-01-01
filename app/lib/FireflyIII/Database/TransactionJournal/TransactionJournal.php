@@ -481,8 +481,9 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
 
         $incomes = $reportRepository->getIncomeForMonth($date);
         $totalIn = 0;
+        /** @var \TransactionJournal $entry */
         foreach ($incomes as $entry) {
-            $totalIn += floatval($entry->transactions[1]->amount);
+            $totalIn += $entry->getAmount();
         }
 
         return $totalIn;
