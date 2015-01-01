@@ -26,7 +26,7 @@ class TransactionJournalTest extends TestCase
         $journal->transactions()->save($other);
 
         $amount      = floatval($transaction->amount);
-        $amount++;
+        $amount--;
 
         $this->assertCount(1, TransactionJournal::moreThan($amount)->get());
     }
