@@ -47,7 +47,6 @@ class GoogleChartController extends BaseController
         $this->_chart->addColumn('Day of month', 'date');
         $this->_chart->addColumn('Balance for ' . $account->name, 'number');
 
-        // TODO this can be combined in some method, it's coming up quite often, is it?
         $start = $this->_start;
         $end   = $this->_end;
         $count = $account->transactions()->count();
@@ -62,7 +61,6 @@ class GoogleChartController extends BaseController
             $start = new Carbon($first->date);
             $end   = new Carbon($last->date);
         }
-        // todo until this part.
 
         $current = clone $start;
 

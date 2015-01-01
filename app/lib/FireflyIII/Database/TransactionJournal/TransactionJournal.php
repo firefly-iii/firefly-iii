@@ -468,24 +468,24 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
     }
 
     /**
+     * TODO This query includes incomes to "shared" accounts which arent income.
+     *
      * @param Carbon $date
      *
      * @return float
      */
     public function getSumOfIncomesByMonth(Carbon $date)
     {
-        $end = clone $date;
-        $date->startOfMonth();
-        $end->endOfMonth();
+        /** @var \FireflyIII\Report\ReportInterface $reportRepository */
+        $reportRepository = \App::make('FireflyIII\Report\ReportInterface');
 
-        $sum = \DB::table('transactions')->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')->leftJoin(
-            'transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id'
-        )->where('amount', '>', 0)->where('transaction_types.type', '=', 'Deposit')->where('transaction_journals.date', '>=', $date->format('Y-m-d'))->where(
-            'transaction_journals.date', '<=', $end->format('Y-m-d')
-        )->sum('transactions.amount');
-        $sum = floatval($sum);
+        $incomes = $reportRepository->getIncomeForMonth($date);
+        $totalIn = 0;
+        foreach ($incomes as $entry) {
+            $totalIn += floatval($entry->transactions[1]->amount);
+        }
 
-        return $sum;
+        return $totalIn;
     }
 
     /**
