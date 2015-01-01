@@ -40,7 +40,9 @@
         "sebastian/phpdcd": "*",
         "codeception/phpbuiltinserver": "*",
         "codeception/specify": "*",
-        "codeception/verify": "*"
+        "codeception/verify": "*",
+        "fzaninotto/faker": "1.*"
+
 
     },
     "autoload": {
