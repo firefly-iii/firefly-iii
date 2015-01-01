@@ -38,7 +38,7 @@ class PiggyBankRepetition extends Eloquent
      */
     public function scopeStarts(Builder $query, Carbon $date)
     {
-        $query->where('startdate', $date->format('Y-m-d'));
+        $query->where('startdate', $date->format('Y-m-d 00:00:00'));
     }
 
     /**
@@ -47,7 +47,7 @@ class PiggyBankRepetition extends Eloquent
      */
     public function scopeTargets(Builder $query, Carbon $date)
     {
-        $query->where('targetdate', $date->format('Y-m-d'));
+        $query->where('targetdate', $date->format('Y-m-d 00:00:00'));
     }
 
 

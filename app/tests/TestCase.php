@@ -26,14 +26,12 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     public function setUp()
     {
         parent::setUp();
-        // reset database?
         $this->prepareForTests();
 
     }
 
     static public function setupBeforeClass()
     {
-        //League\FactoryMuffin\Facade::loadFactories(__DIR__ . '/factories');
         f::loadFactories(__DIR__ . '/factories');
     }
 
