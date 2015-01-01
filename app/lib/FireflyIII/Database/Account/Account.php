@@ -208,8 +208,8 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
 
             return true;
         } else {
-            var_dump($validation['errors']);
-            exit;
+            \Log::error($validation['errors']->all());
+            \App::abort(500);
         }
 
     }
@@ -314,8 +314,8 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
         $data    = array_except($data, ['_token', 'what']);
         $account = new \Account($data);
         if (!$account->isValid()) {
-            var_dump($account->getErrors()->all());
-            exit;
+            \Log::error($account->getErrors()->all());
+            \App::abort(500);
         }
         $account->save();
         if (isset($data['openingbalance']) && floatval($data['openingbalance']) != 0) {
