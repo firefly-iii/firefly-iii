@@ -148,14 +148,4 @@ class PiggyBank extends Eloquent
     {
         return $this->morphMany('Reminder', 'remindersable');
     }
-
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function transactions()
-    {
-        return $this->hasMany('Transaction');
-    }
-
-} 
+}

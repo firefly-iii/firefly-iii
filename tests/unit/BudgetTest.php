@@ -2,7 +2,7 @@
 use League\FactoryMuffin\Facade as f;
 
 /**
- * Class AccountTypeTest
+ * Class BudgetTest
  */
 class BudgetTest extends TestCase
 {

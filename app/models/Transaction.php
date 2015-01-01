@@ -26,15 +26,6 @@ class Transaction extends Eloquent
         return $this->belongsTo('Account');
     }
 
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function piggyBank()
-    {
-        return $this->belongsTo('PiggyBank');
-    }
-
     /**
      * @param Builder $query
      * @param Account $account

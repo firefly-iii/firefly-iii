@@ -13,16 +13,6 @@ class Reminder extends Eloquent
     protected $table = 'reminders';
 
     /**
-     * @param $value
-     *
-     * @return mixed
-     */
-    public function getDataAttribute($value)
-    {
-        return json_decode($value);
-    }
-
-    /**
      * @return array
      */
     public function getDates()
@@ -49,15 +39,7 @@ class Reminder extends Eloquent
      */
     public function scopeDateIs($query, Carbon $start, Carbon $end)
     {
-        return $query->where('startdate', $start->format('Y-m-d'))->where('enddate', $end->format('Y-m-d'));
-    }
-
-    /**
-     * @param $value
-     */
-    public function setDataAttribute($value)
-    {
-        $this->attributes['data'] = json_encode($value);
+        return $query->where('startdate', $start->format('Y-m-d 00:00:00'))->where('enddate', $end->format('Y-m-d 00:00:00'));
     }
 
     /**
