@@ -107,7 +107,6 @@ class CategoryControllerCest
         $I->see('Create a new category');
         $I->submitForm('#store', ['name' => 'New category.', 'post_submit_action' => 'store']);
         $I->seeRecord('categories', ['name' => 'New category.']);
-        resetToClean::clean();
     }
 
     /**
@@ -120,7 +119,6 @@ class CategoryControllerCest
         $I->see('Create a new category');
         $I->submitForm('#store', ['name' => 'New category.', 'post_submit_action' => 'create_another']);
         $I->seeRecord('categories', ['name' => 'New category.']);
-        resetToClean::clean();
     }
 
     /**
@@ -133,7 +131,6 @@ class CategoryControllerCest
         $I->see('Create a new category');
         $I->submitForm('#store', ['name' => null, 'post_submit_action' => 'validate_only']);
         $I->dontSeeRecord('categories', ['name' => 'New category.']);
-        resetToClean::clean();
     }
 
     /**
@@ -146,7 +143,6 @@ class CategoryControllerCest
         $I->see('Create a new category');
         $I->submitForm('#store', ['name' => 'New category.', 'post_submit_action' => 'validate_only']);
         $I->dontSeeRecord('categories', ['name' => 'New category.']);
-        resetToClean::clean();
     }
 
     /**
@@ -159,7 +155,6 @@ class CategoryControllerCest
         $I->see('Edit category "Delete me"');
         $I->submitForm('#update', ['name' => 'Update me', 'post_submit_action' => 'update']);
         $I->seeRecord('categories', ['name' => 'Update me']);
-        resetToClean::clean();
 
     }
 

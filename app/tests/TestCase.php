@@ -1,5 +1,7 @@
 <?php
-use Mockery as m;
+
+use League\FactoryMuffin\Facade as f;
+
 
 /**
  * Class TestCase
@@ -17,39 +19,22 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         $testEnvironment = 'testing';
 
         return require __DIR__ . '/../../bootstrap/start.php';
+
     }
 
     public function setUp()
     {
         parent::setUp();
-        Artisan::call('migrate');
-        $this->seed();
-
-
-        //$this->
-    }
-
-    /**
-     * @param $class
-     *
-     * @return m\MockInterface
-     */
-    public function mock($class)
-    {
-        $mock = Mockery::mock($class);
-
-        $this->app->instance($class, $mock);
-
-        return $mock;
     }
 
     static public function setupBeforeClass()
     {
-        League\FactoryMuffin\Facade::loadFactories(__DIR__ . '/factories');
+        //League\FactoryMuffin\Facade::loadFactories(__DIR__ . '/factories');
+        f::loadFactories(__DIR__ . '/factories');
     }
 
     public function tearDown()
     {
-        m::close();
+        //m::close();
     }
 }

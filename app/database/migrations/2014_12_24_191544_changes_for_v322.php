@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
@@ -99,13 +100,16 @@ class ChangesForV322 extends Migration
         Schema::table(
             'budget_limits', function (Blueprint $table) {
 
-            //            try {
-            //$table->dropUnique('limits_component_id_startdate_repeat_freq_unique');
-            //            } catch (QueryException $e) {
-            //$table->dropUnique('unique_ci_combi');
-            //            } catch (PDOException $e) {
-            //                $table->dropUnique('unique_ci_combi');
-            //            }
+//            try {
+//                //$table->dropUnique('unique_ci_combi');
+//            } catch (QueryException $e) {
+//                echo 'Could not delete unique_ci_combi';
+//
+//            } catch (PDOException $e) {
+//                echo 'Could not delete unique_ci_combi';
+//            } catch (Exception $e) {
+//                echo 'Could not delete unique_ci_combi';
+//            }
 
         }
         );

@@ -11,6 +11,10 @@ modules:
       Db:
         populate: false
         cleanup: true
+        dsn: 'sqlite:tests/_data/db.sqlite'
+        user: ''
+        password: ''
+        dump: tests/_data/dump.sql
       Laravel4:
         environment: 'testing'
         filters: false

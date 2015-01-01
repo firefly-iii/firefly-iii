@@ -148,7 +148,6 @@ class BudgetControllerCest
         $I->see('Create a new budget');
         $I->submitForm('#store', ['name' => 'New budget.', 'post_submit_action' => 'store']);
         $I->seeRecord('budgets', ['name' => 'New budget.']);
-        resetToClean::clean();
     }
 
     /**
@@ -197,7 +196,6 @@ class BudgetControllerCest
         $I->see('Edit budget "Delete me"');
         $I->submitForm('#update', ['name' => 'Update me', 'post_submit_action' => 'update']);
         $I->seeRecord('budgets', ['name' => 'Update me']);
-        resetToClean::clean();
 
     }
 

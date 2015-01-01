@@ -55,7 +55,6 @@ class AccountControllerCest
         $I->see('Delete account "Delete me"');
         $I->submitForm('#destroy', []);
         $I->dontSeeRecord('accounts', ['id' => 3, 'deleted_at' => null]);
-        resetToClean::clean();
     }
 
     /**
@@ -113,7 +112,6 @@ class AccountControllerCest
         $I->see('Create a new asset account');
         $I->submitForm('#store', ['name' => 'New through tests.', 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'store']);
         $I->seeRecord('accounts', ['name' => 'New through tests.']);
-        resetToClean::clean();
     }
 
     /**
@@ -128,7 +126,6 @@ class AccountControllerCest
             '#store', ['name' => 'New through tests.', 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'create_another']
         );
         $I->seeRecord('accounts', ['name' => 'New through tests.']);
-        resetToClean::clean();
     }
 
     /**
@@ -141,7 +138,6 @@ class AccountControllerCest
         $I->see('Create a new asset account');
         $I->submitForm('#store', ['name' => null, 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'validate_only']);
         $I->dontSeeRecord('accounts', ['name' => 'New through tests.']);
-        resetToClean::clean();
     }
 
     /**
@@ -156,7 +152,6 @@ class AccountControllerCest
             '#store', ['name' => 'New through tests.', 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'validate_only']
         );
         $I->dontSeeRecord('accounts', ['name' => 'New through tests.']);
-        resetToClean::clean();
     }
 
     /**
@@ -169,7 +164,6 @@ class AccountControllerCest
         $I->see('Edit asset account "Delete me"');
         $I->submitForm('#update', ['name' => 'Update me', 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'update']);
         $I->seeRecord('accounts', ['name' => 'Update me']);
-        resetToClean::clean();
 
     }
 
@@ -185,7 +179,6 @@ class AccountControllerCest
             '#update', ['name' => 'Savings accountXX', 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'return_to_edit']
         );
         $I->seeRecord('accounts', ['name' => 'Savings accountXX']);
-        resetToClean::clean();
 
     }
 
