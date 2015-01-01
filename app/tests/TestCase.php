@@ -16,7 +16,8 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     public function createApplication()
     {
         $unitTesting     = true;
-        $testEnvironment = 'testing';
+        $testEnvironment = 'testingInMemory';
+
 
         return require __DIR__ . '/../../bootstrap/start.php';
 
@@ -25,6 +26,9 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     public function setUp()
     {
         parent::setUp();
+        // reset database?
+        $this->prepareForTests();
+
     }
 
     static public function setupBeforeClass()
@@ -36,5 +40,16 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     public function tearDown()
     {
         //m::close();
+    }
+
+    /**
+     * Migrates the database and set the mailer to 'pretend'.
+     * This will cause the tests to run quickly.
+     *
+     */
+    private function prepareForTests()
+    {
+        Artisan::call('migrate');
+        Mail::pretend(true);
     }
 }
