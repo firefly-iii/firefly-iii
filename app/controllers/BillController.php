@@ -45,7 +45,7 @@ class BillController extends BaseController
     public function delete(Bill $bill)
     {
         return View::make('bills.delete')->with('bill', $bill)->with(
-            'subTitle', 'Delete "' . $bill->name . '"'
+            'subTitle', 'Delete "' . e($bill->name) . '"'
         );
     }
 
@@ -73,7 +73,7 @@ class BillController extends BaseController
         $periods = \Config::get('firefly.periods_to_text');
 
         return View::make('bills.edit')->with('periods', $periods)->with('bill', $bill)->with(
-            'subTitle', 'Edit "' . $bill->name . '"'
+            'subTitle', 'Edit "' . e($bill->name) . '"'
         );
     }
 
@@ -119,7 +119,7 @@ class BillController extends BaseController
 
 
         return View::make('bills.show', compact('journals', 'hideBill', 'bill'))->with(
-            'subTitle', $bill->name
+            'subTitle', e($bill->name)
         );
     }
 

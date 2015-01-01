@@ -41,7 +41,7 @@ class CategoryController extends BaseController
      */
     public function delete(Category $category)
     {
-        return View::make('categories.delete')->with('category', $category)->with('subTitle', 'Delete category "' . $category->name . '"');
+        return View::make('categories.delete')->with('category', $category)->with('subTitle', 'Delete category "' . e($category->name) . '"');
     }
 
     /**
@@ -65,7 +65,7 @@ class CategoryController extends BaseController
      */
     public function edit(Category $category)
     {
-        return View::make('categories.edit')->with('category', $category)->with('subTitle', 'Edit category "' . $category->name . '"');
+        return View::make('categories.edit')->with('category', $category)->with('subTitle', 'Edit category "' . e($category->name) . '"');
     }
 
     /**

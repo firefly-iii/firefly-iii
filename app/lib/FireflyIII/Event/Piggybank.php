@@ -285,8 +285,8 @@ class PiggyBank
             $event->amount = $diff;
             $event->date   = new Carbon;
             if (!$event->isValid()) {
-                var_dump($event->getErrors());
-                exit();
+                \Log::error($event->getErrors());
+                \App::abort(500);
             }
             $event->save();
         }

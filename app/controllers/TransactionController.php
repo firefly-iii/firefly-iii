@@ -98,7 +98,7 @@ class TransactionController extends BaseController
         $piggies[0]       = '(no piggy bank)';
         $preFilled        = Session::has('preFilled') ? Session::get('preFilled') : [];
         $respondTo        = ['account_id', 'account_from_id'];
-        $subTitle         = 'Add a new ' . $what;
+        $subTitle         = 'Add a new ' . e($what);
 
         foreach ($respondTo as $r) {
             if (!is_null(Input::get($r))) {
@@ -123,7 +123,7 @@ class TransactionController extends BaseController
     public function delete(TransactionJournal $journal)
     {
         $type     = strtolower($journal->transactionType->type);
-        $subTitle = 'Delete ' . $type . ' "' . $journal->description . '"';
+        $subTitle = 'Delete ' . e($type) . ' "' . e($journal->description) . '"';
 
         return View::make('transactions.delete', compact('journal', 'subTitle'));
 
@@ -197,7 +197,7 @@ class TransactionController extends BaseController
     public function edit(TransactionJournal $journal)
     {
         $what         = strtolower($journal->transactiontype->type);
-        $subTitle     = 'Edit ' . $what . ' "' . $journal->description . '"';
+        $subTitle     = 'Edit ' . e($what) . ' "' . e($journal->description) . '"';
         $budgets      = FFForm::makeSelectList($this->_helper->getBudgets(), true);
         $accounts     = FFForm::makeSelectList($this->_helper->getAssetAccounts());
         $piggies      = FFForm::makeSelectList($this->_helper->getPiggyBanks(), true);
@@ -346,7 +346,7 @@ class TransactionController extends BaseController
         }
 
         return View::make('transactions.show', compact('journal', 'members'))->with(
-            'subTitle', $journal->transactionType->type . ' "' . $journal->description . '"'
+            'subTitle', e($journal->transactionType->type) . ' "' . e($journal->description) . '"'
         );
     }
 
