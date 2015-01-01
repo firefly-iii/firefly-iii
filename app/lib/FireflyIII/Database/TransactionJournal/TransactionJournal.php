@@ -461,14 +461,12 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         foreach ($set as $entry) {
             $sum += $entry['amount'];
         }
-        
+
 
         return $sum;
     }
 
     /**
-     * TODO This query includes incomes to "shared" accounts which arent income.
-     *
      * @param Carbon $date
      *
      * @return float
