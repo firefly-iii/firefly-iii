@@ -5,7 +5,9 @@ League\FactoryMuffin\Facade::define(
                              'piggy_bank_id' => 'factory|PiggyBank',
                              'startdate'     => 'date|Y-m-d',
                              'targetdate'    => 'date|Y-m-d',
-                             'currentamount' => 'numberBetween:0,100',
+                             'currentamount' => function () {
+                                 return rand(0, 100);
+                             },
 
                          ]
 );
