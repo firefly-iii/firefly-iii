@@ -109,17 +109,23 @@ class TestContentSeeder extends Seeder
 
             $euro = TransactionCurrency::whereCode('EUR')->first();
 
+            $rentBill = Bill::where('name', 'Rent')->first();
+
 
             $current = clone $this->_yearAgoStartOfMonth;
-            while ($current < $this->_startOfMonth) {
+            while ($current <= $this->_startOfMonth) {
                 $cur       = $current->format('Y-m-d');
                 $formatted = $current->format('F Y');
 
                 // create expenses for rent, utilities, TV, phone on the 1st of the month.
-                $this->createTransaction($checking, $landLord, 800, $withdrawal, 'Rent for ' . $formatted, $cur, $euro, $bills, $house);
+                $this->createTransaction($checking, $landLord, 800, $withdrawal, 'Rent for ' . $formatted, $cur, $euro, $bills, $house, $rentBill);
                 $this->createTransaction($checking, $utilities, 150, $withdrawal, 'Utilities for ' . $formatted, $cur, $euro, $bills, $house);
                 $this->createTransaction($checking, $television, 50, $withdrawal, 'TV for ' . $formatted, $cur, $euro, $bills, $house);
                 $this->createTransaction($checking, $phone, 50, $withdrawal, 'Phone bill for ' . $formatted, $cur, $euro, $bills, $house);
+
+                // two transactions. One without a budget, one without a category.
+                $this->createTransaction($checking, $phone, 10, $withdrawal, 'Extra charges on phone bill for ' . $formatted, $cur, $euro, null, $house);
+                $this->createTransaction($checking, $television, 5, $withdrawal, 'Extra charges on TV bill for ' . $formatted, $cur, $euro, $bills, null);
 
                 // income from job:
                 $this->createTransaction($employer, $checking, rand(3500, 4000), $deposit, 'Salary for ' . $formatted, $cur, $euro);
@@ -225,9 +231,10 @@ class TestContentSeeder extends Seeder
     public function createBudgets(User $user)
     {
 
-        $groceries      = Budget::create(['user_id' => $user->id, 'name' => 'Groceries']);
-        $bills          = Budget::create(['user_id' => $user->id, 'name' => 'Bills']);
-        $deleteMe       = Budget::create(['user_id' => $user->id, 'name' => 'Delete me']);
+        $groceries = Budget::create(['user_id' => $user->id, 'name' => 'Groceries']);
+        $bills     = Budget::create(['user_id' => $user->id, 'name' => 'Bills']);
+        $deleteMe  = Budget::create(['user_id' => $user->id, 'name' => 'Delete me']);
+        Budget::create(['user_id' => $user->id, 'name' => 'Budget without repetition']);
         $groceriesLimit = BudgetLimit::create(
             ['startdate' => $this->som, 'amount' => 201, 'repeats' => 0, 'repeat_freq' => 'monthly', 'budget_id' => $groceries->id]
         );
@@ -405,8 +412,9 @@ class TestContentSeeder extends Seeder
         // bill
         Bill::create(
             [
-                'user_id'     => $user->id, 'name' => 'Huur', 'match' => 'huur,portaal', 'amount_min' => 500,
-                'amount_max'  => 700,
+                'user_id'     => $user->id, 'name' => 'Rent', 'match' => 'rent,landlord',
+                'amount_min'  => 700,
+                'amount_max'  => 900,
                 'date'        => $this->som,
                 'active'      => 1,
                 'automatch'   => 1,

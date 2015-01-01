@@ -108,8 +108,9 @@ class GoogleChartControllerCest
      */
     public function budgetsAndSpending(FunctionalTester $I)
     {
+        $year = date('Y');
         $I->wantTo('see the chart for a budget in a specific year');
-        $I->amOnPage('/chart/budget/1/spending/2014');
+        $I->amOnPage('/chart/budget/1/spending/'.$year);
         $I->seeResponseCodeIs(200);
     }
 
@@ -129,8 +130,9 @@ class GoogleChartControllerCest
      */
     public function categoriesAndSpending(FunctionalTester $I)
     {
+        $year = date('Y');
         $I->wantTo('see the chart for a category in a specific year');
-        $I->amOnPage('/chart/category/1/spending/2014');
+        $I->amOnPage('/chart/category/1/spending/'.$year);
         $I->seeResponseCodeIs(200);
     }
 
