@@ -14,7 +14,7 @@ class User
     /**
      * @param $mail
      *
-     * @return null|User
+     * @return null|\User
      */
     public function findByEmail($mail)
     {

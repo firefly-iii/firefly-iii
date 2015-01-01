@@ -139,6 +139,7 @@ class ReportQuery implements ReportQueryInterface
                     ->get(['accounts.*']);
         $set->each(
             function (\Account $account) use ($start, $end) {
+                /** @noinspection PhpParamsInspection */
                 $account->startBalance = \Steam::balance($account, $start);
                 $account->endBalance   = \Steam::balance($account, $end);
             }
