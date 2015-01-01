@@ -112,6 +112,7 @@ class Report implements ReportInterface
         $start->startOfMonth()->subDay();
         $end = clone $date;
         $end->endOfMonth();
+        \Log::debug('Monthly report account dates: start:[' . $start->format('Y-m-d') . '] and end:[' . $end->format('Y-m-d') . ']');
         $list     = $this->_queries->accountList();
         $accounts = [];
         /** @var \Account $account */
