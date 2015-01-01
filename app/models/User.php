@@ -98,12 +98,5 @@ class User extends Eloquent implements UserInterface, RemindableInterface
         return $this->hasMany('TransactionJournal');
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
-     */
-    public function transactions()
-    {
-        return $this->hasManyThrough('TransactionJournal', 'Transaction');
-    }
 
 }
