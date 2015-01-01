@@ -109,7 +109,7 @@ class Report implements ReportInterface
     public function getAccountsForMonth(Carbon $date)
     {
         $start = clone $date;
-        $start->startOfMonth();
+        $start->startOfMonth()->subDay();
         $end = clone $date;
         $end->endOfMonth();
         $list     = $this->_queries->accountList();
@@ -425,7 +425,7 @@ class Report implements ReportInterface
             }
         );
         $report   = [];
-        $start->startOfYear();
+        $start->startOfYear()->subDay();
         $end->endOfYear();
 
         foreach ($accounts as $account) {

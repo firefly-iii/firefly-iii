@@ -46,7 +46,10 @@ class TransactionControllerCest
     public function destroyTransfer(FunctionalTester $I)
     {
         $I->wantTo('destroy a transfer');
-        $I->amOnPage('/transaction/delete/406');
+
+        $journal = TransactionJournal::whereDescription('Money for new PC')->first();
+
+        $I->amOnPage('/transaction/delete/' . $journal->id);
         $I->submitForm('#destroy', []);
         $I->see('Transaction &quot;Money for new PC&quot; destroyed.');
 
@@ -63,8 +66,9 @@ class TransactionControllerCest
 
     public function edit(FunctionalTester $I)
     {
+        $journal = TransactionJournal::whereDescription('Money for piggy')->first();
         $I->wantTo('edit a transaction');
-        $I->amOnPage('/transaction/edit/408');
+        $I->amOnPage('/transaction/edit/' . $journal->id);
         $I->see('Edit transfer &quot;Money for piggy&quot;');
     }
 
@@ -91,8 +95,10 @@ class TransactionControllerCest
 
     public function show(FunctionalTester $I)
     {
+        $journal = TransactionJournal::whereDescription('Money for new PC')->first();
+
         $I->wantTo('see a transaction');
-        $I->amOnPage('/transaction/show/406');
+        $I->amOnPage('/transaction/show/' . $journal->id);
         $I->see('Transfer "Money for new PC"');
         $I->see('1.259');
     }
@@ -117,27 +123,6 @@ class TransactionControllerCest
         $I->see('Transaction &quot;Test&quot; stored.');
     }
 
-    public function storeAndReturn(FunctionalTester $I)
-    {
-        $I->wantTo('store a transaction');
-        $I->amOnPage('/transactions/create/withdrawal');
-        $I->submitForm(
-            '#store', [
-                        'reminder'           => '',
-                        'description'        => 'Test',
-                        'account_id'         => 1,
-                        'expense_account'    => 'Zomaar',
-                        'amount'             => 100,
-                        'date'               => '2014-12-30',
-                        'budget_id'          => 3,
-                        'category'           => 'Categorrr',
-                        'post_submit_action' => 'create_another'
-                    ]
-        );
-        $I->see('Transaction &quot;Test&quot; stored.');
-    }
-
-
     public function storeAndFail(FunctionalTester $I)
     {
         $I->wantTo('store a transaction and fail');
@@ -156,6 +141,26 @@ class TransactionControllerCest
                     ]
         );
         $I->see('Could not store transaction: The description field is required.');
+    }
+
+    public function storeAndReturn(FunctionalTester $I)
+    {
+        $I->wantTo('store a transaction');
+        $I->amOnPage('/transactions/create/withdrawal');
+        $I->submitForm(
+            '#store', [
+                        'reminder'           => '',
+                        'description'        => 'Test',
+                        'account_id'         => 1,
+                        'expense_account'    => 'Zomaar',
+                        'amount'             => 100,
+                        'date'               => '2014-12-30',
+                        'budget_id'          => 3,
+                        'category'           => 'Categorrr',
+                        'post_submit_action' => 'create_another'
+                    ]
+        );
+        $I->see('Transaction &quot;Test&quot; stored.');
     }
 
     public function update(FunctionalTester $I)

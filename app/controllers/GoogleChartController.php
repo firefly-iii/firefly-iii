@@ -97,6 +97,7 @@ class GoogleChartController extends BaseController
             $this->_chart->addColumn('Balance for ' . $account->name, 'number');
         }
         $current = clone $this->_start;
+        $current->subDay();
 
         while ($this->_end >= $current) {
             $row = [clone $current];

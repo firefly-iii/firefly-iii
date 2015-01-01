@@ -168,7 +168,6 @@ class CurrencyControllerCest
         $I->see('Edit currency "US Dollar"');
         $I->submitForm('#update', ['name' => 'Successful update', 'symbol' => '$', 'code' => 'USD', 'post_submit_action' => 'update']);
         $I->seeRecord('transaction_currencies', ['name' => 'Successful update']);
-        resetToClean::clean();
 
     }
 
