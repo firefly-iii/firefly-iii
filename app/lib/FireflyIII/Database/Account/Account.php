@@ -361,6 +361,7 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
         $model->save();
 
         if (isset($data['openingbalance']) && isset($data['openingbalancedate']) && strlen($data['openingbalancedate']) > 0) {
+            /** @noinspection PhpParamsInspection */
             $openingBalance = $this->openingBalanceTransaction($model);
             // TODO this needs cleaning up and thinking over.
             if (is_null($openingBalance)) {

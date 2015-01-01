@@ -526,6 +526,9 @@ class TestContentSeeder extends Seeder
         }
     }
 
+    /**
+     * @param $date
+     */
     public function createBigExpense($date)
     {
         $date->addDays(12);

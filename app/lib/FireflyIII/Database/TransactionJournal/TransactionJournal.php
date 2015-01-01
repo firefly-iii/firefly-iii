@@ -106,6 +106,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
 
         list($fromAccount, $toAccount) = $this->storeAccounts($data);
 
+        /** @noinspection PhpParamsInspection */
         $this->storeBudget($data, $model);
         $this->storeCategory($data, $model);
 

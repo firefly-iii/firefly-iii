@@ -118,6 +118,7 @@ class Report implements ReportInterface
         /** @var \Account $account */
         foreach ($list as $account) {
             $id            = intval($account->id);
+            /** @noinspection PhpParamsInspection */
             $accounts[$id] = [
                 'name'         => $account->name,
                 'startBalance' => \Steam::balance($account, $start),
