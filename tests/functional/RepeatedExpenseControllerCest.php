@@ -39,9 +39,10 @@ class RepeatedExpenseControllerCest
      */
     public function delete(FunctionalTester $I)
     {
+        $repeatedExpense = PiggyBank::where('repeats', 1)->first();
         $I->wantTo('delete a repeated expense');
-        $I->amOnPage('/repeatedexpenses/delete/4');
-        $I->see('Delete "Nieuwe kleding"');
+        $I->amOnPage('/repeatedexpenses/delete/' . $repeatedExpense->id);
+        $I->see('Delete "' . $repeatedExpense->name . '"');
     }
 
     /**
@@ -49,10 +50,11 @@ class RepeatedExpenseControllerCest
      */
     public function destroy(FunctionalTester $I)
     {
+        $repeatedExpense = PiggyBank::where('repeats', 1)->first();
         $I->wantTo('destroy a repeated expense');
-        $I->amOnPage('/repeatedexpenses/delete/4');
+        $I->amOnPage('/repeatedexpenses/delete/' . $repeatedExpense->id);
         $I->submitForm('#destroy', []);
-        $I->dontSeeInDatabase('piggy_banks', ['id' => 5]);
+        $I->see('Repeated expense &quot;' . $repeatedExpense->name . '&quot; deleted.');
     }
 
     /**
@@ -60,9 +62,10 @@ class RepeatedExpenseControllerCest
      */
     public function edit(FunctionalTester $I)
     {
+        $repeatedExpense = PiggyBank::where('repeats', 1)->first();
         $I->wantTo('edit a repeated expense');
-        $I->amOnPage('/repeatedexpenses/edit/4');
-        $I->see('Edit repeated expense "Nieuwe kleding"');
+        $I->amOnPage('/repeatedexpenses/edit/' . $repeatedExpense->id);
+        $I->see('Edit repeated expense "' . $repeatedExpense->name . '"');
 
     }
 
@@ -71,10 +74,11 @@ class RepeatedExpenseControllerCest
      */
     public function index(FunctionalTester $I)
     {
+        $repeatedExpense = PiggyBank::where('repeats', 1)->first();
         $I->wantTo('see all repeated expenses');
         $I->amOnPage('/repeatedexpenses');
         $I->see('Overview');
-        $I->see('Nieuwe kleding');
+        $I->see($repeatedExpense->name);
     }
 
     /**
@@ -82,9 +86,10 @@ class RepeatedExpenseControllerCest
      */
     public function show(FunctionalTester $I)
     {
+        $repeatedExpense = PiggyBank::where('repeats', 1)->first();
         $I->wantTo('view a repeated expense');
-        $I->amOnPage('/repeatedexpenses/show/4');
-        $I->see('Nieuwe kleding');
+        $I->amOnPage('/repeatedexpenses/show/' . $repeatedExpense->id);
+        $I->see($repeatedExpense->name);
     }
 
     /**
@@ -106,6 +111,31 @@ class RepeatedExpenseControllerCest
                         'remind_me'          => 1,
                         'reminder'           => 'month',
                         'post_submit_action' => 'store',
+                    ]
+        );
+
+        $I->see('Piggy bank &quot;TestRepeatedExpense&quot; stored.');
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function storeAndReturn(FunctionalTester $I)
+    {
+        $I->wantTo('store a repeated expense and return');
+        $I->amOnPage('/repeatedexpenses/create');
+        $I->submitForm(
+            '#store', [
+                        'name'               => 'TestRepeatedExpense',
+                        'account_id'         => 1,
+                        'targetamount'       => 1000,
+                        'targetdate'         => Carbon::now()->format('Y-m-d'),
+                        'rep_length'         => 'month',
+                        'rep_every'          => 0,
+                        'rep_times'          => 0,
+                        'remind_me'          => 1,
+                        'reminder'           => 'month',
+                        'post_submit_action' => 'create_another',
                     ]
         );
 
@@ -140,41 +170,17 @@ class RepeatedExpenseControllerCest
     /**
      * @param FunctionalTester $I
      */
-    public function storeAndReturn(FunctionalTester $I)
-    {
-        $I->wantTo('store a repeated expense and return');
-        $I->amOnPage('/repeatedexpenses/create');
-        $I->submitForm(
-            '#store', [
-                        'name'               => 'TestRepeatedExpense',
-                        'account_id'         => 1,
-                        'targetamount'       => 1000,
-                        'targetdate'         => Carbon::now()->format('Y-m-d'),
-                        'rep_length'         => 'month',
-                        'rep_every'          => 0,
-                        'rep_times'          => 0,
-                        'remind_me'          => 1,
-                        'reminder'           => 'month',
-                        'post_submit_action' => 'create_another',
-                    ]
-        );
-
-        $I->see('Piggy bank &quot;TestRepeatedExpense&quot; stored.');
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
     public function update(FunctionalTester $I)
     {
+        $repeatedExpense = PiggyBank::where('repeats', 1)->first();
         $I->wantTo('update a repeated expense');
-        $I->amOnPage('/repeatedexpenses/edit/4');
+        $I->amOnPage('/repeatedexpenses/edit/' . $repeatedExpense->id);
         $I->submitForm(
             '#update', [
-                         'name'               => 'Nieuwe kleding!',
+                         'name'               => $repeatedExpense->name . '!',
                          'account_id'         => 2,
                          'targetamount'       => 1000.00,
-                         'targetdate'         => '2014-12-30',
+                         'targetdate'         => $repeatedExpense->targetdate->format('Y-m-d'),
                          'rep_length'         => 'month',
                          'rep_every'          => 0,
                          'rep_times'          => 0,
@@ -183,7 +189,7 @@ class RepeatedExpenseControllerCest
                          'post_submit_action' => 'update',
                      ]
         );
-        $I->see('Repeated expense &quot;Nieuwe kleding!&quot; updated.');
+        $I->see('Repeated expense &quot;' . $repeatedExpense->name . '!&quot; updated.');
     }
 
     /**
@@ -191,14 +197,15 @@ class RepeatedExpenseControllerCest
      */
     public function updateAndReturnToEdit(FunctionalTester $I)
     {
+        $repeatedExpense = PiggyBank::where('repeats', 1)->first();
         $I->wantTo('update a repeated expense and return to edit screen');
-        $I->amOnPage('/repeatedexpenses/edit/4');
+        $I->amOnPage('/repeatedexpenses/edit/' . $repeatedExpense->id);
         $I->submitForm(
             '#update', [
-                         'name'               => 'Nieuwe kleding!',
+                         'name'               => $repeatedExpense->name . '!',
                          'account_id'         => 2,
                          'targetamount'       => 1000.00,
-                         'targetdate'         => '2014-12-30',
+                         'targetdate'         => $repeatedExpense->targetdate->format('Y-m-d'),
                          'rep_length'         => 'month',
                          'rep_every'          => 0,
                          'rep_times'          => 0,
@@ -207,7 +214,7 @@ class RepeatedExpenseControllerCest
                          'post_submit_action' => 'return_to_edit',
                      ]
         );
-        $I->see('Repeated expense &quot;Nieuwe kleding!&quot; updated.');
+        $I->see('Repeated expense &quot;' . $repeatedExpense->name . '!&quot; updated.');
     }
 
     /**
@@ -215,8 +222,9 @@ class RepeatedExpenseControllerCest
      */
     public function updateFail(FunctionalTester $I)
     {
+        $repeatedExpense = PiggyBank::where('repeats', 1)->first();
         $I->wantTo('try to update a repeated expense and fail');
-        $I->amOnPage('/repeatedexpenses/edit/4');
+        $I->amOnPage('/repeatedexpenses/edit/' . $repeatedExpense->id);
         $I->submitForm(
             '#update', [
                          'name'               => '',

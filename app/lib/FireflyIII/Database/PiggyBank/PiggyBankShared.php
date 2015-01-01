@@ -32,6 +32,11 @@ class PiggyBankShared
      */
     public function destroy(Eloquent $model)
     {
+        $reminders = \Reminder::where('remindersable_id', $model->id)->get();
+        /** @var \Reminder $reminder */
+        foreach ($reminders as $reminder) {
+            $reminder->delete();
+        }
         $model->delete();
 
     }
