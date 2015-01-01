@@ -30,7 +30,7 @@
             <div class="panel-heading">
                 Account balance
             </div>
-            <table class="table">
+            <table class="table table-bordered table-striped">
             <?php
             $start = 0;
             $end   = 0;
@@ -62,6 +62,39 @@
                 </tr>
             </table>
         </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Income vs. expense
+            </div>
+            <?php
+            $incomeSum = 0;
+            $expenseSum = 0;
+            foreach($groupedIncomes as $income) {
+                $incomeSum += floatval($income->sum);
+            }
+            foreach($groupedExpenses as $exp) {
+                $expenseSum += floatval($exp['amount']);
+            }
+            $incomeSum = floatval($incomeSum*-1);
+
+            ?>
+
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <td>In</td>
+                        <td>{{mf($incomeSum)}}</td>
+                    </tr>
+                    <tr>
+                        <td>Out</td>
+                        <td>{{mf($expenseSum*-1)}}</td>
+                    </tr>
+                    <tr>
+                        <td>Difference</td>
+                        <td>{{mf($incomeSum - $expenseSum)}}</td>
+                    </tr>
+                </table>
+        </div>
     </div>
     <div class="col-lg-3 col-md-3 col-sm-3">
         <div class="panel panel-default">
@@ -69,12 +102,18 @@
                 Income
             </div>
             <table class="table">
+                <?php $sum = 0;?>
             @foreach($groupedIncomes as $income)
+                <?php $sum += floatval($income->sum)*-1;?>
             <tr>
                 <td><a href="{{route('accounts.show',$income->account_id)}}">{{{$income->name}}}</a></td>
                 <td>{{mf(floatval($income->sum)*-1)}}</td>
             </tr>
             @endforeach
+                <tr>
+                    <td><em>Sum</em></td>
+                    <td>{{mf($sum)}}</td>
+                </tr>
             </table>
         </div>
     </div>
