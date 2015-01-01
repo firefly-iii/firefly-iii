@@ -38,9 +38,10 @@ class BillControllerCest
      */
     public function delete(FunctionalTester $I)
     {
+        $bill = User::whereEmail('thegrumpydictator@gmail.com')->first()->bills()->first();
         $I->wantTo('delete a bill');
-        $I->amOnPage('/bills/delete/1');
-        $I->see('Delete "Huur"');
+        $I->amOnPage('/bills/delete/' . $bill->id);
+        $I->see('Delete "' . $bill->name . '"');
     }
 
     /**
@@ -48,9 +49,10 @@ class BillControllerCest
      */
     public function destroy(FunctionalTester $I)
     {
+        $bill = User::whereEmail('thegrumpydictator@gmail.com')->first()->bills()->first();
         $I->wantTo('destroy a bill');
-        $I->amOnPage('/bills/delete/1');
-        $I->see('Delete "Huur"');
+        $I->amOnPage('/bills/delete/' . $bill->id);
+        $I->see('Delete "' . $bill->name . '"');
         $I->submitForm('#destroy', []);
         $I->see('The bill was deleted.');
 
@@ -61,8 +63,10 @@ class BillControllerCest
      */
     public function edit(FunctionalTester $I)
     {
+        $bill = User::whereEmail('thegrumpydictator@gmail.com')->first()->bills()->first();
         $I->wantTo('edit a bill');
-        $I->amOnPage('/bills/edit/1');
+        $I->amOnPage('/bills/edit/' . $bill->id);
+        $I->see($bill->name);
 
 
     }
@@ -72,8 +76,11 @@ class BillControllerCest
      */
     public function index(FunctionalTester $I)
     {
+        $bill = User::whereEmail('thegrumpydictator@gmail.com')->first()->bills()->first();
         $I->wantTo('see all bills');
         $I->amOnPage('/bills');
+        $I->see('Bills');
+        $I->see($bill->name);
     }
 
     /**
@@ -81,8 +88,9 @@ class BillControllerCest
      */
     public function rescan(FunctionalTester $I)
     {
+        $bill = User::whereEmail('thegrumpydictator@gmail.com')->first()->bills()->first();
         $I->wantTo('rescan a bill');
-        $I->amOnPage('/bills/rescan/1');
+        $I->amOnPage('/bills/rescan/' . $bill->id);
         $I->see('Rescanned everything.');
     }
 
@@ -91,8 +99,9 @@ class BillControllerCest
      */
     public function rescanInactive(FunctionalTester $I)
     {
+        $bill = User::whereEmail('thegrumpydictator@gmail.com')->first()->bills()->where('active', 0)->first();
         $I->wantTo('rescan an inactive bill');
-        $I->amOnPage('/bills/rescan/3');
+        $I->amOnPage('/bills/rescan/' . $bill->id);
         $I->see('Inactive bills cannot be scanned.');
     }
 
@@ -101,9 +110,10 @@ class BillControllerCest
      */
     public function show(FunctionalTester $I)
     {
+        $bill = User::whereEmail('thegrumpydictator@gmail.com')->first()->bills()->first();
         $I->wantTo('show a bill');
-        $I->amOnPage('/bills/show/1');
-        $I->see('Huur');
+        $I->amOnPage('/bills/show/' . $bill->id);
+        $I->see($bill->name);
     }
 
     /**
@@ -201,8 +211,9 @@ class BillControllerCest
      */
     public function update(FunctionalTester $I)
     {
+        $bill = User::whereEmail('thegrumpydictator@gmail.com')->first()->bills()->first();
         $I->wantTo('update a bill');
-        $I->amOnPage('/bills/edit/1');
+        $I->amOnPage('/bills/edit/' . $bill->id);
         $I->submitForm(
             '#update', [
                          'name'        => 'Some bill',
@@ -222,8 +233,9 @@ class BillControllerCest
      */
     public function updateFail(FunctionalTester $I)
     {
+        $bill = User::whereEmail('thegrumpydictator@gmail.com')->first()->bills()->first();
         $I->wantTo('update a bill and fail');
-        $I->amOnPage('/bills/edit/1');
+        $I->amOnPage('/bills/edit/' . $bill->id);
         $I->submitForm(
             '#update', [
                          'name'        => 'Some bill',
@@ -243,8 +255,9 @@ class BillControllerCest
      */
     public function updateReturn(FunctionalTester $I)
     {
+        $bill = User::whereEmail('thegrumpydictator@gmail.com')->first()->bills()->first();
         $I->wantTo('update a bill and return to edit it');
-        $I->amOnPage('/bills/edit/1');
+        $I->amOnPage('/bills/edit/' . $bill->id);
         $I->submitForm(
             '#update', [
                          'name'               => 'Some bill',
