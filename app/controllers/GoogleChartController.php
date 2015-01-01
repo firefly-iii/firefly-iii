@@ -132,18 +132,18 @@ class GoogleChartController extends BaseController
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
 
-            Log::debug('Now working budget #'.$budget->id.', '.$budget->name);
+            Log::debug('Now working budget #' . $budget->id . ', ' . $budget->name);
 
             /** @var \LimitRepetition $repetition */
             $repetition = $bdt->repetitionOnStartingOnDate($budget, $this->_start);
             if (is_null($repetition)) {
-                \Log::debug('Budget #'.$budget->id.' has no repetition on ' . $this->_start->format('Y-m-d'));
+                \Log::debug('Budget #' . $budget->id . ' has no repetition on ' . $this->_start->format('Y-m-d'));
                 // use the session start and end for our search query
                 $searchStart = $this->_start;
                 $searchEnd   = $this->_end;
                 $limit       = 0; // the limit is zero:
             } else {
-                \Log::debug('Budget #'.$budget->id.' has a repetition on ' . $this->_start->format('Y-m-d').'!');
+                \Log::debug('Budget #' . $budget->id . ' has a repetition on ' . $this->_start->format('Y-m-d') . '!');
                 // use the limit's start and end for our search query
                 $searchStart = $repetition->startdate;
                 $searchEnd   = $repetition->enddate;
@@ -151,6 +151,7 @@ class GoogleChartController extends BaseController
             }
 
             $expenses = floatval($budget->transactionjournals()->before($searchEnd)->after($searchStart)->lessThan(0)->sum('amount')) * -1;
+            \Log::debug('Expenses in budget ' . $budget->name . ' before ' . $searchEnd->format('Y-m-d') . ' and after ' . $searchStart . ' are: ' . $expenses);
             if ($expenses > 0) {
                 $this->_chart->addRow($budget->name, $limit, $expenses);
             }
@@ -184,6 +185,76 @@ class GoogleChartController extends BaseController
 
         return Response::json($this->_chart->getData());
 
+    }
+
+    /**
+     * @param Bill $bill
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function billOverview(Bill $bill)
+    {
+
+        $this->_chart->addColumn('Date', 'date');
+        $this->_chart->addColumn('Max amount', 'number');
+        $this->_chart->addColumn('Min amount', 'number');
+        $this->_chart->addColumn('Current entry', 'number');
+
+        // get first transaction or today for start:
+        $first = $bill->transactionjournals()->orderBy('date', 'ASC')->first();
+        if ($first) {
+            $start = $first->date;
+        } else {
+            $start = new Carbon;
+        }
+        $end = new Carbon;
+        while ($start <= $end) {
+            $result = $bill->transactionjournals()->before($end)->after($start)->first();
+            if ($result) {
+                $amount = $result->getAmount();
+            } else {
+                $amount = 0;
+            }
+            unset($result);
+            $this->_chart->addRow(clone $start, $bill->amount_max, $bill->amount_min, $amount);
+            $start = DateKit::addPeriod($start, $bill->repeat_freq, 0);
+        }
+
+        $this->_chart->generate();
+
+        return Response::json($this->_chart->getData());
+
+    }
+
+    /**
+     * TODO query move to helper.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \FireflyIII\Exception\FireflyException
+     */
+    public function billsOverview()
+    {
+        $paid   = ['items' => [], 'amount' => 0];
+        $unpaid = ['items' => [], 'amount' => 0];
+        $this->_chart->addColumn('Name', 'string');
+        $this->_chart->addColumn('Amount', 'number');
+
+        $set = $this->_repository->getBillsSummary($this->_start, $this->_end);
+
+        foreach ($set as $entry) {
+            if (intval($entry->journalId) == 0) {
+                $unpaid['items'][] = $entry->name;
+                $unpaid['amount'] += floatval($entry->averageAmount);
+            } else {
+                $paid['items'][] = $entry->description;
+                $paid['amount'] += floatval($entry->actualAmount);
+            }
+        }
+        $this->_chart->addRow('Unpaid: ' . join(', ', $unpaid['items']), $unpaid['amount']);
+        $this->_chart->addRow('Paid: ' . join(', ', $paid['items']), $paid['amount']);
+        $this->_chart->generate();
+
+        return Response::json($this->_chart->getData());
     }
 
     /**
@@ -223,12 +294,12 @@ class GoogleChartController extends BaseController
     /**
      * TODO still in use?
      *
-     * @param Budget    $component
+     * @param Budget    $budget
      * @param           $year
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function budgetsAndSpending(Budget $component, $year)
+    public function budgetsAndSpending(Budget $budget, $year)
     {
         try {
             new Carbon('01-01-' . $year);
@@ -247,11 +318,14 @@ class GoogleChartController extends BaseController
         $end   = clone $start;
         $end->endOfYear();
         while ($start <= $end) {
-            $spent      = $budgetRepository->spentInMonth($component, $start);
-            $repetition = $budgetRepository->repetitionOnStartingOnDate($component, $start);
+            $spent      = $budgetRepository->spentInMonth($budget, $start);
+            $repetition = $budgetRepository->repetitionOnStartingOnDate($budget, $start);
+
             if ($repetition) {
                 $budgeted = floatval($repetition->amount);
+                \Log::debug('Found a repetition on ' . $start->format('Y-m-d'). ' for budget ' . $budget->name.'!');
             } else {
+                \Log::debug('No repetition on ' . $start->format('Y-m-d'). ' for budget ' . $budget->name);
                 $budgeted = null;
             }
 
@@ -332,76 +406,6 @@ class GoogleChartController extends BaseController
 
         return Response::json($this->_chart->getData());
 
-    }
-
-    /**
-     * @param Bill $bill
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function billOverview(Bill $bill)
-    {
-
-        $this->_chart->addColumn('Date', 'date');
-        $this->_chart->addColumn('Max amount', 'number');
-        $this->_chart->addColumn('Min amount', 'number');
-        $this->_chart->addColumn('Current entry', 'number');
-
-        // get first transaction or today for start:
-        $first = $bill->transactionjournals()->orderBy('date', 'ASC')->first();
-        if ($first) {
-            $start = $first->date;
-        } else {
-            $start = new Carbon;
-        }
-        $end = new Carbon;
-        while ($start <= $end) {
-            $result = $bill->transactionjournals()->before($end)->after($start)->first();
-            if ($result) {
-                $amount = $result->getAmount();
-            } else {
-                $amount = 0;
-            }
-            unset($result);
-            $this->_chart->addRow(clone $start, $bill->amount_max, $bill->amount_min, $amount);
-            $start = DateKit::addPeriod($start, $bill->repeat_freq, 0);
-        }
-
-        $this->_chart->generate();
-
-        return Response::json($this->_chart->getData());
-
-    }
-
-    /**
-     * TODO query move to helper.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \FireflyIII\Exception\FireflyException
-     */
-    public function billsOverview()
-    {
-        $paid   = ['items' => [], 'amount' => 0];
-        $unpaid = ['items' => [], 'amount' => 0];
-        $this->_chart->addColumn('Name', 'string');
-        $this->_chart->addColumn('Amount', 'number');
-
-        $set = $this->_repository->getBillsSummary($this->_start, $this->_end);
-
-        foreach ($set as $entry) {
-            if (intval($entry->journalId) == 0) {
-                $unpaid['items'][] = $entry->name;
-                $unpaid['amount'] += floatval($entry->averageAmount);
-            } else {
-                $paid['items'][] = $entry->description;
-                $paid['amount'] += floatval($entry->actualAmount);
-            }
-        }
-        $this->_chart->addRow('Unpaid: ' . join(', ', $unpaid['items']), $unpaid['amount']);
-        $this->_chart->addRow('Paid: ' . join(', ', $paid['items']), $paid['amount']);
-        $this->_chart->generate();
-
-        return Response::json($this->_chart->getData());
     }
 
     /**
