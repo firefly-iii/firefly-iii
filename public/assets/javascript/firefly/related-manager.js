@@ -9,7 +9,7 @@ function unrelateTransaction(e) {
     var id = target.data('id');
     var relatedTo = target.data('relatedto');
 
-    $.post('transactions/unrelate/' + relatedTo, {relation: id}).success(function (data) {
+    $.post('related/removeRelation/' + id + '/' + relatedTo).success(function (data) {
         target.parent().parent().remove();
     }).fail(function () {
         alert('Could not!');
@@ -23,7 +23,7 @@ function relateTransaction(e) {
 
 
     console.log($('#searchRelated').length);
-    $('#relationModal').empty().load('transaction/relate/' + ID, function () {
+    $('#relationModal').empty().load('related/related/' + ID, function () {
 
         $('#relationModal').modal('show');
         getAlreadyRelatedTransactions(e, ID);
@@ -42,7 +42,7 @@ function relateTransaction(e) {
 function searchRelatedTransactions(e, ID) {
     var searchValue = $('#relatedSearchValue').val();
     if (searchValue != '') {
-        $.post('transactions/relatedSearch/' + ID, {searchValue: searchValue}).success(function (data) {
+        $.post('related/search/' + ID, {searchValue: searchValue}).success(function (data) {
             // post each result to some div.
             $('#relatedSearchResults').empty();
             // TODO this is the worst.
@@ -74,7 +74,7 @@ function doRelateNewTransaction(e) {
     var relateToId = target.data('relateto');
     if (!target.checked) {
         var relateID = target.data('id');
-        $.post('transactions/doRelate', {relateTo: relateToId, id: id}).success(function (data) {
+        $.post('related/relate/' + id + '/' + relateToId).success(function (data) {
             // success!
             target.parent().parent().remove();
             getAlreadyRelatedTransactions(null, relateToId);
@@ -91,7 +91,7 @@ function doRelateNewTransaction(e) {
 
 function getAlreadyRelatedTransactions(e, ID) {
     //#alreadyRelated
-    $.post('transactions/alreadyRelated/' + ID).success(function (data) {
+    $.get('related/alreadyRelated/' + ID).success(function (data) {
         $('#alreadyRelated').empty();
         $.each(data, function (i, row) {
             var tr = $('<tr>');

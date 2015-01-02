@@ -97,6 +97,16 @@ Route::bind(
     return null;
 }
 );
+Route::bind(
+    'tjSecond', function ($value, $route) {
+    if (Auth::check()) {
+        return TransactionJournal::
+        where('id', $value)->where('user_id', Auth::user()->id)->first();
+    }
+
+    return null;
+}
+);
 
 Route::bind(
     'currency', function ($value, $route) {
@@ -246,6 +256,13 @@ Route::group(
     //profile controller
     Route::get('/profile', ['uses' => 'ProfileController@index', 'as' => 'profile']);
     Route::get('/profile/change-password', ['uses' => 'ProfileController@changePassword', 'as' => 'change-password']);
+
+    // related controller:
+    Route::get('/related/removeRelation/{tj}/{tjSecond}', ['uses' => 'RelatedController@removeRelation','as' => 'related.removeRelation']);
+    Route::get('/related/related/{tj}', ['uses' => 'RelatedController@related','as' => 'related.related']);
+    Route::post('/related/search/{tj}', ['uses' => 'RelatedController@search','as' => 'related.search']);
+    Route::post('/related/relate/{tj}/{tjSecond}', ['uses' => 'RelatedController@relate','as' => 'related.relate']);
+    Route::get('/related/alreadyRelated/{tj}', ['uses' => 'RelatedController@alreadyRelated','as' => 'related.alreadyRelated']);
 
     // bills controller
     Route::get('/bills', ['uses' => 'BillController@index', 'as' => 'bills.index']);

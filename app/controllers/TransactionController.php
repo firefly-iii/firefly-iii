@@ -40,44 +40,6 @@ class TransactionController extends BaseController
         View::share('mainTitleIcon', 'fa-repeat');
     }
 
-    /**
-     *
-     * TODO this needs cleaning up and thinking over.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @codeCoverageIgnore
-     *
-     * @return array|\Illuminate\Http\JsonResponse
-     */
-    public function alreadyRelated(TransactionJournal $journal)
-    {
-
-        $ids = [];
-        /** @var TransactionGroup $group */
-        foreach ($journal->transactiongroups()->get() as $group) {
-            /** @var TransactionJournal $loopJournal */
-            foreach ($group->transactionjournals()->get() as $loopJournal) {
-                if ($loopJournal->id != $journal->id) {
-                    $ids[] = $loopJournal->id;
-                }
-            }
-        }
-        $unique = array_unique($ids);
-        if (count($unique) > 0) {
-
-            $set = $this->_repository->getByIds($unique);
-            $set->each(
-                function (TransactionJournal $journal) {
-                    $journal->amount = Amount::format($journal->getAmount());
-                }
-            );
-
-            return Response::json($set->toArray());
-        } else {
-            return (new Collection)->toArray();
-        }
-    }
 
     /**
      * Shows the view helping the user to create a new transaction journal.
@@ -154,37 +116,6 @@ class TransactionController extends BaseController
         }
 
         return Redirect::route('transactions.index', $return);
-    }
-
-    /**
-     * TODO this needs cleaning up and thinking over.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     * @codeCoverageIgnore
-     *
-     */
-    public function doRelate()
-    {
-        $brother = intval(Input::get('id'));
-        $sister  = intval(Input::get('relateTo'));
-
-        $journal = $this->_repository->find($brother);
-        $sis     = $this->_repository->find($sister);
-
-        if ($journal && $sis) {
-            $group           = new TransactionGroup;
-            $group->relation = 'balance';
-            $group->user_id  = $this->_repository->getUser()->id;
-            $group->save();
-            $group->transactionjournals()->save($journal);
-            $group->transactionjournals()->save($sis);
-
-            return Response::json(true);
-        }
-
-        return Response::json(false);
-
-
     }
 
     /**
@@ -266,54 +197,7 @@ class TransactionController extends BaseController
 
     }
 
-    /**
-     * TODO refactor relate stuff into another controller.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return \Illuminate\View\View
-     * @codeCoverageIgnore
-     *
-     */
-    public function relate(TransactionJournal $journal)
-    {
-        $groups  = $journal->transactiongroups()->get();
-        $members = new Collection;
-        /** @var TransactionGroup $group */
-        foreach ($groups as $group) {
-            /** @var TransactionJournal $loopJournal */
-            foreach ($group->transactionjournals()->get() as $loopJournal) {
-                if ($loopJournal->id != $journal->id) {
-                    $members->push($loopJournal);
-                }
-            }
-        }
 
-        return View::make('transactions.relate', compact('journal', 'members'));
-    }
-
-    /**
-     * TODO this needs cleaning up and thinking over.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @codeCoverageIgnore
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function relatedSearch(TransactionJournal $journal)
-    {
-        $search = e(trim(Input::get('searchValue')));
-
-        $result = $this->_repository->searchRelated($search, $journal);
-        $result->each(
-            function (TransactionJournal $j) {
-                $j->amount = Amount::format($j->getAmount());
-            }
-        );
-
-        return Response::json($result->toArray());
-    }
 
     /**
      * @param TransactionJournal $journal
@@ -401,35 +285,6 @@ class TransactionController extends BaseController
         return Redirect::route('transactions.create', $data['what'])->withInput();
     }
 
-    /**
-     * TODO this needs cleaning up and thinking over.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @codeCoverageIgnore
-     * @return \Illuminate\Http\JsonResponse
-     * @throws Exception
-     */
-    public function unrelate(TransactionJournal $journal)
-    {
-        $groups    = $journal->transactiongroups()->get();
-        $relatedTo = intval(Input::get('relation'));
-        /** @var TransactionGroup $group */
-        foreach ($groups as $group) {
-            foreach ($group->transactionjournals()->get() as $loopJournal) {
-                if ($loopJournal->id == $relatedTo) {
-                    // remove from group:
-                    $group->transactionjournals()->detach($relatedTo);
-                }
-            }
-            if ($group->transactionjournals()->count() == 1) {
-                $group->delete();
-            }
-        }
-
-        return Response::json(true);
-
-    }
 
     /**
      * @param TransactionJournal $journal

@@ -102,6 +102,9 @@ class FF3ServiceProvider extends ServiceProvider
         $this->app->bind('FireflyIII\Report\ReportInterface', 'FireflyIII\Report\Report');
         $this->app->bind('FireflyIII\Report\ReportQueryInterface', 'FireflyIII\Report\ReportQuery');
         $this->app->bind('FireflyIII\Report\ReportHelperInterface', 'FireflyIII\Report\ReportHelper');
+
+        $this->app->bind('FireflyIII\Helper\Related\RelatedInterface', 'FireflyIII\Helper\Related\Related');
+
         $this->app->bind('FireflyIII\Helper\TransactionJournal\HelperInterface', 'FireflyIII\Helper\TransactionJournal\Helper');
 
         // chart
