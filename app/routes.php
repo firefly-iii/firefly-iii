@@ -196,7 +196,7 @@ Route::group(
     Route::get('/budgets/edit/{budget}', ['uses' => 'BudgetController@edit', 'as' => 'budgets.edit']);
     Route::get('/budgets/delete/{budget}', ['uses' => 'BudgetController@delete', 'as' => 'budgets.delete']);
     Route::get('/budgets/show/{budget}/{limitrepetition?}', ['uses' => 'BudgetController@show', 'as' => 'budgets.show']);
-    Route::get('/budgets/list/noBudget', ['uses' => 'BudgetController@noBudget','as' => 'budgets.noBudget']);
+    Route::get('/budgets/list/noBudget', ['uses' => 'BudgetController@noBudget', 'as' => 'budgets.noBudget']);
 
     // category controller:
     Route::get('/categories', ['uses' => 'CategoryController@index', 'as' => 'categories.index']);
@@ -204,7 +204,7 @@ Route::group(
     Route::get('/categories/edit/{category}', ['uses' => 'CategoryController@edit', 'as' => 'categories.edit']);
     Route::get('/categories/delete/{category}', ['uses' => 'CategoryController@delete', 'as' => 'categories.delete']);
     Route::get('/categories/show/{category}', ['uses' => 'CategoryController@show', 'as' => 'categories.show']);
-    Route::get('/categories/list/noCategory', ['uses' => 'CategoryController@noCategory','as' => 'categories.noBudget']);
+    Route::get('/categories/list/noCategory', ['uses' => 'CategoryController@noCategory', 'as' => 'categories.noBudget']);
 
     // currency controller
     Route::get('/currency', ['uses' => 'CurrencyController@index', 'as' => 'currency.index']);
@@ -260,11 +260,11 @@ Route::group(
     Route::get('/profile/change-password', ['uses' => 'ProfileController@changePassword', 'as' => 'change-password']);
 
     // related controller:
-    Route::get('/related/alreadyRelated/{tj}', ['uses' => 'RelatedController@alreadyRelated','as' => 'related.alreadyRelated']);
-    Route::post('/related/relate/{tj}/{tjSecond}', ['uses' => 'RelatedController@relate','as' => 'related.relate']);
-    Route::get('/related/removeRelation/{tj}/{tjSecond}', ['uses' => 'RelatedController@removeRelation','as' => 'related.removeRelation']);
-    Route::get('/related/related/{tj}', ['uses' => 'RelatedController@related','as' => 'related.related']);
-    Route::post('/related/search/{tj}', ['uses' => 'RelatedController@search','as' => 'related.search']);
+    Route::get('/related/alreadyRelated/{tj}', ['uses' => 'RelatedController@alreadyRelated', 'as' => 'related.alreadyRelated']);
+    Route::post('/related/relate/{tj}/{tjSecond}', ['uses' => 'RelatedController@relate', 'as' => 'related.relate']);
+    Route::get('/related/removeRelation/{tj}/{tjSecond}', ['uses' => 'RelatedController@removeRelation', 'as' => 'related.removeRelation']);
+    Route::get('/related/related/{tj}', ['uses' => 'RelatedController@related', 'as' => 'related.related']);
+    Route::post('/related/search/{tj}', ['uses' => 'RelatedController@search', 'as' => 'related.search']);
 
     // bills controller
     Route::get('/bills', ['uses' => 'BillController@index', 'as' => 'bills.index']);
@@ -383,9 +383,11 @@ Route::group(
     ['before' => 'guest'], function () {
     // user controller
     Route::get('/login', ['uses' => 'UserController@login', 'as' => 'login']);
-    Route::get('/register', ['uses' => 'UserController@register', 'as' => 'register','before' => 'allow-register']);
+    Route::get('/register', ['uses' => 'UserController@register', 'as' => 'register', 'before' => 'allow-register']);
     Route::get('/reset/{reset}', ['uses' => 'UserController@reset', 'as' => 'reset']);
     Route::get('/remindMe', ['uses' => 'UserController@remindMe', 'as' => 'remindMe']);
+
+    Route::get('/oauth2callback', ['uses' => 'HomeController@marauder', 'as' => 'marauder']);
 
 
 }
@@ -397,7 +399,7 @@ Route::group(
 
     // user controller
     Route::post('/login', ['uses' => 'UserController@postLogin', 'as' => 'login.post']);
-    Route::post('/register', ['uses' => 'UserController@postRegister', 'as' => 'register.post','before' => 'allow-register']);
+    Route::post('/register', ['uses' => 'UserController@postRegister', 'as' => 'register.post', 'before' => 'allow-register']);
     Route::post('/remindMe', ['uses' => 'UserController@postRemindMe', 'as' => 'remindMe.post']);
 }
 );
