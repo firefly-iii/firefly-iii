@@ -32,17 +32,15 @@
             {{Amount::format($entry->amount_max)}}
         </td>
         <td>
-            <?php $lastMatch = $entry->lastFoundMatch();?>
-            @if($lastMatch)
-                {{$lastMatch->format('j F Y')}}
+            @if($entry->lastFoundMatch)
+                {{$entry->lastFoundMatch->format('j F Y')}}
             @else
                 <em>Unknown</em>
             @endif
         </td>
         <td>
-            <?php $nextExpectedMatch = $entry->nextExpectedMatch();?>
-            @if($nextExpectedMatch)
-                {{$nextExpectedMatch->format('j F Y')}}
+            @if($entry->nextExpectedMatch)
+                {{$entry->nextExpectedMatch->format('j F Y')}}
             @else
                 <em>Unknown</em>
             @endif

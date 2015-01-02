@@ -40,27 +40,6 @@ class PiggyBank extends Eloquent
     /**
      * TODO remove this method in favour of something in the FireflyIII libraries.
      *
-     * @return int
-     */
-    public function amountPerReminder()
-    {
-        return 0;
-
-    }
-
-    /**
-     * TODO remove this method in favour of something in the FireflyIII libraries.
-     *
-     * @return int
-     */
-    public function countFutureReminders()
-    {
-        return 0;
-    }
-
-    /**
-     * TODO remove this method in favour of something in the FireflyIII libraries.
-     *
      * Grabs the PiggyBankRepetition that's currently relevant / active
      *
      * @returns \PiggyBankRepetition

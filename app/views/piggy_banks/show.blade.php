@@ -88,16 +88,14 @@
                             </td>
                         </tr>
                         @endif
-                        @if($remindersCount > 0)
                             <tr>
                                 <td>Reminders left</td>
-                                <td>{{$remindersCount}}</td>
+                                <td>(in progress...)</td>
                             </tr>
                             <tr>
                                 <td>Expected amount per reminder</td>
-                                <td>{{Amount::format($amountPerReminder)}}</td>
+                                <td>(in progress...)</td>
                             </tr>
-                        @endif
                     </table>
                 </div>
             </div>

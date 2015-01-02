@@ -24,3 +24,4 @@ tests/_data/db.sqlite
 tests/_data/dump.sql
 db.sqlite_snapshot
 c3.php
+db.sqlite-journal

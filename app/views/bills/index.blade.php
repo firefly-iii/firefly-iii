@@ -6,7 +6,6 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <i class="fa {{$mainTitleIcon}}"></i> {{{$title}}}
-            <!-- TODO add menu -->
         </div>
         <div class="panel-body">
             @include('list.bills')

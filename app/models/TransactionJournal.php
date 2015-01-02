@@ -70,8 +70,6 @@ class TransactionJournal extends Eloquent
                 return floatval($t->amount);
             }
         }
-
-        return -0.01;
     }
 
     /**

@@ -31,21 +31,6 @@ class Bill extends Eloquent
     }
 
     /**
-     * TODO remove this method in favour of something in the FireflyIII libraries.
-     *
-     * @return null
-     */
-    public function lastFoundMatch()
-    {
-        $last = $this->transactionjournals()->orderBy('date', 'DESC')->first();
-        if ($last) {
-            return $last->date;
-        }
-
-        return null;
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function transactionjournals()
@@ -54,58 +39,6 @@ class Bill extends Eloquent
     }
 
 
-    /**
-     * TODO remove this method in favour of something in the FireflyIII libraries.
-     *
-     * Find the next expected match based on the set journals and the date stuff from the bill.
-     */
-    public function nextExpectedMatch()
-    {
-
-        /*
-         * The date Firefly tries to find. If this stays null, it's "unknown".
-         */
-        $finalDate = null;
-        if ($this->active == 0) {
-            return $finalDate;
-        }
-
-        /*
-         * $today is the start of the next period, to make sure FF3 won't miss anything
-         * when the current period has a transaction journal.
-         */
-        $today = DateKit::addPeriod(new Carbon, $this->repeat_freq, 0);
-
-        /*
-         * FF3 loops from the $start of the bill, and to make sure
-         * $skip works, it adds one (for modulo).
-         */
-        $skip  = $this->skip + 1;
-        $start = DateKit::startOfPeriod(new Carbon, $this->repeat_freq);
-        /*
-         * go back exactly one month/week/etc because FF3 does not care about 'next'
-         * bills if they're too far into the past.
-         */
-
-        $counter = 0;
-        while ($start <= $today) {
-            if (($counter % $skip) == 0) {
-                // do something.
-                $end          = DateKit::endOfPeriod(clone $start, $this->repeat_freq);
-                $journalCount = $this->transactionjournals()->before($end)->after($start)->count();
-                if ($journalCount == 0) {
-                    $finalDate = clone $start;
-                    break;
-                }
-            }
-
-            // add period for next round!
-            $start = DateKit::addPeriod($start, $this->repeat_freq, 0);
-            $counter++;
-        }
-
-        return $finalDate;
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

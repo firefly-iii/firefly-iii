@@ -24,6 +24,20 @@ interface BillInterface
     public function getJournalForBillInRange(\Bill $bill, Carbon $start, Carbon $end);
 
     /**
+     * @param \Bill $bill
+     *
+     * @return Carbon|null
+     */
+    public function lastFoundMatch(\Bill $bill);
+
+    /**
+     * @param \Bill $bill
+     *
+     * @return Carbon|null
+     */
+    public function nextExpectedMatch(\Bill $bill);
+
+    /**
      * @param \Bill               $bill
      * @param \TransactionJournal $journal
      *

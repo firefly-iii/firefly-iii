@@ -203,6 +203,73 @@ class Bill implements CUDInterface, CommonDatabaseCallsInterface, BillInterface
     }
 
     /**
+     * @param \Bill $bill
+     *
+     * @return Carbon|null
+     */
+    public function lastFoundMatch(\Bill $bill)
+    {
+        $last = $bill->transactionjournals()->orderBy('date', 'DESC')->first();
+        if ($last) {
+            return $last->date;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param \Bill $bill
+     *
+     * @return Carbon|null
+     */
+    public function nextExpectedMatch(\Bill $bill)
+    {
+        /*
+                * The date Firefly tries to find. If this stays null, it's "unknown".
+                */
+        $finalDate = null;
+        if ($bill->active == 0) {
+            return $finalDate;
+        }
+
+        /*
+         * $today is the start of the next period, to make sure FF3 won't miss anything
+         * when the current period has a transaction journal.
+         */
+        $today = \DateKit::addPeriod(new Carbon, $bill->repeat_freq, 0);
+
+        /*
+         * FF3 loops from the $start of the bill, and to make sure
+         * $skip works, it adds one (for modulo).
+         */
+        $skip  = $bill->skip + 1;
+        $start = \DateKit::startOfPeriod(new Carbon, $bill->repeat_freq);
+        /*
+         * go back exactly one month/week/etc because FF3 does not care about 'next'
+         * bills if they're too far into the past.
+         */
+
+        $counter = 0;
+        while ($start <= $today) {
+            if (($counter % $skip) == 0) {
+                // do something.
+                $end          = \DateKit::endOfPeriod(clone $start, $bill->repeat_freq);
+                $journalCount = $bill->transactionjournals()->before($end)->after($start)->count();
+                if ($journalCount == 0) {
+                    $finalDate = clone $start;
+                    break;
+                }
+            }
+
+            // add period for next round!
+            $start = \DateKit::addPeriod($start, $bill->repeat_freq, 0);
+            $counter++;
+        }
+
+        return $finalDate;
+    }
+
+    /**
      * @param \Bill               $bill
      * @param \TransactionJournal $journal
      *
