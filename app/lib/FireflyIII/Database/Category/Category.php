@@ -176,6 +176,26 @@ class Category implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function journalsNoCategory(Carbon $start, Carbon $end)
+    {
+        $set = $this->getUser()
+                    ->transactionjournals()
+                    ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                    ->whereNull('category_transaction_journal.id')
+                    ->before($end)
+                    ->after($start)
+                    ->orderBy('transaction_journals.date')
+                    ->get(['transaction_journals.*']);
+
+        return $set;
+    }
+
+    /**
      * @param \Category $category
      * @param Carbon    $date
      *
