@@ -34,7 +34,6 @@ class LimitRepetition extends Eloquent
     }
 
     /**
-     * TODO remove this method in favour of something in the FireflyIII libraries.
      *
      * @return float
      */

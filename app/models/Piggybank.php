@@ -38,8 +38,6 @@ class PiggyBank extends Eloquent
     }
 
     /**
-     * TODO remove this method in favour of something in the FireflyIII libraries.
-     *
      * Grabs the PiggyBankRepetition that's currently relevant / active
      *
      * @returns \PiggyBankRepetition
