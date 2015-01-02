@@ -196,6 +196,7 @@ Route::group(
     Route::get('/budgets/edit/{budget}', ['uses' => 'BudgetController@edit', 'as' => 'budgets.edit']);
     Route::get('/budgets/delete/{budget}', ['uses' => 'BudgetController@delete', 'as' => 'budgets.delete']);
     Route::get('/budgets/show/{budget}/{limitrepetition?}', ['uses' => 'BudgetController@show', 'as' => 'budgets.show']);
+    Route::get('/budgets/list/noBudget', ['uses' => 'BudgetController@noBudget','as' => 'budgets.noBudget']);
 
     // category controller:
     Route::get('/categories', ['uses' => 'CategoryController@index', 'as' => 'categories.index']);
@@ -203,6 +204,7 @@ Route::group(
     Route::get('/categories/edit/{category}', ['uses' => 'CategoryController@edit', 'as' => 'categories.edit']);
     Route::get('/categories/delete/{category}', ['uses' => 'CategoryController@delete', 'as' => 'categories.delete']);
     Route::get('/categories/show/{category}', ['uses' => 'CategoryController@show', 'as' => 'categories.show']);
+    Route::get('/categories/list/noCategory', ['uses' => 'CategoryController@noCategory','as' => 'categories.noBudget']);
 
     // currency controller
     Route::get('/currency', ['uses' => 'CurrencyController@index', 'as' => 'currency.index']);

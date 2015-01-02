@@ -10,7 +10,7 @@ use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 
 /**
  * Class Budget
@@ -258,7 +258,7 @@ class Budget implements CUDInterface, CommonDatabaseCallsInterface, BudgetInterf
      *
      * @return Collection
      */
-    public function transactionsWithoutBudgetInDateRange(Carbon $start, Carbon $end)
+    public function expenseNoBudget(Carbon $start, Carbon $end)
     {
         // Add expenses that have no budget:
         return $this->getUser()
@@ -269,8 +269,8 @@ class Budget implements CUDInterface, CommonDatabaseCallsInterface, BudgetInterf
                             ->select('transaction_journals.id')
                             ->from('transaction_journals')
                             ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                            ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                            ->where('transaction_journals.date', '<=', $end->format('Y-m-d'));
+                            ->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'))
+                            ->where('transaction_journals.date', '<=', $end->format('Y-m-d 00:00:00'));
                     }
                     )
                     ->before($end)
@@ -278,6 +278,26 @@ class Budget implements CUDInterface, CommonDatabaseCallsInterface, BudgetInterf
                     ->lessThan(0)
                     ->transactionTypes(['Withdrawal'])
                     ->get();
+    }
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function journalsNoBudget(Carbon $start, Carbon $end)
+    {
+        $set = $this->getUser()
+                    ->transactionjournals()
+                    ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                    ->whereNull('budget_transaction_journal.id')
+                    ->before($end)
+                    ->after($start)
+                    ->orderBy('transaction_journals.date')
+                    ->get(['transaction_journals.*']);
+
+        return $set;
     }
 
     /**
