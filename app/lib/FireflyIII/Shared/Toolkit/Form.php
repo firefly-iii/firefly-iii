@@ -1,8 +1,8 @@
 <?php
 
 namespace FireflyIII\Shared\Toolkit;
-
 use Illuminate\Support\Collection;
+
 
 /**
  * Class Form

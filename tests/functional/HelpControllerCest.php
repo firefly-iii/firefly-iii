@@ -52,6 +52,18 @@ class HelpControllerCest
     /**
      * @param FunctionalTester $I
      */
+    public function showHelpEmptyHelpFile(FunctionalTester $I)
+    {
+        $I->wantTo('show help for a route with no text.');
+        $I->amOnPage('/help/transactions.doRelate');
+        $I->canSeeResponseCodeIs(200);
+        $I->see('There is no help for this route');
+
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
     public function showHelpInvalidRoute(FunctionalTester $I)
     {
         $I->wantTo('show help for a non-existing route.');
@@ -60,6 +72,7 @@ class HelpControllerCest
         $I->see('There is no help for this route');
 
     }
+    //
 
     /**
      * @param FunctionalTester $I

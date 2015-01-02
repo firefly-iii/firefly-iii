@@ -3,8 +3,8 @@
 namespace FireflyIII\Database\TransactionType;
 
 
-use FireflyIII\Database\CommonDatabaseCalls;
-use FireflyIII\Database\CUD;
+use FireflyIII\Database\CommonDatabaseCallsInterface;
+use FireflyIII\Database\CUDInterface;
 use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Database\Eloquent\Model as Eloquent;
@@ -16,7 +16,7 @@ use Illuminate\Support\Collection;
  *
  * @package FireflyIII\Database
  */
-class TransactionType implements CUD, CommonDatabaseCalls
+class TransactionType implements CUDInterface, CommonDatabaseCallsInterface
 {
 
     /**
@@ -27,7 +27,6 @@ class TransactionType implements CUD, CommonDatabaseCalls
      */
     public function destroy(Eloquent $model)
     {
-        // TODO: Implement destroy() method.
         throw new NotImplementedException;
     }
 
@@ -39,7 +38,6 @@ class TransactionType implements CUD, CommonDatabaseCalls
      */
     public function store(array $data)
     {
-        // TODO: Implement store() method.
         throw new NotImplementedException;
     }
 
@@ -52,7 +50,6 @@ class TransactionType implements CUD, CommonDatabaseCalls
      */
     public function update(Eloquent $model, array $data)
     {
-        // TODO: Implement update() method.
         throw new NotImplementedException;
     }
 
@@ -67,7 +64,6 @@ class TransactionType implements CUD, CommonDatabaseCalls
      */
     public function validate(array $model)
     {
-        // TODO: Implement validate() method.
         throw new NotImplementedException;
     }
 
@@ -81,7 +77,6 @@ class TransactionType implements CUD, CommonDatabaseCalls
      */
     public function find($objectId)
     {
-        // TODO: Implement find() method.
         throw new NotImplementedException;
     }
 
@@ -95,25 +90,16 @@ class TransactionType implements CUD, CommonDatabaseCalls
      */
     public function findByWhat($what)
     {
-        switch ($what) {
-            case 'opening':
-                return \TransactionType::whereType('Opening balance')->first();
-                break;
-            case 'transfer':
-                return \TransactionType::whereType('Transfer')->first();
-                break;
-            case 'withdrawal':
-                return \TransactionType::whereType('Withdrawal')->first();
-                break;
-            case 'deposit':
-                return \TransactionType::whereType('Deposit')->first();
-                break;
-            default:
-                throw new FireflyException('Cannot find transaction type described as "' . e($what) . '".');
-                break;
-
-
+        $translation = [
+            'opening'    => 'Opening balance',
+            'transfer'   => 'Transfer',
+            'withdrawal' => 'Withdrawal',
+            'deposit'    => 'Deposit',
+        ];
+        if(!isset($translation[$what])) {
+            throw new FireflyException('Cannot find transaction type described as "' . e($what) . '".');
         }
+        return \TransactionType::whereType($translation[$what])->first();
     }
 
     /**
@@ -124,7 +110,6 @@ class TransactionType implements CUD, CommonDatabaseCalls
      */
     public function get()
     {
-        // TODO: Implement get() method.
         throw new NotImplementedException;
     }
 
@@ -136,7 +121,6 @@ class TransactionType implements CUD, CommonDatabaseCalls
      */
     public function getByIds(array $ids)
     {
-        // TODO: Implement getByIds() method.
         throw new NotImplementedException;
     }
 }

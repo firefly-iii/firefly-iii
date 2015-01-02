@@ -61,6 +61,8 @@ class CurrencyController extends BaseController
 
     /**
      * @param TransactionCurrency $currency
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
     public function delete(TransactionCurrency $currency)
     {
@@ -74,6 +76,11 @@ class CurrencyController extends BaseController
         return View::make('currency.delete', compact('currency'));
     }
 
+    /**
+     * @param TransactionCurrency $currency
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy(TransactionCurrency $currency)
     {
         Session::flash('success', 'Currency "' . e($currency->name) . '" deleted');
@@ -98,6 +105,9 @@ class CurrencyController extends BaseController
 
     }
 
+    /**
+     * @return \Illuminate\View\View
+     */
     public function index()
     {
         $currencies = $this->_repository->get();
@@ -112,6 +122,9 @@ class CurrencyController extends BaseController
         return View::make('currency.index', compact('currencies', 'defaultCurrency'));
     }
 
+    /**
+     * @return $this|\Illuminate\Http\RedirectResponse
+     */
     public function store()
     {
         $data = Input::except('_token');
@@ -132,7 +145,7 @@ class CurrencyController extends BaseController
             return Redirect::route('currency.create')->withInput();
         }
 
-        // store:
+        // store
         $this->_repository->store($data);
         Session::flash('success', 'Currency "' . e($data['name']) . '" stored.');
         if ($data['post_submit_action'] == 'store') {
@@ -143,6 +156,11 @@ class CurrencyController extends BaseController
 
     }
 
+    /**
+     * @param TransactionCurrency $currency
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse
+     */
     public function update(TransactionCurrency $currency)
     {
         $data = Input::except('_token');

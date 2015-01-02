@@ -26,8 +26,8 @@ class HomeController extends BaseController
         /** @var \FireflyIII\Database\Account\Account $acct */
         $acct = App::make('FireflyIII\Database\Account\Account');
 
-        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $jrnls */
-        $jrnls = App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
+        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $journalRepository */
+        $journalRepository = App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
 
         /** @var \FireflyIII\Shared\Preferences\PreferencesInterface $preferences */
         $preferences = App::make('FireflyIII\Shared\Preferences\PreferencesInterface');
@@ -39,16 +39,16 @@ class HomeController extends BaseController
 
 
         // get the preference for the home accounts to show:
-        $frontpage = $preferences->get('frontpageAccounts', []);
-        if ($frontpage->data == []) {
+        $frontPage = $preferences->get('frontPageAccounts', []);
+        if ($frontPage->data == []) {
             $accounts = $acct->getAssetAccounts();
         } else {
-            $accounts = $acct->getByIds($frontpage->data);
+            $accounts = $acct->getByIds($frontPage->data);
         }
 
         $transactions = [];
         foreach ($accounts as $account) {
-            $set = $jrnls->getInDateRangeAccount($account, $start, $end, 10);
+            $set = $journalRepository->getInDateRangeAccount($account, $start, $end, 10);
             if (count($set) > 0) {
                 $transactions[] = [$set, $account];
             }

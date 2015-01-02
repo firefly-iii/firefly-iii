@@ -47,7 +47,6 @@ class GoogleChartController extends BaseController
         $this->_chart->addColumn('Day of month', 'date');
         $this->_chart->addColumn('Balance for ' . $account->name, 'number');
 
-        // TODO this can be combined in some method, it's coming up quite often, is it?
         $start = $this->_start;
         $end   = $this->_end;
         $count = $account->transactions()->count();
@@ -62,7 +61,6 @@ class GoogleChartController extends BaseController
             $start = new Carbon($first->date);
             $end   = new Carbon($last->date);
         }
-        // todo until this part.
 
         $current = clone $start;
 
@@ -86,7 +84,7 @@ class GoogleChartController extends BaseController
 
         /** @var \FireflyIII\Shared\Preferences\Preferences $preferences */
         $preferences = App::make('FireflyIII\Shared\Preferences\Preferences');
-        $pref        = $preferences->get('frontpageAccounts', []);
+        $pref        = $preferences->get('frontPageAccounts', []);
 
         /** @var \FireflyIII\Database\Account\Account $acct */
         $acct     = App::make('FireflyIII\Database\Account\Account');
@@ -97,6 +95,7 @@ class GoogleChartController extends BaseController
             $this->_chart->addColumn('Balance for ' . $account->name, 'number');
         }
         $current = clone $this->_start;
+        $current->subDay();
 
         while ($this->_end >= $current) {
             $row = [clone $current];
@@ -131,18 +130,18 @@ class GoogleChartController extends BaseController
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
 
-            Log::debug('Now working budget #'.$budget->id.', '.$budget->name);
+            Log::debug('Now working budget #' . $budget->id . ', ' . $budget->name);
 
             /** @var \LimitRepetition $repetition */
             $repetition = $bdt->repetitionOnStartingOnDate($budget, $this->_start);
             if (is_null($repetition)) {
-                \Log::debug('Budget #'.$budget->id.' has no repetition on ' . $this->_start->format('Y-m-d'));
+                \Log::debug('Budget #' . $budget->id . ' has no repetition on ' . $this->_start->format('Y-m-d'));
                 // use the session start and end for our search query
                 $searchStart = $this->_start;
                 $searchEnd   = $this->_end;
                 $limit       = 0; // the limit is zero:
             } else {
-                \Log::debug('Budget #'.$budget->id.' has a repetition on ' . $this->_start->format('Y-m-d').'!');
+                \Log::debug('Budget #' . $budget->id . ' has a repetition on ' . $this->_start->format('Y-m-d') . '!');
                 // use the limit's start and end for our search query
                 $searchStart = $repetition->startdate;
                 $searchEnd   = $repetition->enddate;
@@ -150,6 +149,7 @@ class GoogleChartController extends BaseController
             }
 
             $expenses = floatval($budget->transactionjournals()->before($searchEnd)->after($searchStart)->lessThan(0)->sum('amount')) * -1;
+            \Log::debug('Expenses in budget ' . $budget->name . ' before ' . $searchEnd->format('Y-m-d') . ' and after ' . $searchStart . ' are: ' . $expenses);
             if ($expenses > 0) {
                 $this->_chart->addRow($budget->name, $limit, $expenses);
             }
@@ -186,7 +186,75 @@ class GoogleChartController extends BaseController
     }
 
     /**
-     * TODO still in use?
+     * @param Bill $bill
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function billOverview(Bill $bill)
+    {
+
+        $this->_chart->addColumn('Date', 'date');
+        $this->_chart->addColumn('Max amount', 'number');
+        $this->_chart->addColumn('Min amount', 'number');
+        $this->_chart->addColumn('Current entry', 'number');
+
+        // get first transaction or today for start:
+        $first = $bill->transactionjournals()->orderBy('date', 'ASC')->first();
+        if ($first) {
+            $start = $first->date;
+        } else {
+            $start = new Carbon;
+        }
+        $end = new Carbon;
+        while ($start <= $end) {
+            $result = $bill->transactionjournals()->before($end)->after($start)->first();
+            if ($result) {
+                $amount = $result->getAmount();
+            } else {
+                $amount = 0;
+            }
+            unset($result);
+            $this->_chart->addRow(clone $start, $bill->amount_max, $bill->amount_min, $amount);
+            $start = DateKit::addPeriod($start, $bill->repeat_freq, 0);
+        }
+
+        $this->_chart->generate();
+
+        return Response::json($this->_chart->getData());
+
+    }
+
+    /**
+     *
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \FireflyIII\Exception\FireflyException
+     */
+    public function billsOverview()
+    {
+        $paid   = ['items' => [], 'amount' => 0];
+        $unpaid = ['items' => [], 'amount' => 0];
+        $this->_chart->addColumn('Name', 'string');
+        $this->_chart->addColumn('Amount', 'number');
+
+        $set = $this->_repository->getBillsSummary($this->_start, $this->_end);
+
+        foreach ($set as $entry) {
+            if (intval($entry->journalId) == 0) {
+                $unpaid['items'][] = $entry->name;
+                $unpaid['amount'] += floatval($entry->averageAmount);
+            } else {
+                $paid['items'][] = $entry->description;
+                $paid['amount'] += floatval($entry->actualAmount);
+            }
+        }
+        $this->_chart->addRow('Unpaid: ' . join(', ', $unpaid['items']), $unpaid['amount']);
+        $this->_chart->addRow('Paid: ' . join(', ', $paid['items']), $paid['amount']);
+        $this->_chart->generate();
+
+        return Response::json($this->_chart->getData());
+    }
+
+    /**
      *
      * @param Budget          $budget
      * @param LimitRepetition $repetition
@@ -220,14 +288,13 @@ class GoogleChartController extends BaseController
     }
 
     /**
-     * TODO still in use?
      *
-     * @param Budget    $component
+     * @param Budget    $budget
      * @param           $year
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function budgetsAndSpending(Budget $component, $year)
+    public function budgetsAndSpending(Budget $budget, $year)
     {
         try {
             new Carbon('01-01-' . $year);
@@ -235,8 +302,8 @@ class GoogleChartController extends BaseController
             return View::make('error')->with('message', 'Invalid year.');
         }
 
-        /** @var \FireflyIII\Database\Budget\Budget $repos */
-        $repos = App::make('FireflyIII\Database\Budget\Budget');
+        /** @var \FireflyIII\Database\Budget\Budget $budgetRepository */
+        $budgetRepository = App::make('FireflyIII\Database\Budget\Budget');
 
         $this->_chart->addColumn('Month', 'date');
         $this->_chart->addColumn('Budgeted', 'number');
@@ -246,11 +313,14 @@ class GoogleChartController extends BaseController
         $end   = clone $start;
         $end->endOfYear();
         while ($start <= $end) {
-            $spent      = $repos->spentInMonth($component, $start);
-            $repetition = $repos->repetitionOnStartingOnDate($component, $start);
+            $spent      = $budgetRepository->spentInMonth($budget, $start);
+            $repetition = $budgetRepository->repetitionOnStartingOnDate($budget, $start);
+
             if ($repetition) {
                 $budgeted = floatval($repetition->amount);
+                \Log::debug('Found a repetition on ' . $start->format('Y-m-d'). ' for budget ' . $budget->name.'!');
             } else {
+                \Log::debug('No repetition on ' . $start->format('Y-m-d'). ' for budget ' . $budget->name);
                 $budgeted = null;
             }
 
@@ -268,7 +338,6 @@ class GoogleChartController extends BaseController
     }
 
     /**
-     * TODO still in use?
      *
      * @param Category  $component
      * @param           $year
@@ -283,8 +352,8 @@ class GoogleChartController extends BaseController
             return View::make('error')->with('message', 'Invalid year.');
         }
 
-        /** @var \FireflyIII\Database\Category\Category $repos */
-        $repos = App::make('FireflyIII\Database\Category\Category');
+        /** @var \FireflyIII\Database\Category\Category $categoryRepository */
+        $categoryRepository = App::make('FireflyIII\Database\Category\Category');
 
         $this->_chart->addColumn('Month', 'date');
         $this->_chart->addColumn('Budgeted', 'number');
@@ -295,7 +364,7 @@ class GoogleChartController extends BaseController
         $end->endOfYear();
         while ($start <= $end) {
 
-            $spent    = $repos->spentInMonth($component, $start);
+            $spent    = $categoryRepository->spentInMonth($component, $start);
             $budgeted = null;
 
             $this->_chart->addRow(clone $start, $budgeted, $spent);
@@ -312,16 +381,16 @@ class GoogleChartController extends BaseController
     }
 
     /**
-     * @param Piggybank $piggybank
+     * @param PiggyBank $piggyBank
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function piggyBankHistory(\Piggybank $piggybank)
+    public function piggyBankHistory(\PiggyBank $piggyBank)
     {
         $this->_chart->addColumn('Date', 'date');
         $this->_chart->addColumn('Balance', 'number');
 
-        $set = \DB::table('piggy_bank_events')->where('piggybank_id', $piggybank->id)->groupBy('date')->get(['date', DB::Raw('SUM(`amount`) AS `sum`')]);
+        $set = \DB::table('piggy_bank_events')->where('piggy_bank_id', $piggyBank->id)->groupBy('date')->get(['date', DB::Raw('SUM(`amount`) AS `sum`')]);
 
         foreach ($set as $entry) {
             $this->_chart->addRow(new Carbon($entry->date), floatval($entry->sum));
@@ -334,77 +403,6 @@ class GoogleChartController extends BaseController
     }
 
     /**
-     * @param RecurringTransaction $recurring
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function recurringOverview(RecurringTransaction $recurring)
-    {
-
-        $this->_chart->addColumn('Date', 'date');
-        $this->_chart->addColumn('Max amount', 'number');
-        $this->_chart->addColumn('Min amount', 'number');
-        $this->_chart->addColumn('Current entry', 'number');
-
-        // get first transaction or today for start:
-        $first = $recurring->transactionjournals()->orderBy('date', 'ASC')->first();
-        if ($first) {
-            $start = $first->date;
-        } else {
-            $start = new Carbon;
-        }
-        $end = new Carbon;
-        while ($start <= $end) {
-            $result = $recurring->transactionjournals()->before($end)->after($start)->first();
-            if ($result) {
-                $amount = $result->getAmount();
-            } else {
-                $amount = 0;
-            }
-            unset($result);
-            $this->_chart->addRow(clone $start, $recurring->amount_max, $recurring->amount_min, $amount);
-            $start = DateKit::addPeriod($start, $recurring->repeat_freq, 0);
-        }
-
-        $this->_chart->generate();
-
-        return Response::json($this->_chart->getData());
-
-    }
-
-    /**
-     * TODO query move to helper.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \FireflyIII\Exception\FireflyException
-     */
-    public function recurringTransactionsOverview()
-    {
-        $paid   = ['items' => [], 'amount' => 0];
-        $unpaid = ['items' => [], 'amount' => 0];
-        $this->_chart->addColumn('Name', 'string');
-        $this->_chart->addColumn('Amount', 'number');
-
-        $set = $this->_repository->getRecurringSummary($this->_start, $this->_end);
-
-        foreach ($set as $entry) {
-            if (intval($entry->journalId) == 0) {
-                $unpaid['items'][] = $entry->name;
-                $unpaid['amount'] += floatval($entry->averageAmount);
-            } else {
-                $paid['items'][] = $entry->description;
-                $paid['amount'] += floatval($entry->actualAmount);
-            }
-        }
-        $this->_chart->addRow('Unpaid: ' . join(', ', $unpaid['items']), $unpaid['amount']);
-        $this->_chart->addRow('Paid: ' . join(', ', $paid['items']), $paid['amount']);
-        $this->_chart->generate();
-
-        return Response::json($this->_chart->getData());
-    }
-
-    /**
-     * TODO see reports for better way to do this.
      *
      * @param $year
      *
@@ -444,7 +442,6 @@ class GoogleChartController extends BaseController
     }
 
     /**
-     * TODO see reports for better way to do this.
      *
      * @param $year
      *

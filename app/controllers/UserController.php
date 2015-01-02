@@ -33,7 +33,7 @@ class UserController extends BaseController
         Auth::logout();
         Session::flush();
 
-        return Redirect::route('index');
+        return Redirect::route('login');
     }
 
     /**
@@ -67,9 +67,6 @@ class UserController extends BaseController
      */
     public function postRegister()
     {
-        if (Config::get('auth.allow_register') !== true) {
-            return View::make('error')->with('message', 'Not possible');
-        }
 
         /** @var \FireflyIII\Database\User\User $repository */
         $repository = App::make('FireflyIII\Database\User\User');
@@ -79,17 +76,10 @@ class UserController extends BaseController
 
         $user = $repository->register(Input::all());
 
-
-        //$user = $this->user->register(Input::all());
         if ($user) {
-            if (Config::get('auth.verify_mail') === true) {
-                $email->sendVerificationMail($user);
+            $email->sendVerificationMail($user);
 
-                return View::make('user.verification-pending');
-            }
-            $email->sendPasswordMail($user);
-
-            return View::make('user.registered');
+            return View::make('user.verification-pending');
         }
 
 
@@ -102,7 +92,7 @@ class UserController extends BaseController
      *
      * @return \Illuminate\View\View
      */
-    public function postRemindme()
+    public function postRemindMe()
     {
 
         /** @var \FireflyIII\Database\User\User $repository */
@@ -116,16 +106,11 @@ class UserController extends BaseController
         if (!$user) {
             Session::flash('error', 'No good!');
 
-            return View::make('user.remindme');
+            return View::make('user.remindMe');
         }
-        if (Config::get('auth.verify_reset') === true) {
-            $email->sendResetVerification($user);
+        $email->sendResetVerification($user);
 
-            return View::make('user.verification-pending');
-        }
-        $email->sendPasswordMail($user);
-
-        return View::make('user.registered');
+        return View::make('user.verification-pending');
 
     }
 
@@ -136,9 +121,6 @@ class UserController extends BaseController
      */
     public function register()
     {
-        if (Config::get('auth.allow_register') !== true) {
-            return View::make('error')->with('message', 'Not possible');
-        }
 
         return View::make('user.register');
     }
@@ -148,9 +130,9 @@ class UserController extends BaseController
      *
      * @return \Illuminate\View\View
      */
-    public function remindme()
+    public function remindMe()
     {
-        return View::make('user.remindme');
+        return View::make('user.remindMe');
     }
 
     /**
@@ -176,7 +158,7 @@ class UserController extends BaseController
             return View::make('user.registered');
         }
 
-        return View::make('error')->with('message', 'Yo no hablo reset code!');
+        return View::make('error')->with('message', 'No reset code found!');
     }
 
 }

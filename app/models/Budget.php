@@ -28,7 +28,7 @@ class Budget extends Eloquent
      */
     public function budgetlimits()
     {
-        return $this->hasMany('BudgetLimit', 'budget_id');
+        return $this->hasMany('BudgetLimit');
     }
 
     /**

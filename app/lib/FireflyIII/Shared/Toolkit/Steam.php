@@ -16,6 +16,7 @@ class Steam
 {
 
     /**
+     *
      * @param \Account $account
      * @param Carbon   $date
      *
@@ -23,35 +24,40 @@ class Steam
      */
     public function balance(\Account $account, Carbon $date = null)
     {
-        \Log::debug('Now in Steam::balance() for account #' . $account->id.' ('.$account->name.')');
-        if (is_null($date)) {
-            $key = 'account.' . $account->id . '.latestBalance';
-        } else {
-            $key = 'account.' . $account->id . '.balanceOn' . $date->format('dmy');
-        }
-        if (\Cache::has($key)) {
-            // TODO find a way to reliably remove cache entries for accounts.
-            #return \Cache::get($key);
-        }
         $date    = is_null($date) ? Carbon::now() : $date;
-        \Log::debug('Now reached the moment we fire the query.');
         $balance = floatval(
             $account->transactions()->leftJoin(
                 'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
             )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount')
         );
-        \Cache::put($key, $balance, 20160);
 
         return $balance;
     }
 
     /**
-     * @param \Piggybank           $piggyBank
-     * @param \PiggybankRepetition $repetition
+     * @param $boolean
+     *
+     * @return string
+     */
+    public function boolString($boolean)
+    {
+        if ($boolean === true) {
+            return 'BOOLEAN TRUE';
+        }
+        if ($boolean === false) {
+            return 'BOOLEAN FALSE';
+        }
+
+        return 'NO BOOLEAN: ' . $boolean;
+    }
+
+    /**
+     * @param \PiggyBank           $piggyBank
+     * @param \PiggyBankRepetition $repetition
      *
      * @return int
      */
-    public function percentage(\Piggybank $piggyBank, \PiggybankRepetition $repetition)
+    public function percentage(\PiggyBank $piggyBank, \PiggyBankRepetition $repetition)
     {
         $pct = $repetition->currentamount / $piggyBank->targetamount * 100;
         if ($pct > 100) {

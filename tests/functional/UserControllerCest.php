@@ -53,18 +53,11 @@ class UserControllerCest
      */
     public function logout(FunctionalTester $I)
     {
+        $I->amLoggedAs(['email' => 'thegrumpydictator@gmail.com', 'password' => 'james']);
         $I->wantTo('logout');
-        #$I->amOnPage('/logout');
-        #$I->am
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
-    public function postLogin(FunctionalTester $I)
-    {
-        $I->wantTo('post login');
-        $I->amOnRoute('login');
+        $I->amOnPage('/');
+        $I->click('Logout');
+        $I->see('Firefly III &mdash; Sign In');
     }
 
     /**
@@ -72,14 +65,23 @@ class UserControllerCest
      */
     public function postRegister(FunctionalTester $I)
     {
-        // @codingStandardsIgnoreStart
         $I->wantTo('post-register a new account');
         $I->amOnPage('/register');
-        $token = $I->grabValueFrom('input[name=_token]');
-        $I->submitForm('#register', ['email' => 'noreply@gmail.com', '_token' => $token]);
-        $I->see('Password sent!');
+        $I->submitForm('#register', ['email' => 'noreply@gmail.com']);
+        $I->see('You\'re about to get an e-mail. Please follow its instructions.');
         $I->seeRecord('users', ['email' => 'noreply@gmail.com']);
-        // @codingStandardsIgnoreEnd
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function postRegisterFail(FunctionalTester $I)
+    {
+        $I->wantTo('post-register a new account and fail');
+        $I->amOnPage('/register');
+        $I->submitForm('#register', ['email' => 'XXxxxxx']);
+        $I->see('Input invalid, please try again: The email must be a valid email address.');
+        $I->dontseeRecord('users', ['email' => 'XXxxxxx']);
     }
 
     /**
@@ -88,7 +90,20 @@ class UserControllerCest
     public function postRemindme(FunctionalTester $I)
     {
         $I->wantTo('get a password reminder');
-        $I->amOnRoute('remindme');
+        $I->amOnRoute('remindMe');
+        $I->submitForm('#remindMe', ['email' => 'functional@example.com']);
+        $I->see('You\'re about to get an e-mail.');
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function postRemindmeFail(FunctionalTester $I)
+    {
+        $I->wantTo('get a password reminder and fail');
+        $I->amOnRoute('remindMe');
+        $I->submitForm('#remindMe', ['email' => 'abcdee']);
+        $I->see('No good!');
     }
 
     /**
@@ -105,10 +120,21 @@ class UserControllerCest
     /**
      * @param FunctionalTester $I
      */
-    public function remindme(FunctionalTester $I)
+    public function remindMe(FunctionalTester $I)
     {
         $I->wantTo('reminded of my password');
-        $I->amOnRoute('remindme');
+        $I->amOnRoute('remindMe');
+        $I->see('Firefly III &mdash; Reset your password');
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function resetFail(FunctionalTester $I)
+    {
+        $I->wantTo('reset my password and fail');
+        $I->amOnPage('/reset/123');
+        $I->see('No reset code found!');
     }
 
     /**
@@ -117,7 +143,8 @@ class UserControllerCest
     public function reset(FunctionalTester $I)
     {
         $I->wantTo('reset my password');
-        $I->amOnRoute('reset');
+        $I->amOnPage('/reset/okokokokokokokokokokokokokokokok');
+        $I->see('You\'re about to get an e-mail.');
     }
 
 }

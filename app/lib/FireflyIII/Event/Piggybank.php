@@ -7,22 +7,22 @@ use Carbon\Carbon;
 use Illuminate\Events\Dispatcher;
 
 /**
- * Class Piggybank
+ * Class PiggyBank
  *
  * @package FireflyIII\Event
  */
-class Piggybank
+class PiggyBank
 {
 
     /**
-     * @param \Piggybank $piggybank
+     * @param \PiggyBank $piggyBank
      * @param float      $amount
      */
-    public function addMoney(\Piggybank $piggybank, $amount = 0.0)
+    public function addMoney(\PiggyBank $piggyBank, $amount = 0.0)
     {
         if ($amount > 0) {
             $event = new \PiggyBankEvent;
-            $event->piggybank()->associate($piggybank);
+            $event->piggyBank()->associate($piggyBank);
             $event->amount = floatval($amount);
             $event->date   = new Carbon;
             if (!$event->isValid()) {
@@ -41,15 +41,15 @@ class Piggybank
      */
     public function destroyTransfer(\TransactionJournal $journal)
     {
-        if ($journal->piggybankevents()->count() > 0) {
+        if ($journal->piggyBankEvents()->count() > 0) {
 
             /** @var \FireflyIII\Database\PiggyBank\PiggyBank $repository */
             $repository = \App::make('FireflyIII\Database\PiggyBank\PiggyBank');
 
-            /** @var \Piggybank $piggyBank */
-            $piggyBank = $journal->piggybankevents()->first()->piggybank()->first();
+            /** @var \PiggyBank $piggyBank */
+            $piggyBank = $journal->piggyBankEvents()->first()->piggyBank()->first();
 
-            /** @var \PiggybankRepetition $repetition */
+            /** @var \PiggyBankRepetition $repetition */
             $repetition = $repository->findRepetitionByDate($piggyBank, $journal->date);
 
             $relevantTransaction = null;
@@ -68,7 +68,7 @@ class Piggybank
 
 
             $event = new \PiggyBankEvent;
-            $event->piggybank()->associate($piggyBank);
+            $event->piggyBank()->associate($piggyBank);
             $event->amount = floatval($relevantTransaction->amount * -1);
             $event->date   = new Carbon;
             $event->save();
@@ -76,15 +76,15 @@ class Piggybank
     }
 
     /**
-     * @param \Piggybank $piggybank
+     * @param \PiggyBank $piggyBank
      * @param float      $amount
      */
-    public function removeMoney(\Piggybank $piggybank, $amount = 0.0)
+    public function removeMoney(\PiggyBank $piggyBank, $amount = 0.0)
     {
         $amount = $amount * -1;
         if ($amount < 0) {
             $event = new \PiggyBankEvent;
-            $event->piggybank()->associate($piggybank);
+            $event->piggyBank()->associate($piggyBank);
             $event->amount = floatval($amount);
             $event->date   = new Carbon;
             $event->save();
@@ -92,18 +92,16 @@ class Piggybank
     }
 
     /**
-     * @param \Piggybank $piggybank
+     * @param \PiggyBank $piggyBank
      */
-    public function storePiggybank(\Piggybank $piggybank)
+    public function storePiggyBank(\PiggyBank $piggyBank)
     {
-        if (intval($piggybank->repeats) == 0) {
-            $repetition = new \PiggybankRepetition;
-            $repetition->piggybank()->associate($piggybank);
-            $repetition->startdate     = $piggybank->startdate;
-            $repetition->targetdate    = $piggybank->targetdate;
-            $repetition->currentamount = 0;
-            $repetition->save();
-        }
+        $repetition = new \PiggyBankRepetition;
+        $repetition->piggyBank()->associate($piggyBank);
+        $repetition->startdate     = $piggyBank->startdate;
+        $repetition->targetdate    = $piggyBank->targetdate;
+        $repetition->currentamount = 0;
+        $repetition->save();
     }
 
     /*
@@ -112,23 +110,23 @@ class Piggybank
 
     /**
      * @param \TransactionJournal $journal
-     * @param int                 $piggybankId
+     * @param int                 $piggyBankId
      */
-    public function storeTransfer(\TransactionJournal $journal, $piggybankId = 0)
+    public function storeTransfer(\TransactionJournal $journal, $piggyBankId = 0)
     {
-        if (intval($piggybankId) == 0) {
+        if (intval($piggyBankId) == 0) {
             return;
         }
         /** @var \FireflyIII\Database\PiggyBank\PiggyBank $repository */
         $repository = \App::make('FireflyIII\Database\PiggyBank\PiggyBank');
 
-        /** @var \Piggybank $piggyBank */
-        $piggyBank = $repository->find($piggybankId);
+        /** @var \PiggyBank $piggyBank */
+        $piggyBank = $repository->find($piggyBankId);
 
         if ($journal->transactions()->where('account_id', $piggyBank->account_id)->count() == 0) {
             return;
         }
-        /** @var \PiggybankRepetition $repetition */
+        /** @var \PiggyBankRepetition $repetition */
         $repetition  = $repository->findRepetitionByDate($piggyBank, $journal->date);
         $amount      = floatval($piggyBank->targetamount);
         $leftToSave  = $amount - floatval($repetition->currentamount);
@@ -146,7 +144,7 @@ class Piggybank
             $repetition->currentamount += floatval($transaction->amount);
             $repetition->save();
             $event = new \PiggyBankEvent;
-            $event->piggybank()->associate($piggyBank);
+            $event->piggyBank()->associate($piggyBank);
             $event->transactionjournal()->associate($journal);
             $event->amount = floatval($transaction->amount);
             $event->date   = new Carbon;
@@ -160,10 +158,10 @@ class Piggybank
     public function subscribe(Dispatcher $events)
     {
         // triggers on piggy bank events:
-        $events->listen('piggybank.addMoney', 'FireflyIII\Event\Piggybank@addMoney');
-        $events->listen('piggybank.removeMoney', 'FireflyIII\Event\Piggybank@removeMoney');
-        $events->listen('piggybank.store', 'FireflyIII\Event\Piggybank@storePiggybank');
-        $events->listen('piggybank.update', 'FireflyIII\Event\Piggybank@updatePiggybank');
+        $events->listen('piggy_bank.addMoney', 'FireflyIII\Event\PiggyBank@addMoney');
+        $events->listen('piggy_bank.removeMoney', 'FireflyIII\Event\PiggyBank@removeMoney');
+        $events->listen('piggy_bank.store', 'FireflyIII\Event\PiggyBank@storePiggyBank');
+        $events->listen('piggy_bank.update', 'FireflyIII\Event\PiggyBank@updatePiggyBank');
 
         \App::before(
             function () {
@@ -171,13 +169,10 @@ class Piggybank
             }
         );
 
-        //$events->listen('piggybank.boo', 'FireflyIII\Event\Piggybank@updatePiggybank');
-
-
         // triggers when others are updated.
-        $events->listen('transactionJournal.store', 'FireflyIII\Event\Piggybank@storeTransfer');
-        $events->listen('transactionJournal.update', 'FireflyIII\Event\Piggybank@updateTransfer');
-        $events->listen('transactionJournal.destroy', 'FireflyIII\Event\Piggybank@destroyTransfer');
+        $events->listen('transactionJournal.store', 'FireflyIII\Event\PiggyBank@storeTransfer');
+        $events->listen('transactionJournal.update', 'FireflyIII\Event\PiggyBank@updateTransfer');
+        $events->listen('transactionJournal.destroy', 'FireflyIII\Event\PiggyBank@destroyTransfer');
     }
 
     /**
@@ -194,21 +189,21 @@ class Piggybank
         $list  = $repository->get();
         $today = Carbon::now();
 
-        /** @var \Piggybank $entry */
+        /** @var \PiggyBank $entry */
         foreach ($list as $entry) {
             $start  = $entry->startdate;
             $target = $entry->targetdate;
             // find a repetition on this date:
-            $count = $entry->piggybankrepetitions()->starts($start)->targets($target)->count();
+            $count = $entry->piggyBankrepetitions()->starts($start)->targets($target)->count();
             if ($count == 0) {
-                $repetition = new \PiggybankRepetition;
-                $repetition->piggybank()->associate($entry);
+                $repetition = new \PiggyBankRepetition;
+                $repetition->piggyBank()->associate($entry);
                 $repetition->startdate     = $start;
                 $repetition->targetdate    = $target;
                 $repetition->currentamount = 0;
                 $repetition->save();
             }
-            // then continue and do something in the current relevant timeframe.
+            // then continue and do something in the current relevant time frame.
 
             $currentTarget = clone $target;
             $currentStart  = null;
@@ -216,10 +211,10 @@ class Piggybank
                 $currentStart  = \DateKit::subtractPeriod($currentTarget, $entry->rep_length, 0);
                 $currentTarget = \DateKit::addPeriod($currentTarget, $entry->rep_length, 0);
                 // create if not exists:
-                $count = $entry->piggybankrepetitions()->starts($currentStart)->targets($currentTarget)->count();
+                $count = $entry->piggyBankRepetitions()->starts($currentStart)->targets($currentTarget)->count();
                 if ($count == 0) {
-                    $repetition = new \PiggybankRepetition;
-                    $repetition->piggybank()->associate($entry);
+                    $repetition = new \PiggyBankRepetition;
+                    $repetition->piggyBank()->associate($entry);
                     $repetition->startdate     = $currentStart;
                     $repetition->targetdate    = $currentTarget;
                     $repetition->currentamount = 0;
@@ -231,9 +226,9 @@ class Piggybank
     }
 
     /**
-     * @param \Piggybank $piggyBank
+     * @param \PiggyBank $piggyBank
      */
-    public function updatePiggybank(\Piggybank $piggyBank)
+    public function updatePiggyBank(\PiggyBank $piggyBank)
     {
         // get the repetition:
         $repetition             = $piggyBank->currentRelevantRep();
@@ -251,18 +246,18 @@ class Piggybank
     public function updateTransfer(\TransactionJournal $journal)
     {
 
-        if ($journal->piggybankevents()->count() > 0) {
+        if ($journal->piggyBankEvents()->count() > 0) {
 
-            $event    = $journal->piggybankevents()->orderBy('date', 'DESC')->orderBy('id', 'DESC')->first();
-            $eventSum = floatval($journal->piggybankevents()->orderBy('date', 'DESC')->orderBy('id', 'DESC')->sum('amount'));
+            $event    = $journal->piggyBankEvents()->orderBy('date', 'DESC')->orderBy('id', 'DESC')->first();
+            $eventSum = floatval($journal->piggyBankEvents()->orderBy('date', 'DESC')->orderBy('id', 'DESC')->sum('amount'));
 
             /** @var \FireflyIII\Database\PiggyBank\PiggyBank $repository */
             $repository = \App::make('FireflyIII\Database\PiggyBank\PiggyBank');
 
-            /** @var \Piggybank $piggyBank */
-            $piggyBank = $journal->piggybankevents()->first()->piggybank()->first();
+            /** @var \PiggyBank $piggyBank */
+            $piggyBank = $journal->piggyBankEvents()->first()->piggyBank()->first();
 
-            /** @var \PiggybankRepetition $repetition */
+            /** @var \PiggyBankRepetition $repetition */
             $repetition = $repository->findRepetitionByDate($piggyBank, $journal->date);
 
             $relevantTransaction = null;
@@ -285,13 +280,13 @@ class Piggybank
 
 
             $event = new \PiggyBankEvent;
-            $event->piggybank()->associate($piggyBank);
+            $event->piggyBank()->associate($piggyBank);
             $event->transactionJournal()->associate($journal);
             $event->amount = $diff;
             $event->date   = new Carbon;
             if (!$event->isValid()) {
-                var_dump($event->getErrors());
-                exit();
+                \Log::error($event->getErrors());
+                \App::abort(500);
             }
             $event->save();
         }

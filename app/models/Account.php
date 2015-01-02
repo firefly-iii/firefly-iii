@@ -1,8 +1,10 @@
 <?php
-use Illuminate\Database\Eloquent\Builder;
+
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Watson\Validating\ValidatingTrait;
 use \Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+
 
 /**
  * Class Account
@@ -57,17 +59,17 @@ class Account extends Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function piggybanks()
+    public function piggyBanks()
     {
-        return $this->hasMany('Piggybank');
+        return $this->hasMany('PiggyBank');
     }
 
     /**
      *
-     * @param Builder $query
+     * @param EloquentBuilder $query
      * @param array   $types
      */
-    public function scopeAccountTypeIn(Builder $query, array $types)
+    public function scopeAccountTypeIn(EloquentBuilder $query, array $types)
     {
         if (is_null($this->joinedAccountTypes)) {
             $query->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id');
@@ -78,9 +80,9 @@ class Account extends Eloquent
 
     /**
      *
-     * @param Builder $query
+     * @param EloquentBuilder $query
      */
-    public function scopeWithMeta(Builder $query)
+    public function scopeWithMeta(EloquentBuilder $query)
     {
         $query->with(['accountmeta']);
     }

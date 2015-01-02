@@ -67,10 +67,10 @@
         <!-- REMINDERS -->
         <div class="panel panel-default">
             <div class="panel-heading">
-                <i class="fa fa-line-chart"></i> Recurring transactions
+                <i class="fa fa-calendar-o"></i> Bills
             </div>
             <div class="panel-body">
-                <div id="recurring-chart"></div>
+                <div id="bills-chart"></div>
             </div>
         </div>
 
@@ -114,7 +114,7 @@
 @stop
 @section('scripts')
 <script type="text/javascript">
-    var currencyCode = '{{getCurrencyCode()}}';
+    var currencyCode = '{{Amount::getCurrencyCode()}}';
 </script>
 <!-- load the libraries and scripts necessary for Google Charts: -->
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>

@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Console\Command;
-//use Symfony\Component\Console\Input\InputArgument;
-//use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Class Cleanup
@@ -43,7 +41,7 @@ class Cleanup extends Command
         $this->info('Cleared compiled...');
         Artisan::call('ide-helper:generate');
         $this->info('IDE helper, done...');
-        Artisan::call('ide-helper:models', ['nowrite']);
+        Artisan::call('ide-helper:models');
         $this->info('IDE models, done...');
         Artisan::call('optimize');
         $this->info('Optimized...');

@@ -38,11 +38,21 @@ class CurrencyControllerCest
     /**
      * @param FunctionalTester $I
      */
+    public function defaultCurrency(FunctionalTester $I)
+    {
+        $I->wantTo('make US Dollar the default currency');
+        $I->amOnPage('/currency/default/2');
+        $I->see('US Dollar is now the default currency.');
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
     public function delete(FunctionalTester $I)
     {
         $I->wantTo('delete a currency');
-        $I->amOnPage('/currency/delete/2');
-        $I->see('Delete currency "US Dollar"');
+        $I->amOnPage('/currency/delete/3');
+        $I->see('Delete currency "Hungarian forint"');
     }
 
     /**
@@ -51,20 +61,10 @@ class CurrencyControllerCest
     public function destroy(FunctionalTester $I)
     {
         $I->wantTo('destroy a currency');
-        $I->amOnPage('/currency/delete/2');
-        $I->see('Delete currency "US Dollar"');
+        $I->amOnPage('/currency/delete/3');
+        $I->see('Delete currency "Hungarian forint"');
         $I->submitForm('#destroy', []);
-        $I->see('Currency &quot;US Dollar&quot; deleted');
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
-    public function defaultCurrency(FunctionalTester $I)
-    {
-        $I->wantTo('make US Dollar the default currency');
-        $I->amOnPage('/currency/default/2');
-        $I->see('US Dollar is now the default currency.');
+        $I->see('Currency &quot;Hungarian forint&quot; deleted');
     }
 
     /**
@@ -85,6 +85,19 @@ class CurrencyControllerCest
         $I->wantTo('edit a currency');
         $I->amOnPage('/currency/edit/2');
         $I->see('Edit currency "US Dollar"');
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function failUpdate(FunctionalTester $I)
+    {
+        $I->wantTo('update a currency and fail');
+        $I->amOnPage('/currency/edit/2');
+        $I->see('Edit currency "US Dollar"');
+        $I->submitForm('#update', ['name' => 'Failed update', 'code' => '123', 'post_submit_action' => 'update']);
+        $I->dontSeeRecord('transaction_currencies', ['name' => 'Failed update']);
+
     }
 
     /**
@@ -155,34 +168,6 @@ class CurrencyControllerCest
         $I->see('Edit currency "US Dollar"');
         $I->submitForm('#update', ['name' => 'Successful update', 'symbol' => '$', 'code' => 'USD', 'post_submit_action' => 'update']);
         $I->seeRecord('transaction_currencies', ['name' => 'Successful update']);
-        resetToClean::clean();
-
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
-    public function failUpdate(FunctionalTester $I)
-    {
-        $I->wantTo('update a currency and fail');
-        $I->amOnPage('/currency/edit/2');
-        $I->see('Edit currency "US Dollar"');
-        $I->submitForm('#update', ['name' => 'Failed update', 'code' => '123', 'post_submit_action' => 'update']);
-        $I->dontSeeRecord('transaction_currencies', ['name' => 'Failed update']);
-
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
-    public function validateUpdateOnly(FunctionalTester $I)
-    {
-        $I->wantTo('update a currency and validate only');
-        $I->amOnPage('/currency/edit/2');
-        $I->see('Edit currency "US Dollar"');
-        $I->submitForm('#update', ['name' => 'Update Validate Only', 'post_submit_action' => 'validate_only']);
-        $I->dontSeeRecord('transaction_currencies', ['name' => 'Update Validate Only']);
-        $I->seeRecord('transaction_currencies', ['name' => 'US Dollar']);
 
     }
 
@@ -198,6 +183,20 @@ class CurrencyControllerCest
             '#update', ['name' => 'US DollarXXX', 'symbol' => '$', 'code' => 'USD', 'post_submit_action' => 'return_to_edit']
         );
         $I->seeRecord('transaction_currencies', ['name' => 'US DollarXXX']);
+
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function validateUpdateOnly(FunctionalTester $I)
+    {
+        $I->wantTo('update a currency and validate only');
+        $I->amOnPage('/currency/edit/2');
+        $I->see('Edit currency "US Dollar"');
+        $I->submitForm('#update', ['name' => 'Update Validate Only', 'post_submit_action' => 'validate_only']);
+        $I->dontSeeRecord('transaction_currencies', ['name' => 'Update Validate Only']);
+        $I->seeRecord('transaction_currencies', ['name' => 'US Dollar']);
 
     }
 }

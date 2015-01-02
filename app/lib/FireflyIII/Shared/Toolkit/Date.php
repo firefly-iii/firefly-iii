@@ -14,10 +14,10 @@ class Date
 {
     /**
      * @param Carbon $theDate
-     * @param        $repeatFreq
-     * @param        $skip
+     * @param                $repeatFreq
+     * @param                $skip
      *
-     * @return Carbon
+     * @return \Carbon\Carbon
      * @throws FireflyException
      */
     public function addPeriod(Carbon $theDate, $repeatFreq, $skip)
@@ -27,7 +27,7 @@ class Date
 
         switch ($repeatFreq) {
             default:
-                throw new FireflyException('Cannot do addPeriod for $repeat_freq ' . $repeatFreq);
+                throw new FireflyException('Cannot do addPeriod for $repeat_freq "' . $repeatFreq . '"');
                 break;
             case 'daily':
                 $date->addDays($add);
@@ -60,9 +60,9 @@ class Date
 
     /**
      * @param Carbon $theCurrentEnd
-     * @param        $repeatFreq
+     * @param                $repeatFreq
      *
-     * @return mixed
+     * @return Carbon
      * @throws FireflyException
      */
     public function endOfPeriod(Carbon $theCurrentEnd, $repeatFreq)
@@ -101,10 +101,10 @@ class Date
 
     /**
      * @param Carbon $theCurrentEnd
-     * @param        $repeatFreq
+     * @param                $repeatFreq
      * @param Carbon $maxDate
      *
-     * @return mixed
+     * @return Carbon
      * @throws FireflyException
      */
     public function endOfX(Carbon $theCurrentEnd, $repeatFreq, Carbon $maxDate)
@@ -150,7 +150,7 @@ class Date
 
     /**
      * @param Carbon $date
-     * @param        $repeatFrequency
+     * @param                $repeatFrequency
      *
      * @return string
      * @throws FireflyException
@@ -184,7 +184,7 @@ class Date
 
     /**
      * @param Carbon $theDate
-     * @param        $repeatFreq
+     * @param                $repeatFreq
      *
      * @return Carbon
      * @throws FireflyException
@@ -229,8 +229,8 @@ class Date
 
     /**
      * @param Carbon $theDate
-     * @param        $repeatFreq
-     * @param int    $subtract
+     * @param                $repeatFreq
+     * @param int            $subtract
      *
      * @return Carbon
      * @throws FireflyException
@@ -242,12 +242,15 @@ class Date
             default:
                 throw new FireflyException('Cannot do subtractPeriod for $repeat_freq ' . $repeatFreq);
                 break;
+            case 'day':
             case 'daily':
                 $date->subDays($subtract);
                 break;
+            case 'week':
             case 'weekly':
                 $date->subWeeks($subtract);
                 break;
+            case 'month':
             case 'monthly':
                 $date->subMonths($subtract);
                 break;

@@ -4,6 +4,7 @@ namespace FireflyIII\Search;
 
 
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
 /**
  * Class Search
@@ -20,7 +21,7 @@ class Search
     public function searchAccounts(array $words)
     {
         return \Auth::user()->accounts()->with('accounttype')->where(
-            function ($q) use ($words) {
+            function (EloquentBuilder $q) use ($words) {
                 foreach ($words as $word) {
                     $q->orWhere('name', 'LIKE', '%' . e($word) . '%');
                 }
@@ -96,7 +97,7 @@ class Search
     public function searchTransactions(array $words)
     {
         return \Auth::user()->transactionjournals()->withRelevantData()->where(
-            function ($q) use ($words) {
+            function (EloquentBuilder $q) use ($words) {
                 foreach ($words as $word) {
                     $q->orWhere('description', 'LIKE', '%' . e($word) . '%');
                 }

@@ -4,8 +4,8 @@ namespace FireflyIII\Database\TransactionJournal;
 
 
 use Carbon\Carbon;
-use FireflyIII\Database\CommonDatabaseCalls;
-use FireflyIII\Database\CUD;
+use FireflyIII\Database\CommonDatabaseCallsInterface;
+use FireflyIII\Database\CUDInterface;
 use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
@@ -18,7 +18,7 @@ use Illuminate\Support\MessageBag;
  *
  * @package FireflyIII\Database
  */
-class TransactionJournal implements TransactionJournalInterface, CUD, CommonDatabaseCalls
+class TransactionJournal implements TransactionJournalInterface, CUDInterface, CommonDatabaseCallsInterface
 {
     use SwitchUser;
 
@@ -63,11 +63,12 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      */
     public function store(array $data)
     {
-        $journalType = $this->getJournalType($data['what']);
-        $currency    = $this->getJournalCurrency($data['currency']);
-        $journal     = new \TransactionJournal(
-            ['transaction_type_id' => $journalType->id, 'transaction_currency_id' => $currency->id, 'user_id' => $this->getUser()->id,
-             'description'         => $data['description'], 'date' => $data['date'], 'completed' => 0]
+        $currency = $this->getJournalCurrency($data['currency']);
+        $journal  = new \TransactionJournal(
+            [
+                'transaction_type_id'     => $data['transaction_type_id'],
+                'transaction_currency_id' => $currency->id, 'user_id' => $this->getUser()->id,
+                'description'             => $data['description'], 'date' => $data['date'], 'completed' => 0]
         );
         $journal->save();
 
@@ -105,6 +106,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
 
         list($fromAccount, $toAccount) = $this->storeAccounts($data);
 
+        /** @noinspection PhpParamsInspection */
         $this->storeBudget($data, $model);
         $this->storeCategory($data, $model);
 
@@ -128,7 +130,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
             $transaction->save();
         }
 
-        return new MessageBag;
+        return true;
     }
 
     /**
@@ -147,41 +149,16 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
 
         $warnings  = new MessageBag;
         $successes = new MessageBag;
-        $errors    = new MessageBag;
 
+        $journal = new \TransactionJournal($model);
+        $journal->isValid();
+        $errors = $journal->getErrors();
 
         if (!isset($model['what'])) {
             $errors->add('description', 'Internal error: need to know type of transaction!');
         }
-        if (isset($model['recurring_transaction_id']) && intval($model['recurring_transaction_id']) < 0) {
-            $errors->add('recurring_transaction_id', 'Recurring transaction is invalid.');
-        }
-        if (!isset($model['description'])) {
-            $errors->add('description', 'This field is mandatory.');
-        }
-        if (isset($model['description']) && strlen($model['description']) == 0) {
-            $errors->add('description', 'This field is mandatory.');
-        }
-        if (isset($model['description']) && strlen($model['description']) > 255) {
-            $errors->add('description', 'Description is too long.');
-        }
-
-        if (!isset($model['currency'])) {
-            $errors->add('description', 'Internal error: currency is mandatory!');
-        }
-        if (isset($model['date']) && !($model['date'] instanceof Carbon) && strlen($model['date']) > 0) {
-            try {
-                new Carbon($model['date']);
-            } catch (\Exception $e) {
-                $errors->add('date', 'This date is invalid.');
-            }
-        }
-        if (!isset($model['date'])) {
-            $errors->add('date', 'This date is invalid.');
-        }
-
         /*
-         * Amount:
+         * Amount
          */
         if (isset($model['amount']) && floatval($model['amount']) < 0.01) {
             $errors->add('amount', 'Amount must be > 0.01');
@@ -194,7 +171,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         }
 
         /*
-         * Budget:
+         * Budget
          */
         if (isset($model['budget_id']) && !ctype_digit($model['budget_id'])) {
             $errors->add('budget_id', 'Invalid budget');
@@ -254,12 +231,6 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         }
 
 
-        $validator = \Validator::make([$model], \TransactionJournal::$rules);
-        if ($validator->invalid()) {
-            $errors->merge($errors);
-        }
-
-
         /*
          * Add "OK"
          */
@@ -273,20 +244,6 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         return ['errors' => $errors, 'warnings' => $warnings, 'successes' => $successes];
 
 
-    }
-
-    /**
-     * @param $type
-     *
-     * @return \AccountType|null
-     * @throws FireflyException
-     */
-    public function getJournalType($type)
-    {
-        /** @var \FireflyIII\Database\TransactionType\TransactionType $typeRepository */
-        $typeRepository = \App::make('FireflyIII\Database\TransactionType\TransactionType');
-
-        return $typeRepository->findByWhat($type);
     }
 
     /**
@@ -389,7 +346,26 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
             if ($category) {
                 $journal->categories()->sync([$category->id]);
             }
+
+            return;
         }
+        $journal->categories()->sync([]);
+
+        return;
+    }
+
+    /**
+     * @param $type
+     *
+     * @return \TransactionType|null
+     * @throws FireflyException
+     */
+    public function getJournalType($type)
+    {
+        /** @var \FireflyIII\Database\TransactionType\TransactionType $typeRepository */
+        $typeRepository = \App::make('FireflyIII\Database\TransactionType\TransactionType');
+
+        return $typeRepository->findByWhat($type);
     }
 
     /**
@@ -414,7 +390,6 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      */
     public function findByWhat($what)
     {
-        // TODO: Implement findByWhat() method.
         throw new NotImplementedException;
     }
 
@@ -478,16 +453,15 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      */
     public function getSumOfExpensesByMonth(Carbon $date)
     {
-        $end = clone $date;
-        $date->startOfMonth();
-        $end->endOfMonth();
+        /** @var \FireflyIII\Report\ReportInterface $reportRepository */
+        $reportRepository = \App::make('FireflyIII\Report\ReportInterface');
 
-        $sum = \DB::table('transactions')->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')->leftJoin(
-            'transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id'
-        )->where('amount', '>', 0)->where('transaction_types.type', '=', 'Withdrawal')->where('transaction_journals.date', '>=', $date->format('Y-m-d'))->where(
-            'transaction_journals.date', '<=', $end->format('Y-m-d')
-        )->sum('transactions.amount');
-        $sum = floatval($sum);
+        $set = $reportRepository->getExpenseGroupedForMonth($date, 200);
+        $sum = 0;
+        foreach ($set as $entry) {
+            $sum += $entry['amount'];
+        }
+
 
         return $sum;
     }
@@ -499,18 +473,17 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
      */
     public function getSumOfIncomesByMonth(Carbon $date)
     {
-        $end = clone $date;
-        $date->startOfMonth();
-        $end->endOfMonth();
+        /** @var \FireflyIII\Report\ReportInterface $reportRepository */
+        $reportRepository = \App::make('FireflyIII\Report\ReportInterface');
 
-        $sum = \DB::table('transactions')->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')->leftJoin(
-            'transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id'
-        )->where('amount', '>', 0)->where('transaction_types.type', '=', 'Deposit')->where('transaction_journals.date', '>=', $date->format('Y-m-d'))->where(
-            'transaction_journals.date', '<=', $end->format('Y-m-d')
-        )->sum('transactions.amount');
-        $sum = floatval($sum);
+        $incomes = $reportRepository->getIncomeForMonth($date);
+        $totalIn = 0;
+        /** @var \TransactionJournal $entry */
+        foreach ($incomes as $entry) {
+            $totalIn += $entry->getAmount();
+        }
 
-        return $sum;
+        return $totalIn;
     }
 
     /**
@@ -597,38 +570,5 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         }
 
         return \Paginator::make($items, $count, $limit);
-    }
-
-    /**
-     * @param string              $query
-     * @param \TransactionJournal $journal
-     *
-     * @return Collection
-     */
-    public function searchRelated($query, \TransactionJournal $journal)
-    {
-        $start = clone $journal->date;
-        $end   = clone $journal->date;
-        $start->startOfMonth();
-        $end->endOfMonth();
-
-        // get already related transactions:
-        $exclude = [$journal->id];
-        foreach ($journal->transactiongroups()->get() as $group) {
-            foreach ($group->transactionjournals() as $jrnl) {
-                $exclude[] = $jrnl->id;
-            }
-        }
-        $exclude = array_unique($exclude);
-
-        $query = $this->getUser()->transactionjournals()
-                      ->withRelevantData()
-                      ->before($end)
-                      ->after($start)
-                      ->whereNotIn('id', $exclude)
-                      ->where('description', 'LIKE', '%' . $query . '%')
-                      ->get();
-
-        return $query;
     }
 }

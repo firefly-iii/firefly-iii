@@ -17,12 +17,12 @@ class TransactionJournal
      */
     public function store(\TransactionJournal $journal)
     {
-        /** @var \FireflyIII\Database\RecurringTransaction\RecurringTransaction $repository */
-        $repository = \App::make('FireflyIII\Database\RecurringTransaction\RecurringTransaction');
+        /** @var \FireflyIII\Database\Bill\Bill $repository */
+        $repository = \App::make('FireflyIII\Database\Bill\Bill');
         $set        = $repository->get();
 
 
-        /** @var \RecurringTransaction $entry */
+        /** @var \Bill $entry */
         foreach ($set as $entry) {
             $repository->scan($entry, $journal);
         }
@@ -43,13 +43,13 @@ class TransactionJournal
      */
     public function update(\TransactionJournal $journal)
     {
-        /** @var \FireflyIII\Database\RecurringTransaction\RecurringTransaction $repository */
-        $repository = \App::make('FireflyIII\Database\RecurringTransaction\RecurringTransaction');
-        $set        = $repository->get();
-        $journal->recurring_transaction_id = null;
+        /** @var \FireflyIII\Database\Bill\Bill $repository */
+        $repository       = \App::make('FireflyIII\Database\Bill\Bill');
+        $set              = $repository->get();
+        $journal->bill_id = null;
         $journal->save();
 
-        /** @var \RecurringTransaction $entry */
+        /** @var \Bill $entry */
         foreach ($set as $entry) {
             $repository->scan($entry, $journal);
         }

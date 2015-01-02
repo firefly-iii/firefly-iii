@@ -2,8 +2,8 @@
 
 namespace FireflyIII\Database\AccountType;
 
-use FireflyIII\Database\CommonDatabaseCalls;
-use FireflyIII\Database\CUD;
+use FireflyIII\Database\CommonDatabaseCallsInterface;
+use FireflyIII\Database\CUDInterface;
 use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Database\Eloquent\Model as Eloquent;
@@ -14,7 +14,7 @@ use Illuminate\Support\Collection;
  *
  * @package FireflyIII\Database
  */
-class AccountType implements CUD, CommonDatabaseCalls
+class AccountType implements CUDInterface, CommonDatabaseCallsInterface
 {
 
     /**
@@ -25,7 +25,6 @@ class AccountType implements CUD, CommonDatabaseCalls
      */
     public function destroy(Eloquent $model)
     {
-        // TODO: Implement destroy() method.
         throw new NotImplementedException;
     }
 
@@ -37,7 +36,6 @@ class AccountType implements CUD, CommonDatabaseCalls
      */
     public function store(array $data)
     {
-        // TODO: Implement store() method.
         throw new NotImplementedException;
     }
 
@@ -50,7 +48,6 @@ class AccountType implements CUD, CommonDatabaseCalls
      */
     public function update(Eloquent $model, array $data)
     {
-        // TODO: Implement update() method.
         throw new NotImplementedException;
     }
 
@@ -65,7 +62,6 @@ class AccountType implements CUD, CommonDatabaseCalls
      */
     public function validate(array $model)
     {
-        // TODO: Implement validate() method.
         throw new NotImplementedException;
     }
 
@@ -79,7 +75,6 @@ class AccountType implements CUD, CommonDatabaseCalls
      */
     public function find($objectId)
     {
-        // TODO: Implement find() method.
         throw new NotImplementedException;
     }
 
@@ -124,7 +119,6 @@ class AccountType implements CUD, CommonDatabaseCalls
      */
     public function get()
     {
-        // TODO: Implement get() method.
         throw new NotImplementedException;
     }
 
@@ -136,7 +130,6 @@ class AccountType implements CUD, CommonDatabaseCalls
      */
     public function getByIds(array $ids)
     {
-        // TODO: Implement getByIds() method.
         throw new NotImplementedException;
     }
 }

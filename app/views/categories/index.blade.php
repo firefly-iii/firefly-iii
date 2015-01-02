@@ -29,7 +29,7 @@
 @stop
 @section('scripts')
 <script type="text/javascript">
-    var currencyCode = '{{getCurrencyCode()}}';
+    var currencyCode = '{{Amount::getCurrencyCode()}}';
 </script>
 <!-- load the libraries and scripts necessary for Google Charts: -->
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>

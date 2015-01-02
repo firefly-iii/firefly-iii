@@ -22,7 +22,6 @@
         </div>
     </div>
     <div class="col-lg-3 col-md-3 col-sm-5">
-    <!-- TODO do this -->
         BLa bla something here.
     </div>
 </div>
@@ -32,7 +31,7 @@
 <script type="text/javascript">
     var componentID = {{$category->id}};
     var year = {{Session::get('start',\Carbon\Carbon::now()->startOfMonth())->format('Y')}};
-    var currencyCode = '{{getCurrencyCode()}}';
+    var currencyCode = '{{Amount::getCurrencyCode()}}';
 </script>
 <!-- load the libraries and scripts necessary for Google Charts: -->
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>

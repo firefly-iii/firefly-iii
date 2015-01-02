@@ -1,17 +1,17 @@
 <?php
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Watson\Validating\ValidatingTrait;
 use \Illuminate\Database\Eloquent\Model as Eloquent;
 /**
- * Class PiggybankRepetition
+ * Class PiggyBankRepetition
  */
-class PiggybankRepetition extends Eloquent
+class PiggyBankRepetition extends Eloquent
 {
     use ValidatingTrait;
     public static $rules
         = [
-            'piggybank_id'  => 'required|exists:piggybanks,id',
+            'piggy_bank_id'  => 'required|exists:piggy_banks,id',
             'targetdate'    => 'date',
             'startdate'     => 'date',
             'currentamount' => 'required|numeric'];
@@ -25,46 +25,29 @@ class PiggybankRepetition extends Eloquent
     }
 
     /**
-     * TODO remove this method in favour of something in the FireflyIII libraries.
-     *
-     * @return float|int
-     */
-    public function pct()
-    {
-        $total = $this->piggybank->targetamount;
-        $saved = $this->currentamount;
-        if ($total == 0) {
-            return 0;
-        }
-        $pct = round(($saved / $total) * 100, 1);
-
-        return $pct;
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function piggybank()
+    public function piggyBank()
     {
-        return $this->belongsTo('Piggybank');
+        return $this->belongsTo('PiggyBank');
     }
 
     /**
-     * @param Builder $query
+     * @param EloquentBuilder $query
      * @param Carbon  $date
      */
-    public function scopeStarts(Builder $query, Carbon $date)
+    public function scopeStarts(EloquentBuilder $query, Carbon $date)
     {
-        $query->where('startdate', $date->format('Y-m-d'));
+        $query->where('startdate', $date->format('Y-m-d 00:00:00'));
     }
 
     /**
-     * @param Builder $query
+     * @param EloquentBuilder $query
      * @param Carbon  $date
      */
-    public function scopeTargets(Builder $query, Carbon $date)
+    public function scopeTargets(EloquentBuilder $query, Carbon $date)
     {
-        $query->where('targetdate', $date->format('Y-m-d'));
+        $query->where('targetdate', $date->format('Y-m-d 00:00:00'));
     }
 
 

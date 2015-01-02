@@ -4,7 +4,6 @@
     "license": "MIT",
     "keywords": ["finance", "finances", "manager", "euro", "laravel", "money", "financials", "budgets", "transactions", "transfers", "management"],
     "homepage": "https://github.com/JC5/firefly-iii",
-    "php": ">=5.4.0",
     "type": "project",
     "authors": [
         {
@@ -33,12 +32,16 @@
         "doctrine/dbal": "~2.3",
         "satooshi/php-coveralls": "dev-master",
         "mockery/mockery": "@stable",
-        "league/factory-muffin": "~2.0",
+        "league/factory-muffin": "~2.1",
         "codeception/codeception": "*",
         "codeception/c3": "2.*",
         "sebastian/phpcpd": "*",
         "sebastian/phpdcd": "*",
-        "codeception/phpbuiltinserver": "*"
+        "codeception/phpbuiltinserver": "*",
+        "codeception/specify": "*",
+        "codeception/verify": "*",
+        "fzaninotto/faker": "1.*"
+
 
     },
     "autoload": {

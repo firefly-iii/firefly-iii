@@ -3,7 +3,7 @@
 return [
     'index_periods'        => ['1D', '1W', '1M', '3M', '6M', '1Y', 'custom'],
     'budget_periods'       => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
-    'piggybank_periods'    => [
+    'piggy_bank_periods'    => [
         'week'    => 'Week',
         'month'   => 'Month',
         'quarter' => 'Quarter',

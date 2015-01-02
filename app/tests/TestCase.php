@@ -1,5 +1,7 @@
 <?php
-use Mockery as m;
+
+use League\FactoryMuffin\Facade as f;
+
 
 /**
  * Class TestCase
@@ -14,42 +16,38 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     public function createApplication()
     {
         $unitTesting     = true;
-        $testEnvironment = 'testing';
+        $testEnvironment = 'testingInMemory';
+
 
         return require __DIR__ . '/../../bootstrap/start.php';
+
     }
 
     public function setUp()
     {
         parent::setUp();
-        Artisan::call('migrate');
-        $this->seed();
+        $this->prepareForTests();
 
-
-        //$this->
-    }
-
-    /**
-     * @param $class
-     *
-     * @return m\MockInterface
-     */
-    public function mock($class)
-    {
-        $mock = Mockery::mock($class);
-
-        $this->app->instance($class, $mock);
-
-        return $mock;
     }
 
     static public function setupBeforeClass()
     {
-        League\FactoryMuffin\Facade::loadFactories(__DIR__ . '/factories');
+        f::loadFactories(__DIR__ . '/factories');
     }
 
     public function tearDown()
     {
-        m::close();
+        //m::close();
+    }
+
+    /**
+     * Migrates the database and set the mailer to 'pretend'.
+     * This will cause the tests to run quickly.
+     *
+     */
+    private function prepareForTests()
+    {
+        Artisan::call('migrate');
+        Mail::pretend(true);
     }
 }

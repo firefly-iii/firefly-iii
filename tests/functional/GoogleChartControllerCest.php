@@ -26,20 +26,20 @@ class GoogleChartControllerCest
     /**
      * @param FunctionalTester $I
      */
-    public function accountBalanceChart(FunctionalTester $I)
+    public function accountAllBalanceChart(FunctionalTester $I)
     {
-        $I->wantTo('see the session balance chart of an account.');
-        $I->amOnPage('chart/account/1/session');
+        $I->wantTo('see the complete balance chart of an account.');
+        $I->amOnPage('chart/account/1/all');
         $I->seeResponseCodeIs(200);
     }
 
     /**
      * @param FunctionalTester $I
      */
-    public function accountAllBalanceChart(FunctionalTester $I)
+    public function accountBalanceChart(FunctionalTester $I)
     {
-        $I->wantTo('see the complete balance chart of an account.');
-        $I->amOnPage('chart/account/1/all');
+        $I->wantTo('see the session balance chart of an account.');
+        $I->amOnPage('chart/account/1/session');
         $I->seeResponseCodeIs(200);
     }
 
@@ -76,6 +76,26 @@ class GoogleChartControllerCest
     /**
      * @param FunctionalTester $I
      */
+    public function billOverview(FunctionalTester $I)
+    {
+        $I->wantTo('see the chart for the history of a bill');
+        $I->amOnPage('/chart/bills/1');
+        $I->seeResponseCodeIs(200);
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function billsOverview(FunctionalTester $I)
+    {
+        $I->wantTo('see the chart for which bills I have yet to pay');
+        $I->amOnPage('/chart/home/bills');
+        $I->seeResponseCodeIs(200);
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
     public function budgetLimitSpending(FunctionalTester $I)
     {
         $I->wantTo('see the chart for a budget and a repetition');
@@ -88,8 +108,9 @@ class GoogleChartControllerCest
      */
     public function budgetsAndSpending(FunctionalTester $I)
     {
+        $year = date('Y');
         $I->wantTo('see the chart for a budget in a specific year');
-        $I->amOnPage('/chart/budget/1/spending/2014');
+        $I->amOnPage('/chart/budget/1/spending/'.$year);
         $I->seeResponseCodeIs(200);
     }
 
@@ -109,8 +130,9 @@ class GoogleChartControllerCest
      */
     public function categoriesAndSpending(FunctionalTester $I)
     {
+        $year = date('Y');
         $I->wantTo('see the chart for a category in a specific year');
-        $I->amOnPage('/chart/category/1/spending/2014');
+        $I->amOnPage('/chart/category/1/spending/'.$year);
         $I->seeResponseCodeIs(200);
     }
 
@@ -128,40 +150,20 @@ class GoogleChartControllerCest
     /**
      * @param FunctionalTester $I
      */
+    public function emptyBillOverview(FunctionalTester $I)
+    {
+        $I->wantTo('see the chart for the history of an empty bill');
+        $I->amOnPage('/chart/bills/2');
+        $I->seeResponseCodeIs(200);
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
     public function piggyBankHistory(FunctionalTester $I)
     {
         $I->wantTo('see the chart for the history of a piggy bank');
-        $I->amOnPage('/chart/piggyhistory/1');
-        $I->seeResponseCodeIs(200);
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
-    public function recurringOverview(FunctionalTester $I)
-    {
-        $I->wantTo('see the chart for the history of a recurring transaction');
-        $I->amOnPage('/chart/recurring/1');
-        $I->seeResponseCodeIs(200);
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
-    public function emptyRecurringOverview(FunctionalTester $I)
-    {
-        $I->wantTo('see the chart for the history of an empty recurring transaction');
-        $I->amOnPage('/chart/recurring/2');
-        $I->seeResponseCodeIs(200);
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
-    public function recurringTransactionsOverview(FunctionalTester $I)
-    {
-        $I->wantTo('see the chart for which recurring transactions I have yet to pay');
-        $I->amOnPage('/chart/home/recurring');
+        $I->amOnPage('/chart/piggy_history/1');
         $I->seeResponseCodeIs(200);
     }
 

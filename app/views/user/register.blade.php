@@ -23,7 +23,7 @@
 
                 <div class="btn-group btn-group-justified btn-group-sm">
                     <a href="{{route('login')}}" class="btn btn-default">Back to the login form</a>
-                    <a href="{{route('remindme')}}" class="btn btn-default">Forgot your password?</a>
+                    <a href="{{route('remindMe')}}" class="btn btn-default">Forgot your password?</a>
                 </div>
 
                 </div>

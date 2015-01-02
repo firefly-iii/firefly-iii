@@ -2,8 +2,8 @@
 
 namespace FireflyIII\Database\TransactionCurrency;
 
-use FireflyIII\Database\CommonDatabaseCalls;
-use FireflyIII\Database\CUD;
+use FireflyIII\Database\CommonDatabaseCallsInterface;
+use FireflyIII\Database\CUDInterface;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Support\Collection;
@@ -14,7 +14,7 @@ use Illuminate\Support\MessageBag;
  *
  * @package FireflyIII\Database
  */
-class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabaseCalls, CUD
+class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabaseCallsInterface, CUDInterface
 {
 
     /**
@@ -35,7 +35,6 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
     public function store(array $data)
     {
         $currency = new \TransactionCurrency($data);
-        \Log::debug('Is valid? ' . boolstr($currency->isValid()));
         $currency->save();
 
         return $currency;
@@ -52,7 +51,6 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
         $model->symbol = $data['symbol'];
         $model->code   = $data['code'];
         $model->name   = $data['name'];
-        \Log::debug('Is valid? ' . boolstr($model->isValid()));
         $model->save();
 
         return true;
@@ -94,12 +92,12 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
      * Returns an object with id $id.
      *
      * @param int $objectId
+     * @throws NotImplementedException
      *
      * @return \Eloquent
      */
     public function find($objectId)
     {
-        // TODO: Implement find() method.
         throw new NotImplementedException;
     }
 
@@ -107,12 +105,12 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
      * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
      *
      * @param $what
+     * @throws NotImplementedException
      *
      * @return \AccountType|null
      */
     public function findByWhat($what)
     {
-        // TODO: Implement findByWhat() method.
         throw new NotImplementedException;
     }
 
@@ -128,12 +126,12 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
 
     /**
      * @param array $objectIds
+     * @throws NotImplementedException
      *
      * @return Collection
      */
     public function getByIds(array $objectIds)
     {
-        // TODO: Implement getByIds() method.
         throw new NotImplementedException;
     }
 

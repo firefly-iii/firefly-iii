@@ -37,5 +37,8 @@
         <testsuite name="Application Test Suite">
             <directory>./app/tests/</directory>
         </testsuite>
+        <testsuite name="CodeCeption">
+            <directory>./tests/unit/</directory>
+        </testsuite>
     </testsuites>
 </phpunit>

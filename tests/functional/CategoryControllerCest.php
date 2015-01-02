@@ -68,6 +68,19 @@ class CategoryControllerCest
     /**
      * @param FunctionalTester $I
      */
+    public function failUpdate(FunctionalTester $I)
+    {
+        $I->wantTo('update a category and fail');
+        $I->amOnPage('/categories/edit/4');
+        $I->see('Edit category "Delete me"');
+        $I->submitForm('#update', ['name' => '', 'post_submit_action' => 'update']);
+        $I->seeRecord('categories', ['name' => 'Delete me']);
+
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
     public function index(FunctionalTester $I)
     {
         $I->wantTo('show all categories');
@@ -94,20 +107,6 @@ class CategoryControllerCest
         $I->see('Create a new category');
         $I->submitForm('#store', ['name' => 'New category.', 'post_submit_action' => 'store']);
         $I->seeRecord('categories', ['name' => 'New category.']);
-        resetToClean::clean();
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
-    public function storeValidateOnly(FunctionalTester $I)
-    {
-        $I->amOnPage('/categories/create');
-        $I->wantTo('validate a new category');
-        $I->see('Create a new category');
-        $I->submitForm('#store', ['name' => 'New category.', 'post_submit_action' => 'validate_only']);
-        $I->dontSeeRecord('categories', ['name' => 'New category.']);
-        resetToClean::clean();
     }
 
     /**
@@ -120,7 +119,6 @@ class CategoryControllerCest
         $I->see('Create a new category');
         $I->submitForm('#store', ['name' => 'New category.', 'post_submit_action' => 'create_another']);
         $I->seeRecord('categories', ['name' => 'New category.']);
-        resetToClean::clean();
     }
 
     /**
@@ -131,10 +129,22 @@ class CategoryControllerCest
         $I->amOnPage('/categories/create');
         $I->wantTo('make storing a new category fail.');
         $I->see('Create a new category');
-        $I->submitForm('#store', ['name' => null,  'post_submit_action' => 'validate_only']);
+        $I->submitForm('#store', ['name' => null, 'post_submit_action' => 'validate_only']);
         $I->dontSeeRecord('categories', ['name' => 'New category.']);
-        resetToClean::clean();
     }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function storeValidateOnly(FunctionalTester $I)
+    {
+        $I->amOnPage('/categories/create');
+        $I->wantTo('validate a new category');
+        $I->see('Create a new category');
+        $I->submitForm('#store', ['name' => 'New category.', 'post_submit_action' => 'validate_only']);
+        $I->dontSeeRecord('categories', ['name' => 'New category.']);
+    }
+
     /**
      * @param FunctionalTester $I
      */
@@ -145,20 +155,21 @@ class CategoryControllerCest
         $I->see('Edit category "Delete me"');
         $I->submitForm('#update', ['name' => 'Update me', 'post_submit_action' => 'update']);
         $I->seeRecord('categories', ['name' => 'Update me']);
-        resetToClean::clean();
 
     }
 
     /**
      * @param FunctionalTester $I
      */
-    public function failUpdate(FunctionalTester $I)
+    public function updateAndReturn(FunctionalTester $I)
     {
-        $I->wantTo('update a category and fail');
+        $I->wantTo('update a category and return to form');
         $I->amOnPage('/categories/edit/4');
         $I->see('Edit category "Delete me"');
-        $I->submitForm('#update', ['name' => '', 'post_submit_action' => 'update']);
-        $I->seeRecord('categories', ['name' => 'Delete me']);
+        $I->submitForm(
+            '#update', ['name' => 'Savings accountXX', 'post_submit_action' => 'return_to_edit']
+        );
+        $I->seeRecord('categories', ['name' => 'Savings accountXX']);
 
     }
 
@@ -175,21 +186,6 @@ class CategoryControllerCest
         );
         $I->dontSeeRecord('categories', ['name' => 'Savings accountXX']);
         $I->seeRecord('categories', ['name' => 'Delete me']);
-
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
-    public function updateAndReturn(FunctionalTester $I)
-    {
-        $I->wantTo('update a category and return to form');
-        $I->amOnPage('/categories/edit/4');
-        $I->see('Edit category "Delete me"');
-        $I->submitForm(
-            '#update', ['name' => 'Savings accountXX',  'post_submit_action' => 'return_to_edit']
-        );
-        $I->seeRecord('categories', ['name' => 'Savings accountXX']);
 
     }
 

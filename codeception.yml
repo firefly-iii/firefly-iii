@@ -10,13 +10,6 @@ settings:
     memory_limit: 1024M
 modules:
   config:
-    Db:
-      dsn: 'sqlite:tests/_data/db.sqlite'
-      user: ''
-      password: ''
-      dump: tests/_data/dump.sql
-      cleanup: true
-      populate: true
 coverage:
   enabled: true
   remote: false

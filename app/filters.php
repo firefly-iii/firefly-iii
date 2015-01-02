@@ -94,3 +94,11 @@ Route::filter(
         }
     }
 );
+
+Route::filter(
+    'allow-register', function () {
+    if (Config::get('auth.allow_register') !== true) {
+        return View::make('error')->with('message', 'Not possible');
+    }
+}
+);
