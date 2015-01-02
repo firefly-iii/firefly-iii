@@ -4,8 +4,8 @@ namespace FireflyIII\Database\Bill;
 
 
 use Carbon\Carbon;
-use FireflyIII\Database\CommonDatabaseCalls;
-use FireflyIII\Database\CUD;
+use FireflyIII\Database\CommonDatabaseCallsInterface;
+use FireflyIII\Database\CUDInterface;
 use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Database\Eloquent\Model as Eloquent;
@@ -17,7 +17,7 @@ use Illuminate\Support\MessageBag;
  *
  * @package FireflyIII\Database
  */
-class Bill implements CUD, CommonDatabaseCalls, BillInterface
+class Bill implements CUDInterface, CommonDatabaseCallsInterface, BillInterface
 {
     use SwitchUser;
 

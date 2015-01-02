@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
  *
  * @package FireflyIII\Database
  */
-interface CUD
+interface CUDInterface
 {
 
     /**

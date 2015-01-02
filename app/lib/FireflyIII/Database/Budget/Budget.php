@@ -2,8 +2,8 @@
 namespace FireflyIII\Database\Budget;
 
 use Carbon\Carbon;
-use FireflyIII\Database\CommonDatabaseCalls;
-use FireflyIII\Database\CUD;
+use FireflyIII\Database\CommonDatabaseCallsInterface;
+use FireflyIII\Database\CUDInterface;
 use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Builder;
  *
  * @package FireflyIII\Database
  */
-class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
+class Budget implements CUDInterface, CommonDatabaseCallsInterface, BudgetInterface
 {
     use SwitchUser;
 

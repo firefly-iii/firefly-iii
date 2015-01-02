@@ -2,7 +2,7 @@
 namespace FireflyIII\Shared\Mail;
 
 use Swift_RfcComplianceException;
-
+use Illuminate\Mail\Message;
 /**
  * Class Registration
  *
@@ -28,7 +28,8 @@ class Registration implements RegistrationInterface
         $data = ['password' => $password];
         try {
             \Mail::send(
-                ['emails.user.register-html', 'emails.user.register-text'], $data, function ($message) use ($email) {
+                ['emails.user.register-html', 'emails.user.register-text'], $data, function (Message $message) use ($email) {
+
                 $message->to($email, $email)->subject('Welcome to Firefly!');
             }
             );
@@ -51,7 +52,7 @@ class Registration implements RegistrationInterface
         $data = ['reset' => $reset];
         try {
             \Mail::send(
-                ['emails.user.remindMe-html', 'emails.user.remindMe-text'], $data, function ($message) use ($email) {
+                ['emails.user.remindMe-html', 'emails.user.remindMe-text'], $data, function (Message $message) use ($email) {
                 $message->to($email, $email)->subject('Forgot your password?');
             }
             );
@@ -77,7 +78,8 @@ class Registration implements RegistrationInterface
 
         try {
             \Mail::send(
-                ['emails.user.verify-html', 'emails.user.verify-text'], $data, function ($message) use ($email) {
+                ['emails.user.verify-html', 'emails.user.verify-text'], $data, function (Message $message) use ($email) {
+
                 $message->to($email, $email)->subject('Verify your e-mail address.');
             }
             );
