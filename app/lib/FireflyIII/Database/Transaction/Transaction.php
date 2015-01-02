@@ -2,8 +2,8 @@
 
 namespace FireflyIII\Database\Transaction;
 
-use FireflyIII\Database\CommonDatabaseCalls;
-use FireflyIII\Database\CUD;
+use FireflyIII\Database\CommonDatabaseCallsInterface;
+use FireflyIII\Database\CUDInterface;
 use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
@@ -16,7 +16,7 @@ use Illuminate\Support\MessageBag;
  *
  * @package FireflyIII\Database
  */
-class Transaction implements CUD, CommonDatabaseCalls
+class Transaction implements CUDInterface, CommonDatabaseCallsInterface
 {
     use SwitchUser;
 

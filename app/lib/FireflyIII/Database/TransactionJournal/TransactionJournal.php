@@ -4,8 +4,8 @@ namespace FireflyIII\Database\TransactionJournal;
 
 
 use Carbon\Carbon;
-use FireflyIII\Database\CommonDatabaseCalls;
-use FireflyIII\Database\CUD;
+use FireflyIII\Database\CommonDatabaseCallsInterface;
+use FireflyIII\Database\CUDInterface;
 use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
@@ -18,7 +18,7 @@ use Illuminate\Support\MessageBag;
  *
  * @package FireflyIII\Database
  */
-class TransactionJournal implements TransactionJournalInterface, CUD, CommonDatabaseCalls
+class TransactionJournal implements TransactionJournalInterface, CUDInterface, CommonDatabaseCallsInterface
 {
     use SwitchUser;
 

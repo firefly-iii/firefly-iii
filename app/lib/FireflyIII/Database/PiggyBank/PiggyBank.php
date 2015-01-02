@@ -2,8 +2,8 @@
 namespace FireflyIII\Database\PiggyBank;
 
 use Carbon\Carbon;
-use FireflyIII\Database\CommonDatabaseCalls;
-use FireflyIII\Database\CUD;
+use FireflyIII\Database\CommonDatabaseCallsInterface;
+use FireflyIII\Database\CUDInterface;
 use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Support\Collection;
@@ -13,7 +13,7 @@ use Illuminate\Support\Collection;
  *
  * @package FireflyIII\Database
  */
-class PiggyBank extends PiggyBankShared implements CUD, CommonDatabaseCalls, PiggyBankInterface
+class PiggyBank extends PiggyBankShared implements CUDInterface, CommonDatabaseCallsInterface, PiggyBankInterface
 {
     /**
      * @param \PiggyBank $piggyBank

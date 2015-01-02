@@ -2,8 +2,8 @@
 
 namespace FireflyIII\Database\AccountType;
 
-use FireflyIII\Database\CommonDatabaseCalls;
-use FireflyIII\Database\CUD;
+use FireflyIII\Database\CommonDatabaseCallsInterface;
+use FireflyIII\Database\CUDInterface;
 use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Database\Eloquent\Model as Eloquent;
@@ -14,7 +14,7 @@ use Illuminate\Support\Collection;
  *
  * @package FireflyIII\Database
  */
-class AccountType implements CUD, CommonDatabaseCalls
+class AccountType implements CUDInterface, CommonDatabaseCallsInterface
 {
 
     /**

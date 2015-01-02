@@ -3,8 +3,8 @@
 namespace FireflyIII\Database\Account;
 
 use Carbon\Carbon;
-use FireflyIII\Database\CommonDatabaseCalls;
-use FireflyIII\Database\CUD;
+use FireflyIII\Database\CommonDatabaseCallsInterface;
+use FireflyIII\Database\CUDInterface;
 use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,7 +18,7 @@ use Illuminate\Support\MessageBag;
  * @package    FireflyIII\Database
  * @implements FireflyIII\Database\Account\AccountInterface
  */
-class Account implements CUD, CommonDatabaseCalls, AccountInterface
+class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInterface
 {
     use SwitchUser;
 

@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
  *
  * @package FireflyIII\Database
  */
-interface CommonDatabaseCalls
+interface CommonDatabaseCallsInterface
 {
     /**
      * Returns an object with id $id.

@@ -2,8 +2,8 @@
 
 namespace FireflyIII\Database\TransactionCurrency;
 
-use FireflyIII\Database\CommonDatabaseCalls;
-use FireflyIII\Database\CUD;
+use FireflyIII\Database\CommonDatabaseCallsInterface;
+use FireflyIII\Database\CUDInterface;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Support\Collection;
@@ -14,7 +14,7 @@ use Illuminate\Support\MessageBag;
  *
  * @package FireflyIII\Database
  */
-class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabaseCalls, CUD
+class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabaseCallsInterface, CUDInterface
 {
 
     /**

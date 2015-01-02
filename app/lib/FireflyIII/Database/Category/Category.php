@@ -2,8 +2,8 @@
 namespace FireflyIII\Database\Category;
 
 use Carbon\Carbon;
-use FireflyIII\Database\CommonDatabaseCalls;
-use FireflyIII\Database\CUD;
+use FireflyIII\Database\CommonDatabaseCallsInterface;
+use FireflyIII\Database\CUDInterface;
 use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
@@ -16,7 +16,7 @@ use Illuminate\Support\MessageBag;
  *
  * @package FireflyIII\Database
  */
-class Category implements CUD, CommonDatabaseCalls
+class Category implements CUDInterface, CommonDatabaseCallsInterface
 {
     use SwitchUser;
 

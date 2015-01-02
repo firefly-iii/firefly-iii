@@ -4,8 +4,8 @@ namespace FireflyIII\Database\PiggyBank;
 
 
 use FireflyIII\Collection\PiggyBankPart;
-use FireflyIII\Database\CommonDatabaseCalls;
-use FireflyIII\Database\CUD;
+use FireflyIII\Database\CommonDatabaseCallsInterface;
+use FireflyIII\Database\CUDInterface;
 use Illuminate\Support\Collection;
 
 /**
@@ -13,7 +13,7 @@ use Illuminate\Support\Collection;
  *
  * @package FireflyIII\Database
  */
-class RepeatedExpense extends PiggyBankShared implements CUD, CommonDatabaseCalls, PiggyBankInterface
+class RepeatedExpense extends PiggyBankShared implements CUDInterface, CommonDatabaseCallsInterface, PiggyBankInterface
 {
 
     /**

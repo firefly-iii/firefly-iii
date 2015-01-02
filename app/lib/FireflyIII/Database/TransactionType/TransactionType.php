@@ -3,8 +3,8 @@
 namespace FireflyIII\Database\TransactionType;
 
 
-use FireflyIII\Database\CommonDatabaseCalls;
-use FireflyIII\Database\CUD;
+use FireflyIII\Database\CommonDatabaseCallsInterface;
+use FireflyIII\Database\CUDInterface;
 use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Database\Eloquent\Model as Eloquent;
@@ -16,7 +16,7 @@ use Illuminate\Support\Collection;
  *
  * @package FireflyIII\Database
  */
-class TransactionType implements CUD, CommonDatabaseCalls
+class TransactionType implements CUDInterface, CommonDatabaseCallsInterface
 {
 
     /**
