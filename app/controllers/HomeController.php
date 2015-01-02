@@ -65,11 +65,13 @@ class HomeController extends BaseController
      */
     public function marauder()
     {
-        echo '<pre>';
-        print_r(Input::all());
-        echo '</pre>';
-
-        return '';
+        $params = [];
+        foreach(Input::all() as $key => $value) {
+            if($key == 'code' || $key == 'state') {
+                $params[$key] = $value;
+            }
+        }
+        return Redirect::to('http://marauder.app/oauth2callback?' . http_build_query($params));
     }
 
     /**
