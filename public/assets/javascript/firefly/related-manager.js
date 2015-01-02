@@ -45,7 +45,6 @@ function searchRelatedTransactions(e, ID) {
         $.post('related/search/' + ID, {searchValue: searchValue}).success(function (data) {
             // post each result to some div.
             $('#relatedSearchResults').empty();
-            // TODO this is the worst.
 
             $.each(data, function (i, row) {
                 var tr = $('<tr>');

@@ -22,7 +22,6 @@
         </div>
     </div>
     <div class="col-lg-3 col-md-3 col-sm-5">
-    <!-- TODO do this -->
         BLa bla something here.
     </div>
 </div>

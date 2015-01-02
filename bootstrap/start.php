@@ -96,6 +96,6 @@ Event::subscribe('FireflyIII\Event\TransactionJournal');
 // see if the various has-many-throughs actually get used.
 // set very tight rules on all models
 // create custom uniquely rules.
-// TODO add "Create new X" button to any list there is: categories, accounts, piggies, etc.
+// add "Create new X" button to any list there is: categories, accounts, piggies, etc.
 // Install PHP5 and code thing and create very small methods.
 return $app;

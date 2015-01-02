@@ -249,7 +249,7 @@ class TransactionController extends BaseController
         $data['transaction_currency_id'] = $transactionCurrency->id;
         $data['completed']               = 0;
         $data['what']                    = $what;
-        $data['currency']                = 'EUR'; // TODO allow custom currency
+        $data['currency']                = 'EUR';
 
         // always validate:
         $messages = $this->_repository->validate($data);

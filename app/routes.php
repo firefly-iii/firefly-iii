@@ -258,11 +258,11 @@ Route::group(
     Route::get('/profile/change-password', ['uses' => 'ProfileController@changePassword', 'as' => 'change-password']);
 
     // related controller:
+    Route::get('/related/alreadyRelated/{tj}', ['uses' => 'RelatedController@alreadyRelated','as' => 'related.alreadyRelated']);
+    Route::post('/related/relate/{tj}/{tjSecond}', ['uses' => 'RelatedController@relate','as' => 'related.relate']);
     Route::get('/related/removeRelation/{tj}/{tjSecond}', ['uses' => 'RelatedController@removeRelation','as' => 'related.removeRelation']);
     Route::get('/related/related/{tj}', ['uses' => 'RelatedController@related','as' => 'related.related']);
     Route::post('/related/search/{tj}', ['uses' => 'RelatedController@search','as' => 'related.search']);
-    Route::post('/related/relate/{tj}/{tjSecond}', ['uses' => 'RelatedController@relate','as' => 'related.relate']);
-    Route::get('/related/alreadyRelated/{tj}', ['uses' => 'RelatedController@alreadyRelated','as' => 'related.alreadyRelated']);
 
     // bills controller
     Route::get('/bills', ['uses' => 'BillController@index', 'as' => 'bills.index']);

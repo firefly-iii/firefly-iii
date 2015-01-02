@@ -49,9 +49,8 @@
                     <tr>
                         <td>Next expected match</td>
                         <td>
-                        <?php $nextExpectedMatch = $bill->nextExpectedMatch();?>
-                            @if($nextExpectedMatch)
-                                {{$nextExpectedMatch->format('j F Y')}}
+                            @if($bill->nextExpectedMatch)
+                                {{$bill->nextExpectedMatch->format('j F Y')}}
                             @else
                                 <em>Unknown</em>
                             @endif

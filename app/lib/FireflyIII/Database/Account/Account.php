@@ -239,7 +239,6 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
                                 $q->orWhere(
                                     function (QueryBuilder $q) use ($model) {
                                         $q->where('accounts.name', 'LIKE', '%' . $model->name . '%');
-                                        // TODO magic number!
                                         $q->where('accounts.account_type_id', 3);
                                         $q->where('accounts.active', 0);
                                     }
@@ -280,7 +279,6 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
                 $q->orWhere(
                     function (EloquentBuilder $q) use ($model) {
                         $q->where('accounts.name', 'LIKE', '%' . $model->name . '%');
-                        // TODO magic number!
                         $q->where('accounts.account_type_id', 3);
                         $q->where('accounts.active', 0);
                     }
@@ -324,7 +322,6 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
             $this->storeInitialBalance($account, $data);
         }
 
-        // TODO this needs cleaning up and thinking over.
         switch ($account->accountType->type) {
             case 'Asset account':
             case 'Default account':
@@ -352,7 +349,6 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
         $model->name   = $data['name'];
         $model->active = isset($data['active']) ? intval($data['active']) : 0;
 
-        // TODO this needs cleaning up and thinking over.
         switch ($model->accountType->type) {
             case 'Asset account':
             case 'Default account':
@@ -365,7 +361,6 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
         if (isset($data['openingbalance']) && isset($data['openingbalancedate']) && strlen($data['openingbalancedate']) > 0) {
             /** @noinspection PhpParamsInspection */
             $openingBalance = $this->openingBalanceTransaction($model);
-            // TODO this needs cleaning up and thinking over.
             if (is_null($openingBalance)) {
                 $this->storeInitialBalance($model, $data);
             } else {
@@ -483,7 +478,6 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
      */
     public function findByWhat($what)
     {
-        // TODO: Implement findByWhat() method.
         throw new NotImplementedException;
     }
 
@@ -495,7 +489,6 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
      */
     public function get()
     {
-        // TODO: Implement get() method.
         throw new NotImplementedException;
     }
 

@@ -262,11 +262,9 @@ class PiggyBankController extends BaseController
          * Number of reminders:
          */
 
-        $amountPerReminder = $piggyBank->amountPerReminder();
-        $remindersCount    = $piggyBank->countFutureReminders();
         $subTitle          = e($piggyBank->name);
 
-        return View::make('piggy_banks.show', compact('amountPerReminder', 'remindersCount', 'piggyBank', 'events', 'subTitle'));
+        return View::make('piggy_banks.show', compact('piggyBank', 'events', 'subTitle'));
 
     }
 

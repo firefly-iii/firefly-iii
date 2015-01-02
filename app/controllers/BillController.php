@@ -83,6 +83,12 @@ class BillController extends BaseController
     public function index()
     {
         $bills = $this->_repository->get();
+        $bills->each(
+            function (Bill $bill) {
+                $bill->nextExpectedMatch = $this->_repository->nextExpectedMatch($bill);
+                $bill->lastFoundMatch    = $this->_repository->lastFoundMatch($bill);
+            }
+        );
 
         return View::make('bills.index', compact('bills'));
     }
@@ -115,6 +121,7 @@ class BillController extends BaseController
     public function show(Bill $bill)
     {
         $journals = $bill->transactionjournals()->withRelevantData()->orderBy('date', 'DESC')->get();
+        $bill->nextExpectedMatch = $this->_repository->nextExpectedMatch($bill);
         $hideBill = true;
 
 

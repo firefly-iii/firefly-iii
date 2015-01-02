@@ -16,7 +16,6 @@ class Steam
 {
 
     /**
-     * TODO find a way to reliably remove cache entries for accounts.
      *
      * @param \Account $account
      * @param Carbon   $date
