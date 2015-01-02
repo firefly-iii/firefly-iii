@@ -199,9 +199,9 @@ class PiggyBankController extends BaseController
              */
             Event::fire('piggy_bank.addMoney', [$piggyBank, $amount]); // new and used.
 
-            Session::flash('success', 'Added ' . mf($amount, false) . ' to "' . e($piggyBank->name) . '".');
+            Session::flash('success', 'Added ' . Amount::format($amount, false) . ' to "' . e($piggyBank->name) . '".');
         } else {
-            Session::flash('error', 'Could not add ' . mf($amount, false) . ' to "' . e($piggyBank->name) . '".');
+            Session::flash('error', 'Could not add ' . Amount::format($amount, false) . ' to "' . e($piggyBank->name) . '".');
         }
 
         return Redirect::route('piggy_banks.index');
@@ -228,9 +228,9 @@ class PiggyBankController extends BaseController
              */
             Event::fire('piggy_bank.removeMoney', [$piggyBank, $amount]); // new and used.
 
-            Session::flash('success', 'Removed ' . mf($amount, false) . ' from "' . e($piggyBank->name) . '".');
+            Session::flash('success', 'Removed ' . Amount::format($amount, false) . ' from "' . e($piggyBank->name) . '".');
         } else {
-            Session::flash('error', 'Could not remove ' . mf($amount, false) . ' from "' . e($piggyBank->name) . '".');
+            Session::flash('error', 'Could not remove ' . Amount::format($amount, false) . ' from "' . e($piggyBank->name) . '".');
         }
 
         return Redirect::route('piggy_banks.index');

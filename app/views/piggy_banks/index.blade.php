@@ -50,7 +50,7 @@
                     </div>
                     <!-- One block -->
                     <div class="col-lg-1 col-md-4 col-sm-4 col-xs-4">
-                        {{mf($piggyBank->savedSoFar,true)}}
+                        {{Amount::format($piggyBank->savedSoFar,true)}}
                     </div>
                     <!-- One block -->
                     <div class="col-lg-7 col-md-12 col-sm-12 col-xs-12">
@@ -68,12 +68,12 @@
                     </div>
                     <!-- One block -->
                     <div class="col-lg-1 col-md-6 col-sm-6 col-xs-6">
-                        {{mf($piggyBank->targetamount,true)}}
+                        {{Amount::format($piggyBank->targetamount,true)}}
                     </div>
                     <!-- One block -->
                     <div class="col-lg-1 col-md-6 col-sm-6 col-xs-6">
                         @if($piggyBank->leftToSave > 0)
-                            {{mf($piggyBank->leftToSave)}}
+                            {{Amount::format($piggyBank->leftToSave)}}
                         @endif
                     </div>
                 </div>
@@ -109,11 +109,11 @@
                 @foreach($accounts as $id => $info)
                     <tr>
                         <td><a href="{{route('accounts.show',$id)}}">{{{$info['name']}}}</a></td>
-                        <td>{{mf($info['balance'])}}</td>
-                        <td>{{mf($info['leftForPiggyBanks'])}}</td>
-                        <td>{{mf($info['sumOfTargets'])}}</td>
-                        <td>{{mf($info['sumOfSaved'])}}</td>
-                        <td>{{mf($info['leftToSave'])}}</td>
+                        <td>{{Amount::format($info['balance'])}}</td>
+                        <td>{{Amount::format($info['leftForPiggyBanks'])}}</td>
+                        <td>{{Amount::format($info['sumOfTargets'])}}</td>
+                        <td>{{Amount::format($info['sumOfSaved'])}}</td>
+                        <td>{{Amount::format($info['leftToSave'])}}</td>
                     </tr>
                 @endforeach
             </table>

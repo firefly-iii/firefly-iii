@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use FireflyIII\Database\Account\Account as AccountRepository;
 use FireflyIII\Database\SwitchUser;
 use FireflyIII\Database\TransactionJournal\TransactionJournal as JournalRepository;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 

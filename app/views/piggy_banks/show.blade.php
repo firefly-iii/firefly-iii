@@ -40,15 +40,15 @@
                         </tr>
                         <tr>
                             <td>Target amount</td>
-                            <td>{{mf($piggyBank->targetamount)}}</td>
+                            <td>{{Amount::format($piggyBank->targetamount)}}</td>
                         </tr>
                         <tr>
                             <td>Saved so far</td>
-                            <td>{{mf($piggyBank->currentRelevantRep()->currentamount)}}</td>
+                            <td>{{Amount::format($piggyBank->currentRelevantRep()->currentamount)}}</td>
                         </tr>
                         <tr>
                             <td>Left to save</td>
-                            <td>{{mf($piggyBank->targetamount-$piggyBank->currentRelevantRep()->currentamount)}}</td>
+                            <td>{{Amount::format($piggyBank->targetamount-$piggyBank->currentRelevantRep()->currentamount)}}</td>
                         </tr>
                         <tr>
                             <td>Start date</td>
@@ -95,7 +95,7 @@
                             </tr>
                             <tr>
                                 <td>Expected amount per reminder</td>
-                                <td>{{mf($amountPerReminder)}}</td>
+                                <td>{{Amount::format($amountPerReminder)}}</td>
                             </tr>
                         @endif
                     </table>

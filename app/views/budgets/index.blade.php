@@ -10,11 +10,11 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-lg-6 col-md-4 col-sm-3">
-                        <small>Budgeted: <span id="budgetedAmount" data-value="300">{{mf(300)}}</span></small>
+                        <small>Budgeted: <span id="budgetedAmount" data-value="300">{{Amount::format(300)}}</span></small>
                     </div>
                     <div class="col-lg-6 col-md-4 col-sm-3" style="text-align:right;">
                         <small>Income {{\Session::get('start', \Carbon\Carbon::now()->startOfMonth())->format('F Y')}}:
-                        <a href="#" class="updateIncome"><span id="totalAmount" data-value="{{$amount}}">{{mf($amount)}}</span></a></small>
+                        <a href="#" class="updateIncome"><span id="totalAmount" data-value="{{$amount}}">{{Amount::format($amount)}}</span></a></small>
                     </div>
                 </div>
 
@@ -29,7 +29,7 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-6 col-md-4 col-sm-3">
-                        <small>Spent: {{mf($spent)}}</small>
+                        <small>Spent: {{Amount::format($spent)}}</small>
                     </div>
                 </div>
                 <div class="row">
@@ -100,21 +100,21 @@
                 <!-- budget-info-X holds the input and the euro-sign: -->
                 <span id="budget-info-{{$budget->id}}">
                 @if($budget->currentRep->amount > $budget->spent)
-                    <span class="text-success">{{getCurrencySymbol()}}</span> <input type="number" min="0" max="{{$budgetMaximum}}" data-id="{{$budget->id}}" step="1" value="{{$budget->currentRep->amount}}" style="width:90px;color:#3c763d;" />
+                    <span class="text-success">{{Amount::getCurrencySymbol()}}</span> <input type="number" min="0" max="{{$budgetMaximum}}" data-id="{{$budget->id}}" step="1" value="{{$budget->currentRep->amount}}" style="width:90px;color:#3c763d;" />
                 @else
-                    <span class="text-danger">{{getCurrencySymbol()}}</span> <input type="number" min="0" max="{{$budgetMaximum}}"  data-id="{{$budget->id}}" step="1" value="{{$budget->currentRep->amount}}" style="width:90px;color:#a94442;" />
+                    <span class="text-danger">{{Amount::getCurrencySymbol()}}</span> <input type="number" min="0" max="{{$budgetMaximum}}"  data-id="{{$budget->id}}" step="1" value="{{$budget->currentRep->amount}}" style="width:90px;color:#a94442;" />
                 @endif
                 </span>
             @else
                 <span id="budget-description-{{$budget->id}}"><em>No budget</em></span>
                 <span id="budget-info-{{$budget->id}}">
-                    <span class="text-success" style="display:none;">{{getCurrencySymbol()}}</span> <input data-id="{{$budget->id}}" type="number" min="0" max="{{$budgetMaximum}}" step="1" value="0" style="width:50px;color:#3c763d;display:none;" />
+                    <span class="text-success" style="display:none;">{{Amount::getCurrencySymbol()}}</span> <input data-id="{{$budget->id}}" type="number" min="0" max="{{$budgetMaximum}}" step="1" value="0" style="width:50px;color:#3c763d;display:none;" />
                 </span>
             @endif
             </span>
             </p>
             <p>
-            <span id="spent-{{$budget->id}}" data-value="{{$budget->spent}}">Spent: {{mf($budget->spent)}}</span>
+            <span id="spent-{{$budget->id}}" data-value="{{$budget->spent}}">Spent: {{Amount::format($budget->spent)}}</span>
             </p>
             </div>
         </div>

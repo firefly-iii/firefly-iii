@@ -42,7 +42,7 @@
                             @foreach(explode(',',$bill->match) as $word)
                                 <span class="label label-info">{{{$word}}}</span>
                             @endforeach
-                            between {{mf($bill->amount_min)}} and {{mf($bill->amount_max)}}.
+                            between {{Amount::format($bill->amount_min)}} and {{Amount::format($bill->amount_max)}}.
                             Repeats {{$bill->repeat_freq}}.</td>
 
                     </tr>
@@ -106,7 +106,7 @@
 @section('scripts')
 <script type="text/javascript">
     var billID = {{{$bill->id}}};
-    var currencyCode = '{{getCurrencyCode()}}';
+    var currencyCode = '{{Amount::getCurrencyCode()}}';
 </script>
 <!-- load the libraries and scripts necessary for Google Charts: -->
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>

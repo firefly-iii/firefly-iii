@@ -8,7 +8,7 @@
             </div>
             <div class="modal-body">
                 <p>
-                    The maximum amount you can remove is {{mf($piggyBank->currentRelevantRep()->currentamount)}}
+                    The maximum amount you can remove is {{Amount::format($piggyBank->currentRelevantRep()->currentamount)}}
                 </p>
                 <div class="input-group">
                     <div class="input-group-addon">€</div>

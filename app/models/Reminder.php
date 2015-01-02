@@ -1,8 +1,10 @@
 <?php
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 use Watson\Validating\ValidatingTrait;
-use \Illuminate\Database\Eloquent\Model as Eloquent;
+
 /**
  * Class Reminder
  */
@@ -31,13 +33,13 @@ class Reminder extends Eloquent
     }
 
     /**
-     * @param        $query
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param EloquentBuilder $query
+     * @param Carbon          $start
+     * @param Carbon          $end
      *
      * @return mixed
      */
-    public function scopeDateIs($query, Carbon $start, Carbon $end)
+    public function scopeDateIs(EloquentBuilder $query, Carbon $start, Carbon $end)
     {
         return $query->where('startdate', $start->format('Y-m-d 00:00:00'))->where('enddate', $end->format('Y-m-d 00:00:00'));
     }

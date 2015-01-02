@@ -8,7 +8,7 @@
             </div>
             <div class="modal-body">
                 <p>
-                    The maximum amount you can add is {{mf($maxAmount)}}
+                    The maximum amount you can add is {{Amount::format($maxAmount)}}
                 </p>
                 <div class="input-group">
                     <div class="input-group-addon">€</div>

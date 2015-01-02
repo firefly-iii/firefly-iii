@@ -21,12 +21,12 @@
                         @else
                         <td><em>{{{$expense['name']}}}</em></td>
                         @endif
-                        <td>{{mf($expense['amount'])}}</td>
+                        <td>{{Amount::format($expense['amount'])}}</td>
                     </tr>
                 @endforeach
                 <tr>
                     <td><em>Sum</em></td>
-                    <td>{{mf($sum)}}</td>
+                    <td>{{Amount::format($sum)}}</td>
                 </tr>
             </table>
         </div>
@@ -43,15 +43,15 @@
             <table class="table table-bordered">
                 <tr>
                     <td>In</td>
-                    <td>{{mf($in)}}</td>
+                    <td>{{Amount::format($in)}}</td>
                 </tr>
                 <tr>
                     <td>Out</td>
-                    <td>{{mf($sum)}}</td>
+                    <td>{{Amount::format($sum)}}</td>
                 </tr>
                 <tr>
                     <td>Difference</td>
-                    <td>{{mf($in - $sum)}}</td>
+                    <td>{{Amount::format($in - $sum)}}</td>
                 </tr>
             </table>
         </div>
@@ -87,16 +87,16 @@
                                 <em>{{{$budget['name']}}}</em>
                             @endif
                         </td>
-                        <td>{{mf($budget['amount'])}}</td>
-                        <td>{{mf($budget['spent'],false)}}</td>
-                        <td>{{mf($budget['amount'] + $budget['spent'])}}</td>
+                        <td>{{Amount::format($budget['amount'])}}</td>
+                        <td>{{Amount::format($budget['spent'],false)}}</td>
+                        <td>{{Amount::format($budget['amount'] + $budget['spent'])}}</td>
                     </tr>
                     @endforeach
                     <tr>
                         <td><em>Sum</em></td>
-                        <td>{{mf($sumEnvelope)}}</td>
-                        <td>{{mf($sumSpent)}}</td>
-                        <td>{{mf($sumLeft)}}</td>
+                        <td>{{Amount::format($sumEnvelope)}}</td>
+                        <td>{{Amount::format($sumSpent)}}</td>
+                        <td>{{Amount::format($sumLeft)}}</td>
                     </tr>
                 </table>
         </div>
@@ -120,12 +120,12 @@
                                 <em>{{{$category['name']}}}</em>
                             @endif
                         </td>
-                        <td>{{mf($category['amount'],false)}}</td>
+                        <td>{{Amount::format($category['amount'],false)}}</td>
                     </tr>
                 @endforeach
                 <tr>
                     <td><em>Sum</em></td>
-                    <td>{{mf($sum)}}</td>
+                    <td>{{Amount::format($sum)}}</td>
                 </tr>
             </table>
         </div>
@@ -149,16 +149,16 @@
                 ?>
                 <tr>
                     <td><a href="{{route('accounts.show',$id)}}">{{{$account['name']}}}</a></td>
-                    <td>{{mf($account['startBalance'])}}</td>
-                    <td>{{mf($account['endBalance'])}}</td>
-                    <td>{{mf($account['difference'])}}</td>
+                    <td>{{Amount::format($account['startBalance'])}}</td>
+                    <td>{{Amount::format($account['endBalance'])}}</td>
+                    <td>{{Amount::format($account['difference'])}}</td>
                 </tr>
             @endforeach
                 <tr>
                     <td><em>Sum</em></td>
-                    <td>{{mf($sumStart)}}</td>
-                    <td>{{mf($sumEnd)}}</td>
-                    <td>{{mf($sumDiff)}}</td>
+                    <td>{{Amount::format($sumStart)}}</td>
+                    <td>{{Amount::format($sumEnd)}}</td>
+                    <td>{{Amount::format($sumDiff)}}</td>
                 </tr>
             </table>
         </div>

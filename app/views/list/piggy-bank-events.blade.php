@@ -23,9 +23,9 @@
 
         <td>
             @if($event->amount < 0)
-                <span class="text-danger">Removed {{mf($event->amount*-1,false)}}</span>
+                <span class="text-danger">Removed {{Amount::format($event->amount*-1,false)}}</span>
             @else
-                <span class="text-success">Added {{mf($event->amount,false)}}</span>
+                <span class="text-success">Added {{Amount::format($event->amount,false)}}</span>
             @endif
             </td>
     </tr>

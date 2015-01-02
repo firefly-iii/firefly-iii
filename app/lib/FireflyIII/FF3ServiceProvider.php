@@ -7,6 +7,7 @@ use FireflyIII\Shared\Toolkit\Form;
 use FireflyIII\Shared\Toolkit\Navigation;
 use FireflyIII\Shared\Toolkit\Reminders;
 use FireflyIII\Shared\Toolkit\Steam;
+use FireflyIII\Shared\Toolkit\Amount;
 use FireflyIII\Shared\Validation\FireflyValidator;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
@@ -82,6 +83,11 @@ class FF3ServiceProvider extends ServiceProvider
             return new Steam;
         }
         );
+        $this->app->bind(
+            'amount', function () {
+            return new Amount;
+        }
+        );
     }
 
     public function registerInterfaces()
@@ -114,6 +120,7 @@ class FF3ServiceProvider extends ServiceProvider
                 $loader->alias('Navigation', 'FireflyIII\Shared\Facade\Navigation');
                 $loader->alias('FFForm', 'FireflyIII\Shared\Facade\FFForm');
                 $loader->alias('Steam', 'FireflyIII\Shared\Facade\Steam');
+                $loader->alias('Amount', 'FireflyIII\Shared\Facade\Amount');
             }
         );
     }

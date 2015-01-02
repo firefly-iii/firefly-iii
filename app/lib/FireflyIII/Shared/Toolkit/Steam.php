@@ -25,7 +25,7 @@ class Steam
      */
     public function balance(\Account $account, Carbon $date = null)
     {
-        $date = is_null($date) ? Carbon::now() : $date;
+        $date    = is_null($date) ? Carbon::now() : $date;
         $balance = floatval(
             $account->transactions()->leftJoin(
                 'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
@@ -33,6 +33,23 @@ class Steam
         );
 
         return $balance;
+    }
+
+    /**
+     * @param $boolean
+     *
+     * @return string
+     */
+    public function boolString($boolean)
+    {
+        if ($boolean === true) {
+            return 'BOOLEAN TRUE';
+        }
+        if ($boolean === false) {
+            return 'BOOLEAN FALSE';
+        }
+
+        return 'NO BOOLEAN: ' . $boolean;
     }
 
     /**

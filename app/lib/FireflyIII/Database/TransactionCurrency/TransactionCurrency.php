@@ -35,7 +35,6 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
     public function store(array $data)
     {
         $currency = new \TransactionCurrency($data);
-        \Log::debug('Is valid? ' . boolstr($currency->isValid()));
         $currency->save();
 
         return $currency;
@@ -52,7 +51,6 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
         $model->symbol = $data['symbol'];
         $model->code   = $data['code'];
         $model->name   = $data['name'];
-        \Log::debug('Is valid? ' . boolstr($model->isValid()));
         $model->save();
 
         return true;
