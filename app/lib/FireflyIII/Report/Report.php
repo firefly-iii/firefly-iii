@@ -10,8 +10,6 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 
-// todo add methods to interface
-
 /**
  * Class Report
  *

@@ -9,7 +9,6 @@
 
     </div>
 </div>
-<!-- TODO create update and destroy -->
 
 @foreach($expenses as $entry)
 <div class="row">

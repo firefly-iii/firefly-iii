@@ -98,7 +98,6 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
      */
     public function find($objectId)
     {
-        // TODO: Implement find() method.
         throw new NotImplementedException;
     }
 
@@ -112,7 +111,6 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
      */
     public function findByWhat($what)
     {
-        // TODO: Implement findByWhat() method.
         throw new NotImplementedException;
     }
 
@@ -134,7 +132,6 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
      */
     public function getByIds(array $objectIds)
     {
-        // TODO: Implement getByIds() method.
         throw new NotImplementedException;
     }
 

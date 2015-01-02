@@ -99,7 +99,6 @@ class BudgetController extends BaseController
 
     /**
      * The index of the budget controller contains all budgets and the current relevant limit repetition.
-     * TODO move currentRep to the repository.
      *
      * @return $this
      */

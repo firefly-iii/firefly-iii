@@ -142,7 +142,6 @@ class Bill implements CUDInterface, CommonDatabaseCallsInterface, BillInterface
      */
     public function find($objectId)
     {
-        // TODO: Implement find() method.
         throw new NotImplementedException;
     }
 
@@ -156,7 +155,6 @@ class Bill implements CUDInterface, CommonDatabaseCallsInterface, BillInterface
      */
     public function findByWhat($what)
     {
-        // TODO: Implement findByWhat() method.
         throw new NotImplementedException;
     }
 
@@ -178,7 +176,6 @@ class Bill implements CUDInterface, CommonDatabaseCallsInterface, BillInterface
      */
     public function getByIds(array $ids)
     {
-        // TODO: Implement getByIds() method.
         throw new NotImplementedException;
     }
 

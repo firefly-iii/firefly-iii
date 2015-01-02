@@ -225,7 +225,6 @@ class GoogleChartController extends BaseController
     }
 
     /**
-     * TODO query move to helper.
      *
      * @return \Illuminate\Http\JsonResponse
      * @throws \FireflyIII\Exception\FireflyException
@@ -256,7 +255,6 @@ class GoogleChartController extends BaseController
     }
 
     /**
-     * TODO still in use?
      *
      * @param Budget          $budget
      * @param LimitRepetition $repetition
@@ -290,7 +288,6 @@ class GoogleChartController extends BaseController
     }
 
     /**
-     * TODO still in use?
      *
      * @param Budget    $budget
      * @param           $year
@@ -341,7 +338,6 @@ class GoogleChartController extends BaseController
     }
 
     /**
-     * TODO still in use?
      *
      * @param Category  $component
      * @param           $year
@@ -407,7 +403,6 @@ class GoogleChartController extends BaseController
     }
 
     /**
-     * TODO see reports for better way to do this.
      *
      * @param $year
      *
@@ -447,7 +442,6 @@ class GoogleChartController extends BaseController
     }
 
     /**
-     * TODO see reports for better way to do this.
      *
      * @param $year
      *

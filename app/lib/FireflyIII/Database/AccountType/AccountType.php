@@ -25,7 +25,6 @@ class AccountType implements CUDInterface, CommonDatabaseCallsInterface
      */
     public function destroy(Eloquent $model)
     {
-        // TODO: Implement destroy() method.
         throw new NotImplementedException;
     }
 
@@ -37,7 +36,6 @@ class AccountType implements CUDInterface, CommonDatabaseCallsInterface
      */
     public function store(array $data)
     {
-        // TODO: Implement store() method.
         throw new NotImplementedException;
     }
 
@@ -50,7 +48,6 @@ class AccountType implements CUDInterface, CommonDatabaseCallsInterface
      */
     public function update(Eloquent $model, array $data)
     {
-        // TODO: Implement update() method.
         throw new NotImplementedException;
     }
 
@@ -65,7 +62,6 @@ class AccountType implements CUDInterface, CommonDatabaseCallsInterface
      */
     public function validate(array $model)
     {
-        // TODO: Implement validate() method.
         throw new NotImplementedException;
     }
 
@@ -79,7 +75,6 @@ class AccountType implements CUDInterface, CommonDatabaseCallsInterface
      */
     public function find($objectId)
     {
-        // TODO: Implement find() method.
         throw new NotImplementedException;
     }
 
@@ -124,7 +119,6 @@ class AccountType implements CUDInterface, CommonDatabaseCallsInterface
      */
     public function get()
     {
-        // TODO: Implement get() method.
         throw new NotImplementedException;
     }
 
@@ -136,7 +130,6 @@ class AccountType implements CUDInterface, CommonDatabaseCallsInterface
      */
     public function getByIds(array $ids)
     {
-        // TODO: Implement getByIds() method.
         throw new NotImplementedException;
     }
 }
