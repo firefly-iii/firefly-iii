@@ -4,7 +4,6 @@
     "license": "MIT",
     "keywords": ["finance", "finances", "manager", "euro", "laravel", "money", "financials", "budgets", "transactions", "transfers", "management"],
     "homepage": "https://github.com/JC5/firefly-iii",
-    "php": ">=5.4.0",
     "type": "project",
     "authors": [
         {
