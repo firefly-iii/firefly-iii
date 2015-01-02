@@ -18,7 +18,7 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'accounts.index', function (Generator $breadcrumbs, $what) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push(ucfirst($what) . ' accounts', route('accounts.index', $what));
+    $breadcrumbs->push(ucfirst(e($what)) . ' accounts', route('accounts.index', $what));
 }
 );
 Breadcrumbs::register(
@@ -43,20 +43,20 @@ Breadcrumbs::register(
             break;
     }
     $breadcrumbs->parent('accounts.index', $what);
-    $breadcrumbs->push($account->name, route('accounts.show', $account->id));
+    $breadcrumbs->push(e($account->name), route('accounts.show', $account->id));
 }
 );
 Breadcrumbs::register(
     'accounts.delete', function (Generator $breadcrumbs, \Account $account) {
     $breadcrumbs->parent('accounts.show', $account);
-    $breadcrumbs->push('Delete ' . $account->name, route('accounts.delete', $account->id));
+    $breadcrumbs->push('Delete ' . e($account->name), route('accounts.delete', $account->id));
 }
 );
 
 Breadcrumbs::register(
     'accounts.edit', function (Generator $breadcrumbs, \Account $account) {
     $breadcrumbs->parent('accounts.show', $account);
-    $breadcrumbs->push('Edit ' . $account->name, route('accounts.edit', $account->id));
+    $breadcrumbs->push('Edit ' . e($account->name), route('accounts.edit', $account->id));
 }
 );
 
@@ -77,20 +77,20 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'budgets.edit', function (Generator $breadcrumbs, Budget $budget) {
     $breadcrumbs->parent('budgets.show', $budget);
-    $breadcrumbs->push('Edit ' . $budget->name, route('budgets.edit', $budget->id));
+    $breadcrumbs->push('Edit ' . e($budget->name), route('budgets.edit', $budget->id));
 }
 );
 Breadcrumbs::register(
     'budgets.delete', function (Generator $breadcrumbs, Budget $budget) {
     $breadcrumbs->parent('budgets.show', $budget);
-    $breadcrumbs->push('Delete ' . $budget->name, route('budgets.delete', $budget->id));
+    $breadcrumbs->push('Delete ' . e($budget->name), route('budgets.delete', $budget->id));
 }
 );
 
 Breadcrumbs::register(
     'budgets.show', function (Generator $breadcrumbs, Budget $budget, LimitRepetition $repetition = null) {
     $breadcrumbs->parent('budgets.index');
-    $breadcrumbs->push($budget->name, route('budgets.show', $budget->id));
+    $breadcrumbs->push(e($budget->name), route('budgets.show', $budget->id));
     if (!is_null($repetition)) {
         $breadcrumbs->push(
             DateKit::periodShow($repetition->startdate, $repetition->budgetlimit->repeat_freq), route('budgets.show', $budget->id, $repetition->id)
@@ -116,20 +116,20 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'categories.edit', function (Generator $breadcrumbs, Category $category) {
     $breadcrumbs->parent('categories.show', $category);
-    $breadcrumbs->push('Edit ' . $category->name, route('categories.edit', $category->id));
+    $breadcrumbs->push('Edit ' . e($category->name), route('categories.edit', $category->id));
 }
 );
 Breadcrumbs::register(
     'categories.delete', function (Generator $breadcrumbs, Category $category) {
     $breadcrumbs->parent('categories.show', $category);
-    $breadcrumbs->push('Delete ' . $category->name, route('categories.delete', $category->id));
+    $breadcrumbs->push('Delete ' . e($category->name), route('categories.delete', $category->id));
 }
 );
 
 Breadcrumbs::register(
     'categories.show', function (Generator $breadcrumbs, Category $category) {
     $breadcrumbs->parent('categories.index');
-    $breadcrumbs->push($category->name, route('categories.show', $category->id));
+    $breadcrumbs->push(e($category->name), route('categories.show', $category->id));
 
 }
 );
@@ -152,20 +152,20 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'piggyBanks.edit', function (Generator $breadcrumbs, PiggyBank $piggyBank) {
     $breadcrumbs->parent('piggyBanks.show', $piggyBank);
-    $breadcrumbs->push('Edit ' . $piggyBank->name, route('piggyBanks.edit', $piggyBank->id));
+    $breadcrumbs->push('Edit ' . e($piggyBank->name), route('piggyBanks.edit', $piggyBank->id));
 }
 );
 Breadcrumbs::register(
     'piggyBanks.delete', function (Generator $breadcrumbs, PiggyBank $piggyBank) {
     $breadcrumbs->parent('piggyBanks.show', $piggyBank);
-    $breadcrumbs->push('Delete ' . $piggyBank->name, route('piggyBanks.delete', $piggyBank->id));
+    $breadcrumbs->push('Delete ' . e($piggyBank->name), route('piggyBanks.delete', $piggyBank->id));
 }
 );
 
 Breadcrumbs::register(
     'piggyBanks.show', function (Generator $breadcrumbs, PiggyBank $piggyBank) {
     $breadcrumbs->parent('piggyBanks.index');
-    $breadcrumbs->push($piggyBank->name, route('piggyBanks.show', $piggyBank->id));
+    $breadcrumbs->push(e($piggyBank->name), route('piggyBanks.show', $piggyBank->id));
 
 }
 );
@@ -212,20 +212,20 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'bills.edit', function (Generator $breadcrumbs, Bill $bill) {
     $breadcrumbs->parent('bills.show', $bill);
-    $breadcrumbs->push('Edit ' . $bill->name, route('bills.edit', $bill->id));
+    $breadcrumbs->push('Edit ' . e($bill->name), route('bills.edit', $bill->id));
 }
 );
 Breadcrumbs::register(
     'bills.delete', function (Generator $breadcrumbs, Bill $bill) {
     $breadcrumbs->parent('bills.show', $bill);
-    $breadcrumbs->push('Delete ' . $bill->name, route('bills.delete', $bill->id));
+    $breadcrumbs->push('Delete ' . e($bill->name), route('bills.delete', $bill->id));
 }
 );
 
 Breadcrumbs::register(
     'bills.show', function (Generator $breadcrumbs, Bill $bill) {
     $breadcrumbs->parent('bills.index');
-    $breadcrumbs->push($bill->name, route('bills.show', $bill->id));
+    $breadcrumbs->push(e($bill->name), route('bills.show', $bill->id));
 
 }
 );
@@ -256,20 +256,20 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'repeated.edit', function (Generator $breadcrumbs, PiggyBank $piggyBank) {
     $breadcrumbs->parent('repeated.show', $piggyBank);
-    $breadcrumbs->push('Edit ' . $piggyBank->name, route('repeated.edit', $piggyBank->id));
+    $breadcrumbs->push('Edit ' . e($piggyBank->name), route('repeated.edit', $piggyBank->id));
 }
 );
 Breadcrumbs::register(
     'repeated.delete', function (Generator $breadcrumbs, PiggyBank $piggyBank) {
     $breadcrumbs->parent('repeated.show', $piggyBank);
-    $breadcrumbs->push('Delete ' . $piggyBank->name, route('repeated.delete', $piggyBank->id));
+    $breadcrumbs->push('Delete ' . e($piggyBank->name), route('repeated.delete', $piggyBank->id));
 }
 );
 
 Breadcrumbs::register(
     'repeated.show', function (Generator $breadcrumbs, PiggyBank $piggyBank) {
     $breadcrumbs->parent('repeated.index');
-    $breadcrumbs->push($piggyBank->name, route('repeated.show', $piggyBank->id));
+    $breadcrumbs->push(e($piggyBank->name), route('repeated.show', $piggyBank->id));
 
 }
 );
@@ -342,20 +342,20 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'transactions.create', function (Generator $breadcrumbs, $what) {
     $breadcrumbs->parent('transactions.index', $what);
-    $breadcrumbs->push('Create new ' . $what, route('transactions.create', $what));
+    $breadcrumbs->push('Create new ' .e($what), route('transactions.create', $what));
 }
 );
 
 Breadcrumbs::register(
     'transactions.edit', function (Generator $breadcrumbs, TransactionJournal $journal) {
     $breadcrumbs->parent('transactions.show', $journal);
-    $breadcrumbs->push('Edit ' . $journal->description, route('transactions.edit', $journal->id));
+    $breadcrumbs->push('Edit ' . e($journal->description), route('transactions.edit', $journal->id));
 }
 );
 Breadcrumbs::register(
     'transactions.delete', function (Generator $breadcrumbs, TransactionJournal $journal) {
     $breadcrumbs->parent('transactions.show', $journal);
-    $breadcrumbs->push('Delete ' . $journal->description, route('transactions.delete', $journal->id));
+    $breadcrumbs->push('Delete ' . e($journal->description), route('transactions.delete', $journal->id));
 }
 );
 
@@ -363,7 +363,7 @@ Breadcrumbs::register(
     'transactions.show', function (Generator $breadcrumbs, TransactionJournal $journal) {
 
     $breadcrumbs->parent('transactions.index', strtolower($journal->transactionType->type));
-    $breadcrumbs->push($journal->description, route('transactions.show', $journal->id));
+    $breadcrumbs->push(e($journal->description), route('transactions.show', $journal->id));
 
 }
 );
