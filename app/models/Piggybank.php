@@ -3,7 +3,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Watson\Validating\ValidatingTrait;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
 /**
  * Class PiggyBank
@@ -73,24 +73,23 @@ class PiggyBank extends Eloquent
         if ($this->repeats == 0) {
             $rep              = $this->piggyBankRepetitions()->first(['piggy_bank_repetitions.*']);
             $this->currentRep = $rep;
-            \Log::debug('currentRelevantRep() reports $rep is null: ' . boolstr(is_null($rep)));
 
             return $rep;
         } else {
             $query  = $this->piggyBankRepetitions()->where(
-                function (Builder $q) {
+                function (EloquentBuilder $q) {
 
                     $q->where(
-                        function (Builder $q) {
+                        function (EloquentBuilder $q) {
 
                             $q->where(
-                                function (Builder $q) {
+                                function (EloquentBuilder $q) {
                                     $today = new Carbon;
                                     $q->whereNull('startdate');
                                     $q->orWhere('startdate', '<=', $today->format('Y-m-d 00:00:00'));
                                 }
                             )->where(
-                                function (Builder $q) {
+                                function (EloquentBuilder $q) {
                                     $today = new Carbon;
                                     $q->whereNull('targetdate');
                                     $q->orWhere('targetdate', '>=', $today->format('Y-m-d 00:00:00'));
@@ -98,7 +97,7 @@ class PiggyBank extends Eloquent
                             );
                         }
                     )->orWhere(
-                        function (Builder $q) {
+                        function (EloquentBuilder $q) {
                             $today = new Carbon;
                             $q->where('startdate', '>=', $today->format('Y-m-d 00:00:00'));
                             $q->where('targetdate', '>=', $today->format('Y-m-d 00:00:00'));
@@ -108,7 +107,6 @@ class PiggyBank extends Eloquent
                 }
             )->orderBy('startdate', 'ASC');
             $result = $query->first(['piggy_bank_repetitions.*']);
-            \Log::debug('Result is null: ' . boolstr(is_null($result)));
             $this->currentRep = $result;
             \Log::debug('Found relevant rep in currentRelevantRep(): ' . $result->id);
 

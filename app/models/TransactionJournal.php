@@ -1,10 +1,10 @@
 <?php
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Watson\Validating\ValidatingTrait;
 use \Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class TransactionJournal
@@ -94,7 +94,7 @@ class TransactionJournal extends Eloquent
      * @param Builder $query
      * @param Account $account
      */
-    public function scopeAccountIs(Builder $query, \Account $account)
+    public function scopeAccountIs($query, \Account $account)
     {
         if (!isset($this->joinedTransactions)) {
             $query->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id');
@@ -129,7 +129,7 @@ class TransactionJournal extends Eloquent
      * @param Builder $query
      * @param         $amount
      */
-    public function scopeLessThan(Builder $query, $amount)
+    public function scopeLessThan($query, $amount)
     {
         if (is_null($this->joinedTransactions)) {
             $query->leftJoin(
@@ -145,7 +145,7 @@ class TransactionJournal extends Eloquent
      * @param Builder $query
      * @param         $amount
      */
-    public function scopeMoreThan(Builder $query, $amount)
+    public function scopeMoreThan($query, $amount)
     {
         if (is_null($this->joinedTransactions)) {
             $query->leftJoin(
@@ -172,7 +172,7 @@ class TransactionJournal extends Eloquent
      * @param Builder $query
      * @param array   $types
      */
-    public function scopeTransactionTypes(Builder $query, array $types)
+    public function scopeTransactionTypes($query, array $types)
     {
         if (is_null($this->joinedTransactionTypes)) {
             $query->leftJoin(
@@ -189,10 +189,10 @@ class TransactionJournal extends Eloquent
      *
      * @param $query
      */
-    public function scopeWithRelevantData(Builder $query)
+    public function scopeWithRelevantData($query)
     {
         $query->with(
-            ['transactions'                    => function (Builder $q) {
+            ['transactions'                    => function (HasMany $q) {
                 $q->orderBy('amount', 'ASC');
             }, 'transactiontype', 'budgets','categories', 'transactions.account.accounttype', 'bill', 'budgets', 'categories']
         );
