@@ -69,7 +69,7 @@ class TransactionController extends BaseController
             $set = $this->_repository->getByIds($unique);
             $set->each(
                 function (TransactionJournal $journal) {
-                    $journal->amount = mf($journal->getAmount());
+                    $journal->amount = Amount::format($journal->getAmount());
                 }
             );
 
@@ -308,7 +308,7 @@ class TransactionController extends BaseController
         $result = $this->_repository->searchRelated($search, $journal);
         $result->each(
             function (TransactionJournal $j) {
-                $j->amount = mf($j->getAmount());
+                $j->amount = Amount::format($j->getAmount());
             }
         );
 

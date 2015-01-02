@@ -49,16 +49,16 @@
                         <small><em>shared</em></small>
                         @endif
                     </td>
-                    <td>{{mf($balance['start'])}}</td>
-                    <td>{{mf($balance['end'])}}</td>
-                    <td>{{mf($balance['end']-$balance['start'])}}</td>
+                    <td>{{Amount::format($balance['start'])}}</td>
+                    <td>{{Amount::format($balance['end'])}}</td>
+                    <td>{{Amount::format($balance['end']-$balance['start'])}}</td>
                 </tr>
                 @endforeach
                 <tr>
                     <td><em>Sum of sums</em></td>
-                    <td>{{mf($start)}}</td>
-                    <td>{{mf($end)}}</td>
-                    <td>{{mf($diff)}}</td>
+                    <td>{{Amount::format($start)}}</td>
+                    <td>{{Amount::format($end)}}</td>
+                    <td>{{Amount::format($diff)}}</td>
                 </tr>
             </table>
         </div>
@@ -83,15 +83,15 @@
                 <table class="table table-bordered table-striped">
                     <tr>
                         <td>In</td>
-                        <td>{{mf($incomeSum)}}</td>
+                        <td>{{Amount::format($incomeSum)}}</td>
                     </tr>
                     <tr>
                         <td>Out</td>
-                        <td>{{mf($expenseSum*-1)}}</td>
+                        <td>{{Amount::format($expenseSum*-1)}}</td>
                     </tr>
                     <tr>
                         <td>Difference</td>
-                        <td>{{mf($incomeSum - $expenseSum)}}</td>
+                        <td>{{Amount::format($incomeSum - $expenseSum)}}</td>
                     </tr>
                 </table>
         </div>
@@ -107,12 +107,12 @@
                 <?php $sum += floatval($income->sum)*-1;?>
             <tr>
                 <td><a href="{{route('accounts.show',$income->account_id)}}">{{{$income->name}}}</a></td>
-                <td>{{mf(floatval($income->sum)*-1)}}</td>
+                <td>{{Amount::format(floatval($income->sum)*-1)}}</td>
             </tr>
             @endforeach
                 <tr>
                     <td><em>Sum</em></td>
-                    <td>{{mf($sum)}}</td>
+                    <td>{{Amount::format($sum)}}</td>
                 </tr>
             </table>
         </div>
@@ -126,7 +126,7 @@
                 @foreach($groupedExpenses as $id => $expense)
                 <tr>
                     <td><a href="{{route('accounts.show',$id)}}">{{{$expense['name']}}}</a></td>
-                    <td>{{mf(floatval($expense['amount'])*-1)}}</td>
+                    <td>{{Amount::format(floatval($expense['amount'])*-1)}}</td>
                 </tr>
                 @endforeach
             </table>
@@ -156,7 +156,7 @@
 
 <script type="text/javascript">
 var year = '{{$year}}';
-var currencyCode = '{{getCurrencyCode()}}';
+var currencyCode = '{{Amount::getCurrencyCode()}}';
 </script>
 
 {{HTML::script('assets/javascript/firefly/reports.js')}}

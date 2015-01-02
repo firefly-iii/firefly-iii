@@ -17,7 +17,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <a href="{{route('repeated.show',$entry->id)}}" title="{{{$entry->name}}}">{{{$entry->name}}}</a>
-                ({{mf($entry->targetamount)}})
+                ({{Amount::format($entry->targetamount)}})
 
                 <!-- ACTIONS MENU -->
                 <div class="pull-right">
@@ -37,11 +37,11 @@
                 <div class="progress progress-striped">
                     <div class="progress-bar" role="progressbar" aria-valuenow="{{Steam::percentage($entry,$entry->currentRep)}}" aria-valuemin="0" aria-valuemax="100" style="width: {{Steam::percentage($entry,$entry->currentRep)}}%; min-width:15px;">
                         @if(Steam::percentage($entry,$entry->currentRep) > 30)
-                            {{mf($entry->currentRep->currentamount,false)}}
+                            {{Amount::format($entry->currentRep->currentamount,false)}}
                         @endif
                     </div>
                     @if(Steam::percentage($entry,$entry->currentRep) <= 30)
-                        &nbsp;<small>{{mf($entry->currentRep->currentamount,false)}}</small>
+                        &nbsp;<small>{{Amount::format($entry->currentRep->currentamount,false)}}</small>
                     @endif
                 </div>
             </div>

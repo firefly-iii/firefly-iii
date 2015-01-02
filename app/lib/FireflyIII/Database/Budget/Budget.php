@@ -10,7 +10,7 @@ use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder;
 
 /**
  * Class Budget
@@ -336,7 +336,6 @@ class Budget implements CUDInterface, CommonDatabaseCallsInterface, BudgetInterf
             $limit->repeat_freq = 'monthly';
             $limit->repeats     = 0;
             $result             = $limit->save();
-            \Log::info('Created new limit? ' . boolstr($result));
             \Log::info('ID: ' . $limit->id);
             /*
              * A newly stored limit also created a limit repetition.

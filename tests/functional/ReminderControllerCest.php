@@ -33,7 +33,7 @@ class ReminderControllerCest
             ['reminders.*']
         );
 
-        $I->wantTo('act on reminder ' . boolstr(is_null($reminder)));
+        $I->wantTo('act on a reminder');
         $I->amOnPage('/reminders/' . $reminder->id . '/act');
         $I->see('Money for Nieuwe spullen');
     }

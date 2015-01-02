@@ -7,11 +7,11 @@ use FireflyIII\Database\CommonDatabaseCallsInterface;
 use FireflyIII\Database\CUDInterface;
 use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\NotImplementedException;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
-
+use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 /**
  * Class Account
  *
@@ -223,20 +223,21 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
     public function destroy(Eloquent $model)
     {
 
+        // delete piggy banks
         // delete journals:
         $journals = \TransactionJournal::whereIn(
-            'id', function (Builder $query) use ($model) {
+            'id', function (QueryBuilder $query) use ($model) {
             $query->select('transaction_journal_id')
                   ->from('transactions')->whereIn(
-                    'account_id', function (Builder $query) use ($model) {
+                    'account_id', function (QueryBuilder $query) use ($model) {
                     $query
                         ->select('id')
                         ->from('accounts')
                         ->where(
-                            function (Builder $q) use ($model) {
+                            function (QueryBuilder $q) use ($model) {
                                 $q->where('id', $model->id);
                                 $q->orWhere(
-                                    function (Builder $q) use ($model) {
+                                    function (QueryBuilder $q) use ($model) {
                                         $q->where('accounts.name', 'LIKE', '%' . $model->name . '%');
                                         // TODO magic number!
                                         $q->where('accounts.account_type_id', 3);
@@ -274,10 +275,10 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
 
         // delete accounts:
         \Account::where(
-            function (Builder $q) use ($model) {
+            function (EloquentBuilder $q) use ($model) {
                 $q->where('id', $model->id);
                 $q->orWhere(
-                    function (Builder $q) use ($model) {
+                    function (EloquentBuilder $q) use ($model) {
                         $q->where('accounts.name', 'LIKE', '%' . $model->name . '%');
                         // TODO magic number!
                         $q->where('accounts.account_type_id', 3);

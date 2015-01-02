@@ -1,7 +1,7 @@
 <?php
 
 use Carbon\Carbon;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Watson\Validating\ValidatingTrait;
 use \Illuminate\Database\Eloquent\Model as Eloquent;
@@ -27,19 +27,19 @@ class Transaction extends Eloquent
     }
 
     /**
-     * @param Builder $query
+     * @param EloquentBuilder $query
      * @param Account $account
      */
-    public function scopeAccountIs(Builder $query, Account $account)
+    public function scopeAccountIs(EloquentBuilder $query, Account $account)
     {
         $query->where('transactions.account_id', $account->id);
     }
 
     /**
-     * @param Builder $query
+     * @param EloquentBuilder $query
      * @param Carbon  $date
      */
-    public function scopeAfter(Builder $query, Carbon $date)
+    public function scopeAfter(EloquentBuilder $query, Carbon $date)
     {
         if (is_null($this->joinedJournals)) {
             $query->leftJoin(
@@ -51,10 +51,10 @@ class Transaction extends Eloquent
     }
 
     /**
-     * @param Builder $query
+     * @param EloquentBuilder $query
      * @param Carbon  $date
      */
-    public function scopeBefore(Builder $query, Carbon $date)
+    public function scopeBefore(EloquentBuilder $query, Carbon $date)
     {
         if (is_null($this->joinedJournals)) {
             $query->leftJoin(
@@ -66,28 +66,28 @@ class Transaction extends Eloquent
     }
 
     /**
-     * @param Builder $query
+     * @param EloquentBuilder $query
      * @param         $amount
      */
-    public function scopeLessThan(Builder $query, $amount)
+    public function scopeLessThan(EloquentBuilder $query, $amount)
     {
         $query->where('amount', '<', $amount);
     }
 
     /**
-     * @param Builder $query
+     * @param EloquentBuilder $query
      * @param         $amount
      */
-    public function scopeMoreThan(Builder $query, $amount)
+    public function scopeMoreThan(EloquentBuilder $query, $amount)
     {
         $query->where('amount', '>', $amount);
     }
 
     /**
-     * @param Builder $query
+     * @param EloquentBuilder $query
      * @param array   $types
      */
-    public function scopeTransactionTypes(Builder $query, array $types)
+    public function scopeTransactionTypes(EloquentBuilder $query, array $types)
     {
         if (is_null($this->joinedJournals)) {
             $query->leftJoin(

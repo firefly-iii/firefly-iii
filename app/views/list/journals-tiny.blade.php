@@ -18,13 +18,13 @@
 @if(isset($account))
     @foreach($journal->transactions as $index => $t)
         @if($t->account_id == $account->id)
-            {{mft($t)}}
+            {{Amount::formatTransaction($t)}}
         @endif
     @endforeach
 @else
     @foreach($journal->transactions as $index => $t)
         @if($index == 0)
-                {{mft($t)}}
+                {{Amount::formatTransaction($t)}}
         @endif
     @endforeach
 @endif

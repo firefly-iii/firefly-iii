@@ -21,7 +21,7 @@
         </div>
         <div class="panel-body">
             <p>
-                Target amount: {{mf($repeatedExpense->targetamount)}}. Currently saved: {{mf($rep->currentamount)}}.
+                Target amount: {{Amount::format($repeatedExpense->targetamount)}}. Currently saved: {{Amount::format($rep->currentamount)}}.
             </p>
             <div class="row">
             @foreach($rep->bars as $bar)
@@ -41,7 +41,7 @@
                                 @endif
                             @endif
                             @if($bar->percentage() > 50 && $bar->percentage() < 100)
-                                {{mf($rep->currentamount,false)}}
+                                {{Amount::format($rep->currentamount,false)}}
                             @endif
                             </div>
                             <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{100-$bar->percentage()}}" aria-valuemin="0" aria-valuemax="100" style="width: {{100-$bar->percentage()}}%;"></div>

@@ -74,7 +74,7 @@
                         <tr>
                             <td><input type="checkbox" checked="checked" data-relatedto="{{$journal->id}}" data-id="{{$jrnl->id}}" class="unrelate-checkbox" /></td>
                             <td><a href="#">{{{$jrnl->description}}}</a></td>
-                            <td>{{mfj($jrnl, $jrnl->getAmount())}}</td>
+                            <td>{{Amount::formatJournal($jrnl, $jrnl->getAmount())}}</td>
                         </tr>
                     @endforeach
                     </table>
@@ -97,11 +97,11 @@
                 <table class="table table-striped table-bordered">
                     <tr>
                         <td>Amount</td>
-                        <td>{{mft($t)}}</td>
+                        <td>{{Amount::formatTransaction($t)}}</td>
                     </tr>
                     <tr>
                         <td>New balance</td>
-                        <td>{{mf($t->before)}} &rarr; {{mf($t->after)}}</td>
+                        <td>{{Amount::format($t->before)}} &rarr; {{Amount::format($t->after)}}</td>
                     </tr>
                     @if(!is_null($t->description))
                     <tr>

@@ -13,9 +13,9 @@
             @foreach($accounts as $account)
                 <tr>
                     <td><a href="{{route('accounts.show',$account->id)}}">{{{$account->name}}}</a></td>
-                    <td>{{mf($account->startBalance)}}</td>
-                    <td>{{mf($account->endBalance)}}</td>
-                    <td>{{mf($account->startBalance - $account->endBalance,false)}}</td>
+                    <td>{{Amount::format($account->startBalance)}}</td>
+                    <td>{{Amount::format($account->endBalance)}}</td>
+                    <td>{{Amount::format($account->startBalance - $account->endBalance,false)}}</td>
                 </tr>
             @endforeach
         </table>
@@ -47,15 +47,15 @@
                     <i class="fa fa-fw fa-question-circle" data-toggle="tooltip" data-placement="top" title="The calculation used here is slightly different from the row below. The numbers should match."></i>
                 @endif
                 </td>
-                <td>{{mf($budget['amount'])}}</td>
+                <td>{{Amount::format($budget['amount'])}}</td>
                 <?php $spent = 0;?>
                 @foreach($accounts as $account)
                     @if(isset($account->budgetInformation[$id]))
                         <td>
                             @if($id == 0)
-                            <a href="#">{{mf($account->budgetInformation[$id]['amount'])}}</a>
+                            <a href="#">{{Amount::format($account->budgetInformation[$id]['amount'])}}</a>
                             @else
-                                {{mf($account->budgetInformation[$id]['amount'])}}
+                                {{Amount::format($account->budgetInformation[$id]['amount'])}}
                             @endif
                         </td>
                         <?php
@@ -63,11 +63,11 @@
                         $accountSums[$account->id] += floatval($account->budgetInformation[$id]['amount']);
                         ?>
                     @else
-                        <td>{{mf(0)}}</td>
+                        <td>{{Amount::format(0)}}</td>
                     @endif
                 @endforeach
-                <td>{{mf($budget['amount'] + $budget['spent'])}}</td>
-                <td>{{mf($budget['amount'] + $spent)}}</td>
+                <td>{{Amount::format($budget['amount'] + $budget['spent'])}}</td>
+                <td>{{Amount::format($budget['amount'] + $spent)}}</td>
             </tr>
             @endforeach
             <tr>
@@ -77,10 +77,10 @@
                 @foreach($accounts as $account)
                     @if(isset($account->budgetInformation[0]))
                         <td>
-                            <a href="#">{{mf($account->budgetInformation[0]['amount'])}}</a>
+                            <a href="#">{{Amount::format($account->budgetInformation[0]['amount'])}}</a>
                         </td>
                     @else
-                        <td>{{mf(0)}}</td>
+                        <td>{{Amount::format(0)}}</td>
                     @endif
                 @endforeach
                 <td colspan="2">&nbsp;</td>
@@ -89,7 +89,7 @@
                 <td colspan="2">Balanced by transfers</td>
                 @foreach($accounts as $account)
                     <td>
-                        <a href="#">{{mf($account->balancedAmount)}}</a>
+                        <a href="#">{{Amount::format($account->balancedAmount)}}</a>
                     </td>
                 @endforeach
                 <td colspan="2">&nbsp;</td>
@@ -98,14 +98,14 @@
             <tr>
                 <td colspan="2">Balancing transfers</td>
                 @foreach($accounts as $account)
-                    <td>{{mf(0)}}</td>
+                    <td>{{Amount::format(0)}}</td>
                 @endforeach
                 <td colspan="2">&nbsp;</td>
             </tr>
             <tr>
                 <td colspan="2">Income</td>
                 @foreach($accounts as $account)
-                    <td>{{mf(0)}}</td>
+                    <td>{{Amount::format(0)}}</td>
                 @endforeach
                 <td colspan="2">&nbsp;</td>
             </tr>
@@ -118,10 +118,10 @@
                     ?>
                     @if(isset($account->budgetInformation[0]))
                         <td>
-                            <a href="#">{{mf($account->budgetInformation[0]['amount'] + $account->balancedAmount)}}</a>
+                            <a href="#">{{Amount::format($account->budgetInformation[0]['amount'] + $account->balancedAmount)}}</a>
                         </td>
                     @else
-                        <td>{{mf(0)}}</td>
+                        <td>{{Amount::format(0)}}</td>
                     @endif
                 @endforeach
                 <td colspan="2">&nbsp;</td>
@@ -129,14 +129,14 @@
             <tr>
                 <td colspan="2"><em>Sum</em></td>
                 @foreach($accounts as $account)
-                    <td>{{mf($accountSums[$account->id])}}</td>
+                    <td>{{Amount::format($accountSums[$account->id])}}</td>
                 @endforeach
                 <td colspan="2">&nbsp;</td>
             </tr>
             <tr>
                 <td colspan="2">Expected balance</td>
                 @foreach($accounts as $account)
-                    <td>{{mf($account->startBalance + $accountSums[$account->id])}}</td>
+                    <td>{{Amount::format($account->startBalance + $accountSums[$account->id])}}</td>
                 @endforeach
                 <td colspan="2">&nbsp;</td>
             </tr>

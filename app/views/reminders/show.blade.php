@@ -14,8 +14,8 @@
         <p>
             @if(get_class($reminder->remindersable) == 'Piggybank')
                 Somewhere between {{$reminder->startdate->format('j F Y')}} and {{$reminder->enddate->format('j F Y')}} you
-                should deposit {{mf($amount)}} in piggy bank <a href="{{route('piggy_banks.show',$reminder->remindersable_id)}}">{{{$reminder->remindersable->name}}}</a>
-                in order to make your goal of saving {{mf($reminder->remindersable->targetamount)}} on {{$reminder->remindersable->targetdate->format('j F Y')}}
+                should deposit {{Amount::format($amount)}} in piggy bank <a href="{{route('piggy_banks.show',$reminder->remindersable_id)}}">{{{$reminder->remindersable->name}}}</a>
+                in order to make your goal of saving {{Amount::format($reminder->remindersable->targetamount)}} on {{$reminder->remindersable->targetdate->format('j F Y')}}
 
             @endif
         </p>

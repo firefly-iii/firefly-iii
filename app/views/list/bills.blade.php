@@ -27,9 +27,9 @@
             @endforeach
         </td>
         <td>
-            {{mf($entry->amount_min)}}
+            {{Amount::format($entry->amount_min)}}
             &mdash;
-            {{mf($entry->amount_max)}}
+            {{Amount::format($entry->amount_max)}}
         </td>
         <td>
             <?php $lastMatch = $entry->lastFoundMatch();?>
