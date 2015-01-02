@@ -158,7 +158,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
             $errors->add('description', 'Internal error: need to know type of transaction!');
         }
         /*
-         * Amount:
+         * Amount
          */
         if (isset($model['amount']) && floatval($model['amount']) < 0.01) {
             $errors->add('amount', 'Amount must be > 0.01');
@@ -171,7 +171,7 @@ class TransactionJournal implements TransactionJournalInterface, CUD, CommonData
         }
 
         /*
-         * Budget:
+         * Budget
          */
         if (isset($model['budget_id']) && !ctype_digit($model['budget_id'])) {
             $errors->add('budget_id', 'Invalid budget');

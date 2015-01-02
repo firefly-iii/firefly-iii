@@ -116,7 +116,7 @@ class CategoryController extends BaseController
             return Redirect::route('categories.create')->withInput();
         }
 
-        // store:
+        // store
         $this->_repository->store($data);
         Session::flash('success', 'Category "' . e($data['name']) . '" stored.');
         if ($data['post_submit_action'] == 'store') {

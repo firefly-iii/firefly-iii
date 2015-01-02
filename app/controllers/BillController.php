@@ -149,7 +149,7 @@ class BillController extends BaseController
             return Redirect::route('bills.create')->withInput();
         }
 
-        // store:
+        // store
         $this->_repository->store($data);
         Session::flash('success', 'Bill "' . e($data['name']) . '" stored.');
         if ($data['post_submit_action'] == 'store') {

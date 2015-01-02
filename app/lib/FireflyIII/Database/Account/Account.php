@@ -7,6 +7,7 @@ use FireflyIII\Database\CommonDatabaseCalls;
 use FireflyIII\Database\CUD;
 use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\NotImplementedException;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
@@ -224,18 +225,18 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
 
         // delete journals:
         $journals = \TransactionJournal::whereIn(
-            'id', function ($query) use ($model) {
+            'id', function (Builder $query) use ($model) {
             $query->select('transaction_journal_id')
                   ->from('transactions')->whereIn(
-                    'account_id', function ($query) use ($model) {
+                    'account_id', function (Builder $query) use ($model) {
                     $query
                         ->select('id')
                         ->from('accounts')
                         ->where(
-                            function ($q) use ($model) {
+                            function (Builder $q) use ($model) {
                                 $q->where('id', $model->id);
                                 $q->orWhere(
-                                    function ($q) use ($model) {
+                                    function (Builder $q) use ($model) {
                                         $q->where('accounts.name', 'LIKE', '%' . $model->name . '%');
                                         // TODO magic number!
                                         $q->where('accounts.account_type_id', 3);
@@ -273,10 +274,10 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
 
         // delete accounts:
         \Account::where(
-            function ($q) use ($model) {
+            function (Builder $q) use ($model) {
                 $q->where('id', $model->id);
                 $q->orWhere(
-                    function ($q) use ($model) {
+                    function (Builder $q) use ($model) {
                         $q->where('accounts.name', 'LIKE', '%' . $model->name . '%');
                         // TODO magic number!
                         $q->where('accounts.account_type_id', 3);

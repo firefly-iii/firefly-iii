@@ -187,7 +187,7 @@ class AccountController extends BaseController
             return Redirect::route('accounts.create', e($data['what']))->withInput();
         }
 
-        // store:
+        // store
         $this->_repository->store($data);
         Session::flash('success', 'Account "' . e($data['name']) . '" stored.');
         if ($data['post_submit_action'] == 'store') {

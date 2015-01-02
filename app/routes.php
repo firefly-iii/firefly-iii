@@ -1,6 +1,6 @@
 <?php
 
-// models:
+// models
 Route::bind(
     'account',
     function ($value, $route) {
@@ -167,7 +167,6 @@ Route::group(
 
     // some date routes used for (well duh) date-based navigation.
     Route::get('/prev', ['uses' => 'HomeController@sessionPrev', 'as' => 'sessionPrev']);
-    //Route::get('/repair', ['uses' => 'HomeController@repair']);
     Route::get('/next', ['uses' => 'HomeController@sessionNext', 'as' => 'sessionNext']);
     Route::get('/jump/{range}', ['uses' => 'HomeController@rangeJump', 'as' => 'rangeJump']);
 
@@ -268,7 +267,6 @@ Route::group(
     Route::get('/reports/{year}', ['uses' => 'ReportController@year', 'as' => 'reports.year']);
     Route::get('/reports/{year}/{month}', ['uses' => 'ReportController@month', 'as' => 'reports.month']);
     Route::get('/reports/budget/{year}/{month}', ['uses' => 'ReportController@budget', 'as' => 'reports.budget']);
-    #Route::get('/reports/unbalanced/{year}/{month}', ['uses' => 'ReportController@unbalanced', 'as' => 'reports.unbalanced']);
 
     // reminder controller
     Route::get('/reminders/{reminder}', ['uses' => 'ReminderController@show', 'as' => 'reminders.show']);

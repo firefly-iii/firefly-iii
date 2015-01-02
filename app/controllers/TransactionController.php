@@ -382,7 +382,7 @@ class TransactionController extends BaseController
             return Redirect::route('transactions.create', $data['what'])->withInput();
         }
 
-        // store:
+        // store
         $journal = $this->_repository->store($data);
         Event::fire('transactionJournal.store', [$journal, Input::get('piggy_bank_id')]); // new and used.
         /*
