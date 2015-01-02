@@ -264,7 +264,7 @@ class Budget implements CUDInterface, CommonDatabaseCallsInterface, BudgetInterf
         return $this->getUser()
                     ->transactionjournals()
                     ->whereNotIn(
-                        'transaction_journals.id', function (Builder $query) use ($start, $end) {
+                        'transaction_journals.id', function (QueryBuilder $query) use ($start, $end) {
                         $query
                             ->select('transaction_journals.id')
                             ->from('transaction_journals')
