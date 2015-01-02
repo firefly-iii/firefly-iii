@@ -108,7 +108,6 @@ class Category implements CUDInterface, CommonDatabaseCallsInterface
      */
     public function find($objectId)
     {
-        // TODO: Implement find() method.
         throw new NotImplementedException;
     }
 
@@ -122,7 +121,6 @@ class Category implements CUDInterface, CommonDatabaseCallsInterface
      */
     public function findByWhat($what)
     {
-        // TODO: Implement findByWhat() method.
         throw new NotImplementedException;
     }
 
@@ -144,7 +142,6 @@ class Category implements CUDInterface, CommonDatabaseCallsInterface
      */
     public function getByIds(array $ids)
     {
-        // TODO: Implement getByIds() method.
         throw new NotImplementedException;
     }
 

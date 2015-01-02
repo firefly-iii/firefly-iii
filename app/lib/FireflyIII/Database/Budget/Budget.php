@@ -119,7 +119,6 @@ class Budget implements CUDInterface, CommonDatabaseCallsInterface, BudgetInterf
      */
     public function findByWhat($what)
     {
-        // TODO: Implement findByWhat() method.
         throw new NotImplementedException;
     }
 
@@ -143,7 +142,6 @@ class Budget implements CUDInterface, CommonDatabaseCallsInterface, BudgetInterf
      */
     public function getByIds(array $ids)
     {
-        // TODO: Implement getByIds() method.
         throw new NotImplementedException;
     }
 
@@ -335,7 +333,7 @@ class Budget implements CUDInterface, CommonDatabaseCallsInterface, BudgetInterf
             $limit->amount      = $amount;
             $limit->repeat_freq = 'monthly';
             $limit->repeats     = 0;
-            $result             = $limit->save();
+            $limit->save();
             \Log::info('ID: ' . $limit->id);
             /*
              * A newly stored limit also created a limit repetition.

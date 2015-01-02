@@ -390,7 +390,6 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
      */
     public function findByWhat($what)
     {
-        // TODO: Implement findByWhat() method.
         throw new NotImplementedException;
     }
 
