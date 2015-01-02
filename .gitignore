@@ -3,7 +3,6 @@
 composer.phar
 .env.*.php
 .env.php
-.DS_Store
 Thumbs.db
 .idea/
 tests/_output/*

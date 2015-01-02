@@ -295,7 +295,7 @@ class Report implements ReportInterface
         $end = clone $date;
         $end->endOfMonth();
 
-        $set = \PiggyBank::
+        \PiggyBank::
         leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
                          ->where('accounts.user_id', \Auth::user()->id)
                          ->where('repeats', 0)
