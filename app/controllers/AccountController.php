@@ -28,6 +28,7 @@ class AccountController extends BaseController
             'Expense account'     => 'expense',
             'Beneficiary account' => 'expense',
             'Revenue account'     => 'revenue',
+            'Cash account'        => 'cash',
         ];
 
     /** @var array */
@@ -36,6 +37,7 @@ class AccountController extends BaseController
             'asset'               => 'fa-money',
             'Asset account'       => 'fa-money',
             'Default account'     => 'fa-money',
+            'Cash account'        => 'fa-money',
             'expense'             => 'fa-shopping-cart',
             'Expense account'     => 'fa-shopping-cart',
             'Beneficiary account' => 'fa-shopping-cart',
@@ -68,7 +70,7 @@ class AccountController extends BaseController
     public function create($what)
     {
         $subTitleIcon = $this->_subIconsByIdentifier[$what];
-        $subTitle     = 'Create a new ' . $what . ' account';
+        $subTitle     = 'Create a new ' . e($what) . ' account';
 
         return View::make('accounts.create', compact('subTitleIcon', 'what', 'subTitle'));
     }
@@ -80,7 +82,7 @@ class AccountController extends BaseController
      */
     public function delete(Account $account)
     {
-        $subTitle = 'Delete ' . strtolower($account->accountType->type) . ' "' . $account->name . '"';
+        $subTitle = 'Delete ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"';
 
         return View::make('accounts.delete', compact('account', 'subTitle'));
     }
@@ -99,7 +101,7 @@ class AccountController extends BaseController
 
         $this->_repository->destroy($account);
 
-        Session::flash('success', 'The ' . $typeName . ' account "' . e($name) . '" was deleted.');
+        Session::flash('success', 'The ' . e($typeName) . ' account "' . e($name) . '" was deleted.');
 
         return Redirect::route('accounts.index', $typeName);
     }
@@ -114,7 +116,7 @@ class AccountController extends BaseController
 
         $openingBalance = $this->_repository->openingBalanceTransaction($account);
         $subTitleIcon   = $this->_subIconsByIdentifier[$account->accountType->type];
-        $subTitle       = 'Edit ' . strtolower($account->accountType->type) . ' "' . $account->name . '"';
+        $subTitle       = 'Edit ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"';
 
         // pre fill some useful values.
         $preFilled = [
@@ -155,7 +157,7 @@ class AccountController extends BaseController
         $subTitleIcon = $this->_subIconsByIdentifier[$account->accountType->type];
         $what         = $this->_shortNamesByFullName[$account->accountType->type];
         $journals     = $this->_repository->getTransactionJournals($account, 50, $range);
-        $subTitle     = 'Details for ' . strtolower($account->accountType->type) . ' "' . $account->name . '"';
+        $subTitle     = 'Details for ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"';
 
         return View::make('accounts.show', compact('account', 'what', 'range', 'subTitleIcon', 'journals', 'subTitle'));
     }
@@ -182,17 +184,17 @@ class AccountController extends BaseController
 
         // return to create screen:
         if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
-            return Redirect::route('accounts.create', $data['what'])->withInput();
+            return Redirect::route('accounts.create', e($data['what']))->withInput();
         }
 
-        // store:
+        // store
         $this->_repository->store($data);
         Session::flash('success', 'Account "' . e($data['name']) . '" stored.');
         if ($data['post_submit_action'] == 'store') {
-            return Redirect::route('accounts.index', $data['what']);
+            return Redirect::route('accounts.index', e($data['what']));
         }
 
-        return Redirect::route('accounts.create', $data['what'])->withInput();
+        return Redirect::route('accounts.create', e($data['what']))->withInput();
     }
 
     /**
@@ -229,7 +231,7 @@ class AccountController extends BaseController
 
         // go back to list
         if ($data['post_submit_action'] == 'update') {
-            return Redirect::route('accounts.index', $data['what']);
+            return Redirect::route('accounts.index', e($data['what']));
         }
 
         // go back to update screen.

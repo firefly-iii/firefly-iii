@@ -2,21 +2,22 @@
 namespace FireflyIII\Database\Budget;
 
 use Carbon\Carbon;
-use FireflyIII\Database\CommonDatabaseCalls;
-use FireflyIII\Database\CUD;
+use FireflyIII\Database\CommonDatabaseCallsInterface;
+use FireflyIII\Database\CUDInterface;
 use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
+use Illuminate\Database\Query\Builder;
 
 /**
  * Class Budget
  *
  * @package FireflyIII\Database
  */
-class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
+class Budget implements CUDInterface, CommonDatabaseCallsInterface, BudgetInterface
 {
     use SwitchUser;
 
@@ -118,7 +119,6 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
      */
     public function findByWhat($what)
     {
-        // TODO: Implement findByWhat() method.
         throw new NotImplementedException;
     }
 
@@ -142,7 +142,6 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
      */
     public function getByIds(array $ids)
     {
-        // TODO: Implement getByIds() method.
         throw new NotImplementedException;
     }
 
@@ -237,7 +236,8 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     }
 
     /**
-     * This method includes the time because otherwise, SQLite doesn't understand it.
+     * This method includes the time because otherwise, SQLite does not understand it.
+     *
      * @param \Budget $budget
      * @param Carbon  $date
      *
@@ -247,9 +247,9 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
     {
         return \LimitRepetition::
         leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
-                                  ->where('limit_repetitions.startdate', $date->format('Y-m-d 00:00:00'))
-                                  ->where('budget_limits.budget_id', $budget->id)
-                                  ->first(['limit_repetitions.*']);
+                               ->where('limit_repetitions.startdate', $date->format('Y-m-d 00:00:00'))
+                               ->where('budget_limits.budget_id', $budget->id)
+                               ->first(['limit_repetitions.*']);
     }
 
     /**
@@ -264,7 +264,7 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
         return $this->getUser()
                     ->transactionjournals()
                     ->whereNotIn(
-                        'transaction_journals.id', function ($query) use ($start, $end) {
+                        'transaction_journals.id', function (Builder $query) use ($start, $end) {
                         $query
                             ->select('transaction_journals.id')
                             ->from('transaction_journals')
@@ -333,8 +333,7 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
             $limit->amount      = $amount;
             $limit->repeat_freq = 'monthly';
             $limit->repeats     = 0;
-            $result             = $limit->save();
-            \Log::info('Created new limit? ' . boolstr($result));
+            $limit->save();
             \Log::info('ID: ' . $limit->id);
             /*
              * A newly stored limit also created a limit repetition.
@@ -366,6 +365,8 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
      */
     public function limitOnStartingOnDate(\Budget $budget, Carbon $date)
     {
-        return $budget->budgetLimits()->where('startdate', $date->format('Y-m-d'))->first();
+        return $budget->budgetLimits()->where('startdate', $date->format('Y-m-d 00:00:00'))->first();
+
+
     }
 }

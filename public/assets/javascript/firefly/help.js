@@ -1,5 +1,8 @@
 $(function () {
     $('#help').click(showHelp);
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
 });
 
 function showHelp(e) {

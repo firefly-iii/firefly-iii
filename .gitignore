@@ -3,7 +3,6 @@
 composer.phar
 .env.*.php
 .env.php
-.DS_Store
 Thumbs.db
 .idea/
 tests/_output/*
@@ -23,3 +22,6 @@ tests/unit/UnitTester.php
 pi.php
 tests/_data/db.sqlite
 tests/_data/dump.sql
+db.sqlite_snapshot
+c3.php
+db.sqlite-journal

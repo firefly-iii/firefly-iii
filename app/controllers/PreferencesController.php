@@ -32,11 +32,11 @@ class PreferencesController extends BaseController
         $accounts       = $acct->getAssetAccounts();
         $viewRange      = $preferences->get('viewRange', '1M');
         $viewRangeValue = $viewRange->data;
-        $frontPage      = $preferences->get('frontpageAccounts', []);
+        $frontPage      = $preferences->get('frontPageAccounts', []);
         $budgetMax      = $preferences->get('budgetMaximum', 1000);
         $budgetMaximum  = $budgetMax->data;
 
-        return View::make('preferences.index', compact('budgetMaximum'))->with('accounts', $accounts)->with('frontpageAccounts', $frontPage)->with(
+        return View::make('preferences.index', compact('budgetMaximum'))->with('accounts', $accounts)->with('frontPageAccounts', $frontPage)->with(
             'viewRange', $viewRangeValue
         );
     }
@@ -49,12 +49,12 @@ class PreferencesController extends BaseController
         /** @var \FireflyIII\Shared\Preferences\Preferences $preferences */
         $preferences = App::make('FireflyIII\Shared\Preferences\Preferences');
 
-        // frontpage accounts
-        $frontpageAccounts = [];
-        foreach (Input::get('frontpageAccounts') as $id) {
-            $frontpageAccounts[] = intval($id);
+        // front page accounts
+        $frontPageAccounts = [];
+        foreach (Input::get('frontPageAccounts') as $id) {
+            $frontPageAccounts[] = intval($id);
         }
-        $preferences->set('frontpageAccounts', $frontpageAccounts);
+        $preferences->set('frontPageAccounts', $frontPageAccounts);
 
         // view range:
         $preferences->set('viewRange', Input::get('viewRange'));

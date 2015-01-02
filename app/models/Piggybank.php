@@ -1,18 +1,23 @@
 <?php
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Watson\Validating\ValidatingTrait;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
 /**
- * Class Piggybank
+ * Class PiggyBank
  */
-class Piggybank extends Eloquent
+class PiggyBank extends Eloquent
 {
-    use ValidatingTrait;
-    public static $rules
+    use ValidatingTrait, SoftDeletingTrait;
+    public    $fillable
+        = ['account_id', 'name', 'targetamount', 'startdate', 'targetdate', 'repeats', 'rep_length', 'rep_every', 'rep_times', 'reminder', 'reminder_skip',
+           'remind_me', 'order'];
+    protected $rules
         = ['account_id'    => 'required|exists:accounts,id', // link to Account
            'name'          => 'required|between:1,255', // name
-           'targetamount'  => 'required|min:0', // amount you want to save
+           'targetamount'  => 'required|min:0.01|numeric', // amount you want to save
            'startdate'     => 'date', // when you started
            'targetdate'    => 'date', // when its due
            'repeats'       => 'required|boolean', // does it repeat?
@@ -23,9 +28,6 @@ class Piggybank extends Eloquent
            'reminder_skip' => 'required|min:0|max:100', // every week? every 2 months?
            'remind_me'     => 'required|boolean', 'order' => 'required:min:1', // not yet used.
         ];
-    public        $fillable
-        = ['account_id', 'name', 'targetamount', 'startdate', 'targetdate', 'repeats', 'rep_length', 'rep_every', 'rep_times', 'reminder', 'reminder_skip',
-           'remind_me', 'order'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -36,52 +38,9 @@ class Piggybank extends Eloquent
     }
 
     /**
-     * TODO remove this method in favour of something in the FireflyIII libraries.
-     *
-     * @return int
-     */
-    public function amountPerReminder()
-    {
-        return 0;
-
-    }
-
-    /**
-     * TODO remove this method in favour of something in the FireflyIII libraries.
-     *
-     * @return int
-     */
-    public function countFutureReminders()
-    {
-        return 0;
-    }
-
-    /**
-     * TODO remove this method in favour of something in the FireflyIII libraries.
-     *
-     * @param Carbon $start
-     * @param Carbon $target
-     *
-     * @return PiggybankRepetition
-     */
-    public function createRepetition(Carbon $start = null, Carbon $target = null)
-    {
-        $rep = new \PiggybankRepetition;
-        $rep->piggybank()->associate($this);
-        $rep->startdate     = $start;
-        $rep->targetdate    = $target;
-        $rep->currentamount = 0;
-        $rep->save();
-
-        return $rep;
-    }
-
-    /**
-     * TODO remove this method in favour of something in the FireflyIII libraries.
-     *
      * Grabs the PiggyBankRepetition that's currently relevant / active
      *
-     * @returns \PiggybankRepetition
+     * @returns \PiggyBankRepetition
      */
     public function currentRelevantRep()
     {
@@ -89,44 +48,42 @@ class Piggybank extends Eloquent
             return $this->currentRep;
         }
         if ($this->repeats == 0) {
-            $rep              = $this->piggybankrepetitions()->first(['piggybank_repetitions.*']);
+            $rep              = $this->piggyBankRepetitions()->first(['piggy_bank_repetitions.*']);
             $this->currentRep = $rep;
-            \Log::debug('currentRelevantRep() reports $rep is null: ' . boolstr(is_null($rep)));
 
             return $rep;
         } else {
-            $query            = $this->piggybankrepetitions()->where(
-                function ($q) {
+            $query  = $this->piggyBankRepetitions()->where(
+                function (EloquentBuilder $q) {
 
                     $q->where(
-                        function ($q) {
+                        function (EloquentBuilder $q) {
 
                             $q->where(
-                                function ($q) {
+                                function (EloquentBuilder $q) {
                                     $today = new Carbon;
                                     $q->whereNull('startdate');
-                                    $q->orWhere('startdate', '<=', $today->format('Y-m-d'));
+                                    $q->orWhere('startdate', '<=', $today->format('Y-m-d 00:00:00'));
                                 }
                             )->where(
-                                function ($q) {
+                                function (EloquentBuilder $q) {
                                     $today = new Carbon;
                                     $q->whereNull('targetdate');
-                                    $q->orWhere('targetdate', '>=', $today->format('Y-m-d'));
+                                    $q->orWhere('targetdate', '>=', $today->format('Y-m-d 00:00:00'));
                                 }
                             );
                         }
                     )->orWhere(
-                        function ($q) {
+                        function (EloquentBuilder $q) {
                             $today = new Carbon;
-                            $q->where('startdate', '>=', $today->format('Y-m-d'));
-                            $q->where('targetdate', '>=', $today->format('Y-m-d'));
+                            $q->where('startdate', '>=', $today->format('Y-m-d 00:00:00'));
+                            $q->where('targetdate', '>=', $today->format('Y-m-d 00:00:00'));
                         }
                     );
 
                 }
-            )
-                                     ->orderBy('startdate', 'ASC');
-            $result           = $query->first(['piggybank_repetitions.*']);
+            )->orderBy('startdate', 'ASC');
+            $result = $query->first(['piggy_bank_repetitions.*']);
             $this->currentRep = $result;
             \Log::debug('Found relevant rep in currentRelevantRep(): ' . $result->id);
 
@@ -139,9 +96,9 @@ class Piggybank extends Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function piggybankrepetitions()
+    public function piggyBankRepetitions()
     {
-        return $this->hasMany('PiggybankRepetition');
+        return $this->hasMany('PiggyBankRepetition');
     }
 
     /**
@@ -155,9 +112,9 @@ class Piggybank extends Eloquent
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function piggybankevents()
+    public function piggyBankEvents()
     {
-        return $this->hasMany('PiggybankEvent');
+        return $this->hasMany('PiggyBankEvent');
     }
 
     /**
@@ -167,50 +124,4 @@ class Piggybank extends Eloquent
     {
         return $this->morphMany('Reminder', 'remindersable');
     }
-
-    /**
-     * TODO remove this method in favour of something in the FireflyIII libraries.
-     *
-     * Same but for specific date.
-     *
-     * @param Carbon $date
-     *
-     * @returns \PiggybankRepetition
-     */
-    public function repetitionForDate(Carbon $date)
-    {
-        $query  = $this->piggybankrepetitions()->where(
-            function ($q) use ($date) {
-
-                $q->where(
-                    function ($q) use ($date) {
-                        $q->whereNull('startdate');
-                        $q->orWhere('startdate', '<=', $date->format('Y-m-d'));
-                    }
-                )->where(
-                    function ($q) use ($date) {
-                        $q->whereNull('targetdate');
-                        $q->orWhere('targetdate', '>=', $date->format('Y-m-d'));
-                    }
-                );
-            }
-        )->orWhere(
-            function ($q) use ($date) {
-                $q->where('startdate', '>=', $date->format('Y-m-d'));
-                $q->where('targetdate', '>=', $date->format('Y-m-d'));
-            }
-        )->orderBy('startdate', 'ASC');
-        $result = $query->first();
-
-        return $result;
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function transactions()
-    {
-        return $this->hasMany('Transaction');
-    }
-
-} 
+}

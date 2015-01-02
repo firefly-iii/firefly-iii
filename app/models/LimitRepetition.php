@@ -34,18 +34,6 @@ class LimitRepetition extends Eloquent
     }
 
     /**
-     * TODO see if this scope is still used.
-     *
-     * How much money is left in this?
-     */
-    public function leftInRepetition()
-    {
-        return floatval($this->amount - $this->spentInRepetition());
-
-    }
-
-    /**
-     * TODO remove this method in favour of something in the FireflyIII libraries.
      *
      * @return float
      */
@@ -64,43 +52,4 @@ class LimitRepetition extends Eloquent
 
         return floatval($sum);
     }
-
-    /**
-     * TODO remove this method in favour of something in the FireflyIII libraries.
-     *
-     * Returns a string used to sort this particular repetition
-     * based on the date and period it falls into. Ie. the limit
-     * repeats monthly and the start date is 12 dec 2012, this will
-     * return 2012-12.
-     */
-    public function periodOrder()
-    {
-        if (is_null($this->repeat_freq)) {
-            $this->repeat_freq = $this->limit->repeat_freq;
-        }
-        switch ($this->repeat_freq) {
-            default:
-                throw new FireflyException('No date formats for frequency "' . $this->repeat_freq . '"!');
-                break;
-            case 'daily':
-                return $this->startdate->format('Ymd') . '-5';
-                break;
-            case 'weekly':
-                return $this->startdate->format('Ymd') . '-4';
-                break;
-            case 'monthly':
-                return $this->startdate->format('Ymd') . '-3';
-                break;
-            case 'quarterly':
-                return $this->startdate->format('Ymd') . '-2';
-                break;
-            case 'half-year':
-                return $this->startdate->format('Ymd') . '-1';
-                break;
-            case 'yearly':
-                return $this->startdate->format('Ymd') . '-0';
-                break;
-        }
-    }
-
-} 
+}

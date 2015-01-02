@@ -14,7 +14,7 @@ class User
     /**
      * @param $mail
      *
-     * @return null|User
+     * @return null|\User
      */
     public function findByEmail($mail)
     {
@@ -43,7 +43,8 @@ class User
         $user->reset    = \Str::random(32);
         $user->password = \Hash::make(\Str::random(12));
 
-        if (!$user->save()) {
+        // validate user:
+        if (!$user->isValid()) {
             \Log::error('Invalid user with data: ' . isset($data['email']) ? $data['email'] : '(no email!)');
             \Session::flash('error', 'Input invalid, please try again: ' . $user->getErrors()->first());
 

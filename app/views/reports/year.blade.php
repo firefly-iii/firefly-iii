@@ -30,7 +30,7 @@
             <div class="panel-heading">
                 Account balance
             </div>
-            <table class="table">
+            <table class="table table-bordered table-striped">
             <?php
             $start = 0;
             $end   = 0;
@@ -49,18 +49,51 @@
                         <small><em>shared</em></small>
                         @endif
                     </td>
-                    <td>{{mf($balance['start'])}}</td>
-                    <td>{{mf($balance['end'])}}</td>
-                    <td>{{mf($balance['end']-$balance['start'])}}</td>
+                    <td>{{Amount::format($balance['start'])}}</td>
+                    <td>{{Amount::format($balance['end'])}}</td>
+                    <td>{{Amount::format($balance['end']-$balance['start'])}}</td>
                 </tr>
                 @endforeach
                 <tr>
                     <td><em>Sum of sums</em></td>
-                    <td>{{mf($start)}}</td>
-                    <td>{{mf($end)}}</td>
-                    <td>{{mf($diff)}}</td>
+                    <td>{{Amount::format($start)}}</td>
+                    <td>{{Amount::format($end)}}</td>
+                    <td>{{Amount::format($diff)}}</td>
                 </tr>
             </table>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Income vs. expense
+            </div>
+            <?php
+            $incomeSum = 0;
+            $expenseSum = 0;
+            foreach($groupedIncomes as $income) {
+                $incomeSum += floatval($income->amount);
+            }
+            foreach($groupedExpenses as $exp) {
+                $expenseSum += floatval($exp['amount']);
+            }
+            $incomeSum = floatval($incomeSum*-1);
+
+            ?>
+
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <td>In</td>
+                        <td>{{Amount::format($incomeSum)}}</td>
+                    </tr>
+                    <tr>
+                        <td>Out</td>
+                        <td>{{Amount::format($expenseSum*-1)}}</td>
+                    </tr>
+                    <tr>
+                        <td>Difference</td>
+                        <td>{{Amount::format($incomeSum - $expenseSum)}}</td>
+                    </tr>
+                </table>
         </div>
     </div>
     <div class="col-lg-3 col-md-3 col-sm-3">
@@ -69,12 +102,18 @@
                 Income
             </div>
             <table class="table">
+                <?php $sum = 0;?>
             @foreach($groupedIncomes as $income)
+                <?php $sum += floatval($income->amount)*-1;?>
             <tr>
                 <td><a href="{{route('accounts.show',$income->account_id)}}">{{{$income->name}}}</a></td>
-                <td>{{mf(floatval($income->sum)*-1)}}</td>
+                <td>{{Amount::format(floatval($income->amount)*-1)}}</td>
             </tr>
             @endforeach
+                <tr>
+                    <td><em>Sum</em></td>
+                    <td>{{Amount::format($sum)}}</td>
+                </tr>
             </table>
         </div>
     </div>
@@ -84,10 +123,10 @@
                 Expenses
             </div>
             <table class="table">
-                @foreach($groupedExpenses as $expense)
+                @foreach($groupedExpenses as $id => $expense)
                 <tr>
-                    <td><a href="{{route('accounts.show',$expense->account_id)}}">{{{$expense->name}}}</a></td>
-                    <td>{{mf(floatval($expense->sum)*-1)}}</td>
+                    <td><a href="{{route('accounts.show',$id)}}">{{{$expense['name']}}}</a></td>
+                    <td>{{Amount::format(floatval($expense['amount'])*-1)}}</td>
                 </tr>
                 @endforeach
             </table>
@@ -117,7 +156,7 @@
 
 <script type="text/javascript">
 var year = '{{$year}}';
-var currencyCode = '{{getCurrencyCode()}}';
+var currencyCode = '{{Amount::getCurrencyCode()}}';
 </script>
 
 {{HTML::script('assets/javascript/firefly/reports.js')}}

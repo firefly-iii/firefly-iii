@@ -7,6 +7,7 @@ use FireflyIII\Shared\Toolkit\Form;
 use FireflyIII\Shared\Toolkit\Navigation;
 use FireflyIII\Shared\Toolkit\Reminders;
 use FireflyIII\Shared\Toolkit\Steam;
+use FireflyIII\Shared\Toolkit\Amount;
 use FireflyIII\Shared\Validation\FireflyValidator;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
@@ -43,8 +44,6 @@ class FF3ServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // FORMAT:
-        #$this->app->bind('Interface', 'Class');
         $this->registerFacades();
         $this->registerInterfaces();
         $this->registerAliases();
@@ -84,18 +83,29 @@ class FF3ServiceProvider extends ServiceProvider
             return new Steam;
         }
         );
+        $this->app->bind(
+            'amount', function () {
+            return new Amount;
+        }
+        );
     }
 
     public function registerInterfaces()
     {
-        // preferences:
+        // preferences
         $this->app->bind('FireflyIII\Shared\Preferences\PreferencesInterface', 'FireflyIII\Shared\Preferences\Preferences');
 
-        // registration and user mail:
+        // registration and user mail
         $this->app->bind('FireflyIII\Shared\Mail\RegistrationInterface', 'FireflyIII\Shared\Mail\Registration');
 
         // reports
         $this->app->bind('FireflyIII\Report\ReportInterface', 'FireflyIII\Report\Report');
+        $this->app->bind('FireflyIII\Report\ReportQueryInterface', 'FireflyIII\Report\ReportQuery');
+        $this->app->bind('FireflyIII\Report\ReportHelperInterface', 'FireflyIII\Report\ReportHelper');
+
+        $this->app->bind('FireflyIII\Helper\Related\RelatedInterface', 'FireflyIII\Helper\Related\Related');
+
+        $this->app->bind('FireflyIII\Helper\TransactionJournal\HelperInterface', 'FireflyIII\Helper\TransactionJournal\Helper');
 
         // chart
         $this->app->bind('FireflyIII\Chart\ChartInterface', 'FireflyIII\Chart\Chart');
@@ -113,6 +123,7 @@ class FF3ServiceProvider extends ServiceProvider
                 $loader->alias('Navigation', 'FireflyIII\Shared\Facade\Navigation');
                 $loader->alias('FFForm', 'FireflyIII\Shared\Facade\FFForm');
                 $loader->alias('Steam', 'FireflyIII\Shared\Facade\Steam');
+                $loader->alias('Amount', 'FireflyIII\Shared\Facade\Amount');
             }
         );
     }

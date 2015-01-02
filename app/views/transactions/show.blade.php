@@ -48,13 +48,13 @@
             </div>
         </div>
         <!-- events, if present -->
-        @if(count($journal->piggybankevents) > 0)
+        @if(count($journal->piggyBankEvents) > 0)
             <div class="panel panel-default">
                 <div class="panel-heading">
                     Piggy banks
                 </div>
                 <div class="panel-body">
-                    @include('list.piggybank-events',['events' => $journal->piggybankevents,'showPiggybank' => true])
+                    @include('list.piggy-bank-events',['events' => $journal->piggyBankEvents,'showPiggyBank' => true])
                 </div>
             </div>
         @endif
@@ -74,7 +74,7 @@
                         <tr>
                             <td><input type="checkbox" checked="checked" data-relatedto="{{$journal->id}}" data-id="{{$jrnl->id}}" class="unrelate-checkbox" /></td>
                             <td><a href="#">{{{$jrnl->description}}}</a></td>
-                            <td>{{mf($jrnl->getAmount())}}</td>
+                            <td>{{Amount::formatJournal($jrnl, $jrnl->getAmount())}}</td>
                         </tr>
                     @endforeach
                     </table>
@@ -97,11 +97,11 @@
                 <table class="table table-striped table-bordered">
                     <tr>
                         <td>Amount</td>
-                        <td>{{mf($t->amount)}}</td>
+                        <td>{{Amount::formatTransaction($t)}}</td>
                     </tr>
                     <tr>
                         <td>New balance</td>
-                        <td>{{mf($t->before)}} &rarr; {{mf($t->after)}}</td>
+                        <td>{{Amount::format($t->before)}} &rarr; {{Amount::format($t->after)}}</td>
                     </tr>
                     @if(!is_null($t->description))
                     <tr>

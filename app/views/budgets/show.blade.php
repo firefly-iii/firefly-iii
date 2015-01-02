@@ -29,10 +29,10 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-6">
-                                Amount: {{mf($rep->amount)}}
+                                Amount: {{Amount::format($rep->amount)}}
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6">
-                                Spent: {{mf($rep->spentInRepetition())}}
+                                Spent: {{Amount::format($rep->spentInRepetition())}}
                             </div>
                         </div>
                         <div class="row">

@@ -68,7 +68,7 @@ App::down(
     }
 );
 
-// forms:
+// forms
 \Form::macro(
     'ffText', function ($name, $value = null, array $options = []) {
     return \FireflyIII\Form\Form::ffText($name, $value, $options);

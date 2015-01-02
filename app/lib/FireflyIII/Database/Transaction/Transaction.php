@@ -2,8 +2,8 @@
 
 namespace FireflyIII\Database\Transaction;
 
-use FireflyIII\Database\CommonDatabaseCalls;
-use FireflyIII\Database\CUD;
+use FireflyIII\Database\CommonDatabaseCallsInterface;
+use FireflyIII\Database\CUDInterface;
 use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
@@ -16,7 +16,7 @@ use Illuminate\Support\MessageBag;
  *
  * @package FireflyIII\Database
  */
-class Transaction implements CUD, CommonDatabaseCalls
+class Transaction implements CUDInterface, CommonDatabaseCallsInterface
 {
     use SwitchUser;
 
@@ -28,7 +28,6 @@ class Transaction implements CUD, CommonDatabaseCalls
      */
     public function destroy(Eloquent $model)
     {
-        // TODO: Implement destroy() method.
         throw new NotImplementedException;
     }
 
@@ -44,8 +43,8 @@ class Transaction implements CUD, CommonDatabaseCalls
         $transaction->account()->associate($data['account']);
         $transaction->transactionJournal()->associate($data['transaction_journal']);
         $transaction->amount = floatval($data['amount']);
-        if (isset($data['piggybank'])) {
-            $transaction->piggybank()->associate($data['piggybank']);
+        if (isset($data['piggyBank'])) {
+            $transaction->piggyBank()->associate($data['piggyBank']);
         }
         if (isset($data['description'])) {
             $transaction->description = $data['description'];
@@ -68,7 +67,6 @@ class Transaction implements CUD, CommonDatabaseCalls
      */
     public function update(Eloquent $model, array $data)
     {
-        // TODO: Implement update() method.
         throw new NotImplementedException;
     }
 
@@ -103,7 +101,6 @@ class Transaction implements CUD, CommonDatabaseCalls
      */
     public function find($objectId)
     {
-        // TODO: Implement find() method.
         throw new NotImplementedException;
     }
 
@@ -117,7 +114,6 @@ class Transaction implements CUD, CommonDatabaseCalls
      */
     public function findByWhat($what)
     {
-        // TODO: Implement findByWhat() method.
         throw new NotImplementedException;
     }
 
@@ -129,7 +125,6 @@ class Transaction implements CUD, CommonDatabaseCalls
      */
     public function get()
     {
-        // TODO: Implement get() method.
         throw new NotImplementedException;
     }
 
@@ -141,7 +136,6 @@ class Transaction implements CUD, CommonDatabaseCalls
      */
     public function getByIds(array $ids)
     {
-        // TODO: Implement getByIds() method.
         throw new NotImplementedException;
     }
 }

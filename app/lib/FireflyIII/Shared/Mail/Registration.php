@@ -2,7 +2,7 @@
 namespace FireflyIII\Shared\Mail;
 
 use Swift_RfcComplianceException;
-
+use Illuminate\Mail\Message;
 /**
  * Class Registration
  *
@@ -28,7 +28,8 @@ class Registration implements RegistrationInterface
         $data = ['password' => $password];
         try {
             \Mail::send(
-                ['emails.user.register-html', 'emails.user.register-text'], $data, function ($message) use ($email) {
+                ['emails.user.register-html', 'emails.user.register-text'], $data, function (Message $message) use ($email) {
+
                 $message->to($email, $email)->subject('Welcome to Firefly!');
             }
             );
@@ -49,11 +50,14 @@ class Registration implements RegistrationInterface
         $email = $user->email;
 
         $data = ['reset' => $reset];
-        \Mail::send(
-            ['emails.user.remindme-html', 'emails.user.remindme-text'], $data, function ($message) use ($email) {
-            $message->to($email, $email)->subject('Forgot your password?');
+        try {
+            \Mail::send(
+                ['emails.user.remindMe-html', 'emails.user.remindMe-text'], $data, function (Message $message) use ($email) {
+                $message->to($email, $email)->subject('Forgot your password?');
+            }
+            );
+        } catch (Swift_RfcComplianceException $e) {
         }
-        );
 
 
     }
@@ -72,11 +76,15 @@ class Registration implements RegistrationInterface
         $email = $user->email;
         $data  = ['reset' => $reset];
 
-        \Mail::send(
-            ['emails.user.verify-html', 'emails.user.verify-text'], $data, function ($message) use ($email) {
-            $message->to($email, $email)->subject('Verify your e-mail address.');
+        try {
+            \Mail::send(
+                ['emails.user.verify-html', 'emails.user.verify-text'], $data, function (Message $message) use ($email) {
+
+                $message->to($email, $email)->subject('Verify your e-mail address.');
+            }
+            );
+        } catch (Swift_RfcComplianceException $e) {
         }
-        );
     }
 
 } 

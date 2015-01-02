@@ -1,7 +1,7 @@
 @extends('layouts.default')
 @section('content')
 {{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $journal) }}
-{{Form::open(['class' => 'form-horizontal','url' => route('transactions.update',$journal->id)])}}
+{{Form::open(['class' => 'form-horizontal','id' => 'update','url' => route('transactions.update',$journal->id)])}}
 
 
 <div class="row">
@@ -68,7 +68,7 @@
 
                 <!-- RELATE THIS TRANSFER TO A PIGGY BANK -->
                 @if($what == 'transfer' && count($piggies) > 0)
-                    {{Form::ffSelect('piggybank_id',$piggies,$data['piggybank_id'])}}
+                    {{Form::ffSelect('piggy_bank_id',$piggies,$data['piggy_bank_id'])}}
                 @endif
                     </div>
             </div><!-- end of panel for options-->

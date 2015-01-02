@@ -25,7 +25,7 @@ class Reminders
 
         switch (get_class($reminder->remindersable)) {
 
-            case 'Piggybank':
+            case 'PiggyBank':
                 $start     = new Carbon;
                 $end       = !is_null($reminder->remindersable->targetdate) ? clone $reminder->remindersable->targetdate : new Carbon;
                 $reminders = 0;
@@ -65,16 +65,16 @@ class Reminders
     public function updateReminders()
     {
         /** @var Collection $set */
-        $set = \Piggybank::leftJoin('accounts', 'accounts.id', '=', 'piggybanks.account_id')
+        $set = \PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
                          ->where('accounts.user_id', \Auth::user()->id)
-                         ->whereNotNull('reminder')->get(['piggybanks.*']);
+                         ->whereNotNull('reminder')->get(['piggy_banks.*']);
 
 
         $today = Carbon::now();
 
-        /** @var \Piggybank $piggybank */
+        /** @var \PiggyBank $piggyBank */
         foreach ($set as $piggyBank) {
-            /** @var \PiggybankRepetition $repetition */
+            /** @var \PiggyBankRepetition $repetition */
             $repetition = $piggyBank->currentRelevantRep();
             $start      = \DateKit::startOfPeriod($today, $piggyBank->reminder);
             if ($repetition->targetdate && $repetition->targetdate <= $today) {
@@ -93,7 +93,7 @@ class Reminders
                 $reminder->active    = 1;
                 $reminder->user()->associate(\Auth::getUser());
                 $reminder->remindersable_id   = $piggyBank->id;
-                $reminder->remindersable_type = 'Piggybank';
+                $reminder->remindersable_type = 'PiggyBank';
                 $reminder->save();
             }
         }

@@ -24,6 +24,7 @@ class Preferences implements PreferencesInterface
         if (!is_null($pref)) {
             return $pref;
         }
+
         return $this->set($name, $default);
 
     }

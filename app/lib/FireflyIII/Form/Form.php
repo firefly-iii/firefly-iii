@@ -123,7 +123,7 @@ class Form
                 $html .= \Form::input('text', $name, $value, $options);
                 break;
             case 'amount':
-                $html .= '<div class="input-group"><div class="input-group-addon">'.getCurrencySymbol().'</div>';
+                $html .= '<div class="input-group"><div class="input-group-addon">' . \Amount::getCurrencySymbol() . '</div>';
                 $html .= \Form::input('number', $name, $value, $options);
                 $html .= '</div>';
                 break;

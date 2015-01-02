@@ -29,19 +29,19 @@ class CreateLimitsTable extends Migration
     {
         Schema::create(
             'limits', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->integer('component_id')->unsigned();
-                $table->date('startdate');
-                $table->decimal('amount', 10, 2);
-                $table->boolean('repeats');
-                $table->enum('repeat_freq', ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly']);
+            $table->increments('id');
+            $table->timestamps();
+            $table->integer('component_id')->unsigned();
+            $table->date('startdate');
+            $table->decimal('amount', 10, 2);
+            $table->boolean('repeats');
+            $table->enum('repeat_freq', ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly']);
 
-                $table->unique(['component_id', 'startdate', 'repeat_freq']);
+            $table->unique(['component_id', 'startdate', 'repeat_freq'], 'unique_ci_combi');
 
-                // connect component
-                $table->foreign('component_id')->references('id')->on('components')->onDelete('cascade');
-            }
+            // connect component
+            $table->foreign('component_id')->references('id')->on('components')->onDelete('cascade');
+        }
         );
     }
 

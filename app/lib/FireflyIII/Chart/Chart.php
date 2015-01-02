@@ -48,28 +48,28 @@ class Chart implements ChartInterface
      *
      * @return Collection
      */
-    public function getRecurringSummary(Carbon $start, Carbon $end)
+    public function getBillsSummary(Carbon $start, Carbon $end)
     {
-        return \RecurringTransaction::
+        return \Bill::
         leftJoin(
             'transaction_journals', function (JoinClause $join) use ($start, $end) {
-            $join->on('recurring_transactions.id', '=', 'transaction_journals.recurring_transaction_id')
+            $join->on('bills.id', '=', 'transaction_journals.bill_id')
                  ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
                  ->where('transaction_journals.date', '<=', $end->format('Y-m-d'));
         }
         )
-                                    ->leftJoin(
-                                        'transactions', function (JoinClause $join) {
-                                        $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '>', 0);
-                                    }
-                                    )
-                                    ->where('active', 1)
-                                    ->groupBy('recurring_transactions.id')
-                                    ->get(
-                                        ['recurring_transactions.id', 'recurring_transactions.name', 'transaction_journals.description',
-                                         'transaction_journals.id as journalId',
-                                         \DB::Raw('SUM(`recurring_transactions`.`amount_min` + `recurring_transactions`.`amount_max`) / 2 as `averageAmount`'),
-                                         'transactions.amount AS actualAmount']
-                                    );
+                    ->leftJoin(
+                        'transactions', function (JoinClause $join) {
+                        $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '>', 0);
+                    }
+                    )
+                    ->where('active', 1)
+                    ->groupBy('bills.id')
+                    ->get(
+                        ['bills.id', 'bills.name', 'transaction_journals.description',
+                         'transaction_journals.id as journalId',
+                         \DB::Raw('SUM(`bills`.`amount_min` + `bills`.`amount_max`) / 2 as `averageAmount`'),
+                         'transactions.amount AS actualAmount']
+                    );
     }
 }

@@ -3,21 +3,22 @@
 namespace FireflyIII\Database\Account;
 
 use Carbon\Carbon;
-use FireflyIII\Database\CommonDatabaseCalls;
-use FireflyIII\Database\CUD;
+use FireflyIII\Database\CommonDatabaseCallsInterface;
+use FireflyIII\Database\CUDInterface;
 use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
-
+use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 /**
  * Class Account
  *
  * @package    FireflyIII\Database
  * @implements FireflyIII\Database\Account\AccountInterface
  */
-class Account implements CUD, CommonDatabaseCalls, AccountInterface
+class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInterface
 {
     use SwitchUser;
 
@@ -208,8 +209,8 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
 
             return true;
         } else {
-            var_dump($validation['errors']);
-            exit;
+            \Log::error($validation['errors']->all());
+            \App::abort(500);
         }
 
     }
@@ -222,22 +223,22 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
     public function destroy(Eloquent $model)
     {
 
+        // delete piggy banks
         // delete journals:
         $journals = \TransactionJournal::whereIn(
-            'id', function ($query) use ($model) {
+            'id', function (QueryBuilder $query) use ($model) {
             $query->select('transaction_journal_id')
                   ->from('transactions')->whereIn(
-                    'account_id', function ($query) use ($model) {
+                    'account_id', function (QueryBuilder $query) use ($model) {
                     $query
                         ->select('id')
                         ->from('accounts')
                         ->where(
-                            function ($q) use ($model) {
+                            function (QueryBuilder $q) use ($model) {
                                 $q->where('id', $model->id);
                                 $q->orWhere(
-                                    function ($q) use ($model) {
+                                    function (QueryBuilder $q) use ($model) {
                                         $q->where('accounts.name', 'LIKE', '%' . $model->name . '%');
-                                        // TODO magic number!
                                         $q->where('accounts.account_type_id', 3);
                                         $q->where('accounts.active', 0);
                                     }
@@ -273,12 +274,11 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
 
         // delete accounts:
         \Account::where(
-            function ($q) use ($model) {
+            function (EloquentBuilder $q) use ($model) {
                 $q->where('id', $model->id);
                 $q->orWhere(
-                    function ($q) use ($model) {
+                    function (EloquentBuilder $q) use ($model) {
                         $q->where('accounts.name', 'LIKE', '%' . $model->name . '%');
-                        // TODO magic number!
                         $q->where('accounts.account_type_id', 3);
                         $q->where('accounts.active', 0);
                     }
@@ -314,15 +314,14 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
         $data    = array_except($data, ['_token', 'what']);
         $account = new \Account($data);
         if (!$account->isValid()) {
-            var_dump($account->getErrors()->all());
-            exit;
+            \Log::error($account->getErrors()->all());
+            \App::abort(500);
         }
         $account->save();
         if (isset($data['openingbalance']) && floatval($data['openingbalance']) != 0) {
             $this->storeInitialBalance($account, $data);
         }
 
-        // TODO this needs cleaning up and thinking over.
         switch ($account->accountType->type) {
             case 'Asset account':
             case 'Default account':
@@ -350,7 +349,6 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
         $model->name   = $data['name'];
         $model->active = isset($data['active']) ? intval($data['active']) : 0;
 
-        // TODO this needs cleaning up and thinking over.
         switch ($model->accountType->type) {
             case 'Asset account':
             case 'Default account':
@@ -361,8 +359,8 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
         $model->save();
 
         if (isset($data['openingbalance']) && isset($data['openingbalancedate']) && strlen($data['openingbalancedate']) > 0) {
+            /** @noinspection PhpParamsInspection */
             $openingBalance = $this->openingBalanceTransaction($model);
-            // TODO this needs cleaning up and thinking over.
             if (is_null($openingBalance)) {
                 $this->storeInitialBalance($model, $data);
             } else {
@@ -480,7 +478,6 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
      */
     public function findByWhat($what)
     {
-        // TODO: Implement findByWhat() method.
         throw new NotImplementedException;
     }
 
@@ -492,7 +489,6 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
      */
     public function get()
     {
-        // TODO: Implement get() method.
         throw new NotImplementedException;
     }
 
@@ -514,14 +510,14 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
      */
     public function firstExpenseAccountOrCreate($name)
     {
-        /** @var \FireflyIII\Database\AccountType\AccountType $accountTypeRepos */
-        $accountTypeRepos = \App::make('FireflyIII\Database\AccountType\AccountType');
+        /** @var \FireflyIII\Database\AccountType\AccountType $accountTypeRepository */
+        $accountTypeRepository = \App::make('FireflyIII\Database\AccountType\AccountType');
 
-        $accountType = $accountTypeRepos->findByWhat('expense');
+        $accountType = $accountTypeRepository->findByWhat('expense');
 
         // if name is "", find cash account:
         if (strlen($name) == 0) {
-            $cashAccountType = $accountTypeRepos->findByWhat('cash');
+            $cashAccountType = $accountTypeRepository->findByWhat('cash');
 
             // find or create cash account:
             return \Account::firstOrCreate(
@@ -543,10 +539,10 @@ class Account implements CUD, CommonDatabaseCalls, AccountInterface
      */
     public function firstRevenueAccountOrCreate($name)
     {
-        /** @var \FireflyIII\Database\AccountType\AccountType $accountTypeRepos */
-        $accountTypeRepos = \App::make('FireflyIII\Database\AccountType\AccountType');
+        /** @var \FireflyIII\Database\AccountType\AccountType $accountTypeRepository */
+        $accountTypeRepository = \App::make('FireflyIII\Database\AccountType\AccountType');
 
-        $accountType = $accountTypeRepos->findByWhat('revenue');
+        $accountType = $accountTypeRepository->findByWhat('revenue');
 
         $data = ['user_id' => $this->getUser()->id, 'account_type_id' => $accountType->id, 'name' => $name, 'active' => 1];
 

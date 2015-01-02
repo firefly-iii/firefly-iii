@@ -1,14 +1,16 @@
 <?php
+use Illuminate\Database\Eloquent\Model as Eloquent;
 use Watson\Validating\ValidatingTrait;
-use \Illuminate\Database\Eloquent\Model as Eloquent;
+
 /**
  * Class Preference
  */
 class Preference extends Eloquent
 {
     use ValidatingTrait;
-    public static $rules
-        = ['user_id' => 'required|exists:users,id', 'name' => 'required|between:1,255', 'data' => 'required'];
+    protected $fillable = ['name', 'data', 'user_id'];
+    protected $rules
+                        = ['user_id' => 'required|exists:users,id', 'name' => 'required|between:1,255', 'data' => 'required'];
 
     /**
      * @param $value

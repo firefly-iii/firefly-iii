@@ -8,7 +8,7 @@
                 Change your password
             </div>
             <div class="panel-body">
-                {{Form::open(['class' => 'form-horizontal'])}}
+                {{Form::open(['class' => 'form-horizontal','id' => 'change-password'])}}
                     <div class="form-group">
                         <label for="inputOldPassword" class="col-sm-4 control-label">Old password</label>
                         <div class="col-sm-8">
