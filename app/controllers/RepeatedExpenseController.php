@@ -168,7 +168,7 @@ class RepeatedExpenseController extends BaseController
             return Redirect::route('repeated.create')->withInput();
         }
 
-        // store:
+        // store
         $piggyBank = $this->_repository->store($data);
         Event::fire('piggy_bank.store', [$piggyBank]); // new and used.
         Session::flash('success', 'Piggy bank "' . e($data['name']) . '" stored.');

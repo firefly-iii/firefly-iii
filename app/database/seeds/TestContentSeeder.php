@@ -268,10 +268,10 @@ class TestContentSeeder extends Seeder
      */
     public function createPiggyBanks(User $user)
     {
-        // account:
+        // account
         $savings = Account::whereName('Savings account')->orderBy('id', 'DESC')->first();
 
-        // some dates:
+        // some dates
         $endDate  = clone $this->_startOfMonth;
         $nextYear = clone $this->_startOfMonth;
 
@@ -374,7 +374,7 @@ class TestContentSeeder extends Seeder
      */
     public function createRecurringTransactions(User $user)
     {
-        // account:
+        // account
         $savings = Account::whereName('Savings account')->orderBy('id', 'DESC')->first();
 
         $recurring = PiggyBank::create(

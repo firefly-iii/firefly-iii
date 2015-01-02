@@ -10,6 +10,7 @@ use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Class Budget
@@ -265,7 +266,7 @@ class Budget implements CUD, CommonDatabaseCalls, BudgetInterface
         return $this->getUser()
                     ->transactionjournals()
                     ->whereNotIn(
-                        'transaction_journals.id', function ($query) use ($start, $end) {
+                        'transaction_journals.id', function (Builder $query) use ($start, $end) {
                         $query
                             ->select('transaction_journals.id')
                             ->from('transaction_journals')

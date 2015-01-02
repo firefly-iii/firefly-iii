@@ -43,8 +43,6 @@ class FF3ServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // FORMAT:
-        #$this->app->bind('Interface', 'Class');
         $this->registerFacades();
         $this->registerInterfaces();
         $this->registerAliases();
@@ -88,10 +86,10 @@ class FF3ServiceProvider extends ServiceProvider
 
     public function registerInterfaces()
     {
-        // preferences:
+        // preferences
         $this->app->bind('FireflyIII\Shared\Preferences\PreferencesInterface', 'FireflyIII\Shared\Preferences\Preferences');
 
-        // registration and user mail:
+        // registration and user mail
         $this->app->bind('FireflyIII\Shared\Mail\RegistrationInterface', 'FireflyIII\Shared\Mail\Registration');
 
         // reports

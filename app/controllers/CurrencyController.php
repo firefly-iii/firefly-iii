@@ -145,7 +145,7 @@ class CurrencyController extends BaseController
             return Redirect::route('currency.create')->withInput();
         }
 
-        // store:
+        // store
         $this->_repository->store($data);
         Session::flash('success', 'Currency "' . e($data['name']) . '" stored.');
         if ($data['post_submit_action'] == 'store') {

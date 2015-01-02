@@ -272,19 +272,6 @@ class ChangesForV321 extends Migration
         $this->dropComponentIdFromBudgetLimits(); // 16.
         $this->expandCurrencyTable(); // 17.
 
-
-        //        $this->doRenameInLimitRepetitions();
-        //        $this->doBudgetLimits();
-        //        $this->doPiggyBankEvents();
-        //        $this->doCreateCategoryTables();
-        //        $this->doUpdateTransactionTable();
-        //        $this->doDropCompRecurTable();
-        //        $this->doDropCompTransTable();
-        //        $this->doMoveBudgets();
-        //        $this->doMoveCategories();
-        //        $this->doMoveLimitReferences();
-
-
     }
 
     public function createBudgetTable()

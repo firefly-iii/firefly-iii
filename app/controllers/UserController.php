@@ -76,8 +76,6 @@ class UserController extends BaseController
 
         $user = $repository->register(Input::all());
 
-
-        //$user = $this->user->register(Input::all());
         if ($user) {
             $email->sendVerificationMail($user);
 

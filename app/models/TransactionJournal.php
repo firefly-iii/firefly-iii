@@ -192,7 +192,7 @@ class TransactionJournal extends Eloquent
     public function scopeWithRelevantData(Builder $query)
     {
         $query->with(
-            ['transactions'                    => function ($q) {
+            ['transactions'                    => function (Builder $q) {
                 $q->orderBy('amount', 'ASC');
             }, 'transactiontype', 'budgets','categories', 'transactions.account.accounttype', 'bill', 'budgets', 'categories']
         );

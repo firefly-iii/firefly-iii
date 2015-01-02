@@ -3,6 +3,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Watson\Validating\ValidatingTrait;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Class PiggyBank
@@ -77,19 +78,19 @@ class PiggyBank extends Eloquent
             return $rep;
         } else {
             $query  = $this->piggyBankRepetitions()->where(
-                function ($q) {
+                function (Builder $q) {
 
                     $q->where(
-                        function ($q) {
+                        function (Builder $q) {
 
                             $q->where(
-                                function ($q) {
+                                function (Builder $q) {
                                     $today = new Carbon;
                                     $q->whereNull('startdate');
                                     $q->orWhere('startdate', '<=', $today->format('Y-m-d 00:00:00'));
                                 }
                             )->where(
-                                function ($q) {
+                                function (Builder $q) {
                                     $today = new Carbon;
                                     $q->whereNull('targetdate');
                                     $q->orWhere('targetdate', '>=', $today->format('Y-m-d 00:00:00'));
@@ -97,7 +98,7 @@ class PiggyBank extends Eloquent
                             );
                         }
                     )->orWhere(
-                        function ($q) {
+                        function (Builder $q) {
                             $today = new Carbon;
                             $q->where('startdate', '>=', $today->format('Y-m-d 00:00:00'));
                             $q->where('targetdate', '>=', $today->format('Y-m-d 00:00:00'));

@@ -179,7 +179,7 @@ class BudgetController extends BaseController
             return Redirect::route('budgets.create')->withInput();
         }
 
-        // store:
+        // store
         $this->_repository->store($data);
         Session::flash('success', 'Budget "' . e($data['name']) . '" stored.');
         if ($data['post_submit_action'] == 'store') {
