@@ -24,12 +24,13 @@
         "davejamesmiller/laravel-breadcrumbs": "2.*",
         "grumpydictator/gchart": "1.*",
         "michelf/php-markdown": "1.*",
-        "watson/validating": "0.10.*"
+        "watson/validating": "0.10.*",
+        "doctrine/dbal": "~2.3"
+
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "@stable",
         "barryvdh/laravel-ide-helper": "@stable",
-        "doctrine/dbal": "~2.3",
         "satooshi/php-coveralls": "dev-master",
         "mockery/mockery": "@stable",
         "league/factory-muffin": "~2.1",

@@ -72,6 +72,7 @@ class TestContentSeeder extends Seeder
      */
     public function run()
     {
+        return;
         if (App::environment() == 'testing' || App::environment() == 'homestead') {
 
             $user = User::whereEmail('thegrumpydictator@gmail.com')->first();

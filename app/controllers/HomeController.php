@@ -7,6 +7,7 @@ use Carbon\Carbon;
  */
 class HomeController extends BaseController
 {
+
     /**
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -57,6 +58,18 @@ class HomeController extends BaseController
         // build the home screen:
         return View::make('index')->with('count', $count)->with('transactions', $transactions)->with('title', 'Firefly')->with('subTitle', 'What\'s playing?')
                    ->with('mainTitleIcon', 'fa-fire');
+    }
+
+    /**
+     * @return string
+     */
+    public function marauder()
+    {
+        echo '<pre>';
+        print_r(Input::all());
+        echo '</pre>';
+
+        return '';
     }
 
     /**
