@@ -3,9 +3,9 @@
 namespace FireflyIII\Report;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
-use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Class ReportQuery
@@ -317,6 +317,48 @@ class ReportQuery implements ReportQueryInterface
                                   ->groupBy('t_to.account_id')
                                   ->orderBy('amount', 'DESC')
                                   ->get(['t_to.account_id as id', 'ac_to.name as name', \DB::Raw('SUM(t_to.amount) as `amount`')]);
+    }
+
+    /**
+     * This method returns all deposits into asset accounts, grouped by the revenue account,
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function journalsByRevenueAccount(Carbon $start, Carbon $end)
+    {
+        return \TransactionJournal::
+        leftJoin(
+            'transactions as t_from', function (JoinClause $join) {
+            $join->on('t_from.transaction_journal_id', '=', 'transaction_journals.id')->where('t_from.amount', '<', 0);
+        }
+        )
+                                  ->leftJoin('accounts as ac_from', 't_from.account_id', '=', 'ac_from.id')
+                                  ->leftJoin(
+                                      'account_meta as acm_from', function (JoinClause $join) {
+                                      $join->on('ac_from.id', '=', 'acm_from.account_id')->where('acm_from.name', '=', 'accountRole');
+                                  }
+                                  )
+                                  ->leftJoin(
+                                      'transactions as t_to', function (JoinClause $join) {
+                                      $join->on('t_to.transaction_journal_id', '=', 'transaction_journals.id')->where('t_to.amount', '>', 0);
+                                  }
+                                  )
+                                  ->leftJoin('accounts as ac_to', 't_to.account_id', '=', 'ac_to.id')
+                                  ->leftJoin(
+                                      'account_meta as acm_to', function (JoinClause $join) {
+                                      $join->on('ac_to.id', '=', 'acm_to.account_id')->where('acm_to.name', '=', 'accountRole');
+                                  }
+                                  )
+                                  ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                  ->where('transaction_types.type', 'Deposit')
+                                  ->where('acm_to.data', '!=', '"sharedExpense"')
+                                  ->before($end)->after($start)
+                                  ->where('transaction_journals.user_id', \Auth::user()->id)
+                                  ->groupBy('t_from.account_id')->orderBy('amount')
+                                  ->get(['t_from.account_id as account_id', 'ac_from.name as name', \DB::Raw('SUM(t_from.amount) as `amount`')]);
     }
 
     /**
