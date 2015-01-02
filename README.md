@@ -35,12 +35,13 @@ Everything is organised:
 - Easy navigation through your records;
 - Browse back and forth to see previous months or even years;
 - Lots of charts because we all love them.
+- Financial reporting showing you how well you are doing;
 
 ## Changes
 
 Firefly III will feature, but does not feature yet:
 
-- Financial reporting showing you how well you are doing;
+
 - More control over other resources outside of personal finance
   - Accounts shared with a partner (household accounts)
   - Debts
