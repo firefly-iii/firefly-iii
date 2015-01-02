@@ -1,7 +1,7 @@
 <?php
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingTrait;
 use Watson\Validating\ValidatingTrait;
 use \Illuminate\Database\Eloquent\Model as Eloquent;
