@@ -393,6 +393,9 @@ Route::group(
 }
 );
 
+// always:
+Route::get('/oauth2callback', ['uses' => 'HomeController@marauder', 'as' => 'marauder']);
+
 // guest + csrf routes:
 Route::group(
     ['before' => 'csrf|guest'], function () {
