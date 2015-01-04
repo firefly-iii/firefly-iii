@@ -71,7 +71,7 @@ class HomeController extends BaseController
                 $params[$key] = $value;
             }
         }
-        return Redirect::to('http://marauder.app/oauth2callback?' . http_build_query($params));
+        return Redirect::to('http://nest.nder.be/oauth2callback?' . http_build_query($params));
     }
 
     /**
