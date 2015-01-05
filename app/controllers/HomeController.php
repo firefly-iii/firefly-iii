@@ -61,20 +61,6 @@ class HomeController extends BaseController
     }
 
     /**
-     * @return string
-     */
-    public function marauder()
-    {
-        $params = [];
-        foreach(Input::all() as $key => $value) {
-            if($key == 'code' || $key == 'state') {
-                $params[$key] = $value;
-            }
-        }
-        return Redirect::to('http://nest.nder.be/oauth2callback?' . http_build_query($params));
-    }
-
-    /**
      * @param $range
      *
      * @return \Illuminate\Http\RedirectResponse
