@@ -278,6 +278,7 @@ class PiggyBankController extends BaseController
         $data['user_id']       = Auth::user()->id;
         $data['rep_every']     = 0;
         $data['reminder_skip'] = 0;
+        $data['remind_me']     = intval(Input::get('remind_me'));
 
 
         // always validate:
