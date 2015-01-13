@@ -23,12 +23,14 @@ class UserTest extends TestCase
     {
         $pref = f::create('Preference');
         $this->assertEquals($pref->user_id, $pref->user->id);
+        $this->assertCount(1, $pref->user->preferences()->get());
     }
 
     public function testReminder()
     {
         $reminder = f::create('Reminder');
         $this->assertEquals($reminder->user_id, $reminder->user->id);
+        $this->assertCount(1, $reminder->user->reminders()->get());
     }
 
 }

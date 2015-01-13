@@ -7,6 +7,7 @@ use Carbon\Carbon;
  */
 class HomeController extends BaseController
 {
+
     /**
      * @return \Illuminate\Http\RedirectResponse
      */

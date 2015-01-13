@@ -106,6 +106,17 @@ class TransactionControllerCest
         $I->see(intval($journal->getAmount()));
     }
 
+    public function showGroupedJournal(FunctionalTester $I)
+    {
+        $journal = TransactionJournal::where('description', 'LIKE', 'Big expense in %')->first();
+
+
+        $I->wantTo('see a grouped transaction');
+        $I->amOnPage('/transaction/show/' . $journal->id);
+        $I->see($journal->description);
+        $I->see('Money for '.$journal->description);
+    }
+
     public function store(FunctionalTester $I)
     {
         $I->wantTo('store a transaction');

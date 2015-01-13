@@ -59,15 +59,19 @@ class TransactionJournal extends Eloquent
      */
     public function getAmount(\Account $account = null)
     {
-
+        $amount = 0;
         foreach ($this->transactions as $t) {
             if (!is_null($account) && $account->id == $t->account_id) {
-                return floatval($t->amount);
+                $amount = floatval($t->amount);
+                break;
             }
             if (floatval($t->amount) > 0) {
-                return floatval($t->amount);
+                $amount = floatval($t->amount);
+                break;
             }
         }
+
+        return $amount;
     }
 
     /**

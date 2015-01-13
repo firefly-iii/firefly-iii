@@ -51,6 +51,18 @@
     <div class="col-lg-3 col-sm-4 col-md-4">
         <!-- time based navigation -->
         @include('partials.date_nav')
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Transactions without a budget
+            </div>
+            <div class="panel-body">
+                <p>
+                    <a href="{{route('budgets.noBudget')}}">Transactions without a budget in
+                        {{\Session::get('start', \Carbon\Carbon::now()->startOfMonth())->format('F Y')}}.</a>
+                </p>
+            </div>
+        </div>
     </div>
 </div>
 
