@@ -1,4 +1,5 @@
 <?php
+use Carbon\Carbon;
 use FireflyIII\Database\Category\Category as CategoryRepository;
 use FireflyIII\Exception\FireflyException;
 
@@ -32,6 +33,19 @@ class CategoryController extends BaseController
     public function create()
     {
         return View::make('categories.create')->with('subTitle', 'Create a new category');
+    }
+
+    /**
+     * @return \Illuminate\View\View
+     */
+    public function noCategory()
+    {
+        $start    = \Session::get('start', Carbon::now()->startOfMonth());
+        $end      = \Session::get('end', Carbon::now()->startOfMonth());
+        $list     = $this->_repository->journalsNoCategory($start, $end);
+        $subTitle = 'Transactions without a category in ' . $start->format('F Y');
+
+        return View::make('categories.noCategory', compact('list', 'subTitle'));
     }
 
     /**

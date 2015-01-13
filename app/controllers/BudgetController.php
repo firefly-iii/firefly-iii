@@ -125,6 +125,19 @@ class BudgetController extends BaseController
     }
 
     /**
+     * @return \Illuminate\View\View
+     */
+    public function noBudget()
+    {
+        $start    = \Session::get('start', Carbon::now()->startOfMonth());
+        $end      = \Session::get('end', Carbon::now()->startOfMonth());
+        $list     = $this->_repository->journalsNoBudget($start, $end);
+        $subTitle = 'Transactions without a budget in ' . $start->format('F Y');
+
+        return View::make('budgets.noBudget', compact('list', 'subTitle'));
+    }
+
+    /**
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postUpdateIncome()
@@ -188,7 +201,6 @@ class BudgetController extends BaseController
         // create another.
         return Redirect::route('budgets.create')->withInput();
     }
-
 
     /**
      * @param Budget $budget

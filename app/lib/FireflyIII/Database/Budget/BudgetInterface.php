@@ -26,6 +26,15 @@ interface BudgetInterface
      *
      * @return Collection
      */
-    public function transactionsWithoutBudgetInDateRange(Carbon $start, Carbon $end);
+    public function expenseNoBudget(Carbon $start, Carbon $end);
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function journalsNoBudget(Carbon $start, Carbon $end);
+
 
 } 

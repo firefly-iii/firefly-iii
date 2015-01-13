@@ -155,7 +155,7 @@ class GoogleChartController extends BaseController
             }
         }
 
-        $noBudgetSet = $bdt->transactionsWithoutBudgetInDateRange($this->_start, $this->_end);
+        $noBudgetSet = $bdt->expenseNoBudget($this->_start, $this->_end);
         $sum         = $noBudgetSet->sum('amount') * -1;
         $this->_chart->addRow('No budget', 0, $sum);
         $this->_chart->generate();

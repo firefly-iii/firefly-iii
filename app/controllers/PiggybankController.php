@@ -262,7 +262,7 @@ class PiggyBankController extends BaseController
          * Number of reminders:
          */
 
-        $subTitle          = e($piggyBank->name);
+        $subTitle = e($piggyBank->name);
 
         return View::make('piggy_banks.show', compact('piggyBank', 'events', 'subTitle'));
 
@@ -273,9 +273,13 @@ class PiggyBankController extends BaseController
      */
     public function store()
     {
-        $data            = Input::all();
-        $data['repeats'] = 0;
-        $data['user_id'] = Auth::user()->id;
+        $data                  = Input::all();
+        $data['repeats']       = 0;
+        $data['user_id']       = Auth::user()->id;
+        $data['rep_every']     = 0;
+        $data['reminder_skip'] = 0;
+        $data['remind_me']     = intval(Input::get('remind_me'));
+        $data['order']         = 0;
 
 
         // always validate:
