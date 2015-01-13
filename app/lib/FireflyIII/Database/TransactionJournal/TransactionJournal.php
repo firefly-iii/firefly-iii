@@ -74,8 +74,15 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
 
         list($fromAccount, $toAccount) = $this->storeAccounts($data);
 
-        $this->storeTransaction(['account' => $fromAccount, 'transaction_journal' => $journal, 'amount' => floatval($data['amount'] * -1)]);
-        $this->storeTransaction(['account' => $toAccount, 'transaction_journal' => $journal, 'amount' => floatval($data['amount'])]);
+
+        $this->storeTransaction(
+            ['account_id' => $fromAccount->id, 'account' => $fromAccount, 'transaction_journal' => $journal, 'transaction_journal_id' => $journal->id,
+             'amount'     => floatval($data['amount'] * -1)]
+        );
+        $this->storeTransaction(
+            ['account_id' => $toAccount->id, 'account' => $toAccount, 'transaction_journal' => $journal, 'transaction_journal_id' => $journal->id,
+             'amount'     => floatval($data['amount'])]
+        );
         $this->storeBudget($data, $journal);
         $this->storeCategory($data, $journal);
 
@@ -278,6 +285,8 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
                 $toAccount   = $accountRepository->firstExpenseAccountOrCreate($data['expense_account']);
                 break;
             case 'opening':
+                $fromAccount = $data['from'];
+                $toAccount   = $data['to'];
                 break;
             case 'deposit':
                 $fromAccount = $accountRepository->firstRevenueAccountOrCreate($data['revenue_account']);
