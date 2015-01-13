@@ -7,11 +7,12 @@ use FireflyIII\Database\CommonDatabaseCallsInterface;
 use FireflyIII\Database\CUDInterface;
 use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\NotImplementedException;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
-use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+
 /**
  * Class Account
  *
@@ -199,8 +200,26 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
 
         // data for transaction journal:
         $balance = $balance < 0 ? $balance * -1 : $balance;
-        $opening = ['what'        => 'opening', 'currency' => 'EUR', 'amount' => $balance, 'from' => $from, 'to' => $to, 'date' => $date,
-                    'description' => 'Opening balance for new account ' . $account->name,];
+
+        // find the account type:
+        /** @var \FireflyIII\Database\TransactionType\TransactionType $typeRepository */
+        $typeRepository = \App::make('FireflyIII\Database\TransactionType\TransactionType');
+        $type           = $typeRepository->findByWhat('opening');
+
+        // find the currency.
+        $currency = \Amount::getDefaultCurrency();
+
+        $opening = [
+            'transaction_type_id'     => $type->id,
+            'transaction_currency_id' => $currency->id,
+            'amount'                  => $balance,
+            'from'                    => $from,
+            'completed'               => 0,
+            'currency'                => 'EUR',
+            'what'                    => 'opening',
+            'to'                      => $to,
+            'date'                    => $date,
+            'description'             => 'Opening balance for new account ' . $account->name,];
 
 
         $validation = $tj->validate($opening);
@@ -209,6 +228,7 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
 
             return true;
         } else {
+            \Log::error('Initial balance created is not valid (Database/Account)');
             \Log::error($validation['errors']->all());
             \App::abort(500);
         }
@@ -314,6 +334,7 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
         $data    = array_except($data, ['_token', 'what']);
         $account = new \Account($data);
         if (!$account->isValid()) {
+            \Log::error('Account created is not valid (Database/Account)');
             \Log::error($account->getErrors()->all());
             \App::abort(500);
         }
