@@ -145,4 +145,21 @@ class Amount
         return $currency->code;
     }
 
+    /**
+     * @return string
+     */
+    public function getDefaultCurrency()
+    {
+        /** @var \FireflyIII\Database\TransactionCurrency\TransactionCurrency $currencies */
+        $currencies = \App::make('FireflyIII\Database\TransactionCurrency\TransactionCurrency');
+
+        /** @var \FireflyIII\Shared\Preferences\Preferences $preferences */
+        $preferences = \App::make('FireflyIII\Shared\Preferences\Preferences');
+
+        $currencyPreference = $preferences->get('currencyPreference', 'EUR');
+        $currency           = $currencies->findByCode($currencyPreference->data);
+
+        return $currency;
+    }
+
 }
