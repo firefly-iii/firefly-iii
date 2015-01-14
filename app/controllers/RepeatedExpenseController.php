@@ -34,7 +34,7 @@ class RepeatedExpenseController extends BaseController
         /** @var \FireflyIII\Database\Account\Account $acct */
         $acct     = App::make('FireflyIII\Database\Account\Account');
         $periods  = Config::get('firefly.piggy_bank_periods');
-        $accounts = FFForm::makeSelectList($acct->getAssetAccounts());
+        $accounts = FFForm::makeSelectList($acct->getAccountsByType(['Default account', 'Asset account']));
 
         return View::make('repeatedExpense.create', compact('accounts', 'periods'))->with('subTitle', 'Create new repeated expense')->with(
             'subTitleIcon', 'fa-plus'
@@ -79,7 +79,7 @@ class RepeatedExpenseController extends BaseController
         $acct = App::make('FireflyIII\Database\Account\Account');
 
         $periods      = Config::get('firefly.piggy_bank_periods');
-        $accounts     = FFForm::makeSelectList($acct->getAssetAccounts());
+        $accounts     = FFForm::makeSelectList($acct->getAccountsByType(['Default account', 'Asset account']));
         $subTitle     = 'Edit repeated expense "' . e($repeatedExpense->name) . '"';
         $subTitleIcon = 'fa-pencil';
 

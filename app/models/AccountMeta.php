@@ -10,16 +10,16 @@ class AccountMeta extends Eloquent
     /**
      * @var array
      */
-    public static $rules
+    protected $rules
         = [
-            'account_id' => 'numeric|required|exists:accounts,id',
+            'account_id' => 'numeric|exists:accounts,id',
             'name'       => 'required|between:1,250',
             'data'       => 'required'
         ];
     /**
      * @var array
      */
-    protected $fillable = ['account_id', 'name', 'date'];
+    protected $fillable = ['account_id', 'name', 'data'];
     protected $table    = 'account_meta';
 
     /**
