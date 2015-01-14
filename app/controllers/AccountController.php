@@ -140,8 +140,7 @@ class AccountController extends BaseController
     {
         $subTitle     = $this->_subTitlesByIdentifier[$what];
         $subTitleIcon = $this->_subIconsByIdentifier[$what];
-
-        $accounts = $this->_repository->getAccountsByType($this->_accountTypesByIdentifier[$what]);
+        $accounts     = $this->_repository->getAccountsByType($this->_accountTypesByIdentifier[$what]);
 
         return View::make('accounts.index', compact('what', 'subTitleIcon', 'subTitle', 'accounts'));
     }
@@ -169,21 +168,23 @@ class AccountController extends BaseController
     public function store()
     {
 
-        $data = Input::except('_token');
-
-        // always validate:
-        $messages = $this->_repository->validate($data);
+        /*
+         * always validate using the account validator:
+         * TODO move to constructor.
+         */
+        /** @var \FireflyIII\Validation\Account $validator */
+        $validator = App::make('FireflyIII\Validation\Account');
+        $data      = Input::except('_token', 'post_submit_action');
+        $errors    = $validator->store($data);
 
         // flash messages:
-        Session::flash('warnings', $messages['warnings']);
-        Session::flash('successes', $messages['successes']);
-        Session::flash('errors', $messages['errors']);
-        if ($messages['errors']->count() > 0) {
-            Session::flash('error', 'Could not store account: ' . $messages['errors']->first());
+        Session::flash('errors', $errors);
+        if ($errors->count() > 0) {
+            Session::flash('error', 'Could not store account: ' . $errors->first());
         }
 
         // return to create screen:
-        if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
+        if ($data['post_submit_action'] == 'validate_only' || $errors->count() > 0) {
             return Redirect::route('accounts.create', e($data['what']))->withInput();
         }
 
@@ -205,23 +206,24 @@ class AccountController extends BaseController
      */
     public function update(Account $account)
     {
+        /*
+         * always validate using the account validator:
+         * TODO move to constructor.
+         */
+        /** @var \FireflyIII\Validation\Account $validator */
+        $validator    = App::make('FireflyIII\Validation\Account');
         $data         = Input::except('_token');
         $data['what'] = $this->_shortNamesByFullName[$account->accountType->type];
-
-
-        // always validate:
-        $messages = $this->_repository->validate($data);
+        $errors       = $validator->update($data, $account);
 
         // flash messages:
-        Session::flash('warnings', $messages['warnings']);
-        Session::flash('successes', $messages['successes']);
-        Session::flash('errors', $messages['errors']);
-        if ($messages['errors']->count() > 0) {
-            Session::flash('error', 'Could not update account: ' . $messages['errors']->first());
+        Session::flash('errors', $errors);
+        if ($errors->count() > 0) {
+            Session::flash('error', 'Could not update account: ' . $errors->first());
         }
 
         // return to update screen:
-        if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
+        if ($data['post_submit_action'] == 'validate_only' || $errors->count() > 0) {
             return Redirect::route('accounts.edit', $account->id)->withInput();
         }
 

@@ -62,7 +62,7 @@ class PiggyBankController extends BaseController
         $acct = App::make('FireflyIII\Database\Account\Account');
 
         $periods      = Config::get('firefly.piggy_bank_periods');
-        $accounts     = FFForm::makeSelectList($acct->getAssetAccounts());
+        $accounts     = FFForm::makeSelectList($acct->getAccountsByType(['Default account', 'Asset account']));
         $subTitle     = 'Create new piggy bank';
         $subTitleIcon = 'fa-plus';
 
@@ -107,7 +107,7 @@ class PiggyBankController extends BaseController
         $acct = App::make('FireflyIII\Database\Account\Account');
 
         $periods      = Config::get('firefly.piggy_bank_periods');
-        $accounts     = FFForm::makeSelectList($acct->getAssetAccounts());
+        $accounts     = FFForm::makeSelectList($acct->getAccountsByType(['Default account', 'Asset account']));
         $subTitle     = 'Edit piggy bank "' . e($piggyBank->name) . '"';
         $subTitleIcon = 'fa-pencil';
 

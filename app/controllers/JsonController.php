@@ -36,7 +36,7 @@ class JsonController extends BaseController
     {
         /** @var \FireflyIII\Database\Account\Account $accounts */
         $accounts = App::make('FireflyIII\Database\Account\Account');
-        $list     = $accounts->getExpenseAccounts();
+        $list     = $accounts->getAccountsByType(['Expense account', 'Beneficiary account']);
         $return   = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;
@@ -53,7 +53,7 @@ class JsonController extends BaseController
     {
         /** @var \FireflyIII\Database\Account\Account $accounts */
         $accounts = App::make('FireflyIII\Database\Account\Account');
-        $list     = $accounts->getRevenueAccounts();
+        $list     = $accounts->getAccountsByType(['Revenue account']);
         $return   = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;
