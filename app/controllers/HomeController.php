@@ -33,7 +33,7 @@ class HomeController extends BaseController
         /** @var \FireflyIII\Shared\Preferences\PreferencesInterface $preferences */
         $preferences = App::make('FireflyIII\Shared\Preferences\PreferencesInterface');
 
-        $count = $acct->countAssetAccounts();
+        $count = $acct->countAccountsByType(['Default account', 'Asset account']);
 
         $start = Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());
@@ -42,7 +42,7 @@ class HomeController extends BaseController
         // get the preference for the home accounts to show:
         $frontPage = $preferences->get('frontPageAccounts', []);
         if ($frontPage->data == []) {
-            $accounts = $acct->getAssetAccounts();
+            $accounts = $acct->getAccountsByType(['Default account', 'Asset account']);
         } else {
             $accounts = $acct->getByIds($frontPage->data);
         }
