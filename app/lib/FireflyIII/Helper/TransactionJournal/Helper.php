@@ -49,7 +49,7 @@ class Helper implements HelperInterface
         /** @var \FireflyIII\Database\Account\Account $accountRepository */
         $accountRepository = \App::make('FireflyIII\Database\Account\Account');
 
-        return $accountRepository->getAccountsByType(['Default account', 'Asset account']);
+        return $accountRepository->getAssetAccounts();
     }
 
     /**

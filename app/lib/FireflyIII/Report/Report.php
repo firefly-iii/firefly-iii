@@ -387,7 +387,7 @@ class Report implements ReportInterface
             $sharedAccounts[] = $account->id;
         }
 
-        $accounts = $this->_accounts->getAccountsByType(['Default account', 'Asset account'])->filter(
+        $accounts = $this->_accounts->getAssetAccounts()->filter(
             function (\Account $account) use ($sharedAccounts) {
                 if (!in_array($account->id, $sharedAccounts)) {
                     return $account;
