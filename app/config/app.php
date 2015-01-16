@@ -37,13 +37,8 @@ return [
         'Illuminate\Validation\ValidationServiceProvider',
         'Illuminate\View\ViewServiceProvider',
         'Illuminate\Workbench\WorkbenchServiceProvider',
-<<<<<<< HEAD
-        //        'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
-        //        'Barryvdh\Debugbar\ServiceProvider',
-=======
         //'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
         //'Barryvdh\Debugbar\ServiceProvider',
->>>>>>> 051eeda9a04ce6ec8e4227b1ceff94086b15f371
         'FireflyIII\FF3ServiceProvider',
         'DaveJamesMiller\Breadcrumbs\ServiceProvider',
         'Grumpydictator\Gchart\GchartServiceProvider',
