@@ -6,11 +6,12 @@ use Carbon\Carbon;
 use FireflyIII\Database\CommonDatabaseCallsInterface;
 use FireflyIII\Database\CUDInterface;
 use FireflyIII\Database\SwitchUser;
-use FireflyIII\Exception\DeprecatedException;
+use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\MessageBag;
 
 /**
  * Class Account
@@ -41,6 +42,47 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
     }
 
     /**
+     * @return int
+     */
+    public function countAssetAccounts()
+    {
+        return $this->countAccountsByType(['Default account', 'Asset account']);
+    }
+
+    /**
+     * @return int
+     */
+    public function countExpenseAccounts()
+    {
+        return $this->countAccountsByType(['Expense account', 'Beneficiary account']);
+    }
+
+    /**
+     * Counts the number of total revenue accounts. Useful for DataTables.
+     *
+     * @return int
+     */
+    public function countRevenueAccounts()
+    {
+        return $this->countAccountsByType(['Revenue account']);
+    }
+
+    /**
+     * @param \Account $account
+     *
+     * @return \Account|null
+     */
+    public function findInitialBalanceAccount(\Account $account)
+    {
+        /** @var \FireflyIII\Database\AccountType\AccountType $acctType */
+        $acctType = \App::make('FireflyIII\Database\AccountType\AccountType');
+
+        $accountType = $acctType->findByWhat('initial');
+
+        return $this->getUser()->accounts()->where('account_type_id', $accountType->id)->where('name', 'LIKE', $account->name . '%')->first();
+    }
+
+    /**
      * @param array $types
      *
      * @return Collection
@@ -50,16 +92,70 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
         /*
          * Basic query:
          */
-        $query = $this->getUser()->accounts()->accountTypeIn($types)->orderBy('name', 'ASC');;
-        $set = $query->get(['accounts.*','account_role.data as account_role']);
+        $query = $this->getUser()->accounts()->accountTypeIn($types)->withMeta()->orderBy('name', 'ASC');;
+        $set = $query->get(['accounts.*']);
 
         $set->each(
             function (\Account $account) {
+                /*
+                 * Get last activity date.
+                 */
                 $account->lastActivityDate = $this->getLastActivity($account);
             }
         );
 
         return $set;
+    }
+
+    /**
+     * Get all asset accounts. Optional JSON based parameters.
+     *
+     * @param array $metaFilter
+     *
+     * @return Collection
+     */
+    public function getAssetAccounts($metaFilter = [])
+    {
+        $list = $this->getAccountsByType(['Default account', 'Asset account']);
+        $list->each(
+            function (\Account $account) {
+
+                // get accountRole:
+
+                /** @var \AccountMeta $entry */
+                $accountRole = $account->accountmeta()->whereName('accountRole')->first();
+                if (!$accountRole) {
+                    $accountRole             = new \AccountMeta;
+                    $accountRole->account_id = $account->id;
+                    $accountRole->name       = 'accountRole';
+                    $accountRole->data       = 'defaultExpense';
+                    $accountRole->save();
+
+                }
+                $account->accountRole = $accountRole->data;
+            }
+        );
+
+        return $list;
+
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getExpenseAccounts()
+    {
+        return $this->getAccountsByType(['Expense account', 'Beneficiary account']);
+    }
+
+    /**
+     * Get all revenue accounts.
+     *
+     * @return Collection
+     */
+    public function getRevenueAccounts()
+    {
+        return $this->getAccountsByType(['Revenue account']);
     }
 
     /**
@@ -88,8 +184,8 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
         /*
          * Create a journal from opposing to account or vice versa.
          */
-        $balance = floatval($data['openingBalance']);
-        $date    = new Carbon($data['openingBalanceDate']);
+        $balance = floatval($data['openingbalance']);
+        $date    = new Carbon($data['openingbalancedate']);
         /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $tj */
         $tj = \App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
         if ($balance < 0) {
@@ -243,7 +339,7 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
             \App::abort(500);
         }
         $account->save();
-        if (isset($data['openingBalance']) && floatval($data['openingBalance']) != 0) {
+        if (isset($data['openingbalance']) && floatval($data['openingbalance']) != 0) {
             $this->storeInitialBalance($account, $data);
         }
 
@@ -309,18 +405,78 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
     }
 
     /**
-     * Validates an array. Returns an array containing MessageBags
+     * Validates a model. Returns an array containing MessageBags
      * errors/warnings/successes.
      *
      * @param array $model
-     *
-     * @throws DeprecatedException
      *
      * @return array
      */
     public function validate(array $model)
     {
-        throw new DeprecatedException;
+        $warnings  = new MessageBag;
+        $successes = new MessageBag;
+        $errors    = new MessageBag;
+
+        /*
+         * Name validation:
+         */
+        if (!isset($model['name'])) {
+            $errors->add('name', 'Name is mandatory');
+        }
+
+        if (isset($model['name']) && strlen($model['name']) == 0) {
+            $errors->add('name', 'Name is too short');
+        }
+        if (isset($model['name']) && strlen($model['name']) > 100) {
+            $errors->add('name', 'Name is too long');
+        }
+        $validator = \Validator::make([$model], \Account::$rules);
+        if ($validator->invalid()) {
+            $errors->merge($errors);
+        }
+
+        if (isset($model['account_role']) && !in_array($model['account_role'], array_keys(\Config::get('firefly.accountRoles')))) {
+            $errors->add('account_role', 'Invalid account role');
+        } else {
+            $successes->add('account_role', 'OK');
+        }
+
+        /*
+         * type validation.
+         */
+        if (!isset($model['what'])) {
+            $errors->add('name', 'Internal error: need to know type of account!');
+        }
+
+        /*
+         * Opening balance and opening balance date.
+         */
+        if (isset($model['what']) && $model['what'] == 'asset') {
+            if (isset($model['openingbalance']) && strlen($model['openingbalance']) > 0 && !is_numeric($model['openingbalance'])) {
+                $errors->add('openingbalance', 'This is not a number.');
+            }
+            if (isset($model['openingbalancedate']) && strlen($model['openingbalancedate']) > 0) {
+                try {
+                    new Carbon($model['openingbalancedate']);
+                } catch (\Exception $e) {
+                    $errors->add('openingbalancedate', 'This date is invalid.');
+                }
+            }
+        }
+
+
+        if (!$errors->has('name')) {
+            $successes->add('name', 'OK');
+        }
+        if (!$errors->has('openingbalance')) {
+            $successes->add('openingbalance', 'OK');
+        }
+        if (!$errors->has('openingbalancedate')) {
+            $successes->add('openingbalancedate', 'OK');
+        }
+
+        return ['errors' => $errors, 'warnings' => $warnings, 'successes' => $successes];
     }
 
     /**
@@ -336,30 +492,25 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
     }
 
     /**
-     * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
-     *
      * @param $what
      *
-     * @throws DeprecatedException
-     *
+     * @throws NotImplementedException
      * @return \AccountType|null
      */
     public function findByWhat($what)
     {
-        throw new DeprecatedException;
+        throw new NotImplementedException;
     }
 
     /**
      * Returns all objects.
      *
-     * @throws DeprecatedException
-     *
-     *
      * @return Collection
+     * @throws NotImplementedException
      */
     public function get()
     {
-        throw new DeprecatedException;
+        throw new NotImplementedException;
     }
 
     /**
@@ -422,6 +573,32 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
 
     /**
      * @param \Account $account
+     * @param int      $limit
+     *
+     * @return \Illuminate\Pagination\Paginator
+     */
+    public function getAllTransactionJournals(\Account $account, $limit = 50)
+    {
+        $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
+        $set    = $this->getUser()->transactionJournals()->withRelevantData()->leftJoin(
+            'transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
+        )->where('transactions.account_id', $account->id)->take($limit)->offset($offset)->orderBy('date', 'DESC')->get(
+            ['transaction_journals.*']
+        );
+        $count  = $this->getUser()->transactionJournals()->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                       ->orderBy('date', 'DESC')->where('transactions.account_id', $account->id)->count();
+        $items  = [];
+        foreach ($set as $entry) {
+            $items[] = $entry;
+        }
+
+        return \Paginator::make($items, $count, $limit);
+
+
+    }
+
+    /**
+     * @param \Account $account
      *
      * @return int
      */
@@ -478,4 +655,25 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
 
 
     }
+
+    /**
+     * @param \Account $account
+     * @param Carbon   $start
+     * @param Carbon   $end
+     *
+     * @return \Illuminate\Pagination\Paginator
+     */
+    public function getTransactionJournalsInRange(\Account $account, Carbon $start, Carbon $end)
+    {
+        $set = $this->getUser()->transactionJournals()->transactionTypes(['Withdrawal'])->withRelevantData()->leftJoin(
+            'transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
+        )->where('transactions.account_id', $account->id)->before($end)->after($start)->orderBy('date', 'DESC')->get(
+            ['transaction_journals.*']
+        );
+
+        return $set;
+
+    }
+
+
 }

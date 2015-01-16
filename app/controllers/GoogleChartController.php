@@ -88,7 +88,7 @@ class GoogleChartController extends BaseController
 
         /** @var \FireflyIII\Database\Account\Account $acct */
         $acct     = App::make('FireflyIII\Database\Account\Account');
-        $accounts = count($pref->data) > 0 ? $acct->getByIds($pref->data) : $acct->getAccountsByType(['Default account', 'Asset account']);
+        $accounts = count($pref->data) > 0 ? $acct->getByIds($pref->data) : $acct->getAssetAccounts();
 
         /** @var Account $account */
         foreach ($accounts as $account) {
