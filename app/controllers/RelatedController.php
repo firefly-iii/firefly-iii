@@ -3,6 +3,8 @@ use FireflyIII\Helper\Related\RelatedInterface;
 use Illuminate\Support\Collection;
 
 /**
+ * @SuppressWarnings("CamelCase") // I'm fine with this.
+ *
  * Class RelatedController
  */
 class RelatedController extends BaseController
@@ -10,6 +12,9 @@ class RelatedController extends BaseController
 
     protected $_repository;
 
+    /**
+     * @param RelatedInterface $repository
+     */
     public function __construct(RelatedInterface $repository)
     {
         $this->_repository = $repository;

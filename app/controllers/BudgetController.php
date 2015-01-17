@@ -8,9 +8,6 @@ use FireflyIII\Shared\Preferences\PreferencesInterface as Pref;
  * Class BudgetController
  *
  * @SuppressWarnings("CamelCase") // I'm fine with this.
- * @SuppressWarnings("TooManyMethods") // I'm also fine with this.
- * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
- * @SuppressWarnings("CouplingBetweenObjects") // There's only so much I can remove.
  *
  */
 class BudgetController extends BaseController

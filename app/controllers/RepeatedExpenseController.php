@@ -6,8 +6,6 @@ use FireflyIII\Exception\FireflyException;
 
 /**
  * @SuppressWarnings("CamelCase") // I'm fine with this.
- * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
- * @SuppressWarnings("CouplingBetweenObjects") // There's only so much I can remove.
  *
  * Class RepeatedExpenseController
  */

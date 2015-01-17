@@ -3,7 +3,6 @@
 /**
  * Class PreferencesController
  *
- * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
  *
  */
 class PreferencesController extends BaseController
