@@ -22,6 +22,8 @@ class RelatedController extends BaseController
     }
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * @param TransactionJournal $journal
      *
      * @return \Illuminate\Http\JsonResponse
@@ -96,6 +98,8 @@ class RelatedController extends BaseController
     }
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * @param TransactionJournal $parentJournal
      * @param TransactionJournal $childJournal
      *

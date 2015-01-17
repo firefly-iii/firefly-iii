@@ -1,8 +1,10 @@
 <?php
 
 /**
+ * @SuppressWarnings("CamelCase") // I'm fine with this.
  *
  * Class HelpController
+ *
  */
 class HelpController extends BaseController
 {
