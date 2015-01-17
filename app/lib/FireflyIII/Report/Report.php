@@ -46,6 +46,7 @@ class Report implements ReportInterface
     }
 
     /**
+     * This methods fails to take in account transfers FROM shared accounts.
      * @param Carbon $start
      * @param Carbon $end
      * @param int    $limit
