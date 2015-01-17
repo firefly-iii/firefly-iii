@@ -5,6 +5,8 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
+ * @SuppressWarnings(PHPMD.ShortMethodName)
+ *
  * Down:
  * 1. Create new Components based on Budgets.
  * 2. Create new Components based on Categories
