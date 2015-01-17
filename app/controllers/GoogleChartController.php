@@ -6,10 +6,6 @@ use Grumpydictator\Gchart\GChart as GChart;
 /**
  * Class GoogleChartController
  * @SuppressWarnings("CamelCase") // I'm fine with this.
- * @SuppressWarnings("TooManyMethods") // I'm also fine with this.
- * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
- * @SuppressWarnings("MethodLength") // There is one with 45 lines and im gonna move it.
- * @SuppressWarnings("CouplingBetweenObjects") // There's only so much I can remove.
  */
 class GoogleChartController extends BaseController
 {

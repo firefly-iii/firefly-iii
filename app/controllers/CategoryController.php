@@ -6,7 +6,6 @@ use FireflyIII\Exception\FireflyException;
 /**
  *
  * @SuppressWarnings("CamelCase") // I'm fine with this.
- * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
  *
  * Class CategoryController
  */
