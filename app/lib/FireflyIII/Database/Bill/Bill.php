@@ -190,19 +190,6 @@ class Bill implements CUDInterface, CommonDatabaseCallsInterface, BillInterface
     }
 
     /**
-     * @param \Bill  $bill
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return \TransactionJournal|null
-     */
-    public function getJournalForBillInRange(\Bill $bill, Carbon $start, Carbon $end)
-    {
-        return $this->getUser()->transactionjournals()->where('bill_id', $bill->id)->after($start)->before($end)->first();
-
-    }
-
-    /**
      * @param \Bill $bill
      *
      * @return Carbon|null

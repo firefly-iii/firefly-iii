@@ -199,19 +199,6 @@ class Category implements CUDInterface, CommonDatabaseCallsInterface
      * @param \Category $category
      * @param Carbon    $date
      *
-     * @return null
-     * @throws NotImplementedException
-     * @internal param \Category $budget
-     */
-    public function repetitionOnStartingOnDate(\Category $category, Carbon $date)
-    {
-        throw new NotImplementedException;
-    }
-
-    /**
-     * @param \Category $category
-     * @param Carbon    $date
-     *
      * @return float
      */
     public function spentInMonth(\Category $category, Carbon $date)
