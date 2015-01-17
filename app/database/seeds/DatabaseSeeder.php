@@ -18,6 +18,10 @@ class DatabaseSeeder extends Seeder
         $this->call('AccountTypeSeeder');
         $this->call('TransactionCurrencySeeder');
         $this->call('TransactionTypeSeeder');
+
+        if (App::environment() == 'testing') {
+            $this->call('TestDataSeeder');
+        }
     }
 
 }

@@ -78,7 +78,7 @@ class UserController extends BaseController
 
         if ($user) {
             $result = $email->sendVerificationMail($user);
-            if ($result === false) {
+            if ($result === false && Config::get('mail.pretend') === false) {
                 $user->delete();
 
                 return View::make('error')->with('message', 'The email message could not be send. See the log files.');
@@ -126,7 +126,9 @@ class UserController extends BaseController
      */
     public function register()
     {
-        if (Config::get('mail.from.address') == '@gmail.com' || Config::get('mail.from.address') == '') {
+        if ((Config::get('mail.from.address') == '@gmail.com' || Config::get('mail.from.address') == '')
+            && Config::get('mail.pretend') === false
+        ) {
             return View::make('error')->with('message', 'Configuration error in <code>app/config/' . App::environment() . '/mail.php</code>');
         }
 
