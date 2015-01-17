@@ -93,6 +93,8 @@ class PiggyBankController extends BaseController
     }
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * @param PiggyBank $piggyBank
      *
      * @return $this

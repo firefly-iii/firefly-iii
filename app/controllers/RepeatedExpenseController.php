@@ -158,11 +158,12 @@ class RepeatedExpenseController extends BaseController
         Session::flash('errors', $messages['errors']);
         if ($messages['errors']->count() > 0) {
             Session::flash('error', 'Could not store repeated expense: ' . $messages['errors']->first());
+            return Redirect::route('repeated.create')->withInput();
         }
 
 
         // return to create screen:
-        if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
+        if ($data['post_submit_action'] == 'validate_only') {
             return Redirect::route('repeated.create')->withInput();
         }
 

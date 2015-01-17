@@ -1,7 +1,7 @@
 <?php
 
 /**
- *
+ * @SuppressWarnings("CamelCase") // I'm fine with this.
  * Class ProfileController
  */
 class ProfileController extends BaseController
@@ -56,6 +56,8 @@ class ProfileController extends BaseController
     }
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * @param string $old
      * @param string $new1
      * @param string $new2

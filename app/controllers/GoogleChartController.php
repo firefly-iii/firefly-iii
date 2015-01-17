@@ -72,7 +72,7 @@ class GoogleChartController extends BaseController
     }
 
     /**
-     * This method renders the b
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
      */
     public function allAccountsBalanceChart()
     {
