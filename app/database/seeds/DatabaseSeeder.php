@@ -18,8 +18,6 @@ class DatabaseSeeder extends Seeder
         $this->call('AccountTypeSeeder');
         $this->call('TransactionCurrencySeeder');
         $this->call('TransactionTypeSeeder');
-        $this->call('DefaultUserSeeder');
-        $this->call('TestContentSeeder');
     }
 
 }
