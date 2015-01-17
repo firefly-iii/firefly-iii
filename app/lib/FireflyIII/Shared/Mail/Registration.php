@@ -3,6 +3,8 @@ namespace FireflyIII\Shared\Mail;
 
 use Swift_RfcComplianceException;
 use Illuminate\Mail\Message;
+use Swift_TransportException;
+
 /**
  * Class Registration
  *
@@ -57,7 +59,16 @@ class Registration implements RegistrationInterface
             }
             );
         } catch (Swift_RfcComplianceException $e) {
+            \Log::error($e->getMessage());
+            return false;
+        } catch(Swift_TransportException $e) {
+            \Log::error($e->getMessage());
+            return false;
+        } catch(\Exception $e) {
+            \Log::error($e->getMessage());
+            return false;
         }
+        return true;
 
 
     }
@@ -84,7 +95,16 @@ class Registration implements RegistrationInterface
             }
             );
         } catch (Swift_RfcComplianceException $e) {
+            \Log::error($e->getMessage());
+            return false;
+        } catch(Swift_TransportException $e) {
+            \Log::error($e->getMessage());
+            return false;
+        } catch(\Exception $e) {
+            \Log::error($e->getMessage());
+            return false;
         }
+        return true;
     }
 
 } 

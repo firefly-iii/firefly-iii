@@ -77,7 +77,11 @@ class UserController extends BaseController
         $user = $repository->register(Input::all());
 
         if ($user) {
-            $email->sendVerificationMail($user);
+            $result = $email->sendVerificationMail($user);
+            if($result === false) {
+                $user->delete();
+                return View::make('error')->with('message','The email message could not be send. See the log files.');
+            }
 
             return View::make('user.verification-pending');
         }
@@ -121,6 +125,9 @@ class UserController extends BaseController
      */
     public function register()
     {
+        if (Config::get('mail.from.address') == '@gmail.com' || Config::get('mail.from.address') == '') {
+            return View::make('error')->with('message', 'Configuration error in <code>app/config/'.App::environment().'/mail.php</code>');
+        }
 
         return View::make('user.register');
     }
