@@ -5,7 +5,8 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 /**
- * @SuppressWarnings(PHPMD.ShortMethodName)
+ * @SuppressWarnings(PHPMD.ShortMethodName) // method names are mandated by laravel.
+ * @SuppressWarnings("TooManyMethods") // I'm fine with this
  *
  * Down:
  * 1. Create new Components based on Budgets.
