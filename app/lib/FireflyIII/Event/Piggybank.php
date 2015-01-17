@@ -34,6 +34,8 @@ class PiggyBank
     }
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * @param \TransactionJournal $journal
      *
      * @throws \FireflyIII\Exception\FireflyException
@@ -109,6 +111,8 @@ class PiggyBank
      */
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * @param \TransactionJournal $journal
      * @param int                 $piggyBankId
      */

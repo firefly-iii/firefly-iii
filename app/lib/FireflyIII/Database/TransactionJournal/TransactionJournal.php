@@ -210,6 +210,8 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
     }
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * @param array $data
      *
      * @return array
@@ -321,6 +323,8 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
     }
 
     /**
+     * @SuppressWarnings("CamelCase") // I'm fine with this.
+     *
      * @param array $model
      *
      * @return MessageBag
@@ -340,6 +344,8 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
     }
 
     /**
+     * @SuppressWarnings("CamelCase") // I'm fine with this.
+     *
      * @param array $model
      *
      * @return MessageBag
@@ -358,6 +364,8 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
     }
 
     /**
+     * @SuppressWarnings("CamelCase") // I'm fine with this.
+     *
      * @param array $model
      *
      * @return MessageBag
@@ -412,6 +420,8 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
      *
      * @param $what

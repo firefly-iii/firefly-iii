@@ -81,14 +81,5 @@ class Helper implements HelperInterface
 
     }
 
-    /**
-     * @param $what
-     *
-     * @return int
-     */
-    public function getTransactionTypeIdByWhat($what)
-    {
-
-    }
 
 }

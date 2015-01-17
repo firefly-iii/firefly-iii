@@ -406,6 +406,8 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param $what
      *
      * @throws NotImplementedException
@@ -445,14 +447,14 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
      */
     public function firstExpenseAccountOrCreate($name)
     {
-        /** @var \FireflyIII\Database\AccountType\AccountType $accountTypeRepository */
-        $accountTypeRepository = \App::make('FireflyIII\Database\AccountType\AccountType');
+        /** @var \FireflyIII\Database\AccountType\AccountType $typeRepository */
+        $typeRepository = \App::make('FireflyIII\Database\AccountType\AccountType');
 
-        $accountType = $accountTypeRepository->findByWhat('expense');
+        $accountType = $typeRepository->findByWhat('expense');
 
         // if name is "", find cash account:
         if (strlen($name) == 0) {
-            $cashAccountType = $accountTypeRepository->findByWhat('cash');
+            $cashAccountType = $typeRepository->findByWhat('cash');
 
             // find or create cash account:
             return \Account::firstOrCreate(
@@ -474,10 +476,10 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
      */
     public function firstRevenueAccountOrCreate($name)
     {
-        /** @var \FireflyIII\Database\AccountType\AccountType $accountTypeRepository */
-        $accountTypeRepository = \App::make('FireflyIII\Database\AccountType\AccountType');
+        /** @var \FireflyIII\Database\AccountType\AccountType $typeRepository */
+        $typeRepository = \App::make('FireflyIII\Database\AccountType\AccountType');
 
-        $accountType = $accountTypeRepository->findByWhat('revenue');
+        $accountType = $typeRepository->findByWhat('revenue');
 
         $data = ['user_id' => $this->getUser()->id, 'account_type_id' => $accountType->id, 'name' => $name, 'active' => 1];
 

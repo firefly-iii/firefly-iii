@@ -20,6 +20,8 @@ class TransactionType implements CUDInterface, CommonDatabaseCallsInterface
 {
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param Eloquent $model
      *
      * @return bool
@@ -31,6 +33,8 @@ class TransactionType implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param array $data
      *
      * @return \Eloquent
@@ -42,6 +46,8 @@ class TransactionType implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param Eloquent $model
      * @param array    $data
      *
@@ -54,6 +60,8 @@ class TransactionType implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Validates an array. Returns an array containing MessageBags
      * errors/warnings/successes.
      *
@@ -68,6 +76,8 @@ class TransactionType implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Returns an object with id $id.
      *
      * @param int $objectId
@@ -104,6 +114,8 @@ class TransactionType implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Returns all objects.
      *
      * @return Collection
@@ -115,6 +127,8 @@ class TransactionType implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param array $ids
      *
      * @return Collection

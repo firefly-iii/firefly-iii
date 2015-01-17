@@ -175,6 +175,8 @@ class Budget implements CUDInterface, CommonDatabaseCallsInterface, BudgetInterf
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
      *
      * @param $what
@@ -200,6 +202,8 @@ class Budget implements CUDInterface, CommonDatabaseCallsInterface, BudgetInterf
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param array $ids
      *
      * @return Collection
