@@ -306,8 +306,23 @@ class ReportQuery implements ReportQueryInterface
                                   }
                                   )
                                   ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                  ->where('transaction_types.type', 'Withdrawal')
-                                  ->where('acm_from.data', '!=', '"sharedExpense"')
+            // not shared, withdrawal
+                                  ->where(
+                function ($q) {
+                    $q->where(
+                        function ($q) {
+                            $q->where('transaction_types.type', 'Withdrawal');
+                            $q->where('acm_from.data', '!=', '"sharedExpense"');
+                        }
+                    )->orWhere(
+                        function ($q) {
+                            $q->where('transaction_types.type', 'Transfer');
+                            $q->where('acm_from.data', '=', '"sharedExpense"');
+                        }
+                    );
+                }
+            )
+            // shared, transfer?
                                   ->before($end)
                                   ->after($start)
                                   ->where('transaction_journals.user_id', \Auth::user()->id)
