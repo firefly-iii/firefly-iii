@@ -11,6 +11,8 @@ use Illuminate\Validation\Validator;
 class FireflyValidator extends Validator
 {
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param $attribute
      * @param $value
      * @param $parameters

@@ -133,6 +133,8 @@ class Bill implements CUDInterface, CommonDatabaseCallsInterface, BillInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Returns an object with id $id.
      *
      * @param int $objectId
@@ -146,6 +148,8 @@ class Bill implements CUDInterface, CommonDatabaseCallsInterface, BillInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
      *
      * @param $what
@@ -169,6 +173,7 @@ class Bill implements CUDInterface, CommonDatabaseCallsInterface, BillInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param array $ids
      *
      * @return Collection
@@ -205,15 +210,14 @@ class Bill implements CUDInterface, CommonDatabaseCallsInterface, BillInterface
     }
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * @param \Bill $bill
      *
      * @return Carbon|null
      */
     public function nextExpectedMatch(\Bill $bill)
     {
-        /*
-                * The date Firefly tries to find. If this stays null, it's "unknown".
-                */
         $finalDate = null;
         if ($bill->active == 0) {
             return $finalDate;
@@ -225,10 +229,6 @@ class Bill implements CUDInterface, CommonDatabaseCallsInterface, BillInterface
          */
         $today = \DateKit::addPeriod(new Carbon, $bill->repeat_freq, 0);
 
-        /*
-         * FF3 loops from the $start of the bill, and to make sure
-         * $skip works, it adds one (for modulo).
-         */
         $skip  = $bill->skip + 1;
         $start = \DateKit::startOfPeriod(new Carbon, $bill->repeat_freq);
         /*

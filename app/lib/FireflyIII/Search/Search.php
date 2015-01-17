@@ -80,6 +80,8 @@ class Search
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param array $words
      *
      * @return Collection

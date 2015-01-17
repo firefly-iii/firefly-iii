@@ -89,6 +89,8 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Returns an object with id $id.
      *
      * @param int $objectId
@@ -102,6 +104,8 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
      *
      * @param $what
@@ -125,6 +129,8 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param array $objectIds
      * @throws NotImplementedException
      *

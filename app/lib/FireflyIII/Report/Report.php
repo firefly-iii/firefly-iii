@@ -227,6 +227,8 @@ class Report implements ReportInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param Carbon $date
      * @param bool   $shared
      *
@@ -354,6 +356,8 @@ class Report implements ReportInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param Carbon $start
      * @param Carbon $end
      * @param int    $limit

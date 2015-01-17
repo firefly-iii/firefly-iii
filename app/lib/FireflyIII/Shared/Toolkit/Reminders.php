@@ -15,6 +15,8 @@ class Reminders
 {
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * @param \Reminder $reminder
      *
      * @return int
@@ -62,6 +64,9 @@ class Reminders
         return $reminders;
     }
 
+    /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     */
     public function updateReminders()
     {
         /** @var Collection $set */

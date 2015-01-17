@@ -22,6 +22,7 @@ class Transaction implements CUDInterface, CommonDatabaseCallsInterface
 
     /**
      * @param Eloquent $model
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      * @throws NotImplementedException
@@ -59,6 +60,8 @@ class Transaction implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param Eloquent $model
      * @param array    $data
      *
@@ -92,6 +95,8 @@ class Transaction implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Returns an object with id $id.
      *
      * @param int $objectId
@@ -105,6 +110,8 @@ class Transaction implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
      *
      * @param $what
@@ -129,6 +136,8 @@ class Transaction implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param array $ids
      *
      * @return Collection
