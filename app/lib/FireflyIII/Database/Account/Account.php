@@ -42,47 +42,6 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
     }
 
     /**
-     * @return int
-     */
-    public function countAssetAccounts()
-    {
-        return $this->countAccountsByType(['Default account', 'Asset account']);
-    }
-
-    /**
-     * @return int
-     */
-    public function countExpenseAccounts()
-    {
-        return $this->countAccountsByType(['Expense account', 'Beneficiary account']);
-    }
-
-    /**
-     * Counts the number of total revenue accounts. Useful for DataTables.
-     *
-     * @return int
-     */
-    public function countRevenueAccounts()
-    {
-        return $this->countAccountsByType(['Revenue account']);
-    }
-
-    /**
-     * @param \Account $account
-     *
-     * @return \Account|null
-     */
-    public function findInitialBalanceAccount(\Account $account)
-    {
-        /** @var \FireflyIII\Database\AccountType\AccountType $acctType */
-        $acctType = \App::make('FireflyIII\Database\AccountType\AccountType');
-
-        $accountType = $acctType->findByWhat('initial');
-
-        return $this->getUser()->accounts()->where('account_type_id', $accountType->id)->where('name', 'LIKE', $account->name . '%')->first();
-    }
-
-    /**
      * @param array $types
      *
      * @return Collection
@@ -105,57 +64,6 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
         );
 
         return $set;
-    }
-
-    /**
-     * Get all asset accounts. Optional JSON based parameters.
-     *
-     * @param array $metaFilter
-     *
-     * @return Collection
-     */
-    public function getAssetAccounts($metaFilter = [])
-    {
-        $list = $this->getAccountsByType(['Default account', 'Asset account']);
-        $list->each(
-            function (\Account $account) {
-
-                // get accountRole:
-
-                /** @var \AccountMeta $entry */
-                $accountRole = $account->accountmeta()->whereName('accountRole')->first();
-                if (!$accountRole) {
-                    $accountRole             = new \AccountMeta;
-                    $accountRole->account_id = $account->id;
-                    $accountRole->name       = 'accountRole';
-                    $accountRole->data       = 'defaultExpense';
-                    $accountRole->save();
-
-                }
-                $account->accountRole = $accountRole->data;
-            }
-        );
-
-        return $list;
-
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getExpenseAccounts()
-    {
-        return $this->getAccountsByType(['Expense account', 'Beneficiary account']);
-    }
-
-    /**
-     * Get all revenue accounts.
-     *
-     * @return Collection
-     */
-    public function getRevenueAccounts()
-    {
-        return $this->getAccountsByType(['Revenue account']);
     }
 
     /**
@@ -233,6 +141,31 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
             \App::abort(500);
         }
 
+    }
+
+    /**
+     * @param \Account $account
+     *
+     * @return int
+     */
+    public function getLastActivity(\Account $account)
+    {
+        $lastActivityKey = 'account.' . $account->id . '.lastActivityDate';
+        if (\Cache::has($lastActivityKey)) {
+            return \Cache::get($lastActivityKey);
+        }
+
+        $transaction = $account->transactions()
+                               ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                               ->orderBy('transaction_journals.date', 'DESC')->first();
+        if ($transaction) {
+            $date = $transaction->transactionJournal->date;
+        } else {
+            $date = 0;
+        }
+        \Cache::forever($lastActivityKey, $date);
+
+        return $date;
     }
 
     /**
@@ -574,57 +507,6 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
     /**
      * @param \Account $account
      * @param int      $limit
-     *
-     * @return \Illuminate\Pagination\Paginator
-     */
-    public function getAllTransactionJournals(\Account $account, $limit = 50)
-    {
-        $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
-        $set    = $this->getUser()->transactionJournals()->withRelevantData()->leftJoin(
-            'transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
-        )->where('transactions.account_id', $account->id)->take($limit)->offset($offset)->orderBy('date', 'DESC')->get(
-            ['transaction_journals.*']
-        );
-        $count  = $this->getUser()->transactionJournals()->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                       ->orderBy('date', 'DESC')->where('transactions.account_id', $account->id)->count();
-        $items  = [];
-        foreach ($set as $entry) {
-            $items[] = $entry;
-        }
-
-        return \Paginator::make($items, $count, $limit);
-
-
-    }
-
-    /**
-     * @param \Account $account
-     *
-     * @return int
-     */
-    public function getLastActivity(\Account $account)
-    {
-        $lastActivityKey = 'account.' . $account->id . '.lastActivityDate';
-        if (\Cache::has($lastActivityKey)) {
-            return \Cache::get($lastActivityKey);
-        }
-
-        $transaction = $account->transactions()
-                               ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                               ->orderBy('transaction_journals.date', 'DESC')->first();
-        if ($transaction) {
-            $date = $transaction->transactionJournal->date;
-        } else {
-            $date = 0;
-        }
-        \Cache::forever($lastActivityKey, $date);
-
-        return $date;
-    }
-
-    /**
-     * @param \Account $account
-     * @param int      $limit
      * @param string   $range
      *
      * @return \Illuminate\Pagination\Paginator
@@ -655,25 +537,5 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
 
 
     }
-
-    /**
-     * @param \Account $account
-     * @param Carbon   $start
-     * @param Carbon   $end
-     *
-     * @return \Illuminate\Pagination\Paginator
-     */
-    public function getTransactionJournalsInRange(\Account $account, Carbon $start, Carbon $end)
-    {
-        $set = $this->getUser()->transactionJournals()->transactionTypes(['Withdrawal'])->withRelevantData()->leftJoin(
-            'transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
-        )->where('transactions.account_id', $account->id)->before($end)->after($start)->orderBy('date', 'DESC')->get(
-            ['transaction_journals.*']
-        );
-
-        return $set;
-
-    }
-
 
 }
