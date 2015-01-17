@@ -11,8 +11,9 @@ use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 
 /**
- * Class Report
+ * @SuppressWarnings("CamelCase") // I'm fine with this.
  *
+ * Class Report
  *
  * @package FireflyIII\Report
  */

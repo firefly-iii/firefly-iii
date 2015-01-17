@@ -13,7 +13,7 @@ use FireflyIII\Exception\FireflyException;
 class Date
 {
     /**
-     * @param Carbon $theDate
+     * @param Carbon         $theDate
      * @param                $repeatFreq
      * @param                $skip
      *
@@ -25,41 +25,37 @@ class Date
         $date = clone $theDate;
         $add  = ($skip + 1);
 
-        switch ($repeatFreq) {
-            default:
-                throw new FireflyException('Cannot do addPeriod for $repeat_freq "' . $repeatFreq . '"');
-                break;
-            case 'daily':
-                $date->addDays($add);
-                break;
-            case 'week':
-            case 'weekly':
-                $date->addWeeks($add);
-                break;
-            case 'month':
-            case 'monthly':
-                $date->addMonths($add);
-                break;
-            case 'quarter':
-            case 'quarterly':
-                $months = $add * 3;
-                $date->addMonths($months);
-                break;
-            case 'half-year':
-                $months = $add * 6;
-                $date->addMonths($months);
-                break;
-            case 'year':
-            case 'yearly':
-                $date->addYears($add);
-                break;
+        $functionMap = [
+            'daily'     => 'addDays',
+            'weekly'    => 'addWeeks',
+            'week'      => 'addWeeks',
+            'month'     => 'addMonths',
+            'monthly'   => 'addMonths',
+            'quarter'   => 'addMonths',
+            'quarterly' => 'addMonths',
+            'half-year' => 'addMonths',
+            'year'      => 'addYears',
+            'yearly'    => 'addYears',
+        ];
+        $modifierMap = [
+            'quarter'   => 3,
+            'quarterly' => 3,
+            'half-year' => 6,
+        ];
+        if (!isset($functionMap[$repeatFreq])) {
+            throw new FireflyException('Cannot do addPeriod for $repeat_freq "' . $repeatFreq . '"');
         }
+        if (isset($modifierMap[$repeatFreq])) {
+            $add = $add * $modifierMap[$repeatFreq];
+        }
+        $function = $functionMap[$repeatFreq];
+        $date->$function($add);
 
         return $date;
     }
 
     /**
-     * @param Carbon $theCurrentEnd
+     * @param Carbon         $theCurrentEnd
      * @param                $repeatFreq
      *
      * @return Carbon
@@ -68,41 +64,47 @@ class Date
     public function endOfPeriod(Carbon $theCurrentEnd, $repeatFreq)
     {
         $currentEnd = clone $theCurrentEnd;
-        switch ($repeatFreq) {
-            default:
-                throw new FireflyException('Cannot do endOfPeriod for $repeat_freq ' . $repeatFreq);
-                break;
-            case 'daily':
-                $currentEnd->addDay();
-                break;
-            case 'week':
-            case 'weekly':
-                $currentEnd->addWeek()->subDay();
-                break;
-            case 'month':
-            case 'monthly':
-                $currentEnd->addMonth()->subDay();
-                break;
-            case 'quarter':
-            case 'quarterly':
-                $currentEnd->addMonths(3)->subDay();
-                break;
-            case 'half-year':
-                $currentEnd->addMonths(6)->subDay();
-                break;
-            case 'year':
-            case 'yearly':
-                $currentEnd->addYear()->subDay();
-                break;
+
+        $functionMap = [
+            'daily'     => 'addDay',
+            'week'      => 'addWeek',
+            'weekly'    => 'addWeek',
+            'month'     => 'addMonth',
+            'monthly'   => 'addMonth',
+            'quarter'   => 'addMonths',
+            'quarterly' => 'addMonths',
+            'half-year' => 'addMonths',
+            'year'      => 'addYear',
+            'yearly'    => 'addYear',
+        ];
+        $modifierMap = [
+            'quarter'   => 3,
+            'quarterly' => 3,
+            'half-year' => 6,
+        ];
+
+        $subDay = ['week', 'weekly', 'month', 'monthly', 'quarter', 'quarterly', 'half-year', 'year', 'yearly'];
+
+        if (!isset($functionMap[$repeatFreq])) {
+            throw new FireflyException('Cannot do endOfPeriod for $repeat_freq ' . $repeatFreq);
+        }
+        $function = $functionMap[$repeatFreq];
+        if (isset($modifierMap[$repeatFreq])) {
+            $currentEnd->$function($modifierMap[$repeatFreq]);
+        } else {
+            $currentEnd->$function();
+        }
+        if (in_array($repeatFreq, $subDay)) {
+            $currentEnd->subDay();
         }
 
         return $currentEnd;
     }
 
     /**
-     * @param Carbon $theCurrentEnd
+     * @param Carbon         $theCurrentEnd
      * @param                $repeatFreq
-     * @param Carbon $maxDate
+     * @param Carbon         $maxDate
      *
      * @return Carbon
      * @throws FireflyException
@@ -149,7 +151,7 @@ class Date
     }
 
     /**
-     * @param Carbon $date
+     * @param Carbon         $date
      * @param                $repeatFrequency
      *
      * @return string
@@ -183,7 +185,7 @@ class Date
     }
 
     /**
-     * @param Carbon $theDate
+     * @param Carbon         $theDate
      * @param                $repeatFreq
      *
      * @return Carbon
@@ -228,7 +230,7 @@ class Date
     }
 
     /**
-     * @param Carbon $theDate
+     * @param Carbon         $theDate
      * @param                $repeatFreq
      * @param int            $subtract
      *

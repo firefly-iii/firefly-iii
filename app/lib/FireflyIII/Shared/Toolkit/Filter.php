@@ -69,36 +69,29 @@ class Filter
      */
     protected function updateStartDate($range, Carbon $start)
     {
-        switch ($range) {
-            default:
-                throw new FireflyException('updateStartDate cannot handle $range ' . $range);
-                break;
-            case '1D':
-                $start->startOfDay();
-                break;
-            case '1W':
-                $start->startOfWeek();
-                break;
-            case '1M':
-                $start->startOfMonth();
-                break;
-            case '3M':
-                $start->firstOfQuarter();
-                break;
-            case '6M':
-                if (intval($start->format('m')) >= 7) {
-                    $start->startOfYear()->addMonths(6);
-                } else {
-                    $start->startOfYear();
-                }
-                break;
-            case '1Y':
-                $start->startOfYear();
-                break;
+        $functionMap = [
+            '1D' => 'startOfDay',
+            '1W' => 'startOfWeek',
+            '1M' => 'startOfMonth',
+            '3M' => 'firstOfQuarter',
+            '1Y' => 'startOfYear',
+        ];
+        if (isset($functionMap[$range])) {
+            $function = $functionMap[$range];
+            $start->$function();
+
+            return $start;
         }
+        if ($range == '6M') {
+            if (intval($start->format('m')) >= 7) {
+                $start->startOfYear()->addMonths(6);
+            } else {
+                $start->startOfYear();
+            }
 
-        return $start;
-
+            return $start;
+        }
+        throw new FireflyException('updateStartDate cannot handle $range ' . $range);
     }
 
     /**
