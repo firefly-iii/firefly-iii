@@ -32,7 +32,7 @@ class Form
             $title = null;
 
             foreach ($fields as $field) {
-                if (is_null($title) && isset($entry->$field)) {
+                if (isset($entry->$field)) {
                     $title = $entry->$field;
                 }
             }

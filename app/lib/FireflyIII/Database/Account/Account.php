@@ -88,51 +88,31 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
     {
         $opposingData    = ['name' => $account->name . ' Initial Balance', 'active' => 0, 'what' => 'initial'];
         $opposingAccount = $this->store($opposingData);
-
-        /*
-         * Create a journal from opposing to account or vice versa.
-         */
-        $balance = floatval($data['openingbalance']);
-        $date    = new Carbon($data['openingbalancedate']);
-        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $tj */
-        $tj = \App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
+        $balance         = floatval($data['openingbalance']);
+        $date            = new Carbon($data['openingbalancedate']);
+        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $journals */
+        $journals    = \App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
+        $fromAccount = $opposingAccount;
+        $toAccount   = $account;
         if ($balance < 0) {
-            // first transaction draws money from the new account to the opposing
-            $from = $account;
-            $to   = $opposingAccount;
-        } else {
-            // first transaction puts money into account
-            $from = $opposingAccount;
-            $to   = $account;
+            $fromAccount = $account;
+            $toAccount   = $opposingAccount;
         }
-
         // data for transaction journal:
         $balance = $balance < 0 ? $balance * -1 : $balance;
 
-        // find the account type:
         /** @var \FireflyIII\Database\TransactionType\TransactionType $typeRepository */
         $typeRepository = \App::make('FireflyIII\Database\TransactionType\TransactionType');
         $type           = $typeRepository->findByWhat('opening');
+        $currency       = \Amount::getDefaultCurrency();
 
-        // find the currency.
-        $currency = \Amount::getDefaultCurrency();
+        $opening = ['transaction_type_id' => $type->id, 'transaction_currency_id' => $currency->id, 'amount' => $balance, 'from' => $fromAccount,
+                    'completed'           => 0, 'currency' => 'EUR', 'what' => 'opening', 'to' => $toAccount, 'date' => $date,
+                    'description'         => 'Opening balance for new account ' . $account->name,];
 
-        $opening = [
-            'transaction_type_id'     => $type->id,
-            'transaction_currency_id' => $currency->id,
-            'amount'                  => $balance,
-            'from'                    => $from,
-            'completed'               => 0,
-            'currency'                => 'EUR',
-            'what'                    => 'opening',
-            'to'                      => $to,
-            'date'                    => $date,
-            'description'             => 'Opening balance for new account ' . $account->name,];
-
-
-        $validation = $tj->validate($opening);
+        $validation = $journals->validate($opening);
         if ($validation['errors']->count() == 0) {
-            $tj->store($opening);
+            $journals->store($opening);
 
             return true;
         } else {
@@ -141,6 +121,7 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
             \App::abort(500);
         }
 
+        return false;
     }
 
     /**

@@ -30,13 +30,10 @@ class PiggyBank extends PiggyBankShared implements CUDInterface, CommonDatabaseC
         if ($reps->count() == 1) {
             return $reps->first();
         }
-        if ($reps->count() == 0) {
-            throw new FireflyException('Should always find a piggy bank repetition.');
-        }
         // should filter the one we need:
         $repetitions = $reps->filter(
             function (\PiggyBankRepetition $rep) use ($date) {
-                if ($date >= $rep->startdate && $date <= $rep->targetdate) {
+                if ($date->between($rep->startdate, $rep->targetdate)) {
                     return $rep;
                 }
 

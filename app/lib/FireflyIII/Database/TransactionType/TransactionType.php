@@ -96,9 +96,10 @@ class TransactionType implements CUDInterface, CommonDatabaseCallsInterface
             'withdrawal' => 'Withdrawal',
             'deposit'    => 'Deposit',
         ];
-        if(!isset($translation[$what])) {
+        if (!isset($translation[$what])) {
             throw new FireflyException('Cannot find transaction type described as "' . e($what) . '".');
         }
+
         return \TransactionType::whereType($translation[$what])->first();
     }
 

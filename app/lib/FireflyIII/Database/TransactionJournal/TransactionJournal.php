@@ -117,9 +117,6 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
         $this->storeBudget($data, $model);
         $this->storeCategory($data, $model);
 
-        /*
-         * Now we can update the transactions related to this journal.
-         */
         $amount = floatval($data['amount']);
         /** @var \Transaction $transaction */
         foreach ($model->transactions()->get() as $transaction) {
@@ -161,91 +158,37 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
         $journal->isValid();
         $errors = $journal->getErrors();
 
+        /*
+         * Is not in rules.
+         */
         if (!isset($model['what'])) {
             $errors->add('description', 'Internal error: need to know type of transaction!');
         }
         /*
-         * Amount
+         * Is not in rules.
          */
-        if (isset($model['amount']) && floatval($model['amount']) < 0.01) {
-            $errors->add('amount', 'Amount must be > 0.01');
-        } else {
-            if (!isset($model['amount'])) {
-                $errors->add('amount', 'Amount must be set!');
-            } else {
-                $successes->add('amount', 'OK');
-            }
-        }
-
-        /*
-         * Budget
-         */
-        if (isset($model['budget_id']) && !ctype_digit($model['budget_id'])) {
-            $errors->add('budget_id', 'Invalid budget');
-        } else {
-            $successes->add('budget_id', 'OK');
-        }
-
-        $successes->add('category', 'OK');
-
-        /*
-         * Many checks to catch invalid or not-existing accounts.
-         */
-        switch (true) {
-            // this combination is often seen in withdrawals.
-            case (isset($model['account_id']) && isset($model['expense_account'])):
-                if (intval($model['account_id']) < 1) {
-                    $errors->add('account_id', 'Invalid account.');
-                } else {
-                    $successes->add('account_id', 'OK');
-                }
-                $successes->add('expense_account', 'OK');
-                break;
-            case (isset($model['account_id']) && isset($model['revenue_account'])):
-                if (intval($model['account_id']) < 1) {
-                    $errors->add('account_id', 'Invalid account.');
-                } else {
-                    $successes->add('account_id', 'OK');
-                }
-                $successes->add('revenue_account', 'OK');
-                break;
-            case (isset($model['account_from_id']) && isset($model['account_to_id'])):
-                if (intval($model['account_from_id']) < 1 || intval($model['account_from_id']) < 1) {
-                    $errors->add('account_from_id', 'Invalid account selected.');
-                    $errors->add('account_to_id', 'Invalid account selected.');
-
-                } else {
-                    if (intval($model['account_from_id']) == intval($model['account_to_id'])) {
-                        $errors->add('account_to_id', 'Cannot be the same as "from" account.');
-                        $errors->add('account_from_id', 'Cannot be the same as "to" account.');
-                    } else {
-                        $successes->add('account_from_id', 'OK');
-                        $successes->add('account_to_id', 'OK');
-                    }
-                }
-                break;
-
-            case (isset($model['to']) && isset($model['from'])):
-                if (is_object($model['to']) && is_object($model['from'])) {
-                    $successes->add('from', 'OK');
-                    $successes->add('to', 'OK');
-                }
-                break;
-
-            default:
-                throw new FireflyException('Cannot validate accounts for transaction journal.');
-                break;
-        }
+        $errors = $errors->merge($this->_validateAmount($model));
+        $errors = $errors->merge($this->_validateBudget($model));
+        $errors = $errors->merge($this->_validateAccount($model));
 
 
         /*
          * Add "OK"
          */
-        if (!$errors->has('description')) {
-            $successes->add('description', 'OK');
-        }
-        if (!$errors->has('date')) {
-            $successes->add('date', 'OK');
+
+        /**
+         * else {
+         * $successes->add('account_from_id', 'OK');
+         * $successes->add('account_to_id', 'OK');
+         * }
+         * else {
+         */
+        $list = ['date', 'description', 'amount', 'budget_id', 'from', 'to', 'account_from_id', 'account_to_id', 'category', 'account_id', 'expense_account',
+                 'revenue_account'];
+        foreach ($list as $entry) {
+            if (!$errors->has($entry)) {
+                $successes->add($entry, 'OK');
+            }
         }
 
         return ['errors' => $errors, 'warnings' => $warnings, 'successes' => $successes];
@@ -375,6 +318,85 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
         $typeRepository = \App::make('FireflyIII\Database\TransactionType\TransactionType');
 
         return $typeRepository->findByWhat($type);
+    }
+
+    /**
+     * @param array $model
+     *
+     * @return MessageBag
+     */
+    protected function _validateAmount(array $model)
+    {
+        $errors = new MessageBag;
+        if (isset($model['amount']) && floatval($model['amount']) < 0.01) {
+            $errors->add('amount', 'Amount must be > 0.01');
+        } else {
+            if (!isset($model['amount'])) {
+                $errors->add('amount', 'Amount must be set!');
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @param array $model
+     *
+     * @return MessageBag
+     */
+    protected function _validateBudget(array $model)
+    {
+        /*
+         * Budget (is not in rules)
+         */
+        $errors = new MessageBag;
+        if (isset($model['budget_id']) && !ctype_digit($model['budget_id'])) {
+            $errors->add('budget_id', 'Invalid budget');
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @param array $model
+     *
+     * @return MessageBag
+     * @throws FireflyException
+     */
+    protected function _validateAccount(array $model)
+    {
+        $errors = new MessageBag;
+        switch (true) {
+            // this combination is often seen in withdrawals.
+            case (isset($model['account_id']) && isset($model['expense_account'])):
+                if (intval($model['account_id']) < 1) {
+                    $errors->add('account_id', 'Invalid account.');
+                }
+                break;
+            case (isset($model['account_id']) && isset($model['revenue_account'])):
+                if (intval($model['account_id']) < 1) {
+                    $errors->add('account_id', 'Invalid account.');
+                }
+                break;
+            case (isset($model['account_from_id']) && isset($model['account_to_id'])):
+                if (intval($model['account_from_id']) < 1 || intval($model['account_from_id']) < 1) {
+                    $errors->add('account_from_id', 'Invalid account selected.');
+                    $errors->add('account_to_id', 'Invalid account selected.');
+
+                } else {
+                    if (intval($model['account_from_id']) == intval($model['account_to_id'])) {
+                        $errors->add('account_to_id', 'Cannot be the same as "from" account.');
+                        $errors->add('account_from_id', 'Cannot be the same as "to" account.');
+                    }
+                }
+                break;
+
+            default:
+                throw new FireflyException('Cannot validate accounts for transaction journal.');
+                break;
+        }
+
+        return $errors;
     }
 
     /**
