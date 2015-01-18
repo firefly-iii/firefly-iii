@@ -306,23 +306,8 @@ class ReportQuery implements ReportQueryInterface
                                   }
                                   )
                                   ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            // not shared, withdrawal
-                                  ->where(
-                function ($q) {
-                    $q->where(
-                        function ($q) {
-                            $q->where('transaction_types.type', 'Withdrawal');
-                            $q->where('acm_from.data', '!=', '"sharedExpense"');
-                        }
-                    )->orWhere(
-                        function ($q) {
-                            $q->where('transaction_types.type', 'Transfer');
-                            $q->where('acm_from.data', '=', '"sharedExpense"');
-                        }
-                    );
-                }
-            )
-            // shared, transfer?
+                                  ->where('transaction_types.type', 'Withdrawal')
+                                  ->where('acm_from.data', '!=', '"sharedExpense"')
                                   ->before($end)
                                   ->after($start)
                                   ->where('transaction_journals.user_id', \Auth::user()->id)
@@ -336,10 +321,11 @@ class ReportQuery implements ReportQueryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
+     * @param int    $limit
      *
      * @return Collection
      */
-    public function journalsByRevenueAccount(Carbon $start, Carbon $end)
+    public function journalsByRevenueAccount(Carbon $start, Carbon $end, $limit = 15)
     {
         return \TransactionJournal::
         leftJoin(
@@ -365,8 +351,24 @@ class ReportQuery implements ReportQueryInterface
                                   }
                                   )
                                   ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                  ->where('transaction_types.type', 'Deposit')
-                                  ->where('acm_to.data', '!=', '"sharedExpense"')
+                                  ->where(
+                                      function ($query) {
+                                          $query->where(
+                                              function ($q) {
+                                                  $q->where('transaction_types.type', 'Deposit');
+                                                  $q->where('acm_to.data', '!=', '"sharedExpense"');
+                                              }
+                                          );
+                                          $query->orWhere(
+                                              function ($q) {
+                                                  $q->where('transaction_types.type', 'Transfer');
+                                                  $q->where('acm_from.data', '=', '"sharedExpense"');
+                                              }
+                                          );
+                                      }
+                                  )
+            //                                  ->where('transaction_types.type', 'Deposit')
+            //                                  ->where('acm_to.data', '!=', '"sharedExpense"')
                                   ->before($end)->after($start)
                                   ->where('transaction_journals.user_id', \Auth::user()->id)
                                   ->groupBy('t_from.account_id')->orderBy('amount')
