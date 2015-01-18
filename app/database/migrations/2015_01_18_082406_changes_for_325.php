@@ -40,6 +40,8 @@ class ChangesFor325 extends Migration
                 $table->dropUnique('unique_ci_combi');
             } catch (QueryException $e) {
                 // don't care.
+            } catch (\Exception $e) {
+                // don't care either.
             }
         }
         );
