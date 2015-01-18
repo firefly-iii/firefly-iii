@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
@@ -35,8 +36,13 @@ class ChangesFor325 extends Migration
         Schema::table(
             'budget_limits', function (Blueprint $table) {
             //$table->dropIndex('unique_ci_combo');
-            $table->dropUnique('unique_ci_combi');
-        });
+            try {
+                $table->dropUnique('unique_ci_combi');
+            } catch (QueryException $e) {
+                // don't care.
+            }
+        }
+        );
 
     }
 
