@@ -183,39 +183,34 @@ class Date
     public function startOfPeriod(Carbon $theDate, $repeatFreq)
     {
         $date = clone $theDate;
-        switch ($repeatFreq) {
-            default:
-                throw new FireflyException('Cannot do startOfPeriod for $repeat_freq ' . $repeatFreq);
-                break;
-            case 'daily':
-                $date->startOfDay();
-                break;
-            case 'week':
-            case 'weekly':
-                $date->startOfWeek();
-                break;
-            case 'month':
-            case 'monthly':
-                $date->startOfMonth();
-                break;
-            case 'quarter':
-            case 'quarterly':
-                $date->firstOfQuarter();
-                break;
-            case 'half-year':
-                $month = intval($date->format('m'));
-                $date->startOfYear();
-                if ($month >= 7) {
-                    $date->addMonths(6);
-                }
-                break;
-            case 'year':
-            case 'yearly':
-                $date->startOfYear();
-                break;
-        }
 
-        return $date;
+        $functionMap = [
+            'daily'   => 'startOfDay',
+            'week'    => 'startOfWeek',
+            'weekly'  => 'startOfWeek',
+            'month'   => 'startOfMonth',
+            'monthly' => 'startOfMonth',
+            'quarter' => 'firstOfQuarter',
+            'quartly' => 'firstOfQuarter',
+            'year'    => 'startOfYear',
+            'yearly'  => 'startOfYear',
+        ];
+        if (isset($functionMap[$repeatFreq])) {
+            $function = $functionMap[$repeatFreq];
+            $date->$function();
+
+            return $date;
+        }
+        if ($repeatFreq == 'half-year') {
+            $month = intval($date->format('m'));
+            $date->startOfYear();
+            if ($month >= 7) {
+                $date->addMonths(6);
+            }
+
+            return $date;
+        }
+        throw new FireflyException('Cannot do startOfPeriod for $repeat_freq ' . $repeatFreq);
     }
 
     /**
@@ -229,38 +224,35 @@ class Date
     public function subtractPeriod(Carbon $theDate, $repeatFreq, $subtract = 1)
     {
         $date = clone $theDate;
-        switch ($repeatFreq) {
-            default:
-                throw new FireflyException('Cannot do subtractPeriod for $repeat_freq ' . $repeatFreq);
-                break;
-            case 'day':
-            case 'daily':
-                $date->subDays($subtract);
-                break;
-            case 'week':
-            case 'weekly':
-                $date->subWeeks($subtract);
-                break;
-            case 'month':
-            case 'monthly':
-                $date->subMonths($subtract);
-                break;
-            case 'quarter':
-            case 'quarterly':
-                $months = $subtract * 3;
-                $date->subMonths($months);
-                break;
-            case 'half-year':
-                $months = $subtract * 6;
-                $date->subMonths($months);
-                break;
-            case 'year':
-            case 'yearly':
-                $date->subYears($subtract);
-                break;
+
+        $functionMap = [
+            'daily'   => 'subDays',
+            'week'    => 'subWeeks',
+            'weekly'  => 'subWeeks',
+            'month'   => 'subMonths',
+            'monthly' => 'subMonths',
+            'year'    => 'subYears',
+            'yearly'  => 'subYears',
+        ];
+        $modifierMap = [
+            'quarter'   => 3,
+            'quarterly' => 3,
+            'half-year' => 6,
+        ];
+        if (isset($functionMap[$repeatFreq])) {
+            $function = $functionMap[$repeatFreq];
+            $date->$function($subtract);
+
+            return $date;
+        }
+        if (isset($modifierMap[$repeatFreq])) {
+            $subtract = $subtract * $modifierMap[$repeatFreq];
+            $date->subMonths($subtract);
+
+            return $date;
         }
 
-        return $date;
+        throw new FireflyException('Cannot do subtractPeriod for $repeat_freq ' . $repeatFreq);
     }
 }
 

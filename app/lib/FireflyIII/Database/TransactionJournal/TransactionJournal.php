@@ -363,11 +363,13 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
                     $errors->add('account_id', 'Invalid account.');
                 }
                 break;
+            // often seen in deposits
             case (isset($model['account_id']) && isset($model['revenue_account'])):
                 if (intval($model['account_id']) < 1) {
                     $errors->add('account_id', 'Invalid account.');
                 }
                 break;
+            // often seen in transfers
             case (isset($model['account_from_id']) && isset($model['account_to_id'])):
                 if (intval($model['account_from_id']) < 1 || intval($model['account_from_id']) < 1) {
                     $errors->add('account_from_id', 'Invalid account selected.');

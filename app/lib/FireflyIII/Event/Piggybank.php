@@ -180,6 +180,7 @@ class PiggyBank
     }
 
     /**
+     *
      * Validates the presence of repetitions for all repeated expenses!
      */
     public function validateRepeatedExpenses()
@@ -189,24 +190,20 @@ class PiggyBank
         }
         /** @var \FireflyIII\Database\PiggyBank\RepeatedExpense $repository */
         $repository = \App::make('FireflyIII\Database\PiggyBank\RepeatedExpense');
-
         $list  = $repository->get();
         $today = Carbon::now();
-
         /** @var \PiggyBank $entry */
         foreach ($list as $entry) {
-            $start  = $entry->startdate;
-            $target = $entry->targetdate;
-            $count = $entry->piggyBankrepetitions()->starts($start)->targets($target)->count();
+            $count = $entry->piggyBankrepetitions()->starts($entry->startdate)->targets($entry->targetdate)->count();
             if ($count == 0) {
                 $repetition = new \PiggyBankRepetition;
                 $repetition->piggyBank()->associate($entry);
-                $repetition->startdate     = $start;
-                $repetition->targetdate    = $target;
+                $repetition->startdate     = $entry->startdate;
+                $repetition->targetdate    = $entry->targetdate;
                 $repetition->currentamount = 0;
                 $repetition->save();
             }
-            $currentTarget = clone $target;
+            $currentTarget = clone $entry->startdate;
             $currentStart  = null;
             while ($currentTarget < $today) {
                 $currentStart  = \DateKit::subtractPeriod($currentTarget, $entry->rep_length, 0);

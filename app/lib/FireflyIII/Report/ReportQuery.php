@@ -367,8 +367,6 @@ class ReportQuery implements ReportQueryInterface
                                           );
                                       }
                                   )
-            //                                  ->where('transaction_types.type', 'Deposit')
-            //                                  ->where('acm_to.data', '!=', '"sharedExpense"')
                                   ->before($end)->after($start)
                                   ->where('transaction_journals.user_id', \Auth::user()->id)
                                   ->groupBy('t_from.account_id')->orderBy('amount')

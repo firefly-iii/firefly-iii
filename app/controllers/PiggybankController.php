@@ -290,11 +290,12 @@ class PiggyBankController extends BaseController
         Session::flash('errors', $messages['errors']);
         if ($messages['errors']->count() > 0) {
             Session::flash('error', 'Could not store piggy bank: ' . $messages['errors']->first());
+            return Redirect::route('piggy_banks.create')->withInput();
         }
 
 
         // return to create screen:
-        if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
+        if ($data['post_submit_action'] == 'validate_only') {
             return Redirect::route('piggy_banks.create')->withInput();
         }
 

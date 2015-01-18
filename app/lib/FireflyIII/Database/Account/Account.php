@@ -150,6 +150,7 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
     }
 
     /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // cannot make it shorter because of query.
      * @param Eloquent $model
      *
      * @return bool
@@ -159,25 +160,25 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
         $journals     = \TransactionJournal::whereIn(
             'id', function (QueryBuilder $query) use ($model) {
             $query->select('transaction_journal_id')
-                  ->from('transactions')->whereIn(
-                    'account_id', function (QueryBuilder $query) use ($model) {
-                    $query
-                        ->select('id')
-                        ->from('accounts')
-                        ->where(
-                            function (QueryBuilder $q) use ($model) {
-                                $q->where('id', $model->id);
-                                $q->orWhere(
-                                    function (QueryBuilder $q) use ($model) {
-                                        $q->where('accounts.name', 'LIKE', '%' . $model->name . '%');
-                                        $q->where('accounts.account_type_id', 3);
-                                        $q->where('accounts.active', 0);
-                                    }
-                                );
-                            }
-                        )->where('accounts.user_id', $this->getUser()->id);
-                }
-                )->get();
+                  ->from('transactions')
+                  ->whereIn(
+                      'account_id', function (QueryBuilder $query) use ($model) {
+                      $query
+                          ->select('id')->from('accounts')
+                          ->where(
+                              function (QueryBuilder $q) use ($model) {
+                                  $q->where('id', $model->id);
+                                  $q->orWhere(
+                                      function (QueryBuilder $q) use ($model) {
+                                          $q->where('accounts.name', 'LIKE', '%' . $model->name . '%');
+                                          $q->where('accounts.account_type_id', 3);
+                                          $q->where('accounts.active', 0);
+                                      }
+                                  );
+                              }
+                          )->where('accounts.user_id', $this->getUser()->id);
+                  }
+                  )->get();
         }
         )->get();
         $transactions = [];
@@ -218,9 +219,6 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
     public function store(array $data)
     {
 
-        /*
-         * Find account type.
-         */
         /** @var \FireflyIII\Database\AccountType\AccountType $acctType */
         $acctType = \App::make('FireflyIII\Database\AccountType\AccountType');
 
@@ -229,7 +227,6 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
         $data['user_id']         = $this->getUser()->id;
         $data['account_type_id'] = $accountType->id;
         $data['active']          = isset($data['active']) && $data['active'] === '1' ? 1 : 0;
-
 
         $data    = array_except($data, ['_token', 'what']);
         $account = new \Account($data);

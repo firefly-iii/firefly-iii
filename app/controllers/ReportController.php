@@ -48,15 +48,15 @@ class ReportController extends BaseController
         } catch (Exception $e) {
             return View::make('error')->with('message', 'Invalid date');
         }
-        $date     = new Carbon($year . '-' . $month . '-01');
-        $dayEarly = clone $date;
+        $date         = new Carbon($year . '-' . $month . '-01');
+        $dayEarly     = clone $date;
         $subTitle     = 'Budget report for ' . $date->format('F Y');
         $subTitleIcon = 'fa-calendar';
-        $dayEarly = $dayEarly->subDay();
-        $accounts = $this->_repository->getAccountListBudgetOverview($date);
-        $budgets  = $this->_repository->getBudgetsForMonth($date);
+        $dayEarly     = $dayEarly->subDay();
+        $accounts     = $this->_repository->getAccountListBudgetOverview($date);
+        $budgets      = $this->_repository->getBudgetsForMonth($date);
 
-        return View::make('reports.budget', compact('subTitle','subTitleIcon','date', 'accounts', 'budgets', 'dayEarly'));
+        return View::make('reports.budget', compact('subTitle', 'subTitleIcon', 'date', 'accounts', 'budgets', 'dayEarly'));
 
     }
 

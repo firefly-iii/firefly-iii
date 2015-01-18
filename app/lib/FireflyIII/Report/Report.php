@@ -232,6 +232,8 @@ class Report implements ReportInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
+     * TODO: This method runs two queries which are only marginally different. Try and combine these.
+     *
      * @param Carbon $date
      * @param bool   $shared
      *
@@ -244,7 +246,6 @@ class Report implements ReportInterface
         $end = clone $date;
         $end->endOfMonth();
         $userId = $this->_accounts->getUser()->id;
-
 
         $list = \TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                                    ->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
