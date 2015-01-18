@@ -117,8 +117,6 @@ class GoogleChartController extends BaseController
         $this->_chart->addColumn('Budgeted', 'number');
         $this->_chart->addColumn('Spent', 'number');
 
-        Log::debug('Now in allBudgetsHomeChart()');
-
         /** @var \FireflyIII\Database\Budget\Budget $bdt */
         $bdt     = App::make('FireflyIII\Database\Budget\Budget');
         $budgets = $bdt->get();
@@ -126,18 +124,13 @@ class GoogleChartController extends BaseController
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
 
-            Log::debug('Now working budget #' . $budget->id . ', ' . $budget->name);
-
             /** @var \LimitRepetition $repetition */
             $repetition = $bdt->repetitionOnStartingOnDate($budget, $this->_start);
-            if (is_null($repetition)) {
-                \Log::debug('Budget #' . $budget->id . ' has no repetition on ' . $this->_start->format('Y-m-d'));
-                // use the session start and end for our search query
+            if (is_null($repetition)) { // use the session start and end for our search query
                 $searchStart = $this->_start;
                 $searchEnd   = $this->_end;
                 $limit       = 0; // the limit is zero:
             } else {
-                \Log::debug('Budget #' . $budget->id . ' has a repetition on ' . $this->_start->format('Y-m-d') . '!');
                 // use the limit's start and end for our search query
                 $searchStart = $repetition->startdate;
                 $searchEnd   = $repetition->enddate;
@@ -145,7 +138,6 @@ class GoogleChartController extends BaseController
             }
 
             $expenses = floatval($budget->transactionjournals()->before($searchEnd)->after($searchStart)->lessThan(0)->sum('amount')) * -1;
-            \Log::debug('Expenses in budget ' . $budget->name . ' before ' . $searchEnd->format('Y-m-d') . ' and after ' . $searchStart . ' are: ' . $expenses);
             if ($expenses > 0) {
                 $this->_chart->addRow($budget->name, $limit, $expenses);
             }
@@ -314,17 +306,14 @@ class GoogleChartController extends BaseController
 
             if ($repetition) {
                 $budgeted = floatval($repetition->amount);
-                \Log::debug('Found a repetition on ' . $start->format('Y-m-d'). ' for budget ' . $budget->name.'!');
+                \Log::debug('Found a repetition on ' . $start->format('Y-m-d') . ' for budget ' . $budget->name . '!');
             } else {
-                \Log::debug('No repetition on ' . $start->format('Y-m-d'). ' for budget ' . $budget->name);
+                \Log::debug('No repetition on ' . $start->format('Y-m-d') . ' for budget ' . $budget->name);
                 $budgeted = null;
             }
-
             $this->_chart->addRow(clone $start, $budgeted, $spent);
-
             $start->addMonth();
         }
-
 
         $this->_chart->generate();
 
