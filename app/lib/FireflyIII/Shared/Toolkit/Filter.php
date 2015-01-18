@@ -103,37 +103,31 @@ class Filter
      */
     protected function updateEndDate($range, Carbon $start)
     {
-        $end = clone $start;
-        switch ($range) {
-            default:
-                throw new FireflyException('updateEndDate cannot handle $range ' . $range);
-                break;
-            case '1D':
-                $end->endOfDay();
-                break;
-            case '1W':
-                $end->endOfWeek();
-                break;
-            case '1M':
-                $end->endOfMonth();
-                break;
-            case '3M':
-                $end->lastOfQuarter();
-                break;
-            case '6M':
-                if (intval($start->format('m')) >= 7) {
-                    $end->endOfYear();
-                } else {
-                    $end->startOfYear()->addMonths(6);
-                }
-                break;
-            case '1Y':
-                $end->endOfYear();
-                break;
+        $functionMap = [
+            '1D' => 'endOfDay',
+            '1W' => 'endOfWeek',
+            '1M' => 'endOfMonth',
+            '3M' => 'lastOfQuarter',
+            '1Y' => 'endOfYear',
+        ];
+        $end         = clone $start;
 
+        if (isset($functionMap[$range])) {
+            $function = $functionMap[$range];
+            $end->$function();
+
+            return $end;
         }
+        if ($range == '6M') {
+            if (intval($start->format('m')) >= 7) {
+                $end->endOfYear();
+            } else {
+                $end->startOfYear()->addMonths(6);
+            }
 
-        return $end;
+            return $end;
+        }
+        throw new FireflyException('updateEndDate cannot handle $range ' . $range);
     }
 
     /**
@@ -145,37 +139,28 @@ class Filter
      */
     protected function periodName($range, Carbon $date)
     {
-        switch ($range) {
-            default:
-                throw new FireflyException('No _periodName() for range "' . $range . '"');
-                break;
-            case '1D':
-                return $date->format('jS F Y');
-                break;
-            case '1W':
-                return 'week ' . $date->format('W, Y');
-                break;
-            case '1M':
-                return $date->format('F Y');
-                break;
-            case '3M':
-                $month = intval($date->format('m'));
-
-                return 'Q' . ceil(($month / 12) * 4) . ' ' . $date->format('Y');
-                break;
-            case '6M':
-                $month    = intval($date->format('m'));
-                $half     = ceil(($month / 12) * 2);
-                $halfName = $half == 1 ? 'first' : 'second';
-
-                return $halfName . ' half of ' . $date->format('d-m-Y');
-                break;
-            case '1Y':
-                return $date->format('Y');
-                break;
-
-
+        $formatMap = [
+            '1D' => 'jS F Y',
+            '1W' => '\w\e\ek W, Y',
+            '1M' => 'F Y',
+            '1Y' => 'Y',
+        ];
+        if (isset($formatMap[$range])) {
+            return $date->format($formatMap[$range]);
         }
+        if ($range == '3M') {
+            $month = intval($date->format('m'));
+
+            return 'Q' . ceil(($month / 12) * 4) . ' ' . $date->format('Y');
+        }
+        if ($range == '6M') {
+            $month    = intval($date->format('m'));
+            $half     = ceil(($month / 12) * 2);
+            $halfName = $half == 1 ? 'first' : 'second';
+
+            return $halfName . ' half of ' . $date->format('d-m-Y');
+        }
+        throw new FireflyException('No _periodName() for range "' . $range . '"');
     }
 
     /**

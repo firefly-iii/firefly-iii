@@ -228,6 +228,8 @@ class Report implements ReportInterface
     }
 
     /**
+     * This method gets all incomes (journals) in a list.
+     *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @param Carbon $date
@@ -357,7 +359,6 @@ class Report implements ReportInterface
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @param Carbon $start
      * @param Carbon $end
@@ -367,7 +368,7 @@ class Report implements ReportInterface
      */
     public function revenueGroupedByAccount(Carbon $start, Carbon $end, $limit = 15)
     {
-        return $this->_queries->journalsByRevenueAccount($start, $end);
+        return $this->_queries->journalsByRevenueAccount($start, $end, $limit);
 
 
 

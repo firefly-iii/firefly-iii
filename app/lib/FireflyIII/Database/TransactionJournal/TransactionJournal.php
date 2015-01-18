@@ -158,31 +158,13 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
         $journal->isValid();
         $errors = $journal->getErrors();
 
-        /*
-         * Is not in rules.
-         */
         if (!isset($model['what'])) {
             $errors->add('description', 'Internal error: need to know type of transaction!');
         }
-        /*
-         * Is not in rules.
-         */
         $errors = $errors->merge($this->_validateAmount($model));
         $errors = $errors->merge($this->_validateBudget($model));
         $errors = $errors->merge($this->_validateAccount($model));
 
-
-        /*
-         * Add "OK"
-         */
-
-        /**
-         * else {
-         * $successes->add('account_from_id', 'OK');
-         * $successes->add('account_to_id', 'OK');
-         * }
-         * else {
-         */
         $list = ['date', 'description', 'amount', 'budget_id', 'from', 'to', 'account_from_id', 'account_to_id', 'category', 'account_id', 'expense_account',
                  'revenue_account'];
         foreach ($list as $entry) {

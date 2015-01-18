@@ -102,6 +102,8 @@ class Date
     }
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * @param Carbon         $theCurrentEnd
      * @param                $repeatFreq
      * @param Carbon         $maxDate
@@ -111,37 +113,32 @@ class Date
      */
     public function endOfX(Carbon $theCurrentEnd, $repeatFreq, Carbon $maxDate)
     {
+        $functionMap = [
+            'daily'     => 'endOfDay',
+            'week'      => 'endOfWeek',
+            'weekly'    => 'endOfWeek',
+            'month'     => 'endOfMonth',
+            'monthly'   => 'endOfMonth',
+            'quarter'   => 'lastOfQuarter',
+            'quarterly' => 'lastOfQuarter',
+            'year'      => 'endOfYear',
+            'yearly'    => 'endOfYear',
+        ];
+        $specials    = ['mont', 'monthly'];
+
         $currentEnd = clone $theCurrentEnd;
-        switch ($repeatFreq) {
-            default:
-                throw new FireflyException('Cannot do endOfPeriod for $repeat_freq ' . $repeatFreq);
-                break;
-            case 'daily':
-                $currentEnd->endOfDay();
-                break;
-            case 'week':
-            case 'weekly':
-                $currentEnd->endOfWeek();
-                break;
-            case 'month':
-            case 'monthly':
-                $currentEnd->endOfMonth();
-                break;
-            case 'quarter':
-            case 'quarterly':
-                $currentEnd->lastOfQuarter();
-                break;
-            case 'half-year':
-                $month = intval($theCurrentEnd->format('m'));
-                $currentEnd->endOfYear();
-                if ($month <= 6) {
-                    $currentEnd->subMonths(6);
-                }
-                break;
-            case 'year':
-            case 'yearly':
-                $currentEnd->endOfYear();
-                break;
+
+        if (isset($functionMap[$repeatFreq])) {
+            $function = $functionMap[$repeatFreq];
+            $currentEnd->$function();
+
+        }
+        if (isset($specials[$repeatFreq])) {
+            $month = intval($theCurrentEnd->format('m'));
+            $currentEnd->endOfYear();
+            if ($month <= 6) {
+                $currentEnd->subMonths(6);
+            }
         }
         if ($currentEnd > $maxDate) {
             return clone $maxDate;
@@ -159,29 +156,21 @@ class Date
      */
     public function periodShow(Carbon $date, $repeatFrequency)
     {
-        switch ($repeatFrequency) {
-            default:
-                throw new FireflyException('No date formats for frequency "' . $repeatFrequency . '"!');
-                break;
-            case 'daily':
-                return $date->format('j F Y');
-                break;
-            case 'week':
-            case 'weekly':
-                return $date->format('\W\e\e\k W, Y');
-                break;
-            case 'quarter':
-                return $date->format('F Y');
-                break;
-            case 'monthly':
-            case 'month':
-                return $date->format('F Y');
-                break;
-            case 'year':
-            case 'yearly':
-                return $date->format('Y');
-                break;
+        $formatMap = [
+            'daily'   => 'j F Y',
+            'week'    => '\W\e\e\k W, Y',
+            'weekly'  => '\W\e\e\k W, Y',
+            'quarter' => 'F Y',
+            'month'   => 'F Y',
+            'monthly' => 'F Y',
+            'year'    => 'Y',
+            'yearly'  => 'Y',
+
+        ];
+        if (isset($formatMap[$repeatFrequency])) {
+            return $date->format($formatMap[$repeatFrequency]);
         }
+        throw new FireflyException('No date formats for frequency "' . $repeatFrequency . '"!');
     }
 
     /**
