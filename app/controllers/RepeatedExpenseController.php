@@ -135,7 +135,7 @@ class RepeatedExpenseController extends BaseController
     }
 
     /**
-     *
+     *  @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
      */
     public function store()
     {
@@ -150,7 +150,6 @@ class RepeatedExpenseController extends BaseController
         $data['remind_me']     = isset($data['remind_me']) ? 1 : 0;
         $data['order']         = 0;
 
-        // always validate:
         $messages = $this->_repository->validate($data);
 
         Session::flash('warnings', $messages['warnings']);
