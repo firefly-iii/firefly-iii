@@ -197,7 +197,6 @@ class PiggyBank
         foreach ($list as $entry) {
             $start  = $entry->startdate;
             $target = $entry->targetdate;
-            // find a repetition on this date:
             $count = $entry->piggyBankrepetitions()->starts($start)->targets($target)->count();
             if ($count == 0) {
                 $repetition = new \PiggyBankRepetition;
@@ -207,14 +206,11 @@ class PiggyBank
                 $repetition->currentamount = 0;
                 $repetition->save();
             }
-            // then continue and do something in the current relevant time frame.
-
             $currentTarget = clone $target;
             $currentStart  = null;
             while ($currentTarget < $today) {
                 $currentStart  = \DateKit::subtractPeriod($currentTarget, $entry->rep_length, 0);
                 $currentTarget = \DateKit::addPeriod($currentTarget, $entry->rep_length, 0);
-                // create if not exists:
                 $count = $entry->piggyBankRepetitions()->starts($currentStart)->targets($currentTarget)->count();
                 if ($count == 0) {
                     $repetition = new \PiggyBankRepetition;

@@ -156,10 +156,7 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
      */
     public function destroy(Eloquent $model)
     {
-
-        // delete piggy banks
-        // delete journals:
-        $journals = \TransactionJournal::whereIn(
+        $journals     = \TransactionJournal::whereIn(
             'id', function (QueryBuilder $query) use ($model) {
             $query->select('transaction_journal_id')
                   ->from('transactions')->whereIn(
@@ -183,9 +180,6 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
                 )->get();
         }
         )->get();
-        /*
-         * Get all transactions.
-         */
         $transactions = [];
         /** @var \TransactionJournal $journal */
         foreach ($journals as $journal) {
@@ -195,18 +189,10 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
             }
             $journal->delete();
         }
-        // also delete transactions.
         if (count($transactions) > 0) {
             \Transaction::whereIn('id', $transactions)->delete();
         }
-
-
-        /*
-         * Trigger deletion:
-         */
         \Event::fire('account.destroy', [$model]);
-
-        // delete accounts:
         \Account::where(
             function (EloquentBuilder $q) use ($model) {
                 $q->where('id', $model->id);

@@ -114,7 +114,7 @@ class Bill implements CUDInterface, CommonDatabaseCallsInterface, BillInterface
         $warnings  = new MessageBag;
         $successes = new MessageBag;
         $errors    = new MessageBag;
-        if (isset($model['amount_min']) && isset($model['amount_max']) && floatval($model['amount_min']) > floatval($model['amount_max'])) {
+        if (floatval($model['amount_min']) > floatval($model['amount_max'])) {
             $errors->add('amount_max', 'Maximum amount can not be less than minimum amount.');
             $errors->add('amount_min', 'Minimum amount can not be more than maximum amount.');
         }
