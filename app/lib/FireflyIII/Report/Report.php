@@ -7,7 +7,6 @@ use FireflyIII\Database\Account\Account as AccountRepository;
 use FireflyIII\Database\SwitchUser;
 use FireflyIII\Database\TransactionJournal\TransactionJournal as JournalRepository;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 
 /**
@@ -47,6 +46,7 @@ class Report implements ReportInterface
 
     /**
      * This methods fails to take in account transfers FROM shared accounts.
+     *
      * @param Carbon $start
      * @param Carbon $end
      * @param int    $limit
@@ -117,7 +117,7 @@ class Report implements ReportInterface
         $accounts = [];
         /** @var \Account $account */
         foreach ($list as $account) {
-            $id            = intval($account->id);
+            $id = intval($account->id);
             /** @noinspection PhpParamsInspection */
             $accounts[$id] = [
                 'name'         => $account->name,
@@ -232,8 +232,6 @@ class Report implements ReportInterface
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
-     * TODO: This method runs two queries which are only marginally different. Try and combine these.
-     *
      * @param Carbon $date
      * @param bool   $shared
      *
@@ -247,45 +245,48 @@ class Report implements ReportInterface
         $end->endOfMonth();
         $userId = $this->_accounts->getUser()->id;
 
-        $list = \TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                   ->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
-                                   ->leftJoin(
-                                       'account_meta', function (JoinClause $join) {
-                                       $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
-                                   }
-                                   )
-                                   ->transactionTypes(['Deposit'])
-                                   ->where('transaction_journals.user_id', $userId)
-                                   ->where('transactions.amount', '>', 0)
-                                   ->where('transaction_journals.user_id', \Auth::user()->id)
-                                   ->where('account_meta.data', '!=', '"sharedExpense"')
-                                   ->orderBy('date', 'ASC')
-                                   ->before($end)->after($start)->get(['transaction_journals.*']);
+        return $this->_queries->incomeByPeriod($start, $end);
 
-        // incoming from a shared account: it's profit (income):
-        $transfers = \TransactionJournal::withRelevantData()
-                                        ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                        ->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
-                                        ->leftJoin(
-                                            'account_meta', function (JoinClause $join) {
-                                            $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
-                                        }
-                                        )
-                                        ->transactionTypes(['Transfer'])
-                                        ->where('transaction_journals.user_id', $userId)
-                                        ->where('transactions.amount', '<', 0)
-                                        ->where('account_meta.data', '=', '"sharedExpense"')
-                                        ->orderBy('date', 'ASC')
-                                        ->before($end)->after($start)->get(['transaction_journals.*']);
+        //        $list = \TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+        //                                   ->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
+        //                                   ->leftJoin(
+        //                                       'account_meta', function (JoinClause $join) {
+        //                                       $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
+        //                                   }
+        //                                   )
+        //                                   ->transactionTypes(['Deposit'])
+        //                                   ->where('transaction_journals.user_id', $userId)
+        //                                   ->where('transactions.amount', '>', 0)
+        //                                   ->where('transaction_journals.user_id', \Auth::user()->id)
+        //                                   ->where('account_meta.data', '!=', '"sharedExpense"')
+        //                                   ->orderBy('date', 'ASC')
+        //                                   ->before($end)->after($start)->get(['transaction_journals.*']);
+        //
+        //        // incoming from a shared account: it's profit (income):
+        //        $transfers = \TransactionJournal::withRelevantData()
+        //                                        ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+        //                                        ->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
+        //                                        ->leftJoin(
+        //                                            'account_meta', function (JoinClause $join) {
+        //                                            $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
+        //                                        }
+        //                                        )
+        //                                        ->transactionTypes(['Transfer'])
+        //                                        ->where('transaction_journals.user_id', $userId)
+        //                                        ->where('transactions.amount', '<', 0)
+        //                                        ->where('account_meta.data', '=', '"sharedExpense"')
+        //                                        ->orderBy('date', 'ASC')
+        //                                        ->before($end)->after($start)->get(['transaction_journals.*']);
+        //
+        //        $list = $list->merge($transfers);
+        //        $list->sort(
+        //            function (\TransactionJournal $journal) {
+        //                return $journal->date->format('U');
+        //            }
+        //        );
+        //
+        //        return $list;
 
-        $list = $list->merge($transfers);
-        $list->sort(
-            function (\TransactionJournal $journal) {
-                return $journal->date->format('U');
-            }
-        );
-
-        return $list;
     }
 
     /**
@@ -302,21 +303,21 @@ class Report implements ReportInterface
 
         \PiggyBank::
         leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
-                         ->where('accounts.user_id', \Auth::user()->id)
-                         ->where('repeats', 0)
-                         ->where(
-                             function (Builder $query) use ($start, $end) {
-                                 $query->whereNull('piggy_banks.deleted_at');
-                                 $query->orWhere(
-                                     function (Builder $query) use ($start, $end) {
-                                         $query->whereNotNull('piggy_banks.deleted_at');
-                                         $query->where('piggy_banks.deleted_at', '>=', $start->format('Y-m-d 00:00:00'));
-                                         $query->where('piggy_banks.deleted_at', '<=', $end->format('Y-m-d 00:00:00'));
-                                     }
-                                 );
-                             }
-                         )
-                         ->get(['piggy_banks.*']);
+                  ->where('accounts.user_id', \Auth::user()->id)
+                  ->where('repeats', 0)
+                  ->where(
+                      function (Builder $query) use ($start, $end) {
+                          $query->whereNull('piggy_banks.deleted_at');
+                          $query->orWhere(
+                              function (Builder $query) use ($start, $end) {
+                                  $query->whereNotNull('piggy_banks.deleted_at');
+                                  $query->where('piggy_banks.deleted_at', '>=', $start->format('Y-m-d 00:00:00'));
+                                  $query->where('piggy_banks.deleted_at', '<=', $end->format('Y-m-d 00:00:00'));
+                              }
+                          );
+                      }
+                  )
+                  ->get(['piggy_banks.*']);
 
 
     }
@@ -370,7 +371,6 @@ class Report implements ReportInterface
     public function revenueGroupedByAccount(Carbon $start, Carbon $end, $limit = 15)
     {
         return $this->_queries->journalsByRevenueAccount($start, $end, $limit);
-
 
 
     }
