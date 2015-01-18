@@ -3,6 +3,10 @@ use Carbon\Carbon;
 
 /**
  * @SuppressWarnings("CamelCase") // I'm fine with this.
+ * @SuppressWarnings("TooManyMethods") // I'm fine with this
+ * @SuppressWarnings("CouplingBetweenObjects") // I'm fine with this
+ * @SuppressWarnings("MethodLength") // I'm fine with this
+
  *
  * Class TestDataSeeder
  */
@@ -410,16 +414,8 @@ class TestDataSeeder extends Seeder
     {
         // bill
         Bill::create(
-            [
-                'user_id'     => $user->id, 'name' => 'Rent', 'match' => 'rent,landlord',
-                'amount_min'  => 700,
-                'amount_max'  => 900,
-                'date'        => $this->som,
-                'active'      => 1,
-                'automatch'   => 1,
-                'repeat_freq' => 'monthly',
-                'skip'        => 0,
-            ]
+            ['user_id' => $user->id, 'name' => 'Rent', 'match' => 'rent,landlord', 'amount_min' => 700, 'amount_max' => 900, 'date' => $this->som,
+             'active'  => 1, 'automatch' => 1, 'repeat_freq' => 'monthly', 'skip' => 0,]
         );
 
         // bill
@@ -428,13 +424,10 @@ class TestDataSeeder extends Seeder
                 'user_id'     => $user->id,
                 'name'        => 'Gas licht',
                 'match'       => 'no,match',
-                'amount_min'  => 500,
-                'amount_max'  => 700,
+                'amount_min'  => 500, 'amount_max'  => 700,
                 'date'        => $this->som,
-                'active'      => 1,
-                'automatch'   => 1,
-                'repeat_freq' => 'monthly',
-                'skip'        => 0,
+                'active'      => 1, 'automatch'   => 1,
+                'repeat_freq' => 'monthly', 'skip'        => 0,
             ]
         );
 
