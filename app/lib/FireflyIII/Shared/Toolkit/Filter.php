@@ -174,37 +174,35 @@ class Filter
      */
     public function previous($range, Carbon $date)
     {
-        switch ($range) {
-            default:
-                throw new FireflyException('Cannot do _previous() on ' . $range);
-                break;
-            case '1D':
-                $date->startOfDay()->subDay();
-                break;
-            case '1W':
-                $date->startOfWeek()->subWeek();
-                break;
-            case '1M':
-                $date->startOfMonth()->subMonth();
-                break;
-            case '3M':
-                $date->firstOfQuarter()->subMonths(3)->firstOfQuarter();
-                break;
-            case '6M':
-                $month = intval($date->format('m'));
-                if ($month <= 6) {
-                    $date->startOfYear()->subMonths(6);
-                } else {
-                    $date->startOfYear();
-                }
-                break;
-            case '1Y':
-                $date->startOfYear()->subYear();
-                break;
+        $functionMap = [
+            '1D' => 'Day',
+            '1W' => 'Week',
+            '1M' => 'Month',
+            '1Y' => 'Year'
+        ];
 
+        if (isset($functionMap[$range])) {
+            $startFunction = 'startOf' . $functionMap[$range];
+            $subFunction   = 'sub' . $functionMap[$range];
+            $date->$startFunction()->$subFunction();
+
+            return $date;
         }
+        if ($range == '3M') {
+            $date->firstOfQuarter()->subMonths(3)->firstOfQuarter();
 
-        return $date;
+            return $date;
+        }
+        if ($range == '6M') {
+            $month = intval($date->format('m'));
+            $date->startOfYear();
+            if ($month <= 6) {
+                $date->subMonths(6);
+            }
+
+            return $date;
+        }
+        throw new FireflyException('Cannot do _previous() on ' . $range);
     }
 
     /**

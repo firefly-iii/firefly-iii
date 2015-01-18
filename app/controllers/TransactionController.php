@@ -162,6 +162,8 @@ class TransactionController extends BaseController
     }
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's 7. More than 5 but alright.
+     *
      * @param $what
      *
      * @return $this

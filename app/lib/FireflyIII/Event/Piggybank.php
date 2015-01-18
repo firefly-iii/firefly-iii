@@ -180,6 +180,7 @@ class PiggyBank
     }
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's 6. More than 5 but alright.
      *
      * Validates the presence of repetitions for all repeated expenses!
      */
