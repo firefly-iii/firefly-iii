@@ -184,6 +184,9 @@ class TestDataSeeder extends Seeder
     }
 
     /**
+     * @SuppressWarnings(PHPMD.ShortVariable)
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     *
      * @param Account              $from
      * @param Account              $to
      * @param                      $amount

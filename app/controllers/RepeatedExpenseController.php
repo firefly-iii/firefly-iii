@@ -178,6 +178,8 @@ class RepeatedExpenseController extends BaseController
     }
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * @param PiggyBank $repeatedExpense
      *
      * @return $this
@@ -194,7 +196,6 @@ class RepeatedExpenseController extends BaseController
         $data['remind_me']     = isset($data['remind_me']) ? 1 : 0;
         $data['user_id']       = Auth::user()->id;
 
-        // always validate:
         $messages = $this->_repository->validate($data);
 
         Session::flash('warnings', $messages['warnings']);
@@ -202,10 +203,11 @@ class RepeatedExpenseController extends BaseController
         Session::flash('errors', $messages['errors']);
         if ($messages['errors']->count() > 0) {
             Session::flash('error', 'Could not update repeated expense: ' . $messages['errors']->first());
+            return Redirect::route('repeated.edit', $repeatedExpense->id)->withInput();
         }
 
         // return to update screen:
-        if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
+        if ($data['post_submit_action'] == 'validate_only') {
             return Redirect::route('repeated.edit', $repeatedExpense->id)->withInput();
         }
 

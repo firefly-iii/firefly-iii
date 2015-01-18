@@ -131,6 +131,8 @@ class Filter
     }
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * @param        $range
      * @param Carbon $date
      *

@@ -230,6 +230,8 @@ class TransactionController extends BaseController
     }
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * @param $what
      *
      * @return $this|\Illuminate\Http\RedirectResponse
@@ -245,8 +247,6 @@ class TransactionController extends BaseController
         $data['completed']               = 0;
         $data['what']                    = $what;
         $data['currency']                = 'EUR';
-
-        // always validate:
         $messages = $this->_repository->validate($data);
 
         Session::flash('warnings', $messages['warnings']);
@@ -257,17 +257,13 @@ class TransactionController extends BaseController
             return Redirect::route('transactions.create', $data['what'])->withInput();
         }
 
-        // return to create screen:
         if ($data['post_submit_action'] == 'validate_only') {
             return Redirect::route('transactions.create', $data['what'])->withInput();
         }
 
-        // store
         $journal = $this->_repository->store($data);
         Event::fire('transactionJournal.store', [$journal, Input::get('piggy_bank_id')]); // new and used.
-        /*
-         * Also trigger on both transactions.
-         */
+
         /** @var Transaction $transaction */
         foreach ($journal->transactions as $transaction) {
             Event::fire('transaction.store', [$transaction]);
@@ -303,8 +299,9 @@ class TransactionController extends BaseController
         Session::flash('errors', $messages['errors']);
         if ($messages['errors']->count() > 0) {
             Session::flash('error', 'Could not update transaction: ' . $messages['errors']->first());
+            return Redirect::route('transactions.edit', $journal->id)->withInput();
         }
-        if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
+        if ($data['post_submit_action'] == 'validate_only') {
             return Redirect::route('transactions.edit', $journal->id)->withInput();
         }
         $this->_repository->update($journal, $data);
