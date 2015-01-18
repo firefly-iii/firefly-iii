@@ -33,18 +33,21 @@ class ChangesFor325 extends Migration
         //
 
         // delete an old index:
-        Schema::table(
-            'budget_limits', function (Blueprint $table) {
-            //$table->dropIndex('unique_ci_combo');
-            try {
+        try {
+            Schema::table(
+                'budget_limits', function (Blueprint $table) {
+                //$table->dropIndex('unique_ci_combo');
                 $table->dropUnique('unique_ci_combi');
-            } catch (QueryException $e) {
-                // don't care.
-            } catch (\Exception $e) {
-                // don't care either.
+
             }
+            );
+        } catch (QueryException $e) {
+            // don't care.
+        } catch (PDOException $e) {
+            // don't care.
+        } catch (\Exception $e) {
+            // don't care either.
         }
-        );
 
     }
 
