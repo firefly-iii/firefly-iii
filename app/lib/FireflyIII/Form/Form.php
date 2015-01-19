@@ -54,7 +54,7 @@ class Form
         /*
          * Make label and placeholder look nice.
          */
-        $options['placeholder'] = ucfirst($name);
+        $options['placeholder'] = ucfirst($label);
 
         /*
          * Get pre filled value:
@@ -123,7 +123,19 @@ class Form
                 $html .= \Form::input('text', $name, $value, $options);
                 break;
             case 'amount':
-                $html .= '<div class="input-group"><div class="input-group-addon">' . \Amount::getCurrencySymbol() . '</div>';
+                // currency button:
+                $defaultCurrency = \Amount::getDefaultCurrency();
+                $html .=
+                    '<div class="input-group"><div class="input-group-btn"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">'
+                    . $defaultCurrency->symbol . ' <span class="caret"></span></button>';
+                // all currencies:
+                $list = \TransactionCurrency::where('name', '!=', $defaultCurrency->name)->get();
+                $html .= '<ul class="dropdown-menu" role="menu">';
+                foreach ($list as $entry) {
+                    $html .= '<li><a href="#">' . e($entry->name) . '</a></li>';
+                }
+                $html .= ' </ul></div>';
+                //$html .= '<div class="input-group"><div class="input-group-addon">' . \Amount::getCurrencySymbol() . '</div>';
                 $html .= \Form::input('number', $name, $value, $options);
                 $html .= '</div>';
                 break;
@@ -204,7 +216,9 @@ class Form
             return $options['label'];
         }
         $labels = ['amount_min'      => 'Amount (min)', 'amount_max' => 'Amount (max)', 'match' => 'Matches on', 'repeat_freq' => 'Repetition',
-                   'account_from_id' => 'Account from', 'account_to_id' => 'Account to', 'account_id' => 'Asset account'];
+                   'account_from_id' => 'Account from', 'account_to_id' => 'Account to', 'account_id' => 'Asset account','budget_id' => 'Budget'
+        ,'piggy_bank_id' => 'Piggy bank'];
+
 
         return isset($labels[$name]) ? $labels[$name] : str_replace('_', ' ', ucfirst($name));
 

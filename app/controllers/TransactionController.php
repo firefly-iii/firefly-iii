@@ -248,14 +248,14 @@ class TransactionController extends BaseController
         $data['transaction_currency_id'] = $transactionCurrency->id;
         $data['completed']               = 0;
         $data['what']                    = $what;
-        $data['currency']                = 'EUR';
-        $messages = $this->_repository->validate($data);
+        $messages                        = $this->_repository->validate($data);
 
         Session::flash('warnings', $messages['warnings']);
         Session::flash('successes', $messages['successes']);
         Session::flash('errors', $messages['errors']);
         if ($messages['errors']->count() > 0) {
             Session::flash('error', 'Could not store transaction: ' . $messages['errors']->first());
+
             return Redirect::route('transactions.create', $data['what'])->withInput();
         }
 
@@ -301,6 +301,7 @@ class TransactionController extends BaseController
         Session::flash('errors', $messages['errors']);
         if ($messages['errors']->count() > 0) {
             Session::flash('error', 'Could not update transaction: ' . $messages['errors']->first());
+
             return Redirect::route('transactions.edit', $journal->id)->withInput();
         }
         if ($data['post_submit_action'] == 'validate_only') {
