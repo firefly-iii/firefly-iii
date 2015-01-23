@@ -464,6 +464,16 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
 
         $accountType = $typeRepository->findByWhat('revenue');
 
+        // if name is "", find cash account:
+        if (strlen($name) == 0) {
+            $cashAccountType = $typeRepository->findByWhat('cash');
+
+            // find or create cash account:
+            return \Account::firstOrCreate(
+                ['name' => 'Cash account', 'account_type_id' => $cashAccountType->id, 'active' => 0, 'user_id' => $this->getUser()->id,]
+            );
+        }
+
         $data = ['user_id' => $this->getUser()->id, 'account_type_id' => $accountType->id, 'name' => $name, 'active' => 1];
 
         return \Account::firstOrCreate($data);
