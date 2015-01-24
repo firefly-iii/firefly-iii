@@ -78,7 +78,7 @@ class HomeController extends BaseController
             Session::forget('range');
         }
 
-        return Redirect::intended('/');
+        return Redirect::back();
     }
 
     /**
@@ -87,8 +87,8 @@ class HomeController extends BaseController
     public function sessionNext()
     {
         Navigation::next();
+        return Redirect::back();
 
-        return Redirect::intended('/');
     }
 
     /**
@@ -98,6 +98,6 @@ class HomeController extends BaseController
     {
         Navigation::prev();
 
-        return Redirect::intended('/');
+        return Redirect::back();
     }
 }
