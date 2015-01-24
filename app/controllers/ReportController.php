@@ -126,9 +126,11 @@ class ReportController extends BaseController
         $balances        = $this->_repository->yearBalanceReport($date);
         $groupedIncomes  = $this->_repository->revenueGroupedByAccount($date, $end, 15);
         $groupedExpenses = $this->_repository->expensesGroupedByAccount($date, $end, 15);
+        $budgets         = \Auth::user()->budgets()->get();
 
         return View::make(
-            'reports.year', compact('date', 'groupedIncomes', 'groupedExpenses', 'year', 'balances', 'title', 'subTitle', 'subTitleIcon', 'mainTitleIcon')
+            'reports.year',
+            compact('date', 'groupedIncomes', 'budgets', 'groupedExpenses', 'year', 'balances', 'title', 'subTitle', 'subTitleIcon', 'mainTitleIcon')
         );
     }
 
