@@ -197,20 +197,27 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
             \Transaction::whereIn('id', $transactions)->delete();
         }
         \Event::fire('account.destroy', [$model]);
-        \Account::
-        leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                ->where(
-                    function (EloquentBuilder $q) use ($model) {
-                        $q->where('id', $model->id);
-                        $q->orWhere(
-                            function (EloquentBuilder $q) use ($model) {
-                                $q->where('accounts.name', 'LIKE', '%' . $model->name . '%');
-                                $q->where('account_types.type', 'Initial balance account');
-                                $q->where('accounts.active', 0);
-                            }
-                        );
+
+        // get account type:
+        /** @var \FireflyIII\Database\AccountType\AccountType $acctType */
+        $acctType = \App::make('FireflyIII\Database\AccountType\AccountType');
+
+        $accountType = $acctType->findByWhat('initial');
+
+        //$q->where('account_types.type', '');
+
+        \Account::where(
+            function (EloquentBuilder $q) use ($model, $accountType) {
+                $q->where('id', $model->id);
+                $q->orWhere(
+                    function (EloquentBuilder $q) use ($model, $accountType) {
+                        $q->where('accounts.name', 'LIKE', '%' . $model->name . '%');
+                        $q->where('accounts.account_type_id', $accountType->id);
+                        $q->where('accounts.active', 0);
                     }
-                )->delete();
+                );
+            }
+        )->delete();
 
         return true;
 
