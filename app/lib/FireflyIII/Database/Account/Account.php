@@ -164,14 +164,16 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
                   ->whereIn(
                       'account_id', function (QueryBuilder $query) use ($model) {
                       $query
-                          ->select('id')->from('accounts')
+                          ->select('accounts.id')
+                          ->from('accounts')
+                          ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
                           ->where(
                               function (QueryBuilder $q) use ($model) {
                                   $q->where('id', $model->id);
                                   $q->orWhere(
                                       function (QueryBuilder $q) use ($model) {
                                           $q->where('accounts.name', 'LIKE', '%' . $model->name . '%');
-                                          $q->where('accounts.account_type_id', 3);
+                                          $q->where('account_types.type', 'Initial balance account');
                                           $q->where('accounts.active', 0);
                                       }
                                   );
@@ -194,13 +196,15 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
             \Transaction::whereIn('id', $transactions)->delete();
         }
         \Event::fire('account.destroy', [$model]);
-        \Account::where(
+        \Account::
+            leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+            ->where(
             function (EloquentBuilder $q) use ($model) {
                 $q->where('id', $model->id);
                 $q->orWhere(
                     function (EloquentBuilder $q) use ($model) {
                         $q->where('accounts.name', 'LIKE', '%' . $model->name . '%');
-                        $q->where('accounts.account_type_id', 3);
+                        $q->where('account_types.type', 'Initial balance account');
                         $q->where('accounts.active', 0);
                     }
                 );
