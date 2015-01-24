@@ -52,7 +52,7 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
          * Basic query:
          */
         $query = $this->getUser()->accounts()->accountTypeIn($types)->withMeta()->orderBy('name', 'ASC');;
-        $set = $query->get(['accounts.*']);
+        $set = $query->get(['accounts.*', 'account_meta.data as accountRole']);
 
         $set->each(
             function (\Account $account) {
@@ -60,6 +60,7 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
                  * Get last activity date.
                  */
                 $account->lastActivityDate = $this->getLastActivity($account);
+                $account->accountRole      = \Config::get('firefly.accountRoles.' . json_decode($account->accountRole));
             }
         );
 
@@ -197,19 +198,19 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
         }
         \Event::fire('account.destroy', [$model]);
         \Account::
-            leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-            ->where(
-            function (EloquentBuilder $q) use ($model) {
-                $q->where('id', $model->id);
-                $q->orWhere(
+        leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                ->where(
                     function (EloquentBuilder $q) use ($model) {
-                        $q->where('accounts.name', 'LIKE', '%' . $model->name . '%');
-                        $q->where('account_types.type', 'Initial balance account');
-                        $q->where('accounts.active', 0);
+                        $q->where('id', $model->id);
+                        $q->orWhere(
+                            function (EloquentBuilder $q) use ($model) {
+                                $q->where('accounts.name', 'LIKE', '%' . $model->name . '%');
+                                $q->where('account_types.type', 'Initial balance account');
+                                $q->where('accounts.active', 0);
+                            }
+                        );
                     }
-                );
-            }
-        )->delete();
+                )->delete();
 
         return true;
 
