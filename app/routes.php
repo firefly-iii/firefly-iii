@@ -222,11 +222,12 @@ Route::group(
     Route::get('/chart/reports/income-expenses/{year}', ['uses' => 'GoogleChartController@yearInExp']);
     Route::get('/chart/reports/income-expenses-sum/{year}', ['uses' => 'GoogleChartController@yearInExpSum']);
     Route::get('/chart/bills/{bill}', ['uses' => 'GoogleChartController@billOverview']);
-    Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'GoogleChartController@budgetLimitSpending']);
+
     Route::get('/chart/piggy_history/{piggyBank}', ['uses' => 'GoogleChartController@piggyBankHistory']);
 
     // google chart for components (categories + budgets combined)
-    Route::get('/chart/budget/{budget}/spending/{year}', ['uses' => 'GoogleChartController@budgetsAndSpending']);
+    Route::get('/chart/budget/{budget}/spending', ['uses' => 'GoogleChartController@budgetsAndSpending']);
+    Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'GoogleChartController@budgetLimitSpending']);
     Route::get('/chart/category/{category}/spending/{year}', ['uses' => 'GoogleChartController@categoriesAndSpending']);
 
     // help controller

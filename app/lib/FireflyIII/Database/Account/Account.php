@@ -170,7 +170,7 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
                           ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
                           ->where(
                               function (QueryBuilder $q) use ($model) {
-                                  $q->where('id', $model->id);
+                                  $q->where('accounts.id', $model->id);
                                   $q->orWhere(
                                       function (QueryBuilder $q) use ($model) {
                                           $q->where('accounts.name', 'LIKE', '%' . $model->name . '%');

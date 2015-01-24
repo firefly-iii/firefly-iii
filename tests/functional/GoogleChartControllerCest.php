@@ -108,21 +108,9 @@ class GoogleChartControllerCest
      */
     public function budgetsAndSpending(FunctionalTester $I)
     {
-        $year = date('Y');
         $I->wantTo('see the chart for a budget in a specific year');
-        $I->amOnPage('/chart/budget/1/spending/'.$year);
+        $I->amOnPage('/chart/budget/1/spending');
         $I->seeResponseCodeIs(200);
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
-    public function budgetsAndSpendingInvalidYear(FunctionalTester $I)
-    {
-        $I->wantTo('see the chart for a budget in an invalid year');
-        $I->amOnPage('/chart/budget/1/spending/XXXX');
-        $I->seeResponseCodeIs(200);
-        $I->see('Invalid year');
     }
 
     /**

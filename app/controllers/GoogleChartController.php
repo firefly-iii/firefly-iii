@@ -277,19 +277,12 @@ class GoogleChartController extends BaseController
 
     /**
      *
-     * @param Budget    $budget
-     * @param           $year
+     * @param Budget $budget
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function budgetsAndSpending(Budget $budget, $year)
+    public function budgetsAndSpending(Budget $budget)
     {
-        try {
-            new Carbon('01-01-' . $year);
-        } catch (Exception $e) {
-            return View::make('error')->with('message', 'Invalid year.');
-        }
-
         /** @var \FireflyIII\Database\Budget\Budget $budgetRepository */
         $budgetRepository = App::make('FireflyIII\Database\Budget\Budget');
 
@@ -297,9 +290,23 @@ class GoogleChartController extends BaseController
         $this->_chart->addColumn('Budgeted', 'number');
         $this->_chart->addColumn('Spent', 'number');
 
-        $start = new Carbon('01-01-' . $year);
-        $end   = clone $start;
-        $end->endOfYear();
+        // grab the first budgetlimit ever:
+        $firstLimit = $budget->budgetlimits()->orderBy('startdate', 'ASC')->first();
+        if ($firstLimit) {
+            $start = new Carbon($firstLimit->startdate);
+        } else {
+            $start = Carbon::now()->startOfYear();
+        }
+
+        // grab the last budget limit ever:
+        $lastLimit = $budget->budgetlimits()->orderBy('startdate', 'DESC')->first();
+        if ($lastLimit) {
+            $end = new Carbon($lastLimit->startdate);
+        } else {
+            $end = Carbon::now()->endOfYear();
+        }
+
+
         while ($start <= $end) {
             $spent      = $budgetRepository->spentInMonth($budget, $start);
             $repetition = $budgetRepository->repetitionOnStartingOnDate($budget, $start);
