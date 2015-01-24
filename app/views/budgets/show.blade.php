@@ -8,7 +8,7 @@
                 Overview
             </div>
             <div class="panel-body">
-                <div id="componentOverview"></div>
+                <div id="budgetOverview"></div>
             </div>
         </div>
 
@@ -71,7 +71,8 @@
 @stop
 @section('scripts')
 <script type="text/javascript">
-    var componentID = {{$budget->id}};
+    var budgetID = {{$budget->id}};
+    var currencyCode = '{{Amount::getCurrencyCode()}}';
     @if(!is_null($repetition))
         var repetitionID = {{$repetition->id}};
         var year = {{$repetition->startdate->format('Y')}};
