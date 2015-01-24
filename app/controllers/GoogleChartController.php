@@ -281,7 +281,7 @@ class GoogleChartController extends BaseController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function budgetsAndSpending(Budget $budget)
+    public function budgetsAndSpending(Budget $budget, $year = 0)
     {
         /** @var \FireflyIII\Database\Budget\Budget $budgetRepository */
         $budgetRepository = App::make('FireflyIII\Database\Budget\Budget');
@@ -289,21 +289,26 @@ class GoogleChartController extends BaseController
         $this->_chart->addColumn('Month', 'date');
         $this->_chart->addColumn('Budgeted', 'number');
         $this->_chart->addColumn('Spent', 'number');
+        if ($year == 0) {
+            // grab the first budgetlimit ever:
+            $firstLimit = $budget->budgetlimits()->orderBy('startdate', 'ASC')->first();
+            if ($firstLimit) {
+                $start = new Carbon($firstLimit->startdate);
+            } else {
+                $start = Carbon::now()->startOfYear();
+            }
 
-        // grab the first budgetlimit ever:
-        $firstLimit = $budget->budgetlimits()->orderBy('startdate', 'ASC')->first();
-        if ($firstLimit) {
-            $start = new Carbon($firstLimit->startdate);
+            // grab the last budget limit ever:
+            $lastLimit = $budget->budgetlimits()->orderBy('startdate', 'DESC')->first();
+            if ($lastLimit) {
+                $end = new Carbon($lastLimit->startdate);
+            } else {
+                $end = Carbon::now()->endOfYear();
+            }
         } else {
-            $start = Carbon::now()->startOfYear();
-        }
-
-        // grab the last budget limit ever:
-        $lastLimit = $budget->budgetlimits()->orderBy('startdate', 'DESC')->first();
-        if ($lastLimit) {
-            $end = new Carbon($lastLimit->startdate);
-        } else {
-            $end = Carbon::now()->endOfYear();
+            $start = Carbon::createFromDate(intval($year), 1, 1);
+            $end   = clone $start;
+            $end->endOfYear();
         }
 
 
