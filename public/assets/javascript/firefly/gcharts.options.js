@@ -96,20 +96,11 @@ var defaultStackedColumnChartOptions = {
         width: '85%',
         height: '80%'
     },
-    vAxis: {format: '\u20AC #'},
     legend: {
         position: 'none'
     },
     isStacked: true,
     colors: ["#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043", "#9e9d24", "#5c6bc0", "#f06292", "#00796b", "#c2185b"],
-    vAxis: {
-        textStyle: {
-            color: '#838383',
-            fontName: 'Roboto2',
-            fontSize: '12'
-        },
-        format: '\u20AC #'
-    },
     hAxis: {
         textStyle: {
             color: '#838383',
@@ -120,6 +111,14 @@ var defaultStackedColumnChartOptions = {
             color: 'transparent'
         }
     },
+    vAxis: {
+        textStyle: {
+            color: '#838383',
+            fontName: 'Roboto2',
+            fontSize: '12'
+        },
+        format: '\u20AC #'
+    }
 };
 
 var defaultPieChartOptions = {
