@@ -89,8 +89,8 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
     {
         $opposingData    = ['name' => $account->name . ' Initial Balance', 'active' => 0, 'what' => 'initial'];
         $opposingAccount = $this->store($opposingData);
-        $balance         = floatval($data['openingbalance']);
-        $date            = new Carbon($data['openingbalancedate']);
+        $balance         = floatval($data['openingBalance']);
+        $date            = new Carbon($data['openingBalanceDate']);
         /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $journals */
         $journals    = \App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
         $fromAccount = $opposingAccount;
@@ -248,7 +248,7 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
             \App::abort(500);
         }
         $account->save();
-        if (isset($data['openingbalance']) && floatval($data['openingbalance']) != 0) {
+        if (isset($data['openingBalance']) && floatval($data['openingBalance']) != 0) {
             $this->storeInitialBalance($account, $data);
         }
 
@@ -288,15 +288,15 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
 
         $model->save();
 
-        if (isset($data['openingbalance']) && isset($data['openingbalancedate']) && strlen($data['openingbalancedate']) > 0) {
+        if (isset($data['openingBalance']) && isset($data['openingBalanceDate']) && strlen($data['openingBalanceDate']) > 0) {
             /** @noinspection PhpParamsInspection */
             $openingBalance = $this->openingBalanceTransaction($model);
             if (is_null($openingBalance)) {
                 $this->storeInitialBalance($model, $data);
             } else {
-                $openingBalance->date = new Carbon($data['openingbalancedate']);
+                $openingBalance->date = new Carbon($data['openingBalanceDate']);
                 $openingBalance->save();
-                $amount = floatval($data['openingbalance']);
+                $amount = floatval($data['openingBalance']);
                 /** @var \Transaction $transaction */
                 foreach ($openingBalance->transactions as $transaction) {
                     if ($transaction->account_id == $model->id) {
@@ -362,14 +362,14 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
          * Opening balance and opening balance date.
          */
         if (isset($model['what']) && $model['what'] == 'asset') {
-            if (isset($model['openingbalance']) && strlen($model['openingbalance']) > 0 && !is_numeric($model['openingbalance'])) {
-                $errors->add('openingbalance', 'This is not a number.');
+            if (isset($model['openingBalance']) && strlen($model['openingBalance']) > 0 && !is_numeric($model['openingBalance'])) {
+                $errors->add('openingBalance', 'This is not a number.');
             }
-            if (isset($model['openingbalancedate']) && strlen($model['openingbalancedate']) > 0) {
+            if (isset($model['openingBalanceDate']) && strlen($model['openingBalanceDate']) > 0) {
                 try {
-                    new Carbon($model['openingbalancedate']);
+                    new Carbon($model['openingBalanceDate']);
                 } catch (\Exception $e) {
-                    $errors->add('openingbalancedate', 'This date is invalid.');
+                    $errors->add('openingBalanceDate', 'This date is invalid.');
                 }
             }
         }
@@ -378,11 +378,11 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
         if (!$errors->has('name')) {
             $successes->add('name', 'OK');
         }
-        if (!$errors->has('openingbalance')) {
-            $successes->add('openingbalance', 'OK');
+        if (!$errors->has('openingBalance')) {
+            $successes->add('openingBalance', 'OK');
         }
-        if (!$errors->has('openingbalancedate')) {
-            $successes->add('openingbalancedate', 'OK');
+        if (!$errors->has('openingBalanceDate')) {
+            $successes->add('openingBalanceDate', 'OK');
         }
 
         return ['errors' => $errors, 'warnings' => $warnings, 'successes' => $successes];
