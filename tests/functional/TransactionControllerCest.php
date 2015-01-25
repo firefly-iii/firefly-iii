@@ -114,7 +114,7 @@ class TransactionControllerCest
         $I->wantTo('see a grouped transaction');
         $I->amOnPage('/transaction/show/' . $journal->id);
         $I->see($journal->description);
-        $I->see('Money for '.$journal->description);
+        $I->see('Money for ' . $journal->description);
     }
 
     public function store(FunctionalTester $I)
@@ -135,6 +135,29 @@ class TransactionControllerCest
                     ]
         );
         $I->see('Transaction &quot;Test&quot; stored.');
+    }
+
+
+    public function storeValidate(FunctionalTester $I)
+    {
+        $I->wantTo('validate a transaction');
+        $I->amOnPage('/transactions/create/withdrawal');
+        $I->submitForm(
+            '#store', [
+                        'reminder'           => '',
+                        'description'        => 'TestValidateMe',
+                        'account_id'         => 1,
+                        'expense_account'    => 'Zomaar',
+                        'amount'             => 100,
+                        'date'               => '2014-12-30',
+                        'budget_id'          => 3,
+                        'category'           => 'CategorrXXXXr',
+                        'post_submit_action' => 'validate_only'
+                    ]
+        );
+        $I->see('OK');
+        $I->seeInSession('successes');
+        $I->dontSeeRecord('transaction_journals', ['description' => 'TestValidateMe']);
     }
 
     public function storeAndFail(FunctionalTester $I)
@@ -197,6 +220,30 @@ class TransactionControllerCest
                      ]
         );
         $I->see($journal->description . '!');
+    }
+
+    public function updateValidate(FunctionalTester $I)
+    {
+        $journal = TransactionJournal::where('description', 'LIKE', '%Salary for %')->first();
+
+        $I->wantTo('validate an updated transaction');
+        $I->amOnPage('/transaction/edit/' . $journal->id);
+        $I->see($journal->description);
+        $I->submitForm(
+            '#update', [
+                         'description'        => $journal->description . 'XYZ',
+                         'account_id'         => 1,
+                         'expense_account'    => 'Portaal',
+                         'amount'             => 500,
+                         'date'               => $journal->date->format('Y-m-d'),
+                         'budget_id'          => is_null($journal->budgets()->first()) ? 0 : $journal->budgets()->first()->id,
+                         'category'           => is_null($journal->categories()->first()) ? '' : $journal->categories()->first()->id,
+                         'post_submit_action' => 'validate_only'
+                     ]
+        );
+        $I->see($journal->description . 'XYZ');
+        $I->see('OK');
+        $I->seeInSession('successes');
     }
 
     public function updateAndFail(FunctionalTester $I)
