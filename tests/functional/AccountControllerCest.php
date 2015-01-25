@@ -117,6 +117,21 @@ class AccountControllerCest
     /**
      * @param FunctionalTester $I
      */
+    public function storeOpeningBalance(FunctionalTester $I)
+    {
+        $I->amOnPage('/accounts/create/asset');
+        $I->wantTo('store a new asset account with a balance');
+        $I->see('Create a new asset account');
+        $I->submitForm('#store', ['name' => 'New through tests with balance.',
+                                  'openingBalance' => 10,
+                                  'openingBalanceDate' => '2015-01-01',
+                                  'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'store']);
+        $I->seeRecord('accounts', ['name' => 'New through tests with balance.']);
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
     public function storeAndCreateAnother(FunctionalTester $I)
     {
         $I->amOnPage('/accounts/create/asset');
