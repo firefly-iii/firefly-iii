@@ -21,7 +21,6 @@ class PiggyBank extends PiggyBankShared implements CUDInterface, CommonDatabaseC
      *
      * @return mixed
      * @throws FireflyException
-     * @throws NotImplementedException
      */
     public function findRepetitionByDate(\PiggyBank $piggyBank, Carbon $date)
     {

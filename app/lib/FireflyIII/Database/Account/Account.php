@@ -402,6 +402,7 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @codeCoverageIgnore
      *
      * @param $what
      *
@@ -418,6 +419,7 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
      *
      * @return Collection
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function get()
     {

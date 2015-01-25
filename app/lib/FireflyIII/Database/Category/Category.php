@@ -107,6 +107,7 @@ class Category implements CUDInterface, CommonDatabaseCallsInterface
      *
      * @return \Eloquent
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function find($objectId)
     {
@@ -122,6 +123,7 @@ class Category implements CUDInterface, CommonDatabaseCallsInterface
      *
      * @return \AccountType|null
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function findByWhat($what)
     {
@@ -147,6 +149,7 @@ class Category implements CUDInterface, CommonDatabaseCallsInterface
      *
      * @return Collection
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function getByIds(array $ids)
     {

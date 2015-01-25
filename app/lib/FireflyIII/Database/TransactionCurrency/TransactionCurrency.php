@@ -95,6 +95,7 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
      *
      * @param int $objectId
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      *
      * @return \Eloquent
      */
@@ -110,6 +111,7 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
      *
      * @param $what
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      *
      * @return \AccountType|null
      */
@@ -133,6 +135,7 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
      *
      * @param array $objectIds
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      *
      * @return Collection
      */

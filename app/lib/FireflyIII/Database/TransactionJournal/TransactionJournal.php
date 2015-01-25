@@ -413,6 +413,7 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
      *
      * @return \AccountType|null
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function findByWhat($what)
     {

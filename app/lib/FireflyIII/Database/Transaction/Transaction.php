@@ -26,6 +26,7 @@ class Transaction implements CUDInterface, CommonDatabaseCallsInterface
      *
      * @return bool
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function destroy(Eloquent $model)
     {
@@ -67,6 +68,7 @@ class Transaction implements CUDInterface, CommonDatabaseCallsInterface
      *
      * @return bool
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function update(Eloquent $model, array $data)
     {
@@ -103,6 +105,7 @@ class Transaction implements CUDInterface, CommonDatabaseCallsInterface
      *
      * @return \Eloquent
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function find($objectId)
     {
@@ -118,6 +121,7 @@ class Transaction implements CUDInterface, CommonDatabaseCallsInterface
      *
      * @return \AccountType|null
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function findByWhat($what)
     {
@@ -129,6 +133,7 @@ class Transaction implements CUDInterface, CommonDatabaseCallsInterface
      *
      * @return Collection
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function get()
     {
@@ -142,6 +147,7 @@ class Transaction implements CUDInterface, CommonDatabaseCallsInterface
      *
      * @return Collection
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function getByIds(array $ids)
     {
