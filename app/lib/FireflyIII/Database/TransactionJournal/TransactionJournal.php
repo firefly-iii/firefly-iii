@@ -382,7 +382,8 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
                     }
                 }
                 break;
-
+            case (isset($model['from']) && isset($model['to'])):
+                break;
             default:
                 throw new FireflyException('Cannot validate accounts for transaction journal.');
                 break;
