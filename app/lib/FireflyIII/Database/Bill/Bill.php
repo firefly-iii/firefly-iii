@@ -141,6 +141,7 @@ class Bill implements CUDInterface, CommonDatabaseCallsInterface, BillInterface
      *
      * @return \Eloquent
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function find($objectId)
     {
@@ -156,6 +157,7 @@ class Bill implements CUDInterface, CommonDatabaseCallsInterface, BillInterface
      *
      * @return \AccountType|null
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function findByWhat($what)
     {
@@ -178,6 +180,7 @@ class Bill implements CUDInterface, CommonDatabaseCallsInterface, BillInterface
      *
      * @return Collection
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function getByIds(array $ids)
     {

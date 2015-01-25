@@ -35,6 +35,7 @@ class Steam
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $boolean
      *
      * @return string
@@ -61,12 +62,18 @@ class Steam
     {
         $pct = $repetition->currentamount / $piggyBank->targetamount * 100;
         if ($pct > 100) {
+            // @codeCoverageIgnoreStart
             return 100;
+            // @codeCoverageIgnoreEnd
         } else {
             return floor($pct);
         }
     }
 
+    /**
+     * @codeCoverageIgnore
+     * @throws \Exception
+     */
     public function removeEmptyBudgetLimits()
     {
         $user = \Auth::user();

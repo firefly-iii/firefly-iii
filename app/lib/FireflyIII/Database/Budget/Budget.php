@@ -183,6 +183,7 @@ class Budget implements CUDInterface, CommonDatabaseCallsInterface, BudgetInterf
      *
      * @return \AccountType|null
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function findByWhat($what)
     {
@@ -208,6 +209,7 @@ class Budget implements CUDInterface, CommonDatabaseCallsInterface, BudgetInterf
      *
      * @return Collection
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function getByIds(array $ids)
     {
