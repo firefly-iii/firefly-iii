@@ -24,181 +24,15 @@ class Form
      */
     public static function ffAmount($name, $value = null, array $options = [])
     {
+        $label           = self::label($name, $options);
+        $options         = self::expandOptionArray($name, $label, $options);
+        $classes         = self::getHolderClasses($name);
+        $value           = self::fillFieldValue($name, $value);
         $options['step'] = 'any';
         $options['min']  = '0.01';
-
-        return self::ffInput('amount', $name, $value, $options);
-
-    }
-
-    /**
-     * @param       $type
-     * @param       $name
-     * @param null  $value
-     * @param array $options
-     * @param array $list
-     *
-     * @return string
-     * @throws FireflyException
-     */
-    public static function ffInput($type, $name, $value = null, array $options = [], $list = [])
-    {
-        /*
-         * add some defaults to this method:
-         */
-        $options['class']        = 'form-control';
-        $options['id']           = 'ffInput_' . $name;
-        $options['autocomplete'] = 'off';
-        $label                   = self::label($name, $options);
-
-        /*
-         * Make label and placeholder look nice.
-         */
-        $options['placeholder'] = ucfirst($label);
-
-        /*
-         * Get pre filled value:
-         */
-        if (\Session::has('preFilled')) {
-            $preFilled = \Session::get('preFilled');
-            $value     = isset($preFilled[$name]) && is_null($value) ? $preFilled[$name] : $value;
-
-        }
-
-        /*
-         * Get the value.
-         */
-        if (!is_null(\Input::old($name))) {
-            /*
-             * Old value overrules $value.
-             */
-            $value = \Input::old($name);
-        }
-
-        /*
-         * Get errors, warnings and successes from session:
-         */
-        /** @var MessageBag $errors */
-        $errors = \Session::get('errors');
-
-        /** @var MessageBag $warnings */
-        $warnings = \Session::get('warnings');
-
-        /** @var MessageBag $successes */
-        $successes = \Session::get('successes');
-
-
-        /*
-         * If errors, add some more classes.
-         */
-        switch (true) {
-            case (!is_null($errors) && $errors->has($name)):
-                $classes = 'form-group has-error has-feedback';
-                break;
-            case (!is_null($warnings) && $warnings->has($name)):
-                $classes = 'form-group has-warning has-feedback';
-                break;
-            case (!is_null($successes) && $successes->has($name)):
-                $classes = 'form-group has-success has-feedback';
-                break;
-            default:
-                $classes = 'form-group';
-                break;
-        }
-
-        /*
-         * Add some HTML.
-         */
-        $html = '<div class="' . $classes . '">';
-        $html .= '<label for="' . $options['id'] . '" class="col-sm-4 control-label">' . $label . '</label>';
-        $html .= '<div class="col-sm-8">';
-
-
-        /*
-         * Switch input type:
-         */
-        unset($options['label']);
-        switch ($type) {
-            case 'text':
-                $html .= \Form::input('text', $name, $value, $options);
-                break;
-            case 'amount':
-                // currency button:
-                $defaultCurrency = \Amount::getDefaultCurrency();
-                $html .=
-                    '<div class="input-group"><div class="input-group-btn"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">'
-                    . $defaultCurrency->symbol . ' <span class="caret"></span></button>';
-                // all currencies:
-                $list = \TransactionCurrency::where('name', '!=', $defaultCurrency->name)->get();
-                $html .= '<ul class="dropdown-menu" role="menu">';
-                foreach ($list as $entry) {
-                    $html .= '<li><a href="#">' . e($entry->name) . '</a></li>';
-                }
-                $html .= ' </ul></div>';
-                //$html .= '<div class="input-group"><div class="input-group-addon">' . \Amount::getCurrencySymbol() . '</div>';
-                $html .= \Form::input('number', $name, $value, $options);
-                $html .= '</div>';
-                break;
-            case 'number':
-                $html .= \Form::input('number', $name, $value, $options);
-                break;
-            case 'checkbox':
-                $checked = $options['checked'];
-                unset($options['placeholder'], $options['autocomplete'], $options['class']);
-                $html .= '<div class="checkbox"><label>';
-                $html .= \Form::checkbox($name, $value, $checked, $options);
-                $html .= '</label></div>';
-
-
-                break;
-            case 'date':
-                $html .= \Form::input('date', $name, $value, $options);
-                break;
-            case 'select':
-                $html .= \Form::select($name, $list, $value, $options);
-                break;
-            default:
-                throw new FireflyException('Cannot handle type "' . $type . '" in FFFormBuilder.');
-                break;
-        }
-
-        /*
-         * If errors, respond to them:
-         */
-
-        if (!is_null($errors)) {
-            if ($errors->has($name)) {
-                $html .= '<span class="glyphicon glyphicon-remove form-control-feedback"></span>';
-                $html .= '<p class="text-danger">' . e($errors->first($name)) . '</p>';
-            }
-        }
-        unset($errors);
-        /*
-         * If warnings, respond to them:
-         */
-
-        if (!is_null($warnings)) {
-            if ($warnings->has($name)) {
-                $html .= '<span class="glyphicon glyphicon-warning-sign form-control-feedback"></span>';
-                $html .= '<p class="text-warning">' . e($warnings->first($name)) . '</p>';
-            }
-        }
-        unset($warnings);
-
-        /*
-         * If successes, respond to them:
-         */
-
-        if (!is_null($successes)) {
-            if ($successes->has($name)) {
-                $html .= '<span class="glyphicon glyphicon-ok form-control-feedback"></span>';
-                $html .= '<p class="text-success">' . e($successes->first($name)) . '</p>';
-            }
-        }
-        unset($successes);
-
-        $html .= '</div>';
-        $html .= '</div>';
+        $defaultCurrency = \Amount::getDefaultCurrency();
+        $currencies      = \TransactionCurrency::where('name', '!=', $defaultCurrency->name)->get();
+        $html            = \View::make('form.amount', compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
 
@@ -216,12 +50,85 @@ class Form
             return $options['label'];
         }
         $labels = ['amount_min'      => 'Amount (min)', 'amount_max' => 'Amount (max)', 'match' => 'Matches on', 'repeat_freq' => 'Repetition',
-                   'account_from_id' => 'Account from', 'account_to_id' => 'Account to', 'account_id' => 'Asset account','budget_id' => 'Budget'
-        ,'piggy_bank_id' => 'Piggy bank'];
+                   'account_from_id' => 'Account from', 'account_to_id' => 'Account to', 'account_id' => 'Asset account', 'budget_id' => 'Budget'
+                   , 'piggy_bank_id' => 'Piggy bank'];
 
 
         return isset($labels[$name]) ? $labels[$name] : str_replace('_', ' ', ucfirst($name));
 
+    }
+
+    /**
+     * @param       $name
+     * @param       $label
+     * @param array $options
+     *
+     * @return array
+     */
+    public static function expandOptionArray($name, $label, array $options)
+    {
+        $options['class']        = 'form-control';
+        $options['id']           = 'ffInput_' . $name;
+        $options['autocomplete'] = 'off';
+        $options['placeholder']  = ucfirst($label);
+
+        return $options;
+    }
+
+    /**
+     * @param $name
+     *
+     * @return string
+     */
+    public static function getHolderClasses($name)
+    {
+        /*
+       * Get errors, warnings and successes from session:
+       */
+        /** @var MessageBag $errors */
+        $errors = \Session::get('errors');
+
+        /** @var MessageBag $warnings */
+        $warnings = \Session::get('warnings');
+
+        /** @var MessageBag $successes */
+        $successes = \Session::get('successes');
+
+        switch (true) {
+            case (!is_null($errors) && $errors->has($name)):
+                $classes = 'form-group has-error has-feedback';
+                break;
+            case (!is_null($warnings) && $warnings->has($name)):
+                $classes = 'form-group has-warning has-feedback';
+                break;
+            case (!is_null($successes) && $successes->has($name)):
+                $classes = 'form-group has-success has-feedback';
+                break;
+            default:
+                $classes = 'form-group';
+                break;
+        }
+
+        return $classes;
+    }
+
+    /**
+     * @param $name
+     * @param $value
+     *
+     * @return mixed
+     */
+    public static function fillFieldValue($name, $value)
+    {
+        if (\Session::has('preFilled')) {
+            $preFilled = \Session::get('preFilled');
+            $value     = isset($preFilled[$name]) && is_null($value) ? $preFilled[$name] : $value;
+        }
+        if (!is_null(\Input::old($name))) {
+            $value = \Input::old($name);
+        }
+
+        return $value;
     }
 
     /**
@@ -234,10 +141,15 @@ class Form
      */
     public static function ffBalance($name, $value = null, array $options = [])
     {
+        $label           = self::label($name, $options);
+        $options         = self::expandOptionArray($name, $label, $options);
+        $classes         = self::getHolderClasses($name);
+        $value           = self::fillFieldValue($name, $value);
         $options['step'] = 'any';
-
-        return self::ffInput('amount', $name, $value, $options);
-
+        $defaultCurrency = \Amount::getDefaultCurrency();
+        $currencies      = \TransactionCurrency::where('name', '!=', $defaultCurrency->name)->get();
+        $html            = \View::make('form.balance', compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
+        return $html;
     }
 
     /**
@@ -252,8 +164,16 @@ class Form
     public static function ffCheckbox($name, $value = 1, $checked = null, $options = [])
     {
         $options['checked'] = $checked === true ? true : null;
+        $label              = self::label($name, $options);
+        $options            = self::expandOptionArray($name, $label, $options);
+        $classes            = self::getHolderClasses($name);
+        $value              = self::fillFieldValue($name, $value);
 
-        return self::ffInput('checkbox', $name, $value, $options);
+        unset($options['placeholder'], $options['autocomplete'], $options['class']);
+
+        $html = \View::make('form.checkbox', compact('classes', 'name', 'label', 'value', 'options'))->render();
+
+        return $html;
     }
 
     /**
@@ -266,7 +186,13 @@ class Form
      */
     public static function ffDate($name, $value = null, array $options = [])
     {
-        return self::ffInput('date', $name, $value, $options);
+        $label   = self::label($name, $options);
+        $options = self::expandOptionArray($name, $label, $options);
+        $classes = self::getHolderClasses($name);
+        $value   = self::fillFieldValue($name, $value);
+        $html    = \View::make('form.date', compact('classes', 'name', 'label', 'value', 'options'))->render();
+
+        return $html;
     }
 
     /**
@@ -279,9 +205,14 @@ class Form
      */
     public static function ffInteger($name, $value = null, array $options = [])
     {
+        $label           = self::label($name, $options);
+        $options         = self::expandOptionArray($name, $label, $options);
+        $classes         = self::getHolderClasses($name);
+        $value           = self::fillFieldValue($name, $value);
         $options['step'] = '1';
+        $html            = \View::make('form.integer', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
-        return self::ffInput('number', $name, $value, $options);
+        return $html;
 
     }
 
@@ -298,57 +229,9 @@ class Form
     {
         $previousValue = \Input::old('post_submit_action');
         $previousValue = is_null($previousValue) ? 'store' : $previousValue;
-        /*
-         * Store.
-         */
-        switch ($type) {
-            case 'create':
-                $store = '<div class="form-group"><label for="' . $name . '_store" class="col-sm-4 control-label">Store</label>';
-                $store .= '<div class="col-sm-8"><div class="radio"><label>';
-                $store .= \Form::radio('post_submit_action', 'store', $previousValue == 'store', ['id' => $name . '_store']);
-                $store .= 'Store ' . $name . '</label></div></div></div>';
-                break;
-            case 'update':
-                $store = '<div class="form-group"><label for="' . $name . 'update" class="col-sm-4 control-label">Store</label>';
-                $store .= '<div class="col-sm-8"><div class="radio"><label>';
-                $store .= \Form::radio('post_submit_action', 'update', $previousValue == 'update' || $previousValue == 'store', ['id' => $name . '_update']);
-                $store .= 'Update ' . $name . '</label></div></div></div>';
-                break;
-            default:
-                throw new FireflyException('Cannot create ffOptionsList for option (store) ' . $type);
-                break;
-        }
+        $html          = \View::make('form.options', compact('type', 'name', 'previousValue'))->render();
 
-        /*
-         * validate is always the same:
-         */
-        $validate = '<div class="form-group"><label for="' . $name . 'validate_only" class="col-sm-4 control-label">Validate only';
-        $validate .= '</label><div class="col-sm-8"><div class="radio"><label>';
-        $validate .= \Form::radio('post_submit_action', 'validate_only', $previousValue == 'validate_only', ['id' => $name . '_validate_only']);
-        $validate .= 'Only validate, do not save</label></div></div></div>';
-
-        /*
-         * Store & return:
-         */
-        switch ($type) {
-            case 'create':
-                $return = '<div class="form-group"><label for="' . $name . 'return_to_form" class="col-sm-4 control-label">';
-                $return .= 'Return here</label><div class="col-sm-8"><div class="radio"><label>';
-                $return .= \Form::radio('post_submit_action', 'create_another', $previousValue == 'create_another', ['id' => $name . '_create_another']);
-                $return .= 'After storing, return here to create another one.</label></div></div></div>';
-                break;
-            case 'update':
-                $return = '<div class="form-group"><label for="' . $name . 'return_to_edit" class="col-sm-4 control-label">';
-                $return .= 'Return here</label><div class="col-sm-8"><div class="radio"><label>';
-                $return .= \Form::radio('post_submit_action', 'return_to_edit', $previousValue == 'return_to_edit', ['id' => $name . '_return_to_edit']);
-                $return .= 'After updating, return here.</label></div></div></div>';
-                break;
-            default:
-                throw new FireflyException('Cannot create ffOptionsList for option (store+return) ' . $type);
-                break;
-        }
-
-        return $store . $validate . $return;
+        return $html;
     }
 
     /**
@@ -358,11 +241,16 @@ class Form
      * @param array $options
      *
      * @return string
-     * @throws FireflyException
      */
     public static function ffSelect($name, array $list = [], $selected = null, array $options = [])
     {
-        return self::ffInput('select', $name, $selected, $options, $list);
+        $label    = self::label($name, $options);
+        $options  = self::expandOptionArray($name, $label, $options);
+        $classes  = self::getHolderClasses($name);
+        $selected = self::fillFieldValue($name, $selected);
+        $html     = \View::make('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
+
+        return $html;
     }
 
     /**
@@ -375,9 +263,14 @@ class Form
      */
     public static function ffTags($name, $value = null, array $options = [])
     {
+        $label                = self::label($name, $options);
+        $options              = self::expandOptionArray($name, $label, $options);
+        $classes              = self::getHolderClasses($name);
+        $value                = self::fillFieldValue($name, $value);
         $options['data-role'] = 'tagsinput';
+        $html                 = \View::make('form.tags', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
-        return self::ffInput('text', $name, $value, $options);
+        return $html;
     }
 
     /**
@@ -390,7 +283,13 @@ class Form
      */
     public static function ffText($name, $value = null, array $options = [])
     {
-        return self::ffInput('text', $name, $value, $options);
+        $label   = self::label($name, $options);
+        $options = self::expandOptionArray($name, $label, $options);
+        $classes = self::getHolderClasses($name);
+        $value   = self::fillFieldValue($name, $value);
+        $html    = \View::make('form.text', compact('classes', 'name', 'label', 'value', 'options'))->render();
+
+        return $html;
 
     }
 }
