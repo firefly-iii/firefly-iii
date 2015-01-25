@@ -188,16 +188,6 @@ class Bill implements CUDInterface, CommonDatabaseCallsInterface, BillInterface
     }
 
     /**
-     * Returns all objects.
-     *
-     * @return Collection
-     */
-    public function getActive()
-    {
-        return $this->getUser()->bills()->where('active', 1)->get();
-    }
-
-    /**
      * @param \Bill $bill
      *
      * @return Carbon|null

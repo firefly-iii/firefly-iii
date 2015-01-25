@@ -78,14 +78,11 @@ class PiggyBankShared
      *
      * @return Collection
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function getByIds(array $ids)
     {
-        return \PiggyBank::
-        leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')->whereIn('piggy_banks.id', [$ids])->where(
-            'accounts.user_id', $this->getUser()->id
-        )
-                         ->first(['piggy_banks.*']);
+       throw new NotImplementedException;
     }
 
     /**
