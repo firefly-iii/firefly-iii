@@ -133,20 +133,18 @@
         </div>
     </div>
 </div>
-@foreach($budgets as $budget)
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                {{{$budget->name}}}
+                Budgets
             </div>
             <div class="panel-body">
-                <div class="budgets" data-id="{{{$budget->id}}}" id="budgets-{{{$budget->id}}}"></div>
+                <div id="budgets"></div>
             </div>
         </div>
     </div>
 </div>
-@endforeach
 
 
 @stop

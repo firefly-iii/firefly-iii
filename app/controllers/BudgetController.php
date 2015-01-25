@@ -42,7 +42,7 @@ class BudgetController extends BaseController
         $date            = Session::get('start', Carbon::now()->startOfMonth());
         $limitRepetition = $this->_repository->updateLimitAmount($budget, $date, $amount);
 
-        return Response::json(['name' => $budget->name, 'repetition' => $limitRepetition->id]);
+        return Response::json(['name' => $budget->name, 'repetition' => $limitRepetition ? $limitRepetition->id : 0]);
 
     }
 

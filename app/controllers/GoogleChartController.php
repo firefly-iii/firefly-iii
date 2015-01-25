@@ -42,6 +42,7 @@ class GoogleChartController extends BaseController
     {
         $this->_chart->addColumn('Day of month', 'date');
         $this->_chart->addColumn('Balance for ' . $account->name, 'number');
+        $this->_chart->addCertainty(1);
 
         $start = $this->_start;
         $end   = $this->_end;
@@ -61,7 +62,7 @@ class GoogleChartController extends BaseController
         $current = clone $start;
 
         while ($end >= $current) {
-            $this->_chart->addRow(clone $current, Steam::balance($account, $current));
+            $this->_chart->addRow(clone $current, Steam::balance($account, $current), false);
             $current->addDay();
         }
 
@@ -86,21 +87,70 @@ class GoogleChartController extends BaseController
         $acct     = App::make('FireflyIII\Database\Account\Account');
         $accounts = count($pref->data) > 0 ? $acct->getByIds($pref->data) : $acct->getAccountsByType(['Default account', 'Asset account']);
 
+        $index = 1;
         /** @var Account $account */
         foreach ($accounts as $account) {
             $this->_chart->addColumn('Balance for ' . $account->name, 'number');
+            $this->_chart->addCertainty($index);
+            $index++;
         }
         $current = clone $this->_start;
         $current->subDay();
-
+        $today = Carbon::now();
         while ($this->_end >= $current) {
-            $row = [clone $current];
+            $row     = [clone $current];
+            $certain = $current < $today;
             foreach ($accounts as $account) {
+
                 $row[] = Steam::balance($account, $current);
+                $row[] = $certain;
             }
             $this->_chart->addRowArray($row);
             $current->addDay();
         }
+
+        $this->_chart->generate();
+
+        return Response::json($this->_chart->getData());
+
+    }
+
+    /**
+     * @param int $year
+     *
+     * @return $this|\Illuminate\Http\JsonResponse
+     */
+    public function allBudgetsAndSpending($year)
+    {
+        try {
+            new Carbon('01-01-' . $year);
+        } catch (Exception $e) {
+            return View::make('error')->with('message', 'Invalid year.');
+        }
+        /** @var \FireflyIII\Database\Budget\Budget $budgetRepository */
+        $budgetRepository = App::make('FireflyIII\Database\Budget\Budget');
+        $budgets          = $budgetRepository->get();
+        $budgets->sortBy('name');
+        $this->_chart->addColumn('Month', 'date');
+        foreach ($budgets as $budget) {
+            $this->_chart->addColumn($budget->name, 'number');
+        }
+        $start = Carbon::createFromDate(intval($year), 1, 1);
+        $end   = clone $start;
+        $end->endOfYear();
+
+
+        while ($start <= $end) {
+            $row = [clone $start];
+            foreach ($budgets as $budget) {
+                $spent = $budgetRepository->spentInMonth($budget, $start);
+                //$repetition = $budgetRepository->repetitionOnStartingOnDate($budget, $start);
+                $row[] = $spent;
+            }
+            $this->_chart->addRowArray($row);
+            $start->addMonth();
+        }
+
 
         $this->_chart->generate();
 

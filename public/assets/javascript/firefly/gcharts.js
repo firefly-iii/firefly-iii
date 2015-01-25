@@ -113,6 +113,43 @@ function googleColumnChart(URL, container, options) {
     }
 }
 
+function googleStackedColumnChart(URL, container, options) {
+    if ($('#' + container).length == 1) {
+        $.getJSON(URL).success(function (data) {
+            /*
+             Get the data from the JSON
+             */
+            gdata = new google.visualization.DataTable(data);
+
+            /*
+             Format as money
+             */
+            var money = new google.visualization.NumberFormat({
+                decimalSymbol: ',',
+                groupingSymbol: '.',
+                prefix: currencyCode + ' '
+            });
+            for (i = 1; i < gdata.getNumberOfColumns(); i++) {
+                money.format(gdata, i);
+            }
+
+            /*
+             Create a new google charts object.
+             */
+            var chart = new google.visualization.ColumnChart(document.getElementById(container));
+            /*
+             Draw it:
+             */
+            chart.draw(gdata, options || defaultStackedColumnChartOptions);
+
+        }).fail(function () {
+            $('#' + container).addClass('google-chart-error');
+        });
+    } else {
+        console.log('No container found called "' + container + '"');
+    }
+}
+
 function googleComboChart(URL, container, options) {
     if ($('#' + container).length == 1) {
         $.getJSON(URL).success(function (data) {
