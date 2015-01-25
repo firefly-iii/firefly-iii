@@ -88,18 +88,12 @@ class Form
         /** @var MessageBag $errors */
         $errors = \Session::get('errors');
 
-        /** @var MessageBag $warnings */
-        $warnings = \Session::get('warnings');
-
         /** @var MessageBag $successes */
         $successes = \Session::get('successes');
 
         switch (true) {
             case (!is_null($errors) && $errors->has($name)):
                 $classes = 'form-group has-error has-feedback';
-                break;
-            case (!is_null($warnings) && $warnings->has($name)):
-                $classes = 'form-group has-warning has-feedback';
                 break;
             case (!is_null($successes) && $successes->has($name)):
                 $classes = 'form-group has-success has-feedback';
