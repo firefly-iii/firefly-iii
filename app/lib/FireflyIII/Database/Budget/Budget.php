@@ -263,26 +263,6 @@ class Budget implements CUDInterface, CommonDatabaseCallsInterface, BudgetInterf
 
     /**
      * @param \Budget $budget
-     * @param int     $limit
-     *
-     * @return \Illuminate\Pagination\Paginator
-     */
-    public function getTransactionJournals(\Budget $budget, $limit = 50)
-    {
-        $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
-        $set    = $budget->transactionJournals()->withRelevantData()->take($limit)->offset($offset)->orderBy('date', 'DESC')->get(['transaction_journals.*']);
-        $count  = $budget->transactionJournals()->count();
-        $items  = [];
-        foreach ($set as $entry) {
-            $items[] = $entry;
-        }
-
-        return \Paginator::make($items, $count, $limit);
-
-    }
-
-    /**
-     * @param \Budget $budget
      * @param Carbon  $date
      *
      * @return float

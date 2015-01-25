@@ -397,11 +397,15 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
      *
      * @param int $objectId
      *
+     * @codeCoverageIgnore
+     * @throws NotImplementedException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @return \Eloquent
      */
     public function find($objectId)
     {
-        return $this->getUser()->transactionjournals()->find($objectId);
+        throw new NotImplementedException;
     }
 
     /**
@@ -424,11 +428,11 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
      * Returns all objects.
      *
      * @return Collection
+     * @codeCoverageIgnore
      */
     public function get()
     {
-        return $this->getUser()->transactionjournals()->with(['TransactionType', 'transactions', 'transactions.account', 'transactions.account.accountType'])
-                    ->get();
+        throw new NotImplementedException;
     }
 
     /**
@@ -460,17 +464,6 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
     public function first()
     {
         return $this->getUser()->transactionjournals()->orderBy('date', 'ASC')->first();
-    }
-
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getInDateRange(Carbon $start, Carbon $end)
-    {
-        return $this->getuser()->transactionjournals()->withRelevantData()->before($end)->after($start)->get();
     }
 
     /**
