@@ -372,22 +372,25 @@ class ReportQuery implements ReportQueryInterface
                                   }
                                   )
                                   ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                  ->where(
-                                      function ($query) {
-                                          $query->where(
-                                              function ($q) {
-                                                  $q->where('transaction_types.type', 'Withdrawal');
-                                                  $q->where('acm_from.data', '!=', '"sharedExpense"');
-                                              }
-                                          );
-                                          $query->orWhere(
-                                              function ($q) {
-                                                  $q->where('transaction_types.type', 'Transfer');
-                                                  $q->where('acm_from.data', '=', '"sharedExpense"');
-                                              }
-                                          );
-                                      }
-                                  )
+
+            ->where(
+                function ($query) {
+                    $query->where(
+                        function ($q) {
+                            $q->where('transaction_types.type', 'Withdrawal');
+                            $q->where('acm_from.data', '!=', '"sharedExpense"');
+                        }
+                    );
+                    $query->orWhere(
+                        function ($q) {
+                            $q->where('transaction_types.type', 'Transfer');
+                            $q->where('acm_to.data', '=', '"sharedExpense"');
+                        }
+                    );
+                }
+            )
+
+
                                   ->before($end)
                                   ->after($start)
                                   ->where('transaction_journals.user_id', \Auth::user()->id)
