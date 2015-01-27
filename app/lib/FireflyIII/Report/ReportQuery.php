@@ -339,6 +339,8 @@ class ReportQuery implements ReportQueryInterface
      * Gets a list of expense accounts and the expenses therein, grouped by that expense account.
      * This result excludes transfers to shared accounts which are expenses, technically.
      *
+     * So now it will include them!
+     *
      * @param Carbon $start
      * @param Carbon $end
      *
@@ -370,8 +372,22 @@ class ReportQuery implements ReportQueryInterface
                                   }
                                   )
                                   ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                  ->where('transaction_types.type', 'Withdrawal')
-                                  ->where('acm_from.data', '!=', '"sharedExpense"')
+                                  ->where(
+                                      function ($query) {
+                                          $query->where(
+                                              function ($q) {
+                                                  $q->where('transaction_types.type', 'Withdrawal');
+                                                  $q->where('acm_from.data', '!=', '"sharedExpense"');
+                                              }
+                                          );
+                                          $query->orWhere(
+                                              function ($q) {
+                                                  $q->where('transaction_types.type', 'Transfer');
+                                                  $q->where('acm_from.data', '=', '"sharedExpense"');
+                                              }
+                                          );
+                                      }
+                                  )
                                   ->before($end)
                                   ->after($start)
                                   ->where('transaction_journals.user_id', \Auth::user()->id)
