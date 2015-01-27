@@ -207,18 +207,18 @@ class Report implements ReportInterface
         $set      = $this->_queries->journalsByExpenseAccount($start, $end);
         $expenses = $this->_helper->makeArray($set);
 
-        $alt       = $this->_queries->sharedExpenses($start, $end);
-        $transfers = $this->_helper->makeArray($alt);
-
-        $expenses[-1] = [
-            'amount' => 0,
-            'name'   => 'Transfers to shared',
-            'spent'  => 0
-        ];
-
-        foreach ($transfers as $transfer) {
-            $expenses[-1]['amount'] += $transfer['amount'];
-        }
+//        $alt       = $this->_queries->sharedExpenses($start, $end);
+//        $transfers = $this->_helper->makeArray($alt);
+//
+//        $expenses[-1] = [
+//            'amount' => 0,
+//            'name'   => 'Transfers to shared',
+//            'spent'  => 0
+//        ];
+//
+//        foreach ($transfers as $transfer) {
+//            $expenses[-1]['amount'] += $transfer['amount'];
+//        }
 
         $expenses = $this->_helper->sortArray($expenses);
         $limited  = $this->_helper->limitArray($expenses, $limit);
