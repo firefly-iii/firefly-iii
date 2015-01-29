@@ -10,7 +10,7 @@ use Illuminate\Database\Schema\Blueprint;
  *
  * Class ChangesForV325
  */
-class ChangesFor325 extends Migration
+class ChangesForV325 extends Migration
 {
 
     /**
@@ -52,7 +52,7 @@ class ChangesFor325 extends Migration
         // allow journal descriptions to be encrypted.
         Schema::table(
             'transaction_journals', function (Blueprint $table) {
-            $table->boolean('encrypted');
+            $table->boolean('encrypted')->default(0);
 
         }
         );
