@@ -82,6 +82,15 @@ class TransactionJournal extends Eloquent
         return ['created_at', 'updated_at', 'date'];
     }
 
+    public function getDescriptionAttribute($value)
+    {
+        if ($this->encrypted) {
+            return Crypt::decrypt($value);
+        }
+
+        return $value;
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -196,6 +205,12 @@ class TransactionJournal extends Eloquent
                 $q->orderBy('amount', 'ASC');
             }, 'transactiontype', 'budgets', 'categories', 'transactions.account.accounttype', 'bill', 'budgets', 'categories']
         );
+    }
+
+    public function setDescriptionAttribute($value)
+    {
+        $this->attributes['description'] = Crypt::encrypt($value);
+        $this->attributes['encrypted']   = true;
     }
 
     /**

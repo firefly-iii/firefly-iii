@@ -49,6 +49,15 @@ class ChangesFor325 extends Migration
             // don't care either.
         }
 
+        // allow journal descriptions to be encrypted.
+        Schema::table(
+            'transaction_journals', function (Blueprint $table) {
+            $table->boolean('encrypted');
+
+        }
+        );
+        DB::update('ALTER TABLE `transaction_journals` MODIFY `description` VARCHAR(1024)');
+
     }
 
 }
