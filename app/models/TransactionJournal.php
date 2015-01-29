@@ -20,7 +20,7 @@ class TransactionJournal extends Eloquent
     protected $rules
         = ['transaction_type_id'     => 'required|exists:transaction_types,id',
            'transaction_currency_id' => 'required|exists:transaction_currencies,id',
-           'description'             => 'required|between:1,255',
+           'description'             => 'required|between:1,1024',
            'date'                    => 'required|date',
            'completed'               => 'required|between:0,1'];
 
