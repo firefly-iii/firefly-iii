@@ -56,7 +56,15 @@ class ChangesForV325 extends Migration
 
         }
         );
-        DB::update('ALTER TABLE `transaction_journals` MODIFY `description` VARCHAR(1024)');
+        try {
+            DB::update('ALTER TABLE `transaction_journals` MODIFY `description` VARCHAR(1024)');
+        } catch (QueryException $e) {
+            // don't care.
+        } catch (PDOException $e) {
+            // don't care.
+        } catch (\Exception $e) {
+            // don't care either.
+        }
 
     }
 
