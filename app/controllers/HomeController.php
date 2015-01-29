@@ -90,9 +90,16 @@ class HomeController extends BaseController
     public function sessionNext()
     {
         Navigation::next();
-        if (isset($_SERVER['HTTP_REFERER']) && (!strpos($_SERVER['HTTP_REFERER'], Config::get('app.url')) === false)) {
+        $strPosition = strpos($_SERVER['HTTP_REFERER'], Config::get('app.url'));
+        Log::debug('HTTP_REFERER is: ' . $_SERVER['HTTP_REFERER']);
+        Log::debug('App.url = ' . Config::get('app.url'));
+        Log::debug('strpos() = ' . Steam::boolString($strPosition));
+
+        if (isset($_SERVER['HTTP_REFERER']) && $strPosition === 0) {
+            Log::debug('Redirect back');
             return Redirect::back();
         } else {
+            Log::debug('Redirect intended');
             return Redirect::intended();
         }
 
@@ -104,10 +111,17 @@ class HomeController extends BaseController
     public function sessionPrev()
     {
         Navigation::prev();
+        $strPosition = strpos($_SERVER['HTTP_REFERER'], Config::get('app.url'));
+        Log::debug('HTTP_REFERER is: ' . $_SERVER['HTTP_REFERER']);
+        Log::debug('App.url = ' . Config::get('app.url'));
+        Log::debug('strpos() = ' . Steam::boolString($strPosition));
 
-        if (isset($_SERVER['HTTP_REFERER']) && (!strpos($_SERVER['HTTP_REFERER'], Config::get('app.url')) === false)) {
+
+        if (isset($_SERVER['HTTP_REFERER']) && $strPosition === 0) {
+            Log::debug('Redirect back');
             return Redirect::back();
         } else {
+            Log::debug('Redirect intended');
             return Redirect::intended();
         }
     }
