@@ -91,6 +91,7 @@
 {{HTML::script('assets/javascript/metisMenu/jquery.metisMenu.min.js')}}
 {{HTML::script('assets/javascript/sb-admin/sb-admin-2.js')}}
 {{HTML::script('assets/javascript/firefly/help.js')}}
+{{HTML::script('assets/javascript/firefly/firefly.js')}}
 @yield('scripts')
 </body>
 </html>

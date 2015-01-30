@@ -94,14 +94,12 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
      * Returns an object with id $id.
      *
      * @param int $objectId
-     * @throws NotImplementedException
-     * @codeCoverageIgnore
      *
      * @return \Eloquent
      */
     public function find($objectId)
     {
-        throw new NotImplementedException;
+        return \TransactionCurrency::find($objectId);
     }
 
     /**
