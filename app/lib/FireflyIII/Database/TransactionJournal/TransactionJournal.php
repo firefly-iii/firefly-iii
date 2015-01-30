@@ -68,7 +68,8 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
                 'transaction_type_id'     => $data['transaction_type_id'],
                 'transaction_currency_id' => $data['transaction_currency_id'],
                 'user_id'                 => $this->getUser()->id,
-                'description'             => $data['description'], 'date' => $data['date'], 'completed' => 0]
+                'description'             => $data['description'],
+                'date'                    => $data['date'], 'completed' => 0]
         );
         $journal->save();
 
@@ -160,6 +161,9 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
 
         if (!isset($model['what'])) {
             $errors->add('description', 'Internal error: need to know type of transaction!');
+        }
+        if (strlen($model['description']) == 0) {
+            $errors->add('description', 'The description field is required.');
         }
         $errors = $errors->merge($this->_validateAmount($model));
         $errors = $errors->merge($this->_validateBudget($model));
@@ -289,19 +293,6 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
         $typeRepository = \App::make('FireflyIII\Database\TransactionType\TransactionType');
 
         return $typeRepository->findByWhat($type);
-    }
-
-    /**
-     * @param $currency
-     *
-     * @return null|\TransactionCurrency
-     */
-    public function getJournalCurrency($currency)
-    {
-        /** @var \FireflyIII\Database\TransactionCurrency\TransactionCurrency $currencyRepository */
-        $currencyRepository = \App::make('FireflyIII\Database\TransactionCurrency\TransactionCurrency');
-
-        return $currencyRepository->findByCode($currency);
     }
 
     /**
@@ -561,6 +552,19 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
         )->get(['transaction_journals.*']);
 
         return $query;
+    }
+
+    /**
+     * @param $currency
+     *
+     * @return null|\TransactionCurrency
+     */
+    public function getJournalCurrency($currency)
+    {
+        /** @var \FireflyIII\Database\TransactionCurrency\TransactionCurrency $currencyRepository */
+        $currencyRepository = \App::make('FireflyIII\Database\TransactionCurrency\TransactionCurrency');
+
+        return $currencyRepository->findByCode($currency);
     }
 
     /**
