@@ -31,7 +31,7 @@
     "require-dev": {
         "barryvdh/laravel-debugbar": "@stable",
         "barryvdh/laravel-ide-helper": "@stable",
-        "satooshi/php-coveralls": "dev-master",
+        "satooshi/php-coveralls": "*",
         "mockery/mockery": "@stable",
         "league/factory-muffin": "~2.1",
         "codeception/codeception": "*",
@@ -41,7 +41,8 @@
         "codeception/phpbuiltinserver": "*",
         "codeception/specify": "*",
         "codeception/verify": "*",
-        "fzaninotto/faker": "1.*"
+        "fzaninotto/faker": "1.*",
+        "codeclimate/php-test-reporter": "dev-master"
 
 
     },
