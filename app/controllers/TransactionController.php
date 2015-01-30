@@ -242,8 +242,9 @@ class TransactionController extends BaseController
     public function store($what)
     {
         $data                            = Input::except('_token');
+
         $transactionType                 = $this->_repository->getJournalType($what);
-        $transactionCurrency             = $this->_repository->getJournalCurrency('EUR');
+        $transactionCurrency             = $this->_repository->getJournalCurrencyById(intval($data['amount_currency_id']));
         $data['transaction_type_id']     = $transactionType->id;
         $data['transaction_currency_id'] = $transactionCurrency->id;
         $data['completed']               = 0;
@@ -289,10 +290,9 @@ class TransactionController extends BaseController
     public function update(TransactionJournal $journal)
     {
         $data                            = Input::except('_token');
-        $data['currency']                = 'EUR';
         $data['what']                    = strtolower($journal->transactionType->type);
         $data['transaction_type_id']     = $journal->transaction_type_id;
-        $data['transaction_currency_id'] = $journal->transaction_currency_id;
+        $data['transaction_currency_id'] = intval($data['amount_currency_id']);
         $data['completed']               = 1;
         $messages                        = $this->_repository->validate($data);
 

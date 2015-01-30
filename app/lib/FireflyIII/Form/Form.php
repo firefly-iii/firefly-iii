@@ -30,8 +30,8 @@ class Form
         $value           = self::fillFieldValue($name, $value);
         $options['step'] = 'any';
         $options['min']  = '0.01';
-        $defaultCurrency = \Amount::getDefaultCurrency();
-        $currencies      = \TransactionCurrency::where('name', '!=', $defaultCurrency->name)->get();
+        $defaultCurrency = isset($options['currency']) ? $options['currency'] : \Amount::getDefaultCurrency();
+        $currencies      = \TransactionCurrency::orderBy('code','ASC')->get();
         $html            = \View::make('form.amount', compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
@@ -141,7 +141,7 @@ class Form
         $value           = self::fillFieldValue($name, $value);
         $options['step'] = 'any';
         $defaultCurrency = \Amount::getDefaultCurrency();
-        $currencies      = \TransactionCurrency::where('name', '!=', $defaultCurrency->name)->get();
+        $currencies      = \TransactionCurrency::orderBy('code','ASC')->get();
         $html            = \View::make('form.balance', compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
         return $html;
     }

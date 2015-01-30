@@ -102,7 +102,7 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
     public function update(Eloquent $model, array $data)
     {
         $journalType        = $this->getJournalType($data['what']);
-        $currency           = $this->getJournalCurrency($data['currency']);
+        $currency           = $this->getJournalCurrencyById($data['transaction_currency_id']);
         $model->description = $data['description'];
         $model->date        = $data['date'];
 
@@ -302,6 +302,19 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
         $currencyRepository = \App::make('FireflyIII\Database\TransactionCurrency\TransactionCurrency');
 
         return $currencyRepository->findByCode($currency);
+    }
+
+    /**
+     * @param int $currencyId
+     *
+     * @return null|\TransactionCurrency
+     */
+    public function getJournalCurrencyById($currencyId)
+    {
+        /** @var \FireflyIII\Database\TransactionCurrency\TransactionCurrency $currencyRepository */
+        $currencyRepository = \App::make('FireflyIII\Database\TransactionCurrency\TransactionCurrency');
+
+        return $currencyRepository->find($currencyId);
     }
 
     /**
