@@ -10,11 +10,11 @@ function currencySelect(e) {
     var code = target.data('code');
     var id = target.data('id');
     var fieldType = target.data('field');
-    var menu = $('.' + fieldType + 'currencyDropdown');
+    var menu = $('.' + fieldType + 'CurrencyDropdown');
 
     var symbolHolder = $('#' + fieldType + 'CurrentSymbol');
     symbolHolder.text(symbol);
-    $('input[name="amount_currency_id"]').val(id);
+    $('input[name="' + fieldType + '_currency_id"]').val(id);
 
     // close dropdown (hack hack)
     menu.click();

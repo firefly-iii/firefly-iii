@@ -105,10 +105,11 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
         /** @var \FireflyIII\Database\TransactionType\TransactionType $typeRepository */
         $typeRepository = \App::make('FireflyIII\Database\TransactionType\TransactionType');
         $type           = $typeRepository->findByWhat('opening');
-        $currency       = \Amount::getDefaultCurrency();
+        $currency       = $journals->getJournalCurrencyById(intval($data['balance_currency_id']));
+        //$currency       = \Amount::getDefaultCurrency();
 
         $opening = ['transaction_type_id' => $type->id, 'transaction_currency_id' => $currency->id, 'amount' => $balance, 'from' => $fromAccount,
-                    'completed'           => 0, 'currency' => 'EUR', 'what' => 'opening', 'to' => $toAccount, 'date' => $date,
+                    'completed'           => 0, 'what' => 'opening', 'to' => $toAccount, 'date' => $date,
                     'description'         => 'Opening balance for new account ' . $account->name,];
 
         $validation = $journals->validate($opening);
