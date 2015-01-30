@@ -26,7 +26,7 @@
             <div class="panel-body">
                 {{Form::ffCheckbox('active','1')}}
                 @if($account->accounttype->type == 'Default account' || $account->accounttype->type == 'Asset account')
-                {{Form::ffBalance('openingBalance')}}
+                {{Form::ffBalance('openingBalance',null, ['currency' => $openingBalance->transactionCurrency])}}
                 {{Form::ffDate('openingBalanceDate')}}
                 {{Form::ffSelect('account_role',Config::get('firefly.accountRoles'))}}
                 @endif

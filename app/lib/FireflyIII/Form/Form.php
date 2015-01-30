@@ -140,7 +140,7 @@ class Form
         $classes         = self::getHolderClasses($name);
         $value           = self::fillFieldValue($name, $value);
         $options['step'] = 'any';
-        $defaultCurrency = \Amount::getDefaultCurrency();
+        $defaultCurrency = isset($options['currency']) ? $options['currency'] : \Amount::getDefaultCurrency();
         $currencies      = \TransactionCurrency::orderBy('code','ASC')->get();
         $html            = \View::make('form.balance', compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
         return $html;
