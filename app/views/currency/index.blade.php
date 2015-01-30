@@ -43,23 +43,9 @@
                         <li>Set the default currency display;</li>
                         <li>Set the default currency for new transactions;</li>
                         <li>Add, modify and remove supported currencies.</li>
+                        <li>Display the actual currency of a transaction</li>
+                        <li>Update a transaction's currency.</li>
                     </ul>
-                </div>
-            </div>
-            <div class="panel panel-red">
-                <div class="panel-heading">
-                    Not supported yet
-                </div>
-                <div class="panel-body">
-                    <ul>
-                        <li>Display the actual currency of a transaction<br />
-                            <small>See the help-page.</small></li>
-                        <li>
-                            Update a transaction's currency.
-                        </li>
-
-                    </ul>
-
                 </div>
             </div>
         </div>
