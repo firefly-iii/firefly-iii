@@ -20,9 +20,8 @@ $(function () {
 function updateSingleRange(e) {
     // get some values:
     var input = $(e.target);
-    var id = input.data('id');
+    var id    = input.data('id');
     var value = parseInt(input.val());
-
     var spent = parseFloat($('#spent-' + id).data('value'));
 
     // update small display:
@@ -33,12 +32,6 @@ function updateSingleRange(e) {
 
         // update the text:
         $('#budget-description-' + id).text('Budgeted: ');
-
-        //if(value < spent) {
-        //    $('#budgeted-' + id).html('Budgeted: <span class="text-danger">\u20AC ' + value.toFixed(2) + '</span>');
-        //} else {
-        //    $('#budgeted-' + id).html('Budgeted: <span class="text-success">\u20AC ' + value.toFixed(2) + '</span>');
-        //}
     } else {
         // hide the input:
         $('#budget-info-' + id + ' span').hide();
@@ -46,9 +39,8 @@ function updateSingleRange(e) {
 
         // update the text:
         $('#budget-description-' + id).html('<em>No budget</em>');
-
-        //$('#budgeted-' + id).html('<em>No budget</em>');
     }
+
     // update the range display text:
     $('#budget-range-display-' + id).text('\u20AC ' + value.toFixed(2));
 
@@ -66,7 +58,6 @@ function updateSingleRange(e) {
     }
 
     // update or hide the bar, whichever is necessary.
-
     updateTotal();
     return value;
 }
@@ -82,8 +73,9 @@ function updateTotal() {
      * Update total sum:
      */
     var totalAmount = parseInt($('#totalAmount').data('value'));
+    var pct;
     if (sum <= totalAmount) {
-        var pct = sum / totalAmount * 100;
+        pct = sum / totalAmount * 100;
         $('#progress-bar-default').css('width', pct + '%');
         $('#progress-bar-warning').css('width', '0');
         $('#progress-bar-danger').css('width', '0');
@@ -91,7 +83,7 @@ function updateTotal() {
     } else {
         // we gaan er X overheen,
 
-        var pct = totalAmount / sum * 100;
+        pct = totalAmount / sum * 100;
         var danger = 100 - pct;
         var err = 100 - danger;
         $('#progress-bar-default').css('width', 0);
