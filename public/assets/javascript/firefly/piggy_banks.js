@@ -2,7 +2,7 @@ $(function () {
     $('.addMoney').on('click', addMoney);
     $('.removeMoney').on('click', removeMoney);
 
-    if (typeof(googleLineChart) == 'function' && typeof(piggyBankID) != 'undefined') {
+    if (typeof(googleLineChart) === 'function' && typeof(piggyBankID) !== 'undefined') {
         googleLineChart('chart/piggy_history/' + piggyBankID, 'piggy-bank-history');
     }
 });

@@ -41,31 +41,24 @@ class TestDataSeeder extends Seeder
     protected $_yearAgoStartOfMonth;
 
     /**
-     *
+     * A whole bunch of times and dates.
      */
     public function __construct()
     {
-        $this->_startOfMonth = Carbon::now()->startOfMonth();
-        $this->som           = $this->_startOfMonth->format('Y-m-d');
-
-        $this->_endOfMonth = Carbon::now()->endOfMonth();
-        $this->eom         = $this->_endOfMonth->format('Y-m-d');
-
-        $this->_nextStartOfMonth = Carbon::now()->addMonth()->startOfMonth();
-        $this->nsom              = $this->_nextStartOfMonth->format('Y-m-d');
-
-        $this->_nextEndOfMonth = Carbon::now()->addMonth()->endOfMonth();
-        $this->neom            = $this->_nextEndOfMonth->format('Y-m-d');
-
+        $this->_startOfMonth        = Carbon::now()->startOfMonth();
+        $this->som                  = $this->_startOfMonth->format('Y-m-d');
+        $this->_endOfMonth          = Carbon::now()->endOfMonth();
+        $this->eom                  = $this->_endOfMonth->format('Y-m-d');
+        $this->_nextStartOfMonth    = Carbon::now()->addMonth()->startOfMonth();
+        $this->nsom                 = $this->_nextStartOfMonth->format('Y-m-d');
+        $this->_nextEndOfMonth      = Carbon::now()->addMonth()->endOfMonth();
+        $this->neom                 = $this->_nextEndOfMonth->format('Y-m-d');
         $this->_yearAgoStartOfMonth = Carbon::now()->subYear()->startOfMonth();
         $this->yasom                = $this->_yearAgoStartOfMonth->format('Y-m-d');
-
-        $this->_yearAgoEndOfMonth = Carbon::now()->subYear()->startOfMonth();
-        $this->yaeom              = $this->_yearAgoEndOfMonth->format('Y-m-d');
-
-
-        $this->_today = Carbon::now();
-        $this->today  = $this->_today->format('Y-m-d');
+        $this->_yearAgoEndOfMonth   = Carbon::now()->subYear()->startOfMonth();
+        $this->yaeom                = $this->_yearAgoEndOfMonth->format('Y-m-d');
+        $this->_today               = Carbon::now();
+        $this->today                = $this->_today->format('Y-m-d');
     }
 
     /**
@@ -76,67 +69,42 @@ class TestDataSeeder extends Seeder
         User::create(['email' => 'reset@example.com', 'password' => 'functional', 'reset' => 'okokokokokokokokokokokokokokokok', 'remember_token' => null]);
         User::create(['email' => 'functional@example.com', 'password' => 'functional', 'reset' => null, 'remember_token' => null]);
 
-
         $user = User::create(['email' => 'thegrumpydictator@gmail.com', 'password' => 'james', 'reset' => null, 'remember_token' => null]);
         Log::debug('Created users.');
         // create initial accounts and various other stuff:
         $this->createAssetAccounts($user);
-        Log::debug('Created asset accounts.');
         $this->createBudgets($user);
-        Log::debug('Created budgets.');
         $this->createCategories($user);
-        Log::debug('Created categories.');
         $this->createPiggyBanks($user);
-        Log::debug('Created piggy banks.');
         $this->createReminders($user);
-        Log::debug('Created reminders.');
         $this->createRecurringTransactions($user);
-        Log::debug('Created recurring transactions.');
         $this->createBills($user);
-        Log::debug('Created bills.');
         $this->createExpenseAccounts($user);
-        Log::debug('Created expense accounts.');
         $this->createRevenueAccounts($user);
-        Log::debug('Created revenue accounts.');
 
         // get some objects from the database:
-        $checking = Account::whereName('Checking account')->orderBy('id', 'DESC')->first();
-        Log::debug('Found checking: ' . json_encode($checking));
-        $savings = Account::whereName('Savings account')->orderBy('id', 'DESC')->first();
-        Log::debug('Found savings: ' . json_encode($savings));
-        $landLord = Account::whereName('Land lord')->orderBy('id', 'DESC')->first();
-        Log::debug('Found landlord: ' . json_encode($landLord));
-        $utilities = Account::whereName('Utilities company')->orderBy('id', 'DESC')->first();
-        Log::debug('Found utilities: ' . json_encode($utilities));
+        $checking   = Account::whereName('Checking account')->orderBy('id', 'DESC')->first();
+        $savings    = Account::whereName('Savings account')->orderBy('id', 'DESC')->first();
+        $landLord   = Account::whereName('Land lord')->orderBy('id', 'DESC')->first();
+        $utilities  = Account::whereName('Utilities company')->orderBy('id', 'DESC')->first();
         $television = Account::whereName('TV company')->orderBy('id', 'DESC')->first();
-        Log::debug('Found tv company: ' . json_encode($television));
-        $phone = Account::whereName('Phone agency')->orderBy('id', 'DESC')->first();
-        Log::debug('Found phone company: ' . json_encode($phone));
-        $employer = Account::whereName('Employer')->orderBy('id', 'DESC')->first();
-        Log::debug('Found employer: ' . json_encode($employer));
+        $phone      = Account::whereName('Phone agency')->orderBy('id', 'DESC')->first();
+        $employer   = Account::whereName('Employer')->orderBy('id', 'DESC')->first();
 
 
-        $bills = Budget::whereName('Bills')->orderBy('id', 'DESC')->first();
-        Log::debug('Found bills budget: ' . json_encode($bills));
+        $bills     = Budget::whereName('Bills')->orderBy('id', 'DESC')->first();
         $groceries = Budget::whereName('Groceries')->orderBy('id', 'DESC')->first();
-        Log::debug('Found groceries budget: ' . json_encode($groceries));
 
         $house = Category::whereName('House')->orderBy('id', 'DESC')->first();
-        Log::debug('Found house category: ' . json_encode($checking));
 
 
         $withdrawal = TransactionType::whereType('Withdrawal')->first();
-        Log::debug('Found withdrawal: ' . json_encode($withdrawal));
-        $deposit = TransactionType::whereType('Deposit')->first();
-        Log::debug('Found deposit: ' . json_encode($deposit));
-        $transfer = TransactionType::whereType('Transfer')->first();
-        Log::debug('Found transfer: ' . json_encode($transfer));
+        $deposit    = TransactionType::whereType('Deposit')->first();
+        $transfer   = TransactionType::whereType('Transfer')->first();
 
         $euro = TransactionCurrency::whereCode('EUR')->first();
-        Log::debug('Found euro: ' . json_encode($euro));
 
         $rentBill = Bill::where('name', 'Rent')->first();
-        Log::debug('Found bill "rent": ' . json_encode($rentBill));
 
 
         $current = clone $this->_yearAgoStartOfMonth;
@@ -146,31 +114,22 @@ class TestDataSeeder extends Seeder
             Log::debug('Now at: ' . $cur);
 
             // create expenses for rent, utilities, TV, phone on the 1st of the month.
+
             $this->createTransaction($checking, $landLord, 800, $withdrawal, 'Rent for ' . $formatted, $cur, $euro, $bills, $house, $rentBill);
-            Log::debug('Created rent.');
             $this->createTransaction($checking, $utilities, 150, $withdrawal, 'Utilities for ' . $formatted, $cur, $euro, $bills, $house);
-            Log::debug('Created utilities.');
             $this->createTransaction($checking, $television, 50, $withdrawal, 'TV for ' . $formatted, $cur, $euro, $bills, $house);
-            Log::debug('Created TV.');
             $this->createTransaction($checking, $phone, 50, $withdrawal, 'Phone bill for ' . $formatted, $cur, $euro, $bills, $house);
-            Log::debug('Created phone bill.');
 
             // two transactions. One without a budget, one without a category.
             $this->createTransaction($checking, $phone, 10, $withdrawal, 'Extra charges on phone bill for ' . $formatted, $cur, $euro, null, $house);
-            Log::debug('Created extra charges no budget.');
             $this->createTransaction($checking, $television, 5, $withdrawal, 'Extra charges on TV bill for ' . $formatted, $cur, $euro, $bills, null);
-            Log::debug('Created extra charges no category.');
 
             // income from job:
             $this->createTransaction($employer, $checking, rand(3500, 4000), $deposit, 'Salary for ' . $formatted, $cur, $euro);
-            Log::debug('Created income.');
             $this->createTransaction($checking, $savings, 2000, $transfer, 'Salary to savings account in ' . $formatted, $cur, $euro);
-            Log::debug('Created savings.');
 
             $this->createGroceries($current);
-            Log::debug('Created groceries range.');
             $this->createBigExpense(clone $current);
-            Log::debug('Created big expense.');
 
             echo 'Created test-content for ' . $current->format('F Y') . "\n";
             $current->addMonth();
@@ -242,7 +201,7 @@ class TestDataSeeder extends Seeder
         $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
 
         $billID = is_null($bill) ? null : $bill->id;
-        Log::debug('String length of encrypted description ("'.$description.'") is: ' . strlen(Crypt::encrypt($description)));
+        Log::debug('String length of encrypted description ("' . $description . '") is: ' . strlen(Crypt::encrypt($description)));
 
         /** @var TransactionJournal $journal */
         $journal = TransactionJournal::create(

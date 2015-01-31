@@ -7,10 +7,10 @@ $(function () {
     $('.updateIncome').on('click', updateIncome);
 
 
-    if (typeof budgetID != 'undefined' && typeof repetitionID == 'undefined') {
+    if (typeof budgetID !== 'undefined' && typeof repetitionID === 'undefined') {
         googleColumnChart('chart/budget/' + budgetID + '/spending', 'budgetOverview');
     }
-    if (typeof budgetID != 'undefined' && typeof repetitionID != 'undefined') {
+    if (typeof budgetID !== 'undefined' && typeof repetitionID !== 'undefined') {
         googleLineChart('chart/budget/' + budgetID + '/' + repetitionID, 'budgetOverview');
     }
 
@@ -24,7 +24,6 @@ function updateSingleRange(e) {
     var value = parseInt(input.val());
 
     var spent = parseFloat($('#spent-' + id).data('value'));
-    console.log('Spent vs budgeted: ' + spent + ' vs ' + value)
 
     // update small display:
     if (value > 0) {
@@ -41,7 +40,6 @@ function updateSingleRange(e) {
         //    $('#budgeted-' + id).html('Budgeted: <span class="text-success">\u20AC ' + value.toFixed(2) + '</span>');
         //}
     } else {
-        console.log('Set to zero!');
         // hide the input:
         $('#budget-info-' + id + ' span').hide();
         $('#budget-info-' + id + ' input').hide();
@@ -55,10 +53,7 @@ function updateSingleRange(e) {
     $('#budget-range-display-' + id).text('\u20AC ' + value.toFixed(2));
 
     // send a post to Firefly to update the amount:
-    console.log('Value is: ' + value);
-    console.log('POST! with ID ' + id + ' AND value ' + value);
     $.post('budgets/amount/' + id, {amount: value}).success(function (data) {
-        console.log('Budget ' + data.name + ' updated!');
         // update the link if relevant:
         $('#budget-link-' + id).attr('href', 'budgets/show/' + id + '/' + data.repetition);
     });
@@ -97,7 +92,6 @@ function updateTotal() {
         // we gaan er X overheen,
 
         var pct = totalAmount / sum * 100;
-        console.log(pct)
         var danger = 100 - pct;
         var err = 100 - danger;
         $('#progress-bar-default').css('width', 0);
@@ -134,14 +128,9 @@ function updateRanges() {
         // update progress bar (if relevant)
         var barHolder = $('#budget-progress-' + id);
         var spent = parseFloat(barHolder.data('spent'));
-        if (value > 0 && spent > 0) {
-            console.log('Add bar')
-            //barHolder.append($('<div class="progress-bar" id="progress-bar-something-' + id + '" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: 10%;"></div>'));
-        }
 
         // send a post to Firefly to update the amount:
         $.post('budgets/amount/' + id, {amount: value}).success(function (data) {
-            console.log('Budget ' + data.name + ' updated!');
         });
 
     });
