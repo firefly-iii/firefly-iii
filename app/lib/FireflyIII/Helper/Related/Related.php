@@ -77,7 +77,7 @@ class Related implements RelatedInterface
                                     ->get();
         $encrypted           = $encryptedCollection->filter(
             function (\TransactionJournal $journal) use ($query) {
-                $strPos = strpos($journal->description, $query);
+                $strPos = strpos(strtolower($journal->description), strtolower($query));
                 if ($strPos !== false) {
                     return $journal;
                 }
