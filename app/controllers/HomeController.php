@@ -77,11 +77,7 @@ class HomeController extends BaseController
             $preferences->set('viewRange', $range);
             Session::forget('range');
         }
-        if (isset($_SERVER['HTTP_REFERER']) && (!strpos($_SERVER['HTTP_REFERER'], Config::get('app.url')) === false)) {
-            return Redirect::back();
-        } else {
-            return Redirect::intended();
-        }
+        Redirect::to(URL::previous());
     }
 
     /**
@@ -90,14 +86,7 @@ class HomeController extends BaseController
     public function sessionNext()
     {
         Navigation::next();
-
-        if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], Config::get('app.url')) === 0) {
-            Log::debug('Redirect back');
-            return Redirect::back();
-        } else {
-            Log::debug('Redirect intended');
-            return Redirect::intended();
-        }
+        Redirect::to(URL::previous());
 
     }
 
@@ -107,13 +96,6 @@ class HomeController extends BaseController
     public function sessionPrev()
     {
         Navigation::prev();
-
-        if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], Config::get('app.url')) === 0) {
-            Log::debug('Redirect back');
-            return Redirect::back();
-        } else {
-            Log::debug('Redirect intended');
-            return Redirect::intended();
-        }
+        Redirect::to(URL::previous());
     }
 }

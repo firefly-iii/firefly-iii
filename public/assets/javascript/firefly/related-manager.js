@@ -22,7 +22,6 @@ function relateTransaction(e) {
     var ID = target.data('id');
 
 
-    console.log($('#searchRelated').length);
     $('#relationModal').empty().load('related/related/' + ID, function () {
 
         $('#relationModal').modal('show');
