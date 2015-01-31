@@ -74,9 +74,19 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
      */
     public function openingBalanceTransaction(\Account $account)
     {
-        return \TransactionJournal::withRelevantData()->accountIs($account)->leftJoin(
-            'transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id'
-        )->where('transaction_types.type', 'Opening balance')->first(['transaction_journals.*']);
+
+        $first   = \TransactionJournal::withRelevantData()->accountIs($account)
+                                      ->orderBy('transaction_journals.date', 'ASC')
+                                      ->orderBy('created_at', 'ASC')
+                                      ->first(['transaction_journals.*']);
+        $initial = strpos(strtolower($first->description), 'initial');
+        $opening = strpos(strtolower($first->description), 'opening');
+        if ($initial === false && $opening === false) {
+            return null;
+        }
+
+        return $first;
+
     }
 
     /**
@@ -87,26 +97,33 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
      */
     public function storeInitialBalance(\Account $account, array $data)
     {
-        $opposingData    = ['name' => $account->name . ' Initial Balance', 'active' => 0, 'what' => 'initial'];
-        $opposingAccount = $this->store($opposingData);
-        $balance         = floatval($data['openingBalance']);
-        $date            = new Carbon($data['openingBalanceDate']);
+
+        // make opposing a revenue / expense account depending on bla bla.
+        $balance = floatval($data['openingBalance']);
+        $date    = new Carbon($data['openingBalanceDate']);
         /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $journals */
-        $journals    = \App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
-        $fromAccount = $opposingAccount;
-        $toAccount   = $account;
-        if ($balance < 0) {
-            $fromAccount = $account;
-            $toAccount   = $opposingAccount;
-        }
-        // data for transaction journal:
-        $balance = $balance < 0 ? $balance * -1 : $balance;
+        $journals = \App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
 
         /** @var \FireflyIII\Database\TransactionType\TransactionType $typeRepository */
         $typeRepository = \App::make('FireflyIII\Database\TransactionType\TransactionType');
-        $type           = $typeRepository->findByWhat('opening');
-        $currency       = $journals->getJournalCurrencyById(intval($data['balance_currency_id']));
-        //$currency       = \Amount::getDefaultCurrency();
+
+
+        if ($balance < 0) {
+            // to is expense account.
+            $opposingData = ['name' => $account->name . ' Initial Balance Account', 'active' => 1, 'what' => 'expense'];
+            $toAccount    = $this->store($opposingData);
+            $fromAccount  = $account;
+            $type         = $typeRepository->findByWhat('withdrawal');
+        } else {
+            // from is revenue account.
+            $opposingData = ['name' => $account->name . ' Initial Balance Account', 'active' => 1, 'what' => 'revenue'];
+            $fromAccount  = $this->store($opposingData);
+            $toAccount    = $account;
+            $type         = $typeRepository->findByWhat('deposit');
+        }
+        // data for transaction journal:
+        $balance  = $balance < 0 ? $balance * -1 : $balance;
+        $currency = $journals->getJournalCurrencyById(intval($data['balance_currency_id']));
 
         $opening = ['transaction_type_id' => $type->id, 'transaction_currency_id' => $currency->id, 'amount' => $balance, 'from' => $fromAccount,
                     'completed'           => 0, 'what' => 'opening', 'to' => $toAccount, 'date' => $date,
@@ -239,7 +256,7 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
 
         $data['user_id']         = $this->getUser()->id;
         $data['account_type_id'] = $accountType->id;
-        $data['active']          = isset($data['active']) && $data['active'] === '1' ? 1 : 0;
+        $data['active']          = isset($data['active']) && intval($data['active']) === 1 ? 1 : 0;
 
         $data    = array_except($data, ['_token', 'what']);
         $account = new \Account($data);
