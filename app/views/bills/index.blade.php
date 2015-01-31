@@ -6,6 +6,19 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <i class="fa {{$mainTitleIcon}}"></i> {{{$title}}}
+
+            <!-- ACTIONS MENU -->
+            <div class="pull-right">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                        Actions
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu pull-right" role="menu">
+                        <li><a href="{{route('bills.create')}}"><i class="fa fa-plus fa-fw"></i> New bill</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
         <div class="panel-body">
             @include('list.bills')
