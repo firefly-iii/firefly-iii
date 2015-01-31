@@ -18,6 +18,6 @@ script:
   - php vendor/bin/codecept run --coverage --coverage-xml
 
 after_script:
-  - cp tests/output/coverage.xml build/logs/clover.xml
+  - cp -v tests/_output/coverage.xml build/logs/clover.xml
   - php vendor/bin/coveralls
   - vendor/bin/test-reporter
