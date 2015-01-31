@@ -11,7 +11,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     /**
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      *
-     * Creates the application.
+     * Creates the application..
      *
      * @return \Symfony\Component\HttpKernel\HttpKernelInterface
      */
