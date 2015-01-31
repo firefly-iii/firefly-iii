@@ -77,7 +77,7 @@ class HomeController extends BaseController
             $preferences->set('viewRange', $range);
             Session::forget('range');
         }
-        Redirect::to(URL::previous());
+        return Redirect::to(URL::previous());
     }
 
     /**
@@ -86,7 +86,7 @@ class HomeController extends BaseController
     public function sessionNext()
     {
         Navigation::next();
-        Redirect::to(URL::previous());
+        return Redirect::to(URL::previous());
 
     }
 
@@ -96,6 +96,6 @@ class HomeController extends BaseController
     public function sessionPrev()
     {
         Navigation::prev();
-        Redirect::to(URL::previous());
+        return Redirect::to(URL::previous());
     }
 }
