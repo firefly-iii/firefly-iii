@@ -6,7 +6,6 @@ use FireflyIII\Exception\FireflyException;
 /**
  *
  * @SuppressWarnings("CamelCase") // I'm fine with this.
- * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
  *
  * Class CategoryController
  */
@@ -106,6 +105,7 @@ class CategoryController extends BaseController
     }
 
     /**
+     *
      * @return $this
      * @throws FireflyException
      */
@@ -123,10 +123,11 @@ class CategoryController extends BaseController
         Session::flash('errors', $messages['errors']);
         if ($messages['errors']->count() > 0) {
             Session::flash('error', 'Could not store category: ' . $messages['errors']->first());
+            return Redirect::route('categories.create')->withInput();
         }
 
         // return to create screen:
-        if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
+        if ($data['post_submit_action'] == 'validate_only') {
             return Redirect::route('categories.create')->withInput();
         }
 
@@ -141,6 +142,7 @@ class CategoryController extends BaseController
     }
 
     /**
+     *
      * @param Category $category
      *
      * @return $this
@@ -160,10 +162,11 @@ class CategoryController extends BaseController
         Session::flash('errors', $messages['errors']);
         if ($messages['errors']->count() > 0) {
             Session::flash('error', 'Could not update category: ' . $messages['errors']->first());
+            return Redirect::route('categories.edit', $category->id)->withInput();
         }
 
         // return to update screen:
-        if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
+        if ($data['post_submit_action'] == 'validate_only') {
             return Redirect::route('categories.edit', $category->id)->withInput();
         }
 

@@ -3,5 +3,7 @@ if (typeof(google) != 'undefined') {
     function drawChart() {
         googleColumnChart('chart/reports/income-expenses/' + year, 'income-expenses-chart');
         googleColumnChart('chart/reports/income-expenses-sum/' + year, 'income-expenses-sum-chart')
+
+        googleStackedColumnChart('chart/budgets/spending/' + year, 'budgets');
     }
 }

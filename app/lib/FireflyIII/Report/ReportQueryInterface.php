@@ -118,6 +118,18 @@ interface ReportQueryInterface
     public function journalsByRevenueAccount(Carbon $start, Carbon $end);
 
     /**
+     * This method returns all "income" journals in a certain period, which are both transfers from a shared account
+     * and "ordinary" deposits. The query used is almost equal to ReportQueryInterface::journalsByRevenueAccount but it does
+     * not group and returns different fields.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function incomeByPeriod(Carbon $start, Carbon $end);
+
+    /**
      * With an equally misleading name, this query returns are transfers to shared accounts. These are considered
      * expenses.
      *

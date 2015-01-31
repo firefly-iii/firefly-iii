@@ -12,6 +12,8 @@ use Illuminate\Support\Collection;
 class Form
 {
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * Takes any collection and tries to make a sensible select list compatible array of it.
      *
      * @param Collection $set
@@ -32,7 +34,7 @@ class Form
             $title = null;
 
             foreach ($fields as $field) {
-                if (is_null($title) && isset($entry->$field)) {
+                if (isset($entry->$field)) {
                     $title = $entry->$field;
                 }
             }

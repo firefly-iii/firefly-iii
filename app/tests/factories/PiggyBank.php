@@ -15,8 +15,12 @@ League\FactoryMuffin\Facade::define(
 
                        return $set[rand(0, count($set) - 1)];
                    },
-                   'rep_every'     => function() {return rand(0,3);},
-                   'rep_times'     => function() {return rand(0,3);},
+                   'rep_every'     => function () {
+                       return rand(0, 3);
+                   },
+                   'rep_times'     => function () {
+                       return rand(0, 3);
+                   },
                    'reminder'      => function () {
                        $set = ['day', 'week', 'quarter', 'month', 'year'];
 

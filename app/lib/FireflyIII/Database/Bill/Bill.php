@@ -114,7 +114,7 @@ class Bill implements CUDInterface, CommonDatabaseCallsInterface, BillInterface
         $warnings  = new MessageBag;
         $successes = new MessageBag;
         $errors    = new MessageBag;
-        if (isset($model['amount_min']) && isset($model['amount_max']) && floatval($model['amount_min']) > floatval($model['amount_max'])) {
+        if (floatval($model['amount_min']) > floatval($model['amount_max'])) {
             $errors->add('amount_max', 'Maximum amount can not be less than minimum amount.');
             $errors->add('amount_min', 'Minimum amount can not be more than maximum amount.');
         }
@@ -133,12 +133,15 @@ class Bill implements CUDInterface, CommonDatabaseCallsInterface, BillInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Returns an object with id $id.
      *
      * @param int $objectId
      *
      * @return \Eloquent
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function find($objectId)
     {
@@ -146,12 +149,15 @@ class Bill implements CUDInterface, CommonDatabaseCallsInterface, BillInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
      *
      * @param $what
      *
      * @return \AccountType|null
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function findByWhat($what)
     {
@@ -169,37 +175,16 @@ class Bill implements CUDInterface, CommonDatabaseCallsInterface, BillInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param array $ids
      *
      * @return Collection
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function getByIds(array $ids)
     {
         throw new NotImplementedException;
-    }
-
-    /**
-     * Returns all objects.
-     *
-     * @return Collection
-     */
-    public function getActive()
-    {
-        return $this->getUser()->bills()->where('active', 1)->get();
-    }
-
-    /**
-     * @param \Bill  $bill
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return \TransactionJournal|null
-     */
-    public function getJournalForBillInRange(\Bill $bill, Carbon $start, Carbon $end)
-    {
-        return $this->getUser()->transactionjournals()->where('bill_id', $bill->id)->after($start)->before($end)->first();
-
     }
 
     /**
@@ -218,15 +203,14 @@ class Bill implements CUDInterface, CommonDatabaseCallsInterface, BillInterface
     }
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * @param \Bill $bill
      *
      * @return Carbon|null
      */
     public function nextExpectedMatch(\Bill $bill)
     {
-        /*
-                * The date Firefly tries to find. If this stays null, it's "unknown".
-                */
         $finalDate = null;
         if ($bill->active == 0) {
             return $finalDate;
@@ -238,10 +222,6 @@ class Bill implements CUDInterface, CommonDatabaseCallsInterface, BillInterface
          */
         $today = \DateKit::addPeriod(new Carbon, $bill->repeat_freq, 0);
 
-        /*
-         * FF3 loops from the $start of the bill, and to make sure
-         * $skip works, it adds one (for modulo).
-         */
         $skip  = $bill->skip + 1;
         $start = \DateKit::startOfPeriod(new Carbon, $bill->repeat_freq);
         /*

@@ -8,9 +8,6 @@ use Illuminate\Support\Collection;
 /**
  *
  * @SuppressWarnings("CamelCase") // I'm fine with this.
- * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
- * @SuppressWarnings("TooManyMethods") // I'm also fine with this.
- * @SuppressWarnings("CouplingBetweenObjects") // There's only so much I can remove.
  *
  *
  * Class PiggyBankController
@@ -62,7 +59,7 @@ class PiggyBankController extends BaseController
         $acct = App::make('FireflyIII\Database\Account\Account');
 
         $periods      = Config::get('firefly.piggy_bank_periods');
-        $accounts     = FFForm::makeSelectList($acct->getAssetAccounts());
+        $accounts     = FFForm::makeSelectList($acct->getAccountsByType(['Default account', 'Asset account']));
         $subTitle     = 'Create new piggy bank';
         $subTitleIcon = 'fa-plus';
 
@@ -96,6 +93,8 @@ class PiggyBankController extends BaseController
     }
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * @param PiggyBank $piggyBank
      *
      * @return $this
@@ -107,7 +106,7 @@ class PiggyBankController extends BaseController
         $acct = App::make('FireflyIII\Database\Account\Account');
 
         $periods      = Config::get('firefly.piggy_bank_periods');
-        $accounts     = FFForm::makeSelectList($acct->getAssetAccounts());
+        $accounts     = FFForm::makeSelectList($acct->getAccountsByType(['Default account', 'Asset account']));
         $subTitle     = 'Edit piggy bank "' . e($piggyBank->name) . '"';
         $subTitleIcon = 'fa-pencil';
 
@@ -291,11 +290,12 @@ class PiggyBankController extends BaseController
         Session::flash('errors', $messages['errors']);
         if ($messages['errors']->count() > 0) {
             Session::flash('error', 'Could not store piggy bank: ' . $messages['errors']->first());
+            return Redirect::route('piggy_banks.create')->withInput();
         }
 
 
         // return to create screen:
-        if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
+        if ($data['post_submit_action'] == 'validate_only') {
             return Redirect::route('piggy_banks.create')->withInput();
         }
 
@@ -335,10 +335,11 @@ class PiggyBankController extends BaseController
         Session::flash('errors', $messages['errors']);
         if ($messages['errors']->count() > 0) {
             Session::flash('error', 'Could not update piggy bank: ' . $messages['errors']->first());
+            return Redirect::route('piggy_banks.edit', $piggyBank->id)->withInput();
         }
 
         // return to update screen:
-        if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
+        if ($data['post_submit_action'] == 'validate_only') {
             return Redirect::route('piggy_banks.edit', $piggyBank->id)->withInput();
         }
 

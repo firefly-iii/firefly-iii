@@ -17,6 +17,8 @@ class RepeatedExpense extends PiggyBankShared implements CUDInterface, CommonDat
 {
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * Based on the piggy bank, the reminder-setting and
      * other variables this method tries to divide the piggy bank into equal parts. Each is
      * accommodated by a reminder (if everything goes to plan).

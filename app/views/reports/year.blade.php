@@ -123,17 +123,22 @@
                 Expenses
             </div>
             <table class="table">
+                <?php $sum = 0;?>
                 @foreach($groupedExpenses as $id => $expense)
                 <tr>
                     <td><a href="{{route('accounts.show',$id)}}">{{{$expense['name']}}}</a></td>
                     <td>{{Amount::format(floatval($expense['amount'])*-1)}}</td>
                 </tr>
+                <?php $sum += floatval($expense['amount'])*-1;?>
                 @endforeach
+                <tr>
+                    <td><em>Sum</em></td>
+                    <td>{{Amount::format($sum)}}</td>
+                </tr>
             </table>
         </div>
     </div>
 </div>
-
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="panel panel-default">
@@ -141,11 +146,12 @@
                 Budgets
             </div>
             <div class="panel-body">
-                <!-- <div id="budgets"></div> -->
+                <div id="budgets"></div>
             </div>
         </div>
     </div>
 </div>
+
 
 @stop
 @section('scripts')

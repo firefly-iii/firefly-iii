@@ -4,6 +4,10 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
+ * @SuppressWarnings(PHPMD.ShortMethodName)
+ * @SuppressWarnings("MethodLength") // I don't mind this in case of migrations.
+
+ *
  * Class ChangesForV322
  */
 class ChangesForV322 extends Migration

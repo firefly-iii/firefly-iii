@@ -9,7 +9,9 @@ use League\FactoryMuffin\Facade as f;
 class TestCase extends Illuminate\Foundation\Testing\TestCase
 {
     /**
-     * Creates the application.
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     *
+     * Creates the application..
      *
      * @return \Symfony\Component\HttpKernel\HttpKernelInterface
      */

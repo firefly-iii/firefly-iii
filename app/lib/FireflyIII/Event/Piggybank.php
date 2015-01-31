@@ -34,6 +34,8 @@ class PiggyBank
     }
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * @param \TransactionJournal $journal
      *
      * @throws \FireflyIII\Exception\FireflyException
@@ -109,6 +111,8 @@ class PiggyBank
      */
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * @param \TransactionJournal $journal
      * @param int                 $piggyBankId
      */
@@ -176,6 +180,8 @@ class PiggyBank
     }
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's 6. More than 5 but alright.
+     *
      * Validates the presence of repetitions for all repeated expenses!
      */
     public function validateRepeatedExpenses()
@@ -185,32 +191,24 @@ class PiggyBank
         }
         /** @var \FireflyIII\Database\PiggyBank\RepeatedExpense $repository */
         $repository = \App::make('FireflyIII\Database\PiggyBank\RepeatedExpense');
-
         $list  = $repository->get();
         $today = Carbon::now();
-
         /** @var \PiggyBank $entry */
         foreach ($list as $entry) {
-            $start  = $entry->startdate;
-            $target = $entry->targetdate;
-            // find a repetition on this date:
-            $count = $entry->piggyBankrepetitions()->starts($start)->targets($target)->count();
+            $count = $entry->piggyBankrepetitions()->starts($entry->startdate)->targets($entry->targetdate)->count();
             if ($count == 0) {
                 $repetition = new \PiggyBankRepetition;
                 $repetition->piggyBank()->associate($entry);
-                $repetition->startdate     = $start;
-                $repetition->targetdate    = $target;
+                $repetition->startdate     = $entry->startdate;
+                $repetition->targetdate    = $entry->targetdate;
                 $repetition->currentamount = 0;
                 $repetition->save();
             }
-            // then continue and do something in the current relevant time frame.
-
-            $currentTarget = clone $target;
+            $currentTarget = clone $entry->startdate;
             $currentStart  = null;
             while ($currentTarget < $today) {
                 $currentStart  = \DateKit::subtractPeriod($currentTarget, $entry->rep_length, 0);
                 $currentTarget = \DateKit::addPeriod($currentTarget, $entry->rep_length, 0);
-                // create if not exists:
                 $count = $entry->piggyBankRepetitions()->starts($currentStart)->targets($currentTarget)->count();
                 if ($count == 0) {
                     $repetition = new \PiggyBankRepetition;

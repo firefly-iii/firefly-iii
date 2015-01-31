@@ -86,6 +86,15 @@ class CategoryControllerCest
         $I->wantTo('show all categories');
         $I->amOnPage('/categories');
     }
+    /**
+     * @param FunctionalTester $I
+     */
+    public function indexNoCategory(FunctionalTester $I)
+    {
+        $I->wantTo('see transactions without a category');
+        $I->amOnPage('/categories/list/noCategory');
+        $I->see('Transactions without a category in');
+    }
 
     /**
      * @param FunctionalTester $I

@@ -33,7 +33,7 @@ class HomeController extends BaseController
         /** @var \FireflyIII\Shared\Preferences\PreferencesInterface $preferences */
         $preferences = App::make('FireflyIII\Shared\Preferences\PreferencesInterface');
 
-        $count = $acct->countAssetAccounts();
+        $count = $acct->countAccountsByType(['Default account', 'Asset account']);
 
         $start = Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());
@@ -42,7 +42,7 @@ class HomeController extends BaseController
         // get the preference for the home accounts to show:
         $frontPage = $preferences->get('frontPageAccounts', []);
         if ($frontPage->data == []) {
-            $accounts = $acct->getAssetAccounts();
+            $accounts = $acct->getAccountsByType(['Default account', 'Asset account']);
         } else {
             $accounts = $acct->getByIds($frontPage->data);
         }
@@ -77,8 +77,11 @@ class HomeController extends BaseController
             $preferences->set('viewRange', $range);
             Session::forget('range');
         }
-
-        return Redirect::intended('/');
+        if (isset($_SERVER['HTTP_REFERER']) && (!strpos($_SERVER['HTTP_REFERER'], Config::get('app.url')) === false)) {
+            return Redirect::back();
+        } else {
+            return Redirect::intended();
+        }
     }
 
     /**
@@ -88,7 +91,14 @@ class HomeController extends BaseController
     {
         Navigation::next();
 
-        return Redirect::intended('/');
+        if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], Config::get('app.url')) === 0) {
+            Log::debug('Redirect back');
+            return Redirect::back();
+        } else {
+            Log::debug('Redirect intended');
+            return Redirect::intended();
+        }
+
     }
 
     /**
@@ -98,6 +108,12 @@ class HomeController extends BaseController
     {
         Navigation::prev();
 
-        return Redirect::intended('/');
+        if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], Config::get('app.url')) === 0) {
+            Log::debug('Redirect back');
+            return Redirect::back();
+        } else {
+            Log::debug('Redirect intended');
+            return Redirect::intended();
+        }
     }
 }

@@ -56,14 +56,36 @@ class Related implements RelatedInterface
         }
         $exclude = array_unique($exclude);
 
-        $query = $this->getUser()->transactionjournals()
-                      ->withRelevantData()
-                      ->before($end)
-                      ->after($start)
-                      ->whereNotIn('id', $exclude)
-                      ->where('description', 'LIKE', '%' . $query . '%')
-                      ->get();
+        /** @var Collection $collection */
+        $collection = $this->getUser()->transactionjournals()
+                           ->withRelevantData()
+                           ->before($end)
+                           ->where('encrypted', 0)
+                           ->after($start)
+                           ->whereNotIn('id', $exclude)
+                           ->where('description', 'LIKE', '%' . $query . '%')
+                           ->get();
 
-        return $query;
+        // manually search encrypted entries:
+        /** @var Collection $encryptedCollection */
+        $encryptedCollection = $this->getUser()->transactionjournals()
+                                    ->withRelevantData()
+                                    ->before($end)
+                                    ->where('encrypted', 1)
+                                    ->after($start)
+                                    ->whereNotIn('id', $exclude)
+                                    ->get();
+        $encrypted           = $encryptedCollection->filter(
+            function (\TransactionJournal $journal) use ($query) {
+                $strPos = strpos($journal->description, $query);
+                if ($strPos !== false) {
+                    return $journal;
+                }
+            }
+        );
+        $collected           = $collection->merge($encrypted);
+
+
+        return $collected;
     }
 }

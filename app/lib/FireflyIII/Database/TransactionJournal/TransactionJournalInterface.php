@@ -20,14 +20,6 @@ interface TransactionJournalInterface
     public function first();
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getInDateRange(Carbon $start, Carbon $end);
-
-    /**
      * @param Carbon $date
      *
      * @return float

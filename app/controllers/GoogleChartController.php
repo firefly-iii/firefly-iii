@@ -6,10 +6,6 @@ use Grumpydictator\Gchart\GChart as GChart;
 /**
  * Class GoogleChartController
  * @SuppressWarnings("CamelCase") // I'm fine with this.
- * @SuppressWarnings("TooManyMethods") // I'm also fine with this.
- * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
- * @SuppressWarnings("MethodLength") // There is one with 45 lines and im gonna move it.
- * @SuppressWarnings("CouplingBetweenObjects") // There's only so much I can remove.
  */
 class GoogleChartController extends BaseController
 {
@@ -46,6 +42,7 @@ class GoogleChartController extends BaseController
     {
         $this->_chart->addColumn('Day of month', 'date');
         $this->_chart->addColumn('Balance for ' . $account->name, 'number');
+        $this->_chart->addCertainty(1);
 
         $start = $this->_start;
         $end   = $this->_end;
@@ -65,7 +62,7 @@ class GoogleChartController extends BaseController
         $current = clone $start;
 
         while ($end >= $current) {
-            $this->_chart->addRow(clone $current, Steam::balance($account, $current));
+            $this->_chart->addRow(clone $current, Steam::balance($account, $current), false);
             $current->addDay();
         }
 
@@ -76,7 +73,7 @@ class GoogleChartController extends BaseController
     }
 
     /**
-     * This method renders the b
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
      */
     public function allAccountsBalanceChart()
     {
@@ -88,23 +85,72 @@ class GoogleChartController extends BaseController
 
         /** @var \FireflyIII\Database\Account\Account $acct */
         $acct     = App::make('FireflyIII\Database\Account\Account');
-        $accounts = count($pref->data) > 0 ? $acct->getByIds($pref->data) : $acct->getAssetAccounts();
+        $accounts = count($pref->data) > 0 ? $acct->getByIds($pref->data) : $acct->getAccountsByType(['Default account', 'Asset account']);
 
+        $index = 1;
         /** @var Account $account */
         foreach ($accounts as $account) {
             $this->_chart->addColumn('Balance for ' . $account->name, 'number');
+            $this->_chart->addCertainty($index);
+            $index++;
         }
         $current = clone $this->_start;
         $current->subDay();
-
+        $today = Carbon::now();
         while ($this->_end >= $current) {
-            $row = [clone $current];
+            $row     = [clone $current];
+            $certain = $current < $today;
             foreach ($accounts as $account) {
+
                 $row[] = Steam::balance($account, $current);
+                $row[] = $certain;
             }
             $this->_chart->addRowArray($row);
             $current->addDay();
         }
+
+        $this->_chart->generate();
+
+        return Response::json($this->_chart->getData());
+
+    }
+
+    /**
+     * @param int $year
+     *
+     * @return $this|\Illuminate\Http\JsonResponse
+     */
+    public function allBudgetsAndSpending($year)
+    {
+        try {
+            new Carbon('01-01-' . $year);
+        } catch (Exception $e) {
+            return View::make('error')->with('message', 'Invalid year.');
+        }
+        /** @var \FireflyIII\Database\Budget\Budget $budgetRepository */
+        $budgetRepository = App::make('FireflyIII\Database\Budget\Budget');
+        $budgets          = $budgetRepository->get();
+        $budgets->sortBy('name');
+        $this->_chart->addColumn('Month', 'date');
+        foreach ($budgets as $budget) {
+            $this->_chart->addColumn($budget->name, 'number');
+        }
+        $start = Carbon::createFromDate(intval($year), 1, 1);
+        $end   = clone $start;
+        $end->endOfYear();
+
+
+        while ($start <= $end) {
+            $row = [clone $start];
+            foreach ($budgets as $budget) {
+                $spent = $budgetRepository->spentInMonth($budget, $start);
+                //$repetition = $budgetRepository->repetitionOnStartingOnDate($budget, $start);
+                $row[] = $spent;
+            }
+            $this->_chart->addRowArray($row);
+            $start->addMonth();
+        }
+
 
         $this->_chart->generate();
 
@@ -121,8 +167,6 @@ class GoogleChartController extends BaseController
         $this->_chart->addColumn('Budgeted', 'number');
         $this->_chart->addColumn('Spent', 'number');
 
-        Log::debug('Now in allBudgetsHomeChart()');
-
         /** @var \FireflyIII\Database\Budget\Budget $bdt */
         $bdt     = App::make('FireflyIII\Database\Budget\Budget');
         $budgets = $bdt->get();
@@ -130,18 +174,13 @@ class GoogleChartController extends BaseController
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
 
-            Log::debug('Now working budget #' . $budget->id . ', ' . $budget->name);
-
             /** @var \LimitRepetition $repetition */
             $repetition = $bdt->repetitionOnStartingOnDate($budget, $this->_start);
-            if (is_null($repetition)) {
-                \Log::debug('Budget #' . $budget->id . ' has no repetition on ' . $this->_start->format('Y-m-d'));
-                // use the session start and end for our search query
+            if (is_null($repetition)) { // use the session start and end for our search query
                 $searchStart = $this->_start;
                 $searchEnd   = $this->_end;
                 $limit       = 0; // the limit is zero:
             } else {
-                \Log::debug('Budget #' . $budget->id . ' has a repetition on ' . $this->_start->format('Y-m-d') . '!');
                 // use the limit's start and end for our search query
                 $searchStart = $repetition->startdate;
                 $searchEnd   = $repetition->enddate;
@@ -149,7 +188,6 @@ class GoogleChartController extends BaseController
             }
 
             $expenses = floatval($budget->transactionjournals()->before($searchEnd)->after($searchStart)->lessThan(0)->sum('amount')) * -1;
-            \Log::debug('Expenses in budget ' . $budget->name . ' before ' . $searchEnd->format('Y-m-d') . ' and after ' . $searchStart . ' are: ' . $expenses);
             if ($expenses > 0) {
                 $this->_chart->addRow($budget->name, $limit, $expenses);
             }
@@ -289,46 +327,55 @@ class GoogleChartController extends BaseController
 
     /**
      *
-     * @param Budget    $budget
-     * @param           $year
+     * @param Budget $budget
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function budgetsAndSpending(Budget $budget, $year)
+    public function budgetsAndSpending(Budget $budget, $year = 0)
     {
-        try {
-            new Carbon('01-01-' . $year);
-        } catch (Exception $e) {
-            return View::make('error')->with('message', 'Invalid year.');
-        }
-
         /** @var \FireflyIII\Database\Budget\Budget $budgetRepository */
         $budgetRepository = App::make('FireflyIII\Database\Budget\Budget');
 
         $this->_chart->addColumn('Month', 'date');
         $this->_chart->addColumn('Budgeted', 'number');
         $this->_chart->addColumn('Spent', 'number');
+        if ($year == 0) {
+            // grab the first budgetlimit ever:
+            $firstLimit = $budget->budgetlimits()->orderBy('startdate', 'ASC')->first();
+            if ($firstLimit) {
+                $start = new Carbon($firstLimit->startdate);
+            } else {
+                $start = Carbon::now()->startOfYear();
+            }
 
-        $start = new Carbon('01-01-' . $year);
-        $end   = clone $start;
-        $end->endOfYear();
+            // grab the last budget limit ever:
+            $lastLimit = $budget->budgetlimits()->orderBy('startdate', 'DESC')->first();
+            if ($lastLimit) {
+                $end = new Carbon($lastLimit->startdate);
+            } else {
+                $end = Carbon::now()->endOfYear();
+            }
+        } else {
+            $start = Carbon::createFromDate(intval($year), 1, 1);
+            $end   = clone $start;
+            $end->endOfYear();
+        }
+
+
         while ($start <= $end) {
             $spent      = $budgetRepository->spentInMonth($budget, $start);
             $repetition = $budgetRepository->repetitionOnStartingOnDate($budget, $start);
 
             if ($repetition) {
                 $budgeted = floatval($repetition->amount);
-                \Log::debug('Found a repetition on ' . $start->format('Y-m-d'). ' for budget ' . $budget->name.'!');
+                \Log::debug('Found a repetition on ' . $start->format('Y-m-d') . ' for budget ' . $budget->name . '!');
             } else {
-                \Log::debug('No repetition on ' . $start->format('Y-m-d'). ' for budget ' . $budget->name);
+                \Log::debug('No repetition on ' . $start->format('Y-m-d') . ' for budget ' . $budget->name);
                 $budgeted = null;
             }
-
             $this->_chart->addRow(clone $start, $budgeted, $spent);
-
             $start->addMonth();
         }
-
 
         $this->_chart->generate();
 

@@ -36,7 +36,7 @@
                     @endif
 
                     <!-- ALWAYS SHOW AMOUNT -->
-                    {{Form::ffAmount('amount',$data['amount'])}}
+                    {{Form::ffAmount('amount',$data['amount'],['currency' => $journal->transactionCurrency])}}
 
                     <!-- ALWAYS SHOW DATE -->
                     {{Form::ffDate('date',$data['date'])}}

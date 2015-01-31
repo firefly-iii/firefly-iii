@@ -9,10 +9,6 @@ use Illuminate\Support\Collection;
 /**
  *
  * @SuppressWarnings("CamelCase") // I'm fine with this.
- * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
- * @SuppressWarnings("CouplingBetweenObjects") // There's only so much I can remove.
- * @SuppressWarnings("TooManyMethods") // I'm also fine with this.
- * @SuppressWarnings("ExcessiveClassComplexity")
  *
  * Class TransactionController
  *
@@ -166,6 +162,8 @@ class TransactionController extends BaseController
     }
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's 7. More than 5 but alright.
+     *
      * @param $what
      *
      * @return $this
@@ -196,7 +194,6 @@ class TransactionController extends BaseController
         return View::make('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'journals'));
 
     }
-
 
 
     /**
@@ -235,6 +232,8 @@ class TransactionController extends BaseController
     }
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * @param $what
      *
      * @return $this|\Illuminate\Http\RedirectResponse
@@ -243,35 +242,31 @@ class TransactionController extends BaseController
     public function store($what)
     {
         $data                            = Input::except('_token');
+
         $transactionType                 = $this->_repository->getJournalType($what);
-        $transactionCurrency             = $this->_repository->getJournalCurrency('EUR');
+        $transactionCurrency             = $this->_repository->getJournalCurrencyById(intval($data['amount_currency_id']));
         $data['transaction_type_id']     = $transactionType->id;
         $data['transaction_currency_id'] = $transactionCurrency->id;
         $data['completed']               = 0;
         $data['what']                    = $what;
-        $data['currency']                = 'EUR';
-
-        // always validate:
-        $messages = $this->_repository->validate($data);
+        $messages                        = $this->_repository->validate($data);
 
         Session::flash('warnings', $messages['warnings']);
         Session::flash('successes', $messages['successes']);
         Session::flash('errors', $messages['errors']);
         if ($messages['errors']->count() > 0) {
             Session::flash('error', 'Could not store transaction: ' . $messages['errors']->first());
-        }
 
-        // return to create screen:
-        if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
             return Redirect::route('transactions.create', $data['what'])->withInput();
         }
 
-        // store
+        if ($data['post_submit_action'] == 'validate_only') {
+            return Redirect::route('transactions.create', $data['what'])->withInput();
+        }
+
         $journal = $this->_repository->store($data);
         Event::fire('transactionJournal.store', [$journal, Input::get('piggy_bank_id')]); // new and used.
-        /*
-         * Also trigger on both transactions.
-         */
+
         /** @var Transaction $transaction */
         foreach ($journal->transactions as $transaction) {
             Event::fire('transaction.store', [$transaction]);
@@ -295,10 +290,9 @@ class TransactionController extends BaseController
     public function update(TransactionJournal $journal)
     {
         $data                            = Input::except('_token');
-        $data['currency']                = 'EUR';
         $data['what']                    = strtolower($journal->transactionType->type);
         $data['transaction_type_id']     = $journal->transaction_type_id;
-        $data['transaction_currency_id'] = $journal->transaction_currency_id;
+        $data['transaction_currency_id'] = intval($data['amount_currency_id']);
         $data['completed']               = 1;
         $messages                        = $this->_repository->validate($data);
 
@@ -307,8 +301,10 @@ class TransactionController extends BaseController
         Session::flash('errors', $messages['errors']);
         if ($messages['errors']->count() > 0) {
             Session::flash('error', 'Could not update transaction: ' . $messages['errors']->first());
+
+            return Redirect::route('transactions.edit', $journal->id)->withInput();
         }
-        if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
+        if ($data['post_submit_action'] == 'validate_only') {
             return Redirect::route('transactions.edit', $journal->id)->withInput();
         }
         $this->_repository->update($journal, $data);

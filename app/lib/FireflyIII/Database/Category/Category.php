@@ -99,12 +99,15 @@ class Category implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Returns an object with id $id.
      *
      * @param int $objectId
      *
      * @return \Eloquent
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function find($objectId)
     {
@@ -112,12 +115,15 @@ class Category implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
      *
      * @param $what
      *
      * @return \AccountType|null
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function findByWhat($what)
     {
@@ -125,6 +131,8 @@ class Category implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Returns all objects.
      *
      * @return Collection
@@ -135,10 +143,13 @@ class Category implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param array $ids
      *
      * @return Collection
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function getByIds(array $ids)
     {
@@ -193,19 +204,6 @@ class Category implements CUDInterface, CommonDatabaseCallsInterface
                     ->get(['transaction_journals.*']);
 
         return $set;
-    }
-
-    /**
-     * @param \Category $category
-     * @param Carbon    $date
-     *
-     * @return null
-     * @throws NotImplementedException
-     * @internal param \Category $budget
-     */
-    public function repetitionOnStartingOnDate(\Category $category, Carbon $date)
-    {
-        throw new NotImplementedException;
     }
 
     /**

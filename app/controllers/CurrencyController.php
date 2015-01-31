@@ -4,7 +4,6 @@ use FireflyIII\Database\TransactionCurrency\TransactionCurrency as Repository;
 /**
  *
  * @SuppressWarnings("CamelCase") // I'm fine with this.
- * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
  *
  * Class CurrencyController
  */
@@ -123,6 +122,8 @@ class CurrencyController extends BaseController
     }
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * @return $this|\Illuminate\Http\RedirectResponse
      */
     public function store()
@@ -174,10 +175,11 @@ class CurrencyController extends BaseController
         Session::flash('errors', $messages['errors']);
         if ($messages['errors']->count() > 0) {
             Session::flash('error', 'Could not update currency: ' . $messages['errors']->first());
+            return Redirect::route('currency.edit', $currency->id)->withInput();
         }
 
         // return to update screen:
-        if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
+        if ($data['post_submit_action'] == 'validate_only') {
             return Redirect::route('currency.edit', $currency->id)->withInput();
         }
 

@@ -8,9 +8,9 @@ use FireflyIII\Database\SwitchUser;
 use FireflyIII\Exception\FireflyException;
 use FireflyIII\Exception\NotImplementedException;
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
-use Illuminate\Database\Query\Builder as QueryBuilder;
 
 /**
  * Class Budget
@@ -98,6 +98,71 @@ class Budget implements CUDInterface, CommonDatabaseCallsInterface, BudgetInterf
     }
 
     /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function expenseNoBudget(Carbon $start, Carbon $end)
+    {
+        // Add expenses that have no budget:
+        return $this->getUser()
+                    ->transactionjournals()
+                    ->whereNotIn(
+                        'transaction_journals.id', function (QueryBuilder $query) use ($start, $end) {
+                        $query
+                            ->select('transaction_journals.id')
+                            ->from('transaction_journals')
+                            ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                            ->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'))
+                            ->where('transaction_journals.date', '<=', $end->format('Y-m-d 00:00:00'));
+                    }
+                    )
+                    ->before($end)
+                    ->after($start)
+                    ->lessThan(0)
+                    ->transactionTypes(['Withdrawal'])
+                    ->get();
+    }
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function journalsNoBudget(Carbon $start, Carbon $end)
+    {
+        $set = $this->getUser()
+                    ->transactionjournals()
+                    ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                    ->whereNull('budget_transaction_journal.id')
+                    ->before($end)
+                    ->after($start)
+                    ->orderBy('transaction_journals.date')
+                    ->get(['transaction_journals.*']);
+
+        return $set;
+    }
+
+    /**
+     * This method includes the time because otherwise, SQLite does not understand it.
+     *
+     * @param \Budget $budget
+     * @param Carbon  $date
+     *
+     * @return \LimitRepetition|null
+     */
+    public function repetitionOnStartingOnDate(\Budget $budget, Carbon $date)
+    {
+        return \LimitRepetition::
+        leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
+                               ->where('limit_repetitions.startdate', $date->format('Y-m-d 00:00:00'))
+                               ->where('budget_limits.budget_id', $budget->id)
+                               ->first(['limit_repetitions.*']);
+    }
+
+    /**
      * Returns an object with id $id.
      *
      * @param int $objectId
@@ -110,12 +175,15 @@ class Budget implements CUDInterface, CommonDatabaseCallsInterface, BudgetInterf
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
      *
      * @param $what
      *
      * @return \AccountType|null
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function findByWhat($what)
     {
@@ -135,10 +203,13 @@ class Budget implements CUDInterface, CommonDatabaseCallsInterface, BudgetInterf
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param array $ids
      *
      * @return Collection
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function getByIds(array $ids)
     {
@@ -192,116 +263,6 @@ class Budget implements CUDInterface, CommonDatabaseCallsInterface, BudgetInterf
 
     /**
      * @param \Budget $budget
-     * @param int     $limit
-     *
-     * @return \Illuminate\Pagination\Paginator
-     */
-    public function getTransactionJournals(\Budget $budget, $limit = 50)
-    {
-        $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
-        $set    = $budget->transactionJournals()->withRelevantData()->take($limit)->offset($offset)->orderBy('date', 'DESC')->get(['transaction_journals.*']);
-        $count  = $budget->transactionJournals()->count();
-        $items  = [];
-        foreach ($set as $entry) {
-            $items[] = $entry;
-        }
-
-        return \Paginator::make($items, $count, $limit);
-
-    }
-
-    /**
-     * @param \Budget          $budget
-     * @param \LimitRepetition $repetition
-     * @param int              $limit
-     *
-     * @return \Illuminate\Pagination\Paginator
-     */
-    public function getTransactionJournalsInRepetition(\Budget $budget, \LimitRepetition $repetition, $limit = 50)
-    {
-        $start = $repetition->startdate;
-        $end   = $repetition->enddate;
-
-        $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $limit : 0;
-        $set    = $budget->transactionJournals()->withRelevantData()->before($end)->after($start)->take($limit)->offset($offset)->orderBy('date', 'DESC')->get(
-            ['transaction_journals.*']
-        );
-        $count  = $budget->transactionJournals()->before($end)->after($start)->count();
-        $items  = [];
-        foreach ($set as $entry) {
-            $items[] = $entry;
-        }
-
-        return \Paginator::make($items, $count, $limit);
-    }
-
-    /**
-     * This method includes the time because otherwise, SQLite does not understand it.
-     *
-     * @param \Budget $budget
-     * @param Carbon  $date
-     *
-     * @return \LimitRepetition|null
-     */
-    public function repetitionOnStartingOnDate(\Budget $budget, Carbon $date)
-    {
-        return \LimitRepetition::
-        leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
-                               ->where('limit_repetitions.startdate', $date->format('Y-m-d 00:00:00'))
-                               ->where('budget_limits.budget_id', $budget->id)
-                               ->first(['limit_repetitions.*']);
-    }
-
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function expenseNoBudget(Carbon $start, Carbon $end)
-    {
-        // Add expenses that have no budget:
-        return $this->getUser()
-                    ->transactionjournals()
-                    ->whereNotIn(
-                        'transaction_journals.id', function (QueryBuilder $query) use ($start, $end) {
-                        $query
-                            ->select('transaction_journals.id')
-                            ->from('transaction_journals')
-                            ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                            ->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'))
-                            ->where('transaction_journals.date', '<=', $end->format('Y-m-d 00:00:00'));
-                    }
-                    )
-                    ->before($end)
-                    ->after($start)
-                    ->lessThan(0)
-                    ->transactionTypes(['Withdrawal'])
-                    ->get();
-    }
-
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function journalsNoBudget(Carbon $start, Carbon $end)
-    {
-        $set = $this->getUser()
-                    ->transactionjournals()
-                    ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                    ->whereNull('budget_transaction_journal.id')
-                    ->before($end)
-                    ->after($start)
-                    ->orderBy('transaction_journals.date')
-                    ->get(['transaction_journals.*']);
-
-        return $set;
-    }
-
-    /**
-     * @param \Budget $budget
      * @param Carbon  $date
      *
      * @return float
@@ -312,20 +273,6 @@ class Budget implements CUDInterface, CommonDatabaseCallsInterface, BudgetInterf
         $date->startOfMonth();
         $end->endOfMonth();
         $sum = floatval($budget->transactionjournals()->before($end)->after($date)->lessThan(0)->sum('amount')) * -1;
-
-        return $sum;
-    }
-
-    /**
-     * @param \Budget $budget
-     * @param Carbon  $start
-     * @param Carbon  $end
-     *
-     * @return float
-     */
-    public function spentInPeriod(\Budget $budget, Carbon $start, Carbon $end)
-    {
-        $sum = floatval($budget->transactionjournals()->before($end)->after($start)->lessThan(0)->sum('amount')) * -1;
 
         return $sum;
     }
@@ -343,7 +290,7 @@ class Budget implements CUDInterface, CommonDatabaseCallsInterface, BudgetInterf
      */
     public function updateLimitAmount(\Budget $budget, Carbon $date, $amount)
     {
-        /** @var \Limit $limit */
+        /** @var \BudgetLimit $limit */
         $limit = $this->limitOnStartingOnDate($budget, $date);
         if (!$limit) {
             // create one!
@@ -381,7 +328,7 @@ class Budget implements CUDInterface, CommonDatabaseCallsInterface, BudgetInterf
      * @param \Budget $budget
      * @param Carbon  $date
      *
-     * @return \Limit
+     * @return \BudgetLimit
      */
     public function limitOnStartingOnDate(\Budget $budget, Carbon $date)
     {

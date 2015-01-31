@@ -19,9 +19,11 @@ class AccountType implements CUDInterface, CommonDatabaseCallsInterface
 
     /**
      * @param Eloquent $model
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function destroy(Eloquent $model)
     {
@@ -30,9 +32,11 @@ class AccountType implements CUDInterface, CommonDatabaseCallsInterface
 
     /**
      * @param array $data
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return \Eloquent
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function store(array $data)
     {
@@ -42,9 +46,11 @@ class AccountType implements CUDInterface, CommonDatabaseCallsInterface
     /**
      * @param Eloquent $model
      * @param array    $data
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function update(Eloquent $model, array $data)
     {
@@ -52,6 +58,8 @@ class AccountType implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Validates an array. Returns an array containing MessageBags
      * errors/warnings/successes.
      *
@@ -59,6 +67,7 @@ class AccountType implements CUDInterface, CommonDatabaseCallsInterface
      *
      * @return array
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function validate(array $model)
     {
@@ -66,12 +75,15 @@ class AccountType implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Returns an object with id $id.
      *
      * @param int $objectId
      *
      * @return \Eloquent
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function find($objectId)
     {
@@ -88,34 +100,27 @@ class AccountType implements CUDInterface, CommonDatabaseCallsInterface
      */
     public function findByWhat($what)
     {
-        switch ($what) {
-            case 'expense':
-                return \AccountType::whereType('Expense account')->first();
-                break;
-            case 'asset':
-                return \AccountType::whereType('Asset account')->first();
-                break;
-            case 'revenue':
-                return \AccountType::whereType('Revenue account')->first();
-                break;
-            case 'cash':
-                return \AccountType::whereType('Cash account')->first();
-                break;
-            case 'initial':
-                return \AccountType::whereType('Initial balance account')->first();
-                break;
-            default:
-                throw new FireflyException('Cannot find account type described as "' . e($what) . '".');
-                break;
-
+        $typeMap = [
+            'expense' => 'Expense account',
+            'asset'   => 'Asset account',
+            'revenue' => 'Revenue account',
+            'cash'    => 'Cash account',
+            'initial' => 'Initial balance account',
+        ];
+        if (isset($typeMap[$what])) {
+            return \AccountType::whereType($typeMap[$what])->first();
         }
+        throw new FireflyException('Cannot find account type described as "' . e($what) . '".');
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Returns all objects.
      *
      * @return Collection
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function get()
     {
@@ -123,10 +128,13 @@ class AccountType implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param array $ids
      *
      * @return Collection
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function getByIds(array $ids)
     {

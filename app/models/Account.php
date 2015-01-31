@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Database\Eloquent\SoftDeletingTrait;
-use Watson\Validating\ValidatingTrait;
-use \Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
-
+use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
+use Illuminate\Database\Query\JoinClause;
+use Watson\Validating\ValidatingTrait;
 
 /**
  * Class Account
@@ -18,15 +18,15 @@ class Account extends Eloquent
      * @var array
      */
     public static $rules
-        = [
+                            = [
             'name'            => ['required', 'between:1,100'],
             'user_id'         => 'required|exists:users,id',
             'account_type_id' => 'required|exists:account_types,id',
             'active'          => 'required|boolean'
 
         ];
-    protected $dates    = ['deleted_at', 'created_at', 'updated_at'];
-    protected $fillable = ['name', 'user_id', 'account_type_id', 'active'];
+    protected     $dates    = ['deleted_at', 'created_at', 'updated_at'];
+    protected     $fillable = ['name', 'user_id', 'account_type_id', 'active'];
 
     /**
      * Account type.
@@ -67,7 +67,7 @@ class Account extends Eloquent
     /**
      *
      * @param EloquentBuilder $query
-     * @param array   $types
+     * @param array           $types
      */
     public function scopeAccountTypeIn(EloquentBuilder $query, array $types)
     {
@@ -82,9 +82,13 @@ class Account extends Eloquent
      *
      * @param EloquentBuilder $query
      */
-    public function scopeWithMeta(EloquentBuilder $query)
+    public function scopeWithMeta(EloquentBuilder $query, $field = 'accountRole')
     {
-        $query->with(['accountmeta']);
+        $query->leftJoin(
+            'account_meta', function (JoinClause $join) use ($field) {
+            $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', $field);
+        }
+        );
     }
 
     /**

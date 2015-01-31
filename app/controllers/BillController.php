@@ -5,8 +5,7 @@ use FireflyIII\Exception\FireflyException;
 /**
  *
  * @SuppressWarnings("CamelCase") // I'm fine with this.
- * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
- * @SuppressWarnings("NPathComplexity")
+ *
  * Class BillController
  *
  */
@@ -120,9 +119,9 @@ class BillController extends BaseController
      */
     public function show(Bill $bill)
     {
-        $journals = $bill->transactionjournals()->withRelevantData()->orderBy('date', 'DESC')->get();
+        $journals                = $bill->transactionjournals()->withRelevantData()->orderBy('date', 'DESC')->get();
         $bill->nextExpectedMatch = $this->_repository->nextExpectedMatch($bill);
-        $hideBill = true;
+        $hideBill                = true;
 
 
         return View::make('bills.show', compact('journals', 'hideBill', 'bill'))->with(
@@ -136,7 +135,7 @@ class BillController extends BaseController
      */
     public function store()
     {
-        $data            = Input::all();
+        $data            = Input::except(['_token', 'post_submit_action']);
         $data['user_id'] = Auth::user()->id;
 
 
@@ -149,17 +148,19 @@ class BillController extends BaseController
         Session::flash('errors', $messages['errors']);
         if ($messages['errors']->count() > 0) {
             Session::flash('error', 'Could not store bill: ' . $messages['errors']->first());
+
+            return Redirect::route('bills.create')->withInput();
         }
 
         // return to create screen:
-        if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
+        if (Input::get('post_submit_action') == 'validate_only') {
             return Redirect::route('bills.create')->withInput();
         }
 
         // store
         $this->_repository->store($data);
         Session::flash('success', 'Bill "' . e($data['name']) . '" stored.');
-        if ($data['post_submit_action'] == 'store') {
+        if (Input::get('post_submit_action') == 'store') {
             return Redirect::route('bills.index');
         }
 
@@ -176,8 +177,8 @@ class BillController extends BaseController
     public function update(Bill $bill)
     {
         $data              = Input::except('_token');
-        $data['active']    = isset($data['active']) ? 1 : 0;
-        $data['automatch'] = isset($data['automatch']) ? 1 : 0;
+        $data['active']    = intval(Input::get('active'));
+        $data['automatch'] = intval(Input::get('automatch'));
         $data['user_id']   = Auth::user()->id;
 
         // always validate:
@@ -189,10 +190,12 @@ class BillController extends BaseController
         Session::flash('errors', $messages['errors']);
         if ($messages['errors']->count() > 0) {
             Session::flash('error', 'Could not update bill: ' . $messages['errors']->first());
+
+            return Redirect::route('bills.edit', $bill->id)->withInput();
         }
 
         // return to update screen:
-        if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
+        if ($data['post_submit_action'] == 'validate_only') {
             return Redirect::route('bills.edit', $bill->id)->withInput();
         }
 

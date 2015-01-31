@@ -1,6 +1,5 @@
 <?php
 
-use FireflyIII\Exception\FireflyException;
 use Watson\Validating\ValidatingTrait;
 use \Illuminate\Database\Eloquent\Model as Eloquent;
 /**

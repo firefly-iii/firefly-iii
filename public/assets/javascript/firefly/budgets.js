@@ -7,11 +7,11 @@ $(function () {
     $('.updateIncome').on('click', updateIncome);
 
 
-    if (typeof componentID != 'undefined' && typeof repetitionID == 'undefined') {
-        googleColumnChart('chart/budget/' + componentID + '/spending/' + year, 'componentOverview');
+    if (typeof budgetID != 'undefined' && typeof repetitionID == 'undefined') {
+        googleColumnChart('chart/budget/' + budgetID + '/spending', 'budgetOverview');
     }
-    if (typeof componentID != 'undefined' && typeof repetitionID != 'undefined') {
-        googleLineChart('chart/budget/' + componentID + '/' + repetitionID, 'componentOverview');
+    if (typeof budgetID != 'undefined' && typeof repetitionID != 'undefined') {
+        googleLineChart('chart/budget/' + budgetID + '/' + repetitionID, 'budgetOverview');
     }
 
 });

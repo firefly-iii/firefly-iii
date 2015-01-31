@@ -120,6 +120,33 @@ class RepeatedExpenseControllerCest
     /**
      * @param FunctionalTester $I
      */
+    public function storeValidate(FunctionalTester $I)
+    {
+        $I->wantTo('validate a repeated expense');
+        $I->amOnPage('/repeatedexpenses/create');
+        $I->submitForm(
+            '#store', [
+                        'name'               => 'TestRepeatedExpenseXX',
+                        'account_id'         => 1,
+                        'targetamount'       => 1000,
+                        'targetdate'         => Carbon::now()->format('Y-m-d'),
+                        'rep_length'         => 'month',
+                        'rep_every'          => 0,
+                        'rep_times'          => 0,
+                        'remind_me'          => 1,
+                        'reminder'           => 'month',
+                        'post_submit_action' => 'validate_only',
+                    ]
+        );
+
+        $I->see('TestRepeatedExpenseXX');
+        $I->see('OK');
+        $I->seeInSession('successes');
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
     public function storeAndReturn(FunctionalTester $I)
     {
         $I->wantTo('store a repeated expense and return');
@@ -190,6 +217,33 @@ class RepeatedExpenseControllerCest
                      ]
         );
         $I->see('Repeated expense &quot;' . $repeatedExpense->name . '!&quot; updated.');
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function updateValidate(FunctionalTester $I)
+    {
+        $repeatedExpense = PiggyBank::where('repeats', 1)->first();
+        $I->wantTo('validate an updated repeated expense');
+        $I->amOnPage('/repeatedexpenses/edit/' . $repeatedExpense->id);
+        $I->submitForm(
+            '#update', [
+                         'name'               => $repeatedExpense->name . 'ABCD',
+                         'account_id'         => 2,
+                         'targetamount'       => 1000.00,
+                         'targetdate'         => $repeatedExpense->targetdate->format('Y-m-d'),
+                         'rep_length'         => 'month',
+                         'rep_every'          => 0,
+                         'rep_times'          => 0,
+                         'remind_me'          => 1,
+                         'reminder'           => 'month',
+                         'post_submit_action' => 'validate_only',
+                     ]
+        );
+        $I->see($repeatedExpense->name . 'ABCD');
+        $I->see('OK');
+        $I->seeInSession('successes');
     }
 
     /**
