@@ -32,6 +32,7 @@ class FF3ServiceProvider extends ServiceProvider
     /**
      * Return the services bla bla.
      *
+     * @CodeCoverageIgnore
      * @return array
      */
     public function provides()

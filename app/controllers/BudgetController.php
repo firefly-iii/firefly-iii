@@ -8,9 +8,6 @@ use FireflyIII\Shared\Preferences\PreferencesInterface as Pref;
  * Class BudgetController
  *
  * @SuppressWarnings("CamelCase") // I'm fine with this.
- * @SuppressWarnings("TooManyMethods") // I'm also fine with this.
- * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
- * @SuppressWarnings("CouplingBetweenObjects") // There's only so much I can remove.
  *
  */
 class BudgetController extends BaseController
@@ -45,7 +42,7 @@ class BudgetController extends BaseController
         $date            = Session::get('start', Carbon::now()->startOfMonth());
         $limitRepetition = $this->_repository->updateLimitAmount($budget, $date, $amount);
 
-        return Response::json(['name' => $budget->name, 'repetition' => $limitRepetition->id]);
+        return Response::json(['name' => $budget->name, 'repetition' => $limitRepetition ? $limitRepetition->id : 0]);
 
     }
 
@@ -148,6 +145,8 @@ class BudgetController extends BaseController
     }
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * @param Budget          $budget
      * @param LimitRepetition $repetition
      *
@@ -184,10 +183,11 @@ class BudgetController extends BaseController
         Session::flash('errors', $messages['errors']);
         if ($messages['errors']->count() > 0) {
             Session::flash('error', 'Could not validate budget: ' . $messages['errors']->first());
+            return Redirect::route('budgets.create')->withInput();
         }
 
         // return to create screen:
-        if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
+        if ($data['post_submit_action'] == 'validate_only') {
             return Redirect::route('budgets.create')->withInput();
         }
 
@@ -222,10 +222,11 @@ class BudgetController extends BaseController
         Session::flash('errors', $messages['errors']);
         if ($messages['errors']->count() > 0) {
             Session::flash('error', 'Could not update budget: ' . $messages['errors']->first());
+            return Redirect::route('budgets.edit', $budget->id)->withInput();
         }
 
         // return to update screen:
-        if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
+        if ($data['post_submit_action'] == 'validate_only') {
             return Redirect::route('budgets.edit', $budget->id)->withInput();
         }
 

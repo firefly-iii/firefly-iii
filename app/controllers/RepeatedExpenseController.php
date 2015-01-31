@@ -6,8 +6,6 @@ use FireflyIII\Exception\FireflyException;
 
 /**
  * @SuppressWarnings("CamelCase") // I'm fine with this.
- * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
- * @SuppressWarnings("CouplingBetweenObjects") // There's only so much I can remove.
  *
  * Class RepeatedExpenseController
  */
@@ -34,7 +32,7 @@ class RepeatedExpenseController extends BaseController
         /** @var \FireflyIII\Database\Account\Account $acct */
         $acct     = App::make('FireflyIII\Database\Account\Account');
         $periods  = Config::get('firefly.piggy_bank_periods');
-        $accounts = FFForm::makeSelectList($acct->getAssetAccounts());
+        $accounts = FFForm::makeSelectList($acct->getAccountsByType(['Default account', 'Asset account']));
 
         return View::make('repeatedExpense.create', compact('accounts', 'periods'))->with('subTitle', 'Create new repeated expense')->with(
             'subTitleIcon', 'fa-plus'
@@ -79,7 +77,7 @@ class RepeatedExpenseController extends BaseController
         $acct = App::make('FireflyIII\Database\Account\Account');
 
         $periods      = Config::get('firefly.piggy_bank_periods');
-        $accounts     = FFForm::makeSelectList($acct->getAssetAccounts());
+        $accounts     = FFForm::makeSelectList($acct->getAccountsByType(['Default account', 'Asset account']));
         $subTitle     = 'Edit repeated expense "' . e($repeatedExpense->name) . '"';
         $subTitleIcon = 'fa-pencil';
 
@@ -137,7 +135,7 @@ class RepeatedExpenseController extends BaseController
     }
 
     /**
-     *
+     *  @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
      */
     public function store()
     {
@@ -152,7 +150,6 @@ class RepeatedExpenseController extends BaseController
         $data['remind_me']     = isset($data['remind_me']) ? 1 : 0;
         $data['order']         = 0;
 
-        // always validate:
         $messages = $this->_repository->validate($data);
 
         Session::flash('warnings', $messages['warnings']);
@@ -160,11 +157,12 @@ class RepeatedExpenseController extends BaseController
         Session::flash('errors', $messages['errors']);
         if ($messages['errors']->count() > 0) {
             Session::flash('error', 'Could not store repeated expense: ' . $messages['errors']->first());
+            return Redirect::route('repeated.create')->withInput();
         }
 
 
         // return to create screen:
-        if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
+        if ($data['post_submit_action'] == 'validate_only') {
             return Redirect::route('repeated.create')->withInput();
         }
 
@@ -180,6 +178,8 @@ class RepeatedExpenseController extends BaseController
     }
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * @param PiggyBank $repeatedExpense
      *
      * @return $this
@@ -196,7 +196,6 @@ class RepeatedExpenseController extends BaseController
         $data['remind_me']     = isset($data['remind_me']) ? 1 : 0;
         $data['user_id']       = Auth::user()->id;
 
-        // always validate:
         $messages = $this->_repository->validate($data);
 
         Session::flash('warnings', $messages['warnings']);
@@ -204,10 +203,11 @@ class RepeatedExpenseController extends BaseController
         Session::flash('errors', $messages['errors']);
         if ($messages['errors']->count() > 0) {
             Session::flash('error', 'Could not update repeated expense: ' . $messages['errors']->first());
+            return Redirect::route('repeated.edit', $repeatedExpense->id)->withInput();
         }
 
         // return to update screen:
-        if ($data['post_submit_action'] == 'validate_only' || $messages['errors']->count() > 0) {
+        if ($data['post_submit_action'] == 'validate_only') {
             return Redirect::route('repeated.edit', $repeatedExpense->id)->withInput();
         }
 

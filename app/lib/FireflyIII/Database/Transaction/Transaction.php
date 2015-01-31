@@ -22,9 +22,11 @@ class Transaction implements CUDInterface, CommonDatabaseCallsInterface
 
     /**
      * @param Eloquent $model
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return bool
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function destroy(Eloquent $model)
     {
@@ -59,11 +61,14 @@ class Transaction implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param Eloquent $model
      * @param array    $data
      *
      * @return bool
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function update(Eloquent $model, array $data)
     {
@@ -92,12 +97,15 @@ class Transaction implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Returns an object with id $id.
      *
      * @param int $objectId
      *
      * @return \Eloquent
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function find($objectId)
     {
@@ -105,12 +113,15 @@ class Transaction implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
      *
      * @param $what
      *
      * @return \AccountType|null
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function findByWhat($what)
     {
@@ -122,6 +133,7 @@ class Transaction implements CUDInterface, CommonDatabaseCallsInterface
      *
      * @return Collection
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function get()
     {
@@ -129,10 +141,13 @@ class Transaction implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param array $ids
      *
      * @return Collection
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function getByIds(array $ids)
     {

@@ -5,7 +5,41 @@
     <div class="col-lg-5 col-md-5 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">Income</div>
-            @include('list.journals-small',['journals' => $income])
+                <table class="table table-bordered">
+                    <?php $tableSum = 0;?>
+                    @foreach($income as $entry)
+                        <tr>
+                            <td>
+                                <a href="{{route('transactions.show',$entry->id)}}" title="{{{$entry->description}}}">{{{$entry->description}}}</a>
+                            </td>
+                            <td>
+                                <?php $tableSum += floatval($entry->amount);?>
+                                @if($entry->type == 'Withdrawal')
+                                    <span class="text-danger">{{Amount::format($entry->amount,false)}}</span>
+                                @endif
+                                @if($entry->type == 'Deposit')
+                                    <span class="text-success">{{Amount::format($entry->amount,false)}}</span>
+                                @endif
+                                @if($entry->type == 'Transfer')
+                                    <span class="text-info">{{Amount::format($entry->amount,false)}}</span>
+                                @endif
+                            </td>
+                            <td>
+                                {{$entry->date->format('j F Y')}}
+                            </td>
+                            <td>
+                                <a href="{{route('accounts.show',$entry->account_id)}}">{{{$entry->name}}}</a>
+                            </td>
+                        </tr>
+                    @endforeach
+                    @if(isset($displaySum) && $displaySum === true)
+                        <tr>
+                            <td><em>Sum</em></td>
+                            <td colspan="3">{{Amount::format($tableSum)}}</td>
+
+                        </tr>
+                    @endif
+                </table>
         </div>
     </div>
     <div class="col-lg-4 col-md-4 col-sm-12">

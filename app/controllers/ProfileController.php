@@ -1,8 +1,7 @@
 <?php
 
 /**
- * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
- *
+ * @SuppressWarnings("CamelCase") // I'm fine with this.
  * Class ProfileController
  */
 class ProfileController extends BaseController
@@ -39,19 +38,9 @@ class ProfileController extends BaseController
 
             return View::make('profile.change-password');
         }
-        if (strlen(Input::get('new1')) == 0 || strlen(Input::get('new2')) == 0) {
-            Session::flash('error', 'Do fill in a password!');
-
-            return View::make('profile.change-password');
-        }
-        if (Input::get('new1') == Input::get('old')) {
-            Session::flash('error', 'The idea is to change your password.');
-
-            return View::make('profile.change-password');
-        }
-
-        if (Input::get('new1') !== Input::get('new2')) {
-            Session::flash('error', 'New passwords do not match!');
+        $result = $this->_validatePassword(Input::get('old'), Input::get('new1'), Input::get('new2'));
+        if (!($result === true)) {
+            Session::flash('error', $result);
 
             return View::make('profile.change-password');
         }
@@ -64,6 +53,33 @@ class ProfileController extends BaseController
         Session::flash('success', 'Password changed!');
 
         return Redirect::route('profile');
+    }
+
+    /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
+     * @param string $old
+     * @param string $new1
+     * @param string $new2
+     *
+     * @return string|bool
+     */
+    protected function _validatePassword($old, $new1, $new2)
+    {
+        if (strlen($new1) == 0 || strlen($new2) == 0) {
+            return 'Do fill in a password!';
+
+        }
+        if ($new1 == $old) {
+            return 'The idea is to change your password.';
+        }
+
+        if ($new1 !== $new2) {
+            return 'New passwords do not match!';
+        }
+
+        return true;
+
     }
 
 } 

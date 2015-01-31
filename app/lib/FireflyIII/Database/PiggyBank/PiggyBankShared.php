@@ -58,12 +58,15 @@ class PiggyBankShared
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
      *
      * @param $what
      *
      * @return \AccountType|null
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function findByWhat($what)
     {
@@ -75,14 +78,11 @@ class PiggyBankShared
      *
      * @return Collection
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function getByIds(array $ids)
     {
-        return \PiggyBank::
-        leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')->whereIn('piggy_banks.id', [$ids])->where(
-            'accounts.user_id', $this->getUser()->id
-        )
-                         ->first(['piggy_banks.*']);
+       throw new NotImplementedException;
     }
 
     /**
@@ -123,6 +123,8 @@ class PiggyBankShared
 
 
     /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * @param Eloquent $model
      * @param array    $data
      *

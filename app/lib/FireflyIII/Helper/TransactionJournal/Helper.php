@@ -13,15 +13,6 @@ class Helper implements HelperInterface
 {
 
     /**
-     * @param $what
-     *
-     * @return int
-     */
-    public function getTransactionTypeIdByWhat($what) {
-
-    }
-
-    /**
      *
      * Get the account_id, which is the asset account that paid for the transaction.
      *
@@ -49,7 +40,7 @@ class Helper implements HelperInterface
         /** @var \FireflyIII\Database\Account\Account $accountRepository */
         $accountRepository = \App::make('FireflyIII\Database\Account\Account');
 
-        return $accountRepository->getAssetAccounts();
+        return $accountRepository->getAccountsByType(['Default account', 'Asset account']);
     }
 
     /**
@@ -89,5 +80,6 @@ class Helper implements HelperInterface
 
 
     }
+
 
 }

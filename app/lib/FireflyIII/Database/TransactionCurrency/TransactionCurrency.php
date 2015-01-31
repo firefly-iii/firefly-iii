@@ -89,23 +89,27 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Returns an object with id $id.
      *
      * @param int $objectId
-     * @throws NotImplementedException
      *
      * @return \Eloquent
      */
     public function find($objectId)
     {
-        throw new NotImplementedException;
+        return \TransactionCurrency::find($objectId);
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
      *
      * @param $what
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      *
      * @return \AccountType|null
      */
@@ -125,8 +129,11 @@ class TransactionCurrency implements TransactionCurrencyInterface, CommonDatabas
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param array $objectIds
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      *
      * @return Collection
      */

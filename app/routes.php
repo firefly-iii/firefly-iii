@@ -204,7 +204,7 @@ Route::group(
     Route::get('/categories/edit/{category}', ['uses' => 'CategoryController@edit', 'as' => 'categories.edit']);
     Route::get('/categories/delete/{category}', ['uses' => 'CategoryController@delete', 'as' => 'categories.delete']);
     Route::get('/categories/show/{category}', ['uses' => 'CategoryController@show', 'as' => 'categories.show']);
-    Route::get('/categories/list/noCategory', ['uses' => 'CategoryController@noCategory', 'as' => 'categories.noBudget']);
+    Route::get('/categories/list/noCategory', ['uses' => 'CategoryController@noCategory', 'as' => 'categories.noCategory']);
 
     // currency controller
     Route::get('/currency', ['uses' => 'CurrencyController@index', 'as' => 'currency.index']);
@@ -222,11 +222,13 @@ Route::group(
     Route::get('/chart/reports/income-expenses/{year}', ['uses' => 'GoogleChartController@yearInExp']);
     Route::get('/chart/reports/income-expenses-sum/{year}', ['uses' => 'GoogleChartController@yearInExpSum']);
     Route::get('/chart/bills/{bill}', ['uses' => 'GoogleChartController@billOverview']);
-    Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'GoogleChartController@budgetLimitSpending']);
+
     Route::get('/chart/piggy_history/{piggyBank}', ['uses' => 'GoogleChartController@piggyBankHistory']);
 
     // google chart for components (categories + budgets combined)
-    Route::get('/chart/budget/{budget}/spending/{year}', ['uses' => 'GoogleChartController@budgetsAndSpending']);
+    Route::get('/chart/budget/{budget}/spending/{year?}', ['uses' => 'GoogleChartController@budgetsAndSpending']);
+    Route::get('/chart/budgets/spending/{year?}', ['uses' => 'GoogleChartController@allBudgetsAndSpending']);
+    Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'GoogleChartController@budgetLimitSpending']);
     Route::get('/chart/category/{category}/spending/{year}', ['uses' => 'GoogleChartController@categoriesAndSpending']);
 
     // help controller

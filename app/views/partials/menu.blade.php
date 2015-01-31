@@ -177,7 +177,7 @@
                         <a @if($isTransfer)class="active"@endif href="{{route('transactions.create','transfer')}}"><i class="fa fa-arrows-h fa-fw"></i> Transfer</a>
                     </li>
                     <li>
-                        <a @if($isBill)class="active"@endif href="{{route('bills.create')}}"><i class="fa fa-rotate-right fa-fw"></i> Bills</a>
+                        <a @if($isBill)class="active"@endif href="{{route('bills.create')}}"><i class="fa fa-calendar-o fa-fw"></i> Bill</a>
                     </li>
                 </ul>
                 <!-- /.nav-second-level -->

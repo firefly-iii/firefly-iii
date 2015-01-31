@@ -63,12 +63,13 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
      */
     public function store(array $data)
     {
-        $currency = $this->getJournalCurrency($data['currency']);
-        $journal  = new \TransactionJournal(
+        $journal = new \TransactionJournal(
             [
                 'transaction_type_id'     => $data['transaction_type_id'],
-                'transaction_currency_id' => $currency->id, 'user_id' => $this->getUser()->id,
-                'description'             => $data['description'], 'date' => $data['date'], 'completed' => 0]
+                'transaction_currency_id' => $data['transaction_currency_id'],
+                'user_id'                 => $this->getUser()->id,
+                'description'             => $data['description'],
+                'date'                    => $data['date'], 'completed' => 0]
         );
         $journal->save();
 
@@ -102,7 +103,7 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
     public function update(Eloquent $model, array $data)
     {
         $journalType        = $this->getJournalType($data['what']);
-        $currency           = $this->getJournalCurrency($data['currency']);
+        $currency           = $this->getJournalCurrencyById($data['transaction_currency_id']);
         $model->description = $data['description'];
         $model->date        = $data['date'];
 
@@ -117,9 +118,6 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
         $this->storeBudget($data, $model);
         $this->storeCategory($data, $model);
 
-        /*
-         * Now we can update the transactions related to this journal.
-         */
         $amount = floatval($data['amount']);
         /** @var \Transaction $transaction */
         foreach ($model->transactions()->get() as $transaction) {
@@ -164,88 +162,19 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
         if (!isset($model['what'])) {
             $errors->add('description', 'Internal error: need to know type of transaction!');
         }
-        /*
-         * Amount
-         */
-        if (isset($model['amount']) && floatval($model['amount']) < 0.01) {
-            $errors->add('amount', 'Amount must be > 0.01');
-        } else {
-            if (!isset($model['amount'])) {
-                $errors->add('amount', 'Amount must be set!');
-            } else {
-                $successes->add('amount', 'OK');
+        if (strlen($model['description']) == 0) {
+            $errors->add('description', 'The description field is required.');
+        }
+        $errors = $errors->merge($this->_validateAmount($model));
+        $errors = $errors->merge($this->_validateBudget($model));
+        $errors = $errors->merge($this->_validateAccount($model));
+
+        $list = ['date', 'description', 'amount', 'budget_id', 'from', 'to', 'account_from_id', 'account_to_id', 'category', 'account_id', 'expense_account',
+                 'revenue_account'];
+        foreach ($list as $entry) {
+            if (!$errors->has($entry)) {
+                $successes->add($entry, 'OK');
             }
-        }
-
-        /*
-         * Budget
-         */
-        if (isset($model['budget_id']) && !ctype_digit($model['budget_id'])) {
-            $errors->add('budget_id', 'Invalid budget');
-        } else {
-            $successes->add('budget_id', 'OK');
-        }
-
-        $successes->add('category', 'OK');
-
-        /*
-         * Many checks to catch invalid or not-existing accounts.
-         */
-        switch (true) {
-            // this combination is often seen in withdrawals.
-            case (isset($model['account_id']) && isset($model['expense_account'])):
-                if (intval($model['account_id']) < 1) {
-                    $errors->add('account_id', 'Invalid account.');
-                } else {
-                    $successes->add('account_id', 'OK');
-                }
-                $successes->add('expense_account', 'OK');
-                break;
-            case (isset($model['account_id']) && isset($model['revenue_account'])):
-                if (intval($model['account_id']) < 1) {
-                    $errors->add('account_id', 'Invalid account.');
-                } else {
-                    $successes->add('account_id', 'OK');
-                }
-                $successes->add('revenue_account', 'OK');
-                break;
-            case (isset($model['account_from_id']) && isset($model['account_to_id'])):
-                if (intval($model['account_from_id']) < 1 || intval($model['account_from_id']) < 1) {
-                    $errors->add('account_from_id', 'Invalid account selected.');
-                    $errors->add('account_to_id', 'Invalid account selected.');
-
-                } else {
-                    if (intval($model['account_from_id']) == intval($model['account_to_id'])) {
-                        $errors->add('account_to_id', 'Cannot be the same as "from" account.');
-                        $errors->add('account_from_id', 'Cannot be the same as "to" account.');
-                    } else {
-                        $successes->add('account_from_id', 'OK');
-                        $successes->add('account_to_id', 'OK');
-                    }
-                }
-                break;
-
-            case (isset($model['to']) && isset($model['from'])):
-                if (is_object($model['to']) && is_object($model['from'])) {
-                    $successes->add('from', 'OK');
-                    $successes->add('to', 'OK');
-                }
-                break;
-
-            default:
-                throw new FireflyException('Cannot validate accounts for transaction journal.');
-                break;
-        }
-
-
-        /*
-         * Add "OK"
-         */
-        if (!$errors->has('description')) {
-            $successes->add('description', 'OK');
-        }
-        if (!$errors->has('date')) {
-            $successes->add('date', 'OK');
         }
 
         return ['errors' => $errors, 'warnings' => $warnings, 'successes' => $successes];
@@ -254,19 +183,8 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
     }
 
     /**
-     * @param $currency
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
      *
-     * @return null|\TransactionCurrency
-     */
-    public function getJournalCurrency($currency)
-    {
-        /** @var \FireflyIII\Database\TransactionCurrency\TransactionCurrency $currencyRepository */
-        $currencyRepository = \App::make('FireflyIII\Database\TransactionCurrency\TransactionCurrency');
-
-        return $currencyRepository->findByCode($currency);
-    }
-
-    /**
      * @param array $data
      *
      * @return array
@@ -378,24 +296,132 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
     }
 
     /**
+     * @param int $currencyId
+     *
+     * @return null|\TransactionCurrency
+     */
+    public function getJournalCurrencyById($currencyId)
+    {
+        /** @var \FireflyIII\Database\TransactionCurrency\TransactionCurrency $currencyRepository */
+        $currencyRepository = \App::make('FireflyIII\Database\TransactionCurrency\TransactionCurrency');
+
+        return $currencyRepository->find($currencyId);
+    }
+
+    /**
+     * @SuppressWarnings("CamelCase") // I'm fine with this.
+     *
+     * @param array $model
+     *
+     * @return MessageBag
+     */
+    protected function _validateAmount(array $model)
+    {
+        $errors = new MessageBag;
+        if (isset($model['amount']) && floatval($model['amount']) < 0.01) {
+            $errors->add('amount', 'Amount must be > 0.01');
+        } else {
+            if (!isset($model['amount'])) {
+                $errors->add('amount', 'Amount must be set!');
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @SuppressWarnings("CamelCase") // I'm fine with this.
+     *
+     * @param array $model
+     *
+     * @return MessageBag
+     */
+    protected function _validateBudget(array $model)
+    {
+        /*
+         * Budget (is not in rules)
+         */
+        $errors = new MessageBag;
+        if (isset($model['budget_id']) && !ctype_digit($model['budget_id'])) {
+            $errors->add('budget_id', 'Invalid budget');
+        }
+
+        return $errors;
+    }
+
+    /**
+     * @SuppressWarnings("CamelCase") // I'm fine with this.
+     *
+     * @param array $model
+     *
+     * @return MessageBag
+     * @throws FireflyException
+     */
+    protected function _validateAccount(array $model)
+    {
+        $errors = new MessageBag;
+        switch (true) {
+            // this combination is often seen in withdrawals.
+            case (isset($model['account_id']) && isset($model['expense_account'])):
+                if (intval($model['account_id']) < 1) {
+                    $errors->add('account_id', 'Invalid account.');
+                }
+                break;
+            // often seen in deposits
+            case (isset($model['account_id']) && isset($model['revenue_account'])):
+                if (intval($model['account_id']) < 1) {
+                    $errors->add('account_id', 'Invalid account.');
+                }
+                break;
+            // often seen in transfers
+            case (isset($model['account_from_id']) && isset($model['account_to_id'])):
+                if (intval($model['account_from_id']) < 1 || intval($model['account_from_id']) < 1) {
+                    $errors->add('account_from_id', 'Invalid account selected.');
+                    $errors->add('account_to_id', 'Invalid account selected.');
+
+                } else {
+                    if (intval($model['account_from_id']) == intval($model['account_to_id'])) {
+                        $errors->add('account_to_id', 'Cannot be the same as "from" account.');
+                        $errors->add('account_from_id', 'Cannot be the same as "to" account.');
+                    }
+                }
+                break;
+            case (isset($model['from']) && isset($model['to'])):
+                break;
+            default:
+                throw new FireflyException('Cannot validate accounts for transaction journal.');
+                break;
+        }
+
+        return $errors;
+    }
+
+    /**
      * Returns an object with id $id.
      *
      * @param int $objectId
+     *
+     * @codeCoverageIgnore
+     * @throws NotImplementedException
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return \Eloquent
      */
     public function find($objectId)
     {
-        return $this->getUser()->transactionjournals()->find($objectId);
+        throw new NotImplementedException;
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Finds an account type using one of the "$what"'s: expense, asset, revenue, opening, etc.
      *
      * @param $what
      *
      * @return \AccountType|null
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function findByWhat($what)
     {
@@ -406,11 +432,11 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
      * Returns all objects.
      *
      * @return Collection
+     * @codeCoverageIgnore
      */
     public function get()
     {
-        return $this->getUser()->transactionjournals()->with(['TransactionType', 'transactions', 'transactions.account', 'transactions.account.accountType'])
-                    ->get();
+        throw new NotImplementedException;
     }
 
     /**
@@ -442,17 +468,6 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
     public function first()
     {
         return $this->getUser()->transactionjournals()->orderBy('date', 'ASC')->first();
-    }
-
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getInDateRange(Carbon $start, Carbon $end)
-    {
-        return $this->getuser()->transactionjournals()->withRelevantData()->before($end)->after($start)->get();
     }
 
     /**
@@ -537,6 +552,19 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
         )->get(['transaction_journals.*']);
 
         return $query;
+    }
+
+    /**
+     * @param $currency
+     *
+     * @return null|\TransactionCurrency
+     */
+    public function getJournalCurrency($currency)
+    {
+        /** @var \FireflyIII\Database\TransactionCurrency\TransactionCurrency $currencyRepository */
+        $currencyRepository = \App::make('FireflyIII\Database\TransactionCurrency\TransactionCurrency');
+
+        return $currencyRepository->findByCode($currency);
     }
 
     /**

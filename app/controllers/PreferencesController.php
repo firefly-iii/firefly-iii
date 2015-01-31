@@ -3,7 +3,6 @@
 /**
  * Class PreferencesController
  *
- * @SuppressWarnings("CyclomaticComplexity") // It's all 5. So ok.
  *
  */
 class PreferencesController extends BaseController
@@ -29,7 +28,7 @@ class PreferencesController extends BaseController
         /** @var \FireflyIII\Shared\Preferences\Preferences $preferences */
         $preferences = App::make('FireflyIII\Shared\Preferences\Preferences');
 
-        $accounts       = $acct->getAssetAccounts();
+        $accounts       = $acct->getAccountsByType(['Default account', 'Asset account']);
         $viewRange      = $preferences->get('viewRange', '1M');
         $viewRangeValue = $viewRange->data;
         $frontPage      = $preferences->get('frontPageAccounts', []);

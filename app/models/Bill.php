@@ -1,5 +1,4 @@
 <?php
-use Carbon\Carbon;
 use Watson\Validating\ValidatingTrait;
 use \Illuminate\Database\Eloquent\Model as Eloquent;
 /**

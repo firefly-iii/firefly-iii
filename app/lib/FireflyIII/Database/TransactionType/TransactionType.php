@@ -20,10 +20,13 @@ class TransactionType implements CUDInterface, CommonDatabaseCallsInterface
 {
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param Eloquent $model
      *
      * @return bool
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function destroy(Eloquent $model)
     {
@@ -31,10 +34,13 @@ class TransactionType implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param array $data
      *
      * @return \Eloquent
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function store(array $data)
     {
@@ -42,11 +48,14 @@ class TransactionType implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param Eloquent $model
      * @param array    $data
      *
      * @return bool
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function update(Eloquent $model, array $data)
     {
@@ -54,6 +63,8 @@ class TransactionType implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Validates an array. Returns an array containing MessageBags
      * errors/warnings/successes.
      *
@@ -61,6 +72,7 @@ class TransactionType implements CUDInterface, CommonDatabaseCallsInterface
      *
      * @return array
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function validate(array $model)
     {
@@ -68,12 +80,15 @@ class TransactionType implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Returns an object with id $id.
      *
      * @param int $objectId
      *
      * @return \Eloquent
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function find($objectId)
     {
@@ -96,17 +111,21 @@ class TransactionType implements CUDInterface, CommonDatabaseCallsInterface
             'withdrawal' => 'Withdrawal',
             'deposit'    => 'Deposit',
         ];
-        if(!isset($translation[$what])) {
+        if (!isset($translation[$what])) {
             throw new FireflyException('Cannot find transaction type described as "' . e($what) . '".');
         }
+
         return \TransactionType::whereType($translation[$what])->first();
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * Returns all objects.
      *
      * @return Collection
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function get()
     {
@@ -114,10 +133,13 @@ class TransactionType implements CUDInterface, CommonDatabaseCallsInterface
     }
 
     /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @param array $ids
      *
      * @return Collection
      * @throws NotImplementedException
+     * @codeCoverageIgnore
      */
     public function getByIds(array $ids)
     {

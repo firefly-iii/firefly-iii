@@ -1,8 +1,5 @@
 <?php
 
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model as Eloquent;
-use Illuminate\Database\QueryException;
 use Watson\Validating\ValidatingTrait;
 
 /**

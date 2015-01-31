@@ -193,6 +193,30 @@ class PiggyBankControllerCest
                        'account_id'    => 1, 'targetamount' => 1000]
         );
         $I->see('Piggy bank &quot;Some new piggy bank&quot; stored.');
+        $I->seeRecord('piggy_banks', ['name' => 'Some new piggy bank']);
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
+    public function storeValidate(FunctionalTester $I)
+    {
+        $I->wantTo('validate a new piggy bank');
+        $I->amOnPage('/piggy_banks/create');
+        $I->see('Create new piggy bank');
+        $I->submitForm(
+            '#store', ['name'               => 'Some new piggy bank validated',
+                       'rep_every'          => 0,
+                       'reminder_skip'      => 0,
+                       'remind_me'          => 0,
+                       'order'              => 3,
+                       'post_submit_action' => 'validate_only',
+                       'account_id'         => 1,
+                       'targetamount'       => 1000]
+        );
+        $I->see('OK');
+        $I->seeInSession('successes');
+        $I->dontSeeRecord('piggy_banks', ['name' => 'Some new piggy bank validated']);
     }
 
     /**

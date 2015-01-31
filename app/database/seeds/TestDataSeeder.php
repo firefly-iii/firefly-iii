@@ -1,14 +1,15 @@
 <?php
-
 use Carbon\Carbon;
 
 /**
- *
  * @SuppressWarnings("CamelCase") // I'm fine with this.
+ * @SuppressWarnings("TooManyMethods") // I'm fine with this
+ * @SuppressWarnings("CouplingBetweenObjects") // I'm fine with this
+ * @SuppressWarnings("MethodLength") // I'm fine with this
  *
- * Class TestContentSeeder
+ * Class TestDataSeeder
  */
-class TestContentSeeder extends Seeder
+class TestDataSeeder extends Seeder
 {
     /** @var  string */
     public $eom;
@@ -72,87 +73,123 @@ class TestContentSeeder extends Seeder
      */
     public function run()
     {
-        if (App::environment() == 'testing' || App::environment() == 'homestead') {
-
-            $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
-
-            // create initial accounts and various other stuff:
-            $this->createAssetAccounts($user);
-            $this->createBudgets($user);
-            $this->createCategories($user);
-            $this->createPiggyBanks($user);
-            $this->createReminders($user);
-            $this->createRecurringTransactions($user);
-            $this->createBills($user);
-            $this->createExpenseAccounts($user);
-            $this->createRevenueAccounts($user);
-
-            // get some objects from the database:
-            $checking   = Account::whereName('Checking account')->orderBy('id', 'DESC')->first();
-            $savings    = Account::whereName('Savings account')->orderBy('id', 'DESC')->first();
-            $landLord   = Account::whereName('Land lord')->orderBy('id', 'DESC')->first();
-            $utilities  = Account::whereName('Utilities company')->orderBy('id', 'DESC')->first();
-            $television = Account::whereName('TV company')->orderBy('id', 'DESC')->first();
-            $phone      = Account::whereName('Phone agency')->orderBy('id', 'DESC')->first();
-            $employer   = Account::whereName('Employer')->orderBy('id', 'DESC')->first();
+        User::create(['email' => 'reset@example.com', 'password' => 'functional', 'reset' => 'okokokokokokokokokokokokokokokok', 'remember_token' => null]);
+        User::create(['email' => 'functional@example.com', 'password' => 'functional', 'reset' => null, 'remember_token' => null]);
 
 
-            $bills     = Budget::whereName('Bills')->orderBy('id', 'DESC')->first();
-            $groceries = Budget::whereName('Groceries')->orderBy('id', 'DESC')->first();
+        $user = User::create(['email' => 'thegrumpydictator@gmail.com', 'password' => 'james', 'reset' => null, 'remember_token' => null]);
+        Log::debug('Created users.');
+        // create initial accounts and various other stuff:
+        $this->createAssetAccounts($user);
+        Log::debug('Created asset accounts.');
+        $this->createBudgets($user);
+        Log::debug('Created budgets.');
+        $this->createCategories($user);
+        Log::debug('Created categories.');
+        $this->createPiggyBanks($user);
+        Log::debug('Created piggy banks.');
+        $this->createReminders($user);
+        Log::debug('Created reminders.');
+        $this->createRecurringTransactions($user);
+        Log::debug('Created recurring transactions.');
+        $this->createBills($user);
+        Log::debug('Created bills.');
+        $this->createExpenseAccounts($user);
+        Log::debug('Created expense accounts.');
+        $this->createRevenueAccounts($user);
+        Log::debug('Created revenue accounts.');
 
-            $house = Category::whereName('House')->orderBy('id', 'DESC')->first();
-
-
-            $withdrawal = TransactionType::whereType('Withdrawal')->first();
-            $deposit    = TransactionType::whereType('Deposit')->first();
-            $transfer   = TransactionType::whereType('Transfer')->first();
-
-            $euro = TransactionCurrency::whereCode('EUR')->first();
-
-            $rentBill = Bill::where('name', 'Rent')->first();
-
-
-            $current = clone $this->_yearAgoStartOfMonth;
-            while ($current <= $this->_startOfMonth) {
-                $cur       = $current->format('Y-m-d');
-                $formatted = $current->format('F Y');
-
-                // create expenses for rent, utilities, TV, phone on the 1st of the month.
-                $this->createTransaction($checking, $landLord, 800, $withdrawal, 'Rent for ' . $formatted, $cur, $euro, $bills, $house, $rentBill);
-                $this->createTransaction($checking, $utilities, 150, $withdrawal, 'Utilities for ' . $formatted, $cur, $euro, $bills, $house);
-                $this->createTransaction($checking, $television, 50, $withdrawal, 'TV for ' . $formatted, $cur, $euro, $bills, $house);
-                $this->createTransaction($checking, $phone, 50, $withdrawal, 'Phone bill for ' . $formatted, $cur, $euro, $bills, $house);
-
-                // two transactions. One without a budget, one without a category.
-                $this->createTransaction($checking, $phone, 10, $withdrawal, 'Extra charges on phone bill for ' . $formatted, $cur, $euro, null, $house);
-                $this->createTransaction($checking, $television, 5, $withdrawal, 'Extra charges on TV bill for ' . $formatted, $cur, $euro, $bills, null);
-
-                // income from job:
-                $this->createTransaction($employer, $checking, rand(3500, 4000), $deposit, 'Salary for ' . $formatted, $cur, $euro);
-                $this->createTransaction($checking, $savings, 2000, $transfer, 'Salary to savings account in ' . $formatted, $cur, $euro);
-
-                $this->createGroceries($current);
-                $this->createBigExpense(clone $current);
-
-                echo 'Created test-content for ' . $current->format('F Y') . "\n";
-                $current->addMonth();
-            }
+        // get some objects from the database:
+        $checking = Account::whereName('Checking account')->orderBy('id', 'DESC')->first();
+        Log::debug('Found checking: ' . json_encode($checking));
+        $savings = Account::whereName('Savings account')->orderBy('id', 'DESC')->first();
+        Log::debug('Found savings: ' . json_encode($savings));
+        $landLord = Account::whereName('Land lord')->orderBy('id', 'DESC')->first();
+        Log::debug('Found landlord: ' . json_encode($landLord));
+        $utilities = Account::whereName('Utilities company')->orderBy('id', 'DESC')->first();
+        Log::debug('Found utilities: ' . json_encode($utilities));
+        $television = Account::whereName('TV company')->orderBy('id', 'DESC')->first();
+        Log::debug('Found tv company: ' . json_encode($television));
+        $phone = Account::whereName('Phone agency')->orderBy('id', 'DESC')->first();
+        Log::debug('Found phone company: ' . json_encode($phone));
+        $employer = Account::whereName('Employer')->orderBy('id', 'DESC')->first();
+        Log::debug('Found employer: ' . json_encode($employer));
 
 
-            // piggy bank event
-            // add money to this piggy bank
-            // create a piggy bank event to match:
-            $piggyBank = PiggyBank::whereName('New camera')->orderBy('id', 'DESC')->first();
-            $intoPiggy = $this->createTransaction($checking, $savings, 100, $transfer, 'Money for piggy', $this->yaeom, $euro, $groceries, $house);
-            PiggyBankEvent::create(
-                [
-                    'piggy_bank_id'          => $piggyBank->id,
-                    'transaction_journal_id' => $intoPiggy->id,
-                    'date'                   => $this->yaeom,
-                    'amount'                 => 100
-                ]
-            );
+        $bills = Budget::whereName('Bills')->orderBy('id', 'DESC')->first();
+        Log::debug('Found bills budget: ' . json_encode($bills));
+        $groceries = Budget::whereName('Groceries')->orderBy('id', 'DESC')->first();
+        Log::debug('Found groceries budget: ' . json_encode($groceries));
+
+        $house = Category::whereName('House')->orderBy('id', 'DESC')->first();
+        Log::debug('Found house category: ' . json_encode($checking));
+
+
+        $withdrawal = TransactionType::whereType('Withdrawal')->first();
+        Log::debug('Found withdrawal: ' . json_encode($withdrawal));
+        $deposit = TransactionType::whereType('Deposit')->first();
+        Log::debug('Found deposit: ' . json_encode($deposit));
+        $transfer = TransactionType::whereType('Transfer')->first();
+        Log::debug('Found transfer: ' . json_encode($transfer));
+
+        $euro = TransactionCurrency::whereCode('EUR')->first();
+        Log::debug('Found euro: ' . json_encode($euro));
+
+        $rentBill = Bill::where('name', 'Rent')->first();
+        Log::debug('Found bill "rent": ' . json_encode($rentBill));
+
+
+        $current = clone $this->_yearAgoStartOfMonth;
+        while ($current <= $this->_startOfMonth) {
+            $cur       = $current->format('Y-m-d');
+            $formatted = $current->format('F Y');
+            Log::debug('Now at: ' . $cur);
+
+            // create expenses for rent, utilities, TV, phone on the 1st of the month.
+            $this->createTransaction($checking, $landLord, 800, $withdrawal, 'Rent for ' . $formatted, $cur, $euro, $bills, $house, $rentBill);
+            Log::debug('Created rent.');
+            $this->createTransaction($checking, $utilities, 150, $withdrawal, 'Utilities for ' . $formatted, $cur, $euro, $bills, $house);
+            Log::debug('Created utilities.');
+            $this->createTransaction($checking, $television, 50, $withdrawal, 'TV for ' . $formatted, $cur, $euro, $bills, $house);
+            Log::debug('Created TV.');
+            $this->createTransaction($checking, $phone, 50, $withdrawal, 'Phone bill for ' . $formatted, $cur, $euro, $bills, $house);
+            Log::debug('Created phone bill.');
+
+            // two transactions. One without a budget, one without a category.
+            $this->createTransaction($checking, $phone, 10, $withdrawal, 'Extra charges on phone bill for ' . $formatted, $cur, $euro, null, $house);
+            Log::debug('Created extra charges no budget.');
+            $this->createTransaction($checking, $television, 5, $withdrawal, 'Extra charges on TV bill for ' . $formatted, $cur, $euro, $bills, null);
+            Log::debug('Created extra charges no category.');
+
+            // income from job:
+            $this->createTransaction($employer, $checking, rand(3500, 4000), $deposit, 'Salary for ' . $formatted, $cur, $euro);
+            Log::debug('Created income.');
+            $this->createTransaction($checking, $savings, 2000, $transfer, 'Salary to savings account in ' . $formatted, $cur, $euro);
+            Log::debug('Created savings.');
+
+            $this->createGroceries($current);
+            Log::debug('Created groceries range.');
+            $this->createBigExpense(clone $current);
+            Log::debug('Created big expense.');
+
+            echo 'Created test-content for ' . $current->format('F Y') . "\n";
+            $current->addMonth();
         }
+
+
+        // piggy bank event
+        // add money to this piggy bank
+        // create a piggy bank event to match:
+        $piggyBank = PiggyBank::whereName('New camera')->orderBy('id', 'DESC')->first();
+        $intoPiggy = $this->createTransaction($checking, $savings, 100, $transfer, 'Money for piggy', $this->yaeom, $euro, $groceries, $house);
+        PiggyBankEvent::create(
+            [
+                'piggy_bank_id'          => $piggyBank->id,
+                'transaction_journal_id' => $intoPiggy->id,
+                'date'                   => $this->yaeom,
+                'amount'                 => 100
+            ]
+        );
     }
 
     /**
@@ -181,6 +218,9 @@ class TestContentSeeder extends Seeder
     }
 
     /**
+     * @SuppressWarnings(PHPMD.ShortVariable)
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     *
      * @param Account              $from
      * @param Account              $to
      * @param                      $amount
@@ -202,15 +242,24 @@ class TestContentSeeder extends Seeder
         $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
 
         $billID = is_null($bill) ? null : $bill->id;
-
+        Log::debug('String length of encrypted description ("'.$description.'") is: ' . strlen(Crypt::encrypt($description)));
 
         /** @var TransactionJournal $journal */
         $journal = TransactionJournal::create(
             [
-                'user_id'     => $user->id, 'transaction_type_id' => $type->id, 'transaction_currency_id' => $currency->id, 'bill_id' => $billID,
-                'description' => $description, 'completed' => 1, 'date' => $date
+                'user_id'                 => $user->id,
+                'transaction_type_id'     => $type->id,
+                'transaction_currency_id' => $currency->id,
+                'bill_id'                 => $billID,
+                'description'             => $description,
+                'completed'               => 1,
+                'date'                    => $date
             ]
         );
+        //Log::debug('Journal valid: ' . Steam::boolString($journal->isValid()));
+        //Log::debug('Journal errors: ' . json_encode($journal->getErrors()));
+        //Log::debug('Journal created: ' . json_encode($journal));
+
 
         Transaction::create(['account_id' => $from->id, 'transaction_journal_id' => $journal->id, 'amount' => $amount * -1]);
         Transaction::create(['account_id' => $to->id, 'transaction_journal_id' => $journal->id, 'amount' => $amount]);
@@ -411,16 +460,8 @@ class TestContentSeeder extends Seeder
     {
         // bill
         Bill::create(
-            [
-                'user_id'     => $user->id, 'name' => 'Rent', 'match' => 'rent,landlord',
-                'amount_min'  => 700,
-                'amount_max'  => 900,
-                'date'        => $this->som,
-                'active'      => 1,
-                'automatch'   => 1,
-                'repeat_freq' => 'monthly',
-                'skip'        => 0,
-            ]
+            ['user_id' => $user->id, 'name' => 'Rent', 'match' => 'rent,landlord', 'amount_min' => 700, 'amount_max' => 900, 'date' => $this->som,
+             'active'  => 1, 'automatch' => 1, 'repeat_freq' => 'monthly', 'skip' => 0,]
         );
 
         // bill
@@ -429,13 +470,10 @@ class TestContentSeeder extends Seeder
                 'user_id'     => $user->id,
                 'name'        => 'Gas licht',
                 'match'       => 'no,match',
-                'amount_min'  => 500,
-                'amount_max'  => 700,
+                'amount_min'  => 500, 'amount_max' => 700,
                 'date'        => $this->som,
-                'active'      => 1,
-                'automatch'   => 1,
-                'repeat_freq' => 'monthly',
-                'skip'        => 0,
+                'active'      => 1, 'automatch' => 1,
+                'repeat_freq' => 'monthly', 'skip' => 0,
             ]
         );
 
@@ -557,5 +595,8 @@ class TestContentSeeder extends Seeder
         );
         $group->transactionjournals()->save($one);
         $group->transactionjournals()->save($two);
+        $group->save();
     }
-} 
+
+
+}

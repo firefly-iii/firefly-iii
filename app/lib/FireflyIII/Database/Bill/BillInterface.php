@@ -12,18 +12,6 @@ use Carbon\Carbon;
 interface BillInterface
 {
     /**
-     * @param \Bill  $bill
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return null|\TransactionJournal
-     * @internal param Carbon $current
-     * @internal param Carbon $currentEnd
-     *
-     */
-    public function getJournalForBillInRange(\Bill $bill, Carbon $start, Carbon $end);
-
-    /**
      * @param \Bill $bill
      *
      * @return Carbon|null

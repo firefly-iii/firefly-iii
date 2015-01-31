@@ -108,6 +108,16 @@ class BudgetControllerCest
     /**
      * @param FunctionalTester $I
      */
+    public function indexNoBudget(FunctionalTester $I)
+    {
+        $I->wantTo('see transactions without a budget');
+        $I->amOnPage('/budgets/list/noBudget');
+        $I->see('Transactions without a budget in');
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
     public function postUpdateIncome(FunctionalTester $I)
     {
         $date = date('FY');
