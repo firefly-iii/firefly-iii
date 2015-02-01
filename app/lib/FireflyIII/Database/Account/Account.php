@@ -129,7 +129,6 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
             'amount'                  => $balance,
             'from'                    => $fromAccount,
             'completed'               => 0,
-            'what'                    => 'opening',
             'to'                      => $toAccount,
             'date'                    => $date,
             'description'             => 'Opening balance for new account ' . $account->name
@@ -347,41 +346,14 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
      */
     public function validate(array $model)
     {
-        $warnings  = new MessageBag;
         $successes = new MessageBag;
-        $errors    = new MessageBag;
-
-        /*
-         * Name validation:
-         */
-        if (!isset($model['name'])) {
-            $errors->add('name', 'Name is mandatory');
-        }
-
-        if (isset($model['name']) && strlen($model['name']) == 0) {
-            $errors->add('name', 'Name is too short');
-        }
-        if (isset($model['name']) && strlen($model['name']) > 100) {
-            $errors->add('name', 'Name is too long');
-        }
-        $validator = \Validator::make([$model], \Account::$rules);
-        if ($validator->invalid()) {
-            $errors->merge($errors);
-        }
+        $account   = new \Account($model);
+        $account->isValid();
+        $errors = $account->getErrors();
 
         if (isset($model['account_role']) && !in_array($model['account_role'], array_keys(\Config::get('firefly.accountRoles')))) {
             $errors->add('account_role', 'Invalid account role');
-        } else {
-            $successes->add('account_role', 'OK');
         }
-
-        /*
-         * type validation.
-         */
-        if (!isset($model['what'])) {
-            $errors->add('name', 'Internal error: need to know type of account!');
-        }
-
         /*
          * Opening balance and opening balance date.
          */
@@ -397,19 +369,14 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
                 }
             }
         }
-
-
-        if (!$errors->has('name')) {
-            $successes->add('name', 'OK');
-        }
-        if (!$errors->has('openingBalance')) {
-            $successes->add('openingBalance', 'OK');
-        }
-        if (!$errors->has('openingBalanceDate')) {
-            $successes->add('openingBalanceDate', 'OK');
+        $fields = ['name', 'openingBalance', 'openingBalanceDate', 'active', 'account_role'];
+        foreach ($fields as $field) {
+            if (!$errors->has($field)) {
+                $successes->add($field, 'OK');
+            }
         }
 
-        return ['errors' => $errors, 'warnings' => $warnings, 'successes' => $successes];
+        return ['errors' => $errors, 'successes' => $successes];
     }
 
     /**

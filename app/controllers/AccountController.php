@@ -168,14 +168,18 @@ class AccountController extends BaseController
      */
     public function store()
     {
+        /** @var \FireflyIII\Database\AccountType\AccountType $accountTypes */
+        $accountTypes = App::make('FireflyIII\Database\AccountType\AccountType');
 
-        $data = Input::except('_token');
 
+        $data                    = Input::except('_token');
+        $type                    = $accountTypes->findByWhat($data['what']);
+        $data['user_id']         = \Auth::user()->id;
+        $data['account_type_id'] = $type->id;
         // always validate:
         $messages = $this->_repository->validate($data);
 
         // flash messages:
-        Session::flash('warnings', $messages['warnings']);
         Session::flash('successes', $messages['successes']);
         Session::flash('errors', $messages['errors']);
         if ($messages['errors']->count() > 0) {
@@ -205,8 +209,9 @@ class AccountController extends BaseController
      */
     public function update(Account $account)
     {
-        $data         = Input::except('_token');
-        $data['what'] = $this->_shortNamesByFullName[$account->accountType->type];
+        $data                    = Input::except('_token');
+        $data['account_type_id'] = $account->account_type_id;
+        $data['user_id']         = \Auth::user()->id;
 
 
         // always validate:
