@@ -281,7 +281,8 @@ class GoogleChartController extends BaseController
                 $unpaid['items'][] = $entry->name;
                 $unpaid['amount'] += floatval($entry->averageAmount);
             } else {
-                $paid['items'][] = $entry->description;
+                $description     = intval($entry->encrypted) == 1 ? Crypt::decrypt($entry->description) : $entry->description;
+                $paid['items'][] = $description;
                 $paid['amount'] += floatval($entry->actualAmount);
             }
         }

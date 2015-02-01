@@ -67,6 +67,7 @@ class Chart implements ChartInterface
                     ->groupBy('bills.id')
                     ->get(
                         ['bills.id', 'bills.name', 'transaction_journals.description',
+                         'transaction_journals.encrypted',
                          'transaction_journals.id as journalId',
                          \DB::Raw('SUM(`bills`.`amount_min` + `bills`.`amount_max`) / 2 as `averageAmount`'),
                          'transactions.amount AS actualAmount']
