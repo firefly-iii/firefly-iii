@@ -12,21 +12,20 @@ use Watson\Validating\ValidatingTrait;
 class Account extends Eloquent
 {
     use SoftDeletingTrait, ValidatingTrait;
+    protected $dates    = ['deleted_at', 'created_at', 'updated_at'];
+    protected $fillable = ['name', 'user_id', 'account_type_id', 'active'];
     /**
      * Validation rules.
      *
      * @var array
      */
-    public static $rules
-                            = [
-            'name'            => ['required', 'between:1,100'],
+    protected $rules
+        = [
+            'name'            => 'required|between:1,100',
             'user_id'         => 'required|exists:users,id',
             'account_type_id' => 'required|exists:account_types,id',
             'active'          => 'required|boolean'
-
         ];
-    protected     $dates    = ['deleted_at', 'created_at', 'updated_at'];
-    protected     $fillable = ['name', 'user_id', 'account_type_id', 'active'];
 
     /**
      * Account type.

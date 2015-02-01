@@ -159,7 +159,7 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
         $journal->isValid();
         $errors = $journal->getErrors();
 
-        if (!isset($model['what'])) {
+        if (!isset($model['what']) && !isset($model['transaction_type_id'])) {
             $errors->add('description', 'Internal error: need to know type of transaction!');
         }
         if (strlen($model['description']) == 0) {
