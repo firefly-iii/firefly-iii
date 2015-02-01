@@ -88,8 +88,8 @@ class RelatedControllerCest
 
     public function search(FunctionalTester $I)
     {
-        $group = TransactionGroup::first();
-        $one   = $group->transactionjournals[0];
+        $one = TransactionJournal::first();//$group = TransactionGroup::first();
+        //$one   = $group->transactionjournals[0];
 
         $I->wantTo('search for a transaction to relate');
 
