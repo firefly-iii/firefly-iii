@@ -243,49 +243,9 @@ class Report implements ReportInterface
         $start->startOfMonth();
         $end = clone $date;
         $end->endOfMonth();
-        $userId = $this->_accounts->getUser()->id;
 
         return $this->_queries->incomeByPeriod($start, $end);
 
-        //        $list = \TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-        //                                   ->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
-        //                                   ->leftJoin(
-        //                                       'account_meta', function (JoinClause $join) {
-        //                                       $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
-        //                                   }
-        //                                   )
-        //                                   ->transactionTypes(['Deposit'])
-        //                                   ->where('transaction_journals.user_id', $userId)
-        //                                   ->where('transactions.amount', '>', 0)
-        //                                   ->where('transaction_journals.user_id', \Auth::user()->id)
-        //                                   ->where('account_meta.data', '!=', '"sharedExpense"')
-        //                                   ->orderBy('date', 'ASC')
-        //                                   ->before($end)->after($start)->get(['transaction_journals.*']);
-        //
-        //        // incoming from a shared account: it's profit (income):
-        //        $transfers = \TransactionJournal::withRelevantData()
-        //                                        ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-        //                                        ->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
-        //                                        ->leftJoin(
-        //                                            'account_meta', function (JoinClause $join) {
-        //                                            $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
-        //                                        }
-        //                                        )
-        //                                        ->transactionTypes(['Transfer'])
-        //                                        ->where('transaction_journals.user_id', $userId)
-        //                                        ->where('transactions.amount', '<', 0)
-        //                                        ->where('account_meta.data', '=', '"sharedExpense"')
-        //                                        ->orderBy('date', 'ASC')
-        //                                        ->before($end)->after($start)->get(['transaction_journals.*']);
-        //
-        //        $list = $list->merge($transfers);
-        //        $list->sort(
-        //            function (\TransactionJournal $journal) {
-        //                return $journal->date->format('U');
-        //            }
-        //        );
-        //
-        //        return $list;
 
     }
 

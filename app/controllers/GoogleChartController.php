@@ -329,6 +329,8 @@ class GoogleChartController extends BaseController
      *
      * @param Budget $budget
      *
+     * @param int    $year
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function budgetsAndSpending(Budget $budget, $year = 0)

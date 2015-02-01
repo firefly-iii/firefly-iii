@@ -82,13 +82,19 @@ class TransactionJournal extends Eloquent
         return ['created_at', 'updated_at', 'date'];
     }
 
+    /**
+     * @param $value
+     *
+     * @return string
+     */
     public function getDescriptionAttribute($value)
     {
         if ($this->encrypted) {
             return Crypt::decrypt($value);
         }
-
+        // @CodeCoverageIgnoreStart
         return $value;
+        // @CodeCoverageIgnoreEnd
     }
 
     /**
@@ -207,6 +213,9 @@ class TransactionJournal extends Eloquent
         );
     }
 
+    /**
+     * @param $value
+     */
     public function setDescriptionAttribute($value)
     {
         $this->attributes['description'] = Crypt::encrypt($value);

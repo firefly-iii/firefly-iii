@@ -37,7 +37,9 @@ class FF3ServiceProvider extends ServiceProvider
      */
     public function provides()
     {
+        // @CodeCoverageIgnoreStart
         return ['reminders', 'filters', 'datekit', 'navigation'];
+        // @CodeCoverageIgnoreEnd
     }
 
     /**
