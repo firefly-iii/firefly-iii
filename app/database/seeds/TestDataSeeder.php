@@ -66,96 +66,49 @@ class TestDataSeeder extends Seeder
      */
     public function run()
     {
-        User::create(['email' => 'reset@example.com', 'password' => 'functional', 'reset' => 'okokokokokokokokokokokokokokokok', 'remember_token' => null]);
-        User::create(['email' => 'functional@example.com', 'password' => 'functional', 'reset' => null, 'remember_token' => null]);
-
-        $user = User::create(['email' => 'thegrumpydictator@gmail.com', 'password' => 'james', 'reset' => null, 'remember_token' => null]);
-        Log::debug('Created users.');
-        // create initial accounts and various other stuff:
-        $this->createAssetAccounts($user);
-        $this->createBudgets($user);
-        $this->createCategories($user);
-        $this->createPiggyBanks($user);
-        $this->createReminders($user);
-        $this->createRecurringTransactions($user);
-        $this->createBills($user);
-        $this->createExpenseAccounts($user);
-        $this->createRevenueAccounts($user);
-
-        // get some objects from the database:
-        $checking   = Account::whereName('Checking account')->orderBy('id', 'DESC')->first();
-        $savings    = Account::whereName('Savings account')->orderBy('id', 'DESC')->first();
-        $landLord   = Account::whereName('Land lord')->orderBy('id', 'DESC')->first();
-        $utilities  = Account::whereName('Utilities company')->orderBy('id', 'DESC')->first();
-        $television = Account::whereName('TV company')->orderBy('id', 'DESC')->first();
-        $phone      = Account::whereName('Phone agency')->orderBy('id', 'DESC')->first();
-        $employer   = Account::whereName('Employer')->orderBy('id', 'DESC')->first();
-
-
-        $bills     = Budget::whereName('Bills')->orderBy('id', 'DESC')->first();
-        $groceries = Budget::whereName('Groceries')->orderBy('id', 'DESC')->first();
-
-        $house = Category::whereName('House')->orderBy('id', 'DESC')->first();
-
-
-        $withdrawal = TransactionType::whereType('Withdrawal')->first();
-        $deposit    = TransactionType::whereType('Deposit')->first();
-        $transfer   = TransactionType::whereType('Transfer')->first();
-
-        $euro = TransactionCurrency::whereCode('EUR')->first();
-
-        $rentBill = Bill::where('name', 'Rent')->first();
-
+        $this->createUsers();
+        $this->createAssetAccounts();
+        $this->createBudgets();
+        $this->createCategories();
+        $this->createPiggyBanks();
+        $this->createReminders();
+        $this->createRecurringTransactions();
+        $this->createBills();
+        $this->createExpenseAccounts();
+        $this->createRevenueAccounts();
 
         $current = clone $this->_yearAgoStartOfMonth;
         while ($current <= $this->_startOfMonth) {
-            $cur       = $current->format('Y-m-d');
-            $formatted = $current->format('F Y');
-            Log::debug('Now at: ' . $cur);
 
             // create expenses for rent, utilities, TV, phone on the 1st of the month.
-
-            $this->createTransaction($checking, $landLord, 800, $withdrawal, 'Rent for ' . $formatted, $cur, $euro, $bills, $house, $rentBill);
-            $this->createTransaction($checking, $utilities, 150, $withdrawal, 'Utilities for ' . $formatted, $cur, $euro, $bills, $house);
-            $this->createTransaction($checking, $television, 50, $withdrawal, 'TV for ' . $formatted, $cur, $euro, $bills, $house);
-            $this->createTransaction($checking, $phone, 50, $withdrawal, 'Phone bill for ' . $formatted, $cur, $euro, $bills, $house);
-
-            // two transactions. One without a budget, one without a category.
-            $this->createTransaction($checking, $phone, 10, $withdrawal, 'Extra charges on phone bill for ' . $formatted, $cur, $euro, null, $house);
-            $this->createTransaction($checking, $television, 5, $withdrawal, 'Extra charges on TV bill for ' . $formatted, $cur, $euro, $bills, null);
-
-            // income from job:
-            $this->createTransaction($employer, $checking, rand(3500, 4000), $deposit, 'Salary for ' . $formatted, $cur, $euro);
-            $this->createTransaction($checking, $savings, 2000, $transfer, 'Salary to savings account in ' . $formatted, $cur, $euro);
-
-            $this->createGroceries($current);
+            $this->createMonthlyExpenses(clone $current);
+            $this->createGroceries(clone $current);
             $this->createBigExpense(clone $current);
 
             echo 'Created test-content for ' . $current->format('F Y') . "\n";
             $current->addMonth();
         }
+        $this->createPiggyBankEvent();
 
 
-        // piggy bank event
-        // add money to this piggy bank
-        // create a piggy bank event to match:
-        $piggyBank = PiggyBank::whereName('New camera')->orderBy('id', 'DESC')->first();
-        $intoPiggy = $this->createTransaction($checking, $savings, 100, $transfer, 'Money for piggy', $this->yaeom, $euro, $groceries, $house);
-        PiggyBankEvent::create(
-            [
-                'piggy_bank_id'          => $piggyBank->id,
-                'transaction_journal_id' => $intoPiggy->id,
-                'date'                   => $this->yaeom,
-                'amount'                 => 100
-            ]
-        );
     }
 
     /**
-     * @param User $user
+     *
      */
-    public function createAssetAccounts(User $user)
+    public function createUsers()
     {
+        User::create(['email' => 'reset@example.com', 'password' => 'functional', 'reset' => 'okokokokokokokokokokokokokokokok', 'remember_token' => null]);
+        User::create(['email' => 'functional@example.com', 'password' => 'functional', 'reset' => null, 'remember_token' => null]);
+        User::create(['email' => 'thegrumpydictator@gmail.com', 'password' => 'james', 'reset' => null, 'remember_token' => null]);
+    }
+
+    /**
+     *
+     */
+    public function createAssetAccounts()
+    {
+        $user      = User::whereEmail('thegrumpydictator@gmail.com')->first();
         $assetType = AccountType::whereType('Asset account')->first();
         $ibType    = AccountType::whereType('Initial balance account')->first();
         $obType    = TransactionType::whereType('Opening balance')->first();
@@ -170,74 +123,64 @@ class TestDataSeeder extends Seeder
         $acc_e = Account::create(['user_id' => $user->id, 'account_type_id' => $ibType->id, 'name' => 'Savings account initial balance', 'active' => 0]);
         $acc_f = Account::create(['user_id' => $user->id, 'account_type_id' => $ibType->id, 'name' => 'Delete me initial balance', 'active' => 0]);
 
+        $this->createJournal(
+            ['from' => $acc_d, 'to' => $acc_a, 'amount' => 4000, 'transactionType' => $obType, 'description' => 'Initial Balance for Checking account',
+             'date' => $this->yasom, 'transactionCurrency' => $euro]
+        );
+        $this->createJournal(
+            ['from' => $acc_e, 'to' => $acc_b, 'amount' => 10000, 'transactionType' => $obType, 'description' => 'Initial Balance for Savings account',
+             'date' => $this->yasom, 'transactionCurrency' => $euro]
+        );
+        $this->createJournal(
+            ['from' => $acc_f, 'to' => $acc_c, 'amount' => 100, 'transactionType' => $obType, 'description' => 'Initial Balance for Delete me',
+             'date' => $this->yasom, 'transactionCurrency' => $euro]
+        );
 
-        $this->createTransaction($acc_d, $acc_a, 4000, $obType, 'Initial Balance for Checking account', $this->yasom, $euro);
-        $this->createTransaction($acc_e, $acc_b, 10000, $obType, 'Initial Balance for Savings account', $this->yasom, $euro);
-        $this->createTransaction($acc_f, $acc_c, 100, $obType, 'Initial Balance for Delete me', $this->yasom, $euro);
+
     }
 
     /**
-     * @SuppressWarnings(PHPMD.ShortVariable)
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-     *
-     * @param Account              $from
-     * @param Account              $to
-     * @param                      $amount
-     * @param TransactionType      $type
-     * @param                      $description
-     * @param                      $date
-     * @param TransactionCurrency  $currency
-     *
-     * @param Budget               $budget
-     * @param Category             $category
-     * @param Bill                 $bill
+     * @param array $data
      *
      * @return TransactionJournal
      */
-    public function createTransaction(
-        Account $from, Account $to, $amount, TransactionType $type, $description, $date, TransactionCurrency $currency, Budget $budget = null,
-        Category $category = null, Bill $bill = null
-    ) {
-        $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
-
-        $billID = is_null($bill) ? null : $bill->id;
-        Log::debug('String length of encrypted description ("' . $description . '") is: ' . strlen(Crypt::encrypt($description)));
+    public function createJournal(array $data)
+    {
+        $user   = User::whereEmail('thegrumpydictator@gmail.com')->first();
+        $billID = isset($data['bill']) ? $data['bill']->id : null;
 
         /** @var TransactionJournal $journal */
         $journal = TransactionJournal::create(
             [
                 'user_id'                 => $user->id,
-                'transaction_type_id'     => $type->id,
-                'transaction_currency_id' => $currency->id,
+                'transaction_type_id'     => $data['transactionType']->id,
+                'transaction_currency_id' => $data['transactionCurrency']->id,
                 'bill_id'                 => $billID,
-                'description'             => $description,
+                'description'             => $data['description'],
                 'completed'               => 1,
-                'date'                    => $date
+                'date'                    => $data['date']
             ]
         );
-        //Log::debug('Journal valid: ' . Steam::boolString($journal->isValid()));
-        //Log::debug('Journal errors: ' . json_encode($journal->getErrors()));
-        //Log::debug('Journal created: ' . json_encode($journal));
 
+        Transaction::create(['account_id' => $data['from']->id, 'transaction_journal_id' => $journal->id, 'amount' => $data['amount'] * -1]);
+        Transaction::create(['account_id' => $data['to']->id, 'transaction_journal_id' => $journal->id, 'amount' => $data['amount']]);
 
-        Transaction::create(['account_id' => $from->id, 'transaction_journal_id' => $journal->id, 'amount' => $amount * -1]);
-        Transaction::create(['account_id' => $to->id, 'transaction_journal_id' => $journal->id, 'amount' => $amount]);
-
-        if (!is_null($budget)) {
-            $journal->budgets()->save($budget);
+        if (isset($data['budget'])) {
+            $journal->budgets()->save($data['budget']);
         }
-        if (!is_null($category)) {
-            $journal->categories()->save($category);
+        if (isset($data['category'])) {
+            $journal->categories()->save($data['category']);
         }
 
         return $journal;
     }
 
     /**
-     * @param User $user
+     *
      */
-    public function createBudgets(User $user)
+    public function createBudgets()
     {
+        $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
 
         $groceries = Budget::create(['user_id' => $user->id, 'name' => 'Groceries']);
         $bills     = Budget::create(['user_id' => $user->id, 'name' => 'Bills']);
@@ -260,10 +203,11 @@ class TestDataSeeder extends Seeder
     }
 
     /**
-     * @param User $user
+     *
      */
-    public function createCategories(User $user)
+    public function createCategories()
     {
+        $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
         Category::create(['user_id' => $user->id, 'name' => 'DailyGroceries']);
         Category::create(['user_id' => $user->id, 'name' => 'Lunch']);
         Category::create(['user_id' => $user->id, 'name' => 'House']);
@@ -272,9 +216,9 @@ class TestDataSeeder extends Seeder
     }
 
     /**
-     * @param User $user
+     *
      */
-    public function createPiggyBanks(User $user)
+    public function createPiggyBanks()
     {
         // account
         $savings = Account::whereName('Savings account')->orderBy('id', 'DESC')->first();
@@ -355,10 +299,11 @@ class TestDataSeeder extends Seeder
     }
 
     /**
-     * @param User $user
+     *
      */
-    public function createReminders(User $user)
+    public function createReminders()
     {
+        $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
         // for weekly piggy bank (clothes)
         $nextWeek  = clone $this->_startOfMonth;
         $piggyBank = PiggyBank::whereName('New clothes')->orderBy('id', 'DESC')->first();
@@ -378,12 +323,13 @@ class TestDataSeeder extends Seeder
     }
 
     /**
-     * @param User $user
+     *
      */
-    public function createRecurringTransactions(User $user)
+    public function createRecurringTransactions()
     {
         // account
         $savings = Account::whereName('Savings account')->orderBy('id', 'DESC')->first();
+        $user    = User::whereEmail('thegrumpydictator@gmail.com')->first();
 
         $recurring = PiggyBank::create(
             [
@@ -413,10 +359,11 @@ class TestDataSeeder extends Seeder
     }
 
     /**
-     * @param $user
+     *
      */
-    public function createBills($user)
+    public function createBills()
     {
+        $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
         // bill
         Bill::create(
             ['user_id' => $user->id, 'name' => 'Rent', 'match' => 'rent,landlord', 'amount_min' => 700, 'amount_max' => 900, 'date' => $this->som,
@@ -455,11 +402,12 @@ class TestDataSeeder extends Seeder
     }
 
     /**
-     * @param $user
+     *
      */
-    public function createExpenseAccounts($user)
+    public function createExpenseAccounts()
     {
         //// create expenses for rent, utilities, water, TV, phone on the 1st of the month.
+        $user        = User::whereEmail('thegrumpydictator@gmail.com')->first();
         $expenseType = AccountType::whereType('Expense account')->first();
 
         Account::create(['user_id' => $user->id, 'account_type_id' => $expenseType->id, 'name' => 'Land lord', 'active' => 1]);
@@ -477,15 +425,78 @@ class TestDataSeeder extends Seeder
     }
 
     /**
-     * @param $user
+     *
      */
-    public function createRevenueAccounts($user)
+    public function createRevenueAccounts()
     {
+        $user        = User::whereEmail('thegrumpydictator@gmail.com')->first();
         $revenueType = AccountType::whereType('Revenue account')->first();
 
         Account::create(['user_id' => $user->id, 'account_type_id' => $revenueType->id, 'name' => 'Employer', 'active' => 1]);
         Account::create(['user_id' => $user->id, 'account_type_id' => $revenueType->id, 'name' => 'IRS', 'active' => 1]);
         Account::create(['user_id' => $user->id, 'account_type_id' => $revenueType->id, 'name' => 'Second job employer', 'active' => 1]);
+
+    }
+
+    /**
+     * @param Carbon $date
+     */
+    public function createMonthlyExpenses(Carbon $date)
+    {
+        // get some objects from the database:
+        $checking   = Account::whereName('Checking account')->orderBy('id', 'DESC')->first();
+        $savings    = Account::whereName('Savings account')->orderBy('id', 'DESC')->first();
+        $landLord   = Account::whereName('Land lord')->orderBy('id', 'DESC')->first();
+        $utilities  = Account::whereName('Utilities company')->orderBy('id', 'DESC')->first();
+        $television = Account::whereName('TV company')->orderBy('id', 'DESC')->first();
+        $phone      = Account::whereName('Phone agency')->orderBy('id', 'DESC')->first();
+        $employer   = Account::whereName('Employer')->orderBy('id', 'DESC')->first();
+        $bills      = Budget::whereName('Bills')->orderBy('id', 'DESC')->first();
+        $house      = Category::whereName('House')->orderBy('id', 'DESC')->first();
+        $withdrawal = TransactionType::whereType('Withdrawal')->first();
+        $deposit    = TransactionType::whereType('Deposit')->first();
+        $transfer   = TransactionType::whereType('Transfer')->first();
+        $euro       = TransactionCurrency::whereCode('EUR')->first();
+        $rentBill   = Bill::where('name', 'Rent')->first();
+        $cur        = $date->format('Y-m-d');
+        $formatted  = $date->format('F Y');
+
+        $this->createJournal(
+            ['from' => $checking, 'to' => $landLord, 'amount' => 800, 'transactionType' => $withdrawal, 'description' => 'Rent for ' . $formatted,
+             'date' => $cur, 'transactionCurrency' => $euro, 'budget' => $bills, 'category' => $house, 'bill' => $rentBill]
+        );
+        $this->createJournal(
+            ['from' => $checking, 'to' => $utilities, 'amount' => 150, 'transactionType' => $withdrawal, 'description' => 'Utilities for ' . $formatted,
+             'date' => $cur, 'transactionCurrency' => $euro, 'budget' => $bills, 'category' => $house,]
+        );
+        $this->createJournal(
+            ['from' => $checking, 'to' => $television, 'amount' => 50, 'transactionType' => $withdrawal, 'description' => 'TV for ' . $formatted,
+             'date' => $cur, 'transactionCurrency' => $euro, 'budget' => $bills, 'category' => $house,]
+        );
+        $this->createJournal(
+            ['from' => $checking, 'to' => $phone, 'amount' => 50, 'transactionType' => $withdrawal, 'description' => 'Phone bill for ' . $formatted,
+             'date' => $cur, 'transactionCurrency' => $euro, 'budget' => $bills, 'category' => $house,]
+        );
+
+        // two transactions. One without a budget, one without a category.
+        $this->createJournal(
+            ['from'        => $checking, 'to' => $phone, 'amount' => 10, 'transactionType' => $withdrawal,
+             'description' => 'Extra charges on phone bill for ' . $formatted, 'date' => $cur, 'transactionCurrency' => $euro, 'category' => $house]
+        );
+        $this->createJournal(
+            ['from'        => $checking, 'to' => $television, 'amount' => 5, 'transactionType' => $withdrawal,
+             'description' => 'Extra charges on TV bill for ' . $formatted, 'date' => $cur, 'transactionCurrency' => $euro, 'budget' => $bills]
+        );
+
+        // income from job:
+        $this->createJournal(
+            ['from' => $employer, 'to' => $checking, 'amount' => rand(3500, 4000), 'transactionType' => $deposit, 'description' => 'Salary for ' . $formatted,
+             'date' => $cur, 'transactionCurrency' => $euro]
+        );
+        $this->createJournal(
+            ['from'        => $checking, 'to' => $savings, 'amount' => 2000, 'transactionType' => $transfer,
+             'description' => 'Salary to savings account in ' . $formatted, 'date' => $cur, 'transactionCurrency' => $euro]
+        );
 
     }
 
@@ -516,8 +527,14 @@ class TestDataSeeder extends Seeder
             $mFormat = $mStart->format('Y-m-d');
             $shop    = $shops[rand(0, 1)];
 
-            $this->createTransaction($checking, $shop, (rand(500, 1000) / 100), $withdrawal, 'Groceries', $mFormat, $euro, $groceries, $daily);
-            $this->createTransaction($checking, $lunchHouse, (rand(200, 600) / 100), $withdrawal, 'Lunch', $mFormat, $euro, $groceries, $lunch);
+            $this->createJournal(
+                ['from' => $checking, 'to' => $shop, 'amount' => (rand(500, 1000) / 100), 'transactionType' => $withdrawal, 'description' => 'Groceries',
+                 'date' => $mFormat, 'transactionCurrency' => $euro, 'category' => $daily, 'budget' => $groceries]
+            );
+            $this->createJournal(
+                ['from' => $checking, 'to' => $lunchHouse, 'amount' => (rand(200, 600) / 100), 'transactionType' => $withdrawal, 'description' => 'Lunch',
+                 'date' => $mFormat, 'transactionCurrency' => $euro, 'category' => $lunch, 'budget' => $groceries]
+            );
 
             $mStart->addDay();
         }
@@ -534,19 +551,21 @@ class TestDataSeeder extends Seeder
         $savings    = Account::whereName('Savings account')->orderBy('id', 'DESC')->first();
         $buyMore    = Account::whereName('Buy More')->orderBy('id', 'DESC')->first();
         $withdrawal = TransactionType::whereType('Withdrawal')->first();
-        $transfer   = TransactionType::whereType('Transfer')->first();
         $user       = User::whereEmail('thegrumpydictator@gmail.com')->first();
 
 
         // create some big expenses, move some money around.
         $amount = rand(500, 2000);
-        $one    = $this->createTransaction(
-            $savings, $checking, $amount, $transfer, 'Money for big expense in ' . $date->format('F Y'), $date->format('Y-m-d'), $dollar
+
+        $one   = $this->createJournal(
+            ['from'        => $savings, 'to' => $checking, 'amount' => $amount, 'transactionType' => $withdrawal,
+             'description' => 'Money for big expense in ' . $date->format('F Y'), 'date' => $date->format('Y-m-d'), 'transactionCurrency' => $dollar]
         );
-        $two    = $this->createTransaction(
-            $checking, $buyMore, $amount, $withdrawal, 'Big expense in ' . $date->format('F Y'), $date->format('Y-m-d'), $dollar
+        $two   = $this->createJournal(
+            ['from'        => $checking, 'to' => $buyMore, 'amount' => $amount, 'transactionType' => $withdrawal,
+             'description' => 'Big expense in ' . $date->format('F Y'), 'date' => $date->format('Y-m-d'), 'transactionCurrency' => $dollar]
         );
-        $group  = TransactionGroup::create(
+        $group = TransactionGroup::create(
             [
                 'user_id'  => $user->id,
                 'relation' => 'balance'
@@ -555,6 +574,35 @@ class TestDataSeeder extends Seeder
         $group->transactionjournals()->save($one);
         $group->transactionjournals()->save($two);
         $group->save();
+    }
+
+    /**
+     *
+     */
+    protected function createPiggyBankEvent()
+    {
+        // piggy bank event
+        // add money to this piggy bank
+        // create a piggy bank event to match:
+        $checking  = Account::whereName('Checking account')->orderBy('id', 'DESC')->first();
+        $savings   = Account::whereName('Savings account')->orderBy('id', 'DESC')->first();
+        $transfer  = TransactionType::whereType('Transfer')->first();
+        $euro      = TransactionCurrency::whereCode('EUR')->first();
+        $groceries = Budget::whereName('Groceries')->orderBy('id', 'DESC')->first();
+        $house     = Category::whereName('House')->orderBy('id', 'DESC')->first();
+        $piggyBank = PiggyBank::whereName('New camera')->orderBy('id', 'DESC')->first();
+        $intoPiggy = $this->createJournal(
+            ['from'                => $checking, 'to' => $savings, 'amount' => 100, 'transactionType' => $transfer, 'description' => 'Money for piggy',
+             'date'                => $this->yaeom, 'transactionCurrency' => $euro, 'category' => $house, 'budget' => $groceries]
+        );
+        PiggyBankEvent::create(
+            [
+                'piggy_bank_id'          => $piggyBank->id,
+                'transaction_journal_id' => $intoPiggy->id,
+                'date'                   => $this->yaeom,
+                'amount'                 => 100
+            ]
+        );
     }
 
 

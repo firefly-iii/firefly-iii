@@ -59,9 +59,7 @@ class Related implements RelatedInterface
         /** @var Collection $collection */
         $collection = $this->getUser()->transactionjournals()
                            ->withRelevantData()
-                           ->before($end)
-                           ->where('encrypted', 0)
-                           ->after($start)
+                           ->before($end)->after($start)->where('encrypted', 0)
                            ->whereNotIn('id', $exclude)
                            ->where('description', 'LIKE', '%' . $query . '%')
                            ->get();
@@ -70,9 +68,8 @@ class Related implements RelatedInterface
         /** @var Collection $encryptedCollection */
         $encryptedCollection = $this->getUser()->transactionjournals()
                                     ->withRelevantData()
-                                    ->before($end)
+                                    ->before($end)->after($start)
                                     ->where('encrypted', 1)
-                                    ->after($start)
                                     ->whereNotIn('id', $exclude)
                                     ->get();
         $encrypted           = $encryptedCollection->filter(
@@ -81,11 +78,11 @@ class Related implements RelatedInterface
                 if ($strPos !== false) {
                     return $journal;
                 }
+
+                return null;
             }
         );
-        $collected           = $collection->merge($encrypted);
 
-
-        return $collected;
+        return $collection->merge($encrypted);
     }
 }

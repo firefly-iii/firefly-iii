@@ -97,37 +97,43 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
      */
     public function storeInitialBalance(\Account $account, array $data)
     {
-
-        // make opposing a revenue / expense account depending on bla bla.
-        $balance = floatval($data['openingBalance']);
-        $date    = new Carbon($data['openingBalanceDate']);
-        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $journals */
-        $journals = \App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
-
         /** @var \FireflyIII\Database\TransactionType\TransactionType $typeRepository */
         $typeRepository = \App::make('FireflyIII\Database\TransactionType\TransactionType');
 
+        /** @var \FireflyIII\Database\TransactionJournal\TransactionJournal $journals */
+        $journals = \App::make('FireflyIII\Database\TransactionJournal\TransactionJournal');
 
+        // some initial variables:
+        $balance = floatval($data['openingBalance']);
+        $date    = new Carbon($data['openingBalanceDate']);
+
+        // some dynamic variables:
         if ($balance < 0) {
-            // to is expense account.
-            $opposingData = ['name' => $account->name . ' Initial Balance Account', 'active' => 1, 'what' => 'expense'];
-            $toAccount    = $this->store($opposingData);
-            $fromAccount  = $account;
-            $type         = $typeRepository->findByWhat('withdrawal');
+            $opposingType    = 'expense';
+            $transactionType = $typeRepository->findByWhat('withdrawal');
+            $toAccount       = $this->store(['name' => $account->name . ' Initial Balance Account', 'active' => 1, 'what' => $opposingType]);
+            $fromAccount     = $account;
         } else {
-            // from is revenue account.
-            $opposingData = ['name' => $account->name . ' Initial Balance Account', 'active' => 1, 'what' => 'revenue'];
-            $fromAccount  = $this->store($opposingData);
-            $toAccount    = $account;
-            $type         = $typeRepository->findByWhat('deposit');
+            $opposingType    = 'revenue';
+            $transactionType = $typeRepository->findByWhat('deposit');
+            $fromAccount     = $this->store(['name' => $account->name . ' Initial Balance Account', 'active' => 1, 'what' => $opposingType]);
+            $toAccount       = $account;
         }
+
         // data for transaction journal:
         $balance  = $balance < 0 ? $balance * -1 : $balance;
         $currency = $journals->getJournalCurrencyById(intval($data['balance_currency_id']));
-
-        $opening = ['transaction_type_id' => $type->id, 'transaction_currency_id' => $currency->id, 'amount' => $balance, 'from' => $fromAccount,
-                    'completed'           => 0, 'what' => 'opening', 'to' => $toAccount, 'date' => $date,
-                    'description'         => 'Opening balance for new account ' . $account->name,];
+        $opening  = [
+            'transaction_type_id'     => $transactionType->id,
+            'transaction_currency_id' => $currency->id,
+            'amount'                  => $balance,
+            'from'                    => $fromAccount,
+            'completed'               => 0,
+            'what'                    => 'opening',
+            'to'                      => $toAccount,
+            'date'                    => $date,
+            'description'             => 'Opening balance for new account ' . $account->name
+        ];
 
         $validation = $journals->validate($opening);
         if ($validation['errors']->count() == 0) {

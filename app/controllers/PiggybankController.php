@@ -313,6 +313,8 @@ class PiggyBankController extends BaseController
     /**
      * @param PiggyBank $piggyBank
      *
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
      * @return $this
      * @throws FireflyException
      */
@@ -327,7 +329,6 @@ class PiggyBankController extends BaseController
         $data['user_id']       = Auth::user()->id;
         $data['repeats']       = 0;
 
-        // always validate:
         $messages = $this->_repository->validate($data);
 
         Session::flash('warnings', $messages['warnings']);

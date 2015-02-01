@@ -124,7 +124,7 @@ class ReportController extends BaseController
         $mainTitleIcon = 'fa-line-chart';
 
         $balances        = $this->_repository->yearBalanceReport($date);
-        $groupedIncomes  = $this->_repository->revenueGroupedByAccount($date, $end, 15);
+        $groupedIncomes  = $this->_repository->revenueGroupedByAccount($date, $end);
         $groupedExpenses = $this->_repository->expensesGroupedByAccount($date, $end, 15);
 
         return View::make(
