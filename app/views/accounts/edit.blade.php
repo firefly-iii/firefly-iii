@@ -29,6 +29,7 @@
                 {{Form::ffBalance('openingBalance',null, ['currency' => $openingBalance ? $openingBalance->transactionCurrency : null])}}
                 {{Form::ffDate('openingBalanceDate')}}
                 {{Form::ffSelect('account_role',Config::get('firefly.accountRoles'))}}
+                    {{Form::hidden('what',$what)}}
                 @endif
             </div>
         </div>

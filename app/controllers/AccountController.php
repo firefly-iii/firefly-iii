@@ -117,6 +117,7 @@ class AccountController extends BaseController
         $openingBalance = $this->_repository->openingBalanceTransaction($account);
         $subTitleIcon   = $this->_subIconsByIdentifier[$account->accountType->type];
         $subTitle       = 'Edit ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"';
+        $what           = $this->_shortNamesByFullName[$account->accountType->type];
 
         // pre fill some useful values.
         $preFilled = [
@@ -126,7 +127,7 @@ class AccountController extends BaseController
         ];
         Session::flash('preFilled', $preFilled);
 
-        return View::make('accounts.edit', compact('account', 'subTitle', 'openingBalance', 'subTitleIcon'));
+        return View::make('accounts.edit', compact('account', 'what', 'subTitle', 'openingBalance', 'subTitleIcon'));
     }
 
     /**
@@ -168,16 +169,9 @@ class AccountController extends BaseController
      */
     public function store()
     {
-        /** @var \FireflyIII\Database\AccountType\AccountType $accountTypes */
-        $accountTypes = App::make('FireflyIII\Database\AccountType\AccountType');
-
-
-        $data                    = Input::except('_token');
-        $type                    = $accountTypes->findByWhat($data['what']);
-        $data['user_id']         = \Auth::user()->id;
-        $data['account_type_id'] = $type->id;
-        // always validate:
+        $data     = Input::except('_token');
         $messages = $this->_repository->validate($data);
+
 
         // flash messages:
         Session::flash('successes', $messages['successes']);
@@ -209,16 +203,10 @@ class AccountController extends BaseController
      */
     public function update(Account $account)
     {
-        $data                    = Input::except('_token');
-        $data['account_type_id'] = $account->account_type_id;
-        $data['user_id']         = \Auth::user()->id;
-
-
-        // always validate:
+        $data     = Input::except('_token');
         $messages = $this->_repository->validate($data);
 
         // flash messages:
-        Session::flash('warnings', $messages['warnings']);
         Session::flash('successes', $messages['successes']);
         Session::flash('errors', $messages['errors']);
         if ($messages['errors']->count() > 0) {
