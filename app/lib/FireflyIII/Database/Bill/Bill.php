@@ -171,7 +171,7 @@ class Bill implements CUDInterface, CommonDatabaseCallsInterface, BillInterface
      */
     public function get()
     {
-        return $this->getUser()->bills()->get();
+        return $this->getUser()->bills()->orderBy('name')->get();
     }
 
     /**
