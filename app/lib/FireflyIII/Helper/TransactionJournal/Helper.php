@@ -40,7 +40,18 @@ class Helper implements HelperInterface
         /** @var \FireflyIII\Database\Account\Account $accountRepository */
         $accountRepository = \App::make('FireflyIII\Database\Account\Account');
 
-        return $accountRepository->getAccountsByType(['Default account', 'Asset account']);
+        /** @var Collection $list */
+        $list     = $accountRepository->getAccountsByType(['Default account', 'Asset account']);
+        $filtered = $list->filter(
+            function (\Account $account) {
+                if (intval($account->active) === 1) {
+                    return $account;
+                }
+                return null;
+            }
+        );
+
+        return $filtered;
     }
 
     /**
