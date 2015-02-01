@@ -19,12 +19,18 @@ class Account extends Eloquent
      *
      * @var array
      */
-    protected $rules
+    protected $rulesets
         = [
-            'name'            => 'required|between:1,100',
-            'user_id'         => 'required|exists:users,id',
-            'account_type_id' => 'required|exists:account_types,id',
-            'active'          => 'required|boolean'
+            'saving'     => [
+                'name'            => 'required|between:1,100',
+                'user_id'         => 'required|exists:users,id',
+                'account_type_id' => 'required|exists:account_types,id',
+                'active'          => 'required|boolean'
+            ],
+            'form_input' => [
+                'name'               => 'required|between:1,100',
+                'active'             => 'required|boolean',
+            ]
         ];
 
     /**

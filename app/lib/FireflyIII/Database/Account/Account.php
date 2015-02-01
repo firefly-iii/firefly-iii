@@ -127,6 +127,7 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
             'transaction_type_id'     => $transactionType->id,
             'transaction_currency_id' => $currency->id,
             'amount'                  => $balance,
+            'what'                    => 'opening',
             'from'                    => $fromAccount,
             'completed'               => 0,
             'to'                      => $toAccount,
@@ -312,24 +313,8 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
         $model->save();
 
         if (isset($data['openingBalance']) && isset($data['openingBalanceDate']) && strlen($data['openingBalanceDate']) > 0) {
-            /** @noinspection PhpParamsInspection */
-            $openingBalance = $this->openingBalanceTransaction($model);
-            if (is_null($openingBalance)) {
-                $this->storeInitialBalance($model, $data);
-            } else {
-                $openingBalance->date = new Carbon($data['openingBalanceDate']);
-                $openingBalance->save();
-                $amount = floatval($data['openingBalance']);
-                /** @var \Transaction $transaction */
-                foreach ($openingBalance->transactions as $transaction) {
-                    if ($transaction->account_id == $model->id) {
-                        $transaction->amount = $amount;
-                    } else {
-                        $transaction->amount = $amount * -1;
-                    }
-                    $transaction->save();
-                }
-            }
+            $this->updateInitialBalance($model, $data);
+
         }
         \Event::fire('account.update', [$model]);
 
@@ -348,7 +333,7 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
     {
         $successes = new MessageBag;
         $account   = new \Account($model);
-        $account->isValid();
+        $account->isValid('form_input', false);
         $errors = $account->getErrors();
 
         if (isset($model['account_role']) && !in_array($model['account_role'], array_keys(\Config::get('firefly.accountRoles')))) {
@@ -377,6 +362,32 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
         }
 
         return ['errors' => $errors, 'successes' => $successes];
+    }
+
+    /**
+     * @param Eloquent $model
+     * @param array    $data
+     */
+    public function updateInitialBalance(Eloquent $model, array $data)
+    {
+        /** @noinspection PhpParamsInspection */
+        $openingBalance = $this->openingBalanceTransaction($model);
+        if (is_null($openingBalance)) {
+            $this->storeInitialBalance($model, $data);
+        } else {
+            $openingBalance->date = new Carbon($data['openingBalanceDate']);
+            $openingBalance->save();
+            $amount = floatval($data['openingBalance']);
+            /** @var \Transaction $transaction */
+            foreach ($openingBalance->transactions as $transaction) {
+                if ($transaction->account_id == $model->id) {
+                    $transaction->amount = $amount;
+                } else {
+                    $transaction->amount = $amount * -1;
+                }
+                $transaction->save();
+            }
+        }
     }
 
     /**
