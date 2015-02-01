@@ -3,7 +3,6 @@ Firefly III (v3.2.5)
 
 [![Build Status](https://travis-ci.org/JC5/firefly-iii.svg?branch=develop)](https://travis-ci.org/JC5/firefly-iii)
 [![Project Status](http://stillmaintained.com/JC5/firefly-iii.png?a=b)](http://stillmaintained.com/JC5/firefly-iii)
-[![Coverage Status](https://coveralls.io/repos/JC5/firefly-iii/badge.png?branch=master)](https://coveralls.io/r/JC5/firefly-iii?branch=master)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/d44c7012-5f50-41ad-add8-8445330e4102/mini.png)](https://insight.sensiolabs.com/projects/d44c7012-5f50-41ad-add8-8445330e4102)
 [![Code Climate](https://codeclimate.com/github/JC5/firefly-iii/badges/gpa.svg)](https://codeclimate.com/github/JC5/firefly-iii)
 [![Test Coverage](https://codeclimate.com/github/JC5/firefly-iii/badges/coverage.svg)](https://codeclimate.com/github/JC5/firefly-iii)

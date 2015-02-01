@@ -331,6 +331,7 @@ class Account implements CUDInterface, CommonDatabaseCallsInterface, AccountInte
      */
     public function validate(array $model)
     {
+        $model['active'] = !isset($model['active']) ? false : $model['active'];
         $successes = new MessageBag;
         $account   = new \Account($model);
         $account->isValid('form_input', false);
