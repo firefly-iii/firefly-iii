@@ -86,6 +86,7 @@ class Account extends Eloquent
     /**
      *
      * @param EloquentBuilder $query
+     * @param string          $field
      */
     public function scopeWithMeta(EloquentBuilder $query, $field = 'accountRole')
     {

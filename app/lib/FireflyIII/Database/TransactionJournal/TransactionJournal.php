@@ -432,6 +432,7 @@ class TransactionJournal implements TransactionJournalInterface, CUDInterface, C
      * Returns all objects.
      *
      * @return Collection
+     * @throws NotImplementedException
      * @codeCoverageIgnore
      */
     public function get()

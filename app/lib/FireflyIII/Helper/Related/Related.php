@@ -50,7 +50,7 @@ class Related implements RelatedInterface
         // get already related transactions:
         $exclude = [$journal->id];
         foreach ($journal->transactiongroups()->get() as $group) {
-            foreach ($group->transactionjournals() as $current) {
+            foreach ($group->transactionjournals()->get() as $current) {
                 $exclude[] = $current->id;
             }
         }

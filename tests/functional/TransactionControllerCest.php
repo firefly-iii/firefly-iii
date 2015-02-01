@@ -69,6 +69,21 @@ class TransactionControllerCest
 
     }
 
+    public function destroyTransferWithEvent(FunctionalTester $I)
+    {
+        // get withdrawal transaction type id:
+        $row       = DB::table('piggy_bank_events')->whereNotNull('transaction_journal_id')->first();
+        $journalId = $row->transaction_journal_id;
+        $journal   = TransactionJournal::find($journalId);
+
+        $I->wantTo('destroy a transfer connected to a piggy bank');
+
+        $I->amOnPage('/transaction/delete/' . $journal->id);
+        $I->submitForm('#destroy', []);
+        $I->see('Transaction &quot;' . $journal->description . '&quot; destroyed.');
+
+    }
+
     public function destroyWithdrawal(FunctionalTester $I)
     {
         // get withdrawal transaction type id:

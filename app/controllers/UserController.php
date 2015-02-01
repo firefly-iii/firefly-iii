@@ -79,9 +79,11 @@ class UserController extends BaseController
         if ($user) {
             $result = $email->sendVerificationMail($user);
             if ($result === false && Config::get('mail.pretend') === false) {
+                // @CodeCoverageIgnoreStart
                 $user->delete();
 
                 return View::make('error')->with('message', 'The email message could not be send. See the log files.');
+                // @CodeCoverageIgnoreEnd
             }
 
             return View::make('user.verification-pending');
