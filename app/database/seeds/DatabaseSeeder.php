@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call('TransactionCurrencySeeder');
         $this->call('TransactionTypeSeeder');
 
-        if (App::environment() == 'testing') {
+        if (App::environment() == 'testing' || App::environment() == 'homestead') {
             $this->call('TestDataSeeder');
         }
     }

@@ -242,7 +242,6 @@ class TransactionController extends BaseController
     public function store($what)
     {
         $data                            = Input::except('_token');
-
         $transactionType                 = $this->_repository->getJournalType($what);
         $transactionCurrency             = $this->_repository->getJournalCurrencyById(intval($data['amount_currency_id']));
         $data['transaction_type_id']     = $transactionType->id;
@@ -283,6 +282,8 @@ class TransactionController extends BaseController
 
     /**
      * @param TransactionJournal $journal
+     *
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
      *
      * @return $this
      * @throws FireflyException

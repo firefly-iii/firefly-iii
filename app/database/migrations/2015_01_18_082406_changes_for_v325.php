@@ -36,17 +36,12 @@ class ChangesForV325 extends Migration
         try {
             Schema::table(
                 'budget_limits', function (Blueprint $table) {
-                //$table->dropIndex('unique_ci_combo');
                 $table->dropUnique('unique_ci_combi');
 
             }
             );
-        } catch (QueryException $e) {
-            // don't care.
         } catch (PDOException $e) {
             // don't care.
-        } catch (\Exception $e) {
-            // don't care either.
         }
 
         // allow journal descriptions to be encrypted.
@@ -58,12 +53,8 @@ class ChangesForV325 extends Migration
         );
         try {
             DB::update('ALTER TABLE `transaction_journals` MODIFY `description` VARCHAR(1024)');
-        } catch (QueryException $e) {
-            // don't care.
         } catch (PDOException $e) {
             // don't care.
-        } catch (\Exception $e) {
-            // don't care either.
         }
 
     }

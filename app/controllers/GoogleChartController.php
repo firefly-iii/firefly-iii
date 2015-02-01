@@ -361,7 +361,6 @@ class GoogleChartController extends BaseController
             $end->endOfYear();
         }
 
-
         while ($start <= $end) {
             $spent      = $budgetRepository->spentInMonth($budget, $start);
             $repetition = $budgetRepository->repetitionOnStartingOnDate($budget, $start);

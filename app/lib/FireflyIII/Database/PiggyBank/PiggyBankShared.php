@@ -76,6 +76,8 @@ class PiggyBankShared
     /**
      * @param array $ids
      *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @return Collection
      * @throws NotImplementedException
      * @codeCoverageIgnore
@@ -108,7 +110,6 @@ class PiggyBankShared
      * @param array $data
      *
      * @return \Eloquent
-     * @throws FireflyException
      */
     public function store(array $data)
     {

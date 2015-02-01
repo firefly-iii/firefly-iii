@@ -364,13 +364,12 @@ class Report implements ReportInterface
      *
      * @param Carbon $start
      * @param Carbon $end
-     * @param int    $limit
      *
      * @return Collection
      */
-    public function revenueGroupedByAccount(Carbon $start, Carbon $end, $limit = 15)
+    public function revenueGroupedByAccount(Carbon $start, Carbon $end)
     {
-        return $this->_queries->journalsByRevenueAccount($start, $end, $limit);
+        return $this->_queries->journalsByRevenueAccount($start, $end);
 
 
     }

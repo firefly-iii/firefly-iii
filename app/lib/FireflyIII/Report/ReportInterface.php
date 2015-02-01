@@ -94,11 +94,10 @@ interface ReportInterface
     /**
      * @param Carbon $start
      * @param Carbon $end
-     * @param int    $limit
      *
      * @return Collection
      */
-    public function revenueGroupedByAccount(Carbon $start, Carbon $end, $limit = 15);
+    public function revenueGroupedByAccount(Carbon $start, Carbon $end);
 
     /**
      * @param Carbon $date

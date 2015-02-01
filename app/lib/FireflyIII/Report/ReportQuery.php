@@ -404,11 +404,10 @@ class ReportQuery implements ReportQueryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
-     * @param int    $limit
      *
      * @return Collection
      */
-    public function journalsByRevenueAccount(Carbon $start, Carbon $end, $limit = 15)
+    public function journalsByRevenueAccount(Carbon $start, Carbon $end)
     {
         return \TransactionJournal::
         leftJoin(
