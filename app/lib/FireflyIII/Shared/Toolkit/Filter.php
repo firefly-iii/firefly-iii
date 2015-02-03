@@ -14,6 +14,7 @@ class Filter
 {
     /**
      * Save Session::get('start') and Session::get('end') for other methods to use.
+     * @CodeCoverageIgnore
      */
     public function setSessionDateRange()
     {
@@ -45,7 +46,9 @@ class Filter
     public function setSessionRangeValue()
     {
         if (!is_null(\Session::get('range'))) {
+            // @CodeCoverageIgnoreStart
             $range = \Session::get('range');
+            // @CodeCoverageIgnoreEnd
         } else {
             /** @var \FireflyIII\Shared\Preferences\PreferencesInterface $preferences */
             $preferences = \App::make('FireflyIII\Shared\Preferences\PreferencesInterface');
@@ -66,6 +69,7 @@ class Filter
      *
      * @return Carbon
      * @throws FireflyException
+     * @CodeCoverageIgnore
      */
     protected function updateStartDate($range, Carbon $start)
     {
@@ -100,6 +104,7 @@ class Filter
      *
      * @return Carbon
      * @throws FireflyException
+     * @CodeCoverageIgnore
      */
     protected function updateEndDate($range, Carbon $start)
     {
@@ -138,6 +143,7 @@ class Filter
      *
      * @return string
      * @throws FireflyException
+     * @CodeCoverageIgnore
      */
     protected function periodName($range, Carbon $date)
     {
