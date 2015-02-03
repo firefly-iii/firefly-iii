@@ -31,9 +31,9 @@
             @if($what == 'asset')
                     {{Form::ffBalance('openingBalance')}}
                     {{Form::ffDate('openingBalanceDate', date('Y-m-d'))}}
-            @endif
-                    {{Form::ffCheckbox('active','1',true)}}
                     {{Form::ffSelect('account_role',Config::get('firefly.accountRoles'))}}
+                @endif
+                    {{Form::ffCheckbox('active','1',true)}}
             </div>
         </div>
 
