@@ -32,14 +32,14 @@ class FF3ServiceProvider extends ServiceProvider
     /**
      * Return the services bla bla.
      *
-     * @CodeCoverageIgnore
+     * @codeCoverageIgnore
      * @return array
      */
     public function provides()
     {
-        // @CodeCoverageIgnoreStart
+        // @codeCoverageIgnoreStart
         return ['reminders', 'filters', 'datekit', 'navigation'];
-        // @CodeCoverageIgnoreEnd
+        // @codeCoverageIgnoreEnd
     }
 
     /**

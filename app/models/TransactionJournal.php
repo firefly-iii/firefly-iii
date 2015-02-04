@@ -92,9 +92,9 @@ class TransactionJournal extends Eloquent
         if ($this->encrypted) {
             return Crypt::decrypt($value);
         }
-        // @CodeCoverageIgnoreStart
+        // @codeCoverageIgnoreStart
         return $value;
-        // @CodeCoverageIgnoreEnd
+        // @codeCoverageIgnoreEnd
     }
 
     /**
