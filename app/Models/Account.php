@@ -1,7 +1,7 @@
 <?php namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 /**
  * Class Account
  *
@@ -25,5 +25,13 @@ class Account extends Model
         return $this->belongsTo('FireflyIII\User');
     }
 
+    public function scopeAccountTypeIn(EloquentBuilder $query, array $types)
+    {
+        if (is_null($this->joinedAccountTypes)) {
+            $query->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id');
+            $this->joinedAccountTypes = true;
+        }
+        $query->whereIn('account_types.type', $types);
+    }
 
 }
