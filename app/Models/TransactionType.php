@@ -2,8 +2,9 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class TransactionType extends Model {
+class TransactionType extends Model
+{
 
-	//
+    //
 
 }

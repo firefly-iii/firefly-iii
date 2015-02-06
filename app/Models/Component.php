@@ -2,8 +2,9 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class Component extends Model {
+class Component extends Model
+{
 
-	//
+    //
 
 }

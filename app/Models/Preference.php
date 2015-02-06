@@ -2,8 +2,9 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class Preference extends Model {
+class Preference extends Model
+{
 
-	//
+    //
 
 }

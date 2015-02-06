@@ -2,8 +2,9 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class PiggyBankEvent extends Model {
+class PiggyBankEvent extends Model
+{
 
-	//
+    //
 
 }

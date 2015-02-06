@@ -2,8 +2,9 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class PiggyBankRepetition extends Model {
+class PiggyBankRepetition extends Model
+{
 
-	//
+    //
 
 }
