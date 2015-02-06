@@ -22,7 +22,7 @@
     "require": {
         "laravel/framework": "5.0.*",
         "davejamesmiller/laravel-breadcrumbs": "@stable",
-        "grumpydictator/gchart": "1.*",
+        "grumpydictator/gchart": "dev-master",
         "michelf/php-markdown": "@stable",
         "watson/validating": "dev-master",
         "doctrine/dbal": "~2.5"
