@@ -1,5 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
+
 class HomeController extends Controller
 {
 
@@ -22,6 +23,7 @@ class HomeController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('range');
         //$this->middleware('guest');
     }
 
@@ -33,12 +35,13 @@ class HomeController extends Controller
     public function index()
     {
         // count is fake
-        $count         = 0;
+        $count         = \Auth::user()->accounts()->accountTypeIn(['Asset account', 'Default account'])->count();
         $title         = 'Firefly';
         $subTitle      = 'What\'s playing?';
         $mainTitleIcon = 'fa-fire';
+        $transactions = [];
 
-        return view('index', compact('count', 'title', 'subTitle', 'mainTitleIcon'));
+        return view('index', compact('count', 'title', 'subTitle', 'mainTitleIcon','transactions'));
     }
 
 }

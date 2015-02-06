@@ -10,7 +10,7 @@ body {
 
 .google-chart-error {
     height:30px;
-    background:url('../../images/error.png') no-repeat center center
+    background:url('../images/error.png') no-repeat center center
 }
 
 .google-visualization-table-tr-head td:first-child {width:100px;}

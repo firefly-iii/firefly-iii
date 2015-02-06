@@ -1,6 +1,12 @@
 <?php
 
+/*
+ * Home Controller
+ */
 Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
+Route::get('/prev', ['uses' => 'HomeController@sessionPrev', 'as' => 'sessionPrev']);
+Route::get('/next', ['uses' => 'HomeController@sessionNext', 'as' => 'sessionNext']);
+Route::get('/jump/{range}', ['uses' => 'HomeController@rangeJump', 'as' => 'rangeJump']);
 
 /*
  * Account Controller
