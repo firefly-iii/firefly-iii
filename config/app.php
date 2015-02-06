@@ -199,6 +199,7 @@ return [
         'Form'        => 'Illuminate\Html\FormFacade',
         'Html'        => 'Illuminate\Html\HtmlFacade',
         'Preferences' => 'FireflyIII\Support\Facades\Preferences',
+        'Navigation'  => 'FireflyIII\Support\Facades\Navigation',
 
     ],
 

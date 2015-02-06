@@ -13,6 +13,11 @@ class FireflyServiceProvider extends ServiceProvider
             return new \FireflyIII\Support\Preferences;
         }
         );
+        $this->app->bind(
+            'navigation', function () {
+            return new \FireflyIII\Support\Navigation;
+        }
+        );
     }
 
 }
