@@ -1,24 +1,22 @@
 <?php namespace FireflyIII\Http\Controllers;
 
+use Preferences;
+use Navigation;
+use Redirect;
+use URL;
+use Session;
 
+/**
+ * Class HomeController
+ *
+ * @package FireflyIII\Http\Controllers
+ */
 class HomeController extends Controller
 {
 
-    /*
-    |--------------------------------------------------------------------------
-    | Home Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller renders your application's "dashboard" for users that
-    | are authenticated. Of course, you are free to change or remove the
-    | controller as you wish. It is just here to get your app started!
-    |
-    */
 
     /**
-     * Create a new controller instance.
      *
-     * @return void
      */
     public function __construct()
     {
@@ -28,9 +26,7 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the application dashboard to the user.
-     *
-     * @return Response
+     * @return \Illuminate\View\View
      */
     public function index()
     {
@@ -42,6 +38,42 @@ class HomeController extends Controller
         $transactions = [];
 
         return view('index', compact('count', 'title', 'subTitle', 'mainTitleIcon','transactions'));
+    }
+
+    /**
+     * @param string $range
+     *
+     * @return mixed
+     */
+    public function rangeJump($range)
+    {
+
+        $valid = ['1D', '1W', '1M', '3M', '6M', '1Y',];
+
+        if (in_array($range, $valid)) {
+            Preferences::set('viewRange', $range);
+            Session::forget('range');
+        }
+        return Redirect::to(URL::previous());
+    }
+
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function sessionNext()
+    {
+        Navigation::next();
+        return Redirect::to(URL::previous());
+
+    }
+
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function sessionPrev()
+    {
+        Navigation::prev();
+        return Redirect::to(URL::previous());
     }
 
 }
