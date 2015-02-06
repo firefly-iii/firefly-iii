@@ -25,12 +25,13 @@
         "grumpydictator/gchart": "dev-master",
         "michelf/php-markdown": "@stable",
         "watson/validating": "dev-master",
-        "doctrine/dbal": "~2.5"
+        "doctrine/dbal": "~2.5",
+        "illuminate/html": "~5.0",
+        "barryvdh/laravel-ide-helper": "~2.0"
 
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "@stable",
-        "barryvdh/laravel-ide-helper": "@stable",
         "phpunit/phpunit": "~4.0",
         "phpspec/phpspec": "~2.1"
 
