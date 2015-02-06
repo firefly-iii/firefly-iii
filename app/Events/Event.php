@@ -1,4 +1,4 @@
-<?php namespace App\Events;
+<?php namespace FireflyIII\Events;
 
 abstract class Event {
 

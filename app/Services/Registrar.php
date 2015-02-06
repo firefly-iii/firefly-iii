@@ -1,6 +1,6 @@
-<?php namespace App\Services;
+<?php namespace FireflyIII\Services;
 
-use App\User;
+use FireflyIII\User;
 use Validator;
 use Illuminate\Contracts\Auth\Registrar as RegistrarContract;
 
