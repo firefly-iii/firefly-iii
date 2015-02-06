@@ -1,6 +1,22 @@
 <?php
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use FireflyIII\Models\User;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\Bill;
+use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\Category;
+use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Models\Reminder;
+use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\PiggyBankEvent;
+use FireflyIII\Models\PiggyBankRepetition;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 
 /**
  * @SuppressWarnings("CamelCase") // I'm fine with this.
