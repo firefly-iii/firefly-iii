@@ -8,6 +8,6 @@ class AccountType extends Model
     //
     public function accounts()
     {
-        return $this->hasMany('Account');
+        return $this->hasMany('FireflyIII\Models\Account');
     }
 }

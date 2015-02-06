@@ -7,12 +7,12 @@ class Category extends Model
 
     public function transactionjournals()
     {
-        return $this->belongsToMany('TransactionJournal', 'category_transaction_journal', 'category_id');
+        return $this->belongsToMany('FireflyIII\Models\TransactionJournal', 'category_transaction_journal', 'category_id');
     }
 
     public function user()
     {
-        return $this->belongsTo('User');
+        return $this->belongsTo('FireflyIII\User');
     }
 
 }

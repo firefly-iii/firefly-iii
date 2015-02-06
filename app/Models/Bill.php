@@ -7,12 +7,12 @@ class Bill extends Model
 
     public function transactionjournals()
     {
-        return $this->hasMany('TransactionJournal');
+        return $this->hasMany('FireflyIII\Models\TransactionJournal');
     }
 
     public function user()
     {
-        return $this->belongsTo('User');
+        return $this->belongsTo('FireflyIII\User');
     }
 
 

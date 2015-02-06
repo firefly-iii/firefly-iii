@@ -7,12 +7,12 @@ class TransactionGroup extends Model
 
     public function transactionjournals()
     {
-        return $this->belongsToMany('TransactionJournal');
+        return $this->belongsToMany('FireflyIII\Models\TransactionJournal');
     }
 
     public function user()
     {
-        return $this->belongsTo('User');
+        return $this->belongsTo('FireflyIII\User');
     }
 
 

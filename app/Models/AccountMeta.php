@@ -7,7 +7,7 @@ class AccountMeta extends Model
 
     public function account()
     {
-        return $this->belongsTo('Account');
+        return $this->belongsTo('FireflyIII\Models\Account');
     }
 
 
