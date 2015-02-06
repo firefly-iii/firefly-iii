@@ -1,4 +1,4 @@
-<?php namespace FireflyIII\Models;
+<?php namespace FireflyIII;
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -32,47 +32,47 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function accounts()
     {
-        return $this->hasMany('Account');
+        return $this->hasMany('FireflyIII\Models\Account');
     }
 
     public function bills()
     {
-        return $this->hasMany('Bill');
+        return $this->hasMany('FireflyIII\Models\Bill');
     }
 
     public function budgets()
     {
-        return $this->hasMany('Budget');
+        return $this->hasMany('FireflyIII\Models\Budget');
     }
 
     public function categories()
     {
-        return $this->hasMany('Category');
+        return $this->hasMany('FireflyIII\Models\Category');
     }
 
     public function piggyBanks()
     {
-        return $this->hasManyThrough('PiggyBank', 'Account');
+        return $this->hasManyThrough('FireflyIII\Models\PiggyBank', 'Account');
     }
 
     public function preferences()
     {
-        return $this->hasMany('Preference');
+        return $this->hasMany('FireflyIII\Models\Preference');
     }
 
     public function reminders()
     {
-        return $this->hasMany('Reminder');
+        return $this->hasMany('FireflyIII\Models\Reminder');
     }
 
     public function transactionjournals()
     {
-        return $this->hasMany('TransactionJournal');
+        return $this->hasMany('FireflyIII\Models\TransactionJournal');
     }
 
     public function setPasswordAttribute($value)
     {
-        $this->attributes['password'] = Hash::make($value);
+        $this->attributes['password'] = \Hash::make($value);
     }
 
 }

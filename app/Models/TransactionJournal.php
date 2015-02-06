@@ -7,17 +7,17 @@ class TransactionJournal extends Model
 
     public function bill()
     {
-        return $this->belongsTo('Bill');
+        return $this->belongsTo('FireflyIII\Models\Bill');
     }
 
     public function budgets()
     {
-        return $this->belongsToMany('Budget');
+        return $this->belongsToMany('FireflyIII\Models\Budget');
     }
 
     public function categories()
     {
-        return $this->belongsToMany('Category');
+        return $this->belongsToMany('FireflyIII\Models\Category');
     }
 
     public function getDescriptionAttribute($value)
@@ -33,38 +33,38 @@ class TransactionJournal extends Model
 
     public function piggyBankEvents()
     {
-        return $this->hasMany('PiggyBankEvent');
+        return $this->hasMany('FireflyIII\Models\PiggyBankEvent');
     }
 
     public function setDescriptionAttribute($value)
     {
-        $this->attributes['description'] = Crypt::encrypt($value);
+        $this->attributes['description'] = \Crypt::encrypt($value);
         $this->attributes['encrypted']   = true;
     }
 
     public function transactionCurrency()
     {
-        return $this->belongsTo('TransactionCurrency');
+        return $this->belongsTo('FireflyIII\Models\TransactionCurrency');
     }
 
     public function transactionType()
     {
-        return $this->belongsTo('TransactionType');
+        return $this->belongsTo('FireflyIII\Models\TransactionType');
     }
 
     public function transactiongroups()
     {
-        return $this->belongsToMany('TransactionGroup');
+        return $this->belongsToMany('FireflyIII\Models\TransactionGroup');
     }
 
     public function transactions()
     {
-        return $this->hasMany('Transaction');
+        return $this->hasMany('FireflyIII\Models\Transaction');
     }
 
     public function user()
     {
-        return $this->belongsTo('User');
+        return $this->belongsTo('FireflyIII\User');
     }
 
 

@@ -1,7 +1,7 @@
 <?php
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
-use FireflyIII\Models\User;
+use FireflyIII\User;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
@@ -17,6 +17,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Models\TransactionGroup;
 
 /**
  * @SuppressWarnings("CamelCase") // I'm fine with this.

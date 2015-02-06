@@ -7,7 +7,7 @@ class TransactionCurrency extends Model
 
     public function transactionJournals()
     {
-        return $this->hasMany('TransactionJournal');
+        return $this->hasMany('FireflyIII\Models\TransactionJournal');
     }
 
 }

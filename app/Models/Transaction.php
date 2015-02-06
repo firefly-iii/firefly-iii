@@ -7,12 +7,12 @@ class Transaction extends Model
 
     public function account()
     {
-        return $this->belongsTo('Account');
+        return $this->belongsTo('FireflyIII\Models\Account');
     }
 
     public function transactionJournal()
     {
-        return $this->belongsTo('TransactionJournal');
+        return $this->belongsTo('FireflyIII\Models\TransactionJournal');
     }
 
 }

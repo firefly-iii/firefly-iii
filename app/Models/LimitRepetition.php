@@ -7,7 +7,7 @@ class LimitRepetition extends Model
 
     public function budgetLimit()
     {
-        return $this->belongsTo('BudgetLimit');
+        return $this->belongsTo('FireflyIII\Models\BudgetLimit');
     }
 
 }

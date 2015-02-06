@@ -7,7 +7,7 @@ class PiggyBankRepetition extends Model
 
     public function piggyBank()
     {
-        return $this->belongsTo('PiggyBank');
+        return $this->belongsTo('FireflyIII\Models\PiggyBank');
     }
 
 }

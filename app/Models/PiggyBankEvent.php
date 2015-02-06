@@ -7,12 +7,12 @@ class PiggyBankEvent extends Model
 
     public function piggyBank()
     {
-        return $this->belongsTo('PiggyBank');
+        return $this->belongsTo('FireflyIII\Models\PiggyBank');
     }
 
     public function transactionJournal()
     {
-        return $this->belongsTo('TransactionJournal');
+        return $this->belongsTo('FireflyIII\Models\TransactionJournal');
     }
 
 }
