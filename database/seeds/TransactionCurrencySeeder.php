@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use FireflyIII\Models\TransactionCurrency;
 /**
  * Class TransactionCurrencySeeder
  */

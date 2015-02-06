@@ -1,6 +1,6 @@
 <?php
 use Illuminate\Database\Seeder;
-
+use FireflyIII\Models\TransactionType;
 /**
  * Class TransactionTypeSeeder
  */
