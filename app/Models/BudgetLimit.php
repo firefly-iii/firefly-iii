@@ -2,8 +2,9 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class BudgetLimit extends Model {
+class BudgetLimit extends Model
+{
 
-	//
+    //
 
 }

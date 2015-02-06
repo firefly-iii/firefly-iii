@@ -2,8 +2,9 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class LimitRepetition extends Model {
+class LimitRepetition extends Model
+{
 
-	//
+    //
 
 }
