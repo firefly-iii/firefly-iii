@@ -1,4 +1,4 @@
-<?php namespace App\Commands;
+<?php namespace FireflyIII\Commands;
 
 abstract class Command {
 

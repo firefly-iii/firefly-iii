@@ -1,4 +1,4 @@
-<?php namespace App\Providers;
+<?php namespace FireflyIII\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider {
 	{
 		$this->app->bind(
 			'Illuminate\Contracts\Auth\Registrar',
-			'App\Services\Registrar'
+			'FireflyIII\Services\Registrar'
 		);
 	}
 
