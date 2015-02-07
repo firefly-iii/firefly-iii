@@ -9,5 +9,9 @@ class PiggyBankRepetition extends Model
     {
         return $this->belongsTo('FireflyIII\Models\PiggyBank');
     }
+    public function getDates()
+    {
+        return ['created_at', 'updated_at','startdate','targetdate'];
+    }
 
 }

@@ -14,5 +14,9 @@ class Category extends Model
     {
         return $this->belongsTo('FireflyIII\User');
     }
+    public function getDates()
+    {
+        return ['created_at', 'updated_at','deleted_at'];
+    }
 
 }

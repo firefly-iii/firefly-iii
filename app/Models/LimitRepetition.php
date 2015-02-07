@@ -9,5 +9,9 @@ class LimitRepetition extends Model
     {
         return $this->belongsTo('FireflyIII\Models\BudgetLimit');
     }
+    public function getDates()
+    {
+        return ['created_at', 'updated_at','startdate','enddate'];
+    }
 
 }

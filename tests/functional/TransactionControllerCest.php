@@ -1,5 +1,8 @@
 <?php
 
+use FireflyIII\Models\TransactionType;
+use FireflyIII\Models\TransactionJournal;
+
 /**
  * Class TransactionControllerCest
  */

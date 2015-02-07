@@ -1,5 +1,7 @@
 <?php
 
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionGroup;
 /**
  * @SuppressWarnings("CamelCase")
  * @SuppressWarnings("short")
