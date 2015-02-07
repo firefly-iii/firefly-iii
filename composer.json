@@ -42,7 +42,8 @@
         "codeception/specify": "*",
         "codeception/verify": "*",
         "fzaninotto/faker": "1.*",
-        "codeclimate/php-test-reporter": "dev-master"
+        "codeclimate/php-test-reporter": "dev-master",
+        "janhenkgerritsen/codeception-laravel5": "~1.0"
 
 
     },

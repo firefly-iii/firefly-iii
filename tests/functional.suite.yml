@@ -6,7 +6,7 @@
 
 class_name: FunctionalTester
 modules:
-    enabled: [Db, Filesystem, FunctionalHelper, Laravel4]
+    enabled: [Db, Filesystem, FunctionalHelper, Laravel5]
     config:
       Db:
         populate: false
