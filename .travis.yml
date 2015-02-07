@@ -11,6 +11,7 @@ addons:
 install:
   - rm composer.lock
   - composer install
+  - php artisan env
 
 script:
   - ./tests/_data/db.sh
