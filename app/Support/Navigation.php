@@ -4,7 +4,6 @@ namespace FireflyIII\Support;
 
 use Carbon\Carbon;
 use FireflyIII\Exception\FireflyException;
-use Session;
 
 /**
  * Class Navigation
@@ -14,48 +13,6 @@ use Session;
 class Navigation
 {
 
-
-    public function jumpToPrevious($range, Carbon $date)
-    {
-        $functionMap = [
-            '1D' => 'Day',
-            '1W' => 'Week',
-            '1M' => 'Month',
-            '1Y' => 'Year'
-        ];
-
-        if (isset($functionMap[$range])) {
-            $startFunction = 'startOf' . $functionMap[$range];
-            $subFunction   = 'sub' . $functionMap[$range];
-            $date->$startFunction()->$subFunction();
-
-            return $date;
-        }
-        if ($range == '3M') {
-            $date->firstOfQuarter()->subMonths(3)->firstOfQuarter();
-
-            return $date;
-        }
-        if ($range == '6M') {
-            $month = intval($date->format('m'));
-            $date->startOfYear();
-            if ($month <= 6) {
-                $date->subMonths(6);
-            }
-
-            return $date;
-        }
-        throw new FireflyException('Cannot do _previous() on ' . $range);
-    }
-
-    public function next()
-    {
-
-        $range = Session::get('range');
-        $start = Session::get('start');
-
-        Session::put('start', Navigation::jumpToNext($range, clone $start));
-    }
 
     public function jumpToNext($range, Carbon $date)
     {
@@ -90,6 +47,39 @@ class Navigation
         return $date;
     }
 
+    public function jumpToPrevious($range, Carbon $date)
+    {
+        $functionMap = [
+            '1D' => 'Day',
+            '1W' => 'Week',
+            '1M' => 'Month',
+            '1Y' => 'Year'
+        ];
+
+        if (isset($functionMap[$range])) {
+            $startFunction = 'startOf' . $functionMap[$range];
+            $subFunction   = 'sub' . $functionMap[$range];
+            $date->$startFunction()->$subFunction();
+
+            return $date;
+        }
+        if ($range == '3M') {
+            $date->firstOfQuarter()->subMonths(3)->firstOfQuarter();
+
+            return $date;
+        }
+        if ($range == '6M') {
+            $month = intval($date->format('m'));
+            $date->startOfYear();
+            if ($month <= 6) {
+                $date->subMonths(6);
+            }
+
+            return $date;
+        }
+        throw new FireflyException('Cannot do _previous() on ' . $range);
+    }
+
     public function periodName($range, Carbon $date)
     {
         $formatMap = [
@@ -114,15 +104,6 @@ class Navigation
             return $halfName . ' half of ' . $date->format('Y');
         }
         throw new FireflyException('No _periodName() for range "' . $range . '"');
-    }
-
-    public function prev()
-    {
-        $range = Session::get('range');
-        $start = Session::get('start');
-
-        Session::put('start', Navigation::jumpToPrevious($range, clone $start));
-
     }
 
     public function updateEndDate($range, Carbon $start)

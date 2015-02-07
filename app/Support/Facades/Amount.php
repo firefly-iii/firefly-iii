@@ -4,11 +4,11 @@ namespace FireflyIII\Support\Facades;
 
 use Illuminate\Support\Facades\Facade;
 /**
- * Class Navigation
+ * Class Amount
  *
  * @package FireflyIII\Support\Facades
  */
-class Navigation extends Facade
+class Amount extends Facade
 {
     /**
      * Get the registered name of the component.
@@ -17,7 +17,7 @@ class Navigation extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'navigation';
+        return 'amount';
     }
 
 }
