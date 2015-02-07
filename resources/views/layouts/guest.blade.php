@@ -7,10 +7,10 @@
     <base href="{{URL::route('index')}}/">
     <title>Firefly III</title>
 
-    <link rel="stylesheet" href="assets/stylesheets/bootstrap/bootstrap.min.css" type="text/css" media="all" />
-    <link rel="stylesheet" href="assets/stylesheets/metisMenu/metisMenu.min.css" type="text/css" media="all" />
-    <link rel="stylesheet" href="assets/stylesheets/sbadmin/sb.css" type="text/css" media="all" />
-    <link rel="stylesheet" href="assets/stylesheets/fa/css/font-awesome.min.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="css/metisMenu.min.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="css/sb.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css" type="text/css" media="all" />
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -42,5 +42,7 @@
     @include('partials.flashes')
     @yield('content')
 </div>
+<script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
+<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 </body>
 </html>
