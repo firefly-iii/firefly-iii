@@ -36,8 +36,8 @@
         "phpspec/phpspec": "~2.1",
         "codeception/codeception": "@stable",
         "codeception/c3": "@stable",
-        "league/factory-muffin": "~3.0",
-        "league/factory-muffin-faker": "~1.0"
+        "league/factory-muffin": "~2.1"
+
 
     },
     "autoload": {
