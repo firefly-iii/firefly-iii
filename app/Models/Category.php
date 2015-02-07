@@ -5,6 +5,11 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
 
+    public function getDates()
+    {
+        return ['created_at', 'updated_at', 'deleted_at'];
+    }
+
     public function transactionjournals()
     {
         return $this->belongsToMany('FireflyIII\Models\TransactionJournal', 'category_transaction_journal', 'category_id');
@@ -13,10 +18,6 @@ class Category extends Model
     public function user()
     {
         return $this->belongsTo('FireflyIII\User');
-    }
-    public function getDates()
-    {
-        return ['created_at', 'updated_at','deleted_at'];
     }
 
 }

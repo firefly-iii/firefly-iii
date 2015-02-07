@@ -11,6 +11,11 @@ class Budget extends Model
         return $this->hasMany('FireflyIII\Models\BudgetLimit');
     }
 
+    public function getDates()
+    {
+        return ['created_at', 'updated_at', 'deleted_at'];
+    }
+
     public function limitrepetitions()
     {
         return $this->hasManyThrough('FireflyIII\Models\LimitRepetition', 'BudgetLimit', 'budget_id');
@@ -24,10 +29,6 @@ class Budget extends Model
     public function user()
     {
         return $this->belongsTo('FireflyIII\User');
-    }
-    public function getDates()
-    {
-        return ['created_at', 'updated_at','deleted_at'];
     }
 
 

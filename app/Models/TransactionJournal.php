@@ -25,7 +25,7 @@ class TransactionJournal extends Model
 
     public function getDates()
     {
-        return ['created_at', 'updated_at', 'date','deleted_at'];
+        return ['created_at', 'updated_at', 'date', 'deleted_at'];
     }
 
     public function getDescriptionAttribute($value)

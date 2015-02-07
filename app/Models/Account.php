@@ -21,14 +21,9 @@ class Account extends Model
         return $this->belongsTo('FireflyIII\Models\AccountType');
     }
 
-    public function user()
+    public function getDates()
     {
-        return $this->belongsTo('FireflyIII\User');
-    }
-
-    public function transactions()
-    {
-        return $this->hasMany('FireflyIII\Models\Transaction');
+        return ['created_at', 'updated_at', 'deleted_at'];
     }
 
     public function scopeAccountTypeIn(EloquentBuilder $query, array $types)
@@ -40,9 +35,14 @@ class Account extends Model
         $query->whereIn('account_types.type', $types);
     }
 
-    public function getDates()
+    public function transactions()
     {
-        return ['created_at', 'updated_at','deleted_at'];
+        return $this->hasMany('FireflyIII\Models\Transaction');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo('FireflyIII\User');
     }
 
 }

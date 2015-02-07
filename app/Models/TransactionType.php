@@ -5,12 +5,13 @@ use Illuminate\Database\Eloquent\Model;
 class TransactionType extends Model
 {
 
+    public function getDates()
+    {
+        return ['created_at', 'updated_at', 'deleted_at'];
+    }
+
     public function transactionJournals()
     {
         return $this->hasMany('FireflyIII\Models\TransactionJournal');
-    }
-    public function getDates()
-    {
-        return ['created_at', 'updated_at','deleted_at'];
     }
 }
