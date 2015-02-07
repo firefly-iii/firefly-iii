@@ -1,5 +1,5 @@
 <?php
-
+use FireflyIII\Models\Reminder;
 /**
  * Class ReminderControllerCest
  *

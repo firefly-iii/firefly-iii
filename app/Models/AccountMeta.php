@@ -20,5 +20,9 @@ class AccountMeta extends Model
     {
         $this->attributes['data'] = json_encode($value);
     }
+    public function getDates()
+    {
+        return ['created_at', 'updated_at'];
+    }
 
 }

@@ -14,5 +14,9 @@ class PiggyBankEvent extends Model
     {
         return $this->belongsTo('FireflyIII\Models\TransactionJournal');
     }
+    public function getDates()
+    {
+        return ['created_at', 'updated_at','date'];
+    }
 
 }
