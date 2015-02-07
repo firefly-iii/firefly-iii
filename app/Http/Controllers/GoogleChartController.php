@@ -21,6 +21,8 @@ use Steam;
  */
 class GoogleChartController extends Controller
 {
+
+
     /**
      * @param GChart $chart
      *

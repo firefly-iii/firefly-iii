@@ -10,6 +10,11 @@ class PiggyBank extends Model
         return $this->belongsTo('FireflyIII\Models\Account');
     }
 
+    public function getDates()
+    {
+        return ['created_at', 'updated_at', 'deleted_at', 'startdate', 'targetdate'];
+    }
+
     public function piggyBankEvents()
     {
         return $this->hasMany('FireflyIII\Models\PiggyBankEvent');
@@ -23,9 +28,5 @@ class PiggyBank extends Model
     public function reminders()
     {
         return $this->morphMany('FireflyIII\Models\Reminder', 'remindersable');
-    }
-    public function getDates()
-    {
-        return ['created_at', 'updated_at','deleted_at','startdate','targetdate'];
     }
 }

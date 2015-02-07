@@ -16,13 +16,14 @@ class AccountMeta extends Model
         return json_decode($value);
     }
 
-    public function setDataAttribute($value)
-    {
-        $this->attributes['data'] = json_encode($value);
-    }
     public function getDates()
     {
         return ['created_at', 'updated_at'];
+    }
+
+    public function setDataAttribute($value)
+    {
+        $this->attributes['data'] = json_encode($value);
     }
 
 }

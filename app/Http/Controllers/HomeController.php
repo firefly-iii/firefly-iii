@@ -1,6 +1,7 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Auth;
+use Cache;
 use Carbon\Carbon;
 use Navigation;
 use Preferences;
@@ -16,15 +17,21 @@ use URL;
 class HomeController extends Controller
 {
 
-
     /**
      *
      */
     public function __construct()
     {
-        $this->middleware('auth');
-        $this->middleware('range');
-        //$this->middleware('guest');
+    }
+
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function flush()
+    {
+        Cache::flush();
+
+        return Redirect::route('index');
     }
 
     /**
@@ -49,21 +56,22 @@ class HomeController extends Controller
 
         foreach ($accounts as $account) {
             $set = Auth::user()
-                ->transactionjournals()
-                ->with(['transactions', 'transactioncurrency', 'transactiontype'])
-                ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')->where('accounts.id', $account->id)
-                ->where('date', '>=', $start->format('Y-m-d'))
-                ->where('date', '<=', $end->format('Y-m-d'))
-                ->orderBy('transaction_journals.date', 'DESC')
-                ->orderBy('transaction_journals.id', 'DESC')
-                ->take(10)
-                ->get(['transaction_journals.*']);
+                       ->transactionjournals()
+                       ->with(['transactions', 'transactioncurrency', 'transactiontype'])
+                       ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                       ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')->where('accounts.id', $account->id)
+                       ->where('date', '>=', $start->format('Y-m-d'))
+                       ->where('date', '<=', $end->format('Y-m-d'))
+                       ->orderBy('transaction_journals.date', 'DESC')
+                       ->orderBy('transaction_journals.id', 'DESC')
+                       ->take(10)
+                       ->get(['transaction_journals.*']);
             if (count($set) > 0) {
                 $transactions[] = [$set, $account];
             }
         }
-//        var_dump($transactions);
+
+        //        var_dump($transactions);
 
         return view('index', compact('count', 'title', 'subTitle', 'mainTitleIcon', 'transactions'));
     }

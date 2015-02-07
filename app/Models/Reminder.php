@@ -5,6 +5,11 @@ use Illuminate\Database\Eloquent\Model;
 class Reminder extends Model
 {
 
+    public function getDates()
+    {
+        return ['created_at', 'updated_at', 'startdate', 'enddate'];
+    }
+
     public function remindersable()
     {
         return $this->morphTo();
@@ -13,10 +18,6 @@ class Reminder extends Model
     public function user()
     {
         return $this->belongsTo('FireflyIII\User');
-    }
-    public function getDates()
-    {
-        return ['created_at', 'updated_at','startdate','enddate'];
     }
 
 }
