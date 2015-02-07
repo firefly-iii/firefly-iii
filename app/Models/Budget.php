@@ -1,10 +1,12 @@
 <?php namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Budget extends Model
 {
 
+    use SoftDeletes;
 
     public function budgetlimits()
     {

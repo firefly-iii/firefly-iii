@@ -2,10 +2,11 @@
 
 namespace FireflyIII\Support;
 
+use Cache;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use Preferences as Prefs;
-use Cache;
+
 /**
  * Class Amount
  *
@@ -13,6 +14,21 @@ use Cache;
  */
 class Amount
 {
+    /**
+     * @param      $amount
+     * @param bool $coloured
+     *
+     * @return string
+     */
+    public function format($amount, $coloured = true)
+    {
+        $currencySymbol = $this->getCurrencySymbol();
+
+        return $this->formatWithSymbol($currencySymbol, $amount, $coloured);
+
+
+    }
+
     /**
      * @param \Transaction $transaction
      * @param bool         $coloured
@@ -28,7 +44,6 @@ class Amount
 
 
     }
-
 
     /**
      * @param string $symbol
@@ -56,6 +71,31 @@ class Amount
 
         // &#8364;
         return $symbol . ' ' . $string;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getCurrencySymbol()
+    {
+        if (defined('FFCURRENCYSYMBOL')) {
+            return FFCURRENCYSYMBOL;
+        }
+        if (\Cache::has('FFCURRENCYSYMBOL')) {
+            define('FFCURRENCYSYMBOL', \Cache::get('FFCURRENCYSYMBOL'));
+
+            return FFCURRENCYSYMBOL;
+        }
+
+        $currencyPreference = Prefs::get('currencyPreference', 'EUR');
+        $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
+
+        \Cache::forever('FFCURRENCYSYMBOL', $currency->symbol);
+
+        define('FFCURRENCYSYMBOL', $currency->symbol);
+
+        return $currency->symbol;
     }
 
     /**

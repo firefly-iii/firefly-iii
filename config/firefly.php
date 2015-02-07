@@ -1,15 +1,15 @@
 <?php
 
 return [
-    'index_periods'        => ['1D', '1W', '1M', '3M', '6M', '1Y', 'custom'],
-    'budget_periods'       => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
-    'piggy_bank_periods'    => [
+    'index_periods'            => ['1D', '1W', '1M', '3M', '6M', '1Y', 'custom'],
+    'budget_periods'           => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
+    'piggy_bank_periods'       => [
         'week'    => 'Week',
         'month'   => 'Month',
         'quarter' => 'Quarter',
         'year'    => 'Year'
     ],
-    'periods_to_text'      => [
+    'periods_to_text'          => [
         'weekly'    => 'A week',
         'monthly'   => 'A month',
         'quarterly' => 'A quarter',
@@ -17,12 +17,12 @@ return [
         'yearly'    => 'A year',
     ],
 
-    'accountRoles'         => [
+    'accountRoles'             => [
         'defaultExpense' => 'Default expense account',
         'sharedExpense'  => 'Shared expense account'
     ],
 
-    'range_to_text'        => [
+    'range_to_text'            => [
         '1D'     => 'day',
         '1W'     => 'week',
         '1M'     => 'month',
@@ -30,7 +30,7 @@ return [
         '6M'     => 'half year',
         'custom' => '(custom)'
     ],
-    'range_to_name'        => [
+    'range_to_name'            => [
         '1D' => 'one day',
         '1W' => 'one week',
         '1M' => 'one month',
@@ -38,7 +38,7 @@ return [
         '6M' => 'six months',
         '1Y' => 'one year',
     ],
-    'range_to_repeat_freq' => [
+    'range_to_repeat_freq'     => [
         '1D'     => 'weekly',
         '1W'     => 'weekly',
         '1M'     => 'monthly',
@@ -46,4 +46,28 @@ return [
         '6M'     => 'half-year',
         'custom' => 'monthly'
     ],
+    'subTitlesByIdentifier'    =>
+        [
+            'asset'   => 'Asset accounts',
+            'expense' => 'Expense accounts',
+            'revenue' => 'Revenue accounts',
+        ],
+    'subIconsByIdentifier'     =>
+        [
+            'asset'               => 'fa-money',
+            'Asset account'       => 'fa-money',
+            'Default account'     => 'fa-money',
+            'Cash account'        => 'fa-money',
+            'expense'             => 'fa-shopping-cart',
+            'Expense account'     => 'fa-shopping-cart',
+            'Beneficiary account' => 'fa-shopping-cart',
+            'revenue'             => 'fa-download',
+            'Revenue account'     => 'fa-download',
+        ],
+    'accountTypesByIdentifier' =>
+        [
+            'asset'   => ['Default account', 'Asset account'],
+            'expense' => ['Expense account', 'Beneficiary account'],
+            'revenue' => ['Revenue account'],
+        ],
 ];

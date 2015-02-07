@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Account
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Account extends Model
 {
+    use SoftDeletes;
 
     public function accountMeta()
     {

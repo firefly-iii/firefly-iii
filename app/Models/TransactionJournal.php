@@ -4,9 +4,11 @@ use Carbon\Carbon;
 use Crypt;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TransactionJournal extends Model
 {
+    use SoftDeletes;
 
     public function bill()
     {
