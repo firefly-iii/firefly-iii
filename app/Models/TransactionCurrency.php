@@ -1,9 +1,11 @@
 <?php namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TransactionCurrency extends Model
 {
+    use SoftDeletes;
 
     public function getDates()
     {

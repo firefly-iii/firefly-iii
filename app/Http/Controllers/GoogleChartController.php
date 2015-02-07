@@ -4,15 +4,19 @@ use Auth;
 use Carbon\Carbon;
 use FireflyIII\Http\Requests;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Models\TransactionJournal;
 use Grumpydictator\Gchart\GChart;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\Request;
 use Preferences;
 use Response;
 use Session;
 use Steam;
+use Crypt;
 
 /**
  * Class GoogleChartController
@@ -128,6 +132,93 @@ class GoogleChartController extends Controller
                            ->get();
         $sum         = $noBudgetSet->sum('amount') * -1;
         $chart->addRow('No budget', 0, $sum);
+        $chart->generate();
+
+        return Response::json($chart->getData());
+    }
+
+    public function allCategoriesHomeChart(GChart $chart)
+    {
+        $chart->addColumn('Category', 'string');
+        $chart->addColumn('Spent', 'number');
+
+        // query!
+        $start = Session::get('start', Carbon::now()->startOfMonth());
+        $end   = Session::get('end', Carbon::now()->endOfMonth());
+        $set   = TransactionJournal::leftJoin(
+            'transactions',
+            function (JoinClause $join) {
+                $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('amount', '>', 0);
+            }
+        )
+                                   ->leftJoin(
+                                       'category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
+                                   )
+                                   ->leftJoin('categories', 'categories.id', '=', 'category_transaction_journal.category_id')
+                                   ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                   ->before($end)
+                                   ->after($start)
+                                   ->where('transaction_types.type', 'Withdrawal')
+                                   ->groupBy('categories.id')
+                                   ->orderBy('sum', 'DESC')
+                                   ->get(['categories.id', 'categories.name', \DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
+
+        foreach ($set as $entry) {
+            $entry->name = strlen($entry->name) == 0 ? '(no category)' : $entry->name;
+            $chart->addRow($entry->name, floatval($entry->sum));
+        }
+
+        $chart->generate();
+
+        return Response::json($chart->getData());
+
+    }
+
+    public function billsOverview(GChart $chart)
+    {
+        $paid   = ['items' => [], 'amount' => 0];
+        $unpaid = ['items' => [], 'amount' => 0];
+        $start  = Session::get('start', Carbon::now()->startOfMonth());
+        $end    = Session::get('end', Carbon::now()->endOfMonth());
+
+        $chart->addColumn('Name', 'string');
+        $chart->addColumn('Amount', 'number');
+
+        $set = Bill::
+        leftJoin(
+            'transaction_journals', function (JoinClause $join) use ($start, $end) {
+            $join->on('bills.id', '=', 'transaction_journals.bill_id')
+                 ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                 ->where('transaction_journals.date', '<=', $end->format('Y-m-d'));
+        }
+        )
+                   ->leftJoin(
+                       'transactions', function (JoinClause $join) {
+                       $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '>', 0);
+                   }
+                   )
+                   ->where('active', 1)
+                   ->groupBy('bills.id')
+                   ->get(
+                       ['bills.id', 'bills.name', 'transaction_journals.description',
+                        'transaction_journals.encrypted',
+                        'transaction_journals.id as journalId',
+                        \DB::Raw('SUM(`bills`.`amount_min` + `bills`.`amount_max`) / 2 as `averageAmount`'),
+                        'transactions.amount AS actualAmount']
+                   );
+
+        foreach ($set as $entry) {
+            if (intval($entry->journalId) == 0) {
+                $unpaid['items'][] = $entry->name;
+                $unpaid['amount'] += floatval($entry->averageAmount);
+            } else {
+                $description     = intval($entry->encrypted) == 1 ? Crypt::decrypt($entry->description) : $entry->description;
+                $paid['items'][] = $description;
+                $paid['amount'] += floatval($entry->actualAmount);
+            }
+        }
+        $chart->addRow('Unpaid: ' . join(', ', $unpaid['items']), $unpaid['amount']);
+        $chart->addRow('Paid: ' . join(', ', $paid['items']), $paid['amount']);
         $chart->generate();
 
         return Response::json($chart->getData());
