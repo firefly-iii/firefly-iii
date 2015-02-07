@@ -136,13 +136,19 @@ Route::group(
     //Route::any('/transactions/unrelate/{tj}', ['uses' => 'TransactionController@unrelate', 'as' => 'transactions.unrelate']);
 
     /**
-     * User Controller
-     * TODO move to AuthController
+     * Auth\Auth Controller
      */
-    Route::get('/logout', ['uses' => 'UserController@logout', 'as' => 'logout']);
+    Route::get('/logout', ['uses' => 'Auth\AuthController@getLogout', 'as' => 'logout']);
+
 
 }
 );
+
+/**
+ * Auth\AuthController
+ */
+Route::get('/register', ['uses' => 'Auth\AuthController@getRegister', 'as' => 'register']);
+
 Route::controllers(
     [
         'auth'     => 'Auth\AuthController',

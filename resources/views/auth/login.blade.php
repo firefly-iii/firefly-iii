@@ -1,63 +1,51 @@
-@extends('app')
-
+@extends('layouts.guest')
 @section('content')
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-md-8 col-md-offset-2">
-			<div class="panel panel-default">
-				<div class="panel-heading">Login</div>
-				<div class="panel-body">
-					@if (count($errors) > 0)
-						<div class="alert alert-danger">
-							<strong>Whoops!</strong> There were some problems with your input.<br><br>
-							<ul>
-								@foreach ($errors->all() as $error)
-									<li>{{ $error }}</li>
-								@endforeach
-							</ul>
-						</div>
-					@endif
 
-					<form class="form-horizontal" role="form" method="POST" action="/auth/login">
-						<input type="hidden" name="_token" value="{{ csrf_token() }}">
-
-						<div class="form-group">
-							<label class="col-md-4 control-label">E-Mail Address</label>
-							<div class="col-md-6">
-								<input type="email" class="form-control" name="email" value="{{ old('email') }}">
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label class="col-md-4 control-label">Password</label>
-							<div class="col-md-6">
-								<input type="password" class="form-control" name="password">
-							</div>
-						</div>
-
-						<div class="form-group">
-							<div class="col-md-6 col-md-offset-4">
-								<div class="checkbox">
-									<label>
-										<input type="checkbox" name="remember"> Remember Me
-									</label>
-								</div>
-							</div>
-						</div>
-
-						<div class="form-group">
-							<div class="col-md-6 col-md-offset-4">
-								<button type="submit" class="btn btn-primary" style="margin-right: 15px;">
-									Login
-								</button>
-
-								<a href="/password/email">Forgot Your Password?</a>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
+@if($errors->has('email'))
+<div class="row">
+    <div class="col-lg-12">
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            <strong>Error!</strong> {{$errors->get('email')[0]}}
+        </div>
+    </div>
 </div>
-@endsection
+@endif
+
+
+<div class="row">
+    <div class="col-md-4 col-md-offset-4">
+        <div class="login-panel panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Firefly III &mdash; Sign In</h3>
+            </div>
+            <div class="panel-body">
+
+                <form role="form" method="POST" id="login" action="/auth/login">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+        <div class="form-group">
+            <input type="email" class="form-control" id="inputEmail" name="email" placeholder="E-mail">
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password">
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="remember" value="1"> Remember me
+            </label>
+        </div>
+        <p>
+            <button type="submit" class="btn btn-lg btn-success btn-block">Login</button>
+        </p>
+        <div class="btn-group btn-group-justified btn-group-sm">
+            @if(Config::get('auth.allow_register') === true)
+                <a href="{{route('register')}}" class="btn btn-default">Register</a>
+            @endif
+            <a href="/password/email" class="btn btn-default">Forgot your password?</a>
+        </div>
+        </form>
+    </div>
+</div>
+</div>
+</div>
+@stop
