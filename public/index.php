@@ -18,8 +18,6 @@
 |
 */
 
-require __DIR__.'/../bootstrap/autoload.php';
-
 /**
  * Adding c3.php for code coverage during codeception tests
  * ref: https://github.com/Codeception/c3
@@ -27,6 +25,10 @@ require __DIR__.'/../bootstrap/autoload.php';
 if (file_exists(__DIR__ . '/../c3.php')) {
 	require __DIR__ . '/../c3.php';
 }
+
+require __DIR__.'/../bootstrap/autoload.php';
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -61,5 +63,7 @@ $response = $kernel->handle(
 );
 
 $response->send();
+
+
 
 $kernel->terminate($request, $response);
