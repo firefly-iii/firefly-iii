@@ -1,10 +1,12 @@
 <?php namespace FireflyIII\Http\Controllers;
 
-use Preferences;
+use Auth;
+use Carbon\Carbon;
 use Navigation;
+use Preferences;
 use Redirect;
-use URL;
 use Session;
+use URL;
 
 /**
  * Class HomeController
@@ -30,14 +32,40 @@ class HomeController extends Controller
      */
     public function index()
     {
-        // count is fake
-        $count         = \Auth::user()->accounts()->accountTypeIn(['Asset account', 'Default account'])->count();
+        $count         = Auth::user()->accounts()->accountTypeIn(['Asset account', 'Default account'])->count();
         $title         = 'Firefly';
         $subTitle      = 'What\'s playing?';
         $mainTitleIcon = 'fa-fire';
-        $transactions = [];
+        $transactions  = [];
+        $frontPage     = Preferences::get('frontPageAccounts', []);
+        $start         = Session::get('start', Carbon::now()->startOfMonth());
+        $end           = Session::get('end', Carbon::now()->endOfMonth());
 
-        return view('index', compact('count', 'title', 'subTitle', 'mainTitleIcon','transactions'));
+        if ($frontPage->data == []) {
+            $accounts = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*']);
+        } else {
+            $accounts = Auth::user()->accounts()->whereIn('id', $frontPage->data)->get(['accounts.*']);
+        }
+
+        foreach ($accounts as $account) {
+            $set = Auth::user()
+                ->transactionjournals()
+                ->with(['transactions', 'transactioncurrency', 'transactiontype'])
+                ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')->where('accounts.id', $account->id)
+                ->where('date', '>=', $start->format('Y-m-d'))
+                ->where('date', '<=', $end->format('Y-m-d'))
+                ->orderBy('transaction_journals.date', 'DESC')
+                ->orderBy('transaction_journals.id', 'DESC')
+                ->take(10)
+                ->get(['transaction_journals.*']);
+            if (count($set) > 0) {
+                $transactions[] = [$set, $account];
+            }
+        }
+//        var_dump($transactions);
+
+        return view('index', compact('count', 'title', 'subTitle', 'mainTitleIcon', 'transactions'));
     }
 
     /**
@@ -54,6 +82,7 @@ class HomeController extends Controller
             Preferences::set('viewRange', $range);
             Session::forget('range');
         }
+
         return Redirect::to(URL::previous());
     }
 
@@ -62,7 +91,11 @@ class HomeController extends Controller
      */
     public function sessionNext()
     {
-        Navigation::next();
+        $range = Session::get('range');
+        $start = Session::get('start');
+
+        Session::put('start', Navigation::jumpToNext($range, clone $start));
+
         return Redirect::to(URL::previous());
 
     }
@@ -72,7 +105,11 @@ class HomeController extends Controller
      */
     public function sessionPrev()
     {
-        Navigation::prev();
+        $range = Session::get('range');
+        $start = Session::get('start');
+
+        Session::put('start', Navigation::jumpToPrevious($range, clone $start));
+
         return Redirect::to(URL::previous());
     }
 

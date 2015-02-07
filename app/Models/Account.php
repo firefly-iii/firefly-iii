@@ -1,7 +1,8 @@
 <?php namespace FireflyIII\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Model;
+
 /**
  * Class Account
  *
@@ -32,6 +33,11 @@ class Account extends Model
             $this->joinedAccountTypes = true;
         }
         $query->whereIn('account_types.type', $types);
+    }
+
+    public function getDates()
+    {
+        return ['created_at', 'updated_at'];
     }
 
 }
