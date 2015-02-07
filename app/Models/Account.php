@@ -26,6 +26,11 @@ class Account extends Model
         return $this->belongsTo('FireflyIII\User');
     }
 
+    public function transactions()
+    {
+        return $this->hasMany('FireflyIII\Models\Transaction');
+    }
+
     public function scopeAccountTypeIn(EloquentBuilder $query, array $types)
     {
         if (is_null($this->joinedAccountTypes)) {

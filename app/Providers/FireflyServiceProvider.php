@@ -23,6 +23,12 @@ class FireflyServiceProvider extends ServiceProvider
             return new \FireflyIII\Support\Amount;
         }
         );
+
+        $this->app->bind(
+            'steam', function () {
+            return new \FireflyIII\Support\Steam;
+        }
+        );
     }
 
 }

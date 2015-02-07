@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * Home Controller
  */
 Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
@@ -8,7 +8,7 @@ Route::get('/prev', ['uses' => 'HomeController@sessionPrev', 'as' => 'sessionPre
 Route::get('/next', ['uses' => 'HomeController@sessionNext', 'as' => 'sessionNext']);
 Route::get('/jump/{range}', ['uses' => 'HomeController@rangeJump', 'as' => 'rangeJump']);
 
-/*
+/**
  * Account Controller
  */
 Route::get('/accounts/{what}', ['uses' => 'AccountController@index', 'as' => 'accounts.index'])->where('what', 'revenue|asset|expense');
@@ -17,10 +17,9 @@ Route::get('/accounts/create/{what}', ['uses' => 'AccountController@create', 'as
 //Route::get('/accounts/delete/{account}', ['uses' => 'AccountController@delete', 'as' => 'accounts.delete']);
 Route::get('/accounts/show/{account}/{view?}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
 
-/*
+/**
  * Bills Controller
  */
-// bills controller
 Route::get('/bills', ['uses' => 'BillController@index', 'as' => 'bills.index']);
 //Route::get('/bills/rescan/{bill}', ['uses' => 'BillController@rescan', 'as' => 'bills.rescan']); # rescan for matching.
 Route::get('/bills/create', ['uses' => 'BillController@create', 'as' => 'bills.create']);
@@ -28,7 +27,7 @@ Route::get('/bills/create', ['uses' => 'BillController@create', 'as' => 'bills.c
 //Route::get('/bills/delete/{bill}', ['uses' => 'BillController@delete', 'as' => 'bills.delete']);
 //Route::get('/bills/show/{bill}', ['uses' => 'BillController@show', 'as' => 'bills.show']);
 
-/*
+/**
  * Budget Controller
  */
 Route::get('/budgets', ['uses' => 'BudgetController@index', 'as' => 'budgets.index']);
@@ -39,7 +38,7 @@ Route::get('/budgets', ['uses' => 'BudgetController@index', 'as' => 'budgets.ind
 //Route::get('/budgets/show/{budget}/{limitrepetition?}', ['uses' => 'BudgetController@show', 'as' => 'budgets.show']);
 //Route::get('/budgets/list/noBudget', ['uses' => 'BudgetController@noBudget', 'as' => 'budgets.noBudget']);
 
-/*
+/**
  * Category Controller
  */
 Route::get('/categories', ['uses' => 'CategoryController@index', 'as' => 'categories.index']);
@@ -49,7 +48,7 @@ Route::get('/categories', ['uses' => 'CategoryController@index', 'as' => 'catego
 //Route::get('/categories/show/{category}', ['uses' => 'CategoryController@show', 'as' => 'categories.show']);
 //Route::get('/categories/list/noCategory', ['uses' => 'CategoryController@noCategory', 'as' => 'categories.noCategory']);
 
-/*
+/**
  * Currency Controller
  */
 Route::get('/currency', ['uses' => 'CurrencyController@index', 'as' => 'currency.index']);
@@ -58,7 +57,20 @@ Route::get('/currency', ['uses' => 'CurrencyController@index', 'as' => 'currency
 //Route::get('/currency/delete/{currency}', ['uses' => 'CurrencyController@delete', 'as' => 'currency.delete']);
 //Route::get('/currency/default/{currency}', ['uses' => 'CurrencyController@defaultCurrency', 'as' => 'currency.default']);
 
-/*
+/**
+ * Google Chart Controller
+ */
+Route::get('/chart/home/account', ['uses' => 'GoogleChartController@allAccountsBalanceChart']);
+Route::get('/chart/home/budgets', ['uses' => 'GoogleChartController@allBudgetsHomeChart']);
+//Route::get('/chart/home/categories', ['uses' => 'GoogleChartController@allCategoriesHomeChart']);
+//Route::get('/chart/home/bills', ['uses' => 'GoogleChartController@billsOverview']);
+//Route::get('/chart/account/{account}/{view?}', ['uses' => 'GoogleChartController@accountBalanceChart']);
+//Route::get('/chart/reports/income-expenses/{year}', ['uses' => 'GoogleChartController@yearInExp']);
+//Route::get('/chart/reports/income-expenses-sum/{year}', ['uses' => 'GoogleChartController@yearInExpSum']);
+//Route::get('/chart/bills/{bill}', ['uses' => 'GoogleChartController@billOverview']);
+
+
+/**
  * Piggy Bank Controller
  */
 // piggy bank controller
@@ -70,28 +82,27 @@ Route::get('/piggy_banks', ['uses' => 'PiggyBankController@index', 'as' => 'pigg
 //Route::get('/piggy_banks/delete/{piggyBank}', ['uses' => 'PiggyBankController@delete', 'as' => 'piggy_banks.delete']);
 //Route::get('/piggy_banks/show/{piggyBank}', ['uses' => 'PiggyBankController@show', 'as' => 'piggy_banks.show']);
 
-/*
+/**
  * Preferences Controller
  */
 Route::get('/preferences', ['uses' => 'PreferencesController@index', 'as' => 'preferences']);
 
-/*
+/**
  * Profile Controller
  */
 Route::get('/profile', ['uses' => 'ProfileController@index', 'as' => 'profile']);
 //Route::get('/profile/change-password', ['uses' => 'ProfileController@changePassword', 'as' => 'change-password']);
 
-/*
+/**
  * Repeated Expenses Controller
  */
-// repeated expenses controller:
 Route::get('/repeatedexpenses', ['uses' => 'RepeatedExpenseController@index', 'as' => 'repeated.index']);
 //Route::get('/repeatedexpenses/create', ['uses' => 'RepeatedExpenseController@create', 'as' => 'repeated.create']);
 //Route::get('/repeatedexpenses/edit/{repeatedExpense}', ['uses' => 'RepeatedExpenseController@edit', 'as' => 'repeated.edit']);
 //Route::get('/repeatedexpenses/delete/{repeatedExpense}', ['uses' => 'RepeatedExpenseController@delete', 'as' => 'repeated.delete']);
 //Route::get('/repeatedexpenses/show/{repeatedExpense}', ['uses' => 'RepeatedExpenseController@show', 'as' => 'repeated.show']);
 
-/*
+/**
  * Report Controller
  */
 Route::get('/reports', ['uses' => 'ReportController@index', 'as' => 'reports.index']);
@@ -99,15 +110,14 @@ Route::get('/reports', ['uses' => 'ReportController@index', 'as' => 'reports.ind
 //Route::get('/reports/{year}/{month}', ['uses' => 'ReportController@month', 'as' => 'reports.month']);
 //Route::get('/reports/budget/{year}/{month}', ['uses' => 'ReportController@budget', 'as' => 'reports.budget']);
 
-/*
+/**
  * Search Controller
  */
 Route::get('/search', ['uses' => 'SearchController@index', 'as' => 'search']);
 
-/*
+/**
  * Transaction Controller
  */
-// transaction controller:
 Route::get('/transactions/{what}', ['uses' => 'TransactionController@index', 'as' => 'transactions.index'])->where(
     ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
 );
@@ -123,7 +133,7 @@ Route::get('/transaction/show/{tj}', ['uses' => 'TransactionController@show', 'a
 //Route::post('/transactions/doRelate', ['uses' => 'TransactionController@doRelate', 'as' => 'transactions.doRelate']);
 //Route::any('/transactions/unrelate/{tj}', ['uses' => 'TransactionController@unrelate', 'as' => 'transactions.unrelate']);
 
-/*
+/**
  * User Controller
  * TODO move to AuthController
  */

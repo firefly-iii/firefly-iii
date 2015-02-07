@@ -1,7 +1,10 @@
 <?php namespace FireflyIII\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 use Crypt;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Model;
+
 class TransactionJournal extends Model
 {
 
@@ -20,6 +23,11 @@ class TransactionJournal extends Model
         return $this->belongsToMany('FireflyIII\Models\Category');
     }
 
+    public function getDates()
+    {
+        return ['created_at', 'updated_at', 'date'];
+    }
+
     public function getDescriptionAttribute($value)
     {
         if ($this->encrypted) {
@@ -34,6 +42,59 @@ class TransactionJournal extends Model
     public function piggyBankEvents()
     {
         return $this->hasMany('FireflyIII\Models\PiggyBankEvent');
+    }
+
+    /**
+     * @param EloquentBuilder $query
+     * @param Carbon          $date
+     *
+     * @return mixed
+     */
+    public function scopeAfter(EloquentBuilder $query, Carbon $date)
+    {
+        return $query->where('transaction_journals.date', '>=', $date->format('Y-m-d 00:00:00'));
+    }
+
+    /**
+     * @param EloquentBuilder $query
+     * @param Carbon          $date
+     *
+     * @return mixed
+     */
+    public function scopeBefore(EloquentBuilder $query, Carbon $date)
+    {
+        return $query->where('transaction_journals.date', '<=', $date->format('Y-m-d 00:00:00'));
+    }
+
+    /**
+     * @param EloquentBuilder $query
+     * @param                 $amount
+     */
+    public function scopeLessThan(EloquentBuilder $query, $amount)
+    {
+        if (is_null($this->joinedTransactions)) {
+            $query->leftJoin(
+                'transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
+            );
+            $this->joinedTransactions = true;
+        }
+
+        $query->where('transactions.amount', '<=', $amount);
+    }
+
+    /**
+     * @param EloquentBuilder $query
+     * @param array           $types
+     */
+    public function scopeTransactionTypes(EloquentBuilder $query, array $types)
+    {
+        if (is_null($this->joinedTransactionTypes)) {
+            $query->leftJoin(
+                'transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id'
+            );
+            $this->joinedTransactionTypes = true;
+        }
+        $query->whereIn('transaction_types.type', $types);
     }
 
     public function setDescriptionAttribute($value)
@@ -66,11 +127,5 @@ class TransactionJournal extends Model
     {
         return $this->belongsTo('FireflyIII\User');
     }
-
-    public function getDates()
-    {
-        return ['created_at', 'updated_at','date'];
-    }
-
 
 }

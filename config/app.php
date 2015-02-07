@@ -201,6 +201,7 @@ return [
         'Preferences' => 'FireflyIII\Support\Facades\Preferences',
         'Navigation'  => 'FireflyIII\Support\Facades\Navigation',
         'Amount'      => 'FireflyIII\Support\Facades\Amount',
+        'Steam'       => 'FireflyIII\Support\Facades\Steam',
 
     ],
 
