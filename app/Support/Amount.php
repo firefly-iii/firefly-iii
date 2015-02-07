@@ -3,6 +3,9 @@
 namespace FireflyIII\Support;
 
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
+use Preferences as Prefs;
+use Cache;
 /**
  * Class Amount
  *
@@ -53,5 +56,30 @@ class Amount
 
         // &#8364;
         return $symbol . ' ' . $string;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrencyCode()
+    {
+        if (defined('FFCURRENCYCODE')) {
+            return FFCURRENCYCODE;
+        }
+        if (Cache::has('FFCURRENCYCODE')) {
+            define('FFCURRENCYCODE', Cache::get('FFCURRENCYCODE'));
+
+            return FFCURRENCYCODE;
+        }
+
+
+        $currencyPreference = Prefs::get('currencyPreference', 'EUR');
+        $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
+
+        \Cache::forever('FFCURRENCYCODE', $currency->code);
+
+        define('FFCURRENCYCODE', $currency->code);
+
+        return $currency->code;
     }
 }
