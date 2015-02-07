@@ -33,7 +33,9 @@
     "require-dev": {
         "barryvdh/laravel-debugbar": "@stable",
         "phpunit/phpunit": "~4.0",
-        "phpspec/phpspec": "~2.1"
+        "phpspec/phpspec": "~2.1",
+        "codeception/codeception": "@stable",
+        "codeception/c3": "@stable"
 
     },
     "autoload": {
