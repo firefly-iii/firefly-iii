@@ -1,12 +1,12 @@
 <?php
 
-namespace FireflyIII\Exception;
+namespace FireflyIII\Exceptions;
 
 
 /**
  * Class FireflyException
  *
- * @package FireflyIII\Exception
+ * @package FireflyIII\Exceptions
  */
 class FireflyException extends \Exception
 {
