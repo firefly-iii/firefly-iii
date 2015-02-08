@@ -748,16 +748,15 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JC5/gchart.git",
-                "reference": "8481daeb6621178ebbabb5355d6ec88a77c697dc"
+                "reference": "0cbefaf7ea75f4ce23791d9764787f3b617208dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JC5/gchart/zipball/8481daeb6621178ebbabb5355d6ec88a77c697dc",
-                "reference": "8481daeb6621178ebbabb5355d6ec88a77c697dc",
+                "url": "https://api.github.com/repos/JC5/gchart/zipball/0cbefaf7ea75f4ce23791d9764787f3b617208dd",
+                "reference": "0cbefaf7ea75f4ce23791d9764787f3b617208dd",
                 "shasum": ""
             },
             "require": {
-                "illuminate/support": "@stable",
                 "php": ">=5.3.0"
             },
             "type": "library",
@@ -777,7 +776,7 @@
                 }
             ],
             "description": "GChart is a small package that allows you to easily generate data for the Google Charts API.",
-            "time": "2015-02-04 19:24:04"
+            "time": "2015-02-08 00:18:35"
         },
         {
             "name": "illuminate/html",
