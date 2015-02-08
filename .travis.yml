@@ -17,7 +17,7 @@ install:
 script:
   - ./tests/_data/db.sh
   - php vendor/bin/codecept build
-  - php vendor/bin/codecept run --coverage --coverage-xml --debug -vvv --no-exit
+  - php vendor/bin/codecept run --coverage --coverage-xml --no-exit
 
 after_script:
   - cp -v tests/_output/coverage.xml build/logs/clover.xml
