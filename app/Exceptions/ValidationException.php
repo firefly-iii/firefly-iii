@@ -1,8 +1,8 @@
 <?php
-namespace FireflyIII\Exception;
+namespace FireflyIII\Exceptions;
 
 /**
- * Class ValidationException
+ * Class ValidationExceptions
  *
  * @package FireflyIII\Exception
  */

@@ -3,9 +3,22 @@
 namespace FireflyIII\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Validator;
+use FireflyIII\Validation\FireflyValidator;
 
+/**
+ * Class FireflyServiceProvider
+ *
+ * @package FireflyIII\Providers
+ */
 class FireflyServiceProvider extends ServiceProvider
 {
+    public function boot() {
+        Validator::resolver(function($translator, $data, $rules, $messages)
+        {
+            return new FireflyValidator($translator, $data, $rules, $messages);
+        });
+    }
     public function register()
     {
         $this->app->bind(
@@ -27,6 +40,11 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(
             'steam', function () {
             return new \FireflyIII\Support\Steam;
+        }
+        );
+        $this->app->bind(
+            'expandedform', function () {
+            return new \FireflyIII\Support\ExpandedForm;
         }
         );
     }

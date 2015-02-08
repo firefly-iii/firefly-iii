@@ -122,4 +122,12 @@ class Amount
 
         return $currency->code;
     }
+
+    public function getDefaultCurrency()
+    {
+        $currencyPreference = Prefs::get('currencyPreference', 'EUR');
+        $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
+
+        return $currency;
+    }
 }

@@ -1,11 +1,11 @@
 <?php
-namespace FireflyIII\Exception;
+namespace FireflyIII\Exceptions;
 
 
 /**
  * Class NotImplementedException
  *
- * @package FireflyIII\Exception
+ * @package FireflyIII\Exceptions
  */
 class NotImplementedException extends \Exception
 {
