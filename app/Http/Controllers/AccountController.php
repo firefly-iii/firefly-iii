@@ -1,10 +1,13 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Auth;
+use Carbon\Carbon;
 use Config;
 use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\AccountFormRequest;
-use Illuminate\Http\Request;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use Redirect;
+use Session;
 use View;
 
 /**
@@ -46,8 +49,24 @@ class AccountController extends Controller
         return view('accounts.index', compact('what', 'subTitleIcon', 'subTitle', 'accounts'));
     }
 
-    public function store(AccountFormRequest $request)
+    public function store(AccountFormRequest $request, AccountRepositoryInterface $repository)
     {
+        $accountData = [
+            'name'                   => $request->input('name'),
+            'accountType'            => Config::get('firefly.accountTypeByIdentifier.' . $request->input('what')),
+            'active'                 => true,
+            'user'                   => Auth::user()->id,
+            'accountRole'            => $request->input('accountRole'),
+            'openingBalance'         => floatval($request->input('openingBalance')),
+            'openingBalanceDate'     => new Carbon($request->input('openingBalanceDate')),
+            'openingBalanceCurrency' => intval($request->input('balance_currency_id')),
+
+        ];
+        $account     = $repository->store($accountData);
+
+        Session::flash('success', 'New account "' . $account->name . '" stored!');
+
+        return Redirect::route('accounts.index', $request->input('what'));
 
     }
 

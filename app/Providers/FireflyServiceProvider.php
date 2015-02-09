@@ -47,6 +47,10 @@ class FireflyServiceProvider extends ServiceProvider
             return new \FireflyIII\Support\ExpandedForm;
         }
         );
+
+        // preferences
+        $this->app->bind('FireflyIII\Repositories\Account\AccountRepositoryInterface', 'FireflyIII\Repositories\Account\AccountRepository');
+        $this->app->bind('FireflyIII\Repositories\Journal\JournalRepositoryInterface', 'FireflyIII\Repositories\Journal\JournalRepository');
     }
 
 }

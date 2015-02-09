@@ -27,21 +27,20 @@
 
     <div class="col-lg-6 col-md-6 col-sm-12">
 
-
+        @if($what == 'asset')
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-smile-o"></i> Optional fields
             </div>
             <div class="panel-body">
-            @if($what == 'asset')
+
                     {!! ExpandedForm::balance('openingBalance') !!}
                     {!! ExpandedForm::date('openingBalanceDate', date('Y-m-d')) !!}
-                    {!! ExpandedForm::select('account_role',Config::get('firefly.accountRoles')) !!}
-                @endif
-                    {!! ExpandedForm::checkbox('active','1',true) !!}
+                    {!! ExpandedForm::select('accountRole',Config::get('firefly.accountRoles')) !!}
+
             </div>
         </div>
-
+        @endif
 
         <!-- panel for options -->
         <div class="panel panel-default">
