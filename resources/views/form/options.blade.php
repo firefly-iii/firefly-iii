@@ -1,4 +1,5 @@
 @if($type == 'create')
+    <!--
     <div class="form-group">
         <label for="{{{$name}}}_store" class="col-sm-4 control-label">Store</label>
         <div class="col-sm-8">
@@ -10,8 +11,10 @@
             </div>
         </div>
     </div>
+    -->
 @endif
 @if($type == 'update')
+    <!--
     <div class="form-group">
         <label for="{{{$name}}}_update" class="col-sm-4 control-label">Update</label>
         <div class="col-sm-8">
@@ -23,8 +26,9 @@
             </div>
         </div>
     </div>
+    -->
 @endif
-
+        <!--
 <div class="form-group">
     <label for="{{{$name}}}_validate_only" class="col-sm-4 control-label">Validate only</label>
     <div class="col-sm-8">
@@ -36,7 +40,7 @@
         </div>
     </div>
 </div>
-
+-->
 @if($type == 'create')
     <div class="form-group">
         <label for="{{{$name}}}_return_to_form" class="col-sm-4 control-label">
@@ -45,7 +49,7 @@
         <div class="col-sm-8">
             <div class="radio">
                 <label>
-                    {!! Form::radio('post_submit_action', 'create_another', $previousValue == 'create_another', ['id' => $name . '_create_another']) !!}
+                    {!! Form::checkbox('create_another', '1') !!}
                     After storing, return here to create another one.
                 </label>
             </div>
@@ -60,7 +64,7 @@
         </label>
         <div class="col-sm-8">
             <div class="radio"><label>
-                {!! Form::radio('post_submit_action', 'return_to_edit', $previousValue == 'return_to_edit', ['id' => $name . '_return_to_edit']) !!}
+                    {!! Form::checkbox('return_to_edit', '1') !!}
                 After updating, return here.
                 </label>
             </div>
