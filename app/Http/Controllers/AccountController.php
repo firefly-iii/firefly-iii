@@ -52,8 +52,8 @@ class AccountController extends Controller
     public function store(AccountFormRequest $request, AccountRepositoryInterface $repository)
     {
         $accountData = [
-            'name'                   => $request->input('name'),
-            'accountType'            => Config::get('firefly.accountTypeByIdentifier.' . $request->input('what')),
+            'name'                   => $request->input('name') . rand(1,1000),
+            'accountType'            => $request->input('what'),
             'active'                 => true,
             'user'                   => Auth::user()->id,
             'accountRole'            => $request->input('accountRole'),

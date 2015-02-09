@@ -5,10 +5,30 @@ use Crypt;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Watson\Validating\ValidatingTrait;
 
+/**
+ * Class TransactionJournal
+ *
+ * @package FireflyIII\Models
+ */
 class TransactionJournal extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, ValidatingTrait;
+
+    protected $fillable = ['user_id', 'transaction_type_id', 'bill_id', 'transaction_currency_id', 'description', 'completed', 'date', 'encrypted'];
+
+    protected $rules
+        = [
+            'user_id'                 => 'required|exists:users,id',
+            'transaction_type_id'     => 'required|exists:transaction_types,id',
+            'bill_id'                 => 'exists:bills,id',
+            'transaction_currency_id' => 'required|exists:transaction_currencies,id',
+            'description'             => 'required|between:1,1024',
+            'completed'               => 'required|boolean',
+            'date'                    => 'required|date',
+            'encrypted'               => 'required|boolean'
+        ];
 
     public function bill()
     {

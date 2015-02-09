@@ -2,10 +2,19 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Watson\Validating\ValidatingTrait;
 
 class Transaction extends Model
 {
-    use SoftDeletes;
+    protected $fillable = ['account_id', 'transaction_journal_id', 'description', 'amount'];
+    protected $rules
+                        = [
+            'account_id'             => 'required|exists:accounts,id',
+            'transaction_journal_id' => 'required|exists:transaction_journals,id',
+            'description'            => 'between:1,255',
+            'amount'                 => 'required|numeric'
+        ];
+    use SoftDeletes, ValidatingTrait;
 
     public function account()
     {
