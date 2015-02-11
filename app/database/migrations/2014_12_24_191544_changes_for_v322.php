@@ -109,13 +109,17 @@ class ChangesForV322 extends Migration
         // rename fields
         Schema::table(
             'piggy_bank_events', function (Blueprint $table) {
+            $table->dropForeign('piggybank_events_piggybank_id_foreign');
             $table->renameColumn('piggybank_id', 'piggy_bank_id');
+            $table->foreign('piggy_bank_id')->references('id')->on('piggy_banks')->onDelete('cascade');
         }
         );
 
         Schema::table(
             'piggy_bank_repetitions', function (Blueprint $table) {
+            $table->dropForeign('piggybank_repetitions_piggybank_id_foreign');
             $table->renameColumn('piggybank_id', 'piggy_bank_id');
+            $table->foreign('piggy_bank_id')->references('id')->on('piggy_banks')->onDelete('cascade');
         }
         );
 
