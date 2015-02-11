@@ -1,23 +1,23 @@
 <?php
 use Carbon\Carbon;
-use Illuminate\Database\Seeder;
-use FireflyIII\User;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Budget;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\LimitRepetition;
-use FireflyIII\Models\Reminder;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\PiggyBankRepetition;
+use FireflyIII\Models\Reminder;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Models\TransactionGroup;
+use FireflyIII\User;
+use Illuminate\Database\Seeder;
 
 /**
  * @SuppressWarnings("CamelCase") // I'm fine with this.
@@ -610,8 +610,8 @@ class TestDataSeeder extends Seeder
         $house     = Category::whereName('House')->orderBy('id', 'DESC')->first();
         $piggyBank = PiggyBank::whereName('New camera')->orderBy('id', 'DESC')->first();
         $intoPiggy = $this->createJournal(
-            ['from'                => $checking, 'to' => $savings, 'amount' => 100, 'transactionType' => $transfer, 'description' => 'Money for piggy',
-             'date'                => $this->yaeom, 'transactionCurrency' => $euro, 'category' => $house, 'budget' => $groceries]
+            ['from' => $checking, 'to' => $savings, 'amount' => 100, 'transactionType' => $transfer, 'description' => 'Money for piggy',
+             'date' => $this->yaeom, 'transactionCurrency' => $euro, 'category' => $house, 'budget' => $groceries]
         );
         PiggyBankEvent::create(
             [

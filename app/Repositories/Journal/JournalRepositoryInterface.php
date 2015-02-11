@@ -9,6 +9,12 @@
 namespace FireflyIII\Repositories\Journal;
 
 
-interface JournalRepositoryInterface {
+/**
+ * Interface JournalRepositoryInterface
+ *
+ * @package FireflyIII\Repositories\Journal
+ */
+interface JournalRepositoryInterface
+{
 
 }

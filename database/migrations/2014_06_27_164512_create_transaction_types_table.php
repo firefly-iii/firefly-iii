@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 /**
  * @SuppressWarnings(PHPMD.ShortMethodName)
- * 
+ *
  * Class CreateTransactionTypesTable
  *
  */
@@ -31,14 +31,14 @@ class CreateTransactionTypesTable extends Migration
     {
         Schema::create(
             'transaction_types', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->softDeletes();
-                $table->string('type', 50);
+            $table->increments('id');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->string('type', 50);
 
-                // type must be unique.
-                $table->unique(['type']);
-            }
+            // type must be unique.
+            $table->unique(['type']);
+        }
         );
     }
 

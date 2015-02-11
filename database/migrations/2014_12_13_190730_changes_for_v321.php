@@ -1,10 +1,10 @@
 <?php
 
+use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\Component;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use FireflyIII\Models\Component;
-use FireflyIII\Models\BudgetLimit;
 
 /**
  * @SuppressWarnings(PHPMD.ShortMethodName) // method names are mandated by laravel.

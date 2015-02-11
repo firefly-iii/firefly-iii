@@ -22,23 +22,36 @@ class Account extends Model
             'active'          => 'required|boolean'
         ];
 
-    protected $fillable = ['user_id','account_type_id','name','active'];
+    protected $fillable = ['user_id', 'account_type_id', 'name', 'active'];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function accountMeta()
     {
         return $this->hasMany('FireflyIII\Models\AccountMeta');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function accountType()
     {
         return $this->belongsTo('FireflyIII\Models\AccountType');
     }
 
+    /**
+     * @return array
+     */
     public function getDates()
     {
         return ['created_at', 'updated_at', 'deleted_at'];
     }
 
+    /**
+     * @param EloquentBuilder $query
+     * @param array           $types
+     */
     public function scopeAccountTypeIn(EloquentBuilder $query, array $types)
     {
         if (is_null($this->joinedAccountTypes)) {
@@ -48,11 +61,17 @@ class Account extends Model
         $query->whereIn('account_types.type', $types);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function transactions()
     {
         return $this->hasMany('FireflyIII\Models\Transaction');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user()
     {
         return $this->belongsTo('FireflyIII\User');

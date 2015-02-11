@@ -31,18 +31,18 @@ class CreatePiggybankRepetitionsTable extends Migration
     {
         Schema::create(
             'piggybank_repetitions', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->integer('piggybank_id')->unsigned();
-                $table->date('startdate')->nullable();
-                $table->date('targetdate')->nullable();
-                $table->decimal('currentamount', 10, 2);
+            $table->increments('id');
+            $table->timestamps();
+            $table->integer('piggybank_id')->unsigned();
+            $table->date('startdate')->nullable();
+            $table->date('targetdate')->nullable();
+            $table->decimal('currentamount', 10, 2);
 
-                $table->unique(['piggybank_id', 'startdate', 'targetdate']);
+            $table->unique(['piggybank_id', 'startdate', 'targetdate']);
 
-                // connect instance to piggybank.
-                $table->foreign('piggybank_id')->references('id')->on('piggybanks')->onDelete('cascade');
-            }
+            // connect instance to piggybank.
+            $table->foreign('piggybank_id')->references('id')->on('piggybanks')->onDelete('cascade');
+        }
         );
     }
 

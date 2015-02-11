@@ -158,20 +158,6 @@ class AccountControllerCest
     /**
      * @param FunctionalTester $I
      */
-    public function storeValidateOnly(FunctionalTester $I)
-    {
-        $I->amOnPage('/accounts/create/asset');
-        $I->wantTo('validate a new asset account');
-        $I->see('Create a new asset account');
-        $I->submitForm(
-            '#store', ['name' => 'New through tests.', 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'validate_only']
-        );
-        $I->dontSeeRecord('accounts', ['name' => 'New through tests.']);
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
     public function update(FunctionalTester $I)
     {
         $I->wantTo('update an asset account');
@@ -194,21 +180,6 @@ class AccountControllerCest
             '#update', ['name' => 'Savings accountXX', 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'return_to_edit']
         );
         $I->seeRecord('accounts', ['name' => 'Savings accountXX']);
-
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
-    public function validateUpdateOnly(FunctionalTester $I)
-    {
-        $I->wantTo('update an asset account and validate only');
-        $I->amOnPage('/accounts/edit/2');
-        $I->see('Edit asset account "Savings account"');
-        $I->submitForm(
-            '#update', ['name' => 'Savings accountXX', 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'validate_only']
-        );
-        $I->dontSeeRecord('accounts', ['name' => 'Savings accountXX']);
 
     }
 

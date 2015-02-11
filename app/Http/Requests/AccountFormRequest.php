@@ -12,12 +12,18 @@ use Config;
  */
 class AccountFormRequest extends Request
 {
+    /**
+     * @return bool
+     */
     public function authorize()
     {
         // Only allow logged in users
         return Auth::check();
     }
 
+    /**
+     * @return array
+     */
     public function rules()
     {
         $accountRoles = join(',', array_keys(Config::get('firefly.accountRoles')));
@@ -29,7 +35,7 @@ class AccountFormRequest extends Request
             'openingBalanceDate'  => 'date',
             'accountRole'         => 'in:' . $accountRoles,
             'active'              => 'boolean',
-            'balance_currency_id' => 'required|exists:transaction_currencies,id',
+            'balance_currency_id' => 'exists:transaction_currencies,id',
             'what'                => 'in:' . $types
         ];
     }

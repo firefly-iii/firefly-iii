@@ -31,20 +31,20 @@ class CreatePiggybankEventsTable extends Migration
     {
         Schema::create(
             'piggybank_events', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->integer('piggybank_id')->unsigned();
-                $table->integer('transaction_journal_id')->unsigned()->nullable();
+            $table->increments('id');
+            $table->timestamps();
+            $table->integer('piggybank_id')->unsigned();
+            $table->integer('transaction_journal_id')->unsigned()->nullable();
 
-                $table->date('date');
-                $table->decimal('amount', 10, 2);
+            $table->date('date');
+            $table->decimal('amount', 10, 2);
 
-                // connect instance to piggybank.
-                $table->foreign('piggybank_id')->references('id')->on('piggybanks')->onDelete('cascade');
+            // connect instance to piggybank.
+            $table->foreign('piggybank_id')->references('id')->on('piggybanks')->onDelete('cascade');
 
-                // connect to journal:
-                $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('set null');
-            }
+            // connect to journal:
+            $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('set null');
+        }
         );
     }
 

@@ -30,26 +30,43 @@ class TransactionJournal extends Model
             'encrypted'               => 'required|boolean'
         ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function bill()
     {
         return $this->belongsTo('FireflyIII\Models\Bill');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function budgets()
     {
         return $this->belongsToMany('FireflyIII\Models\Budget');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function categories()
     {
         return $this->belongsToMany('FireflyIII\Models\Category');
     }
 
+    /**
+     * @return array
+     */
     public function getDates()
     {
         return ['created_at', 'updated_at', 'date', 'deleted_at'];
     }
 
+    /**
+     * @param $value
+     *
+     * @return string
+     */
     public function getDescriptionAttribute($value)
     {
         if ($this->encrypted) {
@@ -61,6 +78,9 @@ class TransactionJournal extends Model
         // @codeCoverageIgnoreEnd
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function piggyBankEvents()
     {
         return $this->hasMany('FireflyIII\Models\PiggyBankEvent');
@@ -119,32 +139,50 @@ class TransactionJournal extends Model
         $query->whereIn('transaction_types.type', $types);
     }
 
+    /**
+     * @param $value
+     */
     public function setDescriptionAttribute($value)
     {
         $this->attributes['description'] = \Crypt::encrypt($value);
         $this->attributes['encrypted']   = true;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function transactionCurrency()
     {
         return $this->belongsTo('FireflyIII\Models\TransactionCurrency');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function transactionType()
     {
         return $this->belongsTo('FireflyIII\Models\TransactionType');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function transactiongroups()
     {
         return $this->belongsToMany('FireflyIII\Models\TransactionGroup');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function transactions()
     {
         return $this->hasMany('FireflyIII\Models\Transaction');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user()
     {
         return $this->belongsTo('FireflyIII\User');

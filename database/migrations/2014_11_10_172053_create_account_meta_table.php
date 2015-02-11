@@ -33,16 +33,16 @@ class CreateAccountMetaTable extends Migration
         //
         Schema::create(
             'account_meta', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->integer('account_id')->unsigned();
-                $table->string('name');
-                $table->text('data');
+            $table->increments('id');
+            $table->timestamps();
+            $table->integer('account_id')->unsigned();
+            $table->string('name');
+            $table->text('data');
 
-                $table->unique(['account_id', 'name']);
+            $table->unique(['account_id', 'name']);
 
 
-            }
+        }
         );
     }
 

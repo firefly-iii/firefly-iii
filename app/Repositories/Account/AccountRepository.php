@@ -75,6 +75,8 @@ class AccountRepository implements AccountRepositoryInterface
      * @param Account $account
      * @param Account $opposing
      * @param array   $data
+     *
+     * @return TransactionJournal
      */
     protected function _storeInitialBalance(Account $account, Account $opposing, array $data)
     {

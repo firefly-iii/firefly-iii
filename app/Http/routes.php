@@ -4,7 +4,7 @@
  * Home Controller
  */
 Route::group(
-    ['middleware' => ['auth','range']], function () {
+    ['middleware' => ['auth', 'range']], function () {
     Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
     Route::get('/prev', ['uses' => 'HomeController@sessionPrev', 'as' => 'sessionPrev']);
     Route::get('/next', ['uses' => 'HomeController@sessionNext', 'as' => 'sessionNext']);
@@ -19,8 +19,8 @@ Route::group(
     Route::get('/accounts/delete/{account}', ['uses' => 'AccountController@delete', 'as' => 'accounts.delete']);
     Route::get('/accounts/show/{account}/{view?}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
     Route::post('/accounts/store', ['uses' => 'AccountController@store', 'as' => 'accounts.store']);
-//    Route::post('/accounts/update/{account}', ['uses' => 'AccountController@update', 'as' => 'accounts.update']);
-//    Route::post('/accounts/destroy/{account}', ['uses' => 'AccountController@destroy', 'as' => 'accounts.destroy']);
+    //    Route::post('/accounts/update/{account}', ['uses' => 'AccountController@update', 'as' => 'accounts.update']);
+    //    Route::post('/accounts/destroy/{account}', ['uses' => 'AccountController@destroy', 'as' => 'accounts.destroy']);
 
     /**
      * Bills Controller

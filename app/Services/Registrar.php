@@ -4,6 +4,11 @@ use FireflyIII\User;
 use Illuminate\Contracts\Auth\Registrar as RegistrarContract;
 use Validator;
 
+/**
+ * Class Registrar
+ *
+ * @package FireflyIII\Services
+ */
 class Registrar implements RegistrarContract
 {
 
@@ -35,9 +40,9 @@ class Registrar implements RegistrarContract
     {
         return Validator::make(
             $data, [
-            'email'    => 'required|email|max:255|unique:users',
-            'password' => 'required|confirmed|min:6',
-        ]
+                     'email'    => 'required|email|max:255|unique:users',
+                     'password' => 'required|confirmed|min:6',
+                 ]
         );
     }
 

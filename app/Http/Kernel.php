@@ -2,6 +2,11 @@
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
+/**
+ * Class Kernel
+ *
+ * @package FireflyIII\Http
+ */
 class Kernel extends HttpKernel
 {
 

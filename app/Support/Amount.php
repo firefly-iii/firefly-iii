@@ -30,8 +30,8 @@ class Amount
     }
 
     /**
-     * @param \Transaction $transaction
-     * @param bool         $coloured
+     * @param Transaction|\Transaction $transaction
+     * @param bool                     $coloured
      *
      * @return string
      */

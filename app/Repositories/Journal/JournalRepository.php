@@ -2,7 +2,12 @@
 
 namespace FireflyIII\Repositories\Journal;
 
-
-class JournalRepository implements JournalRepositoryInterface {
+/**
+ * Class JournalRepository
+ *
+ * @package FireflyIII\Repositories\Journal
+ */
+class JournalRepository implements JournalRepositoryInterface
+{
 
 }

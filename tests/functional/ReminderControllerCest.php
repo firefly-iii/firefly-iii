@@ -1,5 +1,6 @@
 <?php
 use FireflyIII\Models\Reminder;
+
 /**
  * Class ReminderControllerCest
  *
@@ -29,7 +30,7 @@ class ReminderControllerCest
      */
     public function act(FunctionalTester $I)
     {
-        $reminder = Reminder::leftJoin('piggy_banks', 'piggy_banks.id', '=', 'reminders.remindersable_id')->where('piggy_banks.reminder','!=','')->first(
+        $reminder = Reminder::leftJoin('piggy_banks', 'piggy_banks.id', '=', 'reminders.remindersable_id')->where('piggy_banks.reminder', '!=', '')->first(
             ['reminders.*']
         );
 
@@ -73,12 +74,12 @@ class ReminderControllerCest
      */
     public function show(FunctionalTester $I)
     {
-        $reminder = Reminder::leftJoin('piggy_banks', 'piggy_banks.id', '=', 'reminders.remindersable_id')->where('piggy_banks.reminder','!=','')->first(
+        $reminder = Reminder::leftJoin('piggy_banks', 'piggy_banks.id', '=', 'reminders.remindersable_id')->where('piggy_banks.reminder', '!=', '')->first(
             ['reminders.*']
         );
 
         $I->wantTo('see a reminder');
-        $I->amOnPage('/reminders/'.$reminder->id);
+        $I->amOnPage('/reminders/' . $reminder->id);
         $I->see('A reminder about');
         $I->see('your piggy bank labelled "Nieuwe spullen"');
     }

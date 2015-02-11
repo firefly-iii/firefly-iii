@@ -31,15 +31,15 @@ class CreateTransactionGroupsTable extends Migration
     {
         Schema::create(
             'transaction_groups', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->softDeletes();
-                $table->integer('user_id')->unsigned();
-                $table->enum('relation', ['balance']);
+            $table->increments('id');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->integer('user_id')->unsigned();
+            $table->enum('relation', ['balance']);
 
-                // connect reminders to users
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            }
+            // connect reminders to users
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        }
         );
 
 
