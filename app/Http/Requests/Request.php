@@ -2,8 +2,14 @@
 
 use Illuminate\Foundation\Http\FormRequest;
 
-abstract class Request extends FormRequest {
+/**
+ * Class Request
+ *
+ * @package FireflyIII\Http\Requests
+ */
+abstract class Request extends FormRequest
+{
 
-	//
+    //
 
 }

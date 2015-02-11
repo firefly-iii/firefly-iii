@@ -2,9 +2,14 @@
 
 namespace FireflyIII\Providers;
 
+use FireflyIII\Support\Amount;
+use FireflyIII\Support\ExpandedForm;
+use FireflyIII\Support\Navigation;
+use FireflyIII\Support\Preferences;
+use FireflyIII\Support\Steam;
+use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Support\ServiceProvider;
 use Validator;
-use FireflyIII\Validation\FireflyValidator;
 
 /**
  * Class FireflyServiceProvider
@@ -13,38 +18,41 @@ use FireflyIII\Validation\FireflyValidator;
  */
 class FireflyServiceProvider extends ServiceProvider
 {
-    public function boot() {
-        Validator::resolver(function($translator, $data, $rules, $messages)
-        {
-            return new FireflyValidator($translator, $data, $rules, $messages);
-        });
+    public function boot()
+    {
+        Validator::resolver(
+            function ($translator, $data, $rules, $messages) {
+                return new FireflyValidator($translator, $data, $rules, $messages);
+            }
+        );
     }
+
     public function register()
     {
         $this->app->bind(
             'preferences', function () {
-            return new \FireflyIII\Support\Preferences;
+            return new Preferences;
         }
         );
         $this->app->bind(
             'navigation', function () {
-            return new \FireflyIII\Support\Navigation;
+            return new Navigation;
         }
         );
         $this->app->bind(
             'amount', function () {
-            return new \FireflyIII\Support\Amount;
+            return new Amount;
         }
         );
 
         $this->app->bind(
             'steam', function () {
-            return new \FireflyIII\Support\Steam;
+            return new Steam;
         }
         );
         $this->app->bind(
             'expandedform', function () {
-            return new \FireflyIII\Support\ExpandedForm;
+            return new ExpandedForm;
         }
         );
 

@@ -31,18 +31,18 @@ class CreatePreferencesTable extends Migration
     {
         Schema::create(
             'preferences', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->integer('user_id')->unsigned();
-                $table->string('name');
-                $table->text('data');
+            $table->increments('id');
+            $table->timestamps();
+            $table->integer('user_id')->unsigned();
+            $table->string('name');
+            $table->text('data');
 
-                // connect preferences to users
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            // connect preferences to users
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
-                // only one preference per name per user
-                $table->unique(['user_id', 'name']);
-            }
+            // only one preference per name per user
+            $table->unique(['user_id', 'name']);
+        }
         );
     }
 

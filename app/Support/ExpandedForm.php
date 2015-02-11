@@ -181,6 +181,14 @@ class ExpandedForm
         return $html;
     }
 
+    /**
+     * @param       $name
+     * @param array $list
+     * @param null  $selected
+     * @param array $options
+     *
+     * @return string
+     */
     public function select($name, array $list = [], $selected = null, array $options = [])
     {
         $label    = $this->label($name, $options);

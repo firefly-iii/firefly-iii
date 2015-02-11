@@ -1,6 +1,6 @@
 <?php
-use Illuminate\Database\Seeder;
 use FireflyIII\Models\AccountType;
+use Illuminate\Database\Seeder;
 
 /**
  * Class AccountTypeSeeder

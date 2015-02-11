@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use Closure;
 use FireflyIII\Exception\FireflyException;
 use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Http\RedirectResponse;
 use Navigation;
 use Preferences;
 use Session;
@@ -31,7 +30,6 @@ class Range
      *
      * @param  Guard $auth
      *
-     * @return void
      */
     public function __construct(Guard $auth)
     {

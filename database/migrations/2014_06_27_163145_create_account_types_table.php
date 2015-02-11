@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 /**
  * @SuppressWarnings(PHPMD.ShortMethodName)
- * 
+ *
  * Class CreateAccountTypesTable
  *
  */
@@ -31,13 +31,13 @@ class CreateAccountTypesTable extends Migration
     {
         Schema::create(
             'account_types', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->string('type', 30);
-                $table->boolean('editable');
+            $table->increments('id');
+            $table->timestamps();
+            $table->string('type', 30);
+            $table->boolean('editable');
 
-                $table->unique('type');
-            }
+            $table->unique('type');
+        }
         );
     }
 

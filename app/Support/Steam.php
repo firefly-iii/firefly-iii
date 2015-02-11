@@ -15,7 +15,7 @@ class Steam
     /**
      *
      * @param Account $account
-     * @param Carbon   $date
+     * @param Carbon  $date
      *
      * @return float
      */

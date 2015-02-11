@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 /**
  * @SuppressWarnings(PHPMD.ShortMethodName)
- * 
+ *
  * Class CreateComponentTransactionTable
  *
  */
@@ -31,19 +31,19 @@ class CreateComponentTransactionTable extends Migration
     {
         Schema::create(
             'component_transaction', function (Blueprint $table) {
-                $table->increments('id');
-                $table->integer('component_id')->unsigned();
-                $table->integer('transaction_id')->unsigned();
+            $table->increments('id');
+            $table->integer('component_id')->unsigned();
+            $table->integer('transaction_id')->unsigned();
 
-                // connect to components
-                $table->foreign('component_id')->references('id')->on('components')->onDelete('cascade');
+            // connect to components
+            $table->foreign('component_id')->references('id')->on('components')->onDelete('cascade');
 
-                // connect to transactions
-                $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
+            // connect to transactions
+            $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
 
-                // combo must be unique:
-                $table->unique(['component_id', 'transaction_id']);
-            }
+            // combo must be unique:
+            $table->unique(['component_id', 'transaction_id']);
+        }
         );
     }
 

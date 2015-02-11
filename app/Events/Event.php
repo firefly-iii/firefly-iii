@@ -1,7 +1,13 @@
 <?php namespace FireflyIII\Events;
 
-abstract class Event {
+/**
+ * Class Event
+ *
+ * @package FireflyIII\Events
+ */
+abstract class Event
+{
 
-	//
+    //
 
 }

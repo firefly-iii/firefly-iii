@@ -14,6 +14,13 @@ class Navigation
 {
 
 
+    /**
+     * @param        $range
+     * @param Carbon $date
+     *
+     * @return Carbon
+     * @throws FireflyException
+     */
     public function jumpToNext($range, Carbon $date)
     {
         switch ($range) {
@@ -47,6 +54,13 @@ class Navigation
         return $date;
     }
 
+    /**
+     * @param        $range
+     * @param Carbon $date
+     *
+     * @return Carbon
+     * @throws FireflyException
+     */
     public function jumpToPrevious($range, Carbon $date)
     {
         $functionMap = [
@@ -80,6 +94,13 @@ class Navigation
         throw new FireflyException('Cannot do _previous() on ' . $range);
     }
 
+    /**
+     * @param        $range
+     * @param Carbon $date
+     *
+     * @return string
+     * @throws FireflyException
+     */
     public function periodName($range, Carbon $date)
     {
         $formatMap = [
@@ -106,6 +127,13 @@ class Navigation
         throw new FireflyException('No _periodName() for range "' . $range . '"');
     }
 
+    /**
+     * @param        $range
+     * @param Carbon $start
+     *
+     * @return Carbon
+     * @throws FireflyException
+     */
     public function updateEndDate($range, Carbon $start)
     {
         $functionMap = [
@@ -135,6 +163,13 @@ class Navigation
         throw new FireflyException('updateEndDate cannot handle $range ' . $range);
     }
 
+    /**
+     * @param        $range
+     * @param Carbon $start
+     *
+     * @return Carbon
+     * @throws FireflyException
+     */
     public function updateStartDate($range, Carbon $start)
     {
         $functionMap = [

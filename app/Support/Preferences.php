@@ -2,8 +2,8 @@
 
 namespace FireflyIII\Support;
 
-use \FireflyIII\Models\Preference;
 use Auth;
+use FireflyIII\Models\Preference;
 
 /**
  * Class Preferences

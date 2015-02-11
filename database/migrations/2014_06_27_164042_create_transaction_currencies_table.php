@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 /**
  * @SuppressWarnings(PHPMD.ShortMethodName)
- * 
+ *
  * Class CreateTransactionCurrenciesTable
  *
  */
@@ -31,14 +31,14 @@ class CreateTransactionCurrenciesTable extends Migration
     {
         Schema::create(
             'transaction_currencies', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->softDeletes();
-                $table->string('code', 3);
+            $table->increments('id');
+            $table->timestamps();
+            $table->softDeletes();
+            $table->string('code', 3);
 
-                // code must be unique.
-                $table->unique(['code']);
-            }
+            // code must be unique.
+            $table->unique(['code']);
+        }
         );
     }
 

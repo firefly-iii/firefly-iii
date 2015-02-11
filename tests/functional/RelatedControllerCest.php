@@ -1,7 +1,8 @@
 <?php
 
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Models\TransactionJournal;
+
 /**
  * @SuppressWarnings("CamelCase")
  * @SuppressWarnings("short")
@@ -27,6 +28,9 @@ class RelatedControllerCest
 
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function alreadyRelated(FunctionalTester $I)
     {
         $group   = TransactionGroup::first();
@@ -38,6 +42,9 @@ class RelatedControllerCest
 
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function alreadyRelatedNoRelations(FunctionalTester $I)
     {
         $journal = TransactionJournal::first();
@@ -48,6 +55,9 @@ class RelatedControllerCest
 
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function relate(FunctionalTester $I)
     {
         $journal      = TransactionJournal::leftJoin(
@@ -67,6 +77,9 @@ class RelatedControllerCest
         $I->see('true');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function related(FunctionalTester $I)
     {
         $group   = TransactionGroup::first();
@@ -77,6 +90,9 @@ class RelatedControllerCest
         $I->see('Big expense in ');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function removeRelation(FunctionalTester $I)
     {
         $group = TransactionGroup::first();
@@ -88,6 +104,9 @@ class RelatedControllerCest
 
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function search(FunctionalTester $I)
     {
         $one = TransactionJournal::first();//$group = TransactionGroup::first();

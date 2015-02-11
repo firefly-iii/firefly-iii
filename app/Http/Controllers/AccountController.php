@@ -17,6 +17,9 @@ use View;
  */
 class AccountController extends Controller
 {
+    /**
+     *
+     */
     public function __construct()
     {
         View::share('mainTitleIcon', 'fa-credit-card');
@@ -39,6 +42,11 @@ class AccountController extends Controller
 
     }
 
+    /**
+     * @param string $what
+     *
+     * @return View
+     */
     public function index($what = 'default')
     {
         $subTitle     = Config::get('firefly.subTitlesByIdentifier.' . $what);
@@ -49,10 +57,16 @@ class AccountController extends Controller
         return view('accounts.index', compact('what', 'subTitleIcon', 'subTitle', 'accounts'));
     }
 
+    /**
+     * @param AccountFormRequest         $request
+     * @param AccountRepositoryInterface $repository
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(AccountFormRequest $request, AccountRepositoryInterface $repository)
     {
         $accountData = [
-            'name'                   => $request->input('name') . rand(1,1000),
+            'name'                   => $request->input('name'),
             'accountType'            => $request->input('what'),
             'active'                 => true,
             'user'                   => Auth::user()->id,

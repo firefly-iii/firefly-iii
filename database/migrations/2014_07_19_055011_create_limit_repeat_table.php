@@ -31,18 +31,18 @@ class CreateLimitRepeatTable extends Migration
     {
         Schema::create(
             'limit_repetitions', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-                $table->integer('limit_id')->unsigned();
-                $table->date('startdate');
-                $table->date('enddate');
-                $table->decimal('amount', 10, 2);
+            $table->increments('id');
+            $table->timestamps();
+            $table->integer('limit_id')->unsigned();
+            $table->date('startdate');
+            $table->date('enddate');
+            $table->decimal('amount', 10, 2);
 
-                $table->unique(['limit_id', 'startdate', 'enddate']);
+            $table->unique(['limit_id', 'startdate', 'enddate']);
 
-                // connect limit
-                $table->foreign('limit_id')->references('id')->on('limits')->onDelete('cascade');
-            }
+            // connect limit
+            $table->foreign('limit_id')->references('id')->on('limits')->onDelete('cascade');
+        }
         );
     }
 

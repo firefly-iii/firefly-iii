@@ -2,6 +2,7 @@
 
 use Auth;
 use Carbon\Carbon;
+use Crypt;
 use FireflyIII\Http\Requests;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
@@ -11,12 +12,10 @@ use FireflyIII\Models\TransactionJournal;
 use Grumpydictator\Gchart\GChart;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Query\JoinClause;
-use Illuminate\Http\Request;
 use Preferences;
 use Response;
 use Session;
 use Steam;
-use Crypt;
 
 /**
  * Class GoogleChartController
@@ -137,6 +136,11 @@ class GoogleChartController extends Controller
         return Response::json($chart->getData());
     }
 
+    /**
+     * @param GChart $chart
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function allCategoriesHomeChart(GChart $chart)
     {
         $chart->addColumn('Category', 'string');
@@ -174,6 +178,11 @@ class GoogleChartController extends Controller
 
     }
 
+    /**
+     * @param GChart $chart
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function billsOverview(GChart $chart)
     {
         $paid   = ['items' => [], 'amount' => 0];

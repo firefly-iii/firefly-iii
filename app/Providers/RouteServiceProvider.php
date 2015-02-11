@@ -4,6 +4,11 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 
+/**
+ * Class RouteServiceProvider
+ *
+ * @package FireflyIII\Providers
+ */
 class RouteServiceProvider extends ServiceProvider
 {
 
@@ -40,7 +45,7 @@ class RouteServiceProvider extends ServiceProvider
                     //Steam::removeEmptyBudgetLimits();
                     //$reminders = Reminders::getReminders();
                 }
-//                View::share('reminders', $reminders);
+                //                View::share('reminders', $reminders);
             }
         );
     }
@@ -56,6 +61,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         $router->group(
             ['namespace' => $this->namespace], function ($router) {
+            /** @noinspection PhpIncludeInspection */
             require app_path('Http/routes.php');
         }
         );
