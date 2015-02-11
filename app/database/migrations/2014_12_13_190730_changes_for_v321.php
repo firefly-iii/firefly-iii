@@ -234,7 +234,9 @@ class ChangesForV321 extends Migration
     {
         Schema::table(
             'limit_repetitions', function (Blueprint $table) {
+            $table->dropForeign('limit_repetitions_budget_limit_id_foreign');
             $table->renameColumn('budget_limit_id', 'limit_id');
+            $table->foreign('limit_id')->references('id')->on('limits')->onDelete('cascade');
         }
         );
     }
@@ -402,7 +404,9 @@ class ChangesForV321 extends Migration
     {
         Schema::table(
             'limit_repetitions', function (Blueprint $table) {
+            $table->dropForeign('limit_repetitions_limit_id_foreign');
             $table->renameColumn('limit_id', 'budget_limit_id');
+            $table->foreign('budget_limit_id')->references('id')->on('budget_limits')->onDelete('cascade');
         }
         );
     }
