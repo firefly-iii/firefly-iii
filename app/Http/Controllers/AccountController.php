@@ -77,7 +77,7 @@ class AccountController extends Controller
     public function edit(Account $account, AccountRepositoryInterface $repository)
     {
         $what           = Config::get('firefly.shortNamesByFullName')[$account->accountType->type];
-        $subTitle       = Config::get('firefly.subTitlesByIdentifier.' . $what);
+        $subTitle       = 'Edit ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"';
         $subTitleIcon   = Config::get('firefly.subIconsByIdentifier.' . $what);
         $openingBalance = $repository->openingBalanceTransaction($account);
 
