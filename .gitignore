@@ -1,8 +1,6 @@
 /bootstrap/compiled.php
 /vendor
 composer.phar
-.env.*.php
-.env.php
 Thumbs.db
 .idea/
 tests/_output/*
@@ -25,5 +23,4 @@ tests/_data/dump.sql
 db.sqlite_snapshot
 c3.php
 db.sqlite-journal
-
 tests/_output/*
