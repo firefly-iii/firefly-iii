@@ -164,7 +164,7 @@ class AccountController extends Controller
 
         $repository->update($account, $accountData);
 
-        Session::flash('success', 'New account "' . $account->name . '" stored!');
+        Session::flash('success', 'New account "' . $account->name . '" updated.');
 
         return Redirect::route('accounts.index', $what);
 
