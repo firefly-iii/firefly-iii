@@ -70,10 +70,20 @@ return [
             'expense' => ['Expense account', 'Beneficiary account'],
             'revenue' => ['Revenue account'],
         ],
-    'accountTypeByIdentifier' =>
+    'accountTypeByIdentifier'  =>
         [
             'asset'   => 'Asset account',
             'expense' => 'Expense account',
             'revenue' => 'Revenue account',
         ],
+    'shortNamesByFullName'     =>
+        [
+            'Default account'     => 'asset',
+            'Asset account'       => 'asset',
+            'Expense account'     => 'expense',
+            'Beneficiary account' => 'expense',
+            'Revenue account'     => 'revenue',
+            'Cash account'        => 'cash',
+        ]
+
 ];

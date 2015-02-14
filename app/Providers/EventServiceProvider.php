@@ -1,5 +1,8 @@
 <?php namespace FireflyIII\Providers;
 
+use FireflyIII\Models\Account;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -18,8 +21,11 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen
         = [
-            'event.name' => [
+            'event.name'                => [
                 'EventListener',
+            ],
+            'App\Events\JournalDeleted' => [
+                'App\Handlers\Events\JournalDeletedHandler@handle',
             ],
         ];
 
@@ -34,7 +40,27 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot($events);
 
-        //
+        TransactionJournal::deleted(
+            function (TransactionJournal $journal) {
+
+                /** @var Transaction $transaction */
+                foreach ($journal->transactions()->get() as $transaction) {
+                    $transaction->delete();
+                }
+            }
+        );
+
+        Account::deleted(
+            function (Account $account) {
+
+                /** @var Transaction $transaction */
+                foreach ($account->transactions()->get() as $transaction) {
+                    $journal = $transaction->transactionJournal()->first();
+                    $journal->delete();
+                }
+            }
+        );
+
     }
 
 }

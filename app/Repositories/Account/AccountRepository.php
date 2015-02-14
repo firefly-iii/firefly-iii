@@ -5,10 +5,12 @@ namespace FireflyIII\Repositories\Account;
 use App;
 use Config;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use Log;
 
 /**
  * Class AccountRepository
@@ -19,6 +21,31 @@ class AccountRepository implements AccountRepositoryInterface
 {
 
     /**
+     * @param Account $account
+     *
+     * @return boolean
+     */
+    public function destroy(Account $account)
+    {
+        $account->delete();
+
+        return true;
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return TransactionJournal|null
+     */
+    public function openingBalanceTransaction(Account $account)
+    {
+        return TransactionJournal::accountIs($account)
+                                 ->orderBy('transaction_journals.date', 'ASC')
+                                 ->orderBy('created_at', 'ASC')
+                                 ->first(['transaction_journals.*']);
+    }
+
+    /**
      * @param array $data
      *
      * @return Account;
@@ -26,6 +53,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function store(array $data)
     {
         $newAccount = $this->_store($data);
+        $this->_storeMetadata($newAccount, $data);
 
 
         // continue with the opposing account:
@@ -47,6 +75,58 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @param Account $account
+     * @param array   $data
+     */
+    public function update(Account $account, array $data)
+    {
+        // update the account:
+        $account->name   = $data['name'];
+        $account->active = $data['active'] == '1' ? true : false;
+        $account->save();
+
+        // update meta data:
+        /** @var AccountMeta $meta */
+        foreach ($account->accountMeta()->get() as $meta) {
+            if ($meta->name == 'accountRole') {
+                $meta->data = $data['accountRole'];
+                $meta->save();
+            }
+        }
+
+        $openingBalance = $this->openingBalanceTransaction($account);
+
+        // if has openingbalance?
+        if ($data['openingBalance'] != 0) {
+            // if opening balance, do an update:
+            if ($openingBalance) {
+                // update existing opening balance.
+                $this->_updateInitialBalance($account, $openingBalance, $data);
+            } else {
+                // create new opening balance.
+                $type         = $data['openingBalance'] < 0 ? 'expense' : 'revenue';
+                $opposingData = [
+                    'user'        => $data['user'],
+                    'accountType' => $type,
+                    'name'        => $data['name'] . ' initial balance',
+                    'active'      => false,
+                ];
+                $opposing     = $this->_store($opposingData);
+                $this->_storeInitialBalance($account, $opposing, $data);
+            }
+
+        } else {
+            // opening balance is zero, should we delete it?
+            if ($openingBalance) {
+                // delete existing opening balance.
+                $openingBalance->delete();
+            }
+        }
+
+        return $account;
+    }
+
+    /**
      * @param array $data
      *
      * @return Account
@@ -64,11 +144,36 @@ class AccountRepository implements AccountRepositoryInterface
             ]
         );
         if (!$newAccount->isValid()) {
-            App::abort(500);
+            // does the account already exist?
+            $existingAccount = Account::where('user_id', $data['user'])->where('account_type_id', $accountType->id)->where('name', $data['name'])->first();
+            if (!$existingAccount) {
+                Log::error('Account create error: ' . $newAccount->getErrors()->toJson());
+                var_dump($newAccount->getErrors()->toArray());
+            }
+            $newAccount = $existingAccount;
         }
         $newAccount->save();
 
         return $newAccount;
+    }
+
+    /**
+     * @param Account $account
+     * @param array   $data
+     */
+    protected function _storeMetadata(Account $account, array $data)
+    {
+        $metaData = new AccountMeta(
+            [
+                'account_id' => $account->id,
+                'name'       => 'accountRole',
+                'data'       => $data['accountRole']
+            ]
+        );
+        if (!$metaData->isValid()) {
+            App::abort(500);
+        }
+        $metaData->save();
     }
 
     /**
@@ -143,4 +248,29 @@ class AccountRepository implements AccountRepositoryInterface
 
     }
 
+    /**
+     * @param Account            $account
+     * @param TransactionJournal $journal
+     * @param array              $data
+     *
+     * @return TransactionJournal
+     */
+    protected function _updateInitialBalance(Account $account, TransactionJournal $journal, array $data)
+    {
+        $journal->date = $data['openingBalanceDate'];
+
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions()->get() as $transaction) {
+            if ($account->id == $transaction->account_id) {
+                $transaction->amount = $data['openingBalance'];
+                $transaction->save();
+            }
+            if ($account->id != $transaction->account_id) {
+                $transaction->amount = $data['openingBalance'] * -1;
+                $transaction->save();
+            }
+        }
+
+        return $journal;
+    }
 }

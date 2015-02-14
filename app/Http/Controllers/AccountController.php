@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use Config;
 use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\AccountFormRequest;
+use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Redirect;
 use Session;
@@ -40,6 +41,63 @@ class AccountController extends Controller
 
         return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle'));
 
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return \Illuminate\View\View
+     */
+    public function delete(Account $account)
+    {
+        $subTitle = 'Delete ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"';
+
+        return View::make('accounts.delete', compact('account', 'subTitle'));
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy(Account $account, AccountRepositoryInterface $repository)
+    {
+
+        $type     = $account->accountType->type;
+        $typeName = Config::get('firefly.shortNamesByFullName.' . $type);
+        $name     = $account->name;
+
+        $repository->destroy($account);
+
+        Session::flash('success', 'The ' . e($typeName) . ' account "' . e($name) . '" was deleted.');
+
+        return Redirect::route('accounts.index', $typeName);
+    }
+
+    public function edit(Account $account, AccountRepositoryInterface $repository)
+    {
+        $what           = Config::get('firefly.shortNamesByFullName')[$account->accountType->type];
+        $subTitle       = Config::get('firefly.subTitlesByIdentifier.' . $what);
+        $subTitleIcon   = Config::get('firefly.subIconsByIdentifier.' . $what);
+        $openingBalance = $repository->openingBalanceTransaction($account);
+
+        // pre fill some useful values.
+
+        // the opening balance is tricky:
+        $openingBalanceAmount = null;
+        if ($openingBalance) {
+            $transaction          = $openingBalance->transactions()->where('account_id', $account->id)->first();
+            $openingBalanceAmount = $transaction->amount;
+        }
+
+        $preFilled = [
+            'accountRole'        => $account->getMeta('accountRole'),
+            'openingBalanceDate' => $openingBalance ? $openingBalance->date->format('Y-m-d') : null,
+            'openingBalance'     => $openingBalanceAmount
+        ];
+        Session::flash('preFilled', $preFilled);
+
+        return view('accounts.edit', compact('account', 'subTitle', 'subTitleIcon', 'openingBalance', 'what'));
     }
 
     /**
@@ -81,6 +139,34 @@ class AccountController extends Controller
         Session::flash('success', 'New account "' . $account->name . '" stored!');
 
         return Redirect::route('accounts.index', $request->input('what'));
+
+    }
+
+    /**
+     * @param Account                    $account
+     * @param AccountFormRequest         $request
+     * @param AccountRepositoryInterface $repository
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(Account $account, AccountFormRequest $request, AccountRepositoryInterface $repository)
+    {
+        $what        = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
+        $accountData = [
+            'name'                   => $request->input('name'),
+            'active'                 => $request->input('active'),
+            'user'                   => Auth::user()->id,
+            'accountRole'            => $request->input('accountRole'),
+            'openingBalance'         => floatval($request->input('openingBalance')),
+            'openingBalanceDate'     => new Carbon($request->input('openingBalanceDate')),
+            'openingBalanceCurrency' => intval($request->input('balance_currency_id')),
+        ];
+
+        $repository->update($account, $accountData);
+
+        Session::flash('success', 'New account "' . $account->name . '" stored!');
+
+        return Redirect::route('accounts.index', $what);
 
     }
 
