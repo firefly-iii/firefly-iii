@@ -1,4 +1,24 @@
 <?php
+use FireflyIII\Models\Account;
+// models
+Route::bind(
+    'account',
+    function ($value, $route) {
+        if (Auth::check()) {
+            $account = Account::
+            leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                              ->where('account_types.editable', 1)
+                              ->where('accounts.id', $value)
+                              ->where('user_id', Auth::user()->id)
+                              ->first(['accounts.*']);
+            if ($account) {
+                return $account;
+            }
+        }
+        App::abort(404);
+    }
+);
+
 
 /**
  * Home Controller
@@ -18,9 +38,10 @@ Route::group(
     Route::get('/accounts/edit/{account}', ['uses' => 'AccountController@edit', 'as' => 'accounts.edit']);
     Route::get('/accounts/delete/{account}', ['uses' => 'AccountController@delete', 'as' => 'accounts.delete']);
     Route::get('/accounts/show/{account}/{view?}', ['uses' => 'AccountController@show', 'as' => 'accounts.show']);
+
     Route::post('/accounts/store', ['uses' => 'AccountController@store', 'as' => 'accounts.store']);
-    //    Route::post('/accounts/update/{account}', ['uses' => 'AccountController@update', 'as' => 'accounts.update']);
-    //    Route::post('/accounts/destroy/{account}', ['uses' => 'AccountController@destroy', 'as' => 'accounts.destroy']);
+    Route::post('/accounts/update/{account}', ['uses' => 'AccountController@update', 'as' => 'accounts.update']);
+    Route::post('/accounts/destroy/{account}', ['uses' => 'AccountController@destroy', 'as' => 'accounts.destroy']);
 
     /**
      * Bills Controller

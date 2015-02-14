@@ -25,6 +25,23 @@ class Account extends Model
     protected $fillable = ['user_id', 'account_type_id', 'name', 'active'];
 
     /**
+     * @param $fieldName
+     *
+     * @return string|null
+     */
+    public function getMeta($fieldName)
+    {
+        foreach ($this->accountMeta as $meta) {
+            if ($meta->name == $fieldName) {
+                return $meta->data;
+            }
+        }
+
+        return null;
+
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function accountMeta()

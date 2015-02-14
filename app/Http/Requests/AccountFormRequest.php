@@ -4,6 +4,8 @@ namespace FireflyIII\Http\Requests;
 
 use Auth;
 use Config;
+use FireflyIII\Models\Account;
+use Input;
 
 /**
  * Class AccountFormRequest
@@ -29,8 +31,13 @@ class AccountFormRequest extends Request
         $accountRoles = join(',', array_keys(Config::get('firefly.accountRoles')));
         $types        = join(',', array_keys(Config::get('firefly.subTitlesByIdentifier')));
 
+        $nameRule = 'required|between:1,100|uniqueForUser:accounts,name';
+        if (Account::find(Input::get('id'))) {
+            $nameRule = 'required|between:1,100';
+        }
+
         return [
-            'name'                => 'required|between:1,100|uniqueForUser:accounts,name',
+            'name'                => $nameRule,
             'openingBalance'      => 'numeric',
             'openingBalanceDate'  => 'date',
             'accountRole'         => 'in:' . $accountRoles,

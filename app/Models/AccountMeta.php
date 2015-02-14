@@ -1,6 +1,7 @@
 <?php namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Watson\Validating\ValidatingTrait;
 
 /**
  * Class AccountMeta
@@ -9,6 +10,17 @@ use Illuminate\Database\Eloquent\Model;
  */
 class AccountMeta extends Model
 {
+
+    use ValidatingTrait;
+    protected $rules
+        = [
+            'account_id' => 'required|exists:accounts,id',
+            'name'       => 'required|between:1,100',
+            'data'       => 'required'
+        ];
+    protected $table = 'account_meta';
+
+    protected $fillable = ['account_id', 'name', 'data'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

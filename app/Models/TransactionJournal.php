@@ -188,4 +188,17 @@ class TransactionJournal extends Model
         return $this->belongsTo('FireflyIII\User');
     }
 
+    /**
+     * @param EloquentBuilder $query
+     * @param Account         $account
+     */
+    public function scopeAccountIs(EloquentBuilder $query, Account $account)
+    {
+        if (!isset($this->joinedTransactions)) {
+            $query->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id');
+            $this->joinedTransactions = true;
+        }
+        $query->where('transactions.account_id', $account->id);
+    }
+
 }

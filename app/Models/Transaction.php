@@ -11,6 +11,7 @@ use Watson\Validating\ValidatingTrait;
  */
 class Transaction extends Model
 {
+
     protected $fillable = ['account_id', 'transaction_journal_id', 'description', 'amount'];
     protected $rules
                         = [
