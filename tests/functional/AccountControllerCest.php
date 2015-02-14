@@ -162,7 +162,7 @@ class AccountControllerCest
     {
         $I->wantTo('update an asset account');
         $I->amOnPage('/accounts/edit/3');
-        $I->see('Edit asset account "Delete me"');
+        $I->see('Edit asset account &quot;Delete me&quot;');
         $I->submitForm('#update', ['name' => 'Update me', 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'update']);
         $I->seeRecord('accounts', ['name' => 'Update me']);
 
@@ -175,7 +175,7 @@ class AccountControllerCest
     {
         $I->wantTo('update an asset account and return to form');
         $I->amOnPage('/accounts/edit/2');
-        $I->see('Edit asset account "Savings account"');
+        $I->see('Edit asset account &quot;Savings account&quot;');
         $I->submitForm(
             '#update', ['name' => 'Savings accountXX', 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'return_to_edit']
         );
