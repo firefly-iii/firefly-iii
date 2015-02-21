@@ -10,7 +10,11 @@
                     @foreach($income as $entry)
                         <tr>
                             <td>
+                            @if($entry->encrypted == 1)
+                                <a href="{{route('transactions.show',$entry->id)}}" title="{{{Crypt::decrypt($entry->description)}}}">{{{Crypt::decrypt($entry->description)}}}</a>
+                            @else
                                 <a href="{{route('transactions.show',$entry->id)}}" title="{{{$entry->description}}}">{{{$entry->description}}}</a>
+                            @endif
                             </td>
                             <td>
                                 <?php $tableSum += floatval($entry->amount);?>
