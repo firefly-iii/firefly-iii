@@ -4,6 +4,7 @@ namespace FireflyIII\Repositories\Account;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
+
 /**
  * Interface AccountRepositoryInterface
  *
@@ -11,13 +12,6 @@ use FireflyIII\Models\TransactionJournal;
  */
 interface AccountRepositoryInterface
 {
-    /**
-     * @param array $data
-     *
-     * @return Account
-     */
-    public function store(array $data);
-
     /**
      * @param Account $account
      *
@@ -27,11 +21,12 @@ interface AccountRepositoryInterface
 
     /**
      * @param Account $account
-     * @param array   $data
+     * @param int     $page
+     * @param string  $range
      *
-     * @return Account
+     * @return mixed
      */
-    public function update(Account $account, array $data);
+    public function getJournals(Account $account, $page, $range = 'session');
 
     /**
      * @param Account $account
@@ -40,5 +35,18 @@ interface AccountRepositoryInterface
      */
     public function openingBalanceTransaction(Account $account);
 
+    /**
+     * @param array $data
+     *
+     * @return Account
+     */
+    public function store(array $data);
 
+    /**
+     * @param Account $account
+     * @param array   $data
+     *
+     * @return Account
+     */
+    public function update(Account $account, array $data);
 }

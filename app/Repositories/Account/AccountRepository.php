@@ -3,6 +3,8 @@
 namespace FireflyIII\Repositories\Account;
 
 use App;
+use Auth;
+use Carbon\Carbon;
 use Config;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
@@ -10,7 +12,10 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Log;
+use Session;
 
 /**
  * Class AccountRepository
@@ -30,6 +35,43 @@ class AccountRepository implements AccountRepositoryInterface
         $account->delete();
 
         return true;
+    }
+
+    /**
+     * @param Account $account
+     * @param int     $page
+     * @param string  $range
+     *
+     * @return mixed
+     */
+    public function getJournals(Account $account, $page, $range = 'session')
+    {
+        $offset = $page * 50;
+        $items  = [];
+        $query  = Auth::user()
+                      ->transactionJournals()
+            //->withRelevantData()
+                      ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                      ->where('transactions.account_id', $account->id)
+                      ->orderBy('date', 'DESC');
+
+        if ($range == 'session') {
+            $query->before(Session::get('end', Carbon::now()->startOfMonth()));
+            $query->after(Session::get('start', Carbon::now()->startOfMonth()));
+        }
+        $count = $query->count();
+        $set   = $query->take(50)->offset($offset)->get(['transaction_journals.*']);
+
+        foreach ($set as $entry) {
+            $items[] = $entry;
+        }
+
+        $paginator = new LengthAwarePaginator($items, $count, 50, $page);
+        return $paginator;
+
+        //return Paginator::make($items, $count, 50);
+
+
     }
 
     /**

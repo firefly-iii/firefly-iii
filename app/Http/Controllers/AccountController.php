@@ -1,5 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
+use App;
 use Auth;
 use Carbon\Carbon;
 use Config;
@@ -10,6 +11,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Redirect;
 use Session;
 use View;
+use Input;
 
 /**
  * Class AccountController
@@ -113,6 +115,26 @@ class AccountController extends Controller
         $accounts     = Auth::user()->accounts()->accountTypeIn($types)->get(['accounts.*']);
 
         return view('accounts.index', compact('what', 'subTitleIcon', 'subTitle', 'accounts'));
+    }
+
+    /**
+     * @param Account                    $account
+     * @param string                     $range
+     * @param AccountRepositoryInterface $repository
+     *
+     * @return \Illuminate\View\View
+     */
+    public function show(Account $account, $range = 'session')
+    {
+        /** @var \FireflyIII\Repositories\Account\AccountRepositoryInterface $repository */
+        $repository   = App::make('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $page = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
+        $subTitleIcon = Config::get('firefly.subTitlesByIdentifier.' . $account->accountType->type);
+        $what         = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
+        $journals     = $repository->getJournals($account, $range);
+        $subTitle     = 'Details for ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"';
+
+        return View::make('accounts.show', compact('account', 'what', 'range', 'subTitleIcon', 'journals', 'subTitle'));
     }
 
     /**
