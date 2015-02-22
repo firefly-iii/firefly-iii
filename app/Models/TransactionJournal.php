@@ -89,6 +89,19 @@ class TransactionJournal extends Model
 
     /**
      * @param EloquentBuilder $query
+     * @param Account         $account
+     */
+    public function scopeAccountIs(EloquentBuilder $query, Account $account)
+    {
+        if (!isset($this->joinedTransactions)) {
+            $query->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id');
+            $this->joinedTransactions = true;
+        }
+        $query->where('transactions.account_id', $account->id);
+    }
+
+    /**
+     * @param EloquentBuilder $query
      * @param Carbon          $date
      *
      * @return mixed
@@ -127,6 +140,17 @@ class TransactionJournal extends Model
 
     /**
      * @param EloquentBuilder $query
+     * @param Carbon          $date
+     *
+     * @return mixed
+     */
+    public function scopeOnDate(EloquentBuilder $query, Carbon $date)
+    {
+        return $query->where('date', '=', $date->format('Y-m-d'));
+    }
+
+    /**
+     * @param EloquentBuilder $query
      * @param array           $types
      */
     public function scopeTransactionTypes(EloquentBuilder $query, array $types)
@@ -138,6 +162,21 @@ class TransactionJournal extends Model
             $this->joinedTransactionTypes = true;
         }
         $query->whereIn('transaction_types.type', $types);
+    }
+
+    /**
+     * Automatically includes the 'with' parameters to get relevant related
+     * objects.
+     *
+     * @param EloquentBuilder $query
+     */
+    public function scopeWithRelevantData(EloquentBuilder $query)
+    {
+        $query->with(
+            ['transactions' => function (HasMany $q) {
+                $q->orderBy('amount', 'ASC');
+            }, 'transactiontype', 'transactioncurrency', 'budgets', 'categories', 'transactions.account.accounttype', 'bill', 'budgets', 'categories']
+        );
     }
 
     /**
@@ -174,21 +213,6 @@ class TransactionJournal extends Model
     }
 
     /**
-     * Automatically includes the 'with' parameters to get relevant related
-     * objects.
-     *
-     * @param EloquentBuilder $query
-     */
-    public function scopeWithRelevantData(EloquentBuilder $query)
-    {
-        $query->with(
-            ['transactions' => function (HasMany $q) {
-                $q->orderBy('amount', 'ASC');
-            }, 'transactiontype', 'transactioncurrency','budgets', 'categories', 'transactions.account.accounttype', 'bill', 'budgets', 'categories']
-        );
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function transactions()
@@ -202,19 +226,6 @@ class TransactionJournal extends Model
     public function user()
     {
         return $this->belongsTo('FireflyIII\User');
-    }
-
-    /**
-     * @param EloquentBuilder $query
-     * @param Account         $account
-     */
-    public function scopeAccountIs(EloquentBuilder $query, Account $account)
-    {
-        if (!isset($this->joinedTransactions)) {
-            $query->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id');
-            $this->joinedTransactions = true;
-        }
-        $query->where('transactions.account_id', $account->id);
     }
 
 }

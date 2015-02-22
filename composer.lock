@@ -131,16 +131,16 @@
         },
         {
             "name": "danielstjules/stringy",
-            "version": "1.8.1",
+            "version": "1.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielstjules/Stringy.git",
-                "reference": "6a7b0391b2baf0bfdca3ec0c8d33ff379c2835ad"
+                "reference": "3cf18e9e424a6dedc38b7eb7ef580edb0929461b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielstjules/Stringy/zipball/6a7b0391b2baf0bfdca3ec0c8d33ff379c2835ad",
-                "reference": "6a7b0391b2baf0bfdca3ec0c8d33ff379c2835ad",
+                "url": "https://api.github.com/repos/danielstjules/Stringy/zipball/3cf18e9e424a6dedc38b7eb7ef580edb0929461b",
+                "reference": "3cf18e9e424a6dedc38b7eb7ef580edb0929461b",
                 "shasum": ""
             },
             "require": {
@@ -183,7 +183,7 @@
                 "utility",
                 "utils"
             ],
-            "time": "2015-01-08 15:21:43"
+            "time": "2015-02-10 06:19:18"
         },
         {
             "name": "davejamesmiller/laravel-breadcrumbs",
@@ -749,12 +749,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JC5/gchart.git",
-                "reference": "0cbefaf7ea75f4ce23791d9764787f3b617208dd"
+                "reference": "24d06101cfda7ff336ecb10f7f0cb0d6004cb83c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JC5/gchart/zipball/0cbefaf7ea75f4ce23791d9764787f3b617208dd",
-                "reference": "0cbefaf7ea75f4ce23791d9764787f3b617208dd",
+                "url": "https://api.github.com/repos/JC5/gchart/zipball/24d06101cfda7ff336ecb10f7f0cb0d6004cb83c",
+                "reference": "24d06101cfda7ff336ecb10f7f0cb0d6004cb83c",
                 "shasum": ""
             },
             "require": {
@@ -777,7 +777,7 @@
                 }
             ],
             "description": "GChart is a small package that allows you to easily generate data for the Google Charts API.",
-            "time": "2015-02-08 00:18:35"
+            "time": "2015-02-20 20:07:26"
         },
         {
             "name": "illuminate/html",
@@ -1013,16 +1013,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.0.2",
+            "version": "v5.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "30391aa20874c30725f653bea1ea5b895a5217cf"
+                "reference": "43637b796f1ac0b1a960984231251ff04b438006"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/30391aa20874c30725f653bea1ea5b895a5217cf",
-                "reference": "30391aa20874c30725f653bea1ea5b895a5217cf",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/43637b796f1ac0b1a960984231251ff04b438006",
+                "reference": "43637b796f1ac0b1a960984231251ff04b438006",
                 "shasum": ""
             },
             "require": {
@@ -1134,7 +1134,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-02-06 23:14:12"
+            "time": "2015-02-20 16:22:21"
         },
         {
             "name": "league/flysystem",
@@ -1566,16 +1566,16 @@
         },
         {
             "name": "psy/psysh",
-            "version": "v0.3.3",
+            "version": "v0.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bobthecow/psysh.git",
-                "reference": "0355cecab0591c83fed019a9572c510b0da29174"
+                "reference": "2ce0e8f3020fd292c2ad2a496c5d83939823f642"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/0355cecab0591c83fed019a9572c510b0da29174",
-                "reference": "0355cecab0591c83fed019a9572c510b0da29174",
+                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/2ce0e8f3020fd292c2ad2a496c5d83939823f642",
+                "reference": "2ce0e8f3020fd292c2ad2a496c5d83939823f642",
                 "shasum": ""
             },
             "require": {
@@ -1625,14 +1625,14 @@
                 }
             ],
             "description": "An interactive shell for modern PHP.",
-            "homepage": "https://github.com/bobthecow/psysh",
+            "homepage": "http://psysh.org",
             "keywords": [
                 "REPL",
                 "console",
                 "interactive",
                 "shell"
             ],
-            "time": "2015-01-20 21:18:03"
+            "time": "2015-02-12 19:35:52"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -2537,20 +2537,20 @@
     "packages-dev": [
         {
             "name": "barryvdh/laravel-debugbar",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-debugbar.git",
-                "reference": "343dbc07007272511727c9272e568d707682fc24"
+                "reference": "77b9cc071f4bbd839923269668b14d308778d8b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-debugbar/zipball/343dbc07007272511727c9272e568d707682fc24",
-                "reference": "343dbc07007272511727c9272e568d707682fc24",
+                "url": "https://api.github.com/repos/barryvdh/laravel-debugbar/zipball/77b9cc071f4bbd839923269668b14d308778d8b0",
+                "reference": "77b9cc071f4bbd839923269668b14d308778d8b0",
                 "shasum": ""
             },
             "require": {
-                "illuminate/support": "5.0.*",
+                "illuminate/support": "5.0.x",
                 "maximebf/debugbar": "~1.10.2",
                 "php": ">=5.4.0",
                 "symfony/finder": "~2.6"
@@ -2587,7 +2587,7 @@
                 "profiler",
                 "webprofiler"
             ],
-            "time": "2015-02-03 19:52:06"
+            "time": "2015-02-15 14:11:42"
         },
         {
             "name": "codeception/c3",
@@ -2830,12 +2830,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/codeclimate/php-test-reporter.git",
-                "reference": "2dd8395f81874333d15de3a598f722997ba42fb5"
+                "reference": "2a67d5d940e175fddba15f29c81a646ace26dc38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codeclimate/php-test-reporter/zipball/2dd8395f81874333d15de3a598f722997ba42fb5",
-                "reference": "2dd8395f81874333d15de3a598f722997ba42fb5",
+                "url": "https://api.github.com/repos/codeclimate/php-test-reporter/zipball/2a67d5d940e175fddba15f29c81a646ace26dc38",
+                "reference": "2a67d5d940e175fddba15f29c81a646ace26dc38",
                 "shasum": ""
             },
             "require": {
@@ -2845,6 +2845,7 @@
                 "symfony/console": ">=2.0"
             },
             "require-dev": {
+                "ext-xdebug": "*",
                 "phpunit/phpunit": "3.7.*@stable"
             },
             "bin": [
@@ -2879,7 +2880,7 @@
                 "codeclimate",
                 "coverage"
             ],
-            "time": "2014-12-29 16:17:04"
+            "time": "2015-02-20 22:40:35"
         },
         {
             "name": "doctrine/instantiator",
@@ -3276,16 +3277,16 @@
         },
         {
             "name": "janhenkgerritsen/codeception-laravel5",
-            "version": "1.0.10",
+            "version": "1.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/janhenkgerritsen/codeception-laravel5.git",
-                "reference": "6308e72a73dfb015164689646676cda6827409d5"
+                "reference": "b4aef07d548b6becfd54ebf909e1f49de1ca5392"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/janhenkgerritsen/codeception-laravel5/zipball/6308e72a73dfb015164689646676cda6827409d5",
-                "reference": "6308e72a73dfb015164689646676cda6827409d5",
+                "url": "https://api.github.com/repos/janhenkgerritsen/codeception-laravel5/zipball/b4aef07d548b6becfd54ebf909e1f49de1ca5392",
+                "reference": "b4aef07d548b6becfd54ebf909e1f49de1ca5392",
                 "shasum": ""
             },
             "require": {
@@ -3314,7 +3315,7 @@
                 "laravel",
                 "laravel5"
             ],
-            "time": "2015-02-07 10:02:06"
+            "time": "2015-02-14 11:20:37"
         },
         {
             "name": "league/factory-muffin",

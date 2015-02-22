@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Support;
 
-use Amount;
 use FireflyIII\Models\TransactionCurrency;
 use Illuminate\Support\MessageBag;
 use Input;

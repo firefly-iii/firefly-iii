@@ -149,6 +149,7 @@ return [
         'FireflyIII\Providers\EventServiceProvider',
         'FireflyIII\Providers\RouteServiceProvider',
         'FireflyIII\Providers\FireflyServiceProvider',
+        'FireflyIII\Providers\TestingServiceProvider',
 
     ],
 

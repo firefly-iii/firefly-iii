@@ -29,10 +29,10 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-6">
-                                Amount: {{Amount::format($rep->amount)}}
+                                Amount: {!! Amount::format($rep->amount) !!}
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6">
-                                Spent: {{Amount::format($rep->spentInRepetition())}}
+                                Spent: {!! Amount::format($rep->spentInRepetition()) !!}
                             </div>
                         </div>
                         <div class="row">
@@ -73,7 +73,7 @@
 <script type="text/javascript">
     var budgetID = {{$budget->id}};
     var currencyCode = '{{Amount::getCurrencyCode()}}';
-    @if(!is_null($repetition))
+    @if(!is_null($repetition->id))
         var repetitionID = {{$repetition->id}};
         var year = {{$repetition->startdate->format('Y')}};
     @else
@@ -84,8 +84,8 @@
 
 <!-- load the libraries and scripts necessary for Google Charts: -->
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-{{HTML::script('assets/javascript/firefly/gcharts.options.js')}}
-{{HTML::script('assets/javascript/firefly/gcharts.js')}}
-{{HTML::script('assets/javascript/firefly/budgets.js')}}
+<script type="text/javascript" src="js/gcharts.options.js"></script>
+<script type="text/javascript" src="js/gcharts.js"></script>
+<script type="text/javascript" src="js/budgets.js"></script>
 
 @stop
