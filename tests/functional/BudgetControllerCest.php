@@ -188,11 +188,13 @@ class BudgetControllerCest
 
         ///budgets/income
 
+        $token = $I->grabValueFrom("input[name='_token']");
 
-        $I->sendAjaxPostRequest('/budgets/amount/1', ['amount' => 100]);
+
+        $I->sendAjaxPostRequest('/budgets/amount/1', ['amount' => 100, '_token' => $token]);
         $I->canSeeResponseCodeIs(200);
         $I->see('Groceries');
-        $I->seeInDatabase('budgets', ['id' => 1]);
+//        $I->seeInDatabase('budgets', ['id' => 1]);
         #$I->seeInDatabase('budget_limits', ['budget_id' => 1, 'amount' => 100.00]);
     }
 
@@ -201,9 +203,11 @@ class BudgetControllerCest
      */
     public function update(FunctionalTester $I)
     {
+        $budget = Budget::where('name', 'Delete me')->first();
         $I->wantTo('update a budget');
-        $I->amOnPage('/budgets/edit/3');
-        $I->see('Edit budget "Delete me"');
+        $I->amOnPage('/budgets/edit/'.$budget->id);
+        $I->see('Edit budget');
+        $I->see($budget->name);
         $I->submitForm('#update', ['name' => 'Update me', 'post_submit_action' => 'update']);
         $I->seeRecord('budgets', ['name' => 'Update me']);
 
@@ -214,9 +218,11 @@ class BudgetControllerCest
      */
     public function updateAndReturn(FunctionalTester $I)
     {
+        $budget = Budget::where('name', 'Delete me')->first();
         $I->wantTo('update a budget and return to form');
-        $I->amOnPage('/budgets/edit/3');
-        $I->see('Edit budget "Delete me"');
+        $I->amOnPage('/budgets/edit/'.$budget->id);
+        $I->see('Edit budget');
+        $I->see($budget->name);
         $I->submitForm(
             '#update', ['name' => 'Savings accountXX', 'post_submit_action' => 'return_to_edit']
         );
@@ -233,20 +239,5 @@ class BudgetControllerCest
         $I->wantTo('update my monthly income');
         $I->see('Update (expected) income for ');
     }
-
-    /**
-     * @param FunctionalTester $I
-     */
-    public function validateUpdateOnly(FunctionalTester $I)
-    {
-        $I->wantTo('update a budget and validate only');
-        $I->amOnPage('/budgets/edit/3');
-        $I->see('Edit budget "Delete me"');
-        $I->submitForm(
-            '#update', ['name' => 'Validate Only', 'post_submit_action' => 'validate_only']
-        );
-        $I->dontSeeRecord('budgets', ['name' => 'Savings accountXX']);
-        $I->seeRecord('budgets', ['name' => 'Delete me']);
-
-    }
+    
 }
