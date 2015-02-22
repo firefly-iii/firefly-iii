@@ -138,6 +138,7 @@ return [
         'Illuminate\Html\HtmlServiceProvider',
         'Barryvdh\Debugbar\ServiceProvider',
         'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
+        'DaveJamesMiller\Breadcrumbs\ServiceProvider',
 
         /*
          * Application Service Providers...
@@ -198,6 +199,8 @@ return [
         'View'         => 'Illuminate\Support\Facades\View',
         'Form'         => 'Illuminate\Html\FormFacade',
         'Html'         => 'Illuminate\Html\HtmlFacade',
+        'Breadcrumbs' => 'DaveJamesMiller\Breadcrumbs\Facade',
+
         'Preferences'  => 'FireflyIII\Support\Facades\Preferences',
         'Navigation'   => 'FireflyIII\Support\Facades\Navigation',
         'Amount'       => 'FireflyIII\Support\Facades\Amount',

@@ -3,7 +3,7 @@
 namespace FireflyIII\Support;
 
 use Carbon\Carbon;
-use FireflyIII\Exception\FireflyException;
+use FireflyIII\Exceptions\FireflyException;
 
 /**
  * Class Navigation
@@ -195,6 +195,48 @@ class Navigation
             return $start;
         }
         throw new FireflyException('updateStartDate cannot handle $range ' . $range);
+    }
+
+    /**
+     * @param Carbon         $theDate
+     * @param                $repeatFreq
+     * @param                $skip
+     *
+     * @return \Carbon\Carbon
+     * @throws FireflyException
+     */
+    public function addPeriod(Carbon $theDate, $repeatFreq, $skip)
+    {
+        $date = clone $theDate;
+        $add  = ($skip + 1);
+
+        $functionMap = [
+            'daily'     => 'addDays',
+            'weekly'    => 'addWeeks',
+            'week'      => 'addWeeks',
+            'month'     => 'addMonths',
+            'monthly'   => 'addMonths',
+            'quarter'   => 'addMonths',
+            'quarterly' => 'addMonths',
+            'half-year' => 'addMonths',
+            'year'      => 'addYears',
+            'yearly'    => 'addYears',
+        ];
+        $modifierMap = [
+            'quarter'   => 3,
+            'quarterly' => 3,
+            'half-year' => 6,
+        ];
+        if (!isset($functionMap[$repeatFreq])) {
+            throw new FireflyException('Cannot do addPeriod for $repeat_freq "' . $repeatFreq . '"');
+        }
+        if (isset($modifierMap[$repeatFreq])) {
+            $add = $add * $modifierMap[$repeatFreq];
+        }
+        $function = $functionMap[$repeatFreq];
+        $date->$function($add);
+
+        return $date;
     }
 
 
