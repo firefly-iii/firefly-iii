@@ -4,6 +4,7 @@ use Carbon\Carbon;
 use Crypt;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Watson\Validating\ValidatingTrait;
 
@@ -170,6 +171,21 @@ class TransactionJournal extends Model
     public function transactiongroups()
     {
         return $this->belongsToMany('FireflyIII\Models\TransactionGroup');
+    }
+
+    /**
+     * Automatically includes the 'with' parameters to get relevant related
+     * objects.
+     *
+     * @param EloquentBuilder $query
+     */
+    public function scopeWithRelevantData(EloquentBuilder $query)
+    {
+        $query->with(
+            ['transactions' => function (HasMany $q) {
+                $q->orderBy('amount', 'ASC');
+            }, 'transactiontype', 'transactioncurrency','budgets', 'categories', 'transactions.account.accounttype', 'bill', 'budgets', 'categories']
+        );
     }
 
     /**
