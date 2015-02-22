@@ -54,7 +54,7 @@ class AccountController extends Controller
     {
         $subTitle = 'Delete ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"';
 
-        return View::make('accounts.delete', compact('account', 'subTitle'));
+        return view('accounts.delete', compact('account', 'subTitle'));
     }
 
     /**
@@ -134,7 +134,7 @@ class AccountController extends Controller
         $journals     = $repository->getJournals($account, $page, $range);
         $subTitle     = 'Details for ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"';
 
-        return View::make('accounts.show', compact('account', 'what', 'range', 'subTitleIcon', 'journals', 'subTitle'));
+        return view('accounts.show', compact('account', 'what', 'range', 'subTitleIcon', 'journals', 'subTitle'));
     }
 
     /**

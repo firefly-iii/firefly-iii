@@ -3,6 +3,7 @@ use Carbon\Carbon;
 use DaveJamesMiller\Breadcrumbs\Generator;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Category;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
 /*

@@ -49,7 +49,7 @@ class BudgetController extends Controller
      */
     public function create()
     {
-        return View::make('budgets.create')->with('subTitle', 'Create a new budget');
+        return view('budgets.create')->with('subTitle', 'Create a new budget');
     }
 
     /**
@@ -61,7 +61,7 @@ class BudgetController extends Controller
     {
         $subTitle = 'Delete budget' . e($budget->name) . '"';
 
-        return View::make('budgets.delete', compact('budget', 'subTitle'));
+        return view('budgets.delete', compact('budget', 'subTitle'));
     }
 
     /**
@@ -89,7 +89,7 @@ class BudgetController extends Controller
     {
         $subTitle = 'Edit budget "' . e($budget->name) . '"';
 
-        return View::make('budgets.edit', compact('budget', 'subTitle'));
+        return view('budgets.edit', compact('budget', 'subTitle'));
 
     }
 
@@ -117,7 +117,7 @@ class BudgetController extends Controller
         $budgetMax     = Preferences::get('budgetMaximum', 1000);
         $budgetMaximum = $budgetMax->data;
 
-        return View::make('budgets.index', compact('budgetMaximum', 'budgets', 'spent', 'spentPCT', 'overspent', 'amount'));
+        return view('budgets.index', compact('budgetMaximum', 'budgets', 'spent', 'spentPCT', 'overspent', 'amount'));
     }
 
     /**
@@ -137,7 +137,7 @@ class BudgetController extends Controller
                         ->get(['transaction_journals.*']);
         $subTitle = 'Transactions without a budget in ' . $start->format('F Y');
 
-        return View::make('budgets.noBudget', compact('list', 'subTitle'));
+        return view('budgets.noBudget', compact('list', 'subTitle'));
     }
 
     /**
@@ -176,7 +176,7 @@ class BudgetController extends Controller
     public function show(Budget $budget, LimitRepetition $repetition = null, BudgetRepositoryInterface $repository)
     {
         if (!is_null($repetition->id) && $repetition->budgetLimit->budget->id != $budget->id) {
-            return View::make('error')->with('message', 'Invalid selection.');
+            return view('error')->with('message', 'Invalid selection.');
         }
 
         $hideBudget = true; // used in transaction list.
@@ -184,7 +184,7 @@ class BudgetController extends Controller
         $limits     = !is_null($repetition->id) ? [$repetition->budgetLimit] : $budget->budgetLimits()->orderBy('startdate', 'DESC')->get();
         $subTitle   = !is_null($repetition->id) ? e($budget->name) . ' in ' . $repetition->startdate->format('F Y') : e($budget->name);
 
-        return View::make('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle', 'hideBudget'));
+        return view('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle', 'hideBudget'));
     }
 
     /**
@@ -216,7 +216,7 @@ class BudgetController extends Controller
         $date         = Session::get('start', Carbon::now()->startOfMonth())->format('FY');
         $budgetAmount = Preferences::get('budgetIncomeTotal' . $date, 1000);
 
-        return View::make('budgets.income')->with('amount', $budgetAmount);
+        return view('budgets.income')->with('amount', $budgetAmount);
     }
 
 }

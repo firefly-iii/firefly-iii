@@ -239,5 +239,4 @@ class BudgetControllerCest
         $I->wantTo('update my monthly income');
         $I->see('Update (expected) income for ');
     }
-    
 }

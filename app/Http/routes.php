@@ -1,7 +1,8 @@
 <?php
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Budget;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\Category;
 use FireflyIII\Models\LimitRepetition;
 
 
@@ -10,8 +11,7 @@ Route::bind(
     'account',
     function ($value, $route) {
         if (Auth::check()) {
-            $account = Account::
-            leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+            $account = Account::leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
                               ->where('account_types.editable', 1)
                               ->where('accounts.id', $value)
                               ->where('user_id', Auth::user()->id)
@@ -27,8 +27,7 @@ Route::bind(
 Route::bind(
     'bill', function ($value, $route) {
     if (Auth::check()) {
-        return Bill::
-        where('id', $value)->where('user_id', Auth::user()->id)->first();
+        return Bill::where('id', $value)->where('user_id', Auth::user()->id)->first();
     }
 
     return null;
@@ -38,8 +37,7 @@ Route::bind(
 Route::bind(
     'budget', function ($value, $route) {
     if (Auth::check()) {
-        return Budget::
-        where('id', $value)->where('user_id', Auth::user()->id)->first();
+        return Budget::where('id', $value)->where('user_id', Auth::user()->id)->first();
     }
 
     return null;
@@ -54,6 +52,16 @@ Route::bind(
                               ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
                               ->where('budgets.user_id', Auth::user()->id)
                               ->first(['limit_repetitions.*']);
+    }
+
+    return null;
+}
+);
+
+Route::bind(
+    'category', function ($value, $route) {
+    if (Auth::check()) {
+        return Category::where('id', $value)->where('user_id', Auth::user()->id)->first();
     }
 
     return null;
@@ -90,7 +98,7 @@ Route::group(
     //Route::get('/bills/rescan/{bill}', ['uses' => 'BillController@rescan', 'as' => 'bills.rescan']); # rescan for matching.
     Route::get('/bills/create', ['uses' => 'BillController@create', 'as' => 'bills.create']);
     //Route::get('/bills/edit/{bill}', ['uses' => 'BillController@edit', 'as' => 'bills.edit']);
-//    Route::get('/bills/delete/{bill}', ['uses' => 'BillController@delete', 'as' => 'bills.delete']);
+    //    Route::get('/bills/delete/{bill}', ['uses' => 'BillController@delete', 'as' => 'bills.delete']);
     Route::get('/bills/show/{bill}', ['uses' => 'BillController@show', 'as' => 'bills.show']);
 
     /**
@@ -113,11 +121,14 @@ Route::group(
      * Category Controller
      */
     Route::get('/categories', ['uses' => 'CategoryController@index', 'as' => 'categories.index']);
-    //Route::get('/categories/create', ['uses' => 'CategoryController@create', 'as' => 'categories.create']);
-    //Route::get('/categories/edit/{category}', ['uses' => 'CategoryController@edit', 'as' => 'categories.edit']);
-    //Route::get('/categories/delete/{category}', ['uses' => 'CategoryController@delete', 'as' => 'categories.delete']);
+    Route::get('/categories/create', ['uses' => 'CategoryController@create', 'as' => 'categories.create']);
+    Route::get('/categories/edit/{category}', ['uses' => 'CategoryController@edit', 'as' => 'categories.edit']);
+    Route::get('/categories/delete/{category}', ['uses' => 'CategoryController@delete', 'as' => 'categories.delete']);
     Route::get('/categories/show/{category}', ['uses' => 'CategoryController@show', 'as' => 'categories.show']);
-    //Route::get('/categories/list/noCategory', ['uses' => 'CategoryController@noCategory', 'as' => 'categories.noCategory']);
+    Route::get('/categories/list/noCategory', ['uses' => 'CategoryController@noCategory', 'as' => 'categories.noCategory']);
+    Route::post('/categories/store', ['uses' => 'CategoryController@store', 'as' => 'categories.store']);
+    Route::post('/categories/update/{category}', ['uses' => 'CategoryController@update', 'as' => 'categories.update']);
+    Route::post('/categories/destroy/{category}', ['uses' => 'CategoryController@destroy', 'as' => 'categories.destroy']);
 
     /**
      * Currency Controller
