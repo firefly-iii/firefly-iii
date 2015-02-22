@@ -34,7 +34,7 @@ class Budget extends Model
      */
     public function limitrepetitions()
     {
-        return $this->hasManyThrough('FireflyIII\Models\LimitRepetition', 'BudgetLimit', 'budget_id');
+        return $this->hasManyThrough('FireflyIII\Models\LimitRepetition', 'FireflyIII\Models\BudgetLimit', 'budget_id');
     }
 
     /**

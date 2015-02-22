@@ -1,0 +1,2 @@
+- replace \Session with Session
+- find all event::fire's, and see if they fire in new ff as well.

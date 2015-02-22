@@ -1,5 +1,7 @@
 <?php
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\Bill;
 // models
 Route::bind(
     'account',
@@ -17,6 +19,28 @@ Route::bind(
         }
         App::abort(404);
     }
+);
+
+Route::bind(
+    'bill', function ($value, $route) {
+    if (Auth::check()) {
+        return Bill::
+        where('id', $value)->where('user_id', Auth::user()->id)->first();
+    }
+
+    return null;
+}
+);
+
+Route::bind(
+    'budget', function ($value, $route) {
+    if (Auth::check()) {
+        return Budget::
+        where('id', $value)->where('user_id', Auth::user()->id)->first();
+    }
+
+    return null;
+}
 );
 
 
@@ -57,12 +81,17 @@ Route::group(
      * Budget Controller
      */
     Route::get('/budgets', ['uses' => 'BudgetController@index', 'as' => 'budgets.index']);
-    //Route::get('/budgets/income', ['uses' => 'BudgetController@updateIncome', 'as' => 'budgets.income']); # extra.
-    //Route::get('/budgets/create', ['uses' => 'BudgetController@create', 'as' => 'budgets.create']);
-    //Route::get('/budgets/edit/{budget}', ['uses' => 'BudgetController@edit', 'as' => 'budgets.edit']);
-    //Route::get('/budgets/delete/{budget}', ['uses' => 'BudgetController@delete', 'as' => 'budgets.delete']);
+    Route::get('/budgets/income', ['uses' => 'BudgetController@updateIncome', 'as' => 'budgets.income']); # extra.
+    Route::get('/budgets/create', ['uses' => 'BudgetController@create', 'as' => 'budgets.create']);
+    Route::get('/budgets/edit/{budget}', ['uses' => 'BudgetController@edit', 'as' => 'budgets.edit']);
+    Route::get('/budgets/delete/{budget}', ['uses' => 'BudgetController@delete', 'as' => 'budgets.delete']);
     Route::get('/budgets/show/{budget}/{limitrepetition?}', ['uses' => 'BudgetController@show', 'as' => 'budgets.show']);
-    //Route::get('/budgets/list/noBudget', ['uses' => 'BudgetController@noBudget', 'as' => 'budgets.noBudget']);
+    Route::get('/budgets/list/noBudget', ['uses' => 'BudgetController@noBudget', 'as' => 'budgets.noBudget']);
+    Route::post('/budgets/income', ['uses' => 'BudgetController@postUpdateIncome', 'as' => 'budgets.postIncome']);
+    Route::post('/budgets/store', ['uses' => 'BudgetController@store', 'as' => 'budgets.store']);
+    Route::post('/budgets/update/{budget}', ['uses' => 'BudgetController@update', 'as' => 'budgets.update']);
+    Route::post('/budgets/destroy/{budget}', ['uses' => 'BudgetController@destroy', 'as' => 'budgets.destroy']);
+    Route::post('budgets/amount/{budget}', ['uses' => 'BudgetController@amount']);
 
     /**
      * Category Controller

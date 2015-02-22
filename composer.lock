@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "13cdbee2532896d10d1b3d8833f72d74",
+    "hash": "6399deca7bccfb38eaa5df996618bc4d",
     "packages": [
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -187,32 +187,33 @@
         },
         {
             "name": "davejamesmiller/laravel-breadcrumbs",
-            "version": "2.3.0",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/davejamesmiller/laravel-breadcrumbs.git",
-                "reference": "cfcdc58ceaa8bbafa403828b8d1279d65f62799f"
+                "reference": "5a5d5d1b1f5780359604f7fde11bbf810ff3e9e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/davejamesmiller/laravel-breadcrumbs/zipball/cfcdc58ceaa8bbafa403828b8d1279d65f62799f",
-                "reference": "cfcdc58ceaa8bbafa403828b8d1279d65f62799f",
+                "url": "https://api.github.com/repos/davejamesmiller/laravel-breadcrumbs/zipball/5a5d5d1b1f5780359604f7fde11bbf810ff3e9e4",
+                "reference": "5a5d5d1b1f5780359604f7fde11bbf810ff3e9e4",
                 "shasum": ""
             },
             "require": {
-                "illuminate/support": "4.*|5.*",
-                "illuminate/view": "4.*|5.*",
-                "php": ">=5.3.0"
+                "illuminate/support": "5.*",
+                "illuminate/view": "5.*",
+                "php": ">=5.4.0"
             },
             "require-dev": {
-                "mockery/mockery": "~0.9.0",
-                "phpunit/phpunit": "4.0.*",
-                "satooshi/php-coveralls": "~0.6.0"
+                "mockery/mockery": "0.9.*",
+                "orchestra/testbench": "3.0.*",
+                "phpunit/phpunit": "4.*",
+                "satooshi/php-coveralls": "0.6.*"
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "DaveJamesMiller\\Breadcrumbs": "src/"
+                "psr-4": {
+                    "DaveJamesMiller\\Breadcrumbs\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -231,7 +232,7 @@
             "keywords": [
                 "laravel"
             ],
-            "time": "2014-10-26 22:36:05"
+            "time": "2015-02-08 21:44:39"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -4802,7 +4803,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "davejamesmiller/laravel-breadcrumbs": 0,
         "grumpydictator/gchart": 20,
         "michelf/php-markdown": 0,
         "watson/validating": 20,

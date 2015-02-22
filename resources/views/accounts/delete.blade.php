@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-{{-- Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $account) --}}
+{!! Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $account) !!}
 {!! Form::open(['class' => 'form-horizontal','id' => 'destroy','url' => route('accounts.destroy',$account->id)]) !!}
 <div class="row">
     <div class="col-lg-6 col-md-12 col-sm-12">

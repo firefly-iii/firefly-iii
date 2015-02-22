@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-{{-- Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $what) --}}
+{!! Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $what) !!}
 {!! Form::open(['class' => 'form-horizontal','id' => 'store','route' => 'accounts.store']) !!}
 {!! Form::hidden('what',$what) !!}
 
