@@ -8,10 +8,10 @@ use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use Input;
 use Redirect;
 use Session;
 use View;
-use Input;
 
 /**
  * Class AccountController
@@ -128,10 +128,10 @@ class AccountController extends Controller
     {
         /** @var \FireflyIII\Repositories\Account\AccountRepositoryInterface $repository */
         $repository   = App::make('FireflyIII\Repositories\Account\AccountRepositoryInterface');
-        $page = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
+        $page         = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
         $subTitleIcon = Config::get('firefly.subTitlesByIdentifier.' . $account->accountType->type);
         $what         = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
-        $journals     = $repository->getJournals($account, $range);
+        $journals     = $repository->getJournals($account, $page, $range);
         $subTitle     = 'Details for ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"';
 
         return View::make('accounts.show', compact('account', 'what', 'range', 'subTitleIcon', 'journals', 'subTitle'));

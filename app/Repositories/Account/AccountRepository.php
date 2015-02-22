@@ -13,7 +13,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 use Log;
 use Session;
 
@@ -50,7 +49,7 @@ class AccountRepository implements AccountRepositoryInterface
         $items  = [];
         $query  = Auth::user()
                       ->transactionJournals()
-            //->withRelevantData()
+                      ->withRelevantData()
                       ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                       ->where('transactions.account_id', $account->id)
                       ->orderBy('date', 'DESC');
@@ -67,6 +66,7 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         $paginator = new LengthAwarePaginator($items, $count, 50, $page);
+
         return $paginator;
 
         //return Paginator::make($items, $count, 50);
