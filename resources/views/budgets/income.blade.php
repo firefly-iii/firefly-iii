@@ -1,5 +1,6 @@
 <form style="display: inline;" id="income" action="{{route('budgets.postIncome')}}" method="POST">
-{{Form::token()}}
+
+{!! Form::token() !!}
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

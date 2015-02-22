@@ -1,8 +1,10 @@
 <?php
 use Carbon\Carbon;
 use DaveJamesMiller\Breadcrumbs\Generator;
-use FireflyIII\Exception\FireflyException;
-
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\LimitRepetition;
 /*
  * Back home.
  */
@@ -22,7 +24,7 @@ Breadcrumbs::register(
 }
 );
 Breadcrumbs::register(
-    'accounts.show', function (Generator $breadcrumbs, \Account $account) {
+    'accounts.show', function (Generator $breadcrumbs, Account $account) {
     switch ($account->accountType->type) {
         default:
             throw new FireflyException('Cannot handle account type "' . e($account->accountType->type) . '"');
@@ -47,14 +49,14 @@ Breadcrumbs::register(
 }
 );
 Breadcrumbs::register(
-    'accounts.delete', function (Generator $breadcrumbs, \Account $account) {
+    'accounts.delete', function (Generator $breadcrumbs, Account $account) {
     $breadcrumbs->parent('accounts.show', $account);
     $breadcrumbs->push('Delete ' . e($account->name), route('accounts.delete', $account->id));
 }
 );
 
 Breadcrumbs::register(
-    'accounts.edit', function (Generator $breadcrumbs, \Account $account) {
+    'accounts.edit', function (Generator $breadcrumbs, Account $account) {
     $breadcrumbs->parent('accounts.show', $account);
     $breadcrumbs->push('Edit ' . e($account->name), route('accounts.edit', $account->id));
 }
@@ -91,9 +93,9 @@ Breadcrumbs::register(
     'budgets.show', function (Generator $breadcrumbs, Budget $budget, LimitRepetition $repetition = null) {
     $breadcrumbs->parent('budgets.index');
     $breadcrumbs->push(e($budget->name), route('budgets.show', $budget->id));
-    if (!is_null($repetition)) {
+    if (!is_null($repetition) && !is_null($repetition->id)) {
         $breadcrumbs->push(
-            DateKit::periodShow($repetition->startdate, $repetition->budgetlimit->repeat_freq), route('budgets.show', $budget->id, $repetition->id)
+            Navigation::periodShow($repetition->startdate, $repetition->budgetlimit->repeat_freq), route('budgets.show', $budget->id, $repetition->id)
         );
     }
 }

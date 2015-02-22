@@ -1,5 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
+use App;
 use Auth;
 use Carbon\Carbon;
 use Crypt;
@@ -25,6 +26,46 @@ use Steam;
 class GoogleChartController extends Controller
 {
 
+
+    /**
+     * @param Account $account
+     * @param string  $view
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function accountBalanceChart(Account $account, $view = 'session', GChart $chart)
+    {
+        $chart->addColumn('Day of month', 'date');
+        $chart->addColumn('Balance for ' . $account->name, 'number');
+        $chart->addCertainty(1);
+
+        $start = Session::get('start', Carbon::now()->startOfMonth());
+        $end   = Session::get('end', Carbon::now()->endOfMonth());
+        $count = $account->transactions()->count();
+
+        if ($view == 'all' && $count > 0) {
+            $first = $account->transactions()->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')->orderBy(
+                'date', 'ASC'
+            )->first(['transaction_journals.date']);
+            $last  = $account->transactions()->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')->orderBy(
+                'date', 'DESC'
+            )->first(['transaction_journals.date']);
+            $start = new Carbon($first->date);
+            $end   = new Carbon($last->date);
+        }
+
+        $current = clone $start;
+
+        while ($end >= $current) {
+            $chart->addRow(clone $current, Steam::balance($account, $current), false);
+            $current->addDay();
+        }
+
+
+        $chart->generate();
+
+        return Response::json($chart->getData());
+    }
 
     /**
      * @param GChart $chart
@@ -234,43 +275,99 @@ class GoogleChartController extends Controller
     }
 
     /**
-     * @param Account $account
-     * @param string  $view
+     *
+     * @param Budget          $budget
+     * @param LimitRepetition $repetition
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function accountBalanceChart(Account $account, $view = 'session', GChart $chart)
+    public function budgetLimitSpending(Budget $budget, LimitRepetition $repetition, GChart $chart)
     {
-        $chart->addColumn('Day of month', 'date');
-        $chart->addColumn('Balance for ' . $account->name, 'number');
-        $chart->addCertainty(1);
+        $start = clone $repetition->startdate;
+        $end   = $repetition->enddate;
 
-        $start  = Session::get('start', Carbon::now()->startOfMonth());
-        $end    = Session::get('end', Carbon::now()->endOfMonth());
-        $count = $account->transactions()->count();
+        $chart->addColumn('Day', 'date');
+        $chart->addColumn('Left', 'number');
 
-        if ($view == 'all' && $count > 0) {
-            $first = $account->transactions()->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')->orderBy(
-                'date', 'ASC'
-            )->first(['transaction_journals.date']);
-            $last  = $account->transactions()->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')->orderBy(
-                'date', 'DESC'
-            )->first(['transaction_journals.date']);
-            $start = new Carbon($first->date);
-            $end   = new Carbon($last->date);
+
+        $amount = $repetition->amount;
+
+        while ($start <= $end) {
+            /*
+             * Sum of expenses on this day:
+             */
+            $sum = floatval($budget->transactionjournals()->lessThan(0)->transactionTypes(['Withdrawal'])->onDate($start)->sum('amount'));
+            $amount += $sum;
+            $chart->addRow(clone $start, $amount);
+            $start->addDay();
+        }
+        $chart->generate();
+
+        return Response::json($chart->getData());
+
+    }
+
+    /**
+     *
+     * @param Budget $budget
+     *
+     * @param int    $year
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function budgetsAndSpending(Budget $budget, $year = 0)
+    {
+
+        $chart      = App::make('Grumpydictator\Gchart\GChart');
+        $repository = App::make('FireflyIII\Repositories\Budget\BudgetRepository');
+        $chart->addColumn('Month', 'date');
+        $chart->addColumn('Budgeted', 'number');
+        $chart->addColumn('Spent', 'number');
+        if ($year == 0) {
+            // grab the first budgetlimit ever:
+            $firstLimit = $budget->budgetlimits()->orderBy('startdate', 'ASC')->first();
+            if ($firstLimit) {
+                $start = new Carbon($firstLimit->startdate);
+            } else {
+                $start = Carbon::now()->startOfYear();
+            }
+
+            // grab the last budget limit ever:
+            $lastLimit = $budget->budgetlimits()->orderBy('startdate', 'DESC')->first();
+            if ($lastLimit) {
+                $end = new Carbon($lastLimit->startdate);
+            } else {
+                $end = Carbon::now()->endOfYear();
+            }
+        } else {
+            $start = Carbon::createFromDate(intval($year), 1, 1);
+            $end   = clone $start;
+            $end->endOfYear();
         }
 
-        $current = clone $start;
+        while ($start <= $end) {
+            $spent      = $repository->spentInMonth($budget, $start);
+            $repetition = LimitRepetition::leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
+                                         ->where('limit_repetitions.startdate', $start->format('Y-m-d 00:00:00'))
+                                         ->where('budget_limits.budget_id', $budget->id)
+                                         ->first(['limit_repetitions.*']);
 
-        while ($end >= $current) {
-            $chart->addRow(clone $current, Steam::balance($account, $current), false);
-            $current->addDay();
+            if ($repetition) {
+                $budgeted = floatval($repetition->amount);
+                \Log::debug('Found a repetition on ' . $start->format('Y-m-d') . ' for budget ' . $budget->name . '!');
+            } else {
+                \Log::debug('No repetition on ' . $start->format('Y-m-d') . ' for budget ' . $budget->name);
+                $budgeted = null;
+            }
+            $chart->addRow(clone $start, $budgeted, $spent);
+            $start->addMonth();
         }
-
 
         $chart->generate();
 
         return Response::json($chart->getData());
+
+
     }
 
 

@@ -13,6 +13,8 @@ class Budget extends Model
 
     use SoftDeletes;
 
+    protected $fillable = ['user_id', 'name'];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

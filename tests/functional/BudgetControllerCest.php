@@ -1,5 +1,7 @@
 <?php
 
+use FireflyIII\Models\Budget;
+
 /**
  * @SuppressWarnings("CamelCase")
  * @SuppressWarnings("short")
@@ -26,23 +28,6 @@ class BudgetControllerCest
     /**
      * @param FunctionalTester $I
      */
-    public function amount(FunctionalTester $I)
-    {
-        $I->wantTo('update the amount for a budget and limit repetition');
-        $I->amOnPage('/budgets');
-
-        ///budgets/income
-
-        $I->sendAjaxPostRequest('/budgets/amount/1', ['amount' => 100]);
-        $I->canSeeResponseCodeIs(200);
-        $I->see('Groceries');
-        $I->seeInDatabase('budgets', ['id' => 1]);
-        #$I->seeInDatabase('budget_limits', ['budget_id' => 1, 'amount' => 100.00]);
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
     public function create(FunctionalTester $I)
     {
         $I->wantTo('create a budget');
@@ -55,9 +40,11 @@ class BudgetControllerCest
      */
     public function delete(FunctionalTester $I)
     {
+        $budget = Budget::where('name', 'Delete me')->first();
         $I->wantTo('delete a budget');
-        $I->amOnPage('/budgets/delete/3');
-        $I->see('Delete budget "Delete me"');
+        $I->amOnPage('/budgets/delete/' . $budget->id);
+        $I->see('Delete budget');
+        $I->see($budget->name);
     }
 
     /**
@@ -65,11 +52,14 @@ class BudgetControllerCest
      */
     public function destroy(FunctionalTester $I)
     {
+        $budget = Budget::where('name', 'Delete me')->first();
         $I->wantTo('destroy a budget');
-        $I->amOnPage('/budgets/delete/3');
-        $I->see('Delete budget "Delete me"');
+        $I->amOnPage('/budgets/delete/' . $budget->id);
+        $I->see('Delete budget');
+        $I->see($budget->name);
         $I->submitForm('#destroy', []);
-        $I->see('Budget &quot;Delete me&quot; was deleted.');
+        $I->see(' was deleted.');
+        $I->see($budget->name);
     }
 
     /**
@@ -77,9 +67,11 @@ class BudgetControllerCest
      */
     public function edit(FunctionalTester $I)
     {
+        $budget = Budget::where('name', 'Delete me')->first();
         $I->wantTo('edit a budget');
-        $I->amOnPage('/budgets/edit/3');
-        $I->see('Edit budget "Delete me"');
+        $I->amOnPage('/budgets/edit/' . $budget->id);
+        $I->see('Edit budget');
+        $I->see($budget->name);
     }
 
     /**
@@ -87,11 +79,13 @@ class BudgetControllerCest
      */
     public function failUpdate(FunctionalTester $I)
     {
+        $budget = Budget::where('name', 'Delete me')->first();
         $I->wantTo('update a budget and fail');
-        $I->amOnPage('/budgets/edit/3');
-        $I->see('Edit budget "Delete me"');
+        $I->amOnPage('/budgets/edit/' . $budget->id);
+        $I->see('Edit budget');
+        $I->see($budget->name);
         $I->submitForm('#update', ['name' => '', 'post_submit_action' => 'update']);
-        $I->seeRecord('budgets', ['name' => 'Delete me']);
+        $I->seeRecord('budgets', ['name' => $budget->name]);
 
     }
 
@@ -187,13 +181,19 @@ class BudgetControllerCest
     /**
      * @param FunctionalTester $I
      */
-    public function storeValidateOnly(FunctionalTester $I)
+    public function testAmount(FunctionalTester $I)
     {
-        $I->amOnPage('/budgets/create');
-        $I->wantTo('validate a new budget');
-        $I->see('Create a new budget');
-        $I->submitForm('#store', ['name' => 'New budget.', 'post_submit_action' => 'validate_only']);
-        $I->dontSeeRecord('budgets', ['name' => 'New budget.']);
+        $I->wantTo('update the amount for a budget and limit repetition');
+        $I->amOnPage('/budgets');
+
+        ///budgets/income
+
+
+        $I->sendAjaxPostRequest('/budgets/amount/1', ['amount' => 100]);
+        $I->canSeeResponseCodeIs(200);
+        $I->see('Groceries');
+        $I->seeInDatabase('budgets', ['id' => 1]);
+        #$I->seeInDatabase('budget_limits', ['budget_id' => 1, 'amount' => 100.00]);
     }
 
     /**

@@ -2,6 +2,9 @@
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\LimitRepetition;
+
+
 // models
 Route::bind(
     'account',
@@ -43,6 +46,19 @@ Route::bind(
 }
 );
 
+Route::bind(
+    'limitrepetition', function ($value, $route) {
+    if (Auth::check()) {
+        return LimitRepetition::where('limit_repetitions.id', $value)
+                              ->leftjoin('budget_limits', 'budget_limits.id', '=', 'limit_repetitions.budget_limit_id')
+                              ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+                              ->where('budgets.user_id', Auth::user()->id)
+                              ->first(['limit_repetitions.*']);
+    }
+
+    return null;
+}
+);
 
 /**
  * Home Controller
@@ -120,6 +136,9 @@ Route::group(
     Route::get('/chart/home/categories', ['uses' => 'GoogleChartController@allCategoriesHomeChart']);
     Route::get('/chart/home/bills', ['uses' => 'GoogleChartController@billsOverview']);
     Route::get('/chart/account/{account}/{view?}', ['uses' => 'GoogleChartController@accountBalanceChart']);
+
+    Route::get('/chart/budget/{budget}/spending/{year?}', ['uses' => 'GoogleChartController@budgetsAndSpending']);
+    Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'GoogleChartController@budgetLimitSpending']);
     //Route::get('/chart/reports/income-expenses/{year}', ['uses' => 'GoogleChartController@yearInExp']);
     //Route::get('/chart/reports/income-expenses-sum/{year}', ['uses' => 'GoogleChartController@yearInExpSum']);
     //Route::get('/chart/bills/{bill}', ['uses' => 'GoogleChartController@billOverview']);

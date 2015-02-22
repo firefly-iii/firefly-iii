@@ -15,6 +15,33 @@ class Navigation
 
 
     /**
+     * @param Carbon         $date
+     * @param                $repeatFrequency
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    public function periodShow(Carbon $date, $repeatFrequency)
+    {
+        $formatMap = [
+            'daily'   => 'j F Y',
+            'week'    => '\W\e\e\k W, Y',
+            'weekly'  => '\W\e\e\k W, Y',
+            'quarter' => 'F Y',
+            'month'   => 'F Y',
+            'monthly' => 'F Y',
+            'year'    => 'Y',
+            'yearly'  => 'Y',
+
+        ];
+        if (isset($formatMap[$repeatFrequency])) {
+            return $date->format($formatMap[$repeatFrequency]);
+        }
+        throw new FireflyException('No date formats for frequency "' . $repeatFrequency . '"!');
+    }
+
+
+    /**
      * @param        $range
      * @param Carbon $date
      *

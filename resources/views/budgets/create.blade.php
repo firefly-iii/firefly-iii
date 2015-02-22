@@ -1,7 +1,7 @@
 @extends('layouts.default')
 @section('content')
 {!! Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName()) !!}
-{{Form::open(['class' => 'form-horizontal','id' => 'store','url' => route('budgets.store')])}}
+{!! Form::open(['class' => 'form-horizontal','id' => 'store','url' => route('budgets.store')]) !!}
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-12">
         <div class="panel panel-primary">
@@ -9,7 +9,7 @@
                 <i class="fa fa-exclamation"></i> Mandatory fields
             </div>
             <div class="panel-body">
-                {{Form::ffText('name')}}
+                {!! ExpandedForm::text('name') !!}
             </div>
         </div>
         <p>
@@ -26,7 +26,7 @@
                     <i class="fa fa-bolt"></i> Options
                 </div>
                 <div class="panel-body">
-                    {{Form::ffOptionsList('create','budget')}}
+                    {!! ExpandedForm::optionsList('create','budget') !!}
                 </div>
             </div>
 
@@ -36,7 +36,7 @@
 
 
 
-{{Form::close()}}
+{!! Form::close() !!}
 
 
 @stop
