@@ -1,5 +1,5 @@
-@if(is_object($journals) && method_exists($journals, 'links'))
-{{$journals->links()}}
+@if(is_object($journals) && method_exists($journals, 'render'))
+{!! $journals->render() !!}
 @endif
 <table class="table table-striped table-bordered">
     <tr>
@@ -115,6 +115,6 @@
     @endforeach
 </table>
 
-@if(is_object($journals) && method_exists($journals, 'links'))
-{{$journals->links()}}
+@if(is_object($journals) && method_exists($journals, 'render'))
+{!! $journals->render() !!}
 @endif

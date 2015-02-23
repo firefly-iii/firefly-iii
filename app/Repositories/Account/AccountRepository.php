@@ -46,7 +46,6 @@ class AccountRepository implements AccountRepositoryInterface
     public function getJournals(Account $account, $page, $range = 'session')
     {
         $offset = $page * 50;
-        $items  = [];
         $query  = Auth::user()
                       ->transactionJournals()
                       ->withRelevantData()
@@ -58,14 +57,9 @@ class AccountRepository implements AccountRepositoryInterface
             $query->before(Session::get('end', Carbon::now()->startOfMonth()));
             $query->after(Session::get('start', Carbon::now()->startOfMonth()));
         }
-        $count = $query->count();
-        $set   = $query->take(50)->offset($offset)->get(['transaction_journals.*']);
-
-        foreach ($set as $entry) {
-            $items[] = $entry;
-        }
-
-        $paginator = new LengthAwarePaginator($items, $count, 50, $page);
+        $count     = $query->count();
+        $set       = $query->take(50)->offset($offset)->get(['transaction_journals.*']);
+        $paginator = new LengthAwarePaginator($set, $count, 50, $page);
 
         return $paginator;
 

@@ -54,12 +54,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         $set   = $setQuery->get(['transaction_journals.*']);
         $count = $countQuery->count();
-        $items = [];
-        foreach ($set as $entry) {
-            $items[] = $entry;
-        }
-
-        return new LengthAwarePaginator($items, $count, $take, $offset);
+        return new LengthAwarePaginator($set, $count, $take, $offset);
     }
 
     /**
