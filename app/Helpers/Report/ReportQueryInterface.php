@@ -1,14 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 22/02/15
- * Time: 18:30
- */
 
 namespace FireflyIII\Helpers\Report;
 
 use Carbon\Carbon;
+use FireflyIII\Models\Account;
 use Illuminate\Support\Collection;
 
 /**
@@ -25,6 +20,16 @@ interface ReportQueryInterface
      * @return Collection
      */
     public function accountList();
+
+    /**
+     * Get a users accounts combined with various meta-data related to the start and end date.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getAllAccounts(Carbon $start, Carbon $end);
 
     /**
      * This method returns all "income" journals in a certain period, which are both transfers from a shared account
@@ -103,4 +108,27 @@ interface ReportQueryInterface
      * @return Collection
      */
     public function sharedExpensesByCategory(Carbon $start, Carbon $end);
+
+    /**
+     * Grabs a summary of all expenses grouped by budget, related to the account.
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return mixed
+     */
+    public function getBudgetSummary(Account $account, Carbon $start, Carbon $end);
+
+    /**
+     * This method will get a list of all expenses in a certain time period that have no budget
+     * and are balanced by a transfer to make up for it.
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return Collection
+     */
+    public function balancedTransactionsList(Account $account, Carbon $start, Carbon $end);
 }

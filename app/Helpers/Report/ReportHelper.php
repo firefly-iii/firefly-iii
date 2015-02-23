@@ -62,14 +62,13 @@ class ReportHelper implements ReportHelperInterface
         $end = clone $date;
         $end->endOfMonth();
         // all budgets
-        $set                   = \Auth::user()->budgets()
-                                      ->leftJoin(
-                                          'budget_limits', function (JoinClause $join) use ($date) {
-                                          $join->on('budget_limits.budget_id', '=', 'budgets.id')->where('budget_limits.startdate', '=', $date->format('Y-m-d'));
-                                      }
-                                      )
-                                      ->get(['budgets.*', 'budget_limits.amount as amount']);
-
+        $set = \Auth::user()->budgets()
+                    ->leftJoin(
+                        'budget_limits', function (JoinClause $join) use ($date) {
+                        $join->on('budget_limits.budget_id', '=', 'budgets.id')->where('budget_limits.startdate', '=', $date->format('Y-m-d'));
+                    }
+                    )
+                    ->get(['budgets.*', 'budget_limits.amount as amount']);
 
 
         $budgets               = $this->_helper->makeArray($set);

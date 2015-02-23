@@ -58,6 +58,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         foreach ($set as $entry) {
             $items[] = $entry;
         }
+
         return new LengthAwarePaginator($items, $count, $take, $offset);
     }
 

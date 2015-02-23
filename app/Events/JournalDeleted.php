@@ -1,21 +1,20 @@
 <?php namespace FireflyIII\Events;
 
-use FireflyIII\Events\Event;
-
 use Illuminate\Queue\SerializesModels;
 
-class JournalDeleted extends Event {
+class JournalDeleted extends Event
+{
 
-	use SerializesModels;
+    use SerializesModels;
 
-	/**
-	 * Create a new event instance.
-	 *
-	 * @return void
-	 */
-	public function __construct()
-	{
-		//
-	}
+    /**
+     * Create a new event instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
 
 }

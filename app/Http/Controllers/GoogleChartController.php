@@ -492,7 +492,7 @@ class GoogleChartController extends Controller
         } catch (Exception $e) {
             return view('error')->with('message', 'Invalid year.');
         }
-        $budgets          = Auth::user()->budgets()->get();
+        $budgets = Auth::user()->budgets()->get();
         $budgets->sortBy('name');
         $chart->addColumn('Month', 'date');
         foreach ($budgets as $budget) {

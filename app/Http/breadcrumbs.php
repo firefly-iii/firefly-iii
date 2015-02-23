@@ -3,9 +3,10 @@ use Carbon\Carbon;
 use DaveJamesMiller\Breadcrumbs\Generator;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Category;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\Category;
 use FireflyIII\Models\LimitRepetition;
+
 /*
  * Back home.
  */
@@ -345,7 +346,7 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'transactions.create', function (Generator $breadcrumbs, $what) {
     $breadcrumbs->parent('transactions.index', $what);
-    $breadcrumbs->push('Create new ' .e($what), route('transactions.create', $what));
+    $breadcrumbs->push('Create new ' . e($what), route('transactions.create', $what));
 }
 );
 

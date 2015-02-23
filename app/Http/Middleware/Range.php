@@ -5,7 +5,6 @@ namespace FireflyIII\Http\Middleware;
 
 use Carbon\Carbon;
 use Closure;
-use FireflyIII\Exception\FireflyException;
 use Illuminate\Contracts\Auth\Guard;
 use Navigation;
 use Preferences;

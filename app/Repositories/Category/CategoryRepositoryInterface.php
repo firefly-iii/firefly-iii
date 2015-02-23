@@ -1,7 +1,9 @@
 <?php
 
 namespace FireflyIII\Repositories\Category;
+
 use FireflyIII\Models\Category;
+
 /**
  * Interface CategoryRepositoryInterface
  *
@@ -25,7 +27,7 @@ interface CategoryRepositoryInterface
 
     /**
      * @param Category $category
-     * @param array   $data
+     * @param array    $data
      *
      * @return Category
      */

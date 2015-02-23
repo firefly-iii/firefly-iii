@@ -33,11 +33,11 @@ interface ReportHelperInterface
      */
     public function listOfYears(Carbon $date);
 
-        /**
-         * @param Carbon $date
-         *
-         * @return array
-         */
+    /**
+     * @param Carbon $date
+     *
+     * @return array
+     */
     public function yearBalanceReport(Carbon $date);
 
     /**

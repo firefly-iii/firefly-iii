@@ -11,10 +11,12 @@ namespace FireflyIII\Helpers\Report;
 use Auth;
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Steam;
 
 /**
  * Class ReportQuery
@@ -31,22 +33,141 @@ class ReportQuery implements ReportQueryInterface
      */
     public function accountList()
     {
-        return \Auth::user()->accounts()
-                    ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                    ->leftJoin(
-                        'account_meta', function (JoinClause $join) {
-                        $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', "accountRole");
-                    }
-                    )
-                    ->whereIn('account_types.type', ['Default account', 'Cash account', 'Asset account'])
-                    ->where('active', 1)
-                    ->where(
-                        function (Builder $query) {
-                            $query->where('account_meta.data', '!=', '"sharedExpense"');
-                            $query->orWhereNull('account_meta.data');
-                        }
-                    )
-                    ->get(['accounts.*']);
+        return Auth::user()->accounts()
+                   ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                   ->leftJoin(
+                       'account_meta', function (JoinClause $join) {
+                       $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', "accountRole");
+                   }
+                   )
+                   ->whereIn('account_types.type', ['Default account', 'Cash account', 'Asset account'])
+                   ->where('active', 1)
+                   ->where(
+                       function (Builder $query) {
+                           $query->where('account_meta.data', '!=', '"sharedExpense"');
+                           $query->orWhereNull('account_meta.data');
+                       }
+                   )
+                   ->get(['accounts.*']);
+    }
+
+    /**
+     * This method will get a list of all expenses in a certain time period that have no budget
+     * and are balanced by a transfer to make up for it.
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return Collection
+     */
+    public function balancedTransactionsList(Account $account, Carbon $start, Carbon $end)
+    {
+
+        $set = TransactionJournal::
+        leftJoin('transaction_group_transaction_journal', 'transaction_group_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                                 ->leftJoin(
+                                     'transaction_group_transaction_journal as otherFromGroup', function (JoinClause $join) {
+                                     $join->on('otherFromGroup.transaction_group_id', '=', 'transaction_group_transaction_journal.transaction_group_id')
+                                          ->on('otherFromGroup.transaction_journal_id', '!=', 'transaction_journals.id');
+                                 }
+                                 )
+                                 ->leftJoin('transaction_journals as otherJournals', 'otherJournals.id', '=', 'otherFromGroup.transaction_journal_id')
+                                 ->leftJoin('transaction_types', 'transaction_types.id', '=', 'otherJournals.transaction_type_id')
+                                 ->leftJoin(
+                                     'transactions', function (JoinClause $join) {
+                                     $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('amount', '>', 0);
+                                 }
+                                 )
+                                 ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'otherJournals.id')
+                                 ->before($end)->after($start)
+                                 ->where('transaction_types.type', 'Withdrawal')
+                                 ->where('transaction_journals.user_id', \Auth::user()->id)
+                                 ->whereNull('budget_transaction_journal.budget_id')->whereNull('transaction_journals.deleted_at')
+                                 ->whereNull('otherJournals.deleted_at')
+                                 ->where('transactions.account_id', $account->id)
+                                 ->whereNotNull('transaction_group_transaction_journal.transaction_group_id')->groupBy('transaction_journals.id')
+                                 ->first(
+                                     [
+                                         DB::Raw('SUM(`transactions`.`amount`) as `amount`')
+                                     ]
+                                 );
+        $sum = 0;
+        if (!is_null($set)) {
+            $sum = floatval($set->amount);
+        }
+
+        return $sum;
+    }
+
+    /**
+     * Get a users accounts combined with various meta-data related to the start and end date.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getAllAccounts(Carbon $start, Carbon $end)
+    {
+        $set = Auth::user()->accounts()
+                   ->accountTypeIn(['Default account', 'Asset account', 'Cash account'])
+                   ->leftJoin(
+                       'account_meta', function (JoinClause $join) {
+                       $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
+                   }
+                   )
+                   ->where(
+                       function (Builder $query) {
+                           $query->where('account_meta.data', '!=', '"sharedExpense"');
+                           $query->orWhereNull('account_meta.data');
+                       }
+                   )
+                   ->get(['accounts.*']);
+        $set->each(
+            function (Account $account) use ($start, $end) {
+                /** @noinspection PhpParamsInspection */
+                $account->startBalance = Steam::balance($account, $start);
+                $account->endBalance   = Steam::balance($account, $end);
+            }
+        );
+
+        return $set;
+    }
+
+    /**
+     * Grabs a summary of all expenses grouped by budget, related to the account.
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return mixed
+     */
+    public function getBudgetSummary(Account $account, Carbon $start, Carbon $end)
+    {
+        $set = TransactionJournal::
+        leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
+                                 ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                 ->leftJoin(
+                                     'transactions', function (JoinClause $join) {
+                                     $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
+                                 }
+                                 )
+                                 ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                                 ->before($end)
+                                 ->after($start)
+                                 ->where('accounts.id', $account->id)
+                                 ->where('transaction_journals.user_id', Auth::user()->id)
+                                 ->where('transaction_types.type', 'Withdrawal')
+                                 ->groupBy('budgets.id')
+                                 ->orderBy('budgets.id')
+                                 ->get(['budgets.id', 'budgets.name', DB::Raw('SUM(`transactions`.`amount`) as `amount`')]);
+
+        return $set;
+
+
     }
 
     /**
@@ -124,28 +245,28 @@ class ReportQuery implements ReportQueryInterface
      */
     public function journalsByBudget(Carbon $start, Carbon $end)
     {
-        return \Auth::user()->transactionjournals()
-                    ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                    ->leftJoin('budgets', 'budget_transaction_journal.budget_id', '=', 'budgets.id')
-                    ->leftJoin(
-                        'transactions', function (JoinClause $join) {
-                        $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
-                    }
-                    )
-                    ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                    ->leftJoin(
-                        'account_meta', function (JoinClause $join) {
-                        $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
-                    }
-                    )
-                    ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
-                    ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                    ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                    ->where('account_meta.data', '!=', '"sharedExpense"')
-                    ->where('transaction_types.type', 'Withdrawal')
-                    ->groupBy('budgets.id')
-                    ->orderBy('budgets.name', 'ASC')
-                    ->get(['budgets.id', 'budgets.name', \DB::Raw('SUM(`transactions`.`amount`) AS `spent`')]);
+        return Auth::user()->transactionjournals()
+                   ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                   ->leftJoin('budgets', 'budget_transaction_journal.budget_id', '=', 'budgets.id')
+                   ->leftJoin(
+                       'transactions', function (JoinClause $join) {
+                       $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
+                   }
+                   )
+                   ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                   ->leftJoin(
+                       'account_meta', function (JoinClause $join) {
+                       $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
+                   }
+                   )
+                   ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
+                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                   ->where('account_meta.data', '!=', '"sharedExpense"')
+                   ->where('transaction_types.type', 'Withdrawal')
+                   ->groupBy('budgets.id')
+                   ->orderBy('budgets.name', 'ASC')
+                   ->get(['budgets.id', 'budgets.name', DB::Raw('SUM(`transactions`.`amount`) AS `spent`')]);
     }
 
     /**
@@ -159,30 +280,30 @@ class ReportQuery implements ReportQueryInterface
      */
     public function journalsByCategory(Carbon $start, Carbon $end)
     {
-        return \Auth::user()->transactionjournals()
-                    ->leftJoin(
-                        'category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
-                    )
-                    ->leftJoin('categories', 'category_transaction_journal.category_id', '=', 'categories.id')
-                    ->leftJoin(
-                        'transactions', function (JoinClause $join) {
-                        $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
-                    }
-                    )
-                    ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                    ->leftJoin(
-                        'account_meta', function (JoinClause $join) {
-                        $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
-                    }
-                    )
-                    ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
-                    ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                    ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                    ->where('account_meta.data', '!=', '"sharedExpense"')
-                    ->where('transaction_types.type', 'Withdrawal')
-                    ->groupBy('categories.id')
-                    ->orderBy('amount')
-                    ->get(['categories.id', 'categories.name', \DB::Raw('SUM(`transactions`.`amount`) AS `amount`')]);
+        return Auth::user()->transactionjournals()
+                   ->leftJoin(
+                       'category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
+                   )
+                   ->leftJoin('categories', 'category_transaction_journal.category_id', '=', 'categories.id')
+                   ->leftJoin(
+                       'transactions', function (JoinClause $join) {
+                       $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
+                   }
+                   )
+                   ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                   ->leftJoin(
+                       'account_meta', function (JoinClause $join) {
+                       $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
+                   }
+                   )
+                   ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
+                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+                   ->where('account_meta.data', '!=', '"sharedExpense"')
+                   ->where('transaction_types.type', 'Withdrawal')
+                   ->groupBy('categories.id')
+                   ->orderBy('amount')
+                   ->get(['categories.id', 'categories.name', DB::Raw('SUM(`transactions`.`amount`) AS `amount`')]);
 
     }
 
@@ -333,7 +454,7 @@ class ReportQuery implements ReportQueryInterface
                                  ->after($start)
                                  ->before($end)
                                  ->where('transaction_types.type', 'Transfer')
-                                 ->where('transaction_journals.user_id', \Auth::user()->id)
+                                 ->where('transaction_journals.user_id', Auth::user()->id)
                                  ->get(
                                      ['transaction_journals.id', 'transaction_journals.description', 'transactions.account_id', 'accounts.name',
                                       'transactions.amount']
@@ -375,13 +496,13 @@ class ReportQuery implements ReportQueryInterface
                                  ->after($start)
                                  ->before($end)
                                  ->where('transaction_types.type', 'Transfer')
-                                 ->where('transaction_journals.user_id', \Auth::user()->id)
+                                 ->where('transaction_journals.user_id', Auth::user()->id)
                                  ->groupBy('categories.name')
                                  ->get(
                                      [
                                          'categories.id',
                                          'categories.name as name',
-                                         \DB::Raw('SUM(`transactions`.`amount`) * -1 AS `amount`')
+                                         DB::Raw('SUM(`transactions`.`amount`) * -1 AS `amount`')
                                      ]
                                  );
     }
