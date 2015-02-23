@@ -1,12 +1,12 @@
 <?php
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
-use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\PiggyBankRepetition;
@@ -137,6 +137,14 @@ class TestDataSeeder extends Seeder
         $acc_b = Account::create(['user_id' => $user->id, 'account_type_id' => $assetType->id, 'name' => 'Savings account', 'active' => 1]);
         $acc_c = Account::create(['user_id' => $user->id, 'account_type_id' => $assetType->id, 'name' => 'Delete me', 'active' => 1]);
 
+        // create account meta:
+        $meta_a = AccountMeta::create(['account_id' => $acc_a->id, 'name' => 'accountRole', 'data' => 'defaultExpense']);
+        $meta_b = AccountMeta::create(['account_id' => $acc_b->id, 'name' => 'accountRole', 'data' => 'defaultExpense']);
+        $meta_c = AccountMeta::create(['account_id' => $acc_c->id, 'name' => 'accountRole', 'data' => 'defaultExpense']);
+//        var_dump($meta_a->toArray());
+//        var_dump($meta_b->toArray());
+//        var_dump($meta_c->toArray());
+
         $acc_d = Account::create(['user_id' => $user->id, 'account_type_id' => $ibType->id, 'name' => 'Checking account initial balance', 'active' => 0]);
         $acc_e = Account::create(['user_id' => $user->id, 'account_type_id' => $ibType->id, 'name' => 'Savings account initial balance', 'active' => 0]);
         $acc_f = Account::create(['user_id' => $user->id, 'account_type_id' => $ibType->id, 'name' => 'Delete me initial balance', 'active' => 0]);
@@ -215,9 +223,9 @@ class TestDataSeeder extends Seeder
         );
 
         // and because we have no filters, some repetitions:
-//        LimitRepetition::create(['budget_limit_id' => $groceriesLimit->id, 'startdate' => $this->som, 'enddate' => $this->eom, 'amount' => 201]);
-//        LimitRepetition::create(['budget_limit_id' => $billsLimit->id, 'startdate' => $this->som, 'enddate' => $this->eom, 'amount' => 202]);
-//        LimitRepetition::create(['budget_limit_id' => $deleteMeLimit->id, 'startdate' => $this->som, 'enddate' => $this->eom, 'amount' => 203]);
+        //        LimitRepetition::create(['budget_limit_id' => $groceriesLimit->id, 'startdate' => $this->som, 'enddate' => $this->eom, 'amount' => 201]);
+        //        LimitRepetition::create(['budget_limit_id' => $billsLimit->id, 'startdate' => $this->som, 'enddate' => $this->eom, 'amount' => 202]);
+        //        LimitRepetition::create(['budget_limit_id' => $deleteMeLimit->id, 'startdate' => $this->som, 'enddate' => $this->eom, 'amount' => 203]);
     }
 
     /**

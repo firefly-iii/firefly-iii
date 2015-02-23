@@ -149,9 +149,11 @@ Route::group(
     Route::get('/chart/account/{account}/{view?}', ['uses' => 'GoogleChartController@accountBalanceChart']);
 
     Route::get('/chart/budget/{budget}/spending/{year?}', ['uses' => 'GoogleChartController@budgetsAndSpending']);
+    Route::get('/chart/budgets/spending/{year?}', ['uses' => 'GoogleChartController@allBudgetsAndSpending']);
     Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'GoogleChartController@budgetLimitSpending']);
-    //Route::get('/chart/reports/income-expenses/{year}', ['uses' => 'GoogleChartController@yearInExp']);
-    //Route::get('/chart/reports/income-expenses-sum/{year}', ['uses' => 'GoogleChartController@yearInExpSum']);
+
+    Route::get('/chart/reports/income-expenses/{year}', ['uses' => 'GoogleChartController@yearInExp']);
+    Route::get('/chart/reports/income-expenses-sum/{year}', ['uses' => 'GoogleChartController@yearInExpSum']);
     //Route::get('/chart/bills/{bill}', ['uses' => 'GoogleChartController@billOverview']);
 
 
@@ -191,9 +193,9 @@ Route::group(
      * Report Controller
      */
     Route::get('/reports', ['uses' => 'ReportController@index', 'as' => 'reports.index']);
-    //Route::get('/reports/{year}', ['uses' => 'ReportController@year', 'as' => 'reports.year']);
-    //Route::get('/reports/{year}/{month}', ['uses' => 'ReportController@month', 'as' => 'reports.month']);
-    //Route::get('/reports/budget/{year}/{month}', ['uses' => 'ReportController@budget', 'as' => 'reports.budget']);
+    Route::get('/reports/{year}', ['uses' => 'ReportController@year', 'as' => 'reports.year']);
+    Route::get('/reports/{year}/{month}', ['uses' => 'ReportController@month', 'as' => 'reports.month']);
+    Route::get('/reports/budget/{year}/{month}', ['uses' => 'ReportController@budget', 'as' => 'reports.budget']);
 
     /**
      * Search Controller
