@@ -29,6 +29,82 @@ class ReportController extends Controller
 
     }
 
+    /**
+     * @param string $year
+     * @param string $month
+     *
+     * @return \Illuminate\View\View
+     */
+    public function budget($year = '2014', $month = '1', ReportQueryInterface $query)
+    {
+        try {
+            new Carbon($year . '-' . $month . '-01');
+        } catch (Exception $e) {
+            return view('error')->with('message', 'Invalid date');
+        }
+        $date  = new Carbon($year . '-' . $month . '-01');
+        $start = clone $date;
+        $start->startOfMonth();
+        $end = clone $date;
+        $end->endOfMonth();
+        $start->subDay();
+
+        $dayEarly     = clone $date;
+        $subTitle     = 'Budget report for ' . $date->format('F Y');
+        $subTitleIcon = 'fa-calendar';
+        $dayEarly     = $dayEarly->subDay();
+        $accounts     = $query->getAllAccounts($start, $end);
+
+        $accounts->each(
+            function (Account $account) use ($start, $end, $query) {
+                $budgets        = $query->getBudgetSummary($account, $start, $end);
+                $balancedAmount = $query->balancedTransactionsList($account, $start, $end);
+                $array          = [];
+                foreach ($budgets as $budget) {
+                    $id         = intval($budget->id);
+                    $data       = $budget->toArray();
+                    $array[$id] = $data;
+                }
+                $account->budgetInformation = $array;
+                $account->balancedAmount    = $balancedAmount;
+
+            }
+        );
+
+        $start = clone $date;
+        $start->startOfMonth();
+
+        /**
+         * Start getBudgetsForMonth DONE
+         */
+        $set                  = Auth::user()->budgets()
+                                    ->leftJoin(
+                                        'budget_limits', function (JoinClause $join) use ($date) {
+                                        $join->on('budget_limits.budget_id', '=', 'budgets.id')->where('budget_limits.startdate', '=', $date->format('Y-m-d'));
+                                    }
+                                    )
+                                    ->get(['budgets.*', 'budget_limits.amount as amount']);
+        $budgets              = Steam::makeArray($set);
+        $amountSet            = $query->journalsByBudget($start, $end);
+        $amounts              = Steam::makeArray($amountSet);
+        $budgets              = Steam::mergeArrays($budgets, $amounts);
+        $budgets[0]['spent']  = isset($budgets[0]['spent']) ? $budgets[0]['spent'] : 0.0;
+        $budgets[0]['amount'] = isset($budgets[0]['amount']) ? $budgets[0]['amount'] : 0.0;
+        $budgets[0]['name']   = 'No budget';
+
+        // find transactions to shared expense accounts, which are without a budget by default:
+        $transfers = $query->sharedExpenses($start, $end);
+        foreach ($transfers as $transfer) {
+            $budgets[0]['spent'] += floatval($transfer->amount) * -1;
+        }
+
+        /**
+         * End getBudgetsForMonth DONE
+         */
+
+        return View::make('reports.budget', compact('subTitle', 'subTitleIcon', 'date', 'accounts', 'budgets', 'dayEarly'));
+
+    }
 
     /**
      * @param ReportHelperInterface $helper
@@ -57,7 +133,7 @@ class ReportController extends Controller
         try {
             new Carbon($year . '-' . $month . '-01');
         } catch (Exception $e) {
-            return View::make('error')->with('message', 'Invalid date.');
+            return view('error')->with('message', 'Invalid date.');
         }
         $date         = new Carbon($year . '-' . $month . '-01');
         $subTitle     = 'Report for ' . $date->format('F Y');

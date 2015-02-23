@@ -10,7 +10,8 @@ use Illuminate\Support\ServiceProvider;
  *
  * @package FireflyIII\Providers
  */
-class TestingServiceProvider extends ServiceProvider {
+class TestingServiceProvider extends ServiceProvider
+{
 
     /**
      * Register the service provider.
@@ -19,8 +20,7 @@ class TestingServiceProvider extends ServiceProvider {
      */
     public function register()
     {
-        if ($this->app->environment() == 'testing')
-        {
+        if ($this->app->environment() == 'testing') {
             $this->app['config']['session.driver'] = 'native';
         }
     }

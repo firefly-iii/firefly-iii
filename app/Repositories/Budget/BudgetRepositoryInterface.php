@@ -1,9 +1,11 @@
 <?php
 
 namespace FireflyIII\Repositories\Budget;
+
+use Carbon\Carbon;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
-use Carbon\Carbon;
+
 /**
  * Interface BudgetRepositoryInterface
  *
@@ -44,7 +46,7 @@ interface BudgetRepositoryInterface
 
     /**
      * @param Budget $budget
-     * @param array   $data
+     * @param array  $data
      *
      * @return Budget
      */
@@ -55,7 +57,7 @@ interface BudgetRepositoryInterface
      *
      * @param Budget          $budget
      * @param LimitRepetition $repetition
-     * @param int              $take
+     * @param int             $take
      *
      * @return \Illuminate\Pagination\Paginator
      */
