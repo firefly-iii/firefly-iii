@@ -4,12 +4,15 @@ use App;
 use Auth;
 use Carbon\Carbon;
 use Crypt;
+use Exception;
+use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Http\Requests;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Grumpydictator\Gchart\GChart;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Query\JoinClause;
@@ -367,6 +370,153 @@ class GoogleChartController extends Controller
 
         return Response::json($chart->getData());
 
+
+    }
+
+    /**
+     *
+     * @param $year
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function yearInExp($year, GChart $chart, ReportQueryInterface $query)
+    {
+        try {
+            $start = new Carbon('01-01-' . $year);
+        } catch (Exception $e) {
+            return view('error')->with('message', 'Invalid year.');
+        }
+        $chart->addColumn('Month', 'date');
+        $chart->addColumn('Income', 'number');
+        $chart->addColumn('Expenses', 'number');
+
+        // get report query interface.
+
+        $end = clone $start;
+        $end->endOfYear();
+        while ($start < $end) {
+            $currentEnd = clone $start;
+            $currentEnd->endOfMonth();
+            // total income:
+            $income    = $query->incomeByPeriod($start, $currentEnd);
+            $incomeSum = 0;
+            foreach ($income as $entry) {
+                $incomeSum += floatval($entry->amount);
+            }
+
+            // total expenses:
+            $expense    = $query->journalsByExpenseAccount($start, $currentEnd);
+            $expenseSum = 0;
+            foreach ($expense as $entry) {
+                $expenseSum += floatval($entry->amount);
+            }
+
+            $chart->addRow(clone $start, $incomeSum, $expenseSum);
+            $start->addMonth();
+        }
+
+
+        $chart->generate();
+
+        return Response::json($chart->getData());
+
+    }
+
+    /**
+     *
+     * @param $year
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function yearInExpSum($year, GChart $chart, ReportQueryInterface $query)
+    {
+        try {
+            $start = new Carbon('01-01-' . $year);
+        } catch (Exception $e) {
+            return view('error')->with('message', 'Invalid year.');
+        }
+        $chart->addColumn('Summary', 'string');
+        $chart->addColumn('Income', 'number');
+        $chart->addColumn('Expenses', 'number');
+
+        $income  = 0;
+        $expense = 0;
+        $count   = 0;
+
+        $end = clone $start;
+        $end->endOfYear();
+        while ($start < $end) {
+            $currentEnd = clone $start;
+            $currentEnd->endOfMonth();
+            // total income:
+            $incomeResult = $query->incomeByPeriod($start, $currentEnd);
+            $incomeSum    = 0;
+            foreach ($incomeResult as $entry) {
+                $incomeSum += floatval($entry->amount);
+            }
+
+            // total expenses:
+            $expenseResult = $query->journalsByExpenseAccount($start, $currentEnd);
+            $expenseSum    = 0;
+            foreach ($expenseResult as $entry) {
+                $expenseSum += floatval($entry->amount);
+            }
+
+            $income += $incomeSum;
+            $expense += $expenseSum;
+            $count++;
+            $start->addMonth();
+        }
+
+
+        $chart->addRow('Sum', $income, $expense);
+        $count = $count > 0 ? $count : 1;
+        $chart->addRow('Average', ($income / $count), ($expense / $count));
+
+        $chart->generate();
+
+        return Response::json($chart->getData());
+
+    }
+
+
+    /**
+     * @param int $year
+     *
+     * @return $this|\Illuminate\Http\JsonResponse
+     */
+    public function allBudgetsAndSpending($year, GChart $chart, BudgetRepositoryInterface $repository)
+    {
+        try {
+            new Carbon('01-01-' . $year);
+        } catch (Exception $e) {
+            return view('error')->with('message', 'Invalid year.');
+        }
+        $budgets          = Auth::user()->budgets()->get();
+        $budgets->sortBy('name');
+        $chart->addColumn('Month', 'date');
+        foreach ($budgets as $budget) {
+            $chart->addColumn($budget->name, 'number');
+        }
+        $start = Carbon::createFromDate(intval($year), 1, 1);
+        $end   = clone $start;
+        $end->endOfYear();
+
+
+        while ($start <= $end) {
+            $row = [clone $start];
+            foreach ($budgets as $budget) {
+                $spent = $repository->spentInMonth($budget, $start);
+                $row[] = $spent;
+            }
+            $chart->addRowArray($row);
+            $start->addMonth();
+        }
+
+
+        $chart->generate();
+
+        return Response::json($chart->getData());
 
     }
 
