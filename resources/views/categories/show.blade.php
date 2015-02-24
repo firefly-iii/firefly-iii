@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $category) }}
+{!! Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $category) !!}
 <div class="row">
     <div class="col-lg-9 col-md-9 col-sm-7">
         <div class="panel panel-default">
@@ -22,7 +22,7 @@
         </div>
     </div>
     <div class="col-lg-3 col-md-3 col-sm-5">
-        BLa bla something here.
+        (TODO)
     </div>
 </div>
 
@@ -35,8 +35,8 @@
 </script>
 <!-- load the libraries and scripts necessary for Google Charts: -->
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-{{HTML::script('assets/javascript/firefly/gcharts.options.js')}}
-{{HTML::script('assets/javascript/firefly/gcharts.js')}}
-{{HTML::script('assets/javascript/firefly/categories.js')}}
+<script type="text/javascript" src="js/gcharts.options.js"></script>
+<script type="text/javascript" src="js/gcharts.js"></script>
+<script type="text/javascript" src="js/categories.js"></script>
 
 @stop

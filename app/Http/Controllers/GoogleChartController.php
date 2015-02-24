@@ -12,6 +12,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Grumpydictator\Gchart\GChart;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -28,6 +29,49 @@ use Steam;
  */
 class GoogleChartController extends Controller
 {
+
+
+    /**
+     *
+     * @param Category  $category
+     * @param           $year
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function categoriesAndSpending(Category $category, $year, GChart $chart)
+    {
+        try {
+            new Carbon('01-01-' . $year);
+        } catch (Exception $e) {
+            return view('error')->with('message', 'Invalid year.');
+        }
+
+        $chart->addColumn('Month', 'date');
+        $chart->addColumn('Budgeted', 'number');
+        $chart->addColumn('Spent', 'number');
+
+        $start = new Carbon('01-01-' . $year);
+        $end   = clone $start;
+        $end->endOfYear();
+        while ($start <= $end) {
+
+            $currentEnd = clone $start;
+            $currentEnd->endOfMonth();
+            $spent = floatval($category->transactionjournals()->before($end)->after($start)->lessThan(0)->sum('amount')) * -1;
+            $budgeted = null;
+
+            $chart->addRow(clone $start, $budgeted, $spent);
+
+            $start->addMonth();
+        }
+
+
+        $chart->generate();
+
+        return Response::json($chart->getData());
+
+
+    }
 
 
     /**

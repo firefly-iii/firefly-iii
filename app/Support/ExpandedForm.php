@@ -218,7 +218,6 @@ class ExpandedForm
             $selectList[$id] = $title;
         }
 
-
         return $selectList;
     }
 

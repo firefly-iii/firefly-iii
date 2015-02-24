@@ -102,7 +102,7 @@ class ReportController extends Controller
          * End getBudgetsForMonth DONE
          */
 
-        return View::make('reports.budget', compact('subTitle', 'subTitleIcon', 'date', 'accounts', 'budgets', 'dayEarly'));
+        return view('reports.budget', compact('subTitle', 'subTitleIcon', 'date', 'accounts', 'budgets', 'dayEarly'));
 
     }
 
@@ -239,7 +239,7 @@ class ReportController extends Controller
          */
 
 
-        return View::make(
+        return view(
             'reports.month',
             compact(
                 'income', 'expenses', 'budgets', 'accounts', 'categories',
@@ -258,7 +258,7 @@ class ReportController extends Controller
         try {
             new Carbon('01-01-' . $year);
         } catch (Exception $e) {
-            return View::make('error')->with('message', 'Invalid date.');
+            return view('error')->with('message', 'Invalid date.');
         }
         $date = new Carbon('01-01-' . $year);
         $end  = clone $date;
@@ -273,7 +273,7 @@ class ReportController extends Controller
 
         //$groupedExpenses = $helper-> expensesGroupedByAccount($date, $end, 15);
 
-        return View::make(
+        return view(
             'reports.year', compact('date', 'groupedIncomes', 'groupedExpenses', 'year', 'balances', 'title', 'subTitle', 'subTitleIcon', 'mainTitleIcon')
         );
     }

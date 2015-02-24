@@ -12,11 +12,11 @@
                     @endforeach
                 </ul>
             </div>
-            {{Form::input('number', $name, $value, $options)}}
+            {!! Form::input('number', $name, $value, $options) !!}
 
 
         </div>
         @include('form.feedback')
     </div>
-    {{Form::input('hidden','amount_currency_id',$defaultCurrency->id)}}
+    {!! Form::input('hidden','amount_currency_id',$defaultCurrency->id) !!}
 </div>
