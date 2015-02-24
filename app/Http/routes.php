@@ -151,10 +151,16 @@ Route::group(
     Route::get('/chart/budget/{budget}/spending/{year?}', ['uses' => 'GoogleChartController@budgetsAndSpending']);
     Route::get('/chart/budgets/spending/{year?}', ['uses' => 'GoogleChartController@allBudgetsAndSpending']);
     Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'GoogleChartController@budgetLimitSpending']);
+    Route::get('/chart/category/{category}/spending/{year}', ['uses' => 'GoogleChartController@categoriesAndSpending']);
 
     Route::get('/chart/reports/income-expenses/{year}', ['uses' => 'GoogleChartController@yearInExp']);
     Route::get('/chart/reports/income-expenses-sum/{year}', ['uses' => 'GoogleChartController@yearInExpSum']);
     //Route::get('/chart/bills/{bill}', ['uses' => 'GoogleChartController@billOverview']);
+
+    // JSON controller
+    Route::get('/json/expense-accounts', ['uses' => 'JsonController@expenseAccounts', 'as' => 'json.expense-accounts']);
+    Route::get('/json/revenue-accounts', ['uses' => 'JsonController@revenueAccounts', 'as' => 'json.revenue-accounts']);
+    Route::get('/json/categories', ['uses' => 'JsonController@categories', 'as' => 'json.categories']);
 
 
     /**

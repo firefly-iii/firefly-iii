@@ -3,6 +3,7 @@
 {!! Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $what) !!}
 {!! Form::open(['class' => 'form-horizontal','id' => 'store','url' => route('transactions.store',$what)]) !!}
 {!! Form::hidden('reminder',Input::get('reminder_id')) !!}
+{!! Form::hidden('what',$what) !!}
 
 <div class="row">
     <div class="col-lg-6 col-md-12 col-sm-12">
@@ -21,27 +22,27 @@
 
                     <!-- SHOW EXPENSE ACCOUNT ONLY FOR WITHDRAWALS -->
                     @if($what == 'withdrawal')
-                        {{ExpandedForm::text('expense_account')}}
+                        {!! ExpandedForm::text('expense_account') !!}
                     @endif
 
                     <!-- SHOW REVENUE ACCOUNT ONLY FOR DEPOSITS -->
                     @if($what == 'deposit')
-                        {{ExpandedForm::text('revenue_account')}}
+                        {!! ExpandedForm::text('revenue_account') !!}
                     @endif
 
 
                     <!-- ONLY SHOW FROM/TO ACCOUNT WHEN CREATING TRANSFER -->
                     @if($what == 'transfer')
-                        {{ExpandedForm::select('account_from_id',$accounts)}}
-                        {{ExpandedForm::select('account_to_id',$accounts)}}
+                        {!! ExpandedForm::select('account_from_id',$accounts) !!}
+                        {!! ExpandedForm::select('account_to_id',$accounts) !!}
                     @endif
 
 
                     <!-- ALWAYS SHOW AMOUNT -->
-                    {{ExpandedForm::amount('amount')}}
+                    {!! ExpandedForm::amount('amount') !!}
 
                     <!-- ALWAYS SHOW DATE -->
-                    {{ExpandedForm::date('date', date('Y-m-d'))}}
+                    {!! ExpandedForm::date('date', date('Y-m-d')) !!}
                 </div>
         </div>
         <p>
@@ -60,17 +61,17 @@
                     <div class="panel-body">
                         <!-- BUDGET ONLY WHEN CREATING A WITHDRAWAL -->
                         @if($what == 'withdrawal')
-                            {{ExpandedForm::select('budget_id',$budgets,0)}}
+                            {!! ExpandedForm::select('budget_id',$budgets,0) !!}
                         @endif
                         <!-- CATEGORY ALWAYS -->
-                        {{ExpandedForm::text('category')}}
+                        {!! ExpandedForm::text('category') !!}
 
                         <!-- TAGS -->
 
 
                         <!-- RELATE THIS TRANSFER TO A PIGGY BANK -->
                         @if($what == 'transfer' && count($piggies) > 0)
-                            {{ExpandedForm::select('piggy_bank_id',$piggies)}}
+                            {!! ExpandedForm::select('piggy_bank_id',$piggies) !!}
                         @endif
                     </div>
                 </div>
@@ -80,14 +81,14 @@
                         <i class="fa fa-bolt"></i> Options
                     </div>
                     <div class="panel-body">
-                        {{ExpandedForm::optionsList('create','transaction')}}
+                        {!! ExpandedForm::optionsList('create','transaction') !!}
                     </div>
                 </div>
             </div>
         </div>
 
 
-{{Form::close()}}
+{!! Form::close() !!}
 
 @stop
 @section('scripts')

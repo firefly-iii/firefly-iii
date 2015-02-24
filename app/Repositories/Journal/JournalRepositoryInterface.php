@@ -1,13 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 08/02/15
- * Time: 18:15
- */
 
 namespace FireflyIII\Repositories\Journal;
 
+use FireflyIII\Models\TransactionJournal;
 
 /**
  * Interface JournalRepositoryInterface
@@ -16,5 +11,11 @@ namespace FireflyIII\Repositories\Journal;
  */
 interface JournalRepositoryInterface
 {
+    /**
+     * @param array $data
+     *
+     * @return TransactionJournal
+     */
+    public function store(array $data);
 
 }

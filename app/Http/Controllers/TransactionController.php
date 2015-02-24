@@ -1,13 +1,16 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Auth;
+use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Http\Requests;
+use FireflyIII\Http\Requests\JournalFormRequest;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Input;
+use Redirect;
 use Session;
 use View;
-
 
 /**
  * Class TransactionController
@@ -34,7 +37,7 @@ class TransactionController extends Controller
     public function create($what = 'deposit')
     {
         $accounts   = ExpandedForm::makeSelectList(
-            Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->where('active', 1)->orderBy('name', 'DESC')->get()
+            Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->where('active', 1)->orderBy('name', 'DESC')->get(['accounts.*'])
         );
         $budgets    = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
         $budgets[0] = '(no budget)';
@@ -98,7 +101,34 @@ class TransactionController extends Controller
         $journals = new LengthAwarePaginator($set, $count, 50, $page);
         $journals->setPath('transactions/' . $what);
 
-        return View::make('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'journals'));
+        return view('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'journals'));
+
+    }
+
+    public function store(JournalFormRequest $request, JournalRepositoryInterface $repository)
+    {
+
+        $journalData = [
+            'what'               => $request->get('what'),
+            'description'        => $request->get('description'),
+            'account_id'         => intval($request->get('account_id')),
+            'account_from_id'         => intval($request->get('account_from_id')),
+            'account_to_id'         => intval($request->get('account_to_id')),
+            'expense_account'    => $request->get('expense_account'),
+            'revenue_account'    => $request->get('revenue_account'),
+            'amount'             => floatval($request->get('amount')),
+            'user'               => Auth::user()->id,
+            'amount_currency_id' => intval($request->get('amount_currency_id')),
+            'date'               => new Carbon($request->get('date')),
+            'budget_id'          => intval($request->get('budget_id')),
+            'category'           => $request->get('category'),
+        ];
+
+        $journal = $repository->store($journalData);
+
+        Session::flash('success', 'New transaction "' . $journal->description . '" stored!');
+
+        return Redirect::route('transactions.index', $request->input('what'));
 
     }
 

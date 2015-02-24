@@ -64,7 +64,7 @@ class PiggyBankController extends Controller {
             }
         }
 
-        return View::make('piggy-banks.index', compact('piggyBanks', 'accounts'));
+        return view('piggy-banks.index', compact('piggyBanks', 'accounts'));
     }
 
 }

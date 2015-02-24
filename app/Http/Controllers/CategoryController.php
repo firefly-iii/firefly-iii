@@ -5,9 +5,12 @@ use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\CategoryFormRequest;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Redirect;
 use Session;
 use View;
+use Input;
+
 
 /**
  * Class CategoryController
@@ -17,6 +20,9 @@ use View;
 class CategoryController extends Controller
 {
 
+    /**
+     *
+     */
     public function __construct()
     {
         View::share('title', 'Categories');
@@ -29,6 +35,24 @@ class CategoryController extends Controller
     public function create()
     {
         return view('categories.create')->with('subTitle', 'Create a new category');
+    }
+
+    /**
+     * @param Category $category
+     *
+     * @return $this
+     */
+    public function show(Category $category, CategoryRepositoryInterface $repository)
+    {
+        $hideCategory = true; // used in list.
+        $page = intval(Input::get('page'));
+        $offset = $page > 0 ? $page * 50 : 0;
+        $set    = $category->transactionJournals()->withRelevantData()->take(50)->offset($offset)->orderBy('date', 'DESC')->get(['transaction_journals.*']);
+        $count  = $category->transactionJournals()->count();
+
+        $journals = new LengthAwarePaginator($set, $count, 50, $page);
+
+        return view('categories.show', compact('category', 'journals', 'hideCategory'));
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace FireflyIII\Validation;
 
+use Auth;
 use DB;
 use Illuminate\Validation\Validator;
 
@@ -12,6 +13,24 @@ use Illuminate\Validation\Validator;
  */
 class FireflyValidator extends Validator
 {
+
+    /**
+     * @param $attribute
+     * @param $value
+     * @param $parameters
+     *
+     * @return bool
+     */
+    public function validateBelongsToUser($attribute, $value, $parameters)
+    {
+        $count = DB::table($parameters[0])->where('user_id', Auth::user()->id)->where('id', $value)->count();
+        if ($count == 1) {
+            return true;
+        }
+
+        return false;
+
+    }
 
     /**
      * @param $attribute
