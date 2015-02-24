@@ -1,8 +1,11 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Auth;
+use ExpandedForm;
 use FireflyIII\Http\Requests;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Input;
+use Session;
 use View;
 
 
@@ -19,6 +22,39 @@ class TransactionController extends Controller
     {
         View::share('title', 'Transactions');
         View::share('mainTitleIcon', 'fa-repeat');
+    }
+
+    /**
+     * Shows the view helping the user to create a new transaction journal.
+     *
+     * @param string $what
+     *
+     * @return \Illuminate\View\View
+     */
+    public function create($what = 'deposit')
+    {
+        $accounts   = ExpandedForm::makeSelectList(
+            Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->where('active', 1)->orderBy('name', 'DESC')->get()
+        );
+        $budgets    = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
+        $budgets[0] = '(no budget)';
+        $piggies    = ExpandedForm::makeSelectList(Auth::user()->piggyBanks()->get());
+        $piggies[0] = '(no piggy bank)';
+        $preFilled  = Session::has('preFilled') ? Session::get('preFilled') : [];
+        $respondTo  = ['account_id', 'account_from_id'];
+        $subTitle   = 'Add a new ' . e($what);
+
+        foreach ($respondTo as $r) {
+            if (!is_null(Input::get($r))) {
+                $preFilled[$r] = Input::get($r);
+            }
+        }
+        Session::put('preFilled', $preFilled);
+
+        asort($piggies);
+
+
+        return view('transactions.create', compact('accounts', 'budgets', 'what', 'piggies', 'subTitle'));
     }
 
     /**

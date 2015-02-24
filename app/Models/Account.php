@@ -94,4 +94,12 @@ class Account extends Model
         return $this->belongsTo('FireflyIII\User');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function piggyBanks()
+    {
+        return $this->hasMany('FireflyIII\Models\PiggyBank');
+    }
+
 }

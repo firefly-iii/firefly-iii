@@ -6,6 +6,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Models\PiggyBank;
 
 /*
  * Back home.
@@ -141,35 +142,35 @@ Breadcrumbs::register(
 
 // piggy banks
 Breadcrumbs::register(
-    'piggyBanks.index', function (Generator $breadcrumbs) {
+    'piggy-banks.index', function (Generator $breadcrumbs) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push('Piggy banks', route('piggyBanks.index'));
+    $breadcrumbs->push('Piggy banks', route('piggy-banks.index'));
 }
 );
 Breadcrumbs::register(
-    'piggyBanks.create', function (Generator $breadcrumbs) {
-    $breadcrumbs->parent('piggyBanks.index');
-    $breadcrumbs->push('Create new piggy bank', route('piggyBanks.create'));
-}
-);
-
-Breadcrumbs::register(
-    'piggyBanks.edit', function (Generator $breadcrumbs, PiggyBank $piggyBank) {
-    $breadcrumbs->parent('piggyBanks.show', $piggyBank);
-    $breadcrumbs->push('Edit ' . e($piggyBank->name), route('piggyBanks.edit', $piggyBank->id));
-}
-);
-Breadcrumbs::register(
-    'piggyBanks.delete', function (Generator $breadcrumbs, PiggyBank $piggyBank) {
-    $breadcrumbs->parent('piggyBanks.show', $piggyBank);
-    $breadcrumbs->push('Delete ' . e($piggyBank->name), route('piggyBanks.delete', $piggyBank->id));
+    'piggy-banks.create', function (Generator $breadcrumbs) {
+    $breadcrumbs->parent('piggy-banks.index');
+    $breadcrumbs->push('Create new piggy bank', route('piggy-banks.create'));
 }
 );
 
 Breadcrumbs::register(
-    'piggyBanks.show', function (Generator $breadcrumbs, PiggyBank $piggyBank) {
-    $breadcrumbs->parent('piggyBanks.index');
-    $breadcrumbs->push(e($piggyBank->name), route('piggyBanks.show', $piggyBank->id));
+    'piggy-banks.edit', function (Generator $breadcrumbs, PiggyBank $piggyBank) {
+    $breadcrumbs->parent('piggy-banks.show', $piggyBank);
+    $breadcrumbs->push('Edit ' . e($piggyBank->name), route('piggy-banks.edit', $piggyBank->id));
+}
+);
+Breadcrumbs::register(
+    'piggy-banks.delete', function (Generator $breadcrumbs, PiggyBank $piggyBank) {
+    $breadcrumbs->parent('piggy-banks.show', $piggyBank);
+    $breadcrumbs->push('Delete ' . e($piggyBank->name), route('piggy-banks.delete', $piggyBank->id));
+}
+);
+
+Breadcrumbs::register(
+    'piggy-banks.show', function (Generator $breadcrumbs, PiggyBank $piggyBank) {
+    $breadcrumbs->parent('piggy-banks.index');
+    $breadcrumbs->push(e($piggyBank->name), route('piggy-banks.show', $piggyBank->id));
 
 }
 );

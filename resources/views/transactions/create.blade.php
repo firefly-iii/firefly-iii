@@ -1,8 +1,8 @@
 @extends('layouts.default')
 @section('content')
-{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $what) }}
-{{Form::open(['class' => 'form-horizontal','id' => 'store','url' => route('transactions.store',$what)])}}
-{{Form::hidden('reminder',Input::get('reminder_id'))}}
+{!! Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $what) !!}
+{!! Form::open(['class' => 'form-horizontal','id' => 'store','url' => route('transactions.store',$what)]) !!}
+{!! Form::hidden('reminder',Input::get('reminder_id')) !!}
 
 <div class="row">
     <div class="col-lg-6 col-md-12 col-sm-12">
@@ -13,35 +13,35 @@
             </div>
             <div class="panel-body">
                     <!-- DESCRIPTION ALWAYS AVAILABLE -->
-                    {{Form::ffText('description')}}
+                    {!! ExpandedForm::text('description') !!}
                     @if($what == 'deposit' || $what == 'withdrawal')
-                        {{Form::ffSelect('account_id',$accounts)}}
+                        {!! ExpandedForm::select('account_id',$accounts) !!}
                     @endif
 
 
                     <!-- SHOW EXPENSE ACCOUNT ONLY FOR WITHDRAWALS -->
                     @if($what == 'withdrawal')
-                        {{Form::ffText('expense_account')}}
+                        {{ExpandedForm::text('expense_account')}}
                     @endif
 
                     <!-- SHOW REVENUE ACCOUNT ONLY FOR DEPOSITS -->
                     @if($what == 'deposit')
-                        {{Form::ffText('revenue_account')}}
+                        {{ExpandedForm::text('revenue_account')}}
                     @endif
 
 
                     <!-- ONLY SHOW FROM/TO ACCOUNT WHEN CREATING TRANSFER -->
                     @if($what == 'transfer')
-                        {{Form::ffSelect('account_from_id',$accounts)}}
-                        {{Form::ffSelect('account_to_id',$accounts)}}
+                        {{ExpandedForm::select('account_from_id',$accounts)}}
+                        {{ExpandedForm::select('account_to_id',$accounts)}}
                     @endif
 
 
                     <!-- ALWAYS SHOW AMOUNT -->
-                    {{Form::ffAmount('amount')}}
+                    {{ExpandedForm::amount('amount')}}
 
                     <!-- ALWAYS SHOW DATE -->
-                    {{Form::ffDate('date', date('Y-m-d'))}}
+                    {{ExpandedForm::date('date', date('Y-m-d'))}}
                 </div>
         </div>
         <p>
@@ -60,17 +60,17 @@
                     <div class="panel-body">
                         <!-- BUDGET ONLY WHEN CREATING A WITHDRAWAL -->
                         @if($what == 'withdrawal')
-                            {{Form::ffSelect('budget_id',$budgets,0)}}
+                            {{ExpandedForm::select('budget_id',$budgets,0)}}
                         @endif
                         <!-- CATEGORY ALWAYS -->
-                        {{Form::ffText('category')}}
+                        {{ExpandedForm::text('category')}}
 
                         <!-- TAGS -->
 
 
                         <!-- RELATE THIS TRANSFER TO A PIGGY BANK -->
                         @if($what == 'transfer' && count($piggies) > 0)
-                            {{Form::ffSelect('piggy_bank_id',$piggies)}}
+                            {{ExpandedForm::select('piggy_bank_id',$piggies)}}
                         @endif
                     </div>
                 </div>
@@ -80,7 +80,7 @@
                         <i class="fa fa-bolt"></i> Options
                     </div>
                     <div class="panel-body">
-                        {{Form::ffOptionsList('create','transaction')}}
+                        {{ExpandedForm::optionsList('create','transaction')}}
                     </div>
                 </div>
             </div>
@@ -91,6 +91,6 @@
 
 @stop
 @section('scripts')
-{{HTML::script('assets/javascript/typeahead/bootstrap3-typeahead.min.js')}}
-{{HTML::script('assets/javascript/firefly/transactions.js')}}
+<script type="text/javascript" src="js/bootstrap3-typeahead.min.js"></script>
+<script type="text/javascript" src="js/transactions.js"></script>
 @stop

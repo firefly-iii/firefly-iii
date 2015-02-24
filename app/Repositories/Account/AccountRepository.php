@@ -9,6 +9,7 @@ use Config;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -308,5 +309,22 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return $journal;
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return float
+     */
+    public function leftOnAccount(Account $account)
+    {
+        $balance = \Steam::balance($account);
+        /** @var PiggyBank $p */
+        foreach ($account->piggybanks()->get() as $p) {
+            $balance -= $p->currentRelevantRep()->currentamount;
+        }
+
+        return $balance;
+
     }
 }
