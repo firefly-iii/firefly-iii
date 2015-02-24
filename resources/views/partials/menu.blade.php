@@ -137,8 +137,8 @@
 
             </li>
             <?php
-            $isMM = !(strpos($r,'piggy_banks') === false) || !(strpos($r,'bills') === false) |  !(strpos($r,'repeated') === false);
-            $isPiggy = !(strpos($r,'piggy_banks') === false);
+            $isMM = !(strpos($r,'piggy-banks') === false) || !(strpos($r,'bills') === false) |  !(strpos($r,'repeated') === false);
+            $isPiggy = !(strpos($r,'piggy-banks') === false);
             $isBill = !(strpos($r,'bills') === false) && strpos($r,'bills.create') === false;
             $isRep = !(strpos($r,'repeated') === false);
             ?>
@@ -146,7 +146,7 @@
                 <a href="#"><i class="fa fa-euro fa-fw"></i> Money management<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a @if($isPiggy)class="active"@endif href="{{route('piggy_banks.index')}}"><i class="fa fa-sort-amount-asc fa-fw"></i> Piggy banks</a>
+                        <a @if($isPiggy)class="active"@endif href="{{route('piggy-banks.index')}}"><i class="fa fa-sort-amount-asc fa-fw"></i> Piggy banks</a>
                     </li>
                     <li>
                         <a @if($isBill)class="active"@endif href="{{route('bills.index')}}"><i class="fa fa-calendar-o fa-fw"></i> Bills</a>

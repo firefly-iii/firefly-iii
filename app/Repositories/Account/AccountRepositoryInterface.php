@@ -49,4 +49,11 @@ interface AccountRepositoryInterface
      * @return Account
      */
     public function update(Account $account, array $data);
+
+    /**
+     * @param Account $account
+     *
+     * @return float
+     */
+    public function leftOnAccount(Account $account);
 }

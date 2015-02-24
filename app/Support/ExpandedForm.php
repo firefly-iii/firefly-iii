@@ -3,6 +3,7 @@
 namespace FireflyIII\Support;
 
 use FireflyIII\Models\TransactionCurrency;
+use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Input;
 use Session;
@@ -15,7 +16,6 @@ use View;
  */
 class ExpandedForm
 {
-
     /**
      * @param       $name
      * @param null  $value
@@ -23,18 +23,20 @@ class ExpandedForm
      *
      * @return string
      */
-    public function balance($name, $value = null, array $options = [])
+    public function amount($name, $value = null, array $options = [])
     {
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
         $classes         = $this->getHolderClasses($name);
         $value           = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
-        $defaultCurrency = isset($options['currency']) ? $options['currency'] : Amount::getDefaultCurrency();
+        $options['min']  = '0.01';
+        $defaultCurrency = isset($options['currency']) ? $options['currency'] : \Amount::getDefaultCurrency();
         $currencies      = TransactionCurrency::orderBy('code', 'ASC')->get();
-        $html            = View::make('form.balance', compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
+        $html            = View::make('form.amount', compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
+
     }
 
     /**
@@ -126,6 +128,27 @@ class ExpandedForm
 
     /**
      * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     */
+    public function balance($name, $value = null, array $options = [])
+    {
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
+        $options['step'] = 'any';
+        $defaultCurrency = isset($options['currency']) ? $options['currency'] : Amount::getDefaultCurrency();
+        $currencies      = TransactionCurrency::orderBy('code', 'ASC')->get();
+        $html            = View::make('form.balance', compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
+
+        return $html;
+    }
+
+    /**
+     * @param       $name
      * @param int   $value
      * @param null  $checked
      * @param array $options
@@ -163,6 +186,40 @@ class ExpandedForm
         $html    = View::make('form.date', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
+    }
+
+    /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
+     * Takes any collection and tries to make a sensible select list compatible array of it.
+     *
+     * @param Collection $set
+     * @param bool       $addEmpty
+     *
+     * @return mixed
+     */
+    public function makeSelectList(Collection $set, $addEmpty = false)
+    {
+        $selectList = [];
+        if ($addEmpty) {
+            $selectList[0] = '(none)';
+        }
+        $fields = ['title', 'name', 'description'];
+        /** @var \Eloquent $entry */
+        foreach ($set as $entry) {
+            $id    = intval($entry->id);
+            $title = null;
+
+            foreach ($fields as $field) {
+                if (isset($entry->$field)) {
+                    $title = $entry->$field;
+                }
+            }
+            $selectList[$id] = $title;
+        }
+
+
+        return $selectList;
     }
 
     /**

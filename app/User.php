@@ -72,7 +72,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function piggyBanks()
     {
-        return $this->hasManyThrough('FireflyIII\Models\PiggyBank', 'Account');
+        return $this->hasManyThrough('FireflyIII\Models\PiggyBank', 'FireflyIII\Models\Account');
     }
 
     /**

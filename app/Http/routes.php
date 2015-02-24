@@ -161,13 +161,13 @@ Route::group(
      * Piggy Bank Controller
      */
     // piggy bank controller
-    Route::get('/piggy-banks', ['uses' => 'PiggyBankController@index', 'as' => 'piggy_banks.index']);
-    //Route::get('/piggy-banks/add/{piggyBank}', ['uses' => 'PiggyBankController@add']); # add money
-    //Route::get('/piggy-banks/remove/{piggyBank}', ['uses' => 'PiggyBankController@remove']); #remove money
-    //Route::get('/piggy-banks/create', ['uses' => 'PiggyBankController@create', 'as' => 'piggy_banks.create']);
-    //Route::get('/piggy-banks/edit/{piggyBank}', ['uses' => 'PiggyBankController@edit', 'as' => 'piggy_banks.edit']);
-    //Route::get('/piggy-banks/delete/{piggyBank}', ['uses' => 'PiggyBankController@delete', 'as' => 'piggy_banks.delete']);
-    //Route::get('/piggy-banks/show/{piggyBank}', ['uses' => 'PiggyBankController@show', 'as' => 'piggy_banks.show']);
+    Route::get('/piggy-banks', ['uses' => 'PiggyBankController@index', 'as' => 'piggy-banks.index']);
+    Route::get('/piggy-banks/add/{piggyBank}', ['uses' => 'PiggyBankController@add']); # add money
+    Route::get('/piggy-banks/remove/{piggyBank}', ['uses' => 'PiggyBankController@remove']); #remove money
+    Route::get('/piggy-banks/create', ['uses' => 'PiggyBankController@create', 'as' => 'piggy-banks.create']);
+    Route::get('/piggy-banks/edit/{piggyBank}', ['uses' => 'PiggyBankController@edit', 'as' => 'piggy-banks.edit']);
+    Route::get('/piggy-banks/delete/{piggyBank}', ['uses' => 'PiggyBankController@delete', 'as' => 'piggy-banks.delete']);
+    Route::get('/piggy-banks/show/{piggyBank}', ['uses' => 'PiggyBankController@show', 'as' => 'piggy-banks.show']);
 
     /**
      * Preferences Controller
@@ -214,6 +214,12 @@ Route::group(
     Route::get('/transaction/edit/{tj}', ['uses' => 'TransactionController@edit', 'as' => 'transactions.edit']);
     Route::get('/transaction/delete/{tj}', ['uses' => 'TransactionController@delete', 'as' => 'transactions.delete']);
     Route::get('/transaction/show/{tj}', ['uses' => 'TransactionController@show', 'as' => 'transactions.show']);
+    // transaction controller:
+    Route::post('/transactions/store/{what}', ['uses' => 'TransactionController@store', 'as' => 'transactions.store'])->where(
+        ['what' => 'expenses|revenue|withdrawal|deposit|transfer|transfers']
+    );
+    Route::post('/transaction/update/{tj}', ['uses' => 'TransactionController@update', 'as' => 'transactions.update']);
+    Route::post('/transaction/destroy/{tj}', ['uses' => 'TransactionController@destroy', 'as' => 'transactions.destroy']);
     //Route::get('/transaction/relate/{tj}', ['uses' => 'TransactionController@relate', 'as' => 'transactions.relate']);
     //Route::post('/transactions/relatedSearch/{tj}', ['uses' => 'TransactionController@relatedSearch', 'as' => 'transactions.relatedSearch']);
     //Route::post('/transactions/alreadyRelated/{tj}', ['uses' => 'TransactionController@alreadyRelated', 'as' => 'transactions.alreadyRelated']);
