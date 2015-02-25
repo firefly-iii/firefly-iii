@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Model;
 class Bill extends Model
 {
 
+    protected $fillable = ['name', 'match', 'amount_min','user_id', 'amount_max', 'date', 'repeat_freq', 'skip', 'automatch', 'active',];
+
     /**
      * @return array
      */

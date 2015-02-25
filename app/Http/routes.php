@@ -95,11 +95,15 @@ Route::group(
      * Bills Controller
      */
     Route::get('/bills', ['uses' => 'BillController@index', 'as' => 'bills.index']);
-    //Route::get('/bills/rescan/{bill}', ['uses' => 'BillController@rescan', 'as' => 'bills.rescan']); # rescan for matching.
+    Route::get('/bills/rescan/{bill}', ['uses' => 'BillController@rescan', 'as' => 'bills.rescan']); # rescan for matching.
     Route::get('/bills/create', ['uses' => 'BillController@create', 'as' => 'bills.create']);
-    //Route::get('/bills/edit/{bill}', ['uses' => 'BillController@edit', 'as' => 'bills.edit']);
-    //    Route::get('/bills/delete/{bill}', ['uses' => 'BillController@delete', 'as' => 'bills.delete']);
+    Route::get('/bills/edit/{bill}', ['uses' => 'BillController@edit', 'as' => 'bills.edit']);
+    Route::get('/bills/delete/{bill}', ['uses' => 'BillController@delete', 'as' => 'bills.delete']);
     Route::get('/bills/show/{bill}', ['uses' => 'BillController@show', 'as' => 'bills.show']);
+
+    Route::post('/bills/store', ['uses' => 'BillController@store', 'as' => 'bills.store']);
+    Route::post('/bills/update/{bill}', ['uses' => 'BillController@update', 'as' => 'bills.update']);
+    Route::post('/bills/destroy/{bill}', ['uses' => 'BillController@destroy', 'as' => 'bills.destroy']);
 
     /**
      * Budget Controller
@@ -155,7 +159,7 @@ Route::group(
 
     Route::get('/chart/reports/income-expenses/{year}', ['uses' => 'GoogleChartController@yearInExp']);
     Route::get('/chart/reports/income-expenses-sum/{year}', ['uses' => 'GoogleChartController@yearInExpSum']);
-    //Route::get('/chart/bills/{bill}', ['uses' => 'GoogleChartController@billOverview']);
+    Route::get('/chart/bills/{bill}', ['uses' => 'GoogleChartController@billOverview']);
 
     // JSON controller
     Route::get('/json/expense-accounts', ['uses' => 'JsonController@expenseAccounts', 'as' => 'json.expense-accounts']);

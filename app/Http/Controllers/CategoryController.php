@@ -1,6 +1,7 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Auth;
+use Carbon\Carbon;
 use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\CategoryFormRequest;
 use FireflyIII\Models\Category;
@@ -53,6 +54,26 @@ class CategoryController extends Controller
         $journals = new LengthAwarePaginator($set, $count, 50, $page);
 
         return view('categories.show', compact('category', 'journals', 'hideCategory'));
+    }
+
+    /**
+     * @return \Illuminate\View\View
+     */
+    public function noCategory()
+    {
+        $start    = Session::get('start', Carbon::now()->startOfMonth());
+        $end      = Session::get('end', Carbon::now()->startOfMonth());
+        $list     = Auth::user()
+                         ->transactionjournals()
+                         ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                         ->whereNull('category_transaction_journal.id')
+                         ->before($end)
+                         ->after($start)
+                         ->orderBy('transaction_journals.date')
+                         ->get(['transaction_journals.*']);
+        $subTitle = 'Transactions without a category in ' . $start->format('F Y');
+
+        return View::make('categories.noCategory', compact('list', 'subTitle'));
     }
 
     /**

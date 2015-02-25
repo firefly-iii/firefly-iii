@@ -12,6 +12,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Grumpydictator\Gchart\GChart;
@@ -21,6 +22,7 @@ use Preferences;
 use Response;
 use Session;
 use Steam;
+use Navigation;
 
 /**
  * Class GoogleChartController
@@ -70,6 +72,50 @@ class GoogleChartController extends Controller
 
         return Response::json($chart->getData());
 
+
+    }
+
+    /**
+     * @param Bill $bill
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function billOverview(Bill $bill, GChart $chart)
+    {
+
+        $chart->addColumn('Date', 'date');
+        $chart->addColumn('Max amount', 'number');
+        $chart->addColumn('Min amount', 'number');
+        $chart->addColumn('Current entry', 'number');
+
+        // get first transaction or today for start:
+        $first = $bill->transactionjournals()->orderBy('date', 'ASC')->first();
+        if ($first) {
+            $start = $first->date;
+        } else {
+            $start = new Carbon;
+        }
+        $end = new Carbon;
+        while ($start <= $end) {
+            $result = $bill->transactionjournals()->before($end)->after($start)->first();
+            if ($result) {
+                /** @var Transaction $tr */
+                foreach($result->transactions()->get() as $tr) {
+                    if(floatval($tr->amount) > 0) {
+                        $amount = floatval($tr->amount);
+                    }
+                }
+            } else {
+                $amount = 0;
+            }
+            unset($result);
+            $chart->addRow(clone $start, $bill->amount_max, $bill->amount_min, $amount);
+            $start = Navigation::addPeriod($start, $bill->repeat_freq, 0);
+        }
+
+        $chart->generate();
+
+        return Response::json($chart->getData());
 
     }
 
