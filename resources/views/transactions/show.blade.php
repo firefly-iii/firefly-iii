@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $journal) }}
+{!! Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $journal) !!}
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-12">
         <div class="panel panel-default">
@@ -74,7 +74,14 @@
                         <tr>
                             <td><input type="checkbox" checked="checked" data-relatedto="{{$journal->id}}" data-id="{{$jrnl->id}}" class="unrelate-checkbox" /></td>
                             <td><a href="#">{{{$jrnl->description}}}</a></td>
-                            <td>{{Amount::formatJournal($jrnl, $jrnl->getAmount())}}</td>
+
+                            <td>
+                                @foreach($jrnl->transactions()->get() as $t)
+                                    @if($t->amount > 0)
+                                        {!! Amount::formatTransaction($t) !!}
+                                    @endif
+                                @endforeach
+                            </td>
                         </tr>
                     @endforeach
                     </table>
@@ -97,11 +104,11 @@
                 <table class="table table-striped table-bordered">
                     <tr>
                         <td>Amount</td>
-                        <td>{{Amount::formatTransaction($t)}}</td>
+                        <td>{!! Amount::formatTransaction($t) !!}</td>
                     </tr>
                     <tr>
                         <td>New balance</td>
-                        <td>{{Amount::format($t->before)}} &rarr; {{Amount::format($t->after)}}</td>
+                        <td>{!! Amount::format($t->before) !!} &rarr; {!! Amount::format($t->after) !!}</td>
                     </tr>
                     @if(!is_null($t->description))
                     <tr>
@@ -126,6 +133,9 @@
 
 @stop
 @section('scripts')
-{{HTML::script('assets/javascript/firefly/transactions.js')}}
-{{HTML::script('assets/javascript/firefly/related-manager.js')}}
+    <script type="text/javascript">
+        var token = "{{csrf_token()}}";
+    </script>
+<script type="text/javascript" src="js/transactions.js"></script>
+<script type="text/javascript" src="js/related-manager.js"></script>
 @stop

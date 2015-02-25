@@ -5,8 +5,11 @@ use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\JournalFormRequest;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Input;
 use Redirect;
 use Session;
@@ -105,6 +108,42 @@ class TransactionController extends Controller
 
     }
 
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return $this
+     */
+    public function show(TransactionJournal $journal)
+    {
+        $journal->transactions->each(
+            function (Transaction $t) use ($journal) {
+                $t->before = floatval(
+                    $t->account->transactions()->leftJoin(
+                        'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
+                    )->where('transaction_journals.date', '<=', $journal->date->format('Y-m-d'))->where(
+                        'transaction_journals.created_at', '<=', $journal->created_at->format('Y-m-d H:i:s')
+                    )->where('transaction_journals.id', '!=', $journal->id)->sum('transactions.amount')
+                );
+                $t->after  = $t->before + $t->amount;
+            }
+        );
+        $members = new Collection;
+        /** @var TransactionGroup $group */
+        foreach ($journal->transactiongroups()->get() as $group) {
+            /** @var TransactionJournal $loopJournal */
+            foreach ($group->transactionjournals()->get() as $loopJournal) {
+                if ($loopJournal->id != $journal->id) {
+                    $members->push($loopJournal);
+                }
+            }
+        }
+
+        return view('transactions.show', compact('journal', 'members'))->with('subTitle', e($journal->transactiontype->type) . ' "' . e($journal->description) . '"'
+        );
+    }
+
+
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository)
     {
 
@@ -112,8 +151,8 @@ class TransactionController extends Controller
             'what'               => $request->get('what'),
             'description'        => $request->get('description'),
             'account_id'         => intval($request->get('account_id')),
-            'account_from_id'         => intval($request->get('account_from_id')),
-            'account_to_id'         => intval($request->get('account_to_id')),
+            'account_from_id'    => intval($request->get('account_from_id')),
+            'account_to_id'      => intval($request->get('account_to_id')),
             'expense_account'    => $request->get('expense_account'),
             'revenue_account'    => $request->get('revenue_account'),
             'amount'             => floatval($request->get('amount')),
