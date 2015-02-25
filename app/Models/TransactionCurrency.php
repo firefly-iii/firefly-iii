@@ -12,6 +12,9 @@ class TransactionCurrency extends Model
 {
     use SoftDeletes;
 
+
+    protected $fillable = ['name', 'code', 'symbol'];
+
     /**
      * @return array
      */
