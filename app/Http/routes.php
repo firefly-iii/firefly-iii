@@ -5,6 +5,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\PiggyBank;
 
 
@@ -24,6 +25,28 @@ Route::bind(
         }
         App::abort(404);
     }
+);
+
+Route::bind(
+    'tjSecond', function ($value, $route) {
+    if (Auth::check()) {
+        return TransactionJournal::
+        where('id', $value)->where('user_id', Auth::user()->id)->first();
+    }
+
+    return null;
+}
+);
+
+Route::bind(
+    'tj', function ($value, $route) {
+    if (Auth::check()) {
+        return TransactionJournal::
+        where('id', $value)->where('user_id', Auth::user()->id)->first();
+    }
+
+    return null;
+}
 );
 
 Route::bind(
@@ -219,12 +242,23 @@ Route::group(
      * Preferences Controller
      */
     Route::get('/preferences', ['uses' => 'PreferencesController@index', 'as' => 'preferences']);
+    Route::post('/preferences', ['uses' => 'PreferencesController@postIndex']);
 
     /**
      * Profile Controller
      */
     Route::get('/profile', ['uses' => 'ProfileController@index', 'as' => 'profile']);
-    //Route::get('/profile/change-password', ['uses' => 'ProfileController@changePassword', 'as' => 'change-password']);
+    Route::get('/profile/change-password', ['uses' => 'ProfileController@changePassword', 'as' => 'change-password']);
+    Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword','as' => 'change-password-post']);
+
+    /**
+     * Related transactions controller
+     */
+    Route::get('/related/alreadyRelated/{tj}', ['uses' => 'RelatedController@alreadyRelated', 'as' => 'related.alreadyRelated']);
+    Route::post('/related/relate/{tj}/{tjSecond}', ['uses' => 'RelatedController@relate', 'as' => 'related.relate']);
+    Route::post('/related/removeRelation/{tj}/{tjSecond}', ['uses' => 'RelatedController@removeRelation', 'as' => 'related.removeRelation']);
+    Route::get('/related/related/{tj}', ['uses' => 'RelatedController@related', 'as' => 'related.related']);
+    Route::post('/related/search/{tj}', ['uses' => 'RelatedController@search', 'as' => 'related.search']);
 
     /**
      * Repeated Expenses Controller
