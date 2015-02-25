@@ -14,44 +14,14 @@ class PiggyBank extends Model
 {
     use SoftDeletes;
 
+    protected $fillable = ['repeats', 'name', 'account_id', 'targetamount','startdate', 'targetdate', 'reminder',];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function account()
     {
         return $this->belongsTo('FireflyIII\Models\Account');
-    }
-
-    /**
-     * @return array
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'deleted_at', 'startdate', 'targetdate'];
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function piggyBankEvents()
-    {
-        return $this->hasMany('FireflyIII\Models\PiggyBankEvent');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function piggyBankRepetitions()
-    {
-        return $this->hasMany('FireflyIII\Models\PiggyBankRepetition');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     */
-    public function reminders()
-    {
-        return $this->morphMany('FireflyIII\Models\Reminder', 'remindersable');
     }
 
     /**
@@ -70,7 +40,7 @@ class PiggyBank extends Model
 
             return $rep;
         } else {
-            $query  = $this->piggyBankRepetitions()->where(
+            $query            = $this->piggyBankRepetitions()->where(
                 function (EloquentBuilder $q) {
 
                     $q->where(
@@ -100,12 +70,44 @@ class PiggyBank extends Model
 
                 }
             )->orderBy('startdate', 'ASC');
-            $result = $query->first(['piggy_bank_repetitions.*']);
+            $result           = $query->first(['piggy_bank_repetitions.*']);
             $this->currentRep = $result;
 
             return $result;
         }
 
 
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function piggyBankRepetitions()
+    {
+        return $this->hasMany('FireflyIII\Models\PiggyBankRepetition');
+    }
+
+    /**
+     * @return array
+     */
+    public function getDates()
+    {
+        return ['created_at', 'updated_at', 'deleted_at', 'startdate', 'targetdate'];
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function piggyBankEvents()
+    {
+        return $this->hasMany('FireflyIII\Models\PiggyBankEvent');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function reminders()
+    {
+        return $this->morphMany('FireflyIII\Models\Reminder', 'remindersable');
     }
 }

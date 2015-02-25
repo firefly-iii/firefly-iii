@@ -5,6 +5,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\PiggyBank;
 
 
 // models
@@ -59,6 +60,20 @@ Route::bind(
                               ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
                               ->where('budgets.user_id', Auth::user()->id)
                               ->first(['limit_repetitions.*']);
+    }
+
+    return null;
+}
+);
+
+Route::bind(
+    'piggyBank', function ($value, $route) {
+    if (Auth::check()) {
+        return PiggyBank::
+        where('piggy_banks.id', $value)
+                        ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
+                        ->where('accounts.user_id', Auth::user()->id)
+                        ->where('repeats', 0)->first(['piggy_banks.*']);
     }
 
     return null;
@@ -169,6 +184,7 @@ Route::group(
     Route::get('/chart/reports/income-expenses/{year}', ['uses' => 'GoogleChartController@yearInExp']);
     Route::get('/chart/reports/income-expenses-sum/{year}', ['uses' => 'GoogleChartController@yearInExpSum']);
     Route::get('/chart/bills/{bill}', ['uses' => 'GoogleChartController@billOverview']);
+    Route::get('/chart/piggy-history/{piggyBank}', ['uses' => 'GoogleChartController@piggyBankHistory']);
 
     /**
      * Help Controller
@@ -193,6 +209,11 @@ Route::group(
     Route::get('/piggy-banks/edit/{piggyBank}', ['uses' => 'PiggyBankController@edit', 'as' => 'piggy-banks.edit']);
     Route::get('/piggy-banks/delete/{piggyBank}', ['uses' => 'PiggyBankController@delete', 'as' => 'piggy-banks.delete']);
     Route::get('/piggy-banks/show/{piggyBank}', ['uses' => 'PiggyBankController@show', 'as' => 'piggy-banks.show']);
+    Route::post('/piggy-banks/store', ['uses' => 'PiggyBankController@store', 'as' => 'piggy-banks.store']);
+    Route::post('/piggy-banks/update/{piggyBank}', ['uses' => 'PiggyBankController@update', 'as' => 'piggy-banks.update']);
+    Route::post('/piggy-banks/destroy/{piggyBank}', ['uses' => 'PiggyBankController@destroy', 'as' => 'piggy-banks.destroy']);
+    Route::post('/piggy-banks/add/{piggyBank}', ['uses' => 'PiggyBankController@postAdd', 'as' => 'piggy-banks.add']); # add money
+    Route::post('/piggy-banks/remove/{piggyBank}', ['uses' => 'PiggyBankController@postRemove', 'as' => 'piggy-banks.remove']); # remove money.
 
     /**
      * Preferences Controller
