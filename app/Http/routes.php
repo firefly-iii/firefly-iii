@@ -4,6 +4,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Models\TransactionCurrency;
 
 
 // models
@@ -22,6 +23,12 @@ Route::bind(
         }
         App::abort(404);
     }
+);
+
+Route::bind(
+    'currency', function ($value, $route) {
+    return TransactionCurrency::find($value);
+}
 );
 
 Route::bind(
@@ -138,10 +145,14 @@ Route::group(
      * Currency Controller
      */
     Route::get('/currency', ['uses' => 'CurrencyController@index', 'as' => 'currency.index']);
-    //Route::get('/currency/create', ['uses' => 'CurrencyController@create', 'as' => 'currency.create']);
-    //Route::get('/currency/edit/{currency}', ['uses' => 'CurrencyController@edit', 'as' => 'currency.edit']);
-    //Route::get('/currency/delete/{currency}', ['uses' => 'CurrencyController@delete', 'as' => 'currency.delete']);
-    //Route::get('/currency/default/{currency}', ['uses' => 'CurrencyController@defaultCurrency', 'as' => 'currency.default']);
+    Route::get('/currency/create', ['uses' => 'CurrencyController@create', 'as' => 'currency.create']);
+    Route::get('/currency/edit/{currency}', ['uses' => 'CurrencyController@edit', 'as' => 'currency.edit']);
+    Route::get('/currency/delete/{currency}', ['uses' => 'CurrencyController@delete', 'as' => 'currency.delete']);
+    Route::get('/currency/default/{currency}', ['uses' => 'CurrencyController@defaultCurrency', 'as' => 'currency.default']);
+    Route::post('/currency/store', ['uses' => 'CurrencyController@store', 'as' => 'currency.store']);
+    Route::post('/currency/update/{currency}', ['uses' => 'CurrencyController@update', 'as' => 'currency.update']);
+    Route::post('/currency/destroy/{currency}', ['uses' => 'CurrencyController@destroy', 'as' => 'currency.destroy']);
+
 
     /**
      * Google Chart Controller
