@@ -23,11 +23,11 @@
         "laravel/framework": "5.0.*",
         "davejamesmiller/laravel-breadcrumbs": "~3.0",
         "grumpydictator/gchart": "dev-master",
-        "michelf/php-markdown": "@stable",
         "watson/validating": "dev-master",
         "doctrine/dbal": "~2.5",
         "illuminate/html": "~5.0",
-        "barryvdh/laravel-ide-helper": "~2.0"
+        "barryvdh/laravel-ide-helper": "~2.0",
+        "league/commonmark": "0.7.*"
 
     },
     "require-dev": {

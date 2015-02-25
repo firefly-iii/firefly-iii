@@ -8,6 +8,7 @@ use Preferences;
 use Redirect;
 use Session;
 use View;
+use Cache;
 
 /**
  * Class CurrencyController
@@ -46,10 +47,8 @@ class CurrencyController extends Controller
      */
     public function defaultCurrency(TransactionCurrency $currency)
     {
-        /** @var \FireflyIII\Shared\Preferences\Preferences $preferences */
-        $preferences = App::make('FireflyIII\Shared\Preferences\Preferences');
 
-        $currencyPreference       = $preferences->get('currencyPreference', 'EUR');
+        $currencyPreference       = Preferences::get('currencyPreference', 'EUR');
         $currencyPreference->data = $currency->code;
         $currencyPreference->save();
 
