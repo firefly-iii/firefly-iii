@@ -4,6 +4,7 @@ use DaveJamesMiller\Breadcrumbs\Generator;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\Bill;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\PiggyBank;

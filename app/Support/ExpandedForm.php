@@ -16,6 +16,47 @@ use View;
  */
 class ExpandedForm
 {
+
+    /**
+     * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     */
+    public  function integer($name, $value = null, array $options = [])
+    {
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
+        $options['step'] = '1';
+        $html            = \View::make('form.integer', compact('classes', 'name', 'label', 'value', 'options'))->render();
+
+        return $html;
+
+    }
+
+
+    /**
+     * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     */
+    public  function tags($name, $value = null, array $options = [])
+    {
+        $label                = $this->label($name, $options);
+        $options              = $this->expandOptionArray($name, $label, $options);
+        $classes              = $this->getHolderClasses($name);
+        $value                = $this->fillFieldValue($name, $value);
+        $options['data-role'] = 'tagsinput';
+        $html                 = \View::make('form.tags', compact('classes', 'name', 'label', 'value', 'options'))->render();
+
+        return $html;
+    }
+
     /**
      * @param       $name
      * @param null  $value

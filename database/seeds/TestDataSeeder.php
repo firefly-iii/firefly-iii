@@ -392,7 +392,7 @@ class TestDataSeeder extends Seeder
         $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
         // bill
         Bill::create(
-            ['user_id' => $user->id, 'name' => 'Rent', 'match' => 'rent,landlord', 'amount_min' => 700, 'amount_max' => 900, 'date' => $this->som,
+            ['user_id' => $user->id, 'name' => 'Rent', 'match' => 'rent,land,lord', 'amount_min' => 700, 'amount_max' => 900, 'date' => $this->som,
              'active'  => 1, 'automatch' => 1, 'repeat_freq' => 'monthly', 'skip' => 0,]
         );
 
