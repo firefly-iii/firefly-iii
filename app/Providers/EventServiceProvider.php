@@ -5,6 +5,8 @@ use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Support\Facades\Navigation;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Database\QueryException;
@@ -65,6 +67,15 @@ class EventServiceProvider extends ServiceProvider
                 }
             }
         );
+
+        PiggyBank::created(function(PiggyBank $piggyBank) {
+                $repetition = new PiggyBankRepetition;
+                $repetition->piggyBank()->associate($piggyBank);
+                $repetition->startdate     = $piggyBank->startdate;
+                $repetition->targetdate    = $piggyBank->targetdate;
+                $repetition->currentamount = 0;
+                $repetition->save();
+        });
 
         BudgetLimit::saved(
             function (BudgetLimit $budgetLimit) {

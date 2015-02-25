@@ -1,5 +1,5 @@
 <form style="display: inline;" id="remove" action="{{route('piggy-banks.remove',$piggyBank->id)}}" method="POST">
-{{Form::token()}}
+{!! Form::token() !!}
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,7 +8,7 @@
             </div>
             <div class="modal-body">
                 <p>
-                    The maximum amount you can remove is {{Amount::format($piggyBank->currentRelevantRep()->currentamount)}}
+                    The maximum amount you can remove is {!! Amount::format($piggyBank->currentRelevantRep()->currentamount) !!}
                 </p>
                 <div class="input-group">
                     <div class="input-group-addon">€</div>

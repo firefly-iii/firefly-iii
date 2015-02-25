@@ -1,7 +1,10 @@
 @extends('layouts.default')
 @section('content')
-{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $piggyBank) }}
-{{Form::model($piggyBank, ['class' => 'form-horizontal','id' => 'update','url' => route('piggy-banks.update',$piggyBank->id)])}}
+{!! Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $piggyBank) !!}
+{!! Form::model($piggyBank, ['class' => 'form-horizontal','id' => 'update','url' => route('piggy-banks.update',$piggyBank->id)]) !!}
+
+<input type="hidden" name="repeats" value="0" />
+<input type="hidden" name="id" value="{{$piggyBank->id}}" />
 
 <div class="row">
     <div class="col-lg-6 col-md-12 col-sm-6">
@@ -10,9 +13,13 @@
                 <i class="fa fa-fw fa-exclamation"></i> Mandatory fields
             </div>
             <div class="panel-body">
-                {{Form::ffText('name')}}
-                {{Form::ffSelect('account_id',$accounts,null,['label' => 'Save on account'])}}
-                {{Form::ffAmount('targetamount')}}
+                @foreach($errors->all() as $err)
+                    {{$err}}
+                @endforeach
+
+                {!! ExpandedForm::text('name') !!}
+                {!! ExpandedForm::select('account_id',$accounts,null,['label' => 'Save on account']) !!}
+                {!! ExpandedForm::amount('targetamount') !!}
 
             </div>
         </div>
@@ -29,9 +36,9 @@
                 <i class="fa fa-smile-o"></i> Optional fields
             </div>
             <div class="panel-body">
-                {{Form::ffDate('targetdate')}}
-                {{Form::ffCheckbox('remind_me','1',$preFilled['remind_me'],['label' => 'Remind me'])}}
-                {{Form::ffSelect('reminder',$periods,$preFilled['reminder'],['label' => 'Remind every'])}}
+                {!! ExpandedForm::date('targetdate') !!}
+                {!! ExpandedForm::checkbox('remind_me','1',$preFilled['remind_me'],['label' => 'Remind me']) !!}
+                {!! ExpandedForm::select('reminder',$periods,$preFilled['reminder'],['label' => 'Remind every']) !!}
             </div>
         </div>
 
@@ -41,54 +48,12 @@
                 <i class="fa fa-bolt"></i> Options
             </div>
             <div class="panel-body">
-                {{Form::ffOptionsList('update','piggy bank')}}
+                {!! ExpandedForm::optionsList('update','piggy bank') !!}
             </div>
         </div>
 
     </div>
 </div>
-{{--
 
-        <h4>Mandatory fields</h4>
-
-        <h4>Optional fields</h4>
-
-
-        <div class="form-group">
-            {{ Form::label('reminder', 'Remind you every', ['class' => 'col-sm-4 control-label'])}}
-            <div class="col-sm-8">
-                <input type="number" step="1" min="1" value="{{Input::old('reminder_skip') ?: 1}}" style="width:50px;display:inline;" max="100" name="reminder_skip" class="form-control" />
-
-                <select class="form-control" name="reminder" style="width:150px;display: inline">
-                    <option value="none" label="do not remind me">do not remind me</option>
-                    @foreach($periods as $period)
-                        <option value="{{$period}}" label="{{$period}}">{{$period}}</option>
-                    @endforeach
-                </select>
-                 @if($errors->has('reminder'))
-                                <p class="text-danger">{{$errors->first('reminder')}}</p>
-                                @else
-                <span class="help-block">Enter a number and a period and Firefly will remind you to add money
-                    to this piggy bank every now and then.</span>
-                    @endif
-            </div>
-        </div>
-
-
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-lg-6 col-md-12 col-sm-6">
-
-        <div class="form-group">
-            <div class="col-sm-offset-4 col-sm-8">
-                <button type="submit" class="btn btn-default btn-success">Create the piggy bank</button>
-            </div>
-        </div>
-    </div>
-</div>
---}}
-
-{{Form::close()}}
+{!! Form::close() !!}
 @stop

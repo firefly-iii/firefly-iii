@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $piggyBank) }}
+{!! Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $piggyBank) !!}
 <div class="row">
     <div class="col-lg-8 col-md-8 col-sm-6">
         <div class="panel panel-default">
@@ -40,15 +40,15 @@
                         </tr>
                         <tr>
                             <td>Target amount</td>
-                            <td>{{Amount::format($piggyBank->targetamount)}}</td>
+                            <td>{!! Amount::format($piggyBank->targetamount) !!}</td>
                         </tr>
                         <tr>
                             <td>Saved so far</td>
-                            <td>{{Amount::format($piggyBank->currentRelevantRep()->currentamount)}}</td>
+                            <td>{!! Amount::format($piggyBank->currentRelevantRep()->currentamount) !!}</td>
                         </tr>
                         <tr>
                             <td>Left to save</td>
-                            <td>{{Amount::format($piggyBank->targetamount-$piggyBank->currentRelevantRep()->currentamount)}}</td>
+                            <td>{!! Amount::format($piggyBank->targetamount-$piggyBank->currentRelevantRep()->currentamount) !!}</td>
                         </tr>
                         <tr>
                             <td>Start date</td>
@@ -114,12 +114,13 @@
 
 @section('scripts')
 <script type="text/javascript">
-var piggyBankID = {{{$piggyBank->id}}};
+    var currencyCode = '{{Amount::getCurrencyCode()}}';
+    var piggyBankID = {{{$piggyBank->id}}};
 </script>
 
 <!-- load the libraries and scripts necessary for Google Charts: -->
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-{{HTML::script('assets/javascript/firefly/gcharts.options.js')}}
-{{HTML::script('assets/javascript/firefly/gcharts.js')}}
-{{HTML::script('assets/javascript/firefly/piggy-banks.js')}}
+<script type="text/javascript" src="js/gcharts.options.js"></script>
+<script type="text/javascript" src="js/gcharts.js"></script>
+<script type="text/javascript" src="js/piggy-banks.js"></script>
 @stop
