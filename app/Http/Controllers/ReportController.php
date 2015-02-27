@@ -47,7 +47,7 @@ class ReportController extends Controller
         $start->startOfMonth();
         $end = clone $date;
         $end->endOfMonth();
-        $start->subDay();
+        //$start->subDay();
 
         $dayEarly     = clone $date;
         $subTitle     = 'Budget report for ' . $date->format('F Y');
