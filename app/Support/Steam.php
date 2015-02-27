@@ -4,6 +4,8 @@ namespace FireflyIII\Support;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\PiggyBankRepetition;
 use Illuminate\Support\Collection;
 
 /**
@@ -159,6 +161,24 @@ class Steam
         );
 
         return $array;
+    }
+
+    /**
+     * @param PiggyBank           $piggyBank
+     * @param PiggyBankRepetition $repetition
+     *
+     * @return int
+     */
+    public function percentage(PiggyBank $piggyBank, PiggyBankRepetition $repetition)
+    {
+        $pct = $repetition->currentamount / $piggyBank->targetamount * 100;
+        if ($pct > 100) {
+            // @codeCoverageIgnoreStart
+            return 100;
+            // @codeCoverageIgnoreEnd
+        } else {
+            return floor($pct);
+        }
     }
 
 }

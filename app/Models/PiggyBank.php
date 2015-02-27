@@ -14,7 +14,7 @@ class PiggyBank extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['repeats', 'name', 'account_id', 'targetamount','startdate', 'targetdate', 'reminder',];
+    protected $fillable = ['repeats', 'name', 'account_id','rep_every', 'rep_times', 'reminder_skip', 'targetamount', 'startdate', 'targetdate', 'reminder',];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

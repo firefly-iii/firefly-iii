@@ -39,8 +39,6 @@ class AccountController extends Controller
         $subTitleIcon = Config::get('firefly.subTitlesByIdentifier.' . $what);
         $subTitle     = 'Create a new ' . e($what) . ' account';
 
-        //\FireflyIII\Forms\Tags::ffAmount('12');
-
         return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle'));
 
     }
