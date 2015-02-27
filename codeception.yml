@@ -9,14 +9,10 @@ settings:
     colors: true
     memory_limit: 1024M
 modules:
-  config:
+    config:
 coverage:
-  enabled: true
-  remote: false
-  whitelist:
-    include:
-      - app/controllers/*
-      - app/models/*
-      - app/lib/FireflyIII/*
-    exclude:
-      - app/controllers/BaseController.php
+    enabled: true
+    remote: false
+    whitelist:
+        include:
+            - app/*

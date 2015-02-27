@@ -11,11 +11,13 @@ addons:
 install:
   - rm composer.lock
   - composer install
+  - php artisan env
+  - mv -v .env.testing .env
 
 script:
   - ./tests/_data/db.sh
   - php vendor/bin/codecept build
-  - php vendor/bin/codecept run --coverage --coverage-xml
+  - php vendor/bin/codecept run --coverage --coverage-xml --no-exit
 
 after_script:
   - cp -v tests/_output/coverage.xml build/logs/clover.xml

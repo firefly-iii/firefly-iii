@@ -7,38 +7,16 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          processIsolation="false"
-         verbose="true"
-         stopOnFailure="true"
-         strict="false"
+         stopOnFailure="false"
          syntaxCheck="false">
-
-
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./app/models</directory>
-            <directory suffix=".php">./app/controllers</directory>
-            <directory suffix=".php">./app/events</directory>
-            <directory suffix=".php">./app/extensions</directory>
-            <directory suffix=".php">./app/queue</directory>
-            <directory suffix=".php">./app/helpers</directory>
-            <directory suffix=".php">./app/lib/FireflyIII</directory>
-            <exclude>
-                <file>./app/controllers/BaseController.php</file>
-            </exclude>
-        </whitelist>
-
-    </filter>
-
-    <logging>
-        <log type="coverage-clover" target="build/logs/clover.xml"/>
-    </logging>
-
     <testsuites>
         <testsuite name="Application Test Suite">
-            <directory>./app/tests/</directory>
-        </testsuite>
-        <testsuite name="CodeCeption">
-            <directory>./tests/unit/</directory>
+            <directory>./tests/</directory>
         </testsuite>
     </testsuites>
+    <php>
+        <env name="APP_ENV" value="testing"/>
+        <env name="CACHE_DRIVER" value="array"/>
+        <env name="SESSION_DRIVER" value="array"/>
+    </php>
 </phpunit>
