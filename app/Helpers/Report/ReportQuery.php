@@ -110,7 +110,7 @@ class ReportQuery implements ReportQueryInterface
      */
     public function getAllAccounts(Carbon $start, Carbon $end)
     {
-        $set = Auth::user()->accounts()
+        $set = Auth::user()->accounts()->orderBy('accounts.name','ASC')
                    ->accountTypeIn(['Default account', 'Asset account', 'Cash account'])
                    ->leftJoin(
                        'account_meta', function (JoinClause $join) {
