@@ -38,7 +38,7 @@ class RepeatedExpenseController extends Controller
         $periods  = Config::get('firefly.piggy_bank_periods');
         $accounts = ExpandedForm::makeSelectList(Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*']));
 
-        return View::make('repeatedExpense.create', compact('accounts', 'periods'))->with('subTitle', 'Create new repeated expense')->with(
+        return view('repeatedExpense.create', compact('accounts', 'periods'))->with('subTitle', 'Create new repeated expense')->with(
             'subTitleIcon', 'fa-plus'
         );
     }
@@ -52,7 +52,7 @@ class RepeatedExpenseController extends Controller
     {
         $subTitle = 'Delete "' . e($repeatedExpense->name) . '"';
 
-        return View::make('repeatedExpense.delete', compact('repeatedExpense', 'subTitle'));
+        return view('repeatedExpense.delete', compact('repeatedExpense', 'subTitle'));
     }
 
     /**
@@ -98,7 +98,7 @@ class RepeatedExpenseController extends Controller
         ];
         Session::flash('preFilled', $preFilled);
 
-        return View::make('repeatedExpense.edit', compact('subTitle', 'subTitleIcon', 'repeatedExpense', 'accounts', 'periods', 'preFilled'));
+        return view('repeatedExpense.edit', compact('subTitle', 'subTitleIcon', 'repeatedExpense', 'accounts', 'periods', 'preFilled'));
     }
 
     /**
@@ -116,7 +116,7 @@ class RepeatedExpenseController extends Controller
             }
         );
 
-        return View::make('repeatedExpense.index', compact('expenses', 'subTitle'));
+        return view('repeatedExpense.index', compact('expenses', 'subTitle'));
     }
 
     /**
@@ -136,7 +136,7 @@ class RepeatedExpenseController extends Controller
             }
         );
 
-        return View::make('repeatedExpense.show', compact('repetitions', 'repeatedExpense', 'today', 'subTitle'));
+        return view('repeatedExpense.show', compact('repetitions', 'repeatedExpense', 'today', 'subTitle'));
     }
 
     /**

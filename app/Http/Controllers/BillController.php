@@ -70,7 +70,7 @@ class BillController extends Controller
     {
         $periods = \Config::get('firefly.periods_to_text');
 
-        return View::make('bills.edit')->with('periods', $periods)->with('bill', $bill)->with('subTitle', 'Edit "' . e($bill->name) . '"');
+        return view('bills.edit')->with('periods', $periods)->with('bill', $bill)->with('subTitle', 'Edit "' . e($bill->name) . '"');
     }
 
     /**
@@ -92,7 +92,7 @@ class BillController extends Controller
             }
         );
 
-        return View::make('bills.index', compact('bills'));
+        return view('bills.index', compact('bills'));
     }
 
     /**
@@ -140,7 +140,7 @@ class BillController extends Controller
         $hideBill                = true;
 
 
-        return View::make('bills.show', compact('journals', 'hideBill', 'bill'))->with('subTitle', e($bill->name));
+        return view('bills.show', compact('journals', 'hideBill', 'bill'))->with('subTitle', e($bill->name));
     }
 
     /**

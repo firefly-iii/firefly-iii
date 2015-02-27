@@ -74,7 +74,7 @@ class CurrencyController extends Controller
         }
 
 
-        return View::make('currency.delete', compact('currency'));
+        return view('currency.delete', compact('currency'));
     }
 
     /**
