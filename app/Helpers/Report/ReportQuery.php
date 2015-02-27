@@ -86,7 +86,7 @@ class ReportQuery implements ReportQueryInterface
                                  ->whereNull('budget_transaction_journal.budget_id')->whereNull('transaction_journals.deleted_at')
                                  ->whereNull('otherJournals.deleted_at')
                                  ->where('transactions.account_id', $account->id)
-                                 ->whereNotNull('transaction_group_transaction_journal.transaction_group_id')->groupBy('transaction_journals.id')
+                                 ->whereNotNull('transaction_group_transaction_journal.transaction_group_id')
                                  ->first(
                                      [
                                          DB::Raw('SUM(`transactions`.`amount`) as `amount`')
