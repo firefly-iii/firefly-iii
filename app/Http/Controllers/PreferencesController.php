@@ -39,7 +39,7 @@ class PreferencesController extends Controller {
         $budgetMax      = Preferences::get('budgetMaximum', 1000);
         $budgetMaximum  = $budgetMax->data;
 
-        return View::make('preferences.index', compact('budgetMaximum'))->with('accounts', $accounts)->with('frontPageAccounts', $frontPage)->with(
+        return view('preferences.index', compact('budgetMaximum'))->with('accounts', $accounts)->with('frontPageAccounts', $frontPage)->with(
             'viewRange', $viewRangeValue
         );
     }

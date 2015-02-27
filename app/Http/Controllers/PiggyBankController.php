@@ -52,7 +52,7 @@ class PiggyBankController extends Controller
 
         \Log::debug('Now going to view for piggy bank #' . $piggyBank->id . ' (' . $piggyBank->name . ')');
 
-        return View::make('piggy-banks.add', compact('piggyBank', 'maxAmount'));
+        return view('piggy-banks.add', compact('piggyBank', 'maxAmount'));
     }
 
     /**
@@ -66,7 +66,7 @@ class PiggyBankController extends Controller
         $subTitle     = 'Create new piggy bank';
         $subTitleIcon = 'fa-plus';
 
-        return View::make('piggy-banks.create', compact('accounts', 'periods', 'subTitle', 'subTitleIcon'));
+        return view('piggy-banks.create', compact('accounts', 'periods', 'subTitle', 'subTitleIcon'));
     }
 
     /**
@@ -78,7 +78,7 @@ class PiggyBankController extends Controller
     {
         $subTitle = 'Delete "' . e($piggyBank->name) . '"';
 
-        return View::make('piggy_banks.delete', compact('piggyBank', 'subTitle'));
+        return view('piggy_banks.delete', compact('piggyBank', 'subTitle'));
     }
 
     /**
@@ -128,7 +128,7 @@ class PiggyBankController extends Controller
         ];
         Session::flash('preFilled', $preFilled);
 
-        return View::make('piggy-banks.edit', compact('subTitle', 'subTitleIcon', 'piggyBank', 'accounts', 'periods', 'preFilled'));
+        return view('piggy-banks.edit', compact('subTitle', 'subTitleIcon', 'piggyBank', 'accounts', 'periods', 'preFilled'));
     }
 
 
@@ -242,7 +242,7 @@ class PiggyBankController extends Controller
      */
     public function remove(PiggyBank $piggyBank)
     {
-        return View::make('piggy-banks.remove', compact('piggyBank'));
+        return view('piggy-banks.remove', compact('piggyBank'));
     }
 
     /**
@@ -261,7 +261,7 @@ class PiggyBankController extends Controller
 
         $subTitle = e($piggyBank->name);
 
-        return View::make('piggy-banks.show', compact('piggyBank', 'events', 'subTitle'));
+        return view('piggy-banks.show', compact('piggyBank', 'events', 'subTitle'));
 
     }
 

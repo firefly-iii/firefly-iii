@@ -73,7 +73,7 @@ class CategoryController extends Controller
                          ->get(['transaction_journals.*']);
         $subTitle = 'Transactions without a category in ' . $start->format('F Y');
 
-        return View::make('categories.noCategory', compact('list', 'subTitle'));
+        return view('categories.noCategory', compact('list', 'subTitle'));
     }
 
     /**
