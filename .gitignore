@@ -25,3 +25,4 @@ c3.php
 db.sqlite-journal
 tests/_output/*
 .env
+clover.xml
