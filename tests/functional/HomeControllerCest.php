@@ -1,5 +1,6 @@
 <?php
 
+use FireflyIII\Models\Preference;
 /**
  *
  * @SuppressWarnings("CamelCase")
@@ -50,8 +51,8 @@ class HomeControllerCest
      */
     public function indexWithPrefs(FunctionalTester $I)
     {
-        \Preference::whereName('frontPageAccounts')->delete();
-        \Preference::create(
+        Preference::whereName('frontPageAccounts')->delete();
+        Preference::create(
             [
                 'user_id' => 1,
                 'name'    => 'frontPageAccounts',

@@ -1,6 +1,6 @@
 <?php
 use Carbon\Carbon;
-
+use FireflyIII\Models\PiggyBank;
 /**
  * Class RepeatedExpenseControllerCest
  *

@@ -1,9 +1,8 @@
-Firefly III (v3.2.5)
+Firefly III (v3.3)
 ===========
 
 [![Build Status](https://travis-ci.org/JC5/firefly-iii.svg?branch=develop)](https://travis-ci.org/JC5/firefly-iii)
 [![Project Status](http://stillmaintained.com/JC5/firefly-iii.png?a=b)](http://stillmaintained.com/JC5/firefly-iii)
-[![Coverage Status](https://coveralls.io/repos/JC5/firefly-iii/badge.png?branch=master)](https://coveralls.io/r/JC5/firefly-iii?branch=master)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/d44c7012-5f50-41ad-add8-8445330e4102/mini.png)](https://insight.sensiolabs.com/projects/d44c7012-5f50-41ad-add8-8445330e4102)
 [![Code Climate](https://codeclimate.com/github/JC5/firefly-iii/badges/gpa.svg)](https://codeclimate.com/github/JC5/firefly-iii)
 [![Test Coverage](https://codeclimate.com/github/JC5/firefly-iii/badges/coverage.svg)](https://codeclimate.com/github/JC5/firefly-iii)
@@ -13,7 +12,7 @@ Firefly III (v3.2.5)
 [![Latest Unstable Version](https://poser.pugx.org/grumpydictator/firefly-iii/v/unstable.svg)](https://packagist.org/packages/grumpydictator/firefly-iii)
 [![License](https://poser.pugx.org/grumpydictator/firefly-iii/license.svg)](https://packagist.org/packages/grumpydictator/firefly-iii)
 
-Firefly II is a tool to help you manage your finances. Please read the full description [in the wiki](https://github.com/JC5/firefly-iii/wiki/full-description).
+Firefly III is a tool to help you manage your finances. Please read the full description [in the wiki](https://github.com/JC5/firefly-iii/wiki/full-description).
 
 Firefly Mark III is a new version of Firefly built upon best practices and lessons learned
 from building [Firefly](https://github.com/JC5/Firefly). It's Mark III since the original Firefly never made it outside of my

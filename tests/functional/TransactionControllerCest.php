@@ -1,5 +1,8 @@
 <?php
 
+use FireflyIII\Models\TransactionType;
+use FireflyIII\Models\TransactionJournal;
+
 /**
  * Class TransactionControllerCest
  */
@@ -20,6 +23,9 @@ class TransactionControllerCest
         $I->amLoggedAs(['email' => 'thegrumpydictator@gmail.com', 'password' => 'james']);
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function create(FunctionalTester $I)
     {
         $I->wantTo('create a transaction');
@@ -27,6 +33,9 @@ class TransactionControllerCest
         $I->see('Add a new withdrawal');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function deleteWithdrawal(FunctionalTester $I)
     {
         // get withdrawal transaction type id:
@@ -39,6 +48,9 @@ class TransactionControllerCest
         $I->see('Delete withdrawal "' . $journal->description . '"');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function destroyDeposit(FunctionalTester $I)
     {
         // get withdrawal transaction type id:
@@ -53,6 +65,9 @@ class TransactionControllerCest
 
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function destroyTransfer(FunctionalTester $I)
     {
         // get withdrawal transaction type id:
@@ -69,6 +84,27 @@ class TransactionControllerCest
 
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
+    public function destroyTransferWithEvent(FunctionalTester $I)
+    {
+        // get withdrawal transaction type id:
+        $row       = DB::table('piggy_bank_events')->whereNotNull('transaction_journal_id')->first();
+        $journalId = $row->transaction_journal_id;
+        $journal   = TransactionJournal::find($journalId);
+
+        $I->wantTo('destroy a transfer connected to a piggy bank');
+
+        $I->amOnPage('/transaction/delete/' . $journal->id);
+        $I->submitForm('#destroy', []);
+        $I->see('Transaction &quot;' . $journal->description . '&quot; destroyed.');
+
+    }
+
+    /**
+     * @param FunctionalTester $I
+     */
     public function destroyWithdrawal(FunctionalTester $I)
     {
         // get withdrawal transaction type id:
@@ -84,6 +120,9 @@ class TransactionControllerCest
 
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function edit(FunctionalTester $I)
     {
         // get withdrawal transaction type id:
@@ -97,6 +136,9 @@ class TransactionControllerCest
         $I->see('Edit transfer &quot;' . $journal->description . '&quot;');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function index(FunctionalTester $I)
     {
         $I->wantTo('see all withdrawals');
@@ -104,6 +146,9 @@ class TransactionControllerCest
         $I->see('Expenses');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function indexExpenses(FunctionalTester $I)
     {
         $I->wantTo('see all expenses');
@@ -111,6 +156,9 @@ class TransactionControllerCest
         $I->see('Revenue, income and deposits');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function indexTransfers(FunctionalTester $I)
     {
         $I->wantTo('see all transfers');
@@ -118,6 +166,9 @@ class TransactionControllerCest
         $I->see('Transfers');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function show(FunctionalTester $I)
     {
         // get withdrawal transaction type id:
@@ -150,6 +201,9 @@ class TransactionControllerCest
         $I->see($journal->description);
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function store(FunctionalTester $I)
     {
         $I->wantTo('store a transaction');
@@ -170,6 +224,9 @@ class TransactionControllerCest
         $I->see('Transaction &quot;Test&quot; stored.');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function storeAndFail(FunctionalTester $I)
     {
         $I->wantTo('store a transaction and fail');
@@ -190,6 +247,9 @@ class TransactionControllerCest
         $I->see('Could not store transaction: The description field is required.');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function storeAndReturn(FunctionalTester $I)
     {
         $I->wantTo('store a transaction');
@@ -210,6 +270,9 @@ class TransactionControllerCest
         $I->see('Transaction &quot;Test&quot; stored.');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function storeValidate(FunctionalTester $I)
     {
         $I->wantTo('validate a transaction');
@@ -232,6 +295,9 @@ class TransactionControllerCest
         $I->dontSeeRecord('transaction_journals', ['description' => 'TestValidateMe']);
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function update(FunctionalTester $I)
     {
         // get withdrawal transaction type id:
@@ -258,6 +324,9 @@ class TransactionControllerCest
         $I->see($journal->description . '!');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function updateAndFail(FunctionalTester $I)
     {
         // get withdrawal transaction type id:
@@ -284,6 +353,9 @@ class TransactionControllerCest
         $I->see('Could not update transaction: The description field is required.');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function updateAndReturn(FunctionalTester $I)
     {
         // get withdrawal transaction type id:
@@ -309,6 +381,9 @@ class TransactionControllerCest
         $I->see($journal->description . '!');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function updateValidate(FunctionalTester $I)
     {
         // get withdrawal transaction type id:

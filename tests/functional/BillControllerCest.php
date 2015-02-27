@@ -1,5 +1,7 @@
 <?php
 
+use FireflyIII\User;
+
 /**
  * Class BillControllerCest
  *

@@ -1,4 +1,5 @@
 <?php
+use FireflyIII\Models\Account;
 
 /**
  * @SuppressWarnings("CamelCase")
@@ -40,9 +41,11 @@ class AccountControllerCest
      */
     public function delete(FunctionalTester $I)
     {
+        $account = Account::where('name', 'Delete me')->first();
         $I->wantTo('delete an asset account');
-        $I->amOnPage('/accounts/delete/3');
-        $I->see('Delete account "Delete me"');
+        $I->amOnPage('/accounts/delete/'.$account->id);
+        $I->see('Delete account');
+        $I->see($account->name);
     }
 
     /**
@@ -50,9 +53,11 @@ class AccountControllerCest
      */
     public function destroy(FunctionalTester $I)
     {
+        $account = Account::where('name', 'Delete me')->first();
         $I->wantTo('destroy an asset account');
-        $I->amOnPage('/accounts/delete/3');
-        $I->see('Delete account "Delete me"');
+        $I->amOnPage('/accounts/delete/'.$account->id);
+        $I->see('Delete account');
+        $I->see($account->name);
         $I->submitForm('#destroy', []);
         $I->dontSeeRecord('accounts', ['id' => 3, 'deleted_at' => null]);
     }
@@ -62,9 +67,11 @@ class AccountControllerCest
      */
     public function edit(FunctionalTester $I)
     {
+        $account = Account::where('name', 'Delete me')->first();
         $I->wantTo('edit an asset account');
-        $I->amOnPage('/accounts/edit/3');
-        $I->see('Edit asset account "Delete me"');
+        $I->amOnPage('/accounts/edit/'.$account->id);
+        $I->see('Edit asset account');
+        $I->see($account->name);
     }
 
     /**
@@ -72,9 +79,11 @@ class AccountControllerCest
      */
     public function failUpdate(FunctionalTester $I)
     {
+        $account = Account::where('name', 'Delete me')->first();
         $I->wantTo('update an asset account and fail');
-        $I->amOnPage('/accounts/edit/3');
-        $I->see('Edit asset account "Delete me"');
+        $I->amOnPage('/accounts/edit/'.$account->id);
+        $I->see('Edit asset account');
+        $I->see($account->name);
         $I->submitForm('#update', ['name' => '', 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'update']);
         $I->seeRecord('accounts', ['name' => 'Delete me']);
 
@@ -96,10 +105,11 @@ class AccountControllerCest
      */
     public function show(FunctionalTester $I)
     {
+        $account = Account::where('name', 'Delete me')->first();
         $I->wantTo('see one account');
-        $I->amOnPage('/accounts/show/3');
+        $I->amOnPage('/accounts/show/'.$account->id);
         $I->see('Details for');
-        $I->see('Delete me');
+        $I->see($account->name);
     }
 
     /**
@@ -112,21 +122,6 @@ class AccountControllerCest
         $I->see('Create a new asset account');
         $I->submitForm('#store', ['name' => 'New through tests.', 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'store']);
         $I->seeRecord('accounts', ['name' => 'New through tests.']);
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
-    public function storeOpeningBalance(FunctionalTester $I)
-    {
-        $I->amOnPage('/accounts/create/asset');
-        $I->wantTo('store a new asset account with a balance');
-        $I->see('Create a new asset account');
-        $I->submitForm('#store', ['name' => 'New through tests with balance.',
-                                  'openingBalance' => 10,
-                                  'openingBalanceDate' => '2015-01-01',
-                                  'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'store']);
-        $I->seeRecord('accounts', ['name' => 'New through tests with balance.']);
     }
 
     /**
@@ -158,15 +153,18 @@ class AccountControllerCest
     /**
      * @param FunctionalTester $I
      */
-    public function storeValidateOnly(FunctionalTester $I)
+    public function storeOpeningBalance(FunctionalTester $I)
     {
         $I->amOnPage('/accounts/create/asset');
-        $I->wantTo('validate a new asset account');
+        $I->wantTo('store a new asset account with a balance');
         $I->see('Create a new asset account');
         $I->submitForm(
-            '#store', ['name' => 'New through tests.', 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'validate_only']
+            '#store', ['name'               => 'New through tests with balance.',
+                       'openingBalance'     => 10,
+                       'openingBalanceDate' => '2015-01-01',
+                       'what'               => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'store']
         );
-        $I->dontSeeRecord('accounts', ['name' => 'New through tests.']);
+        $I->seeRecord('accounts', ['name' => 'New through tests with balance.']);
     }
 
     /**
@@ -174,9 +172,11 @@ class AccountControllerCest
      */
     public function update(FunctionalTester $I)
     {
+        $account = Account::where('name', 'Delete me')->first();
         $I->wantTo('update an asset account');
-        $I->amOnPage('/accounts/edit/3');
-        $I->see('Edit asset account "Delete me"');
+        $I->amOnPage('/accounts/edit/' . $account->id);
+        $I->see('Edit asset account');
+        $I->see($account->name);
         $I->submitForm('#update', ['name' => 'Update me', 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'update']);
         $I->seeRecord('accounts', ['name' => 'Update me']);
 
@@ -187,28 +187,15 @@ class AccountControllerCest
      */
     public function updateAndReturn(FunctionalTester $I)
     {
+        $account = Account::where('name', 'Savings account')->first();
         $I->wantTo('update an asset account and return to form');
-        $I->amOnPage('/accounts/edit/2');
-        $I->see('Edit asset account "Savings account"');
+        $I->amOnPage('/accounts/edit/' . $account->id);
+        $I->see('Edit asset account');
+        $I->see($account->name);
         $I->submitForm(
             '#update', ['name' => 'Savings accountXX', 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'return_to_edit']
         );
         $I->seeRecord('accounts', ['name' => 'Savings accountXX']);
-
-    }
-
-    /**
-     * @param FunctionalTester $I
-     */
-    public function validateUpdateOnly(FunctionalTester $I)
-    {
-        $I->wantTo('update an asset account and validate only');
-        $I->amOnPage('/accounts/edit/2');
-        $I->see('Edit asset account "Savings account"');
-        $I->submitForm(
-            '#update', ['name' => 'Savings accountXX', 'what' => 'asset', 'account_role' => 'defaultExpense', 'post_submit_action' => 'validate_only']
-        );
-        $I->dontSeeRecord('accounts', ['name' => 'Savings accountXX']);
 
     }
 

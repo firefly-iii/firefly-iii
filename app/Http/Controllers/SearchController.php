@@ -1,0 +1,44 @@
+<?php namespace FireflyIII\Http\Controllers;
+
+use FireflyIII\Http\Requests;
+use FireflyIII\Http\Controllers\Controller;
+
+use FireflyIII\Support\Search\SearchInterface;
+use Illuminate\Http\Request;
+use Input;
+
+/**
+ * Class SearchController
+ *
+ * @package FireflyIII\Http\Controllers
+ */
+class SearchController extends Controller {
+    /**
+     * Results always come in the form of an array [results, count, fullCount]
+     */
+    public function index(SearchInterface $searcher)
+    {
+
+        $subTitle = null;
+        $rawQuery = null;
+        $result   = [];
+        if (!is_null(Input::get('q')) && strlen(Input::get('q')) > 0) {
+            $rawQuery = trim(Input::get('q'));
+            $words    = explode(' ', $rawQuery);
+            $subTitle = 'Results for "' . e($rawQuery) . '"';
+
+            $transactions = $searcher->searchTransactions($words);
+            $accounts     = $searcher->searchAccounts($words);
+            $categories   = $searcher->searchCategories($words);
+            $budgets      = $searcher->searchBudgets($words);
+            $tags         = $searcher->searchTags($words);
+            $result       = ['transactions' => $transactions, 'accounts' => $accounts, 'categories' => $categories, 'budgets' => $budgets, 'tags' => $tags];
+
+        }
+
+        return view('search.index')->with('title', 'Search')->with('subTitle', $subTitle)->with(
+            'mainTitleIcon', 'fa-search'
+        )->with('query', $rawQuery)->with('result', $result);
+    }
+
+}
