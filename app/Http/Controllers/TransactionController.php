@@ -15,6 +15,7 @@ use Redirect;
 use Session;
 use View;
 
+
 /**
  * Class TransactionController
  *
@@ -64,6 +65,105 @@ class TransactionController extends Controller
     }
 
     /**
+     * Shows the form that allows a user to delete a transaction journal.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return $this
+     */
+    public function delete(TransactionJournal $journal)
+    {
+        $type     = strtolower($journal->transactionType->type);
+        $subTitle = 'Delete ' . e($type) . ' "' . e($journal->description) . '"';
+
+        return View::make('transactions.delete', compact('journal', 'subTitle'));
+
+
+    }
+
+    /**
+     * @param TransactionJournal $transactionJournal
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy(TransactionJournal $transactionJournal)
+    {
+        $type   = $transactionJournal->transactionType->type;
+        $return = 'withdrawal';
+
+        Session::flash('success', 'Transaction "' . e($transactionJournal->description) . '" destroyed.');
+
+        $transactionJournal->delete();
+
+        switch ($type) {
+            case 'Deposit':
+                $return = 'deposit';
+                break;
+            case 'Transfer':
+                $return = 'transfers';
+                break;
+        }
+
+        return Redirect::route('transactions.index', $return);
+    }
+
+    /**
+     * Shows the view to edit a transaction.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return $this
+     */
+    public function edit(TransactionJournal $journal, JournalRepositoryInterface $repository)
+    {
+        $what         = strtolower($journal->transactiontype->type);
+        $accounts     = ExpandedForm::makeSelectList(
+            Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->where('active', 1)->orderBy('name', 'DESC')->get(['accounts.*'])
+        );
+        $budgets      = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
+        $budgets[0]   = '(no budget)';
+        $transactions = $journal->transactions()->orderBy('amount', 'DESC')->get();
+        $piggies      = ExpandedForm::makeSelectList(Auth::user()->piggyBanks()->get());
+        $piggies[0]   = '(no piggy bank)';
+        $preFilled    = [
+            'date'          => $journal->date->format('Y-m-d'),
+            'category'      => '',
+            'budget_id'     => 0,
+            'piggy_bank_id' => 0
+        ];
+
+        $category = $journal->categories()->first();
+        if (!is_null($category)) {
+            $preFilled['category'] = $category->name;
+        }
+
+        $budget = $journal->budgets()->first();
+        if (!is_null($budget)) {
+            $preFilled['budget_id'] = $budget->id;
+        }
+
+        if ($journal->piggyBankEvents()->count() > 0) {
+            $preFilled['piggy_bank_id'] = $journal->piggyBankEvents()->first()->piggy_bank_id;
+        }
+
+        $preFilled['amount'] = 0;
+        /** @var Transaction $t */
+        foreach ($transactions as $t) {
+            if (floatval($t->amount) > 0) {
+                $preFilled['amount'] = floatval($t->amount);
+            }
+        }
+        $preFilled['account_id']      = $repository->getAssetAccount($journal);
+        $preFilled['expense_account'] = $transactions[0]->account->name;
+        $preFilled['revenue_account'] = $transactions[1]->account->name;
+        $preFilled['account_from_id'] = $transactions[1]->account->id;
+        $preFilled['account_to_id']   = $transactions[0]->account->id;
+
+
+        return View::make('transactions.edit', compact('journal', 'accounts', 'what', 'budgets', 'piggies', 'subTitle'))->with('data', $preFilled);
+    }
+
+    /**
      * @param $what
      *
      * @return $this
@@ -108,7 +208,6 @@ class TransactionController extends Controller
 
     }
 
-
     /**
      * @param TransactionJournal $journal
      *
@@ -139,10 +238,10 @@ class TransactionController extends Controller
             }
         }
 
-        return view('transactions.show', compact('journal', 'members'))->with('subTitle', e($journal->transactiontype->type) . ' "' . e($journal->description) . '"'
+        return view('transactions.show', compact('journal', 'members'))->with(
+            'subTitle', e($journal->transactiontype->type) . ' "' . e($journal->description) . '"'
         );
     }
-
 
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository)
     {
@@ -168,6 +267,40 @@ class TransactionController extends Controller
         Session::flash('success', 'New transaction "' . $journal->description . '" stored!');
 
         return Redirect::route('transactions.index', $request->input('what'));
+
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
+     * @return $this
+     * @throws FireflyException
+     */
+    public function update(TransactionJournal $journal, JournalFormRequest $request, JournalRepositoryInterface $repository)
+    {
+
+        $journalData = [
+            'what'               => $request->get('what'),
+            'description'        => $request->get('description'),
+            'account_id'         => intval($request->get('account_id')),
+            'account_from_id'    => intval($request->get('account_from_id')),
+            'account_to_id'      => intval($request->get('account_to_id')),
+            'expense_account'    => $request->get('expense_account'),
+            'revenue_account'    => $request->get('revenue_account'),
+            'amount'             => floatval($request->get('amount')),
+            'user'               => Auth::user()->id,
+            'amount_currency_id' => intval($request->get('amount_currency_id')),
+            'date'               => new Carbon($request->get('date')),
+            'budget_id'          => intval($request->get('budget_id')),
+            'category'           => $request->get('category'),
+        ];
+
+        $repository->update($journal, $journalData);
+        Session::flash('success', 'Transaction "' . e($journalData['description']) . '" updated.');
+
+        return Redirect::route('transactions.index', $journalData['what']);
 
     }
 
