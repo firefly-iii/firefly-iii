@@ -13,6 +13,24 @@ use Illuminate\Support\Collection;
 interface JournalRepositoryInterface
 {
     /**
+     *
+     * Get the account_id, which is the asset account that paid for the transaction.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return int
+     */
+    public function getAssetAccount(TransactionJournal $journal);
+
+    /**
+     * @param string             $query
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public function searchRelated($query, TransactionJournal $journal);
+
+    /**
      * @param array $data
      *
      * @return TransactionJournal
@@ -20,10 +38,10 @@ interface JournalRepositoryInterface
     public function store(array $data);
 
     /**
-     * @param string              $query
      * @param TransactionJournal $journal
+     * @param array              $data
      *
-     * @return Collection
+     * @return mixed
      */
-    public function searchRelated($query, TransactionJournal $journal);
+    public function update(TransactionJournal $journal, array $data);
 }
