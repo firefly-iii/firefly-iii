@@ -26,6 +26,9 @@ class PasswordController extends Controller
 
     use ResetsPasswords;
 
+
+    protected $redirectPath = '/';
+
     /**
      * Create a new password controller instance.
      *
@@ -37,6 +40,7 @@ class PasswordController extends Controller
     {
         $this->auth      = $auth;
         $this->passwords = $passwords;
+
 
         $this->middleware('guest');
     }

@@ -1,11 +1,12 @@
-@extends('app')
+@extends('layouts.guest')
 
 @section('content')
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-md-8 col-md-offset-2">
-			<div class="panel panel-default">
-				<div class="panel-heading">Reset Password</div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <div class="login-panel panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Firefly III &mdash; Reset Password</h3>
+                </div>
 				<div class="panel-body">
 					@if (session('status'))
 						<div class="alert alert-success">
@@ -24,23 +25,17 @@
 						</div>
 					@endif
 
-					<form class="form-horizontal" role="form" method="POST" action="/password/email">
+					<form role="form" method="POST" action="/password/email">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
-
 						<div class="form-group">
-							<label class="col-md-4 control-label">E-Mail Address</label>
-							<div class="col-md-6">
-								<input type="email" class="form-control" name="email" value="{{ old('email') }}">
-							</div>
+							<label class="control-label">E-Mail</label>
+                            <input type="email" class="form-control" placeholder="E-Mail" name="email" value="{{ old('email') }}">
 						</div>
 
-						<div class="form-group">
-							<div class="col-md-6 col-md-offset-4">
-								<button type="submit" class="btn btn-primary">
-									Send Password Reset Link
-								</button>
-							</div>
-						</div>
+                        <p>
+                            <button type="submit" class="btn btn-lg btn-success btn-block">Send Password Reset</button>
+                        </p>
+
 					</form>
 				</div>
 			</div>

@@ -3,8 +3,10 @@
 @section('content')
 	<div class="row">
 		<div class="col-md-4 col-md-offset-4">
-			<div class="login-panel panel panel-default">
-				<div class="panel-heading">Firefly III &mdash; Register</div>
+            <div class="login-panel panel panel-default">
+				<div class="panel-heading">
+                    <h3 class="panel-title">Firefly III &mdash; Register</h3>
+                </div>
 				<div class="panel-body">
 					<p>
 						Registering an account on Firefly requires an e-mail address.
@@ -24,27 +26,30 @@
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
 
 						<div class="form-group">
-							<label class="control-label">E-Mail Address</label>
-							<input type="email" class="form-control" name="email" value="{{ old('email') }}">
+							<label class="control-label">E-Mail</label>
+							<input type="email" class="form-control" placeholder="E-Mail" name="email" value="{{ old('email') }}">
 						</div>
 
 						<div class="form-group">
 							<label class="control-label">Password</label>
-							<input type="password" class="form-control" name="password">
+							<input type="password" placeholder="Password" class="form-control" name="password">
 						</div>
 
 						<div class="form-group">
 							<label class="control-label">Confirm Password</label>
-							<input type="password" class="form-control" name="password_confirmation">
+							<input type="password" placeholder="Confirm Password" class="form-control" name="password_confirmation">
 						</div>
 
-						<div class="form-group">
-							<div class="col-md-6 col-md-offset-4">
-								<button type="submit" class="btn btn-primary">
-									Register
-								</button>
-							</div>
-						</div>
+                        <p>
+                            <button type="submit" class="btn btn-lg btn-success btn-block">Register</button>
+                        </p>
+
+
+                        <div class="btn-group btn-group-justified btn-group-sm">
+                            <a href="/auth/login" class="btn btn-default">Login</a>
+                            <a href="/password/email" class="btn btn-default">Forgot your password?</a>
+                        </div>
+
 					</form>
 				</div>
 			</div>
