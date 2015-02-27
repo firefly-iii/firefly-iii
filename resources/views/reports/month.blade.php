@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-{{ Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $date) }}
+{!! Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $date) !!}
 <div class="row">
     <div class="col-lg-5 col-md-5 col-sm-12">
         <div class="panel panel-default">
@@ -10,11 +10,11 @@
                     @foreach($income as $entry)
                         <tr>
                             <td>
-                            @if($entry->encrypted == 1)
-                                <a href="{{route('transactions.show',$entry->id)}}" title="{{{Crypt::decrypt($entry->description)}}}">{{{Crypt::decrypt($entry->description)}}}</a>
-                            @else
-                                <a href="{{route('transactions.show',$entry->id)}}" title="{{{$entry->description}}}">{{{$entry->description}}}</a>
-                            @endif
+                                @if($entry->encrypted === true)
+                                    <a href="{{route('transactions.show',$entry->id)}}" title="{{{Crypt::decrypt($entry->description)}}}">{{{Crypt::decrypt($entry->description)}}}</a>
+                                @else
+                                    <a href="{{route('transactions.show',$entry->id)}}" title="{{{$entry->description}}}">{{{$entry->description}}}</a>
+                                @endif
                             </td>
                             <td>
                                 <?php $tableSum += floatval($entry->amount);?>
@@ -39,7 +39,7 @@
                     @if(isset($displaySum) && $displaySum === true)
                         <tr>
                             <td><em>Sum</em></td>
-                            <td colspan="3">{{Amount::format($tableSum)}}</td>
+                            <td colspan="3">{!! Amount::format($tableSum) !!}</td>
 
                         </tr>
                     @endif
@@ -59,12 +59,12 @@
                         @else
                         <td><em>{{{$expense['name']}}}</em></td>
                         @endif
-                        <td>{{Amount::format($expense['amount'])}}</td>
+                        <td>{!! Amount::format($expense['amount']) !!}</td>
                     </tr>
                 @endforeach
                 <tr>
                     <td><em>Sum</em></td>
-                    <td>{{Amount::format($sum)}}</td>
+                    <td>{!! Amount::format($sum) !!}</td>
                 </tr>
             </table>
         </div>
@@ -81,15 +81,15 @@
             <table class="table table-bordered">
                 <tr>
                     <td>In</td>
-                    <td>{{Amount::format($in)}}</td>
+                    <td>{!! Amount::format($in) !!}</td>
                 </tr>
                 <tr>
                     <td>Out</td>
-                    <td>{{Amount::format($sum)}}</td>
+                    <td>{!! Amount::format($sum) !!}</td>
                 </tr>
                 <tr>
                     <td>Difference</td>
-                    <td>{{Amount::format($in - $sum)}}</td>
+                    <td>{!! Amount::format($in - $sum) !!}</td>
                 </tr>
             </table>
         </div>
@@ -125,16 +125,16 @@
                                 <em>{{{$budget['name']}}}</em>
                             @endif
                         </td>
-                        <td>{{Amount::format($budget['amount'])}}</td>
-                        <td>{{Amount::format($budget['spent'],false)}}</td>
-                        <td>{{Amount::format($budget['amount'] + $budget['spent'])}}</td>
+                        <td>{!! Amount::format($budget['amount']) !!}</td>
+                        <td>{!! Amount::format($budget['spent'],false) !!}</td>
+                        <td>{!! Amount::format($budget['amount'] + $budget['spent']) !!}</td>
                     </tr>
                     @endforeach
                     <tr>
                         <td><em>Sum</em></td>
-                        <td>{{Amount::format($sumEnvelope)}}</td>
-                        <td>{{Amount::format($sumSpent)}}</td>
-                        <td>{{Amount::format($sumLeft)}}</td>
+                        <td>{!! Amount::format($sumEnvelope) !!}</td>
+                        <td>{!! Amount::format($sumSpent) !!}</td>
+                        <td>{!! Amount::format($sumLeft) !!}</td>
                     </tr>
                 </table>
         </div>
@@ -158,12 +158,12 @@
                                 <em>{{{$category['name']}}}</em>
                             @endif
                         </td>
-                        <td>{{Amount::format($category['amount'],false)}}</td>
+                        <td>{!! Amount::format($category['amount'],false) !!}</td>
                     </tr>
                 @endforeach
                 <tr>
                     <td><em>Sum</em></td>
-                    <td>{{Amount::format($sum)}}</td>
+                    <td>{!! Amount::format($sum) !!}</td>
                 </tr>
             </table>
         </div>
@@ -187,16 +187,16 @@
                 ?>
                 <tr>
                     <td><a href="{{route('accounts.show',$id)}}">{{{$account['name']}}}</a></td>
-                    <td>{{Amount::format($account['startBalance'])}}</td>
-                    <td>{{Amount::format($account['endBalance'])}}</td>
-                    <td>{{Amount::format($account['difference'])}}</td>
+                    <td>{!! Amount::format($account['startBalance']) !!}</td>
+                    <td>{!! Amount::format($account['endBalance']) !!}</td>
+                    <td>{!! Amount::format($account['difference']) !!}</td>
                 </tr>
             @endforeach
                 <tr>
                     <td><em>Sum</em></td>
-                    <td>{{Amount::format($sumStart)}}</td>
-                    <td>{{Amount::format($sumEnd)}}</td>
-                    <td>{{Amount::format($sumDiff)}}</td>
+                    <td>{!! Amount::format($sumStart) !!}</td>
+                    <td>{!! Amount::format($sumEnd) !!}</td>
+                    <td>{!! Amount::format($sumDiff) !!}</td>
                 </tr>
             </table>
         </div>

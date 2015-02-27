@@ -8,13 +8,6 @@ body {
     background-color: #f8f8f8;
 }
 
-.google-chart-error {
-    height:30px;
-    background:url('../images/error.png') no-repeat center center
-}
-
-.google-visualization-table-tr-head td:first-child {width:100px;}
-
 #wrapper {
     width: 100%;
 }
@@ -32,6 +25,10 @@ body {
         padding: 0 30px;
         border-left: 1px solid #e7e7e7;
     }
+}
+
+.navbar-top-links {
+    margin-right: 0;
 }
 
 .navbar-top-links li {
@@ -225,6 +222,11 @@ body {
 .flot-chart-content {
     width: 100%;
     height: 100%;
+}
+
+.dataTables_wrapper {
+    position: relative;
+    clear: both;
 }
 
 table.dataTable thead .sorting,

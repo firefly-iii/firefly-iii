@@ -16,8 +16,13 @@
     </title>
 
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css" media="all" />
+    <!-- <link rel="stylesheet" href="css/metisMenu.min.css" type="text/css" media="all" /> -->
+    <!-- new css for SB admin -->
     <link rel="stylesheet" href="css/metisMenu.min.css" type="text/css" media="all" />
-    <link rel="stylesheet" href="css/sb.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="css/sb-admin-2.css" type="text/css" media="all" />
+
+
+
     <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto2" type="text/css" media="all" />
     @yield('styles')
@@ -107,8 +112,18 @@
 
 <script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/jquery.metisMenu.min.js"></script>
+<!-- <script type="text/javascript" src="js/jquery.metisMenu.min.js"></script> -->
+<!-- <script type="text/javascript" src="js/sb-admin-2.js"></script>-->
+
+<!-- new js for sb admin -->
+
+<script type="text/javascript" src="js/metisMenu.min.js"></script>
 <script type="text/javascript" src="js/sb-admin-2.js"></script>
+
+
+
+
+
 <script type="text/javascript" src="js/help.js"></script>
 <script type="text/javascript" src="js/firefly.js"></script>
 @yield('scripts')
