@@ -127,12 +127,27 @@ Route::bind(
 }
 );
 
+
+/**
+ * Auth\AuthController
+ */
+Route::get('/register', ['uses' => 'Auth\AuthController@getRegister', 'as' => 'register']);
+
+Route::controllers(
+    [
+        'auth'     => 'Auth\AuthController',
+        'password' => 'Auth\PasswordController',
+    ]
+);
+
+
 /**
  * Home Controller
  */
 Route::group(
     ['middleware' => ['auth', 'range']], function () {
     Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
+    Route::get('/home', ['uses' => 'HomeController@index', 'as' => 'home']);
     Route::get('/prev', ['uses' => 'HomeController@sessionPrev', 'as' => 'sessionPrev']);
     Route::get('/next', ['uses' => 'HomeController@sessionNext', 'as' => 'sessionNext']);
     Route::get('/jump/{range}', ['uses' => 'HomeController@rangeJump', 'as' => 'rangeJump']);
@@ -327,14 +342,3 @@ Route::group(
 }
 );
 
-/**
- * Auth\AuthController
- */
-Route::get('/register', ['uses' => 'Auth\AuthController@getRegister', 'as' => 'register']);
-
-Route::controllers(
-    [
-        'auth'     => 'Auth\AuthController',
-        'password' => 'Auth\PasswordController',
-    ]
-);

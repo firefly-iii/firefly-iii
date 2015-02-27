@@ -20,15 +20,19 @@
                 <h3 class="panel-title">Firefly III &mdash; Sign In</h3>
             </div>
             <div class="panel-body">
-
                 <form role="form" method="POST" id="login" action="/auth/login">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
-        <div class="form-group">
-            <input type="email" class="form-control" id="inputEmail" name="email" placeholder="E-mail">
-        </div>
-        <div class="form-group">
-            <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password">
-        </div>
+                    <div class="form-group">
+                        <label class="control-label">E-Mail</label>
+                        <input type="email" class="form-control" id="inputEmail" name="email" placeholder="E-Mail">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Password</label>
+                        <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password">
+                    </div>
+
+
         <div class="checkbox">
             <label>
                 <input type="checkbox" name="remember" value="1"> Remember me
