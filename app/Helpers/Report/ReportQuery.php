@@ -110,7 +110,7 @@ class ReportQuery implements ReportQueryInterface
      */
     public function getAllAccounts(Carbon $start, Carbon $end)
     {
-        $set = Auth::user()->accounts()->orderBy('accounts.name','ASC')
+        $set = Auth::user()->accounts()->orderBy('accounts.name', 'ASC')
                    ->accountTypeIn(['Default account', 'Asset account', 'Cash account'])
                    ->leftJoin(
                        'account_meta', function (JoinClause $join) {
@@ -162,7 +162,7 @@ class ReportQuery implements ReportQueryInterface
                                  ->where('transaction_journals.user_id', Auth::user()->id)
                                  ->where('transaction_types.type', 'Withdrawal')
                                  ->groupBy('budgets.id')
-                                 ->orderBy('budgets.id')
+                                 ->orderBy('budgets.name', 'ASC')
                                  ->get(['budgets.id', 'budgets.name', DB::Raw('SUM(`transactions`.`amount`) as `amount`')]);
 
         return $set;
