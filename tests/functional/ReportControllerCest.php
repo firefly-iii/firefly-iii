@@ -24,6 +24,9 @@ class ReportControllerCest
         $I->amLoggedAs(['email' => 'thegrumpydictator@gmail.com', 'password' => 'james']);
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function budget(FunctionalTester $I)
     {
         $I->wantTo('see a budget report');
@@ -31,6 +34,9 @@ class ReportControllerCest
         $I->see('Budget report for September 2014');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function budgetInvalidDate(FunctionalTester $I)
     {
         $I->wantTo('see a budget report for an invalid date');
@@ -38,6 +44,9 @@ class ReportControllerCest
         $I->see('Invalid date');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function index(FunctionalTester $I)
     {
         $I->wantTo('see all possible reports');
@@ -47,6 +56,9 @@ class ReportControllerCest
         $I->see('Budget reports');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function month(FunctionalTester $I)
     {
         $I->wantTo('see a monthly report');
@@ -54,6 +66,9 @@ class ReportControllerCest
         $I->see('Report for September 2014');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function monthInvalidDate(FunctionalTester $I)
     {
         $I->wantTo('see a monthly report for an invalid month');
@@ -61,6 +76,9 @@ class ReportControllerCest
         $I->see('Invalid date');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function year(FunctionalTester $I)
     {
         $I->wantTo('see a yearly report');
@@ -69,6 +87,9 @@ class ReportControllerCest
         $I->see('Account balance');
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function yearInvalidDate(FunctionalTester $I)
     {
         $I->wantTo('see a yearly report for an invalid year');

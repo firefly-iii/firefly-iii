@@ -20,6 +20,9 @@ class SearchControllerCest
         $I->amLoggedAs(['email' => 'thegrumpydictator@gmail.com', 'password' => 'james']);
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function index(FunctionalTester $I)
     {
         $I->wantTo('search for "salary"');
@@ -29,6 +32,9 @@ class SearchControllerCest
 
     }
 
+    /**
+     * @param FunctionalTester $I
+     */
     public function indexNoQuery(FunctionalTester $I)
     {
         $I->wantTo('Search for empty string');
