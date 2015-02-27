@@ -11,40 +11,10 @@
     </div>
     <!-- /.navbar-header -->
 
+
+
     <ul class="nav navbar-top-links navbar-right">
 
-        <!-- reminders -->
-        @if(isset($reminders) && count($reminders) > 0)
-        <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                <i class="fa fa-bell fa-fw"></i>  <i class="fa fa-caret-down"></i>
-            </a>
-            <ul class="dropdown-menu dropdown-alerts">
-                @foreach($reminders as $index => $reminder)
-                <li>
-                    <a href="{{route('reminders.show',$reminder->id)}}">
-                        <div>
-                            <i class="fa fa-clock-o fa-fw"></i>
-                            <!-- may be a title, may be a name or a description -->
-                            @if($reminder->remindersable->title)
-                                {{{$reminder->remindersable->title}}}
-                            @endif
-                            @if($reminder->remindersable->name)
-                                {{{$reminder->remindersable->name}}}
-                            @endif
-                            <span class="pull-right text-muted small"></span>
-                        </div>
-                    </a>
-                </li>
-                @if($index+1 != count($reminders))
-                    <li class="divider"></li>
-                @endif
-                @endforeach
-            </ul>
-            <!-- /.dropdown-alerts -->
-        </li>
-        @endif
-        <!-- /.dropdown -->
 
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -63,7 +33,12 @@
 
 
         <!-- /.dropdown -->
+
+
     </ul>
+
+
+
     <!-- /.navbar-top-links -->
     <div class="navbar-default sidebar" role="navigation">
         <div class="sidebar-nav navbar-collapse">
