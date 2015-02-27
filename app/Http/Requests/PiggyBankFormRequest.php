@@ -28,25 +28,31 @@ class PiggyBankFormRequest extends Request
     public function rules()
     {
 
-        $nameRule = 'required|between:1,255|uniqueForUser:piggy_banks,name';
+        $nameRule       = 'required|between:1,255|uniqueForUser:piggy_banks,name';
+        $targetDateRule = 'date';
         if (intval(Input::get('id'))) {
             $nameRule = 'required|between:1,255';
         }
 
+        if (intval(Input::get('repeats')) == 1) {
+            $targetDateRule = 'required|date|after:' . date('Y-m-d');
+        }
+
         $rules = [
-            'account_id'    => 'required|belongsToUser:accounts',
-            'name'          => $nameRule,
-            'targetamount'  => 'required|min:0.01',
-            'startdate'     => 'date',
-            'targetdate'    => 'date',
-            'repeats'       => 'required|boolean',
-            'rep_length'    => 'in:day,week,quarter,month,year',
-            'rep_every'     => 'integer|min:0|max:31',
-            'rep_times'     => 'integer|min:0|max:99',
-            'reminder'      => 'in:day,week,quarter,month,year',
-            'reminder_skip' => 'integer|min:0|max:99',
-            'remind_me'     => 'boolean',
-            'order'         => 'integer|min:1',
+            'repeats'            => 'required|boolean',
+            'name'               => $nameRule,
+            'account_id'         => 'required|belongsToUser:accounts',
+            'targetamount'       => 'required|min:0.01',
+            'amount_currency_id' => 'exists:transaction_currencies,id',
+            'startdate'          => 'date',
+            'targetdate'         => $targetDateRule,
+            'rep_length'         => 'in:day,week,quarter,month,year',
+            'rep_every'          => 'integer|min:0|max:31',
+            'rep_times'          => 'integer|min:0|max:99',
+            'reminder'           => 'in:day,week,quarter,month,year',
+            'reminder_skip'      => 'integer|min:0|max:99',
+            'remind_me'          => 'boolean',
+            'order'              => 'integer|min:1',
 
         ];
 
