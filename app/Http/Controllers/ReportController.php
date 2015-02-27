@@ -65,6 +65,7 @@ class ReportController extends Controller
                     $data       = $budget->toArray();
                     $array[$id] = $data;
                 }
+
                 $account->budgetInformation = $array;
                 $account->balancedAmount    = $balancedAmount;
 
@@ -77,7 +78,7 @@ class ReportController extends Controller
         /**
          * Start getBudgetsForMonth DONE
          */
-        $set                  = Auth::user()->budgets()
+        $set                  = Auth::user()->budgets()->orderBy('budgets.name', 'ASC')
                                     ->leftJoin(
                                         'budget_limits', function (JoinClause $join) use ($date) {
                                         $join->on('budget_limits.budget_id', '=', 'budgets.id')->where('budget_limits.startdate', '=', $date->format('Y-m-d'));
