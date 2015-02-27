@@ -47,13 +47,14 @@ class ReportController extends Controller
         $start->startOfMonth();
         $end = clone $date;
         $end->endOfMonth();
-        //$start->subDay();
+        $start->subDay();
 
         $dayEarly     = clone $date;
         $subTitle     = 'Budget report for ' . $date->format('F Y');
         $subTitleIcon = 'fa-calendar';
         $dayEarly     = $dayEarly->subDay();
         $accounts     = $query->getAllAccounts($start, $end);
+        $start->addDay();
 
         $accounts->each(
             function (Account $account) use ($start, $end, $query) {
