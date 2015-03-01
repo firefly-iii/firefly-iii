@@ -3,6 +3,7 @@
 use Auth;
 use Carbon\Carbon;
 use ExpandedForm;
+use FireflyIII\Events\JournalSaved;
 use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\JournalFormRequest;
 use FireflyIII\Models\Transaction;
@@ -264,6 +265,8 @@ class TransactionController extends Controller
 
         $journal = $repository->store($journalData);
 
+        event(new JournalSaved($journal));
+
         Session::flash('success', 'New transaction "' . $journal->description . '" stored!');
 
         return Redirect::route('transactions.index', $request->input('what'));
@@ -298,6 +301,9 @@ class TransactionController extends Controller
         ];
 
         $repository->update($journal, $journalData);
+
+        event(new JournalSaved($journal));
+
         Session::flash('success', 'Transaction "' . e($journalData['description']) . '" updated.');
 
         return Redirect::route('transactions.index', $journalData['what']);

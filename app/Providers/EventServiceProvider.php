@@ -30,11 +30,8 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen
         = [
-            'event.name'                => [
-                'EventListener',
-            ],
-            'App\Events\JournalDeleted' => [
-                'App\Handlers\Events\JournalDeletedHandler@handle',
+            'FireflyIII\Events\JournalSaved' => [
+                'FireflyIII\Handlers\Events\RescanJournal',
             ],
         ];
 
@@ -59,26 +56,6 @@ class EventServiceProvider extends ServiceProvider
             }
         );
 
-//        TransactionJournal::saved(
-//            function (TransactionJournal $journal) {
-//
-//                Log::debug('Triggered saved event for journal #' . $journal->id . ' (' . $journal->description . ')');
-//
-//                /** @var \FireflyIII\Repositories\Bill\BillRepositoryInterface $repository */
-//                $repository = App::make('FireflyIII\Repositories\Bill\BillRepositoryInterface');
-//                $list       = $journal->user->bills()->where('active', 1)->where('automatch', 1)->get();
-//
-//                Log::debug('Found ' . $list->count() . ' bills to check.');
-//
-//                /** @var Bill $bill */
-//                foreach ($list as $bill) {
-//                    Log::debug('Now calling bill #' . $bill->id . ' (' . $bill->name . ')');
-//                    $repository->scan($bill, $journal);
-//                }
-//
-//                Log::debug('Done!');
-//            }
-//        );
 
 
         Account::deleted(
