@@ -46,7 +46,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getJournals(Account $account, $page, $range = 'session')
     {
-        $offset = $page * 50;
+        $offset = ($page-1) * 50;
         $query  = Auth::user()
                       ->transactionJournals()
                       ->withRelevantData()
@@ -55,7 +55,7 @@ class AccountRepository implements AccountRepositoryInterface
                       ->orderBy('date', 'DESC');
 
         if ($range == 'session') {
-            $query->before(Session::get('end', Carbon::now()->startOfMonth()));
+            $query->before(Session::get('end', Carbon::now()->endOfMonth()));
             $query->after(Session::get('start', Carbon::now()->startOfMonth()));
         }
         $count     = $query->count();

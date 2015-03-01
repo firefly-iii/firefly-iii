@@ -74,6 +74,12 @@ class AccountController extends Controller
         return Redirect::route('accounts.index', $typeName);
     }
 
+    /**
+     * @param Account                    $account
+     * @param AccountRepositoryInterface $repository
+     *
+     * @return View
+     */
     public function edit(Account $account, AccountRepositoryInterface $repository)
     {
         $what           = Config::get('firefly.shortNamesByFullName')[$account->accountType->type];

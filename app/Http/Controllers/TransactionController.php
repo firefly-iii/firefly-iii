@@ -268,6 +268,9 @@ class TransactionController extends Controller
         event(new JournalSaved($journal));
 
         Session::flash('success', 'New transaction "' . $journal->description . '" stored!');
+        if (intval(Input::get('create_another')) === 1) {
+            return Redirect::route('transactions.create', $request->input('what'));
+        }
 
         return Redirect::route('transactions.index', $request->input('what'));
 
@@ -283,6 +286,7 @@ class TransactionController extends Controller
      */
     public function update(TransactionJournal $journal, JournalFormRequest $request, JournalRepositoryInterface $repository)
     {
+
 
         $journalData = [
             'what'               => $request->get('what'),
@@ -305,6 +309,10 @@ class TransactionController extends Controller
         event(new JournalSaved($journal));
 
         Session::flash('success', 'Transaction "' . e($journalData['description']) . '" updated.');
+
+        if (intval(Input::get('return_to_edit')) === 1) {
+            return Redirect::route('transactions.edit', $journal->id);
+        }
 
         return Redirect::route('transactions.index', $journalData['what']);
 
