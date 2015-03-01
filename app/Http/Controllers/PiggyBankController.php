@@ -78,7 +78,7 @@ class PiggyBankController extends Controller
     {
         $subTitle = 'Delete "' . e($piggyBank->name) . '"';
 
-        return view('piggy_banks.delete', compact('piggyBank', 'subTitle'));
+        return view('piggy-banks.delete', compact('piggyBank', 'subTitle'));
     }
 
     /**
@@ -90,9 +90,9 @@ class PiggyBankController extends Controller
     {
 
         Session::flash('success', 'Piggy bank "' . e($piggyBank->name) . '" deleted.');
-        $this->_repository->destroy($piggyBank);
+        $piggyBank->delete();
 
-        return Redirect::route('piggy_banks.index');
+        return Redirect::route('piggy-banks.index');
     }
 
     /**
