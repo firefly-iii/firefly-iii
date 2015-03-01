@@ -33,8 +33,8 @@ class BillFormRequest extends Request
     public function rules()
     {
         $nameRule = 'required|between:1,255|uniqueForUser:bills,name';
-        if(intval(Input::get('id')) > 0) {
-            $nameRule .= ','.intval(Input::get('id'));
+        if (intval(Input::get('id')) > 0) {
+            $nameRule .= ',' . intval(Input::get('id'));
         }
 
         $rules = [

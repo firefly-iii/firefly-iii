@@ -36,7 +36,7 @@ class CreateAccountsTable extends Migration
             $table->softDeletes();
             $table->integer('user_id')->unsigned();
             $table->integer('account_type_id')->unsigned();
-            $table->string('name', 100);
+            $table->string('name', 1024);
             $table->boolean('active');
 
             // connect accounts to users
