@@ -255,8 +255,8 @@ Route::group(
      * Piggy Bank Controller
      */
     Route::get('/piggy-banks', ['uses' => 'PiggyBankController@index', 'as' => 'piggy-banks.index']);
-    Route::get('/piggy-banks/add/{piggyBank}', ['uses' => 'PiggyBankController@add']); # add money
-    Route::get('/piggy-banks/remove/{piggyBank}', ['uses' => 'PiggyBankController@remove']); #remove money
+    Route::get('/piggy-banks/add/{piggyBank}', ['uses' => 'PiggyBankController@add','as' => 'piggy-banks.addMoney']); # add money
+    Route::get('/piggy-banks/remove/{piggyBank}', ['uses' => 'PiggyBankController@remove','as' => 'piggy-banks.removeMoney']); #remove money
     Route::get('/piggy-banks/create', ['uses' => 'PiggyBankController@create', 'as' => 'piggy-banks.create']);
     Route::get('/piggy-banks/edit/{piggyBank}', ['uses' => 'PiggyBankController@edit', 'as' => 'piggy-banks.edit']);
     Route::get('/piggy-banks/delete/{piggyBank}', ['uses' => 'PiggyBankController@delete', 'as' => 'piggy-banks.delete']);
