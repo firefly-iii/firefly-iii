@@ -1,7 +1,6 @@
 <?php namespace FireflyIII\Providers;
 
 use App;
-use Auth;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\BudgetLimit;
@@ -14,6 +13,7 @@ use FireflyIII\Support\Facades\Navigation;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Log;
 
 /**
  * Class EventServiceProvider
@@ -59,19 +59,26 @@ class EventServiceProvider extends ServiceProvider
             }
         );
 
-        TransactionJournal::saved(
-            function (TransactionJournal $journal) {
-
-                /** @var \FireflyIII\Repositories\Bill\BillRepositoryInterface $repository */
-                $repository = App::make('FireflyIII\Repositories\Bill\BillRepositoryInterface');
-
-                $list       = $journal->user->bills()->where('active', 1)->where('automatch', 1)->get();
-                /** @var Bill $bill */
-                foreach ($list as $bill) {
-                    $repository->scan($bill, $journal);
-                }
-            }
-        );
+//        TransactionJournal::saved(
+//            function (TransactionJournal $journal) {
+//
+//                Log::debug('Triggered saved event for journal #' . $journal->id . ' (' . $journal->description . ')');
+//
+//                /** @var \FireflyIII\Repositories\Bill\BillRepositoryInterface $repository */
+//                $repository = App::make('FireflyIII\Repositories\Bill\BillRepositoryInterface');
+//                $list       = $journal->user->bills()->where('active', 1)->where('automatch', 1)->get();
+//
+//                Log::debug('Found ' . $list->count() . ' bills to check.');
+//
+//                /** @var Bill $bill */
+//                foreach ($list as $bill) {
+//                    Log::debug('Now calling bill #' . $bill->id . ' (' . $bill->name . ')');
+//                    $repository->scan($bill, $journal);
+//                }
+//
+//                Log::debug('Done!');
+//            }
+//        );
 
 
         Account::deleted(
