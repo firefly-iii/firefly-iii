@@ -7,7 +7,6 @@
             <div class="panel-heading">
                 Metadata
             </div>
-            <div class="panel-body">
                 <table class="table table-striped table-bordered">
                     <tr>
                         <td>Date</td>
@@ -45,7 +44,6 @@
                     @endforeach
 
                 </table>
-            </div>
         </div>
         <!-- events, if present -->
         @if(count($journal->piggyBankEvents) > 0)
@@ -100,7 +98,6 @@
             <div class="panel-heading">
                 <a href="{{route('accounts.show',$t->account->id)}}">{{{$t->account->name}}}</a><br /><small>{{{$t->account->accounttype->description}}}</small>
             </div>
-            <div class="panel-body">
                 <table class="table table-striped table-bordered">
                     <tr>
                         <td>Amount</td>
@@ -117,7 +114,6 @@
                     </tr>
                     @endif
                 </table>
-            </div>
         </div>
     @endforeach
     </div>
