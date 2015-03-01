@@ -230,7 +230,9 @@ class ReportQuery implements ReportQueryInterface
                                       'transaction_journals.description',
                                       'transaction_journals.encrypted',
                                       'transaction_types.type',
-                                      't_to.amount', 'transaction_journals.date', 't_from.account_id as account_id',
+                                      DB::Raw('SUM(`t_to`.`amount`) as `amount`'),
+                                      'transaction_journals.date',
+                                      't_from.account_id as account_id',
                                       'ac_from.name as name']
                                  );
     }
