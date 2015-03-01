@@ -15,12 +15,6 @@ class ChangesForV332 extends Migration {
 	 */
 	public function up()
 	{
-        Schema::table(
-            'transaction_journals', function (Blueprint $table) {
-            $table->boolean('encrypted');
-
-        }
-        );
 
         Schema::table(
             'accounts', function (Blueprint $table) {

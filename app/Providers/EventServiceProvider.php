@@ -1,17 +1,19 @@
 <?php namespace FireflyIII\Providers;
 
+use App;
+use Auth;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Bill;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Facades\Navigation;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-
 
 /**
  * Class EventServiceProvider
@@ -57,6 +59,21 @@ class EventServiceProvider extends ServiceProvider
             }
         );
 
+        TransactionJournal::saved(
+            function (TransactionJournal $journal) {
+
+                /** @var \FireflyIII\Repositories\Bill\BillRepositoryInterface $repository */
+                $repository = App::make('FireflyIII\Repositories\Bill\BillRepositoryInterface');
+
+                $list       = $journal->user->bills()->where('active', 1)->where('automatch', 1)->get();
+                /** @var Bill $bill */
+                foreach ($list as $bill) {
+                    $repository->scan($bill, $journal);
+                }
+            }
+        );
+
+
         Account::deleted(
             function (Account $account) {
 
@@ -68,14 +85,16 @@ class EventServiceProvider extends ServiceProvider
             }
         );
 
-        PiggyBank::created(function(PiggyBank $piggyBank) {
+        PiggyBank::created(
+            function (PiggyBank $piggyBank) {
                 $repetition = new PiggyBankRepetition;
                 $repetition->piggyBank()->associate($piggyBank);
                 $repetition->startdate     = $piggyBank->startdate;
                 $repetition->targetdate    = $piggyBank->targetdate;
                 $repetition->currentamount = 0;
                 $repetition->save();
-        });
+            }
+        );
 
         BudgetLimit::saved(
             function (BudgetLimit $budgetLimit) {

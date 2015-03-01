@@ -279,7 +279,6 @@ class TestDataSeeder extends Seeder
         );
         // and some events!
         PiggyBankEvent::create(['piggy_bank_id' => $newCamera->id, 'date' => $this->som, 'amount' => 100]);
-        //PiggyBankRepetition::create(['piggy_bank_id' => $newCamera->id, 'startdate' => $this->som, 'targetdate' => null, 'currentamount' => 100]);
 
 
         $newClothes = PiggyBank::create(
@@ -301,7 +300,6 @@ class TestDataSeeder extends Seeder
         );
 
         PiggyBankEvent::create(['piggy_bank_id' => $newClothes->id, 'date' => $this->som, 'amount' => 100]);
-        //PiggyBankRepetition::create(['piggy_bank_id' => $newClothes->id, 'startdate' => $this->som, 'targetdate' => $end, 'currentamount' => 100]);
 
         // weekly reminder piggy bank
         $weekly = PiggyBank::create(
@@ -321,7 +319,6 @@ class TestDataSeeder extends Seeder
                 'order'         => 0,
             ]
         );
-        //PiggyBankRepetition::create(['piggy_bank_id' => $weekly->id, 'startdate' => $this->som, 'targetdate' => $next, 'currentamount' => 0]);
     }
 
     /**
@@ -374,10 +371,10 @@ class TestDataSeeder extends Seeder
                 'order'         => 0,
             ]
         );
-        PiggyBankRepetition::create(['piggy_bank_id' => $recurring->id, 'startdate' => $this->som, 'targetdate' => $this->eom, 'currentamount' => 0]);
-        PiggyBankRepetition::create(
-            ['piggy_bank_id' => $recurring->id, 'startdate' => $this->nsom, 'targetdate' => $this->neom, 'currentamount' => 0]
-        );
+//        PiggyBankRepetition::create(['piggy_bank_id' => $recurring->id, 'startdate' => $this->som, 'targetdate' => $this->eom, 'currentamount' => 0]);
+//        PiggyBankRepetition::create(
+//            ['piggy_bank_id' => $recurring->id, 'startdate' => $this->nsom, 'targetdate' => $this->neom, 'currentamount' => 0]
+//        );
         Reminder::create(
             ['user_id'          => $user->id, 'startdate' => $this->som, 'enddate' => $this->neom, 'active' => 1, 'notnow' => 0,
              'remindersable_id' => $recurring->id, 'remindersable_type' => 'PiggyBank']
