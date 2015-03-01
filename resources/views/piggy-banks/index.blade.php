@@ -36,9 +36,9 @@
                     <div class="col-lg-1 col-md-4 col-sm-4 col-xs-4">
                         <div class="btn-group btn-group-xs">
                             @if($piggyBank->leftToSave > 0)
-                                <a href="#" class="btn btn-default addMoney" data-id="{{{$piggyBank->id}}}"><span data-id="{{{$piggyBank->id}}}" class="glyphicon glyphicon-plus"></span></a>
+                                <a href="{{route('piggy-banks.addMoney',$piggyBank->id)}}" class="btn btn-default addMoney" data-id="{{{$piggyBank->id}}}"><span data-id="{{{$piggyBank->id}}}" class="glyphicon glyphicon-plus"></span></a>
                             @endif
-                            <a href="#" class="btn btn-default removeMoney" data-id="{{{$piggyBank->id}}}"><span data-id="{{{$piggyBank->id}}}" class="glyphicon glyphicon-minus"></span></a>
+                            <a href="{{route('piggy-banks.removeMoney',$piggyBank->id)}}" class="btn btn-default removeMoney" data-id="{{{$piggyBank->id}}}"><span data-id="{{{$piggyBank->id}}}" class="glyphicon glyphicon-minus"></span></a>
                         </div>
                     </div>
                     <!-- One block -->
@@ -124,6 +124,9 @@
 
 <!-- this is the modal for the add/remove money routine: -->
 <div class="modal fade" id="moneyManagementModal">
+
+
+
 </div><!-- /.modal -->
 
 @stop
