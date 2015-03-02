@@ -3,12 +3,11 @@
 use Auth;
 use Cache;
 use Carbon\Carbon;
-use Navigation;
+use Input;
 use Preferences;
 use Redirect;
 use Session;
-use URL;
-use Input;
+
 /**
  * Class HomeController
  *
@@ -24,12 +23,19 @@ class HomeController extends Controller
     {
     }
 
-    public function dateRange() {
+    public function dateRange()
+    {
         $start = new Carbon(Input::get('start'));
-        $end = new Carbon(Input::get('end'));
+        $end   = new Carbon(Input::get('end'));
 
-        Session::put('start',$start);
-        Session::put('end',$end);
+        $diff = $start->diffInDays($end);
+
+        if ($diff > 50) {
+            Session::flash('warning', $diff . ' days of data may take a while to load.');
+        }
+
+        Session::put('start', $start);
+        Session::put('end', $end);
     }
 
     /**

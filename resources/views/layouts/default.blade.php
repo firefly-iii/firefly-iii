@@ -128,6 +128,7 @@
     var titleString = "{{Session::get('start')->format('j M Y')}} - {{Session::get('end')->format('j M Y')}}";
     var dateRangeURL = "{{route('daterange')}}";
     var token = "{{csrf_token()}}";
+    var firstDate = moment("{{Session::get('first')->format('Y-m-d')}}");
     $('#daterange span').text(titleString);
 </script>
 

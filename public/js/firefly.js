@@ -7,7 +7,8 @@ $(function () {
                 ranges: {
                     'This Month': [moment().startOf('month'), moment().endOf('month')],
                     'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                    'Next Month': [moment().add('month', 1).startOf('month'), moment().add('month', 1).endOf('month')]
+                    'Next Month': [moment().add('month', 1).startOf('month'), moment().add('month', 1).endOf('month')],
+                    'Everything': [firstDate, moment()]
                 },
                 opens: 'left',
 
@@ -21,6 +22,7 @@ $(function () {
                 $.post(dateRangeURL, {
                     start: start.format('YYYY-MM-DD'),
                     end: end.format('YYYY-MM-DD'),
+                    label: label,
                     _token: token
                 }).success(function() {
                     window.location.reload(true);

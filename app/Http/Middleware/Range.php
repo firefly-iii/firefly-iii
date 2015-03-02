@@ -6,9 +6,9 @@ namespace FireflyIII\Http\Middleware;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
+use Navigation;
 use Preferences;
 use Session;
-use Navigation;
 
 /**
  * Class SessionFilter
@@ -58,6 +58,14 @@ class Range
 
                 Session::put('start', $start);
                 Session::put('end', $end);
+            }
+            if (!Session::has('first')) {
+                $journal = $this->auth->user()->transactionjournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
+                if ($journal) {
+                    Session::put('first', $journal->date);
+                } else {
+                    Session::put('first', Carbon::now());
+                }
             }
 
 
