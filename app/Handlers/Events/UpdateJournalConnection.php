@@ -51,9 +51,6 @@ class UpdateJournalConnection
         $diff = $amount - $event->amount;
 
         $repetition->currentamount += $diff;
-        if($repetition->currentamount < 0) {
-            $repetition->currentamount = 0;
-        }
         $repetition->save();
 
 
