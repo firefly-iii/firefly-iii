@@ -4,6 +4,7 @@ use App;
 use Auth;
 use Carbon\Carbon;
 use Crypt;
+use DB;
 use Exception;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Http\Requests;
@@ -19,11 +20,11 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Grumpydictator\Gchart\GChart;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Query\JoinClause;
+use Illuminate\Support\Collection;
 use Navigation;
 use Preferences;
 use Response;
 use Session;
-use DB;
 use Steam;
 
 /**
@@ -177,27 +178,35 @@ class GoogleChartController extends Controller
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
 
-            /** @var \LimitRepetition $repetition */
-            $repetition = LimitRepetition::
+            /** @var Collection $repetitions */
+            $repetitions = LimitRepetition::
             leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
-                                         ->where('limit_repetitions.startdate', $start->format('Y-m-d 00:00:00'))
-                                         ->where('budget_limits.budget_id', $budget->id)
-                                         ->first(['limit_repetitions.*']);
-            if (is_null($repetition)) { // use the session start and end for our search query
-                $searchStart = $start;
-                $searchEnd   = $end;
-                $limit       = 0; // the limit is zero:
+                                          ->where('limit_repetitions.startdate', '<=', $end->format('Y-m-d 00:00:00'))
+                                          ->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d 00:00:00'))
+                                          ->where('budget_limits.budget_id', $budget->id)
+                                          ->get(['limit_repetitions.*']);
+
+            // no results? search entire range for expenses and list those.
+            if ($repetitions->count() == 0) {
+                $expenses = floatval($budget->transactionjournals()->before($end)->after($start)->lessThan(0)->sum('amount')) * -1;
+                if ($expenses > 0) {
+                    $chart->addRow($budget->name, 0, $expenses);
+                }
             } else {
-                // use the limit's start and end for our search query
-                $searchStart = $repetition->startdate;
-                $searchEnd   = $repetition->enddate;
-                $limit       = floatval($repetition->amount); // the limit is the repetitions limit:
+                // add with foreach:
+                /** @var LimitRepetition $repetition */
+                foreach ($repetitions as $repetition) {
+
+                    $expenses
+                        =
+                        floatval($budget->transactionjournals()->before($repetition->enddate)->after($repetition->startdate)->lessThan(0)->sum('amount')) * -1;
+                    if ($expenses > 0) {
+                        $chart->addRow($budget->name . ' (' . $repetition->startdate->format('j M Y') . ')', floatval($repetition->amount), $expenses);
+                    }
+                }
             }
 
-            $expenses = floatval($budget->transactionjournals()->before($searchEnd)->after($searchStart)->lessThan(0)->sum('amount')) * -1;
-            if ($expenses > 0) {
-                $chart->addRow($budget->name, $limit, $expenses);
-            }
+
         }
 
         $noBudgetSet = Auth::user()
