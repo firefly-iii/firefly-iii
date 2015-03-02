@@ -1,7 +1,7 @@
 @if(is_object($accounts) && method_exists($accounts, 'render'))
     {!! $accounts->render() !!}
 @endif
-<table class="table table-striped">
+<table class="table table-striped table-bordered">
     <tr>
         <th>&nbsp;</th>
         <th>Name</th>
