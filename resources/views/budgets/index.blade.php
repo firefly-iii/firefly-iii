@@ -13,7 +13,7 @@
                         <small>Budgeted: <span id="budgetedAmount" data-value="300">{{Amount::format(300)}}</span></small>
                     </div>
                     <div class="col-lg-6 col-md-4 col-sm-3" style="text-align:right;">
-                        <small>Income {{Session::get('start', \Carbon\Carbon::now()->startOfMonth())->format('F Y')}}:
+                        <small>Available in {{Session::get('start', \Carbon\Carbon::now()->startOfMonth())->format('F Y')}}:
                         <a href="#" class="updateIncome"><span id="totalAmount" data-value="{{$amount}}">{!! Amount::format($amount) !!}</span></a></small>
                     </div>
                 </div>

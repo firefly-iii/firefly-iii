@@ -40,11 +40,10 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @param Account $account
      * @param int     $page
-     * @param string  $range
      *
      * @return mixed
      */
-    public function getJournals(Account $account, $page, $range = 'session')
+    public function getJournals(Account $account, $page)
     {
         $offset = ($page - 1) * 50;
         $query  = Auth::user()
@@ -54,10 +53,8 @@ class AccountRepository implements AccountRepositoryInterface
                       ->where('transactions.account_id', $account->id)
                       ->orderBy('date', 'DESC');
 
-        if ($range == 'session') {
-            $query->before(Session::get('end', Carbon::now()->endOfMonth()));
-            $query->after(Session::get('start', Carbon::now()->startOfMonth()));
-        }
+        $query->before(Session::get('end', Carbon::now()->endOfMonth()));
+        $query->after(Session::get('start', Carbon::now()->startOfMonth()));
         $count     = $query->count();
         $set       = $query->take(50)->offset($offset)->get(['transaction_journals.*']);
         $paginator = new LengthAwarePaginator($set, $count, 50, $page);
@@ -297,32 +294,6 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @param Account            $account
-     * @param TransactionJournal $journal
-     * @param array              $data
-     *
-     * @return TransactionJournal
-     */
-    protected function _updateInitialBalance(Account $account, TransactionJournal $journal, array $data)
-    {
-        $journal->date = $data['openingBalanceDate'];
-
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions()->get() as $transaction) {
-            if ($account->id == $transaction->account_id) {
-                $transaction->amount = $data['openingBalance'];
-                $transaction->save();
-            }
-            if ($account->id != $transaction->account_id) {
-                $transaction->amount = $data['openingBalance'] * -1;
-                $transaction->save();
-            }
-        }
-
-        return $journal;
-    }
-
-    /**
      * @param Account $account
      * @param array   $data
      */
@@ -354,5 +325,31 @@ class AccountRepository implements AccountRepositoryInterface
             $metaData->save();
         }
 
+    }
+
+    /**
+     * @param Account            $account
+     * @param TransactionJournal $journal
+     * @param array              $data
+     *
+     * @return TransactionJournal
+     */
+    protected function _updateInitialBalance(Account $account, TransactionJournal $journal, array $data)
+    {
+        $journal->date = $data['openingBalanceDate'];
+
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions()->get() as $transaction) {
+            if ($account->id == $transaction->account_id) {
+                $transaction->amount = $data['openingBalance'];
+                $transaction->save();
+            }
+            if ($account->id != $transaction->account_id) {
+                $transaction->amount = $data['openingBalance'] * -1;
+                $transaction->save();
+            }
+        }
+
+        return $journal;
     }
 }

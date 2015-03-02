@@ -21,12 +21,11 @@ interface AccountRepositoryInterface
 
     /**
      * @param Account $account
-     * @param int     $page
      * @param string  $range
      *
      * @return mixed
      */
-    public function getJournals(Account $account, $page, $range = 'session');
+    public function getJournals(Account $account, $page);
 
     /**
      * @param Account $account

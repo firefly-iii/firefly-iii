@@ -9,6 +9,8 @@ use Redirect;
 use Session;
 use View;
 use Cache;
+use Input;
+
 
 /**
  * Class CurrencyController
@@ -145,6 +147,10 @@ class CurrencyController extends Controller
 
         Session::flash('success', 'Currency "' . $currency->name . '" created');
 
+        if (intval(Input::get('create_another')) === 1) {
+            return Redirect::route('currency.create');
+        }
+
         return Redirect::route('currency.index');
 
 
@@ -163,7 +169,12 @@ class CurrencyController extends Controller
         $currency->name   = $request->get('name');
         $currency->save();
 
-        Session::flash('success', 'Currency "' . e($currency->namename) . '" updated.');
+        Session::flash('success', 'Currency "' . e($currency->name) . '" updated.');
+
+
+        if (intval(Input::get('return_to_edit')) === 1) {
+            return Redirect::route('currency.edit', $currency->id);
+        }
 
         return Redirect::route('currency.index');
 

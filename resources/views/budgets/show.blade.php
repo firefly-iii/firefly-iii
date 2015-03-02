@@ -20,6 +20,10 @@
         </div>
     </div>
     <div class="col-lg-3 col-md-3 col-sm-5">
+        @if(count($limits) == 1)
+        <p class="small text-center"><a href="{{route('budgets.show',$budget->id)}}">Show everything</a></p>
+        @endif
+
         @foreach($limits as $limit)
             @foreach($limit->limitrepetitions as $rep)
                 <div class="panel panel-default">
@@ -64,6 +68,9 @@
             @endforeach
         @endforeach
 
+        @if(count($limits) == 1)
+            <p class="small text-center"><a href="{{route('budgets.show',$budget->id)}}">Show everything</a></p>
+        @endif
 
     </div>
 </div>

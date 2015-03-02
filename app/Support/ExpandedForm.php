@@ -8,6 +8,7 @@ use Illuminate\Support\MessageBag;
 use Input;
 use Session;
 use View;
+use Amount;
 
 /**
  * Class ExpandedForm
@@ -16,46 +17,6 @@ use View;
  */
 class ExpandedForm
 {
-
-    /**
-     * @param       $name
-     * @param null  $value
-     * @param array $options
-     *
-     * @return string
-     */
-    public  function integer($name, $value = null, array $options = [])
-    {
-        $label           = $this->label($name, $options);
-        $options         = $this->expandOptionArray($name, $label, $options);
-        $classes         = $this->getHolderClasses($name);
-        $value           = $this->fillFieldValue($name, $value);
-        $options['step'] = '1';
-        $html            = \View::make('form.integer', compact('classes', 'name', 'label', 'value', 'options'))->render();
-
-        return $html;
-
-    }
-
-
-    /**
-     * @param       $name
-     * @param null  $value
-     * @param array $options
-     *
-     * @return string
-     */
-    public  function tags($name, $value = null, array $options = [])
-    {
-        $label                = $this->label($name, $options);
-        $options              = $this->expandOptionArray($name, $label, $options);
-        $classes              = $this->getHolderClasses($name);
-        $value                = $this->fillFieldValue($name, $value);
-        $options['data-role'] = 'tagsinput';
-        $html                 = \View::make('form.tags', compact('classes', 'name', 'label', 'value', 'options'))->render();
-
-        return $html;
-    }
 
     /**
      * @param       $name
@@ -91,9 +52,19 @@ class ExpandedForm
         if (isset($options['label'])) {
             return $options['label'];
         }
-        $labels = ['amount_min'      => 'Amount (min)', 'amount_max' => 'Amount (max)', 'match' => 'Matches on', 'repeat_freq' => 'Repetition',
-                   'account_from_id' => 'Account from', 'account_to_id' => 'Account to', 'account_id' => 'Asset account', 'budget_id' => 'Budget'
-                   , 'piggy_bank_id' => 'Piggy bank'];
+        $labels = [
+            'amount_min'         => 'Amount (min)',
+            'amount_max'         => 'Amount (max)',
+            'match'              => 'Matches on',
+            'repeat_freq'        => 'Repetition',
+            'account_from_id'    => 'Account from',
+            'account_to_id'      => 'Account to',
+            'account_id'         => 'Asset account',
+            'budget_id'          => 'Budget',
+            'openingBalance'     => 'Opening balance',
+            'accountRole'        => 'Account role',
+            'openingBalanceDate' => 'Opening balance date',
+            'piggy_bank_id'      => 'Piggy bank'];
 
 
         return isset($labels[$name]) ? $labels[$name] : str_replace('_', ' ', ucfirst($name));
@@ -230,6 +201,26 @@ class ExpandedForm
     }
 
     /**
+     * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     */
+    public function integer($name, $value = null, array $options = [])
+    {
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
+        $options['step'] = '1';
+        $html            = \View::make('form.integer', compact('classes', 'name', 'label', 'value', 'options'))->render();
+
+        return $html;
+
+    }
+
+    /**
      * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
      *
      * Takes any collection and tries to make a sensible select list compatible array of it.
@@ -292,6 +283,25 @@ class ExpandedForm
         $classes  = $this->getHolderClasses($name);
         $selected = $this->fillFieldValue($name, $selected);
         $html     = \View::make('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
+
+        return $html;
+    }
+
+    /**
+     * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     */
+    public function tags($name, $value = null, array $options = [])
+    {
+        $label                = $this->label($name, $options);
+        $options              = $this->expandOptionArray($name, $label, $options);
+        $classes              = $this->getHolderClasses($name);
+        $value                = $this->fillFieldValue($name, $value);
+        $options['data-role'] = 'tagsinput';
+        $html                 = \View::make('form.tags', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
     }
