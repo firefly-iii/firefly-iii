@@ -1,3 +1,6 @@
+@if(is_object($accounts) && method_exists($accounts, 'render'))
+    {!! $accounts->render() !!}
+@endif
 <table class="table table-striped">
     <tr>
         <th>&nbsp;</th>
@@ -51,3 +54,6 @@
 
     @endforeach
 </table>
+@if(is_object($accounts) && method_exists($accounts, 'render'))
+    {!! $accounts->render() !!}
+@endif
