@@ -1,6 +1,5 @@
 <?php namespace FireflyIII\Http\Controllers;
 
-use App;
 use Auth;
 use Carbon\Carbon;
 use Config;
@@ -128,7 +127,7 @@ class AccountController extends Controller
             ['accountmeta' => function ($query) {
                 $query->where('name', 'accountRole');
             }]
-        )->accountTypeIn($types)->take($size)->offset($offset)->orderBy('accounts.name','ASC')->get(['accounts.*']);
+        )->accountTypeIn($types)->take($size)->offset($offset)->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
         $total = Auth::user()->accounts()->accountTypeIn($types)->count();
 
         // last activity:
@@ -148,7 +147,7 @@ class AccountController extends Controller
         );
 
         $accounts = new LengthAwarePaginator($set, $total, $size, $page);
-        $accounts->setPath(route('accounts.index',$what));
+        $accounts->setPath(route('accounts.index', $what));
 
 
         return view('accounts.index', compact('what', 'subTitleIcon', 'subTitle', 'accounts'));
@@ -156,22 +155,19 @@ class AccountController extends Controller
 
     /**
      * @param Account                    $account
-     * @param string                     $range
      * @param AccountRepositoryInterface $repository
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
-    public function show(Account $account, $range = 'session')
+    public function show(Account $account, AccountRepositoryInterface $repository)
     {
-        /** @var \FireflyIII\Repositories\Account\AccountRepositoryInterface $repository */
-        $repository   = App::make('FireflyIII\Repositories\Account\AccountRepositoryInterface');
         $page         = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
         $subTitleIcon = Config::get('firefly.subTitlesByIdentifier.' . $account->accountType->type);
         $what         = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
-        $journals     = $repository->getJournals($account, $page, $range);
+        $journals     = $repository->getJournals($account, $page);
         $subTitle     = 'Details for ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"';
 
-        return view('accounts.show', compact('account', 'what', 'range', 'subTitleIcon', 'journals', 'subTitle'));
+        return view('accounts.show', compact('account', 'what', 'subTitleIcon', 'journals', 'subTitle'));
     }
 
     /**
@@ -196,6 +192,10 @@ class AccountController extends Controller
         $account     = $repository->store($accountData);
 
         Session::flash('success', 'New account "' . $account->name . '" stored!');
+
+        if (intval(Input::get('create_another')) === 1) {
+            return Redirect::route('accounts.create', $request->input('what'));
+        }
 
         return Redirect::route('accounts.index', $request->input('what'));
 
@@ -224,6 +224,10 @@ class AccountController extends Controller
         $repository->update($account, $accountData);
 
         Session::flash('success', 'Account "' . $account->name . '" updated.');
+
+        if (intval(Input::get('return_to_edit')) === 1) {
+            return Redirect::route('accounts.edit', $account->id);
+        }
 
         return Redirect::route('accounts.index', $what);
 

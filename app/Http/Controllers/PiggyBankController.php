@@ -273,7 +273,7 @@ class PiggyBankController extends Controller
         $piggyBankData = [
             'repeats'      => false,
             'name'         => $request->get('name'),
-            'startdate'    => new Carbon,
+            'startdate'    => null,
             'account_id'   => intval($request->get('account_id')),
             'targetamount' => floatval($request->get('targetamount')),
             'targetdate'   => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,

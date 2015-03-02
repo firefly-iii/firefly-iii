@@ -3,6 +3,7 @@
 use Auth;
 use Carbon\Carbon;
 use ExpandedForm;
+use FireflyIII\Events\JournalCreated;
 use FireflyIII\Events\JournalSaved;
 use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\JournalFormRequest;
@@ -144,7 +145,7 @@ class TransactionController extends Controller
         }
 
         if ($journal->piggyBankEvents()->count() > 0) {
-            $preFilled['piggy_bank_id'] = $journal->piggyBankEvents()->first()->piggy_bank_id;
+            $preFilled['piggy_bank_id'] = $journal->piggyBankEvents()->orderBy('date', 'DESC')->first()->piggy_bank_id;
         }
 
         $preFilled['amount'] = 0;
@@ -266,8 +267,10 @@ class TransactionController extends Controller
         $journal = $repository->store($journalData);
 
         event(new JournalSaved($journal));
+        event(new JournalCreated($journal, intval($request->get('piggy_bank_id'))));
 
         Session::flash('success', 'New transaction "' . $journal->description . '" stored!');
+
         if (intval(Input::get('create_another')) === 1) {
             return Redirect::route('transactions.create', $request->input('what'));
         }
@@ -307,6 +310,7 @@ class TransactionController extends Controller
         $repository->update($journal, $journalData);
 
         event(new JournalSaved($journal));
+        // update, get events by date and sort DESC
 
         Session::flash('success', 'Transaction "' . e($journalData['description']) . '" updated.');
 

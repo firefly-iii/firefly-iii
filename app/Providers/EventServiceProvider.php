@@ -32,7 +32,12 @@ class EventServiceProvider extends ServiceProvider
         = [
             'FireflyIII\Events\JournalSaved' => [
                 'FireflyIII\Handlers\Events\RescanJournal',
+                'FireflyIII\Handlers\Events\UpdateJournalConnection',
+
             ],
+            'FireflyIII\Events\JournalCreated' => [
+                'FireflyIII\Handlers\Events\ConnectJournalToPiggyBank',
+            ]
         ];
 
     /**
@@ -73,8 +78,8 @@ class EventServiceProvider extends ServiceProvider
             function (PiggyBank $piggyBank) {
                 $repetition = new PiggyBankRepetition;
                 $repetition->piggyBank()->associate($piggyBank);
-                $repetition->startdate     = $piggyBank->startdate;
-                $repetition->targetdate    = $piggyBank->targetdate;
+                $repetition->startdate     = is_null($piggyBank->startdate) ? null : $piggyBank->startdate;
+                $repetition->targetdate    = is_null($piggyBank->targetdate) ? null : $piggyBank->targetdate;
                 $repetition->currentamount = 0;
                 $repetition->save();
             }

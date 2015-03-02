@@ -1,7 +1,8 @@
 <?php namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Carbon\Carbon;
 /**
  * Class PiggyBankRepetition
  *
@@ -24,6 +25,27 @@ class PiggyBankRepetition extends Model
     public function piggyBank()
     {
         return $this->belongsTo('FireflyIII\Models\PiggyBank');
+    }
+
+    /**
+     * @param EloquentBuilder $query
+     * @param Carbon          $date
+     *
+     * @return mixed
+     */
+    public function scopeRelevantOnDate(EloquentBuilder $query, Carbon $date)
+    {
+        return $query->where(
+            function($q) use ($date) {
+                $q->where('startdate', '>=', $date->format('Y-m-d 00:00:00'));
+                $q->orWhereNull('startdate');
+            })
+
+            ->where(function($q) use ($date) {
+
+                $q->where('targetdate', '<=', $date->format('Y-m-d 00:00:00'));
+                $q->orWhereNull('targetdate');
+            });
     }
 
 }

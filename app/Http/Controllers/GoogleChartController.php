@@ -42,27 +42,14 @@ class GoogleChartController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function accountBalanceChart(Account $account, $view = 'session', GChart $chart)
+    public function accountBalanceChart(Account $account, GChart $chart)
     {
         $chart->addColumn('Day of month', 'date');
         $chart->addColumn('Balance for ' . $account->name, 'number');
         $chart->addCertainty(1);
 
-        $start = Session::get('start', Carbon::now()->startOfMonth());
-        $end   = Session::get('end', Carbon::now()->endOfMonth());
-        $count = $account->transactions()->count();
-
-        if ($view == 'all' && $count > 0) {
-            $first = $account->transactions()->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')->orderBy(
-                'date', 'ASC'
-            )->first(['transaction_journals.date']);
-            $last  = $account->transactions()->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')->orderBy(
-                'date', 'DESC'
-            )->first(['transaction_journals.date']);
-            $start = new Carbon($first->date);
-            $end   = new Carbon($last->date);
-        }
-
+        $start   = Session::get('start', Carbon::now()->startOfMonth());
+        $end     = Session::get('end', Carbon::now()->endOfMonth());
         $current = clone $start;
 
         while ($end >= $current) {
