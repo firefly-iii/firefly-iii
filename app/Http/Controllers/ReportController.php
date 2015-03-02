@@ -10,7 +10,7 @@ use FireflyIII\Models\Account;
 use Illuminate\Database\Query\JoinClause;
 use Steam;
 use View;
-
+use Session;
 /**
  * Class ReportController
  *
@@ -115,7 +115,7 @@ class ReportController extends Controller
      */
     public function index(ReportHelperInterface $helper)
     {
-        $start         = $helper->firstDate();
+        $start         = Session::get('first');
         $months        = $helper->listOfMonths($start);
         $years         = $helper->listOfYears($start);
         $title         = 'Reports';

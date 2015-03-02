@@ -12,6 +12,7 @@ use Input;
 use Redirect;
 use Session;
 use View;
+use Steam;
 
 /**
  * Class AccountController
@@ -123,6 +124,22 @@ class AccountController extends Controller
                 $query->where('name', 'accountRole');
             }]
         )->accountTypeIn($types)->get(['accounts.*']);
+
+        // last activity:
+        $accounts->each(
+            function (Account $account) {
+                $lastTransaction = $account->transactions()->leftJoin(
+                    'transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
+                )->orderBy('transaction_journals.date', 'DESC')->first(['transactions.*', 'transaction_journals.date']);
+                if ($lastTransaction) {
+                    $account->lastActivityDate = $lastTransaction->transactionjournal->date;
+                } else {
+                    $account->lastActivityDate = null;
+                }
+                $account->startBalance = Steam::balance($account, Session::get('start'));
+                $account->endBalance = Steam::balance($account, Session::get('end'));
+            }
+        );
 
 
         return view('accounts.index', compact('what', 'subTitleIcon', 'subTitle', 'accounts'));

@@ -15,11 +15,6 @@ interface ReportHelperInterface
 
 
     /**
-     * @return Carbon
-     */
-    public function firstDate();
-
-    /**
      * @param Carbon $date
      *
      * @return array
