@@ -23,11 +23,16 @@
                 Monthly reports
             </div>
             <div class="panel-body">
-                <ul>
-                    @foreach($months as $month)
-                        <li><a href="{{route('reports.month',[$month['year'],$month['month']])}}">{{$month['formatted']}}</a></li>
+
+                    @foreach($months as $year => $entries)
+                        <h5>{{$year}}</h5>
+                        <ul>
+                            @foreach($entries as $month)
+                                <li><a href="{{route('reports.month',[$month['year'],$month['month']])}}">{{$month['formatted']}}</a></li>
+                            @endforeach
+                        </ul>
                     @endforeach
-                </ul>
+
             </div>
         </div>
     </div>
@@ -38,9 +43,13 @@
                 Budget reports
             </div>
             <div class="panel-body">
-                <ul>
-                    @foreach($months as $month)
-                        <li><a href="{{route('reports.budget',[$month['year'],$month['month']])}}">{{$month['formatted']}}</a></li>
+                @foreach($months as $year => $entries)
+                    <h5>{{$year}}</h5>
+                    <ul>
+                        @foreach($entries as $month)
+                            <li><a href="{{route('reports.budget',[$month['year'],$month['month']])}}">{{$month['formatted']}}</a></li>
+                        @endforeach
+                    </ul>
                     @endforeach
                 </ul>
             </div>
