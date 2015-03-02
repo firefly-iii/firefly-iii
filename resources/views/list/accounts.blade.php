@@ -8,6 +8,7 @@
         <th>Current balance</th>
         <th>Active</th>
         <th>Last activity</th>
+        <th>Balance difference between {{Session::get('start')->format('jS F Y')}} and {{Session::get('end')->format('jS F Y')}}</th>
     </tr>
     @foreach($accounts as $account)
     <tr>
@@ -42,6 +43,10 @@
                 <em>Never</em>
             @endif
         </td>
+        <td>
+            {!! Amount::format($account->endBalance - $account->startBalance) !!}
+        </td>
+
     </tr>
 
     @endforeach

@@ -37,14 +37,6 @@ class ReportHelper implements ReportHelperInterface
     }
 
     /**
-     * @return Carbon
-     */
-    public function firstDate()
-    {
-        return Session::get('first');
-    }
-
-    /**
      * This method gets some kind of list for a monthly overview.
      *
      * @param Carbon $date
