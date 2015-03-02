@@ -36,7 +36,7 @@
 
 
     </ul>
-
+    <p class="navbar-text navbar-right" id="daterange"><span>&nbsp;</span> <b class="caret"></b> </p>
 
 
     <!-- /.navbar-top-links -->
