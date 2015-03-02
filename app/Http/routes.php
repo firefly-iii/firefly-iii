@@ -148,9 +148,7 @@ Route::group(
     ['middleware' => ['auth', 'range']], function () {
     Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
     Route::get('/home', ['uses' => 'HomeController@index', 'as' => 'home']);
-    Route::get('/prev', ['uses' => 'HomeController@sessionPrev', 'as' => 'sessionPrev']);
-    Route::get('/next', ['uses' => 'HomeController@sessionNext', 'as' => 'sessionNext']);
-    Route::get('/jump/{range}', ['uses' => 'HomeController@rangeJump', 'as' => 'rangeJump']);
+    Route::post('/daterange',['uses' => 'HomeController@dateRange','as' => 'daterange']);
     Route::get('/flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
     /**
      * Account Controller
