@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Session;
 
 /**
  * Class ReportHelper
@@ -40,12 +41,7 @@ class ReportHelper implements ReportHelperInterface
      */
     public function firstDate()
     {
-        $journal = Auth::user()->transactionjournals()->orderBy('date', 'ASC')->first();
-        if ($journal) {
-            return $journal->date;
-        }
-
-        return Carbon::now();
+        return Session::get('first');
     }
 
     /**
