@@ -8,11 +8,12 @@ use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Input;
 use Redirect;
 use Session;
-use View;
 use Steam;
+use View;
 
 /**
  * Class AccountController
@@ -117,16 +118,21 @@ class AccountController extends Controller
         $subTitle     = Config::get('firefly.subTitlesByIdentifier.' . $what);
         $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
         $types        = Config::get('firefly.accountTypesByIdentifier.' . $what);
+        $size         = 50;
+        $page         = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
+        $offset       = ($page - 1) * $size;
+
 
         // move to repository:
-        $accounts = Auth::user()->accounts()->with(
+        $set   = Auth::user()->accounts()->with(
             ['accountmeta' => function ($query) {
                 $query->where('name', 'accountRole');
             }]
-        )->accountTypeIn($types)->get(['accounts.*']);
+        )->accountTypeIn($types)->take($size)->offset($offset)->get(['accounts.*']);
+        $total = Auth::user()->accounts()->accountTypeIn($types)->count();
 
         // last activity:
-        $accounts->each(
+        $set->each(
             function (Account $account) {
                 $lastTransaction = $account->transactions()->leftJoin(
                     'transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
@@ -137,9 +143,12 @@ class AccountController extends Controller
                     $account->lastActivityDate = null;
                 }
                 $account->startBalance = Steam::balance($account, Session::get('start'));
-                $account->endBalance = Steam::balance($account, Session::get('end'));
+                $account->endBalance   = Steam::balance($account, Session::get('end'));
             }
         );
+
+        $accounts = new LengthAwarePaginator($set, $total, $size, $page);
+        $accounts->setPath(route('accounts.index',$what));
 
 
         return view('accounts.index', compact('what', 'subTitleIcon', 'subTitle', 'accounts'));
