@@ -44,7 +44,7 @@ class ReportQuery implements ReportQueryInterface
                    ->where('active', 1)
                    ->where(
                        function (Builder $query) {
-                           $query->where('account_meta.data', '!=', '"sharedExpense"');
+                           $query->where('account_meta.data', '!=', '"sharedAsset"');
                            $query->orWhereNull('account_meta.data');
                        }
                    )
@@ -119,7 +119,7 @@ class ReportQuery implements ReportQueryInterface
                    )
                    ->where(
                        function (Builder $query) {
-                           $query->where('account_meta.data', '!=', '"sharedExpense"');
+                           $query->where('account_meta.data', '!=', '"sharedAsset"');
                            $query->orWhereNull('account_meta.data');
                        }
                    )
@@ -211,13 +211,13 @@ class ReportQuery implements ReportQueryInterface
                                          $query->where(
                                              function ($q) {
                                                  $q->where('transaction_types.type', 'Deposit');
-                                                 $q->where('acm_to.data', '!=', '"sharedExpense"');
+                                                 $q->where('acm_to.data', '!=', '"sharedAsset"');
                                              }
                                          );
                                          $query->orWhere(
                                              function ($q) {
                                                  $q->where('transaction_types.type', 'Transfer');
-                                                 $q->where('acm_from.data', '=', '"sharedExpense"');
+                                                 $q->where('acm_from.data', '=', '"sharedAsset"');
                                              }
                                          );
                                      }
@@ -264,7 +264,7 @@ class ReportQuery implements ReportQueryInterface
                    ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
                    ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
                    ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                   ->where('account_meta.data', '!=', '"sharedExpense"')
+                   ->where('account_meta.data', '!=', '"sharedAsset"')
                    ->where('transaction_types.type', 'Withdrawal')
                    ->groupBy('budgets.id')
                    ->orderBy('budgets.name', 'ASC')
@@ -301,7 +301,7 @@ class ReportQuery implements ReportQueryInterface
                    ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
                    ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
                    ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                   ->where('account_meta.data', '!=', '"sharedExpense"')
+                   ->where('account_meta.data', '!=', '"sharedAsset"')
                    ->where('transaction_types.type', 'Withdrawal')
                    ->groupBy('categories.id')
                    ->orderBy('amount')
@@ -351,13 +351,13 @@ class ReportQuery implements ReportQueryInterface
                                          $query->where(
                                              function ($q) {
                                                  $q->where('transaction_types.type', 'Withdrawal');
-                                                 $q->where('acm_from.data', '!=', '"sharedExpense"');
+                                                 $q->where('acm_from.data', '!=', '"sharedAsset"');
                                              }
                                          );
                                          $query->orWhere(
                                              function ($q) {
                                                  $q->where('transaction_types.type', 'Transfer');
-                                                 $q->where('acm_to.data', '=', '"sharedExpense"');
+                                                 $q->where('acm_to.data', '=', '"sharedAsset"');
                                              }
                                          );
                                      }
@@ -409,13 +409,13 @@ class ReportQuery implements ReportQueryInterface
                                          $query->where(
                                              function ($q) {
                                                  $q->where('transaction_types.type', 'Deposit');
-                                                 $q->where('acm_to.data', '!=', '"sharedExpense"');
+                                                 $q->where('acm_to.data', '!=', '"sharedAsset"');
                                              }
                                          );
                                          $query->orWhere(
                                              function ($q) {
                                                  $q->where('transaction_types.type', 'Transfer');
-                                                 $q->where('acm_from.data', '=', '"sharedExpense"');
+                                                 $q->where('acm_from.data', '=', '"sharedAsset"');
                                              }
                                          );
                                      }
@@ -452,7 +452,7 @@ class ReportQuery implements ReportQueryInterface
                                      $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
                                  }
                                  )
-                                 ->where('account_meta.data', '"sharedExpense"')
+                                 ->where('account_meta.data', '"sharedAsset"')
                                  ->after($start)
                                  ->before($end)
                                  ->where('transaction_types.type', 'Transfer')
@@ -494,7 +494,7 @@ class ReportQuery implements ReportQueryInterface
                                      'category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
                                  )
                                  ->leftJoin('categories', 'category_transaction_journal.category_id', '=', 'categories.id')
-                                 ->where('account_meta.data', '"sharedExpense"')
+                                 ->where('account_meta.data', '"sharedAsset"')
                                  ->after($start)
                                  ->before($end)
                                  ->where('transaction_types.type', 'Transfer')

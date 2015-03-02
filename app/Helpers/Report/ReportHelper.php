@@ -141,7 +141,7 @@ class ReportHelper implements ReportHelperInterface
         $sharedCollection = \Auth::user()->accounts()
                                  ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
                                  ->where('account_meta.name', '=', 'accountRole')
-                                 ->where('account_meta.data', '=', json_encode('sharedExpense'))
+                                 ->where('account_meta.data', '=', json_encode('sharedAsset'))
                                  ->get(['accounts.id']);
 
         foreach ($sharedCollection as $account) {
@@ -166,7 +166,7 @@ class ReportHelper implements ReportHelperInterface
                 'start'   => \Steam::balance($account, $start),
                 'end'     => \Steam::balance($account, $end),
                 'account' => $account,
-                'shared'  => $account->accountRole == 'sharedExpense'
+                'shared'  => $account->accountRole == 'sharedAsset'
             ];
         }
 
