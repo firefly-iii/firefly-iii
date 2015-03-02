@@ -2,7 +2,9 @@
     <tr>
         <th>&nbsp;</th>
         <th>Name</th>
+        @if(isset($what) && $what == 'asset')
         <th>Role</th>
+        @endif
         <th>Current balance</th>
         <th>Active</th>
         <th>Last activity</th>
@@ -16,7 +18,9 @@
             </div>
         </td>
         <td><a href="{{route('accounts.show',$account->id)}}">{{{$account->name}}}</a></td>
+        @if(isset($what) && $what == 'asset')
         <td>{{{$account->accountRole}}}</td>
+        @endif
         <td>{!! Amount::format(Steam::balance($account)) !!}</td>
         <td>
             @if($account->active)
