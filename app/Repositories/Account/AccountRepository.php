@@ -46,7 +46,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getJournals(Account $account, $page, $range = 'session')
     {
-        $offset = ($page-1) * 50;
+        $offset = ($page - 1) * 50;
         $query  = Auth::user()
                       ->transactionJournals()
                       ->withRelevantData()
@@ -66,6 +66,23 @@ class AccountRepository implements AccountRepositoryInterface
 
         //return Paginator::make($items, $count, 50);
 
+
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return float
+     */
+    public function leftOnAccount(Account $account)
+    {
+        $balance = \Steam::balance($account);
+        /** @var PiggyBank $p */
+        foreach ($account->piggybanks()->get() as $p) {
+            $balance -= $p->currentRelevantRep()->currentamount;
+        }
+
+        return $balance;
 
     }
 
@@ -123,13 +140,7 @@ class AccountRepository implements AccountRepositoryInterface
         $account->save();
 
         // update meta data:
-        /** @var AccountMeta $meta */
-        foreach ($account->accountMeta()->get() as $meta) {
-            if ($meta->name == 'accountRole') {
-                $meta->data = $data['accountRole'];
-                $meta->save();
-            }
-        }
+        $this->_updateMetadata($account, $data);
 
         $openingBalance = $this->openingBalanceTransaction($account);
 
@@ -313,18 +324,35 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @param Account $account
-     *
-     * @return float
+     * @param array   $data
      */
-    public function leftOnAccount(Account $account)
+    protected function _updateMetadata(Account $account, array $data)
     {
-        $balance = \Steam::balance($account);
-        /** @var PiggyBank $p */
-        foreach ($account->piggybanks()->get() as $p) {
-            $balance -= $p->currentRelevantRep()->currentamount;
+        $metaEntries = $account->accountMeta()->get();
+        $updated     = false;
+
+        /** @var AccountMeta $entry */
+        foreach ($metaEntries as $entry) {
+            if ($entry->name == 'accountRole') {
+                $entry->data = $data['accountRole'];
+                $updated     = true;
+                $entry->save();
+            }
         }
 
-        return $balance;
+        if ($updated === false) {
+            $metaData = new AccountMeta(
+                [
+                    'account_id' => $account->id,
+                    'name'       => 'accountRole',
+                    'data'       => $data['accountRole']
+                ]
+            );
+            if (!$metaData->isValid()) {
+                App::abort(500);
+            }
+            $metaData->save();
+        }
 
     }
 }

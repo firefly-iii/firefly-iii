@@ -116,7 +116,14 @@ class AccountController extends Controller
         $subTitle     = Config::get('firefly.subTitlesByIdentifier.' . $what);
         $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
         $types        = Config::get('firefly.accountTypesByIdentifier.' . $what);
-        $accounts     = Auth::user()->accounts()->accountTypeIn($types)->get(['accounts.*']);
+
+        // move to repository:
+        $accounts = Auth::user()->accounts()->with(
+            ['accountmeta' => function ($query) {
+                $query->where('name', 'accountRole');
+            }]
+        )->accountTypeIn($types)->get(['accounts.*']);
+
 
         return view('accounts.index', compact('what', 'subTitleIcon', 'subTitle', 'accounts'));
     }

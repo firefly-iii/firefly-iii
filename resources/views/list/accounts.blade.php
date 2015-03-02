@@ -19,7 +19,13 @@
         </td>
         <td><a href="{{route('accounts.show',$account->id)}}">{{{$account->name}}}</a></td>
         @if(isset($what) && $what == 'asset')
-        <td>{{{$account->accountRole}}}</td>
+        <td>
+            @foreach($account->accountmeta as $entry)
+                @if($entry->name == 'accountRole')
+                    {{Config::get('firefly.accountRoles.'.$entry->data)}}
+                @endif
+            @endforeach
+        </td>
         @endif
         <td>{!! Amount::format(Steam::balance($account)) !!}</td>
         <td>
