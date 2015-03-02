@@ -99,7 +99,8 @@ class ReportHelper implements ReportHelperInterface
         $end    = Carbon::now();
         $months = [];
         while ($start <= $end) {
-            $months[] = [
+            $year = $start->format('Y');
+            $months[$year][] = [
                 'formatted' => $start->format('F Y'),
                 'month'     => intval($start->format('m')),
                 'year'      => intval($start->format('Y')),
