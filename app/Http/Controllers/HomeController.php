@@ -8,7 +8,7 @@ use Preferences;
 use Redirect;
 use Session;
 use URL;
-
+use Input;
 /**
  * Class HomeController
  *
@@ -22,6 +22,14 @@ class HomeController extends Controller
      */
     public function __construct()
     {
+    }
+
+    public function dateRange() {
+        $start = new Carbon(Input::get('start'));
+        $end = new Carbon(Input::get('end'));
+
+        Session::put('start',$start);
+        Session::put('end',$end);
     }
 
     /**
@@ -76,49 +84,5 @@ class HomeController extends Controller
         return view('index', compact('count', 'title', 'subTitle', 'mainTitleIcon', 'transactions'));
     }
 
-    /**
-     * @param string $range
-     *
-     * @return mixed
-     */
-    public function rangeJump($range)
-    {
-
-        $valid = ['1D', '1W', '1M', '3M', '6M', '1Y',];
-
-        if (in_array($range, $valid)) {
-            Preferences::set('viewRange', $range);
-            Session::forget('range');
-        }
-
-        return Redirect::to(URL::previous());
-    }
-
-    /**
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function sessionNext()
-    {
-        $range = Session::get('range');
-        $start = Session::get('start');
-
-        Session::put('start', Navigation::jumpToNext($range, clone $start));
-
-        return Redirect::to(URL::previous());
-
-    }
-
-    /**
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function sessionPrev()
-    {
-        $range = Session::get('range');
-        $start = Session::get('start');
-
-        Session::put('start', Navigation::jumpToPrevious($range, clone $start));
-
-        return Redirect::to(URL::previous());
-    }
 
 }
