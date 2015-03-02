@@ -128,7 +128,7 @@ class AccountController extends Controller
             ['accountmeta' => function ($query) {
                 $query->where('name', 'accountRole');
             }]
-        )->accountTypeIn($types)->take($size)->offset($offset)->get(['accounts.*']);
+        )->accountTypeIn($types)->take($size)->offset($offset)->orderBy('accounts.name','ASC')->get(['accounts.*']);
         $total = Auth::user()->accounts()->accountTypeIn($types)->count();
 
         // last activity:
