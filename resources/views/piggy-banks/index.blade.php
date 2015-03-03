@@ -34,7 +34,9 @@
                 <div class="row">
                     <!-- One block (remove money) -->
                     <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                        <a href="{{route('piggy-banks.removeMoney',$piggyBank->id)}}" class="btn btn-default btn-xs removeMoney" data-id="{{{$piggyBank->id}}}"><span data-id="{{{$piggyBank->id}}}" class="glyphicon glyphicon-minus"></span></a>
+                        @if($piggyBank->savedSoFar > 0)
+                            <a href="{{route('piggy-banks.removeMoney',$piggyBank->id)}}" class="btn btn-default btn-xs removeMoney" data-id="{{{$piggyBank->id}}}"><span data-id="{{{$piggyBank->id}}}" class="glyphicon glyphicon-minus"></span></a>
+                        @endif
                     </div>
                     <!-- Some blocks (bar) -->
                     <div class="col-lg-8 col-md-8 col-sm-4 col-xs-4">
