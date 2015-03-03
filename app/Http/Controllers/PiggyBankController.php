@@ -9,6 +9,7 @@ use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\PiggyBankFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -191,6 +192,9 @@ class PiggyBankController extends Controller
             $repetition->currentamount += $amount;
             $repetition->save();
 
+            // create event.
+            PiggyBankEvent::create(['date' => Carbon::now(), 'amount' => $amount, 'piggy_bank_id' => $piggyBank->id]);
+
             /*
              * Create event!
              */
@@ -219,6 +223,8 @@ class PiggyBankController extends Controller
             $repetition = $piggyBank->currentRelevantRep();
             $repetition->currentamount -= $amount;
             $repetition->save();
+
+            PiggyBankEvent::create(['date' => Carbon::now(), 'amount' => $amount * -1, 'piggy_bank_id' => $piggyBank->id]);
 
             /*
              * Create event!
