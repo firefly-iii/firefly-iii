@@ -12,6 +12,7 @@ use Redirect;
 use Session;
 use URL;
 use View;
+use Input;
 
 /**
  * Class BillController
@@ -168,6 +169,10 @@ class BillController extends Controller
         $bill = $repository->store($billData);
         Session::flash('success', 'Bill "' . e($bill->name) . '" stored.');
 
+        if (intval(Input::get('create_another')) === 1) {
+            return Redirect::route('bills.create')->withInput();
+        }
+
         return Redirect::route('bills.index');
 
     }
@@ -194,6 +199,10 @@ class BillController extends Controller
         ];
 
         $bill = $repository->update($bill, $billData);
+
+        if (intval(Input::get('return_to_edit')) === 1) {
+            return Redirect::route('bills.edit', $bill->id);
+        }
 
         Session::flash('success', 'Bill "' . e($bill->name) . '" updated.');
 
