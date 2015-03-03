@@ -32,7 +32,6 @@
                     </div>
 
                 </div>
-                <div class="panel-body">
                     <table class="table table-bordered table-striped">
                         <tr>
                             <td>Account</td>
@@ -97,15 +96,12 @@
                                 <td>(in progress...)</td>
                             </tr>
                     </table>
-                </div>
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-fw fa-clock-o"></i> Table
                 </div>
-                <div class="panel-body">
                     @include('list.piggy-bank-events')
-                </div>
             </div>
     </div>
 
