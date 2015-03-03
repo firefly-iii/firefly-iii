@@ -3,7 +3,6 @@
 use App;
 use Auth;
 use Carbon\Carbon;
-use Crypt;
 use DB;
 use Exception;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
@@ -16,6 +15,7 @@ use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Grumpydictator\Gchart\GChart;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -311,49 +311,45 @@ class GoogleChartController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function billsOverview(GChart $chart)
+    public function billsOverview(GChart $chart, BillRepositoryInterface $repository)
     {
+        $chart->addColumn('Name', 'string');
+        $chart->addColumn('Amount', 'number');
+
+
         $paid   = ['items' => [], 'amount' => 0];
         $unpaid = ['items' => [], 'amount' => 0];
         $start  = Session::get('start', Carbon::now()->startOfMonth());
         $end    = Session::get('end', Carbon::now()->endOfMonth());
 
-        $chart->addColumn('Name', 'string');
-        $chart->addColumn('Amount', 'number');
+        $bills = Auth::user()->bills()->where('active', 1)->get();
 
-        $set = Bill::
-        leftJoin(
-            'transaction_journals', function (JoinClause $join) use ($start, $end) {
-            $join->on('bills.id', '=', 'transaction_journals.bill_id')
-                 ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                 ->where('transaction_journals.date', '<=', $end->format('Y-m-d'));
-        }
-        )
-                   ->leftJoin(
-                       'transactions', function (JoinClause $join) {
-                       $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '>', 0);
-                   }
-                   )
-                   ->where('active', 1)
-                   ->groupBy('bills.id')
-                   ->get(
-                       ['bills.id', 'bills.name', 'transaction_journals.description',
-                        'transaction_journals.encrypted',
-                        'transaction_journals.id as journalId',
-                        \DB::Raw('SUM(`bills`.`amount_min` + `bills`.`amount_max`) / 2 as `averageAmount`'),
-                        'transactions.amount AS actualAmount']
-                   );
+        /** @var Bill $bill */
+        foreach ($bills as $bill) {
+            $ranges = $repository->getRanges($bill, $start, $end);
 
-        foreach ($set as $entry) {
-            if (intval($entry->journalId) == 0) {
-                $unpaid['items'][] = $entry->name;
-                $unpaid['amount'] += floatval($entry->averageAmount);
-            } else {
-                $description     = intval($entry->encrypted) == 1 ? Crypt::decrypt($entry->description) : $entry->description;
-                $paid['items'][] = $description;
-                $paid['amount'] += floatval($entry->actualAmount);
+            foreach ($ranges as $range) {
+                // paid a bill in this range?
+                $count = $bill->transactionjournals()->before($range['end'])->after($range['start'])->count();
+                if ($count == 0) {
+                    $unpaid['items'][] = $bill->name . ' (' . $range['start']->format('jS M Y') . ')';
+                    $unpaid['amount'] += ($bill->amount_max + $bill->amount_min / 2);
+
+                } else {
+                    $journal         = $bill->transactionjournals()->with('transactions')->before($range['end'])->after($range['start'])->first();
+                    $paid['items'][] = $journal->description;
+                    $amount          = 0;
+                    foreach ($journal->transactions as $t) {
+                        if (floatval($t->amount) > 0) {
+                            $amount = floatval($t->amount);
+                        }
+                    }
+                    $paid['amount'] += $amount;
+                }
+
             }
         }
+
         $chart->addRow('Unpaid: ' . join(', ', $unpaid['items']), $unpaid['amount']);
         $chart->addRow('Paid: ' . join(', ', $paid['items']), $paid['amount']);
         $chart->generate();

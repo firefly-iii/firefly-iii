@@ -298,15 +298,15 @@ class Navigation
         $date = clone $theDate;
 
         $functionMap = [
-            'daily'   => 'startOfDay',
-            'week'    => 'startOfWeek',
-            'weekly'  => 'startOfWeek',
-            'month'   => 'startOfMonth',
-            'monthly' => 'startOfMonth',
-            'quarter' => 'firstOfQuarter',
-            'quartly' => 'firstOfQuarter',
-            'year'    => 'startOfYear',
-            'yearly'  => 'startOfYear',
+            'daily'     => 'startOfDay',
+            'week'      => 'startOfWeek',
+            'weekly'    => 'startOfWeek',
+            'month'     => 'startOfMonth',
+            'monthly'   => 'startOfMonth',
+            'quarter'   => 'firstOfQuarter',
+            'quarterly' => 'firstOfQuarter',
+            'year'      => 'startOfYear',
+            'yearly'    => 'startOfYear',
         ];
         if (isset($functionMap[$repeatFreq])) {
             $function = $functionMap[$repeatFreq];
