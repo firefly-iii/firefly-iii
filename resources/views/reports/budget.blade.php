@@ -42,18 +42,16 @@
             </tr>
             @foreach($budgets as $id => $budget)
             <tr>
-                <td>{{{$budget['name']}}}
-                @if($id == 0)
-                    <i class="fa fa-fw fa-question-circle" data-toggle="tooltip" data-placement="top" title="The calculation used here is slightly different from the row below. The numbers should match."></i>
-                @endif
-                </td>
+                <td>{{{$budget['name']}}}</td>
                 <td>{!! Amount::format($budget['amount']) !!}</td>
                 <?php $spent = 0;?>
                 @foreach($accounts as $account)
                     @if(isset($account->budgetInformation[$id]))
                         <td>
                             @if($id == 0)
-                            <a href="#">{!! Amount::format($account->budgetInformation[$id]['amount']) !!}</a>
+                            <a href="{{route('reports.no-budget',[$account, $year, $month])}}" class="openModal">
+                                {!! Amount::format($account->budgetInformation[$id]['amount']) !!}
+                            </a>
                             @else
                                 {!! Amount::format($account->budgetInformation[$id]['amount']) !!}
                             @endif
@@ -71,45 +69,14 @@
             </tr>
             @endforeach
             <tr>
-                <td colspan="2">Without budget
-                    <i class="fa fa-fw fa-question-circle" data-toggle="tooltip" data-placement="top" title="The calculation used here is slightly different from the row above. The numbers should match."></i>
-                </td>
-                @foreach($accounts as $account)
-                    @if(isset($account->budgetInformation[0]))
-                        <td>
-                            <a href="#">{!! Amount::format($account->budgetInformation[0]['amount']) !!}</a>
-                        </td>
-                    @else
-                        <td>{!! Amount::format(0) !!}</td>
-                    @endif
-                @endforeach
-                <td colspan="2">&nbsp;</td>
-            </tr>
-            <tr>
                 <td colspan="2">Balanced by transfers</td>
                 @foreach($accounts as $account)
                     <td>
-                        <a href="#">{!! Amount::format($account->balancedAmount) !!}</a>
+                        <a href="{{route('reports.balanced-transfers',[$account, $year, $month])}}" class="openModal">{!! Amount::format($account->balancedAmount) !!}</a>
                     </td>
                 @endforeach
                 <td colspan="2">&nbsp;</td>
             </tr>
-            <!--
-            <tr>
-                <td colspan="2">Balancing transfers</td>
-                @foreach($accounts as $account)
-                    <td>{!! Amount::format(0) !!}</td>
-                @endforeach
-                <td colspan="2">&nbsp;</td>
-            </tr>
-            <tr>
-                <td colspan="2">Income</td>
-                @foreach($accounts as $account)
-                    <td>{!! Amount::format(0) !!}</td>
-                @endforeach
-                <td colspan="2">&nbsp;</td>
-            </tr>
-            --->
             <tr>
                 <td colspan="2">Left unbalanced</td>
                 @foreach($accounts as $account)
@@ -118,7 +85,7 @@
                     ?>
                     @if(isset($account->budgetInformation[0]))
                         <td>
-                            <a href="#">{!! Amount::format($account->budgetInformation[0]['amount'] + $account->balancedAmount) !!}</a>
+                            <a href="{{route('reports.left-unbalanced',[$account, $year, $month])}}" class="openModal">{!! Amount::format($account->budgetInformation[0]['amount'] + $account->balancedAmount) !!}</a>
                         </td>
                     @else
                         <td>{!! Amount::format(0) !!}</td>
@@ -152,5 +119,6 @@
 
 @stop
 @section('scripts')
+
     <script type="text/javascript" src="js/reports.js"></script>
 @stop

@@ -111,6 +111,10 @@
 <div class="modal fade" id="relationModal">
 </div>
 
+<!-- default modal -->
+<div class="modal fade" id="defaultModal">
+</div>
+
 <script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/metisMenu.min.js"></script>

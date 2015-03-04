@@ -311,6 +311,11 @@ Route::group(
     Route::get('/reports/{year}/{month}', ['uses' => 'ReportController@month', 'as' => 'reports.month']);
     Route::get('/reports/budget/{year}/{month}', ['uses' => 'ReportController@budget', 'as' => 'reports.budget']);
 
+    // pop ups for budget report:
+    Route::get('/reports/modal/{account}/{year}/{month}/no-budget', ['uses' => 'ReportController@modalNoBudget','as' => 'reports.no-budget']);
+    Route::get('/reports/modal/{account}/{year}/{month}/balanced-transfers', ['uses' => 'ReportController@modalBalancedTransfers','as' => 'reports.balanced-transfers']);
+    Route::get('/reports/modal/{account}/{year}/{month}/left-unbalanced', ['uses' => 'ReportController@modalLeftUnbalanced','as' => 'reports.left-unbalanced']);
+
     /**
      * Search Controller
      */

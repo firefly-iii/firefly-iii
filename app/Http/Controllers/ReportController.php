@@ -7,10 +7,12 @@ use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Http\Requests;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\TransactionJournal;
 use Illuminate\Database\Query\JoinClause;
+use Session;
 use Steam;
 use View;
-use Session;
+
 /**
  * Class ReportController
  *
@@ -59,7 +61,7 @@ class ReportController extends Controller
         $accounts->each(
             function (Account $account) use ($start, $end, $query) {
                 $budgets        = $query->getBudgetSummary($account, $start, $end);
-                $balancedAmount = $query->balancedTransactionsList($account, $start, $end);
+                $balancedAmount = $query->balancedTransactionsSum($account, $start, $end);
                 $array          = [];
                 foreach ($budgets as $budget) {
                     $id         = intval($budget->id);
@@ -104,7 +106,7 @@ class ReportController extends Controller
          * End getBudgetsForMonth DONE
          */
 
-        return view('reports.budget', compact('subTitle', 'subTitleIcon', 'date', 'accounts', 'budgets', 'dayEarly'));
+        return view('reports.budget', compact('subTitle', 'year', 'month', 'subTitleIcon', 'date', 'accounts', 'budgets', 'dayEarly'));
 
     }
 
@@ -122,6 +124,79 @@ class ReportController extends Controller
         $mainTitleIcon = 'fa-line-chart';
 
         return view('reports.index', compact('years', 'months', 'title', 'mainTitleIcon'));
+    }
+
+    /**
+     * @param Account $account
+     * @param string  $year
+     * @param string  $month
+     *
+     * @return \Illuminate\View\View
+     */
+    public function modalBalancedTransfers(Account $account, $year = '2014', $month = '1', ReportQueryInterface $query)
+    {
+
+        try {
+            new Carbon($year . '-' . $month . '-01');
+        } catch (Exception $e) {
+            return view('error')->with('message', 'Invalid date');
+        }
+        $start = new Carbon($year . '-' . $month . '-01');
+        $end   = clone $start;
+        $end->endOfMonth();
+
+        $journals = $query->balancedTransactionsList($account, $start, $end);
+
+        return view('reports.modal-journal-list', compact('journals'));
+
+
+    }
+
+    public function modalLeftUnbalanced(Account $account, $year = '2014', $month = '1', ReportQueryInterface $query)
+    {
+        try {
+            new Carbon($year . '-' . $month . '-01');
+        } catch (Exception $e) {
+            return view('error')->with('message', 'Invalid date');
+        }
+        $start = new Carbon($year . '-' . $month . '-01');
+        $end   = clone $start;
+        $end->endOfMonth();
+        $set = $query->getTransactionsWithoutBudget($account, $start, $end);
+
+        $journals = $set->filter(
+            function (TransactionJournal $journal) {
+                $count = $journal->transactiongroups()->where('relation', 'balance')->count();
+                if ($count == 0) {
+                    return $journal;
+                }
+            }
+        );
+
+        return view('reports.modal-journal-list', compact('journals'));
+    }
+
+    /**
+     * @param Account $account
+     * @param string  $year
+     * @param string  $month
+     *
+     * @return \Illuminate\View\View
+     */
+    public function modalNoBudget(Account $account, $year = '2014', $month = '1', ReportQueryInterface $query)
+    {
+        try {
+            new Carbon($year . '-' . $month . '-01');
+        } catch (Exception $e) {
+            return view('error')->with('message', 'Invalid date');
+        }
+        $start = new Carbon($year . '-' . $month . '-01');
+        $end   = clone $start;
+        $end->endOfMonth();
+        $journals = $query->getTransactionsWithoutBudget($account, $start, $end);
+
+        return view('reports.modal-journal-list', compact('journals'));
+
     }
 
     /**
