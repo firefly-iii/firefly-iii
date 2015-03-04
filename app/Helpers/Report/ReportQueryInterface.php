@@ -121,6 +121,18 @@ interface ReportQueryInterface
     public function getBudgetSummary(Account $account, Carbon $start, Carbon $end);
 
     /**
+     * Get a list of transaction journals that have no budget, filtered for the specified account
+     * and the specified date range.
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return Collection
+     */
+    public function getTransactionsWithoutBudget(Account $account, Carbon $start, Carbon $end);
+
+    /**
      * This method will get a list of all expenses in a certain time period that have no budget
      * and are balanced by a transfer to make up for it.
      *
@@ -131,4 +143,16 @@ interface ReportQueryInterface
      * @return Collection
      */
     public function balancedTransactionsList(Account $account, Carbon $start, Carbon $end);
+
+    /**
+     * This method will get the sum of all expenses in a certain time period that have no budget
+     * and are balanced by a transfer to make up for it.
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return Collection
+     */
+    public function balancedTransactionsSum(Account $account, Carbon $start, Carbon $end);
 }

@@ -87,14 +87,32 @@ class ReportQuery implements ReportQueryInterface
                                  ->whereNull('otherJournals.deleted_at')
                                  ->where('transactions.account_id', $account->id)
                                  ->whereNotNull('transaction_group_transaction_journal.transaction_group_id')
-                                 ->first(
+                                 ->get(
                                      [
-                                         DB::Raw('SUM(`transactions`.`amount`) as `amount`')
+                                         'transaction_journals.*',
+                                         'transactions.amount'
                                      ]
                                  );
+
+        return $set;
+    }
+
+    /**
+     * This method will get the sum of all expenses in a certain time period that have no budget
+     * and are balanced by a transfer to make up for it.
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return Collection
+     */
+    public function balancedTransactionsSum(Account $account, Carbon $start, Carbon $end)
+    {
+        $set = $this->balancedTransactionsList($account, $start, $end);
         $sum = 0;
-        if (!is_null($set)) {
-            $sum = floatval($set->amount);
+        foreach($set as $entry) {
+            $sum += floatval($entry->amount);
         }
 
         return $sum;
@@ -167,7 +185,40 @@ class ReportQuery implements ReportQueryInterface
 
         return $set;
 
+    }
 
+    /**
+     * Get a list of transaction journals that have no budget, filtered for the specified account
+     * and the specified date range.
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return Collection
+     */
+    public function getTransactionsWithoutBudget(Account $account, Carbon $start, Carbon $end)
+    {
+        $set = TransactionJournal::
+        leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
+                                 ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                 ->leftJoin(
+                                     'transactions', function (JoinClause $join) {
+                                     $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
+                                 }
+                                 )
+                                 ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                                 ->before($end)
+                                 ->after($start)
+                                 ->where('accounts.id', $account->id)
+                                 ->where('transaction_journals.user_id', Auth::user()->id)
+                                 ->where('transaction_types.type', 'Withdrawal')
+                                 ->whereNull('budgets.id')
+                                 ->orderBy('transaction_journals.date', 'ASC')
+                                 ->get(['budgets.name', 'transactions.amount', 'transaction_journals.*']);
+
+        return $set;
     }
 
     /**
