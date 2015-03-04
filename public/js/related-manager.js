@@ -9,7 +9,7 @@ function unrelateTransaction(e) {
     var id = target.data('id');
     var relatedTo = target.data('relatedto');
 
-    $.post('related/removeRelation/' + id + '/' + relatedTo, {_token:token}).success(function (data) {
+    $.post('related/removeRelation/' + id + '/' + relatedTo, {_token: token}).success(function (data) {
         target.parent().parent().remove();
     }).fail(function () {
         alert('Could not!');
@@ -41,7 +41,7 @@ function relateTransaction(e) {
 function searchRelatedTransactions(e, ID) {
     var searchValue = $('#relatedSearchValue').val();
     if (searchValue != '') {
-        $.post('related/search/' + ID, {searchValue: searchValue,_token:token}).success(function (data) {
+        $.post('related/search/' + ID, {searchValue: searchValue, _token: token}).success(function (data) {
             // post the results to some div.
             $('#relatedSearchResultsTitle').show();
             $('#relatedSearchResults').empty().html(data);
@@ -61,7 +61,7 @@ function doRelateNewTransaction(e) {
     var relateToId = target.data('relateto');
     if (!target.checked) {
         var relateID = target.data('id');
-        $.post('related/relate/' + id + '/' + relateToId,{_token:token}).success(function (data) {
+        $.post('related/relate/' + id + '/' + relateToId, {_token: token}).success(function (data) {
             // success!
             target.parent().parent().remove();
             getAlreadyRelatedTransactions(null, relateToId);
