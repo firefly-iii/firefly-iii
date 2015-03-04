@@ -81,7 +81,7 @@ class BillController extends Controller
      */
     public function index(BillRepositoryInterface $repository)
     {
-        $bills = Auth::user()->bills()->get();
+        $bills = Auth::user()->bills()->orderBy('name','ASC')->get();
         $bills->each(
             function (Bill $bill) use ($repository) {
                 $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill);
