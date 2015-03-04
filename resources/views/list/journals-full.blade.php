@@ -71,14 +71,14 @@
             {{$journal->date->format('j F Y')}}
         </td>
         <td>
-            @if($journal->transactions[0]->account->accounttype->description == 'Cash account')
+            @if($journal->transactions[0]->account->accounttype->type == 'Cash account')
                 <span class="text-success">(cash)</span>
             @else
                 <a href="{{route('accounts.show',$journal->transactions[0]->account_id)}}">{{{$journal->transactions[0]->account->name}}}</a>
             @endif
         </td>
         <td>
-            @if($journal->transactions[1]->account->accounttype->description == 'Cash account')
+            @if($journal->transactions[1]->account->accounttype->type == 'Cash account')
                 <span class="text-success">(cash)</span>
             @else
                 <a href="{{route('accounts.show',$journal->transactions[1]->account_id)}}">{{{$journal->transactions[1]->account->name}}}</a>

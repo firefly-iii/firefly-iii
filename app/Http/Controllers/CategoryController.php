@@ -113,7 +113,8 @@ class CategoryController extends Controller
                         ->after($start)
                         ->orderBy('transaction_journals.date')
                         ->get(['transaction_journals.*']);
-        $subTitle = 'Transactions without a category in ' . $start->format('F Y');
+
+        $subTitle = 'Transactions without a category between ' . $start->format('jS F Y').' and '.$end->format('jS F Y');
 
         return view('categories.noCategory', compact('list', 'subTitle'));
     }
