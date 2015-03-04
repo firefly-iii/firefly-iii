@@ -85,7 +85,11 @@
                     ?>
                     @if(isset($account->budgetInformation[0]))
                         <td>
-                            <a href="{{route('reports.left-unbalanced',[$account, $year, $month])}}" class="openModal">{!! Amount::format($account->budgetInformation[0]['amount'] + $account->balancedAmount) !!}</a>
+                            @if($account->budgetInformation[0]['amount'] + $account->balancedAmount != 0.0)
+                                <a href="{{route('reports.left-unbalanced',[$account, $year, $month])}}" class="openModal">{!! Amount::format($account->budgetInformation[0]['amount'] + $account->balancedAmount) !!}</a>
+                            @else
+                                {!! Amount::format($account->budgetInformation[0]['amount'] + $account->balancedAmount) !!}
+                            @endif
                         </td>
                     @else
                         <td>{!! Amount::format(0) !!}</td>
