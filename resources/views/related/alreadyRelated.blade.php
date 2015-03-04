@@ -1,9 +1,8 @@
-<!-- search for: {{$search}} with {{$journals->count()}} results -->
 @if($journals->count() > 0)
 <table class="table table-bordered table-striped table-condensed">
     @foreach($journals as $journal)
         <tr>
-            <td><a title="Link" data-id="{{$journal->id}}" data-parent="{{$parent->id}}" class="btn relate btn-xs btn-default" href="#"><span class="glyphicon glyphicon-resize-small"></span></a></td>
+            <td><a title="Unlink" data-id="{{$journal->id}}" data-parent="{{$parent->id}}" class="btn unrelate btn-xs btn-default" href="#"><span class="glyphicon glyphicon-resize-full"></span></a></td>
             <td>
                 @if($journal->transactiontype->type == 'Withdrawal')
                     <i class="fa fa-long-arrow-left fa-fw" title="Withdrawal"></i>
@@ -32,8 +31,32 @@
             </td>
 
         </tr>
+{{--
+
+
+
+
+
+            <span class="pull-right small">
+@if(isset($account))
+                    @foreach($journal->transactions as $index => $t)
+                        @if($t->account_id == $account->id)
+                            {!! Amount::formatTransaction($t) !!}
+                        @endif
+                    @endforeach
+                @else
+                    @foreach($journal->transactions as $index => $t)
+                        @if($index == 0)
+                            {!! Amount::formatTransaction($t) !!}
+                        @endif
+                    @endforeach
+                @endif
+</span>
+
+        </a>
+        --}}
     @endforeach
 </table>
 @else
-    <p><em>No results</em></p>
+    <p><em>No related transactions</em></p>
 @endif

@@ -1,23 +1,40 @@
 $(document).ready(function () {
-    $('.relateTransaction').click(relateTransaction);
-    $('.unrelate-checkbox').click(unrelateTransaction);
+    $('.relateTransaction').click(relateTransactionDialog);
+    //$('.unrelate-checkbox').click(unrelateTransaction);
 
 });
 
 function unrelateTransaction(e) {
     var target = $(e.target);
     var id = target.data('id');
-    var relatedTo = target.data('relatedto');
+    var parent = target.data('parent');
 
-    $.post('related/removeRelation/' + id + '/' + relatedTo, {_token: token}).success(function (data) {
+    if(typeof id == "undefined" && typeof parent == "undefined") {
+        target = target.parent();
+        id = target.data('id');
+        parent = target.data('parent');
+    }
+    console.log('unlink ' + id + ' from ' + parent);
+
+    $.post('related/removeRelation/' + id + '/' + parent, {_token: token}).success(function (data) {
         target.parent().parent().remove();
     }).fail(function () {
         alert('Could not!');
     });
 
+
+    return false;
+
+
+    //$.post('related/removeRelation/' + id + '/' + relatedTo, {_token: token}).success(function (data) {
+    //    target.parent().parent().remove();
+    //}).fail(function () {
+    //    alert('Could not!');
+    //});
+
 }
 
-function relateTransaction(e) {
+function relateTransactionDialog(e) {
     var target = $(e.target);
     var ID = target.data('id');
 
@@ -45,6 +62,8 @@ function searchRelatedTransactions(e, ID) {
             // post the results to some div.
             $('#relatedSearchResultsTitle').show();
             $('#relatedSearchResults').empty().html(data);
+            // remove any clicks.
+            $('.relate').unbind('click').on('click', doRelateNewTransaction);
 
         }).fail(function () {
             alert('Could not search. Sorry.');
@@ -58,38 +77,35 @@ function doRelateNewTransaction(e) {
     // remove the row from the table:
     var target = $(e.target);
     var id = target.data('id');
-    var relateToId = target.data('relateto');
-    if (!target.checked) {
-        var relateID = target.data('id');
-        $.post('related/relate/' + id + '/' + relateToId, {_token: token}).success(function (data) {
-            // success!
-            target.parent().parent().remove();
-            getAlreadyRelatedTransactions(null, relateToId);
-        }).fail(function () {
-            // could not relate.
-            alert('Error!');
-        });
+    var parent = target.data('parent');
 
-
-    } else {
-        alert('remove again!');
+    if (typeof id == "undefined" && typeof parent == "undefined") {
+        target = target.parent();
+        console.log(target);
+        id = target.data('id');
+        parent = target.data('parent');
     }
+
+    console.log('Relate ' + id + ' to ' + parent);
+    $.post('related/relate/' + parent + '/' + id, {_token: token}).success(function (data) {
+        // success! remove entry:
+        target.parent().parent().remove();
+        // get related stuff (again).
+        getAlreadyRelatedTransactions(null, parent);
+    }).fail(function () {
+        // could not relate.
+        alert('Could not relate this transaction to the intended target.');
+    });
+    return false;
 }
 
 function getAlreadyRelatedTransactions(e, ID) {
     //#alreadyRelated
     $.get('related/alreadyRelated/' + ID).success(function (data) {
-        $('#alreadyRelated').empty();
-        $.each(data, function (i, row) {
-            var tr = $('<tr>');
+        $('#alreadyRelated').empty().html(data);
+        // some event triggers.
+        $('.unrelate').unbind('click').on('click', unrelateTransaction);
 
-            var checkBox = $('<td>').append($('<input>').attr('type', 'checkbox').data('relateto', ID).data('id', row.id).click(doRelateNewTransaction));
-            var description = $('<td>').text(row.description);
-            var amount = $('<td>').html(row.amount);
-            tr.append(checkBox).append(description).append(amount);
-            $('#alreadyRelated').append(tr);
-            //$('#relatedSearchResults').append($('<div>').text(row.id));
-        });
     }).fail(function () {
         alert('Cannot get related stuff.');
     });
