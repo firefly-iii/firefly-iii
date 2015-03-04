@@ -13,6 +13,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -455,36 +456,32 @@ class GoogleChartController extends Controller
 
     /**
      *
-     * @param Category  $category
-     * @param           $year
+     * @param Category $category
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function categoriesAndSpending(Category $category, $year, GChart $chart)
+    public function categoryOverviewChart(Category $category, GChart $chart)
     {
-        try {
-            new Carbon('01-01-' . $year);
-        } catch (Exception $e) {
-            return view('error')->with('message', 'Invalid year.');
-        }
+        // oldest transaction in category:
+        /** @var TransactionJournal $first */
+        $first = $category->transactionjournals()->orderBy('date', 'ASC')->first();
+        $start = $first->date;
+        /** @var Preference $range */
+        $range = Preferences::get('viewRange', '1M');
+        // jump to start of week / month / year / etc (TODO).
+        $start = Navigation::startOfPeriod($start, $range->data);
 
-        $chart->addColumn('Month', 'date');
-        $chart->addColumn('Budgeted', 'number');
+        $chart->addColumn('Period', 'date');
         $chart->addColumn('Spent', 'number');
 
-        $start = new Carbon('01-01-' . $year);
-        $end   = clone $start;
-        $end->endOfYear();
+        $end = new Carbon;
         while ($start <= $end) {
 
-            $currentEnd = clone $start;
-            $currentEnd->endOfMonth();
-            $spent    = floatval($category->transactionjournals()->before($end)->after($start)->lessThan(0)->sum('amount')) * -1;
-            $budgeted = null;
+            $currentEnd = Navigation::endOfPeriod($start, $range->data);
+            $spent      = floatval($category->transactionjournals()->before($currentEnd)->after($start)->lessThan(0)->sum('amount')) * -1;
+            $chart->addRow(clone $start, $spent);
 
-            $chart->addRow(clone $start, $budgeted, $spent);
-
-            $start->addMonth();
+            $start = Navigation::addPeriod($start, $range->data, 0);
         }
 
 
@@ -494,6 +491,36 @@ class GoogleChartController extends Controller
 
 
     }
+
+    /**
+     *
+     * @param Category $category
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function categoryPeriodChart(Category $category, GChart $chart)
+    {
+        // oldest transaction in category:
+        /** @var TransactionJournal $first */
+        $start = Session::get('start');
+        $chart->addColumn('Period', 'date');
+        $chart->addColumn('Spent', 'number');
+
+        $end = Session::get('end');
+        while ($start <= $end) {
+            $spent      = floatval($category->transactionjournals()->onDate($start)->lessThan(0)->sum('amount')) * -1;
+            $chart->addRow(clone $start, $spent);
+            $start->addDay();
+        }
+
+        $chart->generate();
+
+        return Response::json($chart->getData());
+
+
+    }
+
+
 
     /**
      * @param PiggyBank $piggyBank
