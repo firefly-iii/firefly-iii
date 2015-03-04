@@ -131,8 +131,10 @@ class AccountController extends Controller
         $total = Auth::user()->accounts()->accountTypeIn($types)->count();
 
         // last activity:
+        $start = clone Session::get('start');
+        $start->subDay();
         $set->each(
-            function (Account $account) {
+            function (Account $account) use($start) {
                 $lastTransaction = $account->transactions()->leftJoin(
                     'transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
                 )->orderBy('transaction_journals.date', 'DESC')->first(['transactions.*', 'transaction_journals.date']);
@@ -141,7 +143,7 @@ class AccountController extends Controller
                 } else {
                     $account->lastActivityDate = null;
                 }
-                $account->startBalance = Steam::balance($account, Session::get('start'));
+                $account->startBalance = Steam::balance($account, $start);
                 $account->endBalance   = Steam::balance($account, Session::get('end'));
             }
         );
