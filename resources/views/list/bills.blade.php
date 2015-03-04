@@ -3,7 +3,7 @@
         <th>&nbsp;</th>
         <th>Name</th>
         <th>Matches on</th>
-        <th>Matching amount</th>
+        <th colspan="2">Matching amount</th>
         <th>Last seen match</th>
         <th>Next expected match</th>
         <th>Is active</th>
@@ -28,7 +28,8 @@
         </td>
         <td>
             {!! Amount::format($entry->amount_min) !!}
-            &mdash;
+        </td>
+        <td>
             {!! Amount::format($entry->amount_max) !!}
         </td>
         <td>
