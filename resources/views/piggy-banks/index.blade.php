@@ -10,7 +10,7 @@
 </div>
 <div class="row">
 @foreach($piggyBanks as $piggyBank)
-    <div class="col-lg-3 col-md-6 col-sm-12">
+    <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-fw fa-rocket"></i> <a href="{{route('piggy-banks.show',$piggyBank->id)}}" title="{{{$piggyBank->name}}}">{{{$piggyBank->name}}}</a>
@@ -83,13 +83,13 @@
                     </div> -->
                 </div>
                 <div class="row">
-                    <div class="col-lg-4">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs4">
                         <span title="Saved so far">{!! Amount::format($piggyBank->savedSoFar,true) !!}</span>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs4">
                         <span title="Target amount">{!! Amount::format($piggyBank->targetamount,true) !!}</span>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs4">
                         @if($piggyBank->leftToSave > 0)
                             <span title="Left to save">{!! Amount::format($piggyBank->leftToSave) !!}</span>
                         @endif
