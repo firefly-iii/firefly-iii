@@ -109,7 +109,6 @@
 
 <!-- modal to relate transactions to each other -->
 <div class="modal fade" id="relationModal">
-
 </div>
 
 <script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>

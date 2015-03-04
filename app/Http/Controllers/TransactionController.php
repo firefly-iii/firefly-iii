@@ -229,18 +229,9 @@ class TransactionController extends Controller
                 $t->after  = $t->before + $t->amount;
             }
         );
-        $members = new Collection;
-        /** @var TransactionGroup $group */
-        foreach ($journal->transactiongroups()->get() as $group) {
-            /** @var TransactionJournal $loopJournal */
-            foreach ($group->transactionjournals()->get() as $loopJournal) {
-                if ($loopJournal->id != $journal->id) {
-                    $members->push($loopJournal);
-                }
-            }
-        }
 
-        return view('transactions.show', compact('journal', 'members'))->with(
+
+        return view('transactions.show', compact('journal'))->with(
             'subTitle', e($journal->transactiontype->type) . ' "' . e($journal->description) . '"'
         );
     }

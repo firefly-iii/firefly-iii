@@ -2,39 +2,38 @@ $(function () {
 
     $('.currencySelect').click(currencySelect);
 
-        $('#daterange').daterangepicker(
-            {
-                ranges: {
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                    'Next Month': [moment().add('month', 1).startOf('month'), moment().add('month', 1).endOf('month')],
-                    'Everything': [firstDate, moment()]
-                },
-                opens: 'left',
-
-                format: 'DD-MM-YYYY',
-                startDate: start,
-                endDate: end
+    $('#daterange').daterangepicker(
+        {
+            ranges: {
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                'Next Month': [moment().add(1, 'month').startOf('month'), moment().add(1, 'month').endOf('month')],
+                'Everything': [firstDate, moment()]
             },
-            function(start, end, label) {
+            opens: 'left',
 
-                // send post.
-                $.post(dateRangeURL, {
-                    start: start.format('YYYY-MM-DD'),
-                    end: end.format('YYYY-MM-DD'),
-                    label: label,
-                    _token: token
-                }).success(function() {
-                    window.location.reload(true);
-                }).fail(function() {
-                    alert('Could not change date range');
+            format: 'DD-MM-YYYY',
+            startDate: start,
+            endDate: end
+        },
+        function (start, end, label) {
 
-                });
+            // send post.
+            $.post(dateRangeURL, {
+                start: start.format('YYYY-MM-DD'),
+                end: end.format('YYYY-MM-DD'),
+                label: label,
+                _token: token
+            }).success(function () {
+                window.location.reload(true);
+            }).fail(function () {
+                alert('Could not change date range');
 
-                //alert('A date range was chosen: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-            }
+            });
 
-        );
+            //alert('A date range was chosen: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        }
+    );
 
 });
 

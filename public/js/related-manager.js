@@ -42,20 +42,9 @@ function searchRelatedTransactions(e, ID) {
     var searchValue = $('#relatedSearchValue').val();
     if (searchValue != '') {
         $.post('related/search/' + ID, {searchValue: searchValue,_token:token}).success(function (data) {
-            // post each result to some div.
-            $('#relatedSearchResults').empty();
-
-            $.each(data, function (i, row) {
-                var tr = $('<tr>');
-
-                var checkBox = $('<td>').append($('<input>').attr('type', 'checkbox').data('relateto', ID).data('id', row.id).click(doRelateNewTransaction));
-                var description = $('<td>').text(row.description);
-                var amount = $('<td>').html(row.amount);
-                tr.append(checkBox).append(description).append(amount);
-                $('#relatedSearchResults').append(tr);
-                //$('#relatedSearchResults').append($('<div>').text(row.id));
-            });
-
+            // post the results to some div.
+            $('#relatedSearchResultsTitle').show();
+            $('#relatedSearchResults').empty().html(data);
 
         }).fail(function () {
             alert('Could not search. Sorry.');

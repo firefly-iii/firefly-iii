@@ -1,7 +1,8 @@
 $(function () {
 
-    if (typeof componentID !== 'undefined' && typeof repetitionID === 'undefined') {
-        googleColumnChart('chart/category/' + componentID + '/spending/' + year, 'componentOverview');
+    if (typeof categoryID !== 'undefined') {
+        googleColumnChart('chart/category/' + categoryID + '/overview', 'componentOverview');
+        googleColumnChart('chart/category/' + categoryID + '/period', 'periodOverview');
     }
 
 
