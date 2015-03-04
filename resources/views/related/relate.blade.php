@@ -19,8 +19,7 @@
             <div id="relatedSearchResults">
             </div>
             <h5>(Already) related transactions</h5>
-            <div>
-                <table id="alreadyRelated" class="table table-bordered table-striped"></table>
+            <div id="alreadyRelated">
             </div>
         </div>
         <div class="modal-footer">
