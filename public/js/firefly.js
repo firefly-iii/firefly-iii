@@ -2,14 +2,21 @@ $(function () {
 
     $('.currencySelect').click(currencySelect);
 
+    ranges = {};
+    ranges[currentMonthName] = [moment().startOf('month'), moment().endOf('month')];
+    ranges[previousMonthName] = [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')];
+    ranges[nextMonthName] = [moment().add(1, 'month').startOf('month'), moment().add(1, 'month').endOf('month')];
+    ranges['Everything'] = [firstDate, moment()];
+
     $('#daterange').daterangepicker(
         {
-            ranges: {
-                'This Month': [moment().startOf('month'), moment().endOf('month')],
-                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-                'Next Month': [moment().add(1, 'month').startOf('month'), moment().add(1, 'month').endOf('month')],
-                'Everything': [firstDate, moment()]
-            },
+            //View::share('currentMonthName', $current);
+            //View::share('previousMonthName', $prev);
+            //View::share('nextMonthName', $next);
+
+
+            ranges: ranges
+            ,
             opens: 'left',
 
             format: 'DD-MM-YYYY',

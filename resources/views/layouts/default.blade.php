@@ -132,6 +132,9 @@
     var dateRangeURL = "{{route('daterange')}}";
     var token = "{{csrf_token()}}";
     var firstDate = moment("{{Session::get('first')->format('Y-m-d')}}");
+    var currentMonthName = "{{$currentMonthName}}";
+    var previousMonthName = "{{$previousMonthName}}";
+    var nextMonthName = "{{$nextMonthName}}";
     $('#daterange span').text(titleString);
 </script>
 
