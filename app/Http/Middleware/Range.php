@@ -9,6 +9,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Navigation;
 use Preferences;
 use Session;
+use View;
 
 /**
  * Class SessionFilter
@@ -67,6 +68,14 @@ class Range
                     Session::put('first', Carbon::now());
                 }
             }
+
+            // set current / next / prev month.
+            $current = Carbon::now()->format('F Y');
+            $next    = Carbon::now()->endOfMonth()->addDay()->format('F Y');
+            $prev    = Carbon::now()->startOfMonth()->subDay()->format('F Y');
+            View::share('currentMonthName', $current);
+            View::share('previousMonthName', $prev);
+            View::share('nextMonthName', $next);
 
 
         }
