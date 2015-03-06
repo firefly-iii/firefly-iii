@@ -20,7 +20,8 @@ return [
     "alpha_dash"           => "The :attribute may only contain letters, numbers, and dashes.",
     "alpha_num"            => "The :attribute may only contain letters and numbers.",
     "array"                => "The :attribute must be an array.",
-    "unique_for_user" => "There already is an entry with this :attribute.",
+    "unique_for_user"      => "There already is an entry with this :attribute.",
+    'piggy_bank_reminder'  => 'The target date is too close to today to allow reminders.',
     "before"               => "The :attribute must be a date before :date.",
     "between"              => [
         "numeric" => "The :attribute must be between :min and :max.",
