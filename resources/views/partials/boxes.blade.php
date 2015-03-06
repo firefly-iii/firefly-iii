@@ -5,7 +5,7 @@
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-3">
-                        <i class="fa fa-comments fa-5x"></i>
+                        <i class="fa fa-cloud-upload fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
                         <div id="box-out" class="huge">{{Amount::format(0,false)}}</div>
@@ -27,7 +27,7 @@
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-3">
-                        <i class="fa fa-tasks fa-5x"></i>
+                        <i class="fa fa-cloud-download fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
                         <div id="box-in" class="huge">{{Amount::format(0,false)}}</div>
@@ -49,7 +49,7 @@
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-3">
-                        <i class="fa fa-shopping-cart fa-5x"></i>
+                        <i class="fa fa-calendar-o fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
                         <div id="box-bills-unpaid" class="huge">{{Amount::format(0,false)}}</div>
@@ -71,7 +71,7 @@
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-3">
-                        <i class="fa fa-support fa-5x"></i>
+                        <i class="fa fa-line-chart fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
                         <div id="box-bills-paid" class="huge">{{Amount::format(0,false)}}</div>
