@@ -2,6 +2,7 @@
 
 namespace FireflyIII\Repositories\PiggyBank;
 
+use Amount;
 use Auth;
 use Carbon\Carbon;
 use FireflyIII\Models\PiggyBank;
@@ -102,17 +103,15 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
                         ->first();
         if (is_null($reminder)) {
             // create one:
-            $reminder = Reminder::create(
-                [
-                    'user_id'            => Auth::user()->id,
-                    'startdate'          => $currentStart->format('Y-m-d'),
-                    'enddate'            => $currentEnd->format('Y-m-d'),
-                    'active'             => '1',
-                    'notnow'             => '0',
-                    'remindersable_id'   => $piggyBank->id,
-                    'remindersable_type' => 'PiggyBank',
-                ]
-            );
+            $reminder = new Reminder;
+            $reminder->user()->associate(Auth::user());
+            $reminder->startdate = $currentStart;
+            $reminder->enddate   = $currentEnd;
+            $reminder->active    = true;
+            $reminder->notnow    = false;
+            $reminder->remindersable()->associate($piggyBank);
+            $reminder->save();
+
             return $reminder;
 
         } else {
@@ -120,6 +119,84 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         }
 
 
+    }
+
+    /**
+     * This routine will return an array consisting of two dates which indicate the start
+     * and end date for each reminder that this piggy bank will have, if the piggy bank has
+     * any reminders. For example:
+     *
+     * [12 mar - 15 mar]
+     * [15 mar - 18 mar]
+     *
+     * etcetera.
+     *
+     * Array is filled with tiny arrays with Carbon objects in them.
+     *
+     * @param PiggyBank $piggyBank
+     *
+     * @return array
+     */
+    public function getReminderRanges(PiggyBank $piggyBank)
+    {
+        $ranges = [];
+        $today  = new Carbon;
+        if ($piggyBank->remind_me === false) {
+            return $ranges;
+        }
+
+        if (!is_null($piggyBank->targetdate)) {
+            // count back until now.
+            //                    echo 'Count back!<br>';
+            $start = $piggyBank->targetdate;
+            $end   = $piggyBank->startdate;
+
+            while ($start >= $end) {
+                $currentEnd   = clone $start;
+                $start        = Navigation::subtractPeriod($start, $piggyBank->reminder, 1);
+                $currentStart = clone $start;
+                $ranges[]     = ['start' => clone $currentStart, 'end' => clone $currentEnd];
+            }
+        } else {
+            $start = clone $piggyBank->startdate;
+            while ($start < $today) {
+                $currentStart = clone $start;
+                $start        = Navigation::addPeriod($start, $piggyBank->reminder, 0);
+                $currentEnd   = clone $start;
+                $ranges[]     = ['start' => clone $currentStart, 'end' => clone $currentEnd];
+            }
+        }
+
+        return $ranges;
+    }
+
+    /**
+     * Takes a reminder, finds the piggy bank and tells you what to do now.
+     * Aka how much money to put in.
+     *
+     *
+     * @param Reminder $reminder
+     *
+     * @return string
+     */
+    public function getReminderText(Reminder $reminder)
+    {
+        /** @var PiggyBank $piggyBank */
+        $piggyBank = $reminder->remindersable;
+
+        if (is_null($piggyBank->targetdate)) {
+            return 'Add money to this piggy bank to reach your target of ' . Amount::format($piggyBank->targetamount);
+        }
+
+        $currentRep = $piggyBank->currentRelevantRep();
+
+
+        $ranges = $this->getReminderRanges($piggyBank);
+        // calculate number of reminders:
+        $left        = $piggyBank->targetamount - $currentRep->currentamount;
+        $perReminder = $left / count($ranges);
+
+        return 'Add '.Amount::format($perReminder).' to fill this piggy bank on '.$piggyBank->targetdate->format('jS F Y');
     }
 
     /**

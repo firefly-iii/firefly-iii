@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 06/03/15
- * Time: 15:04
- */
 
 namespace FireflyIII\Http\Middleware;
 
@@ -14,8 +8,7 @@ use Closure;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Reminder;
 use Illuminate\Contracts\Auth\Guard;
-use Log;
-use Navigation;
+use View;
 
 /**
  * Class Reminders
@@ -61,69 +54,28 @@ class Reminders
 
             /** @var PiggyBank $piggyBank */
             foreach ($piggyBanks as $piggyBank) {
-                $startDate  = is_null($piggyBank->startdate) ? 'null' : $piggyBank->startdate->format('d M Y');
-                $targetDate = is_null($piggyBank->targetdate) ? 'null' : $piggyBank->targetdate->format('d M Y');
-                Log::debug('PiggyBank: #' . $piggyBank->id . ', name: ' . $piggyBank->name);
-                Log::debug('Startdate: ' . $startDate . ', target date: ' . $targetDate);
+                $ranges = $repository->getReminderRanges($piggyBank);
 
-                if (!is_null($piggyBank->targetdate)) {
-                    // count back until now.
-                    //                    echo 'Count back!<br>';
-                    $start = $piggyBank->targetdate;
-                    $end   = $piggyBank->startdate;
-
-                    while ($start >= $end) {
-                        $currentEnd   = clone $start;
-                        $start        = Navigation::subtractPeriod($start, $piggyBank->reminder, 1);
-                        $currentStart = clone $start;
-                        Log::debug('Now range: [' . $currentStart->format('d M Y') . '] to [' . $currentEnd->format('d M Y') . ']');
-
-                        // for today?
-                        if ($today < $currentEnd && $today > $currentStart) {
-                            Log::debug('Today!');
-
-                            // find a reminder first?
-                            $reminders = $this->auth->user()->reminders()
-                                                    ->where('remindersable_id', $piggyBank->id)
-                                                    ->onDates($currentStart, $currentEnd)
-                                                    ->count();
-                            Log::debug('Found ' . $reminders . ' reminders');
-
-                            if ($reminders == 0) {
-                                // create a reminder here!
-                                Log::debug('create reminder!');
-                                $repository->createReminder($piggyBank, $currentStart, $currentEnd);
-                            }
-                            // stop looping, we're done.
-                            break;
-                        }
+                foreach ($ranges as $range) {
+                    if ($today < $range['end'] && $today > $range['start']) {
+                        // create a reminder here!
+                        $repository->createReminder($piggyBank, $range['start'], $range['end']);
+                        break;
                     }
-                } else {
-                    $start = clone $piggyBank->startdate;
-                    while ($start < $today) {
-                        $currentStart = clone $start;
-                        $start        = Navigation::addPeriod($start, $piggyBank->reminder, 0);
-                        $currentEnd   = clone $start;
-                        Log::debug('Now range: [' . $currentStart->format('d M Y') . '] to [' . $currentEnd->format('d M Y') . ']');
+                    // stop looping, we're done.
 
-                        // for today?
-                        if ($today < $currentEnd && $today > $currentStart) {
-                            $reminders = $this->auth->user()->reminders()
-                                                    ->where('remindersable_id', $piggyBank->id)
-                                                    ->onDates($currentStart, $currentEnd)
-                                                    ->count();
-                            Log::debug('Found ' . $reminders . ' reminders');
-
-                            if ($reminders == 0) {
-                                // create a reminder here!
-                                Log::debug('create reminder!');
-                                $repository->createReminder($piggyBank, $currentStart, $currentEnd);
-
-                            }
-                        }
-                    }
                 }
             }
+
+
+            // get and list active reminders:
+            $reminders = $this->auth->user()->reminders()->today()->get();
+            $reminders->each(
+                function (Reminder $reminder) use ($repository) {
+                    $reminder->description = $repository->getReminderText($reminder);
+                }
+            );
+            View::share('reminders', $reminders);
         }
 
         return $next($request);
