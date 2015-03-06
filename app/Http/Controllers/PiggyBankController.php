@@ -125,7 +125,7 @@ class PiggyBankController extends Controller
                       'targetamount' => $piggyBank->targetamount,
                       'targetdate'   => $targetDate,
                       'reminder'     => $piggyBank->reminder,
-                      'remind_me'    => intval($piggyBank->remind_me) == 1 || !is_null($piggyBank->reminder) ? true : false
+                      'remind_me'    => intval($piggyBank->remind_me) == 1 && !is_null($piggyBank->reminder) ? true : false
         ];
         Session::flash('preFilled', $preFilled);
 
@@ -258,24 +258,6 @@ class PiggyBankController extends Controller
      */
     public function show(PiggyBank $piggyBank)
     {
-
-        /*
-         * Some reminder debug stuff.
-         */
-
-
-        //        if($piggyBank->remind_me === true) {
-        //            // need to determine sensible moment for a reminder
-        //            // to occur.
-        //            // loop back to today?
-        //            // if no target date, just make reminders out from start date?
-        //
-        //            $start = $piggyBank->targetdate;
-        //            if(is_null($start)) {
-        //
-        //            }
-        //        }
-
 
         $events = $piggyBank->piggyBankEvents()->orderBy('date', 'DESC')->orderBy('id', 'DESC')->get();
 
