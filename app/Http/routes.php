@@ -1,6 +1,7 @@
 <?php
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\Reminder;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\LimitRepetition;
@@ -83,6 +84,16 @@ Route::bind(
     'budget', function ($value, $route) {
     if (Auth::check()) {
         return Budget::where('id', $value)->where('user_id', Auth::user()->id)->first();
+    }
+
+    return null;
+}
+);
+
+Route::bind(
+    'reminder', function ($value, $route) {
+    if (Auth::check()) {
+        return Reminder::where('id', $value)->where('user_id', Auth::user()->id)->first();
     }
 
     return null;
@@ -230,12 +241,10 @@ Route::group(
     Route::get('/chart/budget/{budget}/spending/{year?}', ['uses' => 'GoogleChartController@budgetsAndSpending']);
     Route::get('/chart/budgets/spending/{year?}', ['uses' => 'GoogleChartController@allBudgetsAndSpending']);
     Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'GoogleChartController@budgetLimitSpending']);
-
     Route::get('/chart/reports/income-expenses/{year}', ['uses' => 'GoogleChartController@yearInExp']);
     Route::get('/chart/reports/income-expenses-sum/{year}', ['uses' => 'GoogleChartController@yearInExpSum']);
     Route::get('/chart/bills/{bill}', ['uses' => 'GoogleChartController@billOverview']);
     Route::get('/chart/piggy-history/{piggyBank}', ['uses' => 'GoogleChartController@piggyBankHistory']);
-
     Route::get('/chart/category/{category}/period', ['uses' => 'GoogleChartController@categoryPeriodChart']);
     Route::get('/chart/category/{category}/overview', ['uses' => 'GoogleChartController@categoryOverviewChart']);
 
@@ -291,6 +300,12 @@ Route::group(
     Route::get('/related/remove/{tj}/{tjSecond}', ['uses' => 'RelatedController@getRemoveRelation', 'as' => 'related.getRemoveRelation']);
     Route::get('/related/related/{tj}', ['uses' => 'RelatedController@related', 'as' => 'related.related']);
     Route::post('/related/search/{tj}', ['uses' => 'RelatedController@search', 'as' => 'related.search']);
+
+    /**
+     * Reminder Controller
+     */
+    Route::get('/reminders', ['uses' => 'ReminderController@index', 'as' => 'reminders.index']);
+    Route::get('/reminder/{reminder}', ['uses' => 'ReminderController@show', 'as' => 'reminders.show']);
 
     /**
      * Repeated Expenses Controller

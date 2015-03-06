@@ -16,11 +16,31 @@ class Reminder extends Model
     protected $fillable = ['user_id', 'startdate', 'enddate', 'active', 'notnow', 'remindersable_id', 'remindersable_type',];
 
     /**
+     * @param $value
+     *
+     * @return int
+     */
+    public function getActiveAttribute($value)
+    {
+        return intval($value) == 1;
+    }
+
+    /**
      * @return array
      */
     public function getDates()
     {
         return ['created_at', 'updated_at', 'startdate', 'enddate'];
+    }
+
+    /**
+     * @param $value
+     *
+     * @return bool
+     */
+    public function getNotnowAttribute($value)
+    {
+        return intval($value) == 1;
     }
 
     /**
@@ -43,9 +63,11 @@ class Reminder extends Model
         return $query->where('reminders.startdate', '=', $start->format('Y-m-d 00:00:00'))->where('reminders.enddate', '=', $end->format('Y-m-d 00:00:00'));
     }
 
-    public function scopeToday(EloquentBuilder $query) {
+    public function scopeToday(EloquentBuilder $query)
+    {
         $today = new Carbon;
-        return $query->where('startdate','<=',$today->format('Y-m-d 00:00:00'))->where('enddate','>=',$today->format('Y-m-d 00:00:00'))->where('active',1);
+
+        return $query->where('startdate', '<=', $today->format('Y-m-d 00:00:00'))->where('enddate', '>=', $today->format('Y-m-d 00:00:00'))->where('active', 1);
     }
 
     /**
