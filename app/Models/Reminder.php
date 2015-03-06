@@ -33,13 +33,19 @@ class Reminder extends Model
 
     /**
      * @param EloquentBuilder $query
-     * @param Carbon          $date
+     * @param Carbon          $start
+     * @param Carbon          $end
      *
-     * @return mixed
+     * @return $this
      */
     public function scopeOnDates(EloquentBuilder $query, Carbon $start, Carbon $end)
     {
         return $query->where('reminders.startdate', '=', $start->format('Y-m-d 00:00:00'))->where('reminders.enddate', '=', $end->format('Y-m-d 00:00:00'));
+    }
+
+    public function scopeToday(EloquentBuilder $query) {
+        $today = new Carbon;
+        return $query->where('startdate','<=',$today->format('Y-m-d 00:00:00'))->where('enddate','>=',$today->format('Y-m-d 00:00:00'))->where('active',1);
     }
 
     /**

@@ -15,7 +15,41 @@
 
     <ul class="nav navbar-top-links navbar-right">
 
+        <!-- reminders -->
+        @if($reminders->count() > 0)
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                <i class="fa fa-envelope fa-fw"></i>  <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-messages">
+                @foreach($reminders as $reminder)
+                <li>
+                    <a href="#">
+                        <div>
+                            <strong>
+                                {{$reminder->remindersable->name}}
+                            </strong>
+                                    <span class="pull-right text-muted">
+                                        <em>{{$reminder->startdate->diffForHumans()}}</em>
+                                    </span>
+                        </div>
+                        <div>{!! $reminder->description !!}</div>
+                    </a>
+                </li>
+                    <li class="divider"></li>
+                @endforeach
+                <li>
+                    <a class="text-center" href="#">
+                        <strong>See all reminders</strong>
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+            </ul>
+            <!-- /.dropdown-messages -->
+        </li>
+        @endif
 
+        <!-- menu -->
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                 <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
