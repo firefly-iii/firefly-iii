@@ -2,8 +2,11 @@
 
 namespace FireflyIII\Repositories\PiggyBank;
 
+use Auth;
+use Carbon\Carbon;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
+use FireflyIII\Models\Reminder;
 use Illuminate\Support\Collection;
 use Navigation;
 
@@ -14,49 +17,6 @@ use Navigation;
  */
 class PiggyBankRepository implements PiggyBankRepositoryInterface
 {
-
-    /**
-     * @param array $data
-     *
-     * @return PiggyBank
-     */
-    public function store(array $data)
-    {
-
-        $piggyBank = PiggyBank::create($data);
-
-        return $piggyBank;
-    }
-
-    /**
-     * @param PiggyBank $account
-     * @param array     $data
-     *
-     * @return PiggyBank
-     */
-    public function update(PiggyBank $piggyBank, array $data)
-    {
-        /**
-        'rep_length'   => $request->get('rep_length'),
-        'rep_every'    => intval($request->get('rep_every')),
-        'rep_times'    => intval($request->get('rep_times')),
-        'remind_me'    => intval($request->get('remind_me')) == 1 ? true : false ,
-        'reminder'     => $request->get('reminder'),
-         */
-
-        $piggyBank->name         = $data['name'];
-        $piggyBank->account_id   = intval($data['account_id']);
-        $piggyBank->targetamount = floatval($data['targetamount']);
-        $piggyBank->targetdate   = $data['targetdate'];
-        $piggyBank->reminder     = $data['reminder'];
-        $piggyBank->rep_length   = isset($data['rep_length']) ? $data['rep_length'] : null;
-        $piggyBank->rep_every    =isset($data['rep_every']) ? $data['rep_every'] : null;
-        $piggyBank->rep_times    = isset($data['rep_times']) ? $data['rep_times'] : null;
-        $piggyBank->remind_me    = isset($data['remind_me']) ? $data['remind_me'] : null;
-
-        $piggyBank->save();
-        return $piggyBank;
-    }
 
     /**
      * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
@@ -125,5 +85,85 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         $part->setTargetdate($data['targetDate']);
 
         return $part;
+    }
+
+    /**
+     * @param PiggyBank $piggyBank
+     * @param Carbon    $currentStart
+     * @param Carbon    $currentEnd
+     *
+     * @return Reminder
+     */
+    public function createReminder(PiggyBank $piggyBank, Carbon $currentStart, Carbon $currentEnd)
+    {
+        $reminder = Auth::user()->reminders()
+                        ->where('remindersable_id', $piggyBank->id)
+                        ->onDates($currentStart, $currentEnd)
+                        ->first();
+        if (is_null($reminder)) {
+            // create one:
+            $reminder = Reminder::create(
+                [
+                    'user_id'            => Auth::user()->id,
+                    'startdate'          => $currentStart->format('Y-m-d'),
+                    'enddate'            => $currentEnd->format('Y-m-d'),
+                    'active'             => '1',
+                    'notnow'             => '0',
+                    'remindersable_id'   => $piggyBank->id,
+                    'remindersable_type' => 'PiggyBank',
+                ]
+            );
+            return $reminder;
+
+        } else {
+            return $reminder;
+        }
+
+
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return PiggyBank
+     */
+    public function store(array $data)
+    {
+        $data['remind_me'] = isset($data['remind_me']) && $data['remind_me'] == '1' ? true : false;
+        $piggyBank         = PiggyBank::create($data);
+
+        return $piggyBank;
+    }
+
+    /**
+     * @param PiggyBank $account
+     * @param array     $data
+     *
+     * @return PiggyBank
+     */
+    public function update(PiggyBank $piggyBank, array $data)
+    {
+        /**
+         * 'rep_length'   => $request->get('rep_length'),
+         * 'rep_every'    => intval($request->get('rep_every')),
+         * 'rep_times'    => intval($request->get('rep_times')),
+         * 'remind_me'    => intval($request->get('remind_me')) == 1 ? true : false ,
+         * 'reminder'     => $request->get('reminder'),
+         */
+
+        $piggyBank->name         = $data['name'];
+        $piggyBank->account_id   = intval($data['account_id']);
+        $piggyBank->targetamount = floatval($data['targetamount']);
+        $piggyBank->targetdate   = $data['targetdate'];
+        $piggyBank->reminder     = $data['reminder'];
+        $piggyBank->startdate    = $data['startdate'];
+        $piggyBank->rep_length   = isset($data['rep_length']) ? $data['rep_length'] : null;
+        $piggyBank->rep_every    = isset($data['rep_every']) ? $data['rep_every'] : null;
+        $piggyBank->rep_times    = isset($data['rep_times']) ? $data['rep_times'] : null;
+        $piggyBank->remind_me    = isset($data['remind_me']) && $data['remind_me'] == '1' ? true : false;
+
+        $piggyBank->save();
+
+        return $piggyBank;
     }
 }

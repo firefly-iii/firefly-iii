@@ -14,7 +14,7 @@ class PiggyBank extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['repeats', 'name', 'account_id','rep_every', 'rep_times', 'reminder_skip', 'targetamount', 'startdate', 'targetdate', 'reminder',];
+    protected $fillable = ['repeats', 'name', 'account_id','rep_every', 'rep_times', 'reminder_skip', 'targetamount', 'startdate', 'targetdate', 'reminder','remind_me'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -22,6 +22,15 @@ class PiggyBank extends Model
     public function account()
     {
         return $this->belongsTo('FireflyIII\Models\Account');
+    }
+
+    /**
+     * @param $value
+     *
+     * @return int
+     */
+    public function getRemindMeAttribute($value) {
+        return intval($value) == 1;
     }
 
     /**

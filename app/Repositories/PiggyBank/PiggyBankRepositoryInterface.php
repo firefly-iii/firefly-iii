@@ -4,30 +4,18 @@ namespace FireflyIII\Repositories\PiggyBank;
 
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
+use FireflyIII\Models\Reminder;
 use Illuminate\Support\Collection;
+use Carbon\Carbon;
 
 /**
  * Interface PiggyBankRepositoryInterface
  *
  * @package FireflyIII\Repositories\PiggyBank
  */
-interface PiggyBankRepositoryInterface {
+interface PiggyBankRepositoryInterface
+{
 
-
-    /**
-     * @param array $data
-     *
-     * @return PiggyBank
-     */
-    public function store(array $data);
-
-    /**
-     * @param PiggyBank $account
-     * @param array   $data
-     *
-     * @return PiggyBank
-     */
-    public function update(PiggyBank $piggyBank, array $data);
 
     /**
      * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
@@ -48,4 +36,28 @@ interface PiggyBankRepositoryInterface {
      * @return PiggyBankPart
      */
     public function createPiggyBankPart(array $data);
+
+    /**
+     * @param PiggyBank $piggyBank
+     * @param Carbon    $currentStart
+     * @param Carbon    $currentEnd
+     *
+     * @return Reminder
+     */
+    public function createReminder(PiggyBank $piggyBank, Carbon $currentStart, Carbon $currentEnd);
+
+    /**
+     * @param array $data
+     *
+     * @return PiggyBank
+     */
+    public function store(array $data);
+
+    /**
+     * @param PiggyBank $account
+     * @param array     $data
+     *
+     * @return PiggyBank
+     */
+    public function update(PiggyBank $piggyBank, array $data);
 }

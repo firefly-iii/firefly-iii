@@ -36,6 +36,7 @@ class Kernel extends HttpKernel
             'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
             'guest'      => 'FireflyIII\Http\Middleware\RedirectIfAuthenticated',
             'range'      => 'FireflyIII\Http\Middleware\Range',
+            'reminders'  => 'FireflyIII\Http\Middleware\Reminders',
         ];
 
 }

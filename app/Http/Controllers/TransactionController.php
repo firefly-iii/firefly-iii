@@ -263,7 +263,7 @@ class TransactionController extends Controller
         Session::flash('success', 'New transaction "' . $journal->description . '" stored!');
 
         if (intval(Input::get('create_another')) === 1) {
-            return Redirect::route('transactions.create', $request->input('what'));
+            return Redirect::route('transactions.create', $request->input('what'))->withInput();
         }
 
         return Redirect::route('transactions.index', $request->input('what'));
