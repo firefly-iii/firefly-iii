@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 25/02/15
- * Time: 12:29
- */
 
 namespace FireflyIII\Http\Requests;
 

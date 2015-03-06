@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 22/02/15
- * Time: 18:30
- */
 
 namespace FireflyIII\Helpers\Report;
 
