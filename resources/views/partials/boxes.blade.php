@@ -1,14 +1,14 @@
 <!-- /.row -->
 <div class="row">
     <div class="col-lg-3 col-md-6">
-        <div class="panel panel-primary">
+        <div class="panel panel-info">
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-3">
                         <i class="fa fa-cloud-upload fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <div id="box-out" class="huge">{{Amount::format(0,false)}}</div>
+                        <div id="box-out" class="large">{{Amount::format(0,false)}}</div>
                         <div>Money out</div>
                     </div>
                 </div>
@@ -30,7 +30,7 @@
                         <i class="fa fa-cloud-download fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <div id="box-in" class="huge">{{Amount::format(0,false)}}</div>
+                        <div id="box-in" class="large">{{Amount::format(0,false)}}</div>
                         <div>Money in</div>
                     </div>
                 </div>
@@ -45,14 +45,14 @@
         </div>
     </div>
     <div class="col-lg-3 col-md-6">
-        <div class="panel panel-red">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 <div class="row">
                     <div class="col-xs-3">
                         <i class="fa fa-calendar-o fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <div id="box-bills-unpaid" class="huge">{{Amount::format(0,false)}}</div>
+                        <div id="box-bills-unpaid" class="large">{{Amount::format(0,false)}}</div>
                         <div>Bills to pay</div>
                     </div>
                 </div>
@@ -74,7 +74,7 @@
                         <i class="fa fa-line-chart fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <div id="box-bills-paid" class="huge">{{Amount::format(0,false)}}</div>
+                        <div id="box-bills-paid" class="large">{{Amount::format(0,false)}}</div>
                         <div>Bills paid</div>
                     </div>
                 </div>
