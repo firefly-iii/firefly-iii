@@ -337,6 +337,7 @@ class PiggyBankController extends Controller
             'remind_me'    => $request->get('remind_me')
         ];
 
+
         $piggyBank = $repository->update($piggyBank, $piggyBankData);
 
         Session::flash('success', 'Updated piggy bank "' . e($piggyBank->name) . '".');
