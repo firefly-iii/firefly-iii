@@ -24,7 +24,7 @@
             <ul class="dropdown-menu dropdown-messages">
                 @foreach($reminders as $reminder)
                 <li>
-                    <a href="#">
+                    <a href="{{route('reminders.show',$reminder->id)}}">
                         <div>
                             <strong>
                                 {{$reminder->remindersable->name}}
@@ -39,7 +39,7 @@
                     <li class="divider"></li>
                 @endforeach
                 <li>
-                    <a class="text-center" href="#">
+                    <a class="text-center" href="{{route('reminders.index')}}">
                         <strong>See all reminders</strong>
                         <i class="fa fa-angle-right"></i>
                     </a>
