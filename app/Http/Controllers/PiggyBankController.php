@@ -14,7 +14,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Support\Collection;
 use Input;
-use Navigation;
 use Redirect;
 use Session;
 use Steam;
@@ -335,6 +334,7 @@ class PiggyBankController extends Controller
             'targetamount' => floatval($request->get('targetamount')),
             'targetdate'   => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
             'reminder'     => $request->get('reminder'),
+            'remind_me'    => $request->get('remind_me')
         ];
 
         $piggyBank = $repository->update($piggyBank, $piggyBankData);
