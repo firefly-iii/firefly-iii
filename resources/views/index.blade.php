@@ -17,6 +17,10 @@
     </div>
     @else
 
+<!-- fancy new boxes -->
+    @include('partials.boxes')
+
+
 
 
 <div class="row">

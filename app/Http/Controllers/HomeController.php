@@ -7,7 +7,7 @@ use Input;
 use Preferences;
 use Redirect;
 use Session;
-
+use DB;
 /**
  * Class HomeController
  *
@@ -62,6 +62,7 @@ class HomeController extends Controller
         $start         = Session::get('start', Carbon::now()->startOfMonth());
         $end           = Session::get('end', Carbon::now()->endOfMonth());
 
+
         if ($frontPage->data == []) {
             $accounts = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*']);
         } else {
@@ -74,8 +75,8 @@ class HomeController extends Controller
                        ->with(['transactions', 'transactioncurrency', 'transactiontype'])
                        ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                        ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')->where('accounts.id', $account->id)
-                       ->where('date', '>=', $start->format('Y-m-d'))
-                       ->where('date', '<=', $end->format('Y-m-d'))
+                        ->before($end)
+                ->after($start)
                        ->orderBy('transaction_journals.date', 'DESC')
                        ->orderBy('transaction_journals.id', 'DESC')
                        ->take(10)

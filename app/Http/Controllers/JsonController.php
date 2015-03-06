@@ -1,19 +1,111 @@
 <?php namespace FireflyIII\Http\Controllers;
 
-use FireflyIII\Http\Requests;
-use FireflyIII\Http\Controllers\Controller;
-
-use Illuminate\Http\Request;
-use Response;
+use Amount;
 use Auth;
+use DB;
+use FireflyIII\Http\Requests;
+use FireflyIII\Models\Bill;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use Input;
+use Response;
+use Session;
 
 /**
  * Class JsonController
  *
  * @package FireflyIII\Http\Controllers
  */
-class JsonController extends Controller {
+class JsonController extends Controller
+{
 
+
+    /**
+     *
+     */
+    public function box(BillRepositoryInterface $repository)
+    {
+        $amount = 0;
+        $start  = Session::get('start');
+        $end    = Session::get('end');
+        $box    = 'empty';
+        switch (Input::get('box')) {
+            case 'in':
+                $box = Input::get('box');
+                $in  = Auth::user()->transactionjournals()
+                           ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                           ->before($end)
+                           ->after($start)
+                           ->transactionTypes(['Deposit'])
+                           ->where('transactions.amount', '>', 0)
+                           ->first([DB::Raw('SUM(transactions.amount) as `amount`')]);
+                if (!is_null($in)) {
+                    $amount = floatval($in->amount);
+                }
+
+                break;
+            case 'out':
+                $box = Input::get('box');
+                $in  = Auth::user()->transactionjournals()
+                           ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                           ->before($end)
+                           ->after($start)
+                           ->transactionTypes(['Withdrawal'])
+                           ->where('transactions.amount', '>', 0)
+                           ->first([DB::Raw('SUM(transactions.amount) as `amount`')]);
+                if (!is_null($in)) {
+                    $amount = floatval($in->amount);
+                }
+
+                break;
+            case 'bills-unpaid':
+                $box   = 'bills-unpaid';
+                $bills = Auth::user()->bills()->where('active', 1)->get();
+
+                /** @var Bill $bill */
+                foreach ($bills as $bill) {
+                    $ranges = $repository->getRanges($bill, $start, $end);
+
+                    foreach ($ranges as $range) {
+                        // paid a bill in this range?
+                        $count = $bill->transactionjournals()->before($range['end'])->after($range['start'])->count();
+                        if ($count == 0) {
+                            $amount += ($bill->amount_max + $bill->amount_min / 2);
+
+                        }
+
+                    }
+                }
+            break;
+            case 'bills-paid':
+                $box = 'bills-paid';
+                // these two functions are the same as the chart TODO
+                $bills = Auth::user()->bills()->where('active', 1)->get();
+
+                /** @var Bill $bill */
+                foreach ($bills as $bill) {
+                    $ranges = $repository->getRanges($bill, $start, $end);
+
+                    foreach ($ranges as $range) {
+                        // paid a bill in this range?
+                        $count = $bill->transactionjournals()->before($range['end'])->after($range['start'])->count();
+                        if ($count != 0) {
+                            $journal         = $bill->transactionjournals()->with('transactions')->before($range['end'])->after($range['start'])->first();
+                            $paid['items'][] = $journal->description;
+                            $currentAmount   = 0;
+                            foreach ($journal->transactions as $t) {
+                                if (floatval($t->amount) > 0) {
+                                    $currentAmount = floatval($t->amount);
+                                }
+                            }
+                            $amount += $currentAmount;
+                        }
+
+                    }
+                }
+        }
+
+        return Response::json(['box' => $box, 'amount' => Amount::format($amount, false)]);
+    }
 
     /**
      * Returns a list of categories.
@@ -22,8 +114,8 @@ class JsonController extends Controller {
      */
     public function categories()
     {
-        $list       = Auth::user()->categories()->orderBy('name','ASC')->get();
-        $return     = [];
+        $list   = Auth::user()->categories()->orderBy('name', 'ASC')->get();
+        $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;
         }
@@ -40,8 +132,8 @@ class JsonController extends Controller {
      */
     public function expenseAccounts()
     {
-        $list     = Auth::user()->accounts()->accountTypeIn(['Expense account', 'Beneficiary account'])->get();
-        $return   = [];
+        $list   = Auth::user()->accounts()->accountTypeIn(['Expense account', 'Beneficiary account'])->get();
+        $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;
         }
@@ -55,8 +147,8 @@ class JsonController extends Controller {
      */
     public function revenueAccounts()
     {
-        $list     = Auth::user()->accounts()->accountTypeIn(['Revenue account'])->get();
-        $return   = [];
+        $list   = Auth::user()->accounts()->accountTypeIn(['Revenue account'])->get();
+        $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;
         }

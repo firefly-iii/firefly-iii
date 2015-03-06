@@ -250,6 +250,7 @@ Route::group(
     Route::get('/json/expense-accounts', ['uses' => 'JsonController@expenseAccounts', 'as' => 'json.expense-accounts']);
     Route::get('/json/revenue-accounts', ['uses' => 'JsonController@revenueAccounts', 'as' => 'json.revenue-accounts']);
     Route::get('/json/categories', ['uses' => 'JsonController@categories', 'as' => 'json.categories']);
+    Route::get('/json/box', ['uses' => 'JsonController@box', 'as' => 'json.box']);
 
 
     /**
