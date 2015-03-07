@@ -5,7 +5,6 @@ use Carbon\Carbon;
 use FireflyIII\Helpers\Reminders\ReminderHelperInterface;
 use FireflyIII\Http\Requests;
 use FireflyIII\Models\Reminder;
-use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Redirect;
 use URL;
 
@@ -19,6 +18,19 @@ class ReminderController extends Controller
 
 
     /**
+     * @param Reminder $reminder
+     */
+    public function dismiss(Reminder $reminder)
+    {
+        $reminder->notnow = true;
+        $reminder->save();
+
+        return Redirect::to(URL::previous());
+
+
+    }
+
+    /**
      *
      */
     public function index(ReminderHelperInterface $helper)
@@ -26,11 +38,13 @@ class ReminderController extends Controller
 
         $reminders = Auth::user()->reminders()->get();
 
-        $reminders->each(function(Reminder $reminder) use ($helper) {
-            $reminder->description = $helper->getReminderText($reminder);
-        });
+        $reminders->each(
+            function (Reminder $reminder) use ($helper) {
+                $reminder->description = $helper->getReminderText($reminder);
+            }
+        );
 
-        $today     = new Carbon;
+        $today = new Carbon;
         // active reminders:
         $active = $reminders->filter(
             function (Reminder $reminder) use ($today) {
@@ -78,18 +92,18 @@ class ReminderController extends Controller
      */
     public function show(Reminder $reminder)
     {
+        $title = 'Reminder';
+        $mainTitleIcon = 'fa-clock-o';
+        if ($reminder->notnow === true) {
+            $subTitle = 'Dismissed reminder';
+        } else {
+            $subTitle = 'Reminder';
+        }
+        $subTitle .= ' for piggy bank "' . $reminder->remindersable->name . '"';
 
 
-    }
 
-    /**
-     * @param Reminder $reminder
-     */
-    public function dismiss(Reminder $reminder)
-    {
-        $reminder->notnow = true;
-        $reminder->save();
-        return Redirect::to(URL::previous());
+        return view('reminders.show', compact('reminder', 'title', 'subTitle', 'mainTitleIcon'));
 
 
     }
