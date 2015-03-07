@@ -9,13 +9,23 @@
                 <th>Start of month</th>
                 <th>Current balance</th>
                 <th>Spent</th>
+                <th>Earned</th>
             </tr>
             @foreach($accounts as $account)
                 <tr>
                     <td><a href="{{route('accounts.show',$account->id)}}">{{{$account->name}}}</a></td>
                     <td>{!! Amount::format($account->startBalance) !!}</td>
                     <td>{!! Amount::format($account->endBalance) !!}</td>
-                    <td>{!! Amount::format($account->startBalance - $account->endBalance,false) !!}</td>
+                    <td>
+                        @if($account->startBalance - $account->endBalance > 0)
+                            {!! Amount::format($account->startBalance - $account->endBalance) !!}
+                        @endif
+                    </td>
+                    <td>
+                        @if($account->startBalance - $account->endBalance <= 0)
+                            {!! Amount::format(($account->startBalance - $account->endBalance)*-1) !!}
+                        @endif
+                    </td>
                 </tr>
             @endforeach
         </table>
