@@ -23,6 +23,13 @@ class ChangesForV332 extends Migration {
         }
         );
 
+        Schema::table(
+            'reminders', function (Blueprint $table) {
+            $table->text('metadata');
+
+        }
+        );
+
 
     }
 

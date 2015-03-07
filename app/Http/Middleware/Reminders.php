@@ -49,20 +49,20 @@ class Reminders
             // do reminders stuff.
             $piggyBanks = $this->auth->user()->piggyBanks()->where('remind_me', 1)->get();
             $today      = new Carbon;
-            /** @var \FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface $repository */
-            $repository = App::make('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
+            /** @var \FireflyIII\Helpers\Reminders\ReminderHelperInterface $helper */
+            $helper = App::make('FireflyIII\Helpers\Reminders\ReminderHelperInterface');
 
             /** @var PiggyBank $piggyBank */
             foreach ($piggyBanks as $piggyBank) {
-                $ranges = $repository->getReminderRanges($piggyBank);
+                $ranges = $helper->getReminderRanges($piggyBank);
 
                 foreach ($ranges as $range) {
                     if ($today < $range['end'] && $today > $range['start']) {
                         // create a reminder here!
-                        $repository->createReminder($piggyBank, $range['start'], $range['end']);
+                        $helper->createReminder($piggyBank, $range['start'], $range['end']);
+                        // stop looping, we're done.
                         break;
                     }
-                    // stop looping, we're done.
 
                 }
             }
@@ -71,8 +71,8 @@ class Reminders
             // get and list active reminders:
             $reminders = $this->auth->user()->reminders()->today()->get();
             $reminders->each(
-                function (Reminder $reminder) use ($repository) {
-                    $reminder->description = $repository->getReminderText($reminder);
+                function (Reminder $reminder) use ($helper) {
+                    $reminder->description = $helper->getReminderText($reminder);
                 }
             );
             View::share('reminders', $reminders);

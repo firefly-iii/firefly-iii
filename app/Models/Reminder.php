@@ -13,7 +13,7 @@ class Reminder extends Model
 {
 
 
-    protected $fillable = ['user_id', 'startdate', 'enddate', 'active', 'notnow', 'remindersable_id', 'remindersable_type',];
+    protected $fillable = ['user_id', 'startdate', 'metadata', 'enddate', 'active', 'notnow', 'remindersable_id', 'remindersable_type',];
 
     /**
      * @param $value
@@ -31,6 +31,16 @@ class Reminder extends Model
     public function getDates()
     {
         return ['created_at', 'updated_at', 'startdate', 'enddate'];
+    }
+
+    /**
+     * @param $value
+     *
+     * @return mixed
+     */
+    public function getMetadataAttribute($value)
+    {
+        return json_decode($value);
     }
 
     /**
@@ -67,7 +77,16 @@ class Reminder extends Model
     {
         $today = new Carbon;
 
-        return $query->where('startdate', '<=', $today->format('Y-m-d 00:00:00'))->where('enddate', '>=', $today->format('Y-m-d 00:00:00'))->where('active', 1);
+        return $query->where('startdate', '<=', $today->format('Y-m-d 00:00:00'))->where('enddate', '>=', $today->format('Y-m-d 00:00:00'))->where('active', 1)
+                     ->where('notnow', 0);
+    }
+
+    /**
+     * @param $value
+     */
+    public function setMetadataAttribute($value)
+    {
+        $this->attributes['metadata'] = json_encode($value);
     }
 
     /**

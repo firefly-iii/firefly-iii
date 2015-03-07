@@ -328,21 +328,7 @@ class TestDataSeeder extends Seeder
     {
         $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
         // for weekly piggy bank (clothes)
-        $nextWeek  = clone $this->_startOfMonth;
-        $piggyBank = PiggyBank::whereName('New clothes')->orderBy('id', 'DESC')->first();
-        $nextWeek->addWeek();
-        $week = $nextWeek->format('Y-m-d');
 
-        Reminder::create(
-            ['user_id'          => $user->id, 'startdate' => $this->som, 'enddate' => $week, 'active' => 1, 'notnow' => 0,
-             'remindersable_id' => $piggyBank->id, 'remindersable_type' => 'PiggyBank']
-        );
-
-        // a fake reminder::
-        Reminder::create(
-            ['user_id'            => $user->id, 'startdate' => $this->som, 'enddate' => $week, 'active' => 0, 'notnow' => 0, 'remindersable_id' => 40,
-             'remindersable_type' => 'Transaction']
-        );
     }
 
     /**
@@ -370,14 +356,6 @@ class TestDataSeeder extends Seeder
                 'remind_me'     => 1,
                 'order'         => 0,
             ]
-        );
-//        PiggyBankRepetition::create(['piggy_bank_id' => $recurring->id, 'startdate' => $this->som, 'targetdate' => $this->eom, 'currentamount' => 0]);
-//        PiggyBankRepetition::create(
-//            ['piggy_bank_id' => $recurring->id, 'startdate' => $this->nsom, 'targetdate' => $this->neom, 'currentamount' => 0]
-//        );
-        Reminder::create(
-            ['user_id'          => $user->id, 'startdate' => $this->som, 'enddate' => $this->neom, 'active' => 1, 'notnow' => 0,
-             'remindersable_id' => $recurring->id, 'remindersable_type' => 'PiggyBank']
         );
     }
 

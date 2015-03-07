@@ -8,7 +8,7 @@ use Illuminate\Support\MessageBag;
 use Input;
 use Session;
 use View;
-use Amount;
+use Amount as Amt;
 
 /**
  * Class ExpandedForm
@@ -33,7 +33,7 @@ class ExpandedForm
         $value           = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
         $options['min']  = '0.01';
-        $defaultCurrency = isset($options['currency']) ? $options['currency'] : \Amount::getDefaultCurrency();
+        $defaultCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
         $currencies      = TransactionCurrency::orderBy('code', 'ASC')->get();
         $html            = View::make('form.amount', compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
 
@@ -128,7 +128,7 @@ class ExpandedForm
     public function fillFieldValue($name, $value)
     {
         if (Session::has('preFilled')) {
-            $preFilled = \Session::get('preFilled');
+            $preFilled = Session::get('preFilled');
             $value     = isset($preFilled[$name]) && is_null($value) ? $preFilled[$name] : $value;
         }
         if (!is_null(Input::old($name))) {
@@ -152,7 +152,7 @@ class ExpandedForm
         $classes         = $this->getHolderClasses($name);
         $value           = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
-        $defaultCurrency = isset($options['currency']) ? $options['currency'] : Amount::getDefaultCurrency();
+        $defaultCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
         $currencies      = TransactionCurrency::orderBy('code', 'ASC')->get();
         $html            = View::make('form.balance', compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
 
@@ -214,7 +214,7 @@ class ExpandedForm
         $classes         = $this->getHolderClasses($name);
         $value           = $this->fillFieldValue($name, $value);
         $options['step'] = '1';
-        $html            = \View::make('form.integer', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        $html            = View::make('form.integer', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
 
@@ -237,7 +237,7 @@ class ExpandedForm
             $selectList[0] = '(none)';
         }
         $fields = ['title', 'name', 'description'];
-        /** @var \Eloquent $entry */
+        /** @var Eloquent $entry */
         foreach ($set as $entry) {
             $id    = intval($entry->id);
             $title = null;
@@ -261,9 +261,9 @@ class ExpandedForm
      */
     public function optionsList($type, $name)
     {
-        $previousValue = \Input::old('post_submit_action');
+        $previousValue = Input::old('post_submit_action');
         $previousValue = is_null($previousValue) ? 'store' : $previousValue;
-        $html          = \View::make('form.options', compact('type', 'name', 'previousValue'))->render();
+        $html          = View::make('form.options', compact('type', 'name', 'previousValue'))->render();
 
         return $html;
     }
@@ -282,7 +282,7 @@ class ExpandedForm
         $options  = $this->expandOptionArray($name, $label, $options);
         $classes  = $this->getHolderClasses($name);
         $selected = $this->fillFieldValue($name, $selected);
-        $html     = \View::make('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
+        $html     = View::make('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
 
         return $html;
     }
@@ -301,7 +301,7 @@ class ExpandedForm
         $classes              = $this->getHolderClasses($name);
         $value                = $this->fillFieldValue($name, $value);
         $options['data-role'] = 'tagsinput';
-        $html                 = \View::make('form.tags', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        $html                 = View::make('form.tags', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
     }

@@ -305,7 +305,9 @@ Route::group(
      * Reminder Controller
      */
     Route::get('/reminders', ['uses' => 'ReminderController@index', 'as' => 'reminders.index']);
+    Route::get('/reminder/dismiss/{reminder}', ['uses' => 'ReminderController@dismiss', 'as' => 'reminders.dismiss']);
     Route::get('/reminder/{reminder}', ['uses' => 'ReminderController@show', 'as' => 'reminders.show']);
+
 
     /**
      * Repeated Expenses Controller
