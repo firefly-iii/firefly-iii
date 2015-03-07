@@ -64,6 +64,8 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface', 'FireflyIII\Repositories\PiggyBank\PiggyBankRepository');
         $this->app->bind('FireflyIII\Support\Search\SearchInterface', 'FireflyIII\Support\Search\Search');
 
+
+        $this->app->bind('FireflyIII\Helpers\Reminders\ReminderHelperInterface', 'FireflyIII\Helpers\Reminders\ReminderHelper');
         $this->app->bind('FireflyIII\Helpers\Report\ReportHelperInterface', 'FireflyIII\Helpers\Report\ReportHelper');
         $this->app->bind('FireflyIII\Helpers\Report\ReportQueryInterface', 'FireflyIII\Helpers\Report\ReportQuery');
 

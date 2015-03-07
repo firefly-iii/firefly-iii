@@ -2,10 +2,18 @@
 
 use Auth;
 use Carbon\Carbon;
+use FireflyIII\Helpers\Reminders\ReminderHelperInterface;
 use FireflyIII\Http\Requests;
 use FireflyIII\Models\Reminder;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use Redirect;
+use URL;
 
+/**
+ * Class ReminderController
+ *
+ * @package FireflyIII\Http\Controllers
+ */
 class ReminderController extends Controller
 {
 
@@ -13,17 +21,20 @@ class ReminderController extends Controller
     /**
      *
      */
-    public function index(PiggyBankRepositoryInterface $repository)
+    public function index(ReminderHelperInterface $helper)
     {
 
         $reminders = Auth::user()->reminders()->get();
 
+        $reminders->each(function(Reminder $reminder) use ($helper) {
+            $reminder->description = $helper->getReminderText($reminder);
+        });
+
         $today     = new Carbon;
         // active reminders:
         $active = $reminders->filter(
-            function (Reminder $reminder) use ($today, $repository) {
+            function (Reminder $reminder) use ($today) {
                 if ($reminder->notnow === false && $reminder->active === true && $reminder->startdate <= $today && $reminder->enddate >= $today) {
-                    $reminder->description = $repository->getReminderText($reminder);
                     return $reminder;
                 }
             }
@@ -71,5 +82,16 @@ class ReminderController extends Controller
 
     }
 
+    /**
+     * @param Reminder $reminder
+     */
+    public function dismiss(Reminder $reminder)
+    {
+        $reminder->notnow = true;
+        $reminder->save();
+        return Redirect::to(URL::previous());
+
+
+    }
 
 }
