@@ -69,7 +69,7 @@ class JsonController extends Controller
                         // paid a bill in this range?
                         $count = $bill->transactionjournals()->before($range['end'])->after($range['start'])->count();
                         if ($count == 0) {
-                            $amount += ($bill->amount_max + $bill->amount_min / 2);
+                            $amount += floatval($bill->amount_max + $bill->amount_min / 2);
 
                         }
 
@@ -104,7 +104,7 @@ class JsonController extends Controller
                 }
         }
 
-        return Response::json(['box' => $box, 'amount' => Amount::format($amount, false)]);
+        return Response::json(['box' => $box, 'amount' => Amount::format($amount, false),'amount_raw' => $amount]);
     }
 
     /**
