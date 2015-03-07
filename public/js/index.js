@@ -14,8 +14,9 @@ function getBoxAmounts() {
     for (x in boxes) {
         var box = boxes[x];
         $.getJSON('/json/box', {box: box}).success(function (data) {
-            "use strict";
-            $('#box-' + data.box).html(data.amount);
+            if(data.amount_raw != 0) {
+                $('#box-' + data.box).html(data.amount);
+            }
         }).fail(function () {
             console.log('Failed to get box!')
         });
