@@ -17,12 +17,12 @@
                     <td>{!! Amount::format($account->startBalance) !!}</td>
                     <td>{!! Amount::format($account->endBalance) !!}</td>
                     <td>
-                        @if($account->startBalance - $account->endBalance > 0)
+                        @if($account->startBalance - $account->endBalance >= 0)
                             {!! Amount::format($account->startBalance - $account->endBalance) !!}
                         @endif
                     </td>
                     <td>
-                        @if($account->startBalance - $account->endBalance <= 0)
+                        @if($account->startBalance - $account->endBalance < 0)
                             {!! Amount::format(($account->startBalance - $account->endBalance)*-1) !!}
                         @endif
                     </td>
