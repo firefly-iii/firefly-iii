@@ -58,6 +58,7 @@
                 <li><a href="{{route('profile')}}"><i class="fa fa-user fa-fw"></i> {{Auth::user()->email}}</a></li>
                 <li><a href="{{route('preferences')}}"><i class="fa fa-gear fa-fw"></i> Preferences</a></li>
                 <li><a href="{{route('currency.index')}}"><i class="fa fa-usd fa-fw"></i> Currency</a></li>
+                <li><a href="{{route('reminders.index')}}"><i class="fa fa-clock-o fa-fw"></i> Reminders</a></li>
                 <li class="divider"></li>
                 <li><a href="{{route('logout')}}"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
             </ul>
