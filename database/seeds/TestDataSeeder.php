@@ -301,24 +301,50 @@ class TestDataSeeder extends Seeder
 
         PiggyBankEvent::create(['piggy_bank_id' => $newClothes->id, 'date' => $this->som, 'amount' => 100]);
 
-        // weekly reminder piggy bank
-        $weekly = PiggyBank::create(
-            [
-                'account_id'    => $savings->id,
-                'name'          => 'Weekly reminder for clothes',
-                'targetamount'  => 2000,
-                'startdate'     => $this->som,
-                'targetdate'    => $next,
-                'repeats'       => 0,
-                'rep_length'    => null,
-                'rep_every'     => 0,
-                'rep_times'     => null,
-                'reminder'      => 'week',
-                'reminder_skip' => 0,
-                'remind_me'     => 1,
-                'order'         => 0,
-            ]
-        );
+        /*
+         * New: create no less than eight piggy banks that
+         * create all sorts of reminders
+         */
+        $list = ['week','quarter','month','year'];
+        $nextYear = clone $this->_startOfMonth;
+        $nextYear->addYear();
+        foreach($list as $entry) {
+
+            PiggyBank::create(
+                [
+                    'account_id'    => $savings->id,
+                    'name'          => $entry.' piggy bank with target date.',
+                    'targetamount'  => 1000,
+                    'startdate'     => $this->som,
+                    'targetdate'    => $nextYear,
+                    'repeats'       => 0,
+                    'rep_length'    => null,
+                    'rep_every'     => 0,
+                    'rep_times'     => null,
+                    'reminder'      => $entry,
+                    'reminder_skip' => 0,
+                    'remind_me'     => 1,
+                    'order'         => 0,
+                ]
+            );
+            PiggyBank::create(
+                [
+                    'account_id'    => $savings->id,
+                    'name'          => $entry.' piggy bank without target date.',
+                    'targetamount'  => 1000,
+                    'startdate'     => $this->som,
+                    'targetdate'    => null,
+                    'repeats'       => 0,
+                    'rep_length'    => null,
+                    'rep_every'     => 0,
+                    'rep_times'     => null,
+                    'reminder'      => $entry,
+                    'reminder_skip' => 0,
+                    'remind_me'     => 1,
+                    'order'         => 0,
+                ]
+            );
+        }
     }
 
     /**

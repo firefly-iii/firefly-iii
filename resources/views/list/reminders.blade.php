@@ -15,10 +15,9 @@
                     </div>
                     <div class="panel-body">
                         <p>
-                            Active between {{$reminder->startdate->format('jS F Y')}}
+                            This reminder is active between {{$reminder->startdate->format('jS F Y')}}
                             and {{$reminder->enddate->format('jS F Y')}}.
                         </p>
-
                         @if(isset($reminder->description))
                             <p>{!! $reminder->description !!}</p>
                         @endif
