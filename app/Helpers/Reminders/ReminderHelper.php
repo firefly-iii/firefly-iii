@@ -39,9 +39,14 @@ class ReminderHelper implements ReminderHelperInterface
                 $perReminder = $left / count($ranges);
             } else {
                 $perReminder = null;
+                $ranges      = [];
+                $left        = 0;
             }
             $metaData = [
-                'perReminder' => $perReminder
+                'perReminder' => $perReminder,
+                'rangesCount' => count($ranges),
+                'ranges'      => $ranges,
+                'leftToSave'  => $left,
             ];
 
 
@@ -97,7 +102,7 @@ class ReminderHelper implements ReminderHelperInterface
             $start = $piggyBank->targetdate;
             $end   = $piggyBank->startdate;
 
-            while ($start >= $end) {
+            while ($start > $end) {
                 $currentEnd   = clone $start;
                 $start        = Navigation::subtractPeriod($start, $piggyBank->reminder, 1);
                 $currentStart = clone $start;
@@ -129,6 +134,9 @@ class ReminderHelper implements ReminderHelperInterface
     {
         /** @var PiggyBank $piggyBank */
         $piggyBank = $reminder->remindersable;
+        if(is_null($piggyBank)) {
+            return 'Piggy bank no longer exists.';
+        }
 
         if (is_null($piggyBank->targetdate)) {
             return 'Add money to this piggy bank to reach your target of ' . Amount::format($piggyBank->targetamount);

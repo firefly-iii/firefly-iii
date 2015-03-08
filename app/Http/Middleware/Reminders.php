@@ -66,6 +66,14 @@ class Reminders
 
                 }
             }
+            // delete invalid reminders
+            $reminders = $this->auth->user()->reminders()->get();
+            foreach($reminders as $reminder) {
+                if(is_null($reminder->remindersable)) {
+                    $reminder->delete();
+                }
+            }
+
 
 
             // get and list active reminders:
