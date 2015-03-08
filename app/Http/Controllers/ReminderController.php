@@ -7,6 +7,7 @@ use FireflyIII\Http\Requests;
 use FireflyIII\Models\Reminder;
 use Redirect;
 use URL;
+use Session;
 
 /**
  * Class ReminderController
@@ -16,6 +17,23 @@ use URL;
 class ReminderController extends Controller
 {
 
+
+    /**
+     * @param Reminder $reminder
+     */
+    public function act(Reminder $reminder)
+    {
+        $data = [
+            'description'   => 'Money for piggy bank "' . $reminder->remindersable->name . '"',
+            'amount'        => round($reminder->metadata->perReminder, 2),
+            'account_to_id' => $reminder->remindersable->account_id,
+            'piggy_bank_id'  => $reminder->remindersable_id,
+            'reminder_id' => $reminder->id,
+        ];
+        Session::flash('_old_input',$data);
+
+        return Redirect::route('transactions.create','transfer');
+    }
 
     /**
      * @param Reminder $reminder
@@ -92,7 +110,7 @@ class ReminderController extends Controller
      */
     public function show(Reminder $reminder)
     {
-        $title = 'Reminder';
+        $title         = 'Reminder';
         $mainTitleIcon = 'fa-clock-o';
         if ($reminder->notnow === true) {
             $subTitle = 'Dismissed reminder';
@@ -100,7 +118,6 @@ class ReminderController extends Controller
             $subTitle = 'Reminder';
         }
         $subTitle .= ' for piggy bank "' . $reminder->remindersable->name . '"';
-
 
 
         return view('reminders.show', compact('reminder', 'title', 'subTitle', 'mainTitleIcon'));

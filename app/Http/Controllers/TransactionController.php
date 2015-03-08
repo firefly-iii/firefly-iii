@@ -238,7 +238,6 @@ class TransactionController extends Controller
 
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository)
     {
-
         $journalData = [
             'what'               => $request->get('what'),
             'description'        => $request->get('description'),
@@ -259,6 +258,12 @@ class TransactionController extends Controller
 
         event(new JournalSaved($journal));
         event(new JournalCreated($journal, intval($request->get('piggy_bank_id'))));
+
+        if(intval($request->get('reminder_id')) > 0) {
+            $reminder = Auth::user()->reminders()->find($request->get('reminder_id'));
+            $reminder->active = 0;
+            $reminder->save();
+        }
 
         Session::flash('success', 'New transaction "' . $journal->description . '" stored!');
 
