@@ -560,6 +560,9 @@ class GoogleChartController extends Controller
         $chart->addColumn('Income', 'number');
         $chart->addColumn('Expenses', 'number');
 
+        $pref              = Preferences::get('showSharedReports', false);
+        $showSharedReports = $pref->data;
+
         // get report query interface.
 
         $end = clone $start;
@@ -568,14 +571,14 @@ class GoogleChartController extends Controller
             $currentEnd = clone $start;
             $currentEnd->endOfMonth();
             // total income:
-            $income    = $query->incomeByPeriod($start, $currentEnd);
+            $income    = $query->incomeByPeriod($start, $currentEnd, $showSharedReports);
             $incomeSum = 0;
             foreach ($income as $entry) {
                 $incomeSum += floatval($entry->amount);
             }
 
             // total expenses:
-            $expense    = $query->journalsByExpenseAccount($start, $currentEnd);
+            $expense    = $query->journalsByExpenseAccount($start, $currentEnd, $showSharedReports);
             $expenseSum = 0;
             foreach ($expense as $entry) {
                 $expenseSum += floatval($entry->amount);
@@ -609,6 +612,9 @@ class GoogleChartController extends Controller
         $chart->addColumn('Income', 'number');
         $chart->addColumn('Expenses', 'number');
 
+        $pref              = Preferences::get('showSharedReports', false);
+        $showSharedReports = $pref->data;
+
         $income  = 0;
         $expense = 0;
         $count   = 0;
@@ -619,14 +625,14 @@ class GoogleChartController extends Controller
             $currentEnd = clone $start;
             $currentEnd->endOfMonth();
             // total income:
-            $incomeResult = $query->incomeByPeriod($start, $currentEnd);
+            $incomeResult = $query->incomeByPeriod($start, $currentEnd, $showSharedReports);
             $incomeSum    = 0;
             foreach ($incomeResult as $entry) {
                 $incomeSum += floatval($entry->amount);
             }
 
             // total expenses:
-            $expenseResult = $query->journalsByExpenseAccount($start, $currentEnd);
+            $expenseResult = $query->journalsByExpenseAccount($start, $currentEnd, $showSharedReports);
             $expenseSum    = 0;
             foreach ($expenseResult as $entry) {
                 $expenseSum += floatval($entry->amount);
