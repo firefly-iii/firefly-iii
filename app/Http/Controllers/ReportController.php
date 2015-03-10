@@ -9,6 +9,7 @@ use FireflyIII\Http\Requests;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Database\Query\JoinClause;
+use Preferences;
 use Session;
 use Steam;
 use View;
@@ -51,11 +52,16 @@ class ReportController extends Controller
         $end->endOfMonth();
         $start->subDay();
 
+        // shared accounts preference:
+        $pref              = Preferences::get('showSharedReports', false);
+        $showSharedReports = $pref->data;
+
+
         $dayEarly     = clone $date;
         $subTitle     = 'Budget report for ' . $date->format('F Y');
         $subTitleIcon = 'fa-calendar';
         $dayEarly     = $dayEarly->subDay();
-        $accounts     = $query->getAllAccounts($start, $end);
+        $accounts     = $query->getAllAccounts($start, $end, $showSharedReports);
         $start->addDay();
 
         $accounts->each(
@@ -89,17 +95,20 @@ class ReportController extends Controller
                                     )
                                     ->get(['budgets.*', 'budget_limits.amount as amount']);
         $budgets              = Steam::makeArray($set);
-        $amountSet            = $query->journalsByBudget($start, $end);
+        $amountSet            = $query->journalsByBudget($start, $end, $showSharedReports);
         $amounts              = Steam::makeArray($amountSet);
         $budgets              = Steam::mergeArrays($budgets, $amounts);
         $budgets[0]['spent']  = isset($budgets[0]['spent']) ? $budgets[0]['spent'] : 0.0;
         $budgets[0]['amount'] = isset($budgets[0]['amount']) ? $budgets[0]['amount'] : 0.0;
         $budgets[0]['name']   = 'No budget';
 
-        // find transactions to shared expense accounts, which are without a budget by default:
-        $transfers = $query->sharedExpenses($start, $end);
-        foreach ($transfers as $transfer) {
-            $budgets[0]['spent'] += floatval($transfer->amount) * -1;
+        // find transactions to shared asset accounts, which are without a budget by default:
+        // which is only relevant when shared asset accounts are hidden.
+        if ($showSharedReports === false) {
+            $transfers = $query->sharedExpenses($start, $end);
+            foreach ($transfers as $transfer) {
+                $budgets[0]['spent'] += floatval($transfer->amount) * -1;
+            }
         }
 
         /**
@@ -152,6 +161,14 @@ class ReportController extends Controller
 
     }
 
+    /**
+     * @param Account              $account
+     * @param string               $year
+     * @param string               $month
+     * @param ReportQueryInterface $query
+     *
+     * @return View
+     */
     public function modalLeftUnbalanced(Account $account, $year = '2014', $month = '1', ReportQueryInterface $query)
     {
         try {
@@ -217,6 +234,9 @@ class ReportController extends Controller
         $subTitleIcon = 'fa-calendar';
         $displaySum   = true; // to show sums in report.
 
+        $pref              = Preferences::get('showSharedReports', false);
+        $showSharedReports = $pref->data;
+
 
         /**
          *
@@ -232,14 +252,14 @@ class ReportController extends Controller
         /**
          * Start getIncomeForMonth DONE
          */
-        $income = $query->incomeByPeriod($start, $end);
+        $income = $query->incomeByPeriod($start, $end, $showSharedReports);
         /**
          * End getIncomeForMonth DONE
          */
         /**
          * Start getExpenseGroupedForMonth DONE
          */
-        $set      = $query->journalsByExpenseAccount($start, $end);
+        $set      = $query->journalsByExpenseAccount($start, $end, $showSharedReports);
         $expenses = Steam::makeArray($set);
         $expenses = Steam::sortArray($expenses);
         $expenses = Steam::limitArray($expenses, 10);
@@ -257,7 +277,7 @@ class ReportController extends Controller
                                     )
                                     ->get(['budgets.*', 'budget_limits.amount as amount']);
         $budgets              = Steam::makeArray($set);
-        $amountSet            = $query->journalsByBudget($start, $end);
+        $amountSet            = $query->journalsByBudget($start, $end, $showSharedReports);
         $amounts              = Steam::makeArray($amountSet);
         $budgets              = Steam::mergeArrays($budgets, $amounts);
         $budgets[0]['spent']  = isset($budgets[0]['spent']) ? $budgets[0]['spent'] : 0.0;
@@ -265,9 +285,11 @@ class ReportController extends Controller
         $budgets[0]['name']   = 'No budget';
 
         // find transactions to shared expense accounts, which are without a budget by default:
-        $transfers = $query->sharedExpenses($start, $end);
-        foreach ($transfers as $transfer) {
-            $budgets[0]['spent'] += floatval($transfer->amount) * -1;
+        if ($showSharedReports === false) {
+            $transfers = $query->sharedExpenses($start, $end);
+            foreach ($transfers as $transfer) {
+                $budgets[0]['spent'] += floatval($transfer->amount) * -1;
+            }
         }
 
         /**
@@ -281,9 +303,13 @@ class ReportController extends Controller
         $categories = Steam::makeArray($result);
 
         // all transfers
-        $result    = $query->sharedExpensesByCategory($start, $end);
-        $transfers = Steam::makeArray($result);
-        $merged    = Steam::mergeArrays($categories, $transfers);
+        if ($showSharedReports === false) {
+            $result    = $query->sharedExpensesByCategory($start, $end);
+            $transfers = Steam::makeArray($result);
+            $merged    = Steam::mergeArrays($categories, $transfers);
+        } else {
+            $merged = $categories;
+        }
 
         // sort.
         $sorted = Steam::sortNegativeArray($merged);
