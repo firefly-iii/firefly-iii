@@ -266,6 +266,8 @@ class ReportQuery implements ReportQueryInterface
                                    )
                                    ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
         if ($showSharedReports === false) {
+            // only get deposits not to a shared account
+            // and transfers to a shared account.
             $query->where(
                 function ($query) {
                     $query->where(
@@ -282,6 +284,9 @@ class ReportQuery implements ReportQueryInterface
                     );
                 }
             );
+        } else {
+            // any deposit is fine.
+            $query->where('transaction_types.type', 'Deposit');
         }
         $query->before($end)->after($start)
               ->where('transaction_journals.user_id', Auth::user()->id)
