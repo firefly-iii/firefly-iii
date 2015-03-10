@@ -59,11 +59,12 @@ class ChangesForV322 extends Migration
         }
         );
 
-        // drop foreign key from budget_limits:
+        // drop unique constraint from budget_limits:
         Schema::table(
             'budget_limits', function (Blueprint $table) {
             $table->dropForeign('bid_foreign');
             $table->dropUnique('unique_bl_combi');
+            $table->foreign('budget_id', 'bid_foreign')->references('id')->on('budgets')->onDelete('cascade');
         }
         );
 
