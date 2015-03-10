@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Steam;
 
 /**
  * Class ReportHelper
@@ -49,7 +50,7 @@ class ReportHelper implements ReportHelperInterface
         $end = clone $date;
         $end->endOfMonth();
         // all budgets
-        $set = \Auth::user()->budgets()
+        $set = Auth::user()->budgets()
                     ->leftJoin(
                         'budget_limits', function (JoinClause $join) use ($date) {
                         $join->on('budget_limits.budget_id', '=', 'budgets.id')->where('budget_limits.startdate', '=', $date->format('Y-m-d'));
@@ -139,7 +140,7 @@ class ReportHelper implements ReportHelperInterface
             }
         }
 
-        $accounts = \Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')->get(['accounts.*'])
+        $accounts = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')->get(['accounts.*'])
                          ->filter(
                              function (Account $account) use ($sharedAccounts) {
                                  if (!in_array($account->id, $sharedAccounts)) {
@@ -155,8 +156,8 @@ class ReportHelper implements ReportHelperInterface
 
         foreach ($accounts as $account) {
             $report[] = [
-                'start'   => \Steam::balance($account, $start),
-                'end'     => \Steam::balance($account, $end),
+                'start'   => Steam::balance($account, $start),
+                'end'     => Steam::balance($account, $end),
                 'account' => $account,
                 'shared'  => $account->accountRole == 'sharedAsset'
             ];

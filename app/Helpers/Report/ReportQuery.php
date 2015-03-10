@@ -83,7 +83,7 @@ class ReportQuery implements ReportQueryInterface
                                  ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'otherJournals.id')
                                  ->before($end)->after($start)
                                  ->where('transaction_types.type', 'Withdrawal')
-                                 ->where('transaction_journals.user_id', \Auth::user()->id)
+                                 ->where('transaction_journals.user_id', Auth::user()->id)
                                  ->whereNull('budget_transaction_journal.budget_id')->whereNull('transaction_journals.deleted_at')
                                  ->whereNull('otherJournals.deleted_at')
                                  ->where('transactions.account_id', $account->id)
