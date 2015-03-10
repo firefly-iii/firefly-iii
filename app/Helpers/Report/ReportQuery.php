@@ -416,6 +416,8 @@ class ReportQuery implements ReportQueryInterface
                                    ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
 
         if ($showSharedReports === false) {
+            // get all withdrawals not from a shared accounts
+            // and all transfers to a shared account
             $query->where(
                 function ($query) {
                     $query->where(
@@ -432,6 +434,9 @@ class ReportQuery implements ReportQueryInterface
                     );
                 }
             );
+        } else {
+            // any withdrawal goes:
+            $query->where('transaction_types.type', 'Withdrawal');
         }
         $query->before($end)
               ->after($start)
