@@ -242,3 +242,6 @@
     </div>
 </div>
 @stop
+@section('scripts')
+    <script type="text/javascript" src="js/reports.js"></script>
+@stop
