@@ -322,7 +322,7 @@ class ReportController extends Controller
         /**
          * Start getAccountsForMonth
          */
-        $list     = $query->accountList();
+        $list     = $query->accountList($showSharedReports);
         $accounts = [];
         /** @var Account $account */
         foreach ($list as $account) {
