@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
-use Session;
 
 /**
  * Class ReportHelper
@@ -87,7 +86,7 @@ class ReportHelper implements ReportHelperInterface
         $end    = Carbon::now();
         $months = [];
         while ($start <= $end) {
-            $year = $start->format('Y');
+            $year            = $start->format('Y');
             $months[$year][] = [
                 'formatted' => $start->format('F Y'),
                 'month'     => intval($start->format('m')),
@@ -119,33 +118,37 @@ class ReportHelper implements ReportHelperInterface
 
     /**
      * @param Carbon $date
+     * @param bool   $showSharedReports
      *
      * @return array
      */
-    public function yearBalanceReport(Carbon $date)
+    public function yearBalanceReport(Carbon $date, $showSharedReports = false)
     {
-        $start            = clone $date;
-        $end              = clone $date;
-        $sharedAccounts   = [];
-        $sharedCollection = \Auth::user()->accounts()
-                                 ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
-                                 ->where('account_meta.name', '=', 'accountRole')
-                                 ->where('account_meta.data', '=', json_encode('sharedAsset'))
-                                 ->get(['accounts.id']);
+        $start          = clone $date;
+        $end            = clone $date;
+        $sharedAccounts = [];
+        if ($showSharedReports === false) {
+            $sharedCollection = \Auth::user()->accounts()
+                                     ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
+                                     ->where('account_meta.name', '=', 'accountRole')
+                                     ->where('account_meta.data', '=', json_encode('sharedAsset'))
+                                     ->get(['accounts.id']);
 
-        foreach ($sharedCollection as $account) {
-            $sharedAccounts[] = $account->id;
+            foreach ($sharedCollection as $account) {
+                $sharedAccounts[] = $account->id;
+            }
         }
 
-        $accounts = \Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name','ASC')->get(['accounts.*'])->filter(
-            function (Account $account) use ($sharedAccounts) {
-                if (!in_array($account->id, $sharedAccounts)) {
-                    return $account;
-                }
+        $accounts = \Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')->get(['accounts.*'])
+                         ->filter(
+                             function (Account $account) use ($sharedAccounts) {
+                                 if (!in_array($account->id, $sharedAccounts)) {
+                                     return $account;
+                                 }
 
-                return null;
-            }
-        );
+                                 return null;
+                             }
+                         );
         $report   = [];
         $start->startOfYear()->subDay();
         $end->endOfYear();

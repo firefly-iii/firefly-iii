@@ -136,10 +136,11 @@ interface ReportQueryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
+     * @param bool   $showSharedReports
      *
      * @return Collection
      */
-    public function journalsByRevenueAccount(Carbon $start, Carbon $end);
+    public function journalsByRevenueAccount(Carbon $start, Carbon $end, $showSharedReports = false);
 
     /**
      * With an equally misleading name, this query returns are transfers to shared accounts. These are considered

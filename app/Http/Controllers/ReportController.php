@@ -363,16 +363,19 @@ class ReportController extends Controller
         } catch (Exception $e) {
             return view('error')->with('message', 'Invalid date.');
         }
-        $date = new Carbon('01-01-' . $year);
-        $end  = clone $date;
+
+        $pref              = Preferences::get('showSharedReports', false);
+        $showSharedReports = $pref->data;
+        $date              = new Carbon('01-01-' . $year);
+        $end               = clone $date;
         $end->endOfYear();
         $title           = 'Reports';
         $subTitle        = $year;
         $subTitleIcon    = 'fa-bar-chart';
         $mainTitleIcon   = 'fa-line-chart';
-        $balances        = $helper->yearBalanceReport($date);
-        $groupedIncomes  = $query->journalsByRevenueAccount($date, $end);
-        $groupedExpenses = $query->journalsByExpenseAccount($date, $end);
+        $balances        = $helper->yearBalanceReport($date, $showSharedReports);
+        $groupedIncomes  = $query->journalsByRevenueAccount($date, $end, $showSharedReports);
+        $groupedExpenses = $query->journalsByExpenseAccount($date, $end, $showSharedReports);
 
         //$groupedExpenses = $helper-> expensesGroupedByAccount($date, $end, 15);
 
