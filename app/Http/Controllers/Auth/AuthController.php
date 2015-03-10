@@ -76,7 +76,7 @@ class AuthController extends Controller
         );
 
         // set flash message
-        Session::flash('success','You have registered successfully!');
+        Session::flash('success', 'You have registered successfully!');
 
 
         return redirect($this->redirectPath());

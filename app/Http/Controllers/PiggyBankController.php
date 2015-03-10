@@ -63,7 +63,9 @@ class PiggyBankController extends Controller
     {
 
         $periods      = Config::get('firefly.piggy_bank_periods');
-        $accounts     = ExpandedForm::makeSelectList(Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*']));
+        $accounts     = ExpandedForm::makeSelectList(
+            Auth::user()->accounts()->orderBy('accounts.name', 'ASC')->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*'])
+        );
         $subTitle     = 'Create new piggy bank';
         $subTitleIcon = 'fa-plus';
 
@@ -107,7 +109,9 @@ class PiggyBankController extends Controller
     {
 
         $periods      = Config::get('firefly.piggy_bank_periods');
-        $accounts     = ExpandedForm::makeSelectList(Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*']));
+        $accounts     = ExpandedForm::makeSelectList(
+            Auth::user()->accounts()->orderBy('accounts.name', 'ASC')->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*'])
+        );
         $subTitle     = 'Edit piggy bank "' . e($piggyBank->name) . '"';
         $subTitleIcon = 'fa-pencil';
 
@@ -333,7 +337,6 @@ class PiggyBankController extends Controller
 
 
     }
-
 
 
 }

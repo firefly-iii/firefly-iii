@@ -1,10 +1,7 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use FireflyIII\Http\Requests;
-use FireflyIII\Http\Controllers\Controller;
-
 use FireflyIII\Support\Search\SearchInterface;
-use Illuminate\Http\Request;
 use Input;
 
 /**
@@ -12,7 +9,8 @@ use Input;
  *
  * @package FireflyIII\Http\Controllers
  */
-class SearchController extends Controller {
+class SearchController extends Controller
+{
     /**
      * Results always come in the form of an array [results, count, fullCount]
      */

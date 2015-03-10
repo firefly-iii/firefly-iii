@@ -7,7 +7,7 @@ use Input;
 use Preferences;
 use Redirect;
 use Session;
-use DB;
+
 /**
  * Class HomeController
  *
@@ -64,7 +64,7 @@ class HomeController extends Controller
 
 
         if ($frontPage->data == []) {
-            $accounts = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*']);
+            $accounts = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
         } else {
             $accounts = Auth::user()->accounts()->whereIn('id', $frontPage->data)->get(['accounts.*']);
         }
@@ -75,8 +75,8 @@ class HomeController extends Controller
                        ->with(['transactions', 'transactioncurrency', 'transactiontype'])
                        ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                        ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')->where('accounts.id', $account->id)
-                        ->before($end)
-                ->after($start)
+                       ->before($end)
+                       ->after($start)
                        ->orderBy('transaction_journals.date', 'DESC')
                        ->orderBy('transaction_journals.id', 'DESC')
                        ->take(10)

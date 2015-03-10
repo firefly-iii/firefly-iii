@@ -1,15 +1,15 @@
 <?php namespace FireflyIII\Http\Controllers;
 
+use Cache;
 use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\CurrencyFormRequest;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
+use Input;
 use Preferences;
 use Redirect;
 use Session;
 use View;
-use Cache;
-use Input;
 
 
 /**

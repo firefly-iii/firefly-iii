@@ -78,9 +78,9 @@ class GoogleChartController extends Controller
         $end       = Session::get('end', Carbon::now()->endOfMonth());
 
         if ($frontPage->data == []) {
-            $accounts = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*']);
+            $accounts = Auth::user()->accounts()->orderBy('accounts.name', 'ASC')->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*']);
         } else {
-            $accounts = Auth::user()->accounts()->whereIn('id', $frontPage->data)->get(['accounts.*']);
+            $accounts = Auth::user()->accounts()->whereIn('id', $frontPage->data)->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
         }
         $index = 1;
         /** @var Account $account */
@@ -508,7 +508,7 @@ class GoogleChartController extends Controller
 
         $end = Session::get('end');
         while ($start <= $end) {
-            $spent      = floatval($category->transactionjournals()->onDate($start)->lessThan(0)->sum('amount')) * -1;
+            $spent = floatval($category->transactionjournals()->onDate($start)->lessThan(0)->sum('amount')) * -1;
             $chart->addRow(clone $start, $spent);
             $start->addDay();
         }
@@ -519,7 +519,6 @@ class GoogleChartController extends Controller
 
 
     }
-
 
 
     /**

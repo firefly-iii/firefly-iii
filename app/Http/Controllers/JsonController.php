@@ -7,6 +7,7 @@ use FireflyIII\Http\Requests;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Input;
+use Preferences;
 use Response;
 use Session;
 
@@ -75,7 +76,7 @@ class JsonController extends Controller
 
                     }
                 }
-            break;
+                break;
             case 'bills-paid':
                 $box = 'bills-paid';
                 // these two functions are the same as the chart TODO
@@ -104,7 +105,7 @@ class JsonController extends Controller
                 }
         }
 
-        return Response::json(['box' => $box, 'amount' => Amount::format($amount, false),'amount_raw' => $amount]);
+        return Response::json(['box' => $box, 'amount' => Amount::format($amount, false), 'amount_raw' => $amount]);
     }
 
     /**
@@ -121,8 +122,6 @@ class JsonController extends Controller
         }
 
         return Response::json($return);
-
-
     }
 
     /**
@@ -132,7 +131,7 @@ class JsonController extends Controller
      */
     public function expenseAccounts()
     {
-        $list   = Auth::user()->accounts()->accountTypeIn(['Expense account', 'Beneficiary account'])->get();
+        $list   = Auth::user()->accounts()->orderBy('accounts.name', 'ASC')->accountTypeIn(['Expense account', 'Beneficiary account'])->get();
         $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;
@@ -147,7 +146,7 @@ class JsonController extends Controller
      */
     public function revenueAccounts()
     {
-        $list   = Auth::user()->accounts()->accountTypeIn(['Revenue account'])->get();
+        $list   = Auth::user()->accounts()->accountTypeIn(['Revenue account'])->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
         $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;
@@ -155,6 +154,29 @@ class JsonController extends Controller
 
         return Response::json($return);
 
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function showSharedReports()
+    {
+        $pref = Preferences::get('showSharedReports', false);
+
+        return Response::json(['value' => $pref->data]);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function setSharedReports()
+    {
+        $pref = Preferences::get('showSharedReports', false);
+        $new  = !$pref->data;
+        Preferences::set('showSharedReports', $new);
+
+
+        return Response::json(['value' => $new]);
     }
 
 }

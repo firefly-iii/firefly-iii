@@ -134,7 +134,7 @@ class AccountController extends Controller
         $start = clone Session::get('start');
         $start->subDay();
         $set->each(
-            function (Account $account) use($start) {
+            function (Account $account) use ($start) {
                 $lastTransaction = $account->transactions()->leftJoin(
                     'transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
                 )->orderBy('transaction_journals.date', 'DESC')->first(['transactions.*', 'transaction_journals.date']);

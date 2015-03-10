@@ -103,18 +103,18 @@ class CategoryController extends Controller
      */
     public function noCategory()
     {
-        $start    = Session::get('start', Carbon::now()->startOfMonth());
-        $end      = Session::get('end', Carbon::now()->startOfMonth());
-        $list     = Auth::user()
-                        ->transactionjournals()
-                        ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                        ->whereNull('category_transaction_journal.id')
-                        ->before($end)
-                        ->after($start)
-                        ->orderBy('transaction_journals.date')
-                        ->get(['transaction_journals.*']);
+        $start = Session::get('start', Carbon::now()->startOfMonth());
+        $end   = Session::get('end', Carbon::now()->startOfMonth());
+        $list  = Auth::user()
+                     ->transactionjournals()
+                     ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                     ->whereNull('category_transaction_journal.id')
+                     ->before($end)
+                     ->after($start)
+                     ->orderBy('transaction_journals.date')
+                     ->get(['transaction_journals.*']);
 
-        $subTitle = 'Transactions without a category between ' . $start->format('jS F Y').' and '.$end->format('jS F Y');
+        $subTitle = 'Transactions without a category between ' . $start->format('jS F Y') . ' and ' . $end->format('jS F Y');
 
         return view('categories.noCategory', compact('list', 'subTitle'));
     }

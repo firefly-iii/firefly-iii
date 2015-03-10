@@ -1,13 +1,13 @@
 <?php
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
-use FireflyIII\Models\Reminder;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\Reminder;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\PiggyBank;
 
 
 // models
@@ -146,7 +146,7 @@ Route::get('/register', ['uses' => 'Auth\AuthController@getRegister', 'as' => 'r
 
 Route::controllers(
     [
-        'auth'     => 'Auth\AuthController',
+        'auth' => 'Auth\AuthController',
         'password' => 'Auth\PasswordController',
     ]
 );
@@ -156,10 +156,10 @@ Route::controllers(
  * Home Controller
  */
 Route::group(
-    ['middleware' => ['auth', 'range','reminders']], function () {
+    ['middleware' => ['auth', 'range', 'reminders']], function () {
     Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
     Route::get('/home', ['uses' => 'HomeController@index', 'as' => 'home']);
-    Route::post('/daterange',['uses' => 'HomeController@dateRange','as' => 'daterange']);
+    Route::post('/daterange', ['uses' => 'HomeController@dateRange', 'as' => 'daterange']);
     Route::get('/flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
     /**
      * Account Controller
@@ -260,14 +260,16 @@ Route::group(
     Route::get('/json/revenue-accounts', ['uses' => 'JsonController@revenueAccounts', 'as' => 'json.revenue-accounts']);
     Route::get('/json/categories', ['uses' => 'JsonController@categories', 'as' => 'json.categories']);
     Route::get('/json/box', ['uses' => 'JsonController@box', 'as' => 'json.box']);
+    Route::get('/json/show-shared-reports', 'JsonController@showSharedReports');
+    Route::get('/json/show-shared-reports/set', 'JsonController@setSharedReports');
 
 
     /**
      * Piggy Bank Controller
      */
     Route::get('/piggy-banks', ['uses' => 'PiggyBankController@index', 'as' => 'piggy-banks.index']);
-    Route::get('/piggy-banks/add/{piggyBank}', ['uses' => 'PiggyBankController@add','as' => 'piggy-banks.addMoney']); # add money
-    Route::get('/piggy-banks/remove/{piggyBank}', ['uses' => 'PiggyBankController@remove','as' => 'piggy-banks.removeMoney']); #remove money
+    Route::get('/piggy-banks/add/{piggyBank}', ['uses' => 'PiggyBankController@add', 'as' => 'piggy-banks.addMoney']); # add money
+    Route::get('/piggy-banks/remove/{piggyBank}', ['uses' => 'PiggyBankController@remove', 'as' => 'piggy-banks.removeMoney']); #remove money
     Route::get('/piggy-banks/create', ['uses' => 'PiggyBankController@create', 'as' => 'piggy-banks.create']);
     Route::get('/piggy-banks/edit/{piggyBank}', ['uses' => 'PiggyBankController@edit', 'as' => 'piggy-banks.edit']);
     Route::get('/piggy-banks/delete/{piggyBank}', ['uses' => 'PiggyBankController@delete', 'as' => 'piggy-banks.delete']);
@@ -289,7 +291,7 @@ Route::group(
      */
     Route::get('/profile', ['uses' => 'ProfileController@index', 'as' => 'profile']);
     Route::get('/profile/change-password', ['uses' => 'ProfileController@changePassword', 'as' => 'change-password']);
-    Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword','as' => 'change-password-post']);
+    Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword', 'as' => 'change-password-post']);
 
     /**
      * Related transactions controller
@@ -331,9 +333,14 @@ Route::group(
     Route::get('/reports/budget/{year}/{month}', ['uses' => 'ReportController@budget', 'as' => 'reports.budget']);
 
     // pop ups for budget report:
-    Route::get('/reports/modal/{account}/{year}/{month}/no-budget', ['uses' => 'ReportController@modalNoBudget','as' => 'reports.no-budget']);
-    Route::get('/reports/modal/{account}/{year}/{month}/balanced-transfers', ['uses' => 'ReportController@modalBalancedTransfers','as' => 'reports.balanced-transfers']);
-    Route::get('/reports/modal/{account}/{year}/{month}/left-unbalanced', ['uses' => 'ReportController@modalLeftUnbalanced','as' => 'reports.left-unbalanced']);
+    Route::get('/reports/modal/{account}/{year}/{month}/no-budget', ['uses' => 'ReportController@modalNoBudget', 'as' => 'reports.no-budget']);
+    Route::get(
+        '/reports/modal/{account}/{year}/{month}/balanced-transfers',
+        ['uses' => 'ReportController@modalBalancedTransfers', 'as' => 'reports.balanced-transfers']
+    );
+    Route::get(
+        '/reports/modal/{account}/{year}/{month}/left-unbalanced', ['uses' => 'ReportController@modalLeftUnbalanced', 'as' => 'reports.left-unbalanced']
+    );
 
     /**
      * Search Controller

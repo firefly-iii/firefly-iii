@@ -11,7 +11,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use Input;
 use Redirect;
 use Session;
@@ -43,7 +42,9 @@ class TransactionController extends Controller
     public function create($what = 'deposit')
     {
         $accounts   = ExpandedForm::makeSelectList(
-            Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->where('active', 1)->orderBy('name', 'DESC')->get(['accounts.*'])
+            Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')->orderBy('name', 'ASC')->where(
+                'active', 1
+            )->orderBy('name', 'DESC')->get(['accounts.*'])
         );
         $budgets    = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
         $budgets[0] = '(no budget)';
@@ -120,7 +121,9 @@ class TransactionController extends Controller
     {
         $what         = strtolower($journal->transactiontype->type);
         $accounts     = ExpandedForm::makeSelectList(
-            Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->where('active', 1)->orderBy('name', 'DESC')->get(['accounts.*'])
+            Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')->where('active', 1)->orderBy(
+                'name', 'DESC'
+            )->get(['accounts.*'])
         );
         $budgets      = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
         $budgets[0]   = '(no budget)';
@@ -259,8 +262,8 @@ class TransactionController extends Controller
         event(new JournalSaved($journal));
         event(new JournalCreated($journal, intval($request->get('piggy_bank_id'))));
 
-        if(intval($request->get('reminder_id')) > 0) {
-            $reminder = Auth::user()->reminders()->find($request->get('reminder_id'));
+        if (intval($request->get('reminder_id')) > 0) {
+            $reminder         = Auth::user()->reminders()->find($request->get('reminder_id'));
             $reminder->active = 0;
             $reminder->save();
         }

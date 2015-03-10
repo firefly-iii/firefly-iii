@@ -36,7 +36,9 @@ class RepeatedExpenseController extends Controller
     public function create()
     {
         $periods  = Config::get('firefly.piggy_bank_periods');
-        $accounts = ExpandedForm::makeSelectList(Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*']));
+        $accounts = ExpandedForm::makeSelectList(
+            Auth::user()->accounts()->orderBy('accounts.name', 'ASC')->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*'])
+        );
 
         return view('repeatedExpense.create', compact('accounts', 'periods'))->with('subTitle', 'Create new repeated expense')->with(
             'subTitleIcon', 'fa-plus'
@@ -79,7 +81,9 @@ class RepeatedExpenseController extends Controller
     {
 
         $periods      = Config::get('firefly.piggy_bank_periods');
-        $accounts     = ExpandedForm::makeSelectList(Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*']));
+        $accounts     = ExpandedForm::makeSelectList(
+            Auth::user()->accounts()->orderBy('accounts.name', 'ASC')->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*'])
+        );
         $subTitle     = 'Edit repeated expense "' . e($repeatedExpense->name) . '"';
         $subTitleIcon = 'fa-pencil';
 
@@ -183,7 +187,7 @@ class RepeatedExpenseController extends Controller
             'rep_length'   => $request->get('rep_length'),
             'rep_every'    => intval($request->get('rep_every')),
             'rep_times'    => intval($request->get('rep_times')),
-            'remind_me'    => intval($request->get('remind_me')) == 1 ? true : false ,
+            'remind_me'    => intval($request->get('remind_me')) == 1 ? true : false,
             'reminder'     => $request->get('reminder'),
         ];
 

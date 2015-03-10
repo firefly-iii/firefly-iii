@@ -6,8 +6,8 @@ use FireflyIII\Helpers\Reminders\ReminderHelperInterface;
 use FireflyIII\Http\Requests;
 use FireflyIII\Models\Reminder;
 use Redirect;
-use URL;
 use Session;
+use URL;
 
 /**
  * Class ReminderController
@@ -27,12 +27,12 @@ class ReminderController extends Controller
             'description'   => 'Money for piggy bank "' . $reminder->remindersable->name . '"',
             'amount'        => round($reminder->metadata->perReminder, 2),
             'account_to_id' => $reminder->remindersable->account_id,
-            'piggy_bank_id'  => $reminder->remindersable_id,
-            'reminder_id' => $reminder->id,
+            'piggy_bank_id' => $reminder->remindersable_id,
+            'reminder_id'   => $reminder->id,
         ];
-        Session::flash('_old_input',$data);
+        Session::flash('_old_input', $data);
 
-        return Redirect::route('transactions.create','transfer');
+        return Redirect::route('transactions.create', 'transfer');
     }
 
     /**

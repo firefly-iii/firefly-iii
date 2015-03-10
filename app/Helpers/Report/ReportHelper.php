@@ -137,7 +137,7 @@ class ReportHelper implements ReportHelperInterface
             $sharedAccounts[] = $account->id;
         }
 
-        $accounts = \Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*'])->filter(
+        $accounts = \Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name','ASC')->get(['accounts.*'])->filter(
             function (Account $account) use ($sharedAccounts) {
                 if (!in_array($account->id, $sharedAccounts)) {
                     return $account;
