@@ -4,7 +4,9 @@ namespace FireflyIII\Repositories\Account;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
-
+use FireflyIII\Models\Preference;
+use Illuminate\Support\Collection;
+use Carbon\Carbon;
 /**
  * Interface AccountRepositoryInterface
  *
@@ -18,6 +20,27 @@ interface AccountRepositoryInterface
      * @return boolean
      */
     public function destroy(Account $account);
+
+    /**
+     * @return int
+     */
+    public function countAssetAccounts();
+
+    /**
+     * @param Preference $preference
+     *
+     * @return Collection
+     */
+    public function getFrontpageAccounts(Preference $preference);
+
+    /**
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return mixed
+     */
+    public function getFrontpageTransactions(Account $account, Carbon $start, Carbon $end);
 
     /**
      * @param Account $account

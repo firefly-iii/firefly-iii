@@ -10,10 +10,12 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Log;
 use Session;
 
@@ -26,6 +28,14 @@ class AccountRepository implements AccountRepositoryInterface
 {
 
     /**
+     * @return int
+     */
+    public function countAssetAccounts()
+    {
+        return Auth::user()->accounts()->accountTypeIn(['Asset account', 'Default account'])->count();
+    }
+
+    /**
      * @param Account $account
      *
      * @return boolean
@@ -35,6 +45,44 @@ class AccountRepository implements AccountRepositoryInterface
         $account->delete();
 
         return true;
+    }
+
+    /**
+     * @param Preference $preference
+     *
+     * @return Collection
+     */
+    public function getFrontpageAccounts(Preference $preference)
+    {
+        if ($preference->data == []) {
+            $accounts = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
+        } else {
+            $accounts = Auth::user()->accounts()->whereIn('id', $preference->data)->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
+        }
+
+        return $accounts;
+    }
+
+    /**
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return mixed
+     */
+    public function getFrontpageTransactions(Account $account, Carbon $start, Carbon $end)
+    {
+        return Auth::user()
+                   ->transactionjournals()
+                   ->with(['transactions', 'transactioncurrency', 'transactiontype'])
+                   ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                   ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')->where('accounts.id', $account->id)
+                   ->before($end)
+                   ->after($start)
+                   ->orderBy('transaction_journals.date', 'DESC')
+                   ->orderBy('transaction_journals.id', 'DESC')
+                   ->take(10)
+                   ->get(['transaction_journals.*']);
     }
 
     /**

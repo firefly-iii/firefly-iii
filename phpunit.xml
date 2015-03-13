@@ -11,7 +11,7 @@
          syntaxCheck="false">
     <testsuites>
         <testsuite name="Application Test Suite">
-            <directory>./tests/</directory>
+            <directory>./tests</directory>
         </testsuite>
     </testsuites>
     <filter>
@@ -21,9 +21,11 @@
     </filter>
 
     <!-- code coverage -->
+    <!--
     <logging>
         <log type="coverage-clover" target="./storage/coverage/clover.xml" charset="UTF-8" />
     </logging>
+    -->
 
     <php>
         <env name="APP_ENV" value="testing"/>
