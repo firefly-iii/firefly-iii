@@ -206,7 +206,8 @@ class GoogleChartController extends Controller
                                    ->from('transaction_journals')
                                    ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
                                    ->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'))
-                                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d 00:00:00'));
+                                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d 00:00:00'))
+                                   ->whereNotNull('budget_transaction_journal.budget_id');
                            }
                            )
                            ->before($end)
