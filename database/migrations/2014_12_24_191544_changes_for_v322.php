@@ -23,13 +23,17 @@ class ChangesForV322 extends Migration
         // rename fields
         Schema::table(
             'piggy_bank_events', function (Blueprint $table) {
+            $table->dropForeign('piggy_bank_events_piggy_bank_id_foreign');
             $table->renameColumn('piggy_bank_id', 'piggybank_id');
+            $table->foreign('piggybank_id')->references('id')->on('piggybanks')->onDelete('cascade');
         }
         );
 
         Schema::table(
             'piggybank_repetitions', function (Blueprint $table) {
+            $table->dropForeign('piggy_bank_repetitions_piggy_bank_id_foreign');
             $table->renameColumn('piggy_bank_id', 'piggybank_id');
+            $table->foreign('piggybank_id')->references('id')->on('piggybanks')->onDelete('cascade');
         }
         );
 
@@ -55,11 +59,12 @@ class ChangesForV322 extends Migration
         }
         );
 
-        // drop foreign key from budget_limits:
+        // drop unique constraint from budget_limits:
         Schema::table(
             'budget_limits', function (Blueprint $table) {
             $table->dropForeign('bid_foreign');
             $table->dropUnique('unique_bl_combi');
+            $table->foreign('budget_id', 'bid_foreign')->references('id')->on('budgets')->onDelete('cascade');
         }
         );
 
