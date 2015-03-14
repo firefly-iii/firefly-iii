@@ -14,6 +14,7 @@
     <div class="col-lg-6 col-md-6 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">
+                <i class="fa fa-fw fa-credit-card"></i>
                 Accounts
             </div>
             <table class="table table-bordered table-striped">
@@ -49,6 +50,7 @@
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">
+                <i class="fa fa-tasks fa-fw"></i>
                 Budgets
             </div>
             <table class="table table-bordered table-striped">

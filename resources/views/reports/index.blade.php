@@ -14,6 +14,7 @@
  <div class="col-lg-4 col-md-4 col-sm-4">
     <div class="panel panel-default">
         <div class="panel-heading">
+            <i class="fa fa-calendar fa-fw"></i>
             Yearly reports
         </div>
         <div class="panel-body">
@@ -29,6 +30,7 @@
     <div class="col-lg-4 col-md-4 col-sm-4">
         <div class="panel panel-default">
             <div class="panel-heading">
+                <i class="fa fa-calendar fa-fw"></i>
                 Monthly reports
             </div>
             <div class="panel-body">
@@ -49,6 +51,7 @@
     <div class="col-lg-4 col-md-4 col-sm-4">
         <div class="panel panel-default">
             <div class="panel-heading">
+                <i class="fa fa-calendar fa-fw"></i>
                 Budget reports
             </div>
             <div class="panel-body">

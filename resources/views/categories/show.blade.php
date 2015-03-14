@@ -5,6 +5,7 @@
     <div class="col-lg-6 col-md-6 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">
+                <i class="fa fa-calendar fa-fw"></i>
                 Overview
             </div>
             <div class="panel-body">
@@ -15,6 +16,7 @@
     <div class="col-lg-6 col-md-6 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">
+                <i class="fa fa-calendar-o fa-fw"></i>
                 Overview
             </div>
             <div class="panel-body">
@@ -28,6 +30,7 @@
 
          <div class="panel panel-default">
             <div class="panel-heading">
+                <i class="fa fa-repeat fa-fw"></i>
                 Transactions
             </div>
             <div class="panel-body">

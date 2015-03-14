@@ -5,12 +5,13 @@
     <div class="col-lg-9 col-sm-8 col-md-8">
         <div class="panel panel-default">
             <div class="panel-heading">
+                <i class="fa fa-calendar fa-fw"></i>
                 {{Session::get('start', \Carbon\Carbon::now()->startOfMonth())->format('F Y')}}
             </div>
             <div class="panel-body">
                 <div class="row">
                     <div class="col-lg-6 col-md-4 col-sm-3">
-                        <small>Budgeted: <span id="budgetedAmount" data-value="300">{{Amount::format(300)}}</span></small>
+                        <small>Budgeted: <span id="budgetedAmount" data-value="300"></span></small>
                     </div>
                     <div class="col-lg-6 col-md-4 col-sm-3" style="text-align:right;">
                         <small>Available in {{Session::get('start', \Carbon\Carbon::now()->startOfMonth())->format('F Y')}}:
@@ -49,11 +50,10 @@
         </div>
     </div>
     <div class="col-lg-3 col-sm-4 col-md-4">
-        <!-- time based navigation -->
-        @include('partials.date_nav')
 
         <div class="panel panel-default">
             <div class="panel-heading">
+                <i class="fa fa-fw fa-tags"></i>
                 Transactions without a budget
             </div>
             <div class="panel-body">
@@ -71,6 +71,7 @@
     <div class="col-lg-3 col-sm-4 col-md-6" style="height:180px;">
         <div class="panel panel-default">
             <div class="panel-heading">
+                <i class="fa fa-fw fa-tasks"></i>
                 @if(isset($budget->currentRep))
                     <a href="{{route('budgets.show',[$budget->id,$budget->currentRep->id])}}" id="budget-link-{{$budget->id}}">{{{$budget->name}}}</a>
                 @else
@@ -135,10 +136,11 @@
     <div class="col-lg-3 col-sm-4 col-md-6">
         <div class="panel panel-default">
             <div class="panel-heading">
+                <i class="fa fa-fw fa-plus-circle"></i>
                 Create budget
             </div>
             <div class="panel-body">
-                <a href="{{route('budgets.create')}}" class="btn btn-success">Create new budget</a>
+                <a href="{{route('budgets.create')}}" class="btn btn-success"><i class="fa fa-fw fa-plus"></i> Create new budget</a>
             </div>
     </div>
 </div>

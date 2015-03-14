@@ -5,6 +5,7 @@
     <div class="col-lg-6 col-md-6 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">
+                <i class="fa fa-info-circle fa-fw"></i>
                 Metadata
             </div>
                 <table class="table table-striped table-bordered">
@@ -54,6 +55,7 @@
         @endif
         <div class="panel panel-default">
             <div class="panel-heading">
+                <i class="fa fa-fw fa-exchange"></i>
                 Related transactions
             </div>
             @if($journal->transactiongroups()->count() == 0)
@@ -85,21 +87,6 @@
                                     </td>
                                 </tr>
                             @endforeach
-                            {{--
-                            <td>
-                                <a href="#" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span></a>
-                                <!--<input type="checkbox" checked="checked" data-relatedto="{{$journal->id}}" data-id="{{$jrnl->id}}" class="unrelate-checkbox" />-->
-                            </td>
-                            <td><a href="{{route('transactions.show',$jrnl->id)}}">{{{$jrnl->description}}}</a></td>
-
-                            <td>
-                                @foreach($jrnl->transactions()->get() as $t)
-                                    @if($t->amount > 0)
-                                        {!! Amount::formatTransaction($t) !!}
-                                    @endif
-                                @endforeach
-                            </td>
-                            --}}
                         </tr>
                     @endforeach
                     </table>
@@ -116,6 +103,15 @@
     @foreach($journal->transactions as $t)
         <div class="panel panel-default">
             <div class="panel-heading">
+                @if($t->account->accounttype->type == 'Asset account')
+                    <i class="fa fa-money fa-fw"></i>
+                @endif
+                @if($t->account->accounttype->type == 'Expense account')
+                    <i class="fa fa-shopping-cart fa-fw"></i>
+                @endif
+                @if($t->account->accounttype->type == 'Revenue account')
+                    <i class="fa fa-download fa-fw"></i>
+                @endif
                 <a href="{{route('accounts.show',$t->account->id)}}">{{{$t->account->name}}}</a><br /><small>{{{$t->account->accounttype->description}}}</small>
             </div>
                 <table class="table table-striped table-bordered">
