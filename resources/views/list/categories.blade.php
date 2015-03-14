@@ -21,8 +21,11 @@
             <a href="{{route('categories.show',$category->id)}}" title="{{{$category->name}}}">{{{$category->name}}}</a>
         </td>
         <td>
-
+            @if($category->lastActivity)
+                {{$category->lastActivity->format('jS F Y')}}
+            @else
                 <em>Never</em>
+            @endif
         </td>
     </tr>
     @endforeach

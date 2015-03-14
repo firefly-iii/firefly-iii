@@ -7,7 +7,10 @@ use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Http\Requests;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\TransactionJournal;
 use Illuminate\Database\Query\JoinClause;
+use Preferences;
+use Session;
 use Steam;
 use View;
 
@@ -49,17 +52,22 @@ class ReportController extends Controller
         $end->endOfMonth();
         $start->subDay();
 
+        // shared accounts preference:
+        $pref              = Preferences::get('showSharedReports', false);
+        $showSharedReports = $pref->data;
+
+
         $dayEarly     = clone $date;
         $subTitle     = 'Budget report for ' . $date->format('F Y');
         $subTitleIcon = 'fa-calendar';
         $dayEarly     = $dayEarly->subDay();
-        $accounts     = $query->getAllAccounts($start, $end);
+        $accounts     = $query->getAllAccounts($start, $end, $showSharedReports);
         $start->addDay();
 
         $accounts->each(
             function (Account $account) use ($start, $end, $query) {
                 $budgets        = $query->getBudgetSummary($account, $start, $end);
-                $balancedAmount = $query->balancedTransactionsList($account, $start, $end);
+                $balancedAmount = $query->balancedTransactionsSum($account, $start, $end);
                 $array          = [];
                 foreach ($budgets as $budget) {
                     $id         = intval($budget->id);
@@ -87,24 +95,27 @@ class ReportController extends Controller
                                     )
                                     ->get(['budgets.*', 'budget_limits.amount as amount']);
         $budgets              = Steam::makeArray($set);
-        $amountSet            = $query->journalsByBudget($start, $end);
+        $amountSet            = $query->journalsByBudget($start, $end, $showSharedReports);
         $amounts              = Steam::makeArray($amountSet);
         $budgets              = Steam::mergeArrays($budgets, $amounts);
         $budgets[0]['spent']  = isset($budgets[0]['spent']) ? $budgets[0]['spent'] : 0.0;
         $budgets[0]['amount'] = isset($budgets[0]['amount']) ? $budgets[0]['amount'] : 0.0;
         $budgets[0]['name']   = 'No budget';
 
-        // find transactions to shared expense accounts, which are without a budget by default:
-        $transfers = $query->sharedExpenses($start, $end);
-        foreach ($transfers as $transfer) {
-            $budgets[0]['spent'] += floatval($transfer->amount) * -1;
+        // find transactions to shared asset accounts, which are without a budget by default:
+        // which is only relevant when shared asset accounts are hidden.
+        if ($showSharedReports === false) {
+            $transfers = $query->sharedExpenses($start, $end);
+            foreach ($transfers as $transfer) {
+                $budgets[0]['spent'] += floatval($transfer->amount) * -1;
+            }
         }
 
         /**
          * End getBudgetsForMonth DONE
          */
 
-        return view('reports.budget', compact('subTitle', 'subTitleIcon', 'date', 'accounts', 'budgets', 'dayEarly'));
+        return view('reports.budget', compact('subTitle', 'year', 'month', 'subTitleIcon', 'date', 'accounts', 'budgets', 'dayEarly'));
 
     }
 
@@ -115,13 +126,94 @@ class ReportController extends Controller
      */
     public function index(ReportHelperInterface $helper)
     {
-        $start         = $helper->firstDate();
+        $start         = Session::get('first');
         $months        = $helper->listOfMonths($start);
         $years         = $helper->listOfYears($start);
         $title         = 'Reports';
         $mainTitleIcon = 'fa-line-chart';
 
         return view('reports.index', compact('years', 'months', 'title', 'mainTitleIcon'));
+    }
+
+    /**
+     * @param Account $account
+     * @param string  $year
+     * @param string  $month
+     *
+     * @return \Illuminate\View\View
+     */
+    public function modalBalancedTransfers(Account $account, $year = '2014', $month = '1', ReportQueryInterface $query)
+    {
+
+        try {
+            new Carbon($year . '-' . $month . '-01');
+        } catch (Exception $e) {
+            return view('error')->with('message', 'Invalid date');
+        }
+        $start = new Carbon($year . '-' . $month . '-01');
+        $end   = clone $start;
+        $end->endOfMonth();
+
+        $journals = $query->balancedTransactionsList($account, $start, $end);
+
+        return view('reports.modal-journal-list', compact('journals'));
+
+
+    }
+
+    /**
+     * @param Account              $account
+     * @param string               $year
+     * @param string               $month
+     * @param ReportQueryInterface $query
+     *
+     * @return View
+     */
+    public function modalLeftUnbalanced(Account $account, $year = '2014', $month = '1', ReportQueryInterface $query)
+    {
+        try {
+            new Carbon($year . '-' . $month . '-01');
+        } catch (Exception $e) {
+            return view('error')->with('message', 'Invalid date');
+        }
+        $start = new Carbon($year . '-' . $month . '-01');
+        $end   = clone $start;
+        $end->endOfMonth();
+        $set = $query->getTransactionsWithoutBudget($account, $start, $end);
+
+        $journals = $set->filter(
+            function (TransactionJournal $journal) {
+                $count = $journal->transactiongroups()->where('relation', 'balance')->count();
+                if ($count == 0) {
+                    return $journal;
+                }
+            }
+        );
+
+        return view('reports.modal-journal-list', compact('journals'));
+    }
+
+    /**
+     * @param Account $account
+     * @param string  $year
+     * @param string  $month
+     *
+     * @return \Illuminate\View\View
+     */
+    public function modalNoBudget(Account $account, $year = '2014', $month = '1', ReportQueryInterface $query)
+    {
+        try {
+            new Carbon($year . '-' . $month . '-01');
+        } catch (Exception $e) {
+            return view('error')->with('message', 'Invalid date');
+        }
+        $start = new Carbon($year . '-' . $month . '-01');
+        $end   = clone $start;
+        $end->endOfMonth();
+        $journals = $query->getTransactionsWithoutBudget($account, $start, $end);
+
+        return view('reports.modal-journal-list', compact('journals'));
+
     }
 
     /**
@@ -142,6 +234,9 @@ class ReportController extends Controller
         $subTitleIcon = 'fa-calendar';
         $displaySum   = true; // to show sums in report.
 
+        $pref              = Preferences::get('showSharedReports', false);
+        $showSharedReports = $pref->data;
+
 
         /**
          *
@@ -157,14 +252,14 @@ class ReportController extends Controller
         /**
          * Start getIncomeForMonth DONE
          */
-        $income = $query->incomeByPeriod($start, $end);
+        $income = $query->incomeByPeriod($start, $end, $showSharedReports);
         /**
          * End getIncomeForMonth DONE
          */
         /**
          * Start getExpenseGroupedForMonth DONE
          */
-        $set      = $query->journalsByExpenseAccount($start, $end);
+        $set      = $query->journalsByExpenseAccount($start, $end, $showSharedReports);
         $expenses = Steam::makeArray($set);
         $expenses = Steam::sortArray($expenses);
         $expenses = Steam::limitArray($expenses, 10);
@@ -182,7 +277,7 @@ class ReportController extends Controller
                                     )
                                     ->get(['budgets.*', 'budget_limits.amount as amount']);
         $budgets              = Steam::makeArray($set);
-        $amountSet            = $query->journalsByBudget($start, $end);
+        $amountSet            = $query->journalsByBudget($start, $end, $showSharedReports);
         $amounts              = Steam::makeArray($amountSet);
         $budgets              = Steam::mergeArrays($budgets, $amounts);
         $budgets[0]['spent']  = isset($budgets[0]['spent']) ? $budgets[0]['spent'] : 0.0;
@@ -190,9 +285,11 @@ class ReportController extends Controller
         $budgets[0]['name']   = 'No budget';
 
         // find transactions to shared expense accounts, which are without a budget by default:
-        $transfers = $query->sharedExpenses($start, $end);
-        foreach ($transfers as $transfer) {
-            $budgets[0]['spent'] += floatval($transfer->amount) * -1;
+        if ($showSharedReports === false) {
+            $transfers = $query->sharedExpenses($start, $end);
+            foreach ($transfers as $transfer) {
+                $budgets[0]['spent'] += floatval($transfer->amount) * -1;
+            }
         }
 
         /**
@@ -206,9 +303,13 @@ class ReportController extends Controller
         $categories = Steam::makeArray($result);
 
         // all transfers
-        $result    = $query->sharedExpensesByCategory($start, $end);
-        $transfers = Steam::makeArray($result);
-        $merged    = Steam::mergeArrays($categories, $transfers);
+        if ($showSharedReports === false) {
+            $result    = $query->sharedExpensesByCategory($start, $end);
+            $transfers = Steam::makeArray($result);
+            $merged    = Steam::mergeArrays($categories, $transfers);
+        } else {
+            $merged = $categories;
+        }
 
         // sort.
         $sorted = Steam::sortNegativeArray($merged);
@@ -221,7 +322,7 @@ class ReportController extends Controller
         /**
          * Start getAccountsForMonth
          */
-        $list     = $query->accountList();
+        $list     = $query->accountList($showSharedReports);
         $accounts = [];
         /** @var Account $account */
         foreach ($list as $account) {
@@ -262,16 +363,19 @@ class ReportController extends Controller
         } catch (Exception $e) {
             return view('error')->with('message', 'Invalid date.');
         }
-        $date = new Carbon('01-01-' . $year);
-        $end  = clone $date;
+
+        $pref              = Preferences::get('showSharedReports', false);
+        $showSharedReports = $pref->data;
+        $date              = new Carbon('01-01-' . $year);
+        $end               = clone $date;
         $end->endOfYear();
         $title           = 'Reports';
         $subTitle        = $year;
         $subTitleIcon    = 'fa-bar-chart';
         $mainTitleIcon   = 'fa-line-chart';
-        $balances        = $helper->yearBalanceReport($date);
-        $groupedIncomes  = $query->journalsByRevenueAccount($date, $end);
-        $groupedExpenses = $query->journalsByExpenseAccount($date, $end);
+        $balances        = $helper->yearBalanceReport($date, $showSharedReports);
+        $groupedIncomes  = $query->journalsByRevenueAccount($date, $end, $showSharedReports);
+        $groupedExpenses = $query->journalsByExpenseAccount($date, $end, $showSharedReports);
 
         //$groupedExpenses = $helper-> expensesGroupedByAccount($date, $end, 15);
 

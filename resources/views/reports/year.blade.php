@@ -2,9 +2,19 @@
 @section('content')
 {!! Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $date) !!}
 <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <p>
+            <a href="#" class="btn btn-default" id="includeShared" style="display:none;">
+                <i class="state-icon glyphicon glyphicon-unchecked"></i>
+                Include shared asset accounts</a>
+        </p>
+    </div>
+</div>
+<div class="row">
  <div class="col-lg-10 col-md-8 col-sm-12">
     <div class="panel panel-default">
         <div class="panel-heading">
+            <i class="fa fa-line-chart"></i>
             Income vs. expenses
         </div>
         <div class="panel-body">
@@ -15,6 +25,7 @@
  <div class="col-lg-2 col-md-4 col-sm-12">
     <div class="panel panel-default">
         <div class="panel-heading">
+            <i class="fa fa-calendar"></i>
             Income vs. expenses
         </div>
         <div class="panel-body">
@@ -28,6 +39,7 @@
     <div class="col-lg-6 col-md-6 col-sm-6">
         <div class="panel panel-default">
             <div class="panel-heading">
+                <i class="fa fa-credit-card fa-fw"></i>
                 Account balance
             </div>
             <table class="table table-bordered table-striped">
@@ -65,6 +77,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
+                <i class="fa fa-arrows-h fa-fw"></i>
                 Income vs. expense
             </div>
             <?php
@@ -99,6 +112,7 @@
     <div class="col-lg-3 col-md-3 col-sm-3">
         <div class="panel panel-default">
             <div class="panel-heading">
+                <i class="fa fa-long-arrow-right fa-fw"></i>
                 Income
             </div>
             <table class="table">
@@ -120,6 +134,7 @@
     <div class="col-lg-3 col-md-3 col-sm-3">
         <div class="panel panel-default">
             <div class="panel-heading">
+                <i class="fa fa-long-arrow-left fa-fw"></i>
                 Expenses
             </div>
             <table class="table">
@@ -143,6 +158,7 @@
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">
+                <i class="fa fa-tasks fa-fw"></i>
                 Budgets
             </div>
             <div class="panel-body">

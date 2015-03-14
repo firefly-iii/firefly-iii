@@ -45,12 +45,12 @@ class Preferences
         if (is_null($pref)) {
             $pref       = new Preference;
             $pref->name = $name;
-            $pref->user()->associate(Auth::user());
-
         }
         $pref->data = $value;
-        $pref->save();
-
+        if (!is_null(Auth::user()->id)) {
+            $pref->user()->associate(Auth::user());
+            $pref->save();
+        }
 
         return $pref;
 

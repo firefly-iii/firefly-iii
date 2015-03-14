@@ -8,6 +8,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use Input;
 use Redirect;
 use Session;
 use URL;
@@ -80,7 +81,7 @@ class BillController extends Controller
      */
     public function index(BillRepositoryInterface $repository)
     {
-        $bills = Auth::user()->bills()->get();
+        $bills = Auth::user()->bills()->orderBy('name', 'ASC')->get();
         $bills->each(
             function (Bill $bill) use ($repository) {
                 $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill);
@@ -108,7 +109,9 @@ class BillController extends Controller
             return Redirect::intended('/');
         }
 
-        $set = \DB::table('transactions')->where('amount', '>', 0)->where('amount', '>=', $bill->amount_min)->where('amount', '<=', $bill->amount_max)->get(['transaction_journal_id']);
+        $set = \DB::table('transactions')->where('amount', '>', 0)->where('amount', '>=', $bill->amount_min)->where('amount', '<=', $bill->amount_max)->get(
+            ['transaction_journal_id']
+        );
         $ids = [];
 
         /** @var Transaction $entry */
@@ -116,7 +119,7 @@ class BillController extends Controller
             $ids[] = intval($entry->transaction_journal_id);
         }
         if (count($ids) > 0) {
-            $journals = Auth::user()->transactionjournals()->whereIn('id',$ids)->get();
+            $journals = Auth::user()->transactionjournals()->whereIn('id', $ids)->get();
             /** @var TransactionJournal $journal */
             foreach ($journals as $journal) {
                 $repository->scan($bill, $journal);
@@ -168,6 +171,10 @@ class BillController extends Controller
         $bill = $repository->store($billData);
         Session::flash('success', 'Bill "' . e($bill->name) . '" stored.');
 
+        if (intval(Input::get('create_another')) === 1) {
+            return Redirect::route('bills.create')->withInput();
+        }
+
         return Redirect::route('bills.index');
 
     }
@@ -194,6 +201,10 @@ class BillController extends Controller
         ];
 
         $bill = $repository->update($bill, $billData);
+
+        if (intval(Input::get('return_to_edit')) === 1) {
+            return Redirect::route('bills.edit', $bill->id);
+        }
 
         Session::flash('success', 'Bill "' . e($bill->name) . '" updated.');
 

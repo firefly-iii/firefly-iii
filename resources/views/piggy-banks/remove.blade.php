@@ -1,6 +1,7 @@
-<form style="display: inline;" id="remove" action="{{route('piggy-banks.remove',$piggyBank->id)}}" method="POST">
-{!! Form::token() !!}
+
     <div class="modal-dialog">
+        <form style="display: inline;" id="remove" action="{{route('piggy-banks.remove',$piggyBank->id)}}" method="POST">
+            {!! Form::token() !!}
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -20,5 +21,6 @@
                 <button type="submit" class="btn btn-primary">Remove</button>
             </div>
         </div>
+        </form>
     </div>
-</form>
+

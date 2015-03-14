@@ -9,6 +9,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Navigation;
 use Preferences;
 use Session;
+use View;
 
 /**
  * Class SessionFilter
@@ -46,25 +47,36 @@ class Range
     public function handle($request, Closure $theNext)
     {
         if ($this->auth->check()) {
-            // user's view range comes from preferences, gets set in session:
-            /** @var \FireflyIII\Models\Preference $viewRange */
-            $viewRange = Preferences::get('viewRange', '1M');
 
+            // ignore preference. set the range to be the current month:
+            if (!Session::has('start') && !Session::has('end')) {
 
-            // the start and end date are checked and stored:
-            $start  = Session::has('start') ? Session::get('start') : new Carbon;
-            $start  = Navigation::updateStartDate($viewRange->data, $start);
-            $end    = Navigation::updateEndDate($viewRange->data, $start);
-            $period = Navigation::periodName($viewRange->data, $start);
-            $prev   = Navigation::jumpToPrevious($viewRange->data, clone $start);
-            $next   = Navigation::jumpToNext($viewRange->data, clone $start);
+                /** @var \FireflyIII\Models\Preference $viewRange */
+                $viewRange = Preferences::get('viewRange', '1M');
+                $start     = Session::has('start') ? Session::get('start') : new Carbon;
+                $start     = Navigation::updateStartDate($viewRange->data, $start);
+                $end       = Navigation::updateEndDate($viewRange->data, $start);
 
-            Session::put('range', $viewRange->data);
-            Session::put('start', $start);
-            Session::put('end', $end);
-            Session::put('period', $period);
-            Session::put('prev', Navigation::periodName($viewRange->data, $prev));
-            Session::put('next', Navigation::periodName($viewRange->data, $next));
+                Session::put('start', $start);
+                Session::put('end', $end);
+            }
+            if (!Session::has('first')) {
+                $journal = $this->auth->user()->transactionjournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
+                if ($journal) {
+                    Session::put('first', $journal->date);
+                } else {
+                    Session::put('first', Carbon::now());
+                }
+            }
+
+            // set current / next / prev month.
+            $current = Carbon::now()->format('F Y');
+            $next    = Carbon::now()->endOfMonth()->addDay()->format('F Y');
+            $prev    = Carbon::now()->startOfMonth()->subDay()->format('F Y');
+            View::share('currentMonthName', $current);
+            View::share('previousMonthName', $prev);
+            View::share('nextMonthName', $next);
+
 
         }
 

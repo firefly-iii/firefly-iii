@@ -4,6 +4,9 @@ use FireflyIII\Http\Controllers\Controller;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Illuminate\Http\Request;
+use Mail;
+use Session;
 
 /**
  * Class AuthController
@@ -41,6 +44,42 @@ class AuthController extends Controller
         $this->registrar = $registrar;
 
         $this->middleware('guest', ['except' => 'getLogout']);
+    }
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param  Request $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function postRegister(Request $request)
+    {
+        $validator = $this->registrar->validator($request->all());
+
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                $request, $validator
+            );
+        }
+
+        $this->auth->login($this->registrar->create($request->all()));
+
+        // get the email address
+        $email = $this->auth->user()->email;
+
+        // send email.
+        Mail::send(
+            'emails.registered', [], function ($message) use ($email) {
+            $message->to($email, $email)->subject('Welcome to Firefly III!');
+        }
+        );
+
+        // set flash message
+        Session::flash('success', 'You have registered successfully!');
+
+
+        return redirect($this->redirectPath());
     }
 
 }

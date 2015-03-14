@@ -7,10 +7,10 @@ use FireflyIII\Http\Requests\CategoryFormRequest;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Input;
 use Redirect;
 use Session;
 use View;
-use Input;
 
 
 /**
@@ -36,44 +36,6 @@ class CategoryController extends Controller
     public function create()
     {
         return view('categories.create')->with('subTitle', 'Create a new category');
-    }
-
-    /**
-     * @param Category $category
-     *
-     * @return $this
-     */
-    public function show(Category $category, CategoryRepositoryInterface $repository)
-    {
-        $hideCategory = true; // used in list.
-        $page = intval(Input::get('page'));
-        $offset = $page > 0 ? $page * 50 : 0;
-        $set    = $category->transactionJournals()->withRelevantData()->take(50)->offset($offset)->orderBy('date', 'DESC')->get(['transaction_journals.*']);
-        $count  = $category->transactionJournals()->count();
-
-        $journals = new LengthAwarePaginator($set, $count, 50, $page);
-
-        return view('categories.show', compact('category', 'journals', 'hideCategory'));
-    }
-
-    /**
-     * @return \Illuminate\View\View
-     */
-    public function noCategory()
-    {
-        $start    = Session::get('start', Carbon::now()->startOfMonth());
-        $end      = Session::get('end', Carbon::now()->startOfMonth());
-        $list     = Auth::user()
-                         ->transactionjournals()
-                         ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                         ->whereNull('category_transaction_journal.id')
-                         ->before($end)
-                         ->after($start)
-                         ->orderBy('transaction_journals.date')
-                         ->get(['transaction_journals.*']);
-        $subTitle = 'Transactions without a category in ' . $start->format('F Y');
-
-        return view('categories.noCategory', compact('list', 'subTitle'));
     }
 
     /**
@@ -122,9 +84,59 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Auth::user()->categories()->get();
+        $categories = Auth::user()->categories()->orderBy('name', 'ASC')->get();
+
+        $categories->each(
+            function (Category $category) {
+                $latest = $category->transactionjournals()->orderBy('date', 'DESC')->first();
+                if ($latest) {
+                    $category->lastActivity = $latest->date;
+                }
+            }
+        );
 
         return view('categories.index', compact('categories'));
+    }
+
+    /**
+     * @return \Illuminate\View\View
+     */
+    public function noCategory()
+    {
+        $start = Session::get('start', Carbon::now()->startOfMonth());
+        $end   = Session::get('end', Carbon::now()->startOfMonth());
+        $list  = Auth::user()
+                     ->transactionjournals()
+                     ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                     ->whereNull('category_transaction_journal.id')
+                     ->before($end)
+                     ->after($start)
+                     ->orderBy('transaction_journals.date')
+                     ->get(['transaction_journals.*']);
+
+        $subTitle = 'Transactions without a category between ' . $start->format('jS F Y') . ' and ' . $end->format('jS F Y');
+
+        return view('categories.noCategory', compact('list', 'subTitle'));
+    }
+
+    /**
+     * @param Category $category
+     *
+     * @return $this
+     */
+    public function show(Category $category, CategoryRepositoryInterface $repository)
+    {
+        $hideCategory = true; // used in list.
+        $page         = intval(Input::get('page'));
+        $offset       = $page > 0 ? $page * 50 : 0;
+        $set          = $category->transactionJournals()->withRelevantData()->take(50)->offset($offset)->orderBy('date', 'DESC')->get(
+            ['transaction_journals.*']
+        );
+        $count        = $category->transactionJournals()->count();
+
+        $journals = new LengthAwarePaginator($set, $count, 50, $page);
+
+        return view('categories.show', compact('category', 'journals', 'hideCategory'));
     }
 
     /**

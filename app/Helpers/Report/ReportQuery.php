@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 22/02/15
- * Time: 18:30
- */
 
 namespace FireflyIII\Helpers\Report;
 
@@ -29,26 +23,33 @@ class ReportQuery implements ReportQueryInterface
     /**
      * This query retrieves a list of accounts that are active and not shared.
      *
+     * @param bool $showSharedReports
+     *
      * @return Collection
      */
-    public function accountList()
+    public function accountList($showSharedReports = false)
     {
-        return Auth::user()->accounts()
-                   ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                   ->leftJoin(
-                       'account_meta', function (JoinClause $join) {
-                       $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', "accountRole");
-                   }
-                   )
-                   ->whereIn('account_types.type', ['Default account', 'Cash account', 'Asset account'])
-                   ->where('active', 1)
-                   ->where(
-                       function (Builder $query) {
-                           $query->where('account_meta.data', '!=', '"sharedExpense"');
-                           $query->orWhereNull('account_meta.data');
-                       }
-                   )
-                   ->get(['accounts.*']);
+        $query = Auth::user()->accounts();
+        if ($showSharedReports === false) {
+
+            $query->leftJoin(
+                'account_meta', function (JoinClause $join) {
+                $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', "accountRole");
+            }
+            )->where(
+                function (Builder $query) {
+                    $query->where('account_meta.data', '!=', '"sharedAsset"');
+                    $query->orWhereNull('account_meta.data');
+                }
+            );
+
+        }
+        $query->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+              ->whereIn('account_types.type', ['Default account', 'Cash account', 'Asset account'])
+              ->where('active', 1)
+              ->orderBy('accounts.name', 'ASC');
+
+        return $query->get(['accounts.*']);
     }
 
     /**
@@ -82,19 +83,37 @@ class ReportQuery implements ReportQueryInterface
                                  ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'otherJournals.id')
                                  ->before($end)->after($start)
                                  ->where('transaction_types.type', 'Withdrawal')
-                                 ->where('transaction_journals.user_id', \Auth::user()->id)
+                                 ->where('transaction_journals.user_id', Auth::user()->id)
                                  ->whereNull('budget_transaction_journal.budget_id')->whereNull('transaction_journals.deleted_at')
                                  ->whereNull('otherJournals.deleted_at')
                                  ->where('transactions.account_id', $account->id)
                                  ->whereNotNull('transaction_group_transaction_journal.transaction_group_id')
-                                 ->first(
+                                 ->get(
                                      [
-                                         DB::Raw('SUM(`transactions`.`amount`) as `amount`')
+                                         'transaction_journals.*',
+                                         'transactions.amount'
                                      ]
                                  );
+
+        return $set;
+    }
+
+    /**
+     * This method will get the sum of all expenses in a certain time period that have no budget
+     * and are balanced by a transfer to make up for it.
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return Collection
+     */
+    public function balancedTransactionsSum(Account $account, Carbon $start, Carbon $end)
+    {
+        $set = $this->balancedTransactionsList($account, $start, $end);
         $sum = 0;
-        if (!is_null($set)) {
-            $sum = floatval($set->amount);
+        foreach ($set as $entry) {
+            $sum += floatval($entry->amount);
         }
 
         return $sum;
@@ -105,25 +124,31 @@ class ReportQuery implements ReportQueryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
+     * @param bool   $showSharedReports
      *
      * @return Collection
      */
-    public function getAllAccounts(Carbon $start, Carbon $end)
+    public function getAllAccounts(Carbon $start, Carbon $end, $showSharedReports = false)
     {
-        $set = Auth::user()->accounts()->orderBy('accounts.name', 'ASC')
-                   ->accountTypeIn(['Default account', 'Asset account', 'Cash account'])
-                   ->leftJoin(
-                       'account_meta', function (JoinClause $join) {
-                       $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
-                   }
-                   )
-                   ->where(
-                       function (Builder $query) {
-                           $query->where('account_meta.data', '!=', '"sharedExpense"');
-                           $query->orWhereNull('account_meta.data');
-                       }
-                   )
-                   ->get(['accounts.*']);
+        $query = Auth::user()->accounts()->orderBy('accounts.name', 'ASC')
+                     ->accountTypeIn(['Default account', 'Asset account', 'Cash account']);
+        if ($showSharedReports === false) {
+            $query->leftJoin(
+                'account_meta', function (JoinClause $join) {
+                $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
+            }
+            )
+                  ->orderBy('accounts.name', 'ASC')
+                  ->where(
+                      function (Builder $query) use ($showSharedReports) {
+
+                          $query->where('account_meta.data', '!=', '"sharedAsset"');
+                          $query->orWhereNull('account_meta.data');
+
+                      }
+                  );
+        }
+        $set = $query->get(['accounts.*']);
         $set->each(
             function (Account $account) use ($start, $end) {
                 /** @noinspection PhpParamsInspection */
@@ -167,7 +192,40 @@ class ReportQuery implements ReportQueryInterface
 
         return $set;
 
+    }
 
+    /**
+     * Get a list of transaction journals that have no budget, filtered for the specified account
+     * and the specified date range.
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return Collection
+     */
+    public function getTransactionsWithoutBudget(Account $account, Carbon $start, Carbon $end)
+    {
+        $set = TransactionJournal::
+        leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
+                                 ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                 ->leftJoin(
+                                     'transactions', function (JoinClause $join) {
+                                     $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
+                                 }
+                                 )
+                                 ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                                 ->before($end)
+                                 ->after($start)
+                                 ->where('accounts.id', $account->id)
+                                 ->where('transaction_journals.user_id', Auth::user()->id)
+                                 ->where('transaction_types.type', 'Withdrawal')
+                                 ->whereNull('budgets.id')
+                                 ->orderBy('transaction_journals.date', 'ASC')
+                                 ->get(['budgets.name', 'transactions.amount', 'transaction_journals.*']);
+
+        return $set;
     }
 
     /**
@@ -177,62 +235,73 @@ class ReportQuery implements ReportQueryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
+     * @param bool   $showSharedReports
      *
      * @return Collection
      */
-    public function incomeByPeriod(Carbon $start, Carbon $end)
+    public function incomeByPeriod(Carbon $start, Carbon $end, $showSharedReports = false)
     {
-        return TransactionJournal::
+        $query = TransactionJournal::
         leftJoin(
             'transactions as t_from', function (JoinClause $join) {
             $join->on('t_from.transaction_journal_id', '=', 'transaction_journals.id')->where('t_from.amount', '<', 0);
         }
         )
-                                 ->leftJoin('accounts as ac_from', 't_from.account_id', '=', 'ac_from.id')
-                                 ->leftJoin(
-                                     'account_meta as acm_from', function (JoinClause $join) {
-                                     $join->on('ac_from.id', '=', 'acm_from.account_id')->where('acm_from.name', '=', 'accountRole');
-                                 }
-                                 )
-                                 ->leftJoin(
-                                     'transactions as t_to', function (JoinClause $join) {
-                                     $join->on('t_to.transaction_journal_id', '=', 'transaction_journals.id')->where('t_to.amount', '>', 0);
-                                 }
-                                 )
-                                 ->leftJoin('accounts as ac_to', 't_to.account_id', '=', 'ac_to.id')
-                                 ->leftJoin(
-                                     'account_meta as acm_to', function (JoinClause $join) {
-                                     $join->on('ac_to.id', '=', 'acm_to.account_id')->where('acm_to.name', '=', 'accountRole');
-                                 }
-                                 )
-                                 ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                 ->where(
-                                     function ($query) {
-                                         $query->where(
-                                             function ($q) {
-                                                 $q->where('transaction_types.type', 'Deposit');
-                                                 $q->where('acm_to.data', '!=', '"sharedExpense"');
-                                             }
-                                         );
-                                         $query->orWhere(
-                                             function ($q) {
-                                                 $q->where('transaction_types.type', 'Transfer');
-                                                 $q->where('acm_from.data', '=', '"sharedExpense"');
-                                             }
-                                         );
-                                     }
-                                 )
-                                 ->before($end)->after($start)
-                                 ->where('transaction_journals.user_id', Auth::user()->id)
-                                 ->groupBy('t_from.account_id')->orderBy('transaction_journals.date')
-                                 ->get(
-                                     ['transaction_journals.id',
-                                      'transaction_journals.description',
-                                      'transaction_journals.encrypted',
-                                      'transaction_types.type',
-                                      't_to.amount', 'transaction_journals.date', 't_from.account_id as account_id',
-                                      'ac_from.name as name']
-                                 );
+                                   ->leftJoin('accounts as ac_from', 't_from.account_id', '=', 'ac_from.id')
+                                   ->leftJoin(
+                                       'account_meta as acm_from', function (JoinClause $join) {
+                                       $join->on('ac_from.id', '=', 'acm_from.account_id')->where('acm_from.name', '=', 'accountRole');
+                                   }
+                                   )
+                                   ->leftJoin(
+                                       'transactions as t_to', function (JoinClause $join) {
+                                       $join->on('t_to.transaction_journal_id', '=', 'transaction_journals.id')->where('t_to.amount', '>', 0);
+                                   }
+                                   )
+                                   ->leftJoin('accounts as ac_to', 't_to.account_id', '=', 'ac_to.id')
+                                   ->leftJoin(
+                                       'account_meta as acm_to', function (JoinClause $join) {
+                                       $join->on('ac_to.id', '=', 'acm_to.account_id')->where('acm_to.name', '=', 'accountRole');
+                                   }
+                                   )
+                                   ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
+        if ($showSharedReports === false) {
+            // only get deposits not to a shared account
+            // and transfers to a shared account.
+            $query->where(
+                function ($query) {
+                    $query->where(
+                        function ($q) {
+                            $q->where('transaction_types.type', 'Deposit');
+                            $q->where('acm_to.data', '!=', '"sharedAsset"');
+                        }
+                    );
+                    $query->orWhere(
+                        function ($q) {
+                            $q->where('transaction_types.type', 'Transfer');
+                            $q->where('acm_from.data', '=', '"sharedAsset"');
+                        }
+                    );
+                }
+            );
+        } else {
+            // any deposit is fine.
+            $query->where('transaction_types.type', 'Deposit');
+        }
+        $query->before($end)->after($start)
+              ->where('transaction_journals.user_id', Auth::user()->id)
+              ->groupBy('t_from.account_id')->orderBy('transaction_journals.date');
+
+        return $query->get(
+            ['transaction_journals.id',
+             'transaction_journals.description',
+             'transaction_journals.encrypted',
+             'transaction_types.type',
+             DB::Raw('SUM(`t_to`.`amount`) as `amount`'),
+             'transaction_journals.date',
+             't_from.account_id as account_id',
+             'ac_from.name as name']
+        );
     }
 
     /**
@@ -240,33 +309,37 @@ class ReportQuery implements ReportQueryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
+     * @param bool   $showSharedReports
      *
      * @return Collection
      */
-    public function journalsByBudget(Carbon $start, Carbon $end)
+    public function journalsByBudget(Carbon $start, Carbon $end, $showSharedReports = false)
     {
-        return Auth::user()->transactionjournals()
-                   ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                   ->leftJoin('budgets', 'budget_transaction_journal.budget_id', '=', 'budgets.id')
-                   ->leftJoin(
-                       'transactions', function (JoinClause $join) {
-                       $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
-                   }
-                   )
-                   ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                   ->leftJoin(
-                       'account_meta', function (JoinClause $join) {
-                       $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
-                   }
-                   )
-                   ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
-                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                   ->where('account_meta.data', '!=', '"sharedExpense"')
-                   ->where('transaction_types.type', 'Withdrawal')
-                   ->groupBy('budgets.id')
-                   ->orderBy('budgets.name', 'ASC')
-                   ->get(['budgets.id', 'budgets.name', DB::Raw('SUM(`transactions`.`amount`) AS `spent`')]);
+        $query = Auth::user()->transactionjournals()
+                     ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                     ->leftJoin('budgets', 'budget_transaction_journal.budget_id', '=', 'budgets.id')
+                     ->leftJoin(
+                         'transactions', function (JoinClause $join) {
+                         $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
+                     }
+                     )
+                     ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id');
+        if ($showSharedReports === false) {
+
+            $query->leftJoin(
+                'account_meta', function (JoinClause $join) {
+                $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
+            }
+            )->where('account_meta.data', '!=', '"sharedAsset"');
+        }
+        $query->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
+              ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+              ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+              ->where('transaction_types.type', 'Withdrawal')
+              ->groupBy('budgets.id')
+              ->orderBy('budgets.name', 'ASC');
+
+        return $query->get(['budgets.id', 'budgets.name', DB::Raw('SUM(`transactions`.`amount`) AS `spent`')]);
     }
 
     /**
@@ -275,35 +348,38 @@ class ReportQuery implements ReportQueryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
+     * @param bool   $showSharedReports
      *
      * @return Collection
      */
-    public function journalsByCategory(Carbon $start, Carbon $end)
+    public function journalsByCategory(Carbon $start, Carbon $end, $showSharedReports = false)
     {
-        return Auth::user()->transactionjournals()
-                   ->leftJoin(
-                       'category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
-                   )
-                   ->leftJoin('categories', 'category_transaction_journal.category_id', '=', 'categories.id')
-                   ->leftJoin(
-                       'transactions', function (JoinClause $join) {
-                       $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
-                   }
-                   )
-                   ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                   ->leftJoin(
-                       'account_meta', function (JoinClause $join) {
-                       $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
-                   }
-                   )
-                   ->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
-                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                   ->where('account_meta.data', '!=', '"sharedExpense"')
-                   ->where('transaction_types.type', 'Withdrawal')
-                   ->groupBy('categories.id')
-                   ->orderBy('amount')
-                   ->get(['categories.id', 'categories.name', DB::Raw('SUM(`transactions`.`amount`) AS `amount`')]);
+        $query = Auth::user()->transactionjournals()
+                     ->leftJoin(
+                         'category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
+                     )
+                     ->leftJoin('categories', 'category_transaction_journal.category_id', '=', 'categories.id')
+                     ->leftJoin(
+                         'transactions', function (JoinClause $join) {
+                         $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('transactions.amount', '<', 0);
+                     }
+                     )
+                     ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id');
+        if ($showSharedReports === false) {
+            $query->leftJoin(
+                'account_meta', function (JoinClause $join) {
+                $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
+            }
+            )->where('account_meta.data', '!=', '"sharedAsset"');
+        }
+        $query->leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
+              ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+              ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+              ->where('transaction_types.type', 'Withdrawal')
+              ->groupBy('categories.id')
+              ->orderBy('amount');
+
+        return $query->get(['categories.id', 'categories.name', DB::Raw('SUM(`transactions`.`amount`) AS `amount`')]);
 
     }
 
@@ -315,57 +391,65 @@ class ReportQuery implements ReportQueryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
+     * @param bool   $showSharedReports
      *
      * @return Collection
      */
-    public function journalsByExpenseAccount(Carbon $start, Carbon $end)
+    public function journalsByExpenseAccount(Carbon $start, Carbon $end, $showSharedReports = false)
     {
-        return TransactionJournal::
-        leftJoin(
+        $query = TransactionJournal::leftJoin(
             'transactions as t_from', function (JoinClause $join) {
             $join->on('t_from.transaction_journal_id', '=', 'transaction_journals.id')->where('t_from.amount', '<', 0);
         }
-        )
-                                 ->leftJoin('accounts as ac_from', 't_from.account_id', '=', 'ac_from.id')
-                                 ->leftJoin(
-                                     'account_meta as acm_from', function (JoinClause $join) {
-                                     $join->on('ac_from.id', '=', 'acm_from.account_id')->where('acm_from.name', '=', 'accountRole');
-                                 }
-                                 )
-                                 ->leftJoin(
-                                     'transactions as t_to', function (JoinClause $join) {
-                                     $join->on('t_to.transaction_journal_id', '=', 'transaction_journals.id')->where('t_to.amount', '>', 0);
-                                 }
-                                 )
-                                 ->leftJoin('accounts as ac_to', 't_to.account_id', '=', 'ac_to.id')
-                                 ->leftJoin(
-                                     'account_meta as acm_to', function (JoinClause $join) {
-                                     $join->on('ac_to.id', '=', 'acm_to.account_id')->where('acm_to.name', '=', 'accountRole');
-                                 }
-                                 )
-                                 ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                 ->where(
-                                     function ($query) {
-                                         $query->where(
-                                             function ($q) {
-                                                 $q->where('transaction_types.type', 'Withdrawal');
-                                                 $q->where('acm_from.data', '!=', '"sharedExpense"');
-                                             }
-                                         );
-                                         $query->orWhere(
-                                             function ($q) {
-                                                 $q->where('transaction_types.type', 'Transfer');
-                                                 $q->where('acm_to.data', '=', '"sharedExpense"');
-                                             }
-                                         );
-                                     }
-                                 )
-                                 ->before($end)
-                                 ->after($start)
-                                 ->where('transaction_journals.user_id', Auth::user()->id)
-                                 ->groupBy('t_to.account_id')
-                                 ->orderBy('amount', 'DESC')
-                                 ->get(['t_to.account_id as id', 'ac_to.name as name', DB::Raw('SUM(t_to.amount) as `amount`')]);
+        )->leftJoin('accounts as ac_from', 't_from.account_id', '=', 'ac_from.id')
+                                   ->leftJoin(
+                                       'account_meta as acm_from', function (JoinClause $join) {
+                                       $join->on('ac_from.id', '=', 'acm_from.account_id')->where('acm_from.name', '=', 'accountRole');
+                                   }
+                                   )
+                                   ->leftJoin(
+                                       'transactions as t_to', function (JoinClause $join) {
+                                       $join->on('t_to.transaction_journal_id', '=', 'transaction_journals.id')->where('t_to.amount', '>', 0);
+                                   }
+                                   )
+                                   ->leftJoin('accounts as ac_to', 't_to.account_id', '=', 'ac_to.id')
+                                   ->leftJoin(
+                                       'account_meta as acm_to', function (JoinClause $join) {
+                                       $join->on('ac_to.id', '=', 'acm_to.account_id')->where('acm_to.name', '=', 'accountRole');
+                                   }
+                                   )
+                                   ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
+
+        if ($showSharedReports === false) {
+            // get all withdrawals not from a shared accounts
+            // and all transfers to a shared account
+            $query->where(
+                function ($query) {
+                    $query->where(
+                        function ($q) {
+                            $q->where('transaction_types.type', 'Withdrawal');
+                            $q->where('acm_from.data', '!=', '"sharedAsset"');
+                        }
+                    );
+                    $query->orWhere(
+                        function ($q) {
+                            $q->where('transaction_types.type', 'Transfer');
+                            $q->where('acm_to.data', '=', '"sharedAsset"');
+                        }
+                    );
+                }
+            );
+        } else {
+            // any withdrawal goes:
+            $query->where('transaction_types.type', 'Withdrawal');
+        }
+        $query->before($end)
+              ->after($start)
+              ->where('transaction_journals.user_id', Auth::user()->id)
+              ->groupBy('t_to.account_id')
+              ->orderBy('amount', 'DESC');
+
+        return $query->get(['t_to.account_id as id', 'ac_to.name as name', DB::Raw('SUM(t_to.amount) as `amount`')]);
     }
 
     /**
@@ -373,55 +457,65 @@ class ReportQuery implements ReportQueryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
+     * @param bool   $showSharedReports
      *
      * @return Collection
      */
-    public function journalsByRevenueAccount(Carbon $start, Carbon $end)
+    public function journalsByRevenueAccount(Carbon $start, Carbon $end, $showSharedReports = false)
     {
-        return TransactionJournal::
+        $query = TransactionJournal::
         leftJoin(
             'transactions as t_from', function (JoinClause $join) {
             $join->on('t_from.transaction_journal_id', '=', 'transaction_journals.id')->where('t_from.amount', '<', 0);
         }
         )
-                                 ->leftJoin('accounts as ac_from', 't_from.account_id', '=', 'ac_from.id')
-                                 ->leftJoin(
-                                     'account_meta as acm_from', function (JoinClause $join) {
-                                     $join->on('ac_from.id', '=', 'acm_from.account_id')->where('acm_from.name', '=', 'accountRole');
-                                 }
-                                 )
-                                 ->leftJoin(
-                                     'transactions as t_to', function (JoinClause $join) {
-                                     $join->on('t_to.transaction_journal_id', '=', 'transaction_journals.id')->where('t_to.amount', '>', 0);
-                                 }
-                                 )
-                                 ->leftJoin('accounts as ac_to', 't_to.account_id', '=', 'ac_to.id')
-                                 ->leftJoin(
-                                     'account_meta as acm_to', function (JoinClause $join) {
-                                     $join->on('ac_to.id', '=', 'acm_to.account_id')->where('acm_to.name', '=', 'accountRole');
-                                 }
-                                 )
-                                 ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                 ->where(
-                                     function ($query) {
-                                         $query->where(
-                                             function ($q) {
-                                                 $q->where('transaction_types.type', 'Deposit');
-                                                 $q->where('acm_to.data', '!=', '"sharedExpense"');
-                                             }
-                                         );
-                                         $query->orWhere(
-                                             function ($q) {
-                                                 $q->where('transaction_types.type', 'Transfer');
-                                                 $q->where('acm_from.data', '=', '"sharedExpense"');
-                                             }
-                                         );
-                                     }
-                                 )
-                                 ->before($end)->after($start)
-                                 ->where('transaction_journals.user_id', Auth::user()->id)
-                                 ->groupBy('t_from.account_id')->orderBy('amount')
-                                 ->get(['t_from.account_id as account_id', 'ac_from.name as name', DB::Raw('SUM(t_from.amount) as `amount`')]);
+                                   ->leftJoin('accounts as ac_from', 't_from.account_id', '=', 'ac_from.id')
+                                   ->leftJoin(
+                                       'account_meta as acm_from', function (JoinClause $join) {
+                                       $join->on('ac_from.id', '=', 'acm_from.account_id')->where('acm_from.name', '=', 'accountRole');
+                                   }
+                                   )
+                                   ->leftJoin(
+                                       'transactions as t_to', function (JoinClause $join) {
+                                       $join->on('t_to.transaction_journal_id', '=', 'transaction_journals.id')->where('t_to.amount', '>', 0);
+                                   }
+                                   )
+                                   ->leftJoin('accounts as ac_to', 't_to.account_id', '=', 'ac_to.id')
+                                   ->leftJoin(
+                                       'account_meta as acm_to', function (JoinClause $join) {
+                                       $join->on('ac_to.id', '=', 'acm_to.account_id')->where('acm_to.name', '=', 'accountRole');
+                                   }
+                                   )
+                                   ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
+        if ($showSharedReports === false) {
+
+            // show queries where transfer type is deposit, and its not to a shared account
+            // or where its a transfer and its from a shared account (both count as incomes)
+            $query->where(
+                function ($query) {
+                    $query->where(
+                        function ($q) {
+                            $q->where('transaction_types.type', 'Deposit');
+                            $q->where('acm_to.data', '!=', '"sharedAsset"');
+                        }
+                    );
+                    $query->orWhere(
+                        function ($q) {
+                            $q->where('transaction_types.type', 'Transfer');
+                            $q->where('acm_from.data', '=', '"sharedAsset"');
+                        }
+                    );
+                }
+            );
+        } else {
+            // any deposit goes:
+            $query->where('transaction_types.type', 'Deposit');
+        }
+        $query->before($end)->after($start)
+              ->where('transaction_journals.user_id', Auth::user()->id)
+              ->groupBy('t_from.account_id')->orderBy('amount');
+
+        return $query->get(['t_from.account_id as account_id', 'ac_from.name as name', DB::Raw('SUM(t_from.amount) as `amount`')]);
     }
 
     /**
@@ -450,7 +544,7 @@ class ReportQuery implements ReportQueryInterface
                                      $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
                                  }
                                  )
-                                 ->where('account_meta.data', '"sharedExpense"')
+                                 ->where('account_meta.data', '"sharedAsset"')
                                  ->after($start)
                                  ->before($end)
                                  ->where('transaction_types.type', 'Transfer')
@@ -492,7 +586,7 @@ class ReportQuery implements ReportQueryInterface
                                      'category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
                                  )
                                  ->leftJoin('categories', 'category_transaction_journal.category_id', '=', 'categories.id')
-                                 ->where('account_meta.data', '"sharedExpense"')
+                                 ->where('account_meta.data', '"sharedAsset"')
                                  ->after($start)
                                  ->before($end)
                                  ->where('transaction_types.type', 'Transfer')

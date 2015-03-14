@@ -1,17 +1,19 @@
 <?php namespace FireflyIII\Providers;
 
+use App;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Bill;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Facades\Navigation;
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-
+use Log;
 
 /**
  * Class EventServiceProvider
@@ -28,12 +30,14 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen
         = [
-            'event.name'                => [
-                'EventListener',
+            'FireflyIII\Events\JournalSaved' => [
+                'FireflyIII\Handlers\Events\RescanJournal',
+                'FireflyIII\Handlers\Events\UpdateJournalConnection',
+
             ],
-            'App\Events\JournalDeleted' => [
-                'App\Handlers\Events\JournalDeletedHandler@handle',
-            ],
+            'FireflyIII\Events\JournalCreated' => [
+                'FireflyIII\Handlers\Events\ConnectJournalToPiggyBank',
+            ]
         ];
 
     /**
@@ -57,6 +61,8 @@ class EventServiceProvider extends ServiceProvider
             }
         );
 
+
+
         Account::deleted(
             function (Account $account) {
 
@@ -68,14 +74,16 @@ class EventServiceProvider extends ServiceProvider
             }
         );
 
-        PiggyBank::created(function(PiggyBank $piggyBank) {
+        PiggyBank::created(
+            function (PiggyBank $piggyBank) {
                 $repetition = new PiggyBankRepetition;
                 $repetition->piggyBank()->associate($piggyBank);
-                $repetition->startdate     = $piggyBank->startdate;
-                $repetition->targetdate    = $piggyBank->targetdate;
+                $repetition->startdate     = is_null($piggyBank->startdate) ? null : $piggyBank->startdate;
+                $repetition->targetdate    = is_null($piggyBank->targetdate) ? null : $piggyBank->targetdate;
                 $repetition->currentamount = 0;
                 $repetition->save();
-        });
+            }
+        );
 
         BudgetLimit::saved(
             function (BudgetLimit $budgetLimit) {

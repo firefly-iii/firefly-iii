@@ -2,9 +2,19 @@
 @section('content')
 {!! Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName()) !!}
 <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <p>
+            <a href="#" class="btn btn-default" id="includeShared" style="display:none;">
+                <i class="state-icon glyphicon glyphicon-unchecked"></i>
+                Include shared asset accounts</a>
+        </p>
+    </div>
+</div>
+<div class="row">
  <div class="col-lg-4 col-md-4 col-sm-4">
     <div class="panel panel-default">
         <div class="panel-heading">
+            <i class="fa fa-calendar fa-fw"></i>
             Yearly reports
         </div>
         <div class="panel-body">
@@ -20,14 +30,20 @@
     <div class="col-lg-4 col-md-4 col-sm-4">
         <div class="panel panel-default">
             <div class="panel-heading">
+                <i class="fa fa-calendar fa-fw"></i>
                 Monthly reports
             </div>
             <div class="panel-body">
-                <ul>
-                    @foreach($months as $month)
-                        <li><a href="{{route('reports.month',[$month['year'],$month['month']])}}">{{$month['formatted']}}</a></li>
+
+                    @foreach($months as $year => $entries)
+                        <h5>{{$year}}</h5>
+                        <ul>
+                            @foreach($entries as $month)
+                                <li><a href="{{route('reports.month',[$month['year'],$month['month']])}}">{{$month['formatted']}}</a></li>
+                            @endforeach
+                        </ul>
                     @endforeach
-                </ul>
+
             </div>
         </div>
     </div>
@@ -35,16 +51,23 @@
     <div class="col-lg-4 col-md-4 col-sm-4">
         <div class="panel panel-default">
             <div class="panel-heading">
+                <i class="fa fa-calendar fa-fw"></i>
                 Budget reports
             </div>
             <div class="panel-body">
-                <ul>
-                    @foreach($months as $month)
-                        <li><a href="{{route('reports.budget',[$month['year'],$month['month']])}}">{{$month['formatted']}}</a></li>
+                @foreach($months as $year => $entries)
+                    <h5>{{$year}}</h5>
+                    <ul>
+                        @foreach($entries as $month)
+                            <li><a href="{{route('reports.budget',[$month['year'],$month['month']])}}">{{$month['formatted']}}</a></li>
+                        @endforeach
+                    </ul>
                     @endforeach
-                </ul>
             </div>
         </div>
     </div>
 </div>
+@stop
+@section('scripts')
+    <script type="text/javascript" src="js/reports.js"></script>
 @stop

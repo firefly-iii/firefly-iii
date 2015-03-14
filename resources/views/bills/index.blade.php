@@ -20,9 +20,7 @@
                 </div>
             </div>
         </div>
-        <div class="panel-body">
             @include('list.bills')
-        </div>
         </div>
     </div>
 </div>

@@ -8,6 +8,7 @@ use Illuminate\Support\MessageBag;
 use Input;
 use Session;
 use View;
+use Amount as Amt;
 
 /**
  * Class ExpandedForm
@@ -24,46 +25,6 @@ class ExpandedForm
      *
      * @return string
      */
-    public  function integer($name, $value = null, array $options = [])
-    {
-        $label           = $this->label($name, $options);
-        $options         = $this->expandOptionArray($name, $label, $options);
-        $classes         = $this->getHolderClasses($name);
-        $value           = $this->fillFieldValue($name, $value);
-        $options['step'] = '1';
-        $html            = \View::make('form.integer', compact('classes', 'name', 'label', 'value', 'options'))->render();
-
-        return $html;
-
-    }
-
-
-    /**
-     * @param       $name
-     * @param null  $value
-     * @param array $options
-     *
-     * @return string
-     */
-    public  function tags($name, $value = null, array $options = [])
-    {
-        $label                = $this->label($name, $options);
-        $options              = $this->expandOptionArray($name, $label, $options);
-        $classes              = $this->getHolderClasses($name);
-        $value                = $this->fillFieldValue($name, $value);
-        $options['data-role'] = 'tagsinput';
-        $html                 = \View::make('form.tags', compact('classes', 'name', 'label', 'value', 'options'))->render();
-
-        return $html;
-    }
-
-    /**
-     * @param       $name
-     * @param null  $value
-     * @param array $options
-     *
-     * @return string
-     */
     public function amount($name, $value = null, array $options = [])
     {
         $label           = $this->label($name, $options);
@@ -72,7 +33,7 @@ class ExpandedForm
         $value           = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
         $options['min']  = '0.01';
-        $defaultCurrency = isset($options['currency']) ? $options['currency'] : \Amount::getDefaultCurrency();
+        $defaultCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
         $currencies      = TransactionCurrency::orderBy('code', 'ASC')->get();
         $html            = View::make('form.amount', compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
 
@@ -91,9 +52,19 @@ class ExpandedForm
         if (isset($options['label'])) {
             return $options['label'];
         }
-        $labels = ['amount_min'      => 'Amount (min)', 'amount_max' => 'Amount (max)', 'match' => 'Matches on', 'repeat_freq' => 'Repetition',
-                   'account_from_id' => 'Account from', 'account_to_id' => 'Account to', 'account_id' => 'Asset account', 'budget_id' => 'Budget'
-                   , 'piggy_bank_id' => 'Piggy bank'];
+        $labels = [
+            'amount_min'         => 'Amount (min)',
+            'amount_max'         => 'Amount (max)',
+            'match'              => 'Matches on',
+            'repeat_freq'        => 'Repetition',
+            'account_from_id'    => 'Account from',
+            'account_to_id'      => 'Account to',
+            'account_id'         => 'Asset account',
+            'budget_id'          => 'Budget',
+            'openingBalance'     => 'Opening balance',
+            'accountRole'        => 'Account role',
+            'openingBalanceDate' => 'Opening balance date',
+            'piggy_bank_id'      => 'Piggy bank'];
 
 
         return isset($labels[$name]) ? $labels[$name] : str_replace('_', ' ', ucfirst($name));
@@ -157,7 +128,7 @@ class ExpandedForm
     public function fillFieldValue($name, $value)
     {
         if (Session::has('preFilled')) {
-            $preFilled = \Session::get('preFilled');
+            $preFilled = Session::get('preFilled');
             $value     = isset($preFilled[$name]) && is_null($value) ? $preFilled[$name] : $value;
         }
         if (!is_null(Input::old($name))) {
@@ -181,7 +152,7 @@ class ExpandedForm
         $classes         = $this->getHolderClasses($name);
         $value           = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
-        $defaultCurrency = isset($options['currency']) ? $options['currency'] : Amount::getDefaultCurrency();
+        $defaultCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
         $currencies      = TransactionCurrency::orderBy('code', 'ASC')->get();
         $html            = View::make('form.balance', compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
 
@@ -230,6 +201,26 @@ class ExpandedForm
     }
 
     /**
+     * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     */
+    public function integer($name, $value = null, array $options = [])
+    {
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
+        $options['step'] = '1';
+        $html            = View::make('form.integer', compact('classes', 'name', 'label', 'value', 'options'))->render();
+
+        return $html;
+
+    }
+
+    /**
      * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
      *
      * Takes any collection and tries to make a sensible select list compatible array of it.
@@ -246,7 +237,7 @@ class ExpandedForm
             $selectList[0] = '(none)';
         }
         $fields = ['title', 'name', 'description'];
-        /** @var \Eloquent $entry */
+        /** @var Eloquent $entry */
         foreach ($set as $entry) {
             $id    = intval($entry->id);
             $title = null;
@@ -270,9 +261,9 @@ class ExpandedForm
      */
     public function optionsList($type, $name)
     {
-        $previousValue = \Input::old('post_submit_action');
+        $previousValue = Input::old('post_submit_action');
         $previousValue = is_null($previousValue) ? 'store' : $previousValue;
-        $html          = \View::make('form.options', compact('type', 'name', 'previousValue'))->render();
+        $html          = View::make('form.options', compact('type', 'name', 'previousValue'))->render();
 
         return $html;
     }
@@ -291,7 +282,26 @@ class ExpandedForm
         $options  = $this->expandOptionArray($name, $label, $options);
         $classes  = $this->getHolderClasses($name);
         $selected = $this->fillFieldValue($name, $selected);
-        $html     = \View::make('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
+        $html     = View::make('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
+
+        return $html;
+    }
+
+    /**
+     * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     */
+    public function tags($name, $value = null, array $options = [])
+    {
+        $label                = $this->label($name, $options);
+        $options              = $this->expandOptionArray($name, $label, $options);
+        $classes              = $this->getHolderClasses($name);
+        $value                = $this->fillFieldValue($name, $value);
+        $options['data-role'] = 'tagsinput';
+        $html                 = View::make('form.tags', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
     }

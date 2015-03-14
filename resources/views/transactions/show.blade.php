@@ -5,17 +5,13 @@
     <div class="col-lg-6 col-md-6 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">
+                <i class="fa fa-info-circle fa-fw"></i>
                 Metadata
             </div>
-            <div class="panel-body">
                 <table class="table table-striped table-bordered">
                     <tr>
                         <td>Date</td>
                         <td>{{{$journal->date->format('jS F Y')}}}</td>
-                    </tr>
-                    <tr>
-                        <td>Currency</td>
-                        <td>{{{$journal->transactioncurrency->code}}}</td>
                     </tr>
                     <tr>
                         <td>Type</td>
@@ -33,19 +29,18 @@
                     </tr>
                     @foreach($journal->budgets()->get() as $budget)
                                     <tr>
-                                        <td>{{$budget->class}}</td>
+                                        <td>Budget</td>
                                         <td><a href="{{route('budgets.show',$budget->id)}}">{{{$budget->name}}}</a></td>
                                     </tr>
                     @endforeach
                     @foreach($journal->categories()->get() as $category)
                         <tr>
-                            <td>{{$category->class}}</td>
+                            <td>Category</td>
                             <td><a href="{{route('categories.show',$category->id)}}">{{{$category->name}}}</a></td>
                         </tr>
                     @endforeach
 
                 </table>
-            </div>
         </div>
         <!-- events, if present -->
         @if(count($journal->piggyBankEvents) > 0)
@@ -60,28 +55,38 @@
         @endif
         <div class="panel panel-default">
             <div class="panel-heading">
+                <i class="fa fa-fw fa-exchange"></i>
                 Related transactions
             </div>
-                @if($members->count() == 0)
-                    <div class="panel-body">
-                        <p>
-                            <em>No related transactions</em>
-                        </p>
-                    </div>
-                @else
-                    <table class="table">
-                    @foreach($members as $jrnl)
+            @if($journal->transactiongroups()->count() == 0)
+                <div class="panel-body">
+                    <p>
+                        <em>No related transactions</em>
+                    </p>
+                </div>
+            @else
+                <table class="table">
+                    @foreach($journal->transactiongroups()->get() as $group)
                         <tr>
-                            <td><input type="checkbox" checked="checked" data-relatedto="{{$journal->id}}" data-id="{{$jrnl->id}}" class="unrelate-checkbox" /></td>
-                            <td><a href="#">{{{$jrnl->description}}}</a></td>
-
-                            <td>
-                                @foreach($jrnl->transactions()->get() as $t)
-                                    @if($t->amount > 0)
-                                        {!! Amount::formatTransaction($t) !!}
-                                    @endif
-                                @endforeach
-                            </td>
+                            <th colspan="2">Group #{{$group->id}} ({{$group->relation}})</th>
+                        </tr>
+                            @foreach($group->transactionjournals()->where('transaction_journals.id','!=',$journal->id)->get() as $jrnl)
+                                <tr>
+                                    <td>
+                                        <a href="{{route('related.getRemoveRelation',[$journal->id, $jrnl->id])}}" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span></a>
+                                    </td>
+                                    <td>
+                                        <a href="{{route('transactions.show',$jrnl->id)}}">{{{$jrnl->description}}}</a>
+                                    </td>
+                                    <td>
+                                        @foreach($jrnl->transactions()->get() as $t)
+                                            @if($t->amount > 0)
+                                                {!! Amount::formatTransaction($t) !!}
+                                            @endif
+                                        @endforeach
+                                    </td>
+                                </tr>
+                            @endforeach
                         </tr>
                     @endforeach
                     </table>
@@ -98,9 +103,24 @@
     @foreach($journal->transactions as $t)
         <div class="panel panel-default">
             <div class="panel-heading">
+                @if($t->account->accounttype->type == 'Asset account')
+                    <i class="fa fa-money fa-fw"></i>
+                @endif
+                @if($t->account->accounttype->type == 'Default account')
+                    <i class="fa fa-money fa-fw"></i>
+                @endif
+                @if($t->account->accounttype->type == 'Expense account')
+                    <i class="fa fa-shopping-cart fa-fw"></i>
+                @endif
+                @if($t->account->accounttype->type == 'Beneficiary account')
+                    <i class="fa fa-shopping-cart fa-fw"></i>
+                @endif
+
+                @if($t->account->accounttype->type == 'Revenue account')
+                    <i class="fa fa-download fa-fw"></i>
+                @endif
                 <a href="{{route('accounts.show',$t->account->id)}}">{{{$t->account->name}}}</a><br /><small>{{{$t->account->accounttype->description}}}</small>
             </div>
-            <div class="panel-body">
                 <table class="table table-striped table-bordered">
                     <tr>
                         <td>Amount</td>
@@ -117,7 +137,6 @@
                     </tr>
                     @endif
                 </table>
-            </div>
         </div>
     @endforeach
     </div>

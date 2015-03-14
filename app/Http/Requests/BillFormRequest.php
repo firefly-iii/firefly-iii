@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 25/02/15
- * Time: 12:29
- */
 
 namespace FireflyIII\Http\Requests;
 
@@ -33,8 +27,8 @@ class BillFormRequest extends Request
     public function rules()
     {
         $nameRule = 'required|between:1,255|uniqueForUser:bills,name';
-        if(intval(Input::get('id')) > 0) {
-            $nameRule .= ','.intval(Input::get('id'));
+        if (intval(Input::get('id')) > 0) {
+            $nameRule = 'required|between:1,255';
         }
 
         $rules = [

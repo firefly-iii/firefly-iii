@@ -1,3 +1,5 @@
+{{--
+
 <div class="panel panel-default">
     <div class="panel-heading">
         <i class="fa fa-clock-o fa-fw"></i>
@@ -26,3 +28,4 @@
         </div>
     </div>
 </div>
+--}}

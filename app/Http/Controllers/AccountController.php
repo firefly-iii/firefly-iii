@@ -1,6 +1,5 @@
 <?php namespace FireflyIII\Http\Controllers;
 
-use App;
 use Auth;
 use Carbon\Carbon;
 use Config;
@@ -8,9 +7,11 @@ use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Input;
 use Redirect;
 use Session;
+use Steam;
 use View;
 
 /**
@@ -74,6 +75,12 @@ class AccountController extends Controller
         return Redirect::route('accounts.index', $typeName);
     }
 
+    /**
+     * @param Account                    $account
+     * @param AccountRepositoryInterface $repository
+     *
+     * @return View
+     */
     public function edit(Account $account, AccountRepositoryInterface $repository)
     {
         $what           = Config::get('firefly.shortNamesByFullName')[$account->accountType->type];
@@ -110,29 +117,59 @@ class AccountController extends Controller
         $subTitle     = Config::get('firefly.subTitlesByIdentifier.' . $what);
         $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
         $types        = Config::get('firefly.accountTypesByIdentifier.' . $what);
-        $accounts     = Auth::user()->accounts()->accountTypeIn($types)->get(['accounts.*']);
+        $size         = 50;
+        $page         = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
+        $offset       = ($page - 1) * $size;
+
+
+        // move to repository:
+        $set   = Auth::user()->accounts()->with(
+            ['accountmeta' => function ($query) {
+                $query->where('name', 'accountRole');
+            }]
+        )->accountTypeIn($types)->take($size)->offset($offset)->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
+        $total = Auth::user()->accounts()->accountTypeIn($types)->count();
+
+        // last activity:
+        $start = clone Session::get('start');
+        $start->subDay();
+        $set->each(
+            function (Account $account) use ($start) {
+                $lastTransaction = $account->transactions()->leftJoin(
+                    'transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
+                )->orderBy('transaction_journals.date', 'DESC')->first(['transactions.*', 'transaction_journals.date']);
+                if ($lastTransaction) {
+                    $account->lastActivityDate = $lastTransaction->transactionjournal->date;
+                } else {
+                    $account->lastActivityDate = null;
+                }
+                $account->startBalance = Steam::balance($account, $start);
+                $account->endBalance   = Steam::balance($account, Session::get('end'));
+            }
+        );
+
+        $accounts = new LengthAwarePaginator($set, $total, $size, $page);
+        $accounts->setPath(route('accounts.index', $what));
+
 
         return view('accounts.index', compact('what', 'subTitleIcon', 'subTitle', 'accounts'));
     }
 
     /**
      * @param Account                    $account
-     * @param string                     $range
      * @param AccountRepositoryInterface $repository
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
-    public function show(Account $account, $range = 'session')
+    public function show(Account $account, AccountRepositoryInterface $repository)
     {
-        /** @var \FireflyIII\Repositories\Account\AccountRepositoryInterface $repository */
-        $repository   = App::make('FireflyIII\Repositories\Account\AccountRepositoryInterface');
         $page         = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
         $subTitleIcon = Config::get('firefly.subTitlesByIdentifier.' . $account->accountType->type);
         $what         = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
-        $journals     = $repository->getJournals($account, $page, $range);
+        $journals     = $repository->getJournals($account, $page);
         $subTitle     = 'Details for ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"';
 
-        return view('accounts.show', compact('account', 'what', 'range', 'subTitleIcon', 'journals', 'subTitle'));
+        return view('accounts.show', compact('account', 'what', 'subTitleIcon', 'journals', 'subTitle'));
     }
 
     /**
@@ -157,6 +194,10 @@ class AccountController extends Controller
         $account     = $repository->store($accountData);
 
         Session::flash('success', 'New account "' . $account->name . '" stored!');
+
+        if (intval(Input::get('create_another')) === 1) {
+            return Redirect::route('accounts.create', $request->input('what'));
+        }
 
         return Redirect::route('accounts.index', $request->input('what'));
 
@@ -185,6 +226,10 @@ class AccountController extends Controller
         $repository->update($account, $accountData);
 
         Session::flash('success', 'Account "' . $account->name . '" updated.');
+
+        if (intval(Input::get('return_to_edit')) === 1) {
+            return Redirect::route('accounts.edit', $account->id);
+        }
 
         return Redirect::route('accounts.index', $what);
 

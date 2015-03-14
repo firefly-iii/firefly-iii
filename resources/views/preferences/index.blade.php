@@ -45,10 +45,10 @@
     <div class="col-lg-6 col-md-6 col-sm-6">
         <div class="panel panel-default">
           <div class="panel-heading">
-                <i class="fa fa-clock-o fa-fw"></i> Home view range
+                <i class="fa fa-clock-o fa-fw"></i> View range
             </div>
             <div class="panel-body">
-                <p class="text-info">By default, Firefly will show you one month of data.</p>
+                <p class="text-info">Some charts are automatically grouped in periods. What period would you prefer?</p>
                 <div class="radio">
                     <label>
                         <input type="radio" name="viewRange" value="1D" @if($viewRange == '1D') checked @endif>

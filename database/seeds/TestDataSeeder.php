@@ -138,9 +138,9 @@ class TestDataSeeder extends Seeder
         $acc_c = Account::create(['user_id' => $user->id, 'account_type_id' => $assetType->id, 'name' => 'Delete me', 'active' => 1]);
 
         // create account meta:
-        $meta_a = AccountMeta::create(['account_id' => $acc_a->id, 'name' => 'accountRole', 'data' => 'defaultExpense']);
-        $meta_b = AccountMeta::create(['account_id' => $acc_b->id, 'name' => 'accountRole', 'data' => 'defaultExpense']);
-        $meta_c = AccountMeta::create(['account_id' => $acc_c->id, 'name' => 'accountRole', 'data' => 'defaultExpense']);
+        $meta_a = AccountMeta::create(['account_id' => $acc_a->id, 'name' => 'accountRole', 'data' => 'defaultAsset']);
+        $meta_b = AccountMeta::create(['account_id' => $acc_b->id, 'name' => 'accountRole', 'data' => 'defaultAsset']);
+        $meta_c = AccountMeta::create(['account_id' => $acc_c->id, 'name' => 'accountRole', 'data' => 'defaultAsset']);
 //        var_dump($meta_a->toArray());
 //        var_dump($meta_b->toArray());
 //        var_dump($meta_c->toArray());
@@ -279,7 +279,6 @@ class TestDataSeeder extends Seeder
         );
         // and some events!
         PiggyBankEvent::create(['piggy_bank_id' => $newCamera->id, 'date' => $this->som, 'amount' => 100]);
-        PiggyBankRepetition::create(['piggy_bank_id' => $newCamera->id, 'startdate' => $this->som, 'targetdate' => null, 'currentamount' => 100]);
 
 
         $newClothes = PiggyBank::create(
@@ -301,27 +300,51 @@ class TestDataSeeder extends Seeder
         );
 
         PiggyBankEvent::create(['piggy_bank_id' => $newClothes->id, 'date' => $this->som, 'amount' => 100]);
-        PiggyBankRepetition::create(['piggy_bank_id' => $newClothes->id, 'startdate' => $this->som, 'targetdate' => $end, 'currentamount' => 100]);
 
-        // weekly reminder piggy bank
-        $weekly = PiggyBank::create(
-            [
-                'account_id'    => $savings->id,
-                'name'          => 'Weekly reminder for clothes',
-                'targetamount'  => 2000,
-                'startdate'     => $this->som,
-                'targetdate'    => $next,
-                'repeats'       => 0,
-                'rep_length'    => null,
-                'rep_every'     => 0,
-                'rep_times'     => null,
-                'reminder'      => 'week',
-                'reminder_skip' => 0,
-                'remind_me'     => 1,
-                'order'         => 0,
-            ]
-        );
-        PiggyBankRepetition::create(['piggy_bank_id' => $weekly->id, 'startdate' => $this->som, 'targetdate' => $next, 'currentamount' => 0]);
+        /*
+         * New: create no less than eight piggy banks that
+         * create all sorts of reminders
+         */
+        $list = ['week','quarter','month','year'];
+        $nextYear = clone $this->_startOfMonth;
+        $nextYear->addYear();
+        foreach($list as $entry) {
+
+            PiggyBank::create(
+                [
+                    'account_id'    => $savings->id,
+                    'name'          => $entry.' piggy bank with target date.',
+                    'targetamount'  => 1000,
+                    'startdate'     => $this->som,
+                    'targetdate'    => $nextYear,
+                    'repeats'       => 0,
+                    'rep_length'    => null,
+                    'rep_every'     => 0,
+                    'rep_times'     => null,
+                    'reminder'      => $entry,
+                    'reminder_skip' => 0,
+                    'remind_me'     => 1,
+                    'order'         => 0,
+                ]
+            );
+            PiggyBank::create(
+                [
+                    'account_id'    => $savings->id,
+                    'name'          => $entry.' piggy bank without target date.',
+                    'targetamount'  => 1000,
+                    'startdate'     => $this->som,
+                    'targetdate'    => null,
+                    'repeats'       => 0,
+                    'rep_length'    => null,
+                    'rep_every'     => 0,
+                    'rep_times'     => null,
+                    'reminder'      => $entry,
+                    'reminder_skip' => 0,
+                    'remind_me'     => 1,
+                    'order'         => 0,
+                ]
+            );
+        }
     }
 
     /**
@@ -331,21 +354,7 @@ class TestDataSeeder extends Seeder
     {
         $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
         // for weekly piggy bank (clothes)
-        $nextWeek  = clone $this->_startOfMonth;
-        $piggyBank = PiggyBank::whereName('New clothes')->orderBy('id', 'DESC')->first();
-        $nextWeek->addWeek();
-        $week = $nextWeek->format('Y-m-d');
 
-        Reminder::create(
-            ['user_id'          => $user->id, 'startdate' => $this->som, 'enddate' => $week, 'active' => 1, 'notnow' => 0,
-             'remindersable_id' => $piggyBank->id, 'remindersable_type' => 'PiggyBank']
-        );
-
-        // a fake reminder::
-        Reminder::create(
-            ['user_id'            => $user->id, 'startdate' => $this->som, 'enddate' => $week, 'active' => 0, 'notnow' => 0, 'remindersable_id' => 40,
-             'remindersable_type' => 'Transaction']
-        );
     }
 
     /**
@@ -373,14 +382,6 @@ class TestDataSeeder extends Seeder
                 'remind_me'     => 1,
                 'order'         => 0,
             ]
-        );
-        PiggyBankRepetition::create(['piggy_bank_id' => $recurring->id, 'startdate' => $this->som, 'targetdate' => $this->eom, 'currentamount' => 0]);
-        PiggyBankRepetition::create(
-            ['piggy_bank_id' => $recurring->id, 'startdate' => $this->nsom, 'targetdate' => $this->neom, 'currentamount' => 0]
-        );
-        Reminder::create(
-            ['user_id'          => $user->id, 'startdate' => $this->som, 'enddate' => $this->neom, 'active' => 1, 'notnow' => 0,
-             'remindersable_id' => $recurring->id, 'remindersable_type' => 'PiggyBank']
         );
     }
 

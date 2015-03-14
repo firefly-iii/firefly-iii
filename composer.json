@@ -26,23 +26,14 @@
         "watson/validating": "dev-master",
         "doctrine/dbal": "~2.5",
         "illuminate/html": "~5.0",
-        "barryvdh/laravel-ide-helper": "~2.0",
         "league/commonmark": "0.7.*"
-
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "@stable",
+        "barryvdh/laravel-ide-helper": "~2.0",
         "phpunit/phpunit": "~4.0",
         "phpspec/phpspec": "~2.1",
-        "codeception/codeception": "@stable",
-        "codeception/c3": "@stable",
-        "league/factory-muffin": "~2.1",
-        "codeception/phpbuiltinserver": "*",
-        "codeception/specify": "*",
-        "codeception/verify": "*",
-        "fzaninotto/faker": "1.*",
-        "codeclimate/php-test-reporter": "dev-master"
-
+        "satooshi/php-coveralls": "0.6.1"
     },
     "autoload": {
         "classmap": [
@@ -60,14 +51,11 @@
     "scripts": {
         "post-install-cmd": [
             "php artisan clear-compiled",
-            "php artisan optimize",
-            "Codeception\\c3\\Installer::copyC3ToRoot"
-
+            "php artisan optimize"
         ],
         "post-update-cmd": [
             "php artisan clear-compiled",
-            "php artisan optimize",
-            "Codeception\\c3\\Installer::copyC3ToRoot"
+            "php artisan optimize"
         ],
         "post-create-project-cmd": [
             "php -r \"copy('.env.example', '.env');\"",

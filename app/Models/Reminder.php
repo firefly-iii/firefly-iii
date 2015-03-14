@@ -1,5 +1,7 @@
 <?php namespace FireflyIII\Models;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,6 +12,19 @@ use Illuminate\Database\Eloquent\Model;
 class Reminder extends Model
 {
 
+
+    protected $fillable = ['user_id', 'startdate', 'metadata', 'enddate', 'active', 'notnow', 'remindersable_id', 'remindersable_type',];
+
+    /**
+     * @param $value
+     *
+     * @return int
+     */
+    public function getActiveAttribute($value)
+    {
+        return intval($value) == 1;
+    }
+
     /**
      * @return array
      */
@@ -19,11 +34,59 @@ class Reminder extends Model
     }
 
     /**
+     * @param $value
+     *
+     * @return mixed
+     */
+    public function getMetadataAttribute($value)
+    {
+        return json_decode($value);
+    }
+
+    /**
+     * @param $value
+     *
+     * @return bool
+     */
+    public function getNotnowAttribute($value)
+    {
+        return intval($value) == 1;
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
     public function remindersable()
     {
         return $this->morphTo();
+    }
+
+    /**
+     * @param EloquentBuilder $query
+     * @param Carbon          $start
+     * @param Carbon          $end
+     *
+     * @return $this
+     */
+    public function scopeOnDates(EloquentBuilder $query, Carbon $start, Carbon $end)
+    {
+        return $query->where('reminders.startdate', '=', $start->format('Y-m-d 00:00:00'))->where('reminders.enddate', '=', $end->format('Y-m-d 00:00:00'));
+    }
+
+    public function scopeToday(EloquentBuilder $query)
+    {
+        $today = new Carbon;
+
+        return $query->where('startdate', '<=', $today->format('Y-m-d 00:00:00'))->where('enddate', '>=', $today->format('Y-m-d 00:00:00'))->where('active', 1)
+                     ->where('notnow', 0);
+    }
+
+    /**
+     * @param $value
+     */
+    public function setMetadataAttribute($value)
+    {
+        $this->attributes['metadata'] = json_encode($value);
     }
 
     /**

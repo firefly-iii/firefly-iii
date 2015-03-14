@@ -1,11 +1,17 @@
-<table class="table table-striped">
+@if(is_object($accounts) && method_exists($accounts, 'render'))
+    {!! $accounts->render() !!}
+@endif
+<table class="table table-striped table-bordered">
     <tr>
         <th>&nbsp;</th>
         <th>Name</th>
+        @if(isset($what) && $what == 'asset')
         <th>Role</th>
+        @endif
         <th>Current balance</th>
         <th>Active</th>
         <th>Last activity</th>
+        <th>Balance difference between {{Session::get('start')->format('jS F Y')}} and {{Session::get('end')->format('jS F Y')}}</th>
     </tr>
     @foreach($accounts as $account)
     <tr>
@@ -16,7 +22,15 @@
             </div>
         </td>
         <td><a href="{{route('accounts.show',$account->id)}}">{{{$account->name}}}</a></td>
-        <td>{{{$account->accountRole}}}</td>
+        @if(isset($what) && $what == 'asset')
+        <td>
+            @foreach($account->accountmeta as $entry)
+                @if($entry->name == 'accountRole')
+                    {{Config::get('firefly.accountRoles.'.$entry->data)}}
+                @endif
+            @endforeach
+        </td>
+        @endif
         <td>{!! Amount::format(Steam::balance($account)) !!}</td>
         <td>
             @if($account->active)
@@ -32,7 +46,14 @@
                 <em>Never</em>
             @endif
         </td>
+        <td>
+            {!! Amount::format($account->endBalance - $account->startBalance) !!}
+        </td>
+
     </tr>
 
     @endforeach
 </table>
+@if(is_object($accounts) && method_exists($accounts, 'render'))
+    {!! $accounts->render() !!}
+@endif

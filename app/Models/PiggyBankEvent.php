@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Model;
 class PiggyBankEvent extends Model
 {
 
+    protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'amount'];
+
     /**
      * @return array
      */

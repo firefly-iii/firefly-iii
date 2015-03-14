@@ -4,9 +4,10 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\Reminder;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\PiggyBank;
 
 
 // models
@@ -90,6 +91,16 @@ Route::bind(
 );
 
 Route::bind(
+    'reminder', function ($value, $route) {
+    if (Auth::check()) {
+        return Reminder::where('id', $value)->where('user_id', Auth::user()->id)->first();
+    }
+
+    return null;
+}
+);
+
+Route::bind(
     'limitrepetition', function ($value, $route) {
     if (Auth::check()) {
         return LimitRepetition::where('limit_repetitions.id', $value)
@@ -135,7 +146,7 @@ Route::get('/register', ['uses' => 'Auth\AuthController@getRegister', 'as' => 'r
 
 Route::controllers(
     [
-        'auth'     => 'Auth\AuthController',
+        'auth' => 'Auth\AuthController',
         'password' => 'Auth\PasswordController',
     ]
 );
@@ -145,12 +156,10 @@ Route::controllers(
  * Home Controller
  */
 Route::group(
-    ['middleware' => ['auth', 'range']], function () {
+    ['middleware' => ['auth', 'range', 'reminders']], function () {
     Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
     Route::get('/home', ['uses' => 'HomeController@index', 'as' => 'home']);
-    Route::get('/prev', ['uses' => 'HomeController@sessionPrev', 'as' => 'sessionPrev']);
-    Route::get('/next', ['uses' => 'HomeController@sessionNext', 'as' => 'sessionNext']);
-    Route::get('/jump/{range}', ['uses' => 'HomeController@rangeJump', 'as' => 'rangeJump']);
+    Route::post('/daterange', ['uses' => 'HomeController@dateRange', 'as' => 'daterange']);
     Route::get('/flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
     /**
      * Account Controller
@@ -232,11 +241,12 @@ Route::group(
     Route::get('/chart/budget/{budget}/spending/{year?}', ['uses' => 'GoogleChartController@budgetsAndSpending']);
     Route::get('/chart/budgets/spending/{year?}', ['uses' => 'GoogleChartController@allBudgetsAndSpending']);
     Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'GoogleChartController@budgetLimitSpending']);
-    Route::get('/chart/category/{category}/spending/{year}', ['uses' => 'GoogleChartController@categoriesAndSpending']);
     Route::get('/chart/reports/income-expenses/{year}', ['uses' => 'GoogleChartController@yearInExp']);
     Route::get('/chart/reports/income-expenses-sum/{year}', ['uses' => 'GoogleChartController@yearInExpSum']);
     Route::get('/chart/bills/{bill}', ['uses' => 'GoogleChartController@billOverview']);
     Route::get('/chart/piggy-history/{piggyBank}', ['uses' => 'GoogleChartController@piggyBankHistory']);
+    Route::get('/chart/category/{category}/period', ['uses' => 'GoogleChartController@categoryPeriodChart']);
+    Route::get('/chart/category/{category}/overview', ['uses' => 'GoogleChartController@categoryOverviewChart']);
 
     /**
      * Help Controller
@@ -249,14 +259,17 @@ Route::group(
     Route::get('/json/expense-accounts', ['uses' => 'JsonController@expenseAccounts', 'as' => 'json.expense-accounts']);
     Route::get('/json/revenue-accounts', ['uses' => 'JsonController@revenueAccounts', 'as' => 'json.revenue-accounts']);
     Route::get('/json/categories', ['uses' => 'JsonController@categories', 'as' => 'json.categories']);
+    Route::get('/json/box', ['uses' => 'JsonController@box', 'as' => 'json.box']);
+    Route::get('/json/show-shared-reports', 'JsonController@showSharedReports');
+    Route::get('/json/show-shared-reports/set', 'JsonController@setSharedReports');
 
 
     /**
      * Piggy Bank Controller
      */
     Route::get('/piggy-banks', ['uses' => 'PiggyBankController@index', 'as' => 'piggy-banks.index']);
-    Route::get('/piggy-banks/add/{piggyBank}', ['uses' => 'PiggyBankController@add']); # add money
-    Route::get('/piggy-banks/remove/{piggyBank}', ['uses' => 'PiggyBankController@remove']); #remove money
+    Route::get('/piggy-banks/add/{piggyBank}', ['uses' => 'PiggyBankController@add', 'as' => 'piggy-banks.addMoney']); # add money
+    Route::get('/piggy-banks/remove/{piggyBank}', ['uses' => 'PiggyBankController@remove', 'as' => 'piggy-banks.removeMoney']); #remove money
     Route::get('/piggy-banks/create', ['uses' => 'PiggyBankController@create', 'as' => 'piggy-banks.create']);
     Route::get('/piggy-banks/edit/{piggyBank}', ['uses' => 'PiggyBankController@edit', 'as' => 'piggy-banks.edit']);
     Route::get('/piggy-banks/delete/{piggyBank}', ['uses' => 'PiggyBankController@delete', 'as' => 'piggy-banks.delete']);
@@ -278,7 +291,7 @@ Route::group(
      */
     Route::get('/profile', ['uses' => 'ProfileController@index', 'as' => 'profile']);
     Route::get('/profile/change-password', ['uses' => 'ProfileController@changePassword', 'as' => 'change-password']);
-    Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword','as' => 'change-password-post']);
+    Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword', 'as' => 'change-password-post']);
 
     /**
      * Related transactions controller
@@ -286,8 +299,18 @@ Route::group(
     Route::get('/related/alreadyRelated/{tj}', ['uses' => 'RelatedController@alreadyRelated', 'as' => 'related.alreadyRelated']);
     Route::post('/related/relate/{tj}/{tjSecond}', ['uses' => 'RelatedController@relate', 'as' => 'related.relate']);
     Route::post('/related/removeRelation/{tj}/{tjSecond}', ['uses' => 'RelatedController@removeRelation', 'as' => 'related.removeRelation']);
+    Route::get('/related/remove/{tj}/{tjSecond}', ['uses' => 'RelatedController@getRemoveRelation', 'as' => 'related.getRemoveRelation']);
     Route::get('/related/related/{tj}', ['uses' => 'RelatedController@related', 'as' => 'related.related']);
     Route::post('/related/search/{tj}', ['uses' => 'RelatedController@search', 'as' => 'related.search']);
+
+    /**
+     * Reminder Controller
+     */
+    Route::get('/reminders', ['uses' => 'ReminderController@index', 'as' => 'reminders.index']);
+    Route::get('/reminder/dismiss/{reminder}', ['uses' => 'ReminderController@dismiss', 'as' => 'reminders.dismiss']);
+    Route::get('/reminder/act/{reminder}', ['uses' => 'ReminderController@act', 'as' => 'reminders.act']);
+    Route::get('/reminder/{reminder}', ['uses' => 'ReminderController@show', 'as' => 'reminders.show']);
+
 
     /**
      * Repeated Expenses Controller
@@ -308,6 +331,16 @@ Route::group(
     Route::get('/reports/{year}', ['uses' => 'ReportController@year', 'as' => 'reports.year']);
     Route::get('/reports/{year}/{month}', ['uses' => 'ReportController@month', 'as' => 'reports.month']);
     Route::get('/reports/budget/{year}/{month}', ['uses' => 'ReportController@budget', 'as' => 'reports.budget']);
+
+    // pop ups for budget report:
+    Route::get('/reports/modal/{account}/{year}/{month}/no-budget', ['uses' => 'ReportController@modalNoBudget', 'as' => 'reports.no-budget']);
+    Route::get(
+        '/reports/modal/{account}/{year}/{month}/balanced-transfers',
+        ['uses' => 'ReportController@modalBalancedTransfers', 'as' => 'reports.balanced-transfers']
+    );
+    Route::get(
+        '/reports/modal/{account}/{year}/{month}/left-unbalanced', ['uses' => 'ReportController@modalLeftUnbalanced', 'as' => 'reports.left-unbalanced']
+    );
 
     /**
      * Search Controller

@@ -1,18 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 25/02/15
- * Time: 07:40
- */
 
 namespace FireflyIII\Repositories\Bill;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
-use Navigation;
 use Log;
+use Navigation;
 
 /**
  * Class BillRepository
@@ -22,12 +16,61 @@ use Log;
 class BillRepository implements BillRepositoryInterface
 {
     /**
+     * Every bill repeats itself weekly, monthly or yearly (or whatever). This method takes a date-range (usually the view-range of Firefly itself)
+     * and returns date ranges that fall within the given range; those ranges are the bills expected. When a bill is due on the 14th of the month and
+     * you give 1st and the 31st of that month as argument, you'll get one response, matching the range of your bill.
+     *
+     * @param Bill   $bill
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return mixed
+     */
+    public function getRanges(Bill $bill, Carbon $start, Carbon $end)
+    {
+        $startOfBill = $bill->date;
+        $startOfBill = Navigation::startOfPeriod($startOfBill, $bill->repeat_freq);
+
+
+        // all periods of this bill up until the current period:
+        $billStarts = [];
+        while ($startOfBill < $end) {
+
+            $endOfBill = Navigation::endOfPeriod($startOfBill, $bill->repeat_freq);
+
+            $billStarts[] = [
+                'start' => clone $startOfBill,
+                'end'   => clone $endOfBill,
+            ];
+            // actually the next one:
+            $startOfBill = Navigation::addPeriod($startOfBill, $bill->repeat_freq, $bill->skip);
+
+        }
+        // for each
+        $validRanges = [];
+        foreach ($billStarts as $dateEntry) {
+            if ($dateEntry['end'] > $start && $dateEntry['start'] < $end) {
+                // count transactions for bill in this range (not relevant yet!):
+                //                $count = $bill->transactionjournals()->before($dateEntry['end'])->after($dateEntry['start'])->count();
+                //                if ($count == 0) {
+                $validRanges[] = $dateEntry;
+                //                }
+            }
+        }
+
+        return $validRanges;
+        //        echo $bill->name;
+        //        var_dump($validRanges);
+    }
+
+    /**
      * @param Bill $bill
      *
      * @return Carbon
      */
     public function nextExpectedMatch(Bill $bill)
     {
+
         $finalDate = null;
         if ($bill->active == 0) {
             return $finalDate;
@@ -113,7 +156,7 @@ class BillRepository implements BillRepositoryInterface
             $wordMatch = true;
             Log::debug('word match is true');
         } else {
-            Log::debug('Count: ' . $count.', count(matches): ' . count($matches));
+            Log::debug('Count: ' . $count . ', count(matches): ' . count($matches));
         }
 
 

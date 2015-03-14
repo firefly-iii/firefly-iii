@@ -17,6 +17,10 @@
     </div>
     @else
 
+<!-- fancy new boxes -->
+    @include('partials.boxes')
+
+
 
 
 <div class="row">
@@ -61,8 +65,6 @@
 
     </div>
     <div class="col-lg-4 col-md-6 col-sm-12">
-        <!-- time based navigation -->
-        @include('partials.date_nav')
 
         <!-- REMINDERS -->
         <div class="panel panel-default">

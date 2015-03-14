@@ -3,13 +3,14 @@
 use Auth;
 use Carbon\Carbon;
 use ExpandedForm;
+use FireflyIII\Events\JournalCreated;
+use FireflyIII\Events\JournalSaved;
 use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\JournalFormRequest;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use Input;
 use Redirect;
 use Session;
@@ -41,7 +42,9 @@ class TransactionController extends Controller
     public function create($what = 'deposit')
     {
         $accounts   = ExpandedForm::makeSelectList(
-            Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->where('active', 1)->orderBy('name', 'DESC')->get(['accounts.*'])
+            Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')->orderBy('name', 'ASC')->where(
+                'active', 1
+            )->orderBy('name', 'DESC')->get(['accounts.*'])
         );
         $budgets    = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
         $budgets[0] = '(no budget)';
@@ -118,7 +121,9 @@ class TransactionController extends Controller
     {
         $what         = strtolower($journal->transactiontype->type);
         $accounts     = ExpandedForm::makeSelectList(
-            Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->where('active', 1)->orderBy('name', 'DESC')->get(['accounts.*'])
+            Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')->where('active', 1)->orderBy(
+                'name', 'DESC'
+            )->get(['accounts.*'])
         );
         $budgets      = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
         $budgets[0]   = '(no budget)';
@@ -143,7 +148,7 @@ class TransactionController extends Controller
         }
 
         if ($journal->piggyBankEvents()->count() > 0) {
-            $preFilled['piggy_bank_id'] = $journal->piggyBankEvents()->first()->piggy_bank_id;
+            $preFilled['piggy_bank_id'] = $journal->piggyBankEvents()->orderBy('date', 'DESC')->first()->piggy_bank_id;
         }
 
         $preFilled['amount'] = 0;
@@ -227,25 +232,15 @@ class TransactionController extends Controller
                 $t->after  = $t->before + $t->amount;
             }
         );
-        $members = new Collection;
-        /** @var TransactionGroup $group */
-        foreach ($journal->transactiongroups()->get() as $group) {
-            /** @var TransactionJournal $loopJournal */
-            foreach ($group->transactionjournals()->get() as $loopJournal) {
-                if ($loopJournal->id != $journal->id) {
-                    $members->push($loopJournal);
-                }
-            }
-        }
 
-        return view('transactions.show', compact('journal', 'members'))->with(
+
+        return view('transactions.show', compact('journal'))->with(
             'subTitle', e($journal->transactiontype->type) . ' "' . e($journal->description) . '"'
         );
     }
 
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository)
     {
-
         $journalData = [
             'what'               => $request->get('what'),
             'description'        => $request->get('description'),
@@ -264,7 +259,20 @@ class TransactionController extends Controller
 
         $journal = $repository->store($journalData);
 
+        event(new JournalSaved($journal));
+        event(new JournalCreated($journal, intval($request->get('piggy_bank_id'))));
+
+        if (intval($request->get('reminder_id')) > 0) {
+            $reminder         = Auth::user()->reminders()->find($request->get('reminder_id'));
+            $reminder->active = 0;
+            $reminder->save();
+        }
+
         Session::flash('success', 'New transaction "' . $journal->description . '" stored!');
+
+        if (intval(Input::get('create_another')) === 1) {
+            return Redirect::route('transactions.create', $request->input('what'))->withInput();
+        }
 
         return Redirect::route('transactions.index', $request->input('what'));
 
@@ -280,6 +288,7 @@ class TransactionController extends Controller
      */
     public function update(TransactionJournal $journal, JournalFormRequest $request, JournalRepositoryInterface $repository)
     {
+
 
         $journalData = [
             'what'               => $request->get('what'),
@@ -298,7 +307,15 @@ class TransactionController extends Controller
         ];
 
         $repository->update($journal, $journalData);
+
+        event(new JournalSaved($journal));
+        // update, get events by date and sort DESC
+
         Session::flash('success', 'Transaction "' . e($journalData['description']) . '" updated.');
+
+        if (intval(Input::get('return_to_edit')) === 1) {
+            return Redirect::route('transactions.edit', $journal->id);
+        }
 
         return Redirect::route('transactions.index', $journalData['what']);
 

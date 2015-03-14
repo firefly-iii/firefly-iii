@@ -1,15 +1,16 @@
 <?php namespace FireflyIII\Http\Controllers;
 
-use Amount;
 use Auth;
 use FireflyIII\Http\Requests;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
-use Response;
 use Input;
+use Redirect;
+use Response;
+use URL;
 
 /**
  * Class RelatedController
@@ -37,11 +38,12 @@ class RelatedController extends Controller
                 }
             }
         }
-        $unique = array_unique($ids);
+        $unique   = array_unique($ids);
+        $journals = new Collection;
         if (count($unique) > 0) {
 
-            $set = Auth::user()->transactionjournals()->whereIn('id', $unique)->get();
-            $set->each(
+            $journals = Auth::user()->transactionjournals()->whereIn('id', $unique)->get();
+            $journals->each(
                 function (TransactionJournal $journal) {
                     /** @var Transaction $t */
                     foreach ($journal->transactions()->get() as $t) {
@@ -52,11 +54,38 @@ class RelatedController extends Controller
 
                 }
             );
-
-            return Response::json($set->toArray());
-        } else {
-            return Response::json((new Collection)->toArray());
         }
+        $parent = $journal;
+
+        return view('related.alreadyRelated', compact('parent', 'journals'));
+    }
+
+    /**
+     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
+     * @param TransactionJournal $parentJournal
+     * @param TransactionJournal $childJournal
+     *
+     * @return \Illuminate\Http\JsonResponse
+     * @throws Exception
+     */
+    public function getRemoveRelation(TransactionJournal $parentJournal, TransactionJournal $childJournal)
+    {
+        $groups = $parentJournal->transactiongroups()->get();
+        /** @var TransactionGroup $group */
+        foreach ($groups as $group) {
+            foreach ($group->transactionjournals()->get() as $loopJournal) {
+                if ($loopJournal->id == $childJournal->id) {
+                    // remove from group:
+                    $group->transactionjournals()->detach($childJournal);
+                }
+            }
+            if ($group->transactionjournals()->count() == 1) {
+                $group->delete();
+            }
+        }
+
+        return Redirect::to(URL::previous());
     }
 
     /**
@@ -137,20 +166,12 @@ class RelatedController extends Controller
     {
 
         $search = e(trim(Input::get('searchValue')));
+        $parent = $journal;
 
-        $result = $repository->searchRelated($search, $journal);
-        $result->each(
-            function (TransactionJournal $journal) {
-                /** @var Transaction $t */
-                foreach ($journal->transactions()->get() as $t) {
-                    if ($t->amount > 0) {
-                        $journal->amount = $t->amount;
-                    }
-                }
-            }
-        );
+        $journals = $repository->searchRelated($search, $journal);
 
-        return Response::json($result->toArray());
+        return view('related.searchResult', compact('journals', 'search', 'parent'));
+
     }
 
 }

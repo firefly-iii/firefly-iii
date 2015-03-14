@@ -1,21 +1,19 @@
 <?php namespace FireflyIII\Http\Controllers;
 
+use Cache;
 use ErrorException;
 use FireflyIII\Http\Requests;
-use FireflyIII\Http\Controllers\Controller;
-
-use Illuminate\Http\Request;
 use League\CommonMark\CommonMarkConverter;
-use Route;
 use Response;
-use Cache;
+use Route;
 
 /**
  * Class HelpController
  *
  * @package FireflyIII\Http\Controllers
  */
-class HelpController extends Controller {
+class HelpController extends Controller
+{
 
     /**
      * @param $route
@@ -83,7 +81,7 @@ class HelpController extends Controller {
         if (strlen(trim($content['text'])) == 0) {
             $content['text'] = '<p>There is no help for this route.</p>';
         }
-        $converter = new CommonMarkConverter();
+        $converter       = new CommonMarkConverter();
         $content['text'] = $converter->convertToHtml($content['text']);
 
         return $content;

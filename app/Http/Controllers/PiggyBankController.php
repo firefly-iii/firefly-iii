@@ -9,6 +9,7 @@ use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\PiggyBankFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -62,7 +63,9 @@ class PiggyBankController extends Controller
     {
 
         $periods      = Config::get('firefly.piggy_bank_periods');
-        $accounts     = ExpandedForm::makeSelectList(Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*']));
+        $accounts     = ExpandedForm::makeSelectList(
+            Auth::user()->accounts()->orderBy('accounts.name', 'ASC')->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*'])
+        );
         $subTitle     = 'Create new piggy bank';
         $subTitleIcon = 'fa-plus';
 
@@ -78,7 +81,7 @@ class PiggyBankController extends Controller
     {
         $subTitle = 'Delete "' . e($piggyBank->name) . '"';
 
-        return view('piggy_banks.delete', compact('piggyBank', 'subTitle'));
+        return view('piggy-banks.delete', compact('piggyBank', 'subTitle'));
     }
 
     /**
@@ -90,9 +93,9 @@ class PiggyBankController extends Controller
     {
 
         Session::flash('success', 'Piggy bank "' . e($piggyBank->name) . '" deleted.');
-        $this->_repository->destroy($piggyBank);
+        $piggyBank->delete();
 
-        return Redirect::route('piggy_banks.index');
+        return Redirect::route('piggy-banks.index');
     }
 
     /**
@@ -106,7 +109,9 @@ class PiggyBankController extends Controller
     {
 
         $periods      = Config::get('firefly.piggy_bank_periods');
-        $accounts     = ExpandedForm::makeSelectList(Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*']));
+        $accounts     = ExpandedForm::makeSelectList(
+            Auth::user()->accounts()->orderBy('accounts.name', 'ASC')->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*'])
+        );
         $subTitle     = 'Edit piggy bank "' . e($piggyBank->name) . '"';
         $subTitleIcon = 'fa-pencil';
 
@@ -124,7 +129,7 @@ class PiggyBankController extends Controller
                       'targetamount' => $piggyBank->targetamount,
                       'targetdate'   => $targetDate,
                       'reminder'     => $piggyBank->reminder,
-                      'remind_me'    => intval($piggyBank->remind_me) == 1 || !is_null($piggyBank->reminder) ? true : false
+                      'remind_me'    => intval($piggyBank->remind_me) == 1 && !is_null($piggyBank->reminder) ? true : false
         ];
         Session::flash('preFilled', $preFilled);
 
@@ -191,6 +196,9 @@ class PiggyBankController extends Controller
             $repetition->currentamount += $amount;
             $repetition->save();
 
+            // create event.
+            PiggyBankEvent::create(['date' => Carbon::now(), 'amount' => $amount, 'piggy_bank_id' => $piggyBank->id]);
+
             /*
              * Create event!
              */
@@ -219,6 +227,8 @@ class PiggyBankController extends Controller
             $repetition = $piggyBank->currentRelevantRep();
             $repetition->currentamount -= $amount;
             $repetition->save();
+
+            PiggyBankEvent::create(['date' => Carbon::now(), 'amount' => $amount * -1, 'piggy_bank_id' => $piggyBank->id]);
 
             /*
              * Create event!
@@ -278,11 +288,17 @@ class PiggyBankController extends Controller
             'targetamount' => floatval($request->get('targetamount')),
             'targetdate'   => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
             'reminder'     => $request->get('reminder'),
+            'remind_me'    => $request->get('remind_me'),
         ];
 
         $piggyBank = $repository->store($piggyBankData);
 
         Session::flash('success', 'Stored piggy bank "' . e($piggyBank->name) . '".');
+
+        if (intval(Input::get('create_another')) === 1) {
+            return Redirect::route('piggy-banks.create')->withInput();
+        }
+
 
         return Redirect::route('piggy-banks.index');
     }
@@ -299,21 +315,28 @@ class PiggyBankController extends Controller
         $piggyBankData = [
             'repeats'      => false,
             'name'         => $request->get('name'),
+            'startdate'    => is_null($piggyBank->startdate) ? $piggyBank->created_at : $piggyBank->startdate,
             'account_id'   => intval($request->get('account_id')),
             'targetamount' => floatval($request->get('targetamount')),
             'targetdate'   => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
             'reminder'     => $request->get('reminder'),
+            'remind_me'    => $request->get('remind_me')
         ];
+
 
         $piggyBank = $repository->update($piggyBank, $piggyBankData);
 
         Session::flash('success', 'Updated piggy bank "' . e($piggyBank->name) . '".');
 
+        if (intval(Input::get('return_to_edit')) === 1) {
+            return Redirect::route('piggy-banks.edit', $piggyBank->id);
+        }
+
+
         return Redirect::route('piggy-banks.index');
 
 
     }
-
 
 
 }

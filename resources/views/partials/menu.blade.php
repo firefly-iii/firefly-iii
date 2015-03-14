@@ -15,7 +15,41 @@
 
     <ul class="nav navbar-top-links navbar-right">
 
+        <!-- reminders -->
+        @if($reminders->count() > 0)
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                <i class="fa fa-envelope fa-fw"></i>  <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-messages">
+                @foreach($reminders as $reminder)
+                <li>
+                    <a href="{{route('reminders.show',$reminder->id)}}">
+                        <div>
+                            <strong>
+                                {{$reminder->remindersable->name}}
+                            </strong>
+                                    <span class="pull-right text-muted">
+                                        <em>{{$reminder->startdate->diffForHumans()}}</em>
+                                    </span>
+                        </div>
+                        <div>{!! $reminder->description !!}</div>
+                    </a>
+                </li>
+                    <li class="divider"></li>
+                @endforeach
+                <li>
+                    <a class="text-center" href="{{route('reminders.index')}}">
+                        <strong>See all reminders</strong>
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </li>
+            </ul>
+            <!-- /.dropdown-messages -->
+        </li>
+        @endif
 
+        <!-- menu -->
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                 <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
@@ -24,6 +58,7 @@
                 <li><a href="{{route('profile')}}"><i class="fa fa-user fa-fw"></i> {{Auth::user()->email}}</a></li>
                 <li><a href="{{route('preferences')}}"><i class="fa fa-gear fa-fw"></i> Preferences</a></li>
                 <li><a href="{{route('currency.index')}}"><i class="fa fa-usd fa-fw"></i> Currency</a></li>
+                <li><a href="{{route('reminders.index')}}"><i class="fa fa-clock-o fa-fw"></i> Reminders</a></li>
                 <li class="divider"></li>
                 <li><a href="{{route('logout')}}"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
             </ul>
@@ -36,7 +71,7 @@
 
 
     </ul>
-
+    <p class="navbar-text navbar-right" id="daterange"><span>&nbsp;</span> <b class="caret"></b> </p>
 
 
     <!-- /.navbar-top-links -->

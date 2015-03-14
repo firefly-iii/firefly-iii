@@ -2,7 +2,7 @@
 @section('content')
 {!! Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $what) !!}
 {!! Form::open(['class' => 'form-horizontal','id' => 'store','url' => route('transactions.store',$what)]) !!}
-{!! Form::hidden('reminder',Input::get('reminder_id')) !!}
+{!! Form::hidden('reminder_id',Input::get('reminder_id')) !!}
 {!! Form::hidden('what',$what) !!}
 
 <div class="row">

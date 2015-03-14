@@ -1,21 +1,20 @@
 <?php namespace FireflyIII\Http\Controllers;
 
-use FireflyIII\Http\Requests;
-use FireflyIII\Http\Controllers\Controller;
-
-use Illuminate\Http\Request;
-use View;
 use Auth;
-use Preferences;
+use FireflyIII\Http\Requests;
 use Input;
-use Session;
+use Preferences;
 use Redirect;
+use Session;
+use View;
+
 /**
  * Class PreferencesController
  *
  * @package FireflyIII\Http\Controllers
  */
-class PreferencesController extends Controller {
+class PreferencesController extends Controller
+{
 
     /**
      *
@@ -32,7 +31,7 @@ class PreferencesController extends Controller {
      */
     public function index()
     {
-        $accounts       = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*']);
+        $accounts       = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
         $viewRange      = Preferences::get('viewRange', '1M');
         $viewRangeValue = $viewRange->data;
         $frontPage      = Preferences::get('frontPageAccounts', []);

@@ -15,32 +15,6 @@ interface ReportHelperInterface
 
 
     /**
-     * @return Carbon
-     */
-    public function firstDate();
-
-    /**
-     * @param Carbon $date
-     *
-     * @return array
-     */
-    public function listOfMonths(Carbon $date);
-
-    /**
-     * @param Carbon $date
-     *
-     * @return array
-     */
-    public function listOfYears(Carbon $date);
-
-    /**
-     * @param Carbon $date
-     *
-     * @return array
-     */
-    public function yearBalanceReport(Carbon $date);
-
-    /**
      * This methods fails to take in account transfers FROM shared accounts.
      *
      * @param Carbon $start
@@ -59,4 +33,26 @@ interface ReportHelperInterface
      * @return Collection
      */
     public function getBudgetsForMonth(Carbon $date);
+
+    /**
+     * @param Carbon $date
+     *
+     * @return array
+     */
+    public function listOfMonths(Carbon $date);
+
+    /**
+     * @param Carbon $date
+     *
+     * @return array
+     */
+    public function listOfYears(Carbon $date);
+
+    /**
+     * @param Carbon $date
+     * @param bool   $showSharedReports
+     *
+     * @return array
+     */
+    public function yearBalanceReport(Carbon $date, $showSharedReports = false);
 }

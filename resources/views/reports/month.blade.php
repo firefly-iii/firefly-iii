@@ -2,9 +2,21 @@
 @section('content')
 {!! Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $date) !!}
 <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <p>
+            <a href="#" class="btn btn-default" id="includeShared" style="display:none;">
+                <i class="state-icon glyphicon glyphicon-unchecked"></i>
+                Include shared asset accounts</a>
+        </p>
+    </div>
+</div>
+<div class="row">
     <div class="col-lg-5 col-md-5 col-sm-12">
         <div class="panel panel-default">
-            <div class="panel-heading">Income</div>
+            <div class="panel-heading">
+                <i class="fa fa-long-arrow-right fa-fw"></i>
+                Income
+            </div>
                 <table class="table table-bordered">
                     <?php $tableSum = 0;?>
                     @foreach($income as $entry)
@@ -48,7 +60,10 @@
     </div>
     <div class="col-lg-4 col-md-4 col-sm-12">
         <div class="panel panel-default">
-            <div class="panel-heading">Expenses (top 10)</div>
+            <div class="panel-heading">
+                <i class="fa fa-long-arrow-left fa-fw"></i>
+                Expenses (top 10)
+            </div>
             <table class="table table-bordered">
                 <?php $sum = 0;?>
                 @foreach($expenses as $id => $expense)
@@ -71,7 +86,10 @@
     </div>
     <div class="col-lg-3 col-md-4 col-sm-12">
         <div class="panel panel-default">
-            <div class="panel-heading">Sums</div>
+            <div class="panel-heading">
+                <i class="fa fa-exchange fa-fw"></i>
+                Sums
+            </div>
             <?php
                 $in = 0;
                 foreach($income as $entry) {
@@ -98,7 +116,10 @@
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-12">
         <div class="panel panel-default">
-            <div class="panel-heading">Budgets</div>
+            <div class="panel-heading">
+                <i class="fa fa-tasks fa-fw"></i>
+                Budgets
+            </div>
                 <table class="table table-bordered">
                     <tr>
                         <th>Budget</th>
@@ -141,7 +162,10 @@
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12">
         <div class="panel panel-default">
-            <div class="panel-heading">Categories</div>
+            <div class="panel-heading">
+                <i class="fa fa-bar-chart fa-fw"></i>
+                Categories
+            </div>
             <table class="table table-bordered">
                 <tr>
                     <th>Category</th>
@@ -172,7 +196,10 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="panel panel-default">
-            <div class="panel-heading">Accounts</div>
+            <div class="panel-heading">
+                <i class="fa fa-credit-card fa-fw"></i>
+                Accounts
+            </div>
             <table class="table table-bordered">
                 <?php
                     $sumStart = 0;
@@ -205,13 +232,19 @@
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-12">
         <div class="panel panel-default">
-            <div class="panel-heading">Piggy banks</div>
+            <div class="panel-heading">
+                <i class="fa fa-sort-amount-asc fa-fw"></i>
+                Piggy banks
+            </div>
             <div class="panel-body">Body</div>
         </div>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12">
         <div class="panel panel-default">
-            <div class="panel-heading">Repeated expenses</div>
+            <div class="panel-heading">
+                <i class="fa fa-rotate-left fa-fw"></i>
+                Repeated expenses
+            </div>
             <div class="panel-body">Body</div>
         </div>
     </div>
@@ -219,7 +252,10 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="panel panel-default">
-            <div class="panel-heading">Bills</div>
+            <div class="panel-heading">
+                <i class="fa fa-calendar-o fa-fw"></i>
+                Bills
+            </div>
             <div class="panel-body">Body</div>
         </div>
     </div>
@@ -227,9 +263,15 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="panel panel-default">
-            <div class="panel-heading">Outside of budgets</div>
+            <div class="panel-heading">
+                <i class="fa fa-fw fa-folder-o"></i>
+                Outside of budgets
+            </div>
             <div class="panel-body">Body</div>
         </div>
     </div>
 </div>
+@stop
+@section('scripts')
+    <script type="text/javascript" src="js/reports.js"></script>
 @stop

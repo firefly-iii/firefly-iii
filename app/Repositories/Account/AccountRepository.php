@@ -10,10 +10,12 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Log;
 use Session;
 
@@ -24,6 +26,14 @@ use Session;
  */
 class AccountRepository implements AccountRepositoryInterface
 {
+
+    /**
+     * @return int
+     */
+    public function countAssetAccounts()
+    {
+        return Auth::user()->accounts()->accountTypeIn(['Asset account', 'Default account'])->count();
+    }
 
     /**
      * @param Account $account
@@ -38,15 +48,52 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @param Preference $preference
+     *
+     * @return Collection
+     */
+    public function getFrontpageAccounts(Preference $preference)
+    {
+        if ($preference->data == []) {
+            $accounts = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
+        } else {
+            $accounts = Auth::user()->accounts()->whereIn('id', $preference->data)->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
+        }
+
+        return $accounts;
+    }
+
+    /**
      * @param Account $account
-     * @param int     $page
-     * @param string  $range
+     * @param Carbon  $start
+     * @param Carbon  $end
      *
      * @return mixed
      */
-    public function getJournals(Account $account, $page, $range = 'session')
+    public function getFrontpageTransactions(Account $account, Carbon $start, Carbon $end)
     {
-        $offset = $page * 50;
+        return Auth::user()
+                   ->transactionjournals()
+                   ->with(['transactions', 'transactioncurrency', 'transactiontype'])
+                   ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                   ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')->where('accounts.id', $account->id)
+                   ->before($end)
+                   ->after($start)
+                   ->orderBy('transaction_journals.date', 'DESC')
+                   ->orderBy('transaction_journals.id', 'DESC')
+                   ->take(10)
+                   ->get(['transaction_journals.*']);
+    }
+
+    /**
+     * @param Account $account
+     * @param int     $page
+     *
+     * @return mixed
+     */
+    public function getJournals(Account $account, $page)
+    {
+        $offset = ($page - 1) * 50;
         $query  = Auth::user()
                       ->transactionJournals()
                       ->withRelevantData()
@@ -54,10 +101,8 @@ class AccountRepository implements AccountRepositoryInterface
                       ->where('transactions.account_id', $account->id)
                       ->orderBy('date', 'DESC');
 
-        if ($range == 'session') {
-            $query->before(Session::get('end', Carbon::now()->startOfMonth()));
-            $query->after(Session::get('start', Carbon::now()->startOfMonth()));
-        }
+        $query->before(Session::get('end', Carbon::now()->endOfMonth()));
+        $query->after(Session::get('start', Carbon::now()->startOfMonth()));
         $count     = $query->count();
         $set       = $query->take(50)->offset($offset)->get(['transaction_journals.*']);
         $paginator = new LengthAwarePaginator($set, $count, 50, $page);
@@ -66,6 +111,23 @@ class AccountRepository implements AccountRepositoryInterface
 
         //return Paginator::make($items, $count, 50);
 
+
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return float
+     */
+    public function leftOnAccount(Account $account)
+    {
+        $balance = \Steam::balance($account);
+        /** @var PiggyBank $p */
+        foreach ($account->piggybanks()->get() as $p) {
+            $balance -= $p->currentRelevantRep()->currentamount;
+        }
+
+        return $balance;
 
     }
 
@@ -123,13 +185,7 @@ class AccountRepository implements AccountRepositoryInterface
         $account->save();
 
         // update meta data:
-        /** @var AccountMeta $meta */
-        foreach ($account->accountMeta()->get() as $meta) {
-            if ($meta->name == 'accountRole') {
-                $meta->data = $data['accountRole'];
-                $meta->save();
-            }
-        }
+        $this->_updateMetadata($account, $data);
 
         $openingBalance = $this->openingBalanceTransaction($account);
 
@@ -286,6 +342,40 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @param Account $account
+     * @param array   $data
+     */
+    protected function _updateMetadata(Account $account, array $data)
+    {
+        $metaEntries = $account->accountMeta()->get();
+        $updated     = false;
+
+        /** @var AccountMeta $entry */
+        foreach ($metaEntries as $entry) {
+            if ($entry->name == 'accountRole') {
+                $entry->data = $data['accountRole'];
+                $updated     = true;
+                $entry->save();
+            }
+        }
+
+        if ($updated === false) {
+            $metaData = new AccountMeta(
+                [
+                    'account_id' => $account->id,
+                    'name'       => 'accountRole',
+                    'data'       => $data['accountRole']
+                ]
+            );
+            if (!$metaData->isValid()) {
+                App::abort(500);
+            }
+            $metaData->save();
+        }
+
+    }
+
+    /**
      * @param Account            $account
      * @param TransactionJournal $journal
      * @param array              $data
@@ -309,22 +399,5 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return $journal;
-    }
-
-    /**
-     * @param Account $account
-     *
-     * @return float
-     */
-    public function leftOnAccount(Account $account)
-    {
-        $balance = \Steam::balance($account);
-        /** @var PiggyBank $p */
-        foreach ($account->piggybanks()->get() as $p) {
-            $balance -= $p->currentRelevantRep()->currentamount;
-        }
-
-        return $balance;
-
     }
 }

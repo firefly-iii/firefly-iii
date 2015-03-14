@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
+use Steam;
 
 /**
  * Class ReportHelper
@@ -36,19 +37,6 @@ class ReportHelper implements ReportHelperInterface
     }
 
     /**
-     * @return Carbon
-     */
-    public function firstDate()
-    {
-        $journal = Auth::user()->transactionjournals()->orderBy('date', 'ASC')->first();
-        if ($journal) {
-            return $journal->date;
-        }
-
-        return Carbon::now();
-    }
-
-    /**
      * This method gets some kind of list for a monthly overview.
      *
      * @param Carbon $date
@@ -62,7 +50,7 @@ class ReportHelper implements ReportHelperInterface
         $end = clone $date;
         $end->endOfMonth();
         // all budgets
-        $set = \Auth::user()->budgets()
+        $set = Auth::user()->budgets()
                     ->leftJoin(
                         'budget_limits', function (JoinClause $join) use ($date) {
                         $join->on('budget_limits.budget_id', '=', 'budgets.id')->where('budget_limits.startdate', '=', $date->format('Y-m-d'));
@@ -99,7 +87,8 @@ class ReportHelper implements ReportHelperInterface
         $end    = Carbon::now();
         $months = [];
         while ($start <= $end) {
-            $months[] = [
+            $year            = $start->format('Y');
+            $months[$year][] = [
                 'formatted' => $start->format('F Y'),
                 'month'     => intval($start->format('m')),
                 'year'      => intval($start->format('Y')),
@@ -130,43 +119,47 @@ class ReportHelper implements ReportHelperInterface
 
     /**
      * @param Carbon $date
+     * @param bool   $showSharedReports
      *
      * @return array
      */
-    public function yearBalanceReport(Carbon $date)
+    public function yearBalanceReport(Carbon $date, $showSharedReports = false)
     {
-        $start            = clone $date;
-        $end              = clone $date;
-        $sharedAccounts   = [];
-        $sharedCollection = \Auth::user()->accounts()
-                                 ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
-                                 ->where('account_meta.name', '=', 'accountRole')
-                                 ->where('account_meta.data', '=', json_encode('sharedExpense'))
-                                 ->get(['accounts.id']);
+        $start          = clone $date;
+        $end            = clone $date;
+        $sharedAccounts = [];
+        if ($showSharedReports === false) {
+            $sharedCollection = \Auth::user()->accounts()
+                                     ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
+                                     ->where('account_meta.name', '=', 'accountRole')
+                                     ->where('account_meta.data', '=', json_encode('sharedAsset'))
+                                     ->get(['accounts.id']);
 
-        foreach ($sharedCollection as $account) {
-            $sharedAccounts[] = $account->id;
+            foreach ($sharedCollection as $account) {
+                $sharedAccounts[] = $account->id;
+            }
         }
 
-        $accounts = \Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*'])->filter(
-            function (Account $account) use ($sharedAccounts) {
-                if (!in_array($account->id, $sharedAccounts)) {
-                    return $account;
-                }
+        $accounts = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')->get(['accounts.*'])
+                         ->filter(
+                             function (Account $account) use ($sharedAccounts) {
+                                 if (!in_array($account->id, $sharedAccounts)) {
+                                     return $account;
+                                 }
 
-                return null;
-            }
-        );
+                                 return null;
+                             }
+                         );
         $report   = [];
         $start->startOfYear()->subDay();
         $end->endOfYear();
 
         foreach ($accounts as $account) {
             $report[] = [
-                'start'   => \Steam::balance($account, $start),
-                'end'     => \Steam::balance($account, $end),
+                'start'   => Steam::balance($account, $start),
+                'end'     => Steam::balance($account, $end),
                 'account' => $account,
-                'shared'  => $account->accountRole == 'sharedExpense'
+                'shared'  => $account->accountRole == 'sharedAsset'
             ];
         }
 

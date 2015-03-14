@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Watson\Validating\ValidatingTrait;
-
+use Crypt;
 /**
  * Class Account
  *
@@ -18,7 +18,7 @@ class Account extends Model
         = [
             'user_id'         => 'required|exists:users,id',
             'account_type_id' => 'required|exists:account_types,id',
-            'name'            => 'required|between:1,100|uniqueForUser:accounts,name',
+            'name'            => 'required|between:1,1024|uniqueForUser:accounts,name',
             'active'          => 'required|boolean'
         ];
 
@@ -39,6 +39,22 @@ class Account extends Model
 
         return null;
 
+    }
+
+    /**
+     * @param $value
+     *
+     * @return string
+     */
+    public function getNameAttribute($value)
+    {
+        if ($this->encrypted) {
+            return Crypt::decrypt($value);
+        }
+
+        // @codeCoverageIgnoreStart
+        return $value;
+        // @codeCoverageIgnoreEnd
     }
 
     /**

@@ -16,15 +16,17 @@
     </title>
 
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css" media="all" />
-    <!-- <link rel="stylesheet" href="css/metisMenu.min.css" type="text/css" media="all" /> -->
-    <!-- new css for SB admin -->
     <link rel="stylesheet" href="css/metisMenu.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="css/sb-admin-2.css" type="text/css" media="all" />
-
-
-
     <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto2" type="text/css" media="all" />
+
+    <!-- date range -->
+    <link rel="stylesheet" href="css/daterangepicker-bs3.css" type="text/css" media="all" />
+
+    <link rel="stylesheet" href="css/firefly.css" type="text/css" media="all" />
+
+
     @yield('styles')
 
     <!--[if lt IE 9]>
@@ -107,24 +109,35 @@
 
 <!-- modal to relate transactions to each other -->
 <div class="modal fade" id="relationModal">
+</div>
 
+<!-- default modal -->
+<div class="modal fade" id="defaultModal">
 </div>
 
 <script type="text/javascript" src="js/jquery-2.1.3.min.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
-<!-- <script type="text/javascript" src="js/jquery.metisMenu.min.js"></script> -->
-<!-- <script type="text/javascript" src="js/sb-admin-2.js"></script>-->
-
-<!-- new js for sb admin -->
-
 <script type="text/javascript" src="js/metisMenu.min.js"></script>
 <script type="text/javascript" src="js/sb-admin-2.js"></script>
-
-
-
-
-
 <script type="text/javascript" src="js/help.js"></script>
+
+<!-- date range stuff -->
+<script type="text/javascript" src="js/moment.min.js"></script>
+<script type="text/javascript" src="js/daterangepicker.js"></script>
+
+<script type="text/javascript">
+    var start = "{{Session::get('start')->format('d-m-Y')}}";
+    var end = "{{Session::get('end')->format('d-m-Y')}}";
+    var titleString = "{{Session::get('start')->format('j M Y')}} - {{Session::get('end')->format('j M Y')}}";
+    var dateRangeURL = "{{route('daterange')}}";
+    var token = "{{csrf_token()}}";
+    var firstDate = moment("{{Session::get('first')->format('Y-m-d')}}");
+    var currentMonthName = "{{$currentMonthName}}";
+    var previousMonthName = "{{$previousMonthName}}";
+    var nextMonthName = "{{$nextMonthName}}";
+    $('#daterange span').text(titleString);
+</script>
+
 <script type="text/javascript" src="js/firefly.js"></script>
 @yield('scripts')
 </body>
