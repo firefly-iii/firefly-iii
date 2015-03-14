@@ -106,9 +106,16 @@
                 @if($t->account->accounttype->type == 'Asset account')
                     <i class="fa fa-money fa-fw"></i>
                 @endif
+                @if($t->account->accounttype->type == 'Default account')
+                    <i class="fa fa-money fa-fw"></i>
+                @endif
                 @if($t->account->accounttype->type == 'Expense account')
                     <i class="fa fa-shopping-cart fa-fw"></i>
                 @endif
+                @if($t->account->accounttype->type == 'Beneficiary account')
+                    <i class="fa fa-shopping-cart fa-fw"></i>
+                @endif
+
                 @if($t->account->accounttype->type == 'Revenue account')
                     <i class="fa fa-download fa-fw"></i>
                 @endif
