@@ -27,7 +27,6 @@
         "doctrine/dbal": "~2.5",
         "illuminate/html": "~5.0",
         "league/commonmark": "0.7.*"
-
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "@stable",
