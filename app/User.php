@@ -99,12 +99,4 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $this->hasMany('FireflyIII\Models\TransactionJournal');
     }
 
-    /**
-     * @param $value
-     */
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = \Hash::make($value);
-    }
-
 }
