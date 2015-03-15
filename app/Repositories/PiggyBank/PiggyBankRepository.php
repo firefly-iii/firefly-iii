@@ -117,8 +117,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         if ($piggyBank) {
             $piggyBank->order = $order;
             $piggyBank->save();
-        } else {
-            echo "Found no piggy for id #".$id."\n";
         }
     }
 

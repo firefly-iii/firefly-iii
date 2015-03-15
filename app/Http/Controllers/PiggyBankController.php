@@ -186,7 +186,6 @@ class PiggyBankController extends Controller
 
         if (is_array($data)) {
             foreach ($data as $order => $id) {
-                echo 'set '.$id.' to position '.($order+1)."\n";
                 $repository->setOrder(intval($id), (intval($order) + 1));
             }
         }
