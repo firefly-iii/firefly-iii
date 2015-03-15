@@ -62,34 +62,15 @@
 
                     </div>
 
-
-
-
-                    <!-- One block -->
-                    <!-- <div class="col-lg-1 col-md-4 col-sm-4 col-xs-4">
-                        {!! Amount::format($piggyBank->savedSoFar,true) !!}
-                    </div> -->
-                    <!-- One block -->
-
-                    <!-- One block -->
-                    <!-- <div class="col-lg-1 col-md-6 col-sm-6 col-xs-6">
-                        {!! Amount::format($piggyBank->targetamount,true) !!}
-                    </div> -->
-                    <!-- One block -->
-                    <!-- <div class="col-lg-1 col-md-6 col-sm-6 col-xs-6">
-                        @if($piggyBank->leftToSave > 0)
-                            {!! Amount::format($piggyBank->leftToSave) !!}
-                        @endif
-                    </div> -->
                 </div>
                 <div class="row">
-                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs4">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                         <span title="Saved so far">{!! Amount::format($piggyBank->savedSoFar,true) !!}</span>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs4">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                         <span title="Target amount">{!! Amount::format($piggyBank->targetamount,true) !!}</span>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs4">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                         @if($piggyBank->leftToSave > 0)
                             <span title="Left to save">{!! Amount::format($piggyBank->leftToSave) !!}</span>
                         @endif
