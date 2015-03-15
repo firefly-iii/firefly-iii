@@ -67,10 +67,10 @@
                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                         <span title="Saved so far">{!! Amount::format($piggyBank->savedSoFar,true) !!}</span>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="text-align: center;">
                         <span title="Target amount">{!! Amount::format($piggyBank->targetamount,true) !!}</span>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="text-align: right;">
                         @if($piggyBank->leftToSave > 0)
                             <span title="Left to save">{!! Amount::format($piggyBank->leftToSave) !!}</span>
                         @endif
