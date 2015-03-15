@@ -112,7 +112,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function setOrder($id, $order)
     {
-        $piggyBank = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.id')->where('accounts.user_id', Auth::user()->id)
+        $piggyBank = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')->where('accounts.user_id', Auth::user()->id)
             ->where('piggy_banks.id',$id)->first(['piggy_banks.*']);
         if ($piggyBank) {
             $piggyBank->order = $order;
