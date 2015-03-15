@@ -136,14 +136,13 @@ class PiggyBankController extends Controller
         return view('piggy-banks.edit', compact('subTitle', 'subTitleIcon', 'piggyBank', 'accounts', 'periods', 'preFilled'));
     }
 
-
     /**
      * @return $this
      */
     public function index(AccountRepositoryInterface $repository)
     {
         /** @var Collection $piggyBanks */
-        $piggyBanks = Auth::user()->piggyBanks()->where('repeats', 0)->get();
+        $piggyBanks = Auth::user()->piggyBanks()->where('repeats', 0)->orderBy('order', 'ASC')->get();
 
         $accounts = [];
         /** @var PiggyBank $piggyBank */
@@ -175,6 +174,23 @@ class PiggyBankController extends Controller
         return view('piggy-banks.index', compact('piggyBanks', 'accounts'));
     }
 
+    /**
+     * Allow user to order piggy banks.
+     */
+    public function order(PiggyBankRepositoryInterface $repository)
+    {
+        $data = Input::get('order');
+
+        // set all users piggy banks to zero:
+        $repository->reset();
+
+        if (is_array($data)) {
+            foreach ($data as $order => $id) {
+                echo 'set '.$id.' to position '.($order+1)."\n";
+                $repository->setOrder(intval($id), (intval($order) + 1));
+            }
+        }
+    }
 
     /**
      * POST add money to piggy bank

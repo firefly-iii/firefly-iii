@@ -8,13 +8,13 @@
         </p>
     </div>
 </div>
-<div class="row">
+<div class="row" id="sortable">
 @foreach($piggyBanks as $piggyBank)
-    <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
+    <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12" data-id="{{$piggyBank->id}}">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <i class="fa fa-fw fa-rocket"></i> <a href="{{route('piggy-banks.show',$piggyBank->id)}}" title="{{{$piggyBank->name}}}">{{{$piggyBank->name}}}</a>
-
+                <i class="loadSpin"></i>
+                <i class="fa fa-fw fa-bars handle"></i> <a href="{{route('piggy-banks.show',$piggyBank->id)}}" title="{{{$piggyBank->name}}}">{{{$piggyBank->name}}}</a>
                 <!-- ACTIONS MENU -->
                 <div class="pull-right">
                     <div class="btn-group">
@@ -129,5 +129,9 @@
 
 @stop
 @section('scripts')
+    <script type="text/javascript">
+        var token = "{{csrf_token()}}";
+    </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/piggy-banks.js"></script>
 @stop

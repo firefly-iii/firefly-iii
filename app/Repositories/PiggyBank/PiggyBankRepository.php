@@ -2,9 +2,8 @@
 
 namespace FireflyIII\Repositories\PiggyBank;
 
-use Amount;
 use Auth;
-use Carbon\Carbon;
+use DB;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\Reminder;
@@ -89,6 +88,41 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
+     * Set all piggy banks to order 0.
+     *
+     * @return void
+     */
+    public function reset()
+    {
+        DB::table('piggy_banks')
+          ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.id')
+          ->where('accounts.user_id', Auth::user()->id)
+          ->update(['order' => 0, 'piggy_banks.updated_at' => DB::Raw('NOW()')]);
+        //Auth::user()->piggyBanks()->update(['order' => 0]);
+    }
+
+    /**
+     *
+     * set id of piggy bank.
+     *
+     * @param int $id
+     * @param int $order
+     *
+     * @return void
+     */
+    public function setOrder($id, $order)
+    {
+        $piggyBank = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.id')->where('accounts.user_id', Auth::user()->id)
+            ->where('piggy_banks.id',$id)->first(['piggy_banks.*']);
+        if ($piggyBank) {
+            $piggyBank->order = $order;
+            $piggyBank->save();
+        } else {
+            echo "Found no piggy for id #".$id."\n";
+        }
+    }
+
+    /**
      * @param array $data
      *
      * @return PiggyBank
@@ -132,5 +166,4 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
         return $piggyBank;
     }
-
 }
