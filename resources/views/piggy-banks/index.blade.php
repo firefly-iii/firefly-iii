@@ -14,7 +14,8 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="loadSpin"></i>
-                <i class="fa fa-fw fa-bars handle"></i> <a href="{{route('piggy-banks.show',$piggyBank->id)}}" title="{{{$piggyBank->name}}}">{{{$piggyBank->name}}}</a>
+                <i class="fa fa-fw fa-bars handle"></i> <a href="{{route('piggy-banks.show',$piggyBank->id)}}" title="{{{$piggyBank->order}}}">{{{$piggyBank->name}}}</a>
+
                 <!-- ACTIONS MENU -->
                 <div class="pull-right">
                     <div class="btn-group">
