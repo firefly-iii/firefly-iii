@@ -12,26 +12,6 @@ var defaultLineChartOptions = {
         height: '80%'
     },
     height: 400,
-    colors: ["#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043", "#9e9d24", "#5c6bc0", "#f06292", "#00796b", "#c2185b"],
-    hAxis: {
-        textStyle: {
-            color: '#838383',
-            fontName: 'Roboto2',
-            fontSize: '12'
-        },
-        gridlines: {
-            color: 'transparent'
-        }
-    },
-    vAxis: {
-        textStyle: {
-            color: '#838383',
-            fontName: 'Roboto2',
-            fontSize: '12'
-        },
-        format: '\u20AC #'
-    }
-
 
 };
 
