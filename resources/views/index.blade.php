@@ -81,7 +81,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-money fa-fw"></i>
-                <a href="{{route('accounts.show',$data[1]->id)}}">{{{$data[1]->name}}}</a>
+                <a href="{{route('accounts.show',$data[1]->id)}}">{{{$data[1]->name}}}</a> ({!! Amount::format(Steam::balance($data[1])) !!})
 
 
                 <!-- ACTIONS MENU -->

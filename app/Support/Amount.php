@@ -5,6 +5,7 @@ namespace FireflyIII\Support;
 use Cache;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\TransactionJournal;
 use Preferences as Prefs;
 
 /**
@@ -30,19 +31,27 @@ class Amount
     }
 
     /**
-     * @param Transaction|\Transaction $transaction
-     * @param bool                     $coloured
-     *
      * @return string
      */
-    public function formatTransaction(Transaction $transaction, $coloured = true)
+    public function getCurrencySymbol()
     {
-        $symbol = $transaction->transactionJournal->transactionCurrency->symbol;
-        $amount = floatval($transaction->amount);
+        if (defined('FFCURRENCYSYMBOL')) {
+            return FFCURRENCYSYMBOL;
+        }
+        if (\Cache::has('FFCURRENCYSYMBOL')) {
+            define('FFCURRENCYSYMBOL', \Cache::get('FFCURRENCYSYMBOL'));
 
-        return $this->formatWithSymbol($symbol, $amount, $coloured);
+            return FFCURRENCYSYMBOL;
+        }
 
+        $currencyPreference = Prefs::get('currencyPreference', 'EUR');
+        $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
 
+        \Cache::forever('FFCURRENCYSYMBOL', $currency->symbol);
+
+        define('FFCURRENCYSYMBOL', $currency->symbol);
+
+        return $currency->symbol;
     }
 
     /**
@@ -73,29 +82,45 @@ class Amount
         return $symbol . ' ' . $string;
     }
 
-
     /**
      * @return string
+     *
+     * @param TransactionJournal $journal
      */
-    public function getCurrencySymbol()
+    public function formatJournal(TransactionJournal $journal, $coloured = true)
     {
-        if (defined('FFCURRENCYSYMBOL')) {
-            return FFCURRENCYSYMBOL;
+        $showPositive = true;
+        $symbol       = $journal->transactionCurrency->symbol;
+        $amount       = 0;
+        switch ($journal->transactionType->type) {
+            case 'Withdrawal':
+                $showPositive = false;
         }
-        if (\Cache::has('FFCURRENCYSYMBOL')) {
-            define('FFCURRENCYSYMBOL', \Cache::get('FFCURRENCYSYMBOL'));
-
-            return FFCURRENCYSYMBOL;
+        foreach ($journal->transactions as $t) {
+            if (floatval($t->amount) > 0 && $showPositive === true) {
+                $amount = floatval($t->amount);
+                break;
+            }
+            if (floatval($t->amount) < 0 && $showPositive === false) {
+                $amount = floatval($t->amount);
+            }
         }
 
-        $currencyPreference = Prefs::get('currencyPreference', 'EUR');
-        $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
+        return $this->formatWithSymbol($symbol, $amount, $coloured);
+    }
 
-        \Cache::forever('FFCURRENCYSYMBOL', $currency->symbol);
+    /**
+     * @param Transaction $transaction
+     * @param bool        $coloured
+     *
+     * @return string
+     */
+    public function formatTransaction(Transaction $transaction, $coloured = true)
+    {
+        $symbol = $transaction->transactionJournal->transactionCurrency->symbol;
+        $amount = floatval($transaction->amount);
 
-        define('FFCURRENCYSYMBOL', $currency->symbol);
-
-        return $currency->symbol;
+        return $this->formatWithSymbol($symbol, $amount, $coloured);
     }
 
     /**

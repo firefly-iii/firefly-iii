@@ -15,19 +15,7 @@
     {{{$journal->description}}}
 
 <span class="pull-right small">
-@if(isset($account))
-    @foreach($journal->transactions as $index => $t)
-        @if($t->account_id == $account->id)
-            {!! Amount::formatTransaction($t) !!}
-        @endif
-    @endforeach
-@else
-    @foreach($journal->transactions as $index => $t)
-        @if($index == 0)
-                {!! Amount::formatTransaction($t) !!}
-        @endif
-    @endforeach
-@endif
+    {!! Amount::formatJournal($journal) !!}
 </span>
 
 </a>

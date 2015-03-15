@@ -24,7 +24,7 @@ function googleChart(chartType, URL, container, options) {
             /*
              Create a new google charts object.
              */
-            var chart = false
+            var chart = false;
             var options = false;
             var isMaterialDesign = false;
             if (chartType === 'line') {
