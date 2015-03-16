@@ -55,15 +55,17 @@ var defaultBarChartOptions = {
         textStyle: {
             color: '#838383',
             fontName: 'Roboto2',
-            fontSize: '12'
+            fontSize: '11'
         },
+        textPosition: 'in',
         gridlines: {
+
             color: 'transparent'
         },
         baselineColor: '#aaaaaa'
     },
     chartArea: {
-        left: 75,
+        left: 15,
         top: 10,
         width: '100%',
         height: '90%'
