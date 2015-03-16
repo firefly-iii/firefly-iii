@@ -1,5 +1,5 @@
 var google = google || {};
-google.load('visualization', '1.1', {'packages': ['corechart', 'bar','line', 'sankey', 'table']});
+google.load('visualization', '1.1', {'packages': ['corechart', 'bar', 'line', 'sankey', 'table']});
 
 function googleChart(chartType, URL, container, options) {
     if ($('#' + container).length === 1) {
@@ -13,10 +13,10 @@ function googleChart(chartType, URL, container, options) {
              Format as money
              */
             var money = new google.visualization.NumberFormat({
-                decimalSymbol: ',',
-                groupingSymbol: '.',
-                prefix: currencyCode + ' '
-            });
+                                                                  decimalSymbol: ',',
+                                                                  groupingSymbol: '.',
+                                                                  prefix: currencyCode + ' '
+                                                              });
             for (var i = 1; i < gdata.getNumberOfColumns(); i++) {
                 money.format(gdata, i);
             }
@@ -26,25 +26,21 @@ function googleChart(chartType, URL, container, options) {
              */
             var chart = false;
             var options = false;
-            var isMaterialDesign = false;
             if (chartType === 'line') {
-                chart = new google.charts.Line(document.getElementById(container));
+                chart = new google.visualization.LineChart(document.getElementById(container));
                 options = options || defaultLineChartOptions;
-                isMaterialDesign = true;
             }
             if (chartType === 'column') {
-                chart = new google.charts.Bar(document.getElementById(container));
+                chart = new google.visualization.ColumnChart(document.getElementById(container));
                 options = options || defaultColumnChartOptions;
-                isMaterialDesign = true;
             }
             if (chartType === 'pie') {
                 chart = new google.visualization.PieChart(document.getElementById(container));
                 options = options || defaultPieChartOptions;
             }
             if (chartType === 'bar') {
-                chart = new google.charts.Bar(document.getElementById(container));
+                chart = new google.visualization.BarChart(document.getElementById(container));
                 options = options || defaultBarChartOptions;
-                isMaterialDesign = true;
             }
             if (chartType === 'stackedColumn') {
                 chart = new google.visualization.ColumnChart(document.getElementById(container));
@@ -58,12 +54,7 @@ function googleChart(chartType, URL, container, options) {
             if (chart === false) {
                 alert('Cannot draw chart of type "' + chartType + '".');
             } else {
-                if(isMaterialDesign && chartType == 'line') {
-                    chart.draw(gdata, google.charts.Line.convertOptions(options));
-                } else {
-                    chart.draw(gdata, options);
-                }
-
+                chart.draw(gdata, options);
             }
 
         }).fail(function () {
