@@ -15,6 +15,7 @@ install:
   - composer install
   - php artisan env
   - mv -v .env.testing .env
+  - php artisan migrate --seed
 
 script:
   - phpunit --debug
