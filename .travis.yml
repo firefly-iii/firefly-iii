@@ -15,7 +15,7 @@ install:
   - mv -v .env.testing .env
 
 script:
-  - phpunit
+  - phpunit --debug
 
 after_script:
   - php vendor/bin/coveralls
