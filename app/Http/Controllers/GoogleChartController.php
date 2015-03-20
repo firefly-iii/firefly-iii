@@ -503,7 +503,7 @@ class GoogleChartController extends Controller
     {
         // oldest transaction in category:
         /** @var TransactionJournal $first */
-        $start = Session::get('start');
+        $start = clone Session::get('start');
         $chart->addColumn('Period', 'date');
         $chart->addColumn('Spent', 'number');
 
