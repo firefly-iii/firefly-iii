@@ -25,10 +25,7 @@ class ReminderHelper implements ReminderHelperInterface
      */
     public function createReminder(PiggyBank $piggyBank, Carbon $start, Carbon $end)
     {
-        $reminder = Auth::user()->reminders()
-                        ->where('remindersable_id', $piggyBank->id)
-                        ->onDates($start, $end)
-                        ->first();
+        $reminder = Auth::user()->reminders()->where('remindersable_id', $piggyBank->id)->onDates($start, $end)->first();
         if (is_null($reminder)) {
 
             if (!is_null($piggyBank->targetdate)) {
@@ -134,7 +131,8 @@ class ReminderHelper implements ReminderHelperInterface
     {
         /** @var PiggyBank $piggyBank */
         $piggyBank = $reminder->remindersable;
-        if(is_null($piggyBank)) {
+
+        if (is_null($piggyBank)) {
             return 'Piggy bank no longer exists.';
         }
 
