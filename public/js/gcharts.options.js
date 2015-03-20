@@ -16,7 +16,7 @@ var defaultLineChartOptions = {
     hAxis: {
         textStyle: {
             color: '#838383',
-            fontName: 'Roboto2',
+            fontName: 'Roboto',
             fontSize: '12'
         },
         baselineColor: '#aaaaaa',
@@ -27,7 +27,7 @@ var defaultLineChartOptions = {
     vAxis: {
         textStyle: {
             color: '#838383',
-            fontName: 'Roboto2',
+            fontName: 'Roboto',
             fontSize: '12'
         },
         baselineColor: '#aaaaaa',
@@ -43,7 +43,7 @@ var defaultBarChartOptions = {
     hAxis: {
         textStyle: {
             color: '#838383',
-            fontName: 'Roboto2',
+            fontName: 'Roboto',
             fontSize: '12'
         },
         baselineColor: '#aaaaaa',
@@ -54,7 +54,7 @@ var defaultBarChartOptions = {
     vAxis: {
         textStyle: {
             color: '#838383',
-            fontName: 'Roboto2',
+            fontName: 'Roboto',
             fontSize: '11'
         },
         textPosition: 'in',
@@ -110,7 +110,7 @@ var defaultColumnChartOptions = {
     hAxis: {
         textStyle: {
             color: '#838383',
-            fontName: 'Roboto2',
+            fontName: 'Roboto',
             fontSize: '12'
         },
         gridlines: {
@@ -123,7 +123,7 @@ var defaultColumnChartOptions = {
     vAxis: {
         textStyle: {
             color: '#838383',
-            fontName: 'Roboto2',
+            fontName: 'Roboto',
             fontSize: '12'
         },
         baselineColor: '#aaaaaa',
@@ -150,7 +150,7 @@ var defaultStackedColumnChartOptions = {
     hAxis: {
         textStyle: {
             color: '#838383',
-            fontName: 'Roboto2',
+            fontName: 'Roboto',
             fontSize: '12'
         },
         gridlines: {
@@ -160,7 +160,7 @@ var defaultStackedColumnChartOptions = {
     vAxis: {
         textStyle: {
             color: '#838383',
-            fontName: 'Roboto2',
+            fontName: 'Roboto',
             fontSize: '12'
         },
         format: '\u20AC #'
