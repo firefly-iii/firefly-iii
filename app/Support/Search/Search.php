@@ -125,6 +125,16 @@ class Search implements SearchInterface
 
             }
         );
-        return $set->merge($decrypted);
+        $filtered = $set->merge($decrypted);
+
+        $filtered->sortBy(
+            function (TransactionJournal $journal) {
+                return intval($journal->date->format('U'));
+            }
+        );
+
+        $filtered = $filtered->reverse();
+
+        return $filtered;
     }
 } 
