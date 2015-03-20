@@ -69,7 +69,7 @@
         <!-- REMINDERS -->
         <div class="panel panel-default">
             <div class="panel-heading">
-                <i class="fa fa-calendar-o"></i> Bills
+                <i class="fa fa-calendar-o"></i> <a href="{{route('bills.index')}}">Bills</a>
             </div>
             <div class="panel-body">
                 <div id="bills-chart"></div>

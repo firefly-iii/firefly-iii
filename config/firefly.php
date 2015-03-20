@@ -19,7 +19,8 @@ return [
 
     'accountRoles'             => [
         'defaultAsset' => 'Default asset account',
-        'sharedAsset'  => 'Shared asset account'
+        'sharedAsset'  => 'Shared asset account',
+        'savingAsset'  => 'Savings account'
     ],
 
     'range_to_text'            => [
