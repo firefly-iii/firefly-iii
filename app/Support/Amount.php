@@ -90,12 +90,23 @@ class Amount
     public function formatJournal(TransactionJournal $journal, $coloured = true)
     {
         $showPositive = true;
-        $symbol       = $journal->transactionCurrency->symbol;
-        $amount       = 0;
-        switch ($journal->transactionType->type) {
-            case 'Withdrawal':
-                $showPositive = false;
+        if (is_null($journal->symbol)) {
+            $symbol = $journal->transactionCurrency->symbol;
+        } else {
+            $symbol = $journal->symbol;
         }
+        $amount = 0;
+
+        if (is_null($journal->type)) {
+            $type = $journal->transactionType->type;
+        } else {
+            $type = $journal->type;
+        }
+
+        if ($type == 'Withdrawal') {
+            $showPositive = false;
+        }
+
         foreach ($journal->transactions as $t) {
             if (floatval($t->amount) > 0 && $showPositive === true) {
                 $amount = floatval($t->amount);

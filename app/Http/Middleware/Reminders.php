@@ -45,7 +45,7 @@ class Reminders
      */
     public function handle($request, Closure $next)
     {
-        if ($this->auth->check() && !$request->isJson()) {
+        if ($this->auth->check() && !$request->isXmlHttpRequest()) {
             // do reminders stuff.
             $piggyBanks = $this->auth->user()->piggyBanks()->where('remind_me', 1)->get();
             $today      = new Carbon;
@@ -84,7 +84,6 @@ class Reminders
             );
             View::share('reminders', $reminders);
         }
-
 
         return $next($request);
     }
