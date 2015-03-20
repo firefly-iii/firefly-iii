@@ -16,19 +16,17 @@ var defaultLineChartOptions = {
     hAxis: {
         textStyle: {
             color: '#838383',
-            fontName: 'Roboto',
-            fontSize: '12'
         },
         baselineColor: '#aaaaaa',
         gridlines: {
             color: 'transparent'
         }
     },
+    fontName: 'Roboto',
+    fontSize: 11,
     vAxis: {
         textStyle: {
             color: '#838383',
-            fontName: 'Roboto',
-            fontSize: '12'
         },
         baselineColor: '#aaaaaa',
         format: '\u20AC #'
@@ -43,19 +41,17 @@ var defaultBarChartOptions = {
     hAxis: {
         textStyle: {
             color: '#838383',
-            fontName: 'Roboto',
-            fontSize: '12'
         },
         baselineColor: '#aaaaaa',
         format: '\u20AC #'
 
     },
+    fontName: 'Roboto',
+    fontSize: 11,
     colors: ["#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043", "#9e9d24", "#5c6bc0", "#f06292", "#00796b", "#c2185b"],
     vAxis: {
         textStyle: {
             color: '#838383',
-            fontName: 'Roboto',
-            fontSize: '11'
         },
         textPosition: 'in',
         gridlines: {
@@ -88,6 +84,8 @@ var defaultComboChartOptions = {
         minValue: 0,
         format: '\u20AC #'
     },
+    fontName: 'Roboto',
+    fontSize: 11,
     legend: {
         position: 'none'
     },
@@ -107,11 +105,11 @@ var defaultColumnChartOptions = {
         width: '85%',
         height: '80%'
     },
+    fontName: 'Roboto',
+    fontSize: 11,
     hAxis: {
         textStyle: {
             color: '#838383',
-            fontName: 'Roboto',
-            fontSize: '12'
         },
         gridlines: {
             color: 'transparent'
@@ -123,8 +121,6 @@ var defaultColumnChartOptions = {
     vAxis: {
         textStyle: {
             color: '#838383',
-            fontName: 'Roboto',
-            fontSize: '12'
         },
         baselineColor: '#aaaaaa',
         format: '\u20AC #'
@@ -145,13 +141,13 @@ var defaultStackedColumnChartOptions = {
     legend: {
         position: 'none'
     },
+    fontName: 'Roboto',
+    fontSize: 11,
     isStacked: true,
     colors: ["#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043", "#9e9d24", "#5c6bc0", "#f06292", "#00796b", "#c2185b"],
     hAxis: {
         textStyle: {
             color: '#838383',
-            fontName: 'Roboto',
-            fontSize: '12'
         },
         gridlines: {
             color: 'transparent'
@@ -160,8 +156,6 @@ var defaultStackedColumnChartOptions = {
     vAxis: {
         textStyle: {
             color: '#838383',
-            fontName: 'Roboto',
-            fontSize: '12'
         },
         format: '\u20AC #'
     }
@@ -174,6 +168,8 @@ var defaultPieChartOptions = {
         width: '100%',
         height: '100%'
     },
+    fontName: 'Roboto',
+    fontSize: 11,
     height: 200,
     legend: {
         position: 'none'

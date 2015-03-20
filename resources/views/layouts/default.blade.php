@@ -14,7 +14,7 @@
         // {{{$subTitle}}}
     @endif
     </title>
-    <link href='http://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto:300,700,300italic' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="css/metisMenu.min.css" type="text/css" media="all" />
@@ -27,11 +27,6 @@
 
 
     @yield('styles')
-
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
 
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">
