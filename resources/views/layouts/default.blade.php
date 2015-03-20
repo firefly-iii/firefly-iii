@@ -14,7 +14,7 @@
         // {{{$subTitle}}}
     @endif
     </title>
-    <link href='http://fonts.googleapis.com/css?family=Roboto:300,700,300italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,700,300italic" type="ext/css" media="all" />
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="css/metisMenu.min.css" type="text/css" media="all" />
