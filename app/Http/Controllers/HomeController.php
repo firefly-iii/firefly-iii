@@ -1,6 +1,5 @@
 <?php namespace FireflyIII\Http\Controllers;
 
-use Auth;
 use Cache;
 use Carbon\Carbon;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -64,6 +63,7 @@ class HomeController extends Controller
         $start         = Session::get('start', Carbon::now()->startOfMonth());
         $end           = Session::get('end', Carbon::now()->endOfMonth());
         $accounts      = $repository->getFrontpageAccounts($frontPage);
+        $savings       = $repository->getSavingsAccounts();
 
         foreach ($accounts as $account) {
             $set = $repository->getFrontpageTransactions($account, $start, $end);
@@ -74,7 +74,7 @@ class HomeController extends Controller
 
         //        var_dump($transactions);
 
-        return view('index', compact('count', 'title', 'subTitle', 'mainTitleIcon', 'transactions'));
+        return view('index', compact('count', 'title','savings', 'subTitle', 'mainTitleIcon', 'transactions'));
     }
 
 

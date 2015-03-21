@@ -18,6 +18,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
 use Session;
+use Steam;
 
 /**
  * Class AccountRepository
@@ -118,6 +119,43 @@ class AccountRepository implements AccountRepositoryInterface
         //return Paginator::make($items, $count, 50);
 
 
+    }
+
+    /**
+     * Get savings accounts and the balance difference in the period.
+     *
+     * @return Collection
+     */
+    public function getSavingsAccounts()
+    {
+        $accounts = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')
+                        ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
+                        ->where('account_meta.name', 'accountRole')
+                        ->where('account_meta.data', '"savingAsset"')
+                        ->get(['accounts.*']);
+        $start    = clone Session::get('start');
+        $end      = clone Session::get('end');
+
+        $accounts->each(
+            function (Account $account) use ($start, $end) {
+                $account->startBalance = Steam::balance($account, $start);
+                $account->endBalance   = Steam::balance($account, $end);
+
+                // diff (negative when lost, positive when gained)
+                $diff = $account->endBalance - $account->startBalance;
+
+                if ($diff < 0) {
+                    // percentage lost compared to start.
+                    $pct = (($diff * -1) / $account->startBalance) * 100;
+                } else {
+                    $pct = ($diff / $account->startBalance) * 100;
+                }
+                $account->difference = $diff;
+                $account->percentage = round($pct);
+            }
+        );
+
+        return $accounts;
     }
 
     /**

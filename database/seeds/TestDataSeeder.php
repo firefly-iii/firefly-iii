@@ -139,7 +139,7 @@ class TestDataSeeder extends Seeder
 
         // create account meta:
         $meta_a = AccountMeta::create(['account_id' => $acc_a->id, 'name' => 'accountRole', 'data' => 'defaultAsset']);
-        $meta_b = AccountMeta::create(['account_id' => $acc_b->id, 'name' => 'accountRole', 'data' => 'defaultAsset']);
+        $meta_b = AccountMeta::create(['account_id' => $acc_b->id, 'name' => 'accountRole', 'data' => 'savingAsset']);
         $meta_c = AccountMeta::create(['account_id' => $acc_c->id, 'name' => 'accountRole', 'data' => 'defaultAsset']);
 //        var_dump($meta_a->toArray());
 //        var_dump($meta_b->toArray());
