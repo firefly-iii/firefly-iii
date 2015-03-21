@@ -17,8 +17,8 @@
     <tr>
         <td>
             <div class="btn-group btn-group-xs">
-                <a class="btn btn-default btn-xs" href="{{route('accounts.edit',$account->id)}}"><span class="glyphicon glyphicon-pencil"></span></a>
-                <a class="btn btn-danger btn-xs" href="{{route('accounts.delete',$account->id)}}"><span class="glyphicon glyphicon-trash"></span></a>
+                <a class="btn btn-default btn-xs" href="{{route('accounts.edit',$account->id)}}"><i class="fa fa-fw fa-pencil"></i></a>
+                <a class="btn btn-danger btn-xs" href="{{route('accounts.delete',$account->id)}}"><i class="fa fa-fw fa-trash-o"></i></a>
             </div>
         </td>
         <td><a href="{{route('accounts.show',$account->id)}}">{{{$account->name}}}</a></td>

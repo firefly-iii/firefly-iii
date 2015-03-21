@@ -10,7 +10,7 @@
             <i class="fa fa-long-arrow-right fa-fw" title="Deposit"></i>
         @endif
         @if($journal->transactiontype->type == 'Transfer')
-            <i class="fa fa-arrows-h fa-fw" title="Transfer"></i>
+                <i class="fa fa-fw fa-exchange" title="Transfer"></i>
         @endif
     @else
         @if($journal->type == 'Withdrawal')
@@ -20,7 +20,7 @@
             <i class="fa fa-long-arrow-right fa-fw" title="Deposit"></i>
         @endif
         @if($journal->type == 'Transfer')
-            <i class="fa fa-arrows-h fa-fw" title="Transfer"></i>
+                <i class="fa fa-fw fa-exchange" title="Transfer"></i>
         @endif
     @endif
 

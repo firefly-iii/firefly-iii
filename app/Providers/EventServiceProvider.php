@@ -74,6 +74,8 @@ class EventServiceProvider extends ServiceProvider
             }
         );
 
+        // move this routine to a filter
+        // in case of repeated piggy banks and/or other problems.
         PiggyBank::created(
             function (PiggyBank $piggyBank) {
                 $repetition = new PiggyBankRepetition;

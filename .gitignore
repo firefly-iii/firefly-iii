@@ -26,3 +26,4 @@ db.sqlite-journal
 tests/_output/*
 .env
 clover.xml
+node_modules/

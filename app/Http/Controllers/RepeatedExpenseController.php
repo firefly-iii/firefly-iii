@@ -159,6 +159,7 @@ class RepeatedExpenseController extends Controller
             'reminder'     => $request->get('reminder'),
             'skip'         => intval($request->get('skip')),
             'rep_every'    => intval($request->get('rep_every')),
+            'rep_length'    => $request->get('rep_length'),
             'rep_times'    => intval($request->get('rep_times')),
         ];
 

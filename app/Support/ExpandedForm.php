@@ -2,13 +2,13 @@
 
 namespace FireflyIII\Support;
 
+use Amount as Amt;
 use FireflyIII\Models\TransactionCurrency;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Input;
 use Session;
 use View;
-use Amount as Amt;
 
 /**
  * Class ExpandedForm
@@ -96,24 +96,14 @@ class ExpandedForm
     public function getHolderClasses($name)
     {
         /*
-       * Get errors, warnings and successes from session:
+       * Get errors from session:
        */
         /** @var MessageBag $errors */
-        $errors = Session::get('errors');
+        $errors  = Session::get('errors');
+        $classes = 'form-group';
 
-        /** @var MessageBag $successes */
-        $successes = Session::get('successes');
-
-        switch (true) {
-            case (!is_null($errors) && $errors->has($name)):
-                $classes = 'form-group has-error has-feedback';
-                break;
-            case (!is_null($successes) && $successes->has($name)):
-                $classes = 'form-group has-success has-feedback';
-                break;
-            default:
-                $classes = 'form-group';
-                break;
+        if (!is_null($errors) && $errors->has($name)) {
+            $classes = 'form-group has-error has-feedback';
         }
 
         return $classes;

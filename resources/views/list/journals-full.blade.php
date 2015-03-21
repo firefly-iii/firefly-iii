@@ -24,7 +24,7 @@
         <tr>
             <td>
                 <div class="btn-group btn-group-xs">
-                    <a href="{{route('transactions.delete',$journal->id)}}" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                    <a href="{{route('transactions.delete',$journal->id)}}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
                 </div>
             </td>
             <td>&nbsp;</td>
@@ -35,8 +35,8 @@
     <tr>
         <td>
             <div class="btn-group btn-group-xs">
-                <a href="{{route('transactions.edit',$journal->id)}}" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
-                <a href="{{route('transactions.delete',$journal->id)}}" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                <a href="{{route('transactions.edit',$journal->id)}}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
+                <a href="{{route('transactions.delete',$journal->id)}}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
             </div>
         </td>
         <td>
@@ -47,7 +47,7 @@
                 <span class="glyphicon glyphicon-arrow-right" title="Deposit"></span>
             @endif
             @if($journal->transactiontype->type == 'Transfer')
-                <span class="glyphicon glyphicon-resize-full" title="Transfer"></span>
+                <i class="fa fa-fw fa-exchange" title="Transfer"></i>
             @endif
             @if($journal->transactiontype->type == 'Opening balance')
                 <span class="glyphicon glyphicon-ban-circle" title="Opening balance"></span>

@@ -141,7 +141,7 @@
                         <a @if($isDeposit)class="active"@endif href="{{route('transactions.index','deposit')}}"><i class="fa fa-long-arrow-right fa-fw"></i> Revenue / income</a>
                     </li>
                     <li>
-                        <a @if($isTransfer)class="active"@endif href="{{route('transactions.index','transfers')}}"><i class="fa fa-arrows-h fa-fw"></i> Transfers</a>
+                        <a @if($isTransfer)class="active"@endif href="{{route('transactions.index','transfers')}}"><i class="fa fa-fw fa-exchange" title="Transfer"></i> Transfers</a>
                     </li>
                 </ul>
 
@@ -184,7 +184,7 @@
                         <a @if($isDeposit)class="active"@endif href="{{route('transactions.create','deposit')}}"><i class="fa fa-long-arrow-right fa-fw"></i> Deposit</a>
                     </li>
                     <li>
-                        <a @if($isTransfer)class="active"@endif href="{{route('transactions.create','transfer')}}"><i class="fa fa-arrows-h fa-fw"></i> Transfer</a>
+                        <a @if($isTransfer)class="active"@endif href="{{route('transactions.create','transfer')}}"><i class="fa fa-fw fa-exchange" title="Transfer"></i> Transfer</a>
                     </li>
                     <li>
                         <a @if($isBill)class="active"@endif href="{{route('bills.create')}}"><i class="fa fa-calendar-o fa-fw"></i> Bill</a>

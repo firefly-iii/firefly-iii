@@ -48,4 +48,16 @@ class PiggyBankRepetition extends Model
             });
     }
 
+    /**
+     * @param EloquentBuilder $query
+     * @param Carbon          $start
+     * @param Carbon          $target
+     *
+     * @return $this
+     */
+    public function scopeOnDates(EloquentBuilder $query, Carbon $start, Carbon $target)
+    {
+        return $query->where('startdate',$start->format('Y-m-d'))->where('targetdate',$target->format('Y-m-d'));
+    }
+
 }

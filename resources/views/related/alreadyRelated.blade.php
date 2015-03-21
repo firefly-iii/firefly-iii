@@ -2,7 +2,8 @@
 <table class="table table-bordered table-striped table-condensed">
     @foreach($journals as $journal)
         <tr>
-            <td><a title="Unlink" data-id="{{$journal->id}}" data-parent="{{$parent->id}}" class="btn unrelate btn-xs btn-default" href="#"><span class="glyphicon glyphicon-resize-full"></span></a></td>
+            <td>
+                <a title="Unlink" data-id="{{$journal->id}}" data-parent="{{$parent->id}}" class="btn unrelate btn-xs btn-default" href="#"><i class="fa fa-fw fa-expand"></i></a></td>
             <td>
                 @if($journal->transactiontype->type == 'Withdrawal')
                     <i class="fa fa-long-arrow-left fa-fw" title="Withdrawal"></i>
@@ -11,7 +12,7 @@
                     <i class="fa fa-long-arrow-right fa-fw" title="Deposit"></i>
                 @endif
                 @if($journal->transactiontype->type == 'Transfer')
-                    <i class="fa fa-arrows-h fa-fw" title="Transfer"></i>
+                    <i class="fa fa-fw fa-exchange" title="Transfer"></i>
                 @endif
             </td>
             <td>{{$journal->date->format('jS M Y')}}</td>

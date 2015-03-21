@@ -210,42 +210,6 @@ class BillController extends Controller
 
         return Redirect::route('bills.index');
 
-
-        //        $data              = Input::except('_token');
-        //        $data['active']    = intval(Input::get('active'));
-        //        $data['automatch'] = intval(Input::get('automatch'));
-        //        $data['user_id']   = Auth::user()->id;
-        //
-        //        // always validate:
-        //        $messages = $this->_repository->validate($data);
-        //
-        //        // flash messages:
-        //        Session::flash('warnings', $messages['warnings']);
-        //        Session::flash('successes', $messages['successes']);
-        //        Session::flash('errors', $messages['errors']);
-        //        if ($messages['errors']->count() > 0) {
-        //            Session::flash('error', 'Could not update bill: ' . $messages['errors']->first());
-        //
-        //            return Redirect::route('bills.edit', $bill->id)->withInput();
-        //        }
-        //
-        //        // return to update screen:
-        //        if ($data['post_submit_action'] == 'validate_only') {
-        //            return Redirect::route('bills.edit', $bill->id)->withInput();
-        //        }
-        //
-        //        // update
-        //        $this->_repository->update($bill, $data);
-        //        Session::flash('success', 'Bill "' . e($data['name']) . '" updated.');
-        //
-        //        // go back to list
-        //        if ($data['post_submit_action'] == 'update') {
-        //            return Redirect::route('bills.index');
-        //        }
-        //
-        //        // go back to update screen.
-        //        return Redirect::route('bills.edit', $bill->id)->withInput(['post_submit_action' => 'return_to_edit']);
-
     }
 
 }

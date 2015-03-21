@@ -37,6 +37,7 @@ class Kernel extends HttpKernel
             'guest'      => 'FireflyIII\Http\Middleware\RedirectIfAuthenticated',
             'range'      => 'FireflyIII\Http\Middleware\Range',
             'reminders'  => 'FireflyIII\Http\Middleware\Reminders',
+            'piggybanks' => 'FireflyIII\Http\Middleware\PiggyBanks',
         ];
 
 }

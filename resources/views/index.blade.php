@@ -141,7 +141,7 @@
                         <ul class="dropdown-menu pull-right" role="menu">
                             <li><a href="{{route('transactions.create','withdrawal')}}?account_id={{{$data[1]->id}}}"><i class="fa fa-long-arrow-left fa-fw"></i> New withdrawal</a></li>
                             <li><a href="{{route('transactions.create','deposit')}}?account_id={{{$data[1]->id}}}"><i class="fa fa-long-arrow-right fa-fw"></i> New deposit</a></li>
-                            <li><a href="{{route('transactions.create','transfer')}}?account_from_id={{{$data[1]->id}}}"><i class="fa fa-arrows-h fa-fw"></i> New transfer</a></li>
+                            <li><a href="{{route('transactions.create','transfer')}}?account_from_id={{{$data[1]->id}}}"><i class="fa fa-fw fa-exchange"></i> New transfer</a></li>
                         </ul>
                     </div>
                 </div>

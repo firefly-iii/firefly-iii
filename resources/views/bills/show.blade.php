@@ -8,15 +8,15 @@
                 <i class="fa fa-rotate-right"></i> {{{$bill->name}}}
 
                 @if($bill->active)
-                    <span class="glyphicon glyphicon-ok" title="Active"></span>
+                    <i class="fa fa-check fa-fw" title="Active"></i>
                 @else
-                    <span class="glyphicon glyphicon-remove" title="Inactive"></span>
+                    <i class="fa fa-times fa-fw" title="Inactive"></i>
                 @endif
 
                 @if($bill->automatch)
-                    <span class="glyphicon glyphicon-ok" title="Automatically matched by Firefly"></span>
+                    <i class="fa fa-check fa-fw" title="Automatically matched by Firefly"></i>
                 @else
-                    <span class="glyphicon glyphicon-remove" title="Not automatically matched by Firefly"></span>
+                    <i class="fa fa-times fa-fw" title="Not automatically matched by Firefly"></i>
                 @endif
 
                 <!-- ACTIONS MENU -->
@@ -27,8 +27,8 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu pull-right" role="menu">
-                            <li><a href="{{route('bills.edit',$bill->id)}}"><span class="glyphicon glyphicon-pencil"></span> edit</a></li>
-                            <li><a href="{{route('bills.delete',$bill->id)}}"><span class="glyphicon glyphicon-trash"></span> delete</a></li>
+                            <li><a href="{{route('bills.edit',$bill->id)}}"><i class="fa fa-fw fa-pencil"></i> edit</a></li>
+                            <li><a href="{{route('bills.delete',$bill->id)}}"><i class="fa fa-fw fa-trash-o"></i> delete</a></li>
                         </ul>
                     </div>
                 </div>

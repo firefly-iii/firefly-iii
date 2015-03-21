@@ -15,11 +15,11 @@
     @endif
     </title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,700,300italic" type="ext/css" media="all" />
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="css/metisMenu.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="css/sb-admin-2.css" type="text/css" media="all" />
-    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css" type="text/css" media="all" />
     <!-- date range -->
     <link rel="stylesheet" href="css/daterangepicker-bs3.css" type="text/css" media="all" />
 

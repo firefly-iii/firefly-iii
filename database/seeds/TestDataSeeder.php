@@ -116,9 +116,9 @@ class TestDataSeeder extends Seeder
      */
     public function createUsers()
     {
-        User::create(['email' => 'reset@example.com', 'password' => 'functional', 'reset' => 'okokokokokokokokokokokokokokokok', 'remember_token' => null]);
-        User::create(['email' => 'functional@example.com', 'password' => 'functional', 'reset' => null, 'remember_token' => null]);
-        User::create(['email' => 'thegrumpydictator@gmail.com', 'password' => 'james', 'reset' => null, 'remember_token' => null]);
+        User::create(['email' => 'reset@example.com', 'password' => bcrypt('functional'), 'reset' => 'okokokokokokokokokokokokokokokok', 'remember_token' => null]);
+        User::create(['email' => 'functional@example.com', 'password' => bcrypt('functional'), 'reset' => null, 'remember_token' => null]);
+        User::create(['email' => 'thegrumpydictator@gmail.com', 'password' => bcrypt('james'), 'reset' => null, 'remember_token' => null]);
     }
 
     /**
