@@ -151,7 +151,7 @@ class AccountRepository implements AccountRepositoryInterface
                     if ($diff >= 0 && $account->startBalance > 0) {
                         $pct = ($diff / $account->startBalance) * 100;
                     } else {
-                        $pct = 0;
+                        $pct = 100;
                     }
                 }
                 $pct                 = $pct > 100 ? 100 : $pct;
