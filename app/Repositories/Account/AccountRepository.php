@@ -144,13 +144,17 @@ class AccountRepository implements AccountRepositoryInterface
                 // diff (negative when lost, positive when gained)
                 $diff = $account->endBalance - $account->startBalance;
 
-                if ($diff < 0) {
+                if ($diff < 0 && $account->startBalance > 0) {
                     // percentage lost compared to start.
                     $pct = (($diff * -1) / $account->startBalance) * 100;
                 } else {
-                    $pct = ($diff / $account->startBalance) * 100;
+                    if ($diff >= 0 && $account->startBalance > 0) {
+                        $pct = ($diff / $account->startBalance) * 100;
+                    } else {
+                        $pct = 0;
+                    }
                 }
-                $pct = $pct > 100 ? 100 : $pct;
+                $pct                 = $pct > 100 ? 100 : $pct;
                 $account->difference = $diff;
                 $account->percentage = round($pct);
             }
