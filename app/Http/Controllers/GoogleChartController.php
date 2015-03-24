@@ -534,8 +534,6 @@ class GoogleChartController extends Controller
 
         /** @var Collection $set */
         $set = DB::table('piggy_bank_events')->where('piggy_bank_id', $piggyBank->id)->groupBy('date')->get(['date', DB::Raw('SUM(`amount`) AS `sum`')]);
-
-        $first = $set->first();
         $sum = 0;
 
         foreach ($set as $entry) {
