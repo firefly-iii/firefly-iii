@@ -63,6 +63,7 @@ class ConnectJournalToPiggyBank
         // update piggy bank rep for date of transaction journal.
         $repetition = $piggyBank->piggyBankRepetitions()->relevantOnDate($journal->date)->first();
         if (is_null($repetition)) {
+            Log::debug('Found no repetition for piggy bank for date '.$journal->date->format('Y M d'));
             return;
         }
 
