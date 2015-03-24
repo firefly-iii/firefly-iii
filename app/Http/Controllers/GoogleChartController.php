@@ -532,10 +532,15 @@ class GoogleChartController extends Controller
         $chart->addColumn('Date', 'date');
         $chart->addColumn('Balance', 'number');
 
-        $set = \DB::table('piggy_bank_events')->where('piggy_bank_id', $piggyBank->id)->groupBy('date')->get(['date', DB::Raw('SUM(`amount`) AS `sum`')]);
+        /** @var Collection $set */
+        $set = DB::table('piggy_bank_events')->where('piggy_bank_id', $piggyBank->id)->groupBy('date')->get(['date', DB::Raw('SUM(`amount`) AS `sum`')]);
+
+        $first = $set->first();
+        $sum = floatval($first->sum);
 
         foreach ($set as $entry) {
-            $chart->addRow(new Carbon($entry->date), floatval($entry->sum));
+            $sum += floatval($entry->sum);
+            $chart->addRow(new Carbon($entry->date), $sum);
         }
 
         $chart->generate();
