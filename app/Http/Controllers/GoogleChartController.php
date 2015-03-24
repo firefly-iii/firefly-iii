@@ -536,7 +536,7 @@ class GoogleChartController extends Controller
         $set = DB::table('piggy_bank_events')->where('piggy_bank_id', $piggyBank->id)->groupBy('date')->get(['date', DB::Raw('SUM(`amount`) AS `sum`')]);
 
         $first = $set->first();
-        $sum = floatval($first->sum);
+        $sum = 0;
 
         foreach ($set as $entry) {
             $sum += floatval($entry->sum);
