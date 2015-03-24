@@ -180,22 +180,19 @@ class TransactionController extends Controller
             case 'withdrawal':
                 $subTitleIcon = 'fa-long-arrow-left';
                 $subTitle     = 'Expenses';
-                //$journals     = $this->_repository->getWithdrawalsPaginated(50);
-                $types = ['Withdrawal'];
+                $types        = ['Withdrawal'];
                 break;
             case 'revenue':
             case 'deposit':
                 $subTitleIcon = 'fa-long-arrow-right';
                 $subTitle     = 'Revenue, income and deposits';
-                //                $journals     = $this->_repository->getDepositsPaginated(50);
-                $types = ['Deposit'];
+                $types        = ['Deposit'];
                 break;
             case 'transfer':
             case 'transfers':
-                $subTitleIcon = 'fa-arrows-h';
+                $subTitleIcon = 'fa-exchange';
                 $subTitle     = 'Transfers';
-                //$journals     = $this->_repository->getTransfersPaginated(50);
-                $types = ['Transfer'];
+                $types        = ['Transfer'];
                 break;
         }
 
