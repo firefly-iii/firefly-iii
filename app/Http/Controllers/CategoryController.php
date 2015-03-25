@@ -155,6 +155,10 @@ class CategoryController extends Controller
 
         Session::flash('success', 'New category "' . $category->name . '" stored!');
 
+        if (intval(Input::get('create_another')) === 1) {
+            return Redirect::route('categories.create');
+        }
+
         return Redirect::route('categories.index');
 
     }
