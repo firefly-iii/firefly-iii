@@ -69,6 +69,7 @@ class FireflyValidator extends Validator
     public function validateUniqueForUser($attribute, $value, $parameters)
     {
         $query = DB::table($parameters[0])->where($parameters[1], $value);
+        $query->where('user_id',Auth::user()->id);
         if (isset($paramers[2])) {
             $query->where('id', '!=', $parameters[2]);
         }
