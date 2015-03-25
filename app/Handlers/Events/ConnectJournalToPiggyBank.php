@@ -38,6 +38,9 @@ class ConnectJournalToPiggyBank
         /** @var TransactionJournal $journal */
         $journal     = $event->journal;
         $piggyBankId = $event->piggyBankId;
+        if(intval($piggyBankId) < 1) {
+            return;
+        }
 
         Log::debug('JournalCreated event: ' . $journal->id . ', ' . $piggyBankId);
 

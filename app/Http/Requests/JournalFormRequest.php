@@ -59,7 +59,6 @@ class JournalFormRequest extends Request
             case 'transfer':
                 $rules['account_from_id'] = 'required|exists:accounts,id|belongsToUser:accounts|different:account_to_id';
                 $rules['account_to_id']   = 'required|exists:accounts,id|belongsToUser:accounts|different:account_from_id';
-                $rules['piggy_bank_id']   = 'exists:piggy_banks,id';
                 $rules['category']        = 'between:1,255';
                 break;
             default:
