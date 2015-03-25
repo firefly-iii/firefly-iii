@@ -66,7 +66,7 @@ class AuthController extends Controller
         $data  =$request->all();
         $data['password'] = bcrypt($data['password']);
 
-        $this->auth->login($this->registrar->create($request->all()));
+        $this->auth->login($this->registrar->create($data));
 
         // get the email address
         $email = $this->auth->user()->email;
