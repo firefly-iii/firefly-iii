@@ -235,7 +235,9 @@ class GoogleChartController extends Controller
         // query!
         $start = Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());
-        $set   = TransactionJournal::leftJoin(
+        $set   = TransactionJournal::
+            where('user_id',Auth::user()->id)
+            ->leftJoin(
             'transactions',
             function (JoinClause $join) {
                 $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('amount', '>', 0);
