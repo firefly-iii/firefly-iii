@@ -320,6 +320,7 @@ class TransactionController extends Controller
             return Redirect::route('transactions.edit', $journal->id);
         }
 
+
         return Redirect::route('transactions.index', $journalData['what']);
 
     }
