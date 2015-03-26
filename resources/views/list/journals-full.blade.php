@@ -35,7 +35,7 @@
     <tr class="drag" data-date="{{$journal->date->format('Y-m-d')}}">
         <td>
             <div class="btn-group btn-group-xs">
-                <a href="#" class="btn btn-default btn-xs"><i class="fa fa-fw fa-arrows-v"></i></a>
+                <a href="#" class="handle btn btn-default btn-xs"><i class="fa fa-fw fa-arrows-v"></i></a>
                 <a href="{{route('transactions.edit',$journal->id)}}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
                 <a href="{{route('transactions.delete',$journal->id)}}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
             </div>

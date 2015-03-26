@@ -35,6 +35,7 @@ $(document).ready(function () {
             //stop: stopSorting,
             items: 'tr:not(.ignore)',
             stop: sortStop,
+            handle: '.handle'
             //revert: 'invalid'
         }
     ).disableSelection();
