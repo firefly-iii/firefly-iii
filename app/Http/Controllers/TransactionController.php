@@ -236,6 +236,12 @@ class TransactionController extends Controller
         );
     }
 
+    /**
+     * @param JournalFormRequest         $request
+     * @param JournalRepositoryInterface $repository
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse
+     */
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository)
     {
         $journalData = [

@@ -291,7 +291,10 @@ class PiggyBankController extends Controller
     }
 
     /**
+     * @param PiggyBankFormRequest         $request
+     * @param PiggyBankRepositoryInterface $repository
      *
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
     public function store(PiggyBankFormRequest $request, PiggyBankRepositoryInterface $repository)
     {

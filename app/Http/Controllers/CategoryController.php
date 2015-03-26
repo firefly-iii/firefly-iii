@@ -156,7 +156,7 @@ class CategoryController extends Controller
         Session::flash('success', 'New category "' . $category->name . '" stored!');
         
         if (intval(Input::get('create_another')) === 1) {
-            return Redirect::route('categories.create');
+            return Redirect::route('categories.create')->withInput();
         }
 
         return Redirect::route('categories.index');
@@ -180,6 +180,10 @@ class CategoryController extends Controller
         $repository->update($category, $categoryData);
 
         Session::flash('success', 'Category "' . $category->name . '" updated.');
+
+        if (intval(Input::get('return_to_edit')) === 1) {
+            return Redirect::route('categories.edit', $category->id);
+        }
 
         return Redirect::route('categories.index');
 

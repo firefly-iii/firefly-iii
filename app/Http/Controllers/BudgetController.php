@@ -152,6 +152,12 @@ class BudgetController extends Controller
         return Redirect::route('budgets.index');
     }
 
+    /**
+     * @param BudgetFormRequest         $request
+     * @param BudgetRepositoryInterface $repository
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(BudgetFormRequest $request, BudgetRepositoryInterface $repository)
     {
         $budgetData = [
@@ -203,6 +209,10 @@ class BudgetController extends Controller
         $repository->update($budget, $budgetData);
 
         Session::flash('success', 'Budget "' . $budget->name . '" updated.');
+
+        if (intval(Input::get('return_to_edit')) === 1) {
+            return Redirect::route('budgets.edit', $budget->id);
+        }
 
         return Redirect::route('budgets.index');
 

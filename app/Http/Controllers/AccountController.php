@@ -196,7 +196,7 @@ class AccountController extends Controller
         Session::flash('success', 'New account "' . $account->name . '" stored!');
 
         if (intval(Input::get('create_another')) === 1) {
-            return Redirect::route('accounts.create', $request->input('what'));
+            return Redirect::route('accounts.create', $request->input('what'))->withInput();
         }
 
         return Redirect::route('accounts.index', $request->input('what'));
