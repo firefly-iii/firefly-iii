@@ -285,12 +285,14 @@ class AccountRepository implements AccountRepositoryInterface
                 'active'          => $data['active'] === true ? true : false,
             ]
         );
+
         if (!$newAccount->isValid()) {
             // does the account already exist?
             $existingAccount = Account::where('user_id', $data['user'])->where('account_type_id', $accountType->id)->where('name', $data['name'])->first();
             if (!$existingAccount) {
                 Log::error('Account create error: ' . $newAccount->getErrors()->toJson());
-                var_dump($newAccount->getErrors()->toArray());
+                App::abort(500);
+
             }
             $newAccount = $existingAccount;
         }

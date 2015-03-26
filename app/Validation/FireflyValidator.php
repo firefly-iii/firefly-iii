@@ -4,8 +4,11 @@ namespace FireflyIII\Validation;
 
 use Auth;
 use Carbon\Carbon;
+use Config;
 use DB;
+use FireflyIII\Models\AccountType;
 use Illuminate\Validation\Validator;
+use Input;
 use Navigation;
 
 /**
@@ -34,6 +37,13 @@ class FireflyValidator extends Validator
 
     }
 
+    /**
+     * @param $attribute
+     * @param $value
+     * @param $parameters
+     *
+     * @return bool
+     */
     public function validatePiggyBankReminder($attribute, $value, $parameters)
     {
         $array = $this->data;
@@ -51,12 +61,42 @@ class FireflyValidator extends Validator
             return true;
         }
 
-        $nextReminder = Navigation::addPeriod($startDate, $array['reminder'],0);
+        $nextReminder = Navigation::addPeriod($startDate, $array['reminder'], 0);
         // reminder is beyond target?
-        if($nextReminder > $targetDate) {
+        if ($nextReminder > $targetDate) {
             return false;
         }
+
         return true;
+    }
+
+    /**
+     * @param $attribute
+     * @param $value
+     * @param $parameters
+     *
+     * @return bool
+     */
+    public function validateUniqueAccountForUser($attribute, $value, $parameters)
+    {
+        // get account type from data, we must have this:
+        $type     = isset($this->data['what']) ? $this->data['what'] : Input::get('what');
+        $longType = Config::get('firefly.accountTypeByIdentifier.' . $type);
+        $dbType   = AccountType::whereType($longType)->first();
+        if (!$dbType) {
+            return false;
+        }
+        $query = DB::table('accounts')->where('name', $value)->where('account_type_id', $dbType->id)->where('user_id', Auth::user()->id);
+        if (isset($parameters[0])) {
+            $query->where('id', '!=', $parameters[0]);
+        }
+        $count = $query->count();
+        if ($count == 0) {
+            return true;
+        }
+
+        return false;
+
     }
 
     /**
@@ -69,7 +109,7 @@ class FireflyValidator extends Validator
     public function validateUniqueForUser($attribute, $value, $parameters)
     {
         $query = DB::table($parameters[0])->where($parameters[1], $value);
-        $query->where('user_id',Auth::user()->id);
+        $query->where('user_id', Auth::user()->id);
         if (isset($paramers[2])) {
             $query->where('id', '!=', $parameters[2]);
         }
