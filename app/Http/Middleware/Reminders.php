@@ -9,7 +9,7 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Reminder;
 use Illuminate\Contracts\Auth\Guard;
 use View;
-use Illuminate\Support\Collection;
+
 /**
  * Class Reminders
  *
@@ -67,10 +67,10 @@ class Reminders
                 }
             }
             // delete invalid reminders
-            $set = $this->auth->user()->reminders()->
-                leftJoin('piggy_banks','piggy_banks.id','=','remindersable_id')->
-                whereNull('piggy_banks.id')->get(['reminders.id']);
-            foreach($set as $reminder) {
+            $set = $this->auth->user()->reminders()->leftJoin('piggy_banks', 'piggy_banks.id', '=', 'remindersable_id')->whereNull('piggy_banks.id')->get(
+                ['reminders.id']
+            );
+            foreach ($set as $reminder) {
                 $reminder->delete();
             }
 

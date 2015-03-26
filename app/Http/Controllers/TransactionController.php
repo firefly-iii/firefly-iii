@@ -287,7 +287,6 @@ class TransactionController extends Controller
      * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
      *
      * @return $this
-     * @throws FireflyException
      */
     public function update(TransactionJournal $journal, JournalFormRequest $request, JournalRepositoryInterface $repository)
     {

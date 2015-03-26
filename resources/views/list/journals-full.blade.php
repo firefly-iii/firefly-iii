@@ -1,8 +1,8 @@
 @if(is_object($journals) && method_exists($journals, 'render'))
 {!! $journals->render() !!}
 @endif
-<table class="table table-striped table-bordered">
-    <tr>
+<table class="table table-striped table-bordered sortable-table">
+    <tr class="ignore">
         <th colspan="2">&nbsp;</th>
         <th>Description</th>
         <th>Amount</th>
@@ -21,7 +21,7 @@
     </tr>
     @foreach($journals as $journal)
     @if(!isset($journal->transactions[1]) || !isset($journal->transactions[0]))
-        <tr>
+        <tr class="ignore">
             <td>
                 <div class="btn-group btn-group-xs">
                     <a href="{{route('transactions.delete',$journal->id)}}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
@@ -32,9 +32,10 @@
             <td colspan="7"><em>Invalid journal: Found {{$journal->transactions()->count()}} transaction(s)</td>
         </tr>
     @else
-    <tr>
+    <tr class="drag" data-date="{{$journal->date->format('Y-m-d')}}">
         <td>
             <div class="btn-group btn-group-xs">
+                <a href="#" class="btn btn-default btn-xs"><i class="fa fa-fw fa-arrows-v"></i></a>
                 <a href="{{route('transactions.edit',$journal->id)}}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
                 <a href="{{route('transactions.delete',$journal->id)}}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
             </div>

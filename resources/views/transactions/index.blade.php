@@ -14,3 +14,8 @@
 
 
 @stop
+@section('scripts')
+    <script src="js/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="js/transactions.js" type="text/javascript"></script>
+
+@stop
