@@ -80,18 +80,36 @@ class FireflyValidator extends Validator
     public function validateUniqueAccountForUser($attribute, $value, $parameters)
     {
         // get account type from data, we must have this:
-        $type     = isset($this->data['what']) ? $this->data['what'] : Input::get('what');
-        $longType = Config::get('firefly.accountTypeByIdentifier.' . $type);
-        $dbType   = AccountType::whereType($longType)->first();
-        if (!$dbType) {
+        $type     = isset($this->data['what']) ? $this->data['what'] : null;
+        // some fallback:
+        if(is_null($type)) {
+            $type = Input::get('what');
+        }
+        // still null?
+        if(is_null($type)) {
+            // find by other field:
+            $type = isset($this->data['account_type_id']) ? $this->data['account_type_id'] : 0;
+            $dbType   = AccountType::find($type);
+        } else {
+            $longType = Config::get('firefly.accountTypeByIdentifier.' . $type);
+            $dbType   = AccountType::whereType($longType)->first();
+        }
+
+        if (is_null($dbType)) {
             return false;
         }
-        $query = DB::table('accounts')->where('name', $value)->where('account_type_id', $dbType->id)->where('user_id', Auth::user()->id);
+
+        // user id?
+        $userId = Auth::check() ? Auth::user()->id : $this->data['user_id'];
+
+        $query = DB::table('accounts')->where('name', $value)->where('account_type_id', $dbType->id)->where('user_id', $userId);
+
         if (isset($parameters[0])) {
             $query->where('id', '!=', $parameters[0]);
         }
         $count = $query->count();
         if ($count == 0) {
+
             return true;
         }
 

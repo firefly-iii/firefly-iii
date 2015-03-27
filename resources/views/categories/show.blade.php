@@ -34,7 +34,7 @@
                 Transactions
             </div>
             <div class="panel-body">
-                @include('list.journals-full')
+                @include('list.journals-full',['sorting' => false])
             </div>
         </div>
     </div>

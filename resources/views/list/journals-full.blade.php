@@ -32,10 +32,12 @@
             <td colspan="7"><em>Invalid journal: Found {{$journal->transactions()->count()}} transaction(s)</td>
         </tr>
     @else
-    <tr class="drag" data-date="{{$journal->date->format('Y-m-d')}}">
+    <tr class="drag" data-date="{{$journal->date->format('Y-m-d')}}" data-id="{{$journal->id}}">
         <td>
             <div class="btn-group btn-group-xs">
-                <a href="#" class="handle btn btn-default btn-xs"><i class="fa fa-fw fa-arrows-v"></i></a>
+                @if($sorting === true)
+                    <a href="#" class="handle btn btn-default btn-xs"><i class="fa fa-fw fa-arrows-v"></i></a>
+                @endif
                 <a href="{{route('transactions.edit',$journal->id)}}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
                 <a href="{{route('transactions.delete',$journal->id)}}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
             </div>

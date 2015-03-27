@@ -211,6 +211,15 @@ class TransactionController extends Controller
     }
 
     /**
+     * Reorder transactions (which all must have the same date)
+     */
+    public function reorder()
+    {
+        $ids = Input::get('items');
+
+    }
+
+    /**
      * @param TransactionJournal $journal
      *
      * @return $this

@@ -31,45 +31,23 @@ $(document).ready(function () {
     $(".sortable-table tbody").sortable(
         {
             helper: fixHelper,
-            connectWith: '.sortable-table tbody',
-            //stop: stopSorting,
             items: 'tr:not(.ignore)',
             stop: sortStop,
-            handle: '.handle'
-            //revert: 'invalid'
+            handle: '.handle',
+            revert: 'invalid'
         }
     ).disableSelection();
 });
 
-function sortChange() {
-    //console.log("change");
-}
-
-function sortSort(event, ui) {
-    //var current = $(ui.item);
-    //var thisDate = current.data('date');
-
-    //if(current.prev().data('date') != thisDate && current.next().data('date') != thisDate) {
-    //    console.log('FALSE ['+current.prev().data('date')+'] ['+thisDate+'] ['+current.next().data('date')+'] ('+current.index()+')');
-    //    return true;
-
-    //    return false;
-    //}
-    //console.log('TRUE ['+current.prev().data('date')+'] ['+thisDate+'] ['+current.next().data('date')+'] ('+current.index()+')');
-
-}
-
 function sortStop(event, ui) {
-    console.log("stop");
     var current = $(ui.item);
     var thisDate = current.data('date');
     var originalBG = current.css('backgroundColor');
 
 
     if (current.prev().data('date') != thisDate && current.next().data('date') != thisDate) {
-        console.log('False!');
-        console.log('[' + current.prev().data('date') + '] [' + thisDate + '] [' + current.next().data('date') + ']');
-
+        //console.log('False!');
+        //console.log('[' + current.prev().data('date') + '] [' + thisDate + '] [' + current.next().data('date') + ']');
         // animate something with color:
         current.animate({
                             backgroundColor: "#d9534f"
@@ -79,13 +57,23 @@ function sortStop(event, ui) {
                             }, 200);
         });
 
-
-        // fade back to original
-
         return false;
     }
-    console.log('TRUE!');
-    console.log('[' + current.prev().data('date') + '] [' + thisDate + '] [' + current.next().data('date') + ']');
+
+    // do update
+    var list = $('tr[data-date="' + thisDate + '"]');
+    var submit = [];
+    $.each(list, function (i, v) {
+        var row = $(v);
+        var id = row.data('id');
+        submit.push(id);
+    });
+
+    $.post('/transaction/reorder',{items: submit,_token:token});
+    console.log(submit);
+
+    //console.log('TRUE!');
+    //console.log('[' + current.prev().data('date') + '] [' + thisDate + '] [' + current.next().data('date') + ']');
 
     current.animate({
                         backgroundColor: "#5cb85c"
@@ -94,6 +82,9 @@ function sortStop(event, ui) {
                             backgroundColor: originalBG
                         }, 200);
     });
+
+
+
 
     //else update some order thing bla bla.
     //check if the item above OR under this one have the same date
