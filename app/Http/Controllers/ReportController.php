@@ -13,6 +13,7 @@ use Preferences;
 use Session;
 use Steam;
 use View;
+use FireflyIII\Models\Preference;
 
 /**
  * Class ReportController
@@ -367,7 +368,7 @@ class ReportController extends Controller
         } catch (Exception $e) {
             return view('error')->with('message', 'Invalid date.');
         }
-
+        /** @var Preference $pref */
         $pref              = Preferences::get('showSharedReports', false);
         $showSharedReports = $pref->data;
         $date              = new Carbon('01-01-' . $year);

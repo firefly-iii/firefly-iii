@@ -54,17 +54,20 @@
                 $end   += $balance['end'];
                 $diff  += ($balance['end']-$balance['start']);
                 ?>
-                <tr>
-                    <td>
-                        <a href="{{route('accounts.show',$balance['account']->id)}}">{{{$balance['account']->name}}}</a>
-                        @if($balance['shared'])
-                        <small><em>shared</em></small>
-                        @endif
-                    </td>
-                    <td>{!! Amount::format($balance['start']) !!}</td>
-                    <td>{!! Amount::format($balance['end']) !!}</td>
-                    <td>{!! Amount::format($balance['end']-$balance['start']) !!}</td>
-                </tr>
+                @if($balance['hide'] === false)
+                    <tr>
+                        <td>
+                            <a href="{{route('accounts.show',$balance['account']->id)}}">{{{$balance['account']->name}}}</a>
+                            @if($balance['shared'])
+                            <small><em>shared</em></small>
+                            @endif
+
+                        </td>
+                        <td>{!! Amount::format($balance['start']) !!}</td>
+                        <td>{!! Amount::format($balance['end']) !!}</td>
+                        <td>{!! Amount::format($balance['end']-$balance['start']) !!}</td>
+                    </tr>
+                @endif
                 @endforeach
                 <tr>
                     <td><em>Sum of sums</em></td>
