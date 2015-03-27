@@ -80,10 +80,12 @@ class FireflyValidator extends Validator
     public function validateUniqueAccountForUser($attribute, $value, $parameters)
     {
         // get account type from data, we must have this:
-        $type     = isset($this->data['what']) ? $this->data['what'] : null;
+        $validTypes = [array_keys(Config::get('firefly.subTitlesByIdentifier'))];
+
+        $type     = isset($this->data['what']) && in_array($this->data['what'],$validTypes) ? $this->data['what'] : null;
         // some fallback:
         if(is_null($type)) {
-            $type = Input::get('what');
+            $type = in_array(Input::get('what'),$validTypes) ? Input::get('what') : null;
         }
         // still null?
         if(is_null($type)) {
