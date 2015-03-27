@@ -37,7 +37,7 @@
                 <i class="fa fa-repeat fa-fw"></i> Transactions
             </div>
             <div class="panel-body">
-                @include('list.journals-full',['sorting' => false])
+                @include('list.journals-full',['sorting' => true])
             </div>
     </div>
 </div>
@@ -49,10 +49,14 @@
 <script type="text/javascript">
     var accountID = {{{$account->id}}};
     var currencyCode = '{{Amount::getCurrencyCode()}}';
+    var token = "{{csrf_token()}}";
 </script>
 <!-- load the libraries and scripts necessary for Google Charts: -->
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="js/gcharts.options.js"></script>
 <script type="text/javascript" src="js/gcharts.js"></script>
 <script type="text/javascript" src="js/accounts.js"></script>
+
+<script src="js/jquery-ui.min.js" type="text/javascript"></script>
+<script src="js/transactions.js" type="text/javascript"></script>
 @stop

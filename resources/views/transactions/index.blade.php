@@ -7,7 +7,7 @@
             <div class="panel-heading">
                 <i class="fa {{$subTitleIcon}}"></i> {{{$subTitle}}}
             </div>
-                @include('list.journals-full',['sorting' => true])
+                @include('list.journals-full',['sorting' => false])
         </div>
     </div>
 </div>
