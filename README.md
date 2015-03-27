@@ -21,9 +21,7 @@ laptop and [Firefly II](https://github.com/JC5/Firefly) is live.
 If you're not sure if this tool is for you, please read the [full description](https://github.com/JC5/firefly-iii/wiki/full-description).
 
 To install and use Firefly III, please read [the installation guide](https://github.com/JC5/firefly-iii/wiki/Installation),
- [the upgrade guide](https://github.com/JC5/firefly-iii/wiki/Upgrade-instructions) (if applicable) and 
- 
- the **[First use guide](https://github.com/JC5/firefly-iii/wiki/First-use)**
+ [the upgrade guide](https://github.com/JC5/firefly-iii/wiki/Upgrade-instructions) (if applicable) and the **[First use guide](https://github.com/JC5/firefly-iii/wiki/First-use)**
 
 ## Current features
 
