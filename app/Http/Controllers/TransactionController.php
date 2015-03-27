@@ -250,9 +250,11 @@ class TransactionController extends Controller
                 $t->before = floatval(
                     $t->account->transactions()->leftJoin(
                         'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-                    )->where('transaction_journals.date', '<=', $journal->date->format('Y-m-d'))->where(
-                        'transaction_journals.created_at', '<=', $journal->created_at->format('Y-m-d H:i:s')
-                    )->where('transaction_journals.id', '!=', $journal->id)->sum('transactions.amount')
+                    )
+                        ->where('transaction_journals.date', '<=', $journal->date->format('Y-m-d'))
+                        ->where('transaction_journals.order','>=',$journal->order)
+                        ->where('transaction_journals.id', '!=', $journal->id)
+                        ->sum('transactions.amount')
                 );
                 $t->after  = $t->before + $t->amount;
             }
