@@ -315,18 +315,6 @@ Route::group(
 
 
     /**
-     * Repeated Expenses Controller
-     */
-    Route::get('/repeated-expenses', ['uses' => 'RepeatedExpenseController@index', 'as' => 'repeated.index']);
-    Route::get('/repeated-expenses/create', ['uses' => 'RepeatedExpenseController@create', 'as' => 'repeated.create']);
-    Route::get('/repeated-expenses/edit/{repeatedExpense}', ['uses' => 'RepeatedExpenseController@edit', 'as' => 'repeated.edit']);
-    Route::get('/repeated-expenses/delete/{repeatedExpense}', ['uses' => 'RepeatedExpenseController@delete', 'as' => 'repeated.delete']);
-    Route::get('/repeated-expenses/show/{repeatedExpense}', ['uses' => 'RepeatedExpenseController@show', 'as' => 'repeated.show']);
-    Route::post('/repeated-expense/store', ['uses' => 'RepeatedExpenseController@store', 'as' => 'repeated.store']);
-    Route::post('/repeated-expense/update/{repeatedExpense}', ['uses' => 'RepeatedExpenseController@update', 'as' => 'repeated.update']);
-    Route::post('/repeated-expense/destroy/{repeatedExpense}', ['uses' => 'RepeatedExpenseController@destroy', 'as' => 'repeated.destroy']);
-
-    /**
      * Report Controller
      */
     Route::get('/reports', ['uses' => 'ReportController@index', 'as' => 'reports.index']);
