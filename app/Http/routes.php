@@ -313,7 +313,6 @@ Route::group(
     Route::get('/reminder/act/{reminder}', ['uses' => 'ReminderController@act', 'as' => 'reminders.act']);
     Route::get('/reminder/{reminder}', ['uses' => 'ReminderController@show', 'as' => 'reminders.show']);
 
-
     /**
      * Report Controller
      */
