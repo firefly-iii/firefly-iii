@@ -29,20 +29,6 @@ Route::bind(
 );
 
 Route::bind(
-    'repeatedExpense', function ($value, $route) {
-    if (Auth::check()) {
-        return PiggyBank::
-        where('piggy_banks.id', $value)
-                        ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
-                        ->where('accounts.user_id', Auth::user()->id)
-                        ->where('repeats', 1)->first(['piggy_banks.*']);
-    }
-
-    return null;
-}
-);
-
-Route::bind(
     'tjSecond', function ($value, $route) {
     if (Auth::check()) {
         return TransactionJournal::
