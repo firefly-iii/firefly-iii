@@ -18,6 +18,13 @@ Firefly Mark III is a new version of Firefly built upon best practices and lesso
 from building [Firefly](https://github.com/JC5/Firefly). It's Mark III since the original Firefly never made it outside of my
 laptop and [Firefly II](https://github.com/JC5/Firefly) is live.
 
+If you're not sure if this tool is for you, please read the [full description](https://github.com/JC5/firefly-iii/wiki/full-description).
+
+To install and use Firefly III, please read [the installation guide](https://github.com/JC5/firefly-iii/wiki/Installation),
+ [the upgrade guide](https://github.com/JC5/firefly-iii/wiki/Upgrade-instructions) (if applicable) and 
+ 
+ the **[First use guide](https://github.com/JC5/firefly-iii/wiki/First-use)**
+
 ## Current features
 
 - [A double-entry bookkeeping system](http://en.wikipedia.org/wiki/Double-entry_bookkeeping_system);
