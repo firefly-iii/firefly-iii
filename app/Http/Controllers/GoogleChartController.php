@@ -55,7 +55,7 @@ class GoogleChartController extends Controller
         $today = new Carbon;
 
         while ($end >= $current) {
-            $certain = $current > $today;
+            $certain = $current < $today;
             $chart->addRow(clone $current, Steam::balance($account, $current), $certain);
             $current->addDay();
         }
