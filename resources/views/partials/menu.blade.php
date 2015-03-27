@@ -161,9 +161,6 @@
                     <li>
                         <a @if($isBill)class="active"@endif href="{{route('bills.index')}}"><i class="fa fa-calendar-o fa-fw"></i> Bills</a>
                     </li>
-                    <li>
-                        <a @if($isRep)class="active"@endif href="{{route('repeated.index')}}"><i class="fa fa-rotate-left fa-fw"></i> Repeated expenses</a>
-                    </li>
                 </ul>
                 <!-- /.nav-second-level -->
             </li>

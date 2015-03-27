@@ -256,40 +256,6 @@ Breadcrumbs::register(
 }
 );
 
-// repeated expenses
-Breadcrumbs::register(
-    'repeated.index', function (Generator $breadcrumbs) {
-    $breadcrumbs->parent('home');
-    $breadcrumbs->push('Repeated expenses', route('repeated.index'));
-}
-);
-Breadcrumbs::register(
-    'repeated.create', function (Generator $breadcrumbs) {
-    $breadcrumbs->parent('repeated.index');
-    $breadcrumbs->push('Create new repeated expense', route('repeated.create'));
-}
-);
-
-Breadcrumbs::register(
-    'repeated.edit', function (Generator $breadcrumbs, PiggyBank $piggyBank) {
-    $breadcrumbs->parent('repeated.show', $piggyBank);
-    $breadcrumbs->push('Edit ' . e($piggyBank->name), route('repeated.edit', $piggyBank->id));
-}
-);
-Breadcrumbs::register(
-    'repeated.delete', function (Generator $breadcrumbs, PiggyBank $piggyBank) {
-    $breadcrumbs->parent('repeated.show', $piggyBank);
-    $breadcrumbs->push('Delete ' . e($piggyBank->name), route('repeated.delete', $piggyBank->id));
-}
-);
-
-Breadcrumbs::register(
-    'repeated.show', function (Generator $breadcrumbs, PiggyBank $piggyBank) {
-    $breadcrumbs->parent('repeated.index');
-    $breadcrumbs->push(e($piggyBank->name), route('repeated.show', $piggyBank->id));
-
-}
-);
 
 // reports
 Breadcrumbs::register(
