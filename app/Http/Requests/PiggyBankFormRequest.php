@@ -30,7 +30,7 @@ class PiggyBankFormRequest extends Request
     public function rules()
     {
 
-        $nameRule       = 'required|between:1,255|uniqueForUser:piggy_banks,name';
+        $nameRule       = 'required|between:1,255|uniquePiggyBankForUser:piggy_banks,name';
         $targetDateRule = 'date';
         if (intval(Input::get('id'))) {
             $nameRule = 'required|between:1,255';
