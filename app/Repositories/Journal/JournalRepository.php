@@ -154,7 +154,6 @@ class JournalRepository implements JournalRepositoryInterface
                     $toType = AccountType::where('type', 'Cash account')->first();
                     $to     = Account::firstOrCreate(['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => 'Cash account', 'active' => 1]);
                 }
-                Log::error('Could not store TO account for Withdrawal (Expense account) because: ' .$to->getErrors()->toJson());
                 break;
 
             case 'Deposit':
