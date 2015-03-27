@@ -92,6 +92,9 @@
 
 @stop
 @section('scripts')
+    <script type="text/javascript">
+        var what = "{{$what}}";
+    </script>
 <script type="text/javascript" src="js/bootstrap3-typeahead.min.js"></script>
 <script type="text/javascript" src="js/transactions.js"></script>
 @stop

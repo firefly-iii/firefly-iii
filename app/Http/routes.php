@@ -261,6 +261,7 @@ Route::group(
     Route::get('/json/categories', ['uses' => 'JsonController@categories', 'as' => 'json.categories']);
     Route::get('/json/box', ['uses' => 'JsonController@box', 'as' => 'json.box']);
     Route::get('/json/show-shared-reports', 'JsonController@showSharedReports');
+    Route::get('/json/transaction-journals/{what}', 'JsonController@transactionJournals');
     Route::get('/json/show-shared-reports/set', 'JsonController@setSharedReports');
 
 

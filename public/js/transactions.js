@@ -8,6 +8,16 @@ if ($('input[name="revenue_account"]').length > 0) {
         $('input[name="revenue_account"]').typeahead({source: data});
     });
 }
+
+if ($('input[name="description"]').length > 0 && what != undefined) {
+    $.getJSON('json/transaction-journals/' + what).success(function (data) {
+        $('input[name="description"]').typeahead({source: data});
+    });
+}
+
+
+
+
 if ($('input[name="category"]').length > 0) {
     $.getJSON('json/categories').success(function (data) {
         $('input[name="category"]').typeahead({source: data});

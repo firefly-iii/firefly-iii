@@ -10,7 +10,8 @@ use Input;
 use Preferences;
 use Response;
 use Session;
-
+use Config;
+use FireflyIII\Models\TransactionType;
 /**
  * Class JsonController
  *
@@ -18,7 +19,6 @@ use Session;
  */
 class JsonController extends Controller
 {
-
 
     /**
      *
@@ -159,16 +159,6 @@ class JsonController extends Controller
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showSharedReports()
-    {
-        $pref = Preferences::get('showSharedReports', false);
-
-        return Response::json(['value' => $pref->data]);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
     public function setSharedReports()
     {
         $pref = Preferences::get('showSharedReports', false);
@@ -177,6 +167,33 @@ class JsonController extends Controller
 
 
         return Response::json(['value' => $new]);
+    }
+
+    /**
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function showSharedReports()
+    {
+        $pref = Preferences::get('showSharedReports', false);
+
+        return Response::json(['value' => $pref->data]);
+    }
+
+    public function transactionJournals($what)
+    {
+        $descriptions = [];
+            $dbType   = TransactionType::whereType($what)->first();
+            $journals = Auth::user()->transactionjournals()->where('transaction_type_id', $dbType->id)
+                ->orderBy('id','DESC')->take(50)
+                ->get();
+            foreach($journals as $j) {
+                $descriptions[] = $j->description;
+            }
+
+        $descriptions = array_unique($descriptions);
+        return Response::json($descriptions);
+
+
     }
 
 }
