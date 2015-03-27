@@ -30,9 +30,8 @@ To install and use Firefly III, please read [the installation guide](https://git
 - It's possible to create, change and manage money using _budgets_;
 - Organize transactions using categories;
 - Save towards a goal using piggy banks;
-- Predict and anticipate large expenses using "repeated expenses" (ie. yearly taxes);
-- Predict and anticipate bills using "recurring transactions" (rent for example);
-- View basic income / expense reports.
+- Predict and anticipate bills;
+- View income / expense reports;
 - Lots of help text in case you don't get it;
 
 Everything is organised:
@@ -60,7 +59,6 @@ Firefly III will feature, but does not feature yet:
 Some stuff has been removed:
 
 - The nesting of budgets, categories and beneficiaries is removed because it was pretty pointless.
-- Firefly will not encrypt the content of the (MySQL) tables. Old versions of Firefly had this capability but it sucks when searching, sorting and organizing entries.
 
 ## Screenshots
 
