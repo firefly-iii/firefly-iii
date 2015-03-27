@@ -33,8 +33,7 @@ $(document).ready(function () {
             helper: fixHelper,
             items: 'tr:not(.ignore)',
             stop: sortStop,
-            handle: '.handle',
-            revert: 'invalid'
+            handle: '.handle'
         }
     ).disableSelection();
 });
@@ -69,7 +68,8 @@ function sortStop(event, ui) {
         submit.push(id);
     });
 
-    $.post('/transaction/reorder',{items: submit,_token:token});
+    // do extra animation when done?
+    $.post('/transaction/reorder',{items: submit,date: thisDate,_token:token});
     console.log(submit);
 
     //console.log('TRUE!');

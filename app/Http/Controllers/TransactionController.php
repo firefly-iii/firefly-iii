@@ -15,7 +15,7 @@ use Input;
 use Redirect;
 use Session;
 use View;
-
+use Response;
 
 /**
  * Class TransactionController
@@ -199,7 +199,14 @@ class TransactionController extends Controller
         $page   = intval(\Input::get('page'));
         $offset = $page > 0 ? ($page - 1) * 50 : 0;
 
-        $set      = Auth::user()->transactionJournals()->transactionTypes($types)->withRelevantData()->take(50)->offset($offset)->orderBy('date', 'DESC')->get(
+        $set      = Auth::user()->
+        transactionJournals()->
+        transactionTypes($types)->
+        withRelevantData()->take(50)->offset($offset)
+            ->orderBy('date', 'DESC')
+            ->orderBy('order','ASC')
+            ->orderBy('id','DESC')
+            ->get(
             ['transaction_journals.*']
         );
         $count    = Auth::user()->transactionJournals()->transactionTypes($types)->count();
@@ -216,6 +223,18 @@ class TransactionController extends Controller
     public function reorder()
     {
         $ids = Input::get('items');
+        if (count($ids) > 0) {
+            $order = 0;
+            foreach ($ids as $id) {
+                $journal = Auth::user()->transactionjournals()->where('id', $id)->where('date', Input::get('date'))->first();
+                if($journal) {
+                    $journal->order = $order;
+                    $order++;
+                    $journal->save();
+                }
+            }
+        }
+        return Response::json(true);
 
     }
 
