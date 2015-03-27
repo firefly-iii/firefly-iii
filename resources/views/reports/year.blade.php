@@ -54,7 +54,7 @@
                 $end   += $balance['end'];
                 $diff  += ($balance['end']-$balance['start']);
                 ?>
-                {{-- @if($balance['hide'] === false) --}}
+                @if($balance['hide'] === false)
                     <tr>
                         <td>
                             <a href="{{route('accounts.show',$balance['account']->id)}}">{{{$balance['account']->name}}}</a>
@@ -69,7 +69,7 @@
                         <td>{!! Amount::format($balance['end']) !!}</td>
                         <td>{!! Amount::format($balance['end']-$balance['start']) !!}</td>
                     </tr>
-                    {{-- @endif --}}
+                    @endif
                 @endforeach
                 <tr>
                     <td><em>Sum of sums</em></td>
