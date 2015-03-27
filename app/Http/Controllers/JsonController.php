@@ -191,6 +191,7 @@ class JsonController extends Controller
             }
 
         $descriptions = array_unique($descriptions);
+        sort($descriptions);
         return Response::json($descriptions);
 
 
