@@ -61,9 +61,6 @@
                             @if($balance['shared'])
                             <small><em>shared</em></small>
                             @endif
-                            @if($balance['hide'])
-                                <small><em>hidden</em></small>
-                            @endif
                         </td>
                         <td>{!! Amount::format($balance['start']) !!}</td>
                         <td>{!! Amount::format($balance['end']) !!}</td>
