@@ -133,7 +133,9 @@ class BudgetController extends Controller
                         ->whereNull('budget_transaction_journal.id')
                         ->before($end)
                         ->after($start)
-                        ->orderBy('transaction_journals.date')
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.order','ASC')
+            ->orderBy('transaction_journals.id','DESC')
                         ->get(['transaction_journals.*']);
         $subTitle = 'Transactions without a budget in ' . $start->format('F Y');
 

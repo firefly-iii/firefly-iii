@@ -88,7 +88,11 @@ class CategoryController extends Controller
 
         $categories->each(
             function (Category $category) {
-                $latest = $category->transactionjournals()->orderBy('date', 'DESC')->first();
+                $latest = $category->transactionjournals()
+                    ->orderBy('transaction_journals.date', 'DESC')
+                    ->orderBy('transaction_journals.order','ASC')
+                    ->orderBy('transaction_journals.id','DESC')
+                    ->first();
                 if ($latest) {
                     $category->lastActivity = $latest->date;
                 }
@@ -111,7 +115,9 @@ class CategoryController extends Controller
                      ->whereNull('category_transaction_journal.id')
                      ->before($end)
                      ->after($start)
-                     ->orderBy('transaction_journals.date')
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.order','ASC')
+            ->orderBy('transaction_journals.id','DESC')
                      ->get(['transaction_journals.*']);
 
         $subTitle = 'Transactions without a category between ' . $start->format('jS F Y') . ' and ' . $end->format('jS F Y');
@@ -129,7 +135,13 @@ class CategoryController extends Controller
         $hideCategory = true; // used in list.
         $page         = intval(Input::get('page'));
         $offset       = $page > 0 ? $page * 50 : 0;
-        $set          = $category->transactionJournals()->withRelevantData()->take(50)->offset($offset)->orderBy('date', 'DESC')->get(
+        $set          = $category->transactionJournals()->withRelevantData()->take(50)->offset($offset)
+
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.order','ASC')
+            ->orderBy('transaction_journals.id','DESC')
+
+            ->get(
             ['transaction_journals.*']
         );
         $count        = $category->transactionJournals()->count();

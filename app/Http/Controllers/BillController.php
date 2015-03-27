@@ -138,7 +138,12 @@ class BillController extends Controller
      */
     public function show(Bill $bill, BillRepositoryInterface $repository)
     {
-        $journals                = $bill->transactionjournals()->withRelevantData()->orderBy('date', 'DESC')->get();
+        $journals                = $bill->transactionjournals()->withRelevantData()
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.order','ASC')
+            ->orderBy('transaction_journals.id','DESC')
+
+            ->get();
         $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill);
         $hideBill                = true;
 

@@ -42,7 +42,10 @@ class BudgetRepository implements BudgetRepositoryInterface
         $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $take : 0;
 
 
-        $setQuery   = $budget->transactionJournals()->withRelevantData()->take($take)->offset($offset)->orderBy('date', 'DESC');
+        $setQuery   = $budget->transactionJournals()->withRelevantData()->take($take)->offset($offset)
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.order','ASC')
+            ->orderBy('transaction_journals.id','DESC');
         $countQuery = $budget->transactionJournals();
 
 

@@ -106,7 +106,9 @@ class AccountRepository implements AccountRepositoryInterface
                       ->withRelevantData()
                       ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                       ->where('transactions.account_id', $account->id)
-                      ->orderBy('date', 'DESC');
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.order','ASC')
+            ->orderBy('transaction_journals.id','DESC');
 
         $query->before(Session::get('end', Carbon::now()->endOfMonth()));
         $query->after(Session::get('start', Carbon::now()->startOfMonth()));
