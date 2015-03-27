@@ -60,7 +60,12 @@
                     $accountSums = [];
                     ?>
                     @foreach($accounts as $account)
-                        <th><a href="{{route('accounts.show',$account->id)}}">{{{$account->name}}}</a></th>
+                        <th><a href="{{route('accounts.show',$account->id)}}">{{{$account->name}}}</a>
+
+                        @if($account->hide === true)
+                            <small>(hidden)</small>
+                        @endif
+                        </th>
                         <?php
                             $accountSums[$account->id] = 0;
                         ?>

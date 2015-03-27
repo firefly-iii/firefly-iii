@@ -69,12 +69,16 @@ class ReportController extends Controller
                 $budgets        = $query->getBudgetSummary($account, $start, $end);
                 $balancedAmount = $query->balancedTransactionsSum($account, $start, $end);
                 $array          = [];
+                $hide           = true;
                 foreach ($budgets as $budget) {
                     $id         = intval($budget->id);
                     $data       = $budget->toArray();
                     $array[$id] = $data;
+                    if (floatval($data['amount']) != 0) {
+                        $hide = false;
+                    }
                 }
-
+                $account->hide              = $hide;
                 $account->budgetInformation = $array;
                 $account->balancedAmount    = $balancedAmount;
 
