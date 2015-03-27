@@ -77,7 +77,7 @@
 
         <div class="panel panel-default">
             <div class="panel-heading">
-                <i class="fa fa-arrows-h fa-fw"></i>
+                <i class="fa fa-fw fa-exchange" title="Transfer"></i>
                 Income vs. expense
             </div>
             <?php

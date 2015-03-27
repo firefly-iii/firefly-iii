@@ -15,7 +15,7 @@ use Input;
 use Redirect;
 use Session;
 use View;
-
+use Response;
 
 /**
  * Class TransactionController
@@ -180,29 +180,33 @@ class TransactionController extends Controller
             case 'withdrawal':
                 $subTitleIcon = 'fa-long-arrow-left';
                 $subTitle     = 'Expenses';
-                //$journals     = $this->_repository->getWithdrawalsPaginated(50);
-                $types = ['Withdrawal'];
+                $types        = ['Withdrawal'];
                 break;
             case 'revenue':
             case 'deposit':
                 $subTitleIcon = 'fa-long-arrow-right';
                 $subTitle     = 'Revenue, income and deposits';
-                //                $journals     = $this->_repository->getDepositsPaginated(50);
-                $types = ['Deposit'];
+                $types        = ['Deposit'];
                 break;
             case 'transfer':
             case 'transfers':
-                $subTitleIcon = 'fa-arrows-h';
+                $subTitleIcon = 'fa-exchange';
                 $subTitle     = 'Transfers';
-                //$journals     = $this->_repository->getTransfersPaginated(50);
-                $types = ['Transfer'];
+                $types        = ['Transfer'];
                 break;
         }
 
         $page   = intval(\Input::get('page'));
         $offset = $page > 0 ? ($page - 1) * 50 : 0;
 
-        $set      = Auth::user()->transactionJournals()->transactionTypes($types)->withRelevantData()->take(50)->offset($offset)->orderBy('date', 'DESC')->get(
+        $set      = Auth::user()->
+        transactionJournals()->
+        transactionTypes($types)->
+        withRelevantData()->take(50)->offset($offset)
+            ->orderBy('date', 'DESC')
+            ->orderBy('order','ASC')
+            ->orderBy('id','DESC')
+            ->get(
             ['transaction_journals.*']
         );
         $count    = Auth::user()->transactionJournals()->transactionTypes($types)->count();
@@ -210,6 +214,27 @@ class TransactionController extends Controller
         $journals->setPath('transactions/' . $what);
 
         return view('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'journals'));
+
+    }
+
+    /**
+     * Reorder transactions (which all must have the same date)
+     */
+    public function reorder()
+    {
+        $ids = Input::get('items');
+        if (count($ids) > 0) {
+            $order = 0;
+            foreach ($ids as $id) {
+                $journal = Auth::user()->transactionjournals()->where('id', $id)->where('date', Input::get('date'))->first();
+                if($journal) {
+                    $journal->order = $order;
+                    $order++;
+                    $journal->save();
+                }
+            }
+        }
+        return Response::json(true);
 
     }
 
@@ -225,9 +250,11 @@ class TransactionController extends Controller
                 $t->before = floatval(
                     $t->account->transactions()->leftJoin(
                         'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-                    )->where('transaction_journals.date', '<=', $journal->date->format('Y-m-d'))->where(
-                        'transaction_journals.created_at', '<=', $journal->created_at->format('Y-m-d H:i:s')
-                    )->where('transaction_journals.id', '!=', $journal->id)->sum('transactions.amount')
+                    )
+                        ->where('transaction_journals.date', '<=', $journal->date->format('Y-m-d'))
+                        ->where('transaction_journals.order','>=',$journal->order)
+                        ->where('transaction_journals.id', '!=', $journal->id)
+                        ->sum('transactions.amount')
                 );
                 $t->after  = $t->before + $t->amount;
             }
@@ -239,6 +266,12 @@ class TransactionController extends Controller
         );
     }
 
+    /**
+     * @param JournalFormRequest         $request
+     * @param JournalRepositoryInterface $repository
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse
+     */
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository)
     {
         $journalData = [
@@ -284,7 +317,6 @@ class TransactionController extends Controller
      * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
      *
      * @return $this
-     * @throws FireflyException
      */
     public function update(TransactionJournal $journal, JournalFormRequest $request, JournalRepositoryInterface $repository)
     {
@@ -316,6 +348,7 @@ class TransactionController extends Controller
         if (intval(Input::get('return_to_edit')) === 1) {
             return Redirect::route('transactions.edit', $journal->id);
         }
+
 
         return Redirect::route('transactions.index', $journalData['what']);
 

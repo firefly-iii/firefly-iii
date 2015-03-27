@@ -37,6 +37,23 @@ interface PiggyBankRepositoryInterface
      */
     public function createPiggyBankPart(array $data);
 
+    /**
+     * Set all piggy banks to order 0.
+     * @return void
+     */
+    public function reset();
+
+    /**
+     *
+     * set id of piggy bank.
+     *
+     * @param int $id
+     * @param int $order
+     *
+     * @return void
+     */
+    public function setOrder($id, $order);
+
 
 
     /**

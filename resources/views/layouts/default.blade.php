@@ -14,13 +14,12 @@
         // {{{$subTitle}}}
     @endif
     </title>
-
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,700,300italic" type="ext/css" media="all" />
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="css/metisMenu.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="css/sb-admin-2.css" type="text/css" media="all" />
-    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css" type="text/css" media="all" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto2" type="text/css" media="all" />
-
     <!-- date range -->
     <link rel="stylesheet" href="css/daterangepicker-bs3.css" type="text/css" media="all" />
 
@@ -28,11 +27,6 @@
 
 
     @yield('styles')
-
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
 
     <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/apple-touch-icon-60x60.png">

@@ -45,7 +45,7 @@ class Reminders
      */
     public function handle($request, Closure $next)
     {
-        if ($this->auth->check()) {
+        if ($this->auth->check() && !$request->isXmlHttpRequest()) {
             // do reminders stuff.
             $piggyBanks = $this->auth->user()->piggyBanks()->where('remind_me', 1)->get();
             $today      = new Carbon;
@@ -67,13 +67,12 @@ class Reminders
                 }
             }
             // delete invalid reminders
-            $reminders = $this->auth->user()->reminders()->get();
-            foreach($reminders as $reminder) {
-                if(is_null($reminder->remindersable)) {
-                    $reminder->delete();
-                }
+            $set = $this->auth->user()->reminders()->leftJoin('piggy_banks', 'piggy_banks.id', '=', 'remindersable_id')->whereNull('piggy_banks.id')->get(
+                ['reminders.id']
+            );
+            foreach ($set as $reminder) {
+                $reminder->delete();
             }
-
 
 
             // get and list active reminders:

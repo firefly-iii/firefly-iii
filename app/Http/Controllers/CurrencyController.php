@@ -148,7 +148,7 @@ class CurrencyController extends Controller
         Session::flash('success', 'Currency "' . $currency->name . '" created');
 
         if (intval(Input::get('create_another')) === 1) {
-            return Redirect::route('currency.create');
+            return Redirect::route('currency.create')->withInput();
         }
 
         return Redirect::route('currency.index');

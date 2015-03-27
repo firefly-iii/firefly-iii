@@ -3,8 +3,10 @@
 namespace FireflyIII\Http\Requests;
 
 use Auth;
+use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use Input;
+use Navigation;
 
 /**
  * Class PiggyBankFormRequest
@@ -36,7 +38,13 @@ class PiggyBankFormRequest extends Request
 
         if (intval(Input::get('repeats')) == 1) {
             $targetDateRule = 'required|date|after:' . date('Y-m-d');
+            // switch on rep_every, make sure it's not too far away.
+            if (!is_null(Input::get('rep_length'))) {
+                $end = Navigation::addPeriod(new Carbon, Input::get('rep_length'), 0);
+                $targetDateRule .= '|before:' . $end->format('Y-m-d');
+            }
         }
+
 
         $rules = [
             'repeats'            => 'required|boolean',

@@ -16,7 +16,7 @@
             <div class="panel-heading">
                 Transactions
             </div>
-                @include('list.journals-full')
+                @include('list.journals-full',['sorting' => false])
         </div>
     </div>
     <div class="col-lg-3 col-md-3 col-sm-5">

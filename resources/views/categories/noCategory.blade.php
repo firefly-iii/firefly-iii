@@ -8,7 +8,7 @@
                 {{{$subTitle}}}
             </div>
             <div class="panel-body">
-                @include('list.journals-full',['journals' => $list])
+                @include('list.journals-full',['journals' => $list,'sorting' => false])
             </div>
         </div>
     </div>

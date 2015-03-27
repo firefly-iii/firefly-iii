@@ -48,7 +48,7 @@ return [
 
         'sqlite' => [
             'driver'   => 'sqlite',
-            'database' => realpath(__DIR__ . '/../tests/_data/db.sqlite'),
+            'database' => realpath(__DIR__ . '/../tests/database/db.sqlite'),
             'prefix'   => '',
         ],
 

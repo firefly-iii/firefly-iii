@@ -7,10 +7,18 @@
             <div class="panel-heading">
                 <i class="fa {{$subTitleIcon}}"></i> {{{$subTitle}}}
             </div>
-                @include('list.journals-full')
+                @include('list.journals-full',['sorting' => false])
         </div>
     </div>
 </div>
 
+
+@stop
+@section('scripts')
+    <script type="text/javascript">
+        var token = "{{csrf_token()}}";
+    </script>
+    <script src="js/jquery-ui.min.js" type="text/javascript"></script>
+    <script src="js/transactions.js" type="text/javascript"></script>
 
 @stop

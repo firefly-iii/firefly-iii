@@ -87,6 +87,9 @@ class ReportQuery implements ReportQueryInterface
                                  ->whereNull('budget_transaction_journal.budget_id')->whereNull('transaction_journals.deleted_at')
                                  ->whereNull('otherJournals.deleted_at')
                                  ->where('transactions.account_id', $account->id)
+                                ->orderBy('transaction_journals.date', 'DESC')
+                                ->orderBy('transaction_journals.order','ASC')
+                                ->orderBy('transaction_journals.id','DESC')
                                  ->whereNotNull('transaction_group_transaction_journal.transaction_group_id')
                                  ->get(
                                      [

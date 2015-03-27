@@ -116,9 +116,9 @@ class TestDataSeeder extends Seeder
      */
     public function createUsers()
     {
-        User::create(['email' => 'reset@example.com', 'password' => 'functional', 'reset' => 'okokokokokokokokokokokokokokokok', 'remember_token' => null]);
-        User::create(['email' => 'functional@example.com', 'password' => 'functional', 'reset' => null, 'remember_token' => null]);
-        User::create(['email' => 'thegrumpydictator@gmail.com', 'password' => 'james', 'reset' => null, 'remember_token' => null]);
+        User::create(['email' => 'reset@example.com', 'password' => bcrypt('functional'), 'reset' => 'okokokokokokokokokokokokokokokok', 'remember_token' => null]);
+        User::create(['email' => 'functional@example.com', 'password' => bcrypt('functional'), 'reset' => null, 'remember_token' => null]);
+        User::create(['email' => 'thegrumpydictator@gmail.com', 'password' => bcrypt('james'), 'reset' => null, 'remember_token' => null]);
     }
 
     /**
@@ -139,7 +139,7 @@ class TestDataSeeder extends Seeder
 
         // create account meta:
         $meta_a = AccountMeta::create(['account_id' => $acc_a->id, 'name' => 'accountRole', 'data' => 'defaultAsset']);
-        $meta_b = AccountMeta::create(['account_id' => $acc_b->id, 'name' => 'accountRole', 'data' => 'defaultAsset']);
+        $meta_b = AccountMeta::create(['account_id' => $acc_b->id, 'name' => 'accountRole', 'data' => 'savingAsset']);
         $meta_c = AccountMeta::create(['account_id' => $acc_c->id, 'name' => 'accountRole', 'data' => 'defaultAsset']);
 //        var_dump($meta_a->toArray());
 //        var_dump($meta_b->toArray());

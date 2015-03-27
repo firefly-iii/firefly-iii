@@ -37,15 +37,27 @@ class PiggyBankRepetition extends Model
     {
         return $query->where(
             function($q) use ($date) {
-                $q->where('startdate', '>=', $date->format('Y-m-d 00:00:00'));
+                $q->where('startdate', '<=', $date->format('Y-m-d 00:00:00'));
                 $q->orWhereNull('startdate');
             })
 
             ->where(function($q) use ($date) {
 
-                $q->where('targetdate', '<=', $date->format('Y-m-d 00:00:00'));
+                $q->where('targetdate', '>=', $date->format('Y-m-d 00:00:00'));
                 $q->orWhereNull('targetdate');
             });
+    }
+
+    /**
+     * @param EloquentBuilder $query
+     * @param Carbon          $start
+     * @param Carbon          $target
+     *
+     * @return $this
+     */
+    public function scopeOnDates(EloquentBuilder $query, Carbon $start, Carbon $target)
+    {
+        return $query->where('startdate',$start->format('Y-m-d'))->where('targetdate',$target->format('Y-m-d'));
     }
 
 }

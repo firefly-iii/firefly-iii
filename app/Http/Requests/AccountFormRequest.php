@@ -31,9 +31,9 @@ class AccountFormRequest extends Request
         $accountRoles = join(',', array_keys(Config::get('firefly.accountRoles')));
         $types        = join(',', array_keys(Config::get('firefly.subTitlesByIdentifier')));
 
-        $nameRule = 'required|between:1,100|uniqueForUser:accounts,name';
+        $nameRule = 'required|between:1,100|uniqueAccountForUser';
         if (Account::find(Input::get('id'))) {
-            $nameRule = 'required|between:1,100';
+            $nameRule = 'required|between:1,100|belongsToUser:accounts|uniqueForUser:'.Input::get('id');
         }
 
         return [

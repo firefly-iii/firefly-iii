@@ -18,6 +18,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
 use Session;
+use Steam;
 
 /**
  * Class AccountRepository
@@ -64,6 +65,10 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * This method is used on the front page where (in turn) its viewed journals-tiny.php which (in turn)
+     * is almost the only place where formatJournal is used. Aka, we can use some custom querying to get some specific.
+     * fields using left joins.
+     *
      * @param Account $account
      * @param Carbon  $start
      * @param Carbon  $end
@@ -74,15 +79,17 @@ class AccountRepository implements AccountRepositoryInterface
     {
         return Auth::user()
                    ->transactionjournals()
-                   ->with(['transactions', 'transactioncurrency', 'transactiontype'])
+                   ->with(['transactions'])
                    ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                    ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')->where('accounts.id', $account->id)
+                   ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transaction_journals.transaction_currency_id')
+                   ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
                    ->before($end)
                    ->after($start)
                    ->orderBy('transaction_journals.date', 'DESC')
                    ->orderBy('transaction_journals.id', 'DESC')
                    ->take(10)
-                   ->get(['transaction_journals.*']);
+                   ->get(['transaction_journals.*', 'transaction_currencies.symbol', 'transaction_types.type']);
     }
 
     /**
@@ -99,7 +106,9 @@ class AccountRepository implements AccountRepositoryInterface
                       ->withRelevantData()
                       ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                       ->where('transactions.account_id', $account->id)
-                      ->orderBy('date', 'DESC');
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.order','ASC')
+            ->orderBy('transaction_journals.id','DESC');
 
         $query->before(Session::get('end', Carbon::now()->endOfMonth()));
         $query->after(Session::get('start', Carbon::now()->startOfMonth()));
@@ -112,6 +121,48 @@ class AccountRepository implements AccountRepositoryInterface
         //return Paginator::make($items, $count, 50);
 
 
+    }
+
+    /**
+     * Get savings accounts and the balance difference in the period.
+     *
+     * @return Collection
+     */
+    public function getSavingsAccounts()
+    {
+        $accounts = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')
+                        ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
+                        ->where('account_meta.name', 'accountRole')
+                        ->where('account_meta.data', '"savingAsset"')
+                        ->get(['accounts.*']);
+        $start    = clone Session::get('start');
+        $end      = clone Session::get('end');
+
+        $accounts->each(
+            function (Account $account) use ($start, $end) {
+                $account->startBalance = Steam::balance($account, $start);
+                $account->endBalance   = Steam::balance($account, $end);
+
+                // diff (negative when lost, positive when gained)
+                $diff = $account->endBalance - $account->startBalance;
+
+                if ($diff < 0 && $account->startBalance > 0) {
+                    // percentage lost compared to start.
+                    $pct = (($diff * -1) / $account->startBalance) * 100;
+                } else {
+                    if ($diff >= 0 && $account->startBalance > 0) {
+                        $pct = ($diff / $account->startBalance) * 100;
+                    } else {
+                        $pct = 100;
+                    }
+                }
+                $pct                 = $pct > 100 ? 100 : $pct;
+                $account->difference = $diff;
+                $account->percentage = round($pct);
+            }
+        );
+
+        return $accounts;
     }
 
     /**
@@ -236,12 +287,14 @@ class AccountRepository implements AccountRepositoryInterface
                 'active'          => $data['active'] === true ? true : false,
             ]
         );
+
         if (!$newAccount->isValid()) {
             // does the account already exist?
             $existingAccount = Account::where('user_id', $data['user'])->where('account_type_id', $accountType->id)->where('name', $data['name'])->first();
             if (!$existingAccount) {
                 Log::error('Account create error: ' . $newAccount->getErrors()->toJson());
-                var_dump($newAccount->getErrors()->toArray());
+                App::abort(500);
+
             }
             $newAccount = $existingAccount;
         }

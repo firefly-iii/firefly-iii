@@ -18,14 +18,14 @@ class ChangesForV332 extends Migration {
 
         Schema::table(
             'accounts', function (Blueprint $table) {
-            $table->boolean('encrypted');
+            $table->boolean('encrypted')->default(0);
 
         }
         );
 
         Schema::table(
             'reminders', function (Blueprint $table) {
-            $table->text('metadata');
+            $table->text('metadata')->nullable();
 
         }
         );

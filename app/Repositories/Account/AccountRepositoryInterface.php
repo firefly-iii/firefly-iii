@@ -78,4 +78,11 @@ interface AccountRepositoryInterface
      * @return float
      */
     public function leftOnAccount(Account $account);
+
+    /**
+     * Get savings accounts and the balance difference in the period.
+     *
+     * @return Collection
+     */
+    public function getSavingsAccounts();
 }

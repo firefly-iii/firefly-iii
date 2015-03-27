@@ -235,7 +235,9 @@ class GoogleChartController extends Controller
         // query!
         $start = Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());
-        $set   = TransactionJournal::leftJoin(
+        $set   = TransactionJournal::
+            where('transaction_journals.user_id',Auth::user()->id)
+            ->leftJoin(
             'transactions',
             function (JoinClause $join) {
                 $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('amount', '>', 0);
@@ -247,6 +249,7 @@ class GoogleChartController extends Controller
                                    ->leftJoin('categories', 'categories.id', '=', 'category_transaction_journal.category_id')
                                    ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
                                    ->before($end)
+                                   ->where('categories.user_id',Auth::user()->id)
                                    ->after($start)
                                    ->where('transaction_types.type', 'Withdrawal')
                                    ->groupBy('categories.id')
@@ -503,7 +506,7 @@ class GoogleChartController extends Controller
     {
         // oldest transaction in category:
         /** @var TransactionJournal $first */
-        $start = Session::get('start');
+        $start = clone Session::get('start');
         $chart->addColumn('Period', 'date');
         $chart->addColumn('Spent', 'number');
 
@@ -532,10 +535,13 @@ class GoogleChartController extends Controller
         $chart->addColumn('Date', 'date');
         $chart->addColumn('Balance', 'number');
 
-        $set = \DB::table('piggy_bank_events')->where('piggy_bank_id', $piggyBank->id)->groupBy('date')->get(['date', DB::Raw('SUM(`amount`) AS `sum`')]);
+        /** @var Collection $set */
+        $set = DB::table('piggy_bank_events')->where('piggy_bank_id', $piggyBank->id)->groupBy('date')->get(['date', DB::Raw('SUM(`amount`) AS `sum`')]);
+        $sum = 0;
 
         foreach ($set as $entry) {
-            $chart->addRow(new Carbon($entry->date), floatval($entry->sum));
+            $sum += floatval($entry->sum);
+            $chart->addRow(new Carbon($entry->date), $sum);
         }
 
         $chart->generate();

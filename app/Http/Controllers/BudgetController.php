@@ -133,7 +133,9 @@ class BudgetController extends Controller
                         ->whereNull('budget_transaction_journal.id')
                         ->before($end)
                         ->after($start)
-                        ->orderBy('transaction_journals.date')
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.order','ASC')
+            ->orderBy('transaction_journals.id','DESC')
                         ->get(['transaction_journals.*']);
         $subTitle = 'Transactions without a budget in ' . $start->format('F Y');
 
@@ -152,6 +154,12 @@ class BudgetController extends Controller
         return Redirect::route('budgets.index');
     }
 
+    /**
+     * @param BudgetFormRequest         $request
+     * @param BudgetRepositoryInterface $repository
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(BudgetFormRequest $request, BudgetRepositoryInterface $repository)
     {
         $budgetData = [
@@ -203,6 +211,10 @@ class BudgetController extends Controller
         $repository->update($budget, $budgetData);
 
         Session::flash('success', 'Budget "' . $budget->name . '" updated.');
+
+        if (intval(Input::get('return_to_edit')) === 1) {
+            return Redirect::route('budgets.edit', $budget->id);
+        }
 
         return Redirect::route('budgets.index');
 

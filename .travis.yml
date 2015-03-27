@@ -1,4 +1,6 @@
 language: php
+sudo: false
+
 
 php:
   - 5.5
@@ -13,9 +15,11 @@ install:
   - composer install
   - php artisan env
   - mv -v .env.testing .env
+  - touch tests/database/db.sqlite
+  - php artisan migrate --seed
 
 script:
-  - phpunit
+  - phpunit --debug
 
 after_script:
   - php vendor/bin/coveralls

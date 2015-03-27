@@ -24,8 +24,10 @@
                     </div>
                     <div class="panel-footer">
                         <div class="btn-group">
-                            @if($reminder->active === true)
+                            @if($reminder->notnow !== true)
                                 <a class="btn btn-warning" href="{{route('reminders.dismiss',$reminder->id)}}">Dismiss</a>
+                            @endif
+                            @if($reminder->active === true)
                                 <a class="btn btn-success" href="{{route('reminders.act',$reminder->id)}}">Act</a>
                             @endif
                         </div>

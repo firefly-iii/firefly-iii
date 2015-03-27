@@ -3,11 +3,12 @@
 namespace FireflyIII\Support\Search;
 
 
-use Illuminate\Support\Collection;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Auth;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
-
+use FireflyIII\Models\TransactionJournal;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Support\Collection;
 
 /**
  * Class Search
@@ -23,7 +24,7 @@ class Search implements SearchInterface
      */
     public function searchAccounts(array $words)
     {
-        return \Auth::user()->accounts()->with('accounttype')->where(
+        return Auth::user()->accounts()->with('accounttype')->where(
             function (EloquentBuilder $q) use ($words) {
                 foreach ($words as $word) {
                     $q->orWhere('name', 'LIKE', '%' . e($word) . '%');
@@ -40,7 +41,7 @@ class Search implements SearchInterface
     public function searchBudgets(array $words)
     {
         /** @var Collection $set */
-        $set    = \Auth::user()->budgets()->get();
+        $set    = Auth::user()->budgets()->get();
         $newSet = $set->filter(
             function (Budget $b) use ($words) {
                 $found = 0;
@@ -65,7 +66,7 @@ class Search implements SearchInterface
     public function searchCategories(array $words)
     {
         /** @var Collection $set */
-        $set    = \Auth::user()->categories()->get();
+        $set    = Auth::user()->categories()->get();
         $newSet = $set->filter(
             function (Category $c) use ($words) {
                 $found = 0;
@@ -101,12 +102,39 @@ class Search implements SearchInterface
      */
     public function searchTransactions(array $words)
     {
-        return \Auth::user()->transactionjournals()->withRelevantData()->where(
+        // decrypted transaction journals:
+        $decrypted = Auth::user()->transactionjournals()->withRelevantData()->where('encrypted', 0)->where(
             function (EloquentBuilder $q) use ($words) {
                 foreach ($words as $word) {
                     $q->orWhere('description', 'LIKE', '%' . e($word) . '%');
                 }
             }
         )->get();
+
+        // encrypted
+        $all = Auth::user()->transactionjournals()->withRelevantData()->where('encrypted', 1)->get();
+        $set = $all->filter(
+            function (TransactionJournal $journal) use ($words) {
+                foreach ($words as $word) {
+                    $haystack = strtolower($journal->description);
+                    $word     = strtolower($word);
+                    if (!(strpos($haystack, $word) === false)) {
+                        return $journal;
+                    }
+                }
+
+            }
+        );
+        $filtered = $set->merge($decrypted);
+
+        $filtered->sortBy(
+            function (TransactionJournal $journal) {
+                return intval($journal->date->format('U'));
+            }
+        );
+
+        $filtered = $filtered->reverse();
+
+        return $filtered;
     }
 } 

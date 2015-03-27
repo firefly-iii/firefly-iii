@@ -5,7 +5,7 @@
             <h4 class="modal-title">No budget bla bla.</h4>
         </div>
         <div class="modal-body">
-            @include('list.journals-full')
+            @include('list.journals-full',['sorting' => false])
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

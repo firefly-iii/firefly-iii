@@ -168,7 +168,7 @@ class AccountController extends Controller
         $what         = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
         $journals     = $repository->getJournals($account, $page);
         $subTitle     = 'Details for ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"';
-
+        $journals->setPath('accounts/show/'.$account->id);
         return view('accounts.show', compact('account', 'what', 'subTitleIcon', 'journals', 'subTitle'));
     }
 
@@ -196,7 +196,7 @@ class AccountController extends Controller
         Session::flash('success', 'New account "' . $account->name . '" stored!');
 
         if (intval(Input::get('create_another')) === 1) {
-            return Redirect::route('accounts.create', $request->input('what'));
+            return Redirect::route('accounts.create', $request->input('what'))->withInput();
         }
 
         return Redirect::route('accounts.index', $request->input('what'));

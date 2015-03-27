@@ -8,12 +8,13 @@
         </p>
     </div>
 </div>
-<div class="row">
+<div class="row" id="sortable">
 @foreach($piggyBanks as $piggyBank)
-    <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
+    <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12" data-id="{{$piggyBank->id}}">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <i class="fa fa-fw fa-rocket"></i> <a href="{{route('piggy-banks.show',$piggyBank->id)}}" title="{{{$piggyBank->name}}}">{{{$piggyBank->name}}}</a>
+                <i class="loadSpin"></i>
+                <i class="fa fa-fw fa-bars handle"></i> <a href="{{route('piggy-banks.show',$piggyBank->id)}}" title="{{{$piggyBank->order}}}">{{{$piggyBank->name}}}</a>
 
                 <!-- ACTIONS MENU -->
                 <div class="pull-right">
@@ -62,34 +63,15 @@
 
                     </div>
 
-
-
-
-                    <!-- One block -->
-                    <!-- <div class="col-lg-1 col-md-4 col-sm-4 col-xs-4">
-                        {!! Amount::format($piggyBank->savedSoFar,true) !!}
-                    </div> -->
-                    <!-- One block -->
-
-                    <!-- One block -->
-                    <!-- <div class="col-lg-1 col-md-6 col-sm-6 col-xs-6">
-                        {!! Amount::format($piggyBank->targetamount,true) !!}
-                    </div> -->
-                    <!-- One block -->
-                    <!-- <div class="col-lg-1 col-md-6 col-sm-6 col-xs-6">
-                        @if($piggyBank->leftToSave > 0)
-                            {!! Amount::format($piggyBank->leftToSave) !!}
-                        @endif
-                    </div> -->
                 </div>
                 <div class="row">
-                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs4">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                         <span title="Saved so far">{!! Amount::format($piggyBank->savedSoFar,true) !!}</span>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs4">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="text-align: center;">
                         <span title="Target amount">{!! Amount::format($piggyBank->targetamount,true) !!}</span>
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs4">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="text-align: right;">
                         @if($piggyBank->leftToSave > 0)
                             <span title="Left to save">{!! Amount::format($piggyBank->leftToSave) !!}</span>
                         @endif
@@ -148,5 +130,9 @@
 
 @stop
 @section('scripts')
+    <script type="text/javascript">
+        var token = "{{csrf_token()}}";
+    </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/jquery-ui.min.js"></script>
 <script type="text/javascript" src="js/piggy-banks.js"></script>
 @stop

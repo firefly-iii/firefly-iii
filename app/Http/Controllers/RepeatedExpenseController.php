@@ -12,6 +12,7 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Redirect;
 use Session;
 use View;
+use Input;
 
 /**
  * Class RepeatedExpenseController
@@ -144,7 +145,10 @@ class RepeatedExpenseController extends Controller
     }
 
     /**
-     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     * @param PiggyBankFormRequest         $request
+     * @param PiggyBankRepositoryInterface $repository
+     *
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(PiggyBankFormRequest $request, PiggyBankRepositoryInterface $repository)
     {
@@ -159,12 +163,18 @@ class RepeatedExpenseController extends Controller
             'reminder'     => $request->get('reminder'),
             'skip'         => intval($request->get('skip')),
             'rep_every'    => intval($request->get('rep_every')),
+            'rep_length'    => $request->get('rep_length'),
             'rep_times'    => intval($request->get('rep_times')),
         ];
 
         $piggyBank = $repository->store($piggyBankData);
 
         Session::flash('success', 'Stored repeated expense "' . e($piggyBank->name) . '".');
+
+        if (intval(Input::get('create_another')) === 1) {
+            return Redirect::route('repeated.create', $request->input('what'))->withInput();
+        }
+
 
         return Redirect::route('repeated.index');
     }
@@ -193,6 +203,10 @@ class RepeatedExpenseController extends Controller
 
 
         $piggyBank = $repository->update($repeatedExpense, $piggyBankData);
+
+        if (intval(Input::get('return_to_edit')) === 1) {
+            return Redirect::route('repeated.edit', $piggyBank->id);
+        }
 
         Session::flash('success', 'Updated repeated expense "' . e($piggyBank->name) . '".');
 

@@ -1,5 +1,5 @@
 var google = google || {};
-google.load('visualization', '1.1', {'packages': ['corechart', 'bar', 'sankey', 'table']});
+google.load('visualization', '1.1', {'packages': ['corechart', 'bar', 'line', 'sankey', 'table']});
 
 function googleChart(chartType, URL, container, options) {
     if ($('#' + container).length === 1) {
@@ -13,10 +13,10 @@ function googleChart(chartType, URL, container, options) {
              Format as money
              */
             var money = new google.visualization.NumberFormat({
-                decimalSymbol: ',',
-                groupingSymbol: '.',
-                prefix: currencyCode + ' '
-            });
+                                                                  decimalSymbol: ',',
+                                                                  groupingSymbol: '.',
+                                                                  prefix: currencyCode + ' '
+                                                              });
             for (var i = 1; i < gdata.getNumberOfColumns(); i++) {
                 money.format(gdata, i);
             }
@@ -24,14 +24,14 @@ function googleChart(chartType, URL, container, options) {
             /*
              Create a new google charts object.
              */
-            var chart = false
+            var chart = false;
             var options = false;
             if (chartType === 'line') {
                 chart = new google.visualization.LineChart(document.getElementById(container));
                 options = options || defaultLineChartOptions;
             }
             if (chartType === 'column') {
-                chart = new google.charts.Bar(document.getElementById(container));
+                chart = new google.visualization.ColumnChart(document.getElementById(container));
                 options = options || defaultColumnChartOptions;
             }
             if (chartType === 'pie') {
@@ -39,7 +39,7 @@ function googleChart(chartType, URL, container, options) {
                 options = options || defaultPieChartOptions;
             }
             if (chartType === 'bar') {
-                chart = new google.charts.Bar(document.getElementById(container));
+                chart = new google.visualization.BarChart(document.getElementById(container));
                 options = options || defaultBarChartOptions;
             }
             if (chartType === 'stackedColumn') {

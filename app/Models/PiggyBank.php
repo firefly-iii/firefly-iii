@@ -14,7 +14,9 @@ class PiggyBank extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['repeats', 'name', 'account_id','rep_every', 'rep_times', 'reminder_skip', 'targetamount', 'startdate', 'targetdate', 'reminder','remind_me'];
+    protected $fillable
+        = ['repeats', 'name', 'account_id', 'rep_every', 'rep_times', 'reminder_skip', 'targetamount', 'startdate', 'targetdate', 'reminder', 'remind_me',
+           'rep_length'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -25,25 +27,16 @@ class PiggyBank extends Model
     }
 
     /**
-     * @param $value
-     *
-     * @return int
-     */
-    public function getRemindMeAttribute($value) {
-        return intval($value) == 1;
-    }
-
-    /**
      * Grabs the PiggyBankRepetition that's currently relevant / active
      *
      * @returns PiggyBankRepetition
      */
     public function currentRelevantRep()
     {
-        if ($this->currentRep) {
+        if (!is_null($this->currentRep)) {
             return $this->currentRep;
         }
-        if ($this->repeats == 0) {
+        if (intval($this->repeats) === 0) {
             $rep              = $this->piggyBankRepetitions()->first(['piggy_bank_repetitions.*']);
             $this->currentRep = $rep;
 
@@ -102,6 +95,16 @@ class PiggyBank extends Model
     public function getDates()
     {
         return ['created_at', 'updated_at', 'deleted_at', 'startdate', 'targetdate'];
+    }
+
+    /**
+     * @param $value
+     *
+     * @return int
+     */
+    public function getRemindMeAttribute($value)
+    {
+        return intval($value) == 1;
     }
 
     /**

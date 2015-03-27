@@ -13,8 +13,8 @@
     <tr>
         <td>
             <div class="btn-group btn-group-xs">
-                <a href="{{route('categories.edit',$category->id)}}" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-pencil"></span></a>
-                <a href="{{route('categories.delete',$category->id)}}" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span></a>
+                <a href="{{route('categories.edit',$category->id)}}" class="btn btn-default btn-xs"><i class="fa fa-fw fa-pencil"></i></a>
+                <a href="{{route('categories.delete',$category->id)}}" class="btn btn-danger btn-xs"><i class="fa fa-fw fa-trash-o"></i></a>
             </div>
         </td>
         <td>

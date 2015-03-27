@@ -38,6 +38,9 @@ class ConnectJournalToPiggyBank
         /** @var TransactionJournal $journal */
         $journal     = $event->journal;
         $piggyBankId = $event->piggyBankId;
+        if(intval($piggyBankId) < 1) {
+            return;
+        }
 
         Log::debug('JournalCreated event: ' . $journal->id . ', ' . $piggyBankId);
 
@@ -63,6 +66,7 @@ class ConnectJournalToPiggyBank
         // update piggy bank rep for date of transaction journal.
         $repetition = $piggyBank->piggyBankRepetitions()->relevantOnDate($journal->date)->first();
         if (is_null($repetition)) {
+            Log::debug('Found no repetition for piggy bank for date '.$journal->date->format('Y M d'));
             return;
         }
 

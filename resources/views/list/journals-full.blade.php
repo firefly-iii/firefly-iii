@@ -1,8 +1,8 @@
 @if(is_object($journals) && method_exists($journals, 'render'))
 {!! $journals->render() !!}
 @endif
-<table class="table table-striped table-bordered">
-    <tr>
+<table class="table table-striped table-bordered sortable-table">
+    <tr class="ignore">
         <th colspan="2">&nbsp;</th>
         <th>Description</th>
         <th>Amount</th>
@@ -21,10 +21,10 @@
     </tr>
     @foreach($journals as $journal)
     @if(!isset($journal->transactions[1]) || !isset($journal->transactions[0]))
-        <tr>
+        <tr class="ignore">
             <td>
                 <div class="btn-group btn-group-xs">
-                    <a href="{{route('transactions.delete',$journal->id)}}" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                    <a href="{{route('transactions.delete',$journal->id)}}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
                 </div>
             </td>
             <td>&nbsp;</td>
@@ -32,11 +32,14 @@
             <td colspan="7"><em>Invalid journal: Found {{$journal->transactions()->count()}} transaction(s)</td>
         </tr>
     @else
-    <tr>
+    <tr class="drag" data-date="{{$journal->date->format('Y-m-d')}}" data-id="{{$journal->id}}">
         <td>
             <div class="btn-group btn-group-xs">
-                <a href="{{route('transactions.edit',$journal->id)}}" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-pencil"></span></a>
-                <a href="{{route('transactions.delete',$journal->id)}}" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-trash"></span></a>
+                @if($sorting === true)
+                    <a href="#" class="handle btn btn-default btn-xs"><i class="fa fa-fw fa-arrows-v"></i></a>
+                @endif
+                <a href="{{route('transactions.edit',$journal->id)}}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
+                <a href="{{route('transactions.delete',$journal->id)}}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
             </div>
         </td>
         <td>
@@ -47,7 +50,7 @@
                 <span class="glyphicon glyphicon-arrow-right" title="Deposit"></span>
             @endif
             @if($journal->transactiontype->type == 'Transfer')
-                <span class="glyphicon glyphicon-resize-full" title="Transfer"></span>
+                <i class="fa fa-fw fa-exchange" title="Transfer"></i>
             @endif
             @if($journal->transactiontype->type == 'Opening balance')
                 <span class="glyphicon glyphicon-ban-circle" title="Opening balance"></span>

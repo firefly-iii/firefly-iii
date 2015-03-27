@@ -5,6 +5,11 @@ use FireflyIII\Events\Event;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Queue\SerializesModels;
 
+/**
+ * Class JournalCreated
+ *
+ * @package FireflyIII\Events
+ */
 class JournalCreated extends Event {
 
 	use SerializesModels;
@@ -22,9 +27,6 @@ class JournalCreated extends Event {
 		//
         $this->journal = $journal;
         $this->piggyBankId = $piggyBankId;
-
-
-
 
 	}
 

@@ -18,7 +18,7 @@ class Account extends Model
         = [
             'user_id'         => 'required|exists:users,id',
             'account_type_id' => 'required|exists:account_types,id',
-            'name'            => 'required|between:1,1024|uniqueForUser:accounts,name',
+            'name'            => 'required|between:1,1024|uniqueAccountForUser',
             'active'          => 'required|boolean'
         ];
 
