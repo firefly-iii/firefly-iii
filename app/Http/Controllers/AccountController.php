@@ -144,7 +144,7 @@ class AccountController extends Controller
                     $account->lastActivityDate = null;
                 }
                 $account->startBalance = Steam::balance($account, $start);
-                $account->endBalance   = Steam::balance($account, Session::get('end'));
+                $account->endBalance   = Steam::balance($account, clone Session::get('end'));
             }
         );
 
