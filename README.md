@@ -1,4 +1,4 @@
-Firefly III (v3.3.2)
+Firefly III (v3.3.3)
 ===========
 
 [![Build Status](https://travis-ci.org/JC5/firefly-iii.svg?branch=develop)](https://travis-ci.org/JC5/firefly-iii)
