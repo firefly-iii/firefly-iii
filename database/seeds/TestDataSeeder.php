@@ -90,7 +90,6 @@ class TestDataSeeder extends Seeder
         $this->createCategories();
         $this->createPiggyBanks();
         $this->createReminders();
-        $this->createRecurringTransactions();
         $this->createBills();
         $this->createExpenseAccounts();
         $this->createRevenueAccounts();
@@ -355,34 +354,6 @@ class TestDataSeeder extends Seeder
         $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
         // for weekly piggy bank (clothes)
 
-    }
-
-    /**
-     *
-     */
-    public function createRecurringTransactions()
-    {
-        // account
-        $savings = Account::whereName('Savings account')->orderBy('id', 'DESC')->first();
-        $user    = User::whereEmail('thegrumpydictator@gmail.com')->first();
-
-        $recurring = PiggyBank::create(
-            [
-                'account_id'    => $savings->id,
-                'name'          => 'Nieuwe spullen',
-                'targetamount'  => 1000,
-                'startdate'     => $this->som,
-                'targetdate'    => $this->eom,
-                'repeats'       => 1,
-                'rep_length'    => 'month',
-                'rep_every'     => 0,
-                'rep_times'     => 0,
-                'reminder'      => 'month',
-                'reminder_skip' => 0,
-                'remind_me'     => 1,
-                'order'         => 0,
-            ]
-        );
     }
 
     /**

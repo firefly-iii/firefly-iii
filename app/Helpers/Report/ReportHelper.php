@@ -51,12 +51,12 @@ class ReportHelper implements ReportHelperInterface
         $end->endOfMonth();
         // all budgets
         $set = Auth::user()->budgets()
-                    ->leftJoin(
-                        'budget_limits', function (JoinClause $join) use ($date) {
-                        $join->on('budget_limits.budget_id', '=', 'budgets.id')->where('budget_limits.startdate', '=', $date->format('Y-m-d'));
-                    }
-                    )
-                    ->get(['budgets.*', 'budget_limits.amount as amount']);
+                   ->leftJoin(
+                       'budget_limits', function (JoinClause $join) use ($date) {
+                       $join->on('budget_limits.budget_id', '=', 'budgets.id')->where('budget_limits.startdate', '=', $date->format('Y-m-d'));
+                   }
+                   )
+                   ->get(['budgets.*', 'budget_limits.amount as amount']);
 
 
         $budgets               = $this->_helper->makeArray($set);
@@ -141,23 +141,26 @@ class ReportHelper implements ReportHelperInterface
         }
 
         $accounts = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')->get(['accounts.*'])
-                         ->filter(
-                             function (Account $account) use ($sharedAccounts) {
-                                 if (!in_array($account->id, $sharedAccounts)) {
-                                     return $account;
-                                 }
+                        ->filter(
+                            function (Account $account) use ($sharedAccounts) {
+                                if (!in_array($account->id, $sharedAccounts)) {
+                                    return $account;
+                                }
 
-                                 return null;
-                             }
-                         );
+                                return null;
+                            }
+                        );
         $report   = [];
         $start->startOfYear()->subDay();
         $end->endOfYear();
 
         foreach ($accounts as $account) {
-            $report[] = [
-                'start'   => Steam::balance($account, $start),
-                'end'     => Steam::balance($account, $end),
+            $startBalance = Steam::balance($account, $start);
+            $endBalance   = Steam::balance($account, $end);
+            $report[]     = [
+                'start'   => $startBalance,
+                'end'     => $endBalance,
+                'hide'    => ($startBalance == 0 && $endBalance == 0),
                 'account' => $account,
                 'shared'  => $account->accountRole == 'sharedAsset'
             ];

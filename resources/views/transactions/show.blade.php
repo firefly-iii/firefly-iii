@@ -152,9 +152,6 @@
 
 @stop
 @section('scripts')
-    <script type="text/javascript">
-        var token = "{{csrf_token()}}";
-    </script>
 <script type="text/javascript" src="js/transactions.js"></script>
 <script type="text/javascript" src="js/related-manager.js"></script>
 @stop

@@ -83,16 +83,16 @@ class FireflyValidator extends Validator
         $validTypes = array_keys(Config::get('firefly.subTitlesByIdentifier'));
 
 
-        $type     = isset($this->data['what']) && in_array($this->data['what'],$validTypes) ? $this->data['what'] : null;
+        $type = isset($this->data['what']) && in_array($this->data['what'], $validTypes) ? $this->data['what'] : null;
         // some fallback:
-        if(is_null($type)) {
-            $type = in_array(Input::get('what'),$validTypes) ? Input::get('what') : null;
+        if (is_null($type)) {
+            $type = in_array(Input::get('what'), $validTypes) ? Input::get('what') : null;
         }
         // still null?
-        if(is_null($type)) {
+        if (is_null($type)) {
             // find by other field:
-            $type = isset($this->data['account_type_id']) ? $this->data['account_type_id'] : 0;
-            $dbType   = AccountType::find($type);
+            $type   = isset($this->data['account_type_id']) ? $this->data['account_type_id'] : 0;
+            $dbType = AccountType::find($type);
         } else {
             $longType = Config::get('firefly.accountTypeByIdentifier.' . $type);
             $dbType   = AccountType::whereType($longType)->first();
@@ -133,6 +133,30 @@ class FireflyValidator extends Validator
         $query->where('user_id', Auth::user()->id);
         if (isset($paramers[2])) {
             $query->where('id', '!=', $parameters[2]);
+        }
+        $count = $query->count();
+        if ($count == 0) {
+            return true;
+        }
+
+        return false;
+
+    }
+
+    /**
+     * @param $attribute
+     * @param $value
+     * @param $parameters
+     *
+     * @return bool
+     */
+    public function validateUniquePiggyBankForUser($attribute, $value, $parameters)
+    {
+        $query = DB::table($parameters[0])->where('piggy_banks.'.$parameters[1], $value);
+        $query->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id');
+        $query->where('accounts.user_id', Auth::user()->id);
+        if (isset($paramers[2])) {
+            $query->where('piggy_banks.id', '!=', $parameters[2]);
         }
         $count = $query->count();
         if ($count == 0) {

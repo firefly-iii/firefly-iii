@@ -13,6 +13,7 @@ use Preferences;
 use Session;
 use Steam;
 use View;
+use FireflyIII\Models\Preference;
 
 /**
  * Class ReportController
@@ -69,12 +70,16 @@ class ReportController extends Controller
                 $budgets        = $query->getBudgetSummary($account, $start, $end);
                 $balancedAmount = $query->balancedTransactionsSum($account, $start, $end);
                 $array          = [];
+                $hide           = true;
                 foreach ($budgets as $budget) {
                     $id         = intval($budget->id);
                     $data       = $budget->toArray();
                     $array[$id] = $data;
+                    if (floatval($data['amount']) != 0) {
+                        $hide = false;
+                    }
                 }
-
+                $account->hide              = $hide;
                 $account->budgetInformation = $array;
                 $account->balancedAmount    = $balancedAmount;
 
@@ -363,7 +368,7 @@ class ReportController extends Controller
         } catch (Exception $e) {
             return view('error')->with('message', 'Invalid date.');
         }
-
+        /** @var Preference $pref */
         $pref              = Preferences::get('showSharedReports', false);
         $showSharedReports = $pref->data;
         $date              = new Carbon('01-01-' . $year);

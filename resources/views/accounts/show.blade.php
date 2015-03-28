@@ -58,5 +58,5 @@
 <script type="text/javascript" src="js/accounts.js"></script>
 
 <script src="js/jquery-ui.min.js" type="text/javascript"></script>
-<script src="js/transactions.js" type="text/javascript"></script>
+<script src="js/accounts.js" type="text/javascript"></script>
 @stop

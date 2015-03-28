@@ -73,9 +73,9 @@ return [
         ],
     'accountTypeByIdentifier'  =>
         [
-            'asset'   => 'Asset account',
-            'expense' => 'Expense account',
-            'revenue' => 'Revenue account',
+            'asset'      => 'Asset account',
+            'expense'    => 'Expense account',
+            'revenue'    => 'Revenue account'
         ],
     'shortNamesByFullName'     =>
         [

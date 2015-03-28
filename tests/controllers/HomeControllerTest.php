@@ -29,19 +29,47 @@ class HomeControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\HomeController::dateRange
      */
-    public function testDateRange()
+    public function testDateRangeWarning()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete('This test has not been implemented yet.');
+        $start = '2014-03-01';
+        $end   = '2015-03-31';
+
+        $this->be(FireflyIII\User::whereEmail('thegrumpydictator@gmail.com')->first());
+        $this->call('POST', '/daterange', ['end' => $end, 'start' => $start,'_token' => 'replaceme']);
+        $this->assertResponseOk();
+
+        $this->assertSessionHas('start');
+        $this->assertSessionHas('end');
+        $this->assertSessionHas('warning');
+
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\HomeController::flush
+     * @covers FireflyIII\Http\Controllers\HomeController::dateRange
      */
-    public function testFlush()
+    public function testDateRange()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete('This test has not been implemented yet.');
+        $start = '2015-03-01';
+        $end   = '2015-03-31';
+
+        $this->be(FireflyIII\User::whereEmail('thegrumpydictator@gmail.com')->first());
+        $this->call('POST', '/daterange', ['end' => $end, 'start' => $start,'_token' => 'replaceme']);
+        $this->assertResponseOk();
+
+        $this->assertSessionHas('start');
+        $this->assertSessionHas('end');
+
+    }
+
+    /**
+     * @covers FireflyIII\Http\Controllers\HomeController::index
+     */
+    public function testIndexLoggedIn()
+    {
+        $this->be(FireflyIII\User::whereEmail('thegrumpydictator@gmail.com')->first());
+        $response = $this->call('GET', '/');
+        $this->assertResponseOk();
+
     }
 
     /**
@@ -51,17 +79,6 @@ class HomeControllerTest extends TestCase
     {
         $response = $this->call('GET', '/');
         $this->assertRedirectedTo('auth/login');
-
-    }
-
-    /**
-     * @covers FireflyIII\Http\Controllers\HomeController::index
-     */
-    public function testIndexLoggedIn()
-    {
-        $this->be(new FireflyIII\User);
-        $response = $this->call('GET', '/');
-        $this->assertResponseOk();
 
     }
 

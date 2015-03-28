@@ -4,7 +4,8 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use App;
+use Log;
 /**
  * Class PiggyBank
  *
@@ -36,46 +37,15 @@ class PiggyBank extends Model
         if (!is_null($this->currentRep)) {
             return $this->currentRep;
         }
+        // repeating piggy banks are no longer supported.
         if (intval($this->repeats) === 0) {
             $rep              = $this->piggyBankRepetitions()->first(['piggy_bank_repetitions.*']);
             $this->currentRep = $rep;
 
             return $rep;
         } else {
-            $query            = $this->piggyBankRepetitions()->where(
-                function (EloquentBuilder $q) {
-
-                    $q->where(
-                        function (EloquentBuilder $q) {
-
-                            $q->where(
-                                function (EloquentBuilder $q) {
-                                    $today = new Carbon;
-                                    $q->whereNull('startdate');
-                                    $q->orWhere('startdate', '<=', $today->format('Y-m-d 00:00:00'));
-                                }
-                            )->where(
-                                function (EloquentBuilder $q) {
-                                    $today = new Carbon;
-                                    $q->whereNull('targetdate');
-                                    $q->orWhere('targetdate', '>=', $today->format('Y-m-d 00:00:00'));
-                                }
-                            );
-                        }
-                    )->orWhere(
-                        function (EloquentBuilder $q) {
-                            $today = new Carbon;
-                            $q->where('startdate', '>=', $today->format('Y-m-d 00:00:00'));
-                            $q->where('targetdate', '>=', $today->format('Y-m-d 00:00:00'));
-                        }
-                    );
-
-                }
-            )->orderBy('startdate', 'ASC');
-            $result           = $query->first(['piggy_bank_repetitions.*']);
-            $this->currentRep = $result;
-
-            return $result;
+            Log::error('Tried to work with a piggy bank with a repeats=1 value! (id is '.$this->id.')');
+            //App::abort(500);
         }
 
 

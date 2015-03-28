@@ -1,4 +1,4 @@
-Firefly III (v3.3.3)
+Firefly III (v3.3.4)
 ===========
 
 [![Build Status](https://travis-ci.org/JC5/firefly-iii.svg?branch=develop)](https://travis-ci.org/JC5/firefly-iii)
@@ -18,6 +18,11 @@ Firefly Mark III is a new version of Firefly built upon best practices and lesso
 from building [Firefly](https://github.com/JC5/Firefly). It's Mark III since the original Firefly never made it outside of my
 laptop and [Firefly II](https://github.com/JC5/Firefly) is live.
 
+If you're not sure if this tool is for you, please read the [full description](https://github.com/JC5/firefly-iii/wiki/full-description).
+
+To install and use Firefly III, please read [the installation guide](https://github.com/JC5/firefly-iii/wiki/Installation),
+ [the upgrade guide](https://github.com/JC5/firefly-iii/wiki/Upgrade-instructions) (if applicable) and the **[first use guide](https://github.com/JC5/firefly-iii/wiki/First-use)**
+
 ## Current features
 
 - [A double-entry bookkeeping system](http://en.wikipedia.org/wiki/Double-entry_bookkeeping_system);
@@ -25,9 +30,8 @@ laptop and [Firefly II](https://github.com/JC5/Firefly) is live.
 - It's possible to create, change and manage money using _budgets_;
 - Organize transactions using categories;
 - Save towards a goal using piggy banks;
-- Predict and anticipate large expenses using "repeated expenses" (ie. yearly taxes);
-- Predict and anticipate bills using "recurring transactions" (rent for example);
-- View basic income / expense reports.
+- Predict and anticipate bills;
+- View income / expense reports;
 - Lots of help text in case you don't get it;
 
 Everything is organised:
@@ -55,7 +59,6 @@ Firefly III will feature, but does not feature yet:
 Some stuff has been removed:
 
 - The nesting of budgets, categories and beneficiaries is removed because it was pretty pointless.
-- Firefly will not encrypt the content of the (MySQL) tables. Old versions of Firefly had this capability but it sucks when searching, sorting and organizing entries.
 
 ## Screenshots
 

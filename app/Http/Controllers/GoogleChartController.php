@@ -52,9 +52,11 @@ class GoogleChartController extends Controller
         $start   = Session::get('start', Carbon::now()->startOfMonth());
         $end     = Session::get('end', Carbon::now()->endOfMonth());
         $current = clone $start;
+        $today = new Carbon;
 
         while ($end >= $current) {
-            $chart->addRow(clone $current, Steam::balance($account, $current), false);
+            $certain = $current < $today;
+            $chart->addRow(clone $current, Steam::balance($account, $current), $certain);
             $current->addDay();
         }
 

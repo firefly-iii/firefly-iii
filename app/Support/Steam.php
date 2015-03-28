@@ -24,7 +24,24 @@ class Steam
      */
     public function balance(Account $account, Carbon $date = null)
     {
-        $date    = is_null($date) ? Carbon::now() : $date;
+        $date = is_null($date) ? Carbon::now() : $date;
+
+        // find the first known transaction on this account:
+        //
+        $firstDateObject = $account
+            ->transactions()
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->orderBy('transaction_journals.date', 'ASC')->first(['transaction_journals.date']);
+
+        $firstDate = is_null($firstDateObject) ? clone $date : new Carbon($firstDateObject->date);
+        $date      = $date < $firstDate ? $firstDate : $date;
+
+        /**
+         *select * from transactions
+         * left join transaction_journals ON transaction_journals.id = transactions.transaction_journal_id
+         * order by date ASC
+         */
+
         $balance = floatval(
             $account->transactions()->leftJoin(
                 'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
@@ -32,6 +49,38 @@ class Steam
         );
 
         return $balance;
+    }
+
+    /**
+     * Only return the top X entries, group the rest by amount
+     * and described as 'Others'. id = 0 as well
+     *
+     * @param array $array
+     * @param int   $limit
+     *
+     * @return array
+     */
+    public function limitArray(array $array, $limit = 10)
+    {
+        $others = [
+            'name'   => 'Others',
+            'amount' => 0
+        ];
+        $return = [];
+        $count  = 0;
+        foreach ($array as $id => $entry) {
+            if ($count < ($limit - 1)) {
+                $return[$id] = $entry;
+            } else {
+                $others['amount'] += $entry['amount'];
+            }
+
+            $count++;
+        }
+        $return[0] = $others;
+
+        return $return;
+
     }
 
     /**
@@ -87,6 +136,24 @@ class Steam
     }
 
     /**
+     * @param PiggyBank           $piggyBank
+     * @param PiggyBankRepetition $repetition
+     *
+     * @return int
+     */
+    public function percentage(PiggyBank $piggyBank, PiggyBankRepetition $repetition)
+    {
+        $pct = $repetition->currentamount / $piggyBank->targetamount * 100;
+        if ($pct > 100) {
+            // @codeCoverageIgnoreStart
+            return 100;
+            // @codeCoverageIgnoreEnd
+        } else {
+            return floor($pct);
+        }
+    }
+
+    /**
      * Sort an array where all 'amount' keys are positive floats.
      *
      * @param array $array
@@ -110,38 +177,6 @@ class Steam
     }
 
     /**
-     * Only return the top X entries, group the rest by amount
-     * and described as 'Others'. id = 0 as well
-     *
-     * @param array $array
-     * @param int   $limit
-     *
-     * @return array
-     */
-    public function limitArray(array $array, $limit = 10)
-    {
-        $others = [
-            'name'   => 'Others',
-            'amount' => 0
-        ];
-        $return = [];
-        $count  = 0;
-        foreach ($array as $id => $entry) {
-            if ($count < ($limit - 1)) {
-                $return[$id] = $entry;
-            } else {
-                $others['amount'] += $entry['amount'];
-            }
-
-            $count++;
-        }
-        $return[0] = $others;
-
-        return $return;
-
-    }
-
-    /**
      * Sort an array where all 'amount' keys are negative floats.
      *
      * @param array $array
@@ -161,24 +196,6 @@ class Steam
         );
 
         return $array;
-    }
-
-    /**
-     * @param PiggyBank           $piggyBank
-     * @param PiggyBankRepetition $repetition
-     *
-     * @return int
-     */
-    public function percentage(PiggyBank $piggyBank, PiggyBankRepetition $repetition)
-    {
-        $pct = $repetition->currentamount / $piggyBank->targetamount * 100;
-        if ($pct > 100) {
-            // @codeCoverageIgnoreStart
-            return 100;
-            // @codeCoverageIgnoreEnd
-        } else {
-            return floor($pct);
-        }
     }
 
 }

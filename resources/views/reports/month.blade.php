@@ -138,6 +138,8 @@
                             $sumEnvelope += $budget['amount'];
                             $sumLeft += $budget['amount'] + $budget['spent'];
                         ?>
+                    <!-- only display when relevant: -->
+                    @if($budget['amount'] != 0 || $budget['spent'] != 0)
                     <tr>
                         <td>
                             @if($id > 0)
@@ -150,6 +152,7 @@
                         <td>{!! Amount::format($budget['spent'],false) !!}</td>
                         <td>{!! Amount::format($budget['amount'] + $budget['spent']) !!}</td>
                     </tr>
+                    @endif
                     @endforeach
                     <tr>
                         <td><em>Sum</em></td>

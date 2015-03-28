@@ -1,11 +1,9 @@
 <?php namespace FireflyIII\Http\Controllers;
 
-use Cache;
 use Carbon\Carbon;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Input;
 use Preferences;
-use Redirect;
 use Session;
 
 /**
@@ -15,13 +13,6 @@ use Session;
  */
 class HomeController extends Controller
 {
-
-    /**
-     *
-     */
-    public function __construct()
-    {
-    }
 
     public function dateRange()
     {
@@ -36,16 +27,6 @@ class HomeController extends Controller
 
         Session::put('start', $start);
         Session::put('end', $end);
-    }
-
-    /**
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function flush()
-    {
-        Cache::flush();
-
-        return Redirect::route('index');
     }
 
     /**
@@ -72,9 +53,7 @@ class HomeController extends Controller
             }
         }
 
-        //        var_dump($transactions);
-
-        return view('index', compact('count', 'title','savings', 'subTitle', 'mainTitleIcon', 'transactions'));
+        return view('index', compact('count', 'title', 'savings', 'subTitle', 'mainTitleIcon', 'transactions'));
     }
 
 
