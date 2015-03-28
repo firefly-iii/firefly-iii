@@ -5,6 +5,7 @@ namespace FireflyIII\Http\Middleware;
 use Closure;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\Middleware;
+use Log;
 
 /**
  * Class ReplaceTestVars
@@ -45,6 +46,7 @@ class ReplaceTestVars implements Middleware
             $input           = $request->all();
             $input['_token'] = $request->session()->token();
             // we need to update _token value to make sure we get the POST / PUT tests passed.
+            Log::debug('Input token replaced ('.$input['_token'].').');
             $request->replace($input);
         }
 

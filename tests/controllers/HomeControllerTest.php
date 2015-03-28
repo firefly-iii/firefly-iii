@@ -35,7 +35,7 @@ class HomeControllerTest extends TestCase
         $end   = '2015-03-31';
 
         $this->be(new FireflyIII\User);
-        $this->call('POST', '/daterange', ['end' => $end, 'start' => $start]);
+        $this->call('POST', '/daterange', ['end' => $end, 'start' => $start,'_token' => 'replaceme']);
         $this->assertResponseOk();
 
         $this->assertSessionHas('start');
@@ -53,7 +53,7 @@ class HomeControllerTest extends TestCase
         $end   = '2015-03-31';
 
         $this->be(new FireflyIII\User);
-        $this->call('POST', '/daterange', ['end' => $end, 'start' => $start]);
+        $this->call('POST', '/daterange', ['end' => $end, 'start' => $start,'_token' => 'replaceme']);
         $this->assertResponseOk();
 
         $this->assertSessionHas('start');
