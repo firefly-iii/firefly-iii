@@ -3,6 +3,7 @@
 composer.phar
 Thumbs.db
 .idea/
+.DS_Store
 tests/_output/*
 _ide_helper.php
 /build/logs/clover.xml
