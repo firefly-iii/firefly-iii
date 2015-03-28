@@ -29,28 +29,35 @@ class HomeControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\HomeController::dateRange
      */
+    public function testDateRangeWarning()
+    {
+        $start = '2014-03-01';
+        $end   = '2015-03-31';
+
+        $this->be(new FireflyIII\User);
+        $this->call('POST', '/daterange', ['end' => $end, 'start' => $start]);
+        $this->assertResponseOk();
+
+        $this->assertSessionHas('start');
+        $this->assertSessionHas('end');
+        $this->assertSessionHas('warning');
+
+    }
+
+    /**
+     * @covers FireflyIII\Http\Controllers\HomeController::dateRange
+     */
     public function testDateRange()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete('This test has not been implemented yet.');
-    }
+        $start = '2015-03-01';
+        $end   = '2015-03-31';
 
-    /**
-     * @covers FireflyIII\Http\Controllers\HomeController::flush
-     */
-    public function testFlush()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete('This test has not been implemented yet.');
-    }
+        $this->be(new FireflyIII\User);
+        $this->call('POST', '/daterange', ['end' => $end, 'start' => $start]);
+        $this->assertResponseOk();
 
-    /**
-     * @covers FireflyIII\Http\Controllers\HomeController::index
-     */
-    public function testIndexNoLogin()
-    {
-        $response = $this->call('GET', '/');
-        $this->assertRedirectedTo('auth/login');
+        $this->assertSessionHas('start');
+        $this->assertSessionHas('end');
 
     }
 
@@ -62,6 +69,16 @@ class HomeControllerTest extends TestCase
         $this->be(new FireflyIII\User);
         $response = $this->call('GET', '/');
         $this->assertResponseOk();
+
+    }
+
+    /**
+     * @covers FireflyIII\Http\Controllers\HomeController::index
+     */
+    public function testIndexNoLogin()
+    {
+        $response = $this->call('GET', '/');
+        $this->assertRedirectedTo('auth/login');
 
     }
 

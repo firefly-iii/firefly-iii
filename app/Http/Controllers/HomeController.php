@@ -39,16 +39,6 @@ class HomeController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function flush()
-    {
-        Cache::flush();
-
-        return Redirect::route('index');
-    }
-
-    /**
      * @return \Illuminate\View\View
      */
     public function index(AccountRepositoryInterface $repository)
