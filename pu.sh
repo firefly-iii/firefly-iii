@@ -7,4 +7,4 @@ if [ ! -f tests/database/db.sqlite ]; then
     php artisan migrate --seed
 fi
 
-phpunit
+phpunit --verbose
