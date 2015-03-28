@@ -45,7 +45,7 @@ class PiggyBank extends Model
             return $rep;
         } else {
             Log::error('Tried to work with a piggy bank with a repeats=1 value! (id is '.$this->id.')');
-            App::abort(500);
+            //App::abort(500);
         }
 
 
