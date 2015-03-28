@@ -37,7 +37,7 @@ class AccountController extends Controller
      */
     public function create($what = 'asset')
     {
-        $subTitleIcon = Config::get('firefly.subTitlesByIdentifier.' . $what);
+        $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
         $subTitle     = 'Create a new ' . e($what) . ' account';
 
         return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle'));
