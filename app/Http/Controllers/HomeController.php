@@ -1,5 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
+use Auth;
 use Carbon\Carbon;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Input;
@@ -45,6 +46,16 @@ class HomeController extends Controller
         $end           = Session::get('end', Carbon::now()->endOfMonth());
         $accounts      = $repository->getFrontpageAccounts($frontPage);
         $savings       = $repository->getSavingsAccounts();
+
+        // check if all books are correct.
+        $sum = floatval(Auth::user()->transactions()->sum('amount'));
+        if ($sum == 0) {
+            Session::flash(
+                'error', 'Your transactions are unbalanced. This means a'
+                         . ' withdrawal, deposit or transfer was not stored properly. '
+                         . 'Please check your accounts and transactions for errors.'
+            );
+        }
 
         foreach ($accounts as $account) {
             $set = $repository->getFrontpageTransactions($account, $start, $end);
