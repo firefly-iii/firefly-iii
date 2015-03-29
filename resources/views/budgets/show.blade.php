@@ -6,6 +6,21 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 Overview
+
+
+                <!-- ACTIONS MENU -->
+                <div class="pull-right">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                            Actions
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu pull-right" role="menu">
+                            <li><a href="{{route('budgets.edit',$budget->id)}}"><i class="fa fa-pencil fa-fw"></i> Edit</a></li>
+                            <li><a href="{{route('budgets.delete',$budget->id)}}"><i class="fa fa-trash fa-fw"></i> Delete</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
             <div class="panel-body">
                 <div id="budgetOverview"></div>

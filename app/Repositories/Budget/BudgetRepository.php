@@ -104,6 +104,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         // update the account:
         $budget->name = $data['name'];
+        $budget->active = $data['active'];
         $budget->save();
 
         return $budget;

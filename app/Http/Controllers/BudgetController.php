@@ -211,6 +211,7 @@ class BudgetController extends Controller
     {
         $budgetData = [
             'name' => $request->input('name'),
+            'active' => intval($request->input('active')) == 1
         ];
 
         $repository->update($budget, $budgetData);

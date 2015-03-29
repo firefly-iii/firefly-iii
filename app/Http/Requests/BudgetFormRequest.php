@@ -34,7 +34,8 @@ class BudgetFormRequest extends Request
         }
 
         return [
-            'name' => $nameRule,
+            'name'   => $nameRule,
+            'active' => 'numeric|between:0,1'
         ];
     }
 }
