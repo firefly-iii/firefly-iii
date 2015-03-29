@@ -145,24 +145,25 @@
             </div>
         </div>
     </div>
-
-    <div class="col-lg-3 col-sm-4 col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-fw fa-minus-circle"></i>
-                Inactive budgets
-            </div>
-            <div class="panel-body">
-                @foreach($inactive as $index => $budget)
-                    @if($index != count($inactive)-1)
-                        <a href="{{route('budgets.show',$budget->id)}}">{{$budget->name}}</a>,
-                    @else
-                        <a href="{{route('budgets.show',$budget->id)}}">{{$budget->name}}</a>
-                    @endif
-                @endforeach
+    @if($inactive->count() > 0)
+        <div class="col-lg-3 col-sm-4 col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-fw fa-minus-circle"></i>
+                    Inactive budgets
+                </div>
+                <div class="panel-body">
+                    @foreach($inactive as $index => $budget)
+                        @if($index != count($inactive)-1)
+                            <a href="{{route('budgets.show',$budget->id)}}">{{$budget->name}}</a>,
+                        @else
+                            <a href="{{route('budgets.show',$budget->id)}}">{{$budget->name}}</a>
+                        @endif
+                    @endforeach
+                </div>
             </div>
         </div>
-    </div>
+    @endif
 </div>
 
 <!-- DIALOG -->
