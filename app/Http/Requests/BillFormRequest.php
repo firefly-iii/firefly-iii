@@ -3,6 +3,7 @@
 namespace FireflyIII\Http\Requests;
 
 use Auth;
+use Carbon\Carbon;
 use Input;
 
 /**
@@ -19,6 +20,26 @@ class BillFormRequest extends Request
     {
         // Only allow logged in users
         return Auth::check();
+    }
+
+    /**
+     * @return array
+     */
+    public function getBillData()
+    {
+        return [
+            'name'               => $this->get('name'),
+            'match'              => $this->get('match'),
+            'amount_min'         => floatval($this->get('amount_min')),
+            'amount_currency_id' => floatval($this->get('amount_currency_id')),
+            'amount_max'         => floatval($this->get('amount_max')),
+            'date'               => new Carbon($this->get('date')),
+            'user'               => Auth::user()->id,
+            'repeat_freq'        => $this->get('repeat_freq'),
+            'skip'               => intval($this->get('skip')),
+            'automatch'          => intval($this->get('automatch')) === 1,
+            'active'             => intval($this->get('active')) === 1,
+        ];
     }
 
     /**

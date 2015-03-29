@@ -1,7 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Auth;
-use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Events\JournalCreated;
 use FireflyIII\Events\JournalSaved;
@@ -13,9 +12,9 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Input;
 use Redirect;
+use Response;
 use Session;
 use View;
-use Response;
 
 /**
  * Class TransactionController
@@ -199,16 +198,13 @@ class TransactionController extends Controller
         $page   = intval(\Input::get('page'));
         $offset = $page > 0 ? ($page - 1) * 50 : 0;
 
-        $set      = Auth::user()->
-        transactionJournals()->
-        transactionTypes($types)->
-        withRelevantData()->take(50)->offset($offset)
-            ->orderBy('date', 'DESC')
-            ->orderBy('order','ASC')
-            ->orderBy('id','DESC')
-            ->get(
-            ['transaction_journals.*']
-        );
+        $set      = Auth::user()->transactionJournals()->transactionTypes($types)->withRelevantData()->take(50)->offset($offset)
+                        ->orderBy('date', 'DESC')
+                        ->orderBy('order', 'ASC')
+                        ->orderBy('id', 'DESC')
+                        ->get(
+                            ['transaction_journals.*']
+                        );
         $count    = Auth::user()->transactionJournals()->transactionTypes($types)->count();
         $journals = new LengthAwarePaginator($set, $count, 50, $page);
         $journals->setPath('transactions/' . $what);
@@ -227,13 +223,14 @@ class TransactionController extends Controller
             $order = 0;
             foreach ($ids as $id) {
                 $journal = Auth::user()->transactionjournals()->where('id', $id)->where('date', Input::get('date'))->first();
-                if($journal) {
+                if ($journal) {
                     $journal->order = $order;
                     $order++;
                     $journal->save();
                 }
             }
         }
+
         return Response::json(true);
 
     }
@@ -251,10 +248,10 @@ class TransactionController extends Controller
                     $t->account->transactions()->leftJoin(
                         'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
                     )
-                        ->where('transaction_journals.date', '<=', $journal->date->format('Y-m-d'))
-                        ->where('transaction_journals.order','>=',$journal->order)
-                        ->where('transaction_journals.id', '!=', $journal->id)
-                        ->sum('transactions.amount')
+                               ->where('transaction_journals.date', '<=', $journal->date->format('Y-m-d'))
+                               ->where('transaction_journals.order', '>=', $journal->order)
+                               ->where('transaction_journals.id', '!=', $journal->id)
+                               ->sum('transactions.amount')
                 );
                 $t->after  = $t->before + $t->amount;
             }
@@ -274,23 +271,8 @@ class TransactionController extends Controller
      */
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository)
     {
-        $journalData = [
-            'what'               => $request->get('what'),
-            'description'        => $request->get('description'),
-            'account_id'         => intval($request->get('account_id')),
-            'account_from_id'    => intval($request->get('account_from_id')),
-            'account_to_id'      => intval($request->get('account_to_id')),
-            'expense_account'    => $request->get('expense_account'),
-            'revenue_account'    => $request->get('revenue_account'),
-            'amount'             => floatval($request->get('amount')),
-            'user'               => Auth::user()->id,
-            'amount_currency_id' => intval($request->get('amount_currency_id')),
-            'date'               => new Carbon($request->get('date')),
-            'budget_id'          => intval($request->get('budget_id')),
-            'category'           => $request->get('category'),
-        ];
-
-        $journal = $repository->store($journalData);
+        $journalData = $request->getJournalData();
+        $journal     = $repository->store($journalData);
 
         event(new JournalSaved($journal));
         event(new JournalCreated($journal, intval($request->get('piggy_bank_id'))));
@@ -321,23 +303,7 @@ class TransactionController extends Controller
     public function update(TransactionJournal $journal, JournalFormRequest $request, JournalRepositoryInterface $repository)
     {
 
-
-        $journalData = [
-            'what'               => $request->get('what'),
-            'description'        => $request->get('description'),
-            'account_id'         => intval($request->get('account_id')),
-            'account_from_id'    => intval($request->get('account_from_id')),
-            'account_to_id'      => intval($request->get('account_to_id')),
-            'expense_account'    => $request->get('expense_account'),
-            'revenue_account'    => $request->get('revenue_account'),
-            'amount'             => floatval($request->get('amount')),
-            'user'               => Auth::user()->id,
-            'amount_currency_id' => intval($request->get('amount_currency_id')),
-            'date'               => new Carbon($request->get('date')),
-            'budget_id'          => intval($request->get('budget_id')),
-            'category'           => $request->get('category'),
-        ];
-
+        $journalData = $request->getJournalData();
         $repository->update($journal, $journalData);
 
         event(new JournalSaved($journal));

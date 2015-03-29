@@ -87,9 +87,9 @@ class ReportQuery implements ReportQueryInterface
                                  ->whereNull('budget_transaction_journal.budget_id')->whereNull('transaction_journals.deleted_at')
                                  ->whereNull('otherJournals.deleted_at')
                                  ->where('transactions.account_id', $account->id)
-                                ->orderBy('transaction_journals.date', 'DESC')
-                                ->orderBy('transaction_journals.order','ASC')
-                                ->orderBy('transaction_journals.id','DESC')
+                                 ->orderBy('transaction_journals.date', 'DESC')
+                                 ->orderBy('transaction_journals.order', 'ASC')
+                                 ->orderBy('transaction_journals.id', 'DESC')
                                  ->whereNotNull('transaction_group_transaction_journal.transaction_group_id')
                                  ->get(
                                      [
@@ -174,26 +174,9 @@ class ReportQuery implements ReportQueryInterface
      */
     public function getBudgetSummary(Account $account, Carbon $start, Carbon $end)
     {
-        $set = TransactionJournal::
-        leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
-                                 ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                 ->leftJoin(
-                                     'transactions', function (JoinClause $join) {
-                                     $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
-                                 }
-                                 )
-                                 ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                                 ->before($end)
-                                 ->after($start)
-                                 ->where('accounts.id', $account->id)
-                                 ->where('transaction_journals.user_id', Auth::user()->id)
-                                 ->where('transaction_types.type', 'Withdrawal')
-                                 ->groupBy('budgets.id')
-                                 ->orderBy('budgets.name', 'ASC')
-                                 ->get(['budgets.id', 'budgets.name', DB::Raw('SUM(`transactions`.`amount`) as `amount`')]);
+        $query = $this->queryJournalsNoBudget($account, $start, $end);
 
-        return $set;
+        return $query->get(['budgets.id', 'budgets.name', DB::Raw('SUM(`transactions`.`amount`) as `amount`')]);
 
     }
 
@@ -209,26 +192,9 @@ class ReportQuery implements ReportQueryInterface
      */
     public function getTransactionsWithoutBudget(Account $account, Carbon $start, Carbon $end)
     {
-        $set = TransactionJournal::
-        leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
-                                 ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                 ->leftJoin(
-                                     'transactions', function (JoinClause $join) {
-                                     $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
-                                 }
-                                 )
-                                 ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                                 ->before($end)
-                                 ->after($start)
-                                 ->where('accounts.id', $account->id)
-                                 ->where('transaction_journals.user_id', Auth::user()->id)
-                                 ->where('transaction_types.type', 'Withdrawal')
-                                 ->whereNull('budgets.id')
-                                 ->orderBy('transaction_journals.date', 'ASC')
-                                 ->get(['budgets.name', 'transactions.amount', 'transaction_journals.*']);
+        $query = $this->queryJournalsNoBudget($account, $start, $end);
 
-        return $set;
+        return $query->get(['budgets.name', 'transactions.amount', 'transaction_journals.*']);
     }
 
     /**
@@ -602,6 +568,39 @@ class ReportQuery implements ReportQueryInterface
                                          DB::Raw('SUM(`transactions`.`amount`) * -1 AS `amount`')
                                      ]
                                  );
+    }
+
+    /**
+     *
+     * This query will get all transaction journals and budget information for a specified account
+     * in a certain date range, where the transaction journal does not have a budget.
+     * There is no get() specified, this is up to the method itself.
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return Builder
+     */
+    public function queryJournalsNoBudget(Account $account, Carbon $start, Carbon $end)
+    {
+        return TransactionJournal::
+        leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
+                                 ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                 ->leftJoin(
+                                     'transactions', function (JoinClause $join) {
+                                     $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
+                                 }
+                                 )
+                                 ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                                 ->before($end)
+                                 ->after($start)
+                                 ->where('accounts.id', $account->id)
+                                 ->where('transaction_journals.user_id', Auth::user()->id)
+                                 ->where('transaction_types.type', 'Withdrawal')
+                                 ->groupBy('budgets.id')
+                                 ->orderBy('budgets.name', 'ASC');
     }
 
 }
