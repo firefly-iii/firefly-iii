@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "34e0c28c0f8f4c04b545b2cbb0f2f24b",
+    "hash": "b77b9f717b25e1e193bdc6edb18ad492",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -682,7 +682,7 @@
         },
         {
             "name": "grumpydictator/gchart",
-            "version": "dev-master",
+            "version": "1.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JC5/gchart.git",
@@ -950,16 +950,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.0.22",
+            "version": "v5.0.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "388289de68ba912746bd1adb20a8b1cd0f846ea1"
+                "reference": "59219f7afb60be05d74ce01fcb5d2440f7a1b13d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/388289de68ba912746bd1adb20a8b1cd0f846ea1",
-                "reference": "388289de68ba912746bd1adb20a8b1cd0f846ea1",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/59219f7afb60be05d74ce01fcb5d2440f7a1b13d",
+                "reference": "59219f7afb60be05d74ce01fcb5d2440f7a1b13d",
                 "shasum": ""
             },
             "require": {
@@ -1072,7 +1072,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2015-03-27 14:49:51"
+            "time": "2015-03-28 16:56:59"
         },
         {
             "name": "league/commonmark",
@@ -2351,7 +2351,7 @@
         },
         {
             "name": "watson/validating",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dwightwatson/validating.git",
@@ -3962,8 +3962,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "grumpydictator/gchart": 20,
-        "watson/validating": 20,
         "barryvdh/laravel-debugbar": 0
     },
     "prefer-stable": false,
