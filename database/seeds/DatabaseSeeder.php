@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call('TransactionCurrencySeeder');
         $this->call('TransactionTypeSeeder');
 
-        if (App::environment() == 'testing' || App::environment() == 'homestead') {
+        if (App::environment() == 'testing' || App::environment() == 'homestead' || gethostname() == 'vagrant-firefly-iii') {
             $this->call('TestDataSeeder');
         }
     }

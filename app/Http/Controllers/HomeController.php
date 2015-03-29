@@ -49,7 +49,7 @@ class HomeController extends Controller
 
         // check if all books are correct.
         $sum = floatval(Auth::user()->transactions()->sum('amount'));
-        if ($sum == 0) {
+        if ($sum != 0) {
             Session::flash(
                 'error', 'Your transactions are unbalanced. This means a'
                          . ' withdrawal, deposit or transfer was not stored properly. '
