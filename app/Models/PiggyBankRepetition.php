@@ -1,8 +1,9 @@
 <?php namespace FireflyIII\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Eloquent\Model;
+
 /**
  * Class PiggyBankRepetition
  *
@@ -29,27 +30,6 @@ class PiggyBankRepetition extends Model
 
     /**
      * @param EloquentBuilder $query
-     * @param Carbon          $date
-     *
-     * @return mixed
-     */
-    public function scopeRelevantOnDate(EloquentBuilder $query, Carbon $date)
-    {
-        return $query->where(
-            function($q) use ($date) {
-                $q->where('startdate', '<=', $date->format('Y-m-d 00:00:00'));
-                $q->orWhereNull('startdate');
-            })
-
-            ->where(function($q) use ($date) {
-
-                $q->where('targetdate', '>=', $date->format('Y-m-d 00:00:00'));
-                $q->orWhereNull('targetdate');
-            });
-    }
-
-    /**
-     * @param EloquentBuilder $query
      * @param Carbon          $start
      * @param Carbon          $target
      *
@@ -57,7 +37,30 @@ class PiggyBankRepetition extends Model
      */
     public function scopeOnDates(EloquentBuilder $query, Carbon $start, Carbon $target)
     {
-        return $query->where('startdate',$start->format('Y-m-d'))->where('targetdate',$target->format('Y-m-d'));
+        return $query->where('startdate', $start->format('Y-m-d'))->where('targetdate', $target->format('Y-m-d'));
+    }
+
+    /**
+     * @param EloquentBuilder $query
+     * @param Carbon          $date
+     *
+     * @return mixed
+     */
+    public function scopeRelevantOnDate(EloquentBuilder $query, Carbon $date)
+    {
+        return $query->where(
+            function (EloquentBuilder $q) use ($date) {
+                $q->where('startdate', '<=', $date->format('Y-m-d 00:00:00'));
+                $q->orWhereNull('startdate');
+            }
+        )
+                     ->where(
+                         function (EloquentBuilder $q) use ($date) {
+
+                             $q->where('targetdate', '>=', $date->format('Y-m-d 00:00:00'));
+                             $q->orWhereNull('targetdate');
+                         }
+                     );
     }
 
 }
