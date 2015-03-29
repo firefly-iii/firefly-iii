@@ -51,16 +51,11 @@ class BillRepository implements BillRepositoryInterface
         foreach ($billStarts as $dateEntry) {
             if ($dateEntry['end'] > $start && $dateEntry['start'] < $end) {
                 // count transactions for bill in this range (not relevant yet!):
-                //                $count = $bill->transactionjournals()->before($dateEntry['end'])->after($dateEntry['start'])->count();
-                //                if ($count == 0) {
                 $validRanges[] = $dateEntry;
-                //                }
             }
         }
 
         return $validRanges;
-        //        echo $bill->name;
-        //        var_dump($validRanges);
     }
 
     /**

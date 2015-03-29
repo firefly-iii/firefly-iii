@@ -3,7 +3,6 @@
 namespace FireflyIII\Http\Requests;
 
 use Auth;
-use FireflyIII\Models\Account;
 
 /**
  * Class ProfileFormRequest

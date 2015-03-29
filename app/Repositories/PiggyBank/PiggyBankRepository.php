@@ -6,7 +6,6 @@ use Auth;
 use DB;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
-use FireflyIII\Models\Reminder;
 use Illuminate\Support\Collection;
 use Navigation;
 
@@ -98,7 +97,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
           ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.id')
           ->where('accounts.user_id', Auth::user()->id)
           ->update(['order' => 0, 'piggy_banks.updated_at' => DB::Raw('NOW()')]);
-        //Auth::user()->piggyBanks()->update(['order' => 0]);
     }
 
     /**

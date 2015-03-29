@@ -157,8 +157,6 @@ class BillController extends Controller
     public function store(BillFormRequest $request, BillRepositoryInterface $repository)
     {
 
-        var_dump($request->all());
-
         $billData = [
             'name'               => $request->get('name'),
             'match'              => $request->get('match'),

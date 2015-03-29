@@ -1,7 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Auth;
-use FireflyIII\Http\Requests;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;

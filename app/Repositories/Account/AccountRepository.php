@@ -118,7 +118,6 @@ class AccountRepository implements AccountRepositoryInterface
 
         return $paginator;
 
-        //return Paginator::make($items, $count, 50);
 
 
     }
@@ -202,8 +201,8 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function store(array $data)
     {
-        $newAccount = $this->_store($data);
-        $this->_storeMetadata($newAccount, $data);
+        $newAccount = $this->storeAccount($data);
+        $this->storeMetadata($newAccount, $data);
 
 
         // continue with the opposing account:
@@ -215,8 +214,8 @@ class AccountRepository implements AccountRepositoryInterface
                 'name'        => $data['name'] . ' initial balance',
                 'active'      => false,
             ];
-            $opposing     = $this->_store($opposingData);
-            $this->_storeInitialBalance($newAccount, $opposing, $data);
+            $opposing     = $this->storeAccount($opposingData);
+            $this->storeInitialBalance($newAccount, $opposing, $data);
 
         }
 
@@ -236,7 +235,7 @@ class AccountRepository implements AccountRepositoryInterface
         $account->save();
 
         // update meta data:
-        $this->_updateMetadata($account, $data);
+        $this->updateMetadata($account, $data);
 
         $openingBalance = $this->openingBalanceTransaction($account);
 
@@ -245,7 +244,7 @@ class AccountRepository implements AccountRepositoryInterface
             // if opening balance, do an update:
             if ($openingBalance) {
                 // update existing opening balance.
-                $this->_updateInitialBalance($account, $openingBalance, $data);
+                $this->updateInitialBalance($account, $openingBalance, $data);
             } else {
                 // create new opening balance.
                 $type         = $data['openingBalance'] < 0 ? 'expense' : 'revenue';
@@ -255,8 +254,8 @@ class AccountRepository implements AccountRepositoryInterface
                     'name'        => $data['name'] . ' initial balance',
                     'active'      => false,
                 ];
-                $opposing     = $this->_store($opposingData);
-                $this->_storeInitialBalance($account, $opposing, $data);
+                $opposing     = $this->storeAccount($opposingData);
+                $this->storeInitialBalance($account, $opposing, $data);
             }
 
         } else {
@@ -275,7 +274,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return Account
      */
-    protected function _store(array $data)
+    protected function storeAccount(array $data)
     {
         $type        = Config::get('firefly.accountTypeByIdentifier.' . $data['accountType']);
         $accountType = AccountType::whereType($type)->first();
@@ -307,7 +306,7 @@ class AccountRepository implements AccountRepositoryInterface
      * @param Account $account
      * @param array   $data
      */
-    protected function _storeMetadata(Account $account, array $data)
+    protected function storeMetadata(Account $account, array $data)
     {
         $metaData = new AccountMeta(
             [
@@ -329,7 +328,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return TransactionJournal
      */
-    protected function _storeInitialBalance(Account $account, Account $opposing, array $data)
+    protected function storeInitialBalance(Account $account, Account $opposing, array $data)
     {
         $type            = $data['openingBalance'] < 0 ? 'Withdrawal' : 'Deposit';
         $transactionType = TransactionType::whereType($type)->first();
@@ -398,7 +397,7 @@ class AccountRepository implements AccountRepositoryInterface
      * @param Account $account
      * @param array   $data
      */
-    protected function _updateMetadata(Account $account, array $data)
+    protected function updateMetadata(Account $account, array $data)
     {
         $metaEntries = $account->accountMeta()->get();
         $updated     = false;
@@ -435,7 +434,7 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @return TransactionJournal
      */
-    protected function _updateInitialBalance(Account $account, TransactionJournal $journal, array $data)
+    protected function updateInitialBalance(Account $account, TransactionJournal $journal, array $data)
     {
         $journal->date = $data['openingBalanceDate'];
 

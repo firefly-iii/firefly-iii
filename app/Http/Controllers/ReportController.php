@@ -5,7 +5,6 @@ use Carbon\Carbon;
 use Exception;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
-use FireflyIII\Http\Requests;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Database\Query\JoinClause;
@@ -381,8 +380,6 @@ class ReportController extends Controller
         $balances        = $helper->yearBalanceReport($date, $showSharedReports);
         $groupedIncomes  = $query->journalsByRevenueAccount($date, $end, $showSharedReports);
         $groupedExpenses = $query->journalsByExpenseAccount($date, $end, $showSharedReports);
-
-        //$groupedExpenses = $helper-> expensesGroupedByAccount($date, $end, 15);
 
         return view(
             'reports.year', compact('date', 'groupedIncomes', 'groupedExpenses', 'year', 'balances', 'title', 'subTitle', 'subTitleIcon', 'mainTitleIcon')

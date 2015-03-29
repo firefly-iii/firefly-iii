@@ -5,6 +5,7 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
+use Illuminate\Mail\Message;
 use Mail;
 use Session;
 
@@ -73,7 +74,7 @@ class AuthController extends Controller
 
         // send email.
         Mail::send(
-            'emails.registered', [], function ($message) use ($email) {
+            'emails.registered', [], function (Message $message) use ($email) {
             $message->to($email, $email)->subject('Welcome to Firefly III!');
         }
         );

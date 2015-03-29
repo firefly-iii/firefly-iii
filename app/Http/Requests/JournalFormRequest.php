@@ -3,9 +3,8 @@
 namespace FireflyIII\Http\Requests;
 
 use Auth;
-use FireflyIII\Models\Account;
 use Input;
-
+use Exception;
 /**
  * Class JournalFormRequest
  *
@@ -24,6 +23,7 @@ class JournalFormRequest extends Request
 
     /**
      * @return array
+     * @throws Exception
      */
     public function rules()
     {
@@ -62,7 +62,7 @@ class JournalFormRequest extends Request
                 $rules['category']        = 'between:1,255';
                 break;
             default:
-                die('Cannot handle ' . $what);
+                throw new Exception('Cannot handle ' . $what);
                 break;
         }
 

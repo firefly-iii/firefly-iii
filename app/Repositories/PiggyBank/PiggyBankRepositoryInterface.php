@@ -4,9 +4,7 @@ namespace FireflyIII\Repositories\PiggyBank;
 
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
-use FireflyIII\Models\Reminder;
 use Illuminate\Support\Collection;
-use Carbon\Carbon;
 
 /**
  * Interface PiggyBankRepositoryInterface
@@ -39,6 +37,7 @@ interface PiggyBankRepositoryInterface
 
     /**
      * Set all piggy banks to order 0.
+     *
      * @return void
      */
     public function reset();
@@ -53,7 +52,6 @@ interface PiggyBankRepositoryInterface
      * @return void
      */
     public function setOrder($id, $order);
-
 
 
     /**

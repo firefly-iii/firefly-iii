@@ -7,6 +7,7 @@ use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Input;
 use Redirect;
@@ -124,7 +125,7 @@ class AccountController extends Controller
 
         // move to repository:
         $set   = Auth::user()->accounts()->with(
-            ['accountmeta' => function ($query) {
+            ['accountmeta' => function (HasMany $query) {
                 $query->where('name', 'accountRole');
             }]
         )->accountTypeIn($types)->take($size)->offset($offset)->orderBy('accounts.name', 'ASC')->get(['accounts.*']);

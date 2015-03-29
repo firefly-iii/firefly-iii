@@ -3,7 +3,6 @@
 use Auth;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Reminders\ReminderHelperInterface;
-use FireflyIII\Http\Requests;
 use FireflyIII\Models\Reminder;
 use Redirect;
 use Session;
@@ -83,7 +82,7 @@ class ReminderController extends Controller
 
         // inactive reminders
         $inactive = $reminders->filter(
-            function (Reminder $reminder) use ($today) {
+            function (Reminder $reminder) {
                 if ($reminder->active === false) {
                     return $reminder;
                 }
@@ -92,7 +91,7 @@ class ReminderController extends Controller
 
         // dismissed reminders
         $dismissed = $reminders->filter(
-            function (Reminder $reminder) use ($today) {
+            function (Reminder $reminder) {
                 if ($reminder->notnow === true) {
                     return $reminder;
                 }

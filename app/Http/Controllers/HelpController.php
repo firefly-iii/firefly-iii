@@ -2,7 +2,6 @@
 
 use Cache;
 use ErrorException;
-use FireflyIII\Http\Requests;
 use League\CommonMark\CommonMarkConverter;
 use Response;
 use Route;
@@ -33,7 +32,7 @@ class HelpController extends Controller
             return Response::json($content);
         }
 
-        if ($this->_inCache($route)) {
+        if ($this->inCache($route)) {
             $content = [
                 'text'  => Cache::get('help.' . $route . '.text'),
                 'title' => Cache::get('help.' . $route . '.title'),
@@ -41,7 +40,7 @@ class HelpController extends Controller
 
             return Response::json($content);
         }
-        $content = $this->_getFromGithub($route);
+        $content = $this->getFromGithub($route);
 
 
         Cache::put('help.' . $route . '.text', $content['text'], 10080); // a week.
@@ -56,7 +55,7 @@ class HelpController extends Controller
      *
      * @return bool
      */
-    protected function _inCache($route)
+    protected function inCache($route)
     {
         return Cache::has('help.' . $route . '.title') && Cache::has('help.' . $route . '.text');
     }
@@ -66,7 +65,7 @@ class HelpController extends Controller
      *
      * @return array
      */
-    protected function _getFromGithub($route)
+    protected function getFromGithub($route)
     {
         $uri     = 'https://raw.githubusercontent.com/JC5/firefly-iii-help/master/' . e($route) . '.md';
         $content = [

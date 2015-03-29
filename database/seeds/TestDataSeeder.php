@@ -9,8 +9,6 @@ use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
-use FireflyIII\Models\PiggyBankRepetition;
-use FireflyIII\Models\Reminder;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
@@ -137,12 +135,9 @@ class TestDataSeeder extends Seeder
         $acc_c = Account::create(['user_id' => $user->id, 'account_type_id' => $assetType->id, 'name' => 'Delete me', 'active' => 1]);
 
         // create account meta:
-        $meta_a = AccountMeta::create(['account_id' => $acc_a->id, 'name' => 'accountRole', 'data' => 'defaultAsset']);
-        $meta_b = AccountMeta::create(['account_id' => $acc_b->id, 'name' => 'accountRole', 'data' => 'savingAsset']);
-        $meta_c = AccountMeta::create(['account_id' => $acc_c->id, 'name' => 'accountRole', 'data' => 'defaultAsset']);
-//        var_dump($meta_a->toArray());
-//        var_dump($meta_b->toArray());
-//        var_dump($meta_c->toArray());
+        AccountMeta::create(['account_id' => $acc_a->id, 'name' => 'accountRole', 'data' => 'defaultAsset']);
+        AccountMeta::create(['account_id' => $acc_b->id, 'name' => 'accountRole', 'data' => 'savingAsset']);
+        AccountMeta::create(['account_id' => $acc_c->id, 'name' => 'accountRole', 'data' => 'defaultAsset']);
 
         $acc_d = Account::create(['user_id' => $user->id, 'account_type_id' => $ibType->id, 'name' => 'Checking account initial balance', 'active' => 0]);
         $acc_e = Account::create(['user_id' => $user->id, 'account_type_id' => $ibType->id, 'name' => 'Savings account initial balance', 'active' => 0]);
@@ -211,20 +206,17 @@ class TestDataSeeder extends Seeder
         $bills     = Budget::create(['user_id' => $user->id, 'name' => 'Bills']);
         $deleteMe  = Budget::create(['user_id' => $user->id, 'name' => 'Delete me']);
         Budget::create(['user_id' => $user->id, 'name' => 'Budget without repetition']);
-        $groceriesLimit = BudgetLimit::create(
+        BudgetLimit::create(
             ['startdate' => $this->som, 'amount' => 201, 'repeats' => 0, 'repeat_freq' => 'monthly', 'budget_id' => $groceries->id]
         );
-        $billsLimit     = BudgetLimit::create(
+        BudgetLimit::create(
             ['startdate' => $this->som, 'amount' => 202, 'repeats' => 0, 'repeat_freq' => 'monthly', 'budget_id' => $bills->id]
         );
-        $deleteMeLimit  = BudgetLimit::create(
+        BudgetLimit::create(
             ['startdate' => $this->som, 'amount' => 203, 'repeats' => 0, 'repeat_freq' => 'monthly', 'budget_id' => $deleteMe->id]
         );
 
         // and because we have no filters, some repetitions:
-        //        LimitRepetition::create(['budget_limit_id' => $groceriesLimit->id, 'startdate' => $this->som, 'enddate' => $this->eom, 'amount' => 201]);
-        //        LimitRepetition::create(['budget_limit_id' => $billsLimit->id, 'startdate' => $this->som, 'enddate' => $this->eom, 'amount' => 202]);
-        //        LimitRepetition::create(['budget_limit_id' => $deleteMeLimit->id, 'startdate' => $this->som, 'enddate' => $this->eom, 'amount' => 203]);
     }
 
     /**
@@ -255,7 +247,6 @@ class TestDataSeeder extends Seeder
         $endDate->addMonths(4);
         $nextYear->addYear()->subDay();
 
-        $next = $nextYear->format('Y-m-d');
         $end  = $endDate->format('Y-m-d');
 
         // piggy bank
@@ -351,8 +342,6 @@ class TestDataSeeder extends Seeder
      */
     public function createReminders()
     {
-        $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
-        // for weekly piggy bank (clothes)
 
     }
 

@@ -1,6 +1,5 @@
 <?php namespace FireflyIII\Http\Controllers;
 
-use FireflyIII\Http\Requests;
 use FireflyIII\Support\Search\SearchInterface;
 use Input;
 

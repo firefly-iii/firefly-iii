@@ -143,7 +143,7 @@ class ReportQuery implements ReportQueryInterface
             )
                   ->orderBy('accounts.name', 'ASC')
                   ->where(
-                      function (Builder $query) use ($showSharedReports) {
+                      function (Builder $query) {
 
                           $query->where('account_meta.data', '!=', '"sharedAsset"');
                           $query->orWhereNull('account_meta.data');
@@ -272,15 +272,15 @@ class ReportQuery implements ReportQueryInterface
             // only get deposits not to a shared account
             // and transfers to a shared account.
             $query->where(
-                function ($query) {
+                function (Builder $query) {
                     $query->where(
-                        function ($q) {
+                        function (Builder $q) {
                             $q->where('transaction_types.type', 'Deposit');
                             $q->where('acm_to.data', '!=', '"sharedAsset"');
                         }
                     );
                     $query->orWhere(
-                        function ($q) {
+                        function (Builder $q) {
                             $q->where('transaction_types.type', 'Transfer');
                             $q->where('acm_from.data', '=', '"sharedAsset"');
                         }
@@ -427,15 +427,15 @@ class ReportQuery implements ReportQueryInterface
             // get all withdrawals not from a shared accounts
             // and all transfers to a shared account
             $query->where(
-                function ($query) {
+                function (Builder $query) {
                     $query->where(
-                        function ($q) {
+                        function (Builder $q) {
                             $q->where('transaction_types.type', 'Withdrawal');
                             $q->where('acm_from.data', '!=', '"sharedAsset"');
                         }
                     );
                     $query->orWhere(
-                        function ($q) {
+                        function (Builder $q) {
                             $q->where('transaction_types.type', 'Transfer');
                             $q->where('acm_to.data', '=', '"sharedAsset"');
                         }
@@ -495,15 +495,15 @@ class ReportQuery implements ReportQueryInterface
             // show queries where transfer type is deposit, and its not to a shared account
             // or where its a transfer and its from a shared account (both count as incomes)
             $query->where(
-                function ($query) {
+                function (Builder $query) {
                     $query->where(
-                        function ($q) {
+                        function (Builder $q) {
                             $q->where('transaction_types.type', 'Deposit');
                             $q->where('acm_to.data', '!=', '"sharedAsset"');
                         }
                     );
                     $query->orWhere(
-                        function ($q) {
+                        function (Builder $q) {
                             $q->where('transaction_types.type', 'Transfer');
                             $q->where('acm_from.data', '=', '"sharedAsset"');
                         }

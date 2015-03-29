@@ -45,7 +45,7 @@ class ProfileController extends Controller
 
             return Redirect::route('change-password');
         }
-        $result = $this->_validatePassword($request->get('current_password'), $request->get('new_password'), $request->get('new_password_confirmation'));
+        $result = $this->validatePassword($request->get('current_password'), $request->get('new_password'), $request->get('new_password_confirmation'));
         if (!($result === true)) {
             Session::flash('error', $result);
 
@@ -70,7 +70,7 @@ class ProfileController extends Controller
      *
      * @return string|bool
      */
-    protected function _validatePassword($old, $new1, $new2)
+    protected function validatePassword($old, $new1, $new2)
     {
         if (strlen($new1) == 0 || strlen($new2) == 0) {
             return 'Do fill in a password!';

@@ -95,7 +95,6 @@ class ReminderHelper implements ReminderHelperInterface
 
         if (!is_null($piggyBank->targetdate)) {
             // count back until now.
-            //                    echo 'Count back!<br>';
             $start = $piggyBank->targetdate;
             $end   = $piggyBank->startdate;
 

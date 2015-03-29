@@ -170,6 +170,10 @@ class BudgetController extends Controller
 
         Session::flash('success', 'New budget "' . $budget->name . '" stored!');
 
+        if (intval(Input::get('create_another')) === 1) {
+            return Redirect::route('budgets.create')->withInput();
+        }
+
         return Redirect::route('budgets.index');
 
     }

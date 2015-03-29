@@ -7,9 +7,9 @@ use Carbon\Carbon;
 use Closure;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
-use FireflyIII\Models\Reminder;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\Query\JoinClause;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Navigation;
 use Session;
@@ -48,7 +48,7 @@ class PiggyBanks
      *
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         if ($this->auth->check() && !$request->isXmlHttpRequest()) {
             // get piggy banks without a repetition:
@@ -91,7 +91,6 @@ class PiggyBanks
                     $start = clone $piggyBank->startdate;
                     $end   = clone $piggyBank->targetdate;
                     $max   = clone $piggyBank->targetdate;
-                    $index = 0;
 
                     // first loop: start date to target date.
                     // then, continue looping until end is > today
@@ -127,7 +126,6 @@ class PiggyBanks
                     $repetition->targetdate    = is_null($piggyBank->targetdate) ? null : $piggyBank->targetdate;
                     $repetition->currentamount = 0;
                     // it might exist, catch:
-                    //$repetition->save();
 
                     // then, loop from original target up to now.
                 }

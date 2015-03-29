@@ -4,7 +4,6 @@ namespace FireflyIII\Http\Requests;
 
 use Auth;
 use Carbon\Carbon;
-use FireflyIII\Models\Account;
 use Input;
 use Navigation;
 
