@@ -27,3 +27,4 @@ tests/_output/*
 .env
 clover.xml
 node_modules/
+addNewLines.php
