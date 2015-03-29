@@ -73,7 +73,4 @@ Some stuff has been removed:
 ## Current state
 I have the basics up and running. Test coverage is currently coming, slowly.
 
-Although I have not checked extensively, some forms and views have CSRF vulnerabilities. This is because not all
-views escape all characters by default. Will be fixed.
-
 Questions, ideas or other things to contribute? [Let me know](https://github.com/JC5/firefly-iii/issues/new)!

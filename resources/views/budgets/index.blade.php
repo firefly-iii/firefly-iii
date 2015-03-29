@@ -64,6 +64,7 @@
             </div>
         </div>
     </div>
+
 </div>
 
 <div class="row">
@@ -142,6 +143,25 @@
             <div class="panel-body">
                 <a href="{{route('budgets.create')}}" class="btn btn-success"><i class="fa fa-fw fa-plus"></i> Create new budget</a>
             </div>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-sm-4 col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-fw fa-minus-circle"></i>
+                Inactive budgets
+            </div>
+            <div class="panel-body">
+                @foreach($inactive as $index => $budget)
+                    @if($index != count($inactive)-1)
+                        <a href="{{route('budgets.show',$budget->id)}}">{{$budget->name}}</a>,
+                    @else
+                        <a href="{{route('budgets.show',$budget->id)}}">{{$budget->name}}</a>
+                    @endif
+                @endforeach
+            </div>
+        </div>
     </div>
 </div>
 
