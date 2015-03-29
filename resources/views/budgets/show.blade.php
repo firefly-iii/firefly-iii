@@ -46,7 +46,8 @@
                                 ?>
                                 @if($overspent)
                                 <?php
-                                $pct = $rep->amount / $rep->spentInRepetition()*100;
+                                $spent = floatval($rep->spentInRepetition());
+                                $pct = $spent != 0 ? ($rep->amount / $spent)*100 : 0;
                                 ?>
                                 <div class="progress progress-striped">
                                   <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ceil($pct)}}" aria-valuemin="0" aria-valuemax="100" style="width: {{ceil($pct)}}%;"></div>
@@ -54,7 +55,8 @@
                                 </div>
                                 @else
                                 <?php
-                                $pct = $rep->spentInRepetition() / $rep->amount*100;
+                                $amount = floatval($rep->amount);
+                                $pct = $amount != 0 ? ($rep->spentInRepetition() / $amount)*100 : 0;
                                 ?>
                                 <div class="progress progress-striped">
                                   <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ceil($pct)}}" aria-valuemin="0" aria-valuemax="100" style="width: {{ceil($pct)}}%;">
