@@ -8,6 +8,7 @@ use Closure;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Reminder;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Http\Request;
 use View;
 
 /**
@@ -43,7 +44,7 @@ class Reminders
      *
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         if ($this->auth->check() && !$request->isXmlHttpRequest()) {
             // do reminders stuff.

@@ -6,6 +6,7 @@ namespace FireflyIII\Http\Middleware;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Http\Request;
 use Navigation;
 use Preferences;
 use Session;
@@ -44,7 +45,7 @@ class Range
      *
      * @return mixed
      */
-    public function handle($request, Closure $theNext)
+    public function handle(Request $request, Closure $theNext)
     {
         if ($this->auth->check()) {
 

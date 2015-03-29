@@ -5,14 +5,15 @@ namespace FireflyIII\Http\Middleware;
 use Closure;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\Middleware;
+use Illuminate\Http\Request;
 use Log;
 
 /**
  * Class ReplaceTestVars
  *
- * @package App\Http\Middleware
+ * @package FireflyIII\Http\Middleware
  */
-class ReplaceTestVars implements Middleware
+class ReplaceTestVars
 {
     /**
      * The application implementation.
@@ -40,7 +41,7 @@ class ReplaceTestVars implements Middleware
      *
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         if ('testing' === $this->app->environment() && $request->has('_token')) {
             $input           = $request->all();

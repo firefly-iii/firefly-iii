@@ -10,6 +10,7 @@ use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\Reminder;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\Query\JoinClause;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Navigation;
 use Session;
@@ -48,7 +49,7 @@ class PiggyBanks
      *
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         if ($this->auth->check() && !$request->isXmlHttpRequest()) {
             // get piggy banks without a repetition:
