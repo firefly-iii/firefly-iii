@@ -1,7 +1,6 @@
 <?php namespace FireflyIII\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 
 /**

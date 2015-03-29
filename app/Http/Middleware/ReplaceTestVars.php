@@ -4,7 +4,6 @@ namespace FireflyIII\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Routing\Middleware;
 use Illuminate\Http\Request;
 use Log;
 
