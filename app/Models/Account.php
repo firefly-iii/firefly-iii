@@ -1,10 +1,11 @@
 <?php namespace FireflyIII\Models;
 
+use Crypt;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Watson\Validating\ValidatingTrait;
-use Crypt;
+
 /**
  * Class Account
  *

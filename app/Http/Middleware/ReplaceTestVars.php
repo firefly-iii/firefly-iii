@@ -46,7 +46,7 @@ class ReplaceTestVars
             $input           = $request->all();
             $input['_token'] = $request->session()->token();
             // we need to update _token value to make sure we get the POST / PUT tests passed.
-            Log::debug('Input token replaced ('.$input['_token'].').');
+            Log::debug('Input token replaced (' . $input['_token'] . ').');
             $request->replace($input);
         }
 

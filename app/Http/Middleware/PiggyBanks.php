@@ -98,10 +98,10 @@ class PiggyBanks
                         // first loop fixes this date. or should fix it.
                         $max = new Carbon;
 
-                        echo '[#'.$piggyBank->id.', from: '.$start->format('Y-m-d.').' to '.$end->format('Y-m-d.').']';
+                        echo '[#' . $piggyBank->id . ', from: ' . $start->format('Y-m-d.') . ' to ' . $end->format('Y-m-d.') . ']';
                         // create stuff. Or at least, try:
                         $repetition = $piggyBank->piggyBankRepetitions()->onDates($start, $end)->first();
-                        if(!$repetition) {
+                        if (!$repetition) {
                             $repetition = new PiggyBankRepetition;
                             $repetition->piggyBank()->associate($piggyBank);
                             $repetition->startdate     = $start;

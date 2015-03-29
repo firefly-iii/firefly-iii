@@ -35,8 +35,8 @@ class UpdateJournalConnection
 
         // get the event connected to this journal:
         /** @var PiggyBankEvent $event */
-        $event      = PiggyBankEvent::where('transaction_journal_id', $journal->id)->first();
-        if(is_null($event)) {
+        $event = PiggyBankEvent::where('transaction_journal_id', $journal->id)->first();
+        if (is_null($event)) {
             return;
         }
         $piggyBank  = $event->piggyBank()->first();

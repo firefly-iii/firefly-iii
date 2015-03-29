@@ -2,11 +2,12 @@
 
 namespace FireflyIII\Repositories\Account;
 
-use FireflyIII\Models\Account;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\Preference;
-use Illuminate\Support\Collection;
 use Carbon\Carbon;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\Preference;
+use FireflyIII\Models\TransactionJournal;
+use Illuminate\Support\Collection;
+
 /**
  * Interface AccountRepositoryInterface
  *

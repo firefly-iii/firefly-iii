@@ -64,7 +64,7 @@ class AuthController extends Controller
             );
         }
 
-        $data  =$request->all();
+        $data             = $request->all();
         $data['password'] = bcrypt($data['password']);
 
         $this->auth->login($this->registrar->create($data));

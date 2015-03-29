@@ -132,7 +132,7 @@ Route::get('/register', ['uses' => 'Auth\AuthController@getRegister', 'as' => 'r
 
 Route::controllers(
     [
-        'auth' => 'Auth\AuthController',
+        'auth'     => 'Auth\AuthController',
         'password' => 'Auth\PasswordController',
     ]
 );
@@ -142,7 +142,7 @@ Route::controllers(
  * Home Controller
  */
 Route::group(
-    ['middleware' => ['auth', 'range', 'reminders','piggybanks']], function () {
+    ['middleware' => ['auth', 'range', 'reminders', 'piggybanks']], function () {
     Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
     Route::get('/home', ['uses' => 'HomeController@index', 'as' => 'home']);
     Route::post('/daterange', ['uses' => 'HomeController@dateRange', 'as' => 'daterange']);

@@ -98,8 +98,8 @@ class BudgetController extends Controller
      */
     public function index(BudgetRepositoryInterface $repository)
     {
-        $budgets = Auth::user()->budgets()->where('active',1)->get();
-        $inactive = Auth::user()->budgets()->where('active',0)->get();
+        $budgets  = Auth::user()->budgets()->where('active', 1)->get();
+        $inactive = Auth::user()->budgets()->where('active', 0)->get();
 
         // loop the budgets:
         $budgets->each(
@@ -118,7 +118,7 @@ class BudgetController extends Controller
         $budgetMax     = Preferences::get('budgetMaximum', 1000);
         $budgetMaximum = $budgetMax->data;
 
-        return view('budgets.index', compact('budgetMaximum','inactive', 'budgets', 'spent', 'spentPCT', 'overspent', 'amount'));
+        return view('budgets.index', compact('budgetMaximum', 'inactive', 'budgets', 'spent', 'spentPCT', 'overspent', 'amount'));
     }
 
     /**
@@ -134,9 +134,9 @@ class BudgetController extends Controller
                         ->whereNull('budget_transaction_journal.id')
                         ->before($end)
                         ->after($start)
-            ->orderBy('transaction_journals.date', 'DESC')
-            ->orderBy('transaction_journals.order','ASC')
-            ->orderBy('transaction_journals.id','DESC')
+                        ->orderBy('transaction_journals.date', 'DESC')
+                        ->orderBy('transaction_journals.order', 'ASC')
+                        ->orderBy('transaction_journals.id', 'DESC')
                         ->get(['transaction_journals.*']);
         $subTitle = 'Transactions without a budget in ' . $start->format('F Y');
 
@@ -210,7 +210,7 @@ class BudgetController extends Controller
     public function update(Budget $budget, BudgetFormRequest $request, BudgetRepositoryInterface $repository)
     {
         $budgetData = [
-            'name' => $request->input('name'),
+            'name'   => $request->input('name'),
             'active' => intval($request->input('active')) == 1
         ];
 

@@ -9,7 +9,8 @@ use Illuminate\Support\Collection;
  *
  * @package FireflyIII\Support\Search
  */
-interface SearchInterface {
+interface SearchInterface
+{
     /**
      * @param array $words
      *

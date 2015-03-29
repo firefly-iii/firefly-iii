@@ -345,6 +345,48 @@ class Navigation
     }
 
     /**
+     * @param Carbon         $theDate
+     * @param                $repeatFreq
+     * @param int            $subtract
+     *
+     * @return Carbon
+     * @throws FireflyException
+     */
+    public function subtractPeriod(Carbon $theDate, $repeatFreq, $subtract = 1)
+    {
+        $date = clone $theDate;
+
+        $functionMap = [
+            'daily'   => 'subDays',
+            'week'    => 'subWeeks',
+            'weekly'  => 'subWeeks',
+            'month'   => 'subMonths',
+            'monthly' => 'subMonths',
+            'year'    => 'subYears',
+            'yearly'  => 'subYears',
+        ];
+        $modifierMap = [
+            'quarter'   => 3,
+            'quarterly' => 3,
+            'half-year' => 6,
+        ];
+        if (isset($functionMap[$repeatFreq])) {
+            $function = $functionMap[$repeatFreq];
+            $date->$function($subtract);
+
+            return $date;
+        }
+        if (isset($modifierMap[$repeatFreq])) {
+            $subtract = $subtract * $modifierMap[$repeatFreq];
+            $date->subMonths($subtract);
+
+            return $date;
+        }
+
+        throw new FireflyException('Cannot do subtractPeriod for $repeat_freq ' . $repeatFreq);
+    }
+
+    /**
      * @param        $range
      * @param Carbon $start
      *
@@ -412,48 +454,6 @@ class Navigation
             return $start;
         }
         throw new FireflyException('updateStartDate cannot handle $range ' . $range);
-    }
-
-    /**
-     * @param Carbon         $theDate
-     * @param                $repeatFreq
-     * @param int            $subtract
-     *
-     * @return Carbon
-     * @throws FireflyException
-     */
-    public function subtractPeriod(Carbon $theDate, $repeatFreq, $subtract = 1)
-    {
-        $date = clone $theDate;
-
-        $functionMap = [
-            'daily'   => 'subDays',
-            'week'    => 'subWeeks',
-            'weekly'  => 'subWeeks',
-            'month'   => 'subMonths',
-            'monthly' => 'subMonths',
-            'year'    => 'subYears',
-            'yearly'  => 'subYears',
-        ];
-        $modifierMap = [
-            'quarter'   => 3,
-            'quarterly' => 3,
-            'half-year' => 6,
-        ];
-        if (isset($functionMap[$repeatFreq])) {
-            $function = $functionMap[$repeatFreq];
-            $date->$function($subtract);
-
-            return $date;
-        }
-        if (isset($modifierMap[$repeatFreq])) {
-            $subtract = $subtract * $modifierMap[$repeatFreq];
-            $date->subMonths($subtract);
-
-            return $date;
-        }
-
-        throw new FireflyException('Cannot do subtractPeriod for $repeat_freq ' . $repeatFreq);
     }
 
 

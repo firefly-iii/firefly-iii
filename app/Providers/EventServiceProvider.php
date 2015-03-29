@@ -28,7 +28,7 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen
         = [
-            'FireflyIII\Events\JournalSaved' => [
+            'FireflyIII\Events\JournalSaved'   => [
                 'FireflyIII\Handlers\Events\RescanJournal',
                 'FireflyIII\Handlers\Events\UpdateJournalConnection',
 
@@ -58,7 +58,6 @@ class EventServiceProvider extends ServiceProvider
                 }
             }
         );
-
 
 
         Account::deleted(

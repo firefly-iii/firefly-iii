@@ -12,7 +12,7 @@ class Component extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['user_id', 'name','class'];
+    protected $fillable = ['user_id', 'name', 'class'];
 
     /**
      * @return array

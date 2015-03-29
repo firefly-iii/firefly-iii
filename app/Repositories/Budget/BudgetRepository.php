@@ -43,9 +43,9 @@ class BudgetRepository implements BudgetRepositoryInterface
 
 
         $setQuery   = $budget->transactionJournals()->withRelevantData()->take($take)->offset($offset)
-            ->orderBy('transaction_journals.date', 'DESC')
-            ->orderBy('transaction_journals.order','ASC')
-            ->orderBy('transaction_journals.id','DESC');
+                             ->orderBy('transaction_journals.date', 'DESC')
+                             ->orderBy('transaction_journals.order', 'ASC')
+                             ->orderBy('transaction_journals.id', 'DESC');
         $countQuery = $budget->transactionJournals();
 
 
@@ -57,6 +57,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         $set   = $setQuery->get(['transaction_journals.*']);
         $count = $countQuery->count();
+
         return new LengthAwarePaginator($set, $count, $take, $offset);
     }
 
@@ -103,7 +104,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function update(Budget $budget, array $data)
     {
         // update the account:
-        $budget->name = $data['name'];
+        $budget->name   = $data['name'];
         $budget->active = $data['active'];
         $budget->save();
 

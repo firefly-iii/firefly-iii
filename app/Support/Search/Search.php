@@ -112,8 +112,8 @@ class Search implements SearchInterface
         )->get();
 
         // encrypted
-        $all = Auth::user()->transactionjournals()->withRelevantData()->where('encrypted', 1)->get();
-        $set = $all->filter(
+        $all      = Auth::user()->transactionjournals()->withRelevantData()->where('encrypted', 1)->get();
+        $set      = $all->filter(
             function (TransactionJournal $journal) use ($words) {
                 foreach ($words as $word) {
                     $haystack = strtolower($journal->description);

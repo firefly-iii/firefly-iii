@@ -51,7 +51,7 @@ class GoogleChartController extends Controller
         $start   = Session::get('start', Carbon::now()->startOfMonth());
         $end     = Session::get('end', Carbon::now()->endOfMonth());
         $current = clone $start;
-        $today = new Carbon;
+        $today   = new Carbon;
 
         while ($end >= $current) {
             $certain = $current < $today;
@@ -237,20 +237,20 @@ class GoogleChartController extends Controller
         $start = Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());
         $set   = TransactionJournal::
-            where('transaction_journals.user_id',Auth::user()->id)
-            ->leftJoin(
-            'transactions',
-            function (JoinClause $join) {
-                $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('amount', '>', 0);
-            }
-        )
+        where('transaction_journals.user_id', Auth::user()->id)
+                                   ->leftJoin(
+                                       'transactions',
+                                       function (JoinClause $join) {
+                                           $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('amount', '>', 0);
+                                       }
+                                   )
                                    ->leftJoin(
                                        'category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
                                    )
                                    ->leftJoin('categories', 'categories.id', '=', 'category_transaction_journal.category_id')
                                    ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
                                    ->before($end)
-                                   ->where('categories.user_id',Auth::user()->id)
+                                   ->where('categories.user_id', Auth::user()->id)
                                    ->after($start)
                                    ->where('transaction_types.type', 'Withdrawal')
                                    ->groupBy('categories.id')

@@ -2,10 +2,9 @@
 
 namespace FireflyIII\Repositories\PiggyBank;
 
-use FireflyIII\Models\Reminder;
-use FireflyIII\Models\PiggyBankRepetition;
-
 use Carbon\Carbon;
+use FireflyIII\Models\PiggyBankRepetition;
+use FireflyIII\Models\Reminder;
 
 /**
  * Class PiggyBankPart

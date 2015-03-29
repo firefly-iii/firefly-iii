@@ -33,7 +33,7 @@ class AccountFormRequest extends Request
 
         $nameRule = 'required|between:1,100|uniqueAccountForUser';
         if (Account::find(Input::get('id'))) {
-            $nameRule = 'required|between:1,100|belongsToUser:accounts|uniqueForUser:'.Input::get('id');
+            $nameRule = 'required|between:1,100|belongsToUser:accounts|uniqueForUser:' . Input::get('id');
         }
 
         return [

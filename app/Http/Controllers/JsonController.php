@@ -89,8 +89,8 @@ class JsonController extends Controller
                         // paid a bill in this range?
                         $count = $bill->transactionjournals()->before($range['end'])->after($range['start'])->count();
                         if ($count != 0) {
-                            $journal         = $bill->transactionjournals()->with('transactions')->before($range['end'])->after($range['start'])->first();
-                            $currentAmount   = 0;
+                            $journal       = $bill->transactionjournals()->with('transactions')->before($range['end'])->after($range['start'])->first();
+                            $currentAmount = 0;
                             foreach ($journal->transactions as $t) {
                                 if (floatval($t->amount) > 0) {
                                     $currentAmount = floatval($t->amount);
