@@ -127,7 +127,6 @@ class PiggyBanks
                     $repetition->targetdate    = is_null($piggyBank->targetdate) ? null : $piggyBank->targetdate;
                     $repetition->currentamount = 0;
                     // it might exist, catch:
-                    //$repetition->save();
 
                     // then, loop from original target up to now.
                 }

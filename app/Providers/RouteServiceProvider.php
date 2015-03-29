@@ -32,22 +32,6 @@ class RouteServiceProvider extends ServiceProvider
     {
         parent::boot($router);
 
-        $router->before(
-            function (Request $request) {
-
-                // put IP in session if not already there.
-
-                $reminders = [];
-
-                if ($request->user()) {
-                    //Filter::setSessionDateRange();
-                    //Reminders::updateReminders();
-                    //Steam::removeEmptyBudgetLimits();
-                    //$reminders = Reminders::getReminders();
-                }
-                //                View::share('reminders', $reminders);
-            }
-        );
     }
 
     /**

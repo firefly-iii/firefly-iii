@@ -381,8 +381,6 @@ class ReportController extends Controller
         $groupedIncomes  = $query->journalsByRevenueAccount($date, $end, $showSharedReports);
         $groupedExpenses = $query->journalsByExpenseAccount($date, $end, $showSharedReports);
 
-        //$groupedExpenses = $helper-> expensesGroupedByAccount($date, $end, 15);
-
         return view(
             'reports.year', compact('date', 'groupedIncomes', 'groupedExpenses', 'year', 'balances', 'title', 'subTitle', 'subTitleIcon', 'mainTitleIcon')
         );
