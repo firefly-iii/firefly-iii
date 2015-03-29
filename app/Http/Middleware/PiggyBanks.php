@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use Closure;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
-use FireflyIII\Models\Reminder;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\Request;

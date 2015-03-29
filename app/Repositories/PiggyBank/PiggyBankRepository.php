@@ -6,7 +6,6 @@ use Auth;
 use DB;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
-use FireflyIII\Models\Reminder;
 use Illuminate\Support\Collection;
 use Navigation;
 

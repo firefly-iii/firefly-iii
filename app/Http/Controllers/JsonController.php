@@ -3,15 +3,14 @@
 use Amount;
 use Auth;
 use DB;
-use FireflyIII\Http\Requests;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Input;
 use Preferences;
 use Response;
 use Session;
-use Config;
-use FireflyIII\Models\TransactionType;
+
 /**
  * Class JsonController
  *
@@ -182,16 +181,17 @@ class JsonController extends Controller
     public function transactionJournals($what)
     {
         $descriptions = [];
-            $dbType   = TransactionType::whereType($what)->first();
-            $journals = Auth::user()->transactionjournals()->where('transaction_type_id', $dbType->id)
-                ->orderBy('id','DESC')->take(50)
-                ->get();
-            foreach($journals as $j) {
-                $descriptions[] = $j->description;
-            }
+        $dbType       = TransactionType::whereType($what)->first();
+        $journals     = Auth::user()->transactionjournals()->where('transaction_type_id', $dbType->id)
+                            ->orderBy('id', 'DESC')->take(50)
+                            ->get();
+        foreach ($journals as $j) {
+            $descriptions[] = $j->description;
+        }
 
         $descriptions = array_unique($descriptions);
         sort($descriptions);
+
         return Response::json($descriptions);
 
 

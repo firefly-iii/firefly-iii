@@ -2,7 +2,6 @@
 
 use Cache;
 use ErrorException;
-use FireflyIII\Http\Requests;
 use League\CommonMark\CommonMarkConverter;
 use Response;
 use Route;

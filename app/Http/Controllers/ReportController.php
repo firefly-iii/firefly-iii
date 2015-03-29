@@ -5,7 +5,6 @@ use Carbon\Carbon;
 use Exception;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
-use FireflyIII\Http\Requests;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Database\Query\JoinClause;

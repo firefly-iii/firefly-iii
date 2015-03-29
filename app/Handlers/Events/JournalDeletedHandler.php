@@ -1,16 +1,18 @@
 <?php namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\JournalDeleted;
-use Illuminate\Contracts\Queue\ShouldBeQueued;
-use Illuminate\Queue\InteractsWithQueue;
 
+/**
+ * Class JournalDeletedHandler
+ *
+ * @package FireflyIII\Handlers\Events
+ */
 class JournalDeletedHandler
 {
 
     /**
      * Create the event handler.
      *
-     * @return void
      */
     public function __construct()
     {

@@ -3,8 +3,12 @@
 use FireflyIII\Events\JournalSaved;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
 
+/**
+ * Class UpdateJournalConnection
+ *
+ * @package FireflyIII\Handlers\Events
+ */
 class UpdateJournalConnection
 {
 

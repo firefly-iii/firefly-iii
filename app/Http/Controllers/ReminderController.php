@@ -3,7 +3,6 @@
 use Auth;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Reminders\ReminderHelperInterface;
-use FireflyIII\Http\Requests;
 use FireflyIII\Models\Reminder;
 use Redirect;
 use Session;

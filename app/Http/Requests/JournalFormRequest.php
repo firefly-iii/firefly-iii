@@ -3,7 +3,6 @@
 namespace FireflyIII\Http\Requests;
 
 use Auth;
-use FireflyIII\Models\Account;
 use Input;
 use Exception;
 /**
@@ -24,6 +23,7 @@ class JournalFormRequest extends Request
 
     /**
      * @return array
+     * @throws Exception
      */
     public function rules()
     {

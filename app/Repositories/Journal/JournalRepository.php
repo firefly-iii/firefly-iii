@@ -11,7 +11,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
-use Log;
 
 /**
  * Class JournalRepository
@@ -275,7 +274,7 @@ class JournalRepository implements JournalRepositoryInterface
                 $transaction->save();
             }
             if (floatval($transaction->amount) > 0) {
-                $transaction->amount = $data['amount'];
+                $transaction->amount     = $data['amount'];
                 $transaction->account_id = $to->id;
                 $transaction->save();
             }

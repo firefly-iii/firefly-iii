@@ -7,7 +7,6 @@ use Config;
 use ExpandedForm;
 use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\PiggyBankFormRequest;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
