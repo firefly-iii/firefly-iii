@@ -139,41 +139,7 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         // store accounts (depends on type)
-        switch ($transactionType->type) {
-            case 'Withdrawal':
-
-                $from = Account::find($data['account_id']);
-
-                if (strlen($data['expense_account']) > 0) {
-                    $toType = AccountType::where('type', 'Expense account')->first();
-                    $to     = Account::firstOrCreate(
-                        ['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => $data['expense_account'], 'active' => 1]
-                    );
-                } else {
-                    $toType = AccountType::where('type', 'Cash account')->first();
-                    $to     = Account::firstOrCreate(['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => 'Cash account', 'active' => 1]);
-                }
-                break;
-
-            case 'Deposit':
-                $to = Account::find($data['account_id']);
-
-                if (strlen($data['revenue_account']) > 0) {
-                    $fromType = AccountType::where('type', 'Revenue account')->first();
-                    $from     = Account::firstOrCreate(
-                        ['user_id' => $data['user'], 'account_type_id' => $fromType->id, 'name' => $data['revenue_account'], 'active' => 1]
-                    );
-                } else {
-                    $toType = AccountType::where('type', 'Cash account')->first();
-                    $from   = Account::firstOrCreate(['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => 'Cash account', 'active' => 1]);
-                }
-
-                break;
-            case 'Transfer':
-                $from = Account::find($data['account_from_id']);
-                $to   = Account::find($data['account_to_id']);
-                break;
-        }
+        list($from, $to) = $this->storeAccounts($transactionType, $data);
 
         // store accompanying transactions.
         Transaction::create( // first transaction.
@@ -197,7 +163,6 @@ class JournalRepository implements JournalRepositoryInterface
 
 
     }
-
 
     /**
      * @param TransactionJournal $journal
@@ -228,7 +193,39 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         // store accounts (depends on type)
-        switch ($journal->transactionType->type) {
+        list($from, $to) = $this->storeAccounts($journal->transactionType, $data);
+
+        // update the from and to transaction.
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions()->get() as $transaction) {
+            if (floatval($transaction->amount) < 0) {
+                // this is the from transaction, negative amount:
+                $transaction->amount     = $data['amount'] * -1;
+                $transaction->account_id = $from->id;
+                $transaction->save();
+            }
+            if (floatval($transaction->amount) > 0) {
+                $transaction->amount     = $data['amount'];
+                $transaction->account_id = $to->id;
+                $transaction->save();
+            }
+        }
+
+
+        $journal->save();
+
+        return $journal;
+    }
+
+    /**
+     * @param TransactionType $type
+     * @param array           $data
+     *
+     * @return array
+     */
+    protected function storeAccounts(TransactionType $type, array $data)
+    {
+        switch ($type->type) {
             case 'Withdrawal':
 
                 $from = Account::find($data['account_id']);
@@ -264,26 +261,7 @@ class JournalRepository implements JournalRepositoryInterface
                 break;
         }
 
-        // update the from and to transaction.
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions()->get() as $transaction) {
-            if (floatval($transaction->amount) < 0) {
-                // this is the from transaction, negative amount:
-                $transaction->amount     = $data['amount'] * -1;
-                $transaction->account_id = $from->id;
-                $transaction->save();
-            }
-            if (floatval($transaction->amount) > 0) {
-                $transaction->amount     = $data['amount'];
-                $transaction->account_id = $to->id;
-                $transaction->save();
-            }
-        }
-
-
-        $journal->save();
-
-        return $journal;
+        return [$from, $to];
     }
 
 }
