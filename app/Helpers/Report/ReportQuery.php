@@ -143,7 +143,7 @@ class ReportQuery implements ReportQueryInterface
             )
                   ->orderBy('accounts.name', 'ASC')
                   ->where(
-                      function (Builder $query) use ($showSharedReports) {
+                      function (Builder $query) {
 
                           $query->where('account_meta.data', '!=', '"sharedAsset"');
                           $query->orWhereNull('account_meta.data');

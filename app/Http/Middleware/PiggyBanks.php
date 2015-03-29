@@ -91,7 +91,6 @@ class PiggyBanks
                     $start = clone $piggyBank->startdate;
                     $end   = clone $piggyBank->targetdate;
                     $max   = clone $piggyBank->targetdate;
-                    $index = 0;
 
                     // first loop: start date to target date.
                     // then, continue looping until end is > today
