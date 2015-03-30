@@ -2,18 +2,17 @@
 
 namespace FireflyIII\Validation;
 
-use App;
 use Auth;
 use Carbon\Carbon;
 use Config;
+use Crypt;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Validation\Validator;
-use Navigation;
-use Crypt;
 use Log;
+use Navigation;
 
 /**
  * Class FireflyValidator
@@ -90,8 +89,11 @@ class FireflyValidator extends Validator
         /**
          * Switch on different cases on which this method can respond:
          */
-        $hasWhat = isset($this->data['what']);
-        $hasAccountId = isset($this->data['account_type_id']) && isset($this->data['name']);
+        $hasWhat          = isset($this->data['what']);
+        $hasAccountTypeId = isset($this->data['account_type_id']) && isset($this->data['name']);
+        $hasAccountId     = isset($this->data['id']);
+        $ignoreId         = 0;
+
 
         if ($hasWhat) {
 
@@ -99,8 +101,15 @@ class FireflyValidator extends Validator
             $type   = AccountType::whereType($search)->first();
             // this field can be used to find the exact type, and continue.
         }
-        if($hasAccountId) {
-            $type   = AccountType::find($this->data['account_type_id']);
+        if ($hasAccountTypeId) {
+            $type = AccountType::find($this->data['account_type_id']);
+        }
+        if ($hasAccountId) {
+            /** @var Account $account */
+            $account  = Account::find($this->data['id']);
+            $ignoreId = intval($this->data['id']);
+            $type     = AccountType::find($account->account_type_id);
+            unset($account);
         }
 
         /**
@@ -108,17 +117,19 @@ class FireflyValidator extends Validator
          */
         try {
             $value = Crypt::decrypt($value);
-        } catch(DecryptException $e) {}
+        } catch (DecryptException $e) {
+        }
 
 
         if (is_null($type)) {
             Log::error('Could not determine type of account to validate.');
+
             return false;
         }
 
         // get all accounts with this type, and find the name.
         $userId = Auth::check() ? Auth::user()->id : 0;
-        $set    = Account::where('account_type_id', $type->id)->where('user_id', $userId)->get();
+        $set    = Account::where('account_type_id', $type->id)->where('id', '!=', $ignoreId)->where('user_id', $userId)->get();
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->name == $value) {
