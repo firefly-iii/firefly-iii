@@ -141,7 +141,7 @@ class PiggyBankController extends Controller
     public function index(AccountRepositoryInterface $repository)
     {
         /** @var Collection $piggyBanks */
-        $piggyBanks = Auth::user()->piggyBanks()->where('repeats', 0)->orderBy('order', 'ASC')->get();
+        $piggyBanks = Auth::user()->piggyBanks()->orderBy('order', 'ASC')->get();
 
         $accounts = [];
         /** @var PiggyBank $piggyBank */
@@ -298,7 +298,6 @@ class PiggyBankController extends Controller
     public function store(PiggyBankFormRequest $request, PiggyBankRepositoryInterface $repository)
     {
         $piggyBankData = [
-            'repeats'      => false,
             'name'         => $request->get('name'),
             'startdate'    => new Carbon,
             'account_id'   => intval($request->get('account_id')),
@@ -330,7 +329,6 @@ class PiggyBankController extends Controller
     public function update(PiggyBank $piggyBank, PiggyBankRepositoryInterface $repository, PiggyBankFormRequest $request)
     {
         $piggyBankData = [
-            'repeats'      => false,
             'name'         => $request->get('name'),
             'startdate'    => is_null($piggyBank->startdate) ? $piggyBank->created_at : $piggyBank->startdate,
             'account_id'   => intval($request->get('account_id')),

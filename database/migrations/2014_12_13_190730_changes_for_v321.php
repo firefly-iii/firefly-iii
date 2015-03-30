@@ -1,8 +1,8 @@
 <?php
 
 use FireflyIII\Models\Budget;
-use FireflyIII\Models\Category;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\Category;
 use FireflyIII\Models\Component;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;

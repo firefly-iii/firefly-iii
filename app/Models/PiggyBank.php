@@ -1,10 +1,8 @@
 <?php namespace FireflyIII\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Log;
-
+use Crypt;
 /**
  * Class PiggyBank
  *
@@ -15,8 +13,7 @@ class PiggyBank extends Model
     use SoftDeletes;
 
     protected $fillable
-        = ['repeats', 'name', 'account_id', 'rep_every', 'rep_times', 'reminder_skip', 'targetamount', 'startdate', 'targetdate', 'reminder', 'remind_me',
-           'rep_length'];
+        = ['name', 'account_id', 'reminder_skip', 'targetamount', 'startdate', 'targetdate', 'reminder', 'remind_me'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -37,14 +34,10 @@ class PiggyBank extends Model
             return $this->currentRep;
         }
         // repeating piggy banks are no longer supported.
-        if (intval($this->repeats) === 0) {
-            $rep              = $this->piggyBankRepetitions()->first(['piggy_bank_repetitions.*']);
-            $this->currentRep = $rep;
+        $rep              = $this->piggyBankRepetitions()->first(['piggy_bank_repetitions.*']);
+        $this->currentRep = $rep;
 
-            return $rep;
-        } else {
-            Log::error('Tried to work with a piggy bank with a repeats=1 value! (id is ' . $this->id . ')');
-        }
+        return $rep;
 
 
     }
@@ -89,5 +82,30 @@ class PiggyBank extends Model
     public function reminders()
     {
         return $this->morphMany('FireflyIII\Models\Reminder', 'remindersable');
+    }
+
+    /**
+     * @param $value
+     */
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name']      = Crypt::encrypt($value);
+        $this->attributes['encrypted'] = true;
+    }
+    /**
+     * @param $value
+     *
+     * @return string
+     */
+    public function getNameAttribute($value)
+    {
+
+        if (intval($this->encrypted) == 1) {
+            return Crypt::decrypt($value);
+        }
+
+        // @codeCoverageIgnoreStart
+        return $value;
+        // @codeCoverageIgnoreEnd
     }
 }

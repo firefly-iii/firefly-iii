@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Crypt;
 /**
  * Class Category
  *
@@ -36,6 +36,31 @@ class Category extends Model
     public function user()
     {
         return $this->belongsTo('FireflyIII\User');
+    }
+
+    /**
+     * @param $value
+     */
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name']      = Crypt::encrypt($value);
+        $this->attributes['encrypted'] = true;
+    }
+    /**
+     * @param $value
+     *
+     * @return string
+     */
+    public function getNameAttribute($value)
+    {
+
+        if (intval($this->encrypted) == 1) {
+            return Crypt::decrypt($value);
+        }
+
+        // @codeCoverageIgnoreStart
+        return $value;
+        // @codeCoverageIgnoreEnd
     }
 
 }

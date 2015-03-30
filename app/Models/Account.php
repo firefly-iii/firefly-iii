@@ -15,6 +15,7 @@ class Account extends Model
 {
     use SoftDeletes, ValidatingTrait;
 
+    protected $fillable = ['user_id', 'account_type_id', 'name', 'active'];
     protected $rules
         = [
             'user_id'         => 'required|exists:users,id',
@@ -22,41 +23,6 @@ class Account extends Model
             'name'            => 'required|between:1,1024|uniqueAccountForUser',
             'active'          => 'required|boolean'
         ];
-
-    protected $fillable = ['user_id', 'account_type_id', 'name', 'active'];
-
-    /**
-     * @param $fieldName
-     *
-     * @return string|null
-     */
-    public function getMeta($fieldName)
-    {
-        foreach ($this->accountMeta as $meta) {
-            if ($meta->name == $fieldName) {
-                return $meta->data;
-            }
-        }
-
-        return null;
-
-    }
-
-    /**
-     * @param $value
-     *
-     * @return string
-     */
-    public function getNameAttribute($value)
-    {
-        if ($this->encrypted) {
-            return Crypt::decrypt($value);
-        }
-
-        // @codeCoverageIgnoreStart
-        return $value;
-        // @codeCoverageIgnoreEnd
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -83,6 +49,33 @@ class Account extends Model
     }
 
     /**
+     * @param $fieldName
+     *
+     * @return string|null
+     */
+    public function getMeta($fieldName)
+    {
+        foreach ($this->accountMeta as $meta) {
+            if ($meta->name == $fieldName) {
+                return $meta->data;
+            }
+        }
+
+        return null;
+
+    }
+
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function piggyBanks()
+    {
+        return $this->hasMany('FireflyIII\Models\PiggyBank');
+    }
+
+    /**
      * @param EloquentBuilder $query
      * @param array           $types
      */
@@ -93,6 +86,31 @@ class Account extends Model
             $this->joinedAccountTypes = true;
         }
         $query->whereIn('account_types.type', $types);
+    }
+
+    /**
+     * @param $value
+     */
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name']      = Crypt::encrypt($value);
+        $this->attributes['encrypted'] = true;
+    }
+    /**
+     * @param $value
+     *
+     * @return string
+     */
+    public function getNameAttribute($value)
+    {
+
+        if (intval($this->encrypted) == 1) {
+            return Crypt::decrypt($value);
+        }
+
+        // @codeCoverageIgnoreStart
+        return $value;
+        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -109,14 +127,6 @@ class Account extends Model
     public function user()
     {
         return $this->belongsTo('FireflyIII\User');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function piggyBanks()
-    {
-        return $this->hasMany('FireflyIII\Models\PiggyBank');
     }
 
 }

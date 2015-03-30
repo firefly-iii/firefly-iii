@@ -35,27 +35,14 @@ class PiggyBankFormRequest extends Request
             $nameRule = 'required|between:1,255';
         }
 
-        if (intval(Input::get('repeats')) == 1) {
-            $targetDateRule = 'required|date|after:' . date('Y-m-d');
-            // switch on rep_every, make sure it's not too far away.
-            if (!is_null(Input::get('rep_length'))) {
-                $end = Navigation::addPeriod(new Carbon, Input::get('rep_length'), 0);
-                $targetDateRule .= '|before:' . $end->format('Y-m-d');
-            }
-        }
-
 
         $rules = [
-            'repeats'            => 'required|boolean',
             'name'               => $nameRule,
             'account_id'         => 'required|belongsToUser:accounts',
             'targetamount'       => 'required|min:0.01',
             'amount_currency_id' => 'exists:transaction_currencies,id',
             'startdate'          => 'date',
             'targetdate'         => $targetDateRule,
-            'rep_length'         => 'in:day,week,quarter,month,year',
-            'rep_every'          => 'integer|min:0|max:31',
-            'rep_times'          => 'integer|min:0|max:99',
             'reminder'           => 'in:day,week,quarter,month,year',
             'reminder_skip'      => 'integer|min:0|max:99',
             'remind_me'          => 'boolean|piggyBankReminder',

@@ -107,7 +107,7 @@ Route::bind(
         where('piggy_banks.id', $value)
                         ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
                         ->where('accounts.user_id', Auth::user()->id)
-                        ->where('repeats', 0)->first(['piggy_banks.*']);
+                        ->first(['piggy_banks.*']);
     }
 
     return null;
