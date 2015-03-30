@@ -96,14 +96,15 @@ class FireflyValidator extends Validator
 
 
         if ($hasWhat) {
-
             $search = Config::get('firefly.accountTypeByIdentifier.' . $this->data['what']);
             $type   = AccountType::whereType($search)->first();
             // this field can be used to find the exact type, and continue.
         }
+
         if ($hasAccountTypeId) {
             $type = AccountType::find($this->data['account_type_id']);
         }
+
         if ($hasAccountId) {
             /** @var Account $account */
             $account  = Account::find($this->data['id']);
@@ -138,62 +139,6 @@ class FireflyValidator extends Validator
         }
 
         return true;
-        //        exit;
-        //
-        //
-        //        // get account type from data, we must have this:
-        //        $validTypes = array_keys(Config::get('firefly.subTitlesByIdentifier'));
-        //        $dbType     = null;
-        //        $type       = isset($this->data['what']) && in_array($this->data['what'], $validTypes) ? $this->data['what'] : null;
-        //        // some fallback:
-        //        if (is_null($type)) {
-        //            $type = in_array(Input::get('what'), $validTypes) ? Input::get('what') : null;
-        //
-        //        }
-        //
-        //        // still null?
-        //        if (is_null($type)) {
-        //            // find by other field:
-        //            $findType = isset($this->data['account_type_id']) ? $this->data['account_type_id'] : 0;
-        //            $dbType   = AccountType::find($findType);
-        //            $type     = $findType == 0 ? null : $findType;
-        //        }
-        //        // STILL null?
-        //
-        //        if (is_null($type) && isset($this->data['id'])) {
-        //            // check ID thingie
-        //            $dbAccount = Account::find($this->data['id']);
-        //            if (!$dbAccount) {
-        //                Log::error('False because $dbAccount does not exist.');
-        //
-        //                return false;
-        //            }
-        //            $dbType = AccountType::find($dbAccount->account_type_id);
-        //        } else {
-        //            $dbType = AccountType::whereType()
-        //        }
-        //
-        //        if (is_null($dbType)) {
-        //            Log::error('False because $dbType is null.');
-        //
-        //            return false;
-        //        }
-        //
-        //        // user id?
-        //        $userId = Auth::check() ? Auth::user()->id : $this->data['user_id'];
-        //
-        //        $query = DB::table('accounts')->where('name', $value)->where('account_type_id', $dbType->id)->where('user_id', $userId);
-        //
-        //        if (isset($parameters[0])) {
-        //            $query->where('id', '!=', $parameters[0]);
-        //        }
-        //        $count = $query->count();
-        //        if ($count == 0) {
-        //
-        //            return true;
-        //        }
-        //
-        //        return false;
 
     }
 
