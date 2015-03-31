@@ -22,11 +22,7 @@
                     @foreach($income as $entry)
                         <tr>
                             <td>
-                                @if($entry->encrypted === true)
-                                    <a href="{{route('transactions.show',$entry->id)}}" title="{{{Crypt::decrypt($entry->description)}}}">{{{Crypt::decrypt($entry->description)}}}</a>
-                                @else
-                                    <a href="{{route('transactions.show',$entry->id)}}" title="{{{$entry->description}}}">{{{$entry->description}}}</a>
-                                @endif
+                                <a href="{{route('transactions.show',$entry->id)}}" title="{{{$entry->description}}}">{{{$entry->description}}}</a>
                             </td>
                             <td>
                                 <?php $tableSum += floatval($entry->amount);?>
@@ -44,11 +40,7 @@
                                 {{$entry->date->format('j F Y')}}
                             </td>
                             <td>
-                                @if(intval($entry->account_encrypted) == 1)
-                                    <a href="{{route('accounts.show',$entry->account_id)}}">{{{Crypt::decrypt($entry->name)}}}</a>
-                                @else
-                                    <a href="{{route('accounts.show',$entry->account_id)}}">{{{$entry->name}}}</a>
-                                @endif
+                                <a href="{{route('accounts.show',$entry->account_id)}}">{{{$entry->name}}}</a>
                             </td>
                         </tr>
                     @endforeach
@@ -73,15 +65,12 @@
                 @foreach($expenses as $id => $expense)
                     <?php
                         $sum += floatval($expense['amount']);
-                        $name = isset($expense['encrypted']) && intval($expense['encrypted']) ==1 ? Crypt::decrypt($expense['name']) :$expense['name'];
-                            //var_dump($expense);
                         ?>
                     <tr>
                         @if($id > 0)
-                        <td><a href="{{route('accounts.show',$id)}}">{{{$name}}}</a></td>
+                            <td><a href="{{route('accounts.show',$id)}}">{{{$expense['name']}}}</a></td>
                         @else
-
-                        <td><em>{{{$expense['name']}}}</em></td>
+                            <td><em>{{{$expense['name']}}}</em></td>
                         @endif
                         <td>{!! Amount::format($expense['amount']) !!}</td>
                     </tr>

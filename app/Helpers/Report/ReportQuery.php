@@ -4,10 +4,12 @@ namespace FireflyIII\Helpers\Report;
 
 use Auth;
 use Carbon\Carbon;
+use Crypt;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Steam;
@@ -236,7 +238,8 @@ class ReportQuery implements ReportQueryInterface
         }
         $query->groupBy('t_from.account_id')->orderBy('transaction_journals.date');
 
-        return $query->get(
+        // get everything, decrypt and return
+        $data = $query->get(
             ['transaction_journals.id',
              'transaction_journals.description',
              'transaction_journals.encrypted',
@@ -248,6 +251,15 @@ class ReportQuery implements ReportQueryInterface
              'ac_from.encrypted as account_encrypted'
             ]
         );
+
+        $data->each(
+            function (Model $object) {
+//                $object->description = intval($object->encrypted);
+                $object->name = intval($object->account_encrypted) == 1 ? Crypt::decrypt($object->name) : $object->name;
+            }
+        );
+
+        return $data;
     }
 
     /**
@@ -325,7 +337,15 @@ class ReportQuery implements ReportQueryInterface
               ->groupBy('categories.id')
               ->orderBy('amount');
 
-        return $query->get(['categories.id', 'categories.encrypted', 'categories.name', DB::Raw('SUM(`transactions`.`amount`) AS `amount`')]);
+        $data = $query->get(['categories.id', 'categories.encrypted', 'categories.name', DB::Raw('SUM(`transactions`.`amount`) AS `amount`')]);
+        // decrypt data:
+        $data->each(
+            function (Model $object) {
+                $object->name = intval($object->encrypted) == 1 ? Crypt::decrypt($object->name) : $object->name;
+            }
+        );
+
+        return $data;
 
     }
 
@@ -372,7 +392,16 @@ class ReportQuery implements ReportQueryInterface
               ->groupBy('t_to.account_id')
               ->orderBy('amount', 'DESC');
 
-        return $query->get(['t_to.account_id as id', 'ac_to.name as name', 'ac_to.encrypted', DB::Raw('SUM(t_to.amount) as `amount`')]);
+        $data = $query->get(['t_to.account_id as id', 'ac_to.name as name', 'ac_to.encrypted', DB::Raw('SUM(t_to.amount) as `amount`')]);
+
+        // decrypt
+        $data->each(
+            function (Model $object) {
+                $object->name = intval($object->encrypted) == 1 ? Crypt::decrypt($object->name) : $object->name;
+            }
+        );
+
+        return $data;
     }
 
     /**
@@ -414,9 +443,17 @@ class ReportQuery implements ReportQueryInterface
 
         $query->groupBy('t_from.account_id')->orderBy('amount');
 
-        return $query->get(
+        $data = $query->get(
             ['t_from.account_id as account_id', 'ac_from.name as name', 'ac_from.encrypted as encrypted', DB::Raw('SUM(t_from.amount) as `amount`')]
         );
+        // decrypt
+        $data->each(
+            function (Model $object) {
+                $object->name = intval($object->encrypted) == 1 ? Crypt::decrypt($object->name) : $object->name;
+            }
+        );
+
+        return $data;
     }
 
     /**

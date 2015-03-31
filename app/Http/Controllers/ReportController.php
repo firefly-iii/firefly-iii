@@ -270,12 +270,6 @@ class ReportController extends Controller
         $categories = Steam::makeArray($result);
 
 
-        // loop and decrypt if necessary:
-        foreach ($categories as $index => $category) {
-            $categories[$index]['name']
-                = intval($categories[$index]['encrypted']) == 1 ? Crypt::decrypt($categories[$index]['name']) : $categories[$index]['name'];
-        }
-
         // all transfers
         if ($showSharedReports === false) {
             $result    = $this->query->sharedExpensesByCategory($start, $end);

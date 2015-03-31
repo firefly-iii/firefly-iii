@@ -128,10 +128,9 @@
             @foreach($groupedIncomes as $income)
                 <?php
                 $sum += floatval($income->amount)*-1;
-                            $name = intval($income->encrypted) == 1 ? Crypt::decrypt($income->name) : $income->name;
                 ?>
             <tr>
-                <td><a href="{{route('accounts.show',$income->account_id)}}">{{{$name}}}</a></td>
+                <td><a href="{{route('accounts.show',$income->account_id)}}">{{{$income->name}}}</a></td>
                 <td>{!! Amount::format(floatval($income->amount)*-1) !!}</td>
             </tr>
             @endforeach
@@ -151,11 +150,8 @@
             <table class="table">
                 <?php $sum = 0;?>
                 @foreach($groupedExpenses as $id => $expense)
-                    <?php
-                    $name = intval($expense['encrypted']) == 1 ? Crypt::decrypt($expense['name']) : $expense['name'];
-                    ?>
                 <tr>
-                    <td><a href="{{route('accounts.show',$id)}}">{{{$name}}}</a></td>
+                    <td><a href="{{route('accounts.show',$id)}}">{{{$expense['name']}}}</a></td>
                     <td>{!! Amount::format(floatval($expense['amount'])*-1) !!}</td>
                 </tr>
                 <?php $sum += floatval($expense['amount'])*-1;?>
