@@ -44,7 +44,11 @@
                                 {{$entry->date->format('j F Y')}}
                             </td>
                             <td>
-                                <a href="{{route('accounts.show',$entry->account_id)}}">{{{$entry->name}}}</a>
+                                @if(intval($entry->account_encrypted) == 1)
+                                    <a href="{{route('accounts.show',$entry->account_id)}}">{{{Crypt::decrypt($entry->name)}}}</a>
+                                @else
+                                    <a href="{{route('accounts.show',$entry->account_id)}}">{{{$entry->name}}}</a>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
@@ -67,11 +71,16 @@
             <table class="table table-bordered">
                 <?php $sum = 0;?>
                 @foreach($expenses as $id => $expense)
-                    <?php $sum += floatval($expense['amount']);?>
+                    <?php
+                        $sum += floatval($expense['amount']);
+                        $name = isset($expense['encrypted']) && intval($expense['encrypted']) ==1 ? Crypt::decrypt($expense['name']) :$expense['name'];
+                            //var_dump($expense);
+                        ?>
                     <tr>
                         @if($id > 0)
-                        <td><a href="{{route('accounts.show',$id)}}">{{{$expense['name']}}}</a></td>
+                        <td><a href="{{route('accounts.show',$id)}}">{{{$name}}}</a></td>
                         @else
+
                         <td><em>{{{$expense['name']}}}</em></td>
                         @endif
                         <td>{!! Amount::format($expense['amount']) !!}</td>

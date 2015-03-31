@@ -244,7 +244,9 @@ class ReportQuery implements ReportQueryInterface
              DB::Raw('SUM(`t_to`.`amount`) as `amount`'),
              'transaction_journals.date',
              't_from.account_id as account_id',
-             'ac_from.name as name']
+             'ac_from.name as name',
+             'ac_from.encrypted as account_encrypted'
+            ]
         );
     }
 
@@ -323,7 +325,7 @@ class ReportQuery implements ReportQueryInterface
               ->groupBy('categories.id')
               ->orderBy('amount');
 
-        return $query->get(['categories.id','categories.encrypted', 'categories.name', DB::Raw('SUM(`transactions`.`amount`) AS `amount`')]);
+        return $query->get(['categories.id', 'categories.encrypted', 'categories.name', DB::Raw('SUM(`transactions`.`amount`) AS `amount`')]);
 
     }
 
@@ -370,7 +372,7 @@ class ReportQuery implements ReportQueryInterface
               ->groupBy('t_to.account_id')
               ->orderBy('amount', 'DESC');
 
-        return $query->get(['t_to.account_id as id', 'ac_to.name as name', DB::Raw('SUM(t_to.amount) as `amount`')]);
+        return $query->get(['t_to.account_id as id', 'ac_to.name as name', 'ac_to.encrypted', DB::Raw('SUM(t_to.amount) as `amount`')]);
     }
 
     /**
@@ -412,7 +414,9 @@ class ReportQuery implements ReportQueryInterface
 
         $query->groupBy('t_from.account_id')->orderBy('amount');
 
-        return $query->get(['t_from.account_id as account_id', 'ac_from.name as name', DB::Raw('SUM(t_from.amount) as `amount`')]);
+        return $query->get(
+            ['t_from.account_id as account_id', 'ac_from.name as name', 'ac_from.encrypted as encrypted', DB::Raw('SUM(t_from.amount) as `amount`')]
+        );
     }
 
     /**

@@ -247,6 +247,7 @@ class ReportController extends Controller
          * Start getExpenseGroupedForMonth DONE
          */
         $set      = $this->query->journalsByExpenseAccount($start, $end, $showSharedReports);
+
         $expenses = Steam::makeArray($set);
         $expenses = Steam::sortArray($expenses);
         $expenses = Steam::limitArray($expenses, 10);
@@ -268,6 +269,7 @@ class ReportController extends Controller
         $result     = $this->query->journalsByCategory($start, $end);
         $categories = Steam::makeArray($result);
 
+
         // loop and decrypt if necessary:
         foreach ($categories as $index => $category) {
             $categories[$index]['name']
@@ -282,6 +284,7 @@ class ReportController extends Controller
         } else {
             $merged = $categories;
         }
+
 
         // sort.
         $sorted = Steam::sortNegativeArray($merged);

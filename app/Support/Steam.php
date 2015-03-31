@@ -100,11 +100,13 @@ class Steam
             if (isset($array[$id])) {
                 $array[$id]['amount'] += floatval($entry->amount);
                 $array[$id]['spent'] += floatval($entry->spent);
+                $array[$id]['encrypted'] = intval($entry->encrypted);
             } else {
                 $array[$id] = [
-                    'amount' => floatval($entry->amount),
-                    'spent'  => floatval($entry->spent),
-                    'name'   => $entry->name
+                    'amount'    => floatval($entry->amount),
+                    'spent'     => floatval($entry->spent),
+                    'encrypted' => intval($entry->encrypted),
+                    'name'      => $entry->name
                 ];
             }
         }
