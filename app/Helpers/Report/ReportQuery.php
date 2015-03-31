@@ -323,7 +323,7 @@ class ReportQuery implements ReportQueryInterface
               ->groupBy('categories.id')
               ->orderBy('amount');
 
-        return $query->get(['categories.id', 'categories.name', DB::Raw('SUM(`transactions`.`amount`) AS `amount`')]);
+        return $query->get(['categories.id','categories.encrypted', 'categories.name', DB::Raw('SUM(`transactions`.`amount`) AS `amount`')]);
 
     }
 
