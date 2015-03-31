@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Class TestCase
  */
@@ -18,6 +17,20 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         $app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
 
         return $app;
+    }
+
+    /**
+     * @param string $class
+     *
+     * @return mixed
+     */
+    public function mock($class)
+    {
+        $mock = Mockery::mock($class);
+
+        $this->app->instance($class, $mock);
+
+        return $mock;
     }
 
 }

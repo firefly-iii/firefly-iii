@@ -18,7 +18,7 @@
     <ul class="nav navbar-top-links navbar-right">
 
         <!-- reminders -->
-        @if($reminders->count() > 0)
+        @if(isset($reminders) && $reminders->count() > 0)
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
                 <i class="fa fa-envelope fa-fw"></i>  <i class="fa fa-caret-down"></i>

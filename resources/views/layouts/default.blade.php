@@ -121,19 +121,31 @@
 <script type="text/javascript" src="js/daterangepicker.js"></script>
 
 <script type="text/javascript">
-    var start = "{{Session::get('start')->format('d-m-Y')}}";
-    var end = "{{Session::get('end')->format('d-m-Y')}}";
-    var titleString = "{{Session::get('start')->format('j M Y')}} - {{Session::get('end')->format('j M Y')}}";
+    var start = "{{Session::get('start', new Carbon\Carbon)->format('d-m-Y')}}";
+    var end = "{{Session::get('end', new Carbon\Carbon)->format('d-m-Y')}}";
+    var titleString = "{{Session::get('start', new Carbon\Carbon)->format('j M Y')}} - {{Session::get('end', new Carbon\Carbon)->format('j M Y')}}";
     var dateRangeURL = "{{route('daterange')}}";
     var token = "{{csrf_token()}}";
-    var firstDate = moment("{{Session::get('first')->format('Y-m-d')}}");
-    var currentMonthName = "{{$currentMonthName}}";
-    var previousMonthName = "{{$previousMonthName}}";
-    var nextMonthName = "{{$nextMonthName}}";
+    var firstDate = moment("{{Session::get('first', new Carbon\Carbon)->format('Y-m-d')}}");
+    var currentMonthName = "{{isset($currentMonthName) ? $currentMonthName : 'Month'}}";
+    var previousMonthName = "{{isset($previousMonthName) ? $previousMonthName : 'Month'}}";
+    var nextMonthName = "{{isset($nextMonthName) ? $nextMonthName : 'Month'}}";
     $('#daterange span').text(titleString);
 </script>
 
 <script type="text/javascript" src="js/firefly.js"></script>
 @yield('scripts')
+
+
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', '<?php echo env('ANALYTICS_ID', 'XXX-XX-X'); ?>', 'auto');
+    ga('send', 'pageview');
+
+</script>
 </body>
 </html>

@@ -3,6 +3,7 @@
 
 namespace FireflyIII\Http\Middleware;
 
+use App;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
@@ -47,14 +48,14 @@ class Range
      */
     public function handle(Request $request, Closure $theNext)
     {
-        if ($this->auth->check()) {
+        if ($this->auth->check() && App::environment() != 'testing') {
 
             // ignore preference. set the range to be the current month:
             if (!Session::has('start') && !Session::has('end')) {
 
                 /** @var \FireflyIII\Models\Preference $viewRange */
                 $viewRange = Preferences::get('viewRange', '1M');
-                $start     = Session::has('start') ? Session::get('start') : new Carbon;
+                $start     = new Carbon;
                 $start     = Navigation::updateStartDate($viewRange->data, $start);
                 $end       = Navigation::updateEndDate($viewRange->data, $start);
 
@@ -62,7 +63,12 @@ class Range
                 Session::put('end', $end);
             }
             if (!Session::has('first')) {
-                $journal = $this->auth->user()->transactionjournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
+                /**
+                 * Get helper thing.
+                 */
+                /** @var \FireflyIII\Repositories\Journal\JournalRepositoryInterface $repository */
+                $repository = App::make('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
+                $journal    = $repository->first();
                 if ($journal) {
                     Session::put('first', $journal->date);
                 } else {

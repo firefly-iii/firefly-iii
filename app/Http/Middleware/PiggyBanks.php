@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Navigation;
 use Session;
-
+use App;
 
 /**
  * Class PiggyBanks
@@ -50,7 +50,7 @@ class PiggyBanks
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($this->auth->check() && !$request->isXmlHttpRequest()) {
+        if ($this->auth->check() && !$request->isXmlHttpRequest() && App::environment() != 'testing') {
             // get piggy banks without a repetition:
             /** @var Collection $set */
             $set = $this->auth->user()->piggybanks()

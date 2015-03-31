@@ -133,8 +133,8 @@ class AccountRepository implements AccountRepositoryInterface
                         ->where('account_meta.name', 'accountRole')
                         ->where('account_meta.data', '"savingAsset"')
                         ->get(['accounts.*']);
-        $start    = clone Session::get('start');
-        $end      = clone Session::get('end');
+        $start    = clone Session::get('start', new Carbon);
+        $end      = clone Session::get('end', new Carbon);
 
         $accounts->each(
             function (Account $account) use ($start, $end) {

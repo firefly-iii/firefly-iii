@@ -44,4 +44,10 @@ interface JournalRepositoryInterface
      * @return mixed
      */
     public function update(TransactionJournal $journal, array $data);
+
+    /**
+     * Get users first transaction journal
+     * @return TransactionJournal
+     */
+    public function first();
 }
