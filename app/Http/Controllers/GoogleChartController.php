@@ -26,6 +26,7 @@ use Preferences;
 use Response;
 use Session;
 use Steam;
+use Crypt;
 
 /**
  * Class GoogleChartController
@@ -255,11 +256,13 @@ class GoogleChartController extends Controller
                                    ->where('transaction_types.type', 'Withdrawal')
                                    ->groupBy('categories.id')
                                    ->orderBy('sum', 'DESC')
-                                   ->get(['categories.id', 'categories.name', \DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
+                                   ->get(['categories.id','categories.encrypted', 'categories.name', \DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
 
         foreach ($set as $entry) {
-            $entry->name = strlen($entry->name) == 0 ? '(no category)' : $entry->name;
-            $chart->addRow($entry->name, floatval($entry->sum));
+            $isEncrypted = intval($entry->encrypted) == 1 ? true : false;
+            $name = strlen($entry->name) == 0 ? '(no category)' : $entry->name;
+            $name = $isEncrypted ? Crypt::decrypt($name) : $name;
+            $chart->addRow($name, floatval($entry->sum));
         }
 
         $chart->generate();
