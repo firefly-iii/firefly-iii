@@ -55,7 +55,7 @@ class ChangesForV336 extends Migration
             $table->dropUnique('bill_user_id');
         }
         );
-//
+        //
         Schema::table(
             'bills', function (Blueprint $table) {
             // raw query:
@@ -140,9 +140,16 @@ class ChangesForV336 extends Migration
         Schema::table(
             'bills', function (Blueprint $table) {
             // raw query:
-
-            DB::insert('ALTER TABLE `bills` CHANGE `name` `name` TEXT NOT NULL');
-            DB::insert('ALTER TABLE `bills` CHANGE `match` `match` TEXT NOT NULL');
+            try {
+                DB::insert('ALTER TABLE `bills` CHANGE `name` `name` TEXT NOT NULL');
+            } catch (PDOException $e) {
+                // don't care.
+            }
+            try {
+                DB::insert('ALTER TABLE `bills` CHANGE `match` `match` TEXT NOT NULL');
+            } catch (PDOException $e) {
+                // don't care.
+            }
             $table->smallInteger('name_encrypted', false, true)->default(0);
             $table->smallInteger('match_encrypted', false, true)->default(0);
             $table->foreign('user_id', 'bill_user_id')->references('id')->on('users')->onDelete('cascade');
@@ -188,7 +195,11 @@ class ChangesForV336 extends Migration
         );
         Schema::table(
             'piggy_banks', function (Blueprint $table) {
-            DB::insert('ALTER TABLE `piggy_banks` CHANGE `name` `name` TEXT NOT NULL');
+            try {
+                DB::insert('ALTER TABLE `piggy_banks` CHANGE `name` `name` TEXT NOT NULL');
+            } catch (PDOException $e) {
+                // don't care.
+            }
             $table->dropColumn(['repeats', 'rep_length', 'rep_every', 'rep_times']);
 
             // create index again:

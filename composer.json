@@ -26,7 +26,8 @@
         "watson/validating": "~1.0",
         "doctrine/dbal": "~2.5",
         "illuminate/html": "~5.0",
-        "league/commonmark": "0.7.*"
+        "league/commonmark": "0.7.*",
+        "mockery/mockery": "0.9.*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "@stable",

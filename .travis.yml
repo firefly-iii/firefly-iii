@@ -14,12 +14,10 @@ install:
   - rm composer.lock
   - composer install
   - php artisan env
-#  - mv -v .env.testing .env
-#  - touch tests/database/db.sqlite
-#  - php artisan migrate --seed
+  - mv -v .env.testing .env
 
 script:
-#  - phpunit --debug
+  - phpunit --debug
 
 after_script:
-#  - php vendor/bin/coveralls
+  - php vendor/bin/coveralls

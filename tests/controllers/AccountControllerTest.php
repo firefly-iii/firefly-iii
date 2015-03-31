@@ -13,7 +13,6 @@ class AccountControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->be(FireflyIII\User::whereEmail('thegrumpydictator@gmail.com')->first());
 
 
     }
@@ -30,6 +29,7 @@ class AccountControllerTest extends TestCase
 
     public function testCreate()
     {
+        $this->be(new FireflyIII\User);
         $response = $this->call('GET', '/accounts/create/asset');
         $this->assertResponseOk();
         $this->assertViewHas('subTitle', 'Create a new asset account');
