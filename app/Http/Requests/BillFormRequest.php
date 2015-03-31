@@ -47,14 +47,16 @@ class BillFormRequest extends Request
      */
     public function rules()
     {
-        $nameRule = 'required|between:1,255|uniqueForUser:bills,name';
+        $nameRule  = 'required|between:1,255|uniqueObjectForUser:bills,name,name_encrypted';
+        $matchRule = 'required|between:1,255|uniqueObjectForUser:bills,match,match_encrypted';
         if (intval(Input::get('id')) > 0) {
-            $nameRule = 'required|between:1,255';
+            $nameRule .= ',' . intval(Input::get('id'));
+            $matchRule .= ',' . intval(Input::get('id'));
         }
 
         $rules = [
             'name'               => $nameRule,
-            'match'              => 'required|between:1,255',
+            'match'              => $matchRule,
             'amount_min'         => 'required|numeric|min:0.01',
             'amount_max'         => 'required|numeric|min:0.01',
             'amount_currency_id' => 'required|exists:transaction_currencies,id',

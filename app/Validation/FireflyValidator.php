@@ -166,6 +166,46 @@ class FireflyValidator extends Validator
     }
 
     /**
+     * Validate an object and its unicity. Checks for encryption / encrypted values as well.
+     *
+     * parameter 0: the table
+     * parameter 1: the field
+     * parameter 2: the encrypted / not encrypted boolean. Defaults to "encrypted".
+     * parameter 3: an id to ignore (when editing)
+     *
+     * @param $attribute
+     * @param $value
+     * @param $parameters
+     *
+     * @return bool
+     */
+    public function validateUniqueObjectForUser($attribute, $value, $parameters)
+    {
+        $table     = $parameters[0];
+        $field     = $parameters[1];
+        $encrypted = isset($parameters[2]) ? $parameters[2] : 'encrypted';
+        $exclude   = isset($parameters[3]) ? $parameters[3] : null;
+
+        $query = DB::table($table)->where('user_id', Auth::user()->id);
+
+        if (!is_null($exclude)) {
+            $query->where('id', '!=', $exclude);
+        }
+
+
+        $set = $query->get();
+        foreach ($set as $entry) {
+            $isEncrypted = intval($entry->$encrypted) == 1 ? true : false;
+            $checkValue  = $isEncrypted ? Crypt::decrypt($entry->$field) : $entry->$field;
+            if ($checkValue == $value) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * @param $attribute
      * @param $value
      * @param $parameters
@@ -174,18 +214,24 @@ class FireflyValidator extends Validator
      */
     public function validateUniquePiggyBankForUser($attribute, $value, $parameters)
     {
-        $query = DB::table($parameters[0])->where('piggy_banks.' . $parameters[1], $value);
+        $exclude = isset($parameters[0]) ? $parameters[0] : null;
+        $query   = DB::table('piggy_banks');
         $query->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id');
         $query->where('accounts.user_id', Auth::user()->id);
-        if (isset($paramers[2])) {
-            $query->where('piggy_banks.id', '!=', $parameters[2]);
+        if (!is_null($exclude)) {
+            $query->where('piggy_banks.id', '!=', $exclude);
         }
-        $count = $query->count();
-        if ($count == 0) {
-            return true;
+        $set = $query->get(['piggy_banks.*']);
+
+        foreach($set as $entry) {
+            $isEncrypted = intval($entry->encrypted) == 1 ? true : false;
+            $checkValue = $isEncrypted ? Crypt::decrypt($entry->name) : $entry->name;
+            if($checkValue == $value) {
+                return false;
+            }
         }
 
-        return false;
+        return true;
 
     }
 }

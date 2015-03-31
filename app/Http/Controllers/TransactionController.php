@@ -274,7 +274,9 @@ class TransactionController extends Controller
         $journalData = $request->getJournalData();
         $journal     = $repository->store($journalData);
 
+        // rescan journal, UpdateJournalConnection
         event(new JournalSaved($journal));
+        // ConnectJournalToPiggyBank
         event(new JournalCreated($journal, intval($request->get('piggy_bank_id'))));
 
         if (intval($request->get('reminder_id')) > 0) {
