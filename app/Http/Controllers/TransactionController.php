@@ -15,6 +15,8 @@ use Redirect;
 use Response;
 use Session;
 use View;
+use URL;
+
 
 /**
  * Class TransactionController
@@ -291,7 +293,7 @@ class TransactionController extends Controller
             return Redirect::route('transactions.create', $request->input('what'))->withInput();
         }
 
-        return Redirect::route('transactions.index', $request->input('what'));
+        return Redirect::to(URL::previous());
 
     }
 
@@ -318,7 +320,7 @@ class TransactionController extends Controller
         }
 
 
-        return Redirect::route('transactions.index', $journalData['what']);
+        return Redirect::to(URL::previous());
 
     }
 
