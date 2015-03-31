@@ -72,7 +72,7 @@ class Range
                 if ($journal) {
                     Session::put('first', $journal->date);
                 } else {
-                    Session::put('first', Carbon::now());
+                    Session::put('first', Carbon::now()->startOfYear());
                 }
             }
 
