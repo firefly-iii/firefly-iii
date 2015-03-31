@@ -16,7 +16,57 @@ class ChangesForV336 extends Migration
      */
     public function down()
     {
-        //
+        /**
+         * ACCOUNTS
+         */
+        // unchange field to be encryptable.
+        Schema::table(
+            'accounts', function (Blueprint $table) {
+            // drop foreign key:
+            $table->dropForeign('account_user_id');
+
+        }
+        );
+
+
+        Schema::table(
+            'accounts', function (Blueprint $table) {
+            $table->string('name', 255)->change();
+
+            // recreate foreign key
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+            // recreate unique:
+            $table->unique(['user_id', 'account_type_id', 'name']);
+        }
+        );
+
+
+        /**
+         * BILLS
+         */
+        // change field to be cryptable.
+        Schema::table(
+            'bills', function (Blueprint $table) {
+            // drop foreign key:
+            $table->dropForeign('bill_user_id');
+
+            // drop unique:
+            $table->dropUnique('bill_user_id');
+        }
+        );
+//
+        Schema::table(
+            'bills', function (Blueprint $table) {
+            // raw query:
+
+            DB::insert('ALTER TABLE `bills` CHANGE `name` `name` varchar(255) NOT NULL');
+            DB::insert('ALTER TABLE `bills` CHANGE `match` `match` varchar(255) NOT NULL');
+            $table->foreign('user_id', 'bills_uid_for')->references('id')->on('users')->onDelete('cascade');
+            $table->unique(['user_id', 'name'], 'uid_name_unique');
+        }
+        );
+
     }
 
     /**
@@ -156,28 +206,6 @@ class ChangesForV336 extends Migration
 
         }
         );
-
-        //
-        //        Schema::table(
-        //            'categories', function (Blueprint $table) {
-        //            $table->smallInteger('encrypted', false, true)->default(0);
-        //            $table->text('name')->change();
-        //        }
-        //        );
-        //
-        //        Schema::table(
-        //            'piggy_banks', function (Blueprint $table) {
-        //            $table->smallInteger('encrypted', false, true)->default(0);
-        //            $table->text('name')->change();
-        //            $table->dropColumn(['repeats', 'rep_length', 'rep_every', 'rep_times']);
-        //        }
-        //        );
-        //        Schema::table(
-        //            'reminders', function (Blueprint $table) {
-        //            $table->smallInteger('encrypted', false, true)->default(0);
-        //        }
-        //        );
-
 
     }
 
