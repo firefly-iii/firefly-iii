@@ -119,6 +119,9 @@ class ReportHelper implements ReportHelperInterface
             $years[] = $start->format('Y');
             $start->addYear();
         }
+        $years[] = Carbon::now()->format('Y');
+        // force the current year.
+        $years = array_unique($years);
 
         return $years;
     }
