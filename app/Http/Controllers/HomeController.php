@@ -6,7 +6,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Input;
 use Preferences;
 use Session;
-
+use Redirect;
 /**
  * Class HomeController
  *
@@ -28,6 +28,11 @@ class HomeController extends Controller
 
         Session::put('start', $start);
         Session::put('end', $end);
+    }
+
+    public function flush() {
+        Session::clear();
+        return Redirect::route('index');
     }
 
     /**
