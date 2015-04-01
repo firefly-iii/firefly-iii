@@ -16,7 +16,7 @@ use Response;
 use Session;
 use View;
 use URL;
-
+use Log;
 
 /**
  * Class TransactionController
@@ -61,6 +61,12 @@ class TransactionController extends Controller
             }
         }
         Session::put('preFilled', $preFilled);
+
+        // put previous url in session if not redirect from store (not "create another").
+        if(Session::get('transactions.create.fromStore') !== true) {
+            Session::put('transactions.create.url', URL::previous());
+        }
+        Session::forget('transactions.create.fromStore');
 
         asort($piggies);
 
@@ -164,6 +170,12 @@ class TransactionController extends Controller
         $preFilled['revenue_account'] = $transactions[1]->account->name;
         $preFilled['account_from_id'] = $transactions[1]->account->id;
         $preFilled['account_to_id']   = $transactions[0]->account->id;
+
+        // put previous url in session if not redirect from store (not "return_to_edit").
+        if(Session::get('transactions.create.fromUpdate') !== true) {
+            Session::put('transactions.edit.url', URL::previous());
+        }
+        Session::forget('transactions.create.fromUpdate');
 
 
         return View::make('transactions.edit', compact('journal', 'accounts', 'what', 'budgets', 'piggies', 'subTitle'))->with('data', $preFilled);
@@ -273,6 +285,7 @@ class TransactionController extends Controller
      */
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository)
     {
+
         $journalData = $request->getJournalData();
         $journal     = $repository->store($journalData);
 
@@ -290,10 +303,13 @@ class TransactionController extends Controller
         Session::flash('success', 'New transaction "' . $journal->description . '" stored!');
 
         if (intval(Input::get('create_another')) === 1) {
+            // set value so create routine will not overwrite URL:
+            Session::put('transactions.create.fromStore',true);
             return Redirect::route('transactions.create', $request->input('what'))->withInput();
         }
 
-        return Redirect::to(URL::previous());
+        // redirect to previous URL.
+        return Redirect::to(Session::get('transactions.create.url'));
 
     }
 
@@ -316,11 +332,13 @@ class TransactionController extends Controller
         Session::flash('success', 'Transaction "' . e($journalData['description']) . '" updated.');
 
         if (intval(Input::get('return_to_edit')) === 1) {
+            // set value so edit routine will not overwrite URL:
+            Session::put('transactions.create.fromUpdate',true);
             return Redirect::route('transactions.edit', $journal->id);
         }
 
-
-        return Redirect::to(URL::previous());
+        // redirect to previous URL.
+        return Redirect::to(Session::get('transactions.edit.url'));
 
     }
 
