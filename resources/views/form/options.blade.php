@@ -64,7 +64,7 @@
         </label>
         <div class="col-sm-8">
             <div class="radio"><label>
-                    {!! Form::checkbox('return_to_edit', '1') !!}
+                    {!! Form::checkbox('return_to_edit', '1', intval(Input::old('return_to_edit')) == 1) !!}
                 After updating, return here.
                 </label>
             </div>
