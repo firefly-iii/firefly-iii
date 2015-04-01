@@ -17,6 +17,7 @@ use Redirect;
 use Session;
 use Steam;
 use View;
+use URL;
 
 /**
  * Class PiggyBankController
@@ -49,9 +50,6 @@ class PiggyBankController extends Controller
         $leftToSave    = $piggyBank->targetamount - $savedSoFar;
         $maxAmount     = min($leftOnAccount, $leftToSave);
 
-
-        \Log::debug('Now going to view for piggy bank #' . $piggyBank->id . ' (' . $piggyBank->name . ')');
-
         return view('piggy-banks.add', compact('piggyBank', 'maxAmount'));
     }
 
@@ -68,6 +66,12 @@ class PiggyBankController extends Controller
         $subTitle     = 'Create new piggy bank';
         $subTitleIcon = 'fa-plus';
 
+        // put previous url in session if not redirect from store (not "create another").
+        if (Session::get('piggy-banks.create.fromStore') !== true) {
+            Session::put('piggy-banks.create.url', URL::previous());
+        }
+        Session::forget('piggy-banks.create.fromStore');
+
         return view('piggy-banks.create', compact('accounts', 'periods', 'subTitle', 'subTitleIcon'));
     }
 
@@ -79,6 +83,9 @@ class PiggyBankController extends Controller
     public function delete(PiggyBank $piggyBank)
     {
         $subTitle = 'Delete "' . e($piggyBank->name) . '"';
+
+        // put previous url in session
+        Session::put('piggy-banks.delete.url', URL::previous());
 
         return view('piggy-banks.delete', compact('piggyBank', 'subTitle'));
     }
@@ -94,7 +101,7 @@ class PiggyBankController extends Controller
         Session::flash('success', 'Piggy bank "' . e($piggyBank->name) . '" deleted.');
         $piggyBank->delete();
 
-        return Redirect::route('piggy-banks.index');
+        return Redirect::to(Session::get('piggy-banks.delete.url'));
     }
 
     /**
@@ -131,6 +138,12 @@ class PiggyBankController extends Controller
                       'remind_me'    => intval($piggyBank->remind_me) == 1 && !is_null($piggyBank->reminder) ? true : false
         ];
         Session::flash('preFilled', $preFilled);
+
+        // put previous url in session if not redirect from store (not "return_to_edit").
+        if (Session::get('piggy-banks.edit.fromUpdate') !== true) {
+            Session::put('piggy-banks.edit.url', URL::previous());
+        }
+        Session::forget('piggy-banks.edit.fromUpdate');
 
         return view('piggy-banks.edit', compact('subTitle', 'subTitleIcon', 'piggyBank', 'accounts', 'periods', 'preFilled'));
     }
@@ -312,11 +325,13 @@ class PiggyBankController extends Controller
         Session::flash('success', 'Stored piggy bank "' . e($piggyBank->name) . '".');
 
         if (intval(Input::get('create_another')) === 1) {
+            Session::put('piggy-banks.create.fromStore', true);
             return Redirect::route('piggy-banks.create')->withInput();
         }
 
 
-        return Redirect::route('piggy-banks.index');
+        // redirect to previous URL.
+        return Redirect::to(Session::get('piggy-banks.create.url'));
     }
 
     /**
@@ -344,11 +359,13 @@ class PiggyBankController extends Controller
         Session::flash('success', 'Updated piggy bank "' . e($piggyBank->name) . '".');
 
         if (intval(Input::get('return_to_edit')) === 1) {
+            Session::put('piggy-banks.edit.fromUpdate', true);
             return Redirect::route('piggy-banks.edit', $piggyBank->id);
         }
 
 
-        return Redirect::route('piggy-banks.index');
+        // redirect to previous URL.
+        return Redirect::to(Session::get('piggy-banks.edit.url'));
 
 
     }
