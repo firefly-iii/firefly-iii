@@ -163,10 +163,10 @@ class TransactionController extends Controller
         $preFilled['account_to_id']   = $transactions[0]->account->id;
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if (Session::get('transactions.create.fromUpdate') !== true) {
+        if (Session::get('transactions.edit.fromUpdate') !== true) {
             Session::put('transactions.edit.url', URL::previous());
         }
-        Session::forget('transactions.create.fromUpdate');
+        Session::forget('transactions.edit.fromUpdate');
 
 
         return View::make('transactions.edit', compact('journal', 'accounts', 'what', 'budgets', 'piggies', 'subTitle'))->with('data', $preFilled);
@@ -325,9 +325,9 @@ class TransactionController extends Controller
 
         if (intval(Input::get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
-            Session::put('transactions.create.fromUpdate', true);
+            Session::put('transactions.edit.fromUpdate', true);
 
-            return Redirect::route('transactions.edit', $journal->id)->withInput(['return_to_edit' => intval(Input::get('return_to_edit'))]);
+            return Redirect::route('transactions.edit', $journal->id)->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.

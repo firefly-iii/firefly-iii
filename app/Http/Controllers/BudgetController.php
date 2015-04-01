@@ -13,7 +13,7 @@ use Redirect;
 use Response;
 use Session;
 use View;
-
+use URL;
 /**
  * Class BudgetController
  *
@@ -49,6 +49,12 @@ class BudgetController extends Controller
      */
     public function create()
     {
+        // put previous url in session if not redirect from store (not "create another").
+        if (Session::get('budgets.create.fromStore') !== true) {
+            Session::put('budgets.create.url', URL::previous());
+        }
+        Session::forget('budgets.create.fromStore');
+
         return view('budgets.create')->with('subTitle', 'Create a new budget');
     }
 
@@ -60,6 +66,9 @@ class BudgetController extends Controller
     public function delete(Budget $budget)
     {
         $subTitle = 'Delete budget' . e($budget->name) . '"';
+
+        // put previous url in session
+        Session::put('budgets.delete.url', URL::previous());
 
         return view('budgets.delete', compact('budget', 'subTitle'));
     }
@@ -75,9 +84,11 @@ class BudgetController extends Controller
         $name = $budget->name;
         $repository->destroy($budget);
 
+
+
         Session::flash('success', 'The  budget "' . e($name) . '" was deleted.');
 
-        return Redirect::route('budgets.index');
+        return Redirect::to(Session::get('budgets.delete.url'));
     }
 
     /**
@@ -88,6 +99,12 @@ class BudgetController extends Controller
     public function edit(Budget $budget)
     {
         $subTitle = 'Edit budget "' . e($budget->name) . '"';
+
+        // put previous url in session if not redirect from store (not "return_to_edit").
+        if (Session::get('budgets.edit.fromUpdate') !== true) {
+            Session::put('budgets.edit.url', URL::previous());
+        }
+        Session::forget('budgets.edit.fromUpdate');
 
         return view('budgets.edit', compact('budget', 'subTitle'));
 
@@ -172,10 +189,13 @@ class BudgetController extends Controller
         Session::flash('success', 'New budget "' . $budget->name . '" stored!');
 
         if (intval(Input::get('create_another')) === 1) {
+            // set value so create routine will not overwrite URL:
+            Session::put('budgets.create.fromStore', true);
             return Redirect::route('budgets.create')->withInput();
         }
 
-        return Redirect::route('budgets.index');
+        // redirect to previous URL.
+        return Redirect::to(Session::get('budgets.create.url'));
 
     }
 
@@ -219,7 +239,9 @@ class BudgetController extends Controller
         Session::flash('success', 'Budget "' . $budget->name . '" updated.');
 
         if (intval(Input::get('return_to_edit')) === 1) {
-            return Redirect::route('budgets.edit', $budget->id);
+            // set value so edit routine will not overwrite URL:
+            Session::put('budgets.edit.fromUpdate', true);
+            return Redirect::route('budgets.edit', $budget->id)->withInput(['return_to_edit' => 1]);
         }
 
         return Redirect::route('budgets.index');
