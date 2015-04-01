@@ -101,7 +101,8 @@ class AccountController extends Controller
         $preFilled = [
             'accountRole'        => $account->getMeta('accountRole'),
             'openingBalanceDate' => $openingBalance ? $openingBalance->date->format('Y-m-d') : null,
-            'openingBalance'     => $openingBalanceAmount
+            'openingBalance'     => $openingBalanceAmount,
+            'virtualBalance'     => floatval($account->virtual_balance)
         ];
         Session::flash('preFilled', $preFilled);
 
@@ -185,6 +186,7 @@ class AccountController extends Controller
         $accountData = [
             'name'                   => $request->input('name'),
             'accountType'            => $request->input('what'),
+            'virtualBalance'         => floatval($request->input('virtualBalance')),
             'active'                 => true,
             'user'                   => Auth::user()->id,
             'accountRole'            => $request->input('accountRole'),
@@ -220,6 +222,7 @@ class AccountController extends Controller
             'active'                 => $request->input('active'),
             'user'                   => Auth::user()->id,
             'accountRole'            => $request->input('accountRole'),
+            'virtualBalance'         => floatval($request->input('virtualBalance')),
             'openingBalance'         => floatval($request->input('openingBalance')),
             'openingBalanceDate'     => new Carbon($request->input('openingBalanceDate')),
             'openingBalanceCurrency' => intval($request->input('balance_currency_id')),

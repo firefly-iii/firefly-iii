@@ -37,6 +37,7 @@
                     {!! ExpandedForm::balance('openingBalance') !!}
                     {!! ExpandedForm::date('openingBalanceDate', date('Y-m-d')) !!}
                     {!! ExpandedForm::select('accountRole',Config::get('firefly.accountRoles')) !!}
+                    {!! ExpandedForm::balance('virtualBalance') !!}
 
             </div>
         </div>

@@ -47,6 +47,7 @@ class Steam
                 'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
             )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount')
         );
+        $balance += floatval($account->virtual_balance);
 
         return $balance;
     }

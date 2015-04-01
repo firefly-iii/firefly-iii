@@ -32,6 +32,7 @@ class ChangesForV336 extends Migration
         Schema::table(
             'accounts', function (Blueprint $table) {
             $table->string('name', 255)->change();
+            $table->dropColumn('virtual_balance');
 
             // recreate foreign key
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
@@ -94,6 +95,7 @@ class ChangesForV336 extends Migration
         Schema::table(
             'accounts', function (Blueprint $table) {
             $table->text('name')->change();
+            $table->decimal('virtual_balance',10,2)->default(0);
             $table->foreign('user_id', 'account_user_id')->references('id')->on('users')->onDelete('cascade');
         }
         );

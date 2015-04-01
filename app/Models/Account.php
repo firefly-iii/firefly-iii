@@ -15,7 +15,7 @@ class Account extends Model
 {
     use SoftDeletes, ValidatingTrait;
 
-    protected $fillable = ['user_id', 'account_type_id', 'name', 'active'];
+    protected $fillable = ['user_id', 'account_type_id', 'name', 'active','virtual_balance'];
     protected $rules
         = [
             'user_id'         => 'required|exists:users,id',

@@ -31,6 +31,7 @@
                     {!! ExpandedForm::balance('openingBalance',null, ['currency' => $openingBalance ? $openingBalance->transactionCurrency : null]) !!}
                     {!! ExpandedForm::date('openingBalanceDate') !!}
                     {!! ExpandedForm::select('accountRole',Config::get('firefly.accountRoles')) !!}
+                    {!! ExpandedForm::balance('virtualBalance',null) !!}
                     {!! Form::hidden('id',$account->id) !!}
                 @endif
                 {!! ExpandedForm::checkbox('active','1') !!}

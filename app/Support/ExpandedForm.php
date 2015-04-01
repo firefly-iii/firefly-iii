@@ -62,6 +62,8 @@ class ExpandedForm
             'account_id'         => 'Asset account',
             'budget_id'          => 'Budget',
             'openingBalance'     => 'Opening balance',
+            'virtualBalance'     => 'Virtual balance',
+            'targetamount'     => 'Target amount',
             'accountRole'        => 'Account role',
             'openingBalanceDate' => 'Opening balance date',
             'piggy_bank_id'      => 'Piggy bank'];

@@ -208,10 +208,11 @@ class AccountRepository implements AccountRepositoryInterface
         if ($data['openingBalance'] != 0) {
             $type         = $data['openingBalance'] < 0 ? 'expense' : 'revenue';
             $opposingData = [
-                'user'        => $data['user'],
-                'accountType' => $type,
-                'name'        => $data['name'] . ' initial balance',
-                'active'      => false,
+                'user'            => $data['user'],
+                'accountType'     => $type,
+                'virtual_balance' => $data['virtualBalance'],
+                'name'            => $data['name'] . ' initial balance',
+                'active'          => false,
             ];
             $opposing     = $this->storeAccount($opposingData);
             $this->storeInitialBalance($newAccount, $opposing, $data);
@@ -229,8 +230,9 @@ class AccountRepository implements AccountRepositoryInterface
     public function update(Account $account, array $data)
     {
         // update the account:
-        $account->name   = $data['name'];
-        $account->active = $data['active'] == '1' ? true : false;
+        $account->name            = $data['name'];
+        $account->active          = $data['active'] == '1' ? true : false;
+        $account->virtual_balance = $data['virtualBalance'];
         $account->save();
 
         // update meta data:
