@@ -149,7 +149,7 @@ class JournalRepository implements JournalRepositoryInterface
                 'amount'                 => $data['amount'] * -1
             ]
         );
-        Transaction::create( // second transaction.
+        $transaction = Transaction::create( // second transaction.
             [
                 'account_id'             => $to->id,
                 'transaction_journal_id' => $journal->id,
@@ -225,6 +225,8 @@ class JournalRepository implements JournalRepositoryInterface
      */
     protected function storeAccounts(TransactionType $type, array $data)
     {
+        $from = null;
+        $to = null;
         switch ($type->type) {
             case 'Withdrawal':
 
@@ -237,7 +239,7 @@ class JournalRepository implements JournalRepositoryInterface
                     );
                 } else {
                     $toType = AccountType::where('type', 'Cash account')->first();
-                    $to     = Account::firstOrCreate(['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => 'Cash account', 'active' => 1]);
+                    $to     = Account::firstOrCreateEncrypted(['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => 'Cash account', 'active' => 1]);
                 }
                 break;
 
@@ -246,12 +248,12 @@ class JournalRepository implements JournalRepositoryInterface
 
                 if (strlen($data['revenue_account']) > 0) {
                     $fromType = AccountType::where('type', 'Revenue account')->first();
-                    $from     = Account::firstOrCreate(
+                    $from     = Account::firstOrCreateEncrypted(
                         ['user_id' => $data['user'], 'account_type_id' => $fromType->id, 'name' => $data['revenue_account'], 'active' => 1]
                     );
                 } else {
                     $toType = AccountType::where('type', 'Cash account')->first();
-                    $from   = Account::firstOrCreate(['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => 'Cash account', 'active' => 1]);
+                    $from   = Account::firstOrCreateEncrypted(['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => 'Cash account', 'active' => 1]);
                 }
 
                 break;
