@@ -244,7 +244,8 @@ class BudgetController extends Controller
             return Redirect::route('budgets.edit', $budget->id)->withInput(['return_to_edit' => 1]);
         }
 
-        return Redirect::route('budgets.index');
+        // redirect to previous URL.
+        return Redirect::to(Session::get('budgets.edit.url'));
 
     }
 
