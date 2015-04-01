@@ -85,6 +85,9 @@ class TransactionController extends Controller
         $type     = strtolower($journal->transactionType->type);
         $subTitle = 'Delete ' . e($type) . ' "' . e($journal->description) . '"';
 
+        // put previous url in session
+        Session::put('transactions.delete.url', URL::previous());
+
         return View::make('transactions.delete', compact('journal', 'subTitle'));
 
 
@@ -97,23 +100,12 @@ class TransactionController extends Controller
      */
     public function destroy(TransactionJournal $transactionJournal)
     {
-        $type   = $transactionJournal->transactionType->type;
-        $return = 'withdrawal';
-
         Session::flash('success', 'Transaction "' . e($transactionJournal->description) . '" destroyed.');
 
         $transactionJournal->delete();
 
-        switch ($type) {
-            case 'Deposit':
-                $return = 'deposit';
-                break;
-            case 'Transfer':
-                $return = 'transfers';
-                break;
-        }
-
-        return Redirect::route('transactions.index', $return);
+        // redirect to previous URL:
+        return Redirect::to(Session::get('transactions.delete.url'));
     }
 
     /**
