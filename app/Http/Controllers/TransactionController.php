@@ -14,9 +14,8 @@ use Input;
 use Redirect;
 use Response;
 use Session;
-use View;
 use URL;
-use Log;
+use View;
 
 /**
  * Class TransactionController
@@ -63,7 +62,7 @@ class TransactionController extends Controller
         Session::put('preFilled', $preFilled);
 
         // put previous url in session if not redirect from store (not "create another").
-        if(Session::get('transactions.create.fromStore') !== true) {
+        if (Session::get('transactions.create.fromStore') !== true) {
             Session::put('transactions.create.url', URL::previous());
         }
         Session::forget('transactions.create.fromStore');
@@ -172,7 +171,7 @@ class TransactionController extends Controller
         $preFilled['account_to_id']   = $transactions[0]->account->id;
 
         // put previous url in session if not redirect from store (not "return_to_edit").
-        if(Session::get('transactions.create.fromUpdate') !== true) {
+        if (Session::get('transactions.create.fromUpdate') !== true) {
             Session::put('transactions.edit.url', URL::previous());
         }
         Session::forget('transactions.create.fromUpdate');
@@ -304,7 +303,8 @@ class TransactionController extends Controller
 
         if (intval(Input::get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
-            Session::put('transactions.create.fromStore',true);
+            Session::put('transactions.create.fromStore', true);
+
             return Redirect::route('transactions.create', $request->input('what'))->withInput();
         }
 
@@ -333,8 +333,9 @@ class TransactionController extends Controller
 
         if (intval(Input::get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
-            Session::put('transactions.create.fromUpdate',true);
-            return Redirect::route('transactions.edit', $journal->id);
+            Session::put('transactions.create.fromUpdate', true);
+
+            return Redirect::route('transactions.edit', $journal->id)->withInput(['return_to_edit' => intval(Input::get('return_to_edit'))]);
         }
 
         // redirect to previous URL.
