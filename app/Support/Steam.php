@@ -19,10 +19,11 @@ class Steam
      *
      * @param Account $account
      * @param Carbon  $date
+     * @param bool    $ignoreVirtualBalance
      *
      * @return float
      */
-    public function balance(Account $account, Carbon $date = null)
+    public function balance(Account $account, Carbon $date = null, $ignoreVirtualBalance = false)
     {
         $date = is_null($date) ? Carbon::now() : $date;
 
@@ -47,7 +48,9 @@ class Steam
                 'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
             )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount')
         );
-        $balance += floatval($account->virtual_balance);
+        if (!$ignoreVirtualBalance) {
+            $balance += floatval($account->virtual_balance);
+        }
 
         return $balance;
     }
