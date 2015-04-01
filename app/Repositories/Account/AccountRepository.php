@@ -170,7 +170,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function leftOnAccount(Account $account)
     {
-        $balance = \Steam::balance($account);
+        $balance = \Steam::balance($account,null,true);
         /** @var PiggyBank $p */
         foreach ($account->piggybanks()->get() as $p) {
             $balance -= $p->currentRelevantRep()->currentamount;
