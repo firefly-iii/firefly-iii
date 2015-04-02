@@ -517,6 +517,27 @@ class TestDataSeeder extends Seeder
     /**
      * @param $name
      *
+     * @return PiggyBank|null
+     */
+    protected function findPiggyBank($name)
+    {
+        // account
+        $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
+        /** @var Budget $budget */
+        foreach (PiggyBank::get() as $piggyBank) {
+            $account = $piggyBank->account()->first();
+            if ($piggyBank->name == $name && $user->id == $account->user_id) {
+                return $piggyBank;
+                break;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param $name
+     *
      * @return Category|null
      */
     protected function findCategory($name)
@@ -638,13 +659,13 @@ class TestDataSeeder extends Seeder
         // piggy bank event
         // add money to this piggy bank
         // create a piggy bank event to match:
-        $checking  = Account::whereName('Checking account')->orderBy('id', 'DESC')->first();
-        $savings   = Account::whereName('Savings account')->orderBy('id', 'DESC')->first();
+        $checking  = $this->findAccount('Checking account');
+        $savings   = $this->findAccount('Savings account');
         $transfer  = TransactionType::whereType('Transfer')->first();
         $euro      = TransactionCurrency::whereCode('EUR')->first();
-        $groceries = Budget::whereName('Groceries')->orderBy('id', 'DESC')->first();
-        $house     = Category::whereName('House')->orderBy('id', 'DESC')->first();
-        $piggyBank = PiggyBank::whereName('New camera')->orderBy('id', 'DESC')->first();
+        $groceries = $this->findBudget('Groceries');
+        $house     = $this->findCategory('House');
+        $piggyBank = $this->findPiggyBank('New camera');
         $intoPiggy = $this->createJournal(
             ['from' => $checking, 'to' => $savings, 'amount' => 100, 'transactionType' => $transfer, 'description' => 'Money for piggy',
              'date' => $this->yaeom, 'transactionCurrency' => $euro, 'category' => $house, 'budget' => $groceries]

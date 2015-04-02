@@ -3,6 +3,8 @@
 use Auth;
 use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\BillFormRequest;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -21,10 +23,57 @@ use View;
 class BillController extends Controller
 {
 
+    /**
+     *
+     */
     public function __construct()
     {
         View::share('title', 'Bills');
         View::share('mainTitleIcon', 'fa-calendar-o');
+    }
+
+    /**
+     * @param Bill $bill
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function add(Bill $bill)
+    {
+        $matches     = explode(',', $bill->match);
+        $description = [];
+        $expense     = null;
+
+        // get users expense accounts:
+        $type     = AccountType::where('type', 'Expense account')->first();
+        $accounts = Auth::user()->accounts()->where('account_type_id', $type->id)->get();
+
+        foreach ($matches as $match) {
+            $match = strtolower($match);
+            // find expense account for each word if not found already:
+            if (is_null($expense)) {
+                /** @var Account $account */
+                foreach ($accounts as $account) {
+                    $name = strtolower($account->name);
+                    if (!(strpos($name, $match) === false)) {
+                        $expense = $account;
+                        break;
+                    }
+                }
+
+
+            }
+            if (is_null($expense)) {
+                $description[] = $match;
+            }
+        }
+        $parameters = [
+            'description'     => ucfirst(join(' ', $description)),
+            'expense_account' => is_null($expense) ? '' : $expense->name,
+            'amount'          => round(($bill->amount_min + $bill->amount_max), 2),
+        ];
+        Session::put('preFilled', $parameters);
+
+        return Redirect::to(route('transactions.create', 'withdrawal'));
     }
 
     /**
