@@ -11,8 +11,7 @@ addons:
     repo_token: 26489f9e854fcdf7e7660ba29c1455694685465b1f90329a79f7d2bf448acb61
 
 install:
-  - rm composer.lock
-  - composer install
+  - composer update
   - php artisan env
   - mv -v .env.testing .env
 

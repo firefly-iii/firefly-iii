@@ -26,15 +26,16 @@
         "watson/validating": "~1.0",
         "doctrine/dbal": "~2.5",
         "illuminate/html": "~5.0",
-        "league/commonmark": "0.7.*",
-        "mockery/mockery": "0.9.*"
+        "league/commonmark": "0.7.*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "@stable",
         "barryvdh/laravel-ide-helper": "~2.0",
         "phpunit/phpunit": "~4.0",
         "phpspec/phpspec": "~2.1",
-        "satooshi/php-coveralls": "0.6.1"
+        "satooshi/php-coveralls": "0.6.1",
+        "mockery/mockery": "0.9.*"
+
     },
     "autoload": {
         "classmap": [
