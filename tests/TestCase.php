@@ -19,6 +19,8 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         return $app;
     }
 
+
+
     /**
      * @param string $class
      *
@@ -32,5 +34,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
 
         return $mock;
     }
+
+
 
 }
