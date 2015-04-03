@@ -38,6 +38,18 @@
             </div>
         </div>
 
+        <!-- panel for credit card options -->
+        @if(Session::get('preFilled')['accountRole'] == 'ccAsset')
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-credit-card"></i> Credit card options
+            </div>
+            <div class="panel-body">
+                Will be here.
+            </div>
+        </div>
+        @endif
+
         <!-- panel for options -->
         <div class="panel panel-default">
             <div class="panel-heading">
