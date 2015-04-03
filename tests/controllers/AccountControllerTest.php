@@ -14,7 +14,6 @@ class AccountControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        Artisan::call('migrate');
 
 
     }
@@ -42,6 +41,8 @@ class AccountControllerTest extends TestCase
 
         Preferences::shouldReceive('get', 'viewRange')->andReturn($pref);
         Amount::shouldReceive('getDefaultCurrency')->andReturn($currency);
+        Amount::shouldReceive('getAllCurrencies')->andReturn([$currency]);
+        // get all currencires?
 
         $response = $this->call('GET', '/accounts/create/asset');
         $this->assertResponseOk();

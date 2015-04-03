@@ -34,7 +34,7 @@ class ExpandedForm
         $options['step'] = 'any';
         $options['min']  = '0.01';
         $defaultCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
-        $currencies      = TransactionCurrency::orderBy('code', 'ASC')->get();
+        $currencies      = Amt::getAllCurrencies();
         $html            = View::make('form.amount', compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
@@ -63,7 +63,7 @@ class ExpandedForm
             'budget_id'          => 'Budget',
             'openingBalance'     => 'Opening balance',
             'virtualBalance'     => 'Virtual balance',
-            'targetamount'     => 'Target amount',
+            'targetamount'       => 'Target amount',
             'accountRole'        => 'Account role',
             'openingBalanceDate' => 'Opening balance date',
             'piggy_bank_id'      => 'Piggy bank'];
@@ -145,7 +145,7 @@ class ExpandedForm
         $value           = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
         $defaultCurrency = isset($options['currency']) ? $options['currency'] : Amt::getDefaultCurrency();
-        $currencies      = TransactionCurrency::orderBy('code', 'ASC')->get();
+        $currencies      = Amt::getAllCurrencies();
         $html            = View::make('form.balance', compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
