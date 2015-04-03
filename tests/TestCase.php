@@ -1,4 +1,7 @@
 <?php
+
+use League\FactoryMuffin\Facade as FactoryMuffin;
+
 /**
  * Class TestCase
  */
@@ -17,6 +20,28 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         $app->make('Illuminate\Contracts\Console\Kernel')->bootstrap();
 
         return $app;
+    }
+
+    /**
+     * This method is called before the first test of this test class is run.
+     *
+     * @since Method available since Release 3.4.0
+     */
+    public static function setUpBeforeClass()
+    {
+
+    }
+
+    /**
+     * Sets up the fixture, for example, opens a network connection.
+     * This method is called before a test is executed.
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        Artisan::call('migrate');
+        FactoryMuffin::loadFactories(__DIR__ . '/factories');
+
     }
 
 
