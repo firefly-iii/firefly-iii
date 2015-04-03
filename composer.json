@@ -34,7 +34,9 @@
         "phpunit/phpunit": "~4.0",
         "phpspec/phpspec": "~2.1",
         "satooshi/php-coveralls": "0.6.1",
-        "mockery/mockery": "0.9.*"
+        "mockery/mockery": "0.9.*",
+        "league/factory-muffin": "~2.1"
+
 
     },
     "autoload": {
