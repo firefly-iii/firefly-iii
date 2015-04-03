@@ -282,7 +282,7 @@ class GoogleChartController extends Controller
         $chart->addColumn('Date', 'date');
         $chart->addColumn('Max amount', 'number');
         $chart->addColumn('Min amount', 'number');
-        $chart->addColumn('Current entry', 'number');
+        $chart->addColumn('Recorded bill entry', 'number');
 
         // get first transaction or today for start:
         $first = $bill->transactionjournals()->orderBy('date', 'ASC')->first();
