@@ -26,9 +26,14 @@ To install and use Firefly III, please read [the installation guide](https://git
 
 ## Current features
 
-- [A double-entry bookkeeping system](http://en.wikipedia.org/wiki/Double-entry_bookkeeping_system);
+- [A double-entry bookkeeping system](https://en.wikipedia.org/wiki/Double-entry_bookkeeping_system);
 - You can store, edit and remove withdrawals, deposits and transfers. This allows you full financial management;
-- It's possible to create, change and manage money using _budgets_;
+- You can manage different types of accounts
+  - Asset accounts
+  - Shared asset accounts (household accounts)
+  - Saving accounts
+  - Credit cards
+- It's possible to create, change and manage money using _[budgets](https://en.wikipedia.org/wiki/Envelope_system)_;
 - Organize transactions using categories;
 - Save towards a goal using piggy banks;
 - Predict and anticipate bills;
@@ -49,9 +54,7 @@ Firefly III will feature, but does not feature yet:
 
 
 - More control over other resources outside of personal finance
-  - Accounts shared with a partner (household accounts)
   - Debts
-  - Credit cards
 - More test-coverage;
 - Firefly will be able to split transactions; a single purchase can be split in multiple entries, for more fine-grained control.
 - Firefly will be able to join transactions.
