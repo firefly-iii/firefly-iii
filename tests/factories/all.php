@@ -28,6 +28,14 @@ FactoryMuffin::define(
 );
 
 FactoryMuffin::define(
+    'FireflyIII\Models\TransactionCurrency', [
+    'code'   => 'EUR',
+    'symbol' => 'x',
+    'name'   => 'word'
+]
+);
+
+FactoryMuffin::define(
     'FireflyIII\User', [
                          'email'    => 'email',
                          'password' => bcrypt('james'),

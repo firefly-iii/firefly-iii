@@ -37,12 +37,12 @@ class AccountControllerTest extends TestCase
         $this->be($pref->user);
 
 
-        // CURRENCY:
-        $currency = new TransactionCurrency;
-
         Preferences::shouldReceive('get', 'viewRange')->andReturn($pref);
-        Amount::shouldReceive('getDefaultCurrency')->andReturn($currency);
-        Amount::shouldReceive('getAllCurrencies')->andReturn([$currency]);
+
+        // CURRENCY:
+        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
+        Amount::shouldReceive('getDefaultCurrency')->once()->andReturn($currency);
+        Amount::shouldReceive('getAllCurrencies')->once()->andReturn([$currency]);
 
         $this->call('GET', '/accounts/create/asset');
         $this->assertResponseOk();
@@ -57,7 +57,7 @@ class AccountControllerTest extends TestCase
     public function testDelete()
     {
         // fake an account.
-        $account = FactoryMuffin::create('FireflyIII\Models\Account');
+        $account                    = FactoryMuffin::create('FireflyIII\Models\Account');
         $account->accountType->type = 'Asset account';
         $account->accountType->save();
 
@@ -70,12 +70,44 @@ class AccountControllerTest extends TestCase
 
     public function testDestroy()
     {
-        $this->markTestIncomplete();
+        // fake an account.
+        $account                    = FactoryMuffin::create('FireflyIII\Models\Account');
+        $account->accountType->type = 'Asset account';
+        $account->accountType->save();
+
+        $this->be($account->user);
+        $this->assertCount(1, DB::table('accounts')->where('id', $account->id)->whereNull('deleted_at')->get());
+
+        // post it!
+        $this->call('POST', '/accounts/destroy/' . $account->id, ['_token' => 'replaceme']);
+        $this->assertSessionHas('success');
+        $this->assertCount(0, DB::table('accounts')->where('id', $account->id)->whereNull('deleted_at')->get());
     }
 
     public function testEdit()
     {
-        $this->markTestIncomplete();
+        // fake an account.
+        $account                    = FactoryMuffin::create('FireflyIII\Models\Account');
+        $account->accountType->type = 'Asset account';
+        $account->accountType->save();
+
+        $this->be($account->user);
+        $this->assertCount(1, DB::table('accounts')->where('id', $account->id)->whereNull('deleted_at')->get());
+
+        // CURRENCY:
+        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
+        Amount::shouldReceive('getDefaultCurrency')->once()->andReturn($currency);
+        Amount::shouldReceive('getAllCurrencies')->once()->andReturn([$currency]);
+
+        // get edit page:
+        $this->call('GET', '/accounts/edit/' . $account->id);
+
+        // assert stuff:
+        $this->assertResponseOk();
+        $this->assertSessionHas('preFilled');
+        $this->assertViewHas('subTitle', 'Edit ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"');
+
+
     }
 
     public function testIndex()
