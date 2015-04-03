@@ -84,10 +84,10 @@ class AccountController extends Controller
      */
     public function edit(Account $account, AccountRepositoryInterface $repository)
     {
-        $what           = Config::get('firefly.shortNamesByFullName')[$account->accountType->type];
-        $subTitle       = 'Edit ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"';
-        $subTitleIcon   = Config::get('firefly.subIconsByIdentifier.' . $what);
-        $openingBalance = $repository->openingBalanceTransaction($account);
+        $what               = Config::get('firefly.shortNamesByFullName')[$account->accountType->type];
+        $subTitle           = 'Edit ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"';
+        $subTitleIcon       = Config::get('firefly.subIconsByIdentifier.' . $what);
+        $openingBalance     = $repository->openingBalanceTransaction($account);
 
         // pre fill some useful values.
 
@@ -134,7 +134,7 @@ class AccountController extends Controller
         $total = Auth::user()->accounts()->accountTypeIn($types)->count();
 
         // last activity:
-        $start = clone Session::get('start');
+        $start = clone Session::get('start', Carbon::now()->startOfMonth());
         $start->subDay();
         $set->each(
             function (Account $account) use ($start) {

@@ -1,4 +1,5 @@
 <?php
+use Carbon\Carbon;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
 use League\FactoryMuffin\Facade as FactoryMuffin;
@@ -121,7 +122,21 @@ class AccountControllerTest extends TestCase
 
     public function testIndex()
     {
-        $this->markTestIncomplete();
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
+        // get currency code:
+        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
+        Amount::shouldReceive('getCurrencyCode')->andReturn($currency->code);
+
+        // put stuff in session:
+        $this->session(['start' => new Carbon, 'end' => new Carbon]);
+
+        // get edit page:
+        $this->call('GET', '/accounts/asset');
+        $this->assertResponseOk();
+        $this->assertViewHas('what', 'asset');
+
     }
 
     public function testShow()
