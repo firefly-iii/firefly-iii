@@ -3,6 +3,7 @@
 use App;
 use Auth;
 use Carbon\Carbon;
+use Crypt;
 use DB;
 use Exception;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
@@ -26,7 +27,6 @@ use Preferences;
 use Response;
 use Session;
 use Steam;
-use Crypt;
 
 /**
  * Class GoogleChartController
@@ -256,12 +256,12 @@ class GoogleChartController extends Controller
                                    ->where('transaction_types.type', 'Withdrawal')
                                    ->groupBy('categories.id')
                                    ->orderBy('sum', 'DESC')
-                                   ->get(['categories.id','categories.encrypted', 'categories.name', \DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
+                                   ->get(['categories.id', 'categories.encrypted', 'categories.name', \DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
 
         foreach ($set as $entry) {
             $isEncrypted = intval($entry->encrypted) == 1 ? true : false;
-            $name = strlen($entry->name) == 0 ? '(no category)' : $entry->name;
-            $name = $isEncrypted ? Crypt::decrypt($name) : $name;
+            $name        = strlen($entry->name) == 0 ? '(no category)' : $entry->name;
+            $name        = $isEncrypted ? Crypt::decrypt($name) : $name;
             $chart->addRow($name, floatval($entry->sum));
         }
 
@@ -291,22 +291,18 @@ class GoogleChartController extends Controller
         } else {
             $start = new Carbon;
         }
-        $end = new Carbon;
-        while ($start <= $end) {
-            $result = $bill->transactionjournals()->before($end)->after($start)->first();
-            if ($result) {
-                /** @var Transaction $tr */
-                foreach ($result->transactions()->get() as $tr) {
-                    if (floatval($tr->amount) > 0) {
-                        $amount = floatval($tr->amount);
-                    }
+
+        $results = $bill->transactionjournals()->after($start)->get();
+        /** @var TransactionJournal $result */
+        foreach ($results as $result) {
+            $amount = 0;
+            /** @var Transaction $tr */
+            foreach ($result->transactions()->get() as $tr) {
+                if (floatval($tr->amount) > 0) {
+                    $amount = floatval($tr->amount);
                 }
-            } else {
-                $amount = 0;
             }
-            unset($result);
-            $chart->addRow(clone $start, $bill->amount_max, $bill->amount_min, $amount);
-            $start = Navigation::addPeriod($start, $bill->repeat_freq, 0);
+            $chart->addRow(clone $result->date, $bill->amount_max, $bill->amount_min, $amount);
         }
 
         $chart->generate();
