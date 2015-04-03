@@ -1,5 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
+use Amount;
 use App;
 use Auth;
 use Carbon\Carbon;
@@ -376,7 +377,7 @@ class GoogleChartController extends Controller
             if ($balance < 0) {
                 // unpaid!
                 $unpaid['amount'] += $balance * -1;
-                $unpaid['items'][] = $creditCard->name . ' (expected on the ' . $date->format('jS') . ')';
+                $unpaid['items'][] = $creditCard->name . ' (expected ' . Amount::format(($balance * -1), false) . ') on the ' . $date->format('jS') . ')';
             }
             if ($balance == 0) {
                 // find a transfer TO the credit card which should account for
@@ -390,7 +391,9 @@ class GoogleChartController extends Controller
                         $journal = $transaction->transactionJournal;
                         if ($journal->transactionType->type == 'Transfer') {
                             $paid['amount'] += floatval($transaction->amount);
-                            $paid['items'][] = $creditCard->name . ' (paid on the ' . $journal->date->format('jS') . ')';
+                            $paid['items'][] = $creditCard->name .
+                                               ' (paid ' . Amount::format((floatval($transaction->amount)), false) .
+                                               ' on the ' . $journal->date->format('jS') . ')';
                         }
                     }
                 }
