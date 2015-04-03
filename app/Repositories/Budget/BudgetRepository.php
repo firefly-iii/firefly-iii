@@ -120,10 +120,12 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function updateLimitAmount(Budget $budget, Carbon $date, $amount)
     {
+        // there should be a budget limit for this startdate:
         /** @var BudgetLimit $limit */
-        $limit = $budget->limitrepetitions()->where('limit_repetitions.startdate', $date)->first(['limit_repetitions.*']);
+        $limit = $budget->budgetlimits()->where('budget_limits.startdate', $date)->first(['budget_limits.*']);
+
         if (!$limit) {
-            // create one!
+            // if not, create one!
             $limit = new BudgetLimit;
             $limit->budget()->associate($budget);
             $limit->startdate   = $date;
@@ -131,6 +133,10 @@ class BudgetRepository implements BudgetRepositoryInterface
             $limit->repeat_freq = 'monthly';
             $limit->repeats     = 0;
             $limit->save();
+
+            // likewise, there should be a limit repetition to match the end date
+            // (which is always the end of the month) but that is caught by an event.
+
         } else {
             if ($amount > 0) {
                 $limit->amount = $amount;

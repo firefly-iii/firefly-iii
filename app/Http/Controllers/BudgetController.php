@@ -22,6 +22,9 @@ use URL;
 class BudgetController extends Controller
 {
 
+    /**
+     *
+     */
     public function __construct()
     {
         View::share('title', 'Budgets');
@@ -32,7 +35,6 @@ class BudgetController extends Controller
      * @param Budget $budget
      *
      * @return \Illuminate\Http\JsonResponse
-     * @throws Exception
      */
     public function amount(Budget $budget, BudgetRepositoryInterface $repository)
     {
