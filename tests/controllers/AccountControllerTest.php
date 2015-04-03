@@ -94,6 +94,15 @@ class AccountControllerTest extends TestCase
         $this->be($account->user);
         $this->assertCount(1, DB::table('accounts')->where('id', $account->id)->whereNull('deleted_at')->get());
 
+        // create a transaction journal that will act as opening balance:
+        $openingBalance = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $repository     = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $repository->shouldReceive('openingBalanceTransaction')->andReturn($openingBalance);
+
+        // create a transaction that will be returned for the opening balance transaction:
+        $openingBalanceTransaction = FactoryMuffin::create('FireflyIII\Models\Transaction');
+        $repository->shouldReceive('getFirstTransaction')->andReturn($openingBalanceTransaction);
+
         // CURRENCY:
         $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
         Amount::shouldReceive('getDefaultCurrency')->once()->andReturn($currency);

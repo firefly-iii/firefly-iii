@@ -3,6 +3,7 @@
 namespace FireflyIII\Repositories\Journal;
 
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\Transaction;
 use Illuminate\Support\Collection;
 
 /**

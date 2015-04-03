@@ -274,4 +274,6 @@ class JournalRepository implements JournalRepositoryInterface
     public function first()
     {
         return Auth::user()->transactionjournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
-    }}
+    }
+
+}

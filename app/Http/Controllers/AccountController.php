@@ -93,8 +93,9 @@ class AccountController extends Controller
 
         // the opening balance is tricky:
         $openingBalanceAmount = null;
+
         if ($openingBalance) {
-            $transaction          = $openingBalance->transactions()->where('account_id', $account->id)->first();
+            $transaction          = $repository->getFirstTransaction($openingBalance, $account);
             $openingBalanceAmount = $transaction->amount;
         }
 

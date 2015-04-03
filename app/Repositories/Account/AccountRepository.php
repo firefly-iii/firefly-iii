@@ -49,6 +49,18 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @param TransactionJournal $journal
+     * @param Account            $account
+     *
+     * @return Transaction
+     */
+    public function getFirstTransaction(TransactionJournal $journal, Account $account)
+    {
+
+        return $journal->transactions()->where('account_id', $account->id)->first();
+    }
+
+    /**
      * @param Preference $preference
      *
      * @return Collection
@@ -170,7 +182,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function leftOnAccount(Account $account)
     {
-        $balance = \Steam::balance($account,null,true);
+        $balance = \Steam::balance($account, null, true);
         /** @var PiggyBank $p */
         foreach ($account->piggybanks()->get() as $p) {
             $balance -= $p->currentRelevantRep()->currentamount;
