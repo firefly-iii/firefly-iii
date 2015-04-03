@@ -146,6 +146,11 @@
     ga('create', '<?php echo env('ANALYTICS_ID', 'XXX-XX-X'); ?>', 'auto');
     ga('send', 'pageview');
 
+    // send an event if relevant:
+    @if(Session::has('gaEventCategory') && Session::has('gaEventAction'))
+        ga('send','event','{{Session::get('gaEventCategory')}}','{{Session::get('gaEventAction')}}');
+    @endif
+
 </script>
 </body>
 </html>
