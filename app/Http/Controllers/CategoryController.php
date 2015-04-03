@@ -185,17 +185,11 @@ class CategoryController extends Controller
             return Redirect::route('categories.create')->withInput();
         }
 
-<<<<<<< HEAD
         if (intval(Input::get('create_another')) === 1) {
             return Redirect::route('categories.create');
         }
 
         return Redirect::route('categories.index');
-=======
-        // redirect to previous URL.
-        return Redirect::to(Session::get('categories.create.url'));
->>>>>>> release/3.3.6
-
     }
 
 
