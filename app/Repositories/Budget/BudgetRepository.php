@@ -17,6 +17,31 @@ class BudgetRepository implements BudgetRepositoryInterface
 {
 
     /**
+     * @return void
+     */
+    public function cleanupBudgets()
+    {
+        $limits = BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')->get(['budget_limits.*']);
+
+        // loop budget limits:
+        $found = [];
+        /** @var BudgetLimit $limit */
+        foreach ($limits as $limit) {
+            $key = $limit->budget_id . '-' . $limit->startdate;
+            if (isset($found[$key])) {
+                $limit->delete();
+            } else {
+                $found[$key] = true;
+            }
+            unset($key);
+        }
+
+        // delete limits with amount 0:
+        BudgetLimit::where('amount',0)->delete();
+
+    }
+
+    /**
      * @param Budget $budget
      *
      * @return boolean
@@ -43,9 +68,9 @@ class BudgetRepository implements BudgetRepositoryInterface
 
 
         $setQuery   = $budget->transactionJournals()->withRelevantData()->take($take)->offset($offset)
-            ->orderBy('transaction_journals.date', 'DESC')
-            ->orderBy('transaction_journals.order','ASC')
-            ->orderBy('transaction_journals.id','DESC');
+                             ->orderBy('transaction_journals.date', 'DESC')
+                             ->orderBy('transaction_journals.order', 'ASC')
+                             ->orderBy('transaction_journals.id', 'DESC');
         $countQuery = $budget->transactionJournals();
 
 
@@ -57,6 +82,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         $set   = $setQuery->get(['transaction_journals.*']);
         $count = $countQuery->count();
+
         return new LengthAwarePaginator($set, $count, $take, $offset);
     }
 
@@ -103,7 +129,8 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function update(Budget $budget, array $data)
     {
         // update the account:
-        $budget->name = $data['name'];
+        $budget->name   = $data['name'];
+        $budget->active = $data['active'];
         $budget->save();
 
         return $budget;
@@ -118,10 +145,12 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function updateLimitAmount(Budget $budget, Carbon $date, $amount)
     {
+        // there should be a budget limit for this startdate:
         /** @var BudgetLimit $limit */
-        $limit = $budget->limitrepetitions()->where('limit_repetitions.startdate', $date)->first(['limit_repetitions.*']);
+        $limit = $budget->budgetlimits()->where('budget_limits.startdate', $date)->first(['budget_limits.*']);
+
         if (!$limit) {
-            // create one!
+            // if not, create one!
             $limit = new BudgetLimit;
             $limit->budget()->associate($budget);
             $limit->startdate   = $date;
@@ -129,6 +158,10 @@ class BudgetRepository implements BudgetRepositoryInterface
             $limit->repeat_freq = 'monthly';
             $limit->repeats     = 0;
             $limit->save();
+
+            // likewise, there should be a limit repetition to match the end date
+            // (which is always the end of the month) but that is caught by an event.
+
         } else {
             if ($amount > 0) {
                 $limit->amount = $amount;

@@ -1,9 +1,10 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Auth;
-use Carbon\Carbon;
 use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\BillFormRequest;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -22,10 +23,57 @@ use View;
 class BillController extends Controller
 {
 
+    /**
+     *
+     */
     public function __construct()
     {
         View::share('title', 'Bills');
         View::share('mainTitleIcon', 'fa-calendar-o');
+    }
+
+    /**
+     * @param Bill $bill
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function add(Bill $bill)
+    {
+        $matches     = explode(',', $bill->match);
+        $description = [];
+        $expense     = null;
+
+        // get users expense accounts:
+        $type     = AccountType::where('type', 'Expense account')->first();
+        $accounts = Auth::user()->accounts()->where('account_type_id', $type->id)->get();
+
+        foreach ($matches as $match) {
+            $match = strtolower($match);
+            // find expense account for each word if not found already:
+            if (is_null($expense)) {
+                /** @var Account $account */
+                foreach ($accounts as $account) {
+                    $name = strtolower($account->name);
+                    if (!(strpos($name, $match) === false)) {
+                        $expense = $account;
+                        break;
+                    }
+                }
+
+
+            }
+            if (is_null($expense)) {
+                $description[] = $match;
+            }
+        }
+        $parameters = [
+            'description'     => ucfirst(join(' ', $description)),
+            'expense_account' => is_null($expense) ? '' : $expense->name,
+            'amount'          => round(($bill->amount_min + $bill->amount_max), 2),
+        ];
+        Session::put('preFilled', $parameters);
+
+        return Redirect::to(route('transactions.create', 'withdrawal'));
     }
 
     /**
@@ -139,11 +187,10 @@ class BillController extends Controller
     public function show(Bill $bill, BillRepositoryInterface $repository)
     {
         $journals                = $bill->transactionjournals()->withRelevantData()
-            ->orderBy('transaction_journals.date', 'DESC')
-            ->orderBy('transaction_journals.order','ASC')
-            ->orderBy('transaction_journals.id','DESC')
-
-            ->get();
+                                        ->orderBy('transaction_journals.date', 'DESC')
+                                        ->orderBy('transaction_journals.order', 'ASC')
+                                        ->orderBy('transaction_journals.id', 'DESC')
+                                        ->get();
         $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill);
         $hideBill                = true;
 
@@ -156,22 +203,8 @@ class BillController extends Controller
      */
     public function store(BillFormRequest $request, BillRepositoryInterface $repository)
     {
-
-        $billData = [
-            'name'               => $request->get('name'),
-            'match'              => $request->get('match'),
-            'amount_min'         => floatval($request->get('amount_min')),
-            'amount_currency_id' => floatval($request->get('amount_currency_id')),
-            'amount_max'         => floatval($request->get('amount_max')),
-            'date'               => new Carbon($request->get('date')),
-            'user'               => Auth::user()->id,
-            'repeat_freq'        => $request->get('repeat_freq'),
-            'skip'               => intval($request->get('skip')),
-            'automatch'          => intval($request->get('automatch')) === 1,
-            'active'             => intval($request->get('active')) === 1,
-        ];
-
-        $bill = $repository->store($billData);
+        $billData = $request->getBillData();
+        $bill     = $repository->store($billData);
         Session::flash('success', 'Bill "' . e($bill->name) . '" stored.');
 
         if (intval(Input::get('create_another')) === 1) {
@@ -189,21 +222,8 @@ class BillController extends Controller
      */
     public function update(Bill $bill, BillFormRequest $request, BillRepositoryInterface $repository)
     {
-        $billData = [
-            'name'               => $request->get('name'),
-            'match'              => $request->get('match'),
-            'amount_min'         => floatval($request->get('amount_min')),
-            'amount_currency_id' => floatval($request->get('amount_currency_id')),
-            'amount_max'         => floatval($request->get('amount_max')),
-            'date'               => new Carbon($request->get('date')),
-            'user'               => Auth::user()->id,
-            'repeat_freq'        => $request->get('repeat_freq'),
-            'skip'               => intval($request->get('skip')),
-            'automatch'          => intval($request->get('automatch')) === 1,
-            'active'             => intval($request->get('active')) === 1,
-        ];
-
-        $bill = $repository->update($bill, $billData);
+        $billData = $request->getBillData();
+        $bill     = $repository->update($bill, $billData);
 
         if (intval(Input::get('return_to_edit')) === 1) {
             return Redirect::route('bills.edit', $bill->id);

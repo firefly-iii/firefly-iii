@@ -2,6 +2,7 @@
 
 namespace FireflyIII\Repositories\Journal;
 
+use App;
 use Auth;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -11,6 +12,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class JournalRepository
@@ -19,6 +21,16 @@ use Illuminate\Support\Collection;
  */
 class JournalRepository implements JournalRepositoryInterface
 {
+
+    /**
+     * Get users first transaction journal
+     *
+     * @return TransactionJournal
+     */
+    public function first()
+    {
+        return Auth::user()->transactionjournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
+    }
 
     /**
      *
@@ -139,41 +151,7 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         // store accounts (depends on type)
-        switch ($transactionType->type) {
-            case 'Withdrawal':
-
-                $from = Account::find($data['account_id']);
-
-                if (strlen($data['expense_account']) > 0) {
-                    $toType = AccountType::where('type', 'Expense account')->first();
-                    $to     = Account::firstOrCreate(
-                        ['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => $data['expense_account'], 'active' => 1]
-                    );
-                } else {
-                    $toType = AccountType::where('type', 'Cash account')->first();
-                    $to     = Account::firstOrCreate(['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => 'Cash account', 'active' => 1]);
-                }
-                break;
-
-            case 'Deposit':
-                $to = Account::find($data['account_id']);
-
-                if (strlen($data['revenue_account']) > 0) {
-                    $fromType = AccountType::where('type', 'Revenue account')->first();
-                    $from     = Account::firstOrCreate(
-                        ['user_id' => $data['user'], 'account_type_id' => $fromType->id, 'name' => $data['revenue_account'], 'active' => 1]
-                    );
-                } else {
-                    $toType = AccountType::where('type', 'Cash account')->first();
-                    $from   = Account::firstOrCreate(['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => 'Cash account', 'active' => 1]);
-                }
-
-                break;
-            case 'Transfer':
-                $from = Account::find($data['account_from_id']);
-                $to   = Account::find($data['account_to_id']);
-                break;
-        }
+        list($from, $to) = $this->storeAccounts($transactionType, $data);
 
         // store accompanying transactions.
         Transaction::create( // first transaction.
@@ -197,7 +175,6 @@ class JournalRepository implements JournalRepositoryInterface
 
 
     }
-
 
     /**
      * @param TransactionJournal $journal
@@ -228,41 +205,7 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         // store accounts (depends on type)
-        switch ($journal->transactionType->type) {
-            case 'Withdrawal':
-
-                $from = Account::find($data['account_id']);
-
-                if (strlen($data['expense_account']) > 0) {
-                    $toType = AccountType::where('type', 'Expense account')->first();
-                    $to     = Account::firstOrCreate(
-                        ['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => $data['expense_account'], 'active' => 1]
-                    );
-                } else {
-                    $toType = AccountType::where('type', 'Cash account')->first();
-                    $to     = Account::firstOrCreate(['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => 'Cash account', 'active' => 1]);
-                }
-                break;
-
-            case 'Deposit':
-                $to = Account::find($data['account_id']);
-
-                if (strlen($data['revenue_account']) > 0) {
-                    $fromType = AccountType::where('type', 'Revenue account')->first();
-                    $from     = Account::firstOrCreate(
-                        ['user_id' => $data['user'], 'account_type_id' => $fromType->id, 'name' => $data['revenue_account'], 'active' => 1]
-                    );
-                } else {
-                    $toType = AccountType::where('type', 'Cash account')->first();
-                    $from   = Account::firstOrCreate(['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => 'Cash account', 'active' => 1]);
-                }
-
-                break;
-            case 'Transfer':
-                $from = Account::find($data['account_from_id']);
-                $to   = Account::find($data['account_to_id']);
-                break;
-        }
+        list($from, $to) = $this->storeAccounts($journal->transactionType, $data);
 
         // update the from and to transaction.
         /** @var Transaction $transaction */
@@ -284,6 +227,67 @@ class JournalRepository implements JournalRepositoryInterface
         $journal->save();
 
         return $journal;
+    }
+
+    /**
+     * @param TransactionType $type
+     * @param array           $data
+     *
+     * @return array
+     */
+    protected function storeAccounts(TransactionType $type, array $data)
+    {
+        $from = null;
+        $to   = null;
+        switch ($type->type) {
+            case 'Withdrawal':
+
+                $from = Account::find($data['account_id']);
+
+                if (strlen($data['expense_account']) > 0) {
+                    $toType = AccountType::where('type', 'Expense account')->first();
+                    $to     = Account::firstOrCreateEncrypted(
+                        ['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => $data['expense_account'], 'active' => 1]
+                    );
+                } else {
+                    $toType = AccountType::where('type', 'Cash account')->first();
+                    $to     = Account::firstOrCreateEncrypted(
+                        ['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => 'Cash account', 'active' => 1]
+                    );
+                }
+                break;
+
+            case 'Deposit':
+                $to = Account::find($data['account_id']);
+
+                if (strlen($data['revenue_account']) > 0) {
+                    $fromType = AccountType::where('type', 'Revenue account')->first();
+                    $from     = Account::firstOrCreateEncrypted(
+                        ['user_id' => $data['user'], 'account_type_id' => $fromType->id, 'name' => $data['revenue_account'], 'active' => 1]
+                    );
+                } else {
+                    $toType = AccountType::where('type', 'Cash account')->first();
+                    $from   = Account::firstOrCreateEncrypted(
+                        ['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => 'Cash account', 'active' => 1]
+                    );
+                }
+
+                break;
+            case 'Transfer':
+                $from = Account::find($data['account_from_id']);
+                $to   = Account::find($data['account_to_id']);
+                break;
+        }
+        if (is_null($to->id)) {
+            Log::error('"to"-account is null, so we cannot continue!');
+            App::abort(500, '"to"-account is null, so we cannot continue!');
+        }
+        if (is_null($from->id)) {
+            Log::error('"from"-account is null, so we cannot continue!');
+            App::abort(500, '"from"-account is null, so we cannot continue!');
+        }
+
+        return [$from, $to];
     }
 
 }

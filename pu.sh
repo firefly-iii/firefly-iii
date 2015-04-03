@@ -1,10 +1,13 @@
 #!/bin/bash
 
-# create DB if not exists
+# backup .env file.
+cp .env .env.backup
 
-if [ ! -f tests/database/db.sqlite ]; then
-    touch tests/database/db.sqlite
-    php artisan migrate --seed
-fi
+# set testing environment
+cp .env.testing .env
 
+# test!
 phpunit --verbose
+
+# restore .env file
+mv .env.backup .env

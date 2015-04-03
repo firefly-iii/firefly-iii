@@ -4,10 +4,12 @@ namespace FireflyIII\Helpers\Report;
 
 use Auth;
 use Carbon\Carbon;
+use Crypt;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Steam;
@@ -87,9 +89,9 @@ class ReportQuery implements ReportQueryInterface
                                  ->whereNull('budget_transaction_journal.budget_id')->whereNull('transaction_journals.deleted_at')
                                  ->whereNull('otherJournals.deleted_at')
                                  ->where('transactions.account_id', $account->id)
-                                ->orderBy('transaction_journals.date', 'DESC')
-                                ->orderBy('transaction_journals.order','ASC')
-                                ->orderBy('transaction_journals.id','DESC')
+                                 ->orderBy('transaction_journals.date', 'DESC')
+                                 ->orderBy('transaction_journals.order', 'ASC')
+                                 ->orderBy('transaction_journals.id', 'DESC')
                                  ->whereNotNull('transaction_group_transaction_journal.transaction_group_id')
                                  ->get(
                                      [
@@ -174,26 +176,9 @@ class ReportQuery implements ReportQueryInterface
      */
     public function getBudgetSummary(Account $account, Carbon $start, Carbon $end)
     {
-        $set = TransactionJournal::
-        leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
-                                 ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                 ->leftJoin(
-                                     'transactions', function (JoinClause $join) {
-                                     $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
-                                 }
-                                 )
-                                 ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                                 ->before($end)
-                                 ->after($start)
-                                 ->where('accounts.id', $account->id)
-                                 ->where('transaction_journals.user_id', Auth::user()->id)
-                                 ->where('transaction_types.type', 'Withdrawal')
-                                 ->groupBy('budgets.id')
-                                 ->orderBy('budgets.name', 'ASC')
-                                 ->get(['budgets.id', 'budgets.name', DB::Raw('SUM(`transactions`.`amount`) as `amount`')]);
+        $query = $this->queryJournalsNoBudget($account, $start, $end);
 
-        return $set;
+        return $query->get(['budgets.id', 'budgets.name', DB::Raw('SUM(`transactions`.`amount`) as `amount`')]);
 
     }
 
@@ -209,26 +194,9 @@ class ReportQuery implements ReportQueryInterface
      */
     public function getTransactionsWithoutBudget(Account $account, Carbon $start, Carbon $end)
     {
-        $set = TransactionJournal::
-        leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
-                                 ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                 ->leftJoin(
-                                     'transactions', function (JoinClause $join) {
-                                     $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
-                                 }
-                                 )
-                                 ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                                 ->before($end)
-                                 ->after($start)
-                                 ->where('accounts.id', $account->id)
-                                 ->where('transaction_journals.user_id', Auth::user()->id)
-                                 ->where('transaction_types.type', 'Withdrawal')
-                                 ->whereNull('budgets.id')
-                                 ->orderBy('transaction_journals.date', 'ASC')
-                                 ->get(['budgets.name', 'transactions.amount', 'transaction_journals.*']);
+        $query = $this->queryJournalsNoBudget($account, $start, $end);
 
-        return $set;
+        return $query->get(['budgets.name', 'transactions.amount', 'transaction_journals.*']);
     }
 
     /**
@@ -244,30 +212,7 @@ class ReportQuery implements ReportQueryInterface
      */
     public function incomeByPeriod(Carbon $start, Carbon $end, $showSharedReports = false)
     {
-        $query = TransactionJournal::
-        leftJoin(
-            'transactions as t_from', function (JoinClause $join) {
-            $join->on('t_from.transaction_journal_id', '=', 'transaction_journals.id')->where('t_from.amount', '<', 0);
-        }
-        )
-                                   ->leftJoin('accounts as ac_from', 't_from.account_id', '=', 'ac_from.id')
-                                   ->leftJoin(
-                                       'account_meta as acm_from', function (JoinClause $join) {
-                                       $join->on('ac_from.id', '=', 'acm_from.account_id')->where('acm_from.name', '=', 'accountRole');
-                                   }
-                                   )
-                                   ->leftJoin(
-                                       'transactions as t_to', function (JoinClause $join) {
-                                       $join->on('t_to.transaction_journal_id', '=', 'transaction_journals.id')->where('t_to.amount', '>', 0);
-                                   }
-                                   )
-                                   ->leftJoin('accounts as ac_to', 't_to.account_id', '=', 'ac_to.id')
-                                   ->leftJoin(
-                                       'account_meta as acm_to', function (JoinClause $join) {
-                                       $join->on('ac_to.id', '=', 'acm_to.account_id')->where('acm_to.name', '=', 'accountRole');
-                                   }
-                                   )
-                                   ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
+        $query = $this->queryJournalsWithTransactions($start, $end);
         if ($showSharedReports === false) {
             // only get deposits not to a shared account
             // and transfers to a shared account.
@@ -291,11 +236,10 @@ class ReportQuery implements ReportQueryInterface
             // any deposit is fine.
             $query->where('transaction_types.type', 'Deposit');
         }
-        $query->before($end)->after($start)
-              ->where('transaction_journals.user_id', Auth::user()->id)
-              ->groupBy('t_from.account_id')->orderBy('transaction_journals.date');
+        $query->groupBy('t_from.account_id')->orderBy('transaction_journals.date');
 
-        return $query->get(
+        // get everything, decrypt and return
+        $data = $query->get(
             ['transaction_journals.id',
              'transaction_journals.description',
              'transaction_journals.encrypted',
@@ -303,8 +247,19 @@ class ReportQuery implements ReportQueryInterface
              DB::Raw('SUM(`t_to`.`amount`) as `amount`'),
              'transaction_journals.date',
              't_from.account_id as account_id',
-             'ac_from.name as name']
+             'ac_from.name as name',
+             'ac_from.encrypted as account_encrypted'
+            ]
         );
+
+        $data->each(
+            function (Model $object) {
+//                $object->description = intval($object->encrypted);
+                $object->name = intval($object->account_encrypted) == 1 ? Crypt::decrypt($object->name) : $object->name;
+            }
+        );
+
+        return $data;
     }
 
     /**
@@ -382,7 +337,15 @@ class ReportQuery implements ReportQueryInterface
               ->groupBy('categories.id')
               ->orderBy('amount');
 
-        return $query->get(['categories.id', 'categories.name', DB::Raw('SUM(`transactions`.`amount`) AS `amount`')]);
+        $data = $query->get(['categories.id', 'categories.encrypted', 'categories.name', DB::Raw('SUM(`transactions`.`amount`) AS `amount`')]);
+        // decrypt data:
+        $data->each(
+            function (Model $object) {
+                $object->name = intval($object->encrypted) == 1 ? Crypt::decrypt($object->name) : $object->name;
+            }
+        );
+
+        return $data;
 
     }
 
@@ -400,29 +363,7 @@ class ReportQuery implements ReportQueryInterface
      */
     public function journalsByExpenseAccount(Carbon $start, Carbon $end, $showSharedReports = false)
     {
-        $query = TransactionJournal::leftJoin(
-            'transactions as t_from', function (JoinClause $join) {
-            $join->on('t_from.transaction_journal_id', '=', 'transaction_journals.id')->where('t_from.amount', '<', 0);
-        }
-        )->leftJoin('accounts as ac_from', 't_from.account_id', '=', 'ac_from.id')
-                                   ->leftJoin(
-                                       'account_meta as acm_from', function (JoinClause $join) {
-                                       $join->on('ac_from.id', '=', 'acm_from.account_id')->where('acm_from.name', '=', 'accountRole');
-                                   }
-                                   )
-                                   ->leftJoin(
-                                       'transactions as t_to', function (JoinClause $join) {
-                                       $join->on('t_to.transaction_journal_id', '=', 'transaction_journals.id')->where('t_to.amount', '>', 0);
-                                   }
-                                   )
-                                   ->leftJoin('accounts as ac_to', 't_to.account_id', '=', 'ac_to.id')
-                                   ->leftJoin(
-                                       'account_meta as acm_to', function (JoinClause $join) {
-                                       $join->on('ac_to.id', '=', 'acm_to.account_id')->where('acm_to.name', '=', 'accountRole');
-                                   }
-                                   )
-                                   ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
-
+        $query = $this->queryJournalsWithTransactions($start, $end);
         if ($showSharedReports === false) {
             // get all withdrawals not from a shared accounts
             // and all transfers to a shared account
@@ -446,13 +387,21 @@ class ReportQuery implements ReportQueryInterface
             // any withdrawal goes:
             $query->where('transaction_types.type', 'Withdrawal');
         }
-        $query->before($end)
-              ->after($start)
+        $query->before($end)->after($start)
               ->where('transaction_journals.user_id', Auth::user()->id)
               ->groupBy('t_to.account_id')
               ->orderBy('amount', 'DESC');
 
-        return $query->get(['t_to.account_id as id', 'ac_to.name as name', DB::Raw('SUM(t_to.amount) as `amount`')]);
+        $data = $query->get(['t_to.account_id as id', 'ac_to.name as name', 'ac_to.encrypted', DB::Raw('SUM(t_to.amount) as `amount`')]);
+
+        // decrypt
+        $data->each(
+            function (Model $object) {
+                $object->name = intval($object->encrypted) == 1 ? Crypt::decrypt($object->name) : $object->name;
+            }
+        );
+
+        return $data;
     }
 
     /**
@@ -466,30 +415,7 @@ class ReportQuery implements ReportQueryInterface
      */
     public function journalsByRevenueAccount(Carbon $start, Carbon $end, $showSharedReports = false)
     {
-        $query = TransactionJournal::
-        leftJoin(
-            'transactions as t_from', function (JoinClause $join) {
-            $join->on('t_from.transaction_journal_id', '=', 'transaction_journals.id')->where('t_from.amount', '<', 0);
-        }
-        )
-                                   ->leftJoin('accounts as ac_from', 't_from.account_id', '=', 'ac_from.id')
-                                   ->leftJoin(
-                                       'account_meta as acm_from', function (JoinClause $join) {
-                                       $join->on('ac_from.id', '=', 'acm_from.account_id')->where('acm_from.name', '=', 'accountRole');
-                                   }
-                                   )
-                                   ->leftJoin(
-                                       'transactions as t_to', function (JoinClause $join) {
-                                       $join->on('t_to.transaction_journal_id', '=', 'transaction_journals.id')->where('t_to.amount', '>', 0);
-                                   }
-                                   )
-                                   ->leftJoin('accounts as ac_to', 't_to.account_id', '=', 'ac_to.id')
-                                   ->leftJoin(
-                                       'account_meta as acm_to', function (JoinClause $join) {
-                                       $join->on('ac_to.id', '=', 'acm_to.account_id')->where('acm_to.name', '=', 'accountRole');
-                                   }
-                                   )
-                                   ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
+        $query = $this->queryJournalsWithTransactions($start, $end);
         if ($showSharedReports === false) {
 
             // show queries where transfer type is deposit, and its not to a shared account
@@ -514,11 +440,20 @@ class ReportQuery implements ReportQueryInterface
             // any deposit goes:
             $query->where('transaction_types.type', 'Deposit');
         }
-        $query->before($end)->after($start)
-              ->where('transaction_journals.user_id', Auth::user()->id)
-              ->groupBy('t_from.account_id')->orderBy('amount');
 
-        return $query->get(['t_from.account_id as account_id', 'ac_from.name as name', DB::Raw('SUM(t_from.amount) as `amount`')]);
+        $query->groupBy('t_from.account_id')->orderBy('amount');
+
+        $data = $query->get(
+            ['t_from.account_id as account_id', 'ac_from.name as name', 'ac_from.encrypted as encrypted', DB::Raw('SUM(t_from.amount) as `amount`')]
+        );
+        // decrypt
+        $data->each(
+            function (Model $object) {
+                $object->name = intval($object->encrypted) == 1 ? Crypt::decrypt($object->name) : $object->name;
+            }
+        );
+
+        return $data;
     }
 
     /**
@@ -602,6 +537,76 @@ class ReportQuery implements ReportQueryInterface
                                          DB::Raw('SUM(`transactions`.`amount`) * -1 AS `amount`')
                                      ]
                                  );
+    }
+
+    /**
+     *
+     * This query will get all transaction journals and budget information for a specified account
+     * in a certain date range, where the transaction journal does not have a budget.
+     * There is no get() specified, this is up to the method itself.
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return Builder
+     */
+    protected function queryJournalsNoBudget(Account $account, Carbon $start, Carbon $end)
+    {
+        return TransactionJournal::
+        leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
+                                 ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                 ->leftJoin(
+                                     'transactions', function (JoinClause $join) {
+                                     $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
+                                 }
+                                 )
+                                 ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                                 ->before($end)
+                                 ->after($start)
+                                 ->where('accounts.id', $account->id)
+                                 ->where('transaction_journals.user_id', Auth::user()->id)
+                                 ->where('transaction_types.type', 'Withdrawal')
+                                 ->groupBy('budgets.id')
+                                 ->orderBy('budgets.name', 'ASC');
+    }
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Builder
+     */
+    protected function queryJournalsWithTransactions(Carbon $start, Carbon $end)
+    {
+        $query = TransactionJournal::
+        leftJoin(
+            'transactions as t_from', function (JoinClause $join) {
+            $join->on('t_from.transaction_journal_id', '=', 'transaction_journals.id')->where('t_from.amount', '<', 0);
+        }
+        )
+                                   ->leftJoin('accounts as ac_from', 't_from.account_id', '=', 'ac_from.id')
+                                   ->leftJoin(
+                                       'account_meta as acm_from', function (JoinClause $join) {
+                                       $join->on('ac_from.id', '=', 'acm_from.account_id')->where('acm_from.name', '=', 'accountRole');
+                                   }
+                                   )
+                                   ->leftJoin(
+                                       'transactions as t_to', function (JoinClause $join) {
+                                       $join->on('t_to.transaction_journal_id', '=', 'transaction_journals.id')->where('t_to.amount', '>', 0);
+                                   }
+                                   )
+                                   ->leftJoin('accounts as ac_to', 't_to.account_id', '=', 'ac_to.id')
+                                   ->leftJoin(
+                                       'account_meta as acm_to', function (JoinClause $join) {
+                                       $join->on('ac_to.id', '=', 'acm_to.account_id')->where('acm_to.name', '=', 'accountRole');
+                                   }
+                                   )
+                                   ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
+        $query->before($end)->after($start)->where('transaction_journals.user_id', Auth::user()->id);
+
+        return $query;
     }
 
 }

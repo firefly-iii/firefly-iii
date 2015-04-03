@@ -22,11 +22,7 @@
                     @foreach($income as $entry)
                         <tr>
                             <td>
-                                @if($entry->encrypted === true)
-                                    <a href="{{route('transactions.show',$entry->id)}}" title="{{{Crypt::decrypt($entry->description)}}}">{{{Crypt::decrypt($entry->description)}}}</a>
-                                @else
-                                    <a href="{{route('transactions.show',$entry->id)}}" title="{{{$entry->description}}}">{{{$entry->description}}}</a>
-                                @endif
+                                <a href="{{route('transactions.show',$entry->id)}}" title="{{{$entry->description}}}">{{{$entry->description}}}</a>
                             </td>
                             <td>
                                 <?php $tableSum += floatval($entry->amount);?>
@@ -67,12 +63,14 @@
             <table class="table table-bordered">
                 <?php $sum = 0;?>
                 @foreach($expenses as $id => $expense)
-                    <?php $sum += floatval($expense['amount']);?>
+                    <?php
+                        $sum += floatval($expense['amount']);
+                        ?>
                     <tr>
                         @if($id > 0)
-                        <td><a href="{{route('accounts.show',$id)}}">{{{$expense['name']}}}</a></td>
+                            <td><a href="{{route('accounts.show',$id)}}">{{{$expense['name']}}}</a></td>
                         @else
-                        <td><em>{{{$expense['name']}}}</em></td>
+                            <td><em>{{{$expense['name']}}}</em></td>
                         @endif
                         <td>{!! Amount::format($expense['amount']) !!}</td>
                     </tr>
@@ -233,20 +231,11 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-lg-6 col-md-6 col-sm-12">
+    <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-sort-amount-asc fa-fw"></i>
                 Piggy banks
-            </div>
-            <div class="panel-body">Body</div>
-        </div>
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-rotate-left fa-fw"></i>
-                Repeated expenses
             </div>
             <div class="panel-body">Body</div>
         </div>

@@ -3,6 +3,7 @@
 namespace FireflyIII\Repositories\Journal;
 
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\Transaction;
 use Illuminate\Support\Collection;
 
 /**
@@ -44,4 +45,10 @@ interface JournalRepositoryInterface
      * @return mixed
      */
     public function update(TransactionJournal $journal, array $data);
+
+    /**
+     * Get users first transaction journal
+     * @return TransactionJournal
+     */
+    public function first();
 }

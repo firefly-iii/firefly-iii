@@ -11,7 +11,8 @@ use FireflyIII\Models\TransactionJournal;
  *
  * @package FireflyIII\Repositories\Bill
  */
-interface BillRepositoryInterface {
+interface BillRepositoryInterface
+{
 
     /**
      * @param Bill $bill
@@ -25,7 +26,7 @@ interface BillRepositoryInterface {
      * and returns date ranges that fall within the given range; those ranges are the bills expected. When a bill is due on the 14th of the month and
      * you give 1st and the 31st of that month as argument, you'll get one response, matching the range of your bill.
      *
-     * @param Bill $bill
+     * @param Bill   $bill
      * @param Carbon $start
      * @param Carbon $end
      *

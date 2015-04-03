@@ -20,7 +20,8 @@ return [
     'accountRoles'             => [
         'defaultAsset' => 'Default asset account',
         'sharedAsset'  => 'Shared asset account',
-        'savingAsset'  => 'Savings account'
+        'savingAsset'  => 'Savings account',
+        'ccAsset'  => 'Credit card',
     ],
 
     'range_to_text'            => [
@@ -30,6 +31,9 @@ return [
         '3M'     => 'three months',
         '6M'     => 'half year',
         'custom' => '(custom)'
+    ],
+    'ccTypes' => [
+        'monthlyFull' => 'Full payment every month'
     ],
     'range_to_name'            => [
         '1D' => 'one day',

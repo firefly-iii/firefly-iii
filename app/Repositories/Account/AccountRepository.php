@@ -49,6 +49,18 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @param TransactionJournal $journal
+     * @param Account            $account
+     *
+     * @return Transaction
+     */
+    public function getFirstTransaction(TransactionJournal $journal, Account $account)
+    {
+
+        return $journal->transactions()->where('account_id', $account->id)->first();
+    }
+
+    /**
      * @param Preference $preference
      *
      * @return Collection
@@ -106,9 +118,9 @@ class AccountRepository implements AccountRepositoryInterface
                       ->withRelevantData()
                       ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                       ->where('transactions.account_id', $account->id)
-            ->orderBy('transaction_journals.date', 'DESC')
-            ->orderBy('transaction_journals.order','ASC')
-            ->orderBy('transaction_journals.id','DESC');
+                      ->orderBy('transaction_journals.date', 'DESC')
+                      ->orderBy('transaction_journals.order', 'ASC')
+                      ->orderBy('transaction_journals.id', 'DESC');
 
         $query->before(Session::get('end', Carbon::now()->endOfMonth()));
         $query->after(Session::get('start', Carbon::now()->startOfMonth()));
@@ -117,7 +129,6 @@ class AccountRepository implements AccountRepositoryInterface
         $paginator = new LengthAwarePaginator($set, $count, 50, $page);
 
         return $paginator;
-
 
 
     }
@@ -134,8 +145,8 @@ class AccountRepository implements AccountRepositoryInterface
                         ->where('account_meta.name', 'accountRole')
                         ->where('account_meta.data', '"savingAsset"')
                         ->get(['accounts.*']);
-        $start    = clone Session::get('start');
-        $end      = clone Session::get('end');
+        $start    = clone Session::get('start', new Carbon);
+        $end      = clone Session::get('end', new Carbon);
 
         $accounts->each(
             function (Account $account) use ($start, $end) {
@@ -171,7 +182,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function leftOnAccount(Account $account)
     {
-        $balance = \Steam::balance($account);
+        $balance = \Steam::balance($account, null, true);
         /** @var PiggyBank $p */
         foreach ($account->piggybanks()->get() as $p) {
             $balance -= $p->currentRelevantRep()->currentamount;
@@ -209,10 +220,11 @@ class AccountRepository implements AccountRepositoryInterface
         if ($data['openingBalance'] != 0) {
             $type         = $data['openingBalance'] < 0 ? 'expense' : 'revenue';
             $opposingData = [
-                'user'        => $data['user'],
-                'accountType' => $type,
-                'name'        => $data['name'] . ' initial balance',
-                'active'      => false,
+                'user'            => $data['user'],
+                'accountType'     => $type,
+                'virtual_balance' => $data['virtualBalance'],
+                'name'            => $data['name'] . ' initial balance',
+                'active'          => false,
             ];
             $opposing     = $this->storeAccount($opposingData);
             $this->storeInitialBalance($newAccount, $opposing, $data);
@@ -230,8 +242,9 @@ class AccountRepository implements AccountRepositoryInterface
     public function update(Account $account, array $data)
     {
         // update the account:
-        $account->name   = $data['name'];
-        $account->active = $data['active'] == '1' ? true : false;
+        $account->name            = $data['name'];
+        $account->active          = $data['active'] == '1' ? true : false;
+        $account->virtual_balance = $data['virtualBalance'];
         $account->save();
 
         // update meta data:
@@ -308,17 +321,21 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function storeMetadata(Account $account, array $data)
     {
-        $metaData = new AccountMeta(
-            [
-                'account_id' => $account->id,
-                'name'       => 'accountRole',
-                'data'       => $data['accountRole']
-            ]
-        );
-        if (!$metaData->isValid()) {
-            App::abort(500);
+        $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType'];
+        foreach ($validFields as $field) {
+            if (isset($data[$field])) {
+                $metaData = new AccountMeta(
+                    [
+                        'account_id' => $account->id,
+                        'name'       => $field,
+                        'data'       => $data[$field]
+                    ]
+                );
+                $metaData->save();
+            }
+
+
         }
-        $metaData->save();
     }
 
     /**
@@ -399,30 +416,28 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function updateMetadata(Account $account, array $data)
     {
-        $metaEntries = $account->accountMeta()->get();
+        $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType'];
         $updated     = false;
 
-        /** @var AccountMeta $entry */
-        foreach ($metaEntries as $entry) {
-            if ($entry->name == 'accountRole') {
-                $entry->data = $data['accountRole'];
-                $updated     = true;
+        foreach ($validFields as $field) {
+            $entry = $account->accountMeta()->where('name', $field)->first();
+
+            // update if new data is present:
+            if ($entry && isset($data[$field])) {
+                $entry->data = $data[$field];
                 $entry->save();
             }
-        }
-
-        if ($updated === false) {
-            $metaData = new AccountMeta(
-                [
-                    'account_id' => $account->id,
-                    'name'       => 'accountRole',
-                    'data'       => $data['accountRole']
-                ]
-            );
-            if (!$metaData->isValid()) {
-                App::abort(500);
+            // no entry but data present?
+            if (!$entry && isset($data[$field])) {
+                $metaData = new AccountMeta(
+                    [
+                        'account_id' => $account->id,
+                        'name'       => $field,
+                        'data'       => $data[$field]
+                    ]
+                );
+                $metaData->save();
             }
-            $metaData->save();
         }
 
     }

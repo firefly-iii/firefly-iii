@@ -16,7 +16,7 @@ class Preferences
      * @param      $name
      * @param null $default
      *
-     * @return null|\Preference
+     * @return null|Preference
      */
     public function get($name, $default = null)
     {
@@ -37,7 +37,7 @@ class Preferences
      * @param $name
      * @param $value
      *
-     * @return \Preference
+     * @return Preference
      */
     public function set($name, $value)
     {

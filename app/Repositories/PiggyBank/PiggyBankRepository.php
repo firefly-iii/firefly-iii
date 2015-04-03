@@ -111,7 +111,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     public function setOrder($id, $order)
     {
         $piggyBank = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')->where('accounts.user_id', Auth::user()->id)
-            ->where('piggy_banks.id',$id)->first(['piggy_banks.*']);
+                              ->where('piggy_banks.id', $id)->first(['piggy_banks.*']);
         if ($piggyBank) {
             $piggyBank->order = $order;
             $piggyBank->save();
@@ -153,9 +153,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         $piggyBank->targetdate   = $data['targetdate'];
         $piggyBank->reminder     = $data['reminder'];
         $piggyBank->startdate    = $data['startdate'];
-        $piggyBank->rep_length   = isset($data['rep_length']) ? $data['rep_length'] : null;
-        $piggyBank->rep_every    = isset($data['rep_every']) ? $data['rep_every'] : null;
-        $piggyBank->rep_times    = isset($data['rep_times']) ? $data['rep_times'] : null;
         $piggyBank->remind_me    = isset($data['remind_me']) && $data['remind_me'] == '1' ? 1 : 0;
 
         $piggyBank->save();

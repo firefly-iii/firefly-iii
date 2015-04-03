@@ -9,6 +9,7 @@
         <th>Is active</th>
         <th>Will be automatched</th>
         <th>Repeats every</th>
+        <th>&nbsp;</th>
     </tr>
     @foreach($bills as $entry)
     <tr>
@@ -66,6 +67,11 @@
                 skips over {{$entry->skip}}
             @endif
          </td>
+        <td>
+            @if($entry->active)
+            <a href="{{route('bills.add',$entry->id)}}" class="btn btn-success btn-xs"><i class="fa fa-fw fa-plus-circle"></i></a>
+            @endif
+        </td>
     </tr>
 
     @endforeach

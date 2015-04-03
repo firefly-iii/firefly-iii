@@ -10,7 +10,7 @@ use Preferences;
 use Redirect;
 use Session;
 use View;
-
+use URL;
 
 /**
  * Class CurrencyController
@@ -38,6 +38,12 @@ class CurrencyController extends Controller
     {
         $subTitleIcon = 'fa-plus';
         $subTitle     = 'Create a new currency';
+
+        // put previous url in session if not redirect from store (not "create another").
+        if (Session::get('currency.create.fromStore') !== true) {
+            Session::put('currency.create.url', URL::previous());
+        }
+        Session::forget('currency.create.fromStore');
 
         return view('currency.create', compact('subTitleIcon', 'subTitle'));
     }
@@ -72,6 +78,9 @@ class CurrencyController extends Controller
         if ($currency->transactionJournals()->count() > 0) {
             Session::flash('error', 'Cannot delete ' . e($currency->name) . ' because there are still transactions attached to it.');
 
+            // put previous url in session
+            Session::put('currency.delete.url', URL::previous());
+
             return Redirect::route('currency.index');
         }
 
@@ -96,7 +105,7 @@ class CurrencyController extends Controller
 
         $currency->delete();
 
-        return Redirect::route('currency.index');
+        return Redirect::to(Session::get('currency.delete.url'));
     }
 
     /**
@@ -109,6 +118,12 @@ class CurrencyController extends Controller
         $subTitleIcon     = 'fa-pencil';
         $subTitle         = 'Edit currency "' . e($currency->name) . '"';
         $currency->symbol = htmlentities($currency->symbol);
+
+        // put previous url in session if not redirect from store (not "return_to_edit").
+        if (Session::get('currency.edit.fromUpdate') !== true) {
+            Session::put('currency.edit.url', URL::previous());
+        }
+        Session::forget('currency.edit.fromUpdate');
 
         return view('currency.edit', compact('currency', 'subTitle', 'subTitleIcon'));
 
@@ -148,10 +163,12 @@ class CurrencyController extends Controller
         Session::flash('success', 'Currency "' . $currency->name . '" created');
 
         if (intval(Input::get('create_another')) === 1) {
+            Session::put('currency.create.fromStore', true);
             return Redirect::route('currency.create')->withInput();
         }
 
-        return Redirect::route('currency.index');
+        // redirect to previous URL.
+        return Redirect::to(Session::get('categories.create.url'));
 
 
     }
@@ -173,10 +190,12 @@ class CurrencyController extends Controller
 
 
         if (intval(Input::get('return_to_edit')) === 1) {
+            Session::put('currency.edit.fromUpdate', true);
             return Redirect::route('currency.edit', $currency->id);
         }
 
-        return Redirect::route('currency.index');
+        // redirect to previous URL.
+        return Redirect::to(Session::get('currency.edit.url'));
 
     }
 

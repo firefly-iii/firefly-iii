@@ -84,6 +84,7 @@ class AccountController extends Controller
      */
     public function edit(Account $account, AccountRepositoryInterface $repository)
     {
+
         $what           = Config::get('firefly.shortNamesByFullName')[$account->accountType->type];
         $subTitle       = 'Edit ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"';
         $subTitleIcon   = Config::get('firefly.subIconsByIdentifier.' . $what);
@@ -93,15 +94,19 @@ class AccountController extends Controller
 
         // the opening balance is tricky:
         $openingBalanceAmount = null;
+
         if ($openingBalance) {
-            $transaction          = $openingBalance->transactions()->where('account_id', $account->id)->first();
+            $transaction          = $repository->getFirstTransaction($openingBalance, $account);
             $openingBalanceAmount = $transaction->amount;
         }
 
         $preFilled = [
-            'accountRole'        => $account->getMeta('accountRole'),
-            'openingBalanceDate' => $openingBalance ? $openingBalance->date->format('Y-m-d') : null,
-            'openingBalance'     => $openingBalanceAmount
+            'accountRole'          => $account->getMeta('accountRole'),
+            'ccType'               => $account->getMeta('ccType'),
+            'ccMonthlyPaymentDate' => $account->getMeta('ccMonthlyPaymentDate'),
+            'openingBalanceDate'   => $openingBalance ? $openingBalance->date->format('Y-m-d') : null,
+            'openingBalance'       => $openingBalanceAmount,
+            'virtualBalance'       => floatval($account->virtual_balance)
         ];
         Session::flash('preFilled', $preFilled);
 
@@ -132,7 +137,7 @@ class AccountController extends Controller
         $total = Auth::user()->accounts()->accountTypeIn($types)->count();
 
         // last activity:
-        $start = clone Session::get('start');
+        $start = clone Session::get('start', Carbon::now()->startOfMonth());
         $start->subDay();
         $set->each(
             function (Account $account) use ($start) {
@@ -169,7 +174,8 @@ class AccountController extends Controller
         $what         = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
         $journals     = $repository->getJournals($account, $page);
         $subTitle     = 'Details for ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"';
-        $journals->setPath('accounts/show/'.$account->id);
+        $journals->setPath('accounts/show/' . $account->id);
+
         return view('accounts.show', compact('account', 'what', 'subTitleIcon', 'journals', 'subTitle'));
     }
 
@@ -184,6 +190,7 @@ class AccountController extends Controller
         $accountData = [
             'name'                   => $request->input('name'),
             'accountType'            => $request->input('what'),
+            'virtualBalance'         => floatval($request->input('virtualBalance')),
             'active'                 => true,
             'user'                   => Auth::user()->id,
             'accountRole'            => $request->input('accountRole'),
@@ -219,9 +226,12 @@ class AccountController extends Controller
             'active'                 => $request->input('active'),
             'user'                   => Auth::user()->id,
             'accountRole'            => $request->input('accountRole'),
+            'virtualBalance'         => floatval($request->input('virtualBalance')),
             'openingBalance'         => floatval($request->input('openingBalance')),
             'openingBalanceDate'     => new Carbon($request->input('openingBalanceDate')),
             'openingBalanceCurrency' => intval($request->input('balance_currency_id')),
+            'ccType'                 => $request->input('ccType'),
+            'ccMonthlyPaymentDate'   => $request->input('ccMonthlyPaymentDate'),
         ];
 
         $repository->update($account, $accountData);

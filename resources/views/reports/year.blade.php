@@ -43,6 +43,12 @@
                 Account balance
             </div>
             <table class="table table-bordered table-striped">
+                <tr>
+                    <th>Name</th>
+                    <th>Balance at start of year</th>
+                    <th>Balance at end of year</th>
+                    <th>Difference</th>
+                </tr>
             <?php
             $start = 0;
             $end   = 0;
@@ -120,7 +126,9 @@
             <table class="table">
                 <?php $sum = 0;?>
             @foreach($groupedIncomes as $income)
-                <?php $sum += floatval($income->amount)*-1;?>
+                <?php
+                $sum += floatval($income->amount)*-1;
+                ?>
             <tr>
                 <td><a href="{{route('accounts.show',$income->account_id)}}">{{{$income->name}}}</a></td>
                 <td>{!! Amount::format(floatval($income->amount)*-1) !!}</td>

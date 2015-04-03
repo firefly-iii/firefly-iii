@@ -10,7 +10,7 @@
             </div>
             <div class="panel-body">
                 <p>
-                Are you sure?
+                Are you sure that you want to delete currency "{{{$currency->name}}}"?
                 </p>
                 <p>
                     <button type="submit" class="btn btn-default btn-danger">Delete permanently</button>

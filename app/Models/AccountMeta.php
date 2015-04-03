@@ -14,12 +14,12 @@ class AccountMeta extends Model
     use ValidatingTrait;
     protected $fillable = ['account_id', 'name', 'data'];
     protected $rules
-                     = [
+                        = [
             'account_id' => 'required|exists:accounts,id',
             'name'       => 'required|between:1,100',
             'data'       => 'required'
         ];
-    protected $table = 'account_meta';
+    protected $table    = 'account_meta';
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

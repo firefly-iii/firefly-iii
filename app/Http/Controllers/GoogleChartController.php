@@ -1,8 +1,10 @@
 <?php namespace FireflyIII\Http\Controllers;
 
+use Amount;
 use App;
 use Auth;
 use Carbon\Carbon;
+use Crypt;
 use DB;
 use Exception;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
@@ -51,7 +53,7 @@ class GoogleChartController extends Controller
         $start   = Session::get('start', Carbon::now()->startOfMonth());
         $end     = Session::get('end', Carbon::now()->endOfMonth());
         $current = clone $start;
-        $today = new Carbon;
+        $today   = new Carbon;
 
         while ($end >= $current) {
             $certain = $current < $today;
@@ -237,29 +239,31 @@ class GoogleChartController extends Controller
         $start = Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());
         $set   = TransactionJournal::
-            where('transaction_journals.user_id',Auth::user()->id)
-            ->leftJoin(
-            'transactions',
-            function (JoinClause $join) {
-                $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('amount', '>', 0);
-            }
-        )
+        where('transaction_journals.user_id', Auth::user()->id)
+                                   ->leftJoin(
+                                       'transactions',
+                                       function (JoinClause $join) {
+                                           $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('amount', '>', 0);
+                                       }
+                                   )
                                    ->leftJoin(
                                        'category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
                                    )
                                    ->leftJoin('categories', 'categories.id', '=', 'category_transaction_journal.category_id')
                                    ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
                                    ->before($end)
-                                   ->where('categories.user_id',Auth::user()->id)
+                                   ->where('categories.user_id', Auth::user()->id)
                                    ->after($start)
                                    ->where('transaction_types.type', 'Withdrawal')
                                    ->groupBy('categories.id')
                                    ->orderBy('sum', 'DESC')
-                                   ->get(['categories.id', 'categories.name', \DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
+                                   ->get(['categories.id', 'categories.encrypted', 'categories.name', \DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
 
         foreach ($set as $entry) {
-            $entry->name = strlen($entry->name) == 0 ? '(no category)' : $entry->name;
-            $chart->addRow($entry->name, floatval($entry->sum));
+            $isEncrypted = intval($entry->encrypted) == 1 ? true : false;
+            $name        = strlen($entry->name) == 0 ? '(no category)' : $entry->name;
+            $name        = $isEncrypted ? Crypt::decrypt($name) : $name;
+            $chart->addRow($name, floatval($entry->sum));
         }
 
         $chart->generate();
@@ -279,7 +283,7 @@ class GoogleChartController extends Controller
         $chart->addColumn('Date', 'date');
         $chart->addColumn('Max amount', 'number');
         $chart->addColumn('Min amount', 'number');
-        $chart->addColumn('Current entry', 'number');
+        $chart->addColumn('Recorded bill entry', 'number');
 
         // get first transaction or today for start:
         $first = $bill->transactionjournals()->orderBy('date', 'ASC')->first();
@@ -288,22 +292,18 @@ class GoogleChartController extends Controller
         } else {
             $start = new Carbon;
         }
-        $end = new Carbon;
-        while ($start <= $end) {
-            $result = $bill->transactionjournals()->before($end)->after($start)->first();
-            if ($result) {
-                /** @var Transaction $tr */
-                foreach ($result->transactions()->get() as $tr) {
-                    if (floatval($tr->amount) > 0) {
-                        $amount = floatval($tr->amount);
-                    }
+
+        $results = $bill->transactionjournals()->after($start)->get();
+        /** @var TransactionJournal $result */
+        foreach ($results as $result) {
+            $amount = 0;
+            /** @var Transaction $tr */
+            foreach ($result->transactions()->get() as $tr) {
+                if (floatval($tr->amount) > 0) {
+                    $amount = floatval($tr->amount);
                 }
-            } else {
-                $amount = 0;
             }
-            unset($result);
-            $chart->addRow(clone $start, $bill->amount_max, $bill->amount_min, $amount);
-            $start = Navigation::addPeriod($start, $bill->repeat_freq, 0);
+            $chart->addRow(clone $result->date, $bill->amount_max, $bill->amount_min, $amount);
         }
 
         $chart->generate();
@@ -356,6 +356,49 @@ class GoogleChartController extends Controller
             }
         }
 
+        /**
+         * Find credit card accounts and possibly unpaid credit card bills.
+         */
+        $creditCards = Auth::user()->accounts()
+                           ->hasMetaValue('accountRole', 'ccAsset')
+                           ->hasMetaValue('ccType', 'monthlyFull')
+                           ->get(
+                               [
+                                   'accounts.*',
+                                   'ccType.data as ccType',
+                                   'accountRole.data as accountRole'
+                               ]
+                           );
+        // if the balance is not zero, the monthly payment is still underway.
+        /** @var Account $creditCard */
+        foreach ($creditCards as $creditCard) {
+            $balance = Steam::balance($creditCard, null, true);
+            $date    = new Carbon($creditCard->getMeta('ccMonthlyPaymentDate'));
+            if ($balance < 0) {
+                // unpaid!
+                $unpaid['amount'] += $balance * -1;
+                $unpaid['items'][] = $creditCard->name . ' (expected ' . Amount::format(($balance * -1), false) . ') on the ' . $date->format('jS') . ')';
+            }
+            if ($balance == 0) {
+                // find a transfer TO the credit card which should account for
+                // anything paid. If not, the CC is not yet used.
+                $transactions = $creditCard->transactions()
+                                           ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                           ->before($end)->after($start)->get();
+                if ($transactions->count() > 0) {
+                    /** @var Transaction $transaction */
+                    foreach ($transactions as $transaction) {
+                        $journal = $transaction->transactionJournal;
+                        if ($journal->transactionType->type == 'Transfer') {
+                            $paid['amount'] += floatval($transaction->amount);
+                            $paid['items'][] = $creditCard->name .
+                                               ' (paid ' . Amount::format((floatval($transaction->amount)), false) .
+                                               ' on the ' . $journal->date->format('jS') . ')';
+                        }
+                    }
+                }
+            }
+        }
         $chart->addRow('Unpaid: ' . join(', ', $unpaid['items']), $unpaid['amount']);
         $chart->addRow('Paid: ' . join(', ', $paid['items']), $paid['amount']);
         $chart->generate();

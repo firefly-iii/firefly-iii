@@ -2,11 +2,13 @@
 
 namespace FireflyIII\Repositories\Account;
 
-use FireflyIII\Models\Account;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\Preference;
-use Illuminate\Support\Collection;
 use Carbon\Carbon;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\Preference;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
+use Illuminate\Support\Collection;
+
 /**
  * Interface AccountRepositoryInterface
  *
@@ -85,4 +87,13 @@ interface AccountRepositoryInterface
      * @return Collection
      */
     public function getSavingsAccounts();
+
+
+    /**
+     * @param TransactionJournal $journal
+     * @param Account            $account
+     *
+     * @return Transaction
+     */
+    public function getFirstTransaction(TransactionJournal $journal, Account $account);
 }

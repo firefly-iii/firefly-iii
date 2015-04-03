@@ -5,10 +5,13 @@ namespace FireflyIII\Validation;
 use Auth;
 use Carbon\Carbon;
 use Config;
+use Crypt;
 use DB;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Validation\Validator;
-use Input;
+use Log;
 use Navigation;
 
 /**
@@ -28,6 +31,7 @@ class FireflyValidator extends Validator
      */
     public function validateBelongsToUser($attribute, $value, $parameters)
     {
+
         $count = DB::table($parameters[0])->where('user_id', Auth::user()->id)->where('id', $value)->count();
         if ($count == 1) {
             return true;
@@ -79,44 +83,62 @@ class FireflyValidator extends Validator
      */
     public function validateUniqueAccountForUser($attribute, $value, $parameters)
     {
-        // get account type from data, we must have this:
-        $validTypes = array_keys(Config::get('firefly.subTitlesByIdentifier'));
+        $type = null;
 
 
-        $type = isset($this->data['what']) && in_array($this->data['what'], $validTypes) ? $this->data['what'] : null;
-        // some fallback:
-        if (is_null($type)) {
-            $type = in_array(Input::get('what'), $validTypes) ? Input::get('what') : null;
+        /**
+         * Switch on different cases on which this method can respond:
+         */
+        $hasWhat          = isset($this->data['what']);
+        $hasAccountTypeId = isset($this->data['account_type_id']) && isset($this->data['name']);
+        $hasAccountId     = isset($this->data['id']);
+        $ignoreId         = 0;
+
+
+        if ($hasWhat) {
+            $search = Config::get('firefly.accountTypeByIdentifier.' . $this->data['what']);
+            $type   = AccountType::whereType($search)->first();
+            // this field can be used to find the exact type, and continue.
         }
-        // still null?
-        if (is_null($type)) {
-            // find by other field:
-            $type   = isset($this->data['account_type_id']) ? $this->data['account_type_id'] : 0;
-            $dbType = AccountType::find($type);
-        } else {
-            $longType = Config::get('firefly.accountTypeByIdentifier.' . $type);
-            $dbType   = AccountType::whereType($longType)->first();
+
+        if ($hasAccountTypeId) {
+            $type = AccountType::find($this->data['account_type_id']);
         }
 
-        if (is_null($dbType)) {
+        if ($hasAccountId) {
+            /** @var Account $account */
+            $account  = Account::find($this->data['id']);
+            $ignoreId = intval($this->data['id']);
+            $type     = AccountType::find($account->account_type_id);
+            unset($account);
+        }
+
+        /**
+         * Try to decrypt data just in case:
+         */
+        try {
+            $value = Crypt::decrypt($value);
+        } catch (DecryptException $e) {
+        }
+
+
+        if (is_null($type)) {
+            Log::error('Could not determine type of account to validate.');
+
             return false;
         }
 
-        // user id?
-        $userId = Auth::check() ? Auth::user()->id : $this->data['user_id'];
-
-        $query = DB::table('accounts')->where('name', $value)->where('account_type_id', $dbType->id)->where('user_id', $userId);
-
-        if (isset($parameters[0])) {
-            $query->where('id', '!=', $parameters[0]);
-        }
-        $count = $query->count();
-        if ($count == 0) {
-
-            return true;
+        // get all accounts with this type, and find the name.
+        $userId = Auth::check() ? Auth::user()->id : 0;
+        $set    = Account::where('account_type_id', $type->id)->where('id', '!=', $ignoreId)->where('user_id', $userId)->get();
+        /** @var Account $entry */
+        foreach ($set as $entry) {
+            if ($entry->name == $value) {
+                return false;
+            }
         }
 
-        return false;
+        return true;
 
     }
 
@@ -144,6 +166,46 @@ class FireflyValidator extends Validator
     }
 
     /**
+     * Validate an object and its unicity. Checks for encryption / encrypted values as well.
+     *
+     * parameter 0: the table
+     * parameter 1: the field
+     * parameter 2: the encrypted / not encrypted boolean. Defaults to "encrypted".
+     * parameter 3: an id to ignore (when editing)
+     *
+     * @param $attribute
+     * @param $value
+     * @param $parameters
+     *
+     * @return bool
+     */
+    public function validateUniqueObjectForUser($attribute, $value, $parameters)
+    {
+        $table     = $parameters[0];
+        $field     = $parameters[1];
+        $encrypted = isset($parameters[2]) ? $parameters[2] : 'encrypted';
+        $exclude   = isset($parameters[3]) ? $parameters[3] : null;
+
+        $query = DB::table($table)->where('user_id', Auth::user()->id);
+
+        if (!is_null($exclude)) {
+            $query->where('id', '!=', $exclude);
+        }
+
+
+        $set = $query->get();
+        foreach ($set as $entry) {
+            $isEncrypted = intval($entry->$encrypted) == 1 ? true : false;
+            $checkValue  = $isEncrypted ? Crypt::decrypt($entry->$field) : $entry->$field;
+            if ($checkValue == $value) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * @param $attribute
      * @param $value
      * @param $parameters
@@ -152,18 +214,24 @@ class FireflyValidator extends Validator
      */
     public function validateUniquePiggyBankForUser($attribute, $value, $parameters)
     {
-        $query = DB::table($parameters[0])->where('piggy_banks.'.$parameters[1], $value);
+        $exclude = isset($parameters[0]) ? $parameters[0] : null;
+        $query   = DB::table('piggy_banks');
         $query->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id');
         $query->where('accounts.user_id', Auth::user()->id);
-        if (isset($paramers[2])) {
-            $query->where('piggy_banks.id', '!=', $parameters[2]);
+        if (!is_null($exclude)) {
+            $query->where('piggy_banks.id', '!=', $exclude);
         }
-        $count = $query->count();
-        if ($count == 0) {
-            return true;
+        $set = $query->get(['piggy_banks.*']);
+
+        foreach($set as $entry) {
+            $isEncrypted = intval($entry->encrypted) == 1 ? true : false;
+            $checkValue = $isEncrypted ? Crypt::decrypt($entry->name) : $entry->name;
+            if($checkValue == $value) {
+                return false;
+            }
         }
 
-        return false;
+        return true;
 
     }
 }

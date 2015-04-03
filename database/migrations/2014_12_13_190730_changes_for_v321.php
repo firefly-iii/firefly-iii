@@ -1,13 +1,12 @@
 <?php
 
 use FireflyIII\Models\Budget;
-use FireflyIII\Models\Category;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\Category;
 use FireflyIII\Models\Component;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
 /**
  * @SuppressWarnings(PHPMD.ShortMethodName) // method names are mandated by laravel.
  * @SuppressWarnings("TooManyMethods") // I'm fine with this
@@ -427,28 +426,28 @@ class ChangesForV321 extends Migration
 
     public function moveComponentIdToBudgetId()
     {
-        \Log::debug('Now in moveComponentIdToBudgetId()');
+        //Log::debug('Now in moveComponentIdToBudgetId()');
         BudgetLimit::get()->each(
             function (BudgetLimit $bl) {
-                \Log::debug('Now at budgetLimit #' . $bl->id . ' with component_id: ' . $bl->component_id);
+                Log::debug('Now at budgetLimit #' . $bl->id . ' with component_id: ' . $bl->component_id);
                 $component = Component::find($bl->component_id);
                 if ($component) {
-                    \Log::debug('Found component with id #' . $component->id . ' and name ' . $component->name);
+                    Log::debug('Found component with id #' . $component->id . ' and name ' . $component->name);
                     $budget = Budget::whereName($component->name)->whereUserId($component->user_id)->first();
                     if ($budget) {
-                        \Log::debug('Found a budget with ID #' . $budget->id . ' and name ' . $budget->name);
+                        Log::debug('Found a budget with ID #' . $budget->id . ' and name ' . $budget->name);
                         $bl->budget_id = $budget->id;
                         $bl->save();
-                        \Log::debug('Connected budgetLimit #' . $bl->id . ' to budget_id' . $budget->id);
+                        Log::debug('Connected budgetLimit #' . $bl->id . ' to budget_id' . $budget->id);
                     } else {
-                        \Log::debug('Could not find a matching budget with name ' . $component->name);
+                        Log::debug('Could not find a matching budget with name ' . $component->name);
                     }
                 } else {
-                    \Log::debug('Could not find a component with id ' . $bl->component_id);
+                    Log::debug('Could not find a component with id ' . $bl->component_id);
                 }
             }
         );
-        \Log::debug('Done with moveComponentIdToBudgetId()');
+        //Log::debug('Done with moveComponentIdToBudgetId()');
 
     }
 

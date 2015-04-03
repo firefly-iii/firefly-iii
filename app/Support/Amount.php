@@ -6,6 +6,7 @@ use Cache;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
+use Illuminate\Support\Collection;
 use Preferences as Prefs;
 
 /**
@@ -132,6 +133,14 @@ class Amount
         $amount = floatval($transaction->amount);
 
         return $this->formatWithSymbol($symbol, $amount, $coloured);
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getAllCurrencies()
+    {
+        return TransactionCurrency::orderBy('code', 'ASC')->get();
     }
 
     /**

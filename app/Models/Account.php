@@ -1,10 +1,13 @@
 <?php namespace FireflyIII\Models;
 
+use App;
+use Crypt;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\JoinClause;
 use Watson\Validating\ValidatingTrait;
-use Crypt;
+
 /**
  * Class Account
  *
@@ -14,47 +17,44 @@ class Account extends Model
 {
     use SoftDeletes, ValidatingTrait;
 
+    protected $fillable = ['user_id', 'account_type_id', 'name', 'active', 'virtual_balance'];
     protected $rules
-        = [
+                        = [
             'user_id'         => 'required|exists:users,id',
             'account_type_id' => 'required|exists:account_types,id',
             'name'            => 'required|between:1,1024|uniqueAccountForUser',
             'active'          => 'required|boolean'
         ];
 
-    protected $fillable = ['user_id', 'account_type_id', 'name', 'active'];
-
     /**
-     * @param $fieldName
+     * @param array $fields
      *
-     * @return string|null
+     * @return Account|null
      */
-    public function getMeta($fieldName)
+    public static function firstOrCreateEncrypted(array $fields)
     {
-        foreach ($this->accountMeta as $meta) {
-            if ($meta->name == $fieldName) {
-                return $meta->data;
+        // everything but the name:
+        $query = Account::orderBy('id');
+        foreach ($fields as $name => $value) {
+            if ($name != 'name') {
+                $query->where($name, $value);
             }
         }
+        $set = $query->get(['accounts.*']);
+        /** @var Account $account */
+        foreach ($set as $account) {
+            if ($account->name == $fields['name']) {
+                return $account;
+            }
+        }
+        // create it!
+        $account = Account::create($fields);
+        if (is_null($account->id)) {
+            // could not create account:
+            App::abort(500, 'Could not create new account with data: ' . json_encode($fields));
 
-        return null;
-
-    }
-
-    /**
-     * @param $value
-     *
-     * @return string
-     */
-    public function getNameAttribute($value)
-    {
-        if ($this->encrypted) {
-            return Crypt::decrypt($value);
         }
 
-        // @codeCoverageIgnoreStart
-        return $value;
-        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -82,6 +82,48 @@ class Account extends Model
     }
 
     /**
+     * @param $fieldName
+     *
+     * @return string|null
+     */
+    public function getMeta($fieldName)
+    {
+        foreach ($this->accountMeta as $meta) {
+            if ($meta->name == $fieldName) {
+                return $meta->data;
+            }
+        }
+
+        return null;
+
+    }
+
+    /**
+     * @param $value
+     *
+     * @return string
+     */
+    public function getNameAttribute($value)
+    {
+
+        if (intval($this->encrypted) == 1) {
+            return Crypt::decrypt($value);
+        }
+
+        // @codeCoverageIgnoreStart
+        return $value;
+        // @codeCoverageIgnoreEnd
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function piggyBanks()
+    {
+        return $this->hasMany('FireflyIII\Models\PiggyBank');
+    }
+
+    /**
      * @param EloquentBuilder $query
      * @param array           $types
      */
@@ -92,6 +134,31 @@ class Account extends Model
             $this->joinedAccountTypes = true;
         }
         $query->whereIn('account_types.type', $types);
+    }
+
+    /**
+     * @param EloquentBuilder $query
+     * @param string          $name
+     * @param string          $value
+     */
+    public function scopeHasMetaValue(EloquentBuilder $query, $name, $value)
+    {
+        $joinName = str_replace('.', '_', $name);
+        $query->leftJoin(
+            'account_meta as ' . $joinName, function (JoinClause $join) use ($joinName, $name) {
+            $join->on($joinName . '.account_id', '=', 'accounts.id')->where($joinName . '.name', '=', $name);
+        }
+        );
+        $query->where($joinName . '.data', json_encode($value));
+    }
+
+    /**
+     * @param $value
+     */
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name']      = Crypt::encrypt($value);
+        $this->attributes['encrypted'] = true;
     }
 
     /**
@@ -108,14 +175,6 @@ class Account extends Model
     public function user()
     {
         return $this->belongsTo('FireflyIII\User');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function piggyBanks()
-    {
-        return $this->hasMany('FireflyIII\Models\PiggyBank');
     }
 
 }

@@ -107,7 +107,7 @@ Route::bind(
         where('piggy_banks.id', $value)
                         ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
                         ->where('accounts.user_id', Auth::user()->id)
-                        ->where('repeats', 0)->first(['piggy_banks.*']);
+                        ->first(['piggy_banks.*']);
     }
 
     return null;
@@ -132,7 +132,7 @@ Route::get('/register', ['uses' => 'Auth\AuthController@getRegister', 'as' => 'r
 
 Route::controllers(
     [
-        'auth' => 'Auth\AuthController',
+        'auth'     => 'Auth\AuthController',
         'password' => 'Auth\PasswordController',
     ]
 );
@@ -142,7 +142,7 @@ Route::controllers(
  * Home Controller
  */
 Route::group(
-    ['middleware' => ['auth', 'range', 'reminders','piggybanks']], function () {
+    ['middleware' => ['auth', 'range', 'reminders', 'piggybanks']], function () {
     Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index']);
     Route::get('/home', ['uses' => 'HomeController@index', 'as' => 'home']);
     Route::post('/daterange', ['uses' => 'HomeController@dateRange', 'as' => 'daterange']);
@@ -167,6 +167,7 @@ Route::group(
     Route::get('/bills/rescan/{bill}', ['uses' => 'BillController@rescan', 'as' => 'bills.rescan']); # rescan for matching.
     Route::get('/bills/create', ['uses' => 'BillController@create', 'as' => 'bills.create']);
     Route::get('/bills/edit/{bill}', ['uses' => 'BillController@edit', 'as' => 'bills.edit']);
+    Route::get('/bills/add/{bill}', ['uses' => 'BillController@add', 'as' => 'bills.add']);
     Route::get('/bills/delete/{bill}', ['uses' => 'BillController@delete', 'as' => 'bills.delete']);
     Route::get('/bills/show/{bill}', ['uses' => 'BillController@show', 'as' => 'bills.show']);
 

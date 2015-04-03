@@ -1,11 +1,12 @@
-Firefly III (v3.3.5)
+Firefly III (v3.3.6)
 ===========
 
 [![Build Status](https://travis-ci.org/JC5/firefly-iii.svg?branch=develop)](https://travis-ci.org/JC5/firefly-iii)
 [![Project Status](http://stillmaintained.com/JC5/firefly-iii.png?a=b)](http://stillmaintained.com/JC5/firefly-iii)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/d44c7012-5f50-41ad-add8-8445330e4102/mini.png)](https://insight.sensiolabs.com/projects/d44c7012-5f50-41ad-add8-8445330e4102)
 [![Code Climate](https://codeclimate.com/github/JC5/firefly-iii/badges/gpa.svg)](https://codeclimate.com/github/JC5/firefly-iii)
-[![Test Coverage](https://codeclimate.com/github/JC5/firefly-iii/badges/coverage.svg)](https://codeclimate.com/github/JC5/firefly-iii)
+[![Coverage Status](https://coveralls.io/repos/JC5/firefly-iii/badge.svg?branch=master)](https://coveralls.io/r/JC5/firefly-iii?branch=master)
+[![Coverage Status](https://coveralls.io/repos/JC5/firefly-iii/badge.svg?branch=master)](https://coveralls.io/r/JC5/firefly-iii?branch=develop)
 
 [![Latest Stable Version](https://poser.pugx.org/grumpydictator/firefly-iii/v/stable.svg)](https://packagist.org/packages/grumpydictator/firefly-iii)
 [![Total Downloads](https://poser.pugx.org/grumpydictator/firefly-iii/downloads.svg)](https://packagist.org/packages/grumpydictator/firefly-iii)
@@ -25,9 +26,14 @@ To install and use Firefly III, please read [the installation guide](https://git
 
 ## Current features
 
-- [A double-entry bookkeeping system](http://en.wikipedia.org/wiki/Double-entry_bookkeeping_system);
+- [A double-entry bookkeeping system](https://en.wikipedia.org/wiki/Double-entry_bookkeeping_system);
 - You can store, edit and remove withdrawals, deposits and transfers. This allows you full financial management;
-- It's possible to create, change and manage money using _budgets_;
+- You can manage different types of accounts
+  - Asset accounts
+  - Shared asset accounts (household accounts)
+  - Saving accounts
+  - Credit cards
+- It's possible to create, change and manage money using _[budgets](https://en.wikipedia.org/wiki/Envelope_system)_;
 - Organize transactions using categories;
 - Save towards a goal using piggy banks;
 - Predict and anticipate bills;
@@ -48,9 +54,7 @@ Firefly III will feature, but does not feature yet:
 
 
 - More control over other resources outside of personal finance
-  - Accounts shared with a partner (household accounts)
   - Debts
-  - Credit cards
 - More test-coverage;
 - Firefly will be able to split transactions; a single purchase can be split in multiple entries, for more fine-grained control.
 - Firefly will be able to join transactions.
@@ -72,8 +76,5 @@ Some stuff has been removed:
 
 ## Current state
 I have the basics up and running. Test coverage is currently coming, slowly.
-
-Although I have not checked extensively, some forms and views have CSRF vulnerabilities. This is because not all
-views escape all characters by default. Will be fixed.
 
 Questions, ideas or other things to contribute? [Let me know](https://github.com/JC5/firefly-iii/issues/new)!

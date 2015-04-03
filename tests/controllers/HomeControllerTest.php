@@ -13,8 +13,7 @@ class HomeControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-
-
+        Artisan::call('migrate');
     }
 
     /**
@@ -33,8 +32,7 @@ class HomeControllerTest extends TestCase
     {
         $start = '2014-03-01';
         $end   = '2015-03-31';
-
-        $this->be(FireflyIII\User::whereEmail('thegrumpydictator@gmail.com')->first());
+        $this->be(new FireflyIII\User);
         $this->call('POST', '/daterange', ['end' => $end, 'start' => $start,'_token' => 'replaceme']);
         $this->assertResponseOk();
 
@@ -51,8 +49,9 @@ class HomeControllerTest extends TestCase
     {
         $start = '2015-03-01';
         $end   = '2015-03-31';
+        $this->be(new FireflyIII\User);
 
-        $this->be(FireflyIII\User::whereEmail('thegrumpydictator@gmail.com')->first());
+
         $this->call('POST', '/daterange', ['end' => $end, 'start' => $start,'_token' => 'replaceme']);
         $this->assertResponseOk();
 
@@ -66,7 +65,9 @@ class HomeControllerTest extends TestCase
      */
     public function testIndexLoggedIn()
     {
-        $this->be(FireflyIII\User::whereEmail('thegrumpydictator@gmail.com')->first());
+        $this->be(new FireflyIII\User);
+        Amount::shouldReceive('getCurrencyCode')->andReturn('EUR');
+
         $response = $this->call('GET', '/');
         $this->assertResponseOk();
 

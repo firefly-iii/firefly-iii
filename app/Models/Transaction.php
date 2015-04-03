@@ -3,7 +3,8 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Watson\Validating\ValidatingTrait;
-
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Carbon\Carbon;
 /**
  * Class Transaction
  *
@@ -28,6 +29,28 @@ class Transaction extends Model
     public function account()
     {
         return $this->belongsTo('FireflyIII\Models\Account');
+    }
+
+    /**
+     * @param EloquentBuilder $query
+     * @param Carbon          $date
+     *
+     * @return mixed
+     */
+    public function scopeAfter(EloquentBuilder $query, Carbon $date)
+    {
+        return $query->where('transaction_journals.date', '>=', $date->format('Y-m-d 00:00:00'));
+    }
+
+    /**
+     * @param EloquentBuilder $query
+     * @param Carbon          $date
+     *
+     * @return mixed
+     */
+    public function scopeBefore(EloquentBuilder $query, Carbon $date)
+    {
+        return $query->where('transaction_journals.date', '<=', $date->format('Y-m-d 00:00:00'));
     }
 
     /**

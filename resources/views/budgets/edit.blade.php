@@ -16,6 +16,7 @@
                     <i class="fa fa-fw fa-exclamation"></i> Mandatory fields
                 </div>
                 <div class="panel-body">
+                    {!! ExpandedForm::checkbox('active') !!}
                     {!! ExpandedForm::text('name') !!}
                 </div>
             </div>

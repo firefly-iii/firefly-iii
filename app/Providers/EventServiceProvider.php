@@ -12,7 +12,7 @@ use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Log;
-
+use Reminder;
 /**
  * Class EventServiceProvider
  *
@@ -28,7 +28,7 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen
         = [
-            'FireflyIII\Events\JournalSaved' => [
+            'FireflyIII\Events\JournalSaved'   => [
                 'FireflyIII\Handlers\Events\RescanJournal',
                 'FireflyIII\Handlers\Events\UpdateJournalConnection',
 
@@ -59,6 +59,14 @@ class EventServiceProvider extends ServiceProvider
             }
         );
 
+
+        PiggyBank::deleting(function(PiggyBank $piggyBank) {
+            $reminders = $piggyBank->reminders()->get();
+            /** @var Reminder $reminder */
+            foreach($reminders as $reminder) {
+                $reminder->delete();
+            }
+        });
 
 
         Account::deleted(

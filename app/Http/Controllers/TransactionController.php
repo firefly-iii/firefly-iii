@@ -1,7 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Auth;
-use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Events\JournalCreated;
 use FireflyIII\Events\JournalSaved;
@@ -13,9 +12,10 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Input;
 use Redirect;
-use Session;
-use View;
 use Response;
+use Session;
+use URL;
+use View;
 
 /**
  * Class TransactionController
@@ -61,6 +61,12 @@ class TransactionController extends Controller
         }
         Session::put('preFilled', $preFilled);
 
+        // put previous url in session if not redirect from store (not "create another").
+        if (Session::get('transactions.create.fromStore') !== true) {
+            Session::put('transactions.create.url', URL::previous());
+        }
+        Session::forget('transactions.create.fromStore');
+
         asort($piggies);
 
 
@@ -79,6 +85,9 @@ class TransactionController extends Controller
         $type     = strtolower($journal->transactionType->type);
         $subTitle = 'Delete ' . e($type) . ' "' . e($journal->description) . '"';
 
+        // put previous url in session
+        Session::put('transactions.delete.url', URL::previous());
+
         return View::make('transactions.delete', compact('journal', 'subTitle'));
 
 
@@ -91,23 +100,12 @@ class TransactionController extends Controller
      */
     public function destroy(TransactionJournal $transactionJournal)
     {
-        $type   = $transactionJournal->transactionType->type;
-        $return = 'withdrawal';
-
         Session::flash('success', 'Transaction "' . e($transactionJournal->description) . '" destroyed.');
 
         $transactionJournal->delete();
 
-        switch ($type) {
-            case 'Deposit':
-                $return = 'deposit';
-                break;
-            case 'Transfer':
-                $return = 'transfers';
-                break;
-        }
-
-        return Redirect::route('transactions.index', $return);
+        // redirect to previous URL:
+        return Redirect::to(Session::get('transactions.delete.url'));
     }
 
     /**
@@ -164,6 +162,12 @@ class TransactionController extends Controller
         $preFilled['account_from_id'] = $transactions[1]->account->id;
         $preFilled['account_to_id']   = $transactions[0]->account->id;
 
+        // put previous url in session if not redirect from store (not "return_to_edit").
+        if (Session::get('transactions.edit.fromUpdate') !== true) {
+            Session::put('transactions.edit.url', URL::previous());
+        }
+        Session::forget('transactions.edit.fromUpdate');
+
 
         return View::make('transactions.edit', compact('journal', 'accounts', 'what', 'budgets', 'piggies', 'subTitle'))->with('data', $preFilled);
     }
@@ -199,16 +203,13 @@ class TransactionController extends Controller
         $page   = intval(\Input::get('page'));
         $offset = $page > 0 ? ($page - 1) * 50 : 0;
 
-        $set      = Auth::user()->
-        transactionJournals()->
-        transactionTypes($types)->
-        withRelevantData()->take(50)->offset($offset)
-            ->orderBy('date', 'DESC')
-            ->orderBy('order','ASC')
-            ->orderBy('id','DESC')
-            ->get(
-            ['transaction_journals.*']
-        );
+        $set      = Auth::user()->transactionJournals()->transactionTypes($types)->withRelevantData()->take(50)->offset($offset)
+                        ->orderBy('date', 'DESC')
+                        ->orderBy('order', 'ASC')
+                        ->orderBy('id', 'DESC')
+                        ->get(
+                            ['transaction_journals.*']
+                        );
         $count    = Auth::user()->transactionJournals()->transactionTypes($types)->count();
         $journals = new LengthAwarePaginator($set, $count, 50, $page);
         $journals->setPath('transactions/' . $what);
@@ -227,13 +228,14 @@ class TransactionController extends Controller
             $order = 0;
             foreach ($ids as $id) {
                 $journal = Auth::user()->transactionjournals()->where('id', $id)->where('date', Input::get('date'))->first();
-                if($journal) {
+                if ($journal) {
                     $journal->order = $order;
                     $order++;
                     $journal->save();
                 }
             }
         }
+
         return Response::json(true);
 
     }
@@ -251,10 +253,10 @@ class TransactionController extends Controller
                     $t->account->transactions()->leftJoin(
                         'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
                     )
-                        ->where('transaction_journals.date', '<=', $journal->date->format('Y-m-d'))
-                        ->where('transaction_journals.order','>=',$journal->order)
-                        ->where('transaction_journals.id', '!=', $journal->id)
-                        ->sum('transactions.amount')
+                               ->where('transaction_journals.date', '<=', $journal->date->format('Y-m-d'))
+                               ->where('transaction_journals.order', '>=', $journal->order)
+                               ->where('transaction_journals.id', '!=', $journal->id)
+                               ->sum('transactions.amount')
                 );
                 $t->after  = $t->before + $t->amount;
             }
@@ -274,25 +276,13 @@ class TransactionController extends Controller
      */
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository)
     {
-        $journalData = [
-            'what'               => $request->get('what'),
-            'description'        => $request->get('description'),
-            'account_id'         => intval($request->get('account_id')),
-            'account_from_id'    => intval($request->get('account_from_id')),
-            'account_to_id'      => intval($request->get('account_to_id')),
-            'expense_account'    => $request->get('expense_account'),
-            'revenue_account'    => $request->get('revenue_account'),
-            'amount'             => floatval($request->get('amount')),
-            'user'               => Auth::user()->id,
-            'amount_currency_id' => intval($request->get('amount_currency_id')),
-            'date'               => new Carbon($request->get('date')),
-            'budget_id'          => intval($request->get('budget_id')),
-            'category'           => $request->get('category'),
-        ];
 
-        $journal = $repository->store($journalData);
+        $journalData = $request->getJournalData();
+        $journal     = $repository->store($journalData);
 
+        // rescan journal, UpdateJournalConnection
         event(new JournalSaved($journal));
+        // ConnectJournalToPiggyBank
         event(new JournalCreated($journal, intval($request->get('piggy_bank_id'))));
 
         if (intval($request->get('reminder_id')) > 0) {
@@ -304,10 +294,14 @@ class TransactionController extends Controller
         Session::flash('success', 'New transaction "' . $journal->description . '" stored!');
 
         if (intval(Input::get('create_another')) === 1) {
+            // set value so create routine will not overwrite URL:
+            Session::put('transactions.create.fromStore', true);
+
             return Redirect::route('transactions.create', $request->input('what'))->withInput();
         }
 
-        return Redirect::route('transactions.index', $request->input('what'));
+        // redirect to previous URL.
+        return Redirect::to(Session::get('transactions.create.url'));
 
     }
 
@@ -321,23 +315,7 @@ class TransactionController extends Controller
     public function update(TransactionJournal $journal, JournalFormRequest $request, JournalRepositoryInterface $repository)
     {
 
-
-        $journalData = [
-            'what'               => $request->get('what'),
-            'description'        => $request->get('description'),
-            'account_id'         => intval($request->get('account_id')),
-            'account_from_id'    => intval($request->get('account_from_id')),
-            'account_to_id'      => intval($request->get('account_to_id')),
-            'expense_account'    => $request->get('expense_account'),
-            'revenue_account'    => $request->get('revenue_account'),
-            'amount'             => floatval($request->get('amount')),
-            'user'               => Auth::user()->id,
-            'amount_currency_id' => intval($request->get('amount_currency_id')),
-            'date'               => new Carbon($request->get('date')),
-            'budget_id'          => intval($request->get('budget_id')),
-            'category'           => $request->get('category'),
-        ];
-
+        $journalData = $request->getJournalData();
         $repository->update($journal, $journalData);
 
         event(new JournalSaved($journal));
@@ -346,11 +324,14 @@ class TransactionController extends Controller
         Session::flash('success', 'Transaction "' . e($journalData['description']) . '" updated.');
 
         if (intval(Input::get('return_to_edit')) === 1) {
-            return Redirect::route('transactions.edit', $journal->id);
+            // set value so edit routine will not overwrite URL:
+            Session::put('transactions.edit.fromUpdate', true);
+
+            return Redirect::route('transactions.edit', $journal->id)->withInput(['return_to_edit' => 1]);
         }
 
-
-        return Redirect::route('transactions.index', $journalData['what']);
+        // redirect to previous URL.
+        return Redirect::to(Session::get('transactions.edit.url'));
 
     }
 

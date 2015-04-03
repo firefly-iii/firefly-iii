@@ -1,8 +1,8 @@
 <?php namespace FireflyIII\Handlers\Events;
 
+use App;
 use FireflyIII\Events\JournalSaved;
 use Log;
-use App;
 
 /**
  * Class RescanJournal

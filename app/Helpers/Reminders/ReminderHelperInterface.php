@@ -2,16 +2,17 @@
 
 namespace FireflyIII\Helpers\Reminders;
 
-use FireflyIII\Models\Reminder;
-use FireflyIII\Models\PiggyBank;
 use Carbon\Carbon;
+use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\Reminder;
 
 /**
  * Interface ReminderHelperInterface
  *
  * @package FireflyIII\Helpers\Reminders
  */
-interface ReminderHelperInterface {
+interface ReminderHelperInterface
+{
     /**
      * Takes a reminder, finds the piggy bank and tells you what to do now.
      * Aka how much money to put in.

@@ -21,6 +21,11 @@ interface BudgetRepositoryInterface
     public function destroy(Budget $budget);
 
     /**
+     * @return void
+     */
+    public function cleanupBudgets();
+
+    /**
      * @param Budget $budget
      * @param Carbon $date
      *

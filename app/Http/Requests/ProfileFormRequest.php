@@ -26,7 +26,7 @@ class ProfileFormRequest extends Request
     public function rules()
     {
         return [
-            'current_password'               => 'required',
+            'current_password'          => 'required',
             'new_password'              => 'required|confirmed',
             'new_password_confirmation' => 'required',
         ];

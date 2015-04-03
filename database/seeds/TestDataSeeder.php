@@ -113,7 +113,9 @@ class TestDataSeeder extends Seeder
      */
     public function createUsers()
     {
-        User::create(['email' => 'reset@example.com', 'password' => bcrypt('functional'), 'reset' => 'okokokokokokokokokokokokokokokok', 'remember_token' => null]);
+        User::create(
+            ['email' => 'reset@example.com', 'password' => bcrypt('functional'), 'reset' => 'okokokokokokokokokokokokokokokok', 'remember_token' => null]
+        );
         User::create(['email' => 'functional@example.com', 'password' => bcrypt('functional'), 'reset' => null, 'remember_token' => null]);
         User::create(['email' => 'thegrumpydictator@gmail.com', 'password' => bcrypt('james'), 'reset' => null, 'remember_token' => null]);
     }
@@ -238,7 +240,8 @@ class TestDataSeeder extends Seeder
     public function createPiggyBanks()
     {
         // account
-        $savings = Account::whereName('Savings account')->orderBy('id', 'DESC')->first();
+        $savings = $this->findAccount('Savings account');
+
 
         // some dates
         $endDate  = clone $this->_startOfMonth;
@@ -247,7 +250,7 @@ class TestDataSeeder extends Seeder
         $endDate->addMonths(4);
         $nextYear->addYear()->subDay();
 
-        $end  = $endDate->format('Y-m-d');
+        $end = $endDate->format('Y-m-d');
 
         // piggy bank
         $newCamera = PiggyBank::create(
@@ -257,10 +260,6 @@ class TestDataSeeder extends Seeder
                 'targetamount'  => 2000,
                 'startdate'     => $this->som,
                 'targetdate'    => null,
-                'repeats'       => 0,
-                'rep_length'    => null,
-                'rep_every'     => 0,
-                'rep_times'     => null,
                 'reminder'      => null,
                 'reminder_skip' => 0,
                 'remind_me'     => 0,
@@ -278,10 +277,6 @@ class TestDataSeeder extends Seeder
                 'targetamount'  => 2000,
                 'startdate'     => $this->som,
                 'targetdate'    => $end,
-                'repeats'       => 0,
-                'rep_length'    => null,
-                'rep_every'     => 0,
-                'rep_times'     => null,
                 'reminder'      => null,
                 'reminder_skip' => 0,
                 'remind_me'     => 0,
@@ -295,22 +290,18 @@ class TestDataSeeder extends Seeder
          * New: create no less than eight piggy banks that
          * create all sorts of reminders
          */
-        $list = ['week','quarter','month','year'];
+        $list     = ['week', 'quarter', 'month', 'year'];
         $nextYear = clone $this->_startOfMonth;
         $nextYear->addYear();
-        foreach($list as $entry) {
+        foreach ($list as $entry) {
 
             PiggyBank::create(
                 [
                     'account_id'    => $savings->id,
-                    'name'          => $entry.' piggy bank with target date.',
+                    'name'          => $entry . ' piggy bank with target date.',
                     'targetamount'  => 1000,
                     'startdate'     => $this->som,
                     'targetdate'    => $nextYear,
-                    'repeats'       => 0,
-                    'rep_length'    => null,
-                    'rep_every'     => 0,
-                    'rep_times'     => null,
                     'reminder'      => $entry,
                     'reminder_skip' => 0,
                     'remind_me'     => 1,
@@ -320,14 +311,10 @@ class TestDataSeeder extends Seeder
             PiggyBank::create(
                 [
                     'account_id'    => $savings->id,
-                    'name'          => $entry.' piggy bank without target date.',
+                    'name'          => $entry . ' piggy bank without target date.',
                     'targetamount'  => 1000,
                     'startdate'     => $this->som,
                     'targetdate'    => null,
-                    'repeats'       => 0,
-                    'rep_length'    => null,
-                    'rep_every'     => 0,
-                    'rep_times'     => null,
                     'reminder'      => $entry,
                     'reminder_skip' => 0,
                     'remind_me'     => 1,
@@ -335,6 +322,26 @@ class TestDataSeeder extends Seeder
                 ]
             );
         }
+    }
+
+    /**
+     * @param $name
+     *
+     * @return Account|null
+     */
+    protected function findAccount($name)
+    {
+        // account
+        $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
+        /** @var Account $account */
+        foreach (Account::get() as $account) {
+            if ($account->name == $name && $user->id == $account->user_id) {
+                return $account;
+                break;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -431,20 +438,20 @@ class TestDataSeeder extends Seeder
     public function createMonthlyExpenses(Carbon $date)
     {
         // get some objects from the database:
-        $checking   = Account::whereName('Checking account')->orderBy('id', 'DESC')->first();
-        $savings    = Account::whereName('Savings account')->orderBy('id', 'DESC')->first();
-        $landLord   = Account::whereName('Land lord')->orderBy('id', 'DESC')->first();
-        $utilities  = Account::whereName('Utilities company')->orderBy('id', 'DESC')->first();
-        $television = Account::whereName('TV company')->orderBy('id', 'DESC')->first();
-        $phone      = Account::whereName('Phone agency')->orderBy('id', 'DESC')->first();
-        $employer   = Account::whereName('Employer')->orderBy('id', 'DESC')->first();
-        $bills      = Budget::whereName('Bills')->orderBy('id', 'DESC')->first();
-        $house      = Category::whereName('House')->orderBy('id', 'DESC')->first();
+        $checking   = $this->findAccount('Checking account');
+        $savings    = $this->findAccount('Savings account');
+        $landLord   = $this->findAccount('Land lord');
+        $utilities  = $this->findAccount('Utilities company');
+        $television = $this->findAccount('TV company');
+        $phone      = $this->findAccount('Phone agency');
+        $employer   = $this->findAccount('Employer');
+        $bills      = $this->findBudget('Bills');
+        $house      = $this->findCategory('House');
         $withdrawal = TransactionType::whereType('Withdrawal')->first();
         $deposit    = TransactionType::whereType('Deposit')->first();
         $transfer   = TransactionType::whereType('Transfer')->first();
         $euro       = TransactionCurrency::whereCode('EUR')->first();
-        $rentBill   = Bill::where('name', 'Rent')->first();
+        $rentBill   = $this->findBill('Rent');
         $cur        = $date->format('Y-m-d');
         $formatted  = $date->format('F Y');
 
@@ -488,20 +495,101 @@ class TestDataSeeder extends Seeder
     }
 
     /**
+     * @param $name
+     *
+     * @return Budget|null
+     */
+    protected function findBudget($name)
+    {
+        // account
+        $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
+        /** @var Budget $budget */
+        foreach (Budget::get() as $budget) {
+            if ($budget->name == $name && $user->id == $budget->user_id) {
+                return $budget;
+                break;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param $name
+     *
+     * @return PiggyBank|null
+     */
+    protected function findPiggyBank($name)
+    {
+        // account
+        $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
+        /** @var Budget $budget */
+        foreach (PiggyBank::get() as $piggyBank) {
+            $account = $piggyBank->account()->first();
+            if ($piggyBank->name == $name && $user->id == $account->user_id) {
+                return $piggyBank;
+                break;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param $name
+     *
+     * @return Category|null
+     */
+    protected function findCategory($name)
+    {
+        // account
+        $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
+        /** @var Category $category */
+        foreach (Category::get() as $category) {
+            if ($category->name == $name && $user->id == $category->user_id) {
+                return $category;
+                break;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param $name
+     *
+     * @return Bill|null
+     */
+    protected function findBill($name)
+    {
+        // account
+        $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
+        /** @var Bill $bill */
+        foreach (Bill::get() as $bill) {
+            if ($bill->name == $name && $user->id == $bill->user_id) {
+                return $bill;
+                break;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @param Carbon $date
      */
     public function createGroceries(Carbon $date)
     {
         // variables we need:
-        $checking   = Account::whereName('Checking account')->orderBy('id', 'DESC')->first();
-        $shopOne    = Account::whereName('Groceries House')->orderBy('id', 'DESC')->first();
-        $shopTwo    = Account::whereName('Super savers')->orderBy('id', 'DESC')->first();
-        $lunchHouse = Account::whereName('Lunch House')->orderBy('id', 'DESC')->first();
-        $lunch      = Category::whereName('Lunch')->orderBy('id', 'DESC')->first();
-        $daily      = Category::whereName('DailyGroceries')->orderBy('id', 'DESC')->first();
+        $checking   = $this->findAccount('Checking account');
+        $shopOne    = $this->findAccount('Groceries House');
+        $shopTwo    = $this->findAccount('Super savers');
+        $lunchHouse = $this->findAccount('Lunch House');
+        $lunch      = $this->findCategory('Lunch');
+        $daily      = $this->findCategory('DailyGroceries');
         $euro       = TransactionCurrency::whereCode('EUR')->first();
         $withdrawal = TransactionType::whereType('Withdrawal')->first();
-        $groceries  = Budget::whereName('Groceries')->orderBy('id', 'DESC')->first();
+        $groceries  = $this->findBudget('Groceries');
 
 
         $shops = [$shopOne, $shopTwo];
@@ -534,9 +622,9 @@ class TestDataSeeder extends Seeder
     {
         $date->addDays(12);
         $dollar     = TransactionCurrency::whereCode('USD')->first();
-        $checking   = Account::whereName('Checking account')->orderBy('id', 'DESC')->first();
-        $savings    = Account::whereName('Savings account')->orderBy('id', 'DESC')->first();
-        $buyMore    = Account::whereName('Buy More')->orderBy('id', 'DESC')->first();
+        $checking   = $this->findAccount('Checking account');
+        $savings    = $this->findAccount('Savings account');
+        $buyMore    = $this->findAccount('Buy More');
         $withdrawal = TransactionType::whereType('Withdrawal')->first();
         $user       = User::whereEmail('thegrumpydictator@gmail.com')->first();
 
@@ -571,13 +659,13 @@ class TestDataSeeder extends Seeder
         // piggy bank event
         // add money to this piggy bank
         // create a piggy bank event to match:
-        $checking  = Account::whereName('Checking account')->orderBy('id', 'DESC')->first();
-        $savings   = Account::whereName('Savings account')->orderBy('id', 'DESC')->first();
+        $checking  = $this->findAccount('Checking account');
+        $savings   = $this->findAccount('Savings account');
         $transfer  = TransactionType::whereType('Transfer')->first();
         $euro      = TransactionCurrency::whereCode('EUR')->first();
-        $groceries = Budget::whereName('Groceries')->orderBy('id', 'DESC')->first();
-        $house     = Category::whereName('House')->orderBy('id', 'DESC')->first();
-        $piggyBank = PiggyBank::whereName('New camera')->orderBy('id', 'DESC')->first();
+        $groceries = $this->findBudget('Groceries');
+        $house     = $this->findCategory('House');
+        $piggyBank = $this->findPiggyBank('New camera');
         $intoPiggy = $this->createJournal(
             ['from' => $checking, 'to' => $savings, 'amount' => 100, 'transactionType' => $transfer, 'description' => 'Money for piggy',
              'date' => $this->yaeom, 'transactionCurrency' => $euro, 'category' => $house, 'budget' => $groceries]

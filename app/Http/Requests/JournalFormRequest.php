@@ -3,8 +3,10 @@
 namespace FireflyIII\Http\Requests;
 
 use Auth;
-use Input;
+use Carbon\Carbon;
 use Exception;
+use Input;
+
 /**
  * Class JournalFormRequest
  *
@@ -19,6 +21,28 @@ class JournalFormRequest extends Request
     {
         // Only allow logged in users
         return Auth::check();
+    }
+
+    /**
+     * @return array
+     */
+    public function getJournalData()
+    {
+        return [
+            'what'               => $this->get('what'),
+            'description'        => $this->get('description'),
+            'account_id'         => intval($this->get('account_id')),
+            'account_from_id'    => intval($this->get('account_from_id')),
+            'account_to_id'      => intval($this->get('account_to_id')),
+            'expense_account'    => $this->get('expense_account'),
+            'revenue_account'    => $this->get('revenue_account'),
+            'amount'             => floatval($this->get('amount')),
+            'user'               => Auth::user()->id,
+            'amount_currency_id' => intval($this->get('amount_currency_id')),
+            'date'               => new Carbon($this->get('date')),
+            'budget_id'          => intval($this->get('budget_id')),
+            'category'           => $this->get('category'),
+        ];
     }
 
     /**

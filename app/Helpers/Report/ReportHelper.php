@@ -2,6 +2,7 @@
 
 namespace FireflyIII\Helpers\Report;
 
+use App;
 use Auth;
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
@@ -40,17 +41,20 @@ class ReportHelper implements ReportHelperInterface
      * This method gets some kind of list for a monthly overview.
      *
      * @param Carbon $date
+     * @param bool   $showSharedReports
      *
      * @return Collection
      */
-    public function getBudgetsForMonth(Carbon $date)
+    public function getBudgetsForMonth(Carbon $date, $showSharedReports = false)
     {
+        /** @var \FireflyIII\Helpers\Report\ReportQueryInterface $query */
+        $query = App::make('FireflyIII\Helpers\Report\ReportQueryInterface');
+
         $start = clone $date;
         $start->startOfMonth();
         $end = clone $date;
         $end->endOfMonth();
-        // all budgets
-        $set = Auth::user()->budgets()
+        $set = Auth::user()->budgets()->orderBy('budgets.name', 'ASC')
                    ->leftJoin(
                        'budget_limits', function (JoinClause $join) use ($date) {
                        $join->on('budget_limits.budget_id', '=', 'budgets.id')->where('budget_limits.startdate', '=', $date->format('Y-m-d'));
@@ -58,22 +62,24 @@ class ReportHelper implements ReportHelperInterface
                    )
                    ->get(['budgets.*', 'budget_limits.amount as amount']);
 
+        $budgets              = Steam::makeArray($set);
+        $amountSet            = $query->journalsByBudget($start, $end, $showSharedReports);
+        $amounts              = Steam::makeArray($amountSet);
+        $budgets              = Steam::mergeArrays($budgets, $amounts);
+        $budgets[0]['spent']  = isset($budgets[0]['spent']) ? $budgets[0]['spent'] : 0.0;
+        $budgets[0]['amount'] = isset($budgets[0]['amount']) ? $budgets[0]['amount'] : 0.0;
+        $budgets[0]['name']   = 'No budget';
 
-        $budgets               = $this->_helper->makeArray($set);
-        $amountSet             = $this->_queries->journalsByBudget($start, $end);
-        $amounts               = $this->_helper->makeArray($amountSet);
-        $combined              = $this->_helper->mergeArrays($budgets, $amounts);
-        $combined[0]['spent']  = isset($combined[0]['spent']) ? $combined[0]['spent'] : 0.0;
-        $combined[0]['amount'] = isset($combined[0]['amount']) ? $combined[0]['amount'] : 0.0;
-        $combined[0]['name']   = 'No budget';
-
-        // find transactions to shared expense accounts, which are without a budget by default:
-        $transfers = $this->_queries->sharedExpenses($start, $end);
-        foreach ($transfers as $transfer) {
-            $combined[0]['spent'] += floatval($transfer->amount) * -1;
+        // find transactions to shared asset accounts, which are without a budget by default:
+        // which is only relevant when shared asset accounts are hidden.
+        if ($showSharedReports === false) {
+            $transfers = $query->sharedExpenses($start, $end);
+            foreach ($transfers as $transfer) {
+                $budgets[0]['spent'] += floatval($transfer->amount) * -1;
+            }
         }
 
-        return $combined;
+        return $budgets;
     }
 
     /**
@@ -113,6 +119,9 @@ class ReportHelper implements ReportHelperInterface
             $years[] = $start->format('Y');
             $start->addYear();
         }
+        $years[] = Carbon::now()->format('Y');
+        // force the current year.
+        $years = array_unique($years);
 
         return $years;
     }

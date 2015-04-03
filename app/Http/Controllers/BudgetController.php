@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\BudgetFormRequest;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Input;
@@ -13,7 +14,7 @@ use Redirect;
 use Response;
 use Session;
 use View;
-
+use URL;
 /**
  * Class BudgetController
  *
@@ -22,6 +23,9 @@ use View;
 class BudgetController extends Controller
 {
 
+    /**
+     *
+     */
     public function __construct()
     {
         View::share('title', 'Budgets');
@@ -32,7 +36,6 @@ class BudgetController extends Controller
      * @param Budget $budget
      *
      * @return \Illuminate\Http\JsonResponse
-     * @throws Exception
      */
     public function amount(Budget $budget, BudgetRepositoryInterface $repository)
     {
@@ -49,6 +52,12 @@ class BudgetController extends Controller
      */
     public function create()
     {
+        // put previous url in session if not redirect from store (not "create another").
+        if (Session::get('budgets.create.fromStore') !== true) {
+            Session::put('budgets.create.url', URL::previous());
+        }
+        Session::forget('budgets.create.fromStore');
+
         return view('budgets.create')->with('subTitle', 'Create a new budget');
     }
 
@@ -60,6 +69,9 @@ class BudgetController extends Controller
     public function delete(Budget $budget)
     {
         $subTitle = 'Delete budget' . e($budget->name) . '"';
+
+        // put previous url in session
+        Session::put('budgets.delete.url', URL::previous());
 
         return view('budgets.delete', compact('budget', 'subTitle'));
     }
@@ -75,9 +87,11 @@ class BudgetController extends Controller
         $name = $budget->name;
         $repository->destroy($budget);
 
+
+
         Session::flash('success', 'The  budget "' . e($name) . '" was deleted.');
 
-        return Redirect::route('budgets.index');
+        return Redirect::to(Session::get('budgets.delete.url'));
     }
 
     /**
@@ -89,6 +103,12 @@ class BudgetController extends Controller
     {
         $subTitle = 'Edit budget "' . e($budget->name) . '"';
 
+        // put previous url in session if not redirect from store (not "return_to_edit").
+        if (Session::get('budgets.edit.fromUpdate') !== true) {
+            Session::put('budgets.edit.url', URL::previous());
+        }
+        Session::forget('budgets.edit.fromUpdate');
+
         return view('budgets.edit', compact('budget', 'subTitle'));
 
     }
@@ -98,7 +118,15 @@ class BudgetController extends Controller
      */
     public function index(BudgetRepositoryInterface $repository)
     {
-        $budgets = Auth::user()->budgets()->get();
+        $budgets  = Auth::user()->budgets()->where('active', 1)->get();
+        $inactive = Auth::user()->budgets()->where('active', 0)->get();
+
+        /**
+         * Do some cleanup:
+         */
+        $repository->cleanupBudgets();
+
+
 
         // loop the budgets:
         $budgets->each(
@@ -117,7 +145,7 @@ class BudgetController extends Controller
         $budgetMax     = Preferences::get('budgetMaximum', 1000);
         $budgetMaximum = $budgetMax->data;
 
-        return view('budgets.index', compact('budgetMaximum', 'budgets', 'spent', 'spentPCT', 'overspent', 'amount'));
+        return view('budgets.index', compact('budgetMaximum', 'inactive', 'budgets', 'spent', 'spentPCT', 'overspent', 'amount'));
     }
 
     /**
@@ -133,9 +161,9 @@ class BudgetController extends Controller
                         ->whereNull('budget_transaction_journal.id')
                         ->before($end)
                         ->after($start)
-            ->orderBy('transaction_journals.date', 'DESC')
-            ->orderBy('transaction_journals.order','ASC')
-            ->orderBy('transaction_journals.id','DESC')
+                        ->orderBy('transaction_journals.date', 'DESC')
+                        ->orderBy('transaction_journals.order', 'ASC')
+                        ->orderBy('transaction_journals.id', 'DESC')
                         ->get(['transaction_journals.*']);
         $subTitle = 'Transactions without a budget in ' . $start->format('F Y');
 
@@ -171,10 +199,13 @@ class BudgetController extends Controller
         Session::flash('success', 'New budget "' . $budget->name . '" stored!');
 
         if (intval(Input::get('create_another')) === 1) {
+            // set value so create routine will not overwrite URL:
+            Session::put('budgets.create.fromStore', true);
             return Redirect::route('budgets.create')->withInput();
         }
 
-        return Redirect::route('budgets.index');
+        // redirect to previous URL.
+        return Redirect::to(Session::get('budgets.create.url'));
 
     }
 
@@ -209,7 +240,8 @@ class BudgetController extends Controller
     public function update(Budget $budget, BudgetFormRequest $request, BudgetRepositoryInterface $repository)
     {
         $budgetData = [
-            'name' => $request->input('name'),
+            'name'   => $request->input('name'),
+            'active' => intval($request->input('active')) == 1
         ];
 
         $repository->update($budget, $budgetData);
@@ -217,10 +249,13 @@ class BudgetController extends Controller
         Session::flash('success', 'Budget "' . $budget->name . '" updated.');
 
         if (intval(Input::get('return_to_edit')) === 1) {
-            return Redirect::route('budgets.edit', $budget->id);
+            // set value so edit routine will not overwrite URL:
+            Session::put('budgets.edit.fromUpdate', true);
+            return Redirect::route('budgets.edit', $budget->id)->withInput(['return_to_edit' => 1]);
         }
 
-        return Redirect::route('budgets.index');
+        // redirect to previous URL.
+        return Redirect::to(Session::get('budgets.edit.url'));
 
     }
 

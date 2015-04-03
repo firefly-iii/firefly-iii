@@ -64,7 +64,7 @@ class AuthController extends Controller
             );
         }
 
-        $data  =$request->all();
+        $data             = $request->all();
         $data['password'] = bcrypt($data['password']);
 
         $this->auth->login($this->registrar->create($data));
@@ -81,6 +81,8 @@ class AuthController extends Controller
 
         // set flash message
         Session::flash('success', 'You have registered successfully!');
+        Session::flash('gaEventCategory', 'user');
+        Session::flash('gaEventAction', 'new-registration');
 
 
         return redirect($this->redirectPath());
