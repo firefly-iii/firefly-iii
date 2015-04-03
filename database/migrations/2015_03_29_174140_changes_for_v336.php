@@ -68,6 +68,13 @@ class ChangesForV336 extends Migration
         }
         );
 
+        // remove a long forgotten index:
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->dropUnique('unique_limit');
+        }
+        );
+
     }
 
     /**
@@ -95,7 +102,7 @@ class ChangesForV336 extends Migration
         Schema::table(
             'accounts', function (Blueprint $table) {
             $table->text('name')->change();
-            $table->decimal('virtual_balance',10,2)->default(0);
+            $table->decimal('virtual_balance', 10, 2)->default(0);
             $table->foreign('user_id', 'account_user_id')->references('id')->on('users')->onDelete('cascade');
         }
         );
@@ -121,6 +128,13 @@ class ChangesForV336 extends Migration
             'budgets', function (Blueprint $table) {
             $table->text('name')->change();
             $table->foreign('user_id', 'budget_user_id')->references('id')->on('users')->onDelete('cascade');
+        }
+        );
+
+        // reinstate a long forgotten index:
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+            $table->unique(['budget_id', 'startdate'],'unique_limit');
         }
         );
 

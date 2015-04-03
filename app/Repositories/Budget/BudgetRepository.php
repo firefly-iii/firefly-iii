@@ -17,6 +17,31 @@ class BudgetRepository implements BudgetRepositoryInterface
 {
 
     /**
+     * @return void
+     */
+    public function cleanupBudgets()
+    {
+        $limits = BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')->get(['budget_limits.*']);
+
+        // loop budget limits:
+        $found = [];
+        /** @var BudgetLimit $limit */
+        foreach ($limits as $limit) {
+            $key = $limit->budget_id . '-' . $limit->startdate;
+            if (isset($found[$key])) {
+                $limit->delete();
+            } else {
+                $found[$key] = true;
+            }
+            unset($key);
+        }
+
+        // delete limits with amount 0:
+        BudgetLimit::where('amount',0)->delete();
+
+    }
+
+    /**
      * @param Budget $budget
      *
      * @return boolean
