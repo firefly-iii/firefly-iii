@@ -46,8 +46,9 @@ class GoogleChartController extends Controller
      */
     public function accountBalanceChart(Account $account, GChart $chart)
     {
+        $accountName = iconv('UTF-8', 'ASCII//TRANSLIT', $account->name);
         $chart->addColumn('Day of month', 'date');
-        $chart->addColumn('Balance for ' . $account->name, 'number');
+        $chart->addColumn('Balance for ' . $accountName, 'number');
         $chart->addCertainty(1);
 
         $start   = Session::get('start', Carbon::now()->startOfMonth());
@@ -88,7 +89,8 @@ class GoogleChartController extends Controller
         $index = 1;
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $chart->addColumn('Balance for ' . $account->name, 'number');
+            $accountName = iconv('UTF-8', 'ASCII//TRANSLIT', $account->name);
+            $chart->addColumn('Balance for ' . $accountName, 'number');
             $chart->addCertainty($index);
             $index++;
         }
