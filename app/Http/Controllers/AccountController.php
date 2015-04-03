@@ -84,10 +84,11 @@ class AccountController extends Controller
      */
     public function edit(Account $account, AccountRepositoryInterface $repository)
     {
-        $what               = Config::get('firefly.shortNamesByFullName')[$account->accountType->type];
-        $subTitle           = 'Edit ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"';
-        $subTitleIcon       = Config::get('firefly.subIconsByIdentifier.' . $what);
-        $openingBalance     = $repository->openingBalanceTransaction($account);
+
+        $what           = Config::get('firefly.shortNamesByFullName')[$account->accountType->type];
+        $subTitle       = 'Edit ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"';
+        $subTitleIcon   = Config::get('firefly.subIconsByIdentifier.' . $what);
+        $openingBalance = $repository->openingBalanceTransaction($account);
 
         // pre fill some useful values.
 
@@ -100,10 +101,12 @@ class AccountController extends Controller
         }
 
         $preFilled = [
-            'accountRole'        => $account->getMeta('accountRole'),
-            'openingBalanceDate' => $openingBalance ? $openingBalance->date->format('Y-m-d') : null,
-            'openingBalance'     => $openingBalanceAmount,
-            'virtualBalance'     => floatval($account->virtual_balance)
+            'accountRole'          => $account->getMeta('accountRole'),
+            'ccType'               => $account->getMeta('ccType'),
+            'ccMonthlyPaymentDate' => $account->getMeta('ccMonthlyPaymentDate'),
+            'openingBalanceDate'   => $openingBalance ? $openingBalance->date->format('Y-m-d') : null,
+            'openingBalance'       => $openingBalanceAmount,
+            'virtualBalance'       => floatval($account->virtual_balance)
         ];
         Session::flash('preFilled', $preFilled);
 
@@ -227,6 +230,8 @@ class AccountController extends Controller
             'openingBalance'         => floatval($request->input('openingBalance')),
             'openingBalanceDate'     => new Carbon($request->input('openingBalanceDate')),
             'openingBalanceCurrency' => intval($request->input('balance_currency_id')),
+            'ccType'                 => $request->input('ccType'),
+            'ccMonthlyPaymentDate'   => $request->input('ccMonthlyPaymentDate'),
         ];
 
         $repository->update($account, $accountData);

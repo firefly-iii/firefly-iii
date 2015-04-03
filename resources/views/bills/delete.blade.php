@@ -10,8 +10,15 @@
             </div>
             <div class="panel-body">
                 <p>
-                Are you sure?
+                Are you sure that you want to delete bill "{{{$bill->name}}}"?
                 </p>
+
+                @if($bill->transactionjournals()->count() > 0)
+                    <p class="text-info">
+                        Bill "{{{$bill->name}}}" still has {{$bill->transactionjournals()->count()}} transactions connected
+                        to it. These will <strong>not</strong> be removed but will lose their connection to this bill.
+                    </p>
+                @endif
 
                 <p>
                     <button type="submit" class="btn btn-default btn-danger">Delete permanently</button>

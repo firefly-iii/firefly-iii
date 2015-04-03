@@ -53,20 +53,22 @@ class ExpandedForm
             return $options['label'];
         }
         $labels = [
-            'amount_min'         => 'Amount (min)',
-            'amount_max'         => 'Amount (max)',
-            'match'              => 'Matches on',
-            'repeat_freq'        => 'Repetition',
-            'account_from_id'    => 'Account from',
-            'account_to_id'      => 'Account to',
-            'account_id'         => 'Asset account',
-            'budget_id'          => 'Budget',
-            'openingBalance'     => 'Opening balance',
-            'virtualBalance'     => 'Virtual balance',
-            'targetamount'       => 'Target amount',
-            'accountRole'        => 'Account role',
-            'openingBalanceDate' => 'Opening balance date',
-            'piggy_bank_id'      => 'Piggy bank'];
+            'amount_min'           => 'Amount (min)',
+            'amount_max'           => 'Amount (max)',
+            'match'                => 'Matches on',
+            'repeat_freq'          => 'Repetition',
+            'account_from_id'      => 'Account from',
+            'account_to_id'        => 'Account to',
+            'account_id'           => 'Asset account',
+            'budget_id'            => 'Budget',
+            'openingBalance'       => 'Opening balance',
+            'virtualBalance'       => 'Virtual balance',
+            'targetamount'         => 'Target amount',
+            'accountRole'          => 'Account role',
+            'openingBalanceDate'   => 'Opening balance date',
+            'ccType'               => 'Credit card payment plan',
+            'ccMonthlyPaymentDate' => 'Credit card monthly payment date',
+            'piggy_bank_id'        => 'Piggy bank'];
 
 
         return isset($labels[$name]) ? $labels[$name] : str_replace('_', ' ', ucfirst($name));
@@ -188,6 +190,24 @@ class ExpandedForm
         $classes = $this->getHolderClasses($name);
         $value   = $this->fillFieldValue($name, $value);
         $html    = View::make('form.date', compact('classes', 'name', 'label', 'value', 'options'))->render();
+
+        return $html;
+    }
+
+    /**
+     * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     */
+    public function month($name, $value = null, array $options = [])
+    {
+        $label   = $this->label($name, $options);
+        $options = $this->expandOptionArray($name, $label, $options);
+        $classes = $this->getHolderClasses($name);
+        $value   = $this->fillFieldValue($name, $value);
+        $html    = View::make('form.month', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
     }

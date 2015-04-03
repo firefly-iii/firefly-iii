@@ -10,16 +10,19 @@
             </div>
             <div class="panel-body">
                 <p>
-                Are you sure?
+                Are you sure that you want to delete the {{strtolower($account->accountType->type)}} "{{$account->name}}"?
                 </p>
 
                 @if($account->transactions()->count() > 0)
-                    <p class="text-info">
-                        Account "{{{$account->name}}}" still has {{$account->transactions()->count()}} transaction(s) associated to it.
-                        These will be deleted as well.
+                    <p class="text-danger">
+                        {{ucfirst($account->accountType->type)}} "{{{$account->name}}}" still has {{$account->transactions()->count()}} transaction(s) associated to it. These will be deleted as well.
                     </p>
                 @endif
-
+                @if($account->piggyBanks()->count() > 0)
+                    <p class="text-danger">
+                        {{ucfirst($account->accountType->type)}} "{{{$account->name}}}" still has {{$account->piggyBanks()->count()}} piggy bank(s) associated to it. These will be deleted as well.
+                    </p>
+                @endif
                 <p>
                     <button type="submit" class="btn btn-default btn-danger">Delete permanently</button>
                     <a href="{{URL::previous()}}" class="btn-default btn">Cancel</a >

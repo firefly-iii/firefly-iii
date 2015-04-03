@@ -45,7 +45,8 @@
                 <i class="fa fa-credit-card"></i> Credit card options
             </div>
             <div class="panel-body">
-                Will be here.
+                {!! ExpandedForm::select('ccType',Config::get('firefly.ccTypes')) !!}
+                {!! ExpandedForm::date('ccMonthlyPaymentDate',null,['helpText' => 'Select any year and any month, it will be ignored anway. Only the day of the month is relevant.']) !!}
             </div>
         </div>
         @endif

@@ -2,6 +2,7 @@
 
 namespace FireflyIII\Repositories\Journal;
 
+use App;
 use Auth;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -11,6 +12,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class JournalRepository
@@ -19,6 +21,16 @@ use Illuminate\Support\Collection;
  */
 class JournalRepository implements JournalRepositoryInterface
 {
+
+    /**
+     * Get users first transaction journal
+     *
+     * @return TransactionJournal
+     */
+    public function first()
+    {
+        return Auth::user()->transactionjournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
+    }
 
     /**
      *
@@ -149,7 +161,7 @@ class JournalRepository implements JournalRepositoryInterface
                 'amount'                 => $data['amount'] * -1
             ]
         );
-        $transaction = Transaction::create( // second transaction.
+        Transaction::create( // second transaction.
             [
                 'account_id'             => $to->id,
                 'transaction_journal_id' => $journal->id,
@@ -226,7 +238,7 @@ class JournalRepository implements JournalRepositoryInterface
     protected function storeAccounts(TransactionType $type, array $data)
     {
         $from = null;
-        $to = null;
+        $to   = null;
         switch ($type->type) {
             case 'Withdrawal':
 
@@ -234,12 +246,14 @@ class JournalRepository implements JournalRepositoryInterface
 
                 if (strlen($data['expense_account']) > 0) {
                     $toType = AccountType::where('type', 'Expense account')->first();
-                    $to     = Account::firstOrCreate(
+                    $to     = Account::firstOrCreateEncrypted(
                         ['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => $data['expense_account'], 'active' => 1]
                     );
                 } else {
                     $toType = AccountType::where('type', 'Cash account')->first();
-                    $to     = Account::firstOrCreateEncrypted(['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => 'Cash account', 'active' => 1]);
+                    $to     = Account::firstOrCreateEncrypted(
+                        ['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => 'Cash account', 'active' => 1]
+                    );
                 }
                 break;
 
@@ -253,7 +267,9 @@ class JournalRepository implements JournalRepositoryInterface
                     );
                 } else {
                     $toType = AccountType::where('type', 'Cash account')->first();
-                    $from   = Account::firstOrCreateEncrypted(['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => 'Cash account', 'active' => 1]);
+                    $from   = Account::firstOrCreateEncrypted(
+                        ['user_id' => $data['user'], 'account_type_id' => $toType->id, 'name' => 'Cash account', 'active' => 1]
+                    );
                 }
 
                 break;
@@ -262,18 +278,16 @@ class JournalRepository implements JournalRepositoryInterface
                 $to   = Account::find($data['account_to_id']);
                 break;
         }
+        if (is_null($to->id)) {
+            Log::error('"to"-account is null, so we cannot continue!');
+            App::abort(500, '"to"-account is null, so we cannot continue!');
+        }
+        if (is_null($from->id)) {
+            Log::error('"from"-account is null, so we cannot continue!');
+            App::abort(500, '"from"-account is null, so we cannot continue!');
+        }
 
         return [$from, $to];
-    }
-
-    /**
-     * Get users first transaction journal
-     *
-     * @return TransactionJournal
-     */
-    public function first()
-    {
-        return Auth::user()->transactionjournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
     }
 
 }

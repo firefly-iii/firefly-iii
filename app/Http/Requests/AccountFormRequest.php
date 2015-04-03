@@ -28,8 +28,9 @@ class AccountFormRequest extends Request
      */
     public function rules()
     {
-        $accountRoles = join(',', array_keys(Config::get('firefly.accountRoles')));
-        $types        = join(',', array_keys(Config::get('firefly.subTitlesByIdentifier')));
+        $accountRoles   = join(',', array_keys(Config::get('firefly.accountRoles')));
+        $types          = join(',', array_keys(Config::get('firefly.subTitlesByIdentifier')));
+        $ccPaymentTypes = join(',', array_keys(Config::get('firefly.ccTypes')));
 
         $nameRule = 'required|between:1,100|uniqueAccountForUser';
         $idRule   = '';
@@ -39,15 +40,17 @@ class AccountFormRequest extends Request
         }
 
         return [
-            'id'                  => $idRule,
-            'name'                => $nameRule,
-            'openingBalance'      => 'numeric',
-            'virtualBalance'      => 'numeric',
-            'openingBalanceDate'  => 'date',
-            'accountRole'         => 'in:' . $accountRoles,
-            'active'              => 'boolean',
-            'balance_currency_id' => 'exists:transaction_currencies,id',
-            'what'                => 'in:' . $types
+            'id'                   => $idRule,
+            'name'                 => $nameRule,
+            'openingBalance'       => 'numeric',
+            'virtualBalance'       => 'numeric',
+            'openingBalanceDate'   => 'date',
+            'accountRole'          => 'in:' . $accountRoles,
+            'active'               => 'boolean',
+            'ccType'               => 'in:' . $ccPaymentTypes,
+            'ccMonthlyPaymentDate' => 'date',
+            'balance_currency_id'  => 'exists:transaction_currencies,id',
+            'what'                 => 'in:' . $types
         ];
     }
 }

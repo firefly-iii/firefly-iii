@@ -10,8 +10,15 @@
             </div>
             <div class="panel-body">
                 <p>
-                Are you sure?
+                Are you sure that you want to delete budget "{{{$budget->name}}}"?
                 </p>
+
+                @if($budget->transactionjournals()->count() > 0)
+                    <p class="text-info">
+                        Budget "{{{$budget->name}}}" still has {{$budget->transactionjournals()->count()}} transactions connected
+                        to it. These will <strong>not</strong> be removed but will lose their connection to this budget.
+                    </p>
+                @endif
 
                 <p>
                     <button type="submit" class="btn btn-default btn-danger">Delete permanently</button>

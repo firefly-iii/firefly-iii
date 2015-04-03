@@ -321,17 +321,21 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function storeMetadata(Account $account, array $data)
     {
-        $metaData = new AccountMeta(
-            [
-                'account_id' => $account->id,
-                'name'       => 'accountRole',
-                'data'       => $data['accountRole']
-            ]
-        );
-        if (!$metaData->isValid()) {
-            App::abort(500);
+        $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType'];
+        foreach ($validFields as $field) {
+            if (isset($data[$field])) {
+                $metaData = new AccountMeta(
+                    [
+                        'account_id' => $account->id,
+                        'name'       => $field,
+                        'data'       => $data[$field]
+                    ]
+                );
+                $metaData->save();
+            }
+
+
         }
-        $metaData->save();
     }
 
     /**
@@ -412,30 +416,28 @@ class AccountRepository implements AccountRepositoryInterface
      */
     protected function updateMetadata(Account $account, array $data)
     {
-        $metaEntries = $account->accountMeta()->get();
+        $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType'];
         $updated     = false;
 
-        /** @var AccountMeta $entry */
-        foreach ($metaEntries as $entry) {
-            if ($entry->name == 'accountRole') {
-                $entry->data = $data['accountRole'];
-                $updated     = true;
+        foreach ($validFields as $field) {
+            $entry = $account->accountMeta()->where('name', $field)->first();
+
+            // update if new data is present:
+            if ($entry && isset($data[$field])) {
+                $entry->data = $data[$field];
                 $entry->save();
             }
-        }
-
-        if ($updated === false) {
-            $metaData = new AccountMeta(
-                [
-                    'account_id' => $account->id,
-                    'name'       => 'accountRole',
-                    'data'       => $data['accountRole']
-                ]
-            );
-            if (!$metaData->isValid()) {
-                App::abort(500);
+            // no entry but data present?
+            if (!$entry && isset($data[$field])) {
+                $metaData = new AccountMeta(
+                    [
+                        'account_id' => $account->id,
+                        'name'       => $field,
+                        'data'       => $data[$field]
+                    ]
+                );
+                $metaData->save();
             }
-            $metaData->save();
         }
 
     }

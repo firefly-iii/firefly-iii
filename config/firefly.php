@@ -32,6 +32,9 @@ return [
         '6M'     => 'half year',
         'custom' => '(custom)'
     ],
+    'ccTypes' => [
+        'monthlyFull' => 'Full payment every month'
+    ],
     'range_to_name'            => [
         '1D' => 'one day',
         '1W' => 'one week',
