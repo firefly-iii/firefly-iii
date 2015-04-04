@@ -12,8 +12,8 @@ use League\FactoryMuffin\Facade as FactoryMuffin;
  */
 class AccountControllerTest extends TestCase
 {
-
-    protected $account;
+    /** @var  Account */
+    public $account;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -22,10 +22,18 @@ class AccountControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->account = FactoryMuffin::create('FireflyIII\Models\Account');
-
+        $this->createAccount();
     }
 
+    /**
+     * This method is called before the first test of this test class is run.
+     *
+     * @since Method available since Release 3.4.0
+     */
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+    }
 
     /**
      * Tears down the fixture, for example, closes a network connection.
@@ -33,21 +41,19 @@ class AccountControllerTest extends TestCase
      */
     public function tearDown()
     {
-
-        foreach (DB::table('accounts')->get() as $entry) {
-            DB::table('accounts')->delete($entry->id);
-        }
-        foreach (DB::table('account_types')->get() as $entry) {
-            DB::table('account_types')->delete($entry->id);
-        }
         parent::tearDown();
-        /*
-         * Delete some entries?
-         */
-
 
     }
 
+    public function createAccount()
+    {
+        if (is_null($this->account)) {
+            $this->account                    = FactoryMuffin::create('FireflyIII\Models\Account');
+            Log::debug('Created a new account.');
+            //$this->account->accountType->type = 'Asset account';
+            //$this->account->accountType->save();
+        }
+    }
 
     public function testCreate()
     {
@@ -75,9 +81,6 @@ class AccountControllerTest extends TestCase
 
     public function testDelete()
     {
-        // fake an account.
-        $this->account->accountType->type = 'Asset account';
-        $this->account->accountType->save();
 
         $this->be($this->account->user);
         $this->call('GET', '/accounts/delete/' . $this->account->id);
@@ -89,13 +92,15 @@ class AccountControllerTest extends TestCase
     public function testDestroy()
     {
         // fake an account.
-        $this->be($this->account->user);
-        $this->assertCount(1, DB::table('accounts')->where('id', $this->account->id)->whereNull('deleted_at')->get());
+        $account = FactoryMuffin::create('FireflyIII\Models\Account');
+
+        $this->be($account->user);
+        $this->assertCount(1, DB::table('accounts')->where('id', $account->id)->whereNull('deleted_at')->get());
 
         // post it!
-        $this->call('POST', '/accounts/destroy/' . $this->account->id, ['_token' => 'replaceme']);
+        $this->call('POST', '/accounts/destroy/' . $account->id, ['_token' => 'replaceme']);
         $this->assertSessionHas('success');
-        $this->assertCount(0, DB::table('accounts')->where('id', $this->account->id)->whereNull('deleted_at')->get());
+        $this->assertCount(0, DB::table('accounts')->where('id', $account->id)->whereNull('deleted_at')->get());
     }
 
     public function testEdit()
@@ -160,13 +165,12 @@ class AccountControllerTest extends TestCase
     public function testShow()
     {
         // an account:
-        $account = FactoryMuffin::create('FireflyIII\Models\Account');
-        $this->be($account->user);
+        $this->be($this->account->user);
 
         Amount::shouldReceive('getCurrencyCode')->once()->andReturn('A');
 
         // get edit page:
-        $this->call('GET', '/accounts/show/' . $account->id);
+        $this->call('GET', '/accounts/show/' . $this->account->id);
         $this->assertResponseOk();
     }
 
