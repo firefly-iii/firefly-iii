@@ -43,8 +43,8 @@ class Category extends Model
      */
     public function setNameAttribute($value)
     {
-        $this->attributes['name']      = Crypt::encrypt($value);
-        $this->attributes['encrypted'] = true;
+        $this->attributes['name']      = \Config::get('database.encryption') ? Crypt::encrypt($value) : $value;
+        $this->attributes['encrypted'] = \Config::get('database.encryption');
     }
     /**
      * @param $value

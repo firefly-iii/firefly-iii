@@ -7,6 +7,7 @@ use Input;
 use Preferences;
 use Session;
 use Redirect;
+use Config;
 /**
  * Class HomeController
  *
@@ -41,7 +42,8 @@ class HomeController extends Controller
     public function index(AccountRepositoryInterface $repository)
     {
 
-        $count         = $repository->countAssetAccounts();
+        $types        = Config::get('firefly.accountTypesByIdentifier.asset');
+        $count         = $repository->countAccounts($types);
         $title         = 'Firefly';
         $subTitle      = 'What\'s playing?';
         $mainTitleIcon = 'fa-fire';

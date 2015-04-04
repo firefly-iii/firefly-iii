@@ -184,8 +184,8 @@ class TransactionJournal extends Model
      */
     public function setDescriptionAttribute($value)
     {
-        $this->attributes['description'] = \Crypt::encrypt($value);
-        $this->attributes['encrypted']   = true;
+        $this->attributes['description']    = \Config::get('database.encryption') ? Crypt::encrypt($value) : $value;
+        $this->attributes['encrypted']      = \Config::get('database.encryption');        
     }
 
     /**
