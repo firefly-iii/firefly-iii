@@ -48,7 +48,11 @@ FactoryMuffin::define(
 
 FactoryMuffin::define(
     'FireflyIII\Models\AccountType', [
-                                       'type'     => 'word',
+                                       'type'     => function () {
+                                           $types = ['Expense account', 'Revenue account', 'Asset account'];
+
+                                           return $types[rand(0, 2)];
+                                       },
                                        'editable' => 1,
                                    ]
 );
