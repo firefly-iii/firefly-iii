@@ -122,4 +122,15 @@ return [
 
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Encryption
+    |--------------------------------------------------------------------------
+    |
+    | Configures whether to encrypt values within the database or not.
+    |
+    */
+
+    'encryption' => false,
+
 ];
