@@ -1,7 +1,10 @@
 <?php
 use Carbon\Carbon;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
+use Illuminate\Support\Collection;
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
 /**
@@ -9,6 +12,8 @@ use League\FactoryMuffin\Facade as FactoryMuffin;
  */
 class AccountControllerTest extends TestCase
 {
+    /** @var  Account */
+    public $account;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -17,9 +22,18 @@ class AccountControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-
+        $this->createAccount();
     }
 
+    /**
+     * This method is called before the first test of this test class is run.
+     *
+     * @since Method available since Release 3.4.0
+     */
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+    }
 
     /**
      * Tears down the fixture, for example, closes a network connection.
@@ -28,8 +42,18 @@ class AccountControllerTest extends TestCase
     public function tearDown()
     {
         parent::tearDown();
+
     }
 
+    public function createAccount()
+    {
+        if (is_null($this->account)) {
+            $this->account                    = FactoryMuffin::create('FireflyIII\Models\Account');
+            Log::debug('Created a new account.');
+            //$this->account->accountType->type = 'Asset account';
+            //$this->account->accountType->save();
+        }
+    }
 
     public function testCreate()
     {
@@ -57,24 +81,18 @@ class AccountControllerTest extends TestCase
 
     public function testDelete()
     {
-        // fake an account.
-        $account                    = FactoryMuffin::create('FireflyIII\Models\Account');
-        $account->accountType->type = 'Asset account';
-        $account->accountType->save();
 
-        $this->be($account->user);
-        $this->call('GET', '/accounts/delete/' . $account->id);
+        $this->be($this->account->user);
+        $this->call('GET', '/accounts/delete/' . $this->account->id);
         $this->assertResponseOk();
-        $this->assertViewHas('subTitle', 'Delete ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"');
+        $this->assertViewHas('subTitle', 'Delete ' . strtolower(e($this->account->accountType->type)) . ' "' . e($this->account->name) . '"');
 
     }
 
     public function testDestroy()
     {
         // fake an account.
-        $account                    = FactoryMuffin::create('FireflyIII\Models\Account');
-        $account->accountType->type = 'Asset account';
-        $account->accountType->save();
+        $account = FactoryMuffin::create('FireflyIII\Models\Account');
 
         $this->be($account->user);
         $this->assertCount(1, DB::table('accounts')->where('id', $account->id)->whereNull('deleted_at')->get());
@@ -88,12 +106,9 @@ class AccountControllerTest extends TestCase
     public function testEdit()
     {
         // fake an account.
-        $account                    = FactoryMuffin::create('FireflyIII\Models\Account');
-        $account->accountType->type = 'Asset account';
-        $account->accountType->save();
 
-        $this->be($account->user);
-        $this->assertCount(1, DB::table('accounts')->where('id', $account->id)->whereNull('deleted_at')->get());
+        $this->be($this->account->user);
+        $this->assertCount(1, DB::table('accounts')->where('id', $this->account->id)->whereNull('deleted_at')->get());
 
         // create a transaction journal that will act as opening balance:
         $openingBalance = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
@@ -110,24 +125,32 @@ class AccountControllerTest extends TestCase
         Amount::shouldReceive('getAllCurrencies')->once()->andReturn([$currency]);
 
         // get edit page:
-        $this->call('GET', '/accounts/edit/' . $account->id);
+        $this->call('GET', '/accounts/edit/' . $this->account->id);
 
         // assert stuff:
         $this->assertResponseOk();
         $this->assertSessionHas('preFilled');
-        $this->assertViewHas('subTitle', 'Edit ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"');
+        $this->assertViewHas('subTitle', 'Edit ' . strtolower(e($this->account->accountType->type)) . ' "' . e($this->account->name) . '"');
 
 
     }
 
     public function testIndex()
     {
-        $user = FactoryMuffin::create('FireflyIII\User');
-        $this->be($user);
+        // an account:
+        $this->be($this->account->user);
 
-        // get currency code:
-        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
-        Amount::shouldReceive('getCurrencyCode')->andReturn($currency->code);
+        $collection = new Collection;
+        $collection->push($this->account);
+
+        $repository = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $repository->shouldReceive('getAccounts')->andReturn($collection);
+        $repository->shouldReceive('countAccounts')->andReturn(1);
+        $repository->shouldReceive('getLastActivity')->andReturn(null);
+
+        Amount::shouldReceive('format')->andReturn('');
+        Amount::shouldReceive('getCurrencyCode')->once()->andReturn('A');
+
 
         // put stuff in session:
         $this->session(['start' => new Carbon, 'end' => new Carbon]);
@@ -141,7 +164,14 @@ class AccountControllerTest extends TestCase
 
     public function testShow()
     {
-        $this->markTestIncomplete();
+        // an account:
+        $this->be($this->account->user);
+
+        Amount::shouldReceive('getCurrencyCode')->once()->andReturn('A');
+
+        // get edit page:
+        $this->call('GET', '/accounts/show/' . $this->account->id);
+        $this->assertResponseOk();
     }
 
     public function testStore()

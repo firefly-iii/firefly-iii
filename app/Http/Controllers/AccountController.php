@@ -1,5 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
+use Amount;
 use Auth;
 use Carbon\Carbon;
 use Config;
@@ -7,7 +8,6 @@ use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Input;
 use Redirect;
@@ -114,43 +114,32 @@ class AccountController extends Controller
     }
 
     /**
-     * @param string $what
+     * @param                            $what
+     * @param AccountRepositoryInterface $repository
      *
      * @return View
      */
-    public function index($what = 'default')
+    public function index($what, AccountRepositoryInterface $repository)
     {
         $subTitle     = Config::get('firefly.subTitlesByIdentifier.' . $what);
         $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
         $types        = Config::get('firefly.accountTypesByIdentifier.' . $what);
         $size         = 50;
         $page         = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
-        $offset       = ($page - 1) * $size;
-
-
-        // move to repository:
-        $set   = Auth::user()->accounts()->with(
-            ['accountmeta' => function (HasMany $query) {
-                $query->where('name', 'accountRole');
-            }]
-        )->accountTypeIn($types)->take($size)->offset($offset)->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
-        $total = Auth::user()->accounts()->accountTypeIn($types)->count();
+        $set          = $repository->getAccounts($types, $page);
+        $total        = $repository->countAccounts($types);
 
         // last activity:
+        /**
+         * HERE WE ARE
+         */
         $start = clone Session::get('start', Carbon::now()->startOfMonth());
         $start->subDay();
         $set->each(
-            function (Account $account) use ($start) {
-                $lastTransaction = $account->transactions()->leftJoin(
-                    'transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
-                )->orderBy('transaction_journals.date', 'DESC')->first(['transactions.*', 'transaction_journals.date']);
-                if ($lastTransaction) {
-                    $account->lastActivityDate = $lastTransaction->transactionjournal->date;
-                } else {
-                    $account->lastActivityDate = null;
-                }
-                $account->startBalance = Steam::balance($account, $start);
-                $account->endBalance   = Steam::balance($account, clone Session::get('end'));
+            function (Account $account) use ($start, $repository) {
+                $account->lastActivityDate = $repository->getLastActivity($account);
+                $account->startBalance     = Steam::balance($account, $start);
+                $account->endBalance       = Steam::balance($account, clone Session::get('end', Carbon::now()->endOfMonth()));
             }
         );
 
@@ -175,6 +164,8 @@ class AccountController extends Controller
         $journals     = $repository->getJournals($account, $page);
         $subTitle     = 'Details for ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"';
         $journals->setPath('accounts/show/' . $account->id);
+
+
 
         return view('accounts.show', compact('account', 'what', 'subTitleIcon', 'journals', 'subTitle'));
     }

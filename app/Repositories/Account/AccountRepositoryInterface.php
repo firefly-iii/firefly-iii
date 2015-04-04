@@ -17,6 +17,13 @@ use Illuminate\Support\Collection;
 interface AccountRepositoryInterface
 {
     /**
+     * @param array $types
+     *
+     * @return int
+     */
+    public function countAccounts(array $types);
+
+    /**
      * @param Account $account
      *
      * @return boolean
@@ -24,9 +31,20 @@ interface AccountRepositoryInterface
     public function destroy(Account $account);
 
     /**
-     * @return int
+     * @param array $types
+     * @param int   $page
+     *
+     * @return mixed
      */
-    public function countAssetAccounts();
+    public function getAccounts(array $types, $page);
+
+    /**
+     * @param TransactionJournal $journal
+     * @param Account            $account
+     *
+     * @return Transaction
+     */
+    public function getFirstTransaction(TransactionJournal $journal, Account $account);
 
     /**
      * @param Preference $preference
@@ -55,6 +73,27 @@ interface AccountRepositoryInterface
     /**
      * @param Account $account
      *
+     * @return Carbon|null
+     */
+    public function getLastActivity(Account $account);
+
+    /**
+     * Get savings accounts and the balance difference in the period.
+     *
+     * @return Collection
+     */
+    public function getSavingsAccounts();
+
+    /**
+     * @param Account $account
+     *
+     * @return float
+     */
+    public function leftOnAccount(Account $account);
+
+    /**
+     * @param Account $account
+     *
      * @return TransactionJournal|null
      */
     public function openingBalanceTransaction(Account $account);
@@ -73,27 +112,4 @@ interface AccountRepositoryInterface
      * @return Account
      */
     public function update(Account $account, array $data);
-
-    /**
-     * @param Account $account
-     *
-     * @return float
-     */
-    public function leftOnAccount(Account $account);
-
-    /**
-     * Get savings accounts and the balance difference in the period.
-     *
-     * @return Collection
-     */
-    public function getSavingsAccounts();
-
-
-    /**
-     * @param TransactionJournal $journal
-     * @param Account            $account
-     *
-     * @return Transaction
-     */
-    public function getFirstTransaction(TransactionJournal $journal, Account $account);
 }

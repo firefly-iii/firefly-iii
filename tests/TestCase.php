@@ -29,7 +29,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
      */
     public static function setUpBeforeClass()
     {
-
+        parent::setUpBeforeClass();
     }
 
     /**
