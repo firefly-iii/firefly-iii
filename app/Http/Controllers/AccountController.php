@@ -192,7 +192,7 @@ class AccountController extends Controller
         ];
         $account     = $repository->store($accountData);
 
-        Session::flash('success', 'New account "' . $account->name . '" stored!');
+        Session::flash('success', 'New account "' .  $account->name . '" stored!');
 
         if (intval(Input::get('create_another')) === 1) {
             return Redirect::route('accounts.create', $request->input('what'))->withInput();

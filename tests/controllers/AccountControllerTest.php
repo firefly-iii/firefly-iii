@@ -48,7 +48,7 @@ class AccountControllerTest extends TestCase
     public function createAccount()
     {
         if (is_null($this->account)) {
-            $this->account                    = FactoryMuffin::create('FireflyIII\Models\Account');
+            $this->account = FactoryMuffin::create('FireflyIII\Models\Account');
             Log::debug('Created a new account.');
             //$this->account->accountType->type = 'Asset account';
             //$this->account->accountType->save();
@@ -176,12 +176,124 @@ class AccountControllerTest extends TestCase
 
     public function testStore()
     {
-        $this->markTestIncomplete();
+        // an account:
+        $this->be($this->account->user);
+
+        $data = [
+            'name'                   => 'New test account ' . rand(1, 1000),
+            'what'                   => 'asset',
+            'virtualBalance'         => 0,
+            'accountRole'            => 'defaultAsset',
+            'openingBalance'         => 20,
+            'openingBalanceDate'     => date('Y-m-d'),
+            'openingBalanceCurrency' => 1,
+            '_token'                 => 'replaceme'
+        ];
+
+        // fake validation routine:
+        $request = $this->mock('FireflyIII\Http\Requests\AccountFormRequest');
+        $request->shouldReceive('input')->andReturn('');
+
+        // fake store routine:
+        $repository = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $repository->shouldReceive('store')->andReturn($this->account);
+
+        $this->call('POST', '/accounts/store', $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+
+    }
+
+    public function testStoreAndRedirect()
+    {
+        // an account:
+        $this->be($this->account->user);
+
+        $data = [
+            'name'                   => 'New test account ' . rand(1, 1000),
+            'what'                   => 'asset',
+            'virtualBalance'         => 0,
+            'accountRole'            => 'defaultAsset',
+            'openingBalance'         => 20,
+            'openingBalanceDate'     => date('Y-m-d'),
+            'openingBalanceCurrency' => 1,
+            '_token'                 => 'replaceme',
+            'create_another'         => 1,
+        ];
+
+        // fake validation routine:
+        $request = $this->mock('FireflyIII\Http\Requests\AccountFormRequest');
+        $request->shouldReceive('input')->andReturn('');
+
+        // fake store routine:
+        $repository = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $repository->shouldReceive('store')->andReturn($this->account);
+
+        $this->call('POST', '/accounts/store', $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+
     }
 
     public function testUpdate()
     {
-        $this->markTestIncomplete();
+
+        // an account:
+        $this->be($this->account->user);
+
+        $data = [
+            'name'                   => 'Edited test account ' . rand(1, 1000),
+            'active'                 => 1,
+            'accountRole'            => 'defaultAsset',
+            'virtualBalance'         => 0,
+            'openingBalance'         => 25,
+            'openingBalanceDate'     => date('Y-m-d'),
+            'openingBalanceCurrency' => 1,
+            '_token'                 => 'replaceme'
+        ];
+
+        // fake validation routine:
+        $request = $this->mock('FireflyIII\Http\Requests\AccountFormRequest');
+        $request->shouldReceive('input')->andReturn('');
+
+        // fake update routine:
+        $repository = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $repository->shouldReceive('update')->andReturn($this->account);
+
+        $this->call('POST', '/accounts/update/' . $this->account->id, $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+    }
+
+    public function testUpdateAndRedirect()
+    {
+
+        // an account:
+        $this->be($this->account->user);
+
+        $data = [
+            'name'                   => 'Edited test account ' . rand(1, 1000),
+            'active'                 => 1,
+            'accountRole'            => 'defaultAsset',
+            'virtualBalance'         => 0,
+            'openingBalance'         => 25,
+            'openingBalanceDate'     => date('Y-m-d'),
+            'openingBalanceCurrency' => 1,
+            '_token'                 => 'replaceme',
+            'return_to_edit'         => 1,
+        ];
+
+        // fake validation routine:
+        $request = $this->mock('FireflyIII\Http\Requests\AccountFormRequest');
+        $request->shouldReceive('input')->andReturn('');
+
+        // fake update routine:
+        $repository = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $repository->shouldReceive('update')->andReturn($this->account);
+
+        $this->call('POST', '/accounts/update/' . $this->account->id, $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
 }
