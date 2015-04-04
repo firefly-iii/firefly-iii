@@ -1,8 +1,8 @@
 <?php
 use Carbon\Carbon;
-use FireflyIII\Models\Preference;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
 use Illuminate\Support\Collection;
 use League\FactoryMuffin\Facade as FactoryMuffin;
@@ -12,6 +12,8 @@ use League\FactoryMuffin\Facade as FactoryMuffin;
  */
 class AccountControllerTest extends TestCase
 {
+
+    protected $account;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -31,7 +33,18 @@ class AccountControllerTest extends TestCase
      */
     public function tearDown()
     {
+
+        foreach (DB::table('accounts')->get() as $entry) {
+            DB::table('accounts')->delete($entry->id);
+        }
+        foreach (DB::table('account_types')->get() as $entry) {
+            DB::table('account_types')->delete($entry->id);
+        }
         parent::tearDown();
+        /*
+         * Delete some entries?
+         */
+
 
     }
 
@@ -125,7 +138,7 @@ class AccountControllerTest extends TestCase
         $collection = new Collection;
         $collection->push($this->account);
 
-        $repository     = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $repository = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
         $repository->shouldReceive('getAccounts')->andReturn($collection);
         $repository->shouldReceive('countAccounts')->andReturn(1);
         $repository->shouldReceive('getLastActivity')->andReturn(null);
