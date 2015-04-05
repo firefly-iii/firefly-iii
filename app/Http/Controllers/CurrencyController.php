@@ -5,12 +5,13 @@ use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\CurrencyFormRequest;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Input;
 use Preferences;
 use Redirect;
 use Session;
-use View;
 use URL;
+use View;
 
 /**
  * Class CurrencyController
@@ -56,9 +57,7 @@ class CurrencyController extends Controller
     public function defaultCurrency(TransactionCurrency $currency)
     {
 
-        $currencyPreference       = Preferences::get('currencyPreference', 'EUR');
-        $currencyPreference->data = $currency->code;
-        $currencyPreference->save();
+        Preferences::set('currencyPreference', $currency->code);
 
         Session::flash('success', $currency->name . ' is now the default currency.');
         Cache::forget('FFCURRENCYSYMBOL');
@@ -73,16 +72,17 @@ class CurrencyController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
-    public function delete(TransactionCurrency $currency)
+    public function delete(TransactionCurrency $currency, CurrencyRepositoryInterface $repository)
     {
-        if ($currency->transactionJournals()->count() > 0) {
-            Session::flash('error', 'Cannot delete ' . e($currency->name) . ' because there are still transactions attached to it.');
 
-            // put previous url in session
-            Session::put('currency.delete.url', URL::previous());
+        if ($repository->countJournals($currency) > 0) {
+            Session::flash('error', 'Cannot delete ' . e($currency->name) . ' because there are still transactions attached to it.');
 
             return Redirect::route('currency.index');
         }
+
+        // put previous url in session
+        Session::put('currency.delete.url', URL::previous());
 
 
         return view('currency.delete', compact('currency'));
@@ -93,10 +93,10 @@ class CurrencyController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(TransactionCurrency $currency)
+    public function destroy(TransactionCurrency $currency, CurrencyRepositoryInterface $repository)
     {
-        if ($currency->transactionJournals()->count() > 0) {
-            Session::flash('error', 'Cannot delete ' . e($currency->name) . ' because there are still transactions attached to it.');
+        if ($repository->countJournals($currency) > 0) {
+            Session::flash('error', 'Cannot destroy ' . e($currency->name) . ' because there are still transactions attached to it.');
 
             return Redirect::route('currency.index');
         }
@@ -132,12 +132,10 @@ class CurrencyController extends Controller
     /**
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(CurrencyRepositoryInterface $repository)
     {
-        $currencies         = TransactionCurrency::get();
-        $currencyPreference = Preferences::get('currencyPreference', 'EUR');
-        $defaultCurrency    = TransactionCurrency::whereCode($currencyPreference->data)->first();
-
+        $currencies      = $repository->get();
+        $defaultCurrency = $repository->getCurrencyByPreference(Preferences::get('currencyPreference', 'EUR'));
 
         return view('currency.index', compact('currencies', 'defaultCurrency'));
     }
@@ -147,28 +145,22 @@ class CurrencyController extends Controller
      *
      * @return $this|\Illuminate\Http\RedirectResponse
      */
-    public function store(CurrencyFormRequest $request)
+    public function store(CurrencyFormRequest $request, CurrencyRepositoryInterface $repository)
     {
+        $data     = $request->getCurrencyData();
+        $currency = $repository->store($data);
 
-
-        // no repository, because the currency controller is relatively simple.
-        $currency = TransactionCurrency::create(
-            [
-                'name'   => $request->get('name'),
-                'code'   => $request->get('code'),
-                'symbol' => $request->get('symbol'),
-            ]
-        );
 
         Session::flash('success', 'Currency "' . $currency->name . '" created');
 
         if (intval(Input::get('create_another')) === 1) {
             Session::put('currency.create.fromStore', true);
+
             return Redirect::route('currency.create')->withInput();
         }
 
         // redirect to previous URL.
-        return Redirect::to(Session::get('categories.create.url'));
+        return Redirect::to(Session::get('currency.create.url'));
 
 
     }
@@ -178,19 +170,17 @@ class CurrencyController extends Controller
      *
      * @return $this|\Illuminate\Http\RedirectResponse
      */
-    public function update(TransactionCurrency $currency, CurrencyFormRequest $request)
+    public function update(TransactionCurrency $currency, CurrencyFormRequest $request, CurrencyRepositoryInterface $repository)
     {
-
-        $currency->code   = $request->get('code');
-        $currency->symbol = $request->get('symbol');
-        $currency->name   = $request->get('name');
-        $currency->save();
+        $data     = $request->getCurrencyData();
+        $currency = $repository->update($currency, $data);
 
         Session::flash('success', 'Currency "' . e($currency->name) . '" updated.');
 
 
         if (intval(Input::get('return_to_edit')) === 1) {
             Session::put('currency.edit.fromUpdate', true);
+
             return Redirect::route('currency.edit', $currency->id);
         }
 

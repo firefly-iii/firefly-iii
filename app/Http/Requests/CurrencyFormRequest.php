@@ -24,6 +24,18 @@ class CurrencyFormRequest extends Request
     /**
      * @return array
      */
+    public function getCurrencyData()
+    {
+        return [
+            'name'   => $this->get('name'),
+            'code'   => $this->get('code'),
+            'symbol' => $this->get('symbol'),
+        ];
+    }
+
+    /**
+     * @return array
+     */
     public function rules()
     {
 
