@@ -77,6 +77,15 @@ FactoryMuffin::define(
 );
 
 FactoryMuffin::define(
+    'FireflyIII\Models\Category',
+    [
+        'user_id'   => 'factory|FireflyIII\User',
+        'name'      => 'sentence',
+        'encrypted' => 1,
+    ]
+);
+
+FactoryMuffin::define(
     'FireflyIII\Models\LimitRepetition',
     [
         'budget_limit_id' => 'factory|FireflyIII\Models\BudgetLimit',

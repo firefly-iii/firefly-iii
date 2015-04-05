@@ -155,7 +155,7 @@ class BudgetController extends Controller
         $start    = Session::get('start', Carbon::now()->startOfMonth());
         $end      = Session::get('end', Carbon::now()->startOfMonth());
         $list     = $repository->getWithoutBudget($start, $end);
-        $subTitle = 'Transactions without a budget in ' . $start->format('F Y');
+        $subTitle = 'Transactions without a budget between ' . $start->format('jS F Y') . ' and ' . $end->format('jS F Y');
 
         return view('budgets.noBudget', compact('list', 'subTitle'));
     }
