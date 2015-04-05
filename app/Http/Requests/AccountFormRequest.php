@@ -32,11 +32,11 @@ class AccountFormRequest extends Request
         $types          = join(',', array_keys(Config::get('firefly.subTitlesByIdentifier')));
         $ccPaymentTypes = join(',', array_keys(Config::get('firefly.ccTypes')));
 
-        $nameRule = 'required|between:1,100|uniqueAccountForUser';
+        $nameRule = 'required|min:1|uniqueAccountForUser';
         $idRule   = '';
         if (Account::find(Input::get('id'))) {
             $idRule   = 'belongsToUser:accounts';
-            $nameRule = 'required|between:1,100|uniqueAccountForUser:' . Input::get('id');
+            $nameRule = 'required|min:1|uniqueAccountForUser:' . Input::get('id');
         }
 
         return [
