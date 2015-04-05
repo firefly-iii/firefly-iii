@@ -2,9 +2,12 @@
 
 namespace FireflyIII\Repositories\Bill;
 
+use Auth;
 use Carbon\Carbon;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use Illuminate\Support\Collection;
 use Log;
 use Navigation;
 
@@ -15,6 +18,62 @@ use Navigation;
  */
 class BillRepository implements BillRepositoryInterface
 {
+    /**
+     * @param Bill $bill
+     *
+     * @return mixed
+     */
+    public function destroy(Bill $bill)
+    {
+        return $bill->delete();
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getBills()
+    {
+        return Auth::user()->bills()->orderBy('name', 'ASC')->get();
+    }
+
+    /**
+     * @param Bill $bill
+     *
+     * @return Collection
+     */
+    public function getJournals(Bill $bill)
+    {
+        return $bill->transactionjournals()->withRelevantData()
+                    ->orderBy('transaction_journals.date', 'DESC')
+                    ->orderBy('transaction_journals.order', 'ASC')
+                    ->orderBy('transaction_journals.id', 'DESC')
+                    ->get();
+    }
+
+    /**
+     * @param Bill $bill
+     *
+     * @return Collection
+     */
+    public function getPossiblyRelatedJournals(Bill $bill)
+    {
+        $set = \DB::table('transactions')->where('amount', '>', 0)->where('amount', '>=', $bill->amount_min)->where('amount', '<=', $bill->amount_max)->get(
+            ['transaction_journal_id']
+        );
+        $ids = [];
+
+        /** @var Transaction $entry */
+        foreach ($set as $entry) {
+            $ids[] = intval($entry->transaction_journal_id);
+        }
+        $journals = new Collection;
+        if (count($ids) > 0) {
+            $journals = Auth::user()->transactionjournals()->whereIn('id', $ids)->get();
+        }
+
+        return $journals;
+    }
+
     /**
      * Every bill repeats itself weekly, monthly or yearly (or whatever). This method takes a date-range (usually the view-range of Firefly itself)
      * and returns date ranges that fall within the given range; those ranges are the bills expected. When a bill is due on the 14th of the month and
@@ -56,6 +115,21 @@ class BillRepository implements BillRepositoryInterface
         }
 
         return $validRanges;
+    }
+
+    /**
+     * @param Bill $bill
+     *
+     * @return Carbon|null
+     */
+    public function lastFoundMatch(Bill $bill)
+    {
+        $last = $bill->transactionjournals()->orderBy('date', 'DESC')->first();
+        if ($last) {
+            return $last->date;
+        }
+
+        return null;
     }
 
     /**

@@ -5,6 +5,7 @@ namespace FireflyIII\Repositories\Bill;
 use Carbon\Carbon;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
+use Illuminate\Support\Collection;
 
 /**
  * Interface BillRepositoryInterface
@@ -17,9 +18,28 @@ interface BillRepositoryInterface
     /**
      * @param Bill $bill
      *
-     * @return Carbon|null
+     * @return mixed
      */
-    public function nextExpectedMatch(Bill $bill);
+    public function destroy(Bill $bill);
+
+    /**
+     * @return Collection
+     */
+    public function getBills();
+
+    /**
+     * @param Bill $bill
+     *
+     * @return Collection
+     */
+    public function getPossiblyRelatedJournals(Bill $bill);
+
+    /**
+     * @param Bill $bill
+     *
+     * @return Collection
+     */
+    public function getJournals(Bill $bill);
 
     /**
      * Every bill repeats itself weekly, monthly or yearly (or whatever). This method takes a date-range (usually the view-range of Firefly itself)
@@ -35,6 +55,28 @@ interface BillRepositoryInterface
     public function getRanges(Bill $bill, Carbon $start, Carbon $end);
 
     /**
+     * @param Bill $bill
+     *
+     * @return Carbon|null
+     */
+    public function lastFoundMatch(Bill $bill);
+
+    /**
+     * @param Bill $bill
+     *
+     * @return Carbon|null
+     */
+    public function nextExpectedMatch(Bill $bill);
+
+    /**
+     * @param Bill               $bill
+     * @param TransactionJournal $journal
+     *
+     * @return bool
+     */
+    public function scan(Bill $bill, TransactionJournal $journal);
+
+    /**
      * @param array $data
      *
      * @return Bill
@@ -48,13 +90,5 @@ interface BillRepositoryInterface
      * @return mixed
      */
     public function update(Bill $bill, array $data);
-
-    /**
-     * @param Bill               $bill
-     * @param TransactionJournal $journal
-     *
-     * @return bool
-     */
-    public function scan(Bill $bill, TransactionJournal $journal);
 
 }

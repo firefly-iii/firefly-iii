@@ -59,14 +59,20 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getAccounts(array $types, $page)
     {
-        $size   = 50;
-        $offset = ($page - 1) * $size;
-
-        return Auth::user()->accounts()->with(
+        $query = Auth::user()->accounts()->with(
             ['accountmeta' => function (HasMany $query) {
                 $query->where('name', 'accountRole');
             }]
-        )->accountTypeIn($types)->take($size)->offset($offset)->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
+        )->accountTypeIn($types)->orderBy('accounts.name', 'ASC');
+
+        if ($page == -1) {
+            return $query->get(['accounts.*']);
+        } else {
+            $size   = 50;
+            $offset = ($page - 1) * $size;
+
+            return $query->take($size)->offset($offset)->get(['accounts.*']);
+        }
     }
 
     /**
