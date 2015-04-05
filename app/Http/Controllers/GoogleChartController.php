@@ -89,7 +89,7 @@ class GoogleChartController extends Controller
         $index = 1;
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $accountName = $account->name;//iconv('UTF-8', 'ASCII//TRANSLIT', $account->name);
+            $accountName = $account->name;
             $chart->addColumn('Balance for ' . $accountName, 'number');
             $chart->addCertainty($index);
             $index++;
