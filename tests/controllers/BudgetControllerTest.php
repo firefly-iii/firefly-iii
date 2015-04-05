@@ -138,11 +138,14 @@ class BudgetControllerTest extends TestCase
 
     public function testPostUpdateIncome()
     {
+        $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $this->be($budget->user);
         $date = Carbon::now()->startOfMonth()->format('FY');
         Preferences::shouldReceive('set')->once()->withArgs(['budgetIncomeTotal' . $date, 1001]);
 
         $this->call('POST', '/budgets/income', ['_token' => 'replaceme', 'amount' => 1001]);
         $this->assertResponseStatus(302);
+        $this->assertRedirectedToRoute('budgets.index');
     }
 
     public function testShow()
