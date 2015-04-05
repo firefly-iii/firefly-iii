@@ -61,8 +61,8 @@ class Bill extends Model
      */
     public function setMatchAttribute($value)
     {
-        $this->attributes['match']           = Crypt::encrypt($value);
-        $this->attributes['match_encrypted'] = true;
+        $this->attributes['match']           = env('DB_ENCRYPTION', true) ? Crypt::encrypt($value) : $value;
+        $this->attributes['match_encrypted'] = env('DB_ENCRYPTION', true);
     }
 
     /**
@@ -70,8 +70,8 @@ class Bill extends Model
      */
     public function setNameAttribute($value)
     {
-        $this->attributes['name']           = Crypt::encrypt($value);
-        $this->attributes['name_encrypted'] = true;
+        $this->attributes['name']      = env('DB_ENCRYPTION', true) ? Crypt::encrypt($value) : $value;
+        $this->attributes['encrypted'] = env('DB_ENCRYPTION', true);
     }
 
     /**
