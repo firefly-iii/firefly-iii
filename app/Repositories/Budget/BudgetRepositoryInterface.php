@@ -5,6 +5,7 @@ namespace FireflyIII\Repositories\Budget;
 use Carbon\Carbon;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
+use Illuminate\Support\Collection;
 
 /**
  * Interface BudgetRepositoryInterface
@@ -21,6 +22,16 @@ interface BudgetRepositoryInterface
     public function destroy(Budget $budget);
 
     /**
+     * @return Collection
+     */
+    public function getActiveBudgets();
+
+    /**
+     * @return Collection
+     */
+    public function getInactiveBudgets();
+
+    /**
      * @return void
      */
     public function cleanupBudgets();
@@ -32,6 +43,29 @@ interface BudgetRepositoryInterface
      * @return float
      */
     public function spentInMonth(Budget $budget, Carbon $date);
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getWithoutBudget(Carbon $start, Carbon $end);
+
+    /**
+     * @param Budget $budget
+     *
+     * @return Collection
+     */
+    public function getBudgetLimits(Budget $budget);
+
+    /**
+     * @param Budget $budget
+     * @param Carbon $date
+     *
+     * @return LimitRepetition|null
+     */
+    public function getCurrentRepetition(Budget $budget, Carbon $date);
 
     /**
      * @param Budget $budget

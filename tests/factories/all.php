@@ -39,6 +39,36 @@ FactoryMuffin::define(
 );
 
 FactoryMuffin::define(
+    'FireflyIII\Models\Budget', [
+                                  'user_id'   => 'factory|FireflyIII\User',
+                                  'name'      => 'word',
+                                  'active'    => 'boolean',
+                                  'encrypted' => 1,
+                              ]
+);
+
+FactoryMuffin::define(
+    'FireflyIII\Models\LimitRepetition', [
+                                           'budget_limit_id' => 'factory|FireflyIII\Models\BudgetLimit',
+                                           'startdate'       => 'date',
+                                           'enddate'         => 'date',
+                                           'amount'          => 'integer',
+                                       ]
+);
+
+FactoryMuffin::define(
+    'FireflyIII\Models\BudgetLimit', [
+                                       'budget_id'   => 'factory|FireflyIII\Models\Budget',
+                                       'startdate'   => 'date',
+                                       'amount'      => 'integer',
+                                       'repeats'     => 'false',
+                                       'repeat_freq' => 'monthly',
+
+                                   ]
+);
+
+
+FactoryMuffin::define(
     'FireflyIII\Models\Preference', [
                                       'name'    => 'word',
                                       'data'    => 'sentence',
@@ -51,6 +81,7 @@ FactoryMuffin::define(
                                        'type'     => function () {
                                            $types = ['Expense account', 'Revenue account', 'Asset account'];
                                            $count = DB::table('account_types')->count();
+
                                            return $types[$count];
                                        },
                                        'editable' => 1,

@@ -7,7 +7,15 @@ cp .env .env.backup
 cp .env.testing .env
 
 # test!
-phpunit --verbose
+if [ -z "$1" ]
+then
+    phpunit --verbose
+fi
+
+if [ ! -z "$1" ]
+then
+    phpunit --verbose tests/controllers/$1.php
+fi
 
 # restore .env file
 mv .env.backup .env
