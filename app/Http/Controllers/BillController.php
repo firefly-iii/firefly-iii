@@ -1,6 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
-use Auth;
+use Config;
 use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\BillFormRequest;
 use FireflyIII\Models\Account;
@@ -8,6 +8,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Input;
 use Redirect;
@@ -37,15 +38,14 @@ class BillController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function add(Bill $bill)
+    public function add(Bill $bill, AccountRepositoryInterface $repository)
     {
         $matches     = explode(',', $bill->match);
         $description = [];
         $expense     = null;
 
         // get users expense accounts:
-        $type     = AccountType::where('type', 'Expense account')->first();
-        $accounts = Auth::user()->accounts()->where('account_type_id', $type->id)->get();
+        $accounts = $repository->getAccounts(Config::get('firefly.accountTypesByIdentifier.expense'), -1);
 
         foreach ($matches as $match) {
             $match = strtolower($match);
@@ -81,7 +81,7 @@ class BillController extends Controller
      */
     public function create()
     {
-        $periods = \Config::get('firefly.periods_to_text');
+        $periods = Config::get('firefly.periods_to_text');
 
         return view('bills.create')->with('periods', $periods)->with('subTitle', 'Create new');
     }
@@ -101,9 +101,10 @@ class BillController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Bill $bill)
+    public function destroy(Bill $bill, BillRepositoryInterface $repository)
     {
-        $bill->delete();
+        $repository->destroy($bill);
+
         Session::flash('success', 'The bill was deleted.');
 
         return Redirect::route('bills.index');
@@ -117,7 +118,7 @@ class BillController extends Controller
      */
     public function edit(Bill $bill)
     {
-        $periods = \Config::get('firefly.periods_to_text');
+        $periods = Config::get('firefly.periods_to_text');
 
         return view('bills.edit')->with('periods', $periods)->with('bill', $bill)->with('subTitle', 'Edit "' . e($bill->name) . '"');
     }
@@ -129,15 +130,11 @@ class BillController extends Controller
      */
     public function index(BillRepositoryInterface $repository)
     {
-        $bills = Auth::user()->bills()->orderBy('name', 'ASC')->get();
+        $bills = $repository->getBills();
         $bills->each(
             function (Bill $bill) use ($repository) {
                 $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill);
-                $last                    = $bill->transactionjournals()->orderBy('date', 'DESC')->first();
-                $bill->lastFoundMatch    = null;
-                if ($last) {
-                    $bill->lastFoundMatch = $last->date;
-                }
+                $bill->lastFoundMatch    = $repository->lastFoundMatch($bill);
             }
         );
 
@@ -154,25 +151,15 @@ class BillController extends Controller
         if (intval($bill->active) == 0) {
             Session::flash('warning', 'Inactive bills cannot be scanned.');
 
-            return Redirect::intended('/');
+            return Redirect::to(URL::previous());
         }
 
-        $set = \DB::table('transactions')->where('amount', '>', 0)->where('amount', '>=', $bill->amount_min)->where('amount', '<=', $bill->amount_max)->get(
-            ['transaction_journal_id']
-        );
-        $ids = [];
+        $journals = $repository->getPossiblyRelatedJournals($bill);
+        /** @var TransactionJournal $journal */
+        foreach ($journals as $journal) {
+            $repository->scan($bill, $journal);
+        }
 
-        /** @var Transaction $entry */
-        foreach ($set as $entry) {
-            $ids[] = intval($entry->transaction_journal_id);
-        }
-        if (count($ids) > 0) {
-            $journals = Auth::user()->transactionjournals()->whereIn('id', $ids)->get();
-            /** @var TransactionJournal $journal */
-            foreach ($journals as $journal) {
-                $repository->scan($bill, $journal);
-            }
-        }
 
         Session::flash('success', 'Rescanned everything.');
 
@@ -186,14 +173,9 @@ class BillController extends Controller
      */
     public function show(Bill $bill, BillRepositoryInterface $repository)
     {
-        $journals                = $bill->transactionjournals()->withRelevantData()
-                                        ->orderBy('transaction_journals.date', 'DESC')
-                                        ->orderBy('transaction_journals.order', 'ASC')
-                                        ->orderBy('transaction_journals.id', 'DESC')
-                                        ->get();
+        $journals = $repository->getJournals($bill);
         $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill);
         $hideBill                = true;
-
 
         return view('bills.show', compact('journals', 'hideBill', 'bill'))->with('subTitle', e($bill->name));
     }

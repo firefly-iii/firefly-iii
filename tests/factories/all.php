@@ -27,74 +27,156 @@ if (!class_exists('RandomString')) {
 
     }
 }
+
 FactoryMuffin::define(
-    'FireflyIII\Models\Account', [
-                                   'user_id'         => 'factory|FireflyIII\User',
-                                   'account_type_id' => 'factory|FireflyIII\Models\AccountType',
-                                   'name'            => 'word',
-                                   'active'          => 'boolean',
-                                   'encrypted'       => 'boolean',
-                                   'virtual_balance' => 0
-                               ]
+    'FireflyIII\Models\Bill',
+    [
+        'user_id'         => 'factory|FireflyIII\User',
+        'name'            => 'sentence',
+        'match'           => function () {
+            $words = [];
+            for ($i = 0; $i < 3; $i++) {
+                $words[] = RandomString::generateRandomString(5);
+            }
+
+            return join(',', $words);
+        },
+        'amount_min'      => 10,
+        'amount_max'      => 20,
+        'date'            => 'date',
+        'active'          => 1,
+        'automatch'       => 1,
+        'repeat_freq'     => 'monthly',
+        'skip'            => 0,
+        'name_encrypted'  => 1,
+        'match_encrypted' => 1,
+
+    ]
 );
 
 FactoryMuffin::define(
-    'FireflyIII\Models\Preference', [
-                                      'name'    => 'word',
-                                      'data'    => 'sentence',
-                                      'user_id' => 'factory|FireflyIII\User',
-                                  ]
+    'FireflyIII\Models\Account',
+    [
+        'user_id'         => 'factory|FireflyIII\User',
+        'account_type_id' => 'factory|FireflyIII\Models\AccountType',
+        'name'            => 'word',
+        'active'          => 'boolean',
+        'encrypted'       => 'boolean',
+        'virtual_balance' => 0
+    ]
 );
 
 FactoryMuffin::define(
-    'FireflyIII\Models\AccountType', [
-                                       'type'     => 'word',
-                                       'editable' => 1,
-                                   ]
+    'FireflyIII\Models\Budget',
+    [
+        'user_id'   => 'factory|FireflyIII\User',
+        'name'      => 'sentence',
+        'active'    => 'boolean',
+        'encrypted' => 1,
+    ]
 );
 
 FactoryMuffin::define(
-    'FireflyIII\Models\TransactionCurrency', [
-                                               'code'   => function () {
-                                                   return RandomString::generateRandomString(3);
-                                               },
-                                               'symbol' => function () {
-                                                   return RandomString::generateRandomString(1);
-                                               },
-                                               'name'   => 'word'
-                                           ]
+    'FireflyIII\Models\Category',
+    [
+        'user_id'   => 'factory|FireflyIII\User',
+        'name'      => 'sentence',
+        'encrypted' => 1,
+    ]
 );
 
 FactoryMuffin::define(
-    'FireflyIII\User', [
-                         'email'    => 'email',
-                         'password' => bcrypt('james'),
-                     ]
+    'FireflyIII\Models\LimitRepetition',
+    [
+        'budget_limit_id' => 'factory|FireflyIII\Models\BudgetLimit',
+        'startdate'       => 'date',
+        'enddate'         => 'date',
+        'amount'          => 'integer',
+    ]
 );
 
 FactoryMuffin::define(
-    'FireflyIII\Models\Transaction', [
-                                       'transaction_journal_id' => 'factory|FireflyIII\Models\TransactionJournal',
-                                       'amount'                 => 'integer',
-                                       'account_id'             => 'factory|FireflyIII\Models\Account'
-                                   ]
+    'FireflyIII\Models\BudgetLimit',
+    [
+        'budget_id'   => 'factory|FireflyIII\Models\Budget',
+        'startdate'   => 'date',
+        'amount'      => 'integer',
+        'repeats'     => 'false',
+        'repeat_freq' => 'monthly',
+
+    ]
+);
+
+
+FactoryMuffin::define(
+    'FireflyIII\Models\Preference',
+    [
+        'name'    => 'word',
+        'data'    => 'sentence',
+        'user_id' => 'factory|FireflyIII\User',
+    ]
 );
 
 FactoryMuffin::define(
-    'FireflyIII\Models\TransactionType', [
-                                           'type' => 'word',
-                                       ]
+    'FireflyIII\Models\AccountType',
+    [
+        'type'     => function () {
+            $types = ['Expense account', 'Revenue account', 'Asset account'];
+            $count = DB::table('account_types')->count();
+
+            return $types[$count];
+        },
+        'editable' => 1,
+    ]
 );
 
 FactoryMuffin::define(
-    'FireflyIII\Models\TransactionJournal', [
-                                              'user_id'                 => 'factory|FireflyIII\User',
-                                              'transaction_type_id'     => 'factory|FireflyIII\Models\TransactionType',
-                                              'transaction_currency_id' => 'factory|FireflyIII\Models\TransactionCurrency',
-                                              'description'             => 'sentence',
-                                              'completed'               => '1',
-                                              'date'                    => 'date',
-                                              'encrypted'               => '1',
-                                              'order'                   => '0',
-                                          ]
+    'FireflyIII\Models\TransactionCurrency',
+    [
+        'code'   => function () {
+            return RandomString::generateRandomString(3);
+        },
+        'symbol' => function () {
+            return RandomString::generateRandomString(1);
+        },
+        'name'   => 'word'
+    ]
+);
+
+FactoryMuffin::define(
+    'FireflyIII\User',
+    [
+        'email'    => 'email',
+        'password' => bcrypt('james'),
+    ]
+);
+
+FactoryMuffin::define(
+    'FireflyIII\Models\Transaction',
+    [
+        'transaction_journal_id' => 'factory|FireflyIII\Models\TransactionJournal',
+        'amount'                 => 'integer',
+        'account_id'             => 'factory|FireflyIII\Models\Account'
+    ]
+);
+
+FactoryMuffin::define(
+    'FireflyIII\Models\TransactionType',
+    [
+        'type' => 'word',
+    ]
+);
+
+FactoryMuffin::define(
+    'FireflyIII\Models\TransactionJournal',
+    [
+        'user_id'                 => 'factory|FireflyIII\User',
+        'transaction_type_id'     => 'factory|FireflyIII\Models\TransactionType',
+        'transaction_currency_id' => 'factory|FireflyIII\Models\TransactionCurrency',
+        'description'             => 'sentence',
+        'completed'               => '1',
+        'date'                    => 'date',
+        'encrypted'               => '1',
+        'order'                   => '0',
+    ]
 );

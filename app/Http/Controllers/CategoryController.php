@@ -10,8 +10,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Input;
 use Redirect;
 use Session;
-use View;
 use URL;
+use View;
 
 /**
  * Class CategoryController
@@ -96,21 +96,15 @@ class CategoryController extends Controller
 
     /**
      * @return $this
+     *
      */
-    public function index()
+    public function index(CategoryRepositoryInterface $repository)
     {
-        $categories = Auth::user()->categories()->orderBy('name', 'ASC')->get();
+        $categories = $repository->getCategories();
 
         $categories->each(
-            function (Category $category) {
-                $latest = $category->transactionjournals()
-                                   ->orderBy('transaction_journals.date', 'DESC')
-                                   ->orderBy('transaction_journals.order', 'ASC')
-                                   ->orderBy('transaction_journals.id', 'DESC')
-                                   ->first();
-                if ($latest) {
-                    $category->lastActivity = $latest->date;
-                }
+            function (Category $category) use ($repository) {
+                $category->lastActivity = $repository->getLatestActivity($category);
             }
         );
 
@@ -120,21 +114,11 @@ class CategoryController extends Controller
     /**
      * @return \Illuminate\View\View
      */
-    public function noCategory()
+    public function noCategory(CategoryRepositoryInterface $repository)
     {
-        $start = Session::get('start', Carbon::now()->startOfMonth());
-        $end   = Session::get('end', Carbon::now()->startOfMonth());
-        $list  = Auth::user()
-                     ->transactionjournals()
-                     ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                     ->whereNull('category_transaction_journal.id')
-                     ->before($end)
-                     ->after($start)
-                     ->orderBy('transaction_journals.date', 'DESC')
-                     ->orderBy('transaction_journals.order', 'ASC')
-                     ->orderBy('transaction_journals.id', 'DESC')
-                     ->get(['transaction_journals.*']);
-
+        $start    = Session::get('start', Carbon::now()->startOfMonth());
+        $end      = Session::get('end', Carbon::now()->startOfMonth());
+        $list     = $repository->getWithoutCategory($start, $end);
         $subTitle = 'Transactions without a category between ' . $start->format('jS F Y') . ' and ' . $end->format('jS F Y');
 
         return view('categories.noCategory', compact('list', 'subTitle'));
@@ -149,17 +133,9 @@ class CategoryController extends Controller
     {
         $hideCategory = true; // used in list.
         $page         = intval(Input::get('page'));
-        $offset       = $page > 0 ? $page * 50 : 0;
-        $set          = $category->transactionJournals()->withRelevantData()->take(50)->offset($offset)
-                                 ->orderBy('transaction_journals.date', 'DESC')
-                                 ->orderBy('transaction_journals.order', 'ASC')
-                                 ->orderBy('transaction_journals.id', 'DESC')
-                                 ->get(
-                                     ['transaction_journals.*']
-                                 );
-        $count        = $category->transactionJournals()->count();
-
-        $journals = new LengthAwarePaginator($set, $count, 50, $page);
+        $set          = $repository->getJournals($category, $page);
+        $count        = $repository->countJournals($category);
+        $journals     = new LengthAwarePaginator($set, $count, 50, $page);
 
         return view('categories.show', compact('category', 'journals', 'hideCategory'));
     }
@@ -182,11 +158,8 @@ class CategoryController extends Controller
 
         if (intval(Input::get('create_another')) === 1) {
             Session::put('categories.create.fromStore', true);
-            return Redirect::route('categories.create')->withInput();
-        }
 
-        if (intval(Input::get('create_another')) === 1) {
-            return Redirect::route('categories.create');
+            return Redirect::route('categories.create')->withInput();
         }
 
         return Redirect::route('categories.index');
@@ -212,6 +185,7 @@ class CategoryController extends Controller
 
         if (intval(Input::get('return_to_edit')) === 1) {
             Session::put('categories.edit.fromUpdate', true);
+
             return Redirect::route('categories.edit', $category->id);
         }
 

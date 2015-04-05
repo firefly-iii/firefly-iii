@@ -14,6 +14,7 @@ use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
@@ -29,11 +30,13 @@ class AccountRepository implements AccountRepositoryInterface
 {
 
     /**
+     * @param array $types
+     *
      * @return int
      */
-    public function countAssetAccounts()
+    public function countAccounts(array $types)
     {
-        return Auth::user()->accounts()->accountTypeIn(['Asset account', 'Default account'])->count();
+        return Auth::user()->accounts()->accountTypeIn($types)->count();
     }
 
     /**
@@ -46,6 +49,30 @@ class AccountRepository implements AccountRepositoryInterface
         $account->delete();
 
         return true;
+    }
+
+    /**
+     * @param array $types
+     * @param int   $page
+     *
+     * @return Collection
+     */
+    public function getAccounts(array $types, $page)
+    {
+        $query = Auth::user()->accounts()->with(
+            ['accountmeta' => function (HasMany $query) {
+                $query->where('name', 'accountRole');
+            }]
+        )->accountTypeIn($types)->orderBy('accounts.name', 'ASC');
+
+        if ($page == -1) {
+            return $query->get(['accounts.*']);
+        } else {
+            $size   = 50;
+            $offset = ($page - 1) * $size;
+
+            return $query->take($size)->offset($offset)->get(['accounts.*']);
+        }
     }
 
     /**
@@ -131,6 +158,23 @@ class AccountRepository implements AccountRepositoryInterface
         return $paginator;
 
 
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return Carbon|null
+     */
+    public function getLastActivity(Account $account)
+    {
+        $lastTransaction = $account->transactions()->leftJoin(
+            'transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
+        )->orderBy('transaction_journals.date', 'DESC')->first(['transactions.*', 'transaction_journals.date']);
+        if ($lastTransaction) {
+            return $lastTransaction->transactionjournal->date;
+        }
+
+        return null;
     }
 
     /**

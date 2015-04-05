@@ -88,7 +88,7 @@ class TransactionController extends Controller
         // put previous url in session
         Session::put('transactions.delete.url', URL::previous());
 
-        return View::make('transactions.delete', compact('journal', 'subTitle'));
+        return view('transactions.delete', compact('journal', 'subTitle'));
 
 
     }

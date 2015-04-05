@@ -13,8 +13,9 @@ use Preferences;
 use Redirect;
 use Response;
 use Session;
-use View;
 use URL;
+use View;
+
 /**
  * Class BudgetController
  *
@@ -88,7 +89,6 @@ class BudgetController extends Controller
         $repository->destroy($budget);
 
 
-
         Session::flash('success', 'The  budget "' . e($name) . '" was deleted.');
 
         return Redirect::to(Session::get('budgets.delete.url'));
@@ -118,8 +118,8 @@ class BudgetController extends Controller
      */
     public function index(BudgetRepositoryInterface $repository)
     {
-        $budgets  = Auth::user()->budgets()->where('active', 1)->get();
-        $inactive = Auth::user()->budgets()->where('active', 0)->get();
+        $budgets  = $repository->getActiveBudgets();
+        $inactive = $repository->getInactiveBudgets();
 
         /**
          * Do some cleanup:
@@ -127,19 +127,18 @@ class BudgetController extends Controller
         $repository->cleanupBudgets();
 
 
-
         // loop the budgets:
         $budgets->each(
             function (Budget $budget) use ($repository) {
                 $date               = Session::get('start', Carbon::now()->startOfMonth());
                 $budget->spent      = $repository->spentInMonth($budget, $date);
-                $budget->currentRep = $budget->limitrepetitions()->where('limit_repetitions.startdate', $date)->first(['limit_repetitions.*']);
+                $budget->currentRep = $repository->getCurrentRepetition($budget, $date);
             }
         );
 
-        $date          = Session::get('start', Carbon::now()->startOfMonth())->format('FY');
+        $dateAsString  = Session::get('start', Carbon::now()->startOfMonth())->format('FY');
         $spent         = $budgets->sum('spent');
-        $amount        = Preferences::get('budgetIncomeTotal' . $date, 1000)->data;
+        $amount        = Preferences::get('budgetIncomeTotal' . $dateAsString, 1000)->data;
         $overspent     = $spent > $amount;
         $spentPCT      = $overspent ? ceil($amount / $spent * 100) : ceil($spent / $amount * 100);
         $budgetMax     = Preferences::get('budgetMaximum', 1000);
@@ -151,21 +150,12 @@ class BudgetController extends Controller
     /**
      * @return \Illuminate\View\View
      */
-    public function noBudget()
+    public function noBudget(BudgetRepositoryInterface $repository)
     {
-        $start    = \Session::get('start', Carbon::now()->startOfMonth());
-        $end      = \Session::get('end', Carbon::now()->startOfMonth());
-        $list     = Auth::user()
-                        ->transactionjournals()
-                        ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                        ->whereNull('budget_transaction_journal.id')
-                        ->before($end)
-                        ->after($start)
-                        ->orderBy('transaction_journals.date', 'DESC')
-                        ->orderBy('transaction_journals.order', 'ASC')
-                        ->orderBy('transaction_journals.id', 'DESC')
-                        ->get(['transaction_journals.*']);
-        $subTitle = 'Transactions without a budget in ' . $start->format('F Y');
+        $start    = Session::get('start', Carbon::now()->startOfMonth());
+        $end      = Session::get('end', Carbon::now()->startOfMonth());
+        $list     = $repository->getWithoutBudget($start, $end);
+        $subTitle = 'Transactions without a budget between ' . $start->format('jS F Y') . ' and ' . $end->format('jS F Y');
 
         return view('budgets.noBudget', compact('list', 'subTitle'));
     }
@@ -180,6 +170,27 @@ class BudgetController extends Controller
         Preferences::set('budgetIncomeTotal' . $date, intval(Input::get('amount')));
 
         return Redirect::route('budgets.index');
+    }
+
+    /**
+     *
+     * @param Budget          $budget
+     * @param LimitRepetition $repetition
+     *
+     * @return \Illuminate\View\View
+     */
+    public function show(Budget $budget, LimitRepetition $repetition = null, BudgetRepositoryInterface $repository)
+    {
+        if (!is_null($repetition->id) && $repetition->budgetLimit->budget->id != $budget->id) {
+            return view('error')->with('message', 'Invalid selection.');
+        }
+
+        $hideBudget = true; // used in transaction list.
+        $journals   = $repository->getJournals($budget, $repetition);
+        $limits     = !is_null($repetition->id) ? [$repetition->budgetLimit] : $repository->getBudgetLimits($budget);
+        $subTitle   = !is_null($repetition->id) ? e($budget->name) . ' in ' . $repetition->startdate->format('F Y') : e($budget->name);
+
+        return view('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle', 'hideBudget'));
     }
 
     /**
@@ -201,33 +212,13 @@ class BudgetController extends Controller
         if (intval(Input::get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
             Session::put('budgets.create.fromStore', true);
+
             return Redirect::route('budgets.create')->withInput();
         }
 
         // redirect to previous URL.
         return Redirect::to(Session::get('budgets.create.url'));
 
-    }
-
-    /**
-     *
-     * @param Budget          $budget
-     * @param LimitRepetition $repetition
-     *
-     * @return \Illuminate\View\View
-     */
-    public function show(Budget $budget, LimitRepetition $repetition = null, BudgetRepositoryInterface $repository)
-    {
-        if (!is_null($repetition->id) && $repetition->budgetLimit->budget->id != $budget->id) {
-            return view('error')->with('message', 'Invalid selection.');
-        }
-
-        $hideBudget = true; // used in transaction list.
-        $journals   = $repository->getJournals($budget, $repetition);
-        $limits     = !is_null($repetition->id) ? [$repetition->budgetLimit] : $budget->budgetLimits()->orderBy('startdate', 'DESC')->get();
-        $subTitle   = !is_null($repetition->id) ? e($budget->name) . ' in ' . $repetition->startdate->format('F Y') : e($budget->name);
-
-        return view('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle', 'hideBudget'));
     }
 
     /**
@@ -251,6 +242,7 @@ class BudgetController extends Controller
         if (intval(Input::get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:
             Session::put('budgets.edit.fromUpdate', true);
+
             return Redirect::route('budgets.edit', $budget->id)->withInput(['return_to_edit' => 1]);
         }
 

@@ -2,11 +2,13 @@
 
 namespace FireflyIII\Repositories\Budget;
 
+use Auth;
 use Carbon\Carbon;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 /**
  * Class BudgetRepository
@@ -37,7 +39,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
 
         // delete limits with amount 0:
-        BudgetLimit::where('amount',0)->delete();
+        BudgetLimit::where('amount', 0)->delete();
 
     }
 
@@ -51,6 +53,33 @@ class BudgetRepository implements BudgetRepositoryInterface
         $budget->delete();
 
         return true;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getActiveBudgets()
+    {
+        return Auth::user()->budgets()->where('active', 1)->get();
+    }
+
+    /**
+     * @param Budget $budget
+     * @param Carbon $date
+     *
+     * @return LimitRepetition|null
+     */
+    public function getCurrentRepetition(Budget $budget, Carbon $date)
+    {
+        return $budget->limitrepetitions()->where('limit_repetitions.startdate', $date)->first(['limit_repetitions.*']);
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getInactiveBudgets()
+    {
+        return Auth::user()->budgets()->where('active', 1)->get();
     }
 
     /**
@@ -84,6 +113,26 @@ class BudgetRepository implements BudgetRepositoryInterface
         $count = $countQuery->count();
 
         return new LengthAwarePaginator($set, $count, $take, $offset);
+    }
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getWithoutBudget(Carbon $start, Carbon $end)
+    {
+        return Auth::user()
+                   ->transactionjournals()
+                   ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                   ->whereNull('budget_transaction_journal.id')
+                   ->before($end)
+                   ->after($start)
+                   ->orderBy('transaction_journals.date', 'DESC')
+                   ->orderBy('transaction_journals.order', 'ASC')
+                   ->orderBy('transaction_journals.id', 'DESC')
+                   ->get(['transaction_journals.*']);
     }
 
     /**
@@ -174,5 +223,15 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $limit;
 
 
+    }
+
+    /**
+     * @param Budget $budget
+     *
+     * @return Collection
+     */
+    public function getBudgetLimits(Budget $budget)
+    {
+        return $budget->budgetLimits()->orderBy('startdate', 'DESC')->get();
     }
 }
