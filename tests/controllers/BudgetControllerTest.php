@@ -165,18 +165,147 @@ class BudgetControllerTest extends TestCase
 
     }
 
+    public function testShowInvalidRepetition()
+    {
+
+        $repetition           = FactoryMuffin::create('FireflyIII\Models\LimitRepetition');
+        $budget               = $repetition->budgetLimit->budget;
+        $otherBudget          = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $otherBudget->user_id = $budget->user_id;
+        $otherBudget->save();
+
+        $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $this->be($otherBudget->user);
+
+        Amount::shouldReceive('getCurrencyCode')->andReturn('x');
+        Amount::shouldReceive('format')->andReturn('x');
+        $repository->shouldReceive('getJournals')->andReturn(new Collection);
+        $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection);
+
+
+        $this->call('GET', '/budgets/show/' . $otherBudget->id . '/' . $repetition->id);
+        $this->assertResponseOk();
+        $this->assertViewHas('message', 'Invalid selection.');
+
+    }
+
     public function testStore()
     {
-        $this->markTestIncomplete();
+        // a budget:
+        $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $this->be($budget->user);
+
+        $data = [
+            'name'   => 'New test budget ' . rand(1, 1000),
+            '_token' => 'replaceme'
+        ];
+
+        // fake validation routine:
+        $request = $this->mock('FireflyIII\Http\Requests\BudgetFormRequest');
+        $request->shouldReceive('input')->andReturn('');
+
+        // fake store routine:
+        $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $repository->shouldReceive('store')->andReturn($budget);
+
+        $this->call('POST', '/budgets/store', $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+
+    }
+
+    public function testStoreAndRedirect()
+    {
+        // a budget:
+        $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $this->be($budget->user);
+
+        $data = [
+            'name'           => 'New test budget ' . rand(1, 1000),
+            '_token'         => 'replaceme',
+            'create_another' => 1,
+        ];
+
+        // fake validation routine:
+        $request = $this->mock('FireflyIII\Http\Requests\BudgetFormRequest');
+        $request->shouldReceive('input')->andReturn('');
+
+        // fake store routine:
+        $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $repository->shouldReceive('store')->andReturn($budget);
+
+        $this->call('POST', '/budgets/store', $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+
     }
 
     public function testUpdate()
     {
-        $this->markTestIncomplete();
+
+        // a budget:
+        $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $this->be($budget->user);
+
+        $data = [
+            'name'   => 'Edited test account ' . rand(1, 1000),
+            'active' => 1,
+            '_token' => 'replaceme'
+        ];
+
+        // fake validation routine:
+        $request = $this->mock('FireflyIII\Http\Requests\BudgetFormRequest');
+        $request->shouldReceive('input')->andReturn('');
+
+        // fake update routine:
+        $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $repository->shouldReceive('update')->andReturn($budget);
+
+        $this->call('POST', '/budgets/update/' . $budget->id, $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+    }
+
+    public function testUpdateAndRedirect()
+    {
+
+        // a budget:
+        $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $this->be($budget->user);
+
+        $data = [
+            'name'           => 'Edited test account ' . rand(1, 1000),
+            'active'         => 1,
+            '_token'         => 'replaceme',
+            'return_to_edit' => 1,
+        ];
+
+        // fake validation routine:
+        $request = $this->mock('FireflyIII\Http\Requests\BudgetFormRequest');
+        $request->shouldReceive('input')->andReturn('');
+
+        // fake update routine:
+        $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $repository->shouldReceive('update')->andReturn($budget);
+
+        $this->call('POST', '/budgets/update/' . $budget->id, $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     public function testUpdateIncome()
     {
-        $this->markTestIncomplete();
+
+        // a budget:
+        $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $this->be($budget->user);
+        $date = Carbon::now()->format('FY');
+        $pref = FactoryMuffin::create('FireflyIII\Models\Preference');
+        Preferences::shouldReceive('get')->withArgs(['budgetIncomeTotal' . $date, 1000])->andReturn($pref);
+        Amount::shouldReceive('format')->andReturn('xx');
+
+        $this->call('GET', '/budgets/income');
+        $this->assertResponseOk();
+        $this->assertViewHas('amount');
     }
 }

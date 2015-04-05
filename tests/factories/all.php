@@ -41,7 +41,7 @@ FactoryMuffin::define(
 FactoryMuffin::define(
     'FireflyIII\Models\Budget', [
                                   'user_id'   => 'factory|FireflyIII\User',
-                                  'name'      => 'word',
+                                  'name'      => 'sentence',
                                   'active'    => 'boolean',
                                   'encrypted' => 1,
                               ]
