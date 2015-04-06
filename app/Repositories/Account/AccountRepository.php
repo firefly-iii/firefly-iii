@@ -403,7 +403,7 @@ class AccountRepository implements AccountRepositoryInterface
                 'description'             => 'Initial balance for "' . $account->name . '"',
                 'completed'               => true,
                 'date'                    => $data['openingBalanceDate'],
-                'encrypted'               => true
+                'encrypted'               => env('DB_ENCRYPTION', true)
             ]
         );
         if (!$journal->isValid()) {

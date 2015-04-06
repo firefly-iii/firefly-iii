@@ -158,8 +158,8 @@ class Account extends Model
      */
     public function setNameAttribute($value)
     {
-        $this->attributes['name']      = Crypt::encrypt($value);
-        $this->attributes['encrypted'] = true;
+        $this->attributes['name']      = env('DB_ENCRYPTION', true) ? Crypt::encrypt($value) : $value;
+        $this->attributes['encrypted'] = env('DB_ENCRYPTION', true);
     }
 
     /**
