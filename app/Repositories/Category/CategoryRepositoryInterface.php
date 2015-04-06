@@ -33,6 +33,14 @@ interface CategoryRepositoryInterface
     public function getCategories();
 
     /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getCategoriesAndExpenses($start, $end);
+
+    /**
      * @param Category $category
      * @param int      $page
      *

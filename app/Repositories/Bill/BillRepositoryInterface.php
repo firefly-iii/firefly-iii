@@ -25,6 +25,11 @@ interface BillRepositoryInterface
     /**
      * @return Collection
      */
+    public function getActiveBills();
+
+    /**
+     * @return Collection
+     */
     public function getBills();
 
     /**
@@ -32,14 +37,14 @@ interface BillRepositoryInterface
      *
      * @return Collection
      */
-    public function getPossiblyRelatedJournals(Bill $bill);
+    public function getJournals(Bill $bill);
 
     /**
      * @param Bill $bill
      *
      * @return Collection
      */
-    public function getJournals(Bill $bill);
+    public function getPossiblyRelatedJournals(Bill $bill);
 
     /**
      * Every bill repeats itself weekly, monthly or yearly (or whatever). This method takes a date-range (usually the view-range of Firefly itself)

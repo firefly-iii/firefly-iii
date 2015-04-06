@@ -9,6 +9,7 @@ use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 
 /**
  * Class BudgetRepository
@@ -60,7 +61,49 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function getActiveBudgets()
     {
-        return Auth::user()->budgets()->where('active', 1)->get();
+        $budgets = Auth::user()->budgets()->where('active', 1)->get();
+        $budgets->sortBy('name');
+
+        return $budgets;
+    }
+
+    /**
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getBudgetLimitRepetitions(Budget $budget, Carbon $start, Carbon $end)
+    {
+        /** @var Collection $repetitions */
+        return LimitRepetition::
+        leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
+                              ->where('limit_repetitions.startdate', '<=', $end->format('Y-m-d 00:00:00'))
+                              ->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d 00:00:00'))
+                              ->where('budget_limits.budget_id', $budget->id)
+                              ->get(['limit_repetitions.*']);
+    }
+
+    /**
+     * @param Budget $budget
+     *
+     * @return Collection
+     */
+    public function getBudgetLimits(Budget $budget)
+    {
+        return $budget->budgetLimits()->orderBy('startdate', 'DESC')->get();
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getBudgets()
+    {
+        $budgets = Auth::user()->budgets()->get();
+        $budgets->sortBy('name');
+
+        return $budgets;
     }
 
     /**
@@ -136,6 +179,35 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return mixed
+     */
+    public function getWithoutBudgetSum(Carbon $start, Carbon $end)
+    {
+        $noBudgetSet = Auth::user()
+                           ->transactionjournals()
+                           ->whereNotIn(
+                               'transaction_journals.id', function (QueryBuilder $query) use ($start, $end) {
+                               $query
+                                   ->select('transaction_journals.id')
+                                   ->from('transaction_journals')
+                                   ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'))
+                                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d 00:00:00'))
+                                   ->whereNotNull('budget_transaction_journal.budget_id');
+                           }
+                           )
+                           ->before($end)
+                           ->after($start)
+                           ->lessThan(0)
+                           ->transactionTypes(['Withdrawal'])
+                           ->get();
+        return floatval($noBudgetSet->sum('amount')) * -1;
+    }
+
+    /**
      * @param Budget $budget
      * @param Carbon $date
      *
@@ -167,6 +239,18 @@ class BudgetRepository implements BudgetRepositoryInterface
         $newBudget->save();
 
         return $newBudget;
+    }
+
+    /**
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return float
+     */
+    public function sumBudgetExpensesInPeriod(Budget $budget, $start, $end)
+    {
+        return floatval($budget->transactionjournals()->before($end)->after($start)->lessThan(0)->sum('amount')) * -1;
     }
 
     /**
@@ -223,15 +307,5 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $limit;
 
 
-    }
-
-    /**
-     * @param Budget $budget
-     *
-     * @return Collection
-     */
-    public function getBudgetLimits(Budget $budget)
-    {
-        return $budget->budgetLimits()->orderBy('startdate', 'DESC')->get();
     }
 }

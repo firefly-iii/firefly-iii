@@ -4,7 +4,10 @@ namespace FireflyIII\Repositories\Category;
 
 use Auth;
 use Carbon\Carbon;
+use DB;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\TransactionJournal;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 
 /**
@@ -44,6 +47,36 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function getCategories()
     {
         return Auth::user()->categories()->orderBy('name', 'ASC')->get();
+    }
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getCategoriesAndExpenses($start, $end)
+    {
+        return TransactionJournal::
+        where('transaction_journals.user_id', Auth::user()->id)
+                                 ->leftJoin(
+                                     'transactions',
+                                     function (JoinClause $join) {
+                                         $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('amount', '>', 0);
+                                     }
+                                 )
+                                 ->leftJoin(
+                                     'category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
+                                 )
+                                 ->leftJoin('categories', 'categories.id', '=', 'category_transaction_journal.category_id')
+                                 ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                 ->before($end)
+                                 ->where('categories.user_id', Auth::user()->id)
+                                 ->after($start)
+                                 ->where('transaction_types.type', 'Withdrawal')
+                                 ->groupBy('categories.id')
+                                 ->orderBy('sum', 'DESC')
+                                 ->get(['categories.id', 'categories.encrypted', 'categories.name', DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
     }
 
     /**
