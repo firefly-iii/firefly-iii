@@ -133,6 +133,7 @@ class JournalRepository implements JournalRepositoryInterface
                 'description'             => $data['description'],
                 'completed'               => 0,
                 'date'                    => $data['date'],
+                'encrypted'               => env('DB_ENCRYPTION', true),
             ]
         );
         $journal->save();

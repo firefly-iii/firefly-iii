@@ -88,9 +88,9 @@ class Reminder extends Model
      * @param $value
      */
     public function setMetadataAttribute($value)
-    {
-        $this->attributes['encrypted'] = true;
-        $this->attributes['metadata'] = Crypt::encrypt(json_encode($value));
+    {        
+        $this->attributes['encrypted']  = env('DB_ENCRYPTION', true);        
+        $this->attributes['metadata']   = env('DB_ENCRYPTION', true) ? Crypt::encrypt(json_encode($value)) : json_encode($value);
     }
 
     /**
