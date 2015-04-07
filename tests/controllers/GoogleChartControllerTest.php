@@ -292,12 +292,47 @@ class GoogleChartControllerTest extends TestCase
 
     public function testYearInExp()
     {
-        $this->markTestIncomplete();
+        $user       = FactoryMuffin::create('FireflyIII\User');
+        $preference = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $journal1   = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $journal2   = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $journals   = new Collection([$journal1, $journal2]);
+        $this->be($user);
+
+
+        // mock!
+        $repository = $this->mock('FireflyIII\Helpers\Report\ReportQueryInterface');
+
+        // expect!
+        $repository->shouldReceive('incomeByPeriod')->andReturn($journals);
+        $repository->shouldReceive('journalsByExpenseAccount')->andReturn($journals);
+        Preferences::shouldReceive('get')->withArgs(['showSharedReports',false])->once()->andReturn($preference);
+
+
+        $this->call('GET', '/chart/reports/income-expenses/2015');
+        $this->assertResponseOk();
     }
 
     public function testYearInExpSum()
     {
-        $this->markTestIncomplete();
+        $user       = FactoryMuffin::create('FireflyIII\User');
+        $preference = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $journal1   = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $journal2   = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $journals   = new Collection([$journal1, $journal2]);
+        $this->be($user);
+
+
+        // mock!
+        $repository = $this->mock('FireflyIII\Helpers\Report\ReportQueryInterface');
+
+        // expect!
+        $repository->shouldReceive('incomeByPeriod')->andReturn($journals);
+        $repository->shouldReceive('journalsByExpenseAccount')->andReturn($journals);
+        Preferences::shouldReceive('get')->withArgs(['showSharedReports',false])->once()->andReturn($preference);
+
+
+        $this->call('GET', '/chart/reports/income-expenses-sum/2015');
     }
 
 }

@@ -5,7 +5,7 @@ use ErrorException;
 use League\CommonMark\CommonMarkConverter;
 use Response;
 use Route;
-
+use Log;
 /**
  * Class HelpController
  *
@@ -27,7 +27,7 @@ class HelpController extends Controller
         ];
 
         if (!Route::has($route)) {
-            \Log::error('No such route: ' . $route);
+            Log::error('No such route: ' . $route);
 
             return Response::json($content);
         }
@@ -75,7 +75,7 @@ class HelpController extends Controller
         try {
             $content['text'] = file_get_contents($uri);
         } catch (ErrorException $e) {
-            \Log::error(trim($e->getMessage()));
+            Log::error(trim($e->getMessage()));
         }
         if (strlen(trim($content['text'])) == 0) {
             $content['text'] = '<p>There is no help for this route.</p>';

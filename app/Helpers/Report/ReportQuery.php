@@ -254,7 +254,6 @@ class ReportQuery implements ReportQueryInterface
 
         $data->each(
             function (Model $object) {
-//                $object->description = intval($object->encrypted);
                 $object->name = intval($object->account_encrypted) == 1 ? Crypt::decrypt($object->name) : $object->name;
             }
         );

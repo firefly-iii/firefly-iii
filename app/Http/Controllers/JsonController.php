@@ -239,6 +239,11 @@ class JsonController extends Controller
         return Response::json(['value' => $pref->data]);
     }
 
+    /**
+     * @param $what
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function transactionJournals($what)
     {
         $descriptions = [];

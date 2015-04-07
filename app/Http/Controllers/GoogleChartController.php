@@ -2,8 +2,6 @@
 
 use Carbon\Carbon;
 use Crypt;
-use DB;
-use Exception;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
@@ -480,11 +478,7 @@ class GoogleChartController extends Controller
      */
     public function yearInExp($year, GChart $chart, ReportQueryInterface $query)
     {
-        try {
-            $start = new Carbon('01-01-' . $year);
-        } catch (Exception $e) {
-            return view('error')->with('message', 'Invalid year.');
-        }
+        $start = new Carbon('01-01-' . $year);
         $chart->addColumn('Month', 'date');
         $chart->addColumn('Income', 'number');
         $chart->addColumn('Expenses', 'number');
@@ -532,11 +526,7 @@ class GoogleChartController extends Controller
      */
     public function yearInExpSum($year, GChart $chart, ReportQueryInterface $query)
     {
-        try {
-            $start = new Carbon('01-01-' . $year);
-        } catch (Exception $e) {
-            return view('error')->with('message', 'Invalid year.');
-        }
+        $start = new Carbon('01-01-' . $year);
         $chart->addColumn('Summary', 'string');
         $chart->addColumn('Income', 'number');
         $chart->addColumn('Expenses', 'number');

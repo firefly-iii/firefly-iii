@@ -509,7 +509,6 @@ class AccountRepository implements AccountRepositoryInterface
     protected function updateMetadata(Account $account, array $data)
     {
         $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType'];
-        $updated     = false;
 
         foreach ($validFields as $field) {
             $entry = $account->accountMeta()->where('name', $field)->first();
