@@ -109,6 +109,14 @@ interface BudgetRepositoryInterface
 
     /**
      * @param Budget $budget
+     * @param Carbon $date
+     *
+     * @return float
+     */
+    public function expensesOnDay(Budget $budget, Carbon $date);
+
+    /**
+     * @param Budget $budget
      * @param Carbon $start
      * @param Carbon $end
      *

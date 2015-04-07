@@ -20,6 +20,31 @@ use Navigation;
 class BillRepository implements BillRepositoryInterface
 {
     /**
+     * Create a fake bill to help the chart controller.
+     *
+     * @param string $description
+     * @param Carbon $date
+     * @param float  $amount
+     *
+     * @return Bill
+     */
+    public function createFakeBill($description, Carbon $date, $amount)
+    {
+        $bill              = new Bill;
+        $bill->name        = $description;
+        $bill->match       = $description;
+        $bill->amount_min  = $amount;
+        $bill->amount_max  = $amount;
+        $bill->date        = $date;
+        $bill->repeat_freq = 'monthly';
+        $bill->skip        = 0;
+        $bill->automatch   = false;
+        $bill->active      = false;
+
+        return $bill;
+    }
+
+    /**
      * @param Bill $bill
      *
      * @return mixed
@@ -27,6 +52,22 @@ class BillRepository implements BillRepositoryInterface
     public function destroy(Bill $bill)
     {
         return $bill->delete();
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getActiveBills()
+    {
+        /** @var Collection $set */
+        $set = Auth::user()->bills()->orderBy('name', 'ASC')->where('active', 1)->get();
+        $set->sort(
+            function (Bill $bill) {
+                return $bill->name;
+            }
+        );
+
+        return $set;
     }
 
     /**
@@ -63,6 +104,20 @@ class BillRepository implements BillRepositoryInterface
                     ->orderBy('transaction_journals.order', 'ASC')
                     ->orderBy('transaction_journals.id', 'DESC')
                     ->get(['transaction_journals.*', 'transactions.amount']);
+    }
+
+    /**
+     * Get all journals that were recorded on this bill between these dates.
+     *
+     * @param Bill   $bill
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getJournalsInRange(Bill $bill, Carbon $start, Carbon $end)
+    {
+        return $bill->transactionjournals()->before($end)->after($start)->get();
     }
 
     /**
@@ -321,21 +376,5 @@ class BillRepository implements BillRepositoryInterface
         $bill->save();
 
         return $bill;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getActiveBills()
-    {
-        /** @var Collection $set */
-        $set = Auth::user()->bills()->orderBy('name', 'ASC')->where('active', 1)->get();
-        $set->sort(
-            function (Bill $bill) {
-                return $bill->name;
-            }
-        );
-
-        return $set;
     }
 }

@@ -66,13 +66,33 @@ class AccountRepository implements AccountRepositoryInterface
         )->accountTypeIn($types)->orderBy('accounts.name', 'ASC');
 
         if ($page == -1) {
-            return $query->get(['accounts.*']);
+            $result = $query->get(['accounts.*']);
         } else {
             $size   = 50;
             $offset = ($page - 1) * $size;
 
-            return $query->take($size)->offset($offset)->get(['accounts.*']);
+            $result = $query->take($size)->offset($offset)->get(['accounts.*']);
         }
+
+        return $result;
+    }
+
+
+    /**
+     * @return Collection
+     */
+    public function getCreditCards()
+    {
+        return Auth::user()->accounts()
+                   ->hasMetaValue('accountRole', 'ccAsset')
+                   ->hasMetaValue('ccType', 'monthlyFull')
+                   ->get(
+                       [
+                           'accounts.*',
+                           'ccType.data as ccType',
+                           'accountRole.data as accountRole'
+                       ]
+                   );
     }
 
     /**
@@ -217,6 +237,34 @@ class AccountRepository implements AccountRepositoryInterface
         );
 
         return $accounts;
+    }
+
+    /**
+     * Get all transfers TO this account in this range.
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return Collection
+     */
+    public function getTransfersInRange(Account $account, Carbon $start, Carbon $end)
+    {
+        return TransactionJournal::whereIn(
+            'id', function ($q) use ($account, $start, $end) {
+            $q->select('transaction_journals.id')
+              ->from('transactions')
+              ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+              ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+              ->where('transactions.account_id', $account->id)
+              ->where('transaction_journals.user_id', Auth::user()->id)
+              ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+              ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+              ->where('transactions.amount', '>', 0)
+              ->where('transaction_types.type', 'Transfer');
+
+        }
+        )->get();
     }
 
     /**

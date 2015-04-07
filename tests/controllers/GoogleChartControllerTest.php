@@ -1,5 +1,10 @@
 <?php
 
+use Carbon\Carbon;
+use FireflyIII\Models\Preference;
+use Illuminate\Support\Collection;
+use League\FactoryMuffin\Facade as FactoryMuffin;
+
 /**
  * Class GoogleChartControllerTest
  */
@@ -36,42 +41,167 @@ class GoogleChartControllerTest extends TestCase
 
     public function testAccountBalanceChart()
     {
-        $this->markTestIncomplete();
+        $account = FactoryMuffin::create('FireflyIII\Models\Account');
+        $this->be($account->user);
+
+        // mock stuff:
+        Steam::shouldReceive('balance')->andReturn(0);
+
+        $this->call('GET', '/chart/account/' . $account->id);
+        $this->assertResponseOk();
     }
 
     public function testAllAccountsBalanceChart()
     {
-        $this->markTestIncomplete();
+        $account = FactoryMuffin::create('FireflyIII\Models\Account');
+        $this->be($account->user);
+        $collection = new Collection;
+        $collection->push($account);
+
+        //mock stuff:
+        Preferences::shouldReceive('get')->andReturn(new Preference);
+        $repository = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $repository->shouldReceive('getFrontpageAccounts')->andReturn($collection);
+
+        $this->call('GET', '/chart/home/account');
+        $this->assertResponseOk();
+
+
     }
 
     public function testAllBudgetsAndSpending()
     {
-        $this->markTestIncomplete();
+        $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $this->be($budget->user);
+        $collection = new Collection;
+        $collection->push($budget);
+
+        // mock stuff:
+        $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $repository->shouldReceive('getBudgets')->andReturn($collection);
+        $repository->shouldReceive('spentInMonth')->andReturn(rand(1, 100));
+
+        $this->call('GET', '/chart/budgets/spending/2015');
+        $this->assertResponseOk();
     }
 
     public function testAllBudgetsHomeChart()
     {
-        $this->markTestIncomplete();
+        $budget  = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $budget1 = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $this->be($budget->user);
+
+        $start = Carbon::now()->startOfMonth();
+        $end   = Carbon::now()->endOfMonth();
+
+        $repetition  = FactoryMuffin::create('FireflyIII\Models\LimitRepetition');
+        $repetitions = new Collection;
+        $repetitions->push($repetition);
+        $emptyRepetitions = new Collection;
+
+        $collection = new Collection;
+        $collection->push($budget);
+        $collection->push($budget1);
+
+        // mock stuff:
+        $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $repository->shouldReceive('getBudgets')->andReturn($collection);
+        $repository->shouldReceive('getBudgetLimitRepetitions')->once()->andReturn($repetitions, $emptyRepetitions);
+        $repository->shouldReceive('sumBudgetExpensesInPeriod')->andReturn(12);
+        $repository->shouldReceive('getWithoutBudgetSum')->andReturn(0);
+
+        $this->call('GET', '/chart/home/budgets');
+        $this->assertResponseOk();
     }
 
     public function testAllCategoriesHomeChart()
     {
-        $this->markTestIncomplete();
+        $category = FactoryMuffin::create('FireflyIII\Models\Category');
+
+        $this->be($category->user);
+        $category->save();
+        $category->sum = 100;
+        $collection    = new Collection;
+        $collection->push($category);
+
+        // mock stuff:
+        $repository = $this->mock('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
+        $repository->shouldReceive('getCategoriesAndExpenses')->andReturn($collection);
+        Crypt::shouldReceive('decrypt')->andReturn('Hello!');
+        Crypt::shouldReceive('encrypt')->andReturn('Hello!');
+
+
+        $this->call('GET', '/chart/home/categories');
+        $this->assertResponseOk();
     }
 
     public function testBillOverview()
     {
-        $this->markTestIncomplete();
+        $bill       = FactoryMuffin::create('FireflyIII\Models\Bill');
+        $journal    = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $collection = new Collection;
+        $collection->push($journal);
+        $this->be($bill->user);
+
+        // mock!
+        $repository = $this->mock('FireflyIII\Repositories\Bill\BillRepositoryInterface');
+        $repository->shouldReceive('getJournals')->andReturn($collection);
+
+
+        // call!
+        $this->call('GET', '/chart/bills/' . $bill->id);
+        $this->assertResponseOk();
     }
 
     public function testBillsOverview()
     {
-        $this->markTestIncomplete();
+        $bill1    = FactoryMuffin::create('FireflyIII\Models\Bill');
+        $bill2    = FactoryMuffin::create('FireflyIII\Models\Bill');
+        $journal1 = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $journal2 = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $card1    = FactoryMuffin::create('FireflyIII\Models\Account');
+        $card2    = FactoryMuffin::create('FireflyIII\Models\Account');
+        $fake     = FactoryMuffin::create('FireflyIII\Models\Bill');
+
+
+        $bills           = new Collection([$bill1, $bill2]);
+        $journals        = new Collection([$journal1, $journal2]);
+        $cards           = new Collection([$card1, $card2]);
+        $emptyCollection = new Collection;
+        $ranges          = [['start' => new Carbon, 'end' => new Carbon]];
+        $this->be($bill1->user);
+
+        // mock!
+        $repository = $this->mock('FireflyIII\Repositories\Bill\BillRepositoryInterface');
+        $accounts   = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+
+        // calls:
+        $repository->shouldReceive('getActiveBills')->andReturn($bills);
+        $repository->shouldReceive('getRanges')->andReturn($ranges);
+        $repository->shouldReceive('getJournalsInRange')->andReturn($journals, $emptyCollection);
+        $accounts->shouldReceive('getCreditCards')->andReturn($cards);
+        $accounts->shouldReceive('getTransfersInRange')->andReturn($journals, $emptyCollection);
+        $repository->shouldReceive('createFakeBill')->andReturn($fake);
+        Steam::shouldReceive('balance')->andReturn(-1, 0);
+
+        $this->call('GET', '/chart/home/bills');
+        $this->assertResponseOk();
     }
 
     public function testBudgetLimitSpending()
     {
-        $this->markTestIncomplete();
+        $repetition = FactoryMuffin::create('FireflyIII\Models\LimitRepetition');
+        $budget     = $repetition->budgetlimit->budget;
+        $this->be($budget->user);
+        ///chart/budget/{budget}/{limitrepetition}
+
+        // mock!
+        $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $repository->shouldReceive('expensesOnDay')->andReturn(rand(1, 1000));
+
+        $this->call('GET', '/chart/budget/' . $budget->id . '/' . $repetition->id);
+        $this->assertResponseOk();
+
     }
 
     public function testBudgetsAndSpending()

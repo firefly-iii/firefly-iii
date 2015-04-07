@@ -1,8 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
-use Amount;
 use App;
-use Auth;
 use Carbon\Carbon;
 use Crypt;
 use DB;
@@ -245,18 +243,16 @@ class GoogleChartController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function billsOverview(GChart $chart, BillRepositoryInterface $repository)
+    public function billsOverview(GChart $chart, BillRepositoryInterface $repository, AccountRepositoryInterface $accounts)
     {
         $chart->addColumn('Name', 'string');
         $chart->addColumn('Amount', 'number');
 
-
-        $paid   = ['items' => [], 'amount' => 0];
-        $unpaid = ['items' => [], 'amount' => 0];
         $start  = Session::get('start', Carbon::now()->startOfMonth());
         $end    = Session::get('end', Carbon::now()->endOfMonth());
-
-        $bills = $repository->getActiveBills();
+        $bills  = $repository->getActiveBills();
+        $paid   = new Collection; // journals.
+        $unpaid = new Collection; // bills
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
@@ -264,71 +260,55 @@ class GoogleChartController extends Controller
 
             foreach ($ranges as $range) {
                 // paid a bill in this range?
-                $count = $bill->transactionjournals()->before($range['end'])->after($range['start'])->count();
-                if ($count == 0) {
-                    $unpaid['items'][] = $bill->name . ' (' . $range['start']->format('jS M Y') . ')';
-                    $unpaid['amount'] += ($bill->amount_max + $bill->amount_min / 2);
-
+                $journals = $repository->getJournalsInRange($bill, $range['start'], $range['end']);
+                if ($journals->count() == 0) {
+                    $unpaid->push([$bill, $range['start']]);
                 } else {
-                    $journal         = $bill->transactionjournals()->with('transactions')->before($range['end'])->after($range['start'])->first();
-                    $paid['items'][] = $journal->description;
-                    $amount          = 0;
-                    foreach ($journal->transactions as $t) {
-                        if (floatval($t->amount) > 0) {
-                            $amount = floatval($t->amount);
-                        }
-                    }
-                    $paid['amount'] += $amount;
+                    $paid = $paid->merge($journals);
                 }
 
             }
         }
 
-        /**
-         * Find credit card accounts and possibly unpaid credit card bills.
-         */
-        $creditCards = Auth::user()->accounts()
-                           ->hasMetaValue('accountRole', 'ccAsset')
-                           ->hasMetaValue('ccType', 'monthlyFull')
-                           ->get(
-                               [
-                                   'accounts.*',
-                                   'ccType.data as ccType',
-                                   'accountRole.data as accountRole'
-                               ]
-                           );
-        // if the balance is not zero, the monthly payment is still underway.
-        /** @var Account $creditCard */
+        $creditCards = $accounts->getCreditCards();
         foreach ($creditCards as $creditCard) {
             $balance = Steam::balance($creditCard, null, true);
             $date    = new Carbon($creditCard->getMeta('ccMonthlyPaymentDate'));
             if ($balance < 0) {
-                // unpaid!
-                $unpaid['amount'] += $balance * -1;
-                $unpaid['items'][] = $creditCard->name . ' (expected ' . Amount::format(($balance * -1), false) . ') on the ' . $date->format('jS') . ')';
+                // unpaid! create a fake bill that matches the amount.
+                $description = $creditCard->name;
+                $amount      = $balance * -1;
+                $fakeBill    = $repository->createFakeBill($description, $date, $amount);
+                $unpaid->push([$fakeBill, $date]);
             }
             if ($balance == 0) {
-                // find a transfer TO the credit card which should account for
+                // find transfer(s) TO the credit card which should account for
                 // anything paid. If not, the CC is not yet used.
-                $transactions = $creditCard->transactions()
-                                           ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                           ->before($end)->after($start)->get();
-                if ($transactions->count() > 0) {
-                    /** @var Transaction $transaction */
-                    foreach ($transactions as $transaction) {
-                        $journal = $transaction->transactionJournal;
-                        if ($journal->transactionType->type == 'Transfer') {
-                            $paid['amount'] += floatval($transaction->amount);
-                            $paid['items'][] = $creditCard->name .
-                                               ' (paid ' . Amount::format((floatval($transaction->amount)), false) .
-                                               ' on the ' . $journal->date->format('jS') . ')';
-                        }
-                    }
-                }
+                $journals = $accounts->getTransfersInRange($creditCard, $start, $end);
+                $paid     = $paid->merge($journals);
             }
         }
-        $chart->addRow('Unpaid: ' . join(', ', $unpaid['items']), $unpaid['amount']);
-        $chart->addRow('Paid: ' . join(', ', $paid['items']), $paid['amount']);
+        // loop paid and create single entry:
+        $paidDescriptions   = [];
+        $paidAmount         = 0;
+        $unpaidDescriptions = [];
+        $unpaidAmount       = 0;
+
+        /** @var TransactionJournal $entry */
+        foreach ($paid as $entry) {
+            $paidDescriptions[] = $entry->description;
+            $paidAmount += floatval($entry->amount);
+        }
+
+        // loop unpaid:
+        /** @var Bill $entry */
+        foreach ($unpaid as $entry) {
+            $unpaidDescriptions[] = $entry[0]->name . ' (' . $entry[1]->format('jS M Y') . ')';
+            $unpaidAmount += ($bill->amount_max + $bill->amount_min / 2);
+        }
+
+        $chart->addRow('Unpaid: ' . join(', ', $unpaidDescriptions), $unpaidAmount);
+        $chart->addRow('Paid: ' . join(', ', $paidDescriptions), $paidAmount);
         $chart->generate();
 
         return Response::json($chart->getData());
@@ -341,7 +321,7 @@ class GoogleChartController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function budgetLimitSpending(Budget $budget, LimitRepetition $repetition, GChart $chart)
+    public function budgetLimitSpending(Budget $budget, LimitRepetition $repetition, GChart $chart, BudgetRepositoryInterface $repository)
     {
         $start = clone $repetition->startdate;
         $end   = $repetition->enddate;
@@ -356,7 +336,7 @@ class GoogleChartController extends Controller
             /*
              * Sum of expenses on this day:
              */
-            $sum = floatval($budget->transactionjournals()->lessThan(0)->transactionTypes(['Withdrawal'])->onDate($start)->sum('amount'));
+            $sum = $repository->expensesOnDay($budget, $start);
             $amount += $sum;
             $chart->addRow(clone $start, $amount);
             $start->addDay();

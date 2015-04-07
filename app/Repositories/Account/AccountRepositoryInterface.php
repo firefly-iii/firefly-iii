@@ -47,6 +47,22 @@ interface AccountRepositoryInterface
     public function getFirstTransaction(TransactionJournal $journal, Account $account);
 
     /**
+     * @return Collection
+     */
+    public function getCreditCards();
+
+    /**
+     * Get all transfers TO this account in this range.
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return Collection
+     */
+    public function getTransfersInRange(Account $account, Carbon $start, Carbon $end);
+
+    /**
      * @param Preference $preference
      *
      * @return Collection

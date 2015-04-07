@@ -308,4 +308,15 @@ class BudgetRepository implements BudgetRepositoryInterface
 
 
     }
+
+    /**
+     * @param Budget $budget
+     * @param Carbon $date
+     *
+     * @return float
+     */
+    public function expensesOnDay(Budget $budget, Carbon $date)
+    {
+        return floatval($budget->transactionjournals()->lessThan(0)->transactionTypes(['Withdrawal'])->onDate($date)->sum('amount'));
+    }
 }
