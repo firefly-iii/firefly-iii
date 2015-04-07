@@ -32,6 +32,9 @@ class HomeController extends Controller
         Session::put('end', $end);
     }
 
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function flush()
     {
         Session::clear();
@@ -58,7 +61,7 @@ class HomeController extends Controller
         $savings       = $repository->getSavingsAccounts();
 
         // check if all books are correct.
-        $sum = floatval(Auth::user()->transactions()->sum('amount'));
+        $sum = $repository->sumOfEverything();
         if ($sum != 0) {
             Session::flash(
                 'error', 'Your transactions are unbalanced. This means a'

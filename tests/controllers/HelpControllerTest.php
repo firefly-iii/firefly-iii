@@ -2,6 +2,9 @@
 
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
+/**
+ * Class HelpControllerTest
+ */
 class HelpControllerTest extends TestCase
 {
     /**
@@ -82,7 +85,6 @@ class HelpControllerTest extends TestCase
     {
         // login
         $user    = FactoryMuffin::create('FireflyIII\User');
-        $content = ['title' => 'Bla', 'text' => 'Bla'];
 
         $this->be($user);
         // mock some stuff.

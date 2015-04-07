@@ -152,6 +152,13 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @return float
+     */
+    public function sumOfEverything() {
+        return floatval(Auth::user()->transactions()->sum('amount'));
+    }
+
+    /**
      * @param Account $account
      * @param int     $page
      *

@@ -95,6 +95,11 @@ interface AccountRepositoryInterface
     public function getLastActivity(Account $account);
 
     /**
+     * @return float
+     */
+    public function sumOfEverything();
+
+    /**
      * Get savings accounts and the balance difference in the period.
      *
      * @return Collection
