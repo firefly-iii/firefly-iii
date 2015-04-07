@@ -193,6 +193,7 @@ class GoogleChartControllerTest extends TestCase
         $repetition            = FactoryMuffin::create('FireflyIII\Models\LimitRepetition');
         $repetition->startdate = Carbon::now()->startOfMonth();
         $repetition->enddate   = Carbon::now()->endOfMonth();
+        $repetition->save();
         $budget                = $repetition->budgetlimit->budget;
         $this->be($budget->user);
         ///chart/budget/{budget}/{limitrepetition}
