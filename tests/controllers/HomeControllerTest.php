@@ -28,23 +28,6 @@ class HomeControllerTest extends TestCase
     /**
      * @covers FireflyIII\Http\Controllers\HomeController::dateRange
      */
-    public function testDateRangeWarning()
-    {
-        $start = '2014-03-01';
-        $end   = '2015-03-31';
-        $this->be(new FireflyIII\User);
-        $this->call('POST', '/daterange', ['end' => $end, 'start' => $start,'_token' => 'replaceme']);
-        $this->assertResponseOk();
-
-        $this->assertSessionHas('start');
-        $this->assertSessionHas('end');
-        $this->assertSessionHas('warning');
-
-    }
-
-    /**
-     * @covers FireflyIII\Http\Controllers\HomeController::dateRange
-     */
     public function testDateRange()
     {
         $start = '2015-03-01';
@@ -52,11 +35,28 @@ class HomeControllerTest extends TestCase
         $this->be(new FireflyIII\User);
 
 
-        $this->call('POST', '/daterange', ['end' => $end, 'start' => $start,'_token' => 'replaceme']);
+        $this->call('POST', '/daterange', ['end' => $end, 'start' => $start, '_token' => 'replaceme']);
         $this->assertResponseOk();
 
         $this->assertSessionHas('start');
         $this->assertSessionHas('end');
+
+    }
+
+    /**
+     * @covers FireflyIII\Http\Controllers\HomeController::dateRange
+     */
+    public function testDateRangeWarning()
+    {
+        $start = '2014-03-01';
+        $end   = '2015-03-31';
+        $this->be(new FireflyIII\User);
+        $this->call('POST', '/daterange', ['end' => $end, 'start' => $start, '_token' => 'replaceme']);
+        $this->assertResponseOk();
+
+        $this->assertSessionHas('start');
+        $this->assertSessionHas('end');
+        $this->assertSessionHas('warning');
 
     }
 

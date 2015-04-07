@@ -306,7 +306,7 @@ class GoogleChartControllerTest extends TestCase
         // expect!
         $repository->shouldReceive('incomeByPeriod')->andReturn($journals);
         $repository->shouldReceive('journalsByExpenseAccount')->andReturn($journals);
-        Preferences::shouldReceive('get')->withArgs(['showSharedReports',false])->once()->andReturn($preference);
+        Preferences::shouldReceive('get')->withArgs(['showSharedReports', false])->once()->andReturn($preference);
 
 
         $this->call('GET', '/chart/reports/income-expenses/2015');
@@ -329,7 +329,7 @@ class GoogleChartControllerTest extends TestCase
         // expect!
         $repository->shouldReceive('incomeByPeriod')->andReturn($journals);
         $repository->shouldReceive('journalsByExpenseAccount')->andReturn($journals);
-        Preferences::shouldReceive('get')->withArgs(['showSharedReports',false])->once()->andReturn($preference);
+        Preferences::shouldReceive('get')->withArgs(['showSharedReports', false])->once()->andReturn($preference);
 
 
         $this->call('GET', '/chart/reports/income-expenses-sum/2015');

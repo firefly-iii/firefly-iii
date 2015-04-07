@@ -23,16 +23,6 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     }
 
     /**
-     * This method is called before the first test of this test class is run.
-     *
-     * @since Method available since Release 3.4.0
-     */
-    public static function setUpBeforeClass()
-    {
-        parent::setUpBeforeClass();
-    }
-
-    /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
@@ -44,7 +34,15 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
 
     }
 
-
+    /**
+     * This method is called before the first test of this test class is run.
+     *
+     * @since Method available since Release 3.4.0
+     */
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+    }
 
     /**
      * @param string $class
@@ -59,7 +57,6 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
 
         return $mock;
     }
-
 
 
 }

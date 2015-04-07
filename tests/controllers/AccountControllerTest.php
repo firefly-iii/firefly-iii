@@ -174,7 +174,7 @@ class AccountControllerTest extends TestCase
         // mock!
         Amount::shouldReceive('getCurrencyCode')->once()->andReturn('A');
         $repository = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
-        $repository->shouldReceive('getJournals')->andReturn(new LengthAwarePaginator([],0,10));
+        $repository->shouldReceive('getJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
 
         // get edit page:
         $this->call('GET', '/accounts/show/' . $this->account->id);
