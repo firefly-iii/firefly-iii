@@ -2,12 +2,13 @@
 
 use Auth;
 use Carbon\Carbon;
+use Config;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Input;
 use Preferences;
-use Session;
 use Redirect;
-use Config;
+use Session;
+
 /**
  * Class HomeController
  *
@@ -31,8 +32,10 @@ class HomeController extends Controller
         Session::put('end', $end);
     }
 
-    public function flush() {
+    public function flush()
+    {
         Session::clear();
+
         return Redirect::route('index');
     }
 
@@ -42,7 +45,7 @@ class HomeController extends Controller
     public function index(AccountRepositoryInterface $repository)
     {
 
-        $types        = Config::get('firefly.accountTypesByIdentifier.asset');
+        $types         = Config::get('firefly.accountTypesByIdentifier.asset');
         $count         = $repository->countAccounts($types);
         $title         = 'Firefly';
         $subTitle      = 'What\'s playing?';

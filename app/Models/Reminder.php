@@ -1,9 +1,10 @@
 <?php namespace FireflyIII\Models;
 
 use Carbon\Carbon;
+use Crypt;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
-use Crypt;
+
 /**
  * Class Reminder
  *
@@ -43,6 +44,7 @@ class Reminder extends Model
         if (intval($this->encrypted) == 1) {
             return json_decode(Crypt::decrypt($value));
         }
+
         return json_decode($value);
     }
 
@@ -90,7 +92,7 @@ class Reminder extends Model
     public function setMetadataAttribute($value)
     {
         $this->attributes['encrypted'] = true;
-        $this->attributes['metadata'] = Crypt::encrypt(json_encode($value));
+        $this->attributes['metadata']  = Crypt::encrypt(json_encode($value));
     }
 
     /**

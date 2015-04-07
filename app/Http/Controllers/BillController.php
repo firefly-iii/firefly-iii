@@ -173,7 +173,7 @@ class BillController extends Controller
      */
     public function show(Bill $bill, BillRepositoryInterface $repository)
     {
-        $journals = $repository->getJournals($bill);
+        $journals                = $repository->getJournals($bill);
         $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill);
         $hideBill                = true;
 

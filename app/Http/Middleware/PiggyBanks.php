@@ -3,17 +3,13 @@
 namespace FireflyIII\Http\Middleware;
 
 
-use Carbon\Carbon;
+use App;
 use Closure;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
 use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Navigation;
-use Session;
-use App;
 
 /**
  * Class PiggyBanks

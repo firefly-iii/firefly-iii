@@ -1,8 +1,9 @@
 <?php namespace FireflyIII\Models;
 
+use Crypt;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Crypt;
+
 /**
  * Class Category
  *
@@ -46,6 +47,7 @@ class Category extends Model
         $this->attributes['name']      = Crypt::encrypt($value);
         $this->attributes['encrypted'] = true;
     }
+
     /**
      * @param $value
      *

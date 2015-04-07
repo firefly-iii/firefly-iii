@@ -89,7 +89,6 @@ interface BillRepositoryInterface
     public function lastFoundMatch(Bill $bill);
 
 
-
     /**
      * @param Bill $bill
      *

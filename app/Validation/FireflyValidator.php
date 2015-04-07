@@ -223,10 +223,10 @@ class FireflyValidator extends Validator
         }
         $set = $query->get(['piggy_banks.*']);
 
-        foreach($set as $entry) {
+        foreach ($set as $entry) {
             $isEncrypted = intval($entry->encrypted) == 1 ? true : false;
-            $checkValue = $isEncrypted ? Crypt::decrypt($entry->name) : $entry->name;
-            if($checkValue == $value) {
+            $checkValue  = $isEncrypted ? Crypt::decrypt($entry->name) : $entry->name;
+            if ($checkValue == $value) {
                 return false;
             }
         }

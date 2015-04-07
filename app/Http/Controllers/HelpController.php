@@ -3,9 +3,10 @@
 use Cache;
 use ErrorException;
 use League\CommonMark\CommonMarkConverter;
+use Log;
 use Response;
 use Route;
-use Log;
+
 /**
  * Class HelpController
  *

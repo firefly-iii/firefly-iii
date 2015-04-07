@@ -54,6 +54,7 @@ class Account extends Model
             App::abort(500, 'Could not create new account with data: ' . json_encode($fields));
 
         }
+
         return $account;
 
     }

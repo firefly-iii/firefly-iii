@@ -30,7 +30,7 @@ class CategoryFormRequest extends Request
 
         $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name,encrypted';
         if (Category::find(Input::get('id'))) {
-            $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name,encrypted,'.intval(Input::get('id'));
+            $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name,encrypted,' . intval(Input::get('id'));
         }
 
         return [
