@@ -93,6 +93,9 @@ class BillControllerTest extends TestCase
         $bill = FactoryMuffin::create('FireflyIII\Models\Bill');
         $this->be($bill->user);
 
+        $repository = $this->mock('FireflyIII\Repositories\Bill\BillRepositoryInterface');
+        $repository->shouldReceive('destroy')->andReturn(true);
+
 
         $this->call('POST', '/bills/destroy/' . $bill->id, ['_token' => 'replaceMe']);
         $this->assertSessionHas('success', 'The bill was deleted.');

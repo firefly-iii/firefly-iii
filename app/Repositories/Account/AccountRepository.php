@@ -155,7 +155,7 @@ class AccountRepository implements AccountRepositoryInterface
      * @param Account $account
      * @param int     $page
      *
-     * @return mixed
+     * @return LengthAwarePaginator
      */
     public function getJournals(Account $account, $page)
     {

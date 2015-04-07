@@ -177,7 +177,15 @@ FactoryMuffin::define(
 FactoryMuffin::define(
     'FireflyIII\Models\TransactionType',
     [
-        'type' => 'word',
+        'type' => function () {
+            $types = ['Withdrawal', 'Deposit', 'Transfer'];
+            $count = DB::table('transaction_types')->count();
+            if ($count < 3) {
+                return $types[$count];
+            } else {
+                return RandomString::generateRandomString(10);
+            }
+        }
     ]
 );
 

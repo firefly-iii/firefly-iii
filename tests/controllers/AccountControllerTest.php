@@ -4,6 +4,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
@@ -95,12 +96,15 @@ class AccountControllerTest extends TestCase
         $account = FactoryMuffin::create('FireflyIII\Models\Account');
 
         $this->be($account->user);
-        $this->assertCount(1, DB::table('accounts')->where('id', $account->id)->whereNull('deleted_at')->get());
+
+        // mock:
+        $repository = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $repository->shouldReceive('destroy')->andReturn(true);
 
         // post it!
         $this->call('POST', '/accounts/destroy/' . $account->id, ['_token' => 'replaceme']);
         $this->assertSessionHas('success');
-        $this->assertCount(0, DB::table('accounts')->where('id', $account->id)->whereNull('deleted_at')->get());
+        $this->assertResponseStatus(302);
     }
 
     public function testEdit()
@@ -167,7 +171,10 @@ class AccountControllerTest extends TestCase
         // an account:
         $this->be($this->account->user);
 
+        // mock!
         Amount::shouldReceive('getCurrencyCode')->once()->andReturn('A');
+        $repository = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $repository->shouldReceive('getJournals')->andReturn(new LengthAwarePaginator([],0,10));
 
         // get edit page:
         $this->call('GET', '/accounts/show/' . $this->account->id);

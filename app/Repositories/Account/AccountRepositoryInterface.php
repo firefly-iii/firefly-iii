@@ -7,6 +7,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 /**
@@ -82,7 +83,7 @@ interface AccountRepositoryInterface
      * @param Account $account
      * @param string  $range
      *
-     * @return mixed
+     * @return LengthAwarePaginator
      */
     public function getJournals(Account $account, $page);
 
