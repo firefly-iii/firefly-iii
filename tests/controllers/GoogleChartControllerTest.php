@@ -190,8 +190,10 @@ class GoogleChartControllerTest extends TestCase
 
     public function testBudgetLimitSpending()
     {
-        $repetition = FactoryMuffin::create('FireflyIII\Models\LimitRepetition');
-        $budget     = $repetition->budgetlimit->budget;
+        $repetition            = FactoryMuffin::create('FireflyIII\Models\LimitRepetition');
+        $repetition->startdate = Carbon::now()->startOfMonth();
+        $repetition->enddate   = Carbon::now()->endOfMonth();
+        $budget                = $repetition->budgetlimit->budget;
         $this->be($budget->user);
         ///chart/budget/{budget}/{limitrepetition}
 
@@ -206,22 +208,86 @@ class GoogleChartControllerTest extends TestCase
 
     public function testBudgetsAndSpending()
     {
-        $this->markTestIncomplete();
+        $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $this->be($budget->user);
+
+        $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $repository->shouldReceive('spentInMonth')->andReturn(100);
+        $repository->shouldReceive('getLimitAmountOnDate')->andReturn(100);
+        $repository->shouldReceive('getFirstBudgetLimitDate')->andReturn(Carbon::now()->startOfMonth());
+        $repository->shouldReceive('getLastBudgetLimitDate')->andReturn(Carbon::now()->endOfYear());
+
+        // /chart/budget/{budget}/spending/{year?}
+        $this->call('GET', '/chart/budget/' . $budget->id . '/spending/0');
+        $this->assertResponseOk();
+    }
+
+    public function testBudgetsAndSpendingWithYear()
+    {
+        $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $this->be($budget->user);
+
+        $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $repository->shouldReceive('spentInMonth')->andReturn(100);
+        $repository->shouldReceive('getLimitAmountOnDate')->andReturn(100);
+
+        // /chart/budget/{budget}/spending/{year?}
+        $this->call('GET', '/chart/budget/' . $budget->id . '/spending/2015');
+        $this->assertResponseOk();
     }
 
     public function testCategoryOverviewChart()
     {
-        $this->markTestIncomplete();
+        $category = FactoryMuffin::create('FireflyIII\Models\Category');
+        $pref     = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $this->be($category->user);
+        $start = new Carbon();
+        $start->subDay();
+        $end = new Carbon;
+        $end->addWeek();
+
+        // mock!
+        $repository = $this->mock('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
+        $repository->shouldReceive('getFirstActivityDate')->andReturn($start);
+        $repository->shouldReceive('spentInPeriodSum')->andReturn(rand(1, 100));
+        Preferences::shouldReceive('get')->andReturn($pref);
+
+        Navigation::shouldReceive('startOfPeriod')->andReturn($start);
+        Navigation::shouldReceive('endOfPeriod')->andReturn($start);
+        Navigation::shouldReceive('addPeriod')->andReturn($end);
+
+        $this->call('GET', '/chart/category/' . $category->id . '/overview');
+        $this->assertResponseOk();
     }
 
     public function testCategoryPeriodChart()
     {
-        $this->markTestIncomplete();
+        $category = FactoryMuffin::create('FireflyIII\Models\Category');
+        $this->be($category->user);
+
+        // mock!
+        $repository = $this->mock('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
+        $repository->shouldReceive('spentOnDaySum')->andReturn(rand(1, 100));
+
+        $this->call('GET', '/chart/category/' . $category->id . '/period');
+        $this->assertResponseOk();
     }
 
     public function testPiggyBankHistory()
     {
-        $this->markTestIncomplete();
+        $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
+        $this->be($piggyBank->account->user);
+
+        $obj        = new stdClass;
+        $obj->sum   = 12;
+        $obj->date  = new Carbon;
+        $collection = new Collection([$obj]);
+
+        $repository = $this->mock('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
+        $repository->shouldReceive('getEventSummarySet')->andReturn($collection);
+
+        $this->call('GET', '/chart/piggy-history/' . $piggyBank->id);
+        $this->assertResponseOk();
     }
 
     public function testYearInExp()

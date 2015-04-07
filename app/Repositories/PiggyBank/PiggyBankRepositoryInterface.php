@@ -36,6 +36,13 @@ interface PiggyBankRepositoryInterface
     public function createPiggyBankPart(array $data);
 
     /**
+     * @param PiggyBank $piggyBank
+     *
+     * @return Collection
+     */
+    public function getEventSummarySet(PiggyBank $piggyBank);
+
+    /**
      * Set all piggy banks to order 0.
      *
      * @return void

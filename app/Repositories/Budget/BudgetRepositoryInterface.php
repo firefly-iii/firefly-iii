@@ -27,6 +27,14 @@ interface BudgetRepositoryInterface
     public function destroy(Budget $budget);
 
     /**
+     * @param Budget $budget
+     * @param Carbon $date
+     *
+     * @return float
+     */
+    public function expensesOnDay(Budget $budget, Carbon $date);
+
+    /**
      * @return Collection
      */
     public function getActiveBudgets();
@@ -61,6 +69,13 @@ interface BudgetRepositoryInterface
     public function getCurrentRepetition(Budget $budget, Carbon $date);
 
     /**
+     * @param Budget $budget
+     *
+     * @return Carbon
+     */
+    public function getFirstBudgetLimitDate(Budget $budget);
+
+    /**
      * @return Collection
      */
     public function getInactiveBudgets();
@@ -75,6 +90,21 @@ interface BudgetRepositoryInterface
      * @return \Illuminate\Pagination\Paginator
      */
     public function getJournals(Budget $budget, LimitRepetition $repetition = null, $take = 50);
+
+    /**
+     * @param Budget $budget
+     *
+     * @return Carbon
+     */
+    public function getLastBudgetLimitDate(Budget $budget);
+
+    /**
+     * @param Budget $budget
+     * @param Carbon $date
+     *
+     * @return float
+     */
+    public function getLimitAmountOnDate(Budget $budget, Carbon $date);
 
     /**
      * @param Carbon $start
@@ -106,14 +136,6 @@ interface BudgetRepositoryInterface
      * @return Budget
      */
     public function store(array $data);
-
-    /**
-     * @param Budget $budget
-     * @param Carbon $date
-     *
-     * @return float
-     */
-    public function expensesOnDay(Budget $budget, Carbon $date);
 
     /**
      * @param Budget $budget

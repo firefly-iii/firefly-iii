@@ -1,6 +1,5 @@
 <?php namespace FireflyIII\Http\Controllers;
 
-use App;
 use Carbon\Carbon;
 use Crypt;
 use DB;
@@ -19,6 +18,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Grumpydictator\Gchart\GChart;
 use Illuminate\Support\Collection;
 use Navigation;
@@ -348,37 +348,22 @@ class GoogleChartController extends Controller
     }
 
     /**
+     * @param Budget                    $budget
+     * @param int                       $year
+     * @param GChart                    $chart
+     * @param BudgetRepositoryInterface $repository
      *
-     * @param Budget $budget
-     *
-     * @param int    $year
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function budgetsAndSpending(Budget $budget, $year = 0)
+    public function budgetsAndSpending(Budget $budget, $year = 0, GChart $chart, BudgetRepositoryInterface $repository)
     {
-
-        $chart      = App::make('Grumpydictator\Gchart\GChart');
-        $repository = App::make('FireflyIII\Repositories\Budget\BudgetRepository');
         $chart->addColumn('Month', 'date');
         $chart->addColumn('Budgeted', 'number');
         $chart->addColumn('Spent', 'number');
-        if ($year == 0) {
-            // grab the first budgetlimit ever:
-            $firstLimit = $budget->budgetlimits()->orderBy('startdate', 'ASC')->first();
-            if ($firstLimit) {
-                $start = new Carbon($firstLimit->startdate);
-            } else {
-                $start = Carbon::now()->startOfYear();
-            }
 
-            // grab the last budget limit ever:
-            $lastLimit = $budget->budgetlimits()->orderBy('startdate', 'DESC')->first();
-            if ($lastLimit) {
-                $end = new Carbon($lastLimit->startdate);
-            } else {
-                $end = Carbon::now()->endOfYear();
-            }
+        if ($year == 0) {
+            $start = $repository->getFirstBudgetLimitDate($budget);
+            $end   = $repository->getLastBudgetLimitDate($budget);
         } else {
             $start = Carbon::createFromDate(intval($year), 1, 1);
             $end   = clone $start;
@@ -386,19 +371,8 @@ class GoogleChartController extends Controller
         }
 
         while ($start <= $end) {
-            $spent      = $repository->spentInMonth($budget, $start);
-            $repetition = LimitRepetition::leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
-                                         ->where('limit_repetitions.startdate', $start->format('Y-m-d 00:00:00'))
-                                         ->where('budget_limits.budget_id', $budget->id)
-                                         ->first(['limit_repetitions.*']);
-
-            if ($repetition) {
-                $budgeted = floatval($repetition->amount);
-                \Log::debug('Found a repetition on ' . $start->format('Y-m-d') . ' for budget ' . $budget->name . '!');
-            } else {
-                \Log::debug('No repetition on ' . $start->format('Y-m-d') . ' for budget ' . $budget->name);
-                $budgeted = null;
-            }
+            $spent    = $repository->spentInMonth($budget, $start);
+            $budgeted = $repository->getLimitAmountOnDate($budget, $start);
             $chart->addRow(clone $start, $budgeted, $spent);
             $start->addMonth();
         }
@@ -416,12 +390,11 @@ class GoogleChartController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function categoryOverviewChart(Category $category, GChart $chart)
+    public function categoryOverviewChart(Category $category, GChart $chart, CategoryRepositoryInterface $repository)
     {
         // oldest transaction in category:
-        /** @var TransactionJournal $first */
-        $first = $category->transactionjournals()->orderBy('date', 'ASC')->first();
-        $start = $first->date;
+        $start = $repository->getFirstActivityDate($category);
+
         /** @var Preference $range */
         $range = Preferences::get('viewRange', '1M');
         // jump to start of week / month / year / etc (TODO).
@@ -434,12 +407,11 @@ class GoogleChartController extends Controller
         while ($start <= $end) {
 
             $currentEnd = Navigation::endOfPeriod($start, $range->data);
-            $spent      = floatval($category->transactionjournals()->before($currentEnd)->after($start)->lessThan(0)->sum('amount')) * -1;
+            $spent      = $repository->spentInPeriodSum($category, $start, $currentEnd);
             $chart->addRow(clone $start, $spent);
 
             $start = Navigation::addPeriod($start, $range->data, 0);
         }
-
 
         $chart->generate();
 
@@ -454,17 +426,15 @@ class GoogleChartController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function categoryPeriodChart(Category $category, GChart $chart)
+    public function categoryPeriodChart(Category $category, GChart $chart, CategoryRepositoryInterface $repository)
     {
-        // oldest transaction in category:
-        /** @var TransactionJournal $first */
-        $start = clone Session::get('start');
+        $start = clone Session::get('start', Carbon::now()->startOfMonth());
         $chart->addColumn('Period', 'date');
         $chart->addColumn('Spent', 'number');
 
-        $end = Session::get('end');
+        $end = Session::get('end', Carbon::now()->endOfMonth());
         while ($start <= $end) {
-            $spent = floatval($category->transactionjournals()->onDate($start)->lessThan(0)->sum('amount')) * -1;
+            $spent = $repository->spentOnDaySum($category, $start);
             $chart->addRow(clone $start, $spent);
             $start->addDay();
         }
@@ -482,13 +452,13 @@ class GoogleChartController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function piggyBankHistory(PiggyBank $piggyBank, GChart $chart)
+    public function piggyBankHistory(PiggyBank $piggyBank, GChart $chart, PiggyBankRepositoryInterface $repository)
     {
         $chart->addColumn('Date', 'date');
         $chart->addColumn('Balance', 'number');
 
         /** @var Collection $set */
-        $set = DB::table('piggy_bank_events')->where('piggy_bank_id', $piggyBank->id)->groupBy('date')->get(['date', DB::Raw('SUM(`amount`) AS `sum`')]);
+        $set = $repository->getEventSummarySet($piggyBank);
         $sum = 0;
 
         foreach ($set as $entry) {

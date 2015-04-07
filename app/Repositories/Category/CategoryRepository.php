@@ -81,6 +81,23 @@ class CategoryRepository implements CategoryRepositoryInterface
 
     /**
      * @param Category $category
+     *
+     * @return Carbon
+     */
+    public function getFirstActivityDate(Category $category)
+    {
+        /** @var TransactionJournal $first */
+        $first = $category->transactionjournals()->orderBy('date', 'ASC')->first();
+        if ($first) {
+            return $first->date;
+        }
+
+        return new Carbon;
+
+    }
+
+    /**
+     * @param Category $category
      * @param int      $page
      *
      * @return Collection
@@ -139,6 +156,18 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
+     * @param Category $category
+     * @param Carbon   $start
+     * @param Carbon   $end
+     *
+     * @return float
+     */
+    public function spentInPeriodSum(Category $category, Carbon $start, Carbon $end)
+    {
+        return floatval($category->transactionjournals()->before($end)->after($start)->lessThan(0)->sum('amount')) * -1;
+    }
+
+    /**
      * @param array $data
      *
      * @return Category
@@ -169,5 +198,16 @@ class CategoryRepository implements CategoryRepositoryInterface
         $category->save();
 
         return $category;
+    }
+
+    /**
+     * @param Category $category
+     * @param Carbon   $date
+     *
+     * @return float
+     */
+    public function spentOnDaySum(Category $category, Carbon $date)
+    {
+        return floatval($category->transactionjournals()->onDate($date)->lessThan(0)->sum('amount')) * -1;
     }
 }

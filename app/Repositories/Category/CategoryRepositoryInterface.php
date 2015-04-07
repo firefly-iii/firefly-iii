@@ -42,6 +42,13 @@ interface CategoryRepositoryInterface
 
     /**
      * @param Category $category
+     *
+     * @return Carbon
+     */
+    public function getFirstActivityDate(Category $category);
+
+    /**
+     * @param Category $category
      * @param int      $page
      *
      * @return Collection
@@ -62,6 +69,23 @@ interface CategoryRepositoryInterface
      * @return Collection
      */
     public function getWithoutCategory(Carbon $start, Carbon $end);
+
+    /**
+     * @param Category $category
+     * @param Carbon   $start
+     * @param Carbon   $end
+     *
+     * @return float
+     */
+    public function spentInPeriodSum(Category $category, Carbon $start, Carbon $end);
+
+    /**
+     * @param Category $category
+     * @param Carbon   $date
+     *
+     * @return float
+     */
+    public function spentOnDaySum(Category $category, Carbon $date);
 
     /**
      * @param array $data

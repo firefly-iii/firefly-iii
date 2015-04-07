@@ -161,6 +161,20 @@ FactoryMuffin::define(
 );
 
 FactoryMuffin::define(
+    'FireflyIII\Models\PiggyBank',
+    [
+        'account_id'    => 'factory|FireflyIII\Models\Account',
+        'name'          => 'sentence',
+        'targetamount'  => 'integer',
+        'startdate'     => 'date',
+        'targetdate'    => 'date',
+        'reminder_skip' => 0,
+        'remind_me'     => 0,
+        'order'         => 0,
+    ]
+);
+
+FactoryMuffin::define(
     'FireflyIII\Models\TransactionType',
     [
         'type' => 'word',
