@@ -34,7 +34,8 @@ class JsonController extends Controller
         switch (Input::get('box')) {
             case 'in':
                 $box = Input::get('box');
-                $set = $reportQuery->journalsByExpenseAccount($start, $end, true);
+                $set = $reportQuery->incomeByPeriod($start, $end, true);
+
 
                 foreach ($set as $entry) {
                     $amount += $entry->queryAmount;
@@ -42,7 +43,7 @@ class JsonController extends Controller
                 break;
             case 'out':
                 $box = Input::get('box');
-                $set = $reportQuery->incomeByPeriod($start, $end, true);
+                $set = $reportQuery->journalsByExpenseAccount($start, $end, true);
 
                 foreach ($set as $entry) {
                     $amount += $entry->queryAmount;
