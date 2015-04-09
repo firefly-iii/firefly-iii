@@ -67,8 +67,8 @@ class Steam
     public function limitArray(array $array, $limit = 10)
     {
         $others = [
-            'name'   => 'Others',
-            'amount' => 0
+            'name'        => 'Others',
+            'queryAmount' => 0
         ];
         $return = [];
         $count  = 0;
@@ -76,7 +76,7 @@ class Steam
             if ($count < ($limit - 1)) {
                 $return[$id] = $entry;
             } else {
-                $others['amount'] += $entry['amount'];
+                $others['queryAmount'] += $entry['queryAmount'];
             }
 
             $count++;
