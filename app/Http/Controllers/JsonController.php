@@ -2,12 +2,15 @@
 
 use Amount;
 use Auth;
+use Carbon\Carbon;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use Illuminate\Support\Collection;
 use Input;
 use Preferences;
 use Response;
@@ -25,7 +28,7 @@ class JsonController extends Controller
     /**
      *
      */
-    public function box(BillRepositoryInterface $repository, ReportQueryInterface $reportQuery)
+    public function box(BillRepositoryInterface $repository, ReportQueryInterface $reportQuery, AccountRepositoryInterface $accountRepository)
     {
         $amount = 0;
         $start  = Session::get('start');
@@ -51,8 +54,9 @@ class JsonController extends Controller
 
                 break;
             case 'bills-unpaid':
-                $box   = 'bills-unpaid';
-                $bills = Auth::user()->bills()->where('active', 1)->get();
+                $box    = 'bills-unpaid';
+                $bills  = $repository->getActiveBills();
+                $unpaid = new Collection; // bills
 
                 /** @var Bill $bill */
                 foreach ($bills as $bill) {
@@ -60,35 +64,30 @@ class JsonController extends Controller
 
                     foreach ($ranges as $range) {
                         // paid a bill in this range?
-                        $count = $bill->transactionjournals()->before($range['end'])->after($range['start'])->count();
-                        if ($count == 0) {
-                            $amount += floatval($bill->amount_max + $bill->amount_min / 2);
+                        $journals = $repository->getJournalsInRange($bill, $range['start'], $range['end']);
+                        if ($journals->count() == 0) {
+                            $unpaid->push([$bill, $range['start']]);
                         }
-
                     }
                 }
 
-                /**
-                 * Find credit card accounts and possibly unpaid credit card bills.
-                 */
-                $creditCards = Auth::user()->accounts()
-                                   ->hasMetaValue('accountRole', 'ccAsset')
-                                   ->hasMetaValue('ccType', 'monthlyFull')
-                                   ->get(
-                                       [
-                                           'accounts.*',
-                                           'ccType.data as ccType',
-                                           'accountRole.data as accountRole'
-                                       ]
-                                   );
-                // if the balance is not zero, the monthly payment is still underway.
-                /** @var Account $creditCard */
+                $creditCards = $accountRepository->getCreditCards();
                 foreach ($creditCards as $creditCard) {
                     $balance = Steam::balance($creditCard, null, true);
+                    $date    = new Carbon($creditCard->getMeta('ccMonthlyPaymentDate'));
                     if ($balance < 0) {
-                        // unpaid!
-                        $amount += $balance * -1;
+                        // unpaid! create a fake bill that matches the amount.
+                        $description = $creditCard->name;
+                        $amount      = $balance * -1;
+                        $fakeBill    = $repository->createFakeBill($description, $date, $amount);
+                        $unpaid->push([$fakeBill, $date]);
                     }
+                }
+                // loop unpaid:
+                /** @var Bill $entry */
+                foreach ($unpaid as $entry) {
+                    $unpaidDescriptions[] = $entry[0]->name . ' (' . $entry[1]->format('jS M Y') . ')';
+                    $amount += ($entry[0]->amount_max + $entry[0]->amount_min / 2);
                 }
 
                 break;

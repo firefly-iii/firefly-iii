@@ -302,7 +302,7 @@ class GoogleChartController extends Controller
         /** @var Bill $entry */
         foreach ($unpaid as $entry) {
             $unpaidDescriptions[] = $entry[0]->name . ' (' . $entry[1]->format('jS M Y') . ')';
-            $unpaidAmount += ($bill->amount_max + $bill->amount_min / 2);
+            $unpaidAmount += ($entry[0]->amount_max + $entry[0]->amount_min / 2);
         }
 
         $chart->addRow('Unpaid: ' . join(', ', $unpaidDescriptions), $unpaidAmount);
