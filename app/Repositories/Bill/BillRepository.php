@@ -4,6 +4,8 @@ namespace FireflyIII\Repositories\Bill;
 
 use Auth;
 use Carbon\Carbon;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;

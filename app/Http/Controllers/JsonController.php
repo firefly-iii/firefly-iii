@@ -50,8 +50,8 @@ class JsonController extends Controller
                 $box = Input::get('box');
                 $in  = Auth::user()->transactionjournals()
                            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                    //->before($end)
-                    //                           ->after($start)
+                           ->before($end)
+                           ->after($start)
                            ->transactionTypes(['Withdrawal'])
                            ->where('transactions.amount', '>', 0)
                            ->first([DB::Raw('SUM(transactions.amount) as `totalAmount`')]);
