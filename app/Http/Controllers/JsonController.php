@@ -40,9 +40,9 @@ class JsonController extends Controller
                            ->after($start)
                            ->transactionTypes(['Deposit'])
                            ->where('transactions.amount', '>', 0)
-                           ->first([DB::Raw('SUM(transactions.amount) as `amount`')]);
+                           ->first([DB::Raw('SUM(transactions.amount) as `totalAmount`')]);
                 if (!is_null($in)) {
-                    $amount = floatval($in->amount);
+                    $amount = floatval($in->totalAmount);
                 }
 
                 break;
@@ -50,13 +50,13 @@ class JsonController extends Controller
                 $box = Input::get('box');
                 $in  = Auth::user()->transactionjournals()
                            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                           ->before($end)
-                           ->after($start)
+                    //->before($end)
+                    //                           ->after($start)
                            ->transactionTypes(['Withdrawal'])
                            ->where('transactions.amount', '>', 0)
-                           ->first([DB::Raw('SUM(transactions.amount) as `amount`')]);
+                           ->first([DB::Raw('SUM(transactions.amount) as `totalAmount`')]);
                 if (!is_null($in)) {
-                    $amount = floatval($in->amount);
+                    $amount = floatval($in->totalAmount);
                 }
 
                 break;
@@ -115,14 +115,8 @@ class JsonController extends Controller
                         // paid a bill in this range?
                         $count = $bill->transactionjournals()->before($range['end'])->after($range['start'])->count();
                         if ($count != 0) {
-                            $journal       = $bill->transactionjournals()->with('transactions')->before($range['end'])->after($range['start'])->first();
-                            $currentAmount = 0;
-                            foreach ($journal->transactions as $t) {
-                                if (floatval($t->amount) > 0) {
-                                    $currentAmount = floatval($t->amount);
-                                }
-                            }
-                            $amount += $currentAmount;
+                            $journal = $bill->transactionjournals()->with('transactions')->before($range['end'])->after($range['start'])->first();
+                            $amount += $journal->amount;
                         }
 
                     }
