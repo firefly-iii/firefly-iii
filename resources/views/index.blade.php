@@ -55,6 +55,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <i class="fa fa-line-chart"></i> Savings
+                        <span class="pull-right">{!! Amount::format($savingsTotal) !!}</span>
                     </div>
                     <div class="panel-body">
                         @if(count($savings) == 0)

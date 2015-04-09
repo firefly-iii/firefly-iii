@@ -8,6 +8,7 @@ use Input;
 use Preferences;
 use Redirect;
 use Session;
+use Steam;
 
 /**
  * Class HomeController
@@ -60,6 +61,11 @@ class HomeController extends Controller
         $accounts      = $repository->getFrontpageAccounts($frontPage);
         $savings       = $repository->getSavingsAccounts();
 
+        $savingsTotal  = 0;
+        foreach ($savings as $savingAccount) {
+            $savingsTotal += Steam::balance($savingAccount);
+        }
+
         // check if all books are correct.
         $sum = $repository->sumOfEverything();
         if ($sum != 0) {
@@ -77,7 +83,7 @@ class HomeController extends Controller
             }
         }
 
-        return view('index', compact('count', 'title', 'savings', 'subTitle', 'mainTitleIcon', 'transactions'));
+        return view('index', compact('count', 'title', 'savings', 'subTitle', 'mainTitleIcon', 'transactions', 'savingsTotal'));
     }
 
 
