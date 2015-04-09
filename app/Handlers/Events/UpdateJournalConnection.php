@@ -45,17 +45,8 @@ class UpdateJournalConnection
         if (is_null($repetition)) {
             return;
         }
-        $amount = 0;
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions()->get() as $transaction) {
-            if ($transaction->account_id === $piggyBank->account_id) {
-                // this transaction is the relevant one.
-                $amount = floatval($transaction->amount);
-            }
-        }
-
-        // update current repetition:
-        $diff = $amount - $event->amount;
+        $amount = $journal->amount;
+        $diff   = $amount - $event->amount;// update current repetition
 
         $repetition->currentamount += $diff;
         $repetition->save();
