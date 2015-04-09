@@ -64,7 +64,7 @@
                 <?php $sum = 0;?>
                 @foreach($expenses as $id => $expense)
                     <?php
-                        $sum += floatval($expense['amount']);
+                        $sum += floatval($expense['queryAmount']);
                         ?>
                     <tr>
                         @if($id > 0)
@@ -72,7 +72,7 @@
                         @else
                             <td><em>{{{$expense['name']}}}</em></td>
                         @endif
-                        <td>{!! Amount::format($expense['amount']) !!}</td>
+                        <td>{!! Amount::format($expense['queryAmount']) !!}</td>
                     </tr>
                 @endforeach
                 <tr>
@@ -133,11 +133,11 @@
                     @foreach($budgets as $id => $budget)
                         <?php
                             $sumSpent += $budget['spent'];
-                            $sumEnvelope += $budget['amount'];
-                            $sumLeft += $budget['amount'] + $budget['spent'];
+                            $sumEnvelope += $budget['queryAmount'];
+                            $sumLeft += $budget['queryAmount'] + $budget['spent'];
                         ?>
                     <!-- only display when relevant: -->
-                    @if($budget['amount'] != 0 || $budget['spent'] != 0)
+                    @if($budget['queryAmount'] != 0 || $budget['spent'] != 0)
                     <tr>
                         <td>
                             @if($id > 0)
@@ -174,7 +174,7 @@
                 </tr>
                 <?php $sum = 0;?>
                 @foreach($categories as $id => $category)
-                    <?php $sum += floatval($category['amount']);?>
+                    <?php $sum += floatval($category['queryAmount']);?>
                     <tr>
                         <td>
                             @if($id > 0)
@@ -183,7 +183,7 @@
                                 <em>{{{$category['name']}}}</em>
                             @endif
                         </td>
-                        <td>{!! Amount::format($category['amount'],false) !!}</td>
+                        <td>{!! Amount::format($category['queryAmount'],false) !!}</td>
                     </tr>
                 @endforeach
                 <tr>
