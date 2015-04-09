@@ -63,7 +63,7 @@ class HomeController extends Controller
 
         $savingsTotal  = 0;
         foreach ($savings as $savingAccount) {
-            $savingsTotal += Steam::balance($savingAccount);
+            $savingsTotal += Steam::balance($savingAccount, $end);
         }
 
         // check if all books are correct.
