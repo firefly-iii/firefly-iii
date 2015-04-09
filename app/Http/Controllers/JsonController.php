@@ -2,7 +2,6 @@
 
 use Amount;
 use Auth;
-use DB;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
@@ -37,22 +36,16 @@ class JsonController extends Controller
                 $box = Input::get('box');
                 $set = $reportQuery->journalsByExpenseAccount($start, $end, true);
 
-                
                 foreach ($set as $entry) {
-                    $amount += $set->queryAmount;
+                    $amount += $entry->queryAmount;
                 }
                 break;
             case 'out':
                 $box = Input::get('box');
-                $in  = Auth::user()->transactionjournals()
-                           ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                           ->before($end)
-                           ->after($start)
-                           ->transactionTypes(['Withdrawal'])
-                           ->where('transactions.amount', '>', 0)
-                           ->first([DB::Raw('SUM(transactions.amount) as `totalAmount`')]);
-                if (!is_null($in)) {
-                    $amount = floatval($in->totalAmount);
+                $set = $reportQuery->incomeByPeriod($start, $end, true);
+
+                foreach ($set as $entry) {
+                    $amount += $entry->queryAmount;
                 }
 
                 break;
