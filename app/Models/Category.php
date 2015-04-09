@@ -3,7 +3,7 @@
 use Crypt;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use App;
 /**
  * Class Category
  *
@@ -29,6 +29,39 @@ class Category extends Model
     public function transactionjournals()
     {
         return $this->belongsToMany('FireflyIII\Models\TransactionJournal', 'category_transaction_journal', 'category_id');
+    }
+
+    /**
+     * @param array $fields
+     *
+     * @return Account|null
+     */
+    public static function firstOrCreateEncrypted(array $fields)
+    {
+        // everything but the name:
+        $query = Category::orderBy('id');
+        foreach ($fields as $name => $value) {
+            if ($name != 'name') {
+                $query->where($name, $value);
+            }
+        }
+        $set = $query->get(['categories.*']);
+        /** @var Category $category */
+        foreach ($set as $category) {
+            if ($category->name == $fields['name']) {
+                return $category;
+            }
+        }
+        // create it!
+        $category = Category::create($fields);
+        if (is_null($category->id)) {
+            // could not create account:
+            App::abort(500, 'Could not create new category with data: ' . json_encode($fields));
+
+        }
+
+        return $category;
+
     }
 
     /**

@@ -140,7 +140,7 @@ class JournalRepository implements JournalRepositoryInterface
 
         // store or get category
         if (strlen($data['category']) > 0) {
-            $category = Category::firstOrCreate(['name' => $data['category'], 'user_id' => $data['user']]);
+            $category = Category::firstOrCreateEncrypted(['name' => $data['category'], 'user_id' => $data['user']]);
             $journal->categories()->save($category);
         }
 
@@ -193,7 +193,7 @@ class JournalRepository implements JournalRepositoryInterface
         // unlink all categories, recreate them:
         $journal->categories()->detach();
         if (strlen($data['category']) > 0) {
-            $category = Category::firstOrCreate(['name' => $data['category'], 'user_id' => $data['user']]);
+            $category = Category::firstOrCreateEncrypted(['name' => $data['category'], 'user_id' => $data['user']]);
             $journal->categories()->save($category);
         }
 
