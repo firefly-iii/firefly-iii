@@ -46,7 +46,15 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function getCategories()
     {
-        return Auth::user()->categories()->orderBy('name', 'ASC')->get();
+        /** @var Collection $set */
+        $set = Auth::user()->categories()->orderBy('name', 'ASC')->get();
+        $set->sortBy(
+            function (Category $category) {
+                return $category->name;
+            }
+        );
+
+        return $set;
     }
 
     /**
@@ -168,6 +176,17 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
+     * @param Category $category
+     * @param Carbon   $date
+     *
+     * @return float
+     */
+    public function spentOnDaySum(Category $category, Carbon $date)
+    {
+        return floatval($category->transactionjournals()->onDate($date)->lessThan(0)->sum('amount')) * -1;
+    }
+
+    /**
      * @param array $data
      *
      * @return Category
@@ -198,16 +217,5 @@ class CategoryRepository implements CategoryRepositoryInterface
         $category->save();
 
         return $category;
-    }
-
-    /**
-     * @param Category $category
-     * @param Carbon   $date
-     *
-     * @return float
-     */
-    public function spentOnDaySum(Category $category, Carbon $date)
-    {
-        return floatval($category->transactionjournals()->onDate($date)->lessThan(0)->sum('amount')) * -1;
     }
 }
