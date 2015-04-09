@@ -75,7 +75,7 @@
                 @foreach($budgets as $id => $budget)
                 <tr>
                     <td>{{{$budget['name']}}}</td>
-                    <td>{!! Amount::format($budget['amount']) !!}</td>
+                    <td>{!! Amount::format($budget['queryAmount']) !!}</td>
                     <?php $spent = 0;?>
                     @foreach($accounts as $account)
                         @if($account->hide === false)
@@ -83,23 +83,23 @@
                                 <td>
                                     @if($id == 0)
                                     <a href="{{route('reports.no-budget',[$account, $year, $month])}}" class="openModal">
-                                        {!! Amount::format($account->budgetInformation[$id]['amount']) !!}
+                                        {!! Amount::format($account->budgetInformation[$id]['queryAmount']) !!}
                                     </a>
                                     @else
-                                        {!! Amount::format($account->budgetInformation[$id]['amount']) !!}
+                                        {!! Amount::format($account->budgetInformation[$id]['queryAmount']) !!}
                                     @endif
                                 </td>
                                 <?php
-                                $spent += floatval($account->budgetInformation[$id]['amount']);
-                                $accountSums[$account->id] += floatval($account->budgetInformation[$id]['amount']);
+                                $spent += floatval($account->budgetInformation[$id]['queryAmount']);
+                                $accountSums[$account->id] += floatval($account->budgetInformation[$id]['queryAmount']);
                                 ?>
                             @else
                                 <td>{!! Amount::format(0) !!}</td>
                             @endif
                         @endif
                     @endforeach
-                    <td>{!! Amount::format($budget['amount'] + $budget['spent']) !!}</td>
-                    <td>{!! Amount::format($budget['amount'] + $spent) !!}</td>
+                    <td>{!! Amount::format($budget['queryAmount'] + $budget['spent']) !!}</td>
+                    <td>{!! Amount::format($budget['queryAmount'] + $spent) !!}</td>
                 </tr>
                 @endforeach
                 <tr>
@@ -122,10 +122,10 @@
                         @if($account->hide === false)
                             @if(isset($account->budgetInformation[0]))
                                 <td>
-                                    @if($account->budgetInformation[0]['amount'] + $account->balancedAmount != 0.0)
-                                        <a href="{{route('reports.left-unbalanced',[$account, $year, $month])}}" class="openModal">{!! Amount::format($account->budgetInformation[0]['amount'] + $account->balancedAmount) !!}</a>
+                                    @if($account->budgetInformation[0]['queryAmount'] + $account->balancedAmount != 0.0)
+                                        <a href="{{route('reports.left-unbalanced',[$account, $year, $month])}}" class="openModal">{!! Amount::format($account->budgetInformation[0]['queryAmount'] + $account->balancedAmount) !!}</a>
                                     @else
-                                        {!! Amount::format($account->budgetInformation[0]['amount'] + $account->balancedAmount) !!}
+                                        {!! Amount::format($account->budgetInformation[0]['queryAmount'] + $account->balancedAmount) !!}
                                     @endif
                                 </td>
                             @else

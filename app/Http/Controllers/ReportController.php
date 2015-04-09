@@ -81,7 +81,7 @@ class ReportController extends Controller
                     $id         = intval($budget->id);
                     $data       = $budget->toArray();
                     $array[$id] = $data;
-                    if (floatval($data['amount']) != 0) {
+                    if (floatval($data['queryAmount']) != 0) {
                         $hide = false;
                     }
                 }

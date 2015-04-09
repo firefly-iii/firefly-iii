@@ -96,7 +96,7 @@ class ReportQuery implements ReportQueryInterface
                                  ->get(
                                      [
                                          'transaction_journals.*',
-                                         'transactions.amount'
+                                         'transactions.amount as queryAmount'
                                      ]
                                  );
 
@@ -178,7 +178,7 @@ class ReportQuery implements ReportQueryInterface
     {
         $query = $this->queryJournalsNoBudget($account, $start, $end);
 
-        return $query->get(['budgets.id', 'budgets.name', DB::Raw('SUM(`transactions`.`amount`) as `amount`')]);
+        return $query->get(['budgets.id', 'budgets.name', DB::Raw('SUM(`transactions`.`amount`) as `queryAmount`')]);
 
     }
 
@@ -196,7 +196,7 @@ class ReportQuery implements ReportQueryInterface
     {
         $query = $this->queryJournalsNoBudget($account, $start, $end);
 
-        return $query->get(['budgets.name', 'transactions.amount', 'transaction_journals.*']);
+        return $query->get(['budgets.name', 'transactions.amount as queryAmount', 'transaction_journals.*']);
     }
 
     /**
@@ -244,7 +244,7 @@ class ReportQuery implements ReportQueryInterface
              'transaction_journals.description',
              'transaction_journals.encrypted',
              'transaction_types.type',
-             DB::Raw('SUM(`t_to`.`amount`) as `amount`'),
+             DB::Raw('SUM(`t_to`.`amount`) as `queryAmount`'),
              'transaction_journals.date',
              't_from.account_id as account_id',
              'ac_from.name as name',
@@ -334,9 +334,9 @@ class ReportQuery implements ReportQueryInterface
               ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
               ->where('transaction_types.type', 'Withdrawal')
               ->groupBy('categories.id')
-              ->orderBy('amount');
+              ->orderBy('queryAmount');
 
-        $data = $query->get(['categories.id', 'categories.encrypted', 'categories.name', DB::Raw('SUM(`transactions`.`amount`) AS `amount`')]);
+        $data = $query->get(['categories.id', 'categories.encrypted', 'categories.name', DB::Raw('SUM(`transactions`.`amount`) AS `queryAmount`')]);
         // decrypt data:
         $data->each(
             function (Model $object) {
@@ -389,9 +389,9 @@ class ReportQuery implements ReportQueryInterface
         $query->before($end)->after($start)
               ->where('transaction_journals.user_id', Auth::user()->id)
               ->groupBy('t_to.account_id')
-              ->orderBy('amount', 'DESC');
+              ->orderBy('queryAmount', 'DESC');
 
-        $data = $query->get(['t_to.account_id as id', 'ac_to.name as name', 'ac_to.encrypted', DB::Raw('SUM(t_to.amount) as `amount`')]);
+        $data = $query->get(['t_to.account_id as id', 'ac_to.name as name', 'ac_to.encrypted', DB::Raw('SUM(t_to.amount) as `queryAmount`')]);
 
         // decrypt
         $data->each(
@@ -440,10 +440,10 @@ class ReportQuery implements ReportQueryInterface
             $query->where('transaction_types.type', 'Deposit');
         }
 
-        $query->groupBy('t_from.account_id')->orderBy('amount');
+        $query->groupBy('t_from.account_id')->orderBy('queryAmount');
 
         $data = $query->get(
-            ['t_from.account_id as account_id', 'ac_from.name as name', 'ac_from.encrypted as encrypted', DB::Raw('SUM(t_from.amount) as `amount`')]
+            ['t_from.account_id as account_id', 'ac_from.name as name', 'ac_from.encrypted as encrypted', DB::Raw('SUM(t_from.amount) as `queryAmount`')]
         );
         // decrypt
         $data->each(
@@ -488,7 +488,7 @@ class ReportQuery implements ReportQueryInterface
                                  ->where('transaction_journals.user_id', Auth::user()->id)
                                  ->get(
                                      ['transaction_journals.id', 'transaction_journals.description', 'transactions.account_id', 'accounts.name',
-                                      'transactions.amount']
+                                      'transactions.amount as queryAmount']
                                  );
 
     }
@@ -533,7 +533,7 @@ class ReportQuery implements ReportQueryInterface
                                      [
                                          'categories.id',
                                          'categories.name as name',
-                                         DB::Raw('SUM(`transactions`.`amount`) * -1 AS `amount`')
+                                         DB::Raw('SUM(`transactions`.`amount`) * -1 AS `queryAmount`')
                                      ]
                                  );
     }

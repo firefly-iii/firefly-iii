@@ -103,14 +103,16 @@ class Steam
             $id           = intval($entry->id);
             if (isset($array[$id])) {
                 $array[$id]['amount'] += floatval($entry->amount);
+                $array[$id]['queryAmount'] += floatval($entry->queryAmount);
                 $array[$id]['spent'] += floatval($entry->spent);
                 $array[$id]['encrypted'] = intval($entry->encrypted);
             } else {
                 $array[$id] = [
-                    'amount'    => floatval($entry->amount),
-                    'spent'     => floatval($entry->spent),
-                    'encrypted' => intval($entry->encrypted),
-                    'name'      => $entry->name
+                    'amount'      => floatval($entry->amount),
+                    'queryAmount' => floatval($entry->queryAmount),
+                    'spent'       => floatval($entry->spent),
+                    'encrypted'   => intval($entry->encrypted),
+                    'name'        => $entry->name
                 ];
             }
         }
@@ -131,7 +133,7 @@ class Steam
         foreach ($two as $id => $value) {
             // $otherId also exists in $one:
             if (isset($one[$id])) {
-                $one[$id]['amount'] += $value['amount'];
+                $one[$id]['queryAmount'] += $value['queryAmount'];
                 $one[$id]['spent'] += $value['spent'];
             } else {
                 $one[$id] = $value;
@@ -170,11 +172,11 @@ class Steam
     {
         uasort(
             $array, function ($left, $right) {
-            if ($left['amount'] == $right['amount']) {
+            if ($left['queryAmount'] == $right['queryAmount']) {
                 return 0;
             }
 
-            return ($left['amount'] < $right['amount']) ? 1 : -1;
+            return ($left['queryAmount'] < $right['queryAmount']) ? 1 : -1;
         }
         );
 
@@ -193,11 +195,11 @@ class Steam
     {
         uasort(
             $array, function ($left, $right) {
-            if ($left['amount'] == $right['amount']) {
+            if ($left['queryAmount'] == $right['queryAmount']) {
                 return 0;
             }
 
-            return ($left['amount'] < $right['amount']) ? -1 : 1;
+            return ($left['queryAmount'] < $right['queryAmount']) ? -1 : 1;
         }
         );
 
