@@ -70,6 +70,7 @@ class JsonController extends Controller
                         }
                     }
                 }
+                unset($bill, $range, $ranges);
 
                 $creditCards = $accountRepository->getCreditCards();
                 foreach ($creditCards as $creditCard) {
@@ -86,8 +87,7 @@ class JsonController extends Controller
                 // loop unpaid:
                 /** @var Bill $entry */
                 foreach ($unpaid as $entry) {
-                    $unpaidDescriptions[] = $entry[0]->name . ' (' . $entry[1]->format('jS M Y') . ')';
-                    $amount += ($entry[0]->amount_max + $entry[0]->amount_min / 2);
+                    $amount += ($entry[0]->amount_max + $entry[0]->amount_min) / 2;
                 }
 
                 break;
