@@ -16,7 +16,6 @@ use Preferences;
 use Response;
 use Session;
 use Steam;
-use Log;
 
 /**
  * Class JsonController
@@ -56,7 +55,6 @@ class JsonController extends Controller
                 $box    = 'bills-unpaid';
                 $bills  = $repository->getActiveBills();
                 $unpaid = new Collection; // bills
-                Log::debug('UnpaidBox: Unpaid box');
 
                 /** @var Bill $bill */
                 foreach ($bills as $bill) {
@@ -90,17 +88,13 @@ class JsonController extends Controller
                 foreach ($unpaid as $entry) {
                     $current = ($entry[0]->amount_max + $entry[0]->amount_min) / 2;
                     $amount += $current;
-                    Log::debug('UnpaidBox: '.$entry[0]->name.': '.$current);
-                    Log::debug('UnpaidBox: Total is now: ' . $amount);
                 }
-                Log::debug('UnpaidBox: Total is final: ' . $amount);
 
                 break;
             case 'bills-paid':
                 $box = 'bills-paid';
                 // these two functions are the same as the chart TODO
                 $bills = Auth::user()->bills()->where('active', 1)->get();
-                Log::debug('PaidBox: Paid box');
 
                 /** @var Bill $bill */
                 foreach ($bills as $bill) {
@@ -110,17 +104,15 @@ class JsonController extends Controller
                         // paid a bill in this range?
                         $count = $bill->transactionjournals()->before($range['end'])->after($range['start'])->count();
                         if ($count != 0) {
+                            // TODO this only gets the first match, may be more than one.
                             $journal = $bill->transactionjournals()->with('transactions')->before($range['end'])->after($range['start'])->first();
                             $amount += $journal->amount;
-                            Log::debug('PaidBox: Journal for bill "'.$bill->name.'": ' . $journal->amount);
-                            Log::debug('PaidBox: Total is now: ' . $amount);
                         }
 
                     }
                 }
 
 
-                Log::debug('PaidBox: Doing ccs now.');
                 /**
                  * Find credit card accounts and possibly unpaid credit card bills.
                  */
@@ -139,7 +131,6 @@ class JsonController extends Controller
                 foreach ($creditCards as $creditCard) {
                     $balance = Steam::balance($creditCard, null, true);
                     if ($balance == 0) {
-                        Log::debug('PaidBox: Balance for '.$creditCard->name.' is zero.');
                         // find a transfer TO the credit card which should account for
                         // anything paid. If not, the CC is not yet used.
                         $transactions = $creditCard->transactions()
@@ -150,16 +141,13 @@ class JsonController extends Controller
                             foreach ($transactions as $transaction) {
                                 $journal = $transaction->transactionJournal;
                                 if ($journal->transactionType->type == 'Transfer') {
-                                    Log::debug('PaidBox: Found the transfer! Amount: ' . floatval($transaction->amount));
                                     $amount += floatval($transaction->amount);
-                                    Log::debug('PaidBox: Total is now: ' . $amount);
                                 }
                             }
                         }
                     }
                 }
-                Log::debug('PaidBox: Total is: ' . $amount);
-            break;
+                break;
         }
 
 
