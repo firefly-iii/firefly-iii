@@ -79,8 +79,8 @@ class JsonController extends Controller
                     if ($balance < 0) {
                         // unpaid! create a fake bill that matches the amount.
                         $description = $creditCard->name;
-                        $amount      = $balance * -1;
-                        $fakeBill    = $repository->createFakeBill($description, $date, $amount);
+                        $fakeAmount  = $balance * -1;
+                        $fakeBill    = $repository->createFakeBill($description, $date, $fakeAmount);
                         $unpaid->push([$fakeBill, $date]);
                     }
                 }
