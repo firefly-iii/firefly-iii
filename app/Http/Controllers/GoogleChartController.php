@@ -19,6 +19,7 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Grumpydictator\Gchart\GChart;
 use Illuminate\Support\Collection;
+use Log;
 use Navigation;
 use Preferences;
 use Response;
@@ -277,6 +278,7 @@ class GoogleChartController extends Controller
                 $description = $creditCard->name;
                 $amount      = $balance * -1;
                 $fakeBill    = $repository->createFakeBill($description, $date, $amount);
+                unset($description, $amount);
                 $unpaid->push([$fakeBill, $date]);
             }
             if ($balance == 0) {
@@ -294,16 +296,26 @@ class GoogleChartController extends Controller
 
         /** @var TransactionJournal $entry */
         foreach ($paid as $entry) {
+
             $paidDescriptions[] = $entry->description;
             $paidAmount += floatval($entry->amount);
+            Log::debug('PaidChart: ' . $entry->description . ' with amount ' . floatval($entry->amount));
+            Log::debug('PaidChart: total amount is now: ' . $paidAmount);
         }
+        Log::debug('PaidChart: total amount final: ' . $paidAmount);
 
         // loop unpaid:
         /** @var Bill $entry */
         foreach ($unpaid as $entry) {
-            $unpaidDescriptions[] = $entry[0]->name . ' (' . $entry[1]->format('jS M Y') . ')';
-            $unpaidAmount += ($entry[0]->amount_max + $entry[0]->amount_min) / 2;
+            $description          = $entry[0]->name . ' (' . $entry[1]->format('jS M Y') . ')';
+            $amount               = ($entry[0]->amount_max + $entry[0]->amount_min) / 2;
+            $unpaidDescriptions[] = $description;
+            $unpaidAmount += $amount;
+            Log::debug('UnpaidChart: ' . $description . ' with amount ' . $amount);
+            Log::debug('UnpaidChart: total is now: ' . $unpaidAmount);
+            unset($amount, $description);
         }
+        Log::debug('UnpaidChart: total is final: ' . $unpaidAmount);
 
         $chart->addRow('Unpaid: ' . join(', ', $unpaidDescriptions), $unpaidAmount);
         $chart->addRow('Paid: ' . join(', ', $paidDescriptions), $paidAmount);
