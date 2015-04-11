@@ -148,7 +148,7 @@
                         </td>
                         <td>{!! Amount::format($budget['queryAmount']) !!}</td>
                         <td>{!! Amount::format($budget['spent'],false) !!}</td>
-                        <td>{!! Amount::format($budget['amount'] + $budget['spent']) !!}</td>
+                        <td>{!! Amount::format($budget['queryAmount'] + $budget['spent']) !!}</td>
                     </tr>
                     @endif
                     @endforeach
