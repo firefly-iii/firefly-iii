@@ -1,18 +1,18 @@
-@if(is_object($accounts) && method_exists($accounts, 'render'))
-    {!! $accounts->render() !!}
-@endif
-<table class="table table-striped table-bordered">
+<table class="table table-striped table-bordered sortable">
+    <thead>
     <tr>
-        <th>&nbsp;</th>
+        <th data-defaultsort="disabled">&nbsp;</th>
         <th>Name</th>
         @if(isset($what) && $what == 'asset')
         <th>Role</th>
         @endif
         <th>Current balance</th>
         <th>Active</th>
-        <th>Last activity</th>
+        <th data-dateformat="DD-MMM-YYYY">Last activity</th>
         <th>Balance difference between {{Session::get('start')->format('jS F Y')}} and {{Session::get('end')->format('jS F Y')}}</th>
     </tr>
+    </thead>
+    <tbody>
     @foreach($accounts as $account)
     <tr>
         <td>
@@ -31,29 +31,30 @@
             @endforeach
         </td>
         @endif
-        <td>{!! Amount::format(Steam::balance($account)) !!}</td>
-        <td>
+        <?php $balance = Steam::balance($account);?>
+        <td data-value="{{$balance}}">{!! Amount::format($balance) !!}</td>
+        <td data-value="{{intval($account->active)}}">
             @if($account->active)
                 <i class="fa fa-fw fa-check"></i>
             @else
                 <i class="fa fa-fw fa-ban"></i>
             @endif
         </td>
-        <td>
             @if($account->lastActivityDate)
-                {{{$account->lastActivityDate->format('j F Y')}}}
+                <td data-value="{{$account->lastActivityDate->format('d-m-Y')}}">
+                    {{{$account->lastActivityDate->format('j F Y')}}}
+                </td>
             @else
-                <em>Never</em>
+                <td data-value="00-00-0000">
+                    <em>Never</em>
+                </td>
             @endif
-        </td>
-        <td>
+        <td data-value="{{$account->endBalance - $account->startBalance}}">
             {!! Amount::format($account->endBalance - $account->startBalance) !!}
         </td>
 
     </tr>
 
     @endforeach
+    </tbody>
 </table>
-@if(is_object($accounts) && method_exists($accounts, 'render'))
-    {!! $accounts->render() !!}
-@endif

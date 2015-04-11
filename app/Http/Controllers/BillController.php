@@ -45,7 +45,7 @@ class BillController extends Controller
         $expense     = null;
 
         // get users expense accounts:
-        $accounts = $repository->getAccounts(Config::get('firefly.accountTypesByIdentifier.expense'), -1);
+        $accounts = $repository->getAccounts(Config::get('firefly.accountTypesByIdentifier.expense'));
 
         foreach ($matches as $match) {
             $match = strtolower($match);

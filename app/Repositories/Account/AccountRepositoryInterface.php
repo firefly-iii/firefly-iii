@@ -33,11 +33,10 @@ interface AccountRepositoryInterface
 
     /**
      * @param array $types
-     * @param int   $page
      *
      * @return mixed
      */
-    public function getAccounts(array $types, $page);
+    public function getAccounts(array $types);
 
     /**
      * @param TransactionJournal $journal

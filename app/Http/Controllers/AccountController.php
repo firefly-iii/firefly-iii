@@ -7,7 +7,6 @@ use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Input;
 use Redirect;
 use Session;
@@ -123,28 +122,20 @@ class AccountController extends Controller
         $subTitle     = Config::get('firefly.subTitlesByIdentifier.' . $what);
         $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
         $types        = Config::get('firefly.accountTypesByIdentifier.' . $what);
-        $size         = 50;
-        $page         = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
-        $set          = $repository->getAccounts($types, $page);
-        $total        = $repository->countAccounts($types);
-
+        $accounts     = $repository->getAccounts($types);
         // last activity:
         /**
          * HERE WE ARE
          */
         $start = clone Session::get('start', Carbon::now()->startOfMonth());
         $start->subDay();
-        $set->each(
+        $accounts->each(
             function (Account $account) use ($start, $repository) {
                 $account->lastActivityDate = $repository->getLastActivity($account);
                 $account->startBalance     = Steam::balance($account, $start);
                 $account->endBalance       = Steam::balance($account, clone Session::get('end', Carbon::now()->endOfMonth()));
             }
         );
-
-        $accounts = new LengthAwarePaginator($set, $total, $size, $page);
-        $accounts->setPath(route('accounts.index', $what));
-
 
         return view('accounts.index', compact('what', 'subTitleIcon', 'subTitle', 'accounts'));
     }
