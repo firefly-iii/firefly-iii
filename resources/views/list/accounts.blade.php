@@ -45,7 +45,7 @@
                     {{{$account->lastActivityDate->format('j F Y')}}}
                 </td>
             @else
-                <td data-value="00-00-0000">
+                <td data-value="0000-00-00">
                     <em>Never</em>
                 </td>
             @endif
