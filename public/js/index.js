@@ -10,11 +10,11 @@ function drawChart() {
 }
 
 function getBoxAmounts() {
-    var boxes = ['in', 'out','bills-unpaid','bills-paid'];
+    var boxes = ['in', 'out', 'bills-unpaid', 'bills-paid'];
     for (x in boxes) {
         var box = boxes[x];
-        $.getJSON('/json/box', {box: box}).success(function (data) {
-            if(data.amount_raw != 0) {
+        $.getJSON('/json/box/' + box).success(function (data) {
+            if (data.amount_raw != 0) {
                 $('#box-' + data.box).html(data.amount);
             }
         }).fail(function () {

@@ -11,7 +11,6 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Support\Collection;
-use Input;
 use Preferences;
 use Response;
 use Session;
@@ -25,133 +24,156 @@ use Steam;
 class JsonController extends Controller
 {
 
+
     /**
+     * @param BillRepositoryInterface $repository
      *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function box(BillRepositoryInterface $repository, ReportQueryInterface $reportQuery, AccountRepositoryInterface $accountRepository)
+    public function boxBillsPaid(BillRepositoryInterface $repository, AccountRepositoryInterface $accountRepository)
     {
-        $amount = 0;
         $start  = Session::get('start');
         $end    = Session::get('end');
-        $box    = 'empty';
-        switch (Input::get('box')) {
-            case 'in':
-                $box = Input::get('box');
-                $set = $reportQuery->incomeByPeriod($start, $end, true);
-                foreach ($set as $entry) {
-                    $amount += $entry->queryAmount;
-                }
-                break;
-            case 'out':
-                $box = Input::get('box');
-                $set = $reportQuery->journalsByExpenseAccount($start, $end, true);
+        $amount = 0;
 
-                foreach ($set as $entry) {
-                    $amount += $entry->queryAmount;
-                }
+        // these two functions are the same as the chart TODO
+        $bills = Auth::user()->bills()->where('active', 1)->get();
 
-                break;
-            case 'bills-unpaid':
-                $box    = 'bills-unpaid';
-                $bills  = $repository->getActiveBills();
-                $unpaid = new Collection; // bills
+        /** @var Bill $bill */
+        foreach ($bills as $bill) {
+            $ranges = $repository->getRanges($bill, $start, $end);
 
-                /** @var Bill $bill */
-                foreach ($bills as $bill) {
-                    $ranges = $repository->getRanges($bill, $start, $end);
-
-                    foreach ($ranges as $range) {
-                        // paid a bill in this range?
-                        $journals = $repository->getJournalsInRange($bill, $range['start'], $range['end']);
-                        if ($journals->count() == 0) {
-                            $unpaid->push([$bill, $range['start']]);
-                        }
-                    }
-                }
-                unset($bill, $range, $ranges);
-
-                $creditCards = $accountRepository->getCreditCards();
-                foreach ($creditCards as $creditCard) {
-                    $balance = Steam::balance($creditCard, null, true);
-                    $date    = new Carbon($creditCard->getMeta('ccMonthlyPaymentDate'));
-                    if ($balance < 0) {
-                        // unpaid! create a fake bill that matches the amount.
-                        $description = $creditCard->name;
-                        $fakeAmount  = $balance * -1;
-                        $fakeBill    = $repository->createFakeBill($description, $date, $fakeAmount);
-                        $unpaid->push([$fakeBill, $date]);
-                    }
-                }
-                // loop unpaid:
-
-                /** @var Bill $entry */
-                foreach ($unpaid as $entry) {
-                    $current = ($entry[0]->amount_max + $entry[0]->amount_min) / 2;
-                    $amount += $current;
+            foreach ($ranges as $range) {
+                // paid a bill in this range?
+                $count = $bill->transactionjournals()->before($range['end'])->after($range['start'])->count();
+                if ($count != 0) {
+                    // TODO this only gets the first match, may be more than one.
+                    $journal = $bill->transactionjournals()->with('transactions')->before($range['end'])->after($range['start'])->first();
+                    $amount += $journal->amount;
                 }
 
-                break;
-            case 'bills-paid':
-                $box = 'bills-paid';
-                // these two functions are the same as the chart TODO
-                $bills = Auth::user()->bills()->where('active', 1)->get();
-
-                /** @var Bill $bill */
-                foreach ($bills as $bill) {
-                    $ranges = $repository->getRanges($bill, $start, $end);
-
-                    foreach ($ranges as $range) {
-                        // paid a bill in this range?
-                        $count = $bill->transactionjournals()->before($range['end'])->after($range['start'])->count();
-                        if ($count != 0) {
-                            // TODO this only gets the first match, may be more than one.
-                            $journal = $bill->transactionjournals()->with('transactions')->before($range['end'])->after($range['start'])->first();
-                            $amount += $journal->amount;
-                        }
-
-                    }
-                }
-
-
-                /**
-                 * Find credit card accounts and possibly unpaid credit card bills.
-                 */
-                $creditCards = Auth::user()->accounts()
-                                   ->hasMetaValue('accountRole', 'ccAsset')
-                                   ->hasMetaValue('ccType', 'monthlyFull')
-                                   ->get(
-                                       [
-                                           'accounts.*',
-                                           'ccType.data as ccType',
-                                           'accountRole.data as accountRole'
-                                       ]
-                                   );
-                // if the balance is not zero, the monthly payment is still underway.
-                /** @var Account $creditCard */
-                foreach ($creditCards as $creditCard) {
-                    $balance = Steam::balance($creditCard, null, true);
-                    if ($balance == 0) {
-                        // find a transfer TO the credit card which should account for
-                        // anything paid. If not, the CC is not yet used.
-                        $transactions = $creditCard->transactions()
-                                                   ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                                   ->before($end)->after($start)->get();
-                        if ($transactions->count() > 0) {
-                            /** @var Transaction $transaction */
-                            foreach ($transactions as $transaction) {
-                                $journal = $transaction->transactionJournal;
-                                if ($journal->transactionType->type == 'Transfer') {
-                                    $amount += floatval($transaction->amount);
-                                }
-                            }
-                        }
-                    }
-                }
-                break;
+            }
         }
 
 
-        return Response::json(['box' => $box, 'amount' => Amount::format($amount, false), 'amount_raw' => $amount]);
+        /**
+         * Find credit card accounts and possibly unpaid credit card bills.
+         */
+        $creditCards = $accountRepository->getCreditCards();
+        // if the balance is not zero, the monthly payment is still underway.
+        /** @var Account $creditCard */
+        foreach ($creditCards as $creditCard) {
+            $balance = Steam::balance($creditCard, null, true);
+            if ($balance == 0) {
+                // find a transfer TO the credit card which should account for
+                // anything paid. If not, the CC is not yet used.
+                $transactions = $creditCard->transactions()
+                                           ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                                           ->before($end)->after($start)->get();
+                if ($transactions->count() > 0) {
+                    /** @var Transaction $transaction */
+                    foreach ($transactions as $transaction) {
+                        $journal = $transaction->transactionJournal;
+                        if ($journal->transactionType->type == 'Transfer') {
+                            $amount += floatval($transaction->amount);
+                        }
+                    }
+                }
+            }
+        }
+
+        return Response::json(['box' => 'bills-paid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount]);
+    }
+
+    /**
+     * @param BillRepositoryInterface    $repository
+     * @param AccountRepositoryInterface $accountRepository
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function boxBillsUnpaid(BillRepositoryInterface $repository, AccountRepositoryInterface $accountRepository)
+    {
+        $start  = Session::get('start');
+        $end    = Session::get('end');
+        $amount = 0;
+
+        $bills  = $repository->getActiveBills();
+        $unpaid = new Collection; // bills
+
+        /** @var Bill $bill */
+        foreach ($bills as $bill) {
+            $ranges = $repository->getRanges($bill, $start, $end);
+
+            foreach ($ranges as $range) {
+                // paid a bill in this range?
+                $journals = $repository->getJournalsInRange($bill, $range['start'], $range['end']);
+                if ($journals->count() == 0) {
+                    $unpaid->push([$bill, $range['start']]);
+                }
+            }
+        }
+        unset($bill, $range, $ranges);
+
+        $creditCards = $accountRepository->getCreditCards();
+        foreach ($creditCards as $creditCard) {
+            $balance = Steam::balance($creditCard, null, true);
+            $date    = new Carbon($creditCard->getMeta('ccMonthlyPaymentDate'));
+            if ($balance < 0) {
+                // unpaid! create a fake bill that matches the amount.
+                $description = $creditCard->name;
+                $fakeAmount  = $balance * -1;
+                $fakeBill    = $repository->createFakeBill($description, $date, $fakeAmount);
+                $unpaid->push([$fakeBill, $date]);
+            }
+        }
+        // loop unpaid:
+
+        /** @var Bill $entry */
+        foreach ($unpaid as $entry) {
+            $current = ($entry[0]->amount_max + $entry[0]->amount_min) / 2;
+            $amount += $current;
+        }
+
+        return Response::json(['box' => 'bills-unpaid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount]);
+    }
+
+    /**
+     * @param ReportQueryInterface $reportQuery
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function boxIn(ReportQueryInterface $reportQuery)
+    {
+        $start  = Session::get('start');
+        $end    = Session::get('end');
+        $amount = 0;
+
+        $set = $reportQuery->incomeByPeriod($start, $end, true);
+        foreach ($set as $entry) {
+            $amount += $entry->queryAmount;
+        }
+
+        return Response::json(['box' => 'in', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount]);
+    }
+
+    /**
+     * @param ReportQueryInterface $reportQuery
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function boxOut(ReportQueryInterface $reportQuery)
+    {
+        $start  = Session::get('start');
+        $end    = Session::get('end');
+        $amount = 0;
+
+        $set = $reportQuery->journalsByExpenseAccount($start, $end, true);
+
+        foreach ($set as $entry) {
+            $amount += $entry->queryAmount;
+        }
+
+        return Response::json(['box' => 'out', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount]);
     }
 
     /**
