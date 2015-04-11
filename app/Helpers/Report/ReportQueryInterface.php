@@ -43,7 +43,7 @@ interface ReportQueryInterface
      * @param Carbon  $start
      * @param Carbon  $end
      *
-     * @return Collection
+     * @return float
      */
     public function balancedTransactionsSum(Account $account, Carbon $start, Carbon $end);
 

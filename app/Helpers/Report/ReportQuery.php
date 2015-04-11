@@ -111,17 +111,11 @@ class ReportQuery implements ReportQueryInterface
      * @param Carbon  $start
      * @param Carbon  $end
      *
-     * @return Collection
+     * @return float
      */
     public function balancedTransactionsSum(Account $account, Carbon $start, Carbon $end)
     {
-        $set = $this->balancedTransactionsList($account, $start, $end);
-        $sum = 0;
-        foreach ($set as $entry) {
-            $sum += floatval($entry->amount);
-        }
-
-        return $sum;
+        return floatval($this->balancedTransactionsList($account, $start, $end)->sum('queryAmount'));
     }
 
     /**

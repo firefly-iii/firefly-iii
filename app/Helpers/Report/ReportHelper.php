@@ -73,10 +73,8 @@ class ReportHelper implements ReportHelperInterface
         // find transactions to shared asset accounts, which are without a budget by default:
         // which is only relevant when shared asset accounts are hidden.
         if ($showSharedReports === false) {
-            $transfers = $query->sharedExpenses($start, $end);
-            foreach ($transfers as $transfer) {
-                $budgets[0]['spent'] += floatval($transfer->amount) * -1;
-            }
+            $transfers = $query->sharedExpenses($start, $end)->sum('queryAmount');
+            $budgets[0]['spent'] += floatval($transfers) * -1;
         }
 
         return $budgets;

@@ -80,8 +80,7 @@ class GoogleChartController extends Controller
         $index = 1;
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $accountName = $account->name;
-            $chart->addColumn('Balance for ' . $accountName, 'number');
+            $chart->addColumn('Balance for ' . $account->name, 'number');
             $chart->addCertainty($index);
             $index++;
         }
@@ -251,6 +250,11 @@ class GoogleChartController extends Controller
         $bills  = $repository->getActiveBills();
         $paid   = new Collection; // journals.
         $unpaid = new Collection; // bills
+        // loop paid and create single entry:
+        $paidDescriptions   = [];
+        $paidAmount         = 0;
+        $unpaidDescriptions = [];
+        $unpaidAmount       = 0;
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
@@ -287,11 +291,7 @@ class GoogleChartController extends Controller
                 $paid     = $paid->merge($journals);
             }
         }
-        // loop paid and create single entry:
-        $paidDescriptions   = [];
-        $paidAmount         = 0;
-        $unpaidDescriptions = [];
-        $unpaidAmount       = 0;
+
 
         /** @var TransactionJournal $entry */
         foreach ($paid as $entry) {
@@ -498,19 +498,9 @@ class GoogleChartController extends Controller
         while ($start < $end) {
             $currentEnd = clone $start;
             $currentEnd->endOfMonth();
-            // total income:
-            $income    = $query->incomeByPeriod($start, $currentEnd, $showSharedReports);
-            $incomeSum = 0;
-            foreach ($income as $entry) {
-                $incomeSum += floatval($entry->amount);
-            }
-
-            // total expenses:
-            $expense    = $query->journalsByExpenseAccount($start, $currentEnd, $showSharedReports);
-            $expenseSum = 0;
-            foreach ($expense as $entry) {
-                $expenseSum += floatval($entry->amount);
-            }
+            // total income && total expenses:
+            $incomeSum  = floatval($query->incomeByPeriod($start, $currentEnd, $showSharedReports)->sum('queryAmount'));
+            $expenseSum = floatval($query->journalsByExpenseAccount($start, $currentEnd, $showSharedReports)->sum('queryAmount'));
 
             $chart->addRow(clone $start, $incomeSum, $expenseSum);
             $start->addMonth();
@@ -549,18 +539,9 @@ class GoogleChartController extends Controller
             $currentEnd = clone $start;
             $currentEnd->endOfMonth();
             // total income:
-            $incomeResult = $query->incomeByPeriod($start, $currentEnd, $showSharedReports);
-            $incomeSum    = 0;
-            foreach ($incomeResult as $entry) {
-                $incomeSum += floatval($entry->amount);
-            }
-
+            $incomeSum = floatval($query->incomeByPeriod($start, $currentEnd, $showSharedReports)->sum('queryAmount'));
             // total expenses:
-            $expenseResult = $query->journalsByExpenseAccount($start, $currentEnd, $showSharedReports);
-            $expenseSum    = 0;
-            foreach ($expenseResult as $entry) {
-                $expenseSum += floatval($entry->amount);
-            }
+            $expenseSum = floatval($query->journalsByExpenseAccount($start, $currentEnd, $showSharedReports)->sum('queryAmount'));
 
             $income += $incomeSum;
             $expense += $expenseSum;
