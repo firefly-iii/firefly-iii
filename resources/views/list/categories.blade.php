@@ -3,7 +3,7 @@
         <tr>
             <th data-defaultsort="disabled">&nbsp;</th>
             <th>Name</th>
-            <th data-dateformat="YYYY-MM-DD">Last activity</th>
+            <th>Last activity</th>
         </tr>
     </thead>
     <tbody>

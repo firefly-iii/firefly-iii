@@ -8,7 +8,7 @@
         @endif
         <th>Current balance</th>
         <th>Active</th>
-        <th data-dateformat="YYYY-MM-DD">Last activity</th>
+        <th>Last activity</th>
         <th>Balance difference between {{Session::get('start')->format('jS F Y')}} and {{Session::get('end')->format('jS F Y')}}</th>
     </tr>
     </thead>

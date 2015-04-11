@@ -42,7 +42,6 @@
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="js/gcharts.options.js"></script>
 <script type="text/javascript" src="js/gcharts.js"></script>
-<script type="text/javascript" src="js/moment.min.js"></script>
 <script type="text/javascript" src="js/bootstrap-sortable.js"></script>
 <script type="text/javascript" src="js/accounts.js"></script>
 @stop
