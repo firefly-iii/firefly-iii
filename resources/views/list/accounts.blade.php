@@ -41,7 +41,7 @@
             @endif
         </td>
             @if($account->lastActivityDate)
-                <td>
+                <td data-value="{{$account->lastActivityDate->format('Y-m-d')}}">
                     {{{$account->lastActivityDate->format('j F Y')}}}
                 </td>
             @else
