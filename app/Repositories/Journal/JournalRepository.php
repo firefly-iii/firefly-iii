@@ -63,6 +63,26 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * @param TransactionType $dbType
+     *
+     * @return Collection
+     */
+    public function getJournalsOfType(TransactionType $dbType)
+    {
+        return Auth::user()->transactionjournals()->where('transaction_type_id', $dbType->id)->orderBy('id', 'DESC')->take(50)->get();
+    }
+
+    /**
+     * @param $type
+     *
+     * @return TransactionType
+     */
+    public function getTransactionType($type)
+    {
+        return TransactionType::whereType($type)->first();
+    }
+
+    /**
      * @param string             $query
      * @param TransactionJournal $journal
      *
@@ -289,5 +309,4 @@ class JournalRepository implements JournalRepositoryInterface
 
         return [$from, $to];
     }
-
 }

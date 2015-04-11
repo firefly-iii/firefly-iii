@@ -10,6 +10,8 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Preferences;
 use Response;
@@ -32,8 +34,8 @@ class JsonController extends Controller
      */
     public function boxBillsPaid(BillRepositoryInterface $repository, AccountRepositoryInterface $accountRepository)
     {
-        $start  = Session::get('start');
-        $end    = Session::get('end');
+        $start  = Session::get('start', Carbon::now()->startOfMonth());
+        $end    = Session::get('end', Carbon::now()->endOfMonth());
         $amount = 0;
 
         // these two functions are the same as the chart TODO
@@ -77,12 +79,14 @@ class JsonController extends Controller
     public function boxBillsUnpaid(BillRepositoryInterface $repository, AccountRepositoryInterface $accountRepository)
     {
         $amount = 0;
+        $start  = Session::get('start', Carbon::now()->startOfMonth());
+        $end    = Session::get('end', Carbon::now()->endOfMonth());
         $bills  = $repository->getActiveBills();
         $unpaid = new Collection; // bills
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
-            $ranges = $repository->getRanges($bill, clone Session::get('start'), clone Session::get('end'));
+            $ranges = $repository->getRanges($bill, $start, $end);
 
             foreach ($ranges as $range) {
                 $journals = $repository->getJournalsInRange($bill, $range['start'], $range['end']);
@@ -121,8 +125,8 @@ class JsonController extends Controller
      */
     public function boxIn(ReportQueryInterface $reportQuery)
     {
-        $start  = Session::get('start');
-        $end    = Session::get('end');
+        $start  = Session::get('start', Carbon::now()->startOfMonth());
+        $end    = Session::get('end', Carbon::now()->endOfMonth());
         $amount = $reportQuery->incomeByPeriod($start, $end, true)->sum('queryAmount');
 
         return Response::json(['box' => 'in', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount]);
@@ -135,8 +139,8 @@ class JsonController extends Controller
      */
     public function boxOut(ReportQueryInterface $reportQuery)
     {
-        $start  = Session::get('start');
-        $end    = Session::get('end');
+        $start  = Session::get('start', Carbon::now()->startOfMonth());
+        $end    = Session::get('end', Carbon::now()->endOfMonth());
         $amount = $reportQuery->journalsByExpenseAccount($start, $end, true)->sum('queryAmount');
 
         return Response::json(['box' => 'out', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount]);
@@ -147,13 +151,14 @@ class JsonController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function categories()
+    public function categories(CategoryRepositoryInterface $repository)
     {
-        $list   = Auth::user()->categories()->orderBy('name', 'ASC')->get();
+        $list   = $repository->getCategories();
         $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;
         }
+        sort($return);
 
         return Response::json($return);
     }
@@ -163,9 +168,9 @@ class JsonController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function expenseAccounts()
+    public function expenseAccounts(AccountRepositoryInterface $accountRepository)
     {
-        $list   = Auth::user()->accounts()->orderBy('accounts.name', 'ASC')->accountTypeIn(['Expense account', 'Beneficiary account'])->get();
+        $list   = $accountRepository->getAccounts(['Expense account', 'Beneficiary account']);
         $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;
@@ -178,9 +183,9 @@ class JsonController extends Controller
     /**
      * @return \Illuminate\Http\JsonResponse
      */
-    public function revenueAccounts()
+    public function revenueAccounts(AccountRepositoryInterface $accountRepository)
     {
-        $list   = Auth::user()->accounts()->accountTypeIn(['Revenue account'])->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
+        $list   = $accountRepository->getAccounts(['Revenue account']);
         $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;
@@ -218,13 +223,12 @@ class JsonController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function transactionJournals($what)
+    public function transactionJournals($what, JournalRepositoryInterface $repository)
     {
         $descriptions = [];
-        $dbType       = TransactionType::whereType($what)->first();
-        $journals     = Auth::user()->transactionjournals()->where('transaction_type_id', $dbType->id)
-                            ->orderBy('id', 'DESC')->take(50)
-                            ->get();
+        $dbType       = $repository->getTransactionType($what);
+
+        $journals = $repository->getJournalsOfType($dbType);
         foreach ($journals as $j) {
             $descriptions[] = $j->description;
         }
