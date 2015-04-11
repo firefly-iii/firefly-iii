@@ -62,12 +62,7 @@ class BillRepository implements BillRepositoryInterface
     public function getActiveBills()
     {
         /** @var Collection $set */
-        $set = Auth::user()->bills()->orderBy('name', 'ASC')->where('active', 1)->get();
-        $set->sort(
-            function (Bill $bill) {
-                return $bill->name;
-            }
-        );
+        $set = Auth::user()->bills()->orderBy('name', 'ASC')->where('active', 1)->get()->sortBy('name');
 
         return $set;
     }
@@ -78,12 +73,7 @@ class BillRepository implements BillRepositoryInterface
     public function getBills()
     {
         /** @var Collection $set */
-        $set = Auth::user()->bills()->orderBy('name', 'ASC')->get();
-        $set->sort(
-            function (Bill $bill) {
-                return $bill->name;
-            }
-        );
+        $set = Auth::user()->bills()->orderBy('name', 'ASC')->get()->sortBy('name');
 
         return $set;
     }

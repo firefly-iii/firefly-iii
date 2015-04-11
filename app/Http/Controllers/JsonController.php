@@ -45,15 +45,10 @@ class JsonController extends Controller
 
             foreach ($ranges as $range) {
                 // paid a bill in this range?
-                $journals = $repository->getJournalsInRange($bill, $range['start'], $range['end']);
-                foreach ($journals as $journal) {
-                    $amount += $journal->amount;
-                }
-
+                $amount += $repository->getJournalsInRange($bill, $range['start'], $range['end'])->sum('amount');
             }
         }
-        unset($journals, $journal);
-
+        unset($ranges, $bill, $range, $bills);
 
         /**
          * Find credit card accounts and possibly unpaid credit card bills.
@@ -66,12 +61,7 @@ class JsonController extends Controller
             if ($balance == 0) {
                 // find a transfer TO the credit card which should account for
                 // anything paid. If not, the CC is not yet used.
-                $journals = $accountRepository->getTransfersInRange($creditCard, $start, $end);
-                foreach ($journals as $journal) {
-                    $amount += floatval($journal->amount);
-
-
-                }
+                $amount += $accountRepository->getTransfersInRange($creditCard, $start, $end)->sum('amount');
             }
         }
 
@@ -86,26 +76,22 @@ class JsonController extends Controller
      */
     public function boxBillsUnpaid(BillRepositoryInterface $repository, AccountRepositoryInterface $accountRepository)
     {
-        $start  = Session::get('start');
-        $end    = Session::get('end');
         $amount = 0;
-
         $bills  = $repository->getActiveBills();
         $unpaid = new Collection; // bills
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
-            $ranges = $repository->getRanges($bill, $start, $end);
+            $ranges = $repository->getRanges($bill, clone Session::get('start'), clone Session::get('end'));
 
             foreach ($ranges as $range) {
-                // paid a bill in this range?
                 $journals = $repository->getJournalsInRange($bill, $range['start'], $range['end']);
                 if ($journals->count() == 0) {
                     $unpaid->push([$bill, $range['start']]);
                 }
             }
         }
-        unset($bill, $range, $ranges);
+        unset($bill, $bills, $range, $ranges);
 
         $creditCards = $accountRepository->getCreditCards();
         foreach ($creditCards as $creditCard) {
@@ -119,8 +105,6 @@ class JsonController extends Controller
                 $unpaid->push([$fakeBill, $date]);
             }
         }
-        // loop unpaid:
-
         /** @var Bill $entry */
         foreach ($unpaid as $entry) {
             $current = ($entry[0]->amount_max + $entry[0]->amount_min) / 2;
@@ -139,12 +123,7 @@ class JsonController extends Controller
     {
         $start  = Session::get('start');
         $end    = Session::get('end');
-        $amount = 0;
-
-        $set = $reportQuery->incomeByPeriod($start, $end, true);
-        foreach ($set as $entry) {
-            $amount += $entry->queryAmount;
-        }
+        $amount = $reportQuery->incomeByPeriod($start, $end, true)->sum('queryAmount');
 
         return Response::json(['box' => 'in', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount]);
     }
@@ -158,13 +137,7 @@ class JsonController extends Controller
     {
         $start  = Session::get('start');
         $end    = Session::get('end');
-        $amount = 0;
-
-        $set = $reportQuery->journalsByExpenseAccount($start, $end, true);
-
-        foreach ($set as $entry) {
-            $amount += $entry->queryAmount;
-        }
+        $amount = $reportQuery->journalsByExpenseAccount($start, $end, true)->sum('queryAmount');
 
         return Response::json(['box' => 'out', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount]);
     }
