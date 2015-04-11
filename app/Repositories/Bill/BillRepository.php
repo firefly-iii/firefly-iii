@@ -315,6 +315,12 @@ class BillRepository implements BillRepositoryInterface
             Log::debug('TOTAL match is true!');
             $journal->bill()->associate($bill);
             $journal->save();
+        } else {
+            if ((!$wordMatch || !$amountMatch) && $bill->id == $journal->bill_id) {
+                // if no match, but bill used to match, remove it:
+                $journal->bill_id = null;
+                $journal->save();
+            }
         }
     }
 
