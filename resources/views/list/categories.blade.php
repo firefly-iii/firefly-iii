@@ -3,7 +3,7 @@
         <tr>
             <th data-defaultsort="disabled">&nbsp;</th>
             <th>Name</th>
-            <th data-dateformat="DD-MM-YYYY">Last activity</th>
+            <th data-dateformat="YYYY-MM-DD">Last activity</th>
         </tr>
     </thead>
     <tbody>
@@ -24,7 +24,7 @@
             <a href="{{route('categories.show',$category->id)}}" title="{{{$category->name}}}">{{{$category->name}}}</a>
         </td>
         @if($category->lastActivity)
-            <td data-value="{{$category->lastActivity->format('d-m-Y')}}">
+            <td data-value="{{$category->lastActivity->format('Y-m-d')}}">
                 {{$category->lastActivity->format('jS F Y')}}
             </td>
         @else
