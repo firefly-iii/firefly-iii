@@ -37,7 +37,7 @@ class JsonController extends Controller
         $amount = 0;
 
         // these two functions are the same as the chart TODO
-        $bills = Auth::user()->bills()->where('active', 1)->get();
+        $bills = $repository->getActiveBills();
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
@@ -45,15 +45,14 @@ class JsonController extends Controller
 
             foreach ($ranges as $range) {
                 // paid a bill in this range?
-                $count = $bill->transactionjournals()->before($range['end'])->after($range['start'])->count();
-                if ($count != 0) {
-                    // TODO this only gets the first match, may be more than one.
-                    $journal = $bill->transactionjournals()->with('transactions')->before($range['end'])->after($range['start'])->first();
+                $journals = $repository->getJournalsInRange($bill, $range['start'], $range['end']);
+                foreach ($journals as $journal) {
                     $amount += $journal->amount;
                 }
 
             }
         }
+        unset($journals, $journal);
 
 
         /**
@@ -67,17 +66,11 @@ class JsonController extends Controller
             if ($balance == 0) {
                 // find a transfer TO the credit card which should account for
                 // anything paid. If not, the CC is not yet used.
-                $transactions = $creditCard->transactions()
-                                           ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                           ->before($end)->after($start)->get();
-                if ($transactions->count() > 0) {
-                    /** @var Transaction $transaction */
-                    foreach ($transactions as $transaction) {
-                        $journal = $transaction->transactionJournal;
-                        if ($journal->transactionType->type == 'Transfer') {
-                            $amount += floatval($transaction->amount);
-                        }
-                    }
+                $journals = $accountRepository->getTransfersInRange($creditCard, $start, $end);
+                foreach ($journals as $journal) {
+                    $amount += floatval($journal->amount);
+
+
                 }
             }
         }
