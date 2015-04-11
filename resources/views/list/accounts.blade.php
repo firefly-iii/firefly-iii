@@ -41,11 +41,11 @@
             @endif
         </td>
             @if($account->lastActivityDate)
-                <td data-value="{{$account->lastActivityDate->format('Y-m-d')}}">
+                <td>
                     {{{$account->lastActivityDate->format('j F Y')}}}
                 </td>
             @else
-                <td data-value="0000-00-00">
+                <td>
                     <em>Never</em>
                 </td>
             @endif
