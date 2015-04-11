@@ -24,11 +24,11 @@
             <a href="{{route('categories.show',$category->id)}}" title="{{{$category->name}}}">{{{$category->name}}}</a>
         </td>
         @if($category->lastActivity)
-            <td data-value="{{$category->lastActivity->format('Y-m-d')}}">
+            <td data-value="{{$category->lastActivity->format('U')}}">
                 {{$category->lastActivity->format('jS F Y')}}
             </td>
         @else
-            <td>
+            <td data-value="0">
                 <em>Never</em>
             </td>
         @endif
