@@ -98,6 +98,7 @@ class HomeControllerTest extends TestCase
         Preferences::shouldReceive('get')->once()->withArgs(['frontPageAccounts', []])->andReturn($preference);
         $repository->shouldReceive('getFrontpageAccounts')->once()->with($preference)->andReturn($accounts);
         $repository->shouldReceive('getSavingsAccounts')->once()->andReturn($accounts);
+        $repository->shouldReceive('getPiggyBankAccounts')->once()->andReturn($accounts);
         $repository->shouldReceive('sumOfEverything')->once()->andReturn(1);
         $repository->shouldReceive('getFrontpageTransactions')->once()->andReturn($journals);
 

@@ -17,6 +17,7 @@ use Navigation;
 class PiggyBankRepository implements PiggyBankRepositoryInterface
 {
 
+
     /**
      * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
      *
@@ -95,6 +96,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     {
         return DB::table('piggy_bank_events')->where('piggy_bank_id', $piggyBank->id)->groupBy('date')->get(['date', DB::Raw('SUM(`amount`) AS `sum`')]);
     }
+
+
 
     /**
      * Set all piggy banks to order 0.

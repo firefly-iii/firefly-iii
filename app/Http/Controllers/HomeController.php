@@ -1,6 +1,5 @@
 <?php namespace FireflyIII\Http\Controllers;
 
-use Auth;
 use Carbon\Carbon;
 use Config;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -44,24 +43,28 @@ class HomeController extends Controller
     }
 
     /**
+     * @param AccountRepositoryInterface $repository
+     *
      * @return \Illuminate\View\View
      */
     public function index(AccountRepositoryInterface $repository)
     {
 
-        $types         = Config::get('firefly.accountTypesByIdentifier.asset');
-        $count         = $repository->countAccounts($types);
-        $title         = 'Firefly';
-        $subTitle      = 'What\'s playing?';
-        $mainTitleIcon = 'fa-fire';
-        $transactions  = [];
-        $frontPage     = Preferences::get('frontPageAccounts', []);
-        $start         = Session::get('start', Carbon::now()->startOfMonth());
-        $end           = Session::get('end', Carbon::now()->endOfMonth());
-        $accounts      = $repository->getFrontpageAccounts($frontPage);
-        $savings       = $repository->getSavingsAccounts();
+        $types             = Config::get('firefly.accountTypesByIdentifier.asset');
+        $count             = $repository->countAccounts($types);
+        $title             = 'Firefly';
+        $subTitle          = 'What\'s playing?';
+        $mainTitleIcon     = 'fa-fire';
+        $transactions      = [];
+        $frontPage         = Preferences::get('frontPageAccounts', []);
+        $start             = Session::get('start', Carbon::now()->startOfMonth());
+        $end               = Session::get('end', Carbon::now()->endOfMonth());
+        $accounts          = $repository->getFrontpageAccounts($frontPage);
+        $savings           = $repository->getSavingsAccounts();
+        $piggyBankAccounts = $repository->getPiggyBankAccounts();
 
-        $savingsTotal  = 0;
+
+        $savingsTotal = 0;
         foreach ($savings as $savingAccount) {
             $savingsTotal += Steam::balance($savingAccount, $end);
         }
@@ -83,7 +86,7 @@ class HomeController extends Controller
             }
         }
 
-        return view('index', compact('count', 'title', 'savings', 'subTitle', 'mainTitleIcon', 'transactions', 'savingsTotal'));
+        return view('index', compact('count', 'title', 'savings', 'subTitle', 'mainTitleIcon', 'transactions', 'savingsTotal','piggyBankAccounts'));
     }
 
 

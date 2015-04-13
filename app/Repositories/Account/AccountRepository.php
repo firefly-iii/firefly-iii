@@ -6,6 +6,7 @@ use App;
 use Auth;
 use Carbon\Carbon;
 use Config;
+use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
@@ -142,13 +143,6 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * @return float
-     */
-    public function sumOfEverything() {
-        return floatval(Auth::user()->transactions()->sum('amount'));
-    }
-
-    /**
      * @param Account $account
      * @param int     $page
      *
@@ -192,6 +186,51 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return null;
+    }
+
+    /**
+     * Get the accounts of a user that have piggy banks connected to them.
+     *
+     * @return Collection
+     */
+    public function getPiggyBankAccounts()
+    {
+        $ids        = [];
+        $start      = clone Session::get('start', new Carbon);
+        $end        = clone Session::get('end', new Carbon);
+        $accountIds = DB::table('piggy_banks')->distinct()->get(['piggy_banks.account_id']);
+        $accounts   = new Collection;
+
+        foreach ($accountIds as $id) {
+            $ids[] = intval($id->account_id);
+        }
+
+        $ids = array_unique($ids);
+        if (count($ids) > 0) {
+            $accounts = Auth::user()->accounts()->whereIn('id', $ids)->get();
+        }
+
+        $accounts->each(
+            function (Account $account) use ($start, $end) {
+                $account->startBalance = Steam::balance($account, $start);
+                $account->endBalance   = Steam::balance($account, $end);
+                $account->piggyBalance = 0;
+                /** @var PiggyBank $piggyBank */
+                foreach ($account->piggyBanks as $piggyBank) {
+                    $account->piggyBalance += $piggyBank->currentRelevantRep()->currentamount;
+                }
+                // sum of piggy bank amounts on this account:
+                // diff between endBalance and piggyBalance.
+                // then, percentage.
+                $difference          = $account->endBalance - $account->piggyBalance;
+                $account->difference = $difference;
+                $account->percentage = $difference != 0 ? round((($difference / $account->endBalance) * 100)) : 100;
+
+            }
+        );
+
+        return $accounts;
+
     }
 
     /**
@@ -322,6 +361,14 @@ class AccountRepository implements AccountRepositoryInterface
 
         return $newAccount;
 
+    }
+
+    /**
+     * @return float
+     */
+    public function sumOfEverything()
+    {
+        return floatval(Auth::user()->transactions()->sum('amount'));
     }
 
     /**

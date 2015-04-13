@@ -52,6 +52,14 @@ interface AccountRepositoryInterface
     public function getCreditCards();
 
     /**
+     * Get the accounts of a user that have piggy banks connected to them.
+     *
+     * @return Collection
+     */
+    public function getPiggyBankAccounts();
+
+
+    /**
      * Get all transfers TO this account in this range.
      *
      * @param Account $account

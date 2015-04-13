@@ -14,7 +14,6 @@ use Illuminate\Support\Collection;
 interface PiggyBankRepositoryInterface
 {
 
-
     /**
      * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
      *
