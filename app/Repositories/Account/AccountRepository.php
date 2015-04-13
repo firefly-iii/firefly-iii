@@ -212,8 +212,8 @@ class AccountRepository implements AccountRepositoryInterface
 
         $accounts->each(
             function (Account $account) use ($start, $end) {
-                $account->startBalance = Steam::balance($account, $start);
-                $account->endBalance   = Steam::balance($account, $end);
+                $account->startBalance = Steam::balance($account, $start, true);
+                $account->endBalance   = Steam::balance($account, $end, true);
                 $account->piggyBalance = 0;
                 /** @var PiggyBank $piggyBank */
                 foreach ($account->piggyBanks as $piggyBank) {
