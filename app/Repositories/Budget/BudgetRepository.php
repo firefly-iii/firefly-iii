@@ -148,7 +148,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function getInactiveBudgets()
     {
-        return Auth::user()->budgets()->where('active', 1)->get();
+        return Auth::user()->budgets()->where('active', 0)->get();
     }
 
     /**
