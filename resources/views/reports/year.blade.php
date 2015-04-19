@@ -152,9 +152,9 @@
                 @foreach($groupedExpenses as $expense)
                 <tr>
                     <td><a href="{{route('accounts.show',$expense['id'])}}">{{{$expense['name']}}}</a></td>
-                    <td>{!! Amount::format(floatval($expense['amount'])*-1) !!}</td>
+                    <td>{!! Amount::format(floatval($expense['queryAmount'])*-1) !!}</td>
                 </tr>
-                <?php $sum += floatval($expense['amount'])*-1;?>
+                <?php $sum += floatval($expense['queryAmount'])*-1;?>
                 @endforeach
                 <tr>
                     <td><em>Sum</em></td>
