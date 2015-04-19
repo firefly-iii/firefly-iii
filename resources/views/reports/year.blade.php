@@ -95,7 +95,7 @@
                 $incomeSum += floatval($income->queryAmount);
             }
             foreach($groupedExpenses as $exp) {
-                $expenseSum += floatval($exp['amount']);
+                $expenseSum += floatval($exp['queryAmount']);
             }
             $incomeSum = floatval($incomeSum*-1);
 
