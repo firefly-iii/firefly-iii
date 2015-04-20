@@ -3,8 +3,10 @@
 namespace FireflyIII\Repositories\PiggyBank;
 
 use Auth;
+use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\PiggyBankRepetition;
 use Illuminate\Support\Collection;
 use Navigation;
@@ -70,6 +72,19 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
+     * @param PiggyBank $piggyBank
+     * @param           $amount
+     *
+     * @return bool
+     */
+    public function createEvent(PiggyBank $piggyBank, $amount)
+    {
+        PiggyBankEvent::create(['date' => Carbon::now(), 'amount' => $amount, 'piggy_bank_id' => $piggyBank->id]);
+
+        return true;
+    }
+
+    /**
      * @param array $data
      *
      * @return PiggyBankPart
@@ -90,6 +105,16 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     /**
      * @param PiggyBank $piggyBank
      *
+     * @return bool
+     */
+    public function destroy(PiggyBank $piggyBank)
+    {
+        return $piggyBank->delete();
+    }
+
+    /**
+     * @param PiggyBank $piggyBank
+     *
      * @return Collection
      */
     public function getEventSummarySet(PiggyBank $piggyBank)
@@ -97,7 +122,32 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         return DB::table('piggy_bank_events')->where('piggy_bank_id', $piggyBank->id)->groupBy('date')->get(['date', DB::Raw('SUM(`amount`) AS `sum`')]);
     }
 
+    /**
+     * @param PiggyBank $piggyBank
+     *
+     * @return Collection
+     */
+    public function getEvents(PiggyBank $piggyBank)
+    {
+        return $piggyBank->piggyBankEvents()->orderBy('date', 'DESC')->orderBy('id', 'DESC')->get();
+    }
 
+    /**
+     * @return Collection
+     */
+    public function getPiggyBanks()
+    {
+        /** @var Collection $set */
+        $set = Auth::user()->piggyBanks()->orderBy('order', 'ASC')->get();
+
+        $set->sortBy(
+            function (PiggyBank $piggyBank) {
+                return $piggyBank->name;
+            }
+        );
+
+        return $set;
+    }
 
     /**
      * Set all piggy banks to order 0.

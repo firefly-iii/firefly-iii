@@ -1,12 +1,12 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Amount;
-use Auth;
 use Carbon\Carbon;
 use Config;
 use ExpandedForm;
 use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\PiggyBankFormRequest;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -56,13 +56,13 @@ class PiggyBankController extends Controller
     /**
      * @return mixed
      */
-    public function create()
+    public function create(AccountRepositoryInterface $repository)
     {
 
-        $periods      = Config::get('firefly.piggy_bank_periods');
-        $accounts     = ExpandedForm::makeSelectList(
-            Auth::user()->accounts()->orderBy('accounts.name', 'ASC')->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*'])
-        );
+        $periods  = Config::get('firefly.piggy_bank_periods');
+        $accounts = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
+        //Auth::user()->accounts()->orderBy('accounts.name', 'ASC')->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*'])
+        //        );
         $subTitle     = 'Create new piggy bank';
         $subTitleIcon = 'fa-plus';
 
@@ -95,11 +95,12 @@ class PiggyBankController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(PiggyBank $piggyBank)
+    public function destroy(PiggyBank $piggyBank, PiggyBankRepositoryInterface $repository)
     {
 
+
         Session::flash('success', 'Piggy bank "' . e($piggyBank->name) . '" deleted.');
-        $piggyBank->delete();
+        $repository->destroy($piggyBank);
 
         return Redirect::to(Session::get('piggy-banks.delete.url'));
     }
@@ -111,13 +112,11 @@ class PiggyBankController extends Controller
      *
      * @return $this
      */
-    public function edit(PiggyBank $piggyBank)
+    public function edit(PiggyBank $piggyBank, AccountRepositoryInterface $repository)
     {
 
         $periods      = Config::get('firefly.piggy_bank_periods');
-        $accounts     = ExpandedForm::makeSelectList(
-            Auth::user()->accounts()->orderBy('accounts.name', 'ASC')->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*'])
-        );
+        $accounts     = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
         $subTitle     = 'Edit piggy bank "' . e($piggyBank->name) . '"';
         $subTitleIcon = 'fa-pencil';
 
@@ -151,16 +150,16 @@ class PiggyBankController extends Controller
     /**
      * @return $this
      */
-    public function index(AccountRepositoryInterface $repository)
+    public function index(AccountRepositoryInterface $repository, PiggyBankRepositoryInterface $piggyRepository)
     {
         /** @var Collection $piggyBanks */
-        $piggyBanks = Auth::user()->piggyBanks()->orderBy('order', 'ASC')->get();
+        $piggyBanks = $piggyRepository->getPiggyBanks();
 
         $accounts = [];
         /** @var PiggyBank $piggyBank */
         foreach ($piggyBanks as $piggyBank) {
             $piggyBank->savedSoFar = floatval($piggyBank->currentRelevantRep()->currentamount);
-            $piggyBank->percentage = intval($piggyBank->savedSoFar / $piggyBank->targetamount * 100);
+            $piggyBank->percentage = $piggyBank->savedSoFar != 0 ? intval($piggyBank->savedSoFar / $piggyBank->targetamount * 100) : 0;
             $piggyBank->leftToSave = $piggyBank->targetamount - $piggyBank->savedSoFar;
 
             /*
@@ -223,8 +222,8 @@ class PiggyBankController extends Controller
             $repetition->currentamount += $amount;
             $repetition->save();
 
-            // create event.
-            PiggyBankEvent::create(['date' => Carbon::now(), 'amount' => $amount, 'piggy_bank_id' => $piggyBank->id]);
+            // create event
+            $repository->createEvent($piggyBank, $amount);
 
             /*
              * Create event!
@@ -244,7 +243,7 @@ class PiggyBankController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postRemove(PiggyBank $piggyBank)
+    public function postRemove(PiggyBank $piggyBank, PiggyBankRepositoryInterface $repository)
     {
         $amount = floatval(Input::get('amount'));
 
@@ -255,12 +254,8 @@ class PiggyBankController extends Controller
             $repetition->currentamount -= $amount;
             $repetition->save();
 
-            PiggyBankEvent::create(['date' => Carbon::now(), 'amount' => $amount * -1, 'piggy_bank_id' => $piggyBank->id]);
-
-            /*
-             * Create event!
-             */
-            //Event::fire('piggy_bank.removeMoney', [$piggyBank, $amount]); // new and used.
+            // create event
+            $repository->createEvent($piggyBank, $amount * -1);
 
             Session::flash('success', 'Removed ' . Amount::format($amount, false) . ' from "' . e($piggyBank->name) . '".');
         } else {
@@ -287,10 +282,9 @@ class PiggyBankController extends Controller
      *
      * @return $this
      */
-    public function show(PiggyBank $piggyBank)
+    public function show(PiggyBank $piggyBank, PiggyBankRepositoryInterface $repository)
     {
-
-        $events = $piggyBank->piggyBankEvents()->orderBy('date', 'DESC')->orderBy('id', 'DESC')->get();
+        $events = $repository->getEvents($piggyBank);
 
         /*
          * Number of reminders:
@@ -310,6 +304,7 @@ class PiggyBankController extends Controller
      */
     public function store(PiggyBankFormRequest $request, PiggyBankRepositoryInterface $repository)
     {
+
         $piggyBankData = [
             'name'         => $request->get('name'),
             'startdate'    => new Carbon,
@@ -353,7 +348,6 @@ class PiggyBankController extends Controller
             'reminder'     => $request->get('reminder'),
             'remind_me'    => $request->get('remind_me')
         ];
-
 
         $piggyBank = $repository->update($piggyBank, $piggyBankData);
 

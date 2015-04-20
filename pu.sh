@@ -18,4 +18,4 @@ then
 fi
 
 # restore .env file
-mv .env.backup .env
+cp .env.local .env

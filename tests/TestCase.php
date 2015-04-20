@@ -29,6 +29,10 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     public function setUp()
     {
         parent::setUp();
+
+        // if the database copy does not exist, call migrate.
+
+        // if the database copy does not exist, create it and copy back as original.
         Artisan::call('migrate');
         FactoryMuffin::loadFactories(__DIR__ . '/factories');
 
@@ -45,9 +49,20 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     }
 
     /**
+     * Tears down the fixture, for example, closes a network connection.
+     * This method is called after a test is executed.
+     */
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        // delete copy and original.
+    }
+
+    /**
      * @param string $class
      *
-     * @return mixed
+     * @return Mockery\MockInterface
      */
     public function mock($class)
     {

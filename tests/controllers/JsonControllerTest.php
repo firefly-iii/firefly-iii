@@ -35,7 +35,6 @@ class JsonControllerTest extends TestCase
     public function tearDown()
     {
         parent::tearDown();
-
     }
 
     public function testBoxBillsPaid()
