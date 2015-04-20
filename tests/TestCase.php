@@ -31,9 +31,20 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         parent::setUp();
 
         // if the database copy does not exist, call migrate.
+        $copy     = __DIR__.'/../storage/database/testing-copy.db';
+        $original = __DIR__.'/../storage/database/testing.db';
+        if (!file_exists($copy)) {
+            Log::debug('Created new database.');
+            touch($original);
+            Artisan::call('migrate');
+            copy($original, $copy);
+        } else {
+            if (file_exists($copy)) {
+                copy($copy, $original);
+            }
+        }
+        // if the database copy does exists, copy back as original.
 
-        // if the database copy does not exist, create it and copy back as original.
-        Artisan::call('migrate');
         FactoryMuffin::loadFactories(__DIR__ . '/factories');
 
     }
@@ -56,7 +67,10 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
     {
         parent::tearDown();
 
-        // delete copy and original.
+        // delete copy original.
+        //$original = __DIR__.'/../storage/database/testing.db';
+        //unlink($original);
+
     }
 
     /**
