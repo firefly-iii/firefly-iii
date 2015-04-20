@@ -45,7 +45,7 @@ class BillController extends Controller
         $expense     = null;
 
         // get users expense accounts:
-        $accounts = $repository->getAccounts(Config::get('firefly.accountTypesByIdentifier.expense'), -1);
+        $accounts = $repository->getAccounts(Config::get('firefly.accountTypesByIdentifier.expense'));
 
         foreach ($matches as $match) {
             $match = strtolower($match);
@@ -173,7 +173,7 @@ class BillController extends Controller
      */
     public function show(Bill $bill, BillRepositoryInterface $repository)
     {
-        $journals = $repository->getJournals($bill);
+        $journals                = $repository->getJournals($bill);
         $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill);
         $hideBill                = true;
 

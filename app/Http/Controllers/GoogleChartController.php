@@ -1,12 +1,7 @@
 <?php namespace FireflyIII\Http\Controllers;
 
-use Amount;
-use App;
-use Auth;
 use Carbon\Carbon;
 use Crypt;
-use DB;
-use Exception;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
@@ -17,11 +12,12 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Grumpydictator\Gchart\GChart;
-use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Navigation;
 use Preferences;
@@ -46,9 +42,8 @@ class GoogleChartController extends Controller
      */
     public function accountBalanceChart(Account $account, GChart $chart)
     {
-        $accountName = iconv('UTF-8', 'ASCII//TRANSLIT', $account->name);
         $chart->addColumn('Day of month', 'date');
-        $chart->addColumn('Balance for ' . $accountName, 'number');
+        $chart->addColumn('Balance for ' . $account->name, 'number');
         $chart->addCertainty(1);
 
         $start   = Session::get('start', Carbon::now()->startOfMonth());
@@ -73,24 +68,19 @@ class GoogleChartController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function allAccountsBalanceChart(GChart $chart)
+    public function allAccountsBalanceChart(GChart $chart, AccountRepositoryInterface $repository)
     {
         $chart->addColumn('Day of the month', 'date');
 
         $frontPage = Preferences::get('frontPageAccounts', []);
         $start     = Session::get('start', Carbon::now()->startOfMonth());
         $end       = Session::get('end', Carbon::now()->endOfMonth());
+        $accounts  = $repository->getFrontpageAccounts($frontPage);
 
-        if ($frontPage->data == []) {
-            $accounts = Auth::user()->accounts()->orderBy('accounts.name', 'ASC')->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*']);
-        } else {
-            $accounts = Auth::user()->accounts()->whereIn('id', $frontPage->data)->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
-        }
         $index = 1;
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $accountName = $account->name;
-            $chart->addColumn('Balance for ' . $accountName, 'number');
+            $chart->addColumn('Balance for ' . $account->name, 'number');
             $chart->addCertainty($index);
             $index++;
         }
@@ -108,7 +98,7 @@ class GoogleChartController extends Controller
             $current->addDay();
         }
         $chart->generate();
-        //header('Content-Type: application/json; charset=utf-8');
+
         return Response::json($chart->getData());
 
     }
@@ -120,21 +110,15 @@ class GoogleChartController extends Controller
      */
     public function allBudgetsAndSpending($year, GChart $chart, BudgetRepositoryInterface $repository)
     {
-        try {
-            new Carbon('01-01-' . $year);
-        } catch (Exception $e) {
-            return view('error')->with('message', 'Invalid year.');
-        }
-        $budgets = Auth::user()->budgets()->get();
-        $budgets->sortBy('name');
+        $budgets = $repository->getBudgets();
         $chart->addColumn('Month', 'date');
         foreach ($budgets as $budget) {
             $chart->addColumn($budget->name, 'number');
         }
+
         $start = Carbon::createFromDate(intval($year), 1, 1);
         $end   = clone $start;
         $end->endOfYear();
-
 
         while ($start <= $end) {
             $row = [clone $start];
@@ -146,7 +130,6 @@ class GoogleChartController extends Controller
             $start->addMonth();
         }
 
-
         $chart->generate();
 
         return Response::json($chart->getData());
@@ -158,73 +141,44 @@ class GoogleChartController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function allBudgetsHomeChart(GChart $chart)
+    public function allBudgetsHomeChart(GChart $chart, BudgetRepositoryInterface $repository)
     {
         $chart->addColumn('Budget', 'string');
         $chart->addColumn('Budgeted', 'number');
         $chart->addColumn('Spent', 'number');
 
-        $budgets = Auth::user()->budgets()->orderBy('name', 'DESC')->get();
-        $start   = Session::get('start', Carbon::now()->startOfMonth());
-        $end     = Session::get('end', Carbon::now()->endOfMonth());
+        $budgets    = $repository->getBudgets();
+        $start      = Session::get('start', Carbon::now()->startOfMonth());
+        $end        = Session::get('end', Carbon::now()->endOfMonth());
+        $allEntries = new Collection;
 
-        /** @var Budget $budget */
         foreach ($budgets as $budget) {
-
-            /** @var Collection $repetitions */
-            $repetitions = LimitRepetition::
-            leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
-                                          ->where('limit_repetitions.startdate', '<=', $end->format('Y-m-d 00:00:00'))
-                                          ->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d 00:00:00'))
-                                          ->where('budget_limits.budget_id', $budget->id)
-                                          ->get(['limit_repetitions.*']);
-
-            // no results? search entire range for expenses and list those.
+            $repetitions = $repository->getBudgetLimitRepetitions($budget, $start, $end);
             if ($repetitions->count() == 0) {
-                $expenses = floatval($budget->transactionjournals()->before($end)->after($start)->lessThan(0)->sum('amount')) * -1;
-                if ($expenses > 0) {
-                    $chart->addRow($budget->name, 0, $expenses);
-                }
-            } else {
-                // add with foreach:
-                /** @var LimitRepetition $repetition */
-                foreach ($repetitions as $repetition) {
-
-                    $expenses
-                        =
-                        floatval($budget->transactionjournals()->before($repetition->enddate)->after($repetition->startdate)->lessThan(0)->sum('amount')) * -1;
-                    if ($expenses > 0) {
-                        $chart->addRow($budget->name . ' (' . $repetition->startdate->format('j M Y') . ')', floatval($repetition->amount), $expenses);
-                    }
-                }
+                $expenses = $repository->sumBudgetExpensesInPeriod($budget, $start, $end);
+                $allEntries->push([$budget->name, 0, $expenses]);
+                continue;
             }
-
-
+            /** @var LimitRepetition $repetition */
+            foreach ($repetitions as $repetition) {
+                $expenses = $repository->sumBudgetExpensesInPeriod($budget, $repetition->startdate, $repetition->enddate);
+                $allEntries->push([$budget->name . ' (' . $repetition->startdate->format('j M Y') . ')', floatval($repetition->amount), $expenses]);
+            }
         }
 
-        $noBudgetSet = Auth::user()
-                           ->transactionjournals()
-                           ->whereNotIn(
-                               'transaction_journals.id', function (QueryBuilder $query) use ($start, $end) {
-                               $query
-                                   ->select('transaction_journals.id')
-                                   ->from('transaction_journals')
-                                   ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'))
-                                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d 00:00:00'))
-                                   ->whereNotNull('budget_transaction_journal.budget_id');
-                           }
-                           )
-                           ->before($end)
-                           ->after($start)
-                           ->lessThan(0)
-                           ->transactionTypes(['Withdrawal'])
-                           ->get();
-        $sum         = $noBudgetSet->sum('amount') * -1;
-        $chart->addRow('No budget', 0, $sum);
+        $noBudgetExpenses = $repository->getWithoutBudgetSum($start, $end);
+        $allEntries->push(['(no budget)', 0, $noBudgetExpenses]);
+
+        foreach ($allEntries as $entry) {
+            if ($entry[2] > 0) {
+                $chart->addRow($entry[0], $entry[1], $entry[2]);
+            }
+        }
+
         $chart->generate();
 
         return Response::json($chart->getData());
+
     }
 
     /**
@@ -232,34 +186,14 @@ class GoogleChartController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function allCategoriesHomeChart(GChart $chart)
+    public function allCategoriesHomeChart(GChart $chart, CategoryRepositoryInterface $repository)
     {
         $chart->addColumn('Category', 'string');
         $chart->addColumn('Spent', 'number');
 
-        // query!
         $start = Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());
-        $set   = TransactionJournal::
-        where('transaction_journals.user_id', Auth::user()->id)
-                                   ->leftJoin(
-                                       'transactions',
-                                       function (JoinClause $join) {
-                                           $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('amount', '>', 0);
-                                       }
-                                   )
-                                   ->leftJoin(
-                                       'category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
-                                   )
-                                   ->leftJoin('categories', 'categories.id', '=', 'category_transaction_journal.category_id')
-                                   ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                   ->before($end)
-                                   ->where('categories.user_id', Auth::user()->id)
-                                   ->after($start)
-                                   ->where('transaction_types.type', 'Withdrawal')
-                                   ->groupBy('categories.id')
-                                   ->orderBy('sum', 'DESC')
-                                   ->get(['categories.id', 'categories.encrypted', 'categories.name', \DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
+        $set   = $repository->getCategoriesAndExpenses($start, $end);
 
         foreach ($set as $entry) {
             $isEncrypted = intval($entry->encrypted) == 1 ? true : false;
@@ -275,11 +209,12 @@ class GoogleChartController extends Controller
     }
 
     /**
-     * @param Bill $bill
+     * @param Bill   $bill
+     * @param GChart $chart
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function billOverview(Bill $bill, GChart $chart)
+    public function billOverview(Bill $bill, GChart $chart, BillRepositoryInterface $repository)
     {
 
         $chart->addColumn('Date', 'date');
@@ -288,24 +223,10 @@ class GoogleChartController extends Controller
         $chart->addColumn('Recorded bill entry', 'number');
 
         // get first transaction or today for start:
-        $first = $bill->transactionjournals()->orderBy('date', 'ASC')->first();
-        if ($first) {
-            $start = $first->date;
-        } else {
-            $start = new Carbon;
-        }
-
-        $results = $bill->transactionjournals()->after($start)->get();
+        $results = $repository->getJournals($bill);
         /** @var TransactionJournal $result */
         foreach ($results as $result) {
-            $amount = 0;
-            /** @var Transaction $tr */
-            foreach ($result->transactions()->get() as $tr) {
-                if (floatval($tr->amount) > 0) {
-                    $amount = floatval($tr->amount);
-                }
-            }
-            $chart->addRow(clone $result->date, $bill->amount_max, $bill->amount_min, $amount);
+            $chart->addRow(clone $result->date, floatval($bill->amount_max), floatval($bill->amount_min), floatval($result->amount));
         }
 
         $chart->generate();
@@ -319,18 +240,21 @@ class GoogleChartController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function billsOverview(GChart $chart, BillRepositoryInterface $repository)
+    public function billsOverview(GChart $chart, BillRepositoryInterface $repository, AccountRepositoryInterface $accounts)
     {
         $chart->addColumn('Name', 'string');
         $chart->addColumn('Amount', 'number');
 
-
-        $paid   = ['items' => [], 'amount' => 0];
-        $unpaid = ['items' => [], 'amount' => 0];
         $start  = Session::get('start', Carbon::now()->startOfMonth());
         $end    = Session::get('end', Carbon::now()->endOfMonth());
-
-        $bills = Auth::user()->bills()->where('active', 1)->get();
+        $bills  = $repository->getActiveBills();
+        $paid   = new Collection; // journals.
+        $unpaid = new Collection; // bills
+        // loop paid and create single entry:
+        $paidDescriptions   = [];
+        $paidAmount         = 0;
+        $unpaidDescriptions = [];
+        $unpaidAmount       = 0;
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
@@ -338,71 +262,56 @@ class GoogleChartController extends Controller
 
             foreach ($ranges as $range) {
                 // paid a bill in this range?
-                $count = $bill->transactionjournals()->before($range['end'])->after($range['start'])->count();
-                if ($count == 0) {
-                    $unpaid['items'][] = $bill->name . ' (' . $range['start']->format('jS M Y') . ')';
-                    $unpaid['amount'] += ($bill->amount_max + $bill->amount_min / 2);
-
+                $journals = $repository->getJournalsInRange($bill, $range['start'], $range['end']);
+                if ($journals->count() == 0) {
+                    $unpaid->push([$bill, $range['start']]);
                 } else {
-                    $journal         = $bill->transactionjournals()->with('transactions')->before($range['end'])->after($range['start'])->first();
-                    $paid['items'][] = $journal->description;
-                    $amount          = 0;
-                    foreach ($journal->transactions as $t) {
-                        if (floatval($t->amount) > 0) {
-                            $amount = floatval($t->amount);
-                        }
-                    }
-                    $paid['amount'] += $amount;
+                    $paid = $paid->merge($journals);
                 }
 
             }
         }
 
-        /**
-         * Find credit card accounts and possibly unpaid credit card bills.
-         */
-        $creditCards = Auth::user()->accounts()
-                           ->hasMetaValue('accountRole', 'ccAsset')
-                           ->hasMetaValue('ccType', 'monthlyFull')
-                           ->get(
-                               [
-                                   'accounts.*',
-                                   'ccType.data as ccType',
-                                   'accountRole.data as accountRole'
-                               ]
-                           );
-        // if the balance is not zero, the monthly payment is still underway.
-        /** @var Account $creditCard */
+        $creditCards = $accounts->getCreditCards();
         foreach ($creditCards as $creditCard) {
             $balance = Steam::balance($creditCard, null, true);
             $date    = new Carbon($creditCard->getMeta('ccMonthlyPaymentDate'));
             if ($balance < 0) {
-                // unpaid!
-                $unpaid['amount'] += $balance * -1;
-                $unpaid['items'][] = $creditCard->name . ' (expected ' . Amount::format(($balance * -1), false) . ') on the ' . $date->format('jS') . ')';
+                // unpaid! create a fake bill that matches the amount.
+                $description = $creditCard->name;
+                $amount      = $balance * -1;
+                $fakeBill    = $repository->createFakeBill($description, $date, $amount);
+                unset($description, $amount);
+                $unpaid->push([$fakeBill, $date]);
             }
             if ($balance == 0) {
-                // find a transfer TO the credit card which should account for
+                // find transfer(s) TO the credit card which should account for
                 // anything paid. If not, the CC is not yet used.
-                $transactions = $creditCard->transactions()
-                                           ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                           ->before($end)->after($start)->get();
-                if ($transactions->count() > 0) {
-                    /** @var Transaction $transaction */
-                    foreach ($transactions as $transaction) {
-                        $journal = $transaction->transactionJournal;
-                        if ($journal->transactionType->type == 'Transfer') {
-                            $paid['amount'] += floatval($transaction->amount);
-                            $paid['items'][] = $creditCard->name .
-                                               ' (paid ' . Amount::format((floatval($transaction->amount)), false) .
-                                               ' on the ' . $journal->date->format('jS') . ')';
-                        }
-                    }
-                }
+                $journals = $accounts->getTransfersInRange($creditCard, $start, $end);
+                $paid     = $paid->merge($journals);
             }
         }
-        $chart->addRow('Unpaid: ' . join(', ', $unpaid['items']), $unpaid['amount']);
-        $chart->addRow('Paid: ' . join(', ', $paid['items']), $paid['amount']);
+
+
+        /** @var TransactionJournal $entry */
+        foreach ($paid as $entry) {
+
+            $paidDescriptions[] = $entry->description;
+            $paidAmount += floatval($entry->amount);
+        }
+
+        // loop unpaid:
+        /** @var Bill $entry */
+        foreach ($unpaid as $entry) {
+            $description          = $entry[0]->name . ' (' . $entry[1]->format('jS M Y') . ')';
+            $amount               = ($entry[0]->amount_max + $entry[0]->amount_min) / 2;
+            $unpaidDescriptions[] = $description;
+            $unpaidAmount += $amount;
+            unset($amount, $description);
+        }
+
+        $chart->addRow('Unpaid: ' . join(', ', $unpaidDescriptions), $unpaidAmount);
+        $chart->addRow('Paid: ' . join(', ', $paidDescriptions), $paidAmount);
         $chart->generate();
 
         return Response::json($chart->getData());
@@ -415,7 +324,7 @@ class GoogleChartController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function budgetLimitSpending(Budget $budget, LimitRepetition $repetition, GChart $chart)
+    public function budgetLimitSpending(Budget $budget, LimitRepetition $repetition, GChart $chart, BudgetRepositoryInterface $repository)
     {
         $start = clone $repetition->startdate;
         $end   = $repetition->enddate;
@@ -430,7 +339,7 @@ class GoogleChartController extends Controller
             /*
              * Sum of expenses on this day:
              */
-            $sum = floatval($budget->transactionjournals()->lessThan(0)->transactionTypes(['Withdrawal'])->onDate($start)->sum('amount'));
+            $sum = $repository->expensesOnDay($budget, $start);
             $amount += $sum;
             $chart->addRow(clone $start, $amount);
             $start->addDay();
@@ -442,37 +351,22 @@ class GoogleChartController extends Controller
     }
 
     /**
+     * @param Budget                    $budget
+     * @param int                       $year
+     * @param GChart                    $chart
+     * @param BudgetRepositoryInterface $repository
      *
-     * @param Budget $budget
-     *
-     * @param int    $year
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function budgetsAndSpending(Budget $budget, $year = 0)
+    public function budgetsAndSpending(Budget $budget, $year = 0, GChart $chart, BudgetRepositoryInterface $repository)
     {
-
-        $chart      = App::make('Grumpydictator\Gchart\GChart');
-        $repository = App::make('FireflyIII\Repositories\Budget\BudgetRepository');
         $chart->addColumn('Month', 'date');
         $chart->addColumn('Budgeted', 'number');
         $chart->addColumn('Spent', 'number');
-        if ($year == 0) {
-            // grab the first budgetlimit ever:
-            $firstLimit = $budget->budgetlimits()->orderBy('startdate', 'ASC')->first();
-            if ($firstLimit) {
-                $start = new Carbon($firstLimit->startdate);
-            } else {
-                $start = Carbon::now()->startOfYear();
-            }
 
-            // grab the last budget limit ever:
-            $lastLimit = $budget->budgetlimits()->orderBy('startdate', 'DESC')->first();
-            if ($lastLimit) {
-                $end = new Carbon($lastLimit->startdate);
-            } else {
-                $end = Carbon::now()->endOfYear();
-            }
+        if ($year == 0) {
+            $start = $repository->getFirstBudgetLimitDate($budget);
+            $end   = $repository->getLastBudgetLimitDate($budget);
         } else {
             $start = Carbon::createFromDate(intval($year), 1, 1);
             $end   = clone $start;
@@ -480,19 +374,8 @@ class GoogleChartController extends Controller
         }
 
         while ($start <= $end) {
-            $spent      = $repository->spentInMonth($budget, $start);
-            $repetition = LimitRepetition::leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
-                                         ->where('limit_repetitions.startdate', $start->format('Y-m-d 00:00:00'))
-                                         ->where('budget_limits.budget_id', $budget->id)
-                                         ->first(['limit_repetitions.*']);
-
-            if ($repetition) {
-                $budgeted = floatval($repetition->amount);
-                \Log::debug('Found a repetition on ' . $start->format('Y-m-d') . ' for budget ' . $budget->name . '!');
-            } else {
-                \Log::debug('No repetition on ' . $start->format('Y-m-d') . ' for budget ' . $budget->name);
-                $budgeted = null;
-            }
+            $spent    = $repository->spentInMonth($budget, $start);
+            $budgeted = $repository->getLimitAmountOnDate($budget, $start);
             $chart->addRow(clone $start, $budgeted, $spent);
             $start->addMonth();
         }
@@ -510,12 +393,11 @@ class GoogleChartController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function categoryOverviewChart(Category $category, GChart $chart)
+    public function categoryOverviewChart(Category $category, GChart $chart, CategoryRepositoryInterface $repository)
     {
         // oldest transaction in category:
-        /** @var TransactionJournal $first */
-        $first = $category->transactionjournals()->orderBy('date', 'ASC')->first();
-        $start = $first->date;
+        $start = $repository->getFirstActivityDate($category);
+
         /** @var Preference $range */
         $range = Preferences::get('viewRange', '1M');
         // jump to start of week / month / year / etc (TODO).
@@ -528,12 +410,11 @@ class GoogleChartController extends Controller
         while ($start <= $end) {
 
             $currentEnd = Navigation::endOfPeriod($start, $range->data);
-            $spent      = floatval($category->transactionjournals()->before($currentEnd)->after($start)->lessThan(0)->sum('amount')) * -1;
+            $spent      = $repository->spentInPeriodSum($category, $start, $currentEnd);
             $chart->addRow(clone $start, $spent);
 
             $start = Navigation::addPeriod($start, $range->data, 0);
         }
-
 
         $chart->generate();
 
@@ -548,17 +429,15 @@ class GoogleChartController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function categoryPeriodChart(Category $category, GChart $chart)
+    public function categoryPeriodChart(Category $category, GChart $chart, CategoryRepositoryInterface $repository)
     {
-        // oldest transaction in category:
-        /** @var TransactionJournal $first */
-        $start = clone Session::get('start');
+        $start = clone Session::get('start', Carbon::now()->startOfMonth());
         $chart->addColumn('Period', 'date');
         $chart->addColumn('Spent', 'number');
 
-        $end = Session::get('end');
+        $end = Session::get('end', Carbon::now()->endOfMonth());
         while ($start <= $end) {
-            $spent = floatval($category->transactionjournals()->onDate($start)->lessThan(0)->sum('amount')) * -1;
+            $spent = $repository->spentOnDaySum($category, $start);
             $chart->addRow(clone $start, $spent);
             $start->addDay();
         }
@@ -576,13 +455,13 @@ class GoogleChartController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function piggyBankHistory(PiggyBank $piggyBank, GChart $chart)
+    public function piggyBankHistory(PiggyBank $piggyBank, GChart $chart, PiggyBankRepositoryInterface $repository)
     {
         $chart->addColumn('Date', 'date');
         $chart->addColumn('Balance', 'number');
 
         /** @var Collection $set */
-        $set = DB::table('piggy_bank_events')->where('piggy_bank_id', $piggyBank->id)->groupBy('date')->get(['date', DB::Raw('SUM(`amount`) AS `sum`')]);
+        $set = $repository->getEventSummarySet($piggyBank);
         $sum = 0;
 
         foreach ($set as $entry) {
@@ -604,11 +483,7 @@ class GoogleChartController extends Controller
      */
     public function yearInExp($year, GChart $chart, ReportQueryInterface $query)
     {
-        try {
-            $start = new Carbon('01-01-' . $year);
-        } catch (Exception $e) {
-            return view('error')->with('message', 'Invalid year.');
-        }
+        $start = new Carbon('01-01-' . $year);
         $chart->addColumn('Month', 'date');
         $chart->addColumn('Income', 'number');
         $chart->addColumn('Expenses', 'number');
@@ -623,19 +498,9 @@ class GoogleChartController extends Controller
         while ($start < $end) {
             $currentEnd = clone $start;
             $currentEnd->endOfMonth();
-            // total income:
-            $income    = $query->incomeByPeriod($start, $currentEnd, $showSharedReports);
-            $incomeSum = 0;
-            foreach ($income as $entry) {
-                $incomeSum += floatval($entry->amount);
-            }
-
-            // total expenses:
-            $expense    = $query->journalsByExpenseAccount($start, $currentEnd, $showSharedReports);
-            $expenseSum = 0;
-            foreach ($expense as $entry) {
-                $expenseSum += floatval($entry->amount);
-            }
+            // total income && total expenses:
+            $incomeSum  = floatval($query->incomeByPeriod($start, $currentEnd, $showSharedReports)->sum('queryAmount'));
+            $expenseSum = floatval($query->journalsByExpenseAccount($start, $currentEnd, $showSharedReports)->sum('queryAmount'));
 
             $chart->addRow(clone $start, $incomeSum, $expenseSum);
             $start->addMonth();
@@ -656,11 +521,7 @@ class GoogleChartController extends Controller
      */
     public function yearInExpSum($year, GChart $chart, ReportQueryInterface $query)
     {
-        try {
-            $start = new Carbon('01-01-' . $year);
-        } catch (Exception $e) {
-            return view('error')->with('message', 'Invalid year.');
-        }
+        $start = new Carbon('01-01-' . $year);
         $chart->addColumn('Summary', 'string');
         $chart->addColumn('Income', 'number');
         $chart->addColumn('Expenses', 'number');
@@ -678,18 +539,9 @@ class GoogleChartController extends Controller
             $currentEnd = clone $start;
             $currentEnd->endOfMonth();
             // total income:
-            $incomeResult = $query->incomeByPeriod($start, $currentEnd, $showSharedReports);
-            $incomeSum    = 0;
-            foreach ($incomeResult as $entry) {
-                $incomeSum += floatval($entry->amount);
-            }
-
+            $incomeSum = floatval($query->incomeByPeriod($start, $currentEnd, $showSharedReports)->sum('queryAmount'));
             // total expenses:
-            $expenseResult = $query->journalsByExpenseAccount($start, $currentEnd, $showSharedReports);
-            $expenseSum    = 0;
-            foreach ($expenseResult as $entry) {
-                $expenseSum += floatval($entry->amount);
-            }
+            $expenseSum = floatval($query->journalsByExpenseAccount($start, $currentEnd, $showSharedReports)->sum('queryAmount'));
 
             $income += $incomeSum;
             $expense += $expenseSum;

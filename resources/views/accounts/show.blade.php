@@ -55,8 +55,6 @@
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="js/gcharts.options.js"></script>
 <script type="text/javascript" src="js/gcharts.js"></script>
-<script type="text/javascript" src="js/accounts.js"></script>
-
 <script src="js/jquery-ui.min.js" type="text/javascript"></script>
 <script src="js/accounts.js" type="text/javascript"></script>
 @stop

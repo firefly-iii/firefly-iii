@@ -146,11 +146,17 @@ class CategoryControllerTest extends TestCase
 
     public function testStore()
     {
-        $category   = FactoryMuffin::create('FireflyIII\Models\Category');
-        $repository = $this->mock('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
-
-        $repository->shouldReceive('store')->andReturn($category);
+        // create
+        $category = FactoryMuffin::create('FireflyIII\Models\Category');
         $this->be($category->user);
+
+        // mock
+        $repository = $this->mock('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
+        $request    = $this->mock('FireflyIII\Http\Requests\CategoryFormRequest');
+
+        // expect
+        $repository->shouldReceive('store')->andReturn($category);
+        $request->shouldReceive('input')->andReturn('');
 
         $this->call('POST', '/categories/store', ['_token' => 'replaceMe', 'name' => 'Bla bla #' . rand(1, 1000)]);
         $this->assertResponseStatus(302);
@@ -160,11 +166,18 @@ class CategoryControllerTest extends TestCase
     //
     public function testStoreAndRedirect()
     {
-        $category   = FactoryMuffin::create('FireflyIII\Models\Category');
-        $repository = $this->mock('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
-
-        $repository->shouldReceive('store')->andReturn($category);
+        // create
+        $category = FactoryMuffin::create('FireflyIII\Models\Category');
         $this->be($category->user);
+
+        // mock:
+        $repository = $this->mock('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
+        $request    = $this->mock('FireflyIII\Http\Requests\CategoryFormRequest');
+
+        // fake:
+        $repository->shouldReceive('store')->andReturn($category);
+        $request->shouldReceive('input')->andReturn('');
+
 
         $this->call('POST', '/categories/store', ['_token' => 'replaceMe', 'create_another' => 1, 'name' => 'Bla bla #' . rand(1, 1000)]);
         $this->assertResponseStatus(302);
@@ -173,11 +186,17 @@ class CategoryControllerTest extends TestCase
 
     public function testUpdate()
     {
-        $category   = FactoryMuffin::create('FireflyIII\Models\Category');
-        $repository = $this->mock('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
-
-        $repository->shouldReceive('update')->andReturn($category);
+        // create
+        $category = FactoryMuffin::create('FireflyIII\Models\Category');
         $this->be($category->user);
+
+        // mock
+        $repository = $this->mock('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
+        $request    = $this->mock('FireflyIII\Http\Requests\CategoryFormRequest');
+
+        // expect
+        $repository->shouldReceive('update')->andReturn($category);
+        $request->shouldReceive('input')->andReturn('');
 
         $this->call('POST', '/categories/update/' . $category->id, ['_token' => 'replaceMe', 'name' => 'Bla bla #' . rand(1, 1000)]);
         $this->assertResponseStatus(302);
@@ -186,11 +205,18 @@ class CategoryControllerTest extends TestCase
 
     public function testUpdateAndRedirect()
     {
-        $category   = FactoryMuffin::create('FireflyIII\Models\Category');
-        $repository = $this->mock('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
-
-        $repository->shouldReceive('update')->andReturn($category);
+        // create
+        $category = FactoryMuffin::create('FireflyIII\Models\Category');
         $this->be($category->user);
+
+        // mock
+        $repository = $this->mock('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
+        $request    = $this->mock('FireflyIII\Http\Requests\CategoryFormRequest');
+
+        // expect
+        $request->shouldReceive('input')->andReturn('');
+        $repository->shouldReceive('update')->andReturn($category);
+
 
         $this->call('POST', '/categories/update/' . $category->id, ['_token' => 'replaceMe', 'return_to_edit' => 1, 'name' => 'Bla bla #' . rand(1, 1000)]);
         $this->assertResponseStatus(302);

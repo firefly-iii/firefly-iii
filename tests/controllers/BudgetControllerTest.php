@@ -78,12 +78,13 @@ class BudgetControllerTest extends TestCase
         $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
         $this->be($budget->user);
 
-        $this->assertCount(1, DB::table('budgets')->where('id', $budget->id)->get());
+        $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $repository->shouldReceive('destroy')->andReturn(true);
 
         $this->call('POST', '/budgets/destroy/' . $budget->id, ['_token' => 'replaceme']);
 
         $this->assertSessionHas('success', 'The  budget "' . e($budget->name) . '" was deleted.');
-        $this->assertCount(0, DB::table('budgets')->wherenull('deleted_at')->where('id', $budget->id)->get());
+
     }
 
     public function testEdit()

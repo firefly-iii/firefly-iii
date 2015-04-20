@@ -4,9 +4,12 @@ namespace FireflyIII\Repositories\Bill;
 
 use Auth;
 use Carbon\Carbon;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Log;
 use Navigation;
@@ -18,6 +21,31 @@ use Navigation;
  */
 class BillRepository implements BillRepositoryInterface
 {
+    /**
+     * Create a fake bill to help the chart controller.
+     *
+     * @param string $description
+     * @param Carbon $date
+     * @param float  $amount
+     *
+     * @return Bill
+     */
+    public function createFakeBill($description, Carbon $date, $amount)
+    {
+        $bill              = new Bill;
+        $bill->name        = $description;
+        $bill->match       = $description;
+        $bill->amount_min  = $amount;
+        $bill->amount_max  = $amount;
+        $bill->date        = $date;
+        $bill->repeat_freq = 'monthly';
+        $bill->skip        = 0;
+        $bill->automatch   = false;
+        $bill->active      = false;
+
+        return $bill;
+    }
+
     /**
      * @param Bill $bill
      *
@@ -31,9 +59,23 @@ class BillRepository implements BillRepositoryInterface
     /**
      * @return Collection
      */
+    public function getActiveBills()
+    {
+        /** @var Collection $set */
+        $set = Auth::user()->bills()->orderBy('name', 'ASC')->where('active', 1)->get()->sortBy('name');
+
+        return $set;
+    }
+
+    /**
+     * @return Collection
+     */
     public function getBills()
     {
-        return Auth::user()->bills()->orderBy('name', 'ASC')->get();
+        /** @var Collection $set */
+        $set = Auth::user()->bills()->orderBy('name', 'ASC')->get()->sortBy('name');
+
+        return $set;
     }
 
     /**
@@ -44,10 +86,30 @@ class BillRepository implements BillRepositoryInterface
     public function getJournals(Bill $bill)
     {
         return $bill->transactionjournals()->withRelevantData()
+                    ->leftJoin(
+                        'transactions', function (JoinClause $join) {
+                        $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                             ->where('transactions.amount', '>', 0);
+                    }
+                    )
                     ->orderBy('transaction_journals.date', 'DESC')
                     ->orderBy('transaction_journals.order', 'ASC')
                     ->orderBy('transaction_journals.id', 'DESC')
-                    ->get();
+                    ->get(['transaction_journals.*', 'transactions.amount']);
+    }
+
+    /**
+     * Get all journals that were recorded on this bill between these dates.
+     *
+     * @param Bill   $bill
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getJournalsInRange(Bill $bill, Carbon $start, Carbon $end)
+    {
+        return $bill->transactionjournals()->before($end)->after($start)->get();
     }
 
     /**
@@ -253,6 +315,12 @@ class BillRepository implements BillRepositoryInterface
             Log::debug('TOTAL match is true!');
             $journal->bill()->associate($bill);
             $journal->save();
+        } else {
+            if ((!$wordMatch || !$amountMatch) && $bill->id == $journal->bill_id) {
+                // if no match, but bill used to match, remove it:
+                $journal->bill_id = null;
+                $journal->save();
+            }
         }
     }
 

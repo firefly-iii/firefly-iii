@@ -1,13 +1,14 @@
 <?php namespace FireflyIII\Http\Controllers;
 
-use Auth;
 use Carbon\Carbon;
+use Config;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Input;
 use Preferences;
-use Session;
 use Redirect;
-use Config;
+use Session;
+use Steam;
+
 /**
  * Class HomeController
  *
@@ -31,31 +32,45 @@ class HomeController extends Controller
         Session::put('end', $end);
     }
 
-    public function flush() {
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function flush()
+    {
         Session::clear();
+
         return Redirect::route('index');
     }
 
     /**
+     * @param AccountRepositoryInterface $repository
+     *
      * @return \Illuminate\View\View
      */
     public function index(AccountRepositoryInterface $repository)
     {
 
-        $types        = Config::get('firefly.accountTypesByIdentifier.asset');
-        $count         = $repository->countAccounts($types);
-        $title         = 'Firefly';
-        $subTitle      = 'What\'s playing?';
-        $mainTitleIcon = 'fa-fire';
-        $transactions  = [];
-        $frontPage     = Preferences::get('frontPageAccounts', []);
-        $start         = Session::get('start', Carbon::now()->startOfMonth());
-        $end           = Session::get('end', Carbon::now()->endOfMonth());
-        $accounts      = $repository->getFrontpageAccounts($frontPage);
-        $savings       = $repository->getSavingsAccounts();
+        $types             = Config::get('firefly.accountTypesByIdentifier.asset');
+        $count             = $repository->countAccounts($types);
+        $title             = 'Firefly';
+        $subTitle          = 'What\'s playing?';
+        $mainTitleIcon     = 'fa-fire';
+        $transactions      = [];
+        $frontPage         = Preferences::get('frontPageAccounts', []);
+        $start             = Session::get('start', Carbon::now()->startOfMonth());
+        $end               = Session::get('end', Carbon::now()->endOfMonth());
+        $accounts          = $repository->getFrontpageAccounts($frontPage);
+        $savings           = $repository->getSavingsAccounts();
+        $piggyBankAccounts = $repository->getPiggyBankAccounts();
+
+
+        $savingsTotal = 0;
+        foreach ($savings as $savingAccount) {
+            $savingsTotal += Steam::balance($savingAccount, $end);
+        }
 
         // check if all books are correct.
-        $sum = floatval(Auth::user()->transactions()->sum('amount'));
+        $sum = $repository->sumOfEverything();
         if ($sum != 0) {
             Session::flash(
                 'error', 'Your transactions are unbalanced. This means a'
@@ -71,7 +86,7 @@ class HomeController extends Controller
             }
         }
 
-        return view('index', compact('count', 'title', 'savings', 'subTitle', 'mainTitleIcon', 'transactions'));
+        return view('index', compact('count', 'title', 'savings', 'subTitle', 'mainTitleIcon', 'transactions', 'savingsTotal','piggyBankAccounts'));
     }
 
 

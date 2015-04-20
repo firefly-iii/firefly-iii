@@ -16,8 +16,8 @@ use Input;
 use Redirect;
 use Session;
 use Steam;
-use View;
 use URL;
+use View;
 
 /**
  * Class PiggyBankController
@@ -170,7 +170,7 @@ class PiggyBankController extends Controller
             if (!isset($accounts[$account->id])) {
                 $accounts[$account->id] = [
                     'name'              => $account->name,
-                    'balance'           => Steam::balance($account,null,true),
+                    'balance'           => Steam::balance($account, null, true),
                     'leftForPiggyBanks' => $repository->leftOnAccount($account),
                     'sumOfSaved'        => $piggyBank->savedSoFar,
                     'sumOfTargets'      => floatval($piggyBank->targetamount),
@@ -326,6 +326,7 @@ class PiggyBankController extends Controller
 
         if (intval(Input::get('create_another')) === 1) {
             Session::put('piggy-banks.create.fromStore', true);
+
             return Redirect::route('piggy-banks.create')->withInput();
         }
 
@@ -360,6 +361,7 @@ class PiggyBankController extends Controller
 
         if (intval(Input::get('return_to_edit')) === 1) {
             Session::put('piggy-banks.edit.fromUpdate', true);
+
             return Redirect::route('piggy-banks.edit', $piggyBank->id);
         }
 

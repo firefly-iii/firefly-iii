@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -56,11 +57,64 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * @param Budget $budget
+     * @param Carbon $date
+     *
+     * @return float
+     */
+    public function expensesOnDay(Budget $budget, Carbon $date)
+    {
+        return floatval($budget->transactionjournals()->lessThan(0)->transactionTypes(['Withdrawal'])->onDate($date)->sum('amount'));
+    }
+
+    /**
      * @return Collection
      */
     public function getActiveBudgets()
     {
-        return Auth::user()->budgets()->where('active', 1)->get();
+        $budgets = Auth::user()->budgets()->where('active', 1)->get();
+        $budgets->sortBy('name');
+
+        return $budgets;
+    }
+
+    /**
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getBudgetLimitRepetitions(Budget $budget, Carbon $start, Carbon $end)
+    {
+        /** @var Collection $repetitions */
+        return LimitRepetition::
+        leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
+                              ->where('limit_repetitions.startdate', '<=', $end->format('Y-m-d 00:00:00'))
+                              ->where('limit_repetitions.startdate', '>=', $start->format('Y-m-d 00:00:00'))
+                              ->where('budget_limits.budget_id', $budget->id)
+                              ->get(['limit_repetitions.*']);
+    }
+
+    /**
+     * @param Budget $budget
+     *
+     * @return Collection
+     */
+    public function getBudgetLimits(Budget $budget)
+    {
+        return $budget->budgetLimits()->orderBy('startdate', 'DESC')->get();
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getBudgets()
+    {
+        $budgets = Auth::user()->budgets()->get();
+        $budgets->sortBy('name');
+
+        return $budgets;
     }
 
     /**
@@ -75,11 +129,26 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * @param Budget $budget
+     *
+     * @return Carbon
+     */
+    public function getFirstBudgetLimitDate(Budget $budget)
+    {
+        $limit = $budget->budgetlimits()->orderBy('startdate', 'ASC')->first();
+        if ($limit) {
+            return $limit->startdate;
+        }
+
+        return Carbon::now()->startOfYear();
+    }
+
+    /**
      * @return Collection
      */
     public function getInactiveBudgets()
     {
-        return Auth::user()->budgets()->where('active', 1)->get();
+        return Auth::user()->budgets()->where('active', 0)->get();
     }
 
     /**
@@ -116,6 +185,41 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * @param Budget $budget
+     *
+     * @return Carbon
+     */
+    public function getLastBudgetLimitDate(Budget $budget)
+    {
+        $limit = $budget->budgetlimits()->orderBy('startdate', 'DESC')->first();
+        if ($limit) {
+            return $limit->startdate;
+        }
+
+        return Carbon::now()->startOfYear();
+    }
+
+    /**
+     * @param Budget $budget
+     * @param Carbon $date
+     *
+     * @return float|null
+     */
+    public function getLimitAmountOnDate(Budget $budget, Carbon $date)
+    {
+        $repetition = LimitRepetition::leftJoin('budget_limits', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
+                                     ->where('limit_repetitions.startdate', $date->format('Y-m-d 00:00:00'))
+                                     ->where('budget_limits.budget_id', $budget->id)
+                                     ->first(['limit_repetitions.*']);
+
+        if ($repetition) {
+            return floatval($repetition->amount);
+        }
+
+        return null;
+    }
+
+    /**
      * @param Carbon $start
      * @param Carbon $end
      *
@@ -133,6 +237,36 @@ class BudgetRepository implements BudgetRepositoryInterface
                    ->orderBy('transaction_journals.order', 'ASC')
                    ->orderBy('transaction_journals.id', 'DESC')
                    ->get(['transaction_journals.*']);
+    }
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return mixed
+     */
+    public function getWithoutBudgetSum(Carbon $start, Carbon $end)
+    {
+        $noBudgetSet = Auth::user()
+                           ->transactionjournals()
+                           ->whereNotIn(
+                               'transaction_journals.id', function (QueryBuilder $query) use ($start, $end) {
+                               $query
+                                   ->select('transaction_journals.id')
+                                   ->from('transaction_journals')
+                                   ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                                   ->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'))
+                                   ->where('transaction_journals.date', '<=', $end->format('Y-m-d 00:00:00'))
+                                   ->whereNotNull('budget_transaction_journal.budget_id');
+                           }
+                           )
+                           ->before($end)
+                           ->after($start)
+                           ->lessThan(0)
+                           ->transactionTypes(['Withdrawal'])
+                           ->get();
+
+        return floatval($noBudgetSet->sum('amount')) * -1;
     }
 
     /**
@@ -167,6 +301,18 @@ class BudgetRepository implements BudgetRepositoryInterface
         $newBudget->save();
 
         return $newBudget;
+    }
+
+    /**
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return float
+     */
+    public function sumBudgetExpensesInPeriod(Budget $budget, $start, $end)
+    {
+        return floatval($budget->transactionjournals()->before($end)->after($start)->lessThan(0)->sum('amount')) * -1;
     }
 
     /**
@@ -223,15 +369,5 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $limit;
 
 
-    }
-
-    /**
-     * @param Budget $budget
-     *
-     * @return Collection
-     */
-    public function getBudgetLimits(Budget $budget)
-    {
-        return $budget->budgetLimits()->orderBy('startdate', 'DESC')->get();
     }
 }

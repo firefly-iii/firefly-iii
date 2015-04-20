@@ -161,9 +161,31 @@ FactoryMuffin::define(
 );
 
 FactoryMuffin::define(
+    'FireflyIII\Models\PiggyBank',
+    [
+        'account_id'    => 'factory|FireflyIII\Models\Account',
+        'name'          => 'sentence',
+        'targetamount'  => 'integer',
+        'startdate'     => 'date',
+        'targetdate'    => 'date',
+        'reminder_skip' => 0,
+        'remind_me'     => 0,
+        'order'         => 0,
+    ]
+);
+
+FactoryMuffin::define(
     'FireflyIII\Models\TransactionType',
     [
-        'type' => 'word',
+        'type' => function () {
+            $types = ['Withdrawal', 'Deposit', 'Transfer'];
+            $count = DB::table('transaction_types')->count();
+            if ($count < 3) {
+                return $types[$count];
+            } else {
+                return RandomString::generateRandomString(10);
+            }
+        }
     ]
 );
 

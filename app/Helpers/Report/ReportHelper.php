@@ -60,23 +60,21 @@ class ReportHelper implements ReportHelperInterface
                        $join->on('budget_limits.budget_id', '=', 'budgets.id')->where('budget_limits.startdate', '=', $date->format('Y-m-d'));
                    }
                    )
-                   ->get(['budgets.*', 'budget_limits.amount as amount']);
+                   ->get(['budgets.*', 'budget_limits.amount as queryAmount']);
 
-        $budgets              = Steam::makeArray($set);
-        $amountSet            = $query->journalsByBudget($start, $end, $showSharedReports);
-        $amounts              = Steam::makeArray($amountSet);
-        $budgets              = Steam::mergeArrays($budgets, $amounts);
-        $budgets[0]['spent']  = isset($budgets[0]['spent']) ? $budgets[0]['spent'] : 0.0;
-        $budgets[0]['amount'] = isset($budgets[0]['amount']) ? $budgets[0]['amount'] : 0.0;
-        $budgets[0]['name']   = 'No budget';
+        $budgets                   = Steam::makeArray($set);
+        $amountSet                 = $query->journalsByBudget($start, $end, $showSharedReports);
+        $amounts                   = Steam::makeArray($amountSet);
+        $budgets                   = Steam::mergeArrays($budgets, $amounts);
+        $budgets[0]['spent']       = isset($budgets[0]['spent']) ? $budgets[0]['spent'] : 0.0;
+        $budgets[0]['queryAmount'] = isset($budgets[0]['queryAmount']) ? $budgets[0]['queryAmount'] : 0.0;
+        $budgets[0]['name']        = 'No budget';
 
         // find transactions to shared asset accounts, which are without a budget by default:
         // which is only relevant when shared asset accounts are hidden.
         if ($showSharedReports === false) {
-            $transfers = $query->sharedExpenses($start, $end);
-            foreach ($transfers as $transfer) {
-                $budgets[0]['spent'] += floatval($transfer->amount) * -1;
-            }
+            $transfers = $query->sharedExpenses($start, $end)->sum('queryAmount');
+            $budgets[0]['spent'] += floatval($transfers) * -1;
         }
 
         return $budgets;

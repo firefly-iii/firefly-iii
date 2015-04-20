@@ -56,6 +56,19 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @return float
+     */
+    public function getAmountAttribute()
+    {
+        /** @var Transaction $t */
+        foreach ($this->transactions as $t) {
+            if ($t->amount > 0) {
+                return floatval($t->amount);
+            }
+        }
+    }
+
+    /**
      * @return array
      */
     public function getDates()

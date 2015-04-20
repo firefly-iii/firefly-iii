@@ -6,6 +6,7 @@ use App;
 use Auth;
 use Carbon\Carbon;
 use Config;
+use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
@@ -53,26 +54,36 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @param array $types
-     * @param int   $page
      *
      * @return Collection
      */
-    public function getAccounts(array $types, $page)
+    public function getAccounts(array $types)
     {
-        $query = Auth::user()->accounts()->with(
+        $result = Auth::user()->accounts()->with(
             ['accountmeta' => function (HasMany $query) {
                 $query->where('name', 'accountRole');
             }]
-        )->accountTypeIn($types)->orderBy('accounts.name', 'ASC');
+        )->accountTypeIn($types)->orderBy('accounts.name', 'ASC')->get(['accounts.*'])->sortBy('name');
 
-        if ($page == -1) {
-            return $query->get(['accounts.*']);
-        } else {
-            $size   = 50;
-            $offset = ($page - 1) * $size;
+        return $result;
+    }
 
-            return $query->take($size)->offset($offset)->get(['accounts.*']);
-        }
+
+    /**
+     * @return Collection
+     */
+    public function getCreditCards()
+    {
+        return Auth::user()->accounts()
+                   ->hasMetaValue('accountRole', 'ccAsset')
+                   ->hasMetaValue('ccType', 'monthlyFull')
+                   ->get(
+                       [
+                           'accounts.*',
+                           'ccType.data as ccType',
+                           'accountRole.data as accountRole'
+                       ]
+                   );
     }
 
     /**
@@ -135,7 +146,7 @@ class AccountRepository implements AccountRepositoryInterface
      * @param Account $account
      * @param int     $page
      *
-     * @return mixed
+     * @return LengthAwarePaginator
      */
     public function getJournals(Account $account, $page)
     {
@@ -178,6 +189,51 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * Get the accounts of a user that have piggy banks connected to them.
+     *
+     * @return Collection
+     */
+    public function getPiggyBankAccounts()
+    {
+        $ids        = [];
+        $start      = clone Session::get('start', new Carbon);
+        $end        = clone Session::get('end', new Carbon);
+        $accountIds = DB::table('piggy_banks')->distinct()->get(['piggy_banks.account_id']);
+        $accounts   = new Collection;
+
+        foreach ($accountIds as $id) {
+            $ids[] = intval($id->account_id);
+        }
+
+        $ids = array_unique($ids);
+        if (count($ids) > 0) {
+            $accounts = Auth::user()->accounts()->whereIn('id', $ids)->get();
+        }
+
+        $accounts->each(
+            function (Account $account) use ($start, $end) {
+                $account->startBalance = Steam::balance($account, $start, true);
+                $account->endBalance   = Steam::balance($account, $end, true);
+                $account->piggyBalance = 0;
+                /** @var PiggyBank $piggyBank */
+                foreach ($account->piggyBanks as $piggyBank) {
+                    $account->piggyBalance += $piggyBank->currentRelevantRep()->currentamount;
+                }
+                // sum of piggy bank amounts on this account:
+                // diff between endBalance and piggyBalance.
+                // then, percentage.
+                $difference          = $account->endBalance - $account->piggyBalance;
+                $account->difference = $difference;
+                $account->percentage = $difference != 0 ? round((($difference / $account->endBalance) * 100)) : 100;
+
+            }
+        );
+
+        return $accounts;
+
+    }
+
+    /**
      * Get savings accounts and the balance difference in the period.
      *
      * @return Collection
@@ -217,6 +273,34 @@ class AccountRepository implements AccountRepositoryInterface
         );
 
         return $accounts;
+    }
+
+    /**
+     * Get all transfers TO this account in this range.
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return Collection
+     */
+    public function getTransfersInRange(Account $account, Carbon $start, Carbon $end)
+    {
+        return TransactionJournal::whereIn(
+            'id', function ($q) use ($account, $start, $end) {
+            $q->select('transaction_journals.id')
+              ->from('transactions')
+              ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+              ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+              ->where('transactions.account_id', $account->id)
+              ->where('transaction_journals.user_id', Auth::user()->id)
+              ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+              ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+              ->where('transactions.amount', '>', 0)
+              ->where('transaction_types.type', 'Transfer');
+
+        }
+        )->get();
     }
 
     /**
@@ -277,6 +361,14 @@ class AccountRepository implements AccountRepositoryInterface
 
         return $newAccount;
 
+    }
+
+    /**
+     * @return float
+     */
+    public function sumOfEverything()
+    {
+        return floatval(Auth::user()->transactions()->sum('amount'));
     }
 
     /**
@@ -461,7 +553,6 @@ class AccountRepository implements AccountRepositoryInterface
     protected function updateMetadata(Account $account, array $data)
     {
         $validFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType'];
-        $updated     = false;
 
         foreach ($validFields as $field) {
             $entry = $account->accountMeta()->where('name', $field)->first();

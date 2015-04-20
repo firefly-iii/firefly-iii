@@ -136,6 +136,7 @@ class CategoryController extends Controller
         $set          = $repository->getJournals($category, $page);
         $count        = $repository->countJournals($category);
         $journals     = new LengthAwarePaginator($set, $count, 50, $page);
+        $journals->setPath('categories/show/' . $category->id);
 
         return view('categories.show', compact('category', 'journals', 'hideCategory'));
     }

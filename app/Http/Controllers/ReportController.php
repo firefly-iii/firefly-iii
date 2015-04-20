@@ -11,7 +11,6 @@ use Preferences;
 use Session;
 use Steam;
 use View;
-use Crypt;
 
 /**
  * Class ReportController
@@ -82,7 +81,7 @@ class ReportController extends Controller
                     $id         = intval($budget->id);
                     $data       = $budget->toArray();
                     $array[$id] = $data;
-                    if (floatval($data['amount']) != 0) {
+                    if (floatval($data['queryAmount']) != 0) {
                         $hide = false;
                     }
                 }
@@ -246,7 +245,7 @@ class ReportController extends Controller
         /**
          * Start getExpenseGroupedForMonth DONE
          */
-        $set      = $this->query->journalsByExpenseAccount($start, $end, $showSharedReports);
+        $set = $this->query->journalsByExpenseAccount($start, $end, $showSharedReports);
 
         $expenses = Steam::makeArray($set);
         $expenses = Steam::sortArray($expenses);

@@ -51,14 +51,7 @@ class ConnectJournalToPiggyBank
             return;
         }
         Log::debug('Found a piggy bank');
-        $amount = 0;
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions()->get() as $transaction) {
-            if ($transaction->account_id === $piggyBank->account_id) {
-                // this transaction is the relevant one.
-                $amount = floatval($transaction->amount);
-            }
-        }
+        $amount = $journal->amount;
         Log::debug('Amount: ' . $amount);
         if ($amount == 0) {
             return;

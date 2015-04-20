@@ -7,6 +7,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 /**
@@ -32,11 +33,10 @@ interface AccountRepositoryInterface
 
     /**
      * @param array $types
-     * @param int   $page
      *
      * @return mixed
      */
-    public function getAccounts(array $types, $page);
+    public function getAccounts(array $types);
 
     /**
      * @param TransactionJournal $journal
@@ -45,6 +45,30 @@ interface AccountRepositoryInterface
      * @return Transaction
      */
     public function getFirstTransaction(TransactionJournal $journal, Account $account);
+
+    /**
+     * @return Collection
+     */
+    public function getCreditCards();
+
+    /**
+     * Get the accounts of a user that have piggy banks connected to them.
+     *
+     * @return Collection
+     */
+    public function getPiggyBankAccounts();
+
+
+    /**
+     * Get all transfers TO this account in this range.
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return Collection
+     */
+    public function getTransfersInRange(Account $account, Carbon $start, Carbon $end);
 
     /**
      * @param Preference $preference
@@ -66,7 +90,7 @@ interface AccountRepositoryInterface
      * @param Account $account
      * @param string  $range
      *
-     * @return mixed
+     * @return LengthAwarePaginator
      */
     public function getJournals(Account $account, $page);
 
@@ -76,6 +100,11 @@ interface AccountRepositoryInterface
      * @return Carbon|null
      */
     public function getLastActivity(Account $account);
+
+    /**
+     * @return float
+     */
+    public function sumOfEverything();
 
     /**
      * Get savings accounts and the balance difference in the period.

@@ -170,7 +170,6 @@ Route::group(
     Route::get('/bills/add/{bill}', ['uses' => 'BillController@add', 'as' => 'bills.add']);
     Route::get('/bills/delete/{bill}', ['uses' => 'BillController@delete', 'as' => 'bills.delete']);
     Route::get('/bills/show/{bill}', ['uses' => 'BillController@show', 'as' => 'bills.show']);
-
     Route::post('/bills/store', ['uses' => 'BillController@store', 'as' => 'bills.store']);
     Route::post('/bills/update/{bill}', ['uses' => 'BillController@update', 'as' => 'bills.update']);
     Route::post('/bills/destroy/{bill}', ['uses' => 'BillController@destroy', 'as' => 'bills.destroy']);
@@ -226,7 +225,7 @@ Route::group(
     Route::get('/chart/home/bills', ['uses' => 'GoogleChartController@billsOverview']);
     Route::get('/chart/account/{account}/{view?}', ['uses' => 'GoogleChartController@accountBalanceChart']);
     Route::get('/chart/budget/{budget}/spending/{year?}', ['uses' => 'GoogleChartController@budgetsAndSpending']);
-    Route::get('/chart/budgets/spending/{year?}', ['uses' => 'GoogleChartController@allBudgetsAndSpending']);
+    Route::get('/chart/budgets/spending/{year?}', ['uses' => 'GoogleChartController@allBudgetsAndSpending'])->where(['year' => '[0-9]+']);
     Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'GoogleChartController@budgetLimitSpending']);
     Route::get('/chart/reports/income-expenses/{year}', ['uses' => 'GoogleChartController@yearInExp']);
     Route::get('/chart/reports/income-expenses-sum/{year}', ['uses' => 'GoogleChartController@yearInExpSum']);
@@ -246,7 +245,10 @@ Route::group(
     Route::get('/json/expense-accounts', ['uses' => 'JsonController@expenseAccounts', 'as' => 'json.expense-accounts']);
     Route::get('/json/revenue-accounts', ['uses' => 'JsonController@revenueAccounts', 'as' => 'json.revenue-accounts']);
     Route::get('/json/categories', ['uses' => 'JsonController@categories', 'as' => 'json.categories']);
-    Route::get('/json/box', ['uses' => 'JsonController@box', 'as' => 'json.box']);
+    Route::get('/json/box/in', ['uses' => 'JsonController@boxIn', 'as' => 'json.box.in']);
+    Route::get('/json/box/out', ['uses' => 'JsonController@boxOut', 'as' => 'json.box.out']);
+    Route::get('/json/box/bills-unpaid', ['uses' => 'JsonController@boxBillsUnpaid', 'as' => 'json.box.paid']);
+    Route::get('/json/box/bills-paid', ['uses' => 'JsonController@boxBillsPaid', 'as' => 'json.box.unpaid']);
     Route::get('/json/show-shared-reports', 'JsonController@showSharedReports');
     Route::get('/json/transaction-journals/{what}', 'JsonController@transactionJournals');
     Route::get('/json/show-shared-reports/set', 'JsonController@setSharedReports');

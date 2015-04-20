@@ -14,7 +14,6 @@ use Illuminate\Support\Collection;
 interface PiggyBankRepositoryInterface
 {
 
-
     /**
      * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
      *
@@ -34,6 +33,13 @@ interface PiggyBankRepositoryInterface
      * @return PiggyBankPart
      */
     public function createPiggyBankPart(array $data);
+
+    /**
+     * @param PiggyBank $piggyBank
+     *
+     * @return Collection
+     */
+    public function getEventSummarySet(PiggyBank $piggyBank);
 
     /**
      * Set all piggy banks to order 0.

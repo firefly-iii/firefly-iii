@@ -3,9 +3,7 @@
 namespace FireflyIII\Http\Requests;
 
 use Auth;
-use Carbon\Carbon;
 use Input;
-use Navigation;
 
 /**
  * Class PiggyBankFormRequest
@@ -32,7 +30,7 @@ class PiggyBankFormRequest extends Request
         $nameRule       = 'required|between:1,255|uniquePiggyBankForUser';
         $targetDateRule = 'date';
         if (intval(Input::get('id'))) {
-            $nameRule = 'required|between:1,255|uniquePiggyBankForUser:'.intval(Input::get('id'));
+            $nameRule = 'required|between:1,255|uniquePiggyBankForUser:' . intval(Input::get('id'));
         }
 
 

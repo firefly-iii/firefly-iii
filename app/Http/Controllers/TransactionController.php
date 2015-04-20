@@ -149,13 +149,7 @@ class TransactionController extends Controller
             $preFilled['piggy_bank_id'] = $journal->piggyBankEvents()->orderBy('date', 'DESC')->first()->piggy_bank_id;
         }
 
-        $preFilled['amount'] = 0;
-        /** @var Transaction $t */
-        foreach ($transactions as $t) {
-            if (floatval($t->amount) > 0) {
-                $preFilled['amount'] = floatval($t->amount);
-            }
-        }
+        $preFilled['amount']          = $journal->amount;
         $preFilled['account_id']      = $repository->getAssetAccount($journal);
         $preFilled['expense_account'] = $transactions[0]->account->name;
         $preFilled['revenue_account'] = $transactions[1]->account->name;

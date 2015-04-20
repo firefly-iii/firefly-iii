@@ -1,9 +1,12 @@
-<table class="table table-striped table-bordered">
-    <tr>
-        <th>&nbsp;</th>
-        <th>Name</th>
-        <th>Last activity</th>
-    </tr>
+<table class="table table-striped table-bordered sortable">
+    <thead>
+        <tr>
+            <th data-defaultsort="disabled">&nbsp;</th>
+            <th>Name</th>
+            <th>Last activity</th>
+        </tr>
+    </thead>
+    <tbody>
     <tr>
         <td>&nbsp;</td>
         <td><a href="{{route('categories.noCategory')}}"><em>Without a category</em></a></td>
@@ -20,13 +23,16 @@
         <td>
             <a href="{{route('categories.show',$category->id)}}" title="{{{$category->name}}}">{{{$category->name}}}</a>
         </td>
-        <td>
-            @if($category->lastActivity)
+        @if($category->lastActivity)
+            <td data-value="{{$category->lastActivity->format('U')}}">
                 {{$category->lastActivity->format('jS F Y')}}
-            @else
+            </td>
+        @else
+            <td data-value="0">
                 <em>Never</em>
-            @endif
-        </td>
+            </td>
+        @endif
     </tr>
     @endforeach
+    </tbody>
 </table>

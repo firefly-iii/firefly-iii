@@ -40,19 +40,7 @@ class RelatedController extends Controller
         $unique   = array_unique($ids);
         $journals = new Collection;
         if (count($unique) > 0) {
-
             $journals = Auth::user()->transactionjournals()->whereIn('id', $unique)->get();
-            $journals->each(
-                function (TransactionJournal $journal) {
-                    /** @var Transaction $t */
-                    foreach ($journal->transactions()->get() as $t) {
-                        if ($t->amount > 0) {
-                            $journal->amount = $t->amount;
-                        }
-                    }
-
-                }
-            );
         }
         $parent = $journal;
 

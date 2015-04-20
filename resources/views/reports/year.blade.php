@@ -92,10 +92,10 @@
             $incomeSum = 0;
             $expenseSum = 0;
             foreach($groupedIncomes as $income) {
-                $incomeSum += floatval($income->amount);
+                $incomeSum += floatval($income->queryAmount);
             }
             foreach($groupedExpenses as $exp) {
-                $expenseSum += floatval($exp['amount']);
+                $expenseSum += floatval($exp['queryAmount']);
             }
             $incomeSum = floatval($incomeSum*-1);
 
@@ -127,11 +127,11 @@
                 <?php $sum = 0;?>
             @foreach($groupedIncomes as $income)
                 <?php
-                $sum += floatval($income->amount)*-1;
+                $sum += floatval($income->queryAmount)*-1;
                 ?>
             <tr>
                 <td><a href="{{route('accounts.show',$income->account_id)}}">{{{$income->name}}}</a></td>
-                <td>{!! Amount::format(floatval($income->amount)*-1) !!}</td>
+                <td>{!! Amount::format(floatval($income->queryAmount)*-1) !!}</td>
             </tr>
             @endforeach
                 <tr>
@@ -149,12 +149,12 @@
             </div>
             <table class="table">
                 <?php $sum = 0;?>
-                @foreach($groupedExpenses as $id => $expense)
+                @foreach($groupedExpenses as $expense)
                 <tr>
-                    <td><a href="{{route('accounts.show',$id)}}">{{{$expense['name']}}}</a></td>
-                    <td>{!! Amount::format(floatval($expense['amount'])*-1) !!}</td>
+                    <td><a href="{{route('accounts.show',$expense['id'])}}">{{{$expense['name']}}}</a></td>
+                    <td>{!! Amount::format(floatval($expense['queryAmount'])*-1) !!}</td>
                 </tr>
-                <?php $sum += floatval($expense['amount'])*-1;?>
+                <?php $sum += floatval($expense['queryAmount'])*-1;?>
                 @endforeach
                 <tr>
                     <td><em>Sum</em></td>

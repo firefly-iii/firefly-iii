@@ -1,6 +1,7 @@
 <?php namespace FireflyIII\Providers;
 
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Bill;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\PiggyBank;
@@ -12,7 +13,8 @@ use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Log;
-use Reminder;
+use FireflyIII\Models\Reminder;
+
 /**
  * Class EventServiceProvider
  *
@@ -60,14 +62,15 @@ class EventServiceProvider extends ServiceProvider
         );
 
 
-        PiggyBank::deleting(function(PiggyBank $piggyBank) {
-            $reminders = $piggyBank->reminders()->get();
-            /** @var Reminder $reminder */
-            foreach($reminders as $reminder) {
-                $reminder->delete();
+        PiggyBank::deleting(
+            function (PiggyBank $piggyBank) {
+                $reminders = $piggyBank->reminders()->get();
+                /** @var Reminder $reminder */
+                foreach ($reminders as $reminder) {
+                    $reminder->delete();
+                }
             }
-        });
-
+        );
 
         Account::deleted(
             function (Account $account) {

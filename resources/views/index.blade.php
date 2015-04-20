@@ -52,62 +52,104 @@
                 <div id="categories-chart"></div>
             </div>
         </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <i class="fa fa-line-chart"></i> Savings
-                    </div>
-                    <div class="panel-body">
-                        @if(count($savings) == 0)
-                            <p class="small"><em>Mark your asset accounts as "Savings account" to fill this panel.</em></p>
-                        @else
-                            @foreach($savings as $account)
-                                <div class="row">
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><h5><a href="{{route('accounts.show')}}">{{$account->name}}</a></h5></div>
-                                </div>
-                                <div class="row">
-                                    <!-- start -->
-                                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4">{!! Amount::format($account->startBalance) !!}</div>
-                                    <!-- bar -->
-                                    <div class="col-lg-8 col-md-8 col-sm-6 col-xs-4">
-                                        @if($account->difference < 0)
-                                            <!-- green (100-pct), then red (pct) -->
-                                            <div class="progress">
-                                                <div class="progress-bar progress-bar-success progress-bar-striped" style="width: {{100 - $account->percentage}}%">
-                                                    @if($account->percentage <= 50)
-                                                        {{Amount::format($account->difference,false)}}
-                                                    @endif
-                                                </div>
-                                                <div class="progress-bar progress-bar-danger progress-bar-striped" style="width: {{$account->percentage}}%">
-                                                    @if($account->percentage > 50)
-                                                        {{Amount::format($account->difference,false)}}
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            @else
-                                            <!-- green (pct), then blue (100-pct) -->
-                                            <div class="progress">
-                                                <div class="progress-bar progress-bar-success progress-bar-striped" style="width: {{$account->percentage}}%">
-                                                    @if($account->percentage > 50)
-                                                        {{Amount::format($account->difference,false)}}
-                                                    @endif
-                                                </div>
-                                                <div class="progress-bar progress-bar-info progress-bar-striped" style="width: {{100 - $account->percentage}}%">
-                                                    @if($account->percentage <= 50)
-                                                        {{Amount::format($account->difference,false)}}
-                                                    @endif
-                                                </div>
-                                            </div>
+
+        <!-- SAVINGS -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-line-chart"></i> Savings
+                <span class="pull-right">{!! Amount::format($savingsTotal) !!}</span>
+            </div>
+            <div class="panel-body">
+                @if(count($savings) == 0)
+                    <p class="small"><em>Mark your asset accounts as "Savings account" to fill this panel.</em></p>
+                @else
+                    @foreach($savings as $account)
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><h5><a href="{{route('accounts.show')}}">{{$account->name}}</a></h5></div>
+                        </div>
+                        <div class="row">
+                            <!-- start -->
+                            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4">{!! Amount::format($account->startBalance) !!}</div>
+                            <!-- bar -->
+                            <div class="col-lg-8 col-md-8 col-sm-6 col-xs-4">
+                                @if($account->difference < 0)
+                                    <!-- green (100-pct), then red (pct) -->
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-success progress-bar-striped" style="width: {{100 - $account->percentage}}%">
+                                            @if($account->percentage <= 50)
+                                                {{Amount::format($account->difference,false)}}
+                                            @endif
+                                        </div>
+                                        <div class="progress-bar progress-bar-danger progress-bar-striped" style="width: {{$account->percentage}}%">
+                                            @if($account->percentage > 50)
+                                                {{Amount::format($account->difference,false)}}
+                                            @endif
+                                        </div>
+                                    </div>
+                                    @else
+                                    <!-- green (pct), then blue (100-pct) -->
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-success progress-bar-striped" style="width: {{$account->percentage}}%">
+                                            @if($account->percentage > 50)
+                                                {{Amount::format($account->difference,false)}}
+                                            @endif
+                                        </div>
+                                        <div class="progress-bar progress-bar-info progress-bar-striped" style="width: {{100 - $account->percentage}}%">
+                                            @if($account->percentage <= 50)
+                                                {{Amount::format($account->difference,false)}}
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endif
+
+                            </div>
+                            <!-- end -->
+                            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4">{!! Amount::format($account->endBalance) !!}</div>
+                        </div>
+                    @endforeach
+                @endif
+            </div>
+        </div>
+
+        <!-- PIGGY BANKS -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-sort-amount-asc fa-fw"></i> Piggy banks
+            </div>
+            <div class="panel-body">
+                @if($piggyBankAccounts->count() == 0)
+                    <p class="small"><em>Create piggy banks to fill this panel.</em></p>
+                @else
+                    @foreach($piggyBankAccounts as $account)
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><h5><a href="{{route('accounts.show')}}">{{$account->name}}</a></h5></div>
+                        </div>
+                        <div class="row">
+                            <!-- start -->
+                            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4">{!! Amount::format($account->startBalance) !!}</div>
+                            <!-- bar -->
+                            <div class="col-lg-8 col-md-8 col-sm-6 col-xs-4">
+
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-info progress-bar-striped" style="width: {{100 - $account->percentage}}%">
+                                        @if($account->percentage <= 50)
+                                            {{Amount::format($account->piggyBalance,false)}} divided
                                         @endif
-
                                     </div>
-                                    <!-- end -->
-                                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4">{!! Amount::format($account->endBalance) !!}</div>
+                                    <div class="progress-bar progress-bar-success progress-bar-striped" style="width: {{$account->percentage}}%">
+                                        @if($account->percentage > 50)
+                                            {{Amount::format($account->difference,false)}} left to divide
+                                        @endif
                                     </div>
-                            @endforeach
-                        @endif
-                    </div>
-                </div>
-
+                                </div>
+                            </div>
+                            <!-- end -->
+                            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-4">{!! Amount::format($account->piggyBalance) !!}</div>
+                        </div>
+                    @endforeach
+                @endif
+            </div>
+        </div>
 
 
     </div>

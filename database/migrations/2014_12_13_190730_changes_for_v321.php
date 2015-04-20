@@ -426,7 +426,6 @@ class ChangesForV321 extends Migration
 
     public function moveComponentIdToBudgetId()
     {
-        //Log::debug('Now in moveComponentIdToBudgetId()');
         BudgetLimit::get()->each(
             function (BudgetLimit $bl) {
                 Log::debug('Now at budgetLimit #' . $bl->id . ' with component_id: ' . $bl->component_id);
@@ -447,7 +446,6 @@ class ChangesForV321 extends Migration
                 }
             }
         );
-        //Log::debug('Done with moveComponentIdToBudgetId()');
 
     }
 

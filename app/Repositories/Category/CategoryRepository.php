@@ -4,7 +4,10 @@ namespace FireflyIII\Repositories\Category;
 
 use Auth;
 use Carbon\Carbon;
+use DB;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\TransactionJournal;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 
 /**
@@ -43,7 +46,62 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function getCategories()
     {
-        return Auth::user()->categories()->orderBy('name', 'ASC')->get();
+        /** @var Collection $set */
+        $set = Auth::user()->categories()->orderBy('name', 'ASC')->get();
+        $set->sortBy(
+            function (Category $category) {
+                return $category->name;
+            }
+        );
+
+        return $set;
+    }
+
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getCategoriesAndExpenses($start, $end)
+    {
+        return TransactionJournal::
+        where('transaction_journals.user_id', Auth::user()->id)
+                                 ->leftJoin(
+                                     'transactions',
+                                     function (JoinClause $join) {
+                                         $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('amount', '>', 0);
+                                     }
+                                 )
+                                 ->leftJoin(
+                                     'category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
+                                 )
+                                 ->leftJoin('categories', 'categories.id', '=', 'category_transaction_journal.category_id')
+                                 ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                 ->before($end)
+                                 ->where('categories.user_id', Auth::user()->id)
+                                 ->after($start)
+                                 ->where('transaction_types.type', 'Withdrawal')
+                                 ->groupBy('categories.id')
+                                 ->orderBy('sum', 'DESC')
+                                 ->get(['categories.id', 'categories.encrypted', 'categories.name', DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
+    }
+
+    /**
+     * @param Category $category
+     *
+     * @return Carbon
+     */
+    public function getFirstActivityDate(Category $category)
+    {
+        /** @var TransactionJournal $first */
+        $first = $category->transactionjournals()->orderBy('date', 'ASC')->first();
+        if ($first) {
+            return $first->date;
+        }
+
+        return new Carbon;
+
     }
 
     /**
@@ -103,6 +161,29 @@ class CategoryRepository implements CategoryRepositoryInterface
                    ->orderBy('transaction_journals.order', 'ASC')
                    ->orderBy('transaction_journals.id', 'DESC')
                    ->get(['transaction_journals.*']);
+    }
+
+    /**
+     * @param Category $category
+     * @param Carbon   $start
+     * @param Carbon   $end
+     *
+     * @return float
+     */
+    public function spentInPeriodSum(Category $category, Carbon $start, Carbon $end)
+    {
+        return floatval($category->transactionjournals()->before($end)->after($start)->lessThan(0)->sum('amount')) * -1;
+    }
+
+    /**
+     * @param Category $category
+     * @param Carbon   $date
+     *
+     * @return float
+     */
+    public function spentOnDaySum(Category $category, Carbon $date)
+    {
+        return floatval($category->transactionjournals()->onDate($date)->lessThan(0)->sum('amount')) * -1;
     }
 
     /**

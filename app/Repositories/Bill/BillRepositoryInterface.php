@@ -16,11 +16,27 @@ interface BillRepositoryInterface
 {
 
     /**
+     * Create a fake bill to help the chart controller.
+     *
+     * @param string $description
+     * @param Carbon $date
+     * @param float  $amount
+     *
+     * @return Bill
+     */
+    public function createFakeBill($description, Carbon $date, $amount);
+
+    /**
      * @param Bill $bill
      *
      * @return mixed
      */
     public function destroy(Bill $bill);
+
+    /**
+     * @return Collection
+     */
+    public function getActiveBills();
 
     /**
      * @return Collection
@@ -32,14 +48,25 @@ interface BillRepositoryInterface
      *
      * @return Collection
      */
-    public function getPossiblyRelatedJournals(Bill $bill);
+    public function getJournals(Bill $bill);
+
+    /**
+     * Get all journals that were recorded on this bill between these dates.
+     *
+     * @param Bill   $bill
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getJournalsInRange(Bill $bill, Carbon $start, Carbon $end);
 
     /**
      * @param Bill $bill
      *
      * @return Collection
      */
-    public function getJournals(Bill $bill);
+    public function getPossiblyRelatedJournals(Bill $bill);
 
     /**
      * Every bill repeats itself weekly, monthly or yearly (or whatever). This method takes a date-range (usually the view-range of Firefly itself)
@@ -60,6 +87,7 @@ interface BillRepositoryInterface
      * @return Carbon|null
      */
     public function lastFoundMatch(Bill $bill);
+
 
     /**
      * @param Bill $bill
