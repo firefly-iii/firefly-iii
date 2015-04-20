@@ -136,8 +136,6 @@ return [
         'Illuminate\Validation\ValidationServiceProvider',
         'Illuminate\View\ViewServiceProvider',
         'Illuminate\Html\HtmlServiceProvider',
-        'Barryvdh\Debugbar\ServiceProvider',
-        'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
         'DaveJamesMiller\Breadcrumbs\ServiceProvider',
 
         /*
