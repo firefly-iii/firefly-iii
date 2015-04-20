@@ -25,15 +25,15 @@
                                 <a href="{{route('transactions.show',$entry->id)}}" title="{{{$entry->description}}}">{{{$entry->description}}}</a>
                             </td>
                             <td>
-                                <?php $tableSum += floatval($entry->amount);?>
+                                <?php $tableSum += floatval($entry->queryAmount);?>
                                 @if($entry->type == 'Withdrawal')
-                                    <span class="text-danger">{{Amount::format($entry->amount,false)}}</span>
+                                    <span class="text-danger">{{Amount::format($entry->queryAmount,false)}}</span>
                                 @endif
                                 @if($entry->type == 'Deposit')
-                                    <span class="text-success">{{Amount::format($entry->amount,false)}}</span>
+                                    <span class="text-success">{{Amount::format($entry->queryAmount,false)}}</span>
                                 @endif
                                 @if($entry->type == 'Transfer')
-                                    <span class="text-info">{{Amount::format($entry->amount,false)}}</span>
+                                    <span class="text-info">{{Amount::format($entry->queryAmount,false)}}</span>
                                 @endif
                             </td>
                             <td>
