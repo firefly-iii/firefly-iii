@@ -1,6 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
-use Auth;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Input;
 use Preferences;
 use Redirect;
@@ -28,9 +28,9 @@ class PreferencesController extends Controller
     /**
      * @return $this|\Illuminate\View\View
      */
-    public function index()
+    public function index(AccountRepositoryInterface $repository)
     {
-        $accounts       = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
+        $accounts       = $repository->getAccounts(['Default account', 'Asset account']);
         $viewRange      = Preferences::get('viewRange', '1M');
         $viewRangeValue = $viewRange->data;
         $frontPage      = Preferences::get('frontPageAccounts', []);
