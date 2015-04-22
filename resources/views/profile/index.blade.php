@@ -8,7 +8,10 @@
                 Options
             </div>
             <div class="panel-body">
-                <a href="{{route('change-password')}}">Change your password</a>
+                <ul>
+                    <li><a href="{{route('change-password')}}">Change your password</a></li>
+                    <li><a class="text-danger" href="{{route('delete-account')}}">Delete account</a></li>
+                </ul>
             </div>
         </div>
     </div>

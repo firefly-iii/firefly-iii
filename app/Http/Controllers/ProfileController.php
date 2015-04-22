@@ -2,6 +2,7 @@
 
 use Auth;
 use FireflyIII\Http\Requests;
+use FireflyIII\Http\Requests\DeleteAccountFormRequest;
 use FireflyIII\Http\Requests\ProfileFormRequest;
 use Hash;
 use Redirect;
@@ -33,6 +34,36 @@ class ProfileController extends Controller
     {
         return view('profile.index')->with('title', 'Profile')->with('subTitle', Auth::user()->email)->with('mainTitleIcon', 'fa-user');
     }
+
+
+    /**
+     * @return \Illuminate\View\View
+     */
+    public function deleteAccount()
+    {
+        return view('profile.delete-account')->with('title', Auth::user()->email)->with('subTitle', 'Delete account')->with(
+            'mainTitleIcon', 'fa-user'
+        );
+    }
+
+    /**
+     *
+     */
+    public function postDeleteAccount(DeleteAccountFormRequest $request) {
+        // old, new1, new2
+        if (!Hash::check($request->get('password'), Auth::user()->password)) {
+            Session::flash('error', 'Invalid password!');
+
+            return Redirect::route('delete-account');
+        }
+
+        // DELETE!
+        Auth::user()->delete();
+        Session::flush();
+        return Redirect::route('index');
+    }
+
+
 
     /**
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View

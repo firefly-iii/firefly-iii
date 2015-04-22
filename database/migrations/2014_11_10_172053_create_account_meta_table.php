@@ -41,6 +41,9 @@ class CreateAccountMetaTable extends Migration
 
             $table->unique(['account_id', 'name']);
 
+            // link to account!
+            $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
+
 
         }
         );
