@@ -1,4 +1,4 @@
-Firefly III (v3.3.8)
+Firefly III (v3.3.9)
 ===========
 
 [![Build Status](https://travis-ci.org/JC5/firefly-iii.svg?branch=develop)](https://travis-ci.org/JC5/firefly-iii)
@@ -22,7 +22,9 @@ laptop and [Firefly II](https://github.com/JC5/Firefly) is live.
 If you're not sure if this tool is for you, please read the [full description](https://github.com/JC5/firefly-iii/wiki/full-description).
 
 To install and use Firefly III, please read [the installation guide](https://github.com/JC5/firefly-iii/wiki/Installation),
- [the upgrade guide](https://github.com/JC5/firefly-iii/wiki/Upgrade-instructions) (if applicable) and the **[first use guide](https://github.com/JC5/firefly-iii/wiki/First-use)**
+ [the upgrade guide](https://github.com/JC5/firefly-iii/wiki/Upgrade-instructions) (if applicable) and the **[first use guide](https://github.com/JC5/firefly-iii/wiki/First-use)**.
+ 
+If you want to try out Firefly III, you can do so on [this dedicated website](https://geld.nder.be/). This site always runs the latest version of Firefly III. If you want to use it, please read the [privacy considerations](https://github.com/JC5/firefly-iii/wiki/Privacy-on-demo-site) for this demo-site.
 
 ## Current features
 
