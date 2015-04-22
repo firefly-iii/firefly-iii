@@ -28,6 +28,18 @@ interface PiggyBankRepositoryInterface
     public function calculateParts(PiggyBankRepetition $repetition);
 
     /**
+     * @return Collection
+     */
+    public function getPiggyBanks();
+
+    /**
+     * @param PiggyBank $piggyBank
+     *
+     * @return Collection
+     */
+    public function getEvents(PiggyBank $piggyBank);
+
+    /**
      * @param array $data
      *
      * @return PiggyBankPart
@@ -36,10 +48,25 @@ interface PiggyBankRepositoryInterface
 
     /**
      * @param PiggyBank $piggyBank
+     * @param           $amount
+     *
+     * @return bool
+     */
+    public function createEvent(PiggyBank $piggyBank, $amount);
+
+    /**
+     * @param PiggyBank $piggyBank
      *
      * @return Collection
      */
     public function getEventSummarySet(PiggyBank $piggyBank);
+
+    /**
+     * @param PiggyBank $piggyBank
+     *
+     * @return bool
+     */
+    public function destroy(PiggyBank $piggyBank);
 
     /**
      * Set all piggy banks to order 0.

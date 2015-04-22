@@ -230,7 +230,7 @@ class ReportQuery implements ReportQueryInterface
             // any deposit is fine.
             $query->where('transaction_types.type', 'Deposit');
         }
-        $query->groupBy('t_from.account_id')->orderBy('transaction_journals.date');
+        $query->groupBy('transaction_journals.id')->orderBy('transaction_journals.date');
 
         // get everything, decrypt and return
         $data = $query->get(
