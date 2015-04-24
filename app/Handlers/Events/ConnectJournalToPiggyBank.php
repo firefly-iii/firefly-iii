@@ -65,6 +65,22 @@ class ConnectJournalToPiggyBank
         }
 
         Log::debug('Found rep! ' . $repetition->id);
+
+        /*
+         * Add amount when
+         */
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions()->get() as $transaction) {
+            if ($transaction->account_id == $piggyBank->account_id) {
+                if ($transaction->amount < 0) {
+                    $amount = $amount * -1;
+                    Log::debug('Transaction is away from piggy, so amount becomes ' . $amount);
+                } else {
+                    Log::debug('Transaction is to from piggy, so amount stays ' . $amount);
+                }
+            }
+        }
+
         $repetition->currentamount += $amount;
         $repetition->save();
 
