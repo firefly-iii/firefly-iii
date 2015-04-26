@@ -45,12 +45,6 @@
                     {!! ExpandedForm::date('date', date('Y-m-d')) !!}
                 </div>
         </div>
-        <p>
-            <button type="submit" class="btn btn-lg btn-success">
-                <i class="fa fa-plus-circle"></i> Store new {{{$what}}}
-            </button>
-        </p>
-
     </div>
     <div class="col-lg-6 col-md-12 col-sm-12">
         <!-- panel for optional fields -->
@@ -86,6 +80,15 @@
                 </div>
             </div>
         </div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <p>
+            <button type="submit" class="btn btn-lg btn-success">
+                <i class="fa fa-plus-circle"></i> Store new {{{$what}}}
+            </button>
+        </p>
+    </div>
+</div>
 
 
 {!! Form::close() !!}
