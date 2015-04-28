@@ -8,80 +8,93 @@
         </p>
     </div>
 </div>
-<div class="row" id="sortable">
-@foreach($piggyBanks as $piggyBank)
-    <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12" data-id="{{$piggyBank->id}}">
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="loadSpin"></i>
-                <i class="fa fa-fw fa-bars handle"></i> <a href="{{route('piggy-banks.show',$piggyBank->id)}}" title="{{{$piggyBank->order}}}">{{{$piggyBank->name}}}</a>
+            <div class="panel-heading">Piggy banks</div>
+            @include('list.piggy-banks')
+        </div>
+    </div>
+</div>
 
-                <!-- ACTIONS MENU -->
-                <div class="pull-right">
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                            Actions
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu pull-right" role="menu">
-                            <li><a href="{{route('piggy-banks.edit',$piggyBank->id)}}"><i class="fa fa-pencil fa-fw"></i> Edit</a></li>
-                            <li><a href="{{route('piggy-banks.delete',$piggyBank->id)}}"><i class="fa fa-trash fa-fw"></i> Delete</a></li>
-                        </ul>
-                    </div>
-                </div>
+{{--
+<div class="row" id="sortable">
+    @foreach($piggyBanks as $piggyBank)
+        <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12" data-id="{{$piggyBank->id}}">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="loadSpin"></i>
+                    <i class="fa fa-fw fa-bars handle"></i> <a href="{{route('piggy-banks.show',$piggyBank->id)}}" title="{{{$piggyBank->order}}}">{{{$piggyBank->name}}}</a>
 
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <!-- One block (remove money) -->
-                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                        @if($piggyBank->savedSoFar > 0)
-                            <a href="{{route('piggy-banks.removeMoney',$piggyBank->id)}}" class="btn btn-default btn-xs removeMoney" data-id="{{{$piggyBank->id}}}"><span data-id="{{{$piggyBank->id}}}" class="glyphicon glyphicon-minus"></span></a>
-                        @endif
-                    </div>
-                    <!-- Some blocks (bar) -->
-                    <div class="col-lg-8 col-md-8 col-sm-4 col-xs-4">
-                        <div class="progress progress-striped">
-                            <div
-                            @if($piggyBank->percentage == 100)
-                                class="progress-bar progress-bar-success"
-                                @else
-                                class="progress-bar progress-bar-info"
-                                @endif
-                                role="progressbar" aria-valuenow="{{$piggyBank->percentage}}" aria-valuemin="0" aria-valuemax="100" style="min-width: 40px;width: {{$piggyBank->percentage}}%;">
-                                {{$piggyBank->percentage}}%
-                            </div>
+                    <!-- ACTIONS MENU -->
+                    <div class="pull-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                Actions
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li><a href="{{route('piggy-banks.edit',$piggyBank->id)}}"><i class="fa fa-pencil fa-fw"></i> Edit</a></li>
+                                <li><a href="{{route('piggy-banks.delete',$piggyBank->id)}}"><i class="fa fa-trash fa-fw"></i> Delete</a></li>
+                            </ul>
                         </div>
                     </div>
 
-
-                    <!-- One block (add money) -->
-                    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                        @if($piggyBank->leftToSave > 0)
-                            <a href="{{route('piggy-banks.addMoney',$piggyBank->id)}}" class="btn btn-default btn-xs addMoney" data-id="{{{$piggyBank->id}}}"><span data-id="{{{$piggyBank->id}}}" class="glyphicon glyphicon-plus"></span></a>
-                        @endif
-
-                    </div>
-
                 </div>
-                <div class="row">
-                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                        <span title="Saved so far">{!! Amount::format($piggyBank->savedSoFar,true) !!}</span>
+                <div class="panel-body">
+                    <div class="row">
+                        <!-- One block (remove money) -->
+                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                            @if($piggyBank->savedSoFar > 0)
+                                <a href="{{route('piggy-banks.removeMoney',$piggyBank->id)}}" class="btn btn-default btn-xs removeMoney" data-id="{{{$piggyBank->id}}}"><span data-id="{{{$piggyBank->id}}}" class="glyphicon glyphicon-minus"></span></a>
+                            @endif
+                        </div>
+                        <!-- Some blocks (bar) -->
+                        <div class="col-lg-8 col-md-8 col-sm-4 col-xs-4">
+                            <div class="progress progress-striped">
+                                <div
+                                @if($piggyBank->percentage == 100)
+                                    class="progress-bar progress-bar-success"
+                                    @else
+                                    class="progress-bar progress-bar-info"
+                                    @endif
+                                    role="progressbar" aria-valuenow="{{$piggyBank->percentage}}" aria-valuemin="0" aria-valuemax="100" style="min-width: 40px;width: {{$piggyBank->percentage}}%;">
+                                    {{$piggyBank->percentage}}%
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- One block (add money) -->
+                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                            @if($piggyBank->leftToSave > 0)
+                                <a href="{{route('piggy-banks.addMoney',$piggyBank->id)}}" class="btn btn-default btn-xs addMoney" data-id="{{{$piggyBank->id}}}"><span data-id="{{{$piggyBank->id}}}" class="glyphicon glyphicon-plus"></span></a>
+                            @endif
+
+                        </div>
+
                     </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="text-align: center;">
-                        <span title="Target amount">{!! Amount::format($piggyBank->targetamount,true) !!}</span>
-                    </div>
-                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="text-align: right;">
-                        @if($piggyBank->leftToSave > 0)
-                            <span title="Left to save">{!! Amount::format($piggyBank->leftToSave) !!}</span>
-                        @endif
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            <span title="Saved so far">{!! Amount::format($piggyBank->savedSoFar,true) !!}</span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="text-align: center;">
+                            <span title="Target amount">{!! Amount::format($piggyBank->targetamount,true) !!}</span>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="text-align: right;">
+                            @if($piggyBank->leftToSave > 0)
+                                <span title="Left to save">{!! Amount::format($piggyBank->leftToSave) !!}</span>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-@endforeach
+    @endforeach
 </div>
+
+--}}
 
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">

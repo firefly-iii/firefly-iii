@@ -5,13 +5,23 @@ $(function () {
     if (typeof(googleLineChart) === 'function' && typeof(piggyBankID) !== 'undefined') {
         googleLineChart('chart/piggy-history/' + piggyBankID, 'piggy-bank-history');
     }
-    $('#sortable').sortable(
+
+    $('#sortable tbody').sortable(
         {
+            helper: fixHelper,
             stop: stopSorting,
             handle: '.handle'
         }
     );
 });
+
+// Return a helper with preserved width of cells
+var fixHelper = function (e, ui) {
+    ui.children().each(function () {
+        $(this).width($(this).width());
+    });
+    return ui;
+};
 
 function addMoney(e) {
     var pigID = parseInt($(e.target).data('id'));
@@ -33,7 +43,7 @@ function removeMoney(e) {
 function stopSorting() {
     $('.loadSpin').addClass('fa fa-refresh fa-spin');
     var order = [];
-    $.each($('#sortable>div'), function(i,v) {
+    $.each($('#sortable>tr'), function(i,v) {
         var holder = $(v);
         var id = holder.data('id');
         order.push(id);
