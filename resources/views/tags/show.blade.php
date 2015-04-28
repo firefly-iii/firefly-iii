@@ -19,8 +19,8 @@
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu pull-right" role="menu">
-                                    <li><a href="{{route('tags.edit',$tag->id)}}"><i class="fa fa-pencil fa-fw"></i> Edit</a></li>
-                                    <li><a href="{{route('tags.delete',$tag->id)}}"><i class="fa fa-trash fa-fw"></i> Delete</a></li>
+                                    <li><a href="{{route('tags.edit',$tag->id)}}"><i class="fa fa-pencil fa-fw"></i> Edit tag</a></li>
+                                    <li><a href="{{route('tags.delete',$tag->id)}}"><i class="fa fa-trash fa-fw"></i> Delete tag</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -57,8 +57,8 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu pull-right" role="menu">
-                                <li><a href="{{route('tags.edit',$tag->id)}}"><i class="fa fa-pencil fa-fw"></i> Edit</a></li>
-                                <li><a href="{{route('tags.delete',$tag->id)}}"><i class="fa fa-trash fa-fw"></i> Delete</a></li>
+                                <li><a href="{{route('tags.edit',$tag->id)}}"><i class="fa fa-pencil fa-fw"></i> Edit tag</a></li>
+                                <li><a href="{{route('tags.delete',$tag->id)}}"><i class="fa fa-trash fa-fw"></i> Delete tag</a></li>
                             </ul>
                         </div>
                     </div>

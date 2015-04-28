@@ -62,10 +62,22 @@ class TagController extends Controller
         return view('tags.create', compact('subTitle', 'subTitleIcon'));
     }
 
+    /**
+     * @param Tag $tag
+     *
+     * @return View
+     */
     public function edit(Tag $tag)
     {
         $subTitle     = 'Edit tag "' . e($tag->tag) . '"';
         $subTitleIcon = 'fa-tag';
+
+        // put previous url in session if not redirect from store (not "return_to_edit").
+        if (Session::get('tags.edit.fromUpdate') !== true) {
+            Session::put('tags.edit.url', URL::previous());
+        }
+        Session::forget('tags.edit.fromUpdate');
+
 
         return view('tags.edit', compact('tag', 'subTitle', 'subTitleIcon'));
     }
@@ -128,13 +140,13 @@ class TagController extends Controller
         $data = [
             'tag'         => $request->get('tag'),
             'date'        => strlen($request->get('date')) > 0 ? new Carbon($request->get('date')) : null,
-            'description' => strlen($request->get('description')) > 0 ? $request->get('description') : null,
+            'description' => strlen($request->get('description')) > 0 ? $request->get('description') : '',
             'latitude'    => $latitude,
             'longitude'   => $longitude,
             'zoomLevel'   => $zoomLevel,
             'tagMode'     => $request->get('tagMode'),
         ];
-        $tag  = $repository->store($data);
+        $repository->store($data);
 
         Session::flash('success','The tag has been created!');
 
@@ -148,5 +160,44 @@ class TagController extends Controller
         // redirect to previous URL.
         return Redirect::to(Session::get('tags.create.url'));
 
+    }
+
+    /**
+     * @param Tag $tag
+     */
+    public function update(Tag $tag, TagFormRequest $request, TagRepositoryInterface $repository) {
+        if (Input::get('setTag') == 'true') {
+            $latitude  = strlen($request->get('latitude')) > 0 ? $request->get('latitude') : null;
+            $longitude = strlen($request->get('longitude')) > 0 ? $request->get('longitude') : null;
+            $zoomLevel = strlen($request->get('zoomLevel')) > 0 ? $request->get('zoomLevel') : null;
+        } else {
+            $latitude  = null;
+            $longitude = null;
+            $zoomLevel = null;
+        }
+
+        $data = [
+            'tag'         => $request->get('tag'),
+            'date'        => strlen($request->get('date')) > 0 ? new Carbon($request->get('date')) : null,
+            'description' => strlen($request->get('description')) > 0 ? $request->get('description') : '',
+            'latitude'    => $latitude,
+            'longitude'   => $longitude,
+            'zoomLevel'   => $zoomLevel,
+            'tagMode'     => $request->get('tagMode'),
+        ];
+
+        $repository->update($tag, $data);
+
+        Session::flash('success', 'Tag "' . e($data['tag']) . '" updated.');
+
+        if (intval(Input::get('return_to_edit')) === 1) {
+            // set value so edit routine will not overwrite URL:
+            Session::put('tags.edit.fromUpdate', true);
+
+            return Redirect::route('tags.edit', $tag->id)->withInput(['return_to_edit' => 1]);
+        }
+
+        // redirect to previous URL.
+        return Redirect::to(Session::get('tags.edit.url'));
     }
 }

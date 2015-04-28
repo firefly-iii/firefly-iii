@@ -2,6 +2,7 @@
 
 namespace FireflyIII\Repositories\Tag;
 use FireflyIII\Models\Tag;
+use Illuminate\Support\Collection;
 
 
 /**
@@ -17,4 +18,17 @@ interface TagRepositoryInterface {
      * @return Tag
      */
     public function store(array $data);
+
+    /**
+     * @return Collection
+     */
+    public function get();
+
+    /**
+     * @param Tag   $tag
+     * @param array $data
+     *
+     * @return Tag
+     */
+    public function update(Tag $tag, array $data);
 }

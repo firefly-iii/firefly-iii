@@ -134,6 +134,12 @@ class TransactionController extends Controller
             'budget_id'     => 0,
             'piggy_bank_id' => 0
         ];
+        // get tags:
+        $tags = [];
+        foreach ($journal->tags as $tag) {
+            $tags[] = $tag->tag;
+        }
+        $preFilled['tags'] = join(',', $tags);
 
         $category = $journal->categories()->first();
         if (!is_null($category)) {
@@ -155,6 +161,8 @@ class TransactionController extends Controller
         $preFilled['revenue_account'] = $transactions[1]->account->name;
         $preFilled['account_from_id'] = $transactions[1]->account->id;
         $preFilled['account_to_id']   = $transactions[0]->account->id;
+
+        Session::flash('preFilled',$preFilled);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (Session::get('transactions.edit.fromUpdate') !== true) {
@@ -270,6 +278,7 @@ class TransactionController extends Controller
      */
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository)
     {
+
 
         $journalData = $request->getJournalData();
         $journal     = $repository->store($journalData);

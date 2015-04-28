@@ -4,10 +4,12 @@ namespace FireflyIII\Repositories\Journal;
 
 use App;
 use Auth;
+use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -80,6 +82,20 @@ class JournalRepository implements JournalRepositoryInterface
     public function getTransactionType($type)
     {
         return TransactionType::whereType($type)->first();
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param array              $array
+     *
+     * @return void
+     */
+    public function saveTags(TransactionJournal $journal, array $array)
+    {
+        foreach ($array as $name) {
+            $tag = Tag::firstOrCreateEncrypted(['tag' => $name, 'user_id' => $journal->user_id]);
+            $journal->tags()->save($tag);
+        }
     }
 
     /**
@@ -156,6 +172,10 @@ class JournalRepository implements JournalRepositoryInterface
             ]
         );
         $journal->save();
+
+        if (isset($data['tags']) && is_array($data['tags'])) {
+            $this->saveTags($journal, $data['tags']);
+        }
 
 
         // store or get category
@@ -246,7 +266,42 @@ class JournalRepository implements JournalRepositoryInterface
 
         $journal->save();
 
+        // update tags:
+        if (isset($data['tags']) && is_array($data['tags'])) {
+            $this->updateTags($journal, $data['tags']);
+        }
+
         return $journal;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param array              $array
+     *
+     * @return void
+     */
+    public function updateTags(TransactionJournal $journal, array $array)
+    {
+        // find or create all tags:
+        $tags = [];
+        $ids  = [];
+        foreach ($array as $name) {
+            $tag    = Tag::firstOrCreateEncrypted(['tag' => $name, 'user_id' => $journal->user_id]);
+            $tags[] = $tag;
+            $ids[]  = $tag->id;
+        }
+
+        // delete all tags connected to journal not in this array:
+        if (count($ids) > 0) {
+            DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal->id)->whereNotIn('tag_id', $ids)->delete();
+        }
+
+        // connect each tag to journal (if not yet connected):
+        foreach($tags as $tag) {
+            if(!$journal->tags()->find($tag->id)) {
+                $journal->tags()->save($tag);
+            }
+        }
     }
 
     /**

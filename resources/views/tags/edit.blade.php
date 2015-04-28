@@ -3,6 +3,7 @@
 {!! Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $tag) !!}
 {!! Form::model($tag, ['class' => 'form-horizontal','id' => 'update','url' => route('tags.update',$tag->id)]) !!}
 
+<input type="hidden" name="id" value="{{$tag->id}}" />
 
 <div class="row">
     <div class="col-lg-5 col-md-5 col-sm-12">
@@ -36,7 +37,7 @@
                 <i class="fa fa-bolt"></i> Options
             </div>
             <div class="panel-body">
-                {!! ExpandedForm::optionsList('create','tag') !!}
+                {!! ExpandedForm::optionsList('update','tag') !!}
             </div>
         </div>
 
@@ -46,7 +47,7 @@
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <p>
             <button type="submit" class="btn btn-lg btn-success">
-                <i class="fa fa-plus-circle"></i> Store new tag
+                <i class="fa fa-plus-circle"></i> Update tag
             </button>
         </p>
     </div>

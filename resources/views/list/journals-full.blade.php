@@ -35,7 +35,7 @@
     <tr class="drag" data-date="{{$journal->date->format('Y-m-d')}}" data-id="{{$journal->id}}">
         <td>
             <div class="btn-group btn-group-xs">
-                @if($sorting === true)
+                @if(isset($sorting) && $sorting === true)
                     <a href="#" class="handle btn btn-default btn-xs"><i class="fa fa-fw fa-arrows-v"></i></a>
                 @endif
                 <a href="{{route('transactions.edit',$journal->id)}}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>

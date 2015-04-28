@@ -61,6 +61,7 @@
                         {!! ExpandedForm::text('category') !!}
 
                         <!-- TAGS -->
+                        {!! ExpandedForm::text('tags') !!}
 
 
                         <!-- RELATE THIS TRANSFER TO A PIGGY BANK -->
@@ -98,6 +99,11 @@
     <script type="text/javascript">
         var what = "{{$what}}";
     </script>
-<script type="text/javascript" src="js/bootstrap3-typeahead.min.js"></script>
-<script type="text/javascript" src="js/transactions.js"></script>
+    <script type="text/javascript" src="js/bootstrap3-typeahead.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap-tagsinput.min.js"></script>
+    <script type="text/javascript" src="js/transactions.js"></script>
+@stop
+
+@section('styles')
+    <link href="css/bootstrap-tagsinput.css" type="text/css" rel="stylesheet" media="all">
 @stop

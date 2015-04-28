@@ -9,6 +9,8 @@
 namespace FireflyIII\Http\Requests;
 
 use Auth;
+use FireflyIII\Models\Tag;
+use Input;
 
 /**
  * Class TagFormRequest
@@ -31,8 +33,16 @@ class TagFormRequest extends Request
      */
     public function rules()
     {
+        $idRule = '';
+        $tagRule = 'required|min:1|uniqueObjectForUser:tags,tag,TRUE';
+        if (Tag::find(Input::get('id'))) {
+            $idRule  = 'belongsToUser:tags';
+            $tagRule = 'required|min:1|uniqueObjectForUser:tags,tag,TRUE,' . Input::get('id');
+        }
+
         return [
-            'tag'         => 'required|min:1|uniqueObjectForUser:tags,tag,TRUE',
+            'tag'         => $tagRule,
+            'id'          => $idRule,
             'description' => 'min:1',
             'date'        => 'date',
             'latitude'    => 'numeric|min:-90|max:90',

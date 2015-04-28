@@ -61,6 +61,7 @@
                 {!! ExpandedForm::text('category',$data['category']) !!}
 
                 <!-- TAGS -->
+                {!! ExpandedForm::text('tags') !!}
 
                 <!-- RELATE THIS TRANSFER TO A PIGGY BANK -->
                 @if($what == 'transfer' && count($piggies) > 0)
@@ -85,7 +86,7 @@
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <p>
             <button type="submit" class="btn btn-lg btn-success">
-                <i class="fa fa-pencil"></i> Update piggy bank
+                <i class="fa fa-pencil"></i> Update transaction
             </button>
         </p>
     </div>
@@ -99,5 +100,9 @@
     var what = "{{$what}}";
 </script>
 <script type="text/javascript" src="js/bootstrap3-typeahead.min.js"></script>
+<script type="text/javascript" src="js/bootstrap-tagsinput.min.js"></script>
 <script type="text/javascript" src="js/transactions.js"></script>
+@stop
+@section('styles')
+    <link href="css/bootstrap-tagsinput.css" type="text/css" rel="stylesheet" media="all">
 @stop
