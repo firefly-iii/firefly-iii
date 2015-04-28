@@ -56,15 +56,6 @@ interface JournalRepositoryInterface
     public function getJournalsOfType(TransactionType $dbType);
 
     /**
-     * @param string             $query
-     * @param TransactionJournal $journal
-     *
-     * @return Collection
-     */
-    public function searchRelated($query, TransactionJournal $journal);
-
-
-    /**
      * @param $type
      *
      * @return TransactionType

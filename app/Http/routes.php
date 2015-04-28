@@ -31,18 +31,6 @@ Route::bind(
 );
 
 Route::bind(
-    'tjSecond', function ($value, $route) {
-    if (Auth::check()) {
-        $object = TransactionJournal::where('id', $value)->where('user_id', Auth::user()->id)->first();
-        if ($object) {
-            return $object;
-        }
-    }
-    throw new NotFoundHttpException;
-}
-);
-
-Route::bind(
     'tj', function ($value, $route) {
     if (Auth::check()) {
         $object = TransactionJournal::where('id', $value)->where('user_id', Auth::user()->id)->first();
@@ -327,16 +315,6 @@ Route::group(
     Route::get('/profile/delete-account', ['uses' => 'ProfileController@deleteAccount', 'as' => 'delete-account']);
     Route::post('/profile/delete-account', ['uses' => 'ProfileController@postDeleteAccount', 'as' => 'delete-account-post']);
     Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword', 'as' => 'change-password-post']);
-
-    /**
-     * Related transactions controller
-     */
-    Route::get('/related/alreadyRelated/{tj}', ['uses' => 'RelatedController@alreadyRelated', 'as' => 'related.alreadyRelated']);
-    Route::post('/related/relate/{tj}/{tjSecond}', ['uses' => 'RelatedController@relate', 'as' => 'related.relate']);
-    Route::post('/related/removeRelation/{tj}/{tjSecond}', ['uses' => 'RelatedController@removeRelation', 'as' => 'related.removeRelation']);
-    Route::get('/related/remove/{tj}/{tjSecond}', ['uses' => 'RelatedController@getRemoveRelation', 'as' => 'related.getRemoveRelation']);
-    Route::get('/related/related/{tj}', ['uses' => 'RelatedController@related', 'as' => 'related.related']);
-    Route::post('/related/search/{tj}', ['uses' => 'RelatedController@search', 'as' => 'related.search']);
 
     /**
      * Reminder Controller

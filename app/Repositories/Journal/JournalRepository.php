@@ -143,58 +143,6 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * @param string             $query
-     * @param TransactionJournal $journal
-     *
-     * @return Collection
-     */
-    public function searchRelated($query, TransactionJournal $journal)
-    {
-        $start = clone $journal->date;
-        $end   = clone $journal->date;
-        $start->startOfMonth();
-        $end->endOfMonth();
-
-        // get already related transactions:
-        $exclude = [$journal->id];
-        foreach ($journal->transactiongroups()->get() as $group) {
-            foreach ($group->transactionjournals()->get() as $current) {
-                $exclude[] = $current->id;
-            }
-        }
-        $exclude = array_unique($exclude);
-
-        /** @var Collection $collection */
-        $collection = Auth::user()->transactionjournals()
-                          ->withRelevantData()
-                          ->before($end)->after($start)->where('encrypted', 0)
-                          ->whereNotIn('id', $exclude)
-                          ->where('description', 'LIKE', '%' . $query . '%')
-                          ->get();
-
-        // manually search encrypted entries:
-        /** @var Collection $encryptedCollection */
-        $encryptedCollection = Auth::user()->transactionjournals()
-                                   ->withRelevantData()
-                                   ->before($end)->after($start)
-                                   ->where('encrypted', 1)
-                                   ->whereNotIn('id', $exclude)
-                                   ->get();
-        $encrypted           = $encryptedCollection->filter(
-            function (TransactionJournal $journal) use ($query) {
-                $strPos = strpos(strtolower($journal->description), strtolower($query));
-                if ($strPos !== false) {
-                    return $journal;
-                }
-
-                return null;
-            }
-        );
-
-        return $collection->merge($encrypted);
-    }
-
-    /**
      * @param array $data
      *
      * @return TransactionJournal
