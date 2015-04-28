@@ -42,14 +42,26 @@
                     </a>
                 </p>
                 <p>
-                    <a href="{{route('tags.create')}}" title="New tag" class="btn btn-info"><i class="fa fa-fw fa-tag"></i> Create new tag</a>
+                    <a href="{{route('tags.create')}}" title="New tag" class="btn btn-info"><i class="fa fa-fw fa-plus"></i> Create new tag</a>
                 </p>
                 <p>
                     @if(count($tags) == 0)
                         <em>No tags</em>
                     @else
                         @foreach($tags as $tag)
-                            <h4 style="display: inline;"><a class="label label-success" href="{{route('tags.show',$tag)}}">{{$tag->tag}}</a></h4>
+
+                            <h4 style="display: inline;"><a class="label label-success" href="{{route('tags.show',$tag)}}">
+                                @if($tag->tagMode == 'nothing')
+                                    <i class="fa fa-fw fa-tag"></i>
+                                @endif
+                                @if($tag->tagMode == 'balancingAct')
+                                        <i class="fa fa-fw fa-refresh"></i>
+                                @endif
+                                    @if($tag->tagMode == 'advancePayment')
+                                        <i class="fa fa-fw fa-sort-numeric-desc"></i>
+                                    @endif
+                                {{$tag->tag}}</a>
+                            </h4>
                         @endforeach
                     @endif
                 </p>
