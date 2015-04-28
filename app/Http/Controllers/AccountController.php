@@ -26,6 +26,7 @@ class AccountController extends Controller
      */
     public function __construct()
     {
+        parent::__construct();
         View::share('mainTitleIcon', 'fa-credit-card');
         View::share('title', 'Accounts');
     }

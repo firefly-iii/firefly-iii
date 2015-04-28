@@ -28,6 +28,7 @@ class TransactionController extends Controller
      */
     public function __construct()
     {
+        parent::__construct();
         View::share('title', 'Transactions');
         View::share('mainTitleIcon', 'fa-repeat');
     }
@@ -162,7 +163,7 @@ class TransactionController extends Controller
         $preFilled['account_from_id'] = $transactions[1]->account->id;
         $preFilled['account_to_id']   = $transactions[0]->account->id;
 
-        Session::flash('preFilled',$preFilled);
+        Session::flash('preFilled', $preFilled);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (Session::get('transactions.edit.fromUpdate') !== true) {

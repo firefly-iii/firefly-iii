@@ -9,13 +9,18 @@
         <th>Date</th>
         <th>From</th>
         <th>To</th>
-        @if(!isset($hideBudget) || (isset($hideBudget) && $hideBudget=== false))
+        {{-- Hide budgets? --}}
+        @if($hideBudgets)
             <th><i class="fa fa-tasks fa-fw" title="Budget"></i></th>
         @endif
-        @if(!isset($hideCategory) || (isset($hideCategory) && $hideCategory=== false))
+
+        {{-- Hide categories? --}}
+        @if($hideCategories)
             <th><i class="fa fa-bar-chart fa-fw" title="Category"></i></th>
         @endif
-        @if(!isset($hideBill) || (isset($hideBill) && $hideBill=== false))
+
+        {{-- Hide bills? --}}
+        @if(!$hideBills)
             <th><i class="fa fa-fw fa-rotate-right" title="Bill"></i></th>
         @endif
     </tr>
@@ -29,7 +34,7 @@
             </td>
             <td>&nbsp;</td>
             <td>{{{$journal->description}}}</td>
-            <td colspan="7"><em>Invalid journal: Found {{$journal->transactions()->count()}} transaction(s)</td>
+            <td colspan="7"><em>Invalid journal: Found {{$journal->transactions()->count()}} transaction(s)</em></td>
         </tr>
     @else
     <tr class="drag" data-date="{{$journal->date->format('Y-m-d')}}" data-id="{{$journal->id}}">
@@ -60,14 +65,17 @@
             <a href="{{route('transactions.show',$journal->id)}}" title="{{{$journal->description}}}">{{{$journal->description}}}</a>
         </td>
         <td>
-            @if($journal->transactiontype->type == 'Withdrawal')
+            @if(!$hideTags)
+                {{-- If relevant, refer to tag instead of amount. --}}
+                <!--
+                transaction can only have one advancePayment or balancingAct.
+                Other attempts to put in such a tag are blocked.
+                also show an error when editing a tag and it becomes either
+                of these two types. Or rather, block editing of the tag.
+                -->
                 {!! Amount::formatJournal($journal) !!}
-            @endif
-            @if($journal->transactiontype->type == 'Deposit')
-                    {!! Amount::formatJournal($journal) !!}
-            @endif
-            @if($journal->transactiontype->type == 'Transfer')
-                <span class="text-info">{{Amount::formatTransaction($journal->transactions[1],false)}}</span>
+            @else
+                {!! Amount::formatJournal($journal) !!}
             @endif
         </td>
         <td>
@@ -87,7 +95,9 @@
                 <a href="{{route('accounts.show',$journal->transactions[1]->account_id)}}">{{{$journal->transactions[1]->account->name}}}</a>
             @endif
         </td>
-        @if(!isset($hideBudget) || (isset($hideBudget) && $hideBudget=== false))
+
+        {{-- Do NOT hide the budget? --}}
+        @if(!$hideBudgets)
             <td>
             <?php $budget = isset($journal->budgets[0]) ? $journal->budgets[0] : null; ?>
                 @if($budget)
@@ -95,20 +105,24 @@
                 @endif
             </td>
         @endif
-        @if(!isset($hideCategory) || (isset($hideCategory) && $hideCategory=== false))
-        <td>
-        <?php $category = isset($journal->categories[0]) ? $journal->categories[0] : null; ?>
-            @if($category)
-                <a href="{{route('categories.show',$category->id)}}">{{{$category->name}}}</a>
-            @endif
-        </td>
+
+        {{-- Do NOT hide the category? --}}
+        @if(!$hideCategories)
+            <td>
+            <?php $category = isset($journal->categories[0]) ? $journal->categories[0] : null; ?>
+                @if($category)
+                    <a href="{{route('categories.show',$category->id)}}">{{{$category->name}}}</a>
+                @endif
+            </td>
         @endif
-        @if(!isset($hideBill) || (isset($hideBill) && $hideBill=== false))
-        <td>
-            @if($journal->bill)
-                <a href="{{route('bills.show',$journal->bill_id)}}">{{{$journal->bill->name}}}</a>
-            @endif
-        </td>
+
+        {{-- Do NOT hide the bill? --}}
+        @if(!$hideBills)
+            <td>
+                @if($journal->bill)
+                    <a href="{{route('bills.show',$journal->bill_id)}}">{{{$journal->bill->name}}}</a>
+                @endif
+            </td>
         @endif
 
 

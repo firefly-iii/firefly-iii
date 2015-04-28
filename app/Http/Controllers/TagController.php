@@ -10,11 +10,11 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Input;
 use Preferences;
+use Redirect;
 use Response;
 use Session;
-use View;
 use URL;
-use Redirect;
+use View;
 
 /**
  * Class TagController
@@ -31,7 +31,7 @@ class TagController extends Controller
      */
     public function __construct()
     {
-
+        parent::__construct();
         View::share('title', 'Tags');
         View::share('mainTitleIcon', 'fa-tags');
         $tagOptions = [
@@ -182,7 +182,7 @@ class TagController extends Controller
         ];
         $repository->store($data);
 
-        Session::flash('success','The tag has been created!');
+        Session::flash('success', 'The tag has been created!');
 
         if (intval(Input::get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
@@ -199,7 +199,8 @@ class TagController extends Controller
     /**
      * @param Tag $tag
      */
-    public function update(Tag $tag, TagFormRequest $request, TagRepositoryInterface $repository) {
+    public function update(Tag $tag, TagFormRequest $request, TagRepositoryInterface $repository)
+    {
         if (Input::get('setTag') == 'true') {
             $latitude  = strlen($request->get('latitude')) > 0 ? $request->get('latitude') : null;
             $longitude = strlen($request->get('longitude')) > 0 ? $request->get('longitude') : null;

@@ -1,7 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Amount;
-use Auth;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Models\Account;
@@ -188,7 +187,7 @@ class JsonController extends Controller
      */
     public function tags(TagRepositoryInterface $tagRepository)
     {
-        $list = $tagRepository->get();
+        $list   = $tagRepository->get();
         $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->tag;

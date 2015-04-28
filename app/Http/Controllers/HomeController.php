@@ -86,7 +86,7 @@ class HomeController extends Controller
             }
         }
 
-        return view('index', compact('count', 'title', 'savings', 'subTitle', 'mainTitleIcon', 'transactions', 'savingsTotal','piggyBankAccounts'));
+        return view('index', compact('count', 'title', 'savings', 'subTitle', 'mainTitleIcon', 'transactions', 'savingsTotal', 'piggyBankAccounts'));
     }
 
 

@@ -29,6 +29,7 @@ class BillController extends Controller
      */
     public function __construct()
     {
+        parent::__construct();
         View::share('title', 'Bills');
         View::share('mainTitleIcon', 'fa-calendar-o');
     }
