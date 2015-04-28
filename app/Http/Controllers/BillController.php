@@ -83,6 +83,12 @@ class BillController extends Controller
     {
         $periods = Config::get('firefly.periods_to_text');
 
+        // put previous url in session if not redirect from store (not "create another").
+        if (Session::get('bills.create.fromStore') !== true) {
+            Session::put('bills.create.url', URL::previous());
+        }
+        Session::forget('bills.create.fromStore');
+
         return view('bills.create')->with('periods', $periods)->with('subTitle', 'Create new');
     }
 
@@ -93,6 +99,9 @@ class BillController extends Controller
      */
     public function delete(Bill $bill)
     {
+        // put previous url in session
+        Session::put('bills.delete.url', URL::previous());
+
         return view('bills.delete')->with('bill', $bill)->with('subTitle', 'Delete "' . e($bill->name) . '"');
     }
 
@@ -107,7 +116,7 @@ class BillController extends Controller
 
         Session::flash('success', 'The bill was deleted.');
 
-        return Redirect::route('bills.index');
+        return Redirect::to(Session::get('bills.delete.url'));
 
     }
 
@@ -119,6 +128,12 @@ class BillController extends Controller
     public function edit(Bill $bill)
     {
         $periods = Config::get('firefly.periods_to_text');
+
+        // put previous url in session if not redirect from store (not "return_to_edit").
+        if (Session::get('bills.edit.fromUpdate') !== true) {
+            Session::put('bills.edit.url', URL::previous());
+        }
+        Session::forget('bills.edit.fromUpdate');
 
         return view('bills.edit')->with('periods', $periods)->with('bill', $bill)->with('subTitle', 'Edit "' . e($bill->name) . '"');
     }
@@ -190,10 +205,14 @@ class BillController extends Controller
         Session::flash('success', 'Bill "' . e($bill->name) . '" stored.');
 
         if (intval(Input::get('create_another')) === 1) {
+            // set value so create routine will not overwrite URL:
+            Session::put('bills.create.fromStore', true);
+
             return Redirect::route('bills.create')->withInput();
         }
 
-        return Redirect::route('bills.index');
+        // redirect to previous URL.
+        return Redirect::to(Session::get('bills.create.url'));
 
     }
 
@@ -213,7 +232,15 @@ class BillController extends Controller
 
         Session::flash('success', 'Bill "' . e($bill->name) . '" updated.');
 
-        return Redirect::route('bills.index');
+        if (intval(Input::get('return_to_edit')) === 1) {
+            // set value so edit routine will not overwrite URL:
+            Session::put('bills.edit.fromUpdate', true);
+
+            return Redirect::route('bills.edit', $bill->id)->withInput(['return_to_edit' => 1]);
+        }
+
+        // redirect to previous URL.
+        return Redirect::to(Session::get('bills.edit.url'));
 
     }
 

@@ -49,7 +49,6 @@
 <script type="text/javascript">
     var accountID = {{{$account->id}}};
     var currencyCode = '{{Amount::getCurrencyCode()}}';
-    var token = "{{csrf_token()}}";
 </script>
 <!-- load the libraries and scripts necessary for Google Charts: -->
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>

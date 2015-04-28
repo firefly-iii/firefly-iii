@@ -175,9 +175,5 @@
 
 @stop
 @section('scripts')
-    <script type="text/javascript">
-        var token = "{{csrf_token()}}";
-    </script>
-
     <script type="text/javascript" src="js/budgets.js"></script>
 @stop

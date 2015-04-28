@@ -61,10 +61,10 @@
         </td>
         <td>
             @if($journal->transactiontype->type == 'Withdrawal')
-                <span class="text-danger">{{Amount::formatTransaction($journal->transactions[0],false)}}</span>
+                {!! Amount::formatJournal($journal) !!}
             @endif
             @if($journal->transactiontype->type == 'Deposit')
-                <span class="text-success">{{Amount::formatTransaction($journal->transactions[1],false)}}</span>
+                    {!! Amount::formatJournal($journal) !!}
             @endif
             @if($journal->transactiontype->type == 'Transfer')
                 <span class="text-info">{{Amount::formatTransaction($journal->transactions[1],false)}}</span>
