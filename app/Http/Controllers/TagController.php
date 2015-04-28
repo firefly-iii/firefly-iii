@@ -40,6 +40,37 @@ class TagController extends Controller
     }
 
     /**
+     * @param Tag $tag
+     *
+     * @return \Illuminate\View\View
+     */
+    public function delete(Tag $tag)
+    {
+        $subTitle = 'Delete "' . e($tag->tag) . '"';
+
+        // put previous url in session
+        Session::put('tags.delete.url', URL::previous());
+
+        return view('tags.delete', compact('tag', 'subTitle'));
+    }
+
+    /**
+     * @param Tag $tag
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy(Tag $tag, TagRepositoryInterface $repository)
+    {
+
+        $tagName = $tag->tag;
+        $repository->destroy($tag);
+
+        Session::flash('success', 'Tag "' . e($tagName) . '" was deleted.');
+
+        return Redirect::to(route('tags.index'));
+    }
+
+    /**
      * @return \Illuminate\View\View
      */
     public function create()

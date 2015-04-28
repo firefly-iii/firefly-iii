@@ -31,4 +31,11 @@ interface TagRepositoryInterface {
      * @return Tag
      */
     public function update(Tag $tag, array $data);
+
+    /**
+     * @param Tag   $tag
+     *
+     * @return boolean
+     */
+    public function destroy(Tag $tag);
 }

@@ -16,6 +16,18 @@ class TagRepository implements TagRepositoryInterface
 {
 
     /**
+     * @param Tag $tag
+     *
+     * @return boolean
+     */
+    public function destroy(Tag $tag)
+    {
+        $tag->delete();
+
+        return true;
+    }
+
+    /**
      * @return Collection
      */
     public function get()
@@ -60,15 +72,17 @@ class TagRepository implements TagRepositoryInterface
      *
      * @return Tag
      */
-    public function update(Tag $tag, array $data) {
-        $tag->tag = $data['tag'];
-        $tag->date = $data['date'];
+    public function update(Tag $tag, array $data)
+    {
+        $tag->tag         = $data['tag'];
+        $tag->date        = $data['date'];
         $tag->description = $data['description'];
-        $tag->latitude = $data['latitude'];
-        $tag->longitude = $data['longitude'];
-        $tag->zoomLevel = $data['zoomLevel'];
-        $tag->tagMode = $data['tagMode'];
+        $tag->latitude    = $data['latitude'];
+        $tag->longitude   = $data['longitude'];
+        $tag->zoomLevel   = $data['zoomLevel'];
+        $tag->tagMode     = $data['tagMode'];
         $tag->save();
+
         return $tag;
     }
 }
