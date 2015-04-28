@@ -85,6 +85,10 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     *
+     * * Remember: a balancingAct takes at most one expense and one transfer.
+     *            an advancePayment takes at most one expense, infinite deposits and NO transfers.
+     *
      * @param TransactionJournal $journal
      * @param array              $array
      *
@@ -94,7 +98,47 @@ class JournalRepository implements JournalRepositoryInterface
     {
         foreach ($array as $name) {
             $tag = Tag::firstOrCreateEncrypted(['tag' => $name, 'user_id' => $journal->user_id]);
-            $journal->tags()->save($tag);
+
+            if ($tag->tagMode == 'nothing') {
+                // save it, no problem:
+                $journal->tags()->save($tag);
+            }
+            if ($tag->tagMode == 'balancingAct') {
+                // if Withdrawal, journals that are of type Withdrawal, max 1.
+                $withdrawal = $this->getTransactionType('Withdrawal');
+                $transfer   = $this->getTransactionType('Transfer');
+
+                $withdrawals = $tag->transactionjournals()->where('transaction_type_id', $withdrawal->id)->count();
+                $transfers   = $tag->transactionjournals()->where('transaction_type_id', $transfer->id)->count();
+
+                // only if this is the only withdrawal.
+                if ($journal->transaction_type_id == $withdrawal->id && $withdrawals < 1) {
+                    $journal->tags()->save($tag);
+                }
+                // and only if this is the only transfer
+                if ($journal->transaction_type_id == $transfer->id && $transfers < 1) {
+                    $journal->tags()->save($tag);
+                }
+
+                // ignore expense
+            }
+
+            if ($tag->tagMode == 'advancePayment') {
+                $withdrawal  = $this->getTransactionType('Withdrawal');
+                $deposit     = $this->getTransactionType('Deposit');
+                $withdrawals = $tag->transactionjournals()->where('transaction_type_id', $withdrawal->id)->count();
+
+                // only if this is the only withdrawal
+                if ($journal->transaction_type_id == $withdrawal->id && $withdrawals < 1) {
+                    $journal->tags()->save($tag);
+                }
+
+                // only if this is a deposit.
+                if ($journal->transaction_type_id == $deposit->id) {
+                    $journal->tags()->save($tag);
+                }
+            }
+
         }
     }
 
@@ -297,9 +341,51 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         // connect each tag to journal (if not yet connected):
-        foreach($tags as $tag) {
-            if(!$journal->tags()->find($tag->id)) {
-                $journal->tags()->save($tag);
+        /** @var Tag $tag */
+        foreach ($tags as $tag) {
+            if (!$journal->tags()->find($tag->id)) {
+                if ($tag->tagMode == 'nothing') {
+                    // save it, no problem:
+                    $journal->tags()->save($tag);
+                }
+                if ($tag->tagMode == 'balancingAct') {
+                    // if Withdrawal, journals that are of type Withdrawal, max 1.
+                    $withdrawal = $this->getTransactionType('Withdrawal');
+                    $transfer   = $this->getTransactionType('Transfer');
+
+                    $withdrawals = $tag->transactionjournals()->where('transaction_type_id', $withdrawal->id)->count();
+                    $transfers   = $tag->transactionjournals()->where('transaction_type_id', $transfer->id)->count();
+
+                    // only if this is the only withdrawal.
+                    if ($journal->transaction_type_id == $withdrawal->id && $withdrawals < 1) {
+                        $journal->tags()->save($tag);
+                    }
+                    // and only if this is the only transfer
+                    if ($journal->transaction_type_id == $transfer->id && $transfers < 1) {
+                        $journal->tags()->save($tag);
+                        Log::debug('Saved tag! [' . $journal->transaction_type_id . ':' . $transfer->id . ':' . $transfers . ']');
+                    } else {
+                        Log::debug('Did not save tag. [' . $journal->transaction_type_id . ':' . $transfer->id . ':' . $transfers . ']');
+                    }
+
+                    // ignore expense
+                }
+
+                if ($tag->tagMode == 'advancePayment') {
+                    $withdrawal  = $this->getTransactionType('Withdrawal');
+                    $deposit     = $this->getTransactionType('Deposit');
+                    $withdrawals = $tag->transactionjournals()->where('transaction_type_id', $withdrawal->id)->count();
+
+                    // only if this is the only withdrawal
+                    if ($journal->transaction_type_id == $withdrawal->id && $withdrawals < 1) {
+                        $journal->tags()->save($tag);
+                    }
+
+                    // only if this is a deposit.
+                    if ($journal->transaction_type_id == $deposit->id) {
+                        $journal->tags()->save($tag);
+                    }
+                }
             }
         }
     }

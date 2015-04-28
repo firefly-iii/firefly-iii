@@ -19,6 +19,9 @@ use Redirect;
 /**
  * Class TagController
  *
+ * Remember: a balancingAct takes at most one expense and one transfer.
+ *           an advancePayment takes at most one expense, infinite deposits and NO transfers.
+ *
  * @package FireflyIII\Http\Controllers
  */
 class TagController extends Controller
