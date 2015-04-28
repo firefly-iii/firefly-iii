@@ -10,7 +10,7 @@ use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Reminder;
 use FireflyIII\Models\TransactionJournal;
-
+use FireflyIII\Models\Tag;
 /*
  * Back home.
  */
@@ -348,5 +348,26 @@ Breadcrumbs::register(
     $breadcrumbs->parent('transactions.index', strtolower($journal->transactionType->type));
     $breadcrumbs->push(e($journal->description), route('transactions.show', $journal->id));
 
+}
+);
+
+// tags
+Breadcrumbs::register(
+    'tags.index', function (Generator $breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('Tags', route('tags.index'));
+}
+);
+
+Breadcrumbs::register(
+    'tags.create', function (Generator $breadcrumbs) {
+    $breadcrumbs->parent('tags.index');
+    $breadcrumbs->push('Create tag', route('tags.create'));
+}
+);
+Breadcrumbs::register(
+    'tags.show', function (Generator $breadcrumbs, Tag $tag) {
+    $breadcrumbs->parent('tags.index');
+    $breadcrumbs->push(e($tag->tag), route('tags.show', $tag));
 }
 );

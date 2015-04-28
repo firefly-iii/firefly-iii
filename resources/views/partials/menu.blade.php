@@ -122,7 +122,7 @@
                 <a @if($r == 'categories.index') class="active" @endif href="{{route('categories.index')}}"><i class="fa fa-bar-chart fa-fw"></i> Categories</a>
             </li>
             <li>
-                <a href="#"><i class="fa fa-tags fa-fw"></i> Tags</a>
+                <a @if($r == 'tags.index') class="active" @endif href="{{route('tags.index')}}"><i class="fa fa-tags fa-fw"></i> Tags</a>
             </li>
             <li>
                 <a @if(!(strpos($r,'reports') === false)) class="active" @endif href="{{route('reports.index')}}"><i class="fa fa-line-chart fa-fw"></i> Reports</a>

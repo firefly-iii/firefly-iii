@@ -241,4 +241,12 @@ class TransactionJournal extends Model
         return $this->belongsTo('FireflyIII\User');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function tags()
+    {
+        return $this->belongsToMany('FireflyIII\Models\Tag');
+    }
+
 }

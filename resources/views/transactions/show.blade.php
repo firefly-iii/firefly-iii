@@ -53,50 +53,6 @@
                 </div>
             </div>
         @endif
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-fw fa-exchange"></i>
-                Related transactions
-            </div>
-            @if($journal->transactiongroups()->count() == 0)
-                <div class="panel-body">
-                    <p>
-                        <em>No related transactions</em>
-                    </p>
-                </div>
-            @else
-                <table class="table">
-                    @foreach($journal->transactiongroups()->get() as $group)
-                        <tr>
-                            <th colspan="2">Group #{{$group->id}} ({{$group->relation}})</th>
-                        </tr>
-                            @foreach($group->transactionjournals()->where('transaction_journals.id','!=',$journal->id)->get() as $jrnl)
-                                <tr>
-                                    <td>
-                                        <a href="{{route('related.getRemoveRelation',[$journal->id, $jrnl->id])}}" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span></a>
-                                    </td>
-                                    <td>
-                                        <a href="{{route('transactions.show',$jrnl->id)}}">{{{$jrnl->description}}}</a>
-                                    </td>
-                                    <td>
-                                        @foreach($jrnl->transactions()->get() as $t)
-                                            @if($t->amount > 0)
-                                                {!! Amount::formatTransaction($t) !!}
-                                            @endif
-                                        @endforeach
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tr>
-                    @endforeach
-                    </table>
-                @endif
-            <div class="panel-footer">
-            <p>
-                <a href="#" data-id="{{$journal->id}}" class="relateTransaction btn btn-default"><i data-id="{{$journal->id}}" class="fa fa-compress"></i> Relate to another transaction</a>
-            </p>
-            </div>
-        </div>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12">
 

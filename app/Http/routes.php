@@ -8,6 +8,7 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Reminder;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\Tag;
 
 
 // models
@@ -118,6 +119,16 @@ Route::bind(
     'category', function ($value, $route) {
     if (Auth::check()) {
         return Category::where('id', $value)->where('user_id', Auth::user()->id)->first();
+    }
+
+    return null;
+}
+);
+
+Route::bind(
+    'tag', function ($value, $route) {
+    if (Auth::check()) {
+        return Tag::where('id', $value)->where('user_id', Auth::user()->id)->first();
     }
 
     return null;
@@ -326,6 +337,22 @@ Route::group(
      * Search Controller
      */
     Route::get('/search', ['uses' => 'SearchController@index', 'as' => 'search']);
+
+    /**
+     * Tag Controller
+     */
+    Route::get('/tags', ['uses' => 'TagController@index', 'as' => 'tags.index']);
+    Route::get('/tags/create', ['uses' => 'TagController@create', 'as' => 'tags.create']);
+    Route::get('/tags/show/{tag}', ['uses' => 'TagController@show', 'as' => 'tags.show']);
+    Route::get('/tags/edit/{tag}', ['uses' => 'TagController@edit', 'as' => 'tags.edit']);
+    Route::get('/tags/delete/{tag}', ['uses' => 'TagController@delete', 'as' => 'tags.delete']);
+
+    Route::post('/tags/store', ['uses' => 'TagController@store', 'as' => 'tags.store']);
+    Route::post('/tags/update/{tag}', ['uses' => 'TagController@update', 'as' => 'tags.update']);
+    Route::post('/tags/destroy/{tag}', ['uses' => 'TagController@destroy', 'as' => 'tags.destroy']);
+
+    Route::post('/tags/hideTagHelp/{state}', ['uses' => 'TagController@hideTagHelp', 'as' => 'tags.hideTagHelp']);
+
 
     /**
      * Transaction Controller

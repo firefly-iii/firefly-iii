@@ -46,6 +46,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function tags()
+    {
+        return $this->hasMany('FireflyIII\Models\Tag');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function bills()
     {
         return $this->hasMany('FireflyIII\Models\Bill');

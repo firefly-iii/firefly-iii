@@ -181,10 +181,14 @@ class FireflyValidator extends Validator
      */
     public function validateUniqueObjectForUser($attribute, $value, $parameters)
     {
-        $table     = $parameters[0];
-        $field     = $parameters[1];
-        $encrypted = isset($parameters[2]) ? $parameters[2] : 'encrypted';
-        $exclude   = isset($parameters[3]) ? $parameters[3] : null;
+        $table           = $parameters[0];
+        $field           = $parameters[1];
+        $encrypted       = isset($parameters[2]) ? $parameters[2] : 'encrypted';
+        $exclude         = isset($parameters[3]) ? $parameters[3] : null;
+        $alwaysEncrypted = false;
+        if ($encrypted == 'TRUE') {
+            $alwaysEncrypted = true;
+        }
 
         $query = DB::table($table)->where('user_id', Auth::user()->id);
 
@@ -195,8 +199,12 @@ class FireflyValidator extends Validator
 
         $set = $query->get();
         foreach ($set as $entry) {
-            $isEncrypted = intval($entry->$encrypted) == 1 ? true : false;
-            $checkValue  = $isEncrypted ? Crypt::decrypt($entry->$field) : $entry->$field;
+            if (!$alwaysEncrypted) {
+                $isEncrypted = intval($entry->$encrypted) == 1 ? true : false;
+            } else {
+                $isEncrypted = true;
+            }
+            $checkValue = $isEncrypted ? Crypt::decrypt($entry->$field) : $entry->$field;
             if ($checkValue == $value) {
                 return false;
             }
