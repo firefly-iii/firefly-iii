@@ -6,7 +6,7 @@
             <i class="fa fa-fw fa-bars handle"></i>
             <i class="loadSpin"></i>
         </td>
-        <td style="width:80px;">
+        <td style="width:100px;">
             <div class="btn-group btn-group-xs">
                 <a href="{{route('piggy-banks.edit',$piggyBank->id)}}" class="btn btn-default btn-xs"><i class="fa fa-pencil fa-fw"></i></a>
                 <a href="{{route('piggy-banks.delete',$piggyBank->id)}}" class="btn btn-default btn-xs"><i class="fa fa-trash fa-fw"></i></a>

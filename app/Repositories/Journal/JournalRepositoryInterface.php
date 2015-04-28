@@ -22,16 +22,6 @@ interface JournalRepositoryInterface
     public function first();
 
     /**
-     *
-     * Get the account_id, which is the asset account that paid for the transaction.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return int
-     */
-    public function getAssetAccount(TransactionJournal $journal);
-
-    /**
      * @param TransactionType $dbType
      *
      * @return Collection
