@@ -39,7 +39,28 @@
                             <td><a href="{{route('categories.show',$category->id)}}">{{{$category->name}}}</a></td>
                         </tr>
                     @endforeach
+                    @if($journal->tags()->count() > 0)
+                        <tr>
+                            <td>Tags</td>
+                            <td>
+                                @foreach($journal->tags as $tag)
 
+                                    <h4 style="display: inline;"><a class="label label-success" href="{{route('tags.show',$tag)}}">
+                                            @if($tag->tagMode == 'nothing')
+                                                <i class="fa fa-fw fa-tag"></i>
+                                            @endif
+                                            @if($tag->tagMode == 'balancingAct')
+                                                <i class="fa fa-fw fa-refresh"></i>
+                                            @endif
+                                            @if($tag->tagMode == 'advancePayment')
+                                                <i class="fa fa-fw fa-sort-numeric-desc"></i>
+                                            @endif
+                                            {{$tag->tag}}</a>
+                                    </h4>
+                                @endforeach
+                            </td>
+                        </tr>
+                    @endif
                 </table>
         </div>
         <!-- events, if present -->
