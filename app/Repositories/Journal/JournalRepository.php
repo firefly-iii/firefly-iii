@@ -40,7 +40,7 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @param TransactionJournal $journal
      *
-     * @return mixed
+     * @return int
      */
     public function getAssetAccount(TransactionJournal $journal)
     {
@@ -135,7 +135,19 @@ class JournalRepository implements JournalRepositoryInterface
 
                 // only if this is a deposit.
                 if ($journal->transaction_type_id == $deposit->id) {
-                    $journal->tags()->save($tag);
+
+                    // if this is a deposit, account must match the current only journal
+                    // (if already present):
+                    $currentWithdrawal = $tag->transactionjournals()->where('transaction_type_id', $withdrawal->id)->first();
+                    if ($currentWithdrawal && $this->getAssetAccount($currentWithdrawal) == $this->getAssetAccount($journal)) {
+                        $journal->tags()->save($tag);
+                    } else {
+                        if (is_null($currentWithdrawal)) {
+                            $journal->tags()->save($tag);
+                        }
+                    }
+
+
                 }
             }
 
@@ -164,10 +176,6 @@ class JournalRepository implements JournalRepositoryInterface
             ]
         );
         $journal->save();
-
-        if (isset($data['tags']) && is_array($data['tags'])) {
-            $this->saveTags($journal, $data['tags']);
-        }
 
 
         // store or get category
@@ -202,6 +210,11 @@ class JournalRepository implements JournalRepositoryInterface
         );
         $journal->completed = 1;
         $journal->save();
+
+        // store tags
+        if (isset($data['tags']) && is_array($data['tags'])) {
+            $this->saveTags($journal, $data['tags']);
+        }
 
         return $journal;
 
