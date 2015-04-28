@@ -77,15 +77,15 @@ class TransactionJournal extends Model
         /** @var Transaction $transaction */
         foreach ($this->transactions()->get() as $transaction) {
             if (floatval($transaction->amount) > 0 && $positive === true) {
-                return $transaction->account_id;
+                return $transaction->account;
             }
             if (floatval($transaction->amount) < 0 && $positive === false) {
-                return $transaction->account_id;
+                return $transaction->account;
             }
 
         }
 
-        return $this->transactions()->first()->account_id;
+        return $this->transactions()->first();
     }
 
     /**
