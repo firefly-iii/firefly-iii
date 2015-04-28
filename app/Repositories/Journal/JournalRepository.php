@@ -70,8 +70,10 @@ class JournalRepository implements JournalRepositoryInterface
         $tagRepository = App::make('FireflyIII\Repositories\Tag\TagRepositoryInterface');
 
         foreach ($array as $name) {
-            $tag = Tag::firstOrCreateEncrypted(['tag' => $name, 'user_id' => $journal->user_id]);
-            $tagRepository->connect($journal, $tag);
+            if (strlen(trim($name)) > 0) {
+                $tag = Tag::firstOrCreateEncrypted(['tag' => $name, 'user_id' => $journal->user_id]);
+                $tagRepository->connect($journal, $tag);
+            }
         }
     }
 
@@ -217,9 +219,11 @@ class JournalRepository implements JournalRepositoryInterface
         $tags = [];
         $ids  = [];
         foreach ($array as $name) {
-            $tag    = Tag::firstOrCreateEncrypted(['tag' => $name, 'user_id' => $journal->user_id]);
-            $tags[] = $tag;
-            $ids[]  = $tag->id;
+            if (strlen(trim($name)) > 0) {
+                $tag    = Tag::firstOrCreateEncrypted(['tag' => $name, 'user_id' => $journal->user_id]);
+                $tags[] = $tag;
+                $ids[]  = $tag->id;
+            }
         }
 
         // delete all tags connected to journal not in this array:
