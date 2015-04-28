@@ -68,6 +68,34 @@ class TransactionJournal extends Model
         }
     }
 
+    public function getAssetAccountAttribute()
+    {
+        $positive = true; // the asset account is in the transaction with the positive amount.
+        if ($this->transactionType->type === 'Withdrawal') {
+            $positive = false;
+        }
+        /** @var Transaction $transaction */
+        foreach ($this->transactions()->get() as $transaction) {
+            if (floatval($transaction->amount) > 0 && $positive === true) {
+                return $transaction->account_id;
+            }
+            if (floatval($transaction->amount) < 0 && $positive === false) {
+                return $transaction->account_id;
+            }
+
+        }
+
+        return $this->transactions()->first()->account_id;
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transactions()
+    {
+        return $this->hasMany('FireflyIII\Models\Transaction');
+    }
+
     /**
      * @return array
      */
@@ -202,6 +230,14 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function tags()
+    {
+        return $this->belongsToMany('FireflyIII\Models\Tag');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function transactionCurrency()
@@ -226,27 +262,11 @@ class TransactionJournal extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function transactions()
-    {
-        return $this->hasMany('FireflyIII\Models\Transaction');
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()
     {
         return $this->belongsTo('FireflyIII\User');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function tags()
-    {
-        return $this->belongsToMany('FireflyIII\Models\Tag');
     }
 
 }

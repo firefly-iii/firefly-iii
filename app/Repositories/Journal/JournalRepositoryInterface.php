@@ -32,23 +32,6 @@ interface JournalRepositoryInterface
     public function getAssetAccount(TransactionJournal $journal);
 
     /**
-     * @param TransactionJournal $journal
-     * @param array              $array
-     *
-     * @return void
-     */
-    public function updateTags(TransactionJournal $journal, array $array);
-
-    /**
-     * @param TransactionJournal $journal
-     * @param array              $array
-     *
-     * @return void
-     */
-    public function saveTags(TransactionJournal $journal, array $array);
-
-
-    /**
      * @param TransactionType $dbType
      *
      * @return Collection
@@ -61,6 +44,22 @@ interface JournalRepositoryInterface
      * @return TransactionType
      */
     public function getTransactionType($type);
+
+    /**
+     * @param TransactionJournal $journal
+     * @param array              $array
+     *
+     * @return void
+
+    /**
+     *
+     * @param TransactionJournal $journal
+     * @param array              $array
+     *
+     * @return void
+     */
+    public function saveTags(TransactionJournal $journal, array $array);
+
     /**
      * @param array $data
      *
@@ -75,4 +74,12 @@ interface JournalRepositoryInterface
      * @return mixed
      */
     public function update(TransactionJournal $journal, array $data);
+
+    /**
+     * @param TransactionJournal $journal
+     * @param array              $array
+     *
+     * @return mixed
+     */
+    public function updateTags(TransactionJournal $journal, array $array);
 }

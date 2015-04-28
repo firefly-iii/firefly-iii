@@ -157,7 +157,7 @@ class TransactionController extends Controller
         }
 
         $preFilled['amount']          = $journal->amount;
-        $preFilled['account_id']      = $repository->getAssetAccount($journal);
+        $preFilled['account_id']      = $journal->assetAccount->id;
         $preFilled['expense_account'] = $transactions[0]->account->name;
         $preFilled['revenue_account'] = $transactions[1]->account->name;
         $preFilled['account_from_id'] = $transactions[1]->account->id;

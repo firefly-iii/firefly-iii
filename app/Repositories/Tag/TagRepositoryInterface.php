@@ -2,6 +2,7 @@
 
 namespace FireflyIII\Repositories\Tag;
 use FireflyIII\Models\Tag;
+use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
 
 
@@ -38,4 +39,12 @@ interface TagRepositoryInterface {
      * @return boolean
      */
     public function destroy(Tag $tag);
+
+    /**
+     * @param TransactionJournal $journal
+     * @param Tag                $tag
+     *
+     * @return boolean
+     */
+    public function connect(TransactionJournal $journal, Tag $tag);
 }
