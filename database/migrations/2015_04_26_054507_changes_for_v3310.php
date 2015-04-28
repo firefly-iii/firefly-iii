@@ -33,18 +33,6 @@ class ChangesForV3310 extends Migration
         }
         );
 
-        Schema::table(
-            'transaction_groups', function (Blueprint $table) {
-
-            // drop column "relation"
-            $table->string('relation', 50);
-        }
-        );
-        // make new column "relation"
-
-        // set all current entries to be "balance"
-        DB::table('transaction_groups')->update(['relation' => 'balance']);
-
         /*
          * New table!
          */
@@ -61,7 +49,6 @@ class ChangesForV3310 extends Migration
             $table->decimal('latitude', 18, 12)->nullable();
             $table->decimal('longitude', 18, 12)->nullable();
             $table->smallInteger('zoomLevel', false, true)->nullable();
-
 
             // connect reminders to users
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
