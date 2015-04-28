@@ -6,9 +6,10 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Reminder;
+use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\Tag;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 // models
@@ -16,102 +17,125 @@ Route::bind(
     'account',
     function ($value, $route) {
         if (Auth::check()) {
-            $account = Account::leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                              ->where('account_types.editable', 1)
-                              ->where('accounts.id', $value)
-                              ->where('user_id', Auth::user()->id)
-                              ->first(['accounts.*']);
-            if ($account) {
-                return $account;
+            $object = Account::leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                             ->where('account_types.editable', 1)
+                             ->where('accounts.id', $value)
+                             ->where('user_id', Auth::user()->id)
+                             ->first(['accounts.*']);
+            if ($object) {
+                return $object;
             }
         }
-        App::abort(404);
+        throw new NotFoundHttpException;
     }
 );
 
 Route::bind(
     'tjSecond', function ($value, $route) {
     if (Auth::check()) {
-        return TransactionJournal::
-        where('id', $value)->where('user_id', Auth::user()->id)->first();
+        $object = TransactionJournal::where('id', $value)->where('user_id', Auth::user()->id)->first();
+        if ($object) {
+            return $object;
+        }
     }
-
-    return null;
+    throw new NotFoundHttpException;
 }
 );
 
 Route::bind(
     'tj', function ($value, $route) {
     if (Auth::check()) {
-        return TransactionJournal::
-        where('id', $value)->where('user_id', Auth::user()->id)->first();
+        $object = TransactionJournal::where('id', $value)->where('user_id', Auth::user()->id)->first();
+        if ($object) {
+            return $object;
+        }
     }
 
-    return null;
+    throw new NotFoundHttpException;
 }
 );
 
 Route::bind(
     'currency', function ($value, $route) {
-    return TransactionCurrency::find($value);
+    if (Auth::check()) {
+        $object = TransactionCurrency::find($value);
+        if ($object) {
+            return $object;
+        }
+    }
+    throw new NotFoundHttpException;
 }
 );
 
 Route::bind(
     'bill', function ($value, $route) {
     if (Auth::check()) {
-        return Bill::where('id', $value)->where('user_id', Auth::user()->id)->first();
+        $object = Bill::where('id', $value)->where('user_id', Auth::user()->id)->first();
+        if ($object) {
+            return $object;
+        }
     }
 
-    return null;
+    throw new NotFoundHttpException;
 }
 );
 
 Route::bind(
     'budget', function ($value, $route) {
     if (Auth::check()) {
-        return Budget::where('id', $value)->where('user_id', Auth::user()->id)->first();
+        $object = Budget::where('id', $value)->where('user_id', Auth::user()->id)->first();
+        if ($object) {
+            return $object;
+        }
     }
 
-    return null;
+    throw new NotFoundHttpException;
 }
 );
 
 Route::bind(
     'reminder', function ($value, $route) {
     if (Auth::check()) {
-        return Reminder::where('id', $value)->where('user_id', Auth::user()->id)->first();
+        $object = Reminder::where('id', $value)->where('user_id', Auth::user()->id)->first();
+        if ($object) {
+            return $object;
+        }
     }
 
-    return null;
+    throw new NotFoundHttpException;
 }
 );
 
 Route::bind(
     'limitrepetition', function ($value, $route) {
     if (Auth::check()) {
-        return LimitRepetition::where('limit_repetitions.id', $value)
-                              ->leftjoin('budget_limits', 'budget_limits.id', '=', 'limit_repetitions.budget_limit_id')
-                              ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
-                              ->where('budgets.user_id', Auth::user()->id)
-                              ->first(['limit_repetitions.*']);
+        $object = LimitRepetition::where('limit_repetitions.id', $value)
+                                 ->leftjoin('budget_limits', 'budget_limits.id', '=', 'limit_repetitions.budget_limit_id')
+                                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+                                 ->where('budgets.user_id', Auth::user()->id)
+                                 ->first(['limit_repetitions.*']);
+        if ($object) {
+            return $object;
+        }
     }
 
-    return null;
+    throw new NotFoundHttpException;
 }
 );
 
 Route::bind(
     'piggyBank', function ($value, $route) {
     if (Auth::check()) {
-        return PiggyBank::
-        where('piggy_banks.id', $value)
-                        ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
-                        ->where('accounts.user_id', Auth::user()->id)
-                        ->first(['piggy_banks.*']);
+        $object = PiggyBank::where('piggy_banks.id', $value)
+                           ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
+                           ->where('accounts.user_id', Auth::user()->id)
+                           ->first(['piggy_banks.*']);
+        if ($object) {
+            return $object;
+        }
     }
 
-    return null;
+    throw new NotFoundHttpException;
 }
 );
 
@@ -119,9 +143,12 @@ Route::bind(
     'category', function ($value, $route) {
     if (Auth::check()) {
         return Category::where('id', $value)->where('user_id', Auth::user()->id)->first();
+        if ($object) {
+            $object = $object;
+        }
     }
 
-    return null;
+    throw new NotFoundHttpException;
 }
 );
 
@@ -129,9 +156,12 @@ Route::bind(
     'tag', function ($value, $route) {
     if (Auth::check()) {
         return Tag::where('id', $value)->where('user_id', Auth::user()->id)->first();
+        if ($object) {
+            $object = $object;
+        }
     }
 
-    return null;
+    throw new NotFoundHttpException;
 }
 );
 
