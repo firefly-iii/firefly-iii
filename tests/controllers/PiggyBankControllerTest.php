@@ -93,8 +93,7 @@ class PiggyBankControllerTest extends TestCase
     public function testDestroy()
     {
         $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
-        $user      = FactoryMuffin::create('FireflyIII\User');
-        $this->be($user);
+        $this->be($piggyBank->account->user);
 
         $repository = $this->mock('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
         $repository->shouldReceive('destroy')->once()->withAnyArgs()->andReturn(true);
@@ -109,8 +108,7 @@ class PiggyBankControllerTest extends TestCase
     public function testEdit()
     {
         $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
-        $user      = FactoryMuffin::create('FireflyIII\User');
-        $this->be($user);
+        $this->be($piggyBank->account->user);
         $account    = FactoryMuffin::create('FireflyIII\Models\Account');
         $collection = new Collection([$account]);
 
@@ -135,8 +133,7 @@ class PiggyBankControllerTest extends TestCase
     public function testEditNullDate()
     {
         $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
-        $user      = FactoryMuffin::create('FireflyIII\User');
-        $this->be($user);
+        $this->be($piggyBank->account->user);
         $piggyBank->targetdate = null;
         $piggyBank->save();
         $account    = FactoryMuffin::create('FireflyIII\Models\Account');
