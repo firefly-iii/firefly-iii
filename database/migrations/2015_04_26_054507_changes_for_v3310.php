@@ -13,8 +13,9 @@ class ChangesForV3310 extends Migration
      */
     public function down()
     {
-        Schema::drop('tags');
         Schema::drop('tag_transaction_journal');
+        Schema::drop('tags');
+
     }
 
     /**
