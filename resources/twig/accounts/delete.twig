@@ -1,36 +1,36 @@
 {% extends "./layout/default.twig" %}
 {% block content %}
-{!! Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $account) !!}
-{!! Form::open(['class' => 'form-horizontal','id' => 'destroy','url' => route('accounts.destroy',$account->id)]) !!}
+{{ Breadcrumbs.renderIfExists(Route.getCurrentRoute().getName(), account) }}
+{{ Form.open({'class' : 'form-horizontal','id' : 'destroy','url' : route('accounts.destroy',account.id)}) }}
 <div class="row">
     <div class="col-lg-6 col-md-12 col-sm-12">
         <div class="panel panel-red">
             <div class="panel-heading">
-                Delete account "{{{$account->name}}}"
+                Delete account "{{ account.name }}"
             </div>
             <div class="panel-body">
                 <p>
-                Are you sure that you want to delete the {{strtolower($account->accountType->type)}} "{{$account->name}}"?
+                Are you sure that you want to delete the {{account.accountType.type|lower}} "{{account.name}}"?
                 </p>
 
-                @if($account->transactions()->count() > 0)
+                {% if account.transactions().count() > 0 %}
                     <p class="text-danger">
-                        {{ucfirst($account->accountType->type)}} "{{{$account->name}}}" still has {{$account->transactions()->count()}} transaction(s) associated to it. These will be deleted as well.
+                        {{account.accountType.type|capitalize}} "{{ account.name }}" still has {{account.transactions().count()}} transaction(s) associated to it. These will be deleted as well.
                     </p>
-                @endif
-                @if($account->piggyBanks()->count() > 0)
+                {% endif %}
+                {% if account.piggyBanks().count() > 0 %}
                     <p class="text-danger">
-                        {{ucfirst($account->accountType->type)}} "{{{$account->name}}}" still has {{$account->piggyBanks()->count()}} piggy bank(s) associated to it. These will be deleted as well.
+                        {{account.accountType.type|capitalize}} "{{ account.name }}" still has {{account.piggyBanks().count()}} piggy bank(s) associated to it. These will be deleted as well.
                     </p>
-                @endif
+                {% endif %}
                 <p>
                     <button type="submit" class="btn btn-default btn-danger">Delete permanently</button>
-                    <a href="{{URL::previous()}}" class="btn-default btn">Cancel</a >
+                    <a href="{{URL.previous()}}" class="btn-default btn">Cancel</a >
                 </p>
             </div>
         </div>
     </div>
 </div>
 
-{!! Form::close() !!}
+</form>
 {% endblock %}
