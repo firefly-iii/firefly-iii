@@ -34,6 +34,7 @@ class TagController extends Controller
         parent::__construct();
         View::share('title', 'Tags');
         View::share('mainTitleIcon', 'fa-tags');
+        View::share('hideTags',true);
         $tagOptions = [
             'nothing'        => 'Just a regular tag.',
             'balancingAct'   => 'The tag takes at most two transactions; an expense and a transfer. They\'ll balance each other out.',

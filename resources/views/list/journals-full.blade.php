@@ -73,7 +73,32 @@
                 also show an error when editing a tag and it becomes either
                 of these two types. Or rather, block editing of the tag.
                 -->
-                {!! Amount::formatJournal($journal) !!}
+                <?php $showTag = false;$subAmount=0;$showSubAmount=false;$doNothing=true;?>
+                @foreach($journal->tags as $tag)
+                    <!-- show tag for deposit that is part of a advance payment -->
+                    @if($tag->tagMode == 'advancePayment' && $journal->transactionType->type == 'Deposit')
+                        <?php $showTag=true;$tagToShow = $tag;$doNothing=false;?>
+                    @endif
+                    @if($tag->tagMode == 'advancePayment' && $journal->transactionType->type == 'Withdrawal')
+                        <?php $subAmount = $journal->amount;$showSubAmount=true;?>
+                        @foreach($tag->transactionjournals as $subJournal)
+                            @if($subJournal->id != $journal->id)
+                                <?php $subAmount -= $subJournal->amount;$doNothing=false;?>
+                            @endif
+                        @endforeach
+                    @endif
+                @endforeach
+
+                <!-- show a link to the tag. -->
+                @if($showTag === true)
+                    <a class="label label-success" href="{{route('tags.show',$tagToShow->id)}}">{{$tagToShow->tag}}</a>
+                @endif
+                @if($showSubAmount === true)
+                    {!! Amount::format($subAmount*-1) !!}
+                @endif
+                @if($doNothing)
+                    {!! Amount::formatJournal($journal) !!}
+                @endif
             @else
                 {!! Amount::formatJournal($journal) !!}
             @endif
