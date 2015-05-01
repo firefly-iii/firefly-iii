@@ -22,7 +22,7 @@
             </div>
             <div class="panel-body">
                 <form role="form" method="POST" id="login" action="/auth/login">
-                    <input type="hidden" name="_token" value="{{ csrf_token }}">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <div class="form-group">
                         <label class="control-label">E-Mail</label>
                         <input type="email" class="form-control" id="inputEmail" name="email" placeholder="E-Mail">
