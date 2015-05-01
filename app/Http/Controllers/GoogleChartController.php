@@ -171,7 +171,7 @@ class GoogleChartController extends Controller
 
         foreach ($allEntries as $entry) {
             if ($entry[2] > 0) {
-                $left = $entry[1] - $entry[0];
+                $left = $entry[1] - $entry[2];
                 $chart->addRow($entry[0], $left);
             }
         }
