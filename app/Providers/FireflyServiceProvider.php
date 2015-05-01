@@ -9,7 +9,8 @@ use FireflyIII\Support\ExpandedForm;
 use FireflyIII\Support\Navigation;
 use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
-use FireflyIII\Support\TwigSupport;
+use FireflyIII\Support\Twig\General;
+use FireflyIII\Support\Twig\Journals;
 use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Support\ServiceProvider;
 use Twig;
@@ -36,7 +37,8 @@ class FireflyServiceProvider extends ServiceProvider
 
         $config = App::make('config');
         Twig::addExtension(new Functions($config));
-        Twig::addExtension(new TwigSupport);
+        Twig::addExtension(new General);
+        Twig::addExtension(new Journals);
     }
 
     public function register()

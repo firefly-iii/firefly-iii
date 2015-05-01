@@ -161,7 +161,9 @@ class ConfigServiceProvider extends ServiceProvider
                                 ]
                             ],
                             'Session',
-                            'Route'
+                            'Route',
+                            'Config',
+                            'ExpandedForm'
                         ],
 
                         /*

@@ -1,8 +1,9 @@
 <?php
 
-namespace FireflyIII\Support;
+namespace FireflyIII\Support\Twig;
 
 use App;
+use Config;
 use FireflyIII\Models\Account;
 use Route;
 use Twig_Extension;
@@ -14,10 +15,13 @@ use Twig_SimpleFunction;
  *
  * @package FireflyIII\Support
  */
-class TwigSupport extends Twig_Extension
+class General extends Twig_Extension
 {
 
 
+    /**
+     * @return array
+     */
     public function getFilters()
     {
         $filters = [];
@@ -40,18 +44,17 @@ class TwigSupport extends Twig_Extension
                 return 'NULL';
             }
 
-            return App::make('amount')->format(App::make('steam')->balance($account));
-        }, ['is_safe' => ['html']]
-        );
-        $filters[]  = new Twig_SimpleFilter(
-            'activeRoute', function ($string) {
-            if (Route::getCurrentRoute()->getName() == $string) {
-                return 'active';
-            }
-
-            return '';
+            return App::make('steam')->balance($account);
         }
         );
+
+        // should be a function but OK
+        $filters[] = new Twig_SimpleFilter(
+            'getAccountRole', function ($name) {
+            return Config::get('firefly.accountRoles.' . $name);
+        }
+        );
+
         return $filters;
     }
 
@@ -68,10 +71,32 @@ class TwigSupport extends Twig_Extension
         }
         );
 
+
         $functions[] = new Twig_SimpleFunction(
             'env', function ($name, $default) {
             return env($name, $default);
         }
+        );
+
+        $functions[] = new Twig_SimpleFunction(
+            'activeRoute', function ($context) {
+            $args  = func_get_args();
+            $route = $args[1];
+            $what  = isset($args[2]) ? $args[2] : false;
+            $activeWhat = isset($context['what']) ? $context['what'] : false;
+            // activeRoute
+            if (!($what === false)) {
+                if ($what == $activeWhat && Route::getCurrentRoute()->getName() == $route) {
+                    return 'active because-active-what';
+                }
+            } else {
+                if (Route::getCurrentRoute()->getName() == $route) {
+                    return 'active because-route-matches';
+                }
+            }
+
+            return 'not-xxx-at-all';
+        }, ['needs_context' => true]
         );
 
         return $functions;
@@ -84,7 +109,7 @@ class TwigSupport extends Twig_Extension
      */
     public function getName()
     {
-        return 'FireflyIII\Support\TwigSupport';
+        return 'FireflyIII\Support\Twig\General';
     }
 
 }
