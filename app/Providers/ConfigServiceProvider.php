@@ -108,7 +108,7 @@ class ConfigServiceProvider extends ServiceProvider
                         | `Twig_Extension_Debug` is enabled automatically if twig.debug is TRUE.
                         |
                         */
-                        'enabled'   => [
+                        'enabled' => [
                             'TwigBridge\Extension\Loader\Facades',
                             'TwigBridge\Extension\Loader\Filters',
                             'TwigBridge\Extension\Loader\Functions',
@@ -122,7 +122,7 @@ class ConfigServiceProvider extends ServiceProvider
                             'TwigBridge\Extension\Laravel\Translator',
                             'TwigBridge\Extension\Laravel\Url',
 
-                            // 'TwigBridge\Extension\Laravel\Form',
+                            //                             'TwigBridge\Extension\Laravel\Form',
                             // 'TwigBridge\Extension\Laravel\Html',
                             // 'TwigBridge\Extension\Laravel\Legacy\Facades',
                         ],
@@ -154,8 +154,8 @@ class ConfigServiceProvider extends ServiceProvider
                         | in order to be marked as safe.
                         |
                         */
-                        'facades'   => [
-                            'Breadcrumbs' => [
+                        'facades' => [
+                            'Breadcrumbs'  => [
                                 'is_safe' => [
                                     'renderIfExists'
                                 ]
@@ -163,7 +163,16 @@ class ConfigServiceProvider extends ServiceProvider
                             'Session',
                             'Route',
                             'Config',
-                            'ExpandedForm'
+                            'ExpandedForm' => [
+                                'is_safe' => [
+                                'date','text','select','balance','optionsList'
+                                ]
+                            ],
+                            'Form' => [
+                                'is_safe' => [
+                                    'input','select','checkbox'
+                                ]
+                            ],
                         ],
 
                         /*
@@ -195,10 +204,10 @@ class ConfigServiceProvider extends ServiceProvider
                         |
                         */
                         'functions' => [
-                            'elixir',
-                            'head',
-                            'last',
-                        ],
+        'elixir',
+        'head',
+        'last',
+    ],
 
                         /*
                         |--------------------------------------------------------------------------

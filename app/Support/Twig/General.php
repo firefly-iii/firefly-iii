@@ -71,6 +71,12 @@ class General extends Twig_Extension
         }
         );
 
+        $functions[] = new Twig_SimpleFunction(
+            'phpdate', function ($str) {
+            return date($str);
+        }
+        );
+
 
         $functions[] = new Twig_SimpleFunction(
             'env', function ($name, $default) {
