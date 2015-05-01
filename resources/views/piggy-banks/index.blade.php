@@ -4,7 +4,7 @@
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <p>
-            <a href="{{route('piggy-banks.create')}}" class="btn btn-success">Create new piggy bank</a>
+            <i class="fa fa-sort-amount-asc fa-fw"></i> <a href="{{route('piggy-banks.create')}}" class="btn btn-success">Create new piggy bank</a>
         </p>
     </div>
 </div>
@@ -15,14 +15,6 @@
             <div class="panel-heading">Piggy banks</div>
             @include('list.piggy-banks')
         </div>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <p>
-            <a href="{{route('piggy-banks.create')}}" class="btn btn-success">Create new piggy bank</a>
-        </p>
     </div>
 </div>
 
