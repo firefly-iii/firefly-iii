@@ -227,10 +227,6 @@ class BillController extends Controller
         $billData = $request->getBillData();
         $bill     = $repository->update($bill, $billData);
 
-        if (intval(Input::get('return_to_edit')) === 1) {
-            return Redirect::route('bills.edit', $bill->id);
-        }
-
         Session::flash('success', 'Bill "' . e($bill->name) . '" updated.');
 
         if (intval(Input::get('return_to_edit')) === 1) {
