@@ -1,4 +1,5 @@
 <?php
+use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Preference;
@@ -108,6 +109,8 @@ class PiggyBankControllerTest extends TestCase
     public function testEdit()
     {
         $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
+        $piggyBank->targetdate = Carbon::now()->addYear();
+        $piggyBank->save();
         $this->be($piggyBank->account->user);
         $account    = FactoryMuffin::create('FireflyIII\Models\Account');
         $collection = new Collection([$account]);
