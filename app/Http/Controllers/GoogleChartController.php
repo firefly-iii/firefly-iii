@@ -144,8 +144,8 @@ class GoogleChartController extends Controller
     public function allBudgetsHomeChart(GChart $chart, BudgetRepositoryInterface $repository)
     {
         $chart->addColumn('Budget', 'string');
-        $chart->addColumn('Budgeted', 'number');
-        $chart->addColumn('Spent', 'number');
+        $chart->addColumn('Left', 'number');
+        //$chart->addColumn('Spent', 'number');
 
         $budgets    = $repository->getBudgets();
         $start      = Session::get('start', Carbon::now()->startOfMonth());
@@ -171,7 +171,8 @@ class GoogleChartController extends Controller
 
         foreach ($allEntries as $entry) {
             if ($entry[2] > 0) {
-                $chart->addRow($entry[0], $entry[1], $entry[2]);
+                $left = $entry[1] - $entry[0];
+                $chart->addRow($entry[0], $left);
             }
         }
 
