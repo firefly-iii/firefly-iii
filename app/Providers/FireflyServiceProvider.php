@@ -3,6 +3,7 @@
 namespace FireflyIII\Providers;
 
 use App;
+use FireflyIII\Models\Account;
 use FireflyIII\Support\Amount;
 use FireflyIII\Support\ExpandedForm;
 use FireflyIII\Support\Navigation;
@@ -10,7 +11,10 @@ use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
 use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Support\ServiceProvider;
+use Route;
 use Twig;
+use Twig_SimpleFilter;
+use Twig_SimpleFunction;
 use TwigBridge\Extension\Loader\Functions;
 use Validator;
 
@@ -28,14 +32,89 @@ class FireflyServiceProvider extends ServiceProvider
                 return new FireflyValidator($translator, $data, $rules, $messages);
             }
         );
+        /*
+         * Default Twig configuration:
+         */
+        $config = App::make('config');
+        Twig::addExtension(new Functions($config));
+
+        /*
+         * Amount::format
+         */
+        $filter = new Twig_SimpleFilter(
+            'formatAmount', function ($string) {
+            return App::make('amount')->format($string);
+        }, ['is_safe' => ['html']]
+        );
+        Twig::addFilter($filter);
+
+        /*
+         * Amount::formatJournal
+         */
+        $filter = new Twig_SimpleFilter(
+            'formatJournal', function ($journal) {
+            return App::make('amount')->formatJournal($journal);
+        }, ['is_safe' => ['html']]
+        );
+        Twig::addFilter($filter);
+
+        /*
+         * Steam::balance()
+         */
+
+        $filter = new Twig_SimpleFilter(
+            'balance', function (Account $account = null) {
+            if (is_null($account)) {
+                return 'NULL';
+            }
+
+            return App::make('amount')->format(App::make('steam')->balance($account));
+            //return App::make('steam')->balance($account);
+        },['is_safe' => ['html']]
+        );
+        Twig::addFilter($filter);
+
+
+        /*
+         * Current active route.
+         */
+        $filter = new Twig_SimpleFilter(
+            'activeRoute', function ($string) {
+            if (Route::getCurrentRoute()->getName() == $string) {
+                return 'active';
+            }
+
+            return '';
+        }
+        );
+        Twig::addFilter($filter);
+
+        /*
+         * Amount::getCurrencyCode()
+         */
+        $function = new Twig_SimpleFunction(
+            'getCurrencyCode', function () {
+            return App::make('amount')->getCurrencyCode();
+        }
+        );
+        Twig::addFunction($function);
+
+
+        /*
+         * env
+         */
+        $function = new Twig_SimpleFunction(
+            'env', function ($a, $b) {
+            return env($a, $b);
+        }
+        );
+        Twig::addFunction($function);
 
     }
 
     public function register()
     {
 
-        $config = App::make('config');
-        Twig::addExtension(new Functions($config));
 
         $this->app->bind(
             'preferences', function () {

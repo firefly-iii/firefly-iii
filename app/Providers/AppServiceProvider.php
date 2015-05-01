@@ -35,6 +35,7 @@ class AppServiceProvider extends ServiceProvider
             'Illuminate\Contracts\Auth\Registrar',
             'FireflyIII\Services\Registrar'
         );
+
     }
 
 }

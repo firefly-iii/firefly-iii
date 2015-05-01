@@ -13,6 +13,7 @@ use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Validation\Validator;
 use Log;
 use Navigation;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class FireflyValidator
@@ -21,6 +22,18 @@ use Navigation;
  */
 class FireflyValidator extends Validator
 {
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array               $data
+     * @param array               $rules
+     * @param array               $messages
+     * @param array               $customAttributes
+     */
+    public function __construct(TranslatorInterface $translator, array $data, array $rules, array $messages = [], array $customAttributes = [])
+    {
+        parent::__construct($translator, $data, $rules, $messages);
+    }
 
     /**
      * @param $attribute
