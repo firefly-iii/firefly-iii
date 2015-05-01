@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Mail\Message;
 use Mail;
 use Session;
+use Twig;
 
 /**
  * Class AuthController
@@ -45,6 +46,16 @@ class AuthController extends Controller
         $this->registrar = $registrar;
 
         $this->middleware('guest', ['except' => 'getLogout']);
+    }
+
+    /**
+     * Show the application login form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getLogin()
+    {
+        return Twig::render('auth.login');
     }
 
     /**

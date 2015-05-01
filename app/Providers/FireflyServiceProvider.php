@@ -2,6 +2,7 @@
 
 namespace FireflyIII\Providers;
 
+use App;
 use FireflyIII\Support\Amount;
 use FireflyIII\Support\ExpandedForm;
 use FireflyIII\Support\Navigation;
@@ -9,6 +10,8 @@ use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
 use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Support\ServiceProvider;
+use Twig;
+use TwigBridge\Extension\Loader\Functions;
 use Validator;
 
 /**
@@ -25,10 +28,15 @@ class FireflyServiceProvider extends ServiceProvider
                 return new FireflyValidator($translator, $data, $rules, $messages);
             }
         );
+
     }
 
     public function register()
     {
+
+        $config = App::make('config');
+        Twig::addExtension(new Functions($config));
+
         $this->app->bind(
             'preferences', function () {
             return new Preferences;
@@ -71,6 +79,7 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind('FireflyIII\Helpers\Reminders\ReminderHelperInterface', 'FireflyIII\Helpers\Reminders\ReminderHelper');
         $this->app->bind('FireflyIII\Helpers\Report\ReportHelperInterface', 'FireflyIII\Helpers\Report\ReportHelper');
         $this->app->bind('FireflyIII\Helpers\Report\ReportQueryInterface', 'FireflyIII\Helpers\Report\ReportQuery');
+
 
     }
 
