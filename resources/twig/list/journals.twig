@@ -33,7 +33,7 @@
                 </td>
                 <td>&nbsp;</td>
                 <td>{{ journal.description }}</td>
-                <td colspan="7"><em>Invalid journal: Found {{journal.transactions.count() }} transaction(s)</em></td>
+                <td colspan="7"><em>Invalid journal: Found {{journal.transactions|length }} transaction(s)</em></td>
             </tr>
         {% else %}
             <tr class="drag" data-date="{{journal.date.format('Y-m-d')}}" data-id="{{journal.id}}">

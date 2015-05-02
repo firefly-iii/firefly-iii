@@ -13,14 +13,14 @@
                 Are you sure that you want to delete the {{account.accountType.type|lower}} "{{account.name}}"?
                 </p>
 
-                {% if account.transactions().count() > 0 %}
+                {% if account.transactions|length > 0 %}
                     <p class="text-danger">
-                        {{account.accountType.type|capitalize}} "{{ account.name }}" still has {{account.transactions().count()}} transaction(s) associated to it. These will be deleted as well.
+                        {{account.accountType.type|capitalize}} "{{ account.name }}" still has {{ account.transactions|length }} transaction(s) associated to it. These will be deleted as well.
                     </p>
                 {% endif %}
-                {% if account.piggyBanks().count() > 0 %}
+                {% if account.piggyBanks|length > 0 %}
                     <p class="text-danger">
-                        {{account.accountType.type|capitalize}} "{{ account.name }}" still has {{account.piggyBanks().count()}} piggy bank(s) associated to it. These will be deleted as well.
+                        {{account.accountType.type|capitalize}} "{{ account.name }}" still has {{ account.piggyBanks|length }} piggy bank(s) associated to it. These will be deleted as well.
                     </p>
                 {% endif %}
                 <p>
