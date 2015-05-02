@@ -72,6 +72,12 @@ class General extends Twig_Extension
         );
 
         $functions[] = new Twig_SimpleFunction(
+            'getCurrencySymbol', function () {
+            return App::make('amount')->getCurrencySymbol();
+        }
+        );
+
+        $functions[] = new Twig_SimpleFunction(
             'phpdate', function ($str) {
             return date($str);
         }
