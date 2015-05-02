@@ -89,7 +89,6 @@
 {% block scripts %}
 <script type="text/javascript">
     var budgetID = {{budget.id}};
-    var currencyCode = '{{ getCurrencyCode() }}';
     {% if repetition.id %}
         var repetitionID = {{repetition.id}};
         var year = {{repetition.startdate.format('Y')}};
