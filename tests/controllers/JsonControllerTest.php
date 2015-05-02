@@ -132,6 +132,24 @@ class JsonControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    public function testTags()
+    {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+        $tag = FactoryMuffin::create('FireflyIII\Models\Tag');
+        $tag->user()->associate($user);
+
+        $tag->save();
+        $this->be($tag->user);
+        $tags = new Collection([$tag]);
+
+        $repository = $this->mock('FireflyIII\Repositories\Tag\TagRepositoryInterface');
+        $repository->shouldReceive('get')->andReturn($tags);
+
+        $this->call('GET', '/json/tags');
+        $this->assertResponseOk();
+    }
+
     public function testExpenseAccounts()
     {
         $account = FactoryMuffin::create('FireflyIII\Models\Account');
