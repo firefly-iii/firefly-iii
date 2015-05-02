@@ -55,7 +55,7 @@
                 </td>
                 <td>
                     {% if not hideTags %}
-                        {{ relevantTags(journal) }}
+                        {{ relevantTags(journal)|raw }}
                     {% else %}
                         {{ journal|formatJournal }}
                     {% endif %}
