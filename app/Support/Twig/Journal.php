@@ -70,8 +70,8 @@ class Journal extends Twig_Extension
                 return App::make('amount')->formatJournal($journal);
             }
             foreach ($journal->tags as $tag) {
-                if ($tag->tagMode == 'balanceAct') {
-                    // return tag formatted for a "balance act".
+                if ($tag->tagMode == 'balancingAct') {
+                    // return tag formatted for a "balancing act".
                     $amount = App::make('amount')->formatJournal($journal, false);
 
                     return '<a href="' . route('tags.show', $tag->id) . '" class="label label-success" title="' . $amount
