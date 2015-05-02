@@ -162,6 +162,7 @@ class ConfigServiceProvider extends ServiceProvider
                             ],
                             'Session',
                             'Route',
+                            'Auth',
                             'URL',
                             'Config',
                             'ExpandedForm' => [
@@ -208,6 +209,7 @@ class ConfigServiceProvider extends ServiceProvider
                             'elixir',
                             'head',
                             'last',
+                            'old'
                         ],
 
                         /*
