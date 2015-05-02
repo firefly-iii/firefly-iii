@@ -31,6 +31,11 @@ class General extends Twig_Extension
             return App::make('amount')->format($string);
         }, ['is_safe' => ['html']]
         );
+        $filters[] = new Twig_SimpleFilter(
+            'formatAmountPlain', function ($string) {
+            return App::make('amount')->format($string, false);
+        }
+        );
 
         $filters[] = new Twig_SimpleFilter(
             'formatJournal', function ($journal) {
