@@ -71,7 +71,6 @@ class TagRepository implements TagRepositoryInterface
             // ignore expense
             return false;
         }
-
         if ($tag->tagMode == 'advancePayment') {
 
 

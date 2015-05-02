@@ -22,6 +22,11 @@ use View;
  * Remember: a balancingAct takes at most one expense and one transfer.
  *           an advancePayment takes at most one expense, infinite deposits and NO transfers.
  *
+ * TODO transaction can only have one advancePayment OR balancingAct.
+ * TODO Other attempts to put in such a tag are blocked.
+ * TODO also show an error when editing a tag and it becomes either
+ * TODO of these two types. Or rather, block editing of the tag.
+ *
  * @package FireflyIII\Http\Controllers
  */
 class TagController extends Controller
@@ -34,13 +39,36 @@ class TagController extends Controller
         parent::__construct();
         View::share('title', 'Tags');
         View::share('mainTitleIcon', 'fa-tags');
-        View::share('hideTags',true);
+        View::share('hideTags', true);
         $tagOptions = [
             'nothing'        => 'Just a regular tag.',
             'balancingAct'   => 'The tag takes at most two transactions; an expense and a transfer. They\'ll balance each other out.',
             'advancePayment' => 'The tag accepts one expense and any number of deposits aimed to repay the original expense.',
         ];
         View::share('tagOptions', $tagOptions);
+    }
+
+    /**
+     * @return \Illuminate\View\View
+     */
+    public function create()
+    {
+        $subTitle     = 'New tag';
+        $subTitleIcon = 'fa-tag';
+
+        $preFilled = [
+            'tagMode' => 'nothing'
+        ];
+        if (!Input::old('tagMode')) {
+            Session::flash('preFilled', $preFilled);
+        }
+        // put previous url in session if not redirect from store (not "create another").
+        if (Session::get('tags.create.fromStore') !== true) {
+            Session::put('tags.create.url', URL::previous());
+        }
+        Session::forget('tags.create.fromStore');
+
+        return view('tags.create', compact('subTitle', 'subTitleIcon'));
     }
 
     /**
@@ -75,29 +103,6 @@ class TagController extends Controller
     }
 
     /**
-     * @return \Illuminate\View\View
-     */
-    public function create()
-    {
-        $subTitle     = 'New tag';
-        $subTitleIcon = 'fa-tag';
-
-        $preFilled = [
-            'tagMode' => 'nothing'
-        ];
-        if (!Input::old('tagMode')) {
-            Session::flash('preFilled', $preFilled);
-        }
-        // put previous url in session if not redirect from store (not "create another").
-        if (Session::get('tags.create.fromStore') !== true) {
-            Session::put('tags.create.url', URL::previous());
-        }
-        Session::forget('tags.create.fromStore');
-
-        return view('tags.create', compact('subTitle', 'subTitleIcon'));
-    }
-
-    /**
      * @param Tag $tag
      *
      * @return View
@@ -107,14 +112,84 @@ class TagController extends Controller
         $subTitle     = 'Edit tag "' . e($tag->tag) . '"';
         $subTitleIcon = 'fa-tag';
 
+        /*
+         * Default tag options (again)
+         */
+        $tagOptions = [
+            'nothing'        => 'Just a regular tag.',
+            'balancingAct'   => 'The tag takes at most two transactions; an expense and a transfer. They\'ll balance each other out.',
+            'advancePayment' => 'The tag accepts one expense and any number of deposits aimed to repay the original expense.',
+        ];
+
+        /*
+         * Can this tag become another type?
+         */
+        $allowToAdvancePayment = true;
+        $allowToBalancingAct   = true;
+
+        /*
+         * If this tag is a balancing act, and it contains transfers, it cannot be
+         * changes to an advancePayment.
+         */
+
+        if ($tag->tagMode == 'balancingAct') {
+            foreach ($tag->transactionjournals as $journal) {
+                if ($journal->transactionType->type == 'Transfer') {
+                    $allowToAdvancePayment = false;
+                }
+            }
+        }
+
+        /*
+         * If this tag contains more than one expenses, it cannot become an advance payment.
+         */
+        $count = 0;
+        foreach ($tag->transactionjournals as $journal) {
+            if ($journal->transactionType->type == 'Withdrawal') {
+                $count++;
+            }
+        }
+        if($count > 1) {
+            $allowToAdvancePayment = false;
+        }
+
+        /*
+         * If has more than two transactions already, cannot become a balancing act:
+         */
+        if ($tag->transactionjournals->count() > 2) {
+            $allowToBalancingAct = false;
+        }
+
+        /*
+         * If any transaction is a deposit, cannot become a balancing act.
+         */
+        $count = 0;
+        foreach ($tag->transactionjournals as $journal) {
+            if ($journal->transactionType->type == 'Deposit') {
+                $count++;
+            }
+        }
+        if($count > 0) {
+            $allowToBalancingAct = false;
+        }
+
+
+        // edit tagoptions:
+        if ($allowToAdvancePayment === false) {
+            unset($tagOptions['advancePayment']);
+        }
+        if ($allowToBalancingAct === false) {
+            unset($tagOptions['balancingAct']);
+        }
+
+
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (Session::get('tags.edit.fromUpdate') !== true) {
             Session::put('tags.edit.url', URL::previous());
         }
         Session::forget('tags.edit.fromUpdate');
 
-
-        return view('tags.edit', compact('tag', 'subTitle', 'subTitleIcon'));
+        return view('tags.edit', compact('tag', 'subTitle', 'subTitleIcon', 'tagOptions'));
     }
 
     /**
