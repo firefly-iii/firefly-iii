@@ -3,11 +3,12 @@
 namespace FireflyIII\Support\Twig;
 
 
+use App;
 use FireflyIII\Models\TransactionJournal;
 use Twig_Extension;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
-use App;
+
 /**
  * Class Journal
  *
@@ -65,10 +66,21 @@ class Journal extends Twig_Extension
 
         $functions[] = new Twig_SimpleFunction(
             'relevantTags', function (TransactionJournal $journal) {
-            if($journal->tags->count() == 0) {
+            if ($journal->tags->count() == 0) {
                 return App::make('amount')->formatJournal($journal);
             }
-            return 'TODO: '.$journal->amount;
+            foreach ($journal->tags as $tag) {
+                if ($tag->tagMode == 'balanceAct') {
+                    // return tag formatted for a "balance act".
+                    $amount = App::make('amount')->formatJournal($journal, false);
+
+                    return '<a href="' . route('tags.show', $tag->id) . '" class="label label-success" title="' . $amount
+                           . '"><i class="fa fa-fw fa-refresh"></i> ' . $tag->tag . '</span>';
+                }
+            }
+
+
+            return 'TODO: ' . $journal->amount;
         }
         );
 
