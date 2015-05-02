@@ -230,6 +230,10 @@ class JournalRepository implements JournalRepositoryInterface
         if (count($ids) > 0) {
             DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal->id)->whereNotIn('tag_id', $ids)->delete();
         }
+        // if count is zero, delete them all:
+        if(count($ids) == 0) {
+            DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal->id)->delete();
+        }
 
         // connect each tag to journal (if not yet connected):
         /** @var Tag $tag */
