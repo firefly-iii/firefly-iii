@@ -96,6 +96,13 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
+    'budgets.noBudget', function (Generator $breadcrumbs, $subTitle) {
+    $breadcrumbs->parent('budgets.index');
+    $breadcrumbs->push($subTitle, route('budgets.noBudget'));
+}
+);
+
+Breadcrumbs::register(
     'budgets.show', function (Generator $breadcrumbs, Budget $budget, LimitRepetition $repetition = null) {
     $breadcrumbs->parent('budgets.index');
     $breadcrumbs->push(e($budget->name), route('budgets.show', $budget->id));
@@ -139,6 +146,13 @@ Breadcrumbs::register(
     $breadcrumbs->parent('categories.index');
     $breadcrumbs->push(e($category->name), route('categories.show', $category->id));
 
+}
+);
+
+Breadcrumbs::register(
+    'categories.noCategory', function (Generator $breadcrumbs, $subTitle) {
+    $breadcrumbs->parent('categories.index');
+    $breadcrumbs->push($subTitle, route('categories.noCategory'));
 }
 );
 
