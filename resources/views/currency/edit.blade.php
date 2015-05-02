@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-{!! Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName()) !!}
+{!! Breadcrumbs::renderIfExists(Route::getCurrentRoute()->getName(), $currency) !!}
 {!! Form::model($currency, ['class' => 'form-horizontal','id' => 'update','url' => route('currency.update',$currency->id)]) !!}
 
 <input type="hidden" name="id" value="{{$currency->id}}" />

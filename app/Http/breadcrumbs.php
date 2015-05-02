@@ -9,6 +9,7 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Reminder;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\Tag;
 /*
@@ -153,6 +154,27 @@ Breadcrumbs::register(
     'categories.noCategory', function (Generator $breadcrumbs, $subTitle) {
     $breadcrumbs->parent('categories.index');
     $breadcrumbs->push($subTitle, route('categories.noCategory'));
+}
+);
+
+// currencies.
+Breadcrumbs::register(
+    'currency.index', function (Generator $breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('Currencies', route('currency.index'));
+}
+);
+
+Breadcrumbs::register(
+    'currency.edit', function (Generator $breadcrumbs, TransactionCurrency $currency) {
+    $breadcrumbs->parent('currency.index');
+    $breadcrumbs->push('Edit '.$currency->name, route('currency.edit', $currency->id));
+}
+);
+Breadcrumbs::register(
+    'currency.delete', function (Generator $breadcrumbs, TransactionCurrency $currency) {
+    $breadcrumbs->parent('currency.index');
+    $breadcrumbs->push('Delete '.$currency->name, route('currency.delete', $currency->id));
 }
 );
 
