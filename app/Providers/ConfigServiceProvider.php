@@ -108,7 +108,7 @@ class ConfigServiceProvider extends ServiceProvider
                         | `Twig_Extension_Debug` is enabled automatically if twig.debug is TRUE.
                         |
                         */
-                        'enabled' => [
+                        'enabled'   => [
                             'TwigBridge\Extension\Loader\Facades',
                             'TwigBridge\Extension\Loader\Filters',
                             'TwigBridge\Extension\Loader\Functions',
@@ -154,7 +154,7 @@ class ConfigServiceProvider extends ServiceProvider
                         | in order to be marked as safe.
                         |
                         */
-                        'facades' => [
+                        'facades'   => [
                             'Breadcrumbs'  => [
                                 'is_safe' => [
                                     'renderIfExists'
@@ -166,12 +166,12 @@ class ConfigServiceProvider extends ServiceProvider
                             'Config',
                             'ExpandedForm' => [
                                 'is_safe' => [
-                                'date','text','select','balance','optionsList','checkbox'
+                                    'date', 'text', 'select', 'balance', 'optionsList', 'checkbox', 'amount'
                                 ]
                             ],
-                            'Form' => [
+                            'Form'         => [
                                 'is_safe' => [
-                                    'input','select','checkbox','model','open'
+                                    'input', 'select', 'checkbox', 'model', 'open'
                                 ]
                             ],
                         ],
@@ -205,10 +205,10 @@ class ConfigServiceProvider extends ServiceProvider
                         |
                         */
                         'functions' => [
-        'elixir',
-        'head',
-        'last',
-    ],
+                            'elixir',
+                            'head',
+                            'last',
+                        ],
 
                         /*
                         |--------------------------------------------------------------------------

@@ -9,11 +9,11 @@ use Twig_SimpleFilter;
 use Twig_SimpleFunction;
 
 /**
- * Class Journals
+ * Class Journal
  *
  * @package FireflyIII\Support\Twig
  */
-class Journals extends Twig_Extension
+class Journal extends Twig_Extension
 {
 
     public function getFilters()
