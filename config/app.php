@@ -136,7 +136,11 @@ return [
         'Illuminate\Validation\ValidationServiceProvider',
         'Illuminate\View\ViewServiceProvider',
         'Illuminate\Html\HtmlServiceProvider',
+        'TwigBridge\ServiceProvider',
+
         'DaveJamesMiller\Breadcrumbs\ServiceProvider',
+        'Barryvdh\Debugbar\ServiceProvider',
+        'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
 
         /*
          * Application Service Providers...
@@ -148,6 +152,7 @@ return [
         'FireflyIII\Providers\RouteServiceProvider',
         'FireflyIII\Providers\FireflyServiceProvider',
         'FireflyIII\Providers\TestingServiceProvider',
+
 
     ],
 
@@ -198,13 +203,14 @@ return [
         'View'         => 'Illuminate\Support\Facades\View',
         'Form'         => 'Illuminate\Html\FormFacade',
         'Html'         => 'Illuminate\Html\HtmlFacade',
-        'Breadcrumbs' => 'DaveJamesMiller\Breadcrumbs\Facade',
-
+        'Breadcrumbs'  => 'DaveJamesMiller\Breadcrumbs\Facade',
         'Preferences'  => 'FireflyIII\Support\Facades\Preferences',
         'Navigation'   => 'FireflyIII\Support\Facades\Navigation',
         'Amount'       => 'FireflyIII\Support\Facades\Amount',
         'Steam'        => 'FireflyIII\Support\Facades\Steam',
         'ExpandedForm' => 'FireflyIII\Support\Facades\ExpandedForm',
+        'Twig'         => 'TwigBridge\Facade\Twig',
+
 
     ],
 

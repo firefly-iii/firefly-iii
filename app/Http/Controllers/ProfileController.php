@@ -49,7 +49,8 @@ class ProfileController extends Controller
     /**
      *
      */
-    public function postDeleteAccount(DeleteAccountFormRequest $request) {
+    public function postDeleteAccount(DeleteAccountFormRequest $request)
+    {
         // old, new1, new2
         if (!Hash::check($request->get('password'), Auth::user()->password)) {
             Session::flash('error', 'Invalid password!');
@@ -60,9 +61,9 @@ class ProfileController extends Controller
         // DELETE!
         Auth::user()->delete();
         Session::flush();
+
         return Redirect::route('index');
     }
-
 
 
     /**

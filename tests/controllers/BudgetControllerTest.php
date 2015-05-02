@@ -1,5 +1,6 @@
 <?php
 use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
@@ -115,6 +116,7 @@ class BudgetControllerTest extends TestCase
         $repository->shouldReceive('getCurrentRepetition')->once();
         Amount::shouldReceive('getCurrencySymbol')->andReturn('x');
         Amount::shouldReceive('format')->andReturn('x');
+        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
         $this->call('GET', '/budgets');
 
         $this->assertResponseOk();
@@ -155,9 +157,11 @@ class BudgetControllerTest extends TestCase
         $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
         $this->be($budget->user);
 
+        $paginator = new LengthAwarePaginator(new Collection, 0, 20, 1);
+
         Amount::shouldReceive('getCurrencyCode')->andReturn('x');
         Amount::shouldReceive('format')->andReturn('x');
-        $repository->shouldReceive('getJournals')->andReturn(new Collection);
+        $repository->shouldReceive('getJournals')->andReturn($paginator);
         $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection);
 
 
@@ -304,6 +308,9 @@ class BudgetControllerTest extends TestCase
         $pref = FactoryMuffin::create('FireflyIII\Models\Preference');
         Preferences::shouldReceive('get')->withArgs(['budgetIncomeTotal' . $date, 1000])->andReturn($pref);
         Amount::shouldReceive('format')->andReturn('xx');
+        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
+
 
         $this->call('GET', '/budgets/income');
         $this->assertResponseOk();

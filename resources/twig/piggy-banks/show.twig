@@ -1,0 +1,120 @@
+{% extends "./layout/default.twig" %}
+{% block content %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, piggyBank) }}
+<div class="row">
+    <div class="col-lg-8 col-md-8 col-sm-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-fw fa-clock-o"></i> Events
+            </div>
+            <div class="panel-body">
+                <div id="piggy-bank-history"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-fw fa-info-circle"></i> Details
+
+                    <!-- ACTIONS MENU -->
+                    <div class="pull-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                Actions
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li><a href="{{ route('piggy-banks.edit', piggyBank.id) }}"><i class="fa fa-pencil fa-fw"></i> Edit</a></li>
+                                <li><a href="{{ route('piggy-banks.delete', piggyBank.id) }}"><i class="fa fa-trash fa-fw"></i> Delete</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+                    <table class="table table-bordered table-striped">
+                        <tr>
+                            <td>Account</td>
+                            <td><a href="{{ route('accounts.show', piggyBank.account_id) }}">{{ piggyBank.account.name }}</a></td>
+                        </tr>
+                        <tr>
+                            <td>Target amount</td>
+                            <td>{{ piggyBank.targetAmount|formatAmount }}</td>
+                        </tr>
+                        <tr>
+                            <td>Saved so far</td>
+                            <td>{{ currentRelevantRepAmount(piggyBank)|formatAmount }}</td>
+                        </tr>
+                        <tr>
+                            <td>Left to save</td>
+                            <td>{{ piggyBank.targetamount - currentRelevantRepAmount(piggyBank)|formatAmount }}</td>
+                        </tr>
+                        <tr>
+                            <td>Start date</td>
+                            <td>
+                                {% if piggyBank.startdate %}
+                                    {{ piggyBank.startdate.format('jS F Y')}}
+                                {% else %}
+                                    <em>No start date</em>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Target date</td>
+                            <td>
+                                {% if piggyBank.targetdate %}
+                                    {{ piggyBank.targetdate.format('jS F Y') }}
+                                {% else %}
+                                    <em>No start date</em>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% if piggyBank.reminder %}
+                        <tr>
+                            <td>Reminder</td>
+                            <td>
+                                {% if piggyBank.remind_me == 0 %}
+                                    <em>(no reminder)</em>
+                                {% else %}
+                                    Every
+                                    {% if piggyBank.reminder_skip != 0 %}
+                                        {{ piggyBank.reminder_skip }}
+                                    {% else %}
+                                        {{ piggyBank.reminder }}(s)
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endif %}
+                            <tr>
+                                <td>Reminders left</td>
+                                <td>(in progress...)</td>
+                            </tr>
+                            <tr>
+                                <td>Expected amount per reminder</td>
+                                <td>(in progress...)</td>
+                            </tr>
+                    </table>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-fw fa-clock-o"></i> Table
+                </div>
+                {% include 'list/piggy-bank-events' %}
+            </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    var piggyBankID = {{ piggyBank.id }};
+</script>
+
+<!-- load the libraries and scripts necessary for Google Charts: -->
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" src="js/gcharts.options.js"></script>
+<script type="text/javascript" src="js/gcharts.js"></script>
+<script type="text/javascript" src="js/piggy-banks.js"></script>
+{% endblock %}

@@ -47,50 +47,51 @@ class ReportController extends Controller
      */
     public function budget($year = '2014', $month = '1')
     {
-        try {
-            new Carbon($year . '-' . $month . '-01');
-        } catch (Exception $e) {
-            return view('error')->with('message', 'Invalid date');
-        }
-        $date  = new Carbon($year . '-' . $month . '-01');
-        $start = clone $date;
+        $date         = new Carbon($year . '-' . $month . '-01');
+        $subTitle     = 'Budget report for ' . $date->format('F Y');
+        $subTitleIcon = 'fa-calendar';
+        $start        = clone $date;
+
+
         $start->startOfMonth();
         $end = clone $date;
         $end->endOfMonth();
-        $start->subDay();
 
+        // should show shared reports?
         /** @var Preference $pref */
         $pref              = Preferences::get('showSharedReports', false);
         $showSharedReports = $pref->data;
+        $accountAmounts    = []; // array with sums of spent amounts on each account.
+        $accounts          = $this->query->getAllAccounts($start, $end, $showSharedReports); // all accounts and some data.
 
+        foreach ($accounts as $account) {
 
-        $dayEarly     = clone $date;
-        $subTitle     = 'Budget report for ' . $date->format('F Y');
-        $subTitleIcon = 'fa-calendar';
-        $dayEarly     = $dayEarly->subDay();
-        $accounts     = $this->query->getAllAccounts($start, $end, $showSharedReports);
-        $start->addDay();
+            $budgets                      = $this->query->getBudgetSummary($account, $start, $end);// get budget summary for this account:
+            $balancedAmount               = $this->query->balancedTransactionsSum($account, $start, $end);
+            $accountAmounts[$account->id] = $balancedAmount;
+            // balance out the transactions (see transaction groups & tags) ^^
 
-        $accounts->each(
-            function (Account $account) use ($start, $end) {
-                $budgets        = $this->query->getBudgetSummary($account, $start, $end);
-                $balancedAmount = $this->query->balancedTransactionsSum($account, $start, $end);
-                $array          = [];
-                $hide           = true;
-                foreach ($budgets as $budget) {
-                    $id         = intval($budget->id);
-                    $data       = $budget->toArray();
-                    $array[$id] = $data;
-                    if (floatval($data['queryAmount']) != 0) {
-                        $hide = false;
-                    }
+            // array with budget information for each account:
+            $array = [];
+            // should always hide account
+            $hide = true;
+            // loop all budgets
+            foreach ($budgets as $budget) {
+                $id         = intval($budget->id);
+                $data       = $budget->toArray();
+                $array[$id] = $data;
+
+                // no longer hide account if any budget has money in it.
+                if (floatval($data['queryAmount']) != 0) {
+                    $hide = false;
                 }
-                $account->hide              = $hide;
-                $account->budgetInformation = $array;
-                $account->balancedAmount    = $balancedAmount;
-
+                $accountAmounts[$account->id] += $data['queryAmount'];
             }
-        );
+            $account->hide              = $hide;
+            $account->budgetInformation = $array;
+            $account->balancedAmount    = $balancedAmount;
+
+        }
 
         /**
          * Start getBudgetsForMonth DONE
@@ -101,7 +102,7 @@ class ReportController extends Controller
          * End getBudgetsForMonth DONE
          */
 
-        return view('reports.budget', compact('subTitle', 'year', 'month', 'subTitleIcon', 'date', 'accounts', 'budgets', 'dayEarly'));
+        return view('reports.budget', compact('subTitle', 'accountAmounts', 'year', 'month', 'subTitleIcon', 'date', 'accounts', 'budgets'));
 
     }
 

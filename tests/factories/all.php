@@ -67,6 +67,21 @@ FactoryMuffin::define(
 );
 
 FactoryMuffin::define(
+    'FireflyIII\Models\Tag',
+    [
+        'description' => 'sentence',
+        'user_id'     => 'factory|FireflyIII\User',
+        'tag'         => function () {
+            return RandomString::generateRandomString(20);
+        },
+        'tagMode'     => 'nothing',
+        'date'        => 'date',
+        'latitude'    => 12,
+        'longitude'   => 13,
+    ]
+);
+
+FactoryMuffin::define(
     'FireflyIII\Models\Budget',
     [
         'user_id'   => 'factory|FireflyIII\User',

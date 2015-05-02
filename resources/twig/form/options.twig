@@ -1,0 +1,30 @@
+{% if type == 'create' %}
+    <div class="form-group">
+        <label for="{{ name }}_return_to_form" class="col-sm-4 control-label">
+            Return here
+        </label>
+        <div class="col-sm-8">
+            <div class="radio">
+                <label>
+                    {{ Form.checkbox('create_another', '1') }}
+                    After storing, return here to create another one.
+                </label>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% if type == 'update' %}
+    <div class="form-group">
+        <label for="{{ name }}_return_to_edit" class="col-sm-4 control-label">
+            Return here
+        </label>
+        <div class="col-sm-8">
+            <div class="radio"><label>
+                    {{ Form.checkbox('return_to_edit', '1', Input.old('return_to_edit') == '1') }}
+                    After updating, return here.
+                </label>
+            </div>
+        </div>
+    </div>
+{% endif %}

@@ -140,12 +140,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         /** @var Collection $set */
         $set = Auth::user()->piggyBanks()->orderBy('order', 'ASC')->get();
 
-        $set->sortBy(
-            function (PiggyBank $piggyBank) {
-                return $piggyBank->name;
-            }
-        );
-
         return $set;
     }
 

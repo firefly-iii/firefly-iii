@@ -57,7 +57,7 @@ class CategoryControllerTest extends TestCase
 
         $this->call('GET', '/categories/delete/' . $category->id);
         $this->assertResponseOk();
-        $this->assertViewHas('subTitle', 'Delete category' . e($category->name) . '"');
+        $this->assertViewHas('subTitle', 'Delete category "' . e($category->name) . '"');
     }
 
     public function testDestroy()

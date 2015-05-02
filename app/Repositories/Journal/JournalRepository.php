@@ -4,10 +4,12 @@ namespace FireflyIII\Repositories\Journal;
 
 use App;
 use Auth;
+use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -33,36 +35,6 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     *
-     * Get the account_id, which is the asset account that paid for the transaction.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return mixed
-     */
-    public function getAssetAccount(TransactionJournal $journal)
-    {
-        $positive = true; // the asset account is in the transaction with the positive amount.
-        switch ($journal->transactionType->type) {
-            case 'Withdrawal':
-                $positive = false;
-                break;
-        }
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions()->get() as $transaction) {
-            if (floatval($transaction->amount) > 0 && $positive === true) {
-                return $transaction->account_id;
-            }
-            if (floatval($transaction->amount) < 0 && $positive === false) {
-                return $transaction->account_id;
-            }
-
-        }
-
-        return $journal->transactions()->first()->account_id;
-    }
-
-    /**
      * @param TransactionType $dbType
      *
      * @return Collection
@@ -83,55 +55,26 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * @param string             $query
-     * @param TransactionJournal $journal
      *
-     * @return Collection
+     * * Remember: a balancingAct takes at most one expense and one transfer.
+     *            an advancePayment takes at most one expense, infinite deposits and NO transfers.
+     *
+     * @param TransactionJournal $journal
+     * @param array              $array
+     *
+     * @return void
      */
-    public function searchRelated($query, TransactionJournal $journal)
+    public function saveTags(TransactionJournal $journal, array $array)
     {
-        $start = clone $journal->date;
-        $end   = clone $journal->date;
-        $start->startOfMonth();
-        $end->endOfMonth();
+        /** @var \FireflyIII\Repositories\Tag\TagRepositoryInterface $tagRepository */
+        $tagRepository = App::make('FireflyIII\Repositories\Tag\TagRepositoryInterface');
 
-        // get already related transactions:
-        $exclude = [$journal->id];
-        foreach ($journal->transactiongroups()->get() as $group) {
-            foreach ($group->transactionjournals()->get() as $current) {
-                $exclude[] = $current->id;
+        foreach ($array as $name) {
+            if (strlen(trim($name)) > 0) {
+                $tag = Tag::firstOrCreateEncrypted(['tag' => $name, 'user_id' => $journal->user_id]);
+                $tagRepository->connect($journal, $tag);
             }
         }
-        $exclude = array_unique($exclude);
-
-        /** @var Collection $collection */
-        $collection = Auth::user()->transactionjournals()
-                          ->withRelevantData()
-                          ->before($end)->after($start)->where('encrypted', 0)
-                          ->whereNotIn('id', $exclude)
-                          ->where('description', 'LIKE', '%' . $query . '%')
-                          ->get();
-
-        // manually search encrypted entries:
-        /** @var Collection $encryptedCollection */
-        $encryptedCollection = Auth::user()->transactionjournals()
-                                   ->withRelevantData()
-                                   ->before($end)->after($start)
-                                   ->where('encrypted', 1)
-                                   ->whereNotIn('id', $exclude)
-                                   ->get();
-        $encrypted           = $encryptedCollection->filter(
-            function (TransactionJournal $journal) use ($query) {
-                $strPos = strpos(strtolower($journal->description), strtolower($query));
-                if ($strPos !== false) {
-                    return $journal;
-                }
-
-                return null;
-            }
-        );
-
-        return $collection->merge($encrypted);
     }
 
     /**
@@ -191,6 +134,11 @@ class JournalRepository implements JournalRepositoryInterface
         $journal->completed = 1;
         $journal->save();
 
+        // store tags
+        if (isset($data['tags']) && is_array($data['tags'])) {
+            $this->saveTags($journal, $data['tags']);
+        }
+
         return $journal;
 
 
@@ -246,7 +194,52 @@ class JournalRepository implements JournalRepositoryInterface
 
         $journal->save();
 
+        // update tags:
+        if (isset($data['tags']) && is_array($data['tags'])) {
+            $this->updateTags($journal, $data['tags']);
+        }
+
         return $journal;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param array              $array
+     *
+     * @return void
+     */
+    public function updateTags(TransactionJournal $journal, array $array)
+    {
+        // create tag repository
+        /** @var \FireflyIII\Repositories\Tag\TagRepositoryInterface $tagRepository */
+        $tagRepository = App::make('FireflyIII\Repositories\Tag\TagRepositoryInterface');
+
+
+        // find or create all tags:
+        $tags = [];
+        $ids  = [];
+        foreach ($array as $name) {
+            if (strlen(trim($name)) > 0) {
+                $tag    = Tag::firstOrCreateEncrypted(['tag' => $name, 'user_id' => $journal->user_id]);
+                $tags[] = $tag;
+                $ids[]  = $tag->id;
+            }
+        }
+
+        // delete all tags connected to journal not in this array:
+        if (count($ids) > 0) {
+            DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal->id)->whereNotIn('tag_id', $ids)->delete();
+        }
+        // if count is zero, delete them all:
+        if(count($ids) == 0) {
+            DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal->id)->delete();
+        }
+
+        // connect each tag to journal (if not yet connected):
+        /** @var Tag $tag */
+        foreach ($tags as $tag) {
+            $tagRepository->connect($journal, $tag);
+        }
     }
 
     /**

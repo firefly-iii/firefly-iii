@@ -1,0 +1,32 @@
+{% extends "./layout/default.twig" %}
+{% block content %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, bill) }}
+    {{ Form.open({'class' : 'form-horizontal','id' : 'destroy','url' : route('bills.destroy',bill.id)}) }}
+<div class="row">
+    <div class="col-lg-6 col-md-12 col-sm-12">
+        <div class="panel panel-red">
+            <div class="panel-heading">
+                Delete bill "{{ bill.name }}"
+            </div>
+            <div class="panel-body">
+                <p>
+                Are you sure that you want to delete bill "{{ bill.name }}"?
+                </p>
+
+                {% if bill.transactionjournals|length > 0 %}
+                    <p class="text-info">
+                        Bill "{{ bill.name }}" still has {{ bill.transactionjournals|length }} transactions connected
+                        to it. These will <strong>not</strong> be removed but will lose their connection to this bill.
+                    </p>
+                {% endif %}
+
+                <p>
+                    <button type="submit" class="btn btn-default btn-danger">Delete permanently</button>
+                    <a href="{{ URL.previous() }}" class="btn-default btn">Cancel</a >
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+{% endblock %}

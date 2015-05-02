@@ -1,12 +1,8 @@
 <?php namespace FireflyIII\Http\Controllers;
 
-use Cache;
-use ErrorException;
 use FireflyIII\Helpers\Help\HelpInterface;
-use League\CommonMark\CommonMarkConverter;
 use Log;
 use Response;
-use Route;
 
 /**
  * Class HelpController

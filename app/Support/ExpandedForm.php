@@ -62,7 +62,10 @@ class ExpandedForm
             'account_id'           => 'Asset account',
             'budget_id'            => 'Budget',
             'openingBalance'       => 'Opening balance',
+            'tagMode'              => 'Tag mode',
+            'tagPosition'          => 'Tag location',
             'virtualBalance'       => 'Virtual balance',
+            'longitude_latitude'   => 'Location',
             'targetamount'         => 'Target amount',
             'accountRole'          => 'Account role',
             'openingBalanceDate'   => 'Opening balance date',
@@ -201,15 +204,17 @@ class ExpandedForm
      *
      * @return string
      */
-    public function month($name, $value = null, array $options = [])
+    public function integer($name, $value = null, array $options = [])
     {
-        $label   = $this->label($name, $options);
-        $options = $this->expandOptionArray($name, $label, $options);
-        $classes = $this->getHolderClasses($name);
-        $value   = $this->fillFieldValue($name, $value);
-        $html    = View::make('form.month', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
+        $options['step'] = '1';
+        $html            = View::make('form.integer', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
+
     }
 
     /**
@@ -219,14 +224,13 @@ class ExpandedForm
      *
      * @return string
      */
-    public function integer($name, $value = null, array $options = [])
+    public function location($name, $value = null, array $options = [])
     {
-        $label           = $this->label($name, $options);
-        $options         = $this->expandOptionArray($name, $label, $options);
-        $classes         = $this->getHolderClasses($name);
-        $value           = $this->fillFieldValue($name, $value);
-        $options['step'] = '1';
-        $html            = View::make('form.integer', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        $label   = $this->label($name, $options);
+        $options = $this->expandOptionArray($name, $label, $options);
+        $classes = $this->getHolderClasses($name);
+        $value   = $this->fillFieldValue($name, $value);
+        $html    = View::make('form.location', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
 
@@ -263,6 +267,44 @@ class ExpandedForm
         }
 
         return $selectList;
+    }
+
+    /**
+     * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     */
+    public function month($name, $value = null, array $options = [])
+    {
+        $label   = $this->label($name, $options);
+        $options = $this->expandOptionArray($name, $label, $options);
+        $classes = $this->getHolderClasses($name);
+        $value   = $this->fillFieldValue($name, $value);
+        $html    = View::make('form.month', compact('classes', 'name', 'label', 'value', 'options'))->render();
+
+        return $html;
+    }
+
+    /**
+     * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     */
+    public function multiRadio($name, array $list = [], $selected = null, array $options = [])
+    {
+        $label    = $this->label($name, $options);
+        $options  = $this->expandOptionArray($name, $label, $options);
+        $classes  = $this->getHolderClasses($name);
+        $selected = $this->fillFieldValue($name, $selected);
+
+        unset($options['class']);
+        $html = View::make('form.multiRadio', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
+
+        return $html;
     }
 
     /**
@@ -332,6 +374,26 @@ class ExpandedForm
         $classes = $this->getHolderClasses($name);
         $value   = $this->fillFieldValue($name, $value);
         $html    = View::make('form.text', compact('classes', 'name', 'label', 'value', 'options'))->render();
+
+        return $html;
+
+    }
+
+    /**
+     * @param       $name
+     * @param null  $value
+     * @param array $options
+     *
+     * @return string
+     */
+    public function textarea($name, $value = null, array $options = [])
+    {
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
+        $options['rows'] = 4;
+        $html            = View::make('form.textarea', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
 

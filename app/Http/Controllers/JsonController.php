@@ -1,7 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Amount;
-use Auth;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Models\Account;
@@ -12,6 +11,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 use Preferences;
 use Response;
@@ -174,6 +174,23 @@ class JsonController extends Controller
         $return = [];
         foreach ($list as $entry) {
             $return[] = $entry->name;
+        }
+
+        return Response::json($return);
+
+    }
+
+    /**
+     * Returns a JSON list of all beneficiaries.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tags(TagRepositoryInterface $tagRepository)
+    {
+        $list   = $tagRepository->get();
+        $return = [];
+        foreach ($list as $entry) {
+            $return[] = $entry->tag;
         }
 
         return Response::json($return);

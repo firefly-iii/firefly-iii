@@ -1,4 +1,5 @@
 <?php
+use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Preference;
@@ -50,6 +51,8 @@ class PiggyBankControllerTest extends TestCase
         $repository = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
         $repository->shouldReceive('leftOnAccount')->withAnyArgs()->andReturn(12);
         Amount::shouldReceive('format')->andReturn('XXxx');
+        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
 
         $this->call('GET', '/piggy-banks/add/' . $piggyBank->id);
         $this->assertResponseOk();
@@ -93,8 +96,7 @@ class PiggyBankControllerTest extends TestCase
     public function testDestroy()
     {
         $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
-        $user      = FactoryMuffin::create('FireflyIII\User');
-        $this->be($user);
+        $this->be($piggyBank->account->user);
 
         $repository = $this->mock('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
         $repository->shouldReceive('destroy')->once()->withAnyArgs()->andReturn(true);
@@ -109,8 +111,9 @@ class PiggyBankControllerTest extends TestCase
     public function testEdit()
     {
         $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
-        $user      = FactoryMuffin::create('FireflyIII\User');
-        $this->be($user);
+        $piggyBank->targetdate = Carbon::now()->addYear();
+        $piggyBank->save();
+        $this->be($piggyBank->account->user);
         $account    = FactoryMuffin::create('FireflyIII\Models\Account');
         $collection = new Collection([$account]);
 
@@ -135,8 +138,7 @@ class PiggyBankControllerTest extends TestCase
     public function testEditNullDate()
     {
         $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
-        $user      = FactoryMuffin::create('FireflyIII\User');
-        $this->be($user);
+        $this->be($piggyBank->account->user);
         $piggyBank->targetdate = null;
         $piggyBank->save();
         $account    = FactoryMuffin::create('FireflyIII\Models\Account');
@@ -182,6 +184,7 @@ class PiggyBankControllerTest extends TestCase
         Steam::shouldReceive('balance')->andReturn(20);
         $accounts->shouldReceive('leftOnAccount')->andReturn(12);
         Amount::shouldReceive('format')->andReturn('123');
+        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
 
 
         $this->call('GET', '/piggy-banks');
@@ -221,6 +224,7 @@ class PiggyBankControllerTest extends TestCase
         $piggyBanks->shouldReceive('createEvent')->once();
 
         Amount::shouldReceive('format')->andReturn('something');
+        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
 
         $this->call('POST', '/piggy-banks/add/' . $piggyBank->id, ['_token' => 'replaceMe']);
         $this->assertResponseStatus(302);
@@ -238,6 +242,7 @@ class PiggyBankControllerTest extends TestCase
         $piggyBanks->shouldReceive('createEvent')->once();
 
         Amount::shouldReceive('format')->andReturn('something');
+        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
 
         $this->call('POST', '/piggy-banks/add/' . $piggyBank->id, ['_token' => 'replaceMe', 'amount' => '10000']);
         $this->assertResponseStatus(302);
@@ -286,6 +291,8 @@ class PiggyBankControllerTest extends TestCase
         $this->be($piggyBank->account->user);
 
         Amount::shouldReceive('format')->andReturn('something');
+        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
 
         $this->call('GET', '/piggy-banks/remove/' . $piggyBank->id);
         $this->assertResponseOk();

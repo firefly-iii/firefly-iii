@@ -28,3 +28,4 @@ tests/_output/*
 clover.xml
 node_modules/
 addNewLines.php
+.phpstorm.meta.php

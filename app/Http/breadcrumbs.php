@@ -9,13 +9,22 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Reminder;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
-
+use FireflyIII\Models\Tag;
 /*
  * Back home.
  */
 Breadcrumbs::register(
     'home',
+    function (Generator $breadcrumbs) {
+
+        $breadcrumbs->push('Home', route('index'));
+    }
+);
+
+Breadcrumbs::register(
+    'index',
     function (Generator $breadcrumbs) {
 
         $breadcrumbs->push('Home', route('index'));
@@ -96,6 +105,13 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
+    'budgets.noBudget', function (Generator $breadcrumbs, $subTitle) {
+    $breadcrumbs->parent('budgets.index');
+    $breadcrumbs->push($subTitle, route('budgets.noBudget'));
+}
+);
+
+Breadcrumbs::register(
     'budgets.show', function (Generator $breadcrumbs, Budget $budget, LimitRepetition $repetition = null) {
     $breadcrumbs->parent('budgets.index');
     $breadcrumbs->push(e($budget->name), route('budgets.show', $budget->id));
@@ -139,6 +155,34 @@ Breadcrumbs::register(
     $breadcrumbs->parent('categories.index');
     $breadcrumbs->push(e($category->name), route('categories.show', $category->id));
 
+}
+);
+
+Breadcrumbs::register(
+    'categories.noCategory', function (Generator $breadcrumbs, $subTitle) {
+    $breadcrumbs->parent('categories.index');
+    $breadcrumbs->push($subTitle, route('categories.noCategory'));
+}
+);
+
+// currencies.
+Breadcrumbs::register(
+    'currency.index', function (Generator $breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('Currencies', route('currency.index'));
+}
+);
+
+Breadcrumbs::register(
+    'currency.edit', function (Generator $breadcrumbs, TransactionCurrency $currency) {
+    $breadcrumbs->parent('currency.index');
+    $breadcrumbs->push('Edit '.$currency->name, route('currency.edit', $currency->id));
+}
+);
+Breadcrumbs::register(
+    'currency.delete', function (Generator $breadcrumbs, TransactionCurrency $currency) {
+    $breadcrumbs->parent('currency.index');
+    $breadcrumbs->push('Delete '.$currency->name, route('currency.delete', $currency->id));
 }
 );
 
@@ -348,5 +392,26 @@ Breadcrumbs::register(
     $breadcrumbs->parent('transactions.index', strtolower($journal->transactionType->type));
     $breadcrumbs->push(e($journal->description), route('transactions.show', $journal->id));
 
+}
+);
+
+// tags
+Breadcrumbs::register(
+    'tags.index', function (Generator $breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('Tags', route('tags.index'));
+}
+);
+
+Breadcrumbs::register(
+    'tags.create', function (Generator $breadcrumbs) {
+    $breadcrumbs->parent('tags.index');
+    $breadcrumbs->push('Create tag', route('tags.create'));
+}
+);
+Breadcrumbs::register(
+    'tags.show', function (Generator $breadcrumbs, Tag $tag) {
+    $breadcrumbs->parent('tags.index');
+    $breadcrumbs->push(e($tag->tag), route('tags.show', $tag));
 }
 );

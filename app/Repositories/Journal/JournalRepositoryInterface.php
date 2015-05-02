@@ -22,16 +22,6 @@ interface JournalRepositoryInterface
     public function first();
 
     /**
-     *
-     * Get the account_id, which is the asset account that paid for the transaction.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return int
-     */
-    public function getAssetAccount(TransactionJournal $journal);
-
-    /**
      * @param TransactionType $dbType
      *
      * @return Collection
@@ -39,20 +29,27 @@ interface JournalRepositoryInterface
     public function getJournalsOfType(TransactionType $dbType);
 
     /**
-     * @param string             $query
-     * @param TransactionJournal $journal
-     *
-     * @return Collection
-     */
-    public function searchRelated($query, TransactionJournal $journal);
-
-
-    /**
      * @param $type
      *
      * @return TransactionType
      */
     public function getTransactionType($type);
+
+    /**
+     * @param TransactionJournal $journal
+     * @param array              $array
+     *
+     * @return void
+
+    /**
+     *
+     * @param TransactionJournal $journal
+     * @param array              $array
+     *
+     * @return void
+     */
+    public function saveTags(TransactionJournal $journal, array $array);
+
     /**
      * @param array $data
      *
@@ -67,4 +64,12 @@ interface JournalRepositoryInterface
      * @return mixed
      */
     public function update(TransactionJournal $journal, array $data);
+
+    /**
+     * @param TransactionJournal $journal
+     * @param array              $array
+     *
+     * @return mixed
+     */
+    public function updateTags(TransactionJournal $journal, array $array);
 }

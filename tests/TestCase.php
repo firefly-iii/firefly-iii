@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+use FireflyIII\Models\TransactionCurrency;
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
 /**
@@ -31,13 +33,23 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         parent::setUp();
 
         // if the database copy does not exist, call migrate.
-        $copy     = __DIR__.'/../storage/database/testing-copy.db';
-        $original = __DIR__.'/../storage/database/testing.db';
+        $copy     = __DIR__ . '/../storage/database/testing-copy.db';
+        $original = __DIR__ . '/../storage/database/testing.db';
+
+        FactoryMuffin::loadFactories(__DIR__ . '/factories');
+
         if (!file_exists($copy)) {
             Log::debug('Created new database.');
             touch($original);
             Artisan::call('migrate');
             copy($original, $copy);
+
+            // create EUR currency
+            /** @var TransactionCurrency $currency */
+            $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
+            $currency->code = 'EUR';
+            $currency->save();
+            Log::debug('Created new EUR currency.');
         } else {
             if (file_exists($copy)) {
                 copy($copy, $original);
@@ -45,7 +57,16 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         }
         // if the database copy does exists, copy back as original.
 
-        FactoryMuffin::loadFactories(__DIR__ . '/factories');
+        $this->session(
+            [
+                'start' => Carbon::now()->startOfMonth(),
+                'end'   => Carbon::now()->endOfMonth(),
+                'first' => Carbon::now()->startOfYear()
+            ]
+        );
+
+
+
 
     }
 

@@ -13,6 +13,7 @@ use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Validation\Validator;
 use Log;
 use Navigation;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class FireflyValidator
@@ -21,6 +22,18 @@ use Navigation;
  */
 class FireflyValidator extends Validator
 {
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array               $data
+     * @param array               $rules
+     * @param array               $messages
+     * @param array               $customAttributes
+     */
+    public function __construct(TranslatorInterface $translator, array $data, array $rules, array $messages = [], array $customAttributes = [])
+    {
+        parent::__construct($translator, $data, $rules, $messages);
+    }
 
     /**
      * @param $attribute
@@ -181,10 +194,14 @@ class FireflyValidator extends Validator
      */
     public function validateUniqueObjectForUser($attribute, $value, $parameters)
     {
-        $table     = $parameters[0];
-        $field     = $parameters[1];
-        $encrypted = isset($parameters[2]) ? $parameters[2] : 'encrypted';
-        $exclude   = isset($parameters[3]) ? $parameters[3] : null;
+        $table           = $parameters[0];
+        $field           = $parameters[1];
+        $encrypted       = isset($parameters[2]) ? $parameters[2] : 'encrypted';
+        $exclude         = isset($parameters[3]) ? $parameters[3] : null;
+        $alwaysEncrypted = false;
+        if ($encrypted == 'TRUE') {
+            $alwaysEncrypted = true;
+        }
 
         $query = DB::table($table)->where('user_id', Auth::user()->id);
 
@@ -195,8 +212,12 @@ class FireflyValidator extends Validator
 
         $set = $query->get();
         foreach ($set as $entry) {
-            $isEncrypted = intval($entry->$encrypted) == 1 ? true : false;
-            $checkValue  = $isEncrypted ? Crypt::decrypt($entry->$field) : $entry->$field;
+            if (!$alwaysEncrypted) {
+                $isEncrypted = intval($entry->$encrypted) == 1 ? true : false;
+            } else {
+                $isEncrypted = true;
+            }
+            $checkValue = $isEncrypted ? Crypt::decrypt($entry->$field) : $entry->$field;
             if ($checkValue == $value) {
                 return false;
             }

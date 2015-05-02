@@ -11,6 +11,7 @@ use Input;
 use Redirect;
 use Session;
 use Steam;
+use URL;
 use View;
 
 /**
@@ -25,6 +26,7 @@ class AccountController extends Controller
      */
     public function __construct()
     {
+        parent::__construct();
         View::share('mainTitleIcon', 'fa-credit-card');
         View::share('title', 'Accounts');
     }
@@ -39,6 +41,12 @@ class AccountController extends Controller
         $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
         $subTitle     = 'Create a new ' . e($what) . ' account';
 
+        // put previous url in session if not redirect from store (not "create another").
+        if (Session::get('accounts.create.fromStore') !== true) {
+            Session::put('accounts.create.url', URL::previous());
+        }
+        Session::forget('accounts.create.fromStore');
+
         return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle'));
 
     }
@@ -51,6 +59,9 @@ class AccountController extends Controller
     public function delete(Account $account)
     {
         $subTitle = 'Delete ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"';
+
+        // put previous url in session
+        Session::put('accounts.delete.url', URL::previous());
 
         return view('accounts.delete', compact('account', 'subTitle'));
     }
@@ -71,7 +82,7 @@ class AccountController extends Controller
 
         Session::flash('success', 'The ' . e($typeName) . ' account "' . e($name) . '" was deleted.');
 
-        return Redirect::route('accounts.index', $typeName);
+        return Redirect::to(Session::get('accounts.delete.url'));
     }
 
     /**
@@ -87,6 +98,12 @@ class AccountController extends Controller
         $subTitle       = 'Edit ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"';
         $subTitleIcon   = Config::get('firefly.subIconsByIdentifier.' . $what);
         $openingBalance = $repository->openingBalanceTransaction($account);
+
+        // put previous url in session if not redirect from store (not "return_to_edit").
+        if (Session::get('accounts.edit.fromUpdate') !== true) {
+            Session::put('accounts.edit.url', URL::previous());
+        }
+        Session::forget('accounts.edit.fromUpdate');
 
         // pre fill some useful values.
 
@@ -184,10 +201,15 @@ class AccountController extends Controller
         Session::flash('success', 'New account "' . $account->name . '" stored!');
 
         if (intval(Input::get('create_another')) === 1) {
-            return Redirect::route('accounts.create', $request->input('what'))->withInput();
+            // set value so create routine will not overwrite URL:
+            Session::put('accounts.create.fromStore', true);
+
+            return Redirect::route('accounts.create')->withInput();
         }
 
-        return Redirect::route('accounts.index', $request->input('what'));
+        // redirect to previous URL.
+        return Redirect::to(Session::get('accounts.create.url'));
+
 
     }
 
@@ -200,7 +222,7 @@ class AccountController extends Controller
      */
     public function update(Account $account, AccountFormRequest $request, AccountRepositoryInterface $repository)
     {
-        $what        = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
+
         $accountData = [
             'name'                   => $request->input('name'),
             'active'                 => $request->input('active'),
@@ -219,10 +241,14 @@ class AccountController extends Controller
         Session::flash('success', 'Account "' . $account->name . '" updated.');
 
         if (intval(Input::get('return_to_edit')) === 1) {
-            return Redirect::route('accounts.edit', $account->id);
+            // set value so edit routine will not overwrite URL:
+            Session::put('accounts.edit.fromUpdate', true);
+
+            return Redirect::route('accounts.edit', $account->id)->withInput(['return_to_edit' => 1]);
         }
 
-        return Redirect::route('accounts.index', $what);
+        // redirect to previous URL.
+        return Redirect::to(Session::get('accounts.edit.url'));
 
     }
 

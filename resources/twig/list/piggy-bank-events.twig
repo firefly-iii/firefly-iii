@@ -1,0 +1,33 @@
+<table class="table table-bordered table-striped">
+    <tr>
+        {% if showPiggyBank %}
+            <th>Piggy bank</th>
+        {% endif %}
+        <th>Date</th>
+        <th>Amount</th>
+    </tr>
+    {% for event in events %}
+    <tr>
+        {% if showPiggyBank %}
+        <td>
+            <a href="{{ route('piggyBanks.show',event.piggyBank_id) }}">{{ event.piggyBank.name }}</a>
+        </td>
+        {% endif %}
+        <td>
+            {% if event.transaction_journal_id %}
+                <a href="{{ route('transactions.show',event.transaction_journal_id) }}" title="{{ event.transactionJournal.description }}">{{ event.date.format('j F Y') }}</a>
+            {% else %}
+                {{ event.date.format('j F Y') }}
+            {% endif %}
+            </td>
+
+        <td>
+            {% if event.amount < 0 %}
+                <span class="text-danger">Removed {{ event.amount*-1|formatAmountPlain }}</span>
+            {% else %}
+                <span class="text-success">Added {{ event.amount|formatAmountPlain }}</span>
+            {% endif %}
+            </td>
+    </tr>
+    {% endfor %}
+</table>
