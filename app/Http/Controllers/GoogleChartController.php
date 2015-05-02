@@ -359,7 +359,7 @@ class GoogleChartController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function budgetsAndSpending(Budget $budget, $year = 0, GChart $chart, BudgetRepositoryInterface $repository)
+    public function budgetsAndSpending(GChart $chart, BudgetRepositoryInterface $repository, Budget $budget, $year = 0)
     {
         $chart->addColumn('Month', 'date');
         $chart->addColumn('Budgeted', 'number');
