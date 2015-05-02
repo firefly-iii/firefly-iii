@@ -7,7 +7,7 @@ use FireflyIII\Models\TransactionJournal;
 use Twig_Extension;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
-
+use App;
 /**
  * Class Journal
  *
@@ -16,6 +16,9 @@ use Twig_SimpleFunction;
 class Journal extends Twig_Extension
 {
 
+    /**
+     * @return array
+     */
     public function getFilters()
     {
         $filters = [];
@@ -43,6 +46,9 @@ class Journal extends Twig_Extension
         return $filters;
     }
 
+    /**
+     * @return array
+     */
     public function getFunctions()
     {
         $functions = [];
@@ -59,7 +65,10 @@ class Journal extends Twig_Extension
 
         $functions[] = new Twig_SimpleFunction(
             'relevantTags', function (TransactionJournal $journal) {
-            return 'TODO'.$journal->amount;
+            if($journal->tags->count() == 0) {
+                return App::make('amount')->formatJournal($journal);
+            }
+            return 'TODO: '.$journal->amount;
         }
         );
 
