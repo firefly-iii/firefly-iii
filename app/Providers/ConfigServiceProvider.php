@@ -166,7 +166,7 @@ class ConfigServiceProvider extends ServiceProvider
                             'Config',
                             'ExpandedForm' => [
                                 'is_safe' => [
-                                    'date', 'text', 'select', 'balance', 'optionsList', 'checkbox', 'amount'
+                                    'date', 'text', 'select', 'balance', 'optionsList', 'checkbox', 'amount', 'tags', 'integer'
                                 ]
                             ],
                             'Form'         => [
