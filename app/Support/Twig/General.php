@@ -5,6 +5,7 @@ namespace FireflyIII\Support\Twig;
 use App;
 use Config;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Transaction;
 use Route;
 use Twig_Extension;
 use Twig_SimpleFilter;
@@ -31,6 +32,13 @@ class General extends Twig_Extension
             return App::make('amount')->format($string);
         }, ['is_safe' => ['html']]
         );
+
+        $filters[] = new Twig_SimpleFilter(
+            'formatTransaction', function (Transaction $transaction) {
+            return App::make('amount')->formatTransaction($transaction);
+        }, ['is_safe' => ['html']]
+        );
+
         $filters[] = new Twig_SimpleFilter(
             'formatAmountPlain', function ($string) {
             return App::make('amount')->format($string, false);
