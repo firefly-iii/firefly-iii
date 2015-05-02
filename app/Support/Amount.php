@@ -160,12 +160,15 @@ class Amount
 
         $currencyPreference = Prefs::get('currencyPreference', 'EUR');
         $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
+        if ($currency) {
 
-        \Cache::forever('FFCURRENCYCODE', $currency->code);
+            Cache::forever('FFCURRENCYCODE', $currency->code);
+            define('FFCURRENCYCODE', $currency->code);
 
-        define('FFCURRENCYCODE', $currency->code);
+            return $currency->code;
+        }
 
-        return $currency->code;
+        return 'EUR';
     }
 
     public function getDefaultCurrency()

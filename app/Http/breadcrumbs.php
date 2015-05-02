@@ -23,6 +23,14 @@ Breadcrumbs::register(
     }
 );
 
+Breadcrumbs::register(
+    'index',
+    function (Generator $breadcrumbs) {
+
+        $breadcrumbs->push('Home', route('index'));
+    }
+);
+
 // accounts
 Breadcrumbs::register(
     'accounts.index', function (Generator $breadcrumbs, $what) {

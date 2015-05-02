@@ -72,6 +72,7 @@ class BillControllerTest extends TestCase
         $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
         Amount::shouldReceive('getDefaultCurrency')->once()->andReturn($currency);
         Amount::shouldReceive('getAllCurrencies')->once()->andReturn([$currency]);
+        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
 
         $this->call('GET', '/bills/create');
         $this->assertViewHas('subTitle', 'Create new');
@@ -111,6 +112,7 @@ class BillControllerTest extends TestCase
         $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
         Amount::shouldReceive('getDefaultCurrency')->once()->andReturn($currency);
         Amount::shouldReceive('getAllCurrencies')->once()->andReturn([$currency]);
+        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
 
         $this->call('GET', '/bills/edit/' . $bill->id);
         $this->assertViewHas('subTitle', 'Edit "' . e($bill->name) . '"');
@@ -126,6 +128,7 @@ class BillControllerTest extends TestCase
         $collection->push($bill);
 
         Amount::shouldReceive('format')->andReturn('XX');
+        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
 
         $repository = $this->mock('FireflyIII\Repositories\Bill\BillRepositoryInterface');
         $repository->shouldReceive('getBills')->once()->andReturn($collection);
@@ -186,6 +189,8 @@ class BillControllerTest extends TestCase
 
         Amount::shouldReceive('format')->andReturn('XX');
         Amount::shouldReceive('getCurrencyCode')->andReturn('XX');
+
+
 
         $this->call('GET', '/bills/show/' . $bill->id);
     }

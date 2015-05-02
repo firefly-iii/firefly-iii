@@ -56,6 +56,7 @@ class JsonControllerTest extends TestCase
         $accounts->shouldReceive('getCreditCards')->andReturn($ccs);
         $accounts->shouldReceive('getTransfersInRange')->andReturn(new Collection);
         Amount::shouldReceive('format')->andReturn('xx');
+        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
         Steam::shouldReceive('balance')->andReturn(0);
 
 
@@ -83,6 +84,7 @@ class JsonControllerTest extends TestCase
         $bills->shouldReceive('createFakeBill')->andReturn($bill);
         $accounts->shouldReceive('getCreditCards')->andReturn($ccs);
         Amount::shouldReceive('format')->andReturn('xx');
+        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
         Steam::shouldReceive('balance')->andReturn(-1);
 
         $this->call('GET', '/json/box/bills-unpaid');
@@ -97,6 +99,7 @@ class JsonControllerTest extends TestCase
         $repository = $this->mock('FireflyIII\Helpers\Report\ReportQueryInterface');
         $repository->shouldReceive('incomeByPeriod')->andReturn(new Collection);
         Amount::shouldReceive('format')->andReturn('xx');
+        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
 
         $this->call('GET', '/json/box/in');
         $this->assertResponseOk();
@@ -110,6 +113,7 @@ class JsonControllerTest extends TestCase
         $repository = $this->mock('FireflyIII\Helpers\Report\ReportQueryInterface');
         $repository->shouldReceive('journalsByExpenseAccount')->andReturn(new Collection);
         Amount::shouldReceive('format')->andReturn('xx');
+        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
 
         $this->call('GET', '/json/box/out');
         $this->assertResponseOk();

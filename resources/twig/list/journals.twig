@@ -1,0 +1,113 @@
+{{ journals.render|raw }}
+
+<table class="table table-striped table-bordered sortable-table">
+    <tr class="ignore">
+        <th colspan="2">&nbsp;</th>
+        <th>Description</th>
+        <th>Amount</th>
+        <th>Date</th>
+        <th>From</th>
+        <th>To</th>
+        <!-- Hide budgets? -->
+        {% if not hideBudgets %}
+            <th><i class="fa fa-tasks fa-fw" title="Budget"></i></th>
+        {% endif %}
+
+        <!-- Hide categories? -->
+        {% if not hideCategories %}
+            <th><i class="fa fa-bar-chart fa-fw" title="Category"></i></th>
+        {% endif %}
+
+        <!-- Hide bills? -->
+        {% if not hideBills %}
+            <th><i class="fa fa-fw fa-rotate-right" title="Bill"></i></th>
+        {% endif %}
+    </tr>
+    {% for journal in journals %}
+        {% if invalidJournal(journal) %}
+            <tr class="ignore">
+                <td>
+                    <div class="btn-group btn-group-xs">
+                        <a href="{{ route("transactions.delete",journal.id) }}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
+                    </div>
+                </td>
+                <td>&nbsp;</td>
+                <td>{{ journal.description }}</td>
+                <td colspan="7"><em>Invalid journal: Found {{journal.transactions|length }} transaction(s)</em></td>
+            </tr>
+        {% else %}
+            <tr class="drag" data-date="{{journal.date.format('Y-m-d')}}" data-id="{{journal.id}}">
+                <td>
+                    <div class="btn-group btn-group-xs">
+                        {% if sorting %}
+                            <a href="#" class="handle btn btn-default btn-xs"><i class="fa fa-fw fa-arrows-v"></i></a>
+                        {% endif %}
+                        <a href="{{ route('transactions.edit',journal.id)}}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
+                        <a href="{{ route('transactions.delete',journal.id)}}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
+                    </div>
+                </td>
+
+                <td>
+                    {{ journal|typeIcon }}
+                </td>
+                <td>
+                    <a href="{{route('transactions.show',journal.id)}}" title="{{journal.description}}">{{journal.description}}</a>
+                </td>
+                <td>
+                    {% if not hideTags %}
+                        {{ relevantTags(journal) }}
+                    {% else %}
+                        {{ journal|formatJournal }}
+                    {% endif %}
+                </td>
+                <td>
+                    {{journal.date.format('j F Y')}}
+                </td>
+                <td>
+                    {% if journal.transactions[0].account.accountType.type == 'Cash account' %}
+                        <span class="text-success">(cash)</span>
+                    {% else %}
+                        <a href="{{route('accounts.show',journal.transactions[0].account_id)}}">{{journal.transactions[0].account.name}}</a>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if journal.transactions[1].account.accountType.type == 'Cash account' %}
+                        <span class="text-success">(cash)</span>
+                    {% else %}
+                        <a href="{{route('accounts.show',journal.transactions[1].account_id)}}">{{journal.transactions[1].account.name}}</a>
+                    {% endif %}
+                </td>
+
+                <!-- Do NOT hide the budget? -->
+                {% if not hideBudgets %}
+                    <td>
+                        {% if journal.budgets[0] %}
+                            <a href="{{route('budgets.show',journal.budgets[0].id)}}">{{journal.budgets[0].name}}</a>
+                        {% endif %}
+                    </td>
+                {% endif %}
+
+                <!-- Do NOT hide the category? -->
+                {% if not hideCategories %}
+                    <td>
+                        {% if journal.categories[0] %}
+                            <a href="{{route('categories.show',journal.categories[0].id)}}">{{journal.categories[0].name}}</a>
+                        {% endif %}
+                    </td>
+                {% endif %}
+
+                <!-- Do NOT hide the bill? -->
+                {% if not hideBills %}
+                    <td>
+                        {% if journal.bill %}
+                            <a href="{{ route('bills.show',journal.bill_id) }}">{{journal.bill.name}}</a>
+                        {% endif %}
+                    </td>
+                {% endif %}
+            </tr>
+        {% endif %}
+
+    {% endfor %}
+</table>
+
+{{ journals.render|raw }}

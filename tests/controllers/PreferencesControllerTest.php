@@ -55,6 +55,7 @@ class PreferencesControllerTest extends TestCase
         Preferences::shouldReceive('get')->once()->withArgs(['budgetMaximum', 1000])->andReturn($pref);
         Preferences::shouldReceive('get')->once()->withArgs(['currencyPreference', 'EUR'])->andReturn($pref);
         Amount::shouldReceive('format')->andReturn('xx');
+        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
         Amount::shouldReceive('getAllCurrencies')->andReturn(new Collection);
         Amount::shouldReceive('getDefaultCurrency')->andReturn($currency);
 

@@ -1,0 +1,40 @@
+{% extends "./layout/default.twig" %}
+{% block content %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, reminder) }}
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a href="{{route('reminders.show',reminder.id)}}">
+                {% if reminder.notnow %}
+                    Dismissed reminder
+                {% else %}
+                    Reminder
+                {% endif %}
+                for piggy bank "{{reminder.remindersable.name}}"
+                </a>
+            </div>
+            <div class="panel-body">
+                <p>
+                    Active between {{reminder.startdate.format('jS F Y')}}
+                    and {{reminder.enddate.format('jS F Y')}}.
+                </p>
+
+                {% if reminder.description %}
+                    <p>{!! reminder.description !!}</p>
+                {% endif %}
+            </div>
+            <div class="panel-footer">
+                    <div class="btn-group">
+                        {% if not reminder.notnow %}
+                            <a class="btn btn-warning" href="{{route('reminders.dismiss',reminder.id)}}">Dismiss</a>
+                        {% endif %}
+                        {% if reminder.active %}
+                            <a class="btn btn-success" href="{{route('reminders.act',reminder.id)}}">Act</a>
+                        {% endif %}
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

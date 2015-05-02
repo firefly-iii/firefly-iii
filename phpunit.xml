@@ -7,7 +7,7 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          processIsolation="false"
-         stopOnFailure="false"
+         stopOnFailure="true"
          syntaxCheck="false">
     <testsuites>
         <testsuite name="Application Test Suite">
@@ -24,6 +24,7 @@
     <logging>
         <log type="coverage-clover" target="./storage/coverage/clover.xml" charset="UTF-8" />
     </logging>
+
     <php>
         <env name="APP_ENV" value="testing"/>
         <env name="CACHE_DRIVER" value="array"/>

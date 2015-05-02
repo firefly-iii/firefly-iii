@@ -2,13 +2,21 @@
 
 namespace FireflyIII\Providers;
 
+use App;
+use FireflyIII\Models\Account;
 use FireflyIII\Support\Amount;
 use FireflyIII\Support\ExpandedForm;
 use FireflyIII\Support\Navigation;
 use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
+use FireflyIII\Support\Twig\Budget;
+use FireflyIII\Support\Twig\General;
+use FireflyIII\Support\Twig\Journal;
+use FireflyIII\Support\Twig\PiggyBank;
 use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Support\ServiceProvider;
+use Twig;
+use TwigBridge\Extension\Loader\Functions;
 use Validator;
 
 /**
@@ -25,10 +33,22 @@ class FireflyServiceProvider extends ServiceProvider
                 return new FireflyValidator($translator, $data, $rules, $messages);
             }
         );
+        /*
+         * Default Twig configuration:
+         */
+
+        $config = App::make('config');
+        Twig::addExtension(new Functions($config));
+        Twig::addExtension(new PiggyBank);
+        Twig::addExtension(new General);
+        Twig::addExtension(new Journal);
+        Twig::addExtension(new Budget);
     }
 
     public function register()
     {
+
+
         $this->app->bind(
             'preferences', function () {
             return new Preferences;
@@ -71,6 +91,7 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind('FireflyIII\Helpers\Reminders\ReminderHelperInterface', 'FireflyIII\Helpers\Reminders\ReminderHelper');
         $this->app->bind('FireflyIII\Helpers\Report\ReportHelperInterface', 'FireflyIII\Helpers\Report\ReportHelper');
         $this->app->bind('FireflyIII\Helpers\Report\ReportQueryInterface', 'FireflyIII\Helpers\Report\ReportQuery');
+
 
     }
 

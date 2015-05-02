@@ -115,6 +115,7 @@ class BudgetControllerTest extends TestCase
         $repository->shouldReceive('getCurrentRepetition')->once();
         Amount::shouldReceive('getCurrencySymbol')->andReturn('x');
         Amount::shouldReceive('format')->andReturn('x');
+        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
         $this->call('GET', '/budgets');
 
         $this->assertResponseOk();
@@ -304,6 +305,10 @@ class BudgetControllerTest extends TestCase
         $pref = FactoryMuffin::create('FireflyIII\Models\Preference');
         Preferences::shouldReceive('get')->withArgs(['budgetIncomeTotal' . $date, 1000])->andReturn($pref);
         Amount::shouldReceive('format')->andReturn('xx');
+        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
+
+
 
         $this->call('GET', '/budgets/income');
         $this->assertResponseOk();
