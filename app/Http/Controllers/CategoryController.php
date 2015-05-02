@@ -52,7 +52,7 @@ class CategoryController extends Controller
      */
     public function delete(Category $category)
     {
-        $subTitle = 'Delete category' . e($category->name) . '"';
+        $subTitle = 'Delete category "' . e($category->name) . '"';
 
         // put previous url in session
         Session::put('categories.delete.url', URL::previous());
