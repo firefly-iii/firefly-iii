@@ -162,6 +162,7 @@ class ConfigServiceProvider extends ServiceProvider
                             ],
                             'Session',
                             'Route',
+                            'URL',
                             'Config',
                             'ExpandedForm' => [
                                 'is_safe' => [

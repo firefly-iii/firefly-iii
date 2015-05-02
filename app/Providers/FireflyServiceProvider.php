@@ -9,6 +9,7 @@ use FireflyIII\Support\ExpandedForm;
 use FireflyIII\Support\Navigation;
 use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
+use FireflyIII\Support\Twig\Budget;
 use FireflyIII\Support\Twig\General;
 use FireflyIII\Support\Twig\Journals;
 use FireflyIII\Validation\FireflyValidator;
@@ -39,6 +40,7 @@ class FireflyServiceProvider extends ServiceProvider
         Twig::addExtension(new Functions($config));
         Twig::addExtension(new General);
         Twig::addExtension(new Journals);
+        Twig::addExtension(new Budget);
     }
 
     public function register()

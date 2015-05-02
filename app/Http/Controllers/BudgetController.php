@@ -190,6 +190,7 @@ class BudgetController extends Controller
         $journals = $repository->getJournals($budget, $repetition);
         $limits   = !is_null($repetition->id) ? [$repetition->budgetLimit] : $repository->getBudgetLimits($budget);
         $subTitle = !is_null($repetition->id) ? e($budget->name) . ' in ' . $repetition->startdate->format('F Y') : e($budget->name);
+        $journals->setPath('/budgets/show/'.$budget->id);
 
         return view('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle'));
     }
