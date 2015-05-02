@@ -50,6 +50,8 @@ class PiggyBankControllerTest extends TestCase
         $repository = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
         $repository->shouldReceive('leftOnAccount')->withAnyArgs()->andReturn(12);
         Amount::shouldReceive('format')->andReturn('XXxx');
+        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
 
         $this->call('GET', '/piggy-banks/add/' . $piggyBank->id);
         $this->assertResponseOk();
@@ -179,6 +181,7 @@ class PiggyBankControllerTest extends TestCase
         Steam::shouldReceive('balance')->andReturn(20);
         $accounts->shouldReceive('leftOnAccount')->andReturn(12);
         Amount::shouldReceive('format')->andReturn('123');
+        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
 
 
         $this->call('GET', '/piggy-banks');
@@ -218,6 +221,7 @@ class PiggyBankControllerTest extends TestCase
         $piggyBanks->shouldReceive('createEvent')->once();
 
         Amount::shouldReceive('format')->andReturn('something');
+        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
 
         $this->call('POST', '/piggy-banks/add/' . $piggyBank->id, ['_token' => 'replaceMe']);
         $this->assertResponseStatus(302);
@@ -235,6 +239,7 @@ class PiggyBankControllerTest extends TestCase
         $piggyBanks->shouldReceive('createEvent')->once();
 
         Amount::shouldReceive('format')->andReturn('something');
+        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
 
         $this->call('POST', '/piggy-banks/add/' . $piggyBank->id, ['_token' => 'replaceMe', 'amount' => '10000']);
         $this->assertResponseStatus(302);
@@ -283,6 +288,8 @@ class PiggyBankControllerTest extends TestCase
         $this->be($piggyBank->account->user);
 
         Amount::shouldReceive('format')->andReturn('something');
+        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
 
         $this->call('GET', '/piggy-banks/remove/' . $piggyBank->id);
         $this->assertResponseOk();
