@@ -92,18 +92,24 @@ class General extends Twig_Extension
 
         $functions[] = new Twig_SimpleFunction(
             'activeRoute', function ($context) {
-            $args  = func_get_args();
-            $route = $args[1];
-            $what  = isset($args[2]) ? $args[2] : false;
+            $args       = func_get_args();
+            $route      = $args[1];
+            $what       = isset($args[2]) ? $args[2] : false;
+            $strict     = isset($args[3]) ? $args[3] : false;
             $activeWhat = isset($context['what']) ? $context['what'] : false;
+
             // activeRoute
             if (!($what === false)) {
                 if ($what == $activeWhat && Route::getCurrentRoute()->getName() == $route) {
                     return 'active because-active-what';
                 }
             } else {
-                if (Route::getCurrentRoute()->getName() == $route) {
-                    return 'active because-route-matches';
+                if (!$strict && !(strpos(Route::getCurrentRoute()->getName(), $route) === false)) {
+                    return 'active because-route-matches-non-strict';
+                } else {
+                    if ($strict && Route::getCurrentRoute()->getName() == $route) {
+                        return 'active because-route-matches-strict';
+                    }
                 }
             }
 
