@@ -2,9 +2,9 @@
 
 namespace FireflyIII\Support\Twig;
 
+use FireflyIII\Models\PiggyBank as PB;
 use Twig_Extension;
 use Twig_SimpleFunction;
-use FireflyIII\Models\PiggyBank as PB;
 
 /**
  * Class PiggyBank
@@ -26,6 +26,7 @@ class PiggyBank extends Twig_Extension
             return $piggyBank->currentRelevantRep()->currentamount;
         }
         );
+
         return $functions;
     }
 

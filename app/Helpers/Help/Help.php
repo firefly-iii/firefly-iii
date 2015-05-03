@@ -54,7 +54,9 @@ class Help implements HelpInterface
     }
 
     /**
-     * @return boolean
+     * @param $route
+     *
+     * @return bool
      */
     public function hasRoute($route)
     {
@@ -62,10 +64,10 @@ class Help implements HelpInterface
     }
 
     /**
-     * @param       $title
+     * @param       $route
      * @param array $content
      *
-     * @return void
+     * @internal param $title
      */
     public function putInCache($route, array $content)
     {

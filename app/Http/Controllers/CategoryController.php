@@ -97,8 +97,9 @@ class CategoryController extends Controller
     }
 
     /**
-     * @return $this
+     * @param CategoryRepositoryInterface $repository
      *
+     * @return $this
      */
     public function index(CategoryRepositoryInterface $repository)
     {
@@ -114,6 +115,8 @@ class CategoryController extends Controller
     }
 
     /**
+     * @param CategoryRepositoryInterface $repository
+     *
      * @return \Illuminate\View\View
      */
     public function noCategory(CategoryRepositoryInterface $repository)

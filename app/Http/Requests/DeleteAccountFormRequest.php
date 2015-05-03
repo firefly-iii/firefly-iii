@@ -26,7 +26,7 @@ class DeleteAccountFormRequest extends Request
     public function rules()
     {
         return [
-            'password'          => 'required',
+            'password' => 'required',
         ];
     }
 }

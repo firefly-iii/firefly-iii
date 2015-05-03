@@ -92,7 +92,7 @@ class TagController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(TagRepositoryInterface $repository,Tag $tag)
+    public function destroy(TagRepositoryInterface $repository, Tag $tag)
     {
 
         $tagName = $tag->tag;
@@ -150,7 +150,7 @@ class TagController extends Controller
                 $count++;
             }
         }
-        if($count > 1) {
+        if ($count > 1) {
             $allowToAdvancePayment = false;
         }
 
@@ -170,12 +170,12 @@ class TagController extends Controller
                 $count++;
             }
         }
-        if($count > 0) {
+        if ($count > 0) {
             $allowToBalancingAct = false;
         }
 
 
-        // edit tagoptions:
+        // edit tag options:
         if ($allowToAdvancePayment === false) {
             unset($tagOptions['advancePayment']);
         }
@@ -195,6 +195,8 @@ class TagController extends Controller
 
     /**
      * @param $state
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function hideTagHelp($state)
     {
@@ -234,7 +236,11 @@ class TagController extends Controller
     }
 
     /**
-     * @param TagFormRequest $request
+     * @param TagFormRequest         $request
+     *
+     * @param TagRepositoryInterface $repository
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
     public function store(TagFormRequest $request, TagRepositoryInterface $repository)
     {

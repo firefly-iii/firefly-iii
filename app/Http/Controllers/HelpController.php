@@ -13,7 +13,8 @@ class HelpController extends Controller
 {
 
     /**
-     * @param $route
+     * @param HelpInterface $help
+     * @param               $route
      *
      * @return \Illuminate\Http\JsonResponse
      */

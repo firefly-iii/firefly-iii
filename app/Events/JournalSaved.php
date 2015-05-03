@@ -3,6 +3,11 @@
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Queue\SerializesModels;
 
+/**
+ * Class JournalSaved
+ *
+ * @package FireflyIII\Events
+ */
 class JournalSaved extends Event
 {
 
@@ -13,7 +18,7 @@ class JournalSaved extends Event
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param TransactionJournal $journal
      */
     public function __construct(TransactionJournal $journal)
     {

@@ -51,7 +51,7 @@ class Account extends Model
         $account = Account::create($fields);
         if (is_null($account->id)) {
             // could not create account:
-            App::abort(500, 'Could not create new account with data: ' . json_encode($fields).' because ' . json_encode($account->getErrors()));
+            App::abort(500, 'Could not create new account with data: ' . json_encode($fields) . ' because ' . json_encode($account->getErrors()));
 
 
         }

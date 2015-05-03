@@ -92,7 +92,7 @@ class AccountController extends Controller
      *
      * @return View
      */
-    public function edit(AccountRepositoryInterface $repository,Account $account)
+    public function edit(AccountRepositoryInterface $repository, Account $account)
     {
 
         $what           = Config::get('firefly.shortNamesByFullName')[$account->accountType->type];

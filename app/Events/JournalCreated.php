@@ -19,7 +19,8 @@ class JournalCreated extends Event
     /**
      * Create a new event instance.
      *
-     * @return void
+     * @param TransactionJournal $journal
+     * @param                    $piggyBankId
      */
     public function __construct(TransactionJournal $journal, $piggyBankId)
     {

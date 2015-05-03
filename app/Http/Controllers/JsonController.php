@@ -28,7 +28,9 @@ class JsonController extends Controller
 
 
     /**
-     * @param BillRepositoryInterface $repository
+     * @param BillRepositoryInterface    $repository
+     *
+     * @param AccountRepositoryInterface $accountRepository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -149,6 +151,8 @@ class JsonController extends Controller
     /**
      * Returns a list of categories.
      *
+     * @param CategoryRepositoryInterface $repository
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function categories(CategoryRepositoryInterface $repository)
@@ -165,6 +169,8 @@ class JsonController extends Controller
 
     /**
      * Returns a JSON list of all beneficiaries.
+     *
+     * @param AccountRepositoryInterface $accountRepository
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -183,6 +189,8 @@ class JsonController extends Controller
     /**
      * Returns a JSON list of all beneficiaries.
      *
+     * @param TagRepositoryInterface $tagRepository
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function tags(TagRepositoryInterface $tagRepository)
@@ -198,6 +206,8 @@ class JsonController extends Controller
     }
 
     /**
+     * @param AccountRepositoryInterface $accountRepository
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function revenueAccounts(AccountRepositoryInterface $accountRepository)

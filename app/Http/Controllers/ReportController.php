@@ -1,7 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Models\Account;
@@ -107,9 +106,9 @@ class ReportController extends Controller
     }
 
     /**
-     * @param ReportHelperInterface $helper
-     *
      * @return View
+     * @internal param ReportHelperInterface $helper
+     *
      */
     public function index()
     {
@@ -144,12 +143,13 @@ class ReportController extends Controller
     }
 
     /**
-     * @param Account              $account
-     * @param string               $year
-     * @param string               $month
-     * @param ReportQueryInterface $query
+     * @param Account $account
+     * @param string  $year
+     * @param string  $month
      *
      * @return View
+     * @internal param ReportQueryInterface $query
+     *
      */
     public function modalLeftUnbalanced(Account $account, $year = '2014', $month = '1')
     {
@@ -164,6 +164,8 @@ class ReportController extends Controller
                 if ($count == 0) {
                     return $journal;
                 }
+
+                return null;
             }
         );
 

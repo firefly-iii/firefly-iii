@@ -133,6 +133,8 @@ class CurrencyController extends Controller
     }
 
     /**
+     * @param CurrencyRepositoryInterface $repository
+     *
      * @return \Illuminate\View\View
      */
     public function index(CurrencyRepositoryInterface $repository)
@@ -145,6 +147,9 @@ class CurrencyController extends Controller
 
     /**
      * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
+     * @param CurrencyFormRequest         $request
+     * @param CurrencyRepositoryInterface $repository
      *
      * @return $this|\Illuminate\Http\RedirectResponse
      */

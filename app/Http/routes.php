@@ -145,8 +145,8 @@ Route::bind(
     if (Auth::check()) {
         /** @var \FireflyIII\Models\Reminder $object */
         $object = Reminder::find($value);
-        if($object) {
-            if($object->remindersable->account->user_id == Auth::user()->id) {
+        if ($object) {
+            if ($object->remindersable->account->user_id == Auth::user()->id) {
                 return $object;
             }
         }
@@ -177,7 +177,7 @@ Route::get('/register', ['uses' => 'Auth\AuthController@getRegister', 'as' => 'r
 
 Route::controllers(
     [
-        'auth'     => 'Auth\AuthController',
+        'auth' => 'Auth\AuthController',
         'password' => 'Auth\PasswordController',
     ]
 );
@@ -350,8 +350,13 @@ Route::group(
 
     // pop ups for budget report:
     Route::get('/reports/modal/{account}/{year}/{month}/no-budget', ['uses' => 'ReportController@modalNoBudget', 'as' => 'reports.no-budget']);
-    Route::get('/reports/modal/{account}/{year}/{month}/balanced-transfers', ['uses' => 'ReportController@modalBalancedTransfers', 'as' => 'reports.balanced-transfers']);
-    Route::get('/reports/modal/{account}/{year}/{month}/left-unbalanced', ['uses' => 'ReportController@modalLeftUnbalanced', 'as' => 'reports.left-unbalanced']);
+    Route::get(
+        '/reports/modal/{account}/{year}/{month}/balanced-transfers',
+        ['uses' => 'ReportController@modalBalancedTransfers', 'as' => 'reports.balanced-transfers']
+    );
+    Route::get(
+        '/reports/modal/{account}/{year}/{month}/left-unbalanced', ['uses' => 'ReportController@modalLeftUnbalanced', 'as' => 'reports.left-unbalanced']
+    );
 
     /**
      * Search Controller

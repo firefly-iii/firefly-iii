@@ -231,7 +231,7 @@ class JournalRepository implements JournalRepositoryInterface
             DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal->id)->whereNotIn('tag_id', $ids)->delete();
         }
         // if count is zero, delete them all:
-        if(count($ids) == 0) {
+        if (count($ids) == 0) {
             DB::table('tag_transaction_journal')->where('transaction_journal_id', $journal->id)->delete();
         }
 

@@ -6,6 +6,7 @@ use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
+use FireflyIII\Models\Reminder;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Facades\Navigation;
@@ -13,7 +14,6 @@ use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Log;
-use FireflyIII\Models\Reminder;
 
 /**
  * Class EventServiceProvider

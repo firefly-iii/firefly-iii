@@ -1,7 +1,5 @@
 <?php namespace FireflyIII\Http\Controllers;
 
-use Auth;
-use FireflyIII\Helpers\Reminders\ReminderHelperInterface;
 use FireflyIII\Models\Reminder;
 use FireflyIII\Repositories\Reminder\ReminderRepositoryInterface;
 use Redirect;
@@ -19,6 +17,8 @@ class ReminderController extends Controller
 
     /**
      * @param Reminder $reminder
+     *
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function act(Reminder $reminder)
     {
@@ -36,6 +36,8 @@ class ReminderController extends Controller
 
     /**
      * @param Reminder $reminder
+     *
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function dismiss(Reminder $reminder)
     {
@@ -48,7 +50,9 @@ class ReminderController extends Controller
     }
 
     /**
+     * @param ReminderRepositoryInterface $repository
      *
+     * @return \Illuminate\View\View
      */
     public function index(ReminderRepositoryInterface $repository)
     {
@@ -67,6 +71,8 @@ class ReminderController extends Controller
 
     /**
      * @param Reminder $reminder
+     *
+     * @return \Illuminate\View\View
      */
     public function show(Reminder $reminder)
     {

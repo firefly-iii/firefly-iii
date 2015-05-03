@@ -243,7 +243,10 @@ class GoogleChartController extends Controller
     }
 
     /**
-     * @param GChart $chart
+     * @param GChart                     $chart
+     *
+     * @param BillRepositoryInterface    $repository
+     * @param AccountRepositoryInterface $accounts
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -494,7 +497,7 @@ class GoogleChartController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function yearInExp(GChart $chart, ReportQueryInterface $query,$year)
+    public function yearInExp(GChart $chart, ReportQueryInterface $query, $year)
     {
         $start = new Carbon('01-01-' . $year);
         $chart->addColumn('Month', 'date');

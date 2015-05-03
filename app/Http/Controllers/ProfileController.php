@@ -46,6 +46,8 @@ class ProfileController extends Controller
     }
 
     /**
+     * @param ProfileFormRequest $request
+     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
     public function postChangePassword(ProfileFormRequest $request)
@@ -91,7 +93,10 @@ class ProfileController extends Controller
     }
 
     /**
+     * @param DeleteAccountFormRequest $request
      *
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
      */
     public function postDeleteAccount(DeleteAccountFormRequest $request)
     {

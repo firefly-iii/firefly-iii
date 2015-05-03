@@ -40,7 +40,8 @@ class PiggyBankController extends Controller
     /**
      * Add money to piggy bank
      *
-     * @param PiggyBank $piggyBank
+     * @param AccountRepositoryInterface $repository
+     * @param PiggyBank                  $piggyBank
      *
      * @return $this
      */
@@ -55,6 +56,8 @@ class PiggyBankController extends Controller
     }
 
     /**
+     * @param AccountRepositoryInterface $repository
+     *
      * @return mixed
      */
     public function create(AccountRepositoryInterface $repository)
@@ -337,10 +340,11 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param PiggyBank $piggyBank
+     * @param PiggyBankRepositoryInterface $repository
+     * @param PiggyBankFormRequest         $request
+     * @param PiggyBank                    $piggyBank
      *
      * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
-     *
      * @return $this
      */
     public function update(PiggyBankRepositoryInterface $repository, PiggyBankFormRequest $request, PiggyBank $piggyBank)

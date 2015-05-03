@@ -26,6 +26,8 @@ class PreferencesController extends Controller
     }
 
     /**
+     * @param AccountRepositoryInterface $repository
+     *
      * @return $this|\Illuminate\View\View
      */
     public function index(AccountRepositoryInterface $repository)

@@ -264,10 +264,10 @@ class BudgetController extends Controller
      */
     public function updateIncome()
     {
-        $date         = Session::get('start', Carbon::now()->startOfMonth())->format('FY');
+        $date   = Session::get('start', Carbon::now()->startOfMonth())->format('FY');
         $amount = Preferences::get('budgetIncomeTotal' . $date, 1000);
 
-        return view('budgets.income',compact('amount'));
+        return view('budgets.income', compact('amount'));
     }
 
 }

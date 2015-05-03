@@ -173,7 +173,7 @@ class ConfigServiceProvider extends ServiceProvider
                             ],
                             'Form'         => [
                                 'is_safe' => [
-                                    'input', 'select', 'checkbox', 'model', 'open','radio','textarea'
+                                    'input', 'select', 'checkbox', 'model', 'open', 'radio', 'textarea'
                                 ]
                             ],
                         ],
