@@ -92,6 +92,14 @@ FactoryMuffin::define(
 );
 
 FactoryMuffin::define(
+    'FireflyIII\Models\TransactionGroup',
+    [
+        'user_id'  => 'factory|FireflyIII\User',
+        'relation' => 'balance',
+    ]
+);
+
+FactoryMuffin::define(
     'FireflyIII\Models\Reminder',
     [
         'user_id'            => 'factory|FireflyIII\User',

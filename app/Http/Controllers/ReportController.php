@@ -132,11 +132,6 @@ class ReportController extends Controller
     public function modalBalancedTransfers(Account $account, $year = '2014', $month = '1')
     {
 
-        try {
-            new Carbon($year . '-' . $month . '-01');
-        } catch (Exception $e) {
-            return view('error')->with('message', 'Invalid date');
-        }
         $start = new Carbon($year . '-' . $month . '-01');
         $end   = clone $start;
         $end->endOfMonth();
@@ -158,11 +153,6 @@ class ReportController extends Controller
      */
     public function modalLeftUnbalanced(Account $account, $year = '2014', $month = '1')
     {
-        try {
-            new Carbon($year . '-' . $month . '-01');
-        } catch (Exception $e) {
-            return view('error')->with('message', 'Invalid date');
-        }
         $start = new Carbon($year . '-' . $month . '-01');
         $end   = clone $start;
         $end->endOfMonth();
@@ -189,11 +179,6 @@ class ReportController extends Controller
      */
     public function modalNoBudget(Account $account, $year = '2014', $month = '1')
     {
-        try {
-            new Carbon($year . '-' . $month . '-01');
-        } catch (Exception $e) {
-            return view('error')->with('message', 'Invalid date');
-        }
         $start = new Carbon($year . '-' . $month . '-01');
         $end   = clone $start;
         $end->endOfMonth();
@@ -211,11 +196,6 @@ class ReportController extends Controller
      */
     public function month($year = '2014', $month = '1')
     {
-        try {
-            new Carbon($year . '-' . $month . '-01');
-        } catch (Exception $e) {
-            return view('error')->with('message', 'Invalid date.');
-        }
         $date         = new Carbon($year . '-' . $month . '-01');
         $subTitle     = 'Report for ' . $date->format('F Y');
         $subTitleIcon = 'fa-calendar';
@@ -327,11 +307,6 @@ class ReportController extends Controller
      */
     public function year($year)
     {
-        try {
-            new Carbon('01-01-' . $year);
-        } catch (Exception $e) {
-            return view('error')->with('message', 'Invalid date.');
-        }
         /** @var Preference $pref */
         $pref              = Preferences::get('showSharedReports', false);
         $showSharedReports = $pref->data;

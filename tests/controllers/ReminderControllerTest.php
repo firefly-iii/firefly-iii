@@ -3,7 +3,7 @@ use Illuminate\Support\Collection;
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
 /**
- * Class ProfileControllerTest
+ * Class ReportControllerTest
  */
 class ReminderControllerTest extends TestCase
 {
