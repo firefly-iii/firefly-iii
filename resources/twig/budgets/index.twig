@@ -122,11 +122,11 @@
                 <!-- budget-info-X holds the input and the euro-sign: -->
                 <span id="budget-info-{{ budget.id }}">
                 {% if budget.currentRep.amount > budget.spent %}
-                    <span class="text-success">{{ getCurrencySymbol() }}</span> <input type="number" min="0" max="{{ budgetMaximum }}" data-id="{{ budget.id }}"
+                    <span class="text-success">{{ getCurrencySymbol()|raw }}</span> <input type="number" min="0" max="{{ budgetMaximum }}" data-id="{{ budget.id }}"
                                                                                        step="1" value="{{ budget.currentRep.amount }}"
                                                                                        style="width:90px;color:#3c763d;"/>
                 {% else %}
-                    <span class="text-danger">{{ getCurrencySymbol() }}</span> <input type="number" min="0" max="{{ budgetMaximum }}" data-id="{{ budget.id }}"
+                    <span class="text-danger">{{ getCurrencySymbol()|raw }}</span> <input type="number" min="0" max="{{ budgetMaximum }}" data-id="{{ budget.id }}"
                                                                                       step="1" value="{{ budget.currentRep.amount }}"
                                                                                       style="width:90px;color:#a94442;"/>
                 {% endif %}
@@ -134,7 +134,7 @@
             {% else %}
                 <span id="budget-description-{{ budget.id }}"><em>No budget</em></span>
                 <span id="budget-info-{{ budget.id }}">
-                    <span class="text-success" style="display:none;">{{ Amount.getCurrencySymbol() }}</span> <input data-id="{{ budget.id }}" type="number"
+                    <span class="text-success" style="display:none;">{{ getCurrencySymbol()|raw }}</span> <input data-id="{{ budget.id }}" type="number"
                                                                                                                     min="0" max="{{ budgetMaximum }}" step="1"
                                                                                                                     value="0"
                                                                                                                     style="width:50px;color:#3c763d;display:none;"/>
