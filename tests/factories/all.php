@@ -78,6 +78,7 @@ FactoryMuffin::define(
         'date'        => 'date',
         'latitude'    => 12,
         'longitude'   => 13,
+        'zoomLevel'   => 3,
     ]
 );
 

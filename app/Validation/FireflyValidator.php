@@ -203,7 +203,13 @@ class FireflyValidator extends Validator
             $alwaysEncrypted = true;
         }
 
-        $query = DB::table($table)->where('user_id', Auth::user()->id);
+        if(is_null(Auth::user())) {
+            // user is not logged in.. weird.
+            return true;
+        } else {
+            $query = DB::table($table)->where('user_id', Auth::user()->id);
+        }
+
 
         if (!is_null($exclude)) {
             $query->where('id', '!=', $exclude);
