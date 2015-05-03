@@ -14,7 +14,6 @@ class ReportControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        FactoryMuffin::create('FireflyIII\User');
     }
 
     /**

@@ -87,11 +87,12 @@ class TagController extends Controller
     }
 
     /**
-     * @param Tag $tag
+     * @param TagRepositoryInterface $repository
+     * @param Tag                    $tag
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Tag $tag, TagRepositoryInterface $repository)
+    public function destroy(TagRepositoryInterface $repository,Tag $tag)
     {
 
         $tagName = $tag->tag;
@@ -273,9 +274,13 @@ class TagController extends Controller
     }
 
     /**
-     * @param Tag $tag
+     * @param TagFormRequest         $request
+     * @param TagRepositoryInterface $repository
+     * @param Tag                    $tag
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
-    public function update(Tag $tag, TagFormRequest $request, TagRepositoryInterface $repository)
+    public function update(TagFormRequest $request, TagRepositoryInterface $repository, Tag $tag)
     {
         if (Input::get('setTag') == 'true') {
             $latitude  = strlen($request->get('latitude')) > 0 ? $request->get('latitude') : null;

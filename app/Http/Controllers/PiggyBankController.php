@@ -44,7 +44,7 @@ class PiggyBankController extends Controller
      *
      * @return $this
      */
-    public function add(PiggyBank $piggyBank, AccountRepositoryInterface $repository)
+    public function add(AccountRepositoryInterface $repository, PiggyBank $piggyBank)
     {
         $leftOnAccount = $repository->leftOnAccount($piggyBank->account);
         $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount;
@@ -92,11 +92,12 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param PiggyBank $piggyBank
+     * @param PiggyBankRepositoryInterface $repository
+     * @param PiggyBank                    $piggyBank
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(PiggyBank $piggyBank, PiggyBankRepositoryInterface $repository)
+    public function destroy(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
 
 
@@ -107,13 +108,12 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     * @param AccountRepositoryInterface $repository
+     * @param PiggyBank                  $piggyBank
      *
-     * @param PiggyBank $piggyBank
-     *
-     * @return $this
+     * @return View
      */
-    public function edit(PiggyBank $piggyBank, AccountRepositoryInterface $repository)
+    public function edit(AccountRepositoryInterface $repository, PiggyBank $piggyBank)
     {
 
         $periods      = Config::get('firefly.piggy_bank_periods');
@@ -149,7 +149,10 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @return $this
+     * @param AccountRepositoryInterface   $repository
+     * @param PiggyBankRepositoryInterface $piggyRepository
+     *
+     * @return View
      */
     public function index(AccountRepositoryInterface $repository, PiggyBankRepositoryInterface $piggyRepository)
     {
@@ -187,7 +190,7 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * Allow user to order piggy banks.
+     * @param PiggyBankRepositoryInterface $repository
      */
     public function order(PiggyBankRepositoryInterface $repository)
     {
@@ -204,13 +207,13 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * POST add money to piggy bank
-     *
-     * @param PiggyBank $piggyBank
+     * @param PiggyBankRepositoryInterface $repository
+     * @param AccountRepositoryInterface   $accounts
+     * @param PiggyBank                    $piggyBank
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postAdd(PiggyBank $piggyBank, PiggyBankRepositoryInterface $repository, AccountRepositoryInterface $accounts)
+    public function postAdd(PiggyBankRepositoryInterface $repository, AccountRepositoryInterface $accounts, PiggyBank $piggyBank)
     {
         $amount        = round(floatval(Input::get('amount')), 2);
         $leftOnAccount = $accounts->leftOnAccount($piggyBank->account);
@@ -240,11 +243,12 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param PiggyBank $piggyBank
+     * @param PiggyBankRepositoryInterface $repository
+     * @param PiggyBank                    $piggyBank
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postRemove(PiggyBank $piggyBank, PiggyBankRepositoryInterface $repository)
+    public function postRemove(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
         $amount = floatval(Input::get('amount'));
 
@@ -279,11 +283,12 @@ class PiggyBankController extends Controller
     }
 
     /**
-     * @param PiggyBank $piggyBank
+     * @param PiggyBankRepositoryInterface $repository
+     * @param PiggyBank                    $piggyBank
      *
-     * @return $this
+     * @return View
      */
-    public function show(PiggyBank $piggyBank, PiggyBankRepositoryInterface $repository)
+    public function show(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
         $events = $repository->getEvents($piggyBank);
 
@@ -338,7 +343,7 @@ class PiggyBankController extends Controller
      *
      * @return $this
      */
-    public function update(PiggyBank $piggyBank, PiggyBankRepositoryInterface $repository, PiggyBankFormRequest $request)
+    public function update(PiggyBankRepositoryInterface $repository, PiggyBankFormRequest $request, PiggyBank $piggyBank)
     {
         $piggyBankData = [
             'name'         => $request->get('name'),

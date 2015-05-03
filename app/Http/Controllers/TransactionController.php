@@ -116,7 +116,7 @@ class TransactionController extends Controller
      *
      * @return $this
      */
-    public function edit(TransactionJournal $journal, JournalRepositoryInterface $repository)
+    public function edit(TransactionJournal $journal)
     {
         $what         = strtolower($journal->transactiontype->type);
         $accounts     = ExpandedForm::makeSelectList(
@@ -310,13 +310,13 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param JournalFormRequest         $request
+     * @param JournalRepositoryInterface $repository
+     * @param TransactionJournal         $journal
      *
-     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
-     *
-     * @return $this
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
-    public function update(TransactionJournal $journal, JournalFormRequest $request, JournalRepositoryInterface $repository)
+    public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
 
         $journalData = $request->getJournalData();

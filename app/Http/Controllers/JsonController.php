@@ -236,11 +236,12 @@ class JsonController extends Controller
     }
 
     /**
-     * @param $what
+     * @param JournalRepositoryInterface $repository
+     * @param                            $what
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function transactionJournals($what, JournalRepositoryInterface $repository)
+    public function transactionJournals(JournalRepositoryInterface $repository, $what)
     {
         $descriptions = [];
         $dbType       = $repository->getTransactionType($what);

@@ -67,11 +67,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @param Account $account
+     * @param AccountRepositoryInterface $repository
+     * @param Account                    $account
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Account $account, AccountRepositoryInterface $repository)
+    public function destroy(AccountRepositoryInterface $repository, Account $account)
     {
 
         $type     = $account->accountType->type;
@@ -86,12 +87,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @param Account                    $account
      * @param AccountRepositoryInterface $repository
+     * @param Account                    $account
      *
      * @return View
      */
-    public function edit(Account $account, AccountRepositoryInterface $repository)
+    public function edit(AccountRepositoryInterface $repository,Account $account)
     {
 
         $what           = Config::get('firefly.shortNamesByFullName')[$account->accountType->type];
@@ -129,12 +130,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @param                            $what
      * @param AccountRepositoryInterface $repository
+     * @param                            $what
      *
      * @return View
      */
-    public function index($what, AccountRepositoryInterface $repository)
+    public function index(AccountRepositoryInterface $repository, $what)
     {
         $subTitle     = Config::get('firefly.subTitlesByIdentifier.' . $what);
         $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
@@ -158,12 +159,12 @@ class AccountController extends Controller
     }
 
     /**
-     * @param Account                    $account
      * @param AccountRepositoryInterface $repository
+     * @param Account                    $account
      *
      * @return View
      */
-    public function show(Account $account, AccountRepositoryInterface $repository)
+    public function show(AccountRepositoryInterface $repository, Account $account)
     {
         $page         = intval(Input::get('page')) == 0 ? 1 : intval(Input::get('page'));
         $subTitleIcon = Config::get('firefly.subTitlesByIdentifier.' . $account->accountType->type);
@@ -214,13 +215,13 @@ class AccountController extends Controller
     }
 
     /**
-     * @param Account                    $account
      * @param AccountFormRequest         $request
      * @param AccountRepositoryInterface $repository
+     * @param Account                    $account
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
-    public function update(Account $account, AccountFormRequest $request, AccountRepositoryInterface $repository)
+    public function update(AccountFormRequest $request, AccountRepositoryInterface $repository, Account $account)
     {
 
         $accountData = [

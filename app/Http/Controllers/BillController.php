@@ -35,11 +35,12 @@ class BillController extends Controller
     }
 
     /**
-     * @param Bill $bill
+     * @param AccountRepositoryInterface $repository
+     * @param Bill                       $bill
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function add(Bill $bill, AccountRepositoryInterface $repository)
+    public function add(AccountRepositoryInterface $repository, Bill $bill)
     {
         $matches     = explode(',', $bill->match);
         $description = [];
@@ -107,11 +108,12 @@ class BillController extends Controller
     }
 
     /**
-     * @param Bill $bill
+     * @param BillRepositoryInterface $repository
+     * @param Bill                    $bill
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Bill $bill, BillRepositoryInterface $repository)
+    public function destroy(BillRepositoryInterface $repository, Bill $bill)
     {
         $repository->destroy($bill);
 
@@ -158,11 +160,12 @@ class BillController extends Controller
     }
 
     /**
-     * @param Bill $bill
+     * @param BillRepositoryInterface $repository
+     * @param Bill                    $bill
      *
-     * @return mixed
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function rescan(Bill $bill, BillRepositoryInterface $repository)
+    public function rescan(BillRepositoryInterface $repository, Bill $bill)
     {
         if (intval($bill->active) == 0) {
             Session::flash('warning', 'Inactive bills cannot be scanned.');
@@ -183,11 +186,12 @@ class BillController extends Controller
     }
 
     /**
-     * @param Bill $bill
+     * @param BillRepositoryInterface $repository
+     * @param Bill                    $bill
      *
      * @return mixed
      */
-    public function show(Bill $bill, BillRepositoryInterface $repository)
+    public function show(BillRepositoryInterface $repository, Bill $bill)
     {
         $journals                = $repository->getJournals($bill);
         $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill);
@@ -197,7 +201,10 @@ class BillController extends Controller
     }
 
     /**
-     * @return $this
+     * @param BillFormRequest         $request
+     * @param BillRepositoryInterface $repository
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
     public function store(BillFormRequest $request, BillRepositoryInterface $repository)
     {
@@ -218,11 +225,13 @@ class BillController extends Controller
     }
 
     /**
-     * @param Bill $bill
+     * @param BillFormRequest         $request
+     * @param BillRepositoryInterface $repository
+     * @param Bill                    $bill
      *
-     * @return $this
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
-    public function update(Bill $bill, BillFormRequest $request, BillRepositoryInterface $repository)
+    public function update(BillFormRequest $request, BillRepositoryInterface $repository, Bill $bill)
     {
         $billData = $request->getBillData();
         $bill     = $repository->update($bill, $billData);

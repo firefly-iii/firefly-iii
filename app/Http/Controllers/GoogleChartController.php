@@ -35,12 +35,12 @@ class GoogleChartController extends Controller
 
 
     /**
+     * @param GChart  $chart
      * @param Account $account
-     * @param string  $view
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function accountBalanceChart(Account $account, GChart $chart)
+    public function accountBalanceChart(GChart $chart, Account $account)
     {
         $chart->addColumn('Day of month', 'date');
         $chart->addColumn('Balance for ' . $account->name, 'number');
@@ -64,7 +64,8 @@ class GoogleChartController extends Controller
     }
 
     /**
-     * @param GChart $chart
+     * @param GChart                     $chart
+     * @param AccountRepositoryInterface $repository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -104,11 +105,13 @@ class GoogleChartController extends Controller
     }
 
     /**
-     * @param int $year
+     * @param GChart                    $chart
+     * @param BudgetRepositoryInterface $repository
+     * @param                           $year
      *
-     * @return $this|\Illuminate\Http\JsonResponse
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function allBudgetsAndSpending($year, GChart $chart, BudgetRepositoryInterface $repository)
+    public function allBudgetsAndSpending(GChart $chart, BudgetRepositoryInterface $repository, $year)
     {
         $budgets = $repository->getBudgets();
         $chart->addColumn('Month', 'date');
@@ -137,7 +140,8 @@ class GoogleChartController extends Controller
     }
 
     /**
-     * @param GChart $chart
+     * @param GChart                    $chart
+     * @param BudgetRepositoryInterface $repository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -183,7 +187,8 @@ class GoogleChartController extends Controller
     }
 
     /**
-     * @param GChart $chart
+     * @param GChart                      $chart
+     * @param CategoryRepositoryInterface $repository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -210,12 +215,13 @@ class GoogleChartController extends Controller
     }
 
     /**
-     * @param Bill   $bill
-     * @param GChart $chart
+     * @param GChart                  $chart
+     * @param BillRepositoryInterface $repository
+     * @param Bill                    $bill
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function billOverview(Bill $bill, GChart $chart, BillRepositoryInterface $repository)
+    public function billOverview(GChart $chart, BillRepositoryInterface $repository, Bill $bill)
     {
 
         $chart->addColumn('Date', 'date');
@@ -319,13 +325,14 @@ class GoogleChartController extends Controller
     }
 
     /**
+     * @param GChart                    $chart
+     * @param BudgetRepositoryInterface $repository
+     * @param Budget                    $budget
+     * @param LimitRepetition           $repetition
      *
-     * @param Budget          $budget
-     * @param LimitRepetition $repetition
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function budgetLimitSpending(Budget $budget, LimitRepetition $repetition, GChart $chart, BudgetRepositoryInterface $repository)
+    public function budgetLimitSpending(GChart $chart, BudgetRepositoryInterface $repository, Budget $budget, LimitRepetition $repetition)
     {
         $start = clone $repetition->startdate;
         $end   = $repetition->enddate;
@@ -352,10 +359,10 @@ class GoogleChartController extends Controller
     }
 
     /**
-     * @param Budget                    $budget
-     * @param int                       $year
      * @param GChart                    $chart
      * @param BudgetRepositoryInterface $repository
+     * @param Budget                    $budget
+     * @param int                       $year
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -389,12 +396,13 @@ class GoogleChartController extends Controller
     }
 
     /**
+     * @param GChart                      $chart
+     * @param CategoryRepositoryInterface $repository
+     * @param Category                    $category
      *
-     * @param Category $category
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function categoryOverviewChart(Category $category, GChart $chart, CategoryRepositoryInterface $repository)
+    public function categoryOverviewChart(GChart $chart, CategoryRepositoryInterface $repository, Category $category)
     {
         // oldest transaction in category:
         $start = $repository->getFirstActivityDate($category);
@@ -425,12 +433,13 @@ class GoogleChartController extends Controller
     }
 
     /**
+     * @param GChart                      $chart
+     * @param CategoryRepositoryInterface $repository
+     * @param Category                    $category
      *
-     * @param Category $category
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function categoryPeriodChart(Category $category, GChart $chart, CategoryRepositoryInterface $repository)
+    public function categoryPeriodChart(GChart $chart, CategoryRepositoryInterface $repository, Category $category)
     {
         $start = clone Session::get('start', Carbon::now()->startOfMonth());
         $chart->addColumn('Period', 'date');
@@ -452,11 +461,13 @@ class GoogleChartController extends Controller
 
 
     /**
-     * @param PiggyBank $piggyBank
+     * @param GChart                       $chart
+     * @param PiggyBankRepositoryInterface $repository
+     * @param PiggyBank                    $piggyBank
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function piggyBankHistory(PiggyBank $piggyBank, GChart $chart, PiggyBankRepositoryInterface $repository)
+    public function piggyBankHistory(GChart $chart, PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
         $chart->addColumn('Date', 'date');
         $chart->addColumn('Balance', 'number');
@@ -477,12 +488,13 @@ class GoogleChartController extends Controller
     }
 
     /**
+     * @param GChart               $chart
+     * @param ReportQueryInterface $query
+     * @param                      $year
      *
-     * @param $year
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function yearInExp($year, GChart $chart, ReportQueryInterface $query)
+    public function yearInExp(GChart $chart, ReportQueryInterface $query,$year)
     {
         $start = new Carbon('01-01-' . $year);
         $chart->addColumn('Month', 'date');
@@ -515,12 +527,13 @@ class GoogleChartController extends Controller
     }
 
     /**
+     * @param GChart               $chart
+     * @param ReportQueryInterface $query
+     * @param                      $year
      *
-     * @param $year
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function yearInExpSum($year, GChart $chart, ReportQueryInterface $query)
+    public function yearInExpSum(GChart $chart, ReportQueryInterface $query, $year)
     {
         $start = new Carbon('01-01-' . $year);
         $chart->addColumn('Summary', 'string');
