@@ -151,14 +151,10 @@ class Amount
         if (defined('FFCURRENCYCODE')) {
             return FFCURRENCYCODE;
         }
-        if (Cache::has('FFCURRENCYCODE')) {
-            define('FFCURRENCYCODE', Cache::get('FFCURRENCYCODE'));
-
-            return FFCURRENCYCODE;
-        }
 
 
         $currencyPreference = Prefs::get('currencyPreference', 'EUR');
+
         $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
         if ($currency) {
 
