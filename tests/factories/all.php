@@ -92,6 +92,29 @@ FactoryMuffin::define(
 );
 
 FactoryMuffin::define(
+    'FireflyIII\Models\Reminder',
+    [
+        'user_id'            => 'factory|FireflyIII\User',
+        'startdate'          => 'date',
+        'enddate'            => 'date',
+        'active'             => 'boolean',
+        'notnow'             => 'boolean',
+        'remindersable_id'   => 'factory|FireflyIII\Models\Piggybank',
+        'remindersable_type' => 'FireflyIII\Models\Piggybank',
+        'metadata'           => function () {
+            return [
+                'perReminder' => 100,
+                'rangesCount' => 0,
+                'ranges'      => [],
+                'leftToSave'  => 100,
+            ];
+        },
+        'encrypted'          => 1,
+    ]
+);
+
+
+FactoryMuffin::define(
     'FireflyIII\Models\Category',
     [
         'user_id'   => 'factory|FireflyIII\User',

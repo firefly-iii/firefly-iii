@@ -130,9 +130,25 @@ Route::bind(
 Route::bind(
     'category', function ($value, $route) {
     if (Auth::check()) {
-        return Category::where('id', $value)->where('user_id', Auth::user()->id)->first();
+        $object = Category::where('id', $value)->where('user_id', Auth::user()->id)->first();
         if ($object) {
-            $object = $object;
+            return $object;
+        }
+    }
+
+    throw new NotFoundHttpException;
+}
+);
+
+Route::bind(
+    'reminder', function ($value, $route) {
+    if (Auth::check()) {
+        /** @var \FireflyIII\Models\Reminder $object */
+        $object = Reminder::find($value);
+        if($object) {
+            if($object->remindersable->account->user_id == Auth::user()->id) {
+                return $object;
+            }
         }
     }
 
@@ -143,9 +159,9 @@ Route::bind(
 Route::bind(
     'tag', function ($value, $route) {
     if (Auth::check()) {
-        return Tag::where('id', $value)->where('user_id', Auth::user()->id)->first();
+        $object = Tag::where('id', $value)->where('user_id', Auth::user()->id)->first();
         if ($object) {
-            $object = $object;
+            return $object;
         }
     }
 
