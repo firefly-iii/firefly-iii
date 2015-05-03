@@ -42,7 +42,7 @@ class General extends Twig_Extension
         $filters[] = new Twig_SimpleFilter(
             'formatAmountPlain', function ($string) {
             return App::make('amount')->format($string, false);
-        }
+        }, ['is_safe' => ['html']]
         );
 
         $filters[] = new Twig_SimpleFilter(
