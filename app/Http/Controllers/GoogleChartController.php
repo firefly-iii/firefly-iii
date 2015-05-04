@@ -178,8 +178,10 @@ class GoogleChartController extends Controller
                 $left = $entry[1] - $entry[2];
                 if ($left > 0) {
                     $chart->addRow($entry[0], $left, null);
-                } else if($left < 0) {
-                    $chart->addRow($entry[0], null, $left);
+                } else {
+                    if ($left < 0) {
+                        $chart->addRow($entry[0], null, $left);
+                    }
                 }
 
             }
