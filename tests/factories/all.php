@@ -202,7 +202,10 @@ FactoryMuffin::define(
     'FireflyIII\Models\Transaction',
     [
         'transaction_journal_id' => 'factory|FireflyIII\Models\TransactionJournal',
-        'amount'                 => 'integer',
+        'amount'                 => function () {
+            return rand(1, 100);
+        },
+        'description'            => 'sentence',
         'account_id'             => 'factory|FireflyIII\Models\Account'
     ]
 );
