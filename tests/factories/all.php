@@ -170,8 +170,11 @@ FactoryMuffin::define(
         'type'     => function () {
             $types = ['Expense account', 'Revenue account', 'Asset account'];
             $count = DB::table('account_types')->count();
-
-            return $types[$count];
+            if ($count < 3) {
+                return $types[$count];
+            } else {
+                return RandomString::generateRandomString(10);
+            }
         },
         'editable' => 1,
     ]
@@ -223,6 +226,19 @@ FactoryMuffin::define(
         'order'         => 0,
     ]
 );
+
+FactoryMuffin::define(
+    'FireflyIII\Models\PiggyBankEvent',
+    [
+        'piggy_bank_id'          => 'factory|FireflyIII\Models\PiggyBank',
+        'transaction_journal_id' => 'factory|FireflyIII\Models\TransactionJournal',
+        'date'                   => 'date',
+        'amount'                 => function () {
+            return rand(1, 100);
+        },
+    ]
+);
+
 
 FactoryMuffin::define(
     'FireflyIII\Models\TransactionType',

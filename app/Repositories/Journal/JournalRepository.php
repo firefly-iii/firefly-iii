@@ -4,6 +4,7 @@ namespace FireflyIII\Repositories\Journal;
 
 use App;
 use Auth;
+use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -13,6 +14,7 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -25,6 +27,23 @@ class JournalRepository implements JournalRepositoryInterface
 {
 
     /**
+     * @param TransactionJournal $journal
+     *
+     * @return bool
+     */
+    public function delete(TransactionJournal $journal)
+    {
+        // delete transactions first:
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions()->get() as $transaction) {
+            $transaction->delete();
+        }
+        $journal->delete();
+
+        return true;
+    }
+
+    /**
      * Get users first transaction journal
      *
      * @return TransactionJournal
@@ -32,6 +51,25 @@ class JournalRepository implements JournalRepositoryInterface
     public function first()
     {
         return Auth::user()->transactionjournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param Transaction        $transaction
+     *
+     * @return float
+     */
+    public function getAmountBefore(TransactionJournal $journal, Transaction $transaction)
+    {
+        return floatval(
+            $transaction->account->transactions()->leftJoin(
+                'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
+            )
+                                 ->where('transaction_journals.date', '<=', $journal->date->format('Y-m-d'))
+                                 ->where('transaction_journals.order', '>=', $journal->order)
+                                 ->where('transaction_journals.id', '!=', $journal->id)
+                                 ->sum('transactions.amount')
+);
     }
 
     /**
@@ -45,6 +83,28 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * @param array $types
+     * @param int   $offset
+     * @param int   $page
+     *
+     * @return LengthAwarePaginator
+     */
+    public function getJournalsOfTypes(array $types, $offset, $page)
+    {
+        $set      = Auth::user()->transactionJournals()->transactionTypes($types)->withRelevantData()->take(50)->offset($offset)
+                        ->orderBy('date', 'DESC')
+                        ->orderBy('order', 'ASC')
+                        ->orderBy('id', 'DESC')
+                        ->get(
+                            ['transaction_journals.*']
+                        );
+        $count    = Auth::user()->transactionJournals()->transactionTypes($types)->count();
+        $journals = new LengthAwarePaginator($set, $count, 50, $page);
+
+        return $journals;
+    }
+
+    /**
      * @param $type
      *
      * @return TransactionType
@@ -52,6 +112,17 @@ class JournalRepository implements JournalRepositoryInterface
     public function getTransactionType($type)
     {
         return TransactionType::whereType($type)->first();
+    }
+
+    /**
+     * @param        $id
+     * @param Carbon $date
+     *
+     * @return TransactionJournal
+     */
+    public function getWithDate($id, Carbon $date)
+    {
+        return Auth::user()->transactionjournals()->where('id', $id)->where('date', $date->format('Y-m-d'))->first();
     }
 
     /**
