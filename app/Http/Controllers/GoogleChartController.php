@@ -149,7 +149,7 @@ class GoogleChartController extends Controller
     {
         $chart->addColumn('Budget', 'string');
         $chart->addColumn('Left', 'number');
-        //$chart->addColumn('Spent', 'number');
+        $chart->addColumn('Overspent', 'number');
 
         $budgets    = $repository->getBudgets();
         $start      = Session::get('start', Carbon::now()->startOfMonth());
@@ -176,7 +176,12 @@ class GoogleChartController extends Controller
         foreach ($allEntries as $entry) {
             if ($entry[2] > 0) {
                 $left = $entry[1] - $entry[2];
-                $chart->addRow($entry[0], $left);
+                if ($left >= 0) {
+                    $chart->addRow($entry[0], $left, null);
+                } else {
+                    $chart->addRow($entry[0], null, $left);
+                }
+
             }
         }
 
