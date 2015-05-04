@@ -63,10 +63,8 @@ class PiggyBankController extends Controller
     public function create(AccountRepositoryInterface $repository)
     {
 
-        $periods  = Config::get('firefly.piggy_bank_periods');
-        $accounts = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
-        //Auth::user()->accounts()->orderBy('accounts.name', 'ASC')->accountTypeIn(['Default account', 'Asset account'])->get(['accounts.*'])
-        //        );
+        $periods      = Config::get('firefly.piggy_bank_periods');
+        $accounts     = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
         $subTitle     = 'Create new piggy bank';
         $subTitleIcon = 'fa-plus';
 
