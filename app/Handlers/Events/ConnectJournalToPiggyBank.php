@@ -19,7 +19,6 @@ class ConnectJournalToPiggyBank
     /**
      * Create the event handler.
      *
-     * @return void
      */
     public function __construct()
     {

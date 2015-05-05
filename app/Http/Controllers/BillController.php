@@ -35,11 +35,12 @@ class BillController extends Controller
     }
 
     /**
-     * @param Bill $bill
+     * @param AccountRepositoryInterface $repository
+     * @param Bill                       $bill
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function add(Bill $bill, AccountRepositoryInterface $repository)
+    public function add(AccountRepositoryInterface $repository, Bill $bill)
     {
         $matches     = explode(',', $bill->match);
         $description = [];
@@ -89,8 +90,9 @@ class BillController extends Controller
             Session::put('bills.create.url', URL::previous());
         }
         Session::forget('bills.create.fromStore');
+        $subTitle = 'Create new bill';
 
-        return view('bills.create')->with('periods', $periods)->with('subTitle', 'Create new');
+        return view('bills.create', compact('periods', 'subTitle'));
     }
 
     /**
@@ -102,16 +104,18 @@ class BillController extends Controller
     {
         // put previous url in session
         Session::put('bills.delete.url', URL::previous());
+        $subTitle = 'Delete "' . e($bill->name) . '"';
 
-        return view('bills.delete')->with('bill', $bill)->with('subTitle', 'Delete "' . e($bill->name) . '"');
+        return view('bills.delete', compact('bill', 'subTitle'));
     }
 
     /**
-     * @param Bill $bill
+     * @param BillRepositoryInterface $repository
+     * @param Bill                    $bill
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Bill $bill, BillRepositoryInterface $repository)
+    public function destroy(BillRepositoryInterface $repository, Bill $bill)
     {
         $repository->destroy($bill);
 
@@ -128,7 +132,8 @@ class BillController extends Controller
      */
     public function edit(Bill $bill)
     {
-        $periods = Config::get('firefly.periods_to_text');
+        $periods  = Config::get('firefly.periods_to_text');
+        $subTitle = 'Edit "' . e($bill->name) . '"';
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (Session::get('bills.edit.fromUpdate') !== true) {
@@ -136,7 +141,7 @@ class BillController extends Controller
         }
         Session::forget('bills.edit.fromUpdate');
 
-        return view('bills.edit')->with('periods', $periods)->with('bill', $bill)->with('subTitle', 'Edit "' . e($bill->name) . '"');
+        return view('bills.edit', compact('subTitle', 'periods', 'bill'));
     }
 
     /**
@@ -158,11 +163,12 @@ class BillController extends Controller
     }
 
     /**
-     * @param Bill $bill
+     * @param BillRepositoryInterface $repository
+     * @param Bill                    $bill
      *
-     * @return mixed
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function rescan(Bill $bill, BillRepositoryInterface $repository)
+    public function rescan(BillRepositoryInterface $repository, Bill $bill)
     {
         if (intval($bill->active) == 0) {
             Session::flash('warning', 'Inactive bills cannot be scanned.');
@@ -183,21 +189,26 @@ class BillController extends Controller
     }
 
     /**
-     * @param Bill $bill
+     * @param BillRepositoryInterface $repository
+     * @param Bill                    $bill
      *
      * @return mixed
      */
-    public function show(Bill $bill, BillRepositoryInterface $repository)
+    public function show(BillRepositoryInterface $repository, Bill $bill)
     {
         $journals                = $repository->getJournals($bill);
         $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill);
         $hideBill                = true;
+        $subTitle                = e($bill->name);
 
-        return view('bills.show', compact('journals', 'hideBill', 'bill'))->with('subTitle', e($bill->name));
+        return view('bills.show', compact('journals', 'hideBill', 'bill', 'subTitle'));
     }
 
     /**
-     * @return $this
+     * @param BillFormRequest         $request
+     * @param BillRepositoryInterface $repository
+     *
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
     public function store(BillFormRequest $request, BillRepositoryInterface $repository)
     {
@@ -218,11 +229,13 @@ class BillController extends Controller
     }
 
     /**
-     * @param Bill $bill
+     * @param BillFormRequest         $request
+     * @param BillRepositoryInterface $repository
+     * @param Bill                    $bill
      *
-     * @return $this
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
-    public function update(Bill $bill, BillFormRequest $request, BillRepositoryInterface $repository)
+    public function update(BillFormRequest $request, BillRepositoryInterface $repository, Bill $bill)
     {
         $billData = $request->getBillData();
         $bill     = $repository->update($bill, $billData);

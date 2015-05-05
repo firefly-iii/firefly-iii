@@ -2,7 +2,6 @@
 
 use Auth;
 use Carbon\Carbon;
-use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\CategoryFormRequest;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -41,8 +40,9 @@ class CategoryController extends Controller
             Session::put('categories.create.url', URL::previous());
         }
         Session::forget('categories.create.fromStore');
+        $subTitle = 'Create a new category';
 
-        return view('categories.create')->with('subTitle', 'Create a new category');
+        return view('categories.create', compact('subTitle'));
     }
 
     /**
@@ -61,11 +61,12 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param Category $category
+     * @param CategoryRepositoryInterface $repository
+     * @param Category                    $category
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(Category $category, CategoryRepositoryInterface $repository)
+    public function destroy(CategoryRepositoryInterface $repository, Category $category)
     {
 
         $name = $category->name;
@@ -96,8 +97,9 @@ class CategoryController extends Controller
     }
 
     /**
-     * @return $this
+     * @param CategoryRepositoryInterface $repository
      *
+     * @return $this
      */
     public function index(CategoryRepositoryInterface $repository)
     {
@@ -113,6 +115,8 @@ class CategoryController extends Controller
     }
 
     /**
+     * @param CategoryRepositoryInterface $repository
+     *
      * @return \Illuminate\View\View
      */
     public function noCategory(CategoryRepositoryInterface $repository)
@@ -126,11 +130,12 @@ class CategoryController extends Controller
     }
 
     /**
-     * @param Category $category
+     * @param CategoryRepositoryInterface $repository
+     * @param Category                    $category
      *
-     * @return $this
+     * @return View
      */
-    public function show(Category $category, CategoryRepositoryInterface $repository)
+    public function show(CategoryRepositoryInterface $repository, Category $category)
     {
         $hideCategory = true; // used in list.
         $page         = intval(Input::get('page'));
@@ -169,13 +174,13 @@ class CategoryController extends Controller
 
 
     /**
-     * @param Category                    $category
      * @param CategoryFormRequest         $request
      * @param CategoryRepositoryInterface $repository
+     * @param Category                    $category
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Category $category, CategoryFormRequest $request, CategoryRepositoryInterface $repository)
+    public function update(CategoryFormRequest $request, CategoryRepositoryInterface $repository, Category $category)
     {
         $categoryData = [
             'name' => $request->input('name'),

@@ -150,8 +150,16 @@ class ReportQuery implements ReportQueryInterface
         $set = $query->get(['accounts.*']);
         $set->each(
             function (Account $account) use ($start, $end) {
+                /**
+                 * The balance for today always incorporates transactions
+                 * made on today. So to get todays "start" balance, we sub one
+                 * day.
+                 */
+                $yesterday = clone $start;
+                $yesterday->subDay();
+
                 /** @noinspection PhpParamsInspection */
-                $account->startBalance = Steam::balance($account, $start);
+                $account->startBalance = Steam::balance($account, $yesterday);
                 $account->endBalance   = Steam::balance($account, $end);
             }
         );

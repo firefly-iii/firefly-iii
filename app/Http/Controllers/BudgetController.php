@@ -36,11 +36,12 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param Budget $budget
+     * @param BudgetRepositoryInterface $repository
+     * @param Budget                    $budget
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function amount(Budget $budget, BudgetRepositoryInterface $repository)
+    public function amount(BudgetRepositoryInterface $repository, Budget $budget)
     {
         $amount          = intval(Input::get('amount'));
         $date            = Session::get('start', Carbon::now()->startOfMonth());
@@ -60,8 +61,9 @@ class BudgetController extends Controller
             Session::put('budgets.create.url', URL::previous());
         }
         Session::forget('budgets.create.fromStore');
+        $subTitle = 'Create a new budget';
 
-        return view('budgets.create')->with('subTitle', 'Create a new budget');
+        return view('budgets.create', compact('subTitle'));
     }
 
     /**
@@ -80,7 +82,8 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param Budget $budget
+     * @param Budget                    $budget
+     * @param BudgetRepositoryInterface $repository
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -116,7 +119,9 @@ class BudgetController extends Controller
     }
 
     /**
-     * @return mixed
+     * @param BudgetRepositoryInterface $repository
+     *
+     * @return View
      */
     public function index(BudgetRepositoryInterface $repository)
     {
@@ -150,7 +155,9 @@ class BudgetController extends Controller
     }
 
     /**
-     * @return \Illuminate\View\View
+     * @param BudgetRepositoryInterface $repository
+     *
+     * @return View
      */
     public function noBudget(BudgetRepositoryInterface $repository)
     {
@@ -163,7 +170,7 @@ class BudgetController extends Controller
     }
 
     /**
-     * @return mixed
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function postUpdateIncome()
     {
@@ -175,16 +182,18 @@ class BudgetController extends Controller
     }
 
     /**
+     * @param BudgetRepositoryInterface $repository
+     * @param Budget                    $budget
+     * @param LimitRepetition           $repetition
      *
-     * @param Budget          $budget
-     * @param LimitRepetition $repetition
-     *
-     * @return \Illuminate\View\View
+     * @return View
      */
-    public function show(Budget $budget, LimitRepetition $repetition = null, BudgetRepositoryInterface $repository)
+    public function show(BudgetRepositoryInterface $repository, Budget $budget, LimitRepetition $repetition = null)
     {
         if (!is_null($repetition->id) && $repetition->budgetLimit->budget->id != $budget->id) {
-            return view('error')->with('message', 'Invalid selection.');
+            $message = 'Invalid selection.';
+
+            return view('error', compact('message'));
         }
 
         $journals = $repository->getJournals($budget, $repetition);
@@ -224,13 +233,13 @@ class BudgetController extends Controller
     }
 
     /**
-     * @param Budget                    $budget
      * @param BudgetFormRequest         $request
      * @param BudgetRepositoryInterface $repository
+     * @param Budget                    $budget
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
-    public function update(Budget $budget, BudgetFormRequest $request, BudgetRepositoryInterface $repository)
+    public function update(BudgetFormRequest $request, BudgetRepositoryInterface $repository, Budget $budget)
     {
         $budgetData = [
             'name'   => $request->input('name'),
@@ -254,14 +263,14 @@ class BudgetController extends Controller
     }
 
     /**
-     * @return $this
+     * @return View
      */
     public function updateIncome()
     {
-        $date         = Session::get('start', Carbon::now()->startOfMonth())->format('FY');
-        $budgetAmount = Preferences::get('budgetIncomeTotal' . $date, 1000);
+        $date   = Session::get('start', Carbon::now()->startOfMonth())->format('FY');
+        $amount = Preferences::get('budgetIncomeTotal' . $date, 1000);
 
-        return view('budgets.income')->with('amount', $budgetAmount);
+        return view('budgets.income', compact('amount'));
     }
 
 }

@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -28,7 +29,9 @@ class JsonController extends Controller
 
 
     /**
-     * @param BillRepositoryInterface $repository
+     * @param BillRepositoryInterface    $repository
+     *
+     * @param AccountRepositoryInterface $accountRepository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -149,6 +152,8 @@ class JsonController extends Controller
     /**
      * Returns a list of categories.
      *
+     * @param CategoryRepositoryInterface $repository
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function categories(CategoryRepositoryInterface $repository)
@@ -165,6 +170,8 @@ class JsonController extends Controller
 
     /**
      * Returns a JSON list of all beneficiaries.
+     *
+     * @param AccountRepositoryInterface $accountRepository
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -183,6 +190,8 @@ class JsonController extends Controller
     /**
      * Returns a JSON list of all beneficiaries.
      *
+     * @param TagRepositoryInterface $tagRepository
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function tags(TagRepositoryInterface $tagRepository)
@@ -198,6 +207,8 @@ class JsonController extends Controller
     }
 
     /**
+     * @param AccountRepositoryInterface $accountRepository
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function revenueAccounts(AccountRepositoryInterface $accountRepository)
@@ -217,6 +228,7 @@ class JsonController extends Controller
      */
     public function setSharedReports()
     {
+        /** @var Preference $pref */
         $pref = Preferences::get('showSharedReports', false);
         $new  = !$pref->data;
         Preferences::set('showSharedReports', $new);
@@ -236,11 +248,12 @@ class JsonController extends Controller
     }
 
     /**
-     * @param $what
+     * @param JournalRepositoryInterface $repository
+     * @param                            $what
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function transactionJournals($what, JournalRepositoryInterface $repository)
+    public function transactionJournals(JournalRepositoryInterface $repository, $what)
     {
         $descriptions = [];
         $dbType       = $repository->getTransactionType($what);

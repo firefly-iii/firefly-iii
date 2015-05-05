@@ -84,7 +84,7 @@ class HelpControllerTest extends TestCase
     public function testGetHelpTextNoRoute()
     {
         // login
-        $user    = FactoryMuffin::create('FireflyIII\User');
+        $user = FactoryMuffin::create('FireflyIII\User');
 
         $this->be($user);
         // mock some stuff.

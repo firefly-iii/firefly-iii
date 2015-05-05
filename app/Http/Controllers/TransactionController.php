@@ -1,6 +1,7 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Auth;
+use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Events\JournalCreated;
 use FireflyIII\Events\JournalSaved;
@@ -8,8 +9,8 @@ use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\JournalFormRequest;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Input;
 use Redirect;
 use Response;
@@ -34,19 +35,14 @@ class TransactionController extends Controller
     }
 
     /**
-     * Shows the view helping the user to create a new transaction journal.
+     * @param AccountRepositoryInterface $repository
+     * @param string                     $what
      *
-     * @param string $what
-     *
-     * @return \Illuminate\View\View
+     * @return View
      */
-    public function create($what = 'deposit')
+    public function create(AccountRepositoryInterface $repository, $what = 'deposit')
     {
-        $accounts   = ExpandedForm::makeSelectList(
-            Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')->orderBy('name', 'ASC')->where(
-                'active', 1
-            )->orderBy('name', 'DESC')->get(['accounts.*'])
-        );
+        $accounts   = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
         $budgets    = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
         $budgets[0] = '(no budget)';
         $piggies    = ExpandedForm::makeSelectList(Auth::user()->piggyBanks()->get());
@@ -95,15 +91,16 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param TransactionJournal $transactionJournal
+     * @param JournalRepositoryInterface $repository
+     * @param TransactionJournal         $transactionJournal
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(TransactionJournal $transactionJournal)
+    public function destroy(JournalRepositoryInterface $repository, TransactionJournal $transactionJournal)
     {
         Session::flash('success', 'Transaction "' . e($transactionJournal->description) . '" destroyed.');
 
-        $transactionJournal->delete();
+        $repository->delete($transactionJournal);
 
         // redirect to previous URL:
         return Redirect::to(Session::get('transactions.delete.url'));
@@ -112,18 +109,15 @@ class TransactionController extends Controller
     /**
      * Shows the view to edit a transaction.
      *
-     * @param TransactionJournal $journal
+     * @param AccountRepositoryInterface $repository
+     * @param TransactionJournal         $journal
      *
      * @return $this
      */
-    public function edit(TransactionJournal $journal, JournalRepositoryInterface $repository)
+    public function edit(AccountRepositoryInterface $repository, TransactionJournal $journal)
     {
         $what         = strtolower($journal->transactiontype->type);
-        $accounts     = ExpandedForm::makeSelectList(
-            Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')->where('active', 1)->orderBy(
-                'name', 'DESC'
-            )->get(['accounts.*'])
-        );
+        $accounts     = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
         $budgets      = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
         $budgets[0]   = '(no budget)';
         $transactions = $journal->transactions()->orderBy('amount', 'DESC')->get();
@@ -176,12 +170,14 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param $what
+     * @param JournalRepositoryInterface $repository
+     * @param                            $what
      *
-     * @return $this
+     * @return View
      */
-    public function index($what)
+    public function index(JournalRepositoryInterface $repository, $what)
     {
+        $types = [];
         switch ($what) {
             case 'expenses':
             case 'withdrawal':
@@ -203,18 +199,10 @@ class TransactionController extends Controller
                 break;
         }
 
-        $page   = intval(\Input::get('page'));
-        $offset = $page > 0 ? ($page - 1) * 50 : 0;
+        $page     = intval(Input::get('page'));
+        $offset   = $page > 0 ? ($page - 1) * 50 : 0;
+        $journals = $repository->getJournalsOfTypes($types, $offset, $page);
 
-        $set      = Auth::user()->transactionJournals()->transactionTypes($types)->withRelevantData()->take(50)->offset($offset)
-                        ->orderBy('date', 'DESC')
-                        ->orderBy('order', 'ASC')
-                        ->orderBy('id', 'DESC')
-                        ->get(
-                            ['transaction_journals.*']
-                        );
-        $count    = Auth::user()->transactionJournals()->transactionTypes($types)->count();
-        $journals = new LengthAwarePaginator($set, $count, 50, $page);
         $journals->setPath('transactions/' . $what);
 
         return view('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'journals'));
@@ -222,15 +210,19 @@ class TransactionController extends Controller
     }
 
     /**
-     * Reorder transactions (which all must have the same date)
+     * @param JournalRepositoryInterface $repository
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function reorder()
+    public function reorder(JournalRepositoryInterface $repository)
     {
-        $ids = Input::get('items');
+        $ids  = Input::get('items');
+        $date = new Carbon(Input::get('date'));
         if (count($ids) > 0) {
             $order = 0;
             foreach ($ids as $id) {
-                $journal = Auth::user()->transactionjournals()->where('id', $id)->where('date', Input::get('date'))->first();
+
+                $journal = $repository->getWithDate($id, $date);
                 if ($journal) {
                     $journal->order = $order;
                     $order++;
@@ -244,31 +236,22 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param JournalRepositoryInterface $repository
+     * @param TransactionJournal         $journal
      *
      * @return $this
      */
-    public function show(TransactionJournal $journal)
+    public function show(JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
         $journal->transactions->each(
-            function (Transaction $t) use ($journal) {
-                $t->before = floatval(
-                    $t->account->transactions()->leftJoin(
-                        'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-                    )
-                               ->where('transaction_journals.date', '<=', $journal->date->format('Y-m-d'))
-                               ->where('transaction_journals.order', '>=', $journal->order)
-                               ->where('transaction_journals.id', '!=', $journal->id)
-                               ->sum('transactions.amount')
-                );
+            function (Transaction $t) use ($journal, $repository) {
+                $t->before = $repository->getAmountBefore($journal, $t);
                 $t->after  = $t->before + $t->amount;
             }
         );
+        $subTitle = e($journal->transactiontype->type) . ' "' . e($journal->description) . '"';
 
-
-        return view('transactions.show', compact('journal'))->with(
-            'subTitle', e($journal->transactiontype->type) . ' "' . e($journal->description) . '"'
-        );
+        return view('transactions.show', compact('journal', 'subTitle'));
     }
 
     /**
@@ -280,7 +263,6 @@ class TransactionController extends Controller
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository)
     {
 
-
         $journalData = $request->getJournalData();
         $journal     = $repository->store($journalData);
 
@@ -289,11 +271,7 @@ class TransactionController extends Controller
         // ConnectJournalToPiggyBank
         event(new JournalCreated($journal, intval($request->get('piggy_bank_id'))));
 
-        if (intval($request->get('reminder_id')) > 0) {
-            $reminder         = Auth::user()->reminders()->find($request->get('reminder_id'));
-            $reminder->active = 0;
-            $reminder->save();
-        }
+        $repository->deactivateReminder($request->get('reminder_id'));
 
         Session::flash('success', 'New transaction "' . $journal->description . '" stored!');
 
@@ -309,14 +287,15 @@ class TransactionController extends Controller
 
     }
 
+
     /**
-     * @param TransactionJournal $journal
+     * @param JournalFormRequest         $request
+     * @param JournalRepositoryInterface $repository
+     * @param TransactionJournal         $journal
      *
-     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
-     *
-     * @return $this
+     * @return $this|\Illuminate\Http\RedirectResponse
      */
-    public function update(TransactionJournal $journal, JournalFormRequest $request, JournalRepositoryInterface $repository)
+    public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
 
         $journalData = $request->getJournalData();

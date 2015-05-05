@@ -1,7 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Models\Account;
@@ -76,6 +75,7 @@ class ReportController extends Controller
             // should always hide account
             $hide = true;
             // loop all budgets
+            /** @var \FireflyIII\Models\Budget $budget */
             foreach ($budgets as $budget) {
                 $id         = intval($budget->id);
                 $data       = $budget->toArray();
@@ -107,9 +107,9 @@ class ReportController extends Controller
     }
 
     /**
-     * @param ReportHelperInterface $helper
-     *
      * @return View
+     * @internal param ReportHelperInterface $helper
+     *
      */
     public function index()
     {
@@ -132,11 +132,6 @@ class ReportController extends Controller
     public function modalBalancedTransfers(Account $account, $year = '2014', $month = '1')
     {
 
-        try {
-            new Carbon($year . '-' . $month . '-01');
-        } catch (Exception $e) {
-            return view('error')->with('message', 'Invalid date');
-        }
         $start = new Carbon($year . '-' . $month . '-01');
         $end   = clone $start;
         $end->endOfMonth();
@@ -149,20 +144,16 @@ class ReportController extends Controller
     }
 
     /**
-     * @param Account              $account
-     * @param string               $year
-     * @param string               $month
-     * @param ReportQueryInterface $query
+     * @param Account $account
+     * @param string  $year
+     * @param string  $month
      *
      * @return View
+     * @internal param ReportQueryInterface $query
+     *
      */
     public function modalLeftUnbalanced(Account $account, $year = '2014', $month = '1')
     {
-        try {
-            new Carbon($year . '-' . $month . '-01');
-        } catch (Exception $e) {
-            return view('error')->with('message', 'Invalid date');
-        }
         $start = new Carbon($year . '-' . $month . '-01');
         $end   = clone $start;
         $end->endOfMonth();
@@ -174,6 +165,8 @@ class ReportController extends Controller
                 if ($count == 0) {
                     return $journal;
                 }
+
+                return null;
             }
         );
 
@@ -189,11 +182,6 @@ class ReportController extends Controller
      */
     public function modalNoBudget(Account $account, $year = '2014', $month = '1')
     {
-        try {
-            new Carbon($year . '-' . $month . '-01');
-        } catch (Exception $e) {
-            return view('error')->with('message', 'Invalid date');
-        }
         $start = new Carbon($year . '-' . $month . '-01');
         $end   = clone $start;
         $end->endOfMonth();
@@ -211,11 +199,6 @@ class ReportController extends Controller
      */
     public function month($year = '2014', $month = '1')
     {
-        try {
-            new Carbon($year . '-' . $month . '-01');
-        } catch (Exception $e) {
-            return view('error')->with('message', 'Invalid date.');
-        }
         $date         = new Carbon($year . '-' . $month . '-01');
         $subTitle     = 'Report for ' . $date->format('F Y');
         $subTitleIcon = 'fa-calendar';
@@ -327,11 +310,6 @@ class ReportController extends Controller
      */
     public function year($year)
     {
-        try {
-            new Carbon('01-01-' . $year);
-        } catch (Exception $e) {
-            return view('error')->with('message', 'Invalid date.');
-        }
         /** @var Preference $pref */
         $pref              = Preferences::get('showSharedReports', false);
         $showSharedReports = $pref->data;

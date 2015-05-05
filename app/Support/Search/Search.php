@@ -84,7 +84,6 @@ class Search implements SearchInterface
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @param array $words
      *
@@ -122,6 +121,7 @@ class Search implements SearchInterface
                         return $journal;
                     }
                 }
+                return null;
 
             }
         );

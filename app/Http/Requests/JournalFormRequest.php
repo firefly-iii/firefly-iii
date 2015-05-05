@@ -57,7 +57,7 @@ class JournalFormRequest extends Request
 
         $rules = [
             'description'        => 'required|min:1,max:255',
-            'what'               => 'required|in:withdrawal,deposit,transfer|exists:transaction_types,type',
+            'what'               => 'required|in:withdrawal,deposit,transfer',
             'amount'             => 'numeric|required|min:0.01',
             'date'               => 'required|date',
             'reminder_id'        => 'numeric|exists:reminders,id',

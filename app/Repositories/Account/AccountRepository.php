@@ -374,6 +374,8 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @param Account $account
      * @param array   $data
+     *
+     * @return Account
      */
     public function update(Account $account, array $data)
     {

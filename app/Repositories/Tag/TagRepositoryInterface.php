@@ -1,6 +1,7 @@
 <?php
 
 namespace FireflyIII\Repositories\Tag;
+
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
@@ -11,7 +12,8 @@ use Illuminate\Support\Collection;
  *
  * @package FireflyIII\Repositories\Tag
  */
-interface TagRepositoryInterface {
+interface TagRepositoryInterface
+{
 
     /**
      * @param array $data
@@ -34,7 +36,7 @@ interface TagRepositoryInterface {
     public function update(Tag $tag, array $data);
 
     /**
-     * @param Tag   $tag
+     * @param Tag $tag
      *
      * @return boolean
      */

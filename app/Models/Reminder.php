@@ -78,6 +78,11 @@ class Reminder extends Model
         return $query->where('reminders.startdate', '=', $start->format('Y-m-d 00:00:00'))->where('reminders.enddate', '=', $end->format('Y-m-d 00:00:00'));
     }
 
+    /**
+     * @param EloquentBuilder $query
+     *
+     * @return $this
+     */
     public function scopeToday(EloquentBuilder $query)
     {
         $today = new Carbon;

@@ -211,10 +211,12 @@ class BillRepository implements BillRepositoryInterface
          * $today is the start of the next period, to make sure FF3 won't miss anything
          * when the current period has a transaction journal.
          */
-        $today = Navigation::addPeriod(new Carbon, $bill->repeat_freq, 0);
+        /** @var \Carbon\Carbon $obj */
+        $obj = new Carbon;
+        $today = Navigation::addPeriod($obj, $bill->repeat_freq, 0);
 
         $skip  = $bill->skip + 1;
-        $start = Navigation::startOfPeriod(new Carbon, $bill->repeat_freq);
+        $start = Navigation::startOfPeriod($obj, $bill->repeat_freq);
         /*
          * go back exactly one month/week/etc because FF3 does not care about 'next'
          * bills if they're too far into the past.

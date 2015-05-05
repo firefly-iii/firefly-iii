@@ -17,8 +17,8 @@ class Steam
 {
     /**
      *
-     * @param Account $account
-     * @param Carbon  $date
+     * @param \FireflyIII\Models\Account $account
+     * @param \Carbon\Carbon  $date
      * @param bool    $ignoreVirtualBalance
      *
      * @return float
@@ -91,7 +91,7 @@ class Steam
      * Turns a collection into an array. Needs the field 'id' for the key,
      * and saves only 'name' and 'amount' as a sub array.
      *
-     * @param Collection $collection
+     * @param \Illuminate\Support\Collection $collection
      *
      * @return array
      */

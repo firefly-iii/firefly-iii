@@ -87,27 +87,35 @@ class GoogleChartControllerTest extends TestCase
 
     public function testAllBudgetsHomeChart()
     {
-        $budget  = FactoryMuffin::create('FireflyIII\Models\Budget');
+
         $budget1 = FactoryMuffin::create('FireflyIII\Models\Budget');
-        $this->be($budget->user);
+        $budget2 = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $budget3 = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $budget4 = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $budgets = new Collection([$budget1, $budget2, $budget3, $budget4]);
 
-        $start = Carbon::now()->startOfMonth();
-        $end   = Carbon::now()->endOfMonth();
+        $rep1 = FactoryMuffin::create('FireflyIII\Models\LimitRepetition');
+        $rep2 = FactoryMuffin::create('FireflyIII\Models\LimitRepetition');
+        $rep3 = FactoryMuffin::create('FireflyIII\Models\LimitRepetition');
 
-        $repetition  = FactoryMuffin::create('FireflyIII\Models\LimitRepetition');
-        $repetitions = new Collection;
-        $repetitions->push($repetition);
-        $emptyRepetitions = new Collection;
+        $rep1->amount = 6;
+        $rep1->save();
+        $rep2->amount = 18;
+        $rep2->save();
+        $this->be($budget1->user);
 
-        $collection = new Collection;
-        $collection->push($budget);
-        $collection->push($budget1);
+
+        $coll1 = new Collection([$rep1]);
+        $coll2 = new Collection([$rep2]);
+        $coll3 = new Collection([$rep3]);
+        $coll4 = new Collection;
+
 
         // mock stuff:
         $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-        $repository->shouldReceive('getBudgets')->andReturn($collection);
-        $repository->shouldReceive('getBudgetLimitRepetitions')->once()->andReturn($repetitions, $emptyRepetitions);
-        $repository->shouldReceive('sumBudgetExpensesInPeriod')->andReturn(12);
+        $repository->shouldReceive('getBudgets')->andReturn($budgets);
+        $repository->shouldReceive('getBudgetLimitRepetitions')->andReturn($coll1, $coll2, $coll3, $coll4);
+        $repository->shouldReceive('sumBudgetExpensesInPeriod')->andReturn(12, 12, 12, -12);
         $repository->shouldReceive('getWithoutBudgetSum')->andReturn(0);
 
         $this->call('GET', '/chart/home/budgets');
@@ -194,7 +202,7 @@ class GoogleChartControllerTest extends TestCase
         $repetition->startdate = Carbon::now()->startOfMonth();
         $repetition->enddate   = Carbon::now()->endOfMonth();
         $repetition->save();
-        $budget                = $repetition->budgetlimit->budget;
+        $budget = $repetition->budgetlimit->budget;
         $this->be($budget->user);
         ///chart/budget/{budget}/{limitrepetition}
 

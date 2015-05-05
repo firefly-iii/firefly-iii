@@ -3,6 +3,12 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
+/**
+ * @SuppressWarnings(PHPMD.ShortMethodName)
+ * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
+ *
+ * Class ChangesForV3310
+ */
 class ChangesForV3310 extends Migration
 {
 
@@ -57,7 +63,8 @@ class ChangesForV3310 extends Migration
         );
 
 
-        Schema::create('tag_transaction_journal',function (Blueprint $table) {
+        Schema::create(
+            'tag_transaction_journal', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('tag_id')->unsigned();
             $table->integer('transaction_journal_id')->unsigned();
@@ -69,7 +76,8 @@ class ChangesForV3310 extends Migration
             // add unique.
             $table->unique(['tag_id', 'transaction_journal_id'], 'tag_t_joined');
 
-        });
+        }
+        );
     }
 
 }

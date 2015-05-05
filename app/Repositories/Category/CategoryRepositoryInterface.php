@@ -72,8 +72,8 @@ interface CategoryRepositoryInterface
 
     /**
      * @param Category $category
-     * @param Carbon   $start
-     * @param Carbon   $end
+     * @param \Carbon\Carbon   $start
+     * @param \Carbon\Carbon   $end
      *
      * @return float
      */

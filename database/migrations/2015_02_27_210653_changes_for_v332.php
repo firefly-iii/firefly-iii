@@ -4,6 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
+ * @SuppressWarnings(PHPMD.ShortMethodName)
+ *
  * Class ChangesForV332
  */
 class ChangesForV332 extends Migration

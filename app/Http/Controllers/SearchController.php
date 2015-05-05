@@ -12,6 +12,10 @@ class SearchController extends Controller
 {
     /**
      * Results always come in the form of an array [results, count, fullCount]
+     *
+     * @param SearchInterface $searcher
+     *
+     * @return $this
      */
     public function index(SearchInterface $searcher)
     {

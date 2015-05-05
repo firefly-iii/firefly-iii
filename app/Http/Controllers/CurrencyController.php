@@ -68,11 +68,12 @@ class CurrencyController extends Controller
     }
 
     /**
-     * @param TransactionCurrency $currency
+     * @param CurrencyRepositoryInterface $repository
+     * @param TransactionCurrency         $currency
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     * @return \Illuminate\Http\RedirectResponse|View
      */
-    public function delete(TransactionCurrency $currency, CurrencyRepositoryInterface $repository)
+    public function delete(CurrencyRepositoryInterface $repository, TransactionCurrency $currency)
     {
 
         if ($repository->countJournals($currency) > 0) {
@@ -89,11 +90,13 @@ class CurrencyController extends Controller
     }
 
     /**
-     * @param TransactionCurrency $currency
+     * @param CurrencyRepositoryInterface $repository
+     * @param TransactionCurrency         $currency
      *
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
      */
-    public function destroy(TransactionCurrency $currency, CurrencyRepositoryInterface $repository)
+    public function destroy(CurrencyRepositoryInterface $repository, TransactionCurrency $currency)
     {
         if ($repository->countJournals($currency) > 0) {
             Session::flash('error', 'Cannot destroy ' . e($currency->name) . ' because there are still transactions attached to it.');
@@ -130,6 +133,8 @@ class CurrencyController extends Controller
     }
 
     /**
+     * @param CurrencyRepositoryInterface $repository
+     *
      * @return \Illuminate\View\View
      */
     public function index(CurrencyRepositoryInterface $repository)
@@ -141,7 +146,9 @@ class CurrencyController extends Controller
     }
 
     /**
-     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
+     *
+     * @param CurrencyFormRequest         $request
+     * @param CurrencyRepositoryInterface $repository
      *
      * @return $this|\Illuminate\Http\RedirectResponse
      */
@@ -166,11 +173,13 @@ class CurrencyController extends Controller
     }
 
     /**
-     * @param TransactionCurrency $currency
+     * @param CurrencyFormRequest         $request
+     * @param CurrencyRepositoryInterface $repository
+     * @param TransactionCurrency         $currency
      *
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(TransactionCurrency $currency, CurrencyFormRequest $request, CurrencyRepositoryInterface $repository)
+    public function update(CurrencyFormRequest $request, CurrencyRepositoryInterface $repository, TransactionCurrency $currency)
     {
         $data     = $request->getCurrencyData();
         $currency = $repository->update($currency, $data);

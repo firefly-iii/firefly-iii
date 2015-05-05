@@ -13,11 +13,12 @@ class HelpController extends Controller
 {
 
     /**
-     * @param $route
+     * @param HelpInterface $help
+     * @param               $route
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($route, HelpInterface $help)
+    public function show(HelpInterface $help, $route)
     {
         $content = [
             'text'  => '<p>There is no help for this route!</p>',

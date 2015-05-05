@@ -2,6 +2,11 @@
 
 use Illuminate\Queue\SerializesModels;
 
+/**
+ * Class JournalDeleted
+ *
+ * @package FireflyIII\Events
+ */
 class JournalDeleted extends Event
 {
 
@@ -10,7 +15,6 @@ class JournalDeleted extends Event
     /**
      * Create a new event instance.
      *
-     * @return void
      */
     public function __construct()
     {

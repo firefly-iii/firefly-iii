@@ -4,6 +4,9 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
+ * @SuppressWarnings(PHPMD.ShortMethodName)
+ * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
+ *
  * Class ChangesForV336
  */
 class ChangesForV336 extends Migration
@@ -134,7 +137,7 @@ class ChangesForV336 extends Migration
         // reinstate a long forgotten index:
         Schema::table(
             'budget_limits', function (Blueprint $table) {
-            $table->unique(['budget_id', 'startdate'],'unique_limit');
+            $table->unique(['budget_id', 'startdate'], 'unique_limit');
         }
         );
 

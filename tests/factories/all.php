@@ -78,6 +78,7 @@ FactoryMuffin::define(
         'date'        => 'date',
         'latitude'    => 12,
         'longitude'   => 13,
+        'zoomLevel'   => 3,
     ]
 );
 
@@ -90,6 +91,37 @@ FactoryMuffin::define(
         'encrypted' => 1,
     ]
 );
+
+FactoryMuffin::define(
+    'FireflyIII\Models\TransactionGroup',
+    [
+        'user_id'  => 'factory|FireflyIII\User',
+        'relation' => 'balance',
+    ]
+);
+
+FactoryMuffin::define(
+    'FireflyIII\Models\Reminder',
+    [
+        'user_id'            => 'factory|FireflyIII\User',
+        'startdate'          => 'date',
+        'enddate'            => 'date',
+        'active'             => 'boolean',
+        'notnow'             => 'boolean',
+        'remindersable_id'   => 'factory|FireflyIII\Models\Piggybank',
+        'remindersable_type' => 'FireflyIII\Models\Piggybank',
+        'metadata'           => function () {
+            return [
+                'perReminder' => 100,
+                'rangesCount' => 0,
+                'ranges'      => [],
+                'leftToSave'  => 100,
+            ];
+        },
+        'encrypted'          => 1,
+    ]
+);
+
 
 FactoryMuffin::define(
     'FireflyIII\Models\Category',
@@ -138,8 +170,11 @@ FactoryMuffin::define(
         'type'     => function () {
             $types = ['Expense account', 'Revenue account', 'Asset account'];
             $count = DB::table('account_types')->count();
-
-            return $types[$count];
+            if ($count < 3) {
+                return $types[$count];
+            } else {
+                return RandomString::generateRandomString(10);
+            }
         },
         'editable' => 1,
     ]
@@ -170,7 +205,10 @@ FactoryMuffin::define(
     'FireflyIII\Models\Transaction',
     [
         'transaction_journal_id' => 'factory|FireflyIII\Models\TransactionJournal',
-        'amount'                 => 'integer',
+        'amount'                 => function () {
+            return rand(1, 100);
+        },
+        'description'            => 'sentence',
         'account_id'             => 'factory|FireflyIII\Models\Account'
     ]
 );
@@ -188,6 +226,19 @@ FactoryMuffin::define(
         'order'         => 0,
     ]
 );
+
+FactoryMuffin::define(
+    'FireflyIII\Models\PiggyBankEvent',
+    [
+        'piggy_bank_id'          => 'factory|FireflyIII\Models\PiggyBank',
+        'transaction_journal_id' => 'factory|FireflyIII\Models\TransactionJournal',
+        'date'                   => 'date',
+        'amount'                 => function () {
+            return rand(1, 100);
+        },
+    ]
+);
+
 
 FactoryMuffin::define(
     'FireflyIII\Models\TransactionType',

@@ -84,9 +84,11 @@ class Amount
     }
 
     /**
-     * @return string
      *
      * @param TransactionJournal $journal
+     * @param bool               $coloured
+     *
+     * @return string
      */
     public function formatJournal(TransactionJournal $journal, $coloured = true)
     {
@@ -151,15 +153,11 @@ class Amount
         if (defined('FFCURRENCYCODE')) {
             return FFCURRENCYCODE;
         }
-        if (Cache::has('FFCURRENCYCODE')) {
-            define('FFCURRENCYCODE', Cache::get('FFCURRENCYCODE'));
-
-            return FFCURRENCYCODE;
-        }
 
 
         $currencyPreference = Prefs::get('currencyPreference', 'EUR');
-        $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
+
+        $currency = TransactionCurrency::whereCode($currencyPreference->data)->first();
         if ($currency) {
 
             Cache::forever('FFCURRENCYCODE', $currency->code);
@@ -171,6 +169,9 @@ class Amount
         return 'EUR';
     }
 
+    /**
+     * @return mixed|static
+     */
     public function getDefaultCurrency()
     {
         $currencyPreference = Prefs::get('currencyPreference', 'EUR');

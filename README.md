@@ -1,4 +1,4 @@
-Firefly III (v3.4)
+Firefly III (v3.4.0.1)
 ===========
 
 [![Build Status](https://travis-ci.org/JC5/firefly-iii.svg?branch=develop)](https://travis-ci.org/JC5/firefly-iii)
@@ -6,7 +6,7 @@ Firefly III (v3.4)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/d44c7012-5f50-41ad-add8-8445330e4102/mini.png)](https://insight.sensiolabs.com/projects/d44c7012-5f50-41ad-add8-8445330e4102)
 [![Code Climate](https://codeclimate.com/github/JC5/firefly-iii/badges/gpa.svg)](https://codeclimate.com/github/JC5/firefly-iii)
 [![Coverage Status](https://coveralls.io/repos/JC5/firefly-iii/badge.svg?branch=master)](https://coveralls.io/r/JC5/firefly-iii?branch=master)
-[![Coverage Status](https://coveralls.io/repos/JC5/firefly-iii/badge.svg?branch=master)](https://coveralls.io/r/JC5/firefly-iii?branch=develop)
+[![Coverage Status](https://coveralls.io/repos/JC5/firefly-iii/badge.svg?branch=develop)](https://coveralls.io/r/JC5/firefly-iii?branch=develop)
 
 [![Latest Stable Version](https://poser.pugx.org/grumpydictator/firefly-iii/v/stable.svg)](https://packagist.org/packages/grumpydictator/firefly-iii)
 [![Total Downloads](https://poser.pugx.org/grumpydictator/firefly-iii/downloads.svg)](https://packagist.org/packages/grumpydictator/firefly-iii)

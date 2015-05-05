@@ -66,8 +66,13 @@ class TransactionJournal extends Model
                 return floatval($t->amount);
             }
         }
+
+        return 0;
     }
 
+    /**
+     * @return Account|mixed
+     */
     public function getAssetAccountAttribute()
     {
         $positive = true; // the asset account is in the transaction with the positive amount.

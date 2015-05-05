@@ -101,7 +101,7 @@
                     </tr>
                     <tr>
                         <td>Out</td>
-                        <td>{{ (expenseSum*-1)|formatAmount }}</td>
+                        <td><span class="text-danger">{{ expenseSum|formatAmountPlain }}</span></td>
                     </tr>
                     <tr>
                         <td>Difference</td>
@@ -143,7 +143,7 @@
                 {% for expense in groupedExpenses %}
                 <tr>
                     <td><a href="{{route('accounts.show',expense.id)}}">{{ expense.name }}</a></td>
-                    <td>{{ (expense.queryAmount*-1)|formatAmount }}</td>
+                    <td><span class="text-danger">{{ expense.queryAmount|formatAmountPlain }}</span></td>
                 </tr>
                     {% set sum = sum + (expense.queryAmount * -1) %}
                 {% endfor %}

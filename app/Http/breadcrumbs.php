@@ -9,9 +9,10 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Reminder;
+use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\Tag;
+
 /*
  * Back home.
  */
@@ -176,13 +177,13 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'currency.edit', function (Generator $breadcrumbs, TransactionCurrency $currency) {
     $breadcrumbs->parent('currency.index');
-    $breadcrumbs->push('Edit '.$currency->name, route('currency.edit', $currency->id));
+    $breadcrumbs->push('Edit ' . $currency->name, route('currency.edit', $currency->id));
 }
 );
 Breadcrumbs::register(
     'currency.delete', function (Generator $breadcrumbs, TransactionCurrency $currency) {
     $breadcrumbs->parent('currency.index');
-    $breadcrumbs->push('Delete '.$currency->name, route('currency.delete', $currency->id));
+    $breadcrumbs->push('Delete ' . $currency->name, route('currency.delete', $currency->id));
 }
 );
 
@@ -312,21 +313,21 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'reports.year', function (Generator $breadcrumbs, Carbon $date) {
     $breadcrumbs->parent('reports.index');
-    $breadcrumbs->push($date->format('Y'), route('reports.year', $date->format('Y')));
+    $breadcrumbs->push($date->year, route('reports.year', $date->year));
 }
 );
 
 Breadcrumbs::register(
     'reports.month', function (Generator $breadcrumbs, Carbon $date) {
     $breadcrumbs->parent('reports.index');
-    $breadcrumbs->push('Monthly report for ' . $date->format('F Y'), route('reports.month', $date));
+    $breadcrumbs->push('Monthly report for ' . $date->format('F Y'), route('reports.month', [$date->year, $date->month]));
 }
 );
 
 Breadcrumbs::register(
     'reports.budget', function (Generator $breadcrumbs, Carbon $date) {
     $breadcrumbs->parent('reports.index');
-    $breadcrumbs->push('Budget report for ' . $date->format('F Y'), route('reports.budget', $date));
+    $breadcrumbs->push('Budget report for ' . $date->format('F Y'), route('reports.budget', [$date->year, $date->month]));
 }
 );
 
@@ -412,6 +413,6 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'tags.show', function (Generator $breadcrumbs, Tag $tag) {
     $breadcrumbs->parent('tags.index');
-    $breadcrumbs->push(e($tag->tag), route('tags.show', $tag));
+    $breadcrumbs->push(e($tag->tag), route('tags.show', $tag->id));
 }
 );

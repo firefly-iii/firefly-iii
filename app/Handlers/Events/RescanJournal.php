@@ -15,7 +15,6 @@ class RescanJournal
     /**
      * Create the event handler.
      *
-     * @return void
      */
     public function __construct()
     {
@@ -41,7 +40,7 @@ class RescanJournal
 
         Log::debug('Found ' . $list->count() . ' bills to check.');
 
-        /** @var Bill $bill */
+        /** @var \FireflyIII\Models\Bill $bill */
         foreach ($list as $bill) {
             Log::debug('Now calling bill #' . $bill->id . ' (' . $bill->name . ')');
             $repository->scan($bill, $journal);

@@ -21,7 +21,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
 
     /**
-     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
      *
      * Based on the piggy bank, the reminder-setting and
      * other variables this method tries to divide the piggy bank into equal parts. Each is
@@ -189,10 +188,11 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
-     * @param PiggyBank $account
+     * @param PiggyBank $piggyBank
      * @param array     $data
      *
      * @return PiggyBank
+     * @internal param PiggyBank $account
      */
     public function update(PiggyBank $piggyBank, array $data)
     {

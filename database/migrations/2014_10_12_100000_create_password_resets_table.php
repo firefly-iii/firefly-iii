@@ -4,6 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
+ * @SuppressWarnings(PHPMD.ShortMethodName)
+ *
  * Class CreatePasswordResetsTable
  */
 class CreatePasswordResetsTable extends Migration

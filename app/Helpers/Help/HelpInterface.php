@@ -18,16 +18,25 @@ interface HelpInterface
     public function getFromCache($key);
 
     /**
-     * @return boolean
+     * @param $route
+     *
+     * @return array
+     */
+    public function getFromGithub($route);
+
+    /**
+     * @param $route
+     *
+     * @return bool
      */
     public function hasRoute($route);
 
     /**
      * @param $route
      *
-     * @return array
+     * @return bool
      */
-    public function getFromGithub($route);
+    public function inCache($route);
 
     /**
      * @param       $route
@@ -36,11 +45,4 @@ interface HelpInterface
      * @return void
      */
     public function putInCache($route, array $content);
-
-    /**
-     * @param $route
-     *
-     * @return bool
-     */
-    public function inCache($route);
 }

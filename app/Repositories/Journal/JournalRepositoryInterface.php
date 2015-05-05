@@ -2,9 +2,11 @@
 
 namespace FireflyIII\Repositories\Journal;
 
+use Carbon\Carbon;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 /**
@@ -15,11 +17,33 @@ use Illuminate\Support\Collection;
 interface JournalRepositoryInterface
 {
     /**
+     * @param int $reminderId
+     *
+     * @return bool
+     */
+    public function deactivateReminder($reminderId);
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return bool
+     */
+    public function delete(TransactionJournal $journal);
+
+    /**
      * Get users first transaction journal
      *
      * @return TransactionJournal
      */
     public function first();
+
+    /**
+     * @param TransactionJournal $journal
+     * @param Transaction        $transaction
+     *
+     * @return float
+     */
+    public function getAmountBefore(TransactionJournal $journal, Transaction $transaction);
 
     /**
      * @param TransactionType $dbType
@@ -29,11 +53,28 @@ interface JournalRepositoryInterface
     public function getJournalsOfType(TransactionType $dbType);
 
     /**
+     * @param array $types
+     * @param int   $offset
+     * @param int   $page
+     *
+     * @return LengthAwarePaginator
+     */
+    public function getJournalsOfTypes(array $types, $offset, $page);
+
+    /**
      * @param $type
      *
      * @return TransactionType
      */
     public function getTransactionType($type);
+
+    /**
+     * @param        $id
+     * @param Carbon $date
+     *
+     * @return TransactionJournal
+     */
+    public function getWithDate($id, Carbon $date);
 
     /**
      * @param TransactionJournal $journal

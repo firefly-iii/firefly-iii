@@ -1,9 +1,7 @@
 <?php namespace FireflyIII\Http\Controllers;
 
-use Auth;
-use Carbon\Carbon;
-use FireflyIII\Helpers\Reminders\ReminderHelperInterface;
 use FireflyIII\Models\Reminder;
+use FireflyIII\Repositories\Reminder\ReminderRepositoryInterface;
 use Redirect;
 use Session;
 use URL;
@@ -19,6 +17,8 @@ class ReminderController extends Controller
 
     /**
      * @param Reminder $reminder
+     *
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function act(Reminder $reminder)
     {
@@ -36,6 +36,8 @@ class ReminderController extends Controller
 
     /**
      * @param Reminder $reminder
+     *
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function dismiss(Reminder $reminder)
     {
@@ -48,55 +50,18 @@ class ReminderController extends Controller
     }
 
     /**
+     * @param ReminderRepositoryInterface $repository
      *
+     * @return \Illuminate\View\View
      */
-    public function index(ReminderHelperInterface $helper)
+    public function index(ReminderRepositoryInterface $repository)
     {
 
-        $reminders = Auth::user()->reminders()->get();
 
-        $reminders->each(
-            function (Reminder $reminder) use ($helper) {
-                $reminder->description = $helper->getReminderText($reminder);
-            }
-        );
-
-        $today = new Carbon;
-        // active reminders:
-        $active = $reminders->filter(
-            function (Reminder $reminder) use ($today) {
-                if ($reminder->notnow === false && $reminder->active === true && $reminder->startdate <= $today && $reminder->enddate >= $today) {
-                    return $reminder;
-                }
-            }
-        );
-
-        // expired reminders:
-        $expired = $reminders->filter(
-            function (Reminder $reminder) use ($today) {
-                if ($reminder->notnow === false && $reminder->active === true && $reminder->startdate > $today || $reminder->enddate < $today) {
-                    return $reminder;
-                }
-            }
-        );
-
-        // inactive reminders
-        $inactive = $reminders->filter(
-            function (Reminder $reminder) {
-                if ($reminder->active === false) {
-                    return $reminder;
-                }
-            }
-        );
-
-        // dismissed reminders
-        $dismissed = $reminders->filter(
-            function (Reminder $reminder) {
-                if ($reminder->notnow === true) {
-                    return $reminder;
-                }
-            }
-        );
+        $active    = $repository->getActiveReminders();
+        $expired   = $repository->getExpiredReminders();
+        $inactive  = $repository->getInactiveReminders();
+        $dismissed = $repository->getDismissedReminders();
 
         $title         = 'Reminders';
         $mainTitleIcon = 'fa-clock-o';
@@ -106,6 +71,8 @@ class ReminderController extends Controller
 
     /**
      * @param Reminder $reminder
+     *
+     * @return \Illuminate\View\View
      */
     public function show(Reminder $reminder)
     {

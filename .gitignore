@@ -29,3 +29,5 @@ clover.xml
 node_modules/
 addNewLines.php
 .phpstorm.meta.php
+.env.backup
+.env.local

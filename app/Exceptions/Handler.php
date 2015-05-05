@@ -49,8 +49,7 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $e)
     {
-        /** @noinspection PhpInconsistentReturnPointsInspection */
-        return parent::report($e);
+        parent::report($e);
     }
 
 }
