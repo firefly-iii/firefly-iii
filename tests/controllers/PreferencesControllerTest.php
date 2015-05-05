@@ -65,7 +65,7 @@ class PreferencesControllerTest extends TestCase
 
     public function testPostIndex()
     {
-        $user     = FactoryMuffin::create('FireflyIII\User');
+        $user = FactoryMuffin::create('FireflyIII\User');
         $this->be($user);
 
         $data = [

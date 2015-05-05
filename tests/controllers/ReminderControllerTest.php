@@ -59,7 +59,7 @@ class ReminderControllerTest extends TestCase
 
     public function testIndex()
     {
-        $user       = FactoryMuffin::create('FireflyIII\User');
+        $user = FactoryMuffin::create('FireflyIII\User');
         $this->be($user);
         $reminder   = FactoryMuffin::create('FireflyIII\Models\Reminder');
         $collection = new Collection([$reminder]);
@@ -77,7 +77,7 @@ class ReminderControllerTest extends TestCase
 
     public function testShow()
     {
-        $reminder = FactoryMuffin::create('FireflyIII\Models\Reminder');
+        $reminder         = FactoryMuffin::create('FireflyIII\Models\Reminder');
         $reminder->notnow = false;
         $reminder->save();
         $this->be($reminder->remindersable->account->user);
@@ -88,7 +88,7 @@ class ReminderControllerTest extends TestCase
 
     public function testShowDismissed()
     {
-        $reminder = FactoryMuffin::create('FireflyIII\Models\Reminder');
+        $reminder         = FactoryMuffin::create('FireflyIII\Models\Reminder');
         $reminder->notnow = true;
         $reminder->save();
         $this->be($reminder->remindersable->account->user);

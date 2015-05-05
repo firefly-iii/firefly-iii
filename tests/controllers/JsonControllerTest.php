@@ -210,7 +210,7 @@ class JsonControllerTest extends TestCase
     public function testTransactionJournals()
     {
         $journal    = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-        $type = FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $type       = FactoryMuffin::create('FireflyIII\Models\TransactionType');
         $collection = new Collection([$journal]);
         $user       = FactoryMuffin::create('FireflyIII\User');
         $this->be($user);

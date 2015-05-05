@@ -191,7 +191,6 @@ class BillControllerTest extends TestCase
         Amount::shouldReceive('getCurrencyCode')->andReturn('XX');
 
 
-
         $this->call('GET', '/bills/show/' . $bill->id);
     }
 

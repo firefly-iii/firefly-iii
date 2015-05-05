@@ -6,6 +6,7 @@ use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
 use Illuminate\Support\Collection;
 use League\FactoryMuffin\Facade as FactoryMuffin;
+
 /**
  * Class PiggyBankControllerTest
  */
@@ -110,7 +111,7 @@ class PiggyBankControllerTest extends TestCase
 
     public function testEdit()
     {
-        $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
+        $piggyBank             = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
         $piggyBank->targetdate = Carbon::now()->addYear();
         $piggyBank->save();
         $this->be($piggyBank->account->user);

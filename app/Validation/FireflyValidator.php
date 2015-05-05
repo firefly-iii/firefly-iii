@@ -203,7 +203,7 @@ class FireflyValidator extends Validator
             $alwaysEncrypted = true;
         }
 
-        if(is_null(Auth::user())) {
+        if (is_null(Auth::user())) {
             // user is not logged in.. weird.
             return true;
         } else {

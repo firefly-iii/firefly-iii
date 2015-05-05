@@ -7,6 +7,7 @@ use FireflyIII\Models\Component;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+
 /**
  * @SuppressWarnings(PHPMD.ShortMethodName) // method names are mandated by laravel.
  * @SuppressWarnings("TooManyMethods") // I'm fine with this

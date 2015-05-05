@@ -46,7 +46,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
 
             // create EUR currency
             /** @var TransactionCurrency $currency */
-            $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
+            $currency       = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
             $currency->code = 'EUR';
             $currency->save();
             Log::debug('Created new EUR currency.');
@@ -64,8 +64,6 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
                 'first' => Carbon::now()->startOfYear()
             ]
         );
-
-
 
 
     }

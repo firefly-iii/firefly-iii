@@ -1,7 +1,5 @@
 <?php
 
-use Carbon\Carbon;
-use Illuminate\Support\Collection;
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
 /**
@@ -38,7 +36,8 @@ class SearchControllerTest extends TestCase
         parent::tearDown();
     }
 
-    public function testSearch() {
+    public function testSearch()
+    {
         $user = FactoryMuffin::create('FireflyIII\User');
         $this->be($user);
         $words = ['Something'];
@@ -50,7 +49,7 @@ class SearchControllerTest extends TestCase
         $repository->shouldReceive('searchBudgets')->with($words)->once()->andReturn([]);
         $repository->shouldReceive('searchTags')->with($words)->once()->andReturn([]);
 
-        $this->call('GET','/search?q=Something');
+        $this->call('GET', '/search?q=Something');
         $this->assertResponseOk();
     }
 }

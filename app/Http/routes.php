@@ -177,7 +177,7 @@ Route::get('/register', ['uses' => 'Auth\AuthController@getRegister', 'as' => 'r
 
 Route::controllers(
     [
-        'auth' => 'Auth\AuthController',
+        'auth'     => 'Auth\AuthController',
         'password' => 'Auth\PasswordController',
     ]
 );

@@ -134,7 +134,7 @@ class ChangesForV336 extends Migration
         // reinstate a long forgotten index:
         Schema::table(
             'budget_limits', function (Blueprint $table) {
-            $table->unique(['budget_id', 'startdate'],'unique_limit');
+            $table->unique(['budget_id', 'startdate'], 'unique_limit');
         }
         );
 

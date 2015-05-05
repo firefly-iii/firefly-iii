@@ -17,7 +17,6 @@ use Response;
 use Session;
 use URL;
 use View;
-use Log;
 
 /**
  * Class TransactionController
@@ -289,7 +288,6 @@ class TransactionController extends Controller
         return Redirect::to(Session::get('transactions.create.url'));
 
     }
-
 
 
     /**

@@ -155,7 +155,7 @@ class Amount
 
         $currencyPreference = Prefs::get('currencyPreference', 'EUR');
 
-        $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
+        $currency = TransactionCurrency::whereCode($currencyPreference->data)->first();
         if ($currency) {
 
             Cache::forever('FFCURRENCYCODE', $currency->code);
