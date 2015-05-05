@@ -16,6 +16,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
@@ -287,7 +288,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function getTransfersInRange(Account $account, Carbon $start, Carbon $end)
     {
         return TransactionJournal::whereIn(
-            'id', function ($q) use ($account, $start, $end) {
+            'id', function (Builder $q) use ($account, $start, $end) {
             $q->select('transaction_journals.id')
               ->from('transactions')
               ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
