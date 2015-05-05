@@ -50,9 +50,6 @@ class AccountControllerTest extends TestCase
     {
         if (is_null($this->account)) {
             $this->account = FactoryMuffin::create('FireflyIII\Models\Account');
-            Log::debug('Created a new account.');
-            //$this->account->accountType->type = 'Asset account';
-            //$this->account->accountType->save();
         }
     }
 
