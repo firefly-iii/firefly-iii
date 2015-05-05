@@ -92,7 +92,8 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param TransactionJournal $transactionJournal
+     * @param JournalRepositoryInterface $repository
+     * @param TransactionJournal         $transactionJournal
      *
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -109,7 +110,8 @@ class TransactionController extends Controller
     /**
      * Shows the view to edit a transaction.
      *
-     * @param TransactionJournal $journal
+     * @param AccountRepositoryInterface $repository
+     * @param TransactionJournal         $journal
      *
      * @return $this
      */
@@ -235,7 +237,8 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param JournalRepositoryInterface $repository
+     * @param TransactionJournal         $journal
      *
      * @return $this
      */

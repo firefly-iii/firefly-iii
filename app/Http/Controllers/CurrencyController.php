@@ -146,7 +146,6 @@ class CurrencyController extends Controller
     }
 
     /**
-     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
      *
      * @param CurrencyFormRequest         $request
      * @param CurrencyRepositoryInterface $repository

@@ -237,7 +237,6 @@ class ExpandedForm
     }
 
     /**
-     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
      *
      * Takes any collection and tries to make a sensible select list compatible array of it.
      *

@@ -75,7 +75,6 @@ class ProfileController extends Controller
     }
 
     /**
-     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
      *
      * @param string $old
      * @param string $new1

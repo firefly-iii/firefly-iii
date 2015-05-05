@@ -274,7 +274,6 @@ class PiggyBankController extends Controller
     /**
      * @param PiggyBank $piggyBank
      *
-     * @SuppressWarnings("Unused")
      *
      * @return \Illuminate\View\View
      */
@@ -342,7 +341,6 @@ class PiggyBankController extends Controller
      * @param PiggyBankFormRequest         $request
      * @param PiggyBank                    $piggyBank
      *
-     * @SuppressWarnings("CyclomaticComplexity") // It's exactly 5. So I don't mind.
      * @return $this
      */
     public function update(PiggyBankRepositoryInterface $repository, PiggyBankFormRequest $request, PiggyBank $piggyBank)
