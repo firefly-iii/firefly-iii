@@ -313,21 +313,21 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'reports.year', function (Generator $breadcrumbs, Carbon $date) {
     $breadcrumbs->parent('reports.index');
-    $breadcrumbs->push($date->format('Y'), route('reports.year', $date->format('Y')));
+    $breadcrumbs->push($date->year, route('reports.year', $date->year));
 }
 );
 
 Breadcrumbs::register(
     'reports.month', function (Generator $breadcrumbs, Carbon $date) {
     $breadcrumbs->parent('reports.index');
-    $breadcrumbs->push('Monthly report for ' . $date->format('F Y'), route('reports.month', $date));
+    $breadcrumbs->push('Monthly report for ' . $date->format('F Y'), route('reports.month', [$date->year, $date->month]));
 }
 );
 
 Breadcrumbs::register(
     'reports.budget', function (Generator $breadcrumbs, Carbon $date) {
     $breadcrumbs->parent('reports.index');
-    $breadcrumbs->push('Budget report for ' . $date->format('F Y'), route('reports.budget', $date));
+    $breadcrumbs->push('Budget report for ' . $date->format('F Y'), route('reports.budget', [$date->year, $date->month]));
 }
 );
 

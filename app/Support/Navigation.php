@@ -148,9 +148,8 @@ class Navigation
 
         }
         if (isset($specials[$repeatFreq])) {
-            $month = intval($theCurrentEnd->format('m'));
             $currentEnd->endOfYear();
-            if ($month <= 6) {
+            if ($theCurrentEnd->month <= 6) {
                 $currentEnd->subMonths(6);
             }
         }
@@ -184,7 +183,7 @@ class Navigation
                 $date->lastOfQuarter()->addDay();
                 break;
             case '6M':
-                if (intval($date->format('m')) >= 7) {
+                if ($date->month >= 7) {
                     $date->startOfYear()->addYear();
                 } else {
                     $date->startOfYear()->addMonths(6);
@@ -230,9 +229,8 @@ class Navigation
             return $date;
         }
         if ($range == '6M') {
-            $month = intval($date->format('m'));
             $date->startOfYear();
-            if ($month <= 6) {
+            if ($date->month <= 6) {
                 $date->subMonths(6);
             }
 
@@ -260,16 +258,15 @@ class Navigation
             return $date->format($formatMap[$range]);
         }
         if ($range == '3M') {
-            $month = intval($date->format('m'));
 
-            return 'Q' . ceil(($month / 12) * 4) . ' ' . $date->format('Y');
+
+            return 'Q' . ceil(($date->month / 12) * 4) . ' ' . $date->year;
         }
         if ($range == '6M') {
-            $month    = intval($date->format('m'));
-            $half     = ceil(($month / 12) * 2);
+            $half     = ceil(($date->month / 12) * 2);
             $halfName = $half == 1 ? 'first' : 'second';
 
-            return $halfName . ' half of ' . $date->format('Y');
+            return $halfName . ' half of ' . $date->year;
         }
         throw new FireflyException('No _periodName() for range "' . $range . '"');
     }
@@ -333,7 +330,7 @@ class Navigation
             return $date;
         }
         if ($repeatFreq == 'half-year' || $repeatFreq == '6M') {
-            $month = intval($date->format('m'));
+            $month = $date->month;
             $date->startOfYear();
             if ($month >= 7) {
                 $date->addMonths(6);
@@ -411,7 +408,7 @@ class Navigation
             return $end;
         }
         if ($range == '6M') {
-            if (intval($start->format('m')) >= 7) {
+            if ($start->month >= 7) {
                 $end->endOfYear();
             } else {
                 $end->startOfYear()->addMonths(6);
@@ -445,7 +442,7 @@ class Navigation
             return $start;
         }
         if ($range == '6M') {
-            if (intval($start->format('m')) >= 7) {
+            if ($start->month >= 7) {
                 $start->startOfYear()->addMonths(6);
             } else {
                 $start->startOfYear();

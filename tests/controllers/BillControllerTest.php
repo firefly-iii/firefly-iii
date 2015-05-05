@@ -75,7 +75,7 @@ class BillControllerTest extends TestCase
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
 
         $this->call('GET', '/bills/create');
-        $this->assertViewHas('subTitle', 'Create new');
+        $this->assertViewHas('subTitle', 'Create new bill');
         $this->assertResponseOk();
 
     }

@@ -91,11 +91,11 @@ class ReportHelper implements ReportHelperInterface
         $end    = Carbon::now();
         $months = [];
         while ($start <= $end) {
-            $year            = $start->format('Y');
+            $year            = $start->year;
             $months[$year][] = [
                 'formatted' => $start->format('F Y'),
-                'month'     => intval($start->format('m')),
-                'year'      => intval($start->format('Y')),
+                'month'     => $start->month,
+                'year'      => $year,
             ];
             $start->addMonth();
         }
@@ -114,10 +114,10 @@ class ReportHelper implements ReportHelperInterface
         $end   = Carbon::now();
         $years = [];
         while ($start <= $end) {
-            $years[] = $start->format('Y');
+            $years[] = $start->year;
             $start->addYear();
         }
-        $years[] = Carbon::now()->format('Y');
+        $years[] = Carbon::now()->year;
         // force the current year.
         $years = array_unique($years);
 
