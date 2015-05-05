@@ -17,6 +17,13 @@ use Illuminate\Support\Collection;
 interface JournalRepositoryInterface
 {
     /**
+     * @param int $id
+     *
+     * @return bool
+     */
+    public function deactivateReminder($id);
+
+    /**
      * @param TransactionJournal $journal
      *
      * @return bool
@@ -29,14 +36,6 @@ interface JournalRepositoryInterface
      * @return TransactionJournal
      */
     public function first();
-
-    /**
-     * @param        $id
-     * @param Carbon $date
-     *
-     * @return TransactionJournal
-     */
-    public function getWithDate($id, Carbon $date);
 
     /**
      * @param TransactionJournal $journal
@@ -68,6 +67,14 @@ interface JournalRepositoryInterface
      * @return TransactionType
      */
     public function getTransactionType($type);
+
+    /**
+     * @param        $id
+     * @param Carbon $date
+     *
+     * @return TransactionJournal
+     */
+    public function getWithDate($id, Carbon $date);
 
     /**
      * @param TransactionJournal $journal

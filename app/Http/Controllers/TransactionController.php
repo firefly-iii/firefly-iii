@@ -12,12 +12,12 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Input;
-use Log;
 use Redirect;
 use Response;
 use Session;
 use URL;
 use View;
+use Log;
 
 /**
  * Class TransactionController
@@ -263,7 +263,6 @@ class TransactionController extends Controller
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository)
     {
 
-
         $journalData = $request->getJournalData();
         $journal     = $repository->store($journalData);
 
@@ -272,11 +271,7 @@ class TransactionController extends Controller
         // ConnectJournalToPiggyBank
         event(new JournalCreated($journal, intval($request->get('piggy_bank_id'))));
 
-        if (intval($request->get('reminder_id')) > 0) {
-            $reminder         = Auth::user()->reminders()->find($request->get('reminder_id'));
-            $reminder->active = 0;
-            $reminder->save();
-        }
+        $repository->deactivateReminder($request->get('reminder_id'));
 
         Session::flash('success', 'New transaction "' . $journal->description . '" stored!');
 
@@ -291,6 +286,8 @@ class TransactionController extends Controller
         return Redirect::to(Session::get('transactions.create.url'));
 
     }
+
+
 
     /**
      * @param JournalFormRequest         $request

@@ -27,6 +27,21 @@ class JournalRepository implements JournalRepositoryInterface
 {
 
     /**
+     * @param int $id
+     *
+     * @return bool
+     */
+    public function deactivateReminder($id)
+    {
+        $reminder = Auth::user()->reminders()->find($id);
+        if ($reminder) {
+            $reminder->active = 0;
+            $reminder->save();
+        }
+
+    }
+
+    /**
      * @param TransactionJournal $journal
      *
      * @return bool
@@ -69,7 +84,7 @@ class JournalRepository implements JournalRepositoryInterface
                                  ->where('transaction_journals.order', '>=', $journal->order)
                                  ->where('transaction_journals.id', '!=', $journal->id)
                                  ->sum('transactions.amount')
-);
+        );
     }
 
     /**
