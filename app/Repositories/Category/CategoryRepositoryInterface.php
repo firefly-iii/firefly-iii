@@ -71,9 +71,9 @@ interface CategoryRepositoryInterface
     public function getWithoutCategory(Carbon $start, Carbon $end);
 
     /**
-     * @param Category $category
-     * @param \Carbon\Carbon   $start
-     * @param \Carbon\Carbon   $end
+     * @param Category       $category
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
      *
      * @return float
      */

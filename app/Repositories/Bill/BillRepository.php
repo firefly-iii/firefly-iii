@@ -212,7 +212,7 @@ class BillRepository implements BillRepositoryInterface
          * when the current period has a transaction journal.
          */
         /** @var \Carbon\Carbon $obj */
-        $obj = new Carbon;
+        $obj   = new Carbon;
         $today = Navigation::addPeriod($obj, $bill->repeat_freq, 0);
 
         $skip  = $bill->skip + 1;

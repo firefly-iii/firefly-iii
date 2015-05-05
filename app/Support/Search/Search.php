@@ -121,6 +121,7 @@ class Search implements SearchInterface
                         return $journal;
                     }
                 }
+
                 return null;
 
             }
