@@ -289,11 +289,56 @@ class TransactionControllerTest extends TestCase
             'account_id'         => $account->id,
             'expense_account'    => 'Lunch House',
             'amount'             => '4.72',
-            'amount_currency_id' => '1',
+            'amount_currency_id' => $currency->id,
             'date'               => '2015-05-31',
             'budget_id'          => '0',
             'category'           => 'Lunch',
-            'return_to_edit' => 1,
+            'tags'               => '',
+            'piggy_bank_id'      => '0',
+        ];
+
+        $this->call('POST', '/transactions/store/withdrawal', $data);
+
+        // mock!
+        $repository = $this->mock('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
+
+        // fake!
+        $repository->shouldReceive('update')->andReturn($journal);
+
+
+        $this->call('POST', '/transaction/update/' . $journal->id, $data);
+        //$this->assertSessionHas('errors','bla');
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+
+
+    }
+
+    public function testUpdateWithRedirect()
+    {
+        $account  = FactoryMuffin::create('FireflyIII\Models\Account');
+        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
+        $journal  = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $this->be($journal->user);
+        $account->user_id = $journal->user_id;
+        $account->save();
+
+        $data = [
+            '_token'             => 'replaceMe',
+            'id'                 => $journal->id,
+            'what'               => 'withdrawal',
+            'description'        => 'LunchX',
+            'account_id'         => $account->id,
+            'expense_account'    => 'Lunch House',
+            'amount'             => '4.72',
+            'amount_currency_id' => $currency->id,
+            'date'               => '2015-05-31',
+            'budget_id'          => '0',
+            'category'           => 'Lunch',
+            'return_to_edit'     => 1,
             'tags'               => '',
             'piggy_bank_id'      => '0',
         ];

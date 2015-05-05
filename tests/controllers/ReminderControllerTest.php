@@ -64,7 +64,7 @@ class ReminderControllerTest extends TestCase
         $reminder   = FactoryMuffin::create('FireflyIII\Models\Reminder');
         $collection = new Collection([$reminder]);
 
-        $repository = $this->mock('FireflyIII\Repositories\Reminder\ReminderRepositoryInterface\ReminderRepositoryInterface');
+        $repository = $this->mock('FireflyIII\Repositories\Reminder\ReminderRepositoryInterface');
 
         $repository->shouldReceive('getActiveReminders')->andReturn($collection);
         $repository->shouldReceive('getExpiredReminders')->andReturn($collection);
