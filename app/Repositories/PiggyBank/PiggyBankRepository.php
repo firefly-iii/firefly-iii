@@ -188,10 +188,11 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
-     * @param PiggyBank $account
+     * @param PiggyBank $piggyBank
      * @param array     $data
      *
      * @return PiggyBank
+     * @internal param PiggyBank $account
      */
     public function update(PiggyBank $piggyBank, array $data)
     {

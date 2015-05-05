@@ -75,6 +75,7 @@ class ReportController extends Controller
             // should always hide account
             $hide = true;
             // loop all budgets
+            /** @var \FireflyIII\Models\Budget $budget */
             foreach ($budgets as $budget) {
                 $id         = intval($budget->id);
                 $data       = $budget->toArray();

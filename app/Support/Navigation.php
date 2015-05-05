@@ -15,7 +15,7 @@ class Navigation
 
 
     /**
-     * @param Carbon         $theDate
+     * @param \Carbon\Carbon $theDate
      * @param                $repeatFreq
      * @param                $skip
      *
@@ -64,10 +64,10 @@ class Navigation
     }
 
     /**
-     * @param Carbon         $theCurrentEnd
+     * @param \Carbon\Carbon $theCurrentEnd
      * @param                $repeatFreq
      *
-     * @return Carbon
+     * @return \Carbon\Carbon
      * @throws FireflyException
      */
     public function endOfPeriod(Carbon $theCurrentEnd, $repeatFreq)
@@ -301,10 +301,10 @@ class Navigation
     }
 
     /**
-     * @param Carbon         $theDate
+     * @param \Carbon\Carbon $theDate
      * @param                $repeatFreq
      *
-     * @return Carbon
+     * @return \Carbon\Carbon
      * @throws FireflyException
      */
     public function startOfPeriod(Carbon $theDate, $repeatFreq)
@@ -388,9 +388,9 @@ class Navigation
 
     /**
      * @param        $range
-     * @param Carbon $start
+     * @param \Carbon\Carbon $start
      *
-     * @return Carbon
+     * @return \Carbon\Carbon
      * @throws FireflyException
      */
     public function updateEndDate($range, Carbon $start)
@@ -423,10 +423,10 @@ class Navigation
     }
 
     /**
-     * @param        $range
-     * @param Carbon $start
+     * @param                $range
+     * @param \Carbon\Carbon $start
      *
-     * @return Carbon
+     * @return \Carbon\Carbon
      * @throws FireflyException
      */
     public function updateStartDate($range, Carbon $start)

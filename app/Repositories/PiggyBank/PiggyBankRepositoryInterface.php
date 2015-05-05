@@ -94,7 +94,7 @@ interface PiggyBankRepositoryInterface
     public function store(array $data);
 
     /**
-     * @param PiggyBank $account
+     * @param PiggyBank $piggyBank
      * @param array     $data
      *
      * @return PiggyBank

@@ -88,7 +88,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param Account $account
-     * @param string  $range
+     * @param         $page
      *
      * @return LengthAwarePaginator
      */

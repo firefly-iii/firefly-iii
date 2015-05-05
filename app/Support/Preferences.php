@@ -16,7 +16,7 @@ class Preferences
      * @param      $name
      * @param null $default
      *
-     * @return null|Preference
+     * @return null|\FireflyIII\Models\Preference
      */
     public function get($name, $default = null)
     {

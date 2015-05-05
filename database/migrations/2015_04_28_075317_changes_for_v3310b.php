@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 
 /**
+ * @SuppressWarnings(PHPMD.ShortMethodName)
+ *
  * Class ChangesForV3310b
  */
 class ChangesForV3310b extends Migration

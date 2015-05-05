@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 // models
+/** @noinspection PhpUnusedParameterInspection */
 Route::bind(
     'account',
     function ($value, $route) {
@@ -30,6 +31,7 @@ Route::bind(
     }
 );
 
+/** @noinspection PhpUnusedParameterInspection */
 Route::bind(
     'tj', function ($value, $route) {
     if (Auth::check()) {
@@ -43,6 +45,7 @@ Route::bind(
 }
 );
 
+/** @noinspection PhpUnusedParameterInspection */
 Route::bind(
     'currency', function ($value, $route) {
     if (Auth::check()) {
@@ -55,6 +58,7 @@ Route::bind(
 }
 );
 
+/** @noinspection PhpUnusedParameterInspection */
 Route::bind(
     'bill', function ($value, $route) {
     if (Auth::check()) {
@@ -68,6 +72,7 @@ Route::bind(
 }
 );
 
+/** @noinspection PhpUnusedParameterInspection */
 Route::bind(
     'budget', function ($value, $route) {
     if (Auth::check()) {
@@ -81,6 +86,7 @@ Route::bind(
 }
 );
 
+/** @noinspection PhpUnusedParameterInspection */
 Route::bind(
     'reminder', function ($value, $route) {
     if (Auth::check()) {
@@ -94,6 +100,7 @@ Route::bind(
 }
 );
 
+/** @noinspection PhpUnusedParameterInspection */
 Route::bind(
     'limitrepetition', function ($value, $route) {
     if (Auth::check()) {
@@ -111,6 +118,7 @@ Route::bind(
 }
 );
 
+/** @noinspection PhpUnusedParameterInspection */
 Route::bind(
     'piggyBank', function ($value, $route) {
     if (Auth::check()) {
@@ -127,6 +135,7 @@ Route::bind(
 }
 );
 
+/** @noinspection PhpUnusedParameterInspection */
 Route::bind(
     'category', function ($value, $route) {
     if (Auth::check()) {
@@ -140,6 +149,7 @@ Route::bind(
 }
 );
 
+/** @noinspection PhpUnusedParameterInspection */
 Route::bind(
     'reminder', function ($value, $route) {
     if (Auth::check()) {
@@ -156,6 +166,7 @@ Route::bind(
 }
 );
 
+/** @noinspection PhpUnusedParameterInspection */
 Route::bind(
     'tag', function ($value, $route) {
     if (Auth::check()) {

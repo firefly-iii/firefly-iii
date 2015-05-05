@@ -3,6 +3,11 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
+/**
+ * @SuppressWarnings(PHPMD.ShortMethodName)
+ *
+ * Class ChangesForV333
+ */
 class ChangesForV333 extends Migration
 {
 

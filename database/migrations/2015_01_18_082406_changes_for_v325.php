@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 /**
  * @SuppressWarnings(PHPMD.ShortMethodName)
- * @SuppressWarnings("MethodLength") // I don't mind this in case of migrations.
+ * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
  *
  * Class ChangesForV325
  */

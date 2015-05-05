@@ -2,7 +2,6 @@
 
 use Auth;
 use Carbon\Carbon;
-use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\CategoryFormRequest;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -41,8 +40,9 @@ class CategoryController extends Controller
             Session::put('categories.create.url', URL::previous());
         }
         Session::forget('categories.create.fromStore');
+        $subTitle = 'Create a new category';
 
-        return view('categories.create')->with('subTitle', 'Create a new category');
+        return view('categories.create', compact('subTitle'));
     }
 
     /**

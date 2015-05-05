@@ -413,6 +413,6 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'tags.show', function (Generator $breadcrumbs, Tag $tag) {
     $breadcrumbs->parent('tags.index');
-    $breadcrumbs->push(e($tag->tag), route('tags.show', $tag));
+    $breadcrumbs->push(e($tag->tag), route('tags.show', $tag->id));
 }
 );

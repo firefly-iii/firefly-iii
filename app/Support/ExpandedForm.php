@@ -240,8 +240,8 @@ class ExpandedForm
      *
      * Takes any collection and tries to make a sensible select list compatible array of it.
      *
-     * @param Collection $set
-     * @param bool       $addEmpty
+     * @param \Illuminate\Support\Collection $set
+     * @param bool                           $addEmpty
      *
      * @return mixed
      */
@@ -288,10 +288,12 @@ class ExpandedForm
 
     /**
      * @param       $name
-     * @param null  $value
+     * @param array $list
+     * @param null  $selected
      * @param array $options
      *
      * @return string
+     * @internal param null $value
      */
     public function multiRadio($name, array $list = [], $selected = null, array $options = [])
     {

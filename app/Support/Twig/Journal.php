@@ -39,7 +39,7 @@ class Journal extends Twig_Extension
             if ($type == 'Opening balance') {
                 return '<span class="glyphicon glyphicon-ban-circle" title="Opening balance"></span>';
             }
-
+            return '';
 
         }, ['is_safe' => ['html']]
         );

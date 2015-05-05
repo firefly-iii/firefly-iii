@@ -61,8 +61,9 @@ class BudgetController extends Controller
             Session::put('budgets.create.url', URL::previous());
         }
         Session::forget('budgets.create.fromStore');
+        $subTitle = 'Create a new budget';
 
-        return view('budgets.create')->with('subTitle', 'Create a new budget');
+        return view('budgets.create', compact('subTitle'));
     }
 
     /**
@@ -190,7 +191,9 @@ class BudgetController extends Controller
     public function show(BudgetRepositoryInterface $repository, Budget $budget, LimitRepetition $repetition = null)
     {
         if (!is_null($repetition->id) && $repetition->budgetLimit->budget->id != $budget->id) {
-            return view('error')->with('message', 'Invalid selection.');
+            $message = 'Invalid selection.';
+
+            return view('error', compact('message'));
         }
 
         $journals = $repository->getJournals($budget, $repetition);

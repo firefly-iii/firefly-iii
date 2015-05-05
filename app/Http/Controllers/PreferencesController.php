@@ -32,16 +32,14 @@ class PreferencesController extends Controller
      */
     public function index(AccountRepositoryInterface $repository)
     {
-        $accounts       = $repository->getAccounts(['Default account', 'Asset account']);
-        $viewRange      = Preferences::get('viewRange', '1M');
-        $viewRangeValue = $viewRange->data;
-        $frontPage      = Preferences::get('frontPageAccounts', []);
-        $budgetMax      = Preferences::get('budgetMaximum', 1000);
-        $budgetMaximum  = $budgetMax->data;
+        $accounts          = $repository->getAccounts(['Default account', 'Asset account']);
+        $viewRangePref     = Preferences::get('viewRange', '1M');
+        $viewRange         = $viewRangePref->data;
+        $frontPageAccounts = Preferences::get('frontPageAccounts', []);
+        $budgetMax         = Preferences::get('budgetMaximum', 1000);
+        $budgetMaximum     = $budgetMax->data;
 
-        return view('preferences.index', compact('budgetMaximum'))->with('accounts', $accounts)->with('frontPageAccounts', $frontPage)->with(
-            'viewRange', $viewRangeValue
-        );
+        return view('preferences.index', compact('budgetMaximum', 'accounts', 'frontPageAccounts', 'viewRange'));
     }
 
     /**

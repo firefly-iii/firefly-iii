@@ -90,8 +90,9 @@ class BillController extends Controller
             Session::put('bills.create.url', URL::previous());
         }
         Session::forget('bills.create.fromStore');
+        $subTitle = 'Create new bill';
 
-        return view('bills.create')->with('periods', $periods)->with('subTitle', 'Create new');
+        return view('bills.create', compact('periods', 'subTitle'));
     }
 
     /**
@@ -103,8 +104,9 @@ class BillController extends Controller
     {
         // put previous url in session
         Session::put('bills.delete.url', URL::previous());
+        $subTitle = 'Delete "' . e($bill->name) . '"';
 
-        return view('bills.delete')->with('bill', $bill)->with('subTitle', 'Delete "' . e($bill->name) . '"');
+        return view('bills.delete', compact('bill', 'subTitle'));
     }
 
     /**
@@ -130,7 +132,8 @@ class BillController extends Controller
      */
     public function edit(Bill $bill)
     {
-        $periods = Config::get('firefly.periods_to_text');
+        $periods  = Config::get('firefly.periods_to_text');
+        $subTitle = 'Edit "' . e($bill->name) . '"';
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (Session::get('bills.edit.fromUpdate') !== true) {
@@ -138,7 +141,7 @@ class BillController extends Controller
         }
         Session::forget('bills.edit.fromUpdate');
 
-        return view('bills.edit')->with('periods', $periods)->with('bill', $bill)->with('subTitle', 'Edit "' . e($bill->name) . '"');
+        return view('bills.edit', compact('subTitle', 'periods', 'bill'));
     }
 
     /**
@@ -196,8 +199,9 @@ class BillController extends Controller
         $journals                = $repository->getJournals($bill);
         $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill);
         $hideBill                = true;
+        $subTitle                = e($bill->name);
 
-        return view('bills.show', compact('journals', 'hideBill', 'bill'))->with('subTitle', e($bill->name));
+        return view('bills.show', compact('journals', 'hideBill', 'bill', 'subTitle'));
     }
 
     /**

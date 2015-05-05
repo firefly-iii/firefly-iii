@@ -4,6 +4,9 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 /**
+ * @SuppressWarnings(PHPMD.ShortMethodName)
+ * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
+ *
  * Class ChangesForV336
  */
 class ChangesForV336 extends Migration

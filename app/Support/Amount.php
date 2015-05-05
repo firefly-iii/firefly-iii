@@ -84,9 +84,11 @@ class Amount
     }
 
     /**
-     * @return string
      *
      * @param TransactionJournal $journal
+     * @param bool               $coloured
+     *
+     * @return string
      */
     public function formatJournal(TransactionJournal $journal, $coloured = true)
     {
@@ -167,6 +169,9 @@ class Amount
         return 'EUR';
     }
 
+    /**
+     * @return mixed|static
+     */
     public function getDefaultCurrency()
     {
         $currencyPreference = Prefs::get('currencyPreference', 'EUR');

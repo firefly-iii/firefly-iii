@@ -249,11 +249,9 @@ class TransactionController extends Controller
                 $t->after  = $t->before + $t->amount;
             }
         );
+        $subTitle = e($journal->transactiontype->type) . ' "' . e($journal->description) . '"';
 
-
-        return view('transactions.show', compact('journal'))->with(
-            'subTitle', e($journal->transactiontype->type) . ' "' . e($journal->description) . '"'
-        );
+        return view('transactions.show', compact('journal', 'subTitle'));
     }
 
     /**

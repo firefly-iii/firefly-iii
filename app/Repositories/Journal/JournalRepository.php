@@ -27,13 +27,13 @@ class JournalRepository implements JournalRepositoryInterface
 {
 
     /**
-     * @param int $id
+     * @param int $reminderId
      *
      * @return bool
      */
-    public function deactivateReminder($id)
+    public function deactivateReminder($reminderId)
     {
-        $reminder = Auth::user()->reminders()->find($id);
+        $reminder = Auth::user()->reminders()->find($reminderId);
         if ($reminder) {
             $reminder->active = 0;
             $reminder->save();
@@ -195,6 +195,7 @@ class JournalRepository implements JournalRepositoryInterface
 
         // store or get budget
         if (intval($data['budget_id']) > 0) {
+            /** @var \FireflyIII\Models\Budget $budget */
             $budget = Budget::find($data['budget_id']);
             $journal->budgets()->save($budget);
         }
@@ -254,6 +255,7 @@ class JournalRepository implements JournalRepositoryInterface
         // unlink all budgets and recreate them:
         $journal->budgets()->detach();
         if (intval($data['budget_id']) > 0) {
+            /** @var \FireflyIII\Models\Budget $budget */
             $budget = Budget::find($data['budget_id']);
             $journal->budgets()->save($budget);
         }

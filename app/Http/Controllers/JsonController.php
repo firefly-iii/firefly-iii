@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -227,6 +228,7 @@ class JsonController extends Controller
      */
     public function setSharedReports()
     {
+        /** @var Preference $pref */
         $pref = Preferences::get('showSharedReports', false);
         $new  = !$pref->data;
         Preferences::set('showSharedReports', $new);
