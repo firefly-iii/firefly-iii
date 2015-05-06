@@ -27,6 +27,7 @@ class TagRepositoryTest extends TestCase
      */
     public function tearDown()
     {
+        parent::tearDown();
     }
 
     /**

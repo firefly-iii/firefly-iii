@@ -2,6 +2,7 @@
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
+use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepository;
@@ -169,7 +170,6 @@ class AccountRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Account\AccountRepository::getFrontpageAccounts
-     * @todo   Implement testGetFrontpageAccounts().
      */
     public function testGetFrontpageAccountsWithPreference()
     {
@@ -316,12 +316,49 @@ class AccountRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Account\AccountRepository::getLastActivity
-     * @todo   Implement testGetLastActivity().
      */
     public function testGetLastActivity()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete('This test has not been implemented yet.');
+        $date = new Carbon('2012-02-02');
+        // one journals
+        /** @var Account $account */
+        $account          = FactoryMuffin::create('FireflyIII\Models\Account');
+        $journal          = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $journal->date    = $date;
+        $journal->user_id = $account->user_id;
+        $journal->save();
+
+        // transaction to match the date (one will do)
+        Transaction::create(
+            [
+                'account_id'             => $account->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => 100
+            ]
+        );
+
+        // be user
+        $this->be($journal->user);
+
+        $latest = $this->object->getLastActivity($account);
+        $this->assertEquals($date->format('Y-m-d'), $latest->format('Y-m-d'));
+
+    }
+
+    /**
+     * @covers FireflyIII\Repositories\Account\AccountRepository::getLastActivity
+     */
+    public function testGetLastActivityNoActivity()
+    {
+        $date = new Carbon('2012-02-02');
+        // one journals
+        /** @var Account $account */
+        $account = FactoryMuffin::create('FireflyIII\Models\Account');
+        $this->be($account->user);
+
+        $latest = $this->object->getLastActivity($account);
+        $this->assertnull($latest);
+
     }
 
     /**
@@ -330,8 +367,39 @@ class AccountRepositoryTest extends TestCase
      */
     public function testGetPiggyBankAccounts()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete('This test has not been implemented yet.');
+        $date = Carbon::now()->startOfMonth()->addDays(3);
+        /*
+         * Quite the collection of objects for this one.
+         */
+        $piggyBank           = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
+        $account             = FactoryMuffin::create('FireflyIII\Models\Account');
+        $piggyBankRepetition = $piggyBank->piggybankRepetitions()->first();
+        /*
+         * Update id's to match each other:
+         */
+        $piggyBankRepetition->currentamount = rand(1,100);
+        $piggyBankRepetition->startdate     = $date;
+        $piggyBankRepetition->targetdate    = $date;
+        $piggyBank->account_id              = $account->id;
+        $piggyBankRepetition->save();
+        $piggyBank->save();
+
+        /*
+         * Put dates in session:
+         */
+        $this->session(['start' => Carbon::now()->startOfMonth(), 'end' => Carbon::now()->endOfMonth()]);
+
+        /*
+         * Run method:
+         */
+        $this->be($account->user);
+        $collection = $this->object->getPiggyBankAccounts();
+
+        $this->assertCount(1, $collection);
+        $this->assertEquals($collection->first()->id, $account->id);
+        $this->assertEquals($collection->first()->piggyBalance, $piggyBankRepetition->currentamount);
+        $this->assertEquals(0, $collection->first()->startBalance);
+        $this->assertEquals(0, $collection->first()->endBalance);
     }
 
     /**

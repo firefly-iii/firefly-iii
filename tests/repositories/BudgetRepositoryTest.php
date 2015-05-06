@@ -27,6 +27,7 @@ class BudgetRepositoryTest extends TestCase
      */
     public function tearDown()
     {
+        parent::tearDown();
     }
 
     /**

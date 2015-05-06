@@ -226,7 +226,7 @@ class AccountRepository implements AccountRepositoryInterface
                 // then, percentage.
                 $difference          = $account->endBalance - $account->piggyBalance;
                 $account->difference = $difference;
-                $account->percentage = $difference != 0 ? round((($difference / $account->endBalance) * 100)) : 100;
+                $account->percentage = $difference != 0 && $account->endBalance != 0 ? round((($difference / $account->endBalance) * 100)) : 100;
 
             }
         );

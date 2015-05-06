@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Model;
 class PiggyBankRepetition extends Model
 {
 
+    protected $fillable = ['piggy_bank_id', 'startdate', 'targetdate', 'currentamount'];
+
     /**
      * @return array
      */

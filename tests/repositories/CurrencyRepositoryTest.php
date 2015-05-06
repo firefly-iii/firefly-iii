@@ -27,6 +27,7 @@ class CurrencyRepositoryTest extends TestCase
      */
     public function tearDown()
     {
+        parent::tearDown();
     }
 
     /**

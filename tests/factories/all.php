@@ -228,6 +228,19 @@ FactoryMuffin::define(
 );
 
 FactoryMuffin::define(
+    'FireflyIII\Models\PiggyBankRepetition',
+    [
+        'piggy_bank_id' => 'factory|FireflyIII\Models\PiggyBank',
+        'startdate'     => 'date',
+        'targetdate'    => 'date',
+        'currentamount' => function () {
+            return rand(1, 100);
+        },
+    ]
+);
+
+
+FactoryMuffin::define(
     'FireflyIII\Models\PiggyBankEvent',
     [
         'piggy_bank_id'          => 'factory|FireflyIII\Models\PiggyBank',
