@@ -113,7 +113,6 @@ class AccountRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Account\AccountRepository::getFirstTransaction
-     * @todo   Implement testGetFirstTransaction().
      */
     public function testGetFirstTransaction()
     {
@@ -321,7 +320,7 @@ class AccountRepositoryTest extends TestCase
     public function testGetLastActivity()
     {
         $date = new Carbon('2012-02-02');
-        // one journals
+        // one journal
         /** @var Account $account */
         $account          = FactoryMuffin::create('FireflyIII\Models\Account');
         $journal          = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
@@ -351,8 +350,6 @@ class AccountRepositoryTest extends TestCase
      */
     public function testGetLastActivityNoActivity()
     {
-        $date = new Carbon('2012-02-02');
-        // one journals
         /** @var Account $account */
         $account = FactoryMuffin::create('FireflyIII\Models\Account');
         $this->be($account->user);
@@ -471,10 +468,64 @@ class AccountRepositoryTest extends TestCase
         $date = new Carbon;
 
         // three transfers, two out of range:
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $journal1                      = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $journal2                      = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $journal3                      = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $account                       = FactoryMuffin::create('FireflyIII\Models\Account');
+        $journal2->transaction_type_id = $journal1->transaction_type_id;
+        $journal3->transaction_type_id = $journal1->transaction_type_id;
+
+        // three transactions:
+        Transaction::create(
+            [
+                'account_id'             => $account->id,
+                'transaction_journal_id' => $journal1->id,
+                'amount'                 => 100
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $account->id,
+                'transaction_journal_id' => $journal2->id,
+                'amount'                 => 100
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $account->id,
+                'transaction_journal_id' => $journal3->id,
+                'amount'                 => 100
+            ]
+        );
+
+        // check date:
+        $start   = new Carbon('2014-01-01');
+        $end     = new Carbon('2014-01-31');
+        $inRange = new Carbon('2014-01-15');
+        $before  = new Carbon('2013-01-15');
+        $after   = new Carbon('2015-01-15');
+
+        // journal 1 will match:
+        $journal1->date    = $inRange;
+        $journal1->user_id = $account->user_id;
+        $journal2->date    = $before;
+        $journal2->user_id = $account->user_id;
+        $journal3->date    = $after;
+        $journal3->user_id = $account->user_id;
+        $journal1->save();
+        $journal2->save();
+        $journal3->save();
+        $this->be($account->user);
+
+        $set = $this->object->getTransfersInRange($account, $start, $end);
 
 
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete('This test has not been implemented yet.');
+        $this->assertEquals(1, $set->count());
+        $this->assertEquals(100, $set->first()->amount);
+        $this->assertEquals($journal1->description, $set->first()->description);
+
     }
 
     /**
@@ -483,8 +534,18 @@ class AccountRepositoryTest extends TestCase
      */
     public function testLeftOnAccount()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete('This test has not been implemented yet.');
+        $piggyBank                          = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
+        $piggyBankRepetition                = $piggyBank->piggybankRepetitions()->first();
+        $piggyBankRepetition->currentamount = rand(1, 100);
+        $piggyBankRepetition->save();
+        $this->be($piggyBank->account->user);
+
+
+        $result = $this->object->leftOnAccount($piggyBank->account);
+
+        $this->assertEquals($piggyBankRepetition->currentamount * -1, $result);
+
+
     }
 
     /**
