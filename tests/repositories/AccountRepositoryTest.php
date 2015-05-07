@@ -2,6 +2,7 @@
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
@@ -363,7 +364,6 @@ class AccountRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Account\AccountRepository::getPiggyBankAccounts
-     * @todo   Implement testGetPiggyBankAccounts().
      */
     public function testGetPiggyBankAccounts()
     {
@@ -377,7 +377,7 @@ class AccountRepositoryTest extends TestCase
         /*
          * Update id's to match each other:
          */
-        $piggyBankRepetition->currentamount = rand(1,100);
+        $piggyBankRepetition->currentamount = rand(1, 100);
         $piggyBankRepetition->startdate     = $date;
         $piggyBankRepetition->targetdate    = $date;
         $piggyBank->account_id              = $account->id;
@@ -404,12 +404,60 @@ class AccountRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Account\AccountRepository::getSavingsAccounts
-     * @todo   Implement testGetSavingsAccounts().
      */
     public function testGetSavingsAccounts()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete('This test has not been implemented yet.');
+        // create three accounts:
+        FactoryMuffin::create('FireflyIII\Models\AccountType');
+        FactoryMuffin::create('FireflyIII\Models\AccountType');
+        $type                      = FactoryMuffin::create('FireflyIII\Models\AccountType');
+        $account1                  = FactoryMuffin::create('FireflyIII\Models\Account');
+        $account1->account_type_id = $type->id;
+        $account2                  = FactoryMuffin::create('FireflyIII\Models\Account');
+        $account2->account_type_id = $type->id;
+        $account3                  = FactoryMuffin::create('FireflyIII\Models\Account');
+        $account3->account_type_id = $type->id;
+
+        // make them savings accounts:
+        $meta             = new  AccountMeta;
+        $meta->name       = 'accountRole';
+        $meta->data       = 'savingAsset';
+        $meta->account_id = $account1->id;
+        $meta->save();
+
+        $meta             = new  AccountMeta;
+        $meta->name       = 'accountRole';
+        $meta->data       = 'savingAsset';
+        $meta->account_id = $account2->id;
+        $meta->save();
+
+        $meta             = new  AccountMeta;
+        $meta->name       = 'accountRole';
+        $meta->data       = 'savingAsset';
+        $meta->account_id = $account3->id;
+        $meta->save();
+
+        // assign to the same user:
+        $account2->user_id = $account1->user_id;
+        $account3->user_id = $account1->user_id;
+        $account1->save();
+        $account2->save();
+        $account3->save();
+        $this->be($account1->user);
+
+        // mock steam balance:
+        Steam::shouldReceive('balance')->andReturn(0, 0, 1, 2, 4, 3);
+
+        // get the result from the method:
+        $result = $this->object->getSavingsAccounts();
+
+        $this->assertEquals(0, $result->get(0)->difference);
+        $this->assertEquals(1, $result->get(1)->difference);
+        $this->assertEquals(-1, $result->get(2)->difference);
+
+        $this->assertEquals(100, $result->get(0)->percentage);
+        $this->assertEquals(100, $result->get(1)->percentage);
+        $this->assertEquals(25, $result->get(2)->percentage);
     }
 
     /**
@@ -418,6 +466,13 @@ class AccountRepositoryTest extends TestCase
      */
     public function testGetTransfersInRange()
     {
+        $account = FactoryMuffin::create('FireflyIII\Models\Account');
+
+        $date = new Carbon;
+
+        // three transfers, two out of range:
+
+
         // Remove the following lines when you implement this test.
         $this->markTestIncomplete('This test has not been implemented yet.');
     }

@@ -17,8 +17,9 @@ class ReminderRepositoryTest extends TestCase
      */
     public function setUp()
     {
-        $this->object = new ReminderRepository;
         parent::setUp();
+        $this->object = new ReminderRepository;
+
     }
 
     /**

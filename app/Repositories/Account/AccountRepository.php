@@ -271,6 +271,7 @@ class AccountRepository implements AccountRepositoryInterface
                 $pct                 = $pct > 100 ? 100 : $pct;
                 $account->difference = $diff;
                 $account->percentage = round($pct);
+
             }
         );
 
