@@ -1,6 +1,8 @@
 <?php
 use Carbon\Carbon;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepository;
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
@@ -146,70 +148,293 @@ class BillRepositoryTest extends TestCase
      */
     public function testGetPossiblyRelatedJournals()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $bill1             = FactoryMuffin::create('FireflyIII\Models\Bill');
+        $account           = FactoryMuffin::create('FireflyIII\Models\Account');
+        $bill1->amount_min = 100;
+        $bill1->amount_max = 1000;
+        $account->user_id  = $bill1->user_id;
+        $bill1->save();
+        $account->save();
+
+        // create some transactions to match our bill:
+        for ($i = 0; $i < 8; $i++) {
+            $journal          = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+            $journal->user_id = $bill1->user_id;
+            $journal->save();
+            Transaction::create(
+                [
+                    'account_id'             => $account->id,
+                    'transaction_journal_id' => $journal->id,
+                    'amount'                 => rand(101, 999),
+                ]
+            );
+        }
+        $this->be($bill1->user);
+
+        $set = $this->object->getPossiblyRelatedJournals($bill1);
+        $this->assertCount(8, $set);
     }
 
     /**
      * @covers FireflyIII\Repositories\Bill\BillRepository::getRanges
-     * @todo   Implement testGetRanges().
      */
     public function testGetRanges()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $bill1              = FactoryMuffin::create('FireflyIII\Models\Bill');
+        $bill1->date        = new Carbon('2012-01-01');
+        $bill1->repeat_freq = 'monthly';
+        $bill1->save();
+
+        $set = $this->object->getRanges($bill1, new Carbon('2012-01-01'), new Carbon('2012-12-31'));
+
+        $this->assertCount(12, $set);
     }
 
     /**
      * @covers FireflyIII\Repositories\Bill\BillRepository::lastFoundMatch
-     * @todo   Implement testLastFoundMatch().
      */
     public function testLastFoundMatch()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $bill             = FactoryMuffin::create('FireflyIII\Models\Bill');
+        $journal          = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $journal->bill_id = $bill->id;
+        $journal->user_id = $bill->user_id;
+        $journal->save();
+
+        $this->be($bill->user);
+
+        $date = $this->object->lastFoundMatch($bill);
+
+        $this->assertEquals($journal->date->format('Y-m-d'), $date->format('Y-m-d'));
+    }
+
+    /**
+     * @covers FireflyIII\Repositories\Bill\BillRepository::lastFoundMatch
+     */
+    public function testLastFoundMatchNull()
+    {
+        $bill = FactoryMuffin::create('FireflyIII\Models\Bill');
+
+        $this->be($bill->user);
+
+        $date = $this->object->lastFoundMatch($bill);
+
+        $this->assertNull($date);
     }
 
     /**
      * @covers FireflyIII\Repositories\Bill\BillRepository::nextExpectedMatch
-     * @todo   Implement testNextExpectedMatch().
      */
     public function testNextExpectedMatch()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
+        $bill              = FactoryMuffin::create('FireflyIII\Models\Bill');
+        $bill->date        = new Carbon('2012-01-07');
+        $bill->repeat_freq = 'monthly';
+        $bill->save();
+        $this->be($bill->user);
+
+        // journal:
+        $journal          = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $journal->date    = Carbon::now()->format('Y-m-d');
+        $journal->user_id = $bill->user_id;
+        $journal->bill_id = $bill->id;
+        $journal->save();
+
+        $next  = $this->object->nextExpectedMatch($bill);
+        $today = Carbon::now()->endOfMonth()->addDay();
+        $this->assertEquals($today->format('Y-m-d'), $next->format('Y-m-d'));
+
+
+    }
+
+    /**
+     * @covers FireflyIII\Repositories\Bill\BillRepository::nextExpectedMatch
+     */
+    public function testNextExpectedMatchInactive()
+    {
+        $bill         = FactoryMuffin::create('FireflyIII\Models\Bill');
+        $bill->active = 0;
+        $bill->save();
+        $this->be($bill->user);
+
+        $this->assertNull($this->object->nextExpectedMatch($bill));
+
+
+    }
+
+    /**
+     * @covers FireflyIII\Repositories\Bill\BillRepository::nextExpectedMatch
+     */
+    public function testNextExpectedMatchNoJournals()
+    {
+        $bill              = FactoryMuffin::create('FireflyIII\Models\Bill');
+        $bill->date        = new Carbon('2012-01-07');
+        $bill->repeat_freq = 'monthly';
+        $bill->save();
+
+        $this->be($bill->user);
+
+        $next  = $this->object->nextExpectedMatch($bill);
+        $today = Carbon::now()->startOfMonth();
+        $this->assertEquals($today->format('Y-m-d'), $next->format('Y-m-d'));
+
+
+    }
+
+
+    /**
+     * One
+     *
+     * @covers FireflyIII\Repositories\Bill\BillRepository::scan
+     */
+    public function testScanMatch()
+    {
+        $bill              = FactoryMuffin::create('FireflyIII\Models\Bill');
+        $bill->date        = new Carbon('2012-01-07');
+        $bill->repeat_freq = 'monthly';
+        $bill->match       = 'jemoeder';
+        $bill->amount_min  = 90;
+        $bill->amount_max  = 110;
+        $bill->save();
+        $this->be($bill->user);
+
+        // journal:
+        $journal              = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $journal->date        = Carbon::now()->format('Y-m-d');
+        $journal->description = 'jemoeder';
+        $journal->user_id     = $bill->user_id;
+        $journal->save();
+
+        // two transactions:
+        $account1 = FactoryMuffin::create('FireflyIII\Models\Account');
+        $account2 = FactoryMuffin::create('FireflyIII\Models\Account');
+        Transaction::create(
+            [
+                'account_id'             => $account1->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => 100,
+            ]
         );
+        Transaction::create(
+            [
+                'account_id'             => $account2->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => 100,
+            ]
+        );
+
+        $this->object->scan($bill, $journal);
+        $newJournal = TransactionJournal::find($journal->id);
+
+        $this->assertEquals($bill->id, $newJournal->bill_id);
     }
 
     /**
      * @covers FireflyIII\Repositories\Bill\BillRepository::scan
-     * @todo   Implement testScan().
      */
-    public function testScan()
+    public function testScanNoMatch()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
+        $bill              = FactoryMuffin::create('FireflyIII\Models\Bill');
+        $bill->date        = new Carbon('2012-01-07');
+        $bill->repeat_freq = 'monthly';
+        $bill->save();
+        $this->be($bill->user);
+
+        // journal:
+        $journal          = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $journal->date    = Carbon::now()->format('Y-m-d');
+        $journal->user_id = $bill->user_id;
+        $journal->save();
+
+        // two transactions:
+        $account1 = FactoryMuffin::create('FireflyIII\Models\Account');
+        $account2 = FactoryMuffin::create('FireflyIII\Models\Account');
+        Transaction::create(
+            [
+                'account_id'             => $account1->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => 100,
+            ]
         );
+        Transaction::create(
+            [
+                'account_id'             => $account2->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => 100,
+            ]
+        );
+
+        $this->object->scan($bill, $journal);
+        $newJournal = TransactionJournal::find($journal->id);
+
+        $this->assertNull($newJournal->bill_id);
+    }
+
+    /**
+     * @covers FireflyIII\Repositories\Bill\BillRepository::scan
+     */
+    public function testScanNoMatchButAttached()
+    {
+        $bill              = FactoryMuffin::create('FireflyIII\Models\Bill');
+        $bill->date        = new Carbon('2012-01-07');
+        $bill->match       = 'blablabla';
+        $bill->repeat_freq = 'monthly';
+        $bill->save();
+        $this->be($bill->user);
+
+        // journal:
+        $journal          = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $journal->date    = Carbon::now()->format('Y-m-d');
+        $journal->user_id = $bill->user_id;
+        $journal->bill_id = $bill->id;
+        $journal->save();
+
+        // two transactions:
+        $account1 = FactoryMuffin::create('FireflyIII\Models\Account');
+        $account2 = FactoryMuffin::create('FireflyIII\Models\Account');
+        Transaction::create(
+            [
+                'account_id'             => $account1->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => 100,
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $account2->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => 100,
+            ]
+        );
+
+        $this->object->scan($bill, $journal);
+        $newJournal = TransactionJournal::find($journal->id);
+
+        $this->assertNull($newJournal->bill_id);
     }
 
     /**
      * @covers FireflyIII\Repositories\Bill\BillRepository::store
-     * @todo   Implement testStore().
      */
     public function testStore()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $data = [
+            'name'        => 'Something',
+            'match'       => 'Something',
+            'amount_min'  => 100,
+            'user'        => $user->id,
+            'amount_max'  => 110,
+            'date'        => new Carbon,
+            'repeat_freq' => 'monthly',
+            'skip'        => 0,
+            'automatch'   => 1,
+            'active'      => 1,
+
+        ];
+        $bill = $this->object->store($data);
+
+        $this->assertEquals($data['name'], $bill->name);
     }
 
     /**
@@ -218,9 +443,22 @@ class BillRepositoryTest extends TestCase
      */
     public function testUpdate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $bill    = FactoryMuffin::create('FireflyIII\Models\Bill');
+        $data    = [
+            'name'        => 'new Name',
+            'match'       => $bill->match,
+            'amount_min'  => 100,
+            'amount_max'  => 110,
+            'date'        => new Carbon,
+            'repeat_freq' => 'monthly',
+            'skip'        => 0,
+            'automatch'   => 1,
+            'active'      => 1,
+
+        ];
+        $newBill = $this->object->update($bill, $data);
+
+        $this->assertEquals($data['name'], $newBill->name);
+        $this->assertEquals($bill->match, $newBill->match);
     }
 }

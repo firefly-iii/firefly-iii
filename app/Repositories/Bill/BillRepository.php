@@ -262,11 +262,8 @@ class BillRepository implements BillRepositoryInterface
         /*
          * Attach expense account to description for more narrow matching.
          */
-        if (count($journal->transactions) < 2) {
-            $transactions = $journal->transactions()->get();
-        } else {
-            $transactions = $journal->transactions;
-        }
+        $transactions = $journal->transactions()->get();
+
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
             /** @var Account $account */
