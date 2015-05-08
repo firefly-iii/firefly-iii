@@ -10,6 +10,7 @@ use FireflyIII\Models\LimitRepetition;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Input;
 
 /**
  * Class BudgetRepository
@@ -162,7 +163,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function getJournals(Budget $budget, LimitRepetition $repetition = null, $take = 50)
     {
-        $offset = intval(\Input::get('page')) > 0 ? intval(\Input::get('page')) * $take : 0;
+        $offset = intval(Input::get('page')) > 0 ? intval(Input::get('page')) * $take : 0;
 
 
         $setQuery   = $budget->transactionJournals()->withRelevantData()->take($take)->offset($offset)

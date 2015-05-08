@@ -4,6 +4,7 @@ namespace FireflyIII\Repositories\Bill;
 
 use Auth;
 use Carbon\Carbon;
+use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Bill;
@@ -119,7 +120,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getPossiblyRelatedJournals(Bill $bill)
     {
-        $set = \DB::table('transactions')->where('amount', '>', 0)->where('amount', '>=', $bill->amount_min)->where('amount', '<=', $bill->amount_max)->get(
+        $set = DB::table('transactions')->where('amount', '>', 0)->where('amount', '>=', $bill->amount_min)->where('amount', '<=', $bill->amount_max)->get(
             ['transaction_journal_id']
         );
         $ids = [];
@@ -261,11 +262,8 @@ class BillRepository implements BillRepositoryInterface
         /*
          * Attach expense account to description for more narrow matching.
          */
-        if (count($journal->transactions) < 2) {
-            $transactions = $journal->transactions()->get();
-        } else {
-            $transactions = $journal->transactions;
-        }
+        $transactions = $journal->transactions()->get();
+
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
             /** @var Account $account */

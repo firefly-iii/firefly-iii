@@ -117,8 +117,8 @@ class EventServiceProvider extends ServiceProvider
                     try {
                         $repetition->save();
                     } catch (QueryException $e) {
-                        \Log::error('Trying to save new LimitRepetition failed!');
-                        \Log::error($e->getMessage());
+                        Log::error('Trying to save new LimitRepetition failed!');
+                        Log::error($e->getMessage());
                     }
                 } else {
                     if ($set->count() == 1) {
