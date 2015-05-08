@@ -510,9 +510,6 @@ class AccountRepository implements AccountRepositoryInterface
                 'encrypted'               => true
             ]
         );
-        if (!$journal->isValid()) {
-            App::abort(500);
-        }
         $journal->save();
 
 
@@ -536,9 +533,6 @@ class AccountRepository implements AccountRepositoryInterface
                 'amount'                 => $firstAmount
             ]
         );
-        if (!$one->isValid()) {
-            App::abort(500);
-        }
         $one->save();
 
         // second transaction: to
@@ -549,9 +543,6 @@ class AccountRepository implements AccountRepositoryInterface
                 'amount'                 => $secondAmount
             ]
         );
-        if (!$two->isValid()) {
-            App::abort(500);
-        }
         $two->save();
 
         return $journal;
