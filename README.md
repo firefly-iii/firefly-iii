@@ -1,4 +1,4 @@
-Firefly III (v3.4.0.2)
+Firefly III (v3.4.0.3)
 ===========
 
 [![Build Status](https://travis-ci.org/JC5/firefly-iii.svg?branch=develop)](https://travis-ci.org/JC5/firefly-iii)
@@ -68,13 +68,19 @@ Some stuff has been removed:
 
 ## Screenshots
 
-![Index](http://i.imgur.com/TkZNIer.png)
+![Index](https://i.nder.be/c09vfw90)
 
-![Accounts](http://i.imgur.com/YE8WavP.png)
+![Accounts](https://i.nder.be/hkn0vhcg)
 
-![Budgets](http://i.imgur.com/Go0M6Nd.png)
+![Budgets](https://i.nder.be/h2snx2mw)
 
-![Reports](http://i.imgur.com/EnEIyQI.png)
+![Reports 1](https://i.nder.be/c9f8zy5c)
+
+![Reports 2](https://i.nder.be/ghvs5png)
+
+![Bills](https://i.nder.be/h58kh00p)
+
+![Piggy banks](https://i.nder.be/hkud0h53)
 
 ## Current state
 I have the basics up and running. Test coverage is currently coming, slowly.
