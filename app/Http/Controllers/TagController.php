@@ -22,10 +22,10 @@ use View;
  * Remember: a balancingAct takes at most one expense and one transfer.
  *           an advancePayment takes at most one expense, infinite deposits and NO transfers.
  *
- * TODO transaction can only have one advancePayment OR balancingAct.
- * TODO Other attempts to put in such a tag are blocked.
- * TODO also show an error when editing a tag and it becomes either
- * TODO of these two types. Or rather, block editing of the tag.
+ *  transaction can only have one advancePayment OR balancingAct.
+ *  Other attempts to put in such a tag are blocked.
+ *  also show an error when editing a tag and it becomes either
+ *  of these two types. Or rather, block editing of the tag.
  *
  * @package FireflyIII\Http\Controllers
  */

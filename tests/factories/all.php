@@ -61,7 +61,9 @@ FactoryMuffin::define(
         'account_type_id' => 'factory|FireflyIII\Models\AccountType',
         'name'            => 'word',
         'active'          => 'boolean',
-        'encrypted'       => 'boolean',
+        'encrypted'       => function () {
+            return true;
+        },
         'virtual_balance' => 0
     ]
 );
@@ -226,6 +228,19 @@ FactoryMuffin::define(
         'order'         => 0,
     ]
 );
+
+FactoryMuffin::define(
+    'FireflyIII\Models\PiggyBankRepetition',
+    [
+        'piggy_bank_id' => 'factory|FireflyIII\Models\PiggyBank',
+        'startdate'     => 'date',
+        'targetdate'    => 'date',
+        'currentamount' => function () {
+            return rand(1, 100);
+        },
+    ]
+);
+
 
 FactoryMuffin::define(
     'FireflyIII\Models\PiggyBankEvent',

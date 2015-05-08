@@ -18,8 +18,8 @@ class Steam
     /**
      *
      * @param \FireflyIII\Models\Account $account
-     * @param \Carbon\Carbon  $date
-     * @param bool    $ignoreVirtualBalance
+     * @param \Carbon\Carbon             $date
+     * @param bool                       $ignoreVirtualBalance
      *
      * @return float
      */

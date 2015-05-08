@@ -3,7 +3,6 @@
 namespace FireflyIII\Support;
 
 use Amount as Amt;
-use FireflyIII\Models\TransactionCurrency;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Input;

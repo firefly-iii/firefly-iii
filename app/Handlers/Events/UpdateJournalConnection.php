@@ -2,7 +2,6 @@
 
 use FireflyIII\Events\JournalSaved;
 use FireflyIII\Models\PiggyBankEvent;
-use FireflyIII\Models\Transaction;
 
 /**
  * Class UpdateJournalConnection

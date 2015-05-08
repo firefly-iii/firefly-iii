@@ -384,7 +384,7 @@ class Navigation
     }
 
     /**
-     * @param        $range
+     * @param                $range
      * @param \Carbon\Carbon $start
      *
      * @return \Carbon\Carbon

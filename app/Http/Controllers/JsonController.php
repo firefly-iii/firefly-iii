@@ -6,8 +6,6 @@ use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Preference;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -188,25 +186,6 @@ class JsonController extends Controller
     }
 
     /**
-     * Returns a JSON list of all beneficiaries.
-     *
-     * @param TagRepositoryInterface $tagRepository
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function tags(TagRepositoryInterface $tagRepository)
-    {
-        $list   = $tagRepository->get();
-        $return = [];
-        foreach ($list as $entry) {
-            $return[] = $entry->tag;
-        }
-
-        return Response::json($return);
-
-    }
-
-    /**
      * @param AccountRepositoryInterface $accountRepository
      *
      * @return \Illuminate\Http\JsonResponse
@@ -245,6 +224,25 @@ class JsonController extends Controller
         $pref = Preferences::get('showSharedReports', false);
 
         return Response::json(['value' => $pref->data]);
+    }
+
+    /**
+     * Returns a JSON list of all beneficiaries.
+     *
+     * @param TagRepositoryInterface $tagRepository
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tags(TagRepositoryInterface $tagRepository)
+    {
+        $list   = $tagRepository->get();
+        $return = [];
+        foreach ($list as $entry) {
+            $return[] = $entry->tag;
+        }
+
+        return Response::json($return);
+
     }
 
     /**

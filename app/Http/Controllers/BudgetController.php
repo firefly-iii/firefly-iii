@@ -5,7 +5,6 @@ use Carbon\Carbon;
 use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\BudgetFormRequest;
 use FireflyIII\Models\Budget;
-use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Input;

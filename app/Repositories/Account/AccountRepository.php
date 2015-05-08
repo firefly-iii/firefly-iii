@@ -16,11 +16,13 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
 use Session;
 use Steam;
+
 
 /**
  * Class AccountRepository
@@ -224,7 +226,7 @@ class AccountRepository implements AccountRepositoryInterface
                 // then, percentage.
                 $difference          = $account->endBalance - $account->piggyBalance;
                 $account->difference = $difference;
-                $account->percentage = $difference != 0 ? round((($difference / $account->endBalance) * 100)) : 100;
+                $account->percentage = $difference != 0 && $account->endBalance != 0 ? round((($difference / $account->endBalance) * 100)) : 100;
 
             }
         );
@@ -269,6 +271,7 @@ class AccountRepository implements AccountRepositoryInterface
                 $pct                 = $pct > 100 ? 100 : $pct;
                 $account->difference = $diff;
                 $account->percentage = round($pct);
+
             }
         );
 
@@ -287,7 +290,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function getTransfersInRange(Account $account, Carbon $start, Carbon $end)
     {
         return TransactionJournal::whereIn(
-            'id', function ($q) use ($account, $start, $end) {
+            'id', function (Builder $q) use ($account, $start, $end) {
             $q->select('transaction_journals.id')
               ->from('transactions')
               ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
@@ -310,7 +313,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function leftOnAccount(Account $account)
     {
-        $balance = \Steam::balance($account, null, true);
+        $balance = Steam::balance($account, null, true);
         /** @var PiggyBank $p */
         foreach ($account->piggybanks()->get() as $p) {
             $balance -= $p->currentRelevantRep()->currentamount;
@@ -440,13 +443,20 @@ class AccountRepository implements AccountRepositoryInterface
 
         if (!$newAccount->isValid()) {
             // does the account already exist?
-            $existingAccount = Account::where('user_id', $data['user'])->where('account_type_id', $accountType->id)->where('name', $data['name'])->first();
+            $searchData      = [
+                'user_id'         => $data['user'],
+                'account_type_id' => $accountType->id,
+                'name'            => $data['name']
+            ];
+            $existingAccount = Account::firstOrNullEncrypted($searchData);
             if (!$existingAccount) {
                 Log::error('Account create error: ' . $newAccount->getErrors()->toJson());
                 App::abort(500);
-
+                // @codeCoverageIgnoreStart
             }
+            // @codeCoverageIgnoreEnd
             $newAccount = $existingAccount;
+
         }
         $newAccount->save();
 

@@ -1,7 +1,6 @@
 <?php namespace FireflyIII\Providers;
 
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Bill;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\PiggyBank;

@@ -3,7 +3,6 @@
 namespace FireflyIII\Providers;
 
 use App;
-use FireflyIII\Models\Account;
 use FireflyIII\Support\Amount;
 use FireflyIII\Support\ExpandedForm;
 use FireflyIII\Support\Navigation;
