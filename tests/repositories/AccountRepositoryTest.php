@@ -530,7 +530,6 @@ class AccountRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Account\AccountRepository::leftOnAccount
-     * @todo   Implement testLeftOnAccount().
      */
     public function testLeftOnAccount()
     {
@@ -550,22 +549,93 @@ class AccountRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Account\AccountRepository::openingBalanceTransaction
-     * @todo   Implement testOpeningBalanceTransaction().
      */
     public function testOpeningBalanceTransaction()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete('This test has not been implemented yet.');
+        $account  = FactoryMuffin::create('FireflyIII\Models\Account');
+        $journal1 = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $journal2 = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        // two transactions:
+        Transaction::create(
+            [
+                'account_id'             => $account->id,
+                'transaction_journal_id' => $journal1->id,
+                'amount'                 => 100
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $account->id,
+                'transaction_journal_id' => $journal2->id,
+                'amount'                 => 100
+            ]
+        );
+
+        // dates
+        $one = new Carbon('2013-01-15');
+        $two = new Carbon('2015-01-15');
+
+        // journal 1 will match:
+        $journal1->date    = $one;
+        $journal1->user_id = $account->user_id;
+        $journal2->date    = $two;
+        $journal2->user_id = $account->user_id;
+        $journal1->save();
+        $journal2->save();
+
+
+        $this->be($account->user);
+
+        $result = $this->object->openingBalanceTransaction($account);
+        $this->assertEquals($journal1->id, $result->id);
+        $this->assertEquals($journal1->description, $result->description);
+        $this->assertEquals(100, $result->amount);
+    }
+
+    /**
+     * @covers FireflyIII\Repositories\Account\AccountRepository::openingBalanceTransaction
+     */
+    public function testOpeningBalanceTransactionNull()
+    {
+        $account = FactoryMuffin::create('FireflyIII\Models\Account');
+        $this->be($account->user);
+
+        $result = $this->object->openingBalanceTransaction($account);
+        $this->assertNull($result);
     }
 
     /**
      * @covers FireflyIII\Repositories\Account\AccountRepository::store
-     * @todo   Implement testStore().
      */
     public function testStore()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete('This test has not been implemented yet.');
+        $user = FactoryMuffin::create('FireflyIII\User');
+        FactoryMuffin::create('FireflyIII\Models\AccountType');
+        FactoryMuffin::create('FireflyIII\Models\AccountType');
+        FactoryMuffin::create('FireflyIII\Models\AccountType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
+        $this->be($user);
+
+        $data = [
+            'accountType'            => 'expense',
+            'user'                   => $user->id,
+            'name'                   => 'Test account #' . rand(1, 100),
+            'active'                 => true,
+            'accountRole'            => 'testAccount',
+            'openingBalance'         => 100,
+            'virtualBalance'         => 0,
+            'openingBalanceCurrency' => $currency->id,
+            'openingBalanceDate'     => '2015-01-01',
+        ];
+
+
+        $account = $this->object->store($data);
+
+        $this->assertEquals($data['name'], $account->name);
+
     }
 
     /**
