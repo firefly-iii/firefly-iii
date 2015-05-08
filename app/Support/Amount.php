@@ -39,16 +39,9 @@ class Amount
         if (defined('FFCURRENCYSYMBOL')) {
             return FFCURRENCYSYMBOL;
         }
-        if (\Cache::has('FFCURRENCYSYMBOL')) {
-            define('FFCURRENCYSYMBOL', \Cache::get('FFCURRENCYSYMBOL'));
-
-            return FFCURRENCYSYMBOL;
-        }
 
         $currencyPreference = Prefs::get('currencyPreference', 'EUR');
         $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
-
-        \Cache::forever('FFCURRENCYSYMBOL', $currency->symbol);
 
         define('FFCURRENCYSYMBOL', $currency->symbol);
 
@@ -160,7 +153,6 @@ class Amount
         $currency = TransactionCurrency::whereCode($currencyPreference->data)->first();
         if ($currency) {
 
-            Cache::forever('FFCURRENCYCODE', $currency->code);
             define('FFCURRENCYCODE', $currency->code);
 
             return $currency->code;

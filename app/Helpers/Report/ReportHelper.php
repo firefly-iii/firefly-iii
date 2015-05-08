@@ -136,7 +136,7 @@ class ReportHelper implements ReportHelperInterface
         $end            = clone $date;
         $sharedAccounts = [];
         if ($showSharedReports === false) {
-            $sharedCollection = \Auth::user()->accounts()
+            $sharedCollection = Auth::user()->accounts()
                                      ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
                                      ->where('account_meta.name', '=', 'accountRole')
                                      ->where('account_meta.data', '=', json_encode('sharedAsset'))

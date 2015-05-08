@@ -65,38 +65,61 @@ class BillRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Bill\BillRepository::getActiveBills
-     * @todo   Implement testGetActiveBills().
      */
     public function testGetActiveBills()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $bill1 = FactoryMuffin::create('FireflyIII\Models\Bill');
+        $bill2 = FactoryMuffin::create('FireflyIII\Models\Bill');
+
+        // update bills
+        $bill1->active  = 1;
+        $bill2->active  = 0;
+        $bill2->user_id = $bill1->user_id;
+        $bill1->save();
+        $bill2->save();
+        $this->be($bill1->user);
+
+        $set = $this->object->getActiveBills();
+
+        $this->assertCount(1, $set);
     }
 
     /**
      * @covers FireflyIII\Repositories\Bill\BillRepository::getBills
-     * @todo   Implement testGetBills().
      */
     public function testGetBills()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $bill1 = FactoryMuffin::create('FireflyIII\Models\Bill');
+        $bill2 = FactoryMuffin::create('FireflyIII\Models\Bill');
+
+        // update bills
+        $bill1->active  = 1;
+        $bill2->active  = 0;
+        $bill2->user_id = $bill1->user_id;
+        $bill1->save();
+        $bill2->save();
+        $this->be($bill1->user);
+
+        $set = $this->object->getBills();
+
+        $this->assertCount(2, $set);
     }
 
     /**
      * @covers FireflyIII\Repositories\Bill\BillRepository::getJournals
-     * @todo   Implement testGetJournals().
      */
     public function testGetJournals()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $bill1 = FactoryMuffin::create('FireflyIII\Models\Bill');
+
+        // update bills
+        $bill1->active = 1;
+        $bill1->save();
+        $this->be($bill1->user);
+
+        $set = $this->object->getJournals($bill1);
+
+        $this->assertCount(0, $set);
     }
 
     /**
@@ -105,10 +128,16 @@ class BillRepositoryTest extends TestCase
      */
     public function testGetJournalsInRange()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $bill1 = FactoryMuffin::create('FireflyIII\Models\Bill');
+
+        // update bills
+        $bill1->active = 1;
+        $bill1->save();
+        $this->be($bill1->user);
+
+        $set = $this->object->getJournalsInRange($bill1, new Carbon, new Carbon);
+
+        $this->assertCount(0, $set);
     }
 
     /**
