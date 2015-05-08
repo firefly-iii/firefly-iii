@@ -452,8 +452,11 @@ class AccountRepository implements AccountRepositoryInterface
             if (!$existingAccount) {
                 Log::error('Account create error: ' . $newAccount->getErrors()->toJson());
                 App::abort(500);
+                // @codeCoverageIgnoreStart
             }
+            // @codeCoverageIgnoreEnd
             $newAccount = $existingAccount;
+
         }
         $newAccount->save();
 

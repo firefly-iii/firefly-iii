@@ -721,6 +721,7 @@ class AccountRepositoryTest extends TestCase
      * @covers FireflyIII\Repositories\Account\AccountRepository::storeAccount
      * @covers FireflyIII\Repositories\Account\AccountRepository::storeMetadata
      * @covers FireflyIII\Repositories\Account\AccountRepository::storeInitialBalance
+     * @expectedException Symfony\Component\HttpKernel\Exception\HttpException
      */
     public function testStoreWithInvalidAccountData()
     {
@@ -730,26 +731,23 @@ class AccountRepositoryTest extends TestCase
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
         $this->be($account->user);
 
 
         $data = [
             'accountType'            => 'expense',
-            'user'                   => $account->user->id,
+            'user'                   => $account->user->id + 12,
             'name'                   => $account->name,
             'active'                 => $account->active,
             'accountRole'            => 'testAccount',
             'openingBalance'         => 0,
             'virtualBalance'         => 0,
-            'openingBalanceCurrency' => 12,
+            'openingBalanceCurrency' => $currency->id,
             'openingBalanceDate'     => '2015-01-01',
         ];
 
-
-        $newAccount = $this->object->store($data);
-
-        $this->assertEquals($account->name, $newAccount->name);
-        $this->assertEquals($account->id, $newAccount->id);
+        $this->object->store($data);
 
     }
 
