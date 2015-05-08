@@ -1,6 +1,6 @@
-<table class="table table-bordered table-striped">
+<table class="table table-bordered table-striped sortable">
     <tr>
-        <th>&nbsp;</th>
+        <th data-defaultsort="disabled">&nbsp;</th>
         <th>Name</th>
         <th>Matches on</th>
         <th colspan="2">Matching amount</th>
@@ -9,7 +9,7 @@
         <th>Is active</th>
         <th>Will be automatched</th>
         <th>Repeats every</th>
-        <th>&nbsp;</th>
+        <th data-defaultsort="disabled">&nbsp;</th>
     </tr>
     {% for entry in bills %}
     <tr>
@@ -22,46 +22,52 @@
         <td>
             <a href="{{route('bills.show',entry.id)}}" title="{{ entry.name }}">{{ entry.name }}</a>
         </td>
-        <td>
+        <td data-value="{{ entry.match }}">
             {% for match in entry.match|split(',') %}
             <span class="label label-info">{{ match }}</span>
             {% endfor %}
         </td>
-        <td>
+        <td data-value="{{ entry.amount_min }}">
             {{  entry.amount_min|formatAmount  }}
         </td>
-        <td>
+        <td data-value="{{ entry.amount_max }}">
             {{  entry.amount_max|formatAmount  }}
         </td>
-        <td>
             {% if entry.lastFoundMatch %}
+            <td data-value="{{ entry.lastFoundMatch.format('U') }}">
                 {{entry.lastFoundMatch.format('j F Y')}}
+            </td>
             {% else %}
+            <td data-value="0">
                 <em>Unknown</em>
+            </td>
             {% endif %}
-        </td>
-        <td>
+
             {% if entry.nextExpectedMatch%}
+            <td data-value="{{entry.nextExpectedMatch.format('U')}}">
                 {{entry.nextExpectedMatch.format('j F Y')}}
+            </td>
             {% else %}
+            <td data-value="0">
                 <em>Unknown</em>
+            </td>
             {% endif %}
-        </td>
-        <td>
+
+        <td data-value="{{ entry.active }}">
             {% if entry.active %}
                 <i class="fa fa-fw fa-check"></i>
             {% else %}
                 <i class="fa fa-fw fa-ban"></i>
             {% endif %}
         </td>
-        <td>
+        <td data-value="{{ entry.automatch }}">
             {% if entry.automatch %}
                  <i class="fa fa-fw fa-check"></i>
             {% else %}
                  <i class="fa fa-fw fa-ban"></i>
              {% endif %}
          </td>
-         <td>
+        <td data-value="{{ entry.repeat_freq }}{{ entry.skip }}">
             {{ entry.repeat_freq }}
              {% if entry.skip > 0 %}
                 skips over {{entry.skip}}
