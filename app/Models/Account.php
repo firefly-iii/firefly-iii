@@ -61,6 +61,31 @@ class Account extends Model
     }
 
     /**
+     * @param array $fields
+     *
+     * @return Account|null
+     */
+    public static function firstOrNullEncrypted(array $fields)
+    {
+        // everything but the name:
+        $query = Account::orderBy('id');
+        foreach ($fields as $name => $value) {
+            if ($name != 'name') {
+                $query->where($name, $value);
+            }
+        }
+        $set = $query->get(['accounts.*']);
+        /** @var Account $account */
+        foreach ($set as $account) {
+            if ($account->name == $fields['name']) {
+                return $account;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function accountMeta()

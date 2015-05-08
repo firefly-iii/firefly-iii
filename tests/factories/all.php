@@ -61,7 +61,9 @@ FactoryMuffin::define(
         'account_type_id' => 'factory|FireflyIII\Models\AccountType',
         'name'            => 'word',
         'active'          => 'boolean',
-        'encrypted'       => 'boolean',
+        'encrypted'       => function () {
+            return true;
+        },
         'virtual_balance' => 0
     ]
 );

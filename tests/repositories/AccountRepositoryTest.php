@@ -606,6 +606,9 @@ class AccountRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Account\AccountRepository::store
+     * @covers FireflyIII\Repositories\Account\AccountRepository::storeAccount
+     * @covers FireflyIII\Repositories\Account\AccountRepository::storeMetadata
+     * @covers FireflyIII\Repositories\Account\AccountRepository::storeInitialBalance
      */
     public function testStore()
     {
@@ -639,13 +642,126 @@ class AccountRepositoryTest extends TestCase
     }
 
     /**
+     * @covers FireflyIII\Repositories\Account\AccountRepository::store
+     * @covers FireflyIII\Repositories\Account\AccountRepository::storeAccount
+     * @covers FireflyIII\Repositories\Account\AccountRepository::storeMetadata
+     * @covers FireflyIII\Repositories\Account\AccountRepository::storeInitialBalance
+     */
+    public function testStoreWithNegativeInitialBalance()
+    {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        FactoryMuffin::create('FireflyIII\Models\AccountType');
+        FactoryMuffin::create('FireflyIII\Models\AccountType');
+        FactoryMuffin::create('FireflyIII\Models\AccountType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
+        $this->be($user);
+
+        $data = [
+            'accountType'            => 'expense',
+            'user'                   => $user->id,
+            'name'                   => 'Test account #' . rand(1, 100),
+            'active'                 => true,
+            'accountRole'            => 'testAccount',
+            'openingBalance'         => -100,
+            'virtualBalance'         => 0,
+            'openingBalanceCurrency' => $currency->id,
+            'openingBalanceDate'     => '2015-01-01',
+        ];
+
+
+        $account = $this->object->store($data);
+
+        $this->assertEquals($data['name'], $account->name);
+
+    }
+
+    /**
+     * @covers FireflyIII\Repositories\Account\AccountRepository::store
+     * @covers FireflyIII\Repositories\Account\AccountRepository::storeAccount
+     * @covers FireflyIII\Repositories\Account\AccountRepository::storeMetadata
+     * @covers FireflyIII\Repositories\Account\AccountRepository::storeInitialBalance
+     */
+    public function testStoreWithExistingAccount()
+    {
+        $account = FactoryMuffin::create('FireflyIII\Models\Account');
+        FactoryMuffin::create('FireflyIII\Models\AccountType');
+        FactoryMuffin::create('FireflyIII\Models\AccountType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
+        $this->be($account->user);
+
+
+        $data = [
+            'accountType'            => 'expense',
+            'user'                   => $account->user->id,
+            'name'                   => $account->name,
+            'active'                 => $account->active,
+            'accountRole'            => 'testAccount',
+            'openingBalance'         => 0,
+            'virtualBalance'         => 0,
+            'openingBalanceCurrency' => $currency->id,
+            'openingBalanceDate'     => '2015-01-01',
+        ];
+
+
+        $newAccount = $this->object->store($data);
+
+        $this->assertEquals($account->name, $newAccount->name);
+        $this->assertEquals($account->id, $newAccount->id);
+
+    }
+
+    /**
+     * @covers FireflyIII\Repositories\Account\AccountRepository::store
+     * @covers FireflyIII\Repositories\Account\AccountRepository::storeAccount
+     * @covers FireflyIII\Repositories\Account\AccountRepository::storeMetadata
+     * @covers FireflyIII\Repositories\Account\AccountRepository::storeInitialBalance
+     */
+    public function testStoreWithInvalidAccountData()
+    {
+        $account = FactoryMuffin::create('FireflyIII\Models\Account');
+        FactoryMuffin::create('FireflyIII\Models\AccountType');
+        FactoryMuffin::create('FireflyIII\Models\AccountType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $this->be($account->user);
+
+
+        $data = [
+            'accountType'            => 'expense',
+            'user'                   => $account->user->id,
+            'name'                   => $account->name,
+            'active'                 => $account->active,
+            'accountRole'            => 'testAccount',
+            'openingBalance'         => 0,
+            'virtualBalance'         => 0,
+            'openingBalanceCurrency' => 12,
+            'openingBalanceDate'     => '2015-01-01',
+        ];
+
+
+        $newAccount = $this->object->store($data);
+
+        $this->assertEquals($account->name, $newAccount->name);
+        $this->assertEquals($account->id, $newAccount->id);
+
+    }
+
+    /**
      * @covers FireflyIII\Repositories\Account\AccountRepository::sumOfEverything
-     * @todo   Implement testSumOfEverything().
      */
     public function testSumOfEverything()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete('This test has not been implemented yet.');
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
+        $this->assertEquals(0, $this->object->sumOfEverything());
     }
 
     /**
