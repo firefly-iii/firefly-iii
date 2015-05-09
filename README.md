@@ -43,17 +43,17 @@ This site always runs the latest version of Firefly III. If you want to use it, 
 ## Current features
 
 - [A double-entry bookkeeping system](https://en.wikipedia.org/wiki/Double-entry_bookkeeping_system);
-- You can store, edit and remove withdrawals, deposits and transfers. This allows you full financial management;
+- You can store, edit and remove [withdrawals, deposits and transfers](https://en.wikipedia.org/wiki/Financial_transaction). This allows you full financial management;
 - You can manage different types of accounts
-  - Asset accounts
-  - Shared asset accounts (household accounts)
+  - [Asset](https://en.wikipedia.org/wiki/Asset) accounts
+  - Shared [asset accounts](https://en.wikipedia.org/wiki/Asset) ([household accounts](https://en.wikipedia.org/wiki/Household))
   - Saving accounts
   - Credit cards
 - It's possible to create, change and manage money using _[budgets](https://en.wikipedia.org/wiki/Envelope_system)_;
 - Organize transactions using categories;
-- Save towards a goal using piggy banks;
-- Predict and anticipate bills;
-- View income / expense reports;
+- Save towards a goal using [piggy banks](https://en.wikipedia.org/wiki/Piggy_bank);
+- Predict and anticipate [bills](https://en.wikipedia.org/wiki/Invoice);
+- View income / expense [reports](https://en.wikipedia.org/wiki/Financial_statement);
 - Organize expenses using tags;
 - Lots of help text in case you don't get it.
 
@@ -83,6 +83,7 @@ Everything is organised:
 
 ## Current state
 
-Firefly III is pretty much all grown up. Full test coverage (nerd alert!) is coming.
+Firefly III is pretty much all grown up. Full test coverage (nerd alert!) is coming. One of the things on the todo-list
+is adding translations.
 
 Questions, ideas, bugs or other things to contribute? [Let me know](https://github.com/JC5/firefly-iii/issues/new)!
