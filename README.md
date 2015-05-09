@@ -10,7 +10,7 @@
 ## About
 
 "Firefly III" is a financial manager. It can help you keep track of expenses, income, budgets and everything in between. It even supports credit cards, shared 
-household accounts and savings accounts! It's pretty fancy. The end goal is to save money.
+household accounts and savings accounts! It's pretty fancy. You should use it to save and organise money.
  
 Firefly is a system you'll have install yourself on webhosting of your choosing.
 
@@ -66,6 +66,8 @@ Everything is organised:
 - Financial reporting showing you how well you are doing;
 
 ## Screenshots
+
+The screenshot below shows  
 
 ![Index](https://i.nder.be/c09vfw90)
 
