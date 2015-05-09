@@ -1,7 +1,6 @@
 <?php
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
-
 if (!class_exists('RandomString')) {
     /**
      * Class RandomString
@@ -140,7 +139,9 @@ FactoryMuffin::define(
         'budget_limit_id' => 'factory|FireflyIII\Models\BudgetLimit',
         'startdate'       => 'date',
         'enddate'         => 'date',
-        'amount'          => 'integer',
+        'amount'          => function () {
+            return rand(1, 100);
+        },
     ]
 );
 
@@ -149,7 +150,9 @@ FactoryMuffin::define(
     [
         'budget_id'   => 'factory|FireflyIII\Models\Budget',
         'startdate'   => 'date',
-        'amount'      => 'integer',
+        'amount'      => function () {
+            return rand(1, 100);
+        },
         'repeats'     => 'false',
         'repeat_freq' => 'monthly',
 
@@ -220,7 +223,9 @@ FactoryMuffin::define(
     [
         'account_id'    => 'factory|FireflyIII\Models\Account',
         'name'          => 'sentence',
-        'targetamount'  => 'integer',
+        'targetamount'  => function () {
+            return rand(1, 100);
+        },
         'startdate'     => 'date',
         'targetdate'    => 'date',
         'reminder_skip' => 0,

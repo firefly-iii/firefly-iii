@@ -7,7 +7,7 @@
     <div class="col-lg-6 col-md-6 col-sm-12">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <i class="fa fa-exclamation"></i> Mandatory fields
+                <i class="fa fa-exclamation"></i> {{ trans('firefly.mandatoryFields') }}
             </div>
             <div class="panel-body">
                 {{ ExpandedForm.text('name') }}
@@ -20,7 +20,7 @@
         <!-- panel for options -->
         <div class="panel panel-default">
             <div class="panel-heading">
-                <i class="fa fa-bolt"></i> Options
+                <i class="fa fa-bolt"></i> {{ trans('firefly.options') }}
             </div>
             <div class="panel-body">
                 {{ ExpandedForm.optionsList('create','category')  }}

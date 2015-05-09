@@ -6,10 +6,9 @@
     <input type="hidden" name="what" value="{{ what }}" />
     <div class="row">
         <div class="col-lg-6 col-md-12 col-sm-12">
-            <!-- panel for mandatory fields -->
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <i class="fa fa-exclamation-circle"></i> Mandatory fields
+                    <i class="fa fa-exclamation-circle"></i> {{ trans('firefly.mandatoryFields') }}
                 </div>
                 <div class="panel-body">
                     <!-- DESCRIPTION ALWAYS AVAILABLE -->
@@ -46,10 +45,9 @@
             </div>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12">
-            <!-- panel for optional fields -->
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-smile-o"></i> Optional fields
+                    <i class="fa fa-smile-o"></i> {{ trans('firefly.optionalFields') }}
                 </div>
                 <div class="panel-body">
                     <!-- BUDGET ONLY WHEN CREATING A WITHDRAWAL -->
@@ -73,7 +71,7 @@
             <!-- panel for options -->
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-bolt"></i> Options
+                    <i class="fa fa-bolt"></i> {{ trans('firefly.options') }}
                 </div>
                 <div class="panel-body">
                     {{ ExpandedForm.optionsList('create','transaction') }}
