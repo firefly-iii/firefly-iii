@@ -3,6 +3,7 @@ use Carbon\Carbon;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Repositories\Budget\BudgetRepository;
+use Illuminate\Pagination\LengthAwarePaginator;
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
 /**
@@ -207,121 +208,180 @@ class BudgetRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Budget\BudgetRepository::getJournals
-     * @todo   Implement testGetJournals().
      */
     public function testGetJournals()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $repetition = FactoryMuffin::create('FireflyIII\Models\LimitRepetition');
+
+        $set = $this->object->getJournals($repetition->budgetlimit->budget, $repetition);
+        $this->assertTrue($set instanceof LengthAwarePaginator);
+        $this->assertCount(0, $set);
+        $this->assertEquals(1, $set->currentPage());
     }
 
     /**
      * @covers FireflyIII\Repositories\Budget\BudgetRepository::getLastBudgetLimitDate
-     * @todo   Implement testGetLastBudgetLimitDate().
      */
     public function testGetLastBudgetLimitDate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        /** @var BudgetLimit $budget */
+        $limit = FactoryMuffin::create('FireflyIII\Models\BudgetLimit');
+        $date  = $this->object->getLastBudgetLimitDate($limit->budget);
+        $this->assertEquals($date->format('Y-m-d'), $limit->startdate->format('Y-m-d'));
+    }
+
+    /**
+     * @covers FireflyIII\Repositories\Budget\BudgetRepository::getLastBudgetLimitDate
+     */
+    public function testGetLastBudgetLimitDateNull()
+    {
+
+        /** @var Budget $budget */
+        $budget  = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $date    = $this->object->getLastBudgetLimitDate($budget);
+        $ownDate = Carbon::now()->startOfYear();
+        $this->assertEquals($date->format('Y-m-d'), $ownDate->format('Y-m-d'));
     }
 
     /**
      * @covers FireflyIII\Repositories\Budget\BudgetRepository::getLimitAmountOnDate
-     * @todo   Implement testGetLimitAmountOnDate().
      */
     public function testGetLimitAmountOnDate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $rep = FactoryMuffin::create('FireflyIII\Models\LimitRepetition');
+
+        $amount = $this->object->getLimitAmountOnDate($rep->budgetlimit->budget, $rep->startdate);
+
+        $this->assertEquals($rep->amount, $amount);
+    }
+
+    /**
+     * @covers FireflyIII\Repositories\Budget\BudgetRepository::getLimitAmountOnDate
+     */
+    public function testGetLimitAmountOnDateNull()
+    {
+        $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
+
+        $amount = $this->object->getLimitAmountOnDate($budget, new Carbon);
+
+        $this->assertNull($amount);
     }
 
     /**
      * @covers FireflyIII\Repositories\Budget\BudgetRepository::getWithoutBudget
-     * @todo   Implement testGetWithoutBudget().
      */
     public function testGetWithoutBudget()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+        $set = $this->object->getWithoutBudget(new Carbon, new Carbon);
+        $this->assertCount(0, $set);
     }
 
     /**
      * @covers FireflyIII\Repositories\Budget\BudgetRepository::getWithoutBudgetSum
-     * @todo   Implement testGetWithoutBudgetSum().
      */
     public function testGetWithoutBudgetSum()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+        $sum = $this->object->getWithoutBudgetSum(new Carbon, new Carbon);
+        $this->assertEquals(0, $sum);
     }
 
     /**
      * @covers FireflyIII\Repositories\Budget\BudgetRepository::spentInMonth
-     * @todo   Implement testSpentInMonth().
      */
     public function testSpentInMonth()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
+
+        $amount = $this->object->spentInMonth($budget, new Carbon);
+        $this->assertEquals(0, $amount);
     }
 
     /**
      * @covers FireflyIII\Repositories\Budget\BudgetRepository::store
-     * @todo   Implement testStore().
      */
     public function testStore()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $user = FactoryMuffin::create('FireflyIII\User');
+
+        $data   = [
+            'name' => 'new budget ' . rand(1, 100),
+            'user' => $user->id
+        ];
+        $result = $this->object->store($data);
+
+        $this->assertTrue($result instanceof Budget);
+        $this->assertEquals($result->name, $data['name']);
     }
 
     /**
      * @covers FireflyIII\Repositories\Budget\BudgetRepository::sumBudgetExpensesInPeriod
-     * @todo   Implement testSumBudgetExpensesInPeriod().
      */
     public function testSumBudgetExpensesInPeriod()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $result = $this->object->sumBudgetExpensesInPeriod($budget, new Carbon, new Carbon);
+        $this->assertEquals(0, $result);
     }
 
     /**
      * @covers FireflyIII\Repositories\Budget\BudgetRepository::update
-     * @todo   Implement testUpdate().
      */
     public function testUpdate()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
+
+        $data   = [
+            'name'   => 'update budget ' . rand(1, 100),
+            'active' => true
+        ];
+        $result = $this->object->update($budget, $data);
+
+        $this->assertTrue($result instanceof Budget);
+        $this->assertEquals($result->name, $data['name']);
+        $this->assertEquals($result->id, $budget->id);
     }
 
     /**
      * @covers FireflyIII\Repositories\Budget\BudgetRepository::updateLimitAmount
-     * @todo   Implement testUpdateLimitAmount().
      */
     public function testUpdateLimitAmount()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
+
+        $result = $this->object->updateLimitAmount($budget, new Carbon, 100);
+
+        $this->assertTrue($result instanceof BudgetLimit);
+        $this->assertEquals($result->amount, 100);
+    }
+
+    /**
+     * @covers FireflyIII\Repositories\Budget\BudgetRepository::updateLimitAmount
+     */
+    public function testUpdateLimitAmountExisting()
+    {
+        $budgetLimit= FactoryMuffin::create('FireflyIII\Models\BudgetLimit');
+
+        $result = $this->object->updateLimitAmount($budgetLimit->budget, $budgetLimit->startdate, 100);
+
+        $this->assertTrue($result instanceof BudgetLimit);
+        $this->assertEquals($result->amount, 100);
+    }
+
+    /**
+     * @covers FireflyIII\Repositories\Budget\BudgetRepository::updateLimitAmount
+     */
+    public function testUpdateLimitAmountZero()
+    {
+        $budgetLimit= FactoryMuffin::create('FireflyIII\Models\BudgetLimit');
+
+        $result = $this->object->updateLimitAmount($budgetLimit->budget, $budgetLimit->startdate, 0);
+
+        $this->assertTrue($result instanceof BudgetLimit);
+        $this->assertEquals($result->amount, 0);
+        $this->assertNull($result->id);
     }
 }
