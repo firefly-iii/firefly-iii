@@ -187,17 +187,6 @@ class GoogleChartController extends Controller
             if ($entry[1] != 0 || $entry[2] != 0 || $entry[3] != 0) {
                 $chart->addRow($entry[0], $entry[1], $entry[2], $entry[3]);
             }
-            //            if ($entry[2] > 0) {
-            //                $left = $entry[1] - $entry[2];
-            //                if ($left > 0) {
-            //                    $chart->addRow($entry[0], $left, null);
-            //                } else {
-            //                    if ($left < 0) {
-            //                        $chart->addRow($entry[0], null, $left);
-            //                    }
-            //                }
-            //
-            //            }
         }
 
         $chart->generate();
