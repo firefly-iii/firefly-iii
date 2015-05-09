@@ -149,6 +149,7 @@ class GoogleChartController extends Controller
     {
         $chart->addColumn('Budget', 'string');
         $chart->addColumn('Left', 'number');
+        $chart->addColumn('Spent', 'number');
         $chart->addColumn('Overspent', 'number');
 
         $budgets    = $repository->getBudgets();
@@ -160,31 +161,41 @@ class GoogleChartController extends Controller
             $repetitions = $repository->getBudgetLimitRepetitions($budget, $start, $end);
             if ($repetitions->count() == 0) {
                 $expenses = $repository->sumBudgetExpensesInPeriod($budget, $start, $end);
-                $allEntries->push([$budget->name, 0, $expenses]);
+                $allEntries->push([$budget->name, 0, 0, $expenses]);
                 continue;
             }
             /** @var LimitRepetition $repetition */
             foreach ($repetitions as $repetition) {
-                $expenses = $repository->sumBudgetExpensesInPeriod($budget, $repetition->startdate, $repetition->enddate);
-                $allEntries->push([$budget->name . ' (' . $repetition->startdate->format('j M Y') . ')', floatval($repetition->amount), $expenses]);
+                $expenses  = $repository->sumBudgetExpensesInPeriod($budget, $repetition->startdate, $repetition->enddate);
+                $left      = $expenses > floatval($repetition->amount) ? 0 : (floatval($repetition->amount));
+                $spent     = $expenses > floatval($repetition->amount) ? 0 : $expenses;
+                $overspent = $expenses > floatval($repetition->amount) ? $expenses - floatval($repetition->amount) : 0;
+                $allEntries->push(
+                    [$budget->name . ' (' . $repetition->startdate->format('j M Y') . ')',
+                     $left,
+                     $spent,
+                     $overspent
+                    ]
+                );
             }
         }
 
         $noBudgetExpenses = $repository->getWithoutBudgetSum($start, $end);
-        $allEntries->push(['(no budget)', 0, $noBudgetExpenses]);
+        $allEntries->push(['(no budget)', 0, 0, $noBudgetExpenses]);
 
         foreach ($allEntries as $entry) {
-            if ($entry[2] > 0) {
-                $left = $entry[1] - $entry[2];
-                if ($left > 0) {
-                    $chart->addRow($entry[0], $left, null);
-                } else {
-                    if ($left < 0) {
-                        $chart->addRow($entry[0], null, $left);
-                    }
-                }
-
-            }
+            $chart->addRow($entry[0], $entry[1], $entry[2], $entry[3]);
+//            if ($entry[2] > 0) {
+//                $left = $entry[1] - $entry[2];
+//                if ($left > 0) {
+//                    $chart->addRow($entry[0], $left, null);
+//                } else {
+//                    if ($left < 0) {
+//                        $chart->addRow($entry[0], null, $left);
+//                    }
+//                }
+//
+//            }
         }
 
         $chart->generate();

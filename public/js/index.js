@@ -3,7 +3,8 @@ google.setOnLoadCallback(drawChart);
 
 function drawChart() {
     googleLineChart('chart/home/account', 'accounts-chart');
-    googleColumnChart('chart/home/budgets', 'budgets-chart');
+    //googleColumnChart('chart/home/budgets', 'budgets-chart');
+    googleStackedColumnChart('chart/home/budgets', 'budgets-chart');
     googleColumnChart('chart/home/categories', 'categories-chart');
     googlePieChart('chart/home/bills', 'bills-chart');
     getBoxAmounts();
