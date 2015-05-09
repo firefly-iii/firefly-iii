@@ -178,10 +178,11 @@ class BudgetRepositoryTest extends TestCase
      */
     public function testGetFirstBudgetLimitDateNull()
     {
-        /** @var BudgetLimit $budget */
-        $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
-        $date   = $this->object->getFirstBudgetLimitDate($budget);
-        $this->assertNull($date);
+        /** @var Budget $budget */
+        $budget  = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $date    = $this->object->getFirstBudgetLimitDate($budget);
+        $ownDate = Carbon::now()->startOfYear();
+        $this->assertEquals($date->format('Y-m-d'), $ownDate->format('Y-m-d'));
     }
 
     /**
