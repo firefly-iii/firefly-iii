@@ -67,7 +67,7 @@ Everything is organised:
 
 ## Screenshots
 
-The screenshot below shows  
+_Please note that everything in these screenshots is fictional and may not be realistic._
 
 ![Index](https://i.nder.be/c09vfw90)
 
