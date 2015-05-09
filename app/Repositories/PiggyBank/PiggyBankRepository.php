@@ -145,14 +145,20 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     /**
      * Set all piggy banks to order 0.
      *
-     * @return void
+     * @return boolean
      */
     public function reset()
     {
-        DB::table('piggy_banks')
-          ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.id')
-          ->where('accounts.user_id', Auth::user()->id)
-          ->update(['order' => 0, 'piggy_banks.updated_at' => DB::Raw('NOW()')]);
+        // split query to make it work in sqlite:
+        $set = PiggyBank::
+                 leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.id')
+                 ->where('accounts.user_id', Auth::user()->id)->get(['piggy_banks.*']);
+        foreach ($set as $e) {
+            $e->order = 0;
+            $e->save();
+        }
+
+        return true;
     }
 
     /**
