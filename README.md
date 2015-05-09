@@ -6,7 +6,7 @@
 [![Code Climate](https://codeclimate.com/github/JC5/firefly-iii/badges/gpa.svg)](https://codeclimate.com/github/JC5/firefly-iii)
 [![Coverage Status](https://coveralls.io/repos/JC5/firefly-iii/badge.svg?branch=master)](https://coveralls.io/r/JC5/firefly-iii?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/grumpydictator/firefly-iii/v/stable.svg)](https://packagist.org/packages/grumpydictator/firefly-iii)
-
+![GA](https://ga-beacon.appspot.com/UA-58172398-6/firefly-iii/readme)
 ## About
 
 "Firefly III" is a financial manager. It can help you keep track of expenses, income, budgets and everything in between. It even supports credit cards, shared 
