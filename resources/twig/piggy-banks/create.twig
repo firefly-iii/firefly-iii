@@ -8,7 +8,7 @@
     <div class="col-lg-6 col-md-12 col-sm-6">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <i class="fa fa-fw fa-exclamation"></i> {{ trans('firefly.mandatoryFields') }}
+                <i class="fa fa-fw fa-exclamation"></i> {{ 'mandatoryFields'|_ }}
             </div>
             <div class="panel-body">
 
@@ -22,7 +22,7 @@
     <div class="col-lg-6 col-md-12 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <i class="fa fa-smile-o"></i> {{ trans('firefly.optionalFields') }}
+                <i class="fa fa-smile-o"></i> {{ 'optionalFields'|_ }}
             </div>
             <div class="panel-body">
                 {{ ExpandedForm.date('targetdate') }}
@@ -34,7 +34,7 @@
         <!-- panel for options -->
         <div class="panel panel-default">
             <div class="panel-heading">
-                <i class="fa fa-bolt"></i> {{ trans('firefly.options') }}
+                <i class="fa fa-bolt"></i> {{ 'options'|_ }}
             </div>
             <div class="panel-body">
                 {{ ExpandedForm.optionsList('create','piggy bank') }}
