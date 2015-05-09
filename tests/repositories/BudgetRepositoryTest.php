@@ -381,7 +381,5 @@ class BudgetRepositoryTest extends TestCase
         $result = $this->object->updateLimitAmount($budgetLimit->budget, $budgetLimit->startdate, 0);
 
         $this->assertTrue($result instanceof BudgetLimit);
-        $this->assertEquals($result->amount, 0);
-        $this->assertNull($result->id);
     }
 }
