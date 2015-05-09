@@ -89,3 +89,5 @@ Firefly III is pretty much all grown up. Full test coverage (nerd alert!) is com
 is adding translations.
 
 Questions, ideas, bugs or other things to contribute? [Let me know](https://github.com/JC5/firefly-iii/issues/new)!
+
+If you like this tool, feel free to [donate me some beer money](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=2ZMV952UUSCLU&lc=NL&item_name=Development%20of%20Firefly&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted).
