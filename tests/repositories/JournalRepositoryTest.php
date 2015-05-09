@@ -196,26 +196,343 @@ class JournalRepositoryTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Repositories\Journal\JournalRepository::update
-     * @todo   Implement testUpdate().
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::store
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::storeAccounts
      */
-    public function testUpdate()
+    public function testStoreDeposit()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        for ($i = 0; $i < 4; $i++) {
+            FactoryMuffin::create('FireflyIII\Models\AccountType');
+        }
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+
+        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
+        $budget   = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $account1 = FactoryMuffin::create('FireflyIII\Models\Account');
+        $user     = FactoryMuffin::create('FireflyIII\User');
+        $data     = [
+            'description'        => 'Some journal ' . rand(1, 100),
+            'user'               => $user->id,
+            'what'               => 'deposit',
+            'amount_currency_id' => $currency->id,
+            'account_id'         => $account1->id,
+            'revenue_account'    => 'Some revenue account',
+            'date'               => '2014-01-01',
+            'category'           => 'Some category',
+            'budget_id'          => $budget->id,
+            'amount'             => 100,
+            'tags'               => ['one', 'two', 'three']
+
+
+        ];
+
+        $journal = $this->object->store($data);
+
+        $this->assertEquals($data['description'], $journal->description);
     }
 
     /**
-     * @covers FireflyIII\Repositories\Journal\JournalRepository::updateTags
-     * @todo   Implement testUpdateTags().
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::store
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::storeAccounts
      */
-    public function testUpdateTags()
+    public function testStoreExpenseWithCash()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        for ($i = 0; $i < 4; $i++) {
+            FactoryMuffin::create('FireflyIII\Models\AccountType');
+        }
+
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
+        $budget   = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $account1 = FactoryMuffin::create('FireflyIII\Models\Account');
+        $user     = FactoryMuffin::create('FireflyIII\User');
+        $data     = [
+            'description'        => 'Some journal ' . rand(1, 100),
+            'user'               => $user->id,
+            'what'               => 'withdrawal',
+            'amount_currency_id' => $currency->id,
+            'account_id'         => $account1->id,
+            'expense_account'    => '',
+            'date'               => '2014-01-01',
+            'category'           => 'Some other category',
+            'budget_id'          => $budget->id,
+            'amount'             => 100,
+            'tags'               => ['one', 'two', 'three']
+
+
+        ];
+
+        $journal = $this->object->store($data);
+
+        $this->assertEquals($data['description'], $journal->description);
     }
+
+    /**
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::store
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::storeAccounts
+     * @expectedException Symfony\Component\HttpKernel\Exception\HttpException
+     */
+    public function testStoreInvalidFromAccount()
+    {
+        for ($i = 0; $i < 4; $i++) {
+            FactoryMuffin::create('FireflyIII\Models\AccountType');
+        }
+
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
+        $budget   = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $account1 = FactoryMuffin::create('FireflyIII\Models\Account');
+        $user     = FactoryMuffin::create('FireflyIII\User');
+        $data     = [
+            'description'        => 'Some journal ' . rand(1, 100),
+            'user'               => $user->id,
+            'what'               => 'transfer',
+            'amount_currency_id' => $currency->id,
+            'account_from_id'    => $account1->id,
+            'account_to_id'      => 17,
+            'date'               => '2014-01-01',
+            'category'           => 'Some other category',
+            'budget_id'          => $budget->id,
+            'amount'             => 100,
+            'tags'               => ['one', 'two', 'three']
+
+
+        ];
+
+        $journal = $this->object->store($data);
+
+        $this->assertEquals($data['description'], $journal->description);
+    }
+
+    /**
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::store
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::storeAccounts
+     * @expectedException Symfony\Component\HttpKernel\Exception\HttpException
+     */
+    public function testStoreInvalidToAccount()
+    {
+        for ($i = 0; $i < 4; $i++) {
+            FactoryMuffin::create('FireflyIII\Models\AccountType');
+        }
+
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
+        $budget   = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $account1 = FactoryMuffin::create('FireflyIII\Models\Account');
+        $user     = FactoryMuffin::create('FireflyIII\User');
+        $data     = [
+            'description'        => 'Some journal ' . rand(1, 100),
+            'user'               => $user->id,
+            'what'               => 'transfer',
+            'amount_currency_id' => $currency->id,
+            'account_from_id'    => 17,
+            'account_to_id'      => $account1->id,
+            'date'               => '2014-01-01',
+            'category'           => 'Some other category',
+            'budget_id'          => $budget->id,
+            'amount'             => 100,
+            'tags'               => ['one', 'two', 'three']
+
+
+        ];
+
+        $journal = $this->object->store($data);
+
+        $this->assertEquals($data['description'], $journal->description);
+    }
+
+    /**
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::store
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::storeAccounts
+     */
+    public function testStoreRevenueWithCash()
+    {
+        for ($i = 0; $i < 4; $i++) {
+            FactoryMuffin::create('FireflyIII\Models\AccountType');
+        }
+
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
+        $budget   = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $account1 = FactoryMuffin::create('FireflyIII\Models\Account');
+        $user     = FactoryMuffin::create('FireflyIII\User');
+        $data     = [
+            'description'        => 'Some journal ' . rand(1, 100),
+            'user'               => $user->id,
+            'what'               => 'deposit',
+            'amount_currency_id' => $currency->id,
+            'account_id'         => $account1->id,
+            'revenue_account'    => '',
+            'date'               => '2014-01-01',
+            'category'           => 'Some other category',
+            'budget_id'          => $budget->id,
+            'amount'             => 100,
+            'tags'               => ['one', 'two', 'three']
+
+
+        ];
+
+        $journal = $this->object->store($data);
+
+        $this->assertEquals($data['description'], $journal->description);
+    }
+
+    /**
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::store
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::storeAccounts
+     */
+    public function testStoreTransfer()
+    {
+        for ($i = 0; $i < 4; $i++) {
+            FactoryMuffin::create('FireflyIII\Models\AccountType');
+        }
+
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
+        $budget   = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $account1 = FactoryMuffin::create('FireflyIII\Models\Account');
+        $account2 = FactoryMuffin::create('FireflyIII\Models\Account');
+        $user     = FactoryMuffin::create('FireflyIII\User');
+        $data     = [
+            'description'        => 'Some journal ' . rand(1, 100),
+            'user'               => $user->id,
+            'what'               => 'transfer',
+            'amount_currency_id' => $currency->id,
+            'account_from_id'    => $account1->id,
+            'account_to_id'      => $account2->id,
+            'date'               => '2014-01-01',
+            'category'           => 'Some other category',
+            'budget_id'          => $budget->id,
+            'amount'             => 100,
+            'tags'               => ['one', 'two', 'three']
+
+
+        ];
+
+        $journal = $this->object->store($data);
+
+        $this->assertEquals($data['description'], $journal->description);
+    }
+
+    /**
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::update
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::updateTags
+     */
+    public function testUpdate()
+    {
+        for ($i = 0; $i < 4; $i++) {
+            FactoryMuffin::create('FireflyIII\Models\AccountType');
+        }
+
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $journal  = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
+        $budget   = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $account1 = FactoryMuffin::create('FireflyIII\Models\Account');
+        $account2 = FactoryMuffin::create('FireflyIII\Models\Account');
+
+        // two transactions
+        Transaction::create(
+            [
+                'account_id'             => $account1->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => 100,
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $account1->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => -100,
+            ]
+        );
+
+
+        $data = [
+            'amount_currency_id' => $currency->id,
+            'description'        => 'New description ' . rand(1, 100),
+            'date'               => '2015-01-01',
+            'category'           => 'SomenewCat',
+            'amount'             => 50,
+            'user'               => $journal->user_id,
+            'budget_id'          => $budget->id,
+            'account_from_id'    => $account1->id,
+            'account_to_id'      => $account2->id,
+            'revenue_account'    => 'Some revenue account',
+            'expense_account'    => 'Some expense account',
+            'tags'               => ['a', 'b', 'c']
+
+        ];
+
+        $result = $this->object->update($journal, $data);
+
+        $this->assertEquals($result->description, $data['description']);
+        $this->assertEquals($result->amount, 50);
+    }
+    /**
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::update
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::updateTags
+     */
+    public function testUpdateNoTags()
+    {
+        for ($i = 0; $i < 4; $i++) {
+            FactoryMuffin::create('FireflyIII\Models\AccountType');
+        }
+
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $journal  = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
+        $budget   = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $account1 = FactoryMuffin::create('FireflyIII\Models\Account');
+        $account2 = FactoryMuffin::create('FireflyIII\Models\Account');
+
+        // two transactions
+        Transaction::create(
+            [
+                'account_id'             => $account1->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => 100,
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $account1->id,
+                'transaction_journal_id' => $journal->id,
+                'amount'                 => -100,
+            ]
+        );
+
+
+        $data = [
+            'amount_currency_id' => $currency->id,
+            'description'        => 'New description ' . rand(1, 100),
+            'date'               => '2015-01-01',
+            'category'           => 'SomenewCat',
+            'amount'             => 50,
+            'user'               => $journal->user_id,
+            'budget_id'          => $budget->id,
+            'account_from_id'    => $account1->id,
+            'account_to_id'      => $account2->id,
+            'revenue_account'    => 'Some revenue account',
+            'expense_account'    => 'Some expense account',
+            'tags'               => []
+
+        ];
+
+        $result = $this->object->update($journal, $data);
+
+        $this->assertEquals($result->description, $data['description']);
+        $this->assertEquals($result->amount, 50);
+    }
+
 }

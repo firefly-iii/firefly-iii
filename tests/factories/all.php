@@ -173,9 +173,9 @@ FactoryMuffin::define(
     'FireflyIII\Models\AccountType',
     [
         'type'     => function () {
-            $types = ['Expense account', 'Revenue account', 'Asset account'];
+            $types = ['Expense account', 'Revenue account', 'Asset account','Cash account'];
             $count = DB::table('account_types')->count();
-            if ($count < 3) {
+            if ($count < 4) {
                 return $types[$count];
             } else {
                 return RandomString::generateRandomString(10);

@@ -379,14 +379,19 @@ class JournalRepository implements JournalRepositoryInterface
                 $to   = Account::find($data['account_to_id']);
                 break;
         }
-        if (is_null($to->id)) {
+        if (is_null($to) || (!is_null($to) && is_null($to->id))) {
             Log::error('"to"-account is null, so we cannot continue!');
             App::abort(500, '"to"-account is null, so we cannot continue!');
+            // @codeCoverageIgnoreStart
         }
-        if (is_null($from->id)) {
+        // @codeCoverageIgnoreEnd
+
+        if (is_null($from) || (!is_null($from) && is_null($from->id))) {
             Log::error('"from"-account is null, so we cannot continue!');
             App::abort(500, '"from"-account is null, so we cannot continue!');
+            // @codeCoverageIgnoreStart
         }
+        // @codeCoverageIgnoreEnd
 
         return [$from, $to];
     }
