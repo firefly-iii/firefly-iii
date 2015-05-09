@@ -167,7 +167,7 @@ class GoogleChartController extends Controller
             /** @var LimitRepetition $repetition */
             foreach ($repetitions as $repetition) {
                 $expenses  = $repository->sumBudgetExpensesInPeriod($budget, $repetition->startdate, $repetition->enddate);
-                $left      = $expenses > floatval($repetition->amount) ? 0 : (floatval($repetition->amount));
+                $left      = $expenses < floatval($repetition->amount) ? floatval($repetition->amount) - $expenses : 0;
                 $spent     = $expenses > floatval($repetition->amount) ? 0 : $expenses;
                 $overspent = $expenses > floatval($repetition->amount) ? $expenses - floatval($repetition->amount) : 0;
                 $allEntries->push(
