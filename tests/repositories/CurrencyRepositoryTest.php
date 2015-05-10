@@ -76,7 +76,7 @@ class CurrencyRepositoryTest extends TestCase
         $preference->data = 'ABC';
         $preference->save();
         $found = $this->object->getCurrencyByPreference($preference);
-        $this->assertEquals($first->id, $found->id);
+        $this->assertEquals(1, $found->id); // EUR is first and will be set.
     }
 
     /**
