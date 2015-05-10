@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * Class Amount
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Support\Facades
  */
 class ExpandedForm extends Facade

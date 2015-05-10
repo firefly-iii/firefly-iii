@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * Class Preferences
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Support\Facades
  */
 class Preferences extends Facade

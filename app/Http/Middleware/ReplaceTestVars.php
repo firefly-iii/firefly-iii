@@ -10,6 +10,7 @@ use Log;
 /**
  * Class ReplaceTestVars
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Http\Middleware
  */
 class ReplaceTestVars

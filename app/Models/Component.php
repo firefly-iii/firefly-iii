@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class Component
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Models
  */
 class Component extends Model

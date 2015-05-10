@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * Class Steam
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Support\Facades
  */
 class Steam extends Facade

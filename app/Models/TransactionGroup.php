@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class TransactionGroup
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Models
  */
 class TransactionGroup extends Model
