@@ -50,7 +50,7 @@ class CurrencyRepositoryTest extends TestCase
         FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
 
         $set = $this->object->get();
-        $this->assertCount(2, $set);
+        $this->assertCount(3, $set); // EUR is already present.
     }
 
     /**
