@@ -115,6 +115,28 @@ class TagControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    public function testMultipleDeposits()
+    {
+        $tag        = FactoryMuffin::create('FireflyIII\Models\Tag');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $type       = FactoryMuffin::create('FireflyIII\Models\TransactionType');
+
+        for ($i = 0; $i < 3; $i++) {
+            $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+            $journal->transaction_type_id = $type->id;
+            $journal->save();
+            $tag->transactionJournals()->save($journal);
+        }
+
+
+        $tag->tagMode = 'nothing';
+        $tag->save();
+        $this->be($tag->user);
+
+        $this->call('GET', '/tags/edit/' . $tag->id);
+        $this->assertResponseOk();
+    }
+
 
     public function testHideTagHelp()
     {
