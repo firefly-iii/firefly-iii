@@ -6,6 +6,7 @@ use Illuminate\Queue\SerializesModels;
 /**
  * Class JournalSaved
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Events
  */
 class JournalSaved extends Event

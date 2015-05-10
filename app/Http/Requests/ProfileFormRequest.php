@@ -7,6 +7,7 @@ use Auth;
 /**
  * Class ProfileFormRequest
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Http\Requests
  */
 class ProfileFormRequest extends Request

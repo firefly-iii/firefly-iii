@@ -9,6 +9,7 @@ use Input;
 /**
  * Class CategoryFormRequest
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Http\Requests
  */
 class CategoryFormRequest extends Request

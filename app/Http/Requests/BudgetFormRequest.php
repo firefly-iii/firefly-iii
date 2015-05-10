@@ -9,6 +9,7 @@ use Input;
 /**
  * Class BudgetFormRequest
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Http\Requests
  */
 class BudgetFormRequest extends Request

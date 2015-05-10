@@ -6,6 +6,7 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 /**
  * Class Kernel
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Console
  */
 class Kernel extends ConsoleKernel
