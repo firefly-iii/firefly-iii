@@ -319,7 +319,7 @@ Breadcrumbs::register(
 
 Breadcrumbs::register(
     'reports.month', function (Generator $breadcrumbs, Carbon $date) {
-    $breadcrumbs->parent('reports.index');
+    $breadcrumbs->parent('reports.year', $date);
     $breadcrumbs->push('Monthly report for ' . $date->format('F Y'), route('reports.month', [$date->year, $date->month]));
 }
 );

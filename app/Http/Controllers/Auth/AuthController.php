@@ -38,6 +38,7 @@ class AuthController extends Controller
      *
      * @param  \Illuminate\Contracts\Auth\Guard     $auth
      * @param  \Illuminate\Contracts\Auth\Registrar $registrar
+     * @codeCoverageIgnore
      *
      */
     public function __construct(Guard $auth, Registrar $registrar)
@@ -51,7 +52,9 @@ class AuthController extends Controller
     /**
      * Show the application login form.
      *
+     * @codeCoverageIgnore
      * @return \Illuminate\Http\Response
+     *
      */
     public function getLogin()
     {
@@ -73,7 +76,9 @@ class AuthController extends Controller
             $this->throwValidationException(
                 $request, $validator
             );
+            // @codeCoverageIgnoreStart
         }
+        // @codeCoverageIgnoreEnd
 
         $data             = $request->all();
         $data['password'] = bcrypt($data['password']);

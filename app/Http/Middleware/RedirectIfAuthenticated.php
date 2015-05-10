@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 /**
  * Class RedirectIfAuthenticated
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Http\Middleware
  */
 class RedirectIfAuthenticated

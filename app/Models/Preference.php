@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class Preference
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Models
  */
 class Preference extends Model

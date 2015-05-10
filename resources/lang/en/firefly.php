@@ -6,5 +6,7 @@ return [
     'pleaseHold'      => 'Please hold...',
     'mandatoryFields' => 'Mandatory fields',
     'optionalFields'  => 'Optional fields',
-    'options' => 'Options'
+    'options'         => 'Options',
+    'something'       => 'Something!'
+
 ];

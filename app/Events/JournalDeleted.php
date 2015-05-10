@@ -5,6 +5,7 @@ use Illuminate\Queue\SerializesModels;
 /**
  * Class JournalDeleted
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Events
  */
 class JournalDeleted extends Event

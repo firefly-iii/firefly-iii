@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class Budget
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Models
  */
 class Budget extends Model
@@ -17,6 +18,7 @@ class Budget extends Model
     protected $fillable = ['user_id', 'name'];
 
     /**
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function budgetlimits()

@@ -6,6 +6,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 /**
  * Class Handler
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Exceptions
  */
 class Handler extends ExceptionHandler

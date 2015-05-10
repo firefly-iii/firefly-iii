@@ -7,6 +7,7 @@ use Auth;
 /**
  * Class DeleteAccountFormRequest
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Http\Requests
  */
 class DeleteAccountFormRequest extends Request

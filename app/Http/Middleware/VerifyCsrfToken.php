@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as BaseVerifier;
 /**
  * Class VerifyCsrfToken
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Http\Middleware
  */
 class VerifyCsrfToken extends BaseVerifier

@@ -20,7 +20,7 @@ class ReminderRepository implements ReminderRepositoryInterface
     protected $helper;
 
     /**
-     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

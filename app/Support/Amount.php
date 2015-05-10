@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Support;
 
-use Cache;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;

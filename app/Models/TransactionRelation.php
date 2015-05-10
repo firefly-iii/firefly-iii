@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class TransactionRelation
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Models
  */
 class TransactionRelation extends Model

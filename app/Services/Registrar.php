@@ -7,6 +7,7 @@ use Validator;
 /**
  * Class Registrar
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Services
  */
 class Registrar implements RegistrarContract

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class Category
  *
+ *
  * @package FireflyIII\Models
  */
 class Category extends Model
@@ -17,6 +18,7 @@ class Category extends Model
     protected $fillable = ['user_id', 'name'];
 
     /**
+     * @codeCoverageIgnore
      * @return array
      */
     public function getDates()
@@ -25,6 +27,7 @@ class Category extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function transactionjournals()
@@ -66,6 +69,7 @@ class Category extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()
@@ -74,6 +78,7 @@ class Category extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      */
     public function setNameAttribute($value)
@@ -83,6 +88,7 @@ class Category extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      *
      * @return string
@@ -94,9 +100,7 @@ class Category extends Model
             return Crypt::decrypt($value);
         }
 
-        // @codeCoverageIgnoreStart
         return $value;
-        // @codeCoverageIgnoreEnd
     }
 
 }

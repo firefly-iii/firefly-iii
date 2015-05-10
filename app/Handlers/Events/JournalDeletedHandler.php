@@ -5,6 +5,7 @@ use FireflyIII\Events\JournalDeleted;
 /**
  * Class JournalDeletedHandler
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Handlers\Events
  */
 class JournalDeletedHandler

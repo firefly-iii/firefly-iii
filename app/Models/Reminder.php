@@ -17,6 +17,7 @@ class Reminder extends Model
     protected $fillable = ['user_id', 'startdate', 'metadata', 'enddate', 'active', 'notnow', 'remindersable_id', 'remindersable_type',];
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      *
      * @return int
@@ -27,6 +28,7 @@ class Reminder extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return array
      */
     public function getDates()
@@ -35,6 +37,7 @@ class Reminder extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      *
      * @return mixed
@@ -49,6 +52,7 @@ class Reminder extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      *
      * @return bool
@@ -59,6 +63,7 @@ class Reminder extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
     public function remindersable()
@@ -67,6 +72,7 @@ class Reminder extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param EloquentBuilder $query
      * @param Carbon          $start
      * @param Carbon          $end
@@ -79,6 +85,7 @@ class Reminder extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param EloquentBuilder $query
      *
      * @return $this
@@ -92,6 +99,7 @@ class Reminder extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      */
     public function setMetadataAttribute($value)
@@ -101,6 +109,7 @@ class Reminder extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()

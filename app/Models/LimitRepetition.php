@@ -13,6 +13,7 @@ class LimitRepetition extends Model
 {
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function budgetLimit()
@@ -21,6 +22,7 @@ class LimitRepetition extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return array
      */
     public function getDates()

@@ -9,6 +9,7 @@ use FireflyIII\Models\Reminder;
 /**
  * Class PiggyBankPart
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Collection
  */
 class PiggyBankPart

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 /**
  * Class Authenticate
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Http\Middleware
  */
 class Authenticate

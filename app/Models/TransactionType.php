@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class TransactionType
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Models
  */
 class TransactionType extends Model

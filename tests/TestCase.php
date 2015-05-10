@@ -42,7 +42,7 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
             Log::debug('Created new database.');
             touch($original);
             Artisan::call('migrate');
-            copy($original, $copy);
+
 
             // create EUR currency
             /** @var TransactionCurrency $currency */
@@ -50,8 +50,11 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
             $currency->code = 'EUR';
             $currency->save();
             Log::debug('Created new EUR currency.');
+            copy($original, $copy);
         } else {
+
             if (file_exists($copy)) {
+                Log::debug('Copied copy back over original.');
                 copy($copy, $original);
             }
         }

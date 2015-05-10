@@ -32,6 +32,7 @@ class TransactionJournal extends Model
         ];
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function bill()
@@ -40,6 +41,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function budgets()
@@ -48,6 +50,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function categories()
@@ -94,6 +97,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function transactions()
@@ -102,6 +106,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return array
      */
     public function getDates()
@@ -110,6 +115,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      *
      * @return string
@@ -120,12 +126,11 @@ class TransactionJournal extends Model
             return Crypt::decrypt($value);
         }
 
-        // @codeCoverageIgnoreStart
         return $value;
-        // @codeCoverageIgnoreEnd
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function piggyBankEvents()
@@ -134,6 +139,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param EloquentBuilder $query
      * @param Account         $account
      */
@@ -147,6 +153,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param EloquentBuilder $query
      * @param Carbon          $date
      *
@@ -158,6 +165,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param EloquentBuilder $query
      * @param Carbon          $date
      *
@@ -169,6 +177,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param EloquentBuilder $query
      * @param                 $amount
      */
@@ -185,6 +194,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param EloquentBuilder $query
      * @param Carbon          $date
      *
@@ -196,6 +206,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param EloquentBuilder $query
      * @param array           $types
      */
@@ -211,6 +222,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * Automatically includes the 'with' parameters to get relevant related
      * objects.
      *
@@ -226,6 +238,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      */
     public function setDescriptionAttribute($value)
@@ -235,6 +248,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function tags()
@@ -243,6 +257,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function transactionCurrency()
@@ -251,6 +266,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function transactionType()
@@ -259,6 +275,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function transactiongroups()
@@ -267,6 +284,7 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()

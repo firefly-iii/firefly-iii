@@ -29,6 +29,7 @@ class Account extends Model
     /**
      * @param array $fields
      *
+     *
      * @return Account|null
      */
     public static function firstOrCreateEncrypted(array $fields)
@@ -86,6 +87,7 @@ class Account extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function accountMeta()
@@ -94,6 +96,7 @@ class Account extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function accountType()
@@ -102,6 +105,7 @@ class Account extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return array
      */
     public function getDates()
@@ -110,6 +114,7 @@ class Account extends Model
     }
 
     /**
+     *
      * @param $fieldName
      *
      * @return string|null
@@ -127,6 +132,7 @@ class Account extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      *
      * @return string
@@ -144,6 +150,7 @@ class Account extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function piggyBanks()
@@ -152,6 +159,7 @@ class Account extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param EloquentBuilder $query
      * @param array           $types
      */
@@ -165,6 +173,7 @@ class Account extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param EloquentBuilder $query
      * @param string          $name
      * @param string          $value
@@ -181,6 +190,7 @@ class Account extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      */
     public function setNameAttribute($value)
@@ -190,6 +200,7 @@ class Account extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function transactions()
@@ -198,6 +209,7 @@ class Account extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()
