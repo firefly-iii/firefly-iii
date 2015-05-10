@@ -52,6 +52,7 @@ class TagRepository implements TagRepositoryInterface
 
         $withdrawals = $tag->transactionjournals()->where('transaction_type_id', $withdrawal->id)->count();
         $transfers   = $tag->transactionjournals()->where('transaction_type_id', $transfer->id)->count();
+        $deposits    = $tag->transactionjournals()->where('transaction_type_id', $deposit->id)->count();
 
         if ($tag->tagMode == 'balancingAct') {
 
@@ -73,39 +74,47 @@ class TagRepository implements TagRepositoryInterface
         }
         if ($tag->tagMode == 'advancePayment') {
 
+            // advance payments cannot accept transfers:
+            if ($journal->transaction_type_id == $transfer->id) {
+                return false;
+            }
 
-            // only if this is the only withdrawal
-            if ($journal->transaction_type_id == $withdrawal->id && $withdrawals < 1) {
+            // the first transaction to be attached to this
+            // tag is attached just like that:
+            if ($withdrawals < 1 && $deposits < 1) {
                 $journal->tags()->save($tag);
 
                 return true;
             }
 
-            // only if this is a deposit.
-            if ($journal->transaction_type_id == $deposit->id) {
+            // if withdrawal and already has a withdrawal, return false:
+            if ($journal->transaction_type_id == $withdrawal->id && $withdrawals == 1) {
+                return false;
+            }
 
-                // if this is a deposit, account must match the current only journal
-                // (if already present):
-                $currentWithdrawal = $tag->transactionjournals()->where('transaction_type_id', $withdrawal->id)->first();
-
-                if ($currentWithdrawal && $currentWithdrawal->assetAccount->id == $journal->assetAccount->id) {
+            // if already has transaction journals, must match ALL asset account id's:
+            if ($deposits > 0 || $withdrawals == 1) {
+                $match = true;
+                /** @var TransactionJournal $check */
+                foreach ($tag->transactionjournals as $check) {
+                    if ($check->assetAccount->id != $journal->assetAccount->id) {
+                        $match = false;
+                    }
+                }
+                if ($match) {
                     $journal->tags()->save($tag);
 
                     return true;
-                } else {
-                    if (is_null($currentWithdrawal)) {
-                        $journal->tags()->save($tag);
-
-                        return true;
-                    }
                 }
+
             }
 
             return false;
         }
-
+        // @codeCoverageIgnoreStart
         return false;
     }
+    // @codeCoverageIgnoreEnd
 
     /**
      * @param Tag $tag
