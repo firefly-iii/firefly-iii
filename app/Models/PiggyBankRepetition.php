@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class PiggyBankRepetition
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Models
  */
 class PiggyBankRepetition extends Model

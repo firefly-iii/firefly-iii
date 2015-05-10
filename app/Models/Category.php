@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class Category
  *
+ *
  * @package FireflyIII\Models
  */
 class Category extends Model

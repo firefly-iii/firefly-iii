@@ -4,8 +4,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
+ *
  * Class TransactionCurrency
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Models
  */
 class TransactionCurrency extends Model

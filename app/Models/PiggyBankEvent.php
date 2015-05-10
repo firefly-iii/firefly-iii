@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class PiggyBankEvent
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Models
  */
 class PiggyBankEvent extends Model

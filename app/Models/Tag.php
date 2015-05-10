@@ -67,6 +67,7 @@ class Tag extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return array
      */
     public function getDates()
@@ -75,6 +76,7 @@ class Tag extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      *
      * @return string
@@ -85,6 +87,7 @@ class Tag extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      *
      * @return string
@@ -95,6 +98,7 @@ class Tag extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      */
     public function setDescriptionAttribute($value)
@@ -103,6 +107,7 @@ class Tag extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $value
      */
     public function setTagAttribute($value)
@@ -111,6 +116,7 @@ class Tag extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function transactionjournals()
@@ -119,6 +125,7 @@ class Tag extends Model
     }
 
     /**
+     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()

@@ -9,6 +9,7 @@ use Watson\Validating\ValidatingTrait;
 /**
  * Class Transaction
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Models
  */
 class Transaction extends Model

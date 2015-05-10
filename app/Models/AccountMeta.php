@@ -6,6 +6,7 @@ use Watson\Validating\ValidatingTrait;
 /**
  * Class AccountMeta
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Models
  */
 class AccountMeta extends Model
@@ -22,6 +23,7 @@ class AccountMeta extends Model
     protected $table    = 'account_meta';
 
     /**
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function account()

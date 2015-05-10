@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class AccountType
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Models
  */
 class AccountType extends Model

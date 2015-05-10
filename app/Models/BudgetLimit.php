@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class BudgetLimit
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Models
  */
 class BudgetLimit extends Model
