@@ -30,7 +30,7 @@ class ConnectJournalToPiggyBank
      *
      * @param  JournalCreated $event
      *
-     * @return void
+     * @return boolean
      */
     public function handle(JournalCreated $event)
     {
@@ -38,7 +38,7 @@ class ConnectJournalToPiggyBank
         $journal     = $event->journal;
         $piggyBankId = $event->piggyBankId;
         if (intval($piggyBankId) < 1) {
-            return;
+            return false;
         }
 
         Log::debug('JournalCreated event: ' . $journal->id . ', ' . $piggyBankId);
@@ -47,20 +47,20 @@ class ConnectJournalToPiggyBank
         $piggyBank = Auth::user()->piggybanks()->where('piggy_banks.id', $piggyBankId)->first(['piggy_banks.*']);
 
         if (is_null($piggyBank) || $journal->transactionType->type != 'Transfer') {
-            return;
+            return false;
         }
         Log::debug('Found a piggy bank');
         $amount = $journal->amount;
         Log::debug('Amount: ' . $amount);
         if ($amount == 0) {
-            return;
+            return false;
         }
         // update piggy bank rep for date of transaction journal.
         $repetition = $piggyBank->piggyBankRepetitions()->relevantOnDate($journal->date)->first();
         if (is_null($repetition)) {
             Log::debug('Found no repetition for piggy bank for date ' . $journal->date->format('Y M d'));
 
-            return;
+            return false;
         }
 
         Log::debug('Found rep! ' . $repetition->id);
@@ -91,6 +91,7 @@ class ConnectJournalToPiggyBank
                 'amount'                 => $amount
             ]
         );
+        return true;
 
     }
 
