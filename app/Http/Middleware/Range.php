@@ -48,7 +48,7 @@ class Range
      */
     public function handle(Request $request, Closure $theNext)
     {
-        if ($this->auth->check() && App::environment() != 'testing') {
+        if ($this->auth->check()) {
 
             // ignore preference. set the range to be the current month:
             if (!Session::has('start') && !Session::has('end')) {

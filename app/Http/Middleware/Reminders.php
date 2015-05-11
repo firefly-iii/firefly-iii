@@ -46,7 +46,7 @@ class Reminders
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($this->auth->check() && !$request->isXmlHttpRequest() && App::environment() != 'testing') {
+        if ($this->auth->check() && !$request->isXmlHttpRequest()) {
             // do reminders stuff.
             $piggyBanks = $this->auth->user()->piggyBanks()->where('remind_me', 1)->get();
             $today      = new Carbon;
