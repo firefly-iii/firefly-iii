@@ -46,8 +46,6 @@ class ReminderHelper implements ReminderHelperInterface
                 'leftToSave'  => $left,
             ];
 
-
-            // create one:
             $reminder = new Reminder;
             $reminder->user()->associate(Auth::user());
             $reminder->startdate = $start;

@@ -7,6 +7,7 @@ use Log;
 /**
  * Class RescanJournal
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Handlers\Events
  */
 class RescanJournal
