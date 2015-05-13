@@ -13,7 +13,7 @@
     <!-- /.navbar-header -->
 
 
-    <ul class="nav navbar-top-links navbar-right">
+    <ul class="nav navbar-top-links navbar-right hidden-xs">
 
         <!-- reminders -->
         {% if reminders|length > 0 %}
@@ -68,16 +68,15 @@
 
         <!-- /.dropdown -->
 
-
     </ul>
-    <p class="navbar-text navbar-right" id="daterange"><span>&nbsp;</span> <b class="caret"></b></p>
+    <p class="navbar-text navbar-right hidden-xs" id="daterange"><span>&nbsp;</span> <b class="caret"></b></p>
 
 
     <!-- /.navbar-top-links -->
     <div class="navbar-default sidebar" role="navigation">
         <div class="sidebar-nav navbar-collapse">
             <ul class="nav" id="side-menu">
-                <li class="sidebar-search">
+                <li class="sidebar-search hidden-xs">
                     <form action="{{ route('search') }}" method="GET" class="form-inline">
                         <div class="input-group custom-search-form">
                             <input type="text" name="q" class="form-control" value="{% if Input.get('q') %}{{ Input.get('q') }}{% endif %}"
@@ -174,6 +173,8 @@
                     </ul>
                     <!-- /.nav-second-level -->
                 </li>
+                <!-- profile, again-->
+                <!-- reminders, again-->
             </ul>
         </div>
         <!-- /.sidebar-collapse -->
