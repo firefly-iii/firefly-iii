@@ -28,6 +28,7 @@ class Help implements HelpInterface
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $route
      *
      * @return array
