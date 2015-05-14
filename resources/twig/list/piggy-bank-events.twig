@@ -3,8 +3,8 @@
         {% if showPiggyBank %}
             <th>Piggy bank</th>
         {% endif %}
-        <th>Date</th>
-        <th>Amount</th>
+        <th>{{ trans('list.date') }}</th>
+        <th>{{ trans('list.amount') }}</th>
     </tr>
     {% for event in events %}
     <tr>
