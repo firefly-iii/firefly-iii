@@ -23,7 +23,7 @@
                 </p>
                 <p class="small">
                 {% if category.transactionjournals|length > 0 %}
-                    {{ Lang.choice('form.category_keep_transactions', category.transactionjournals|length) }}
+                    {{ Lang.choice('form.category_keep_transactions', category.transactionjournals|length, {count: category.transactionjournals|length}) }}
                 {% endif %}
                 </p>
             </div>

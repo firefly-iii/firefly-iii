@@ -51,10 +51,13 @@ return [
 
     'permDeleteWarning'           => 'Dingen verwijderen uit Firefly is permanent en kan niet ongedaan gemaakt worden.',
     'also_delete_transactions'    => 'Ook de enige transactie verbonden aan deze rekening wordt verwijderd.' .
-                                     '|Ook alle transacties verbonden aan deze rekening worden verwijderd.',
+                                     '|Ook alle :count transacties verbonden aan deze rekening worden verwijderd.',
     'also_delete_piggyBanks'      => 'Ook het spaarpotje verbonden aan deze rekening wordt verwijderd.' .
-                                     '|Ook alle spaarpotjes verbonden aan deze rekening worden verwijderd.',
-    'bill_keep_transactions'      => 'De transactie verbonden aan deze rekening blijft bewaard.|De transacties verbonden aan deze rekening blijven bewaard.',
-    'budget_keep_transactions'    => 'De transactie verbonden aan dit budget blijft bewaard.|De transacties verbonden aan dit budget blijven bewaard.',
-    'category_keep_transactions'  => 'De transactie verbonden aan deze categorie blijft bewaard.|De transacties verbonden aan deze categorie blijven bewaard.',
+                                     '|Ook alle :count spaarpotjes verbonden aan deze rekening worden verwijderd.',
+    'bill_keep_transactions'      => 'De transactie verbonden aan deze rekening blijft bewaard.' .
+                                     '|De :count transacties verbonden aan deze rekening blijven bewaard.',
+    'budget_keep_transactions'    => 'De transactie verbonden aan dit budget blijft bewaard.' .
+                                     '|De :count transacties verbonden aan dit budget blijven bewaard.',
+    'category_keep_transactions'  => 'De transactie verbonden aan deze categorie blijft bewaard.' .
+                                     '|De :count transacties verbonden aan deze categorie blijven bewaard.',
 ];

@@ -22,10 +22,10 @@
                 </p>
                 <p class="small">
                 {% if account.transactions|length > 0 %}
-                    {{ Lang.choice('form.also_delete_transactions', account.transactions|length) }}
+                    {{ Lang.choice('form.also_delete_transactions', account.transactions|length, {count: account.transactions|length}) }}
                 {% endif %}<br />
                 {% if account.piggyBanks|length > 0 %}
-                    {{ Lang.choice('form.also_delete_piggyBanks', account.piggyBanks|length) }}
+                    {{ Lang.choice('form.also_delete_piggyBanks', account.piggyBanks|length, {count: account.piggyBanks|length}) }}
                 {% endif %}
                 </p>
             </div>

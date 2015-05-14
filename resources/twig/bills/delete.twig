@@ -22,7 +22,7 @@
                 </p>
                 <p class="small">
                 {% if bill.transactionjournals|length > 0 %}
-                    {{ Lang.choice('form.bill_keep_transactions', bill.transactionjournals|length) }}
+                    {{ Lang.choice('form.bill_keep_transactions', bill.transactionjournals|length,{count: bill.transactionjournals|length}) }}
                 {% endif %}
                 </p>
             </div>

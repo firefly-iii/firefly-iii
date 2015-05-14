@@ -24,7 +24,7 @@
 
                 <p class="small">
                 {% if budget.transactionjournals|length > 0 %}
-                    {{ Lang.choice('form.budget_keep_transactions', budget.transactionjournals|length) }}
+                    {{ Lang.choice('form.budget_keep_transactions', budget.transactionjournals|length, {count: budget.transactionjournals|length}) }}
                 {% endif %}
                 </p>
             </div>
