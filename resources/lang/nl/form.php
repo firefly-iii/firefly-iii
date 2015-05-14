@@ -24,5 +24,10 @@ return [
     'returnHere'                  => 'Keer terug',
     'returnHereExplanation'       => 'Terug naar deze pagina na het opslaan.',
     'returnHereUpdateExplanation' => 'Terug naar deze pagina na het wijzigen.',
-
+    'description'                 => 'Omschrijving',
+    'expense_account'             => 'Crediteur',
+    'amount'                      => 'Bedrag',
+    'date'                        => 'Datum',
+    'category'                    => 'Categorie',
+    'tags'                        => 'Tags'
 ];

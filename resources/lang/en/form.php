@@ -24,5 +24,10 @@ return [
     'returnHere'                  => 'Return here',
     'returnHereExplanation'       => 'After storing, return here to create another one.',
     'returnHereUpdateExplanation' => 'After updating, return here.',
-
+    'description'                 => 'Description',
+    'expense_account'             => 'Expense account',
+    'amount'                      => 'Amount',
+    'date'                        => 'Date',
+    'category'                    => 'Category',
+    'tags'                        => 'Tags'
 ];
