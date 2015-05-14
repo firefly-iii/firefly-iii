@@ -61,7 +61,7 @@
                     {% endif %}
                 </td>
                 <td>
-                    {{journal.date.format('j F Y')}}
+                    {{journal.date.formatLocalized(monthAndDayFormat)}}
                 </td>
                 <td class="hidden-xs">
                     {% if journal.transactions[0].account.accountType.type == 'Cash account' %}

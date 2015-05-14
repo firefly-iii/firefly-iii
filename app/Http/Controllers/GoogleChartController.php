@@ -171,7 +171,7 @@ class GoogleChartController extends Controller
                 $spent     = $expenses > floatval($repetition->amount) ? 0 : $expenses;
                 $overspent = $expenses > floatval($repetition->amount) ? $expenses - floatval($repetition->amount) : 0;
                 $allEntries->push(
-                    [$budget->name . ' (' . $repetition->startdate->format('j M Y') . ')',
+                    [$budget->name . ' (' . $repetition->startdate->formatLocalized($this->monthAndDayFormat) . ')',
                      $left,
                      $spent,
                      $overspent
