@@ -137,7 +137,7 @@ class AccountController extends Controller
      */
     public function index(AccountRepositoryInterface $repository, $what)
     {
-        $subTitle     = Config::get('firefly.subTitlesByIdentifier.' . $what);
+        $subTitle     = trans('firefly.' . $what.'_accounts');
         $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
         $types        = Config::get('firefly.accountTypesByIdentifier.' . $what);
         $accounts     = $repository->getAccounts($types);

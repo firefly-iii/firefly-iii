@@ -32,6 +32,9 @@ return [
     'tags'                        => 'Tags',
     'deletePermanently'           => 'Delete permanently',
     'cancel'                      => 'Cancel',
+    'targetdate'                  => 'Target date',
+    'remind_me'                   => 'Remind me',
+    'reminder'                    => 'Remind me every',
 
     'delete_account'              => 'Delete account ":name"',
     'delete_bill'                 => 'Delete bill ":name"',

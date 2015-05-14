@@ -27,5 +27,5 @@ return [
     'deposit'        => 'Deposit',
     'transfer'       => 'Transfer',
     'type'           => 'Type',
-    'completed' => 'Completed',
+    'completed'      => 'Completed',
 ];

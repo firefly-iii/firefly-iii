@@ -32,6 +32,9 @@ return [
     'tags'                        => 'Tags',
     'deletePermanently'           => 'Verwijderen',
     'cancel'                      => 'Annuleren',
+    'targetdate'                  => 'Doeldatum',
+    'remind_me'                   => 'Help me herinneren',
+    'reminder'                    => 'Herinner me elke',
 
     'delete_account'              => 'Verwijder rekening ":name"',
     'delete_bill'                 => 'Verwijder rekening ":name"',

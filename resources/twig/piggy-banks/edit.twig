@@ -15,7 +15,7 @@
             <div class="panel-body">
 
                 {{ ExpandedForm.text('name') }}
-                {{ ExpandedForm.select('account_id',accounts,null,{'label' : 'Save on account'}) }}
+                {{ ExpandedForm.select('account_id',accounts,null,{'label' : 'saveOnAccount'|_}) }}
                 {{ ExpandedForm.amount('targetamount') }}
 
             </div>
@@ -29,8 +29,8 @@
             </div>
             <div class="panel-body">
                 {{ ExpandedForm.date('targetdate') }}
-                {{ ExpandedForm.checkbox('remind_me','1',preFilled.remind_me,{'label' : 'Remind me'}) }}
-                {{ ExpandedForm.select('reminder',periods,preFilled.reminder,{'label' : 'Remind every'}) }}
+                {{ ExpandedForm.checkbox('remind_me','1',preFilled.remind_me) }}
+                {{ ExpandedForm.select('reminder',periods,preFilled.reminder) }}
             </div>
         </div>
 
