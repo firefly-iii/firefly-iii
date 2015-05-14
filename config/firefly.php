@@ -21,7 +21,7 @@ return [
         'defaultAsset' => 'Default asset account',
         'sharedAsset'  => 'Shared asset account',
         'savingAsset'  => 'Savings account',
-        'ccAsset'  => 'Credit card',
+        'ccAsset'      => 'Credit card',
     ],
 
     'range_to_text'            => [
@@ -32,7 +32,7 @@ return [
         '6M'     => 'half year',
         'custom' => '(custom)'
     ],
-    'ccTypes' => [
+    'ccTypes'                  => [
         'monthlyFull' => 'Full payment every month'
     ],
     'range_to_name'            => [
@@ -77,9 +77,9 @@ return [
         ],
     'accountTypeByIdentifier'  =>
         [
-            'asset'      => 'Asset account',
-            'expense'    => 'Expense account',
-            'revenue'    => 'Revenue account'
+            'asset'   => 'Asset account',
+            'expense' => 'Expense account',
+            'revenue' => 'Revenue account'
         ],
     'shortNamesByFullName'     =>
         [
@@ -89,6 +89,10 @@ return [
             'Beneficiary account' => 'expense',
             'Revenue account'     => 'revenue',
             'Cash account'        => 'cash',
-        ]
+        ],
+    'lang'                     => [
+        'en' => 'English',
+        'nl' => 'Nederlands'
+    ],
 
 ];
