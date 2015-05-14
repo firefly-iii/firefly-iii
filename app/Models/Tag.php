@@ -77,6 +77,7 @@ class Tag extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return string
@@ -88,6 +89,7 @@ class Tag extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return string
@@ -99,6 +101,7 @@ class Tag extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setDescriptionAttribute($value)
@@ -108,6 +111,7 @@ class Tag extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setTagAttribute($value)

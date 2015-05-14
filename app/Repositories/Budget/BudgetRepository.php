@@ -250,7 +250,8 @@ class BudgetRepository implements BudgetRepositoryInterface
                            ->before($end)
                            ->lessThan(0)
                            ->transactionTypes(['Withdrawal'])
-            ->sum('transactions.amount');
+                           ->sum('transactions.amount');
+
         return floatval($noBudgetSet) * -1;
     }
 

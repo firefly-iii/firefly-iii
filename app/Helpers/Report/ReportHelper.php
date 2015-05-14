@@ -118,10 +118,10 @@ class ReportHelper implements ReportHelperInterface
         $sharedAccounts = [];
         if ($showSharedReports === false) {
             $sharedCollection = Auth::user()->accounts()
-                                     ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
-                                     ->where('account_meta.name', '=', 'accountRole')
-                                     ->where('account_meta.data', '=', json_encode('sharedAsset'))
-                                     ->get(['accounts.id']);
+                                    ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
+                                    ->where('account_meta.name', '=', 'accountRole')
+                                    ->where('account_meta.data', '=', json_encode('sharedAsset'))
+                                    ->get(['accounts.id']);
 
             foreach ($sharedCollection as $account) {
                 $sharedAccounts[] = $account->id;

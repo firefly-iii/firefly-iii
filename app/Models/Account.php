@@ -133,6 +133,7 @@ class Account extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return string
@@ -160,6 +161,7 @@ class Account extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      * @param array           $types
      */
@@ -174,6 +176,7 @@ class Account extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      * @param string          $name
      * @param string          $value
@@ -191,6 +194,7 @@ class Account extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setNameAttribute($value)

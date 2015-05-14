@@ -91,6 +91,7 @@ class ConnectJournalToPiggyBank
                 'amount'                 => $amount
             ]
         );
+
         return true;
 
     }

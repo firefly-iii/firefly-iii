@@ -478,6 +478,7 @@ class JournalRepositoryTest extends TestCase
         $this->assertEquals($result->description, $data['description']);
         $this->assertEquals($result->amount, 50);
     }
+
     /**
      * @covers FireflyIII\Repositories\Journal\JournalRepository::update
      * @covers FireflyIII\Repositories\Journal\JournalRepository::updateTags

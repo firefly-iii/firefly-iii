@@ -380,7 +380,7 @@ class TagRepositoryTest extends TestCase
      */
     public function testUpdate()
     {
-        $tag          = FactoryMuffin::create('FireflyIII\Models\Tag');
+        $tag = FactoryMuffin::create('FireflyIII\Models\Tag');
 
 
         $data = [

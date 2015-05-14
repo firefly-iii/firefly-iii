@@ -130,8 +130,8 @@ class ReportHelperTest extends TestCase
 
     public function testYearBalanceReport()
     {
-        $date = new Carbon('2015-01-01');
-        $user = FactoryMuffin::create('FireflyIII\User');
+        $date      = new Carbon('2015-01-01');
+        $user      = FactoryMuffin::create('FireflyIII\User');
         $setShared = [];
         $setNormal = [];
 
@@ -171,7 +171,7 @@ class ReportHelperTest extends TestCase
         $this->be($user);
 
         $result = $this->object->yearBalanceReport($date, false);
-        foreach($result as $entry) {
+        foreach ($result as $entry) {
             // everything is hidden:
             $this->assertTrue($entry['hide']);
             // nothing is shared:
@@ -182,8 +182,8 @@ class ReportHelperTest extends TestCase
 
     public function testYearBalanceReportWithShared()
     {
-        $date = new Carbon('2015-01-01');
-        $user = FactoryMuffin::create('FireflyIII\User');
+        $date      = new Carbon('2015-01-01');
+        $user      = FactoryMuffin::create('FireflyIII\User');
         $setShared = [];
         $setNormal = [];
 
@@ -223,7 +223,7 @@ class ReportHelperTest extends TestCase
         $this->be($user);
 
         $result = $this->object->yearBalanceReport($date, true);
-        foreach($result as $entry) {
+        foreach ($result as $entry) {
             // everything is hidden:
             $this->assertTrue($entry['hide']);
             // nothing is shared:

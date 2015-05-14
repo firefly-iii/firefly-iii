@@ -3,7 +3,6 @@
 namespace FireflyIII\Http\Middleware;
 
 
-use App;
 use Closure;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;

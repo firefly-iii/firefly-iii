@@ -151,8 +151,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     {
         // split query to make it work in sqlite:
         $set = PiggyBank::
-                 leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.id')
-                 ->where('accounts.user_id', Auth::user()->id)->get(['piggy_banks.*']);
+        leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.id')
+                        ->where('accounts.user_id', Auth::user()->id)->get(['piggy_banks.*']);
         foreach ($set as $e) {
             $e->order = 0;
             $e->save();

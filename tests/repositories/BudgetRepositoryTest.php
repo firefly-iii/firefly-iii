@@ -363,7 +363,7 @@ class BudgetRepositoryTest extends TestCase
      */
     public function testUpdateLimitAmountExisting()
     {
-        $budgetLimit= FactoryMuffin::create('FireflyIII\Models\BudgetLimit');
+        $budgetLimit = FactoryMuffin::create('FireflyIII\Models\BudgetLimit');
 
         $result = $this->object->updateLimitAmount($budgetLimit->budget, $budgetLimit->startdate, 100);
 
@@ -376,7 +376,7 @@ class BudgetRepositoryTest extends TestCase
      */
     public function testUpdateLimitAmountZero()
     {
-        $budgetLimit= FactoryMuffin::create('FireflyIII\Models\BudgetLimit');
+        $budgetLimit = FactoryMuffin::create('FireflyIII\Models\BudgetLimit');
 
         $result = $this->object->updateLimitAmount($budgetLimit->budget, $budgetLimit->startdate, 0);
 

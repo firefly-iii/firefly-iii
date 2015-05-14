@@ -391,6 +391,7 @@ class JournalRepository implements JournalRepositoryInterface
             App::abort(500, '"from"-account is null, so we cannot continue!');
             // @codeCoverageIgnoreStart
         }
+
         // @codeCoverageIgnoreEnd
 
         return [$from, $to];

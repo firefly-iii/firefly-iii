@@ -49,7 +49,7 @@ class ConnectJournalToPiggyBankTest extends TestCase
         $user = FactoryMuffin::create('FireflyIII\User');
         $this->be($user);
 
-        $journal               = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
         /** @var \FireflyIII\Models\PiggyBank $piggyBank */
         $piggyBank             = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
         $account1              = FactoryMuffin::create('FireflyIII\Models\Account');
@@ -64,7 +64,7 @@ class ConnectJournalToPiggyBankTest extends TestCase
         // because the event handler responds to this piggy bank, we must remove
         // the piggy bank repetition:
         /** @var \FireflyIII\Models\PiggyBankRepetition $rep */
-        foreach($piggyBank->piggyBankRepetitions()->get() as $rep) {
+        foreach ($piggyBank->piggyBankRepetitions()->get() as $rep) {
             $rep->forceDelete();
         }
 

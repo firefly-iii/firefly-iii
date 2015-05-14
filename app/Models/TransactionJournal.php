@@ -116,6 +116,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return string
@@ -140,6 +141,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      * @param Account         $account
      */
@@ -154,6 +156,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      * @param Carbon          $date
      *
@@ -166,6 +169,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      * @param Carbon          $date
      *
@@ -178,6 +182,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      * @param                 $amount
      */
@@ -195,6 +200,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      * @param Carbon          $date
      *
@@ -207,6 +213,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      * @param array           $types
      */
@@ -239,6 +246,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setDescriptionAttribute($value)

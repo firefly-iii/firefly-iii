@@ -111,6 +111,7 @@ class TagRepository implements TagRepositoryInterface
 
             return false;
         }
+
         // @codeCoverageIgnoreStart
         return false;
     }

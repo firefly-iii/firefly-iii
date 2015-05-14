@@ -79,6 +79,7 @@ class Category extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setNameAttribute($value)
@@ -89,6 +90,7 @@ class Category extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return string
