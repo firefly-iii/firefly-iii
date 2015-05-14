@@ -91,4 +91,5 @@ return [
     'summary'                 => 'Summary',
     'sum'                     => 'Sum',
     'average'                 => 'Average',
+    'balanceFor'              => 'Balance for :name',
 ];

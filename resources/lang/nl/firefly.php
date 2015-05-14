@@ -91,4 +91,5 @@ return [
     'summary'                 => 'Samenvatting',
     'sum'                     => 'Som',
     'average'                 => 'Gemiddeld',
+    'balanceFor'              => 'Saldo op :name',
 ];
