@@ -25,7 +25,7 @@
         </td>
         {% if category.lastActivity %}
             <td data-value="{{ category.lastActivity.format('U') }}">
-                {{category.lastActivity.format('jS F Y') }}
+                {{category.lastActivity.formatLocalized(monthAndDayFormat) }}
             </td>
         {% else %}
             <td data-value="0">

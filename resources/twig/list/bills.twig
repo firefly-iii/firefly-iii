@@ -37,21 +37,21 @@
         </td>
             {% if entry.lastFoundMatch %}
             <td data-value="{{ entry.lastFoundMatch.format('U') }}">
-                {{entry.lastFoundMatch.format('j F Y')}}
+                {{entry.lastFoundMatch.formatLocalized(monthAndDayFormat)}}
             </td>
             {% else %}
             <td data-value="0">
-                <em>Unknown</em>
+                <em>{{ 'unknown'|_ }}</em>
             </td>
             {% endif %}
 
             {% if entry.nextExpectedMatch%}
             <td data-value="{{entry.nextExpectedMatch.format('U')}}">
-                {{entry.nextExpectedMatch.format('j F Y')}}
+                {{entry.nextExpectedMatch.formatLocalized(monthAndDayFormat)}}
             </td>
             {% else %}
             <td data-value="0">
-                <em>Unknown</em>
+                <em>{{ 'unknown'|_ }}</em>
             </td>
             {% endif %}
 
@@ -70,7 +70,7 @@
              {% endif %}
          </td>
         <td data-value="{{ entry.repeat_freq }}{{ entry.skip }}">
-            {{ entry.repeat_freq }}
+            {{ entry.repeat_freq|_ }}
              {% if entry.skip > 0 %}
                 skips over {{entry.skip}}
              {% endif %}

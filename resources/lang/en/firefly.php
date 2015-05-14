@@ -78,6 +78,13 @@ return [
     'newBalance'               => 'New balance',
     'overview'                 => 'Overview',
     'saveOnAccount'            => 'Save on account',
+    'unknown'                  => 'Unknown',
+    'daily'                    => 'Daily',
+    'weekly'                   => 'Weekly',
+    'monthly'                  => 'Monthly',
+    'quarterly'                => 'Quarterly',
+    'half-year'                => 'Every six months',
+    'yearly'                   => 'Yearly',
 
     // charts:
     'dayOfMonth'               => 'Day of the month',

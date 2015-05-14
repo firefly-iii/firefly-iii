@@ -10,6 +10,7 @@ return [
     'lastActivity'   => 'Last activity',
     'balanceDiff'    => 'Balance difference between :start and :end',
     'matchedOn'      => 'Matched on',
+    'matchesOn'      => 'Matched on',
     'matchingAmount' => 'Amount',
     'lastMatch'      => 'Last match',
     'expectedMatch'  => 'Expected match',

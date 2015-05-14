@@ -78,6 +78,13 @@ return [
     'newBalance'               => 'Nieuw saldo',
     'overview'                 => 'Overzicht',
     'saveOnAccount'            => 'Sparen op rekening',
+    'unknown'                  => 'Onbekend',
+    'daily'                    => 'Dagelijks',
+    'weekly'                   => 'Wekelijks',
+    'monthly'                  => 'Maandelijks',
+    'quarterly'                => 'Elk kwartaal',
+    'half-year'                => 'Elk half jaar',
+    'yearly'                   => 'Jaarlijks',
 
     // charts:
     'dayOfMonth'               => 'Dag vd maand',
@@ -111,13 +118,13 @@ return [
 
     // some extra help:
     'accountExtraHelp_asset'   => '',
-    'accountExtraHelp_expense' => 'Een crediteur is een persoon of een bedrijf waar je geld aan moet betalen. Je staat bij ze in het krijt. Een verwarrende'.
-                                  ' term misschien, maar zo werkt het nou eenmaal. De supermarkt, je huurbaas of de bank zijn crediteuren. Jouw '.
-                                  'geld (krediet) gaat naar hen toe. De term komt uit de wereld van de boekhouding. De uitgaves die je hier ziet zijn '.
+    'accountExtraHelp_expense' => 'Een crediteur is een persoon of een bedrijf waar je geld aan moet betalen. Je staat bij ze in het krijt. Een verwarrende' .
+                                  ' term misschien, maar zo werkt het nou eenmaal. De supermarkt, je huurbaas of de bank zijn crediteuren. Jouw ' .
+                                  'geld (krediet) gaat naar hen toe. De term komt uit de wereld van de boekhouding. De uitgaves die je hier ziet zijn ' .
                                   'positief, want je kijkt uit hun perspectief. Zodra jij afrekent in een winkel, komt het geld er bij hen bij (positief).',
-    'accountExtraHelp_revenue' => 'Als je geld krijgt van een bedrijf of een persoon is dat een debiteur. '.
+    'accountExtraHelp_revenue' => 'Als je geld krijgt van een bedrijf of een persoon is dat een debiteur. ' .
                                   'Dat kan salaris zijn, of een andere betaling. ' .
-                                  ' Ze hebben een schuld (debet) aan jou. De term komt uit de wereld van de boekhouding.'.
-                                  ' De inkomsten die je hier ziet zijn negatief, want je kijkt uit hun perspectief. Zodra een debiteur geld naar jou '.
+                                  ' Ze hebben een schuld (debet) aan jou. De term komt uit de wereld van de boekhouding.' .
+                                  ' De inkomsten die je hier ziet zijn negatief, want je kijkt uit hun perspectief. Zodra een debiteur geld naar jou ' .
                                   'overmaakt gaat het er bij hen af (negatief).',
 ];

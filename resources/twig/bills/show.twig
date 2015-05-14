@@ -49,9 +49,9 @@
                         <td>Next expected match</td>
                         <td>
                             {% if bill.nextExpectedMatch %}
-                                {{bill.nextExpectedMatch.format('j F Y')}}
+                                {{bill.nextExpectedMatch.formatLocalized(monthAndDayFormat)}}
                             {% else %}
-                                <em>Unknown</em>
+                                <em>{{ 'unknown'|_ }}</em>
                             {% endif %}
                             </td>
                     </tr>
