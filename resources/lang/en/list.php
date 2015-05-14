@@ -25,5 +25,7 @@ return [
     'bill'           => 'Bill',
     'withdrawal'     => 'Withdrawal',
     'deposit'        => 'Deposit',
-    'transfer'       => 'Transfer'
+    'transfer'       => 'Transfer',
+    'type'           => 'Type',
+    'completed' => 'Completed',
 ];

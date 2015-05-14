@@ -31,7 +31,7 @@ class PiggyBankController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('title', 'Piggy banks');
+        View::share('title', trans('firefly.piggyBanks'));
         View::share('mainTitleIcon', 'fa-sort-amount-asc');
     }
 

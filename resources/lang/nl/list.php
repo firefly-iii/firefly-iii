@@ -25,5 +25,8 @@ return [
     'bill'           => 'Rekening',
     'withdrawal'     => 'Uitgave',
     'deposit'        => 'Inkomsten',
-    'transfer'       => 'Overschrijving'
+    'transfer'       => 'Overschrijving',
+    'type'           => 'Type',
+    'completed'      => 'Opgeslagen'
+
 ];

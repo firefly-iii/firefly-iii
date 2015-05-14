@@ -22,7 +22,7 @@ class PreferencesController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('title', 'Preferences');
+        View::share('title', trans('firefly.preferences'));
         View::share('mainTitleIcon', 'fa-gear');
     }
 

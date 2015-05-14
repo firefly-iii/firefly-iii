@@ -10,38 +10,38 @@
             </div>
                 <table class="table table-striped table-bordered">
                     <tr>
-                        <td>Date</td>
-                        <td>{{ journal.date.format('jS F Y') }}</td>
+                        <td>{{ trans('list.date') }}</td>
+                        <td>{{ journal.date.formatLocalized(monthAndDayFormat) }}</td>
                     </tr>
                     <tr>
-                        <td>Type</td>
-                        <td>{{ journal.transactiontype.type }}</td>
+                        <td>{{ trans('list.type') }}</td>
+                        <td>{{ journal.transactiontype.type|_ }}</td>
                     </tr>
                     <tr>
-                        <td>Completed</td>
+                        <td>{{ trans('list.completed') }}</td>
                         <td>
                             {% if journal.completed %}
-                            <span class="text-success">Yes</span>
+                            <span class="text-success">{{ 'yes'|_ }}</span>
                             {% else %}
-                            <span class="text-danger">No</span>
+                            <span class="text-danger">{{ 'no'|_ }}</span>
                             {% endif %}
                         </td>
                     </tr>
                     {% for budget in journal.budgets %}
                         <tr>
-                            <td>Budget</td>
+                            <td>{{ 'budget'|_ }}</td>
                             <td><a href="{{route('budgets.show',budget.id)}}">{{ budget.name }}</a></td>
                         </tr>
                     {% endfor %}
                     {% for category in journal.categories %}
                         <tr>
-                            <td>Category</td>
+                            <td>{{ 'category'|_ }}</td>
                             <td><a href="{{route('categories.show',category.id)}}">{{ category.name }}</a></td>
                         </tr>
                     {% endfor %}
                     {% if journal.tags|length > 0 %}
                         <tr>
-                            <td>Tags</td>
+                            <td>{{ 'tags'|_ }}</td>
                             <td>
                                 {% for tag in journal.tags %}
 
@@ -67,7 +67,7 @@
         {% if journal.piggyBankEvents|length > 0 %}
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    Piggy banks
+                    {{ 'piggyBanks'|_ }}
                 </div>
                 <div class="panel-body">
                     {% include 'list/piggy-bank-events' with {'events': journal.piggyBankEvents, 'showPiggyBank':true} %}
@@ -96,15 +96,15 @@
                 {% if t.account.accounttype.type == 'Revenue account' %}
                     <i class="fa fa-download fa-fw"></i>
                 {% endif %}
-                <a href="{{route('accounts.show',t.account.id)}}">{{ t.account.name }}</a><br /><small>{{ t.account.accounttype.description }}</small>
+                <a href="{{route('accounts.show',t.account.id)}}">{{ t.account.name }}</a> <small>({{ t.account.accounttype.type|_ }})</small>
             </div>
                 <table class="table table-striped table-bordered">
                     <tr>
-                        <td>Amount</td>
+                        <td>{{ 'amount'|_ }}</td>
                         <td>{{ t|formatTransaction }}</td>
                     </tr>
                     <tr>
-                        <td>New balance</td>
+                        <td>{{ 'newBalance'|_ }}</td>
                         <td>{{ t.before|formatAmount }} &rarr; {{ t.after|formatAmount }}</td>
                     </tr>
                     {% if t.description %}

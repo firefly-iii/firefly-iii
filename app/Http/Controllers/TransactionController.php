@@ -30,7 +30,7 @@ class TransactionController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('title', 'Transactions');
+        View::share('title', trans('firefly.transactions'));
         View::share('mainTitleIcon', 'fa-repeat');
     }
 
@@ -182,19 +182,19 @@ class TransactionController extends Controller
             case 'expenses':
             case 'withdrawal':
                 $subTitleIcon = 'fa-long-arrow-left';
-                $subTitle     = 'Expenses';
+                $subTitle     = trans('firefly.expenses');
                 $types        = ['Withdrawal'];
                 break;
             case 'revenue':
             case 'deposit':
                 $subTitleIcon = 'fa-long-arrow-right';
-                $subTitle     = 'Revenue, income and deposits';
+                $subTitle     = trans('firefly.income');
                 $types        = ['Deposit'];
                 break;
             case 'transfer':
             case 'transfers':
                 $subTitleIcon = 'fa-exchange';
-                $subTitle     = 'Transfers';
+                $subTitle     = trans('firefly.transfers');
                 $types        = ['Transfer'];
                 break;
         }
