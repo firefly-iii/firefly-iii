@@ -36,6 +36,15 @@ return [
     'remind_me'                   => 'Help me herinneren',
     'reminder'                    => 'Herinner me elke',
 
+    'store_new_withdrawal'        => 'Nieuwe uitgave opslaan',
+    'store_new_deposit'           => 'Nieuwe inkomsten opslaan',
+    'store_new_transfer'          => 'Nieuwe overschrijving opslaan',
+    'add_new_withdrawal'          => 'Maak nieuwe uitgave',
+    'add_new_deposit'             => 'Maak nieuwe inkomsten',
+    'add_new_transfer'            => 'Maak nieuwe overschrijving',
+    'noPiggybank'                 => '(geen spaarpotje)',
+    'noBudget'                    => '(geen budget)',
+
     'delete_account'              => 'Verwijder rekening ":name"',
     'delete_bill'                 => 'Verwijder rekening ":name"',
     'delete_budget'               => 'Verwijder budget ":name"',

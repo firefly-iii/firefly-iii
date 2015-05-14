@@ -36,6 +36,15 @@ return [
     'remind_me'                   => 'Remind me',
     'reminder'                    => 'Remind me every',
 
+    'store_new_withdrawal'        => 'Store new withdrawal',
+    'store_new_deposit'           => 'Store new deposit',
+    'store_new_transfer'          => 'Store new transfer',
+    'add_new_withdrawal'          => 'Add a new withdrawal',
+    'add_new_deposit'             => 'Add a new deposit',
+    'add_new_transfer'            => 'Add a new transfer',
+    'noPiggybank'                 => '(no piggy bank)',
+    'noBudget'                    => '(no budget)',
+
     'delete_account'              => 'Delete account ":name"',
     'delete_bill'                 => 'Delete bill ":name"',
     'delete_budget'               => 'Delete budget ":name"',

@@ -44,12 +44,12 @@ class TransactionController extends Controller
     {
         $accounts   = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
         $budgets    = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
-        $budgets[0] = '(no budget)';
+        $budgets[0] = trans('form.noBudget');
         $piggies    = ExpandedForm::makeSelectList(Auth::user()->piggyBanks()->get());
-        $piggies[0] = '(no piggy bank)';
+        $piggies[0] = trans('form.noPiggybank');
         $preFilled  = Session::has('preFilled') ? Session::get('preFilled') : [];
         $respondTo  = ['account_id', 'account_from_id'];
-        $subTitle   = 'Add a new ' . e($what);
+        $subTitle   = trans('form.add_new_'.$what);
 
         foreach ($respondTo as $r) {
             if (!is_null(Input::get($r))) {
