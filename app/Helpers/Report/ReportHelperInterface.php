@@ -13,18 +13,6 @@ use Illuminate\Support\Collection;
 interface ReportHelperInterface
 {
 
-
-    /**
-     * This methods fails to take in account transfers FROM shared accounts.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param int    $limit
-     *
-     * @return Collection
-     */
-    public function expensesGroupedByAccount(Carbon $start, Carbon $end, $limit = 15);
-
     /**
      * This method gets some kind of list for a monthly overview.
      *
