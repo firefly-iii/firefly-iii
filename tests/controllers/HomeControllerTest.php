@@ -102,6 +102,12 @@ class HomeControllerTest extends TestCase
         $repository->shouldReceive('sumOfEverything')->once()->andReturn(1);
         $repository->shouldReceive('getFrontpageTransactions')->once()->andReturn($journals);
 
+        // language preference:
+        $language = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $language->data = 'en';
+        $language->save();
+        Preferences::shouldReceive('get')->withAnyArgs()->andReturn($language);
+
 
         Amount::shouldReceive('getCurrencyCode')->andReturn('EUR');
         Amount::shouldReceive('format')->andReturn('xxx');

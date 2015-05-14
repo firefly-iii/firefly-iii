@@ -187,6 +187,12 @@ class JsonControllerTest extends TestCase
         Preferences::shouldReceive('get')->withArgs(['showSharedReports', false])->andReturn($pref);
         Preferences::shouldReceive('set')->withArgs(['showSharedReports', true]);
 
+        // language preference:
+        $language = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $language->data = 'en';
+        $language->save();
+        Preferences::shouldReceive('get')->withAnyArgs()->andReturn($language);
+
         $this->call('GET', '/json/show-shared-reports/set');
         $this->assertResponseOk();
     }
@@ -201,6 +207,12 @@ class JsonControllerTest extends TestCase
         $this->be($user);
 
         Preferences::shouldReceive('get')->withArgs(['showSharedReports', false])->andReturn($pref);
+
+        // language preference:
+        $language = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $language->data = 'en';
+        $language->save();
+        Preferences::shouldReceive('get')->withAnyArgs()->andReturn($language);
 
 
         $this->call('GET', '/json/show-shared-reports');
