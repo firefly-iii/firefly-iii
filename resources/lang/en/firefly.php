@@ -30,6 +30,7 @@ return [
     'categories'        => 'Categories',
     'tags'              => 'Tags',
     'reports'           => 'Reports',
+    'transactions'      => 'Transactions',
     'expenses'          => 'Expenses',
     'income'            => 'Revenue / income',
     'transfers'         => 'Transfer',
