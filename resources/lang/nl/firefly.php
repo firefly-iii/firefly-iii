@@ -12,6 +12,7 @@ return [
     'actions'                 => 'Acties',
     'edit'                    => 'Wijzig',
     'delete'                  => 'Verwijder',
+    'welcomeBack'             => 'Hoe staat het er voor?',
 
     // new user:
     'welcome'                 => 'Welkom bij Firefly!',
@@ -44,6 +45,7 @@ return [
     'logout'                  => 'Uitloggen',
     'searchPlaceholder'       => 'Zoeken...',
     'dashboard'               => 'Dashboard',
+    'currencies'              => 'Munteenheden',
     'accounts'                => 'Rekeningen',
     'assetAccounts'           => 'Betaalrekeningen',
     'expenseAccounts'         => 'Crediteuren',

@@ -26,7 +26,7 @@ class CategoryController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('title', 'Categories');
+        View::share('title', trans('firefly.categories'));
         View::share('mainTitleIcon', 'fa-bar-chart');
     }
 
