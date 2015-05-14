@@ -1,0 +1,28 @@
+<?php
+return [
+    'name'                        => 'Name',
+    'active'                      => 'Active',
+    'amount_min'                  => 'Minimum amount',
+    'amount_max'                  => 'Maximum amount',
+    'match'                       => 'Matches on',
+    'repeat_freq'                 => 'Repeats',
+    'account_from_id'             => 'From account',
+    'account_to_id'               => 'To account',
+    'account_id'                  => 'Asset account',
+    'budget_id'                   => 'Budget',
+    'openingBalance'              => 'Opening balance',
+    'tagMode'                     => 'Tag mode',
+    'tagPosition'                 => 'Tag location',
+    'virtualBalance'              => 'Vitual balance',
+    'longitude_latitude'          => 'Location',
+    'targetamount'                => 'Target amount',
+    'accountRole'                 => 'Account role',
+    'openingBalanceDate'          => 'Opening balance date',
+    'ccType'                      => 'Credit card payment plan',
+    'ccMonthlyPaymentDate'        => 'Credit card monthly payment date',
+    'piggy_bank_id'               => 'Piggy bank',
+    'returnHere'                  => 'Return here',
+    'returnHereExplanation'       => 'After storing, return here to create another one.',
+    'returnHereUpdateExplanation' => 'After updating, return here.',
+
+];
