@@ -1,5 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
+use Config;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Input;
 use Preferences;
@@ -37,9 +38,11 @@ class PreferencesController extends Controller
         $viewRange         = $viewRangePref->data;
         $frontPageAccounts = Preferences::get('frontPageAccounts', []);
         $budgetMax         = Preferences::get('budgetMaximum', 1000);
+        $languagePref      = Preferences::get('language', 'en');
+        $language          = $languagePref->data;
         $budgetMaximum     = $budgetMax->data;
 
-        return view('preferences.index', compact('budgetMaximum', 'accounts', 'frontPageAccounts', 'viewRange'));
+        return view('preferences.index', compact('budgetMaximum', 'language', 'accounts', 'frontPageAccounts', 'viewRange'));
     }
 
     /**
@@ -64,6 +67,12 @@ class PreferencesController extends Controller
         // budget maximum:
         $budgetMaximum = intval(Input::get('budgetMaximum'));
         Preferences::set('budgetMaximum', $budgetMaximum);
+
+        // language:
+        $lang = Input::get('language');
+        if (in_array($lang, array_keys(Config::get('firefly.lang')))) {
+            Preferences::set('language', $lang);
+        }
 
 
         Session::flash('success', 'Preferences saved!');

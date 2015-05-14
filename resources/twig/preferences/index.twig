@@ -95,7 +95,11 @@
                 {% for key, lang in Config.get('firefly.lang') %}
                     <div class="radio">
                         <label>
-                            <input type="radio" name="language" value="{{ key }}" />
+                            <input type="radio" name="language" value="{{ key }}"
+                                    {% if language == key %}
+                                    checked
+                                    {% endif %}
+                                    />
                             {{ lang }}
                         </label>
                     </div>
