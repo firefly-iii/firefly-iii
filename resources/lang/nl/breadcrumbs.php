@@ -54,6 +54,7 @@ return [
     'withdrawal_list'     => 'Uitgaven',
     'deposit_list'        => 'Inkomsten',
     'transfer_list'       => 'Overschrijvingen',
+    'transfers_list'       => 'Overschrijvingen',
 
     'create_withdrawal'   => 'Sla nieuwe uitgave op',
     'create_deposit'      => 'Sla nieuwe inkomsten op',

@@ -54,6 +54,7 @@ return [
     'withdrawal_list'     => 'Expenses',
     'deposit_list'        => 'Revenue, income and deposits',
     'transfer_list'       => 'Transfers',
+    'transfers_list'       => 'Transfers',
 
     'create_withdrawal'   => 'Create new withdrawal',
     'create_deposit'      => 'Create new deposit',
