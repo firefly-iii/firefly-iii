@@ -52,10 +52,12 @@ class PreferencesController extends Controller
     {
         // front page accounts
         $frontPageAccounts = [];
-        foreach (Input::get('frontPageAccounts') as $id) {
-            $frontPageAccounts[] = intval($id);
+        if (is_array(Input::get('frontPageAccounts'))) {
+            foreach (Input::get('frontPageAccounts') as $id) {
+                $frontPageAccounts[] = intval($id);
+            }
+            Preferences::set('frontPageAccounts', $frontPageAccounts);
         }
-        Preferences::set('frontPageAccounts', $frontPageAccounts);
 
         // view range:
         Preferences::set('viewRange', Input::get('viewRange'));
