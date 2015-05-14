@@ -163,6 +163,7 @@ class ConfigServiceProvider extends ServiceProvider
                             'Session',
                             'Route',
                             'Auth',
+                            'Lang',
                             'URL',
                             'Config',
                             'ExpandedForm' => [

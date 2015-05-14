@@ -2,7 +2,7 @@
 return [
     'welcome'         => 'Welcome to Firefly!',
     'mainTitle'       => 'What\'s playing?',
-    'close'           => 'Clone',
+    'close'           => 'Close',
     'pleaseHold'      => 'Please hold...',
     'mandatoryFields' => 'Mandatory fields',
     'optionalFields'  => 'Optional fields',
