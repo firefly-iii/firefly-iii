@@ -9,6 +9,8 @@ return [
     'optionalFields'  => 'Optionele velden',
     'options'         => 'Opties',
     'something'       => 'Iets!',
-    'actions'         => 'Acties'
+    'actions'         => 'Acties',
+    'edit'            => 'Wijzig',
+    'delete'          => 'Verwijder',
 
 ];

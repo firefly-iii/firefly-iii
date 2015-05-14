@@ -122,7 +122,7 @@
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-12">
         <div class="btn-group">
-        <a class="btn btn-default" href="{{route('transactions.edit',journal.id)}}"><i class="fa fa-fw fa-pencil"></i> Edit</a> <a href="{{route('transactions.delete',journal.id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Delete</a>
+        <a class="btn btn-default" href="{{route('transactions.edit',journal.id)}}"><i class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a> <a href="{{route('transactions.delete',journal.id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> {{ 'delete'|_ }}</a>
         </div>
     </div>
 </div>

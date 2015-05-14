@@ -25,8 +25,8 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu pull-right" role="menu">
-                                <li><a href="{{ route('piggy-banks.edit', piggyBank.id) }}"><i class="fa fa-pencil fa-fw"></i> Edit</a></li>
-                                <li><a href="{{ route('piggy-banks.delete', piggyBank.id) }}"><i class="fa fa-trash fa-fw"></i> Delete</a></li>
+                                <li><a href="{{ route('piggy-banks.edit', piggyBank.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a></li>
+                                <li><a href="{{ route('piggy-banks.delete', piggyBank.id) }}"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}</a></li>
                             </ul>
                         </div>
                     </div>

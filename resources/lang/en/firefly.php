@@ -9,6 +9,8 @@ return [
     'optionalFields'  => 'Optional fields',
     'options'         => 'Options',
     'something'       => 'Something!',
-    'actions'         => 'Actions'
+    'actions'         => 'Actions',
+    'edit'            => 'Edit',
+    'delete'          => 'Delete',
 
 ];
