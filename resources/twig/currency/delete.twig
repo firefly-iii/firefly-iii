@@ -3,18 +3,22 @@
 {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, currency) }}
 {{ Form.open({'class' : 'form-horizontal','id' : 'destroy','url' : route('currency.destroy',currency.id)}) }}
 <div class="row">
-    <div class="col-lg-6 col-md-12 col-sm-12">
+    <div class="col-lg-6 col-lg-offset-3 col-md-12 col-sm-12">
         <div class="panel panel-red">
             <div class="panel-heading">
-                Delete currency "{{ currency.name }}"
+                <i class="fa fa-exclamation-circle"></i>
+                {{ trans('form.delete_currency', {'name': currency.name}) }}
             </div>
             <div class="panel-body">
-                <p>
-                Are you sure that you want to delete currency "{{ currency.name }}"?
+                <p class="text-danger">
+                    {{ trans('form.permDeleteWarning') }}
                 </p>
                 <p>
-                    <button type="submit" class="btn btn-default btn-danger">Delete permanently</button>
-                    <a href="{{ URL.previous }}" class="btn-default btn">Cancel</a >
+                    {{ trans('form.currency_areYouSure', {'name': currency.name}) }}
+                </p>
+                <p>
+                    <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn btn-danger" />
+                    <a href="{{ URL.previous }}" class="btn-default btn">{{ trans('form.cancel') }}</a >
                 </p>
             </div>
         </div>
