@@ -2,25 +2,25 @@
 
 <table class="table table-striped table-bordered sortable-table">
     <tr class="ignore">
-        <th colspan="2">&nbsp;</th>
+        <th class="hidden-xs" colspan="2">&nbsp;</th>
         <th>Description</th>
         <th>Amount</th>
         <th>Date</th>
-        <th>From</th>
-        <th>To</th>
+        <th class="hidden-xs">From</th>
+        <th class="hidden-xs">To</th>
         <!-- Hide budgets? -->
         {% if not hideBudgets %}
-            <th><i class="fa fa-tasks fa-fw" title="Budget"></i></th>
+            <th class="hidden-xs"><i class="fa fa-tasks fa-fw" title="Budget"></i></th>
         {% endif %}
 
         <!-- Hide categories? -->
         {% if not hideCategories %}
-            <th><i class="fa fa-bar-chart fa-fw" title="Category"></i></th>
+            <th class="hidden-xs"><i class="fa fa-bar-chart fa-fw" title="Category"></i></th>
         {% endif %}
 
         <!-- Hide bills? -->
         {% if not hideBills %}
-            <th><i class="fa fa-fw fa-rotate-right" title="Bill"></i></th>
+            <th class="hidden-xs"><i class="fa fa-fw fa-rotate-right" title="Bill"></i></th>
         {% endif %}
     </tr>
     {% for journal in journals %}
@@ -37,7 +37,7 @@
             </tr>
         {% else %}
             <tr class="drag" data-date="{{journal.date.format('Y-m-d')}}" data-id="{{journal.id}}">
-                <td>
+                <td class="hidden-xs">
                     <div class="btn-group btn-group-xs">
                         {% if sorting %}
                             <a href="#" class="handle btn btn-default btn-xs"><i class="fa fa-fw fa-arrows-v"></i></a>
@@ -47,7 +47,7 @@
                     </div>
                 </td>
 
-                <td>
+                <td class="hidden-xs">
                     {{ journal|typeIcon }}
                 </td>
                 <td>
@@ -63,14 +63,14 @@
                 <td>
                     {{journal.date.format('j F Y')}}
                 </td>
-                <td>
+                <td class="hidden-xs">
                     {% if journal.transactions[0].account.accountType.type == 'Cash account' %}
                         <span class="text-success">(cash)</span>
                     {% else %}
                         <a href="{{route('accounts.show',journal.transactions[0].account_id)}}">{{journal.transactions[0].account.name}}</a>
                     {% endif %}
                 </td>
-                <td>
+                <td class="hidden-xs">
                     {% if journal.transactions[1].account.accountType.type == 'Cash account' %}
                         <span class="text-success">(cash)</span>
                     {% else %}
@@ -80,7 +80,7 @@
 
                 <!-- Do NOT hide the budget? -->
                 {% if not hideBudgets %}
-                    <td>
+                    <td class="hidden-xs">
                         {% if journal.budgets[0] %}
                             <a href="{{route('budgets.show',journal.budgets[0].id)}}">{{journal.budgets[0].name}}</a>
                         {% endif %}
@@ -89,7 +89,7 @@
 
                 <!-- Do NOT hide the category? -->
                 {% if not hideCategories %}
-                    <td>
+                    <td class="hidden-xs">
                         {% if journal.categories[0] %}
                             <a href="{{route('categories.show',journal.categories[0].id)}}">{{journal.categories[0].name}}</a>
                         {% endif %}
@@ -98,7 +98,7 @@
 
                 <!-- Do NOT hide the bill? -->
                 {% if not hideBills %}
-                    <td>
+                    <td class="hidden-xs">
                         {% if journal.bill %}
                             <a href="{{ route('bills.show',journal.bill_id) }}">{{journal.bill.name}}</a>
                         {% endif %}

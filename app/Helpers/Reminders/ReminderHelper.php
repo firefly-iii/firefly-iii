@@ -33,7 +33,7 @@ class ReminderHelper implements ReminderHelperInterface
                 $ranges      = $this->getReminderRanges($piggyBank, $start);
                 $currentRep  = $piggyBank->currentRelevantRep();
                 $left        = $piggyBank->targetamount - $currentRep->currentamount;
-                $perReminder = $left / count($ranges);
+                $perReminder = count($ranges) == 0 ? $left : $left / count($ranges);
             } else {
                 $perReminder = null;
                 $ranges      = [];
@@ -46,8 +46,6 @@ class ReminderHelper implements ReminderHelperInterface
                 'leftToSave'  => $left,
             ];
 
-
-            // create one:
             $reminder = new Reminder;
             $reminder->user()->associate(Auth::user());
             $reminder->startdate = $start;

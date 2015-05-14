@@ -19,25 +19,6 @@ class ReportHelper implements ReportHelperInterface
 {
 
     /**
-     * This methods fails to take in account transfers FROM shared accounts.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param int    $limit
-     *
-     * @return Collection
-     */
-    public function expensesGroupedByAccount(Carbon $start, Carbon $end, $limit = 15)
-    {
-        $result  = $this->_queries->journalsByExpenseAccount($start, $end);
-        $array   = $this->_helper->makeArray($result);
-        $limited = $this->_helper->limitArray($array, $limit);
-
-        return $limited;
-
-    }
-
-    /**
      * This method gets some kind of list for a monthly overview.
      *
      * @param Carbon $date

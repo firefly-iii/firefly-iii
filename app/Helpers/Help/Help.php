@@ -17,6 +17,7 @@ class Help implements HelpInterface
 {
 
     /**
+     * @codeCoverageIgnore
      * @param $key
      *
      * @return string
@@ -27,6 +28,7 @@ class Help implements HelpInterface
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $route
      *
      * @return array
@@ -54,6 +56,7 @@ class Help implements HelpInterface
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $route
      *
      * @return bool
@@ -64,6 +67,7 @@ class Help implements HelpInterface
     }
 
     /**
+     * @codeCoverageIgnore
      * @param       $route
      * @param array $content
      *
@@ -76,6 +80,7 @@ class Help implements HelpInterface
     }
 
     /**
+     * @codeCoverageIgnore
      * @param $route
      *
      * @return bool

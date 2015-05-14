@@ -46,7 +46,7 @@ class PiggyBanks
      */
     public function handle(Request $request, Closure $next)
     {
-        if ($this->auth->check() && !$request->isXmlHttpRequest() && App::environment() != 'testing') {
+        if ($this->auth->check() && !$request->isXmlHttpRequest()) {
             // get piggy banks without a repetition:
             /** @var Collection $set */
             $set = $this->auth->user()->piggybanks()

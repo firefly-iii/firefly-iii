@@ -6,6 +6,7 @@ use FireflyIII\Models\PiggyBankEvent;
 /**
  * Class UpdateJournalConnection
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Handlers\Events
  */
 class UpdateJournalConnection
