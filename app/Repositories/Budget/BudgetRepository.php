@@ -246,13 +246,12 @@ class BudgetRepository implements BudgetRepositoryInterface
                                    ->whereNotNull('budget_transaction_journal.budget_id');
                            }
                            )
-                           ->before($end)
                            ->after($start)
+                           ->before($end)
                            ->lessThan(0)
                            ->transactionTypes(['Withdrawal'])
-                           ->get();
-
-        return floatval($noBudgetSet->sum('amount')) * -1;
+            ->sum('transactions.amount');
+        return floatval($noBudgetSet) * -1;
     }
 
     /**
