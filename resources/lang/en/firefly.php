@@ -1,7 +1,7 @@
 <?php
 return [
+    'test'            => 'You have selected English.',
     'welcome'         => 'Welcome to Firefly!',
-    'mainTitle'       => 'What\'s playing?',
     'close'           => 'Close',
     'pleaseHold'      => 'Please hold...',
     'mandatoryFields' => 'Mandatory fields',

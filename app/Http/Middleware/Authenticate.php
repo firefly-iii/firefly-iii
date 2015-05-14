@@ -1,8 +1,11 @@
 <?php namespace FireflyIII\Http\Middleware;
 
+use App;
 use Closure;
+use FireflyIII\Models\Preference;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
+use Preferences;
 
 /**
  * Class Authenticate
@@ -48,6 +51,10 @@ class Authenticate
                 return redirect()->guest('auth/login');
             }
         }
+        // if logged in, set user language:
+        $pref = Preferences::get('language', 'en');
+        App::setLocale($pref->data);
+
 
         return $next($request);
     }
