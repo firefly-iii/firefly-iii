@@ -76,6 +76,7 @@ return [
     'no'                      => 'Nee',
     'amount'                  => 'Bedrag',
     'newBalance'              => 'Nieuw saldo',
+    'overview'                => 'Overzicht',
 
     // charts:
     'dayOfMonth'              => 'Dag vd maand',

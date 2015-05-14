@@ -76,6 +76,7 @@ return [
     'no'                      => 'No',
     'amount'                  => 'Amount',
     'newBalance'              => 'New balance',
+    'overview'                => 'Overview',
 
     // charts:
     'dayOfMonth'              => 'Day of the month',
