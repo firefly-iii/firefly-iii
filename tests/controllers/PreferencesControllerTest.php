@@ -77,7 +77,8 @@ class PreferencesControllerTest extends TestCase
         $data = [
             'frontPageAccounts' => [1, 2, 3],
             '_token'            => 'replaceMe',
-            'viewRange'         => '1M'
+            'viewRange'         => '1M',
+            'language' => 'en',
         ];
 
         Preferences::shouldReceive('set')->once()->withArgs(['frontPageAccounts', [1, 2, 3]]);

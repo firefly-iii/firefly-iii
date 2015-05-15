@@ -324,7 +324,7 @@ class GoogleChartControllerTest extends TestCase
         Preferences::shouldReceive('get')->withAnyArgs()->andReturn($language);
 
 
-        $this->call('GET', '/chart/reports/income-expenses/2015');
+        $this->call('GET', '/chart/reports/income-expenses/2015/shared');
         $this->assertResponseOk();
     }
 
@@ -353,7 +353,7 @@ class GoogleChartControllerTest extends TestCase
         Preferences::shouldReceive('get')->withAnyArgs()->andReturn($language);
 
 
-        $this->call('GET', '/chart/reports/income-expenses-sum/2015');
+        $this->call('GET', '/chart/reports/income-expenses-sum/2015/shared');
     }
 
 }

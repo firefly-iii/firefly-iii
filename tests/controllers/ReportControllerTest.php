@@ -1,4 +1,5 @@
 <?php
+use FireflyIII\Models\AccountMeta;
 use Illuminate\Support\Collection;
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
@@ -42,10 +43,22 @@ class ReportControllerTest extends TestCase
         $this->be($user);
 
         // mock stuff
-        $helper = $this->mock('FireflyIII\Helpers\Report\ReportHelperInterface');
+        $helper     = $this->mock('FireflyIII\Helpers\Report\ReportHelperInterface');
+        $repository = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+        $account    = FactoryMuffin::create('FireflyIII\Models\Account');
+
+        // make shared:
+        AccountMeta::create(
+            [
+                'account_id' => $account->id,
+                'name'       => 'accountRole',
+                'data'       => 'sharedAsset'
+            ]
+        );
 
         $helper->shouldReceive('listOfMonths')->andReturn([]);
         $helper->shouldReceive('listOfYears')->andReturn([]);
+        $repository->shouldReceive('getAccounts')->andReturn(new Collection([$account]));
 
 
         $this->call('GET', '/reports');
@@ -102,11 +115,75 @@ class ReportControllerTest extends TestCase
 
     }
 
+    public function testMonth()
+    {
+        $user    = FactoryMuffin::create('FireflyIII\User');
+        $account = FactoryMuffin::create('FireflyIII\Models\Account');
+        $budget1 = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $budget1->queryAmount = 12;
+        $budget2 = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $budget2->queryAmount = 0;
+        $this->be($user);
+
+        // mock!
+        $query = $this->mock('FireflyIII\Helpers\Report\ReportQueryInterface');
+
+        // fake!
+        $query->shouldReceive('incomeInPeriod')->andReturn([]);
+        $query->shouldReceive('journalsByExpenseAccount')->andReturn(new Collection);
+        $query->shouldReceive('getAllAccounts')->andReturn(new Collection([$account]));
+        $query->shouldReceive('getBudgetSummary')->andReturn(new Collection([$budget1, $budget2]));
+        $query->shouldReceive('journalsByBudget')->andReturn(new Collection);
+        $query->shouldReceive('journalsByCategory')->andReturn(new Collection);
+        $query->shouldReceive('balancedTransactionsSum')->andReturn(0);
+        $query->shouldReceive('sharedExpenses')->andReturn(new Collection);
+        $query->shouldReceive('sharedExpensesByCategory')->andReturn(new Collection);
+
+        $this->call('GET', '/reports/2015/1');
+        $this->assertResponseOk();
+    }
+
+    public function testMonthShared()
+    {
+        $user    = FactoryMuffin::create('FireflyIII\User');
+        $account = FactoryMuffin::create('FireflyIII\Models\Account');
+        $budget1 = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $budget1->queryAmount = 12;
+        $budget2 = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $budget2->queryAmount = 0;
+        $this->be($user);
+
+        // mock!
+        $query = $this->mock('FireflyIII\Helpers\Report\ReportQueryInterface');
+
+        // fake!
+        $query->shouldReceive('incomeInPeriod')->andReturn([]);
+        $query->shouldReceive('journalsByExpenseAccount')->andReturn(new Collection);
+        $query->shouldReceive('getAllAccounts')->andReturn(new Collection([$account]));
+        $query->shouldReceive('getBudgetSummary')->andReturn(new Collection([$budget1, $budget2]));
+        $query->shouldReceive('journalsByBudget')->andReturn(new Collection);
+        $query->shouldReceive('journalsByCategory')->andReturn(new Collection);
+        $query->shouldReceive('balancedTransactionsSum')->andReturn(0);
+
+        $this->call('GET', '/reports/2015/1/shared');
+        $this->assertResponseOk();
+    }
+
     public function testYear()
     {
         $user     = FactoryMuffin::create('FireflyIII\User');
         $journal  = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
         $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
+        $account  = FactoryMuffin::create('FireflyIII\Models\Account');
+
+        // make shared:
+        AccountMeta::create(
+            [
+                'account_id' => $account->id,
+                'name'       => 'accountRole',
+                'data'       => 'sharedAsset'
+            ]
+        );
         $journals = new Collection([$journal]);
 
         $this->be($user);
@@ -114,9 +191,11 @@ class ReportControllerTest extends TestCase
         $helper = $this->mock('FireflyIII\Helpers\Report\ReportHelperInterface');
         $query  = $this->mock('FireflyIII\Helpers\Report\ReportQueryInterface');
 
+
         $helper->shouldReceive('yearBalanceReport')->withAnyArgs()->andReturn([]);
-        $query->shouldReceive('getAllAccounts')->withAnyArgs()->andReturn([]);
-        $query->shouldReceive('incomeInPeriod')->withAnyArgs()->andReturn([]);
+        $query->shouldReceive('getAllAccounts')->withAnyArgs()->andReturn(new Collection([$account]));
+
+        $query->shouldReceive('incomeInPeriod')->withAnyArgs()->andReturn(new Collection([$journal, $journal]));
         $query->shouldReceive('journalsByRevenueAccount')->withAnyArgs()->andReturn($journals);
         $query->shouldReceive('journalsByExpenseAccount')->withAnyArgs()->andReturn($journals);
 
@@ -127,7 +206,7 @@ class ReportControllerTest extends TestCase
         Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
         Amount::shouldReceive('format')->andReturn('X');
 
-        $this->call('GET', '/reports/2015');
+        $this->call('GET', '/reports/2015/shared');
         $this->assertResponseOk();
     }
 
