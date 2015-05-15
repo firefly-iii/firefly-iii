@@ -6,6 +6,7 @@ use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Session;
 use Steam;
 use View;
@@ -42,14 +43,26 @@ class ReportController extends Controller
      * @internal param ReportHelperInterface $helper
      *
      */
-    public function index()
+    public function index(AccountRepositoryInterface $repository)
     {
         $start         = Session::get('first');
         $months        = $this->helper->listOfMonths($start);
         $title         = 'Reports';
         $mainTitleIcon = 'fa-line-chart';
 
-        return view('reports.index', compact('months', 'title', 'mainTitleIcon'));
+        // does the user have shared accounts?
+        $accounts  = $repository->getAccounts(['Default account', 'Asset account']);
+        $hasShared = false;
+
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            if ($account->getMeta('accountRole') == 'sharedAsset') {
+                $hasShared = true;
+            }
+        }
+
+
+        return view('reports.index', compact('months', 'title', 'mainTitleIcon', 'hasShared'));
     }
 
     /**

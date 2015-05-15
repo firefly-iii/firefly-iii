@@ -1,27 +1,49 @@
 {% extends "./layout/default.twig" %}
 {% block content %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-calendar fa-fw"></i>
-                Reports
-            </div>
-            <div class="panel-body">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-calendar fa-fw"></i>
+                    Reports for your own accounts
+                </div>
+                <div class="panel-body">
 
-                {% for year, entries in months %}
-                <h4><a href="{{route('reports.year',year)}}">{{ year }}</a></h4>
-                    <ul class="list-inline">
-                    {% for month in entries %}
-                        <li><a href="{{route('reports.month',[month.year, month.month])}}">{{ month.formatted}}</a></li>
+                    {% for year, entries in months %}
+                    <h4><a href="{{route('reports.year',year)}}">{{ year }}</a></h4>
+                        <ul class="list-inline">
+                        {% for month in entries %}
+                            <li><a href="{{route('reports.month',[month.year, month.month])}}">{{ month.formatted}}</a></li>
+                        {% endfor %}
+                        </ul>
                     {% endfor %}
-                    </ul>
-                {% endfor %}
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-calendar fa-fw"></i>
+                    Reports for your own accounts and shared accounts
+                </div>
+                <div class="panel-body">
+
+                    {% for year, entries in months %}
+                        <h4><a href="{{route('reports.year',[year, 'shared'])}}">{{ year }}</a></h4>
+                        <ul class="list-inline">
+                            {% for month in entries %}
+                                <li><a href="{{route('reports.month',[month.year, month.month,'shared'])}}">{{ month.formatted}}</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block scripts %}
