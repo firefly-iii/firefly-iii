@@ -81,9 +81,16 @@ class PreferencesControllerTest extends TestCase
             'language' => 'en',
         ];
 
+        // language preference:
+        $language = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $language->data = 'en';
+        $language->save();
+        Preferences::shouldReceive('get')->withAnyArgs()->andReturn($language);
+
         Preferences::shouldReceive('set')->once()->withArgs(['frontPageAccounts', [1, 2, 3]]);
         Preferences::shouldReceive('set')->once()->withArgs(['viewRange', '1M']);
         Preferences::shouldReceive('set')->once()->withArgs(['budgetMaximum', 0]);
+        Preferences::shouldReceive('set')->once()->withArgs(['language', 'en']);
 
         // language preference:
         $language = FactoryMuffin::create('FireflyIII\Models\Preference');
