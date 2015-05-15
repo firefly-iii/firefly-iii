@@ -115,6 +115,8 @@ class ReportControllerTest extends TestCase
         $query  = $this->mock('FireflyIII\Helpers\Report\ReportQueryInterface');
 
         $helper->shouldReceive('yearBalanceReport')->withAnyArgs()->andReturn([]);
+        $query->shouldReceive('getAllAccounts')->withAnyArgs()->andReturn([]);
+        $query->shouldReceive('incomeInPeriod')->withAnyArgs()->andReturn([]);
         $query->shouldReceive('journalsByRevenueAccount')->withAnyArgs()->andReturn($journals);
         $query->shouldReceive('journalsByExpenseAccount')->withAnyArgs()->andReturn($journals);
 
