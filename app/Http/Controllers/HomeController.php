@@ -53,7 +53,7 @@ class HomeController extends Controller
         $types             = Config::get('firefly.accountTypesByIdentifier.asset');
         $count             = $repository->countAccounts($types);
         $title             = 'Firefly';
-        $subTitle          = 'What\'s playing?';
+        $subTitle          = trans('firefly.welcomeBack');
         $mainTitleIcon     = 'fa-fire';
         $transactions      = [];
         $frontPage         = Preferences::get('frontPageAccounts', []);

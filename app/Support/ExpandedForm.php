@@ -51,29 +51,7 @@ class ExpandedForm
         if (isset($options['label'])) {
             return $options['label'];
         }
-        $labels = [
-            'amount_min'           => 'Amount (min)',
-            'amount_max'           => 'Amount (max)',
-            'match'                => 'Matches on',
-            'repeat_freq'          => 'Repetition',
-            'account_from_id'      => 'Account from',
-            'account_to_id'        => 'Account to',
-            'account_id'           => 'Asset account',
-            'budget_id'            => 'Budget',
-            'openingBalance'       => 'Opening balance',
-            'tagMode'              => 'Tag mode',
-            'tagPosition'          => 'Tag location',
-            'virtualBalance'       => 'Virtual balance',
-            'longitude_latitude'   => 'Location',
-            'targetamount'         => 'Target amount',
-            'accountRole'          => 'Account role',
-            'openingBalanceDate'   => 'Opening balance date',
-            'ccType'               => 'Credit card payment plan',
-            'ccMonthlyPaymentDate' => 'Credit card monthly payment date',
-            'piggy_bank_id'        => 'Piggy bank'];
-
-
-        return isset($labels[$name]) ? $labels[$name] : str_replace('_', ' ', ucfirst($name));
+        return trans('form.'.$name);
 
     }
 

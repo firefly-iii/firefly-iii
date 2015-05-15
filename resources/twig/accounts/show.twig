@@ -12,12 +12,12 @@
                 <div class="pull-right">
                     <div class="btn-group">
                         <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                            Actions
+                            {{ 'actions'|_ }}
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu pull-right" role="menu">
-                            <li><a href="{{route('accounts.edit', account.id)}}"><i class="fa fa-pencil fa-fw"></i> Edit</a></li>
-                            <li><a href="{{route('accounts.delete', account.id)}}"><i class="fa fa-trash fa-fw"></i> Delete</a></li>
+                            <li><a href="{{route('accounts.edit', account.id)}}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a></li>
+                            <li><a href="{{route('accounts.delete', account.id)}}"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}</a></li>
                         </ul>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <i class="fa fa-repeat fa-fw"></i> Transactions
+                <i class="fa fa-repeat fa-fw"></i> {{ 'transactions'|_ }}
             </div>
             <div class="panel-body">
                 {% include 'list/journals.twig' with {sorting:true} %}

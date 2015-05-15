@@ -2,6 +2,13 @@
 {% block content %}
 {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, what)  }}
 <div class="row">
+    <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
+        <p>
+            {{ ('accountExtraHelp_'~what)|_ }}
+        </p>
+    </div>
+</div>
+<div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -11,7 +18,7 @@
                 <div class="pull-right">
                     <div class="btn-group">
                         <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                            Actions
+                            {{ 'actions'|_ }}
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu pull-right" role="menu">

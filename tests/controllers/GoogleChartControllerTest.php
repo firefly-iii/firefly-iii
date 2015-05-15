@@ -317,6 +317,12 @@ class GoogleChartControllerTest extends TestCase
         $repository->shouldReceive('journalsByExpenseAccount')->andReturn($journals);
         Preferences::shouldReceive('get')->withArgs(['showSharedReports', false])->once()->andReturn($preference);
 
+        // language preference:
+        $language = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $language->data = 'en';
+        $language->save();
+        Preferences::shouldReceive('get')->withAnyArgs()->andReturn($language);
+
 
         $this->call('GET', '/chart/reports/income-expenses/2015');
         $this->assertResponseOk();
@@ -339,6 +345,12 @@ class GoogleChartControllerTest extends TestCase
         $repository->shouldReceive('incomeByPeriod')->andReturn($journals);
         $repository->shouldReceive('journalsByExpenseAccount')->andReturn($journals);
         Preferences::shouldReceive('get')->withArgs(['showSharedReports', false])->once()->andReturn($preference);
+
+        // language preference:
+        $language = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $language->data = 'en';
+        $language->save();
+        Preferences::shouldReceive('get')->withAnyArgs()->andReturn($language);
 
 
         $this->call('GET', '/chart/reports/income-expenses-sum/2015');

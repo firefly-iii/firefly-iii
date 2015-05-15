@@ -3,7 +3,7 @@
 <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
+            <span class="sr-only">{{ 'toggleNavigation'|_ }}</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -40,7 +40,7 @@
                     {% endfor %}
                     <li>
                         <a class="text-center" href="{{ route('reminders.index') }}">
-                            <strong>See all reminders</strong>
+                            <strong>{{ 'seeAllReminders'|_ }}</strong>
                             <i class="fa fa-angle-right"></i>
                         </a>
                     </li>
@@ -56,11 +56,11 @@
             </a>
             <ul class="dropdown-menu dropdown-user">
                 <li><a href="{{ route('profile') }}"><i class="fa fa-user fa-fw"></i> {{ Auth.user.email }}</a></li>
-                <li><a href="{{ route('preferences') }}"><i class="fa fa-gear fa-fw"></i> Preferences</a></li>
-                <li><a href="{{ route('currency.index') }}"><i class="fa fa-usd fa-fw"></i> Currency</a></li>
-                <li><a href="{{ route('reminders.index') }}"><i class="fa fa-clock-o fa-fw"></i> Reminders</a></li>
+                <li><a href="{{ route('preferences') }}"><i class="fa fa-gear fa-fw"></i> {{ 'preferences'|_ }}</a></li>
+                <li><a href="{{ route('currency.index') }}"><i class="fa fa-usd fa-fw"></i> {{ 'currency'|_ }}</a></li>
+                <li><a href="{{ route('reminders.index') }}"><i class="fa fa-clock-o fa-fw"></i> {{ 'reminders'|_ }}</a></li>
                 <li class="divider"></li>
-                <li><a href="{{ route('logout') }}"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
+                <li><a href="{{ route('logout') }}"><i class="fa fa-sign-out fa-fw"></i> {{ 'logout'|_ }}</a></li>
             </ul>
             <!-- /.dropdown-user -->
         </li>
@@ -80,7 +80,7 @@
                     <form action="{{ route('search') }}" method="GET" class="form-inline">
                         <div class="input-group custom-search-form">
                             <input type="text" name="q" class="form-control" value="{% if Input.get('q') %}{{ Input.get('q') }}{% endif %}"
-                                   placeholder="Search...">
+                                   placeholder="{{ 'searchPlaceholder'|_ }}">
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
                             </span>
@@ -89,86 +89,84 @@
                     <!-- /input-group -->
                 </li>
                 <li>
-                    <a class="{{ activeRoute('index',null,true) }}" href="{{ route('index') }}"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                    <a class="{{ activeRoute('index',null,true) }}" href="{{ route('index') }}"><i class="fa fa-dashboard fa-fw"></i> {{ 'dashboard'|_ }}</a>
                 </li>
                 <li class="{{ activeRoute('accounts.index') }}">
-                    <a href="#"><i class="fa fa-credit-card fa-fw"></i> Accounts <span class="fa arrow"></span></a>
+                    <a href="#"><i class="fa fa-credit-card fa-fw"></i> {{ 'accounts'|_ }} <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a class="{{ activeRoute('accounts.index', 'asset') }}" href="{{ route('accounts.index','asset') }}"><i class="fa fa-money fa-fw"></i> Asset
-                                accounts</a>
+                            <a class="{{ activeRoute('accounts.index', 'asset') }}" href="{{ route('accounts.index','asset') }}">
+                                <i class="fa fa-money fa-fw"></i> {{ 'assetAccounts'|_ }}</a>
                         </li>
                         <li>
-                            <a class="{{ activeRoute('accounts.index', 'expense') }}" href="{{ route('accounts.index','expense') }}"><i
-                                        class="fa fa-shopping-cart fa-fw"></i> Expense accounts</a>
+                            <a class="{{ activeRoute('accounts.index', 'expense') }}" href="{{ route('accounts.index','expense') }}">
+                                <i class="fa fa-shopping-cart fa-fw"></i> {{ 'expenseAccounts'|_ }}</a>
                         </li>
                         <li>
-                            <a class="{{ activeRoute('accounts.index', 'revenue') }}" href="{{ route('accounts.index','revenue') }}"><i class="fa fa-download fa-fw"></i>
-                                Revenue accounts</a>
+                            <a class="{{ activeRoute('accounts.index', 'revenue') }}" href="{{ route('accounts.index','revenue') }}">
+                                <i class="fa fa-download fa-fw"></i> {{ 'revenueAccounts'|_ }}</a>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->
                 </li>
                 <li>
-                    <a class="{{ activeRoute('budgets') }}" href="{{ route('budgets.index') }}"><i class="fa fa-tasks fa-fw"></i> Budgets</a>
+                    <a class="{{ activeRoute('budgets') }}" href="{{ route('budgets.index') }}"><i class="fa fa-tasks fa-fw"></i> {{ 'budgets'|_ }}</a>
                 </li>
                 <li>
-                    <a class="{{ activeRoute('categories') }}" href="{{ route('categories.index') }}"><i class="fa fa-bar-chart fa-fw"></i> Categories</a>
+                    <a class="{{ activeRoute('categories') }}" href="{{ route('categories.index') }}"><i class="fa fa-bar-chart fa-fw"></i> {{ 'categories'|_ }}</a>
                 </li>
                 <li>
-                    <a class="{{ activeRoute('tags') }}" href="{{ route('tags.index') }}"><i class="fa fa-tags fa-fw"></i> Tags</a>
+                    <a class="{{ activeRoute('tags') }}" href="{{ route('tags.index') }}"><i class="fa fa-tags fa-fw"></i> {{ 'tags'|_ }}</a>
                 </li>
                 <li>
-                    <a class="{{ activeRoute('reports') }}" href="{{ route('reports.index') }}"><i class="fa fa-line-chart fa-fw"></i> Reports</a>
+                    <a class="{{ activeRoute('reports') }}" href="{{ route('reports.index') }}"><i class="fa fa-line-chart fa-fw"></i> {{ 'reports'|_ }}</a>
                 </li>
                 <li class="{{ activeRoute('transactions') }}">
-                    <a href="#"><i class="fa fa-repeat fa-fw"></i> Transactions<span class="fa arrow"></span></a>
+                    <a href="#"><i class="fa fa-repeat fa-fw"></i> {{ 'transactions'|_ }}<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a class="{{ activeRoute('transactions.index','withdrawal') }}" href="{{ route('transactions.index','withdrawal') }}"><i
-                                        class="fa fa-long-arrow-left fa-fw"></i> Expenses</a>
+                            <a class="{{ activeRoute('transactions.index','withdrawal') }}" href="{{ route('transactions.index','withdrawal') }}">
+                                <i class="fa fa-long-arrow-left fa-fw"></i> {{ 'expenses'|_ }}</a>
                         </li>
                         <li>
                             <a class="{{ activeRoute('transactions.index','deposit') }}" href="{{ route('transactions.index','deposit') }}"><i
-                                        class="fa fa-long-arrow-right fa-fw"></i> Revenue / income</a>
+                                        class="fa fa-long-arrow-right fa-fw"></i> {{ 'income'|_ }}</a>
                         </li>
                         <li>
-                            <a class="{{ activeRoute('transactions.index','transfers') }}" href="{{ route('transactions.index','transfers') }}"><i class="fa fa-fw fa-exchange"
-                                                                                                                                title="Transfer"></i> Transfers</a>
+                            <a class="{{ activeRoute('transactions.index','transfers') }}" href="{{ route('transactions.index','transfers') }}">
+                                <i class="fa fa-fw fa-exchange"></i> {{ 'transfers'|_ }}</a>
                         </li>
                     </ul>
 
                 </li>
                 <li class="{{ activeRoute('piggy-banks') }}">
-                    <a href="#"><i class="fa fa-euro fa-fw"></i> Money management<span class="fa arrow"></span></a>
+                    <a href="#"><i class="fa fa-euro fa-fw"></i> {{ 'moneyManagement'|_ }}<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a class="{{ activeRoute('piggy-banks') }}" href="{{ route('piggy-banks.index') }}"><i class="fa fa-sort-amount-asc fa-fw"></i> Piggy
-                                banks</a>
+                            <a class="{{ activeRoute('piggy-banks') }}" href="{{ route('piggy-banks.index') }}">
+                                <i class="fa fa-sort-amount-asc fa-fw"></i> {{ 'piggyBanks'|_ }}</a>
                         </li>
                         <li>
-                            <a class="{{ activeRoute('bills') }}" href="{{ route('bills.index') }}"><i class="fa fa-calendar-o fa-fw"></i> Bills</a>
+                            <a class="{{ activeRoute('bills') }}" href="{{ route('bills.index') }}">
+                                <i class="fa fa-calendar-o fa-fw"></i> {{ 'bills'|_ }}</a>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->
                 </li>
                 <li class="{{ activeRoute('transactions.create') }}">
-                    <a href="#"><i class="fa fa-plus fa-fw"></i> Create new<span class="fa arrow"></span></a>
+                    <a href="#"><i class="fa fa-plus fa-fw"></i> {{ 'createNew'|_ }} <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a class="{{ activeRoute('transactions.create','withdrawal') }}" href="{{ route('transactions.create','withdrawal') }}"><i
-                                        class="fa fa-long-arrow-left fa-fw"></i> Withdrawal</a>
+                            <a class="{{ activeRoute('transactions.create','withdrawal') }}" href="{{ route('transactions.create','withdrawal') }}">
+                                <i class="fa fa-long-arrow-left fa-fw"></i> {{ 'withdrawal'|_ }}</a>
                         </li>
                         <li>
-                            <a class="{{ activeRoute('transactions.create','deposit') }}" href="{{ route('transactions.create','deposit') }}"><i
-                                        class="fa fa-long-arrow-right fa-fw"></i> Deposit</a>
+                            <a class="{{ activeRoute('transactions.create','deposit') }}" href="{{ route('transactions.create','deposit') }}">
+                                <i class="fa fa-long-arrow-right fa-fw"></i> {{ 'deposit'|_ }}</a>
                         </li>
                         <li>
-                            <a class="{{ activeRoute('transactions.create','transfer') }}" href="{{ route('transactions.create','transfer') }}"><i class="fa fa-fw fa-exchange"
-                                                                                                                             title="Transfer"></i> Transfer</a>
-                        </li>
-                        <li>
-                            <a class="{{ activeRoute('bills.create') }}" href="{{ route('bills.create') }}"><i class="fa fa-calendar-o fa-fw"></i> Bill</a>
+                            <a class="{{ activeRoute('transactions.create','transfer') }}" href="{{ route('transactions.create','transfer') }}">
+                                <i class="fa fa-fw fa-exchange"></i> {{ 'transfer'|_ }}</a>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->

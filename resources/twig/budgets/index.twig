@@ -6,15 +6,15 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-calendar fa-fw"></i>
-                    {{ Session.get('start').format('F Y') }}
+                    {{ Session.get('start').formatLocalized(monthFormat) }}
                 </div>
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-lg-6 col-md-4 col-sm-3">
-                            <small>Budgeted: <span id="budgetedAmount" data-value="300"></span></small>
+                            <small>{{ 'budgeted'|_ }}: <span id="budgetedAmount" data-value="300"></span></small>
                         </div>
                         <div class="col-lg-6 col-md-4 col-sm-3" style="text-align:right;">
-                            <small>Available in {{ Session.get('start').format('F Y') }}:
+                            <small>Available in {{ Session.get('start').formatLocalized(monthFormat) }}:
                                 <a href="#" class="updateIncome"><span id="totalAmount" data-value="{{ amount }}">{{ amount|formatAmount }}</span></a></small>
                         </div>
                     </div>
@@ -33,7 +33,7 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-6 col-md-4 col-sm-3">
-                            <small>Spent: {{ spent|formatAmount }}</small>
+                            <small>{{ 'spent'|_ }}: {{ spent|formatAmount }}</small>
                         </div>
                     </div>
                     <div class="row">
@@ -90,12 +90,12 @@
                 <div class="pull-right">
                     <div class="btn-group">
                         <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                            Actions
+                            {{ 'actions'|_ }}
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu pull-right" role="menu">
-                            <li><a href="{{ route('budgets.edit',budget.id) }}"><i class="fa fa-pencil fa-fw"></i> Edit</a></li>
-                            <li><a href="{{ route('budgets.delete',budget.id) }}"><i class="fa fa-trash fa-fw"></i> Delete</a></li>
+                            <li><a href="{{ route('budgets.edit',budget.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a></li>
+                            <li><a href="{{ route('budgets.delete',budget.id) }}"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}</a></li>
                         </ul>
                     </div>
                 </div>

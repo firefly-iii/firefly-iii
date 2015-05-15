@@ -94,5 +94,17 @@ return [
         'en' => 'English',
         'nl' => 'Nederlands'
     ],
+    'locales'                  => [
+        'en' => ['en', 'English', 'en_US', 'en_US.utf8'],
+        'nl' => ['nl', 'Dutch', 'nl_NL', 'nl_NL.utf8'],
+    ],
+    'month'                    => [
+        'en' => '%B %Y',
+        'nl' => '%B %Y',
+    ],
+    'monthAndDay'              => [
+        'en' => '%B %e, %Y',
+        'nl' => '%e %B %Y',
+    ],
 
 ];

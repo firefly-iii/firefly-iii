@@ -42,8 +42,8 @@ class GoogleChartController extends Controller
      */
     public function accountBalanceChart(GChart $chart, Account $account)
     {
-        $chart->addColumn('Day of month', 'date');
-        $chart->addColumn('Balance for ' . $account->name, 'number');
+        $chart->addColumn(trans('firefly.dayOfMonth'), 'date');
+        $chart->addColumn(trans('firefly.balanceFor',['name' => $account->name]), 'number');
         $chart->addCertainty(1);
 
         $start   = Session::get('start', Carbon::now()->startOfMonth());
@@ -71,7 +71,7 @@ class GoogleChartController extends Controller
      */
     public function allAccountsBalanceChart(GChart $chart, AccountRepositoryInterface $repository)
     {
-        $chart->addColumn('Day of the month', 'date');
+        $chart->addColumn(trans('firefly.dayOfMonth'), 'date');
 
         $frontPage = Preferences::get('frontPageAccounts', []);
         $start     = Session::get('start', Carbon::now()->startOfMonth());
@@ -81,7 +81,7 @@ class GoogleChartController extends Controller
         $index = 1;
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $chart->addColumn('Balance for ' . $account->name, 'number');
+            $chart->addColumn(trans('firefly.balanceFor',['name' => $account->name]), 'number');
             $chart->addCertainty($index);
             $index++;
         }
@@ -114,7 +114,7 @@ class GoogleChartController extends Controller
     public function allBudgetsAndSpending(GChart $chart, BudgetRepositoryInterface $repository, $year)
     {
         $budgets = $repository->getBudgets();
-        $chart->addColumn('Month', 'date');
+        $chart->addColumn(trans('firefly.month'), 'date');
         foreach ($budgets as $budget) {
             $chart->addColumn($budget->name, 'number');
         }
@@ -147,10 +147,10 @@ class GoogleChartController extends Controller
      */
     public function allBudgetsHomeChart(GChart $chart, BudgetRepositoryInterface $repository)
     {
-        $chart->addColumn('Budget', 'string');
-        $chart->addColumn('Left', 'number');
-        $chart->addColumn('Spent', 'number');
-        $chart->addColumn('Overspent', 'number');
+        $chart->addColumn(trans('firefly.budget'), 'string');
+        $chart->addColumn(trans('firefly.left'), 'number');
+        $chart->addColumn(trans('firefly.spent'), 'number');
+        $chart->addColumn(trans('firefly.overspent'), 'number');
 
         $budgets    = $repository->getBudgets();
         $start      = Session::get('start', Carbon::now()->startOfMonth());
@@ -171,7 +171,7 @@ class GoogleChartController extends Controller
                 $spent     = $expenses > floatval($repetition->amount) ? 0 : $expenses;
                 $overspent = $expenses > floatval($repetition->amount) ? $expenses - floatval($repetition->amount) : 0;
                 $allEntries->push(
-                    [$budget->name . ' (' . $repetition->startdate->format('j M Y') . ')',
+                    [$budget->name . ' (' . $repetition->startdate->formatLocalized($this->monthAndDayFormat) . ')',
                      $left,
                      $spent,
                      $overspent
@@ -181,7 +181,7 @@ class GoogleChartController extends Controller
         }
 
         $noBudgetExpenses = $repository->getWithoutBudgetSum($start, $end);
-        $allEntries->push(['(no budget)', 0, 0, $noBudgetExpenses]);
+        $allEntries->push([trans('firefly.noBudget'), 0, 0, $noBudgetExpenses]);
 
         foreach ($allEntries as $entry) {
             if ($entry[1] != 0 || $entry[2] != 0 || $entry[3] != 0) {
@@ -203,8 +203,8 @@ class GoogleChartController extends Controller
      */
     public function allCategoriesHomeChart(GChart $chart, CategoryRepositoryInterface $repository)
     {
-        $chart->addColumn('Category', 'string');
-        $chart->addColumn('Spent', 'number');
+        $chart->addColumn(trans('firefly.category'), 'string');
+        $chart->addColumn(trans('firefly.spent'), 'number');
 
         $start = Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());
@@ -212,7 +212,7 @@ class GoogleChartController extends Controller
 
         foreach ($set as $entry) {
             $isEncrypted = intval($entry->encrypted) == 1 ? true : false;
-            $name        = strlen($entry->name) == 0 ? '(no category)' : $entry->name;
+            $name        = strlen($entry->name) == 0 ? trans('firefly.noCategory') : $entry->name;
             $name        = $isEncrypted ? Crypt::decrypt($name) : $name;
             $chart->addRow($name, floatval($entry->sum));
         }
@@ -233,10 +233,10 @@ class GoogleChartController extends Controller
     public function billOverview(GChart $chart, BillRepositoryInterface $repository, Bill $bill)
     {
 
-        $chart->addColumn('Date', 'date');
-        $chart->addColumn('Max amount', 'number');
-        $chart->addColumn('Min amount', 'number');
-        $chart->addColumn('Recorded bill entry', 'number');
+        $chart->addColumn(trans('firefly.date'), 'date');
+        $chart->addColumn(trans('firefly.maxAmount'), 'number');
+        $chart->addColumn(trans('firefly.minAmount'), 'number');
+        $chart->addColumn(trans('firefly.billEntry'), 'number');
 
         // get first transaction or today for start:
         $results = $repository->getJournals($bill);
@@ -261,8 +261,8 @@ class GoogleChartController extends Controller
      */
     public function billsOverview(GChart $chart, BillRepositoryInterface $repository, AccountRepositoryInterface $accounts)
     {
-        $chart->addColumn('Name', 'string');
-        $chart->addColumn('Amount', 'number');
+        $chart->addColumn(trans('firefly.name'), 'string');
+        $chart->addColumn(trans('firefly.amount'), 'number');
 
         $start  = Session::get('start', Carbon::now()->startOfMonth());
         $end    = Session::get('end', Carbon::now()->endOfMonth());
@@ -329,8 +329,8 @@ class GoogleChartController extends Controller
             unset($amount, $description);
         }
 
-        $chart->addRow('Unpaid: ' . join(', ', $unpaidDescriptions), $unpaidAmount);
-        $chart->addRow('Paid: ' . join(', ', $paidDescriptions), $paidAmount);
+        $chart->addRow(trans('firefly.unpaid') . ': ' . join(', ', $unpaidDescriptions), $unpaidAmount);
+        $chart->addRow(trans('firefly.paid') . ': ' . join(', ', $paidDescriptions), $paidAmount);
         $chart->generate();
 
         return Response::json($chart->getData());
@@ -349,8 +349,8 @@ class GoogleChartController extends Controller
         $start = clone $repetition->startdate;
         $end   = $repetition->enddate;
 
-        $chart->addColumn('Day', 'date');
-        $chart->addColumn('Left', 'number');
+        $chart->addColumn(trans('firefly.day'), 'date');
+        $chart->addColumn(trans('firefly.left'), 'number');
 
 
         $amount = $repetition->amount;
@@ -380,9 +380,9 @@ class GoogleChartController extends Controller
      */
     public function budgetsAndSpending(GChart $chart, BudgetRepositoryInterface $repository, Budget $budget, $year = 0)
     {
-        $chart->addColumn('Month', 'date');
-        $chart->addColumn('Budgeted', 'number');
-        $chart->addColumn('Spent', 'number');
+        $chart->addColumn(trans('firefly.month'), 'date');
+        $chart->addColumn(trans('firefly.budgeted'), 'number');
+        $chart->addColumn(trans('firefly.spent'), 'number');
 
         if ($year == 0) {
             $start = $repository->getFirstBudgetLimitDate($budget);
@@ -424,8 +424,8 @@ class GoogleChartController extends Controller
         // jump to start of week / month / year / etc (TODO).
         $start = Navigation::startOfPeriod($start, $range->data);
 
-        $chart->addColumn('Period', 'date');
-        $chart->addColumn('Spent', 'number');
+        $chart->addColumn(trans('firefly.period'), 'date');
+        $chart->addColumn(trans('firefly.spent'), 'number');
 
         $end = new Carbon;
         while ($start <= $end) {
@@ -454,8 +454,8 @@ class GoogleChartController extends Controller
     public function categoryPeriodChart(GChart $chart, CategoryRepositoryInterface $repository, Category $category)
     {
         $start = clone Session::get('start', Carbon::now()->startOfMonth());
-        $chart->addColumn('Period', 'date');
-        $chart->addColumn('Spent', 'number');
+        $chart->addColumn(trans('firefly.period'), 'date');
+        $chart->addColumn(trans('firefly.spent'), 'number');
 
         $end = Session::get('end', Carbon::now()->endOfMonth());
         while ($start <= $end) {
@@ -481,8 +481,8 @@ class GoogleChartController extends Controller
      */
     public function piggyBankHistory(GChart $chart, PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
-        $chart->addColumn('Date', 'date');
-        $chart->addColumn('Balance', 'number');
+        $chart->addColumn(trans('firefly.date'), 'date');
+        $chart->addColumn(trans('firefly.balance'), 'number');
 
         /** @var Collection $set */
         $set = $repository->getEventSummarySet($piggyBank);
@@ -509,9 +509,9 @@ class GoogleChartController extends Controller
     public function yearInExp(GChart $chart, ReportQueryInterface $query, $year)
     {
         $start = new Carbon('01-01-' . $year);
-        $chart->addColumn('Month', 'date');
-        $chart->addColumn('Income', 'number');
-        $chart->addColumn('Expenses', 'number');
+        $chart->addColumn(trans('firefly.month'), 'date');
+        $chart->addColumn(trans('firefly.income'), 'number');
+        $chart->addColumn(trans('firefly.expenses'), 'number');
 
         $pref              = Preferences::get('showSharedReports', false);
         $showSharedReports = $pref->data;
@@ -548,9 +548,9 @@ class GoogleChartController extends Controller
     public function yearInExpSum(GChart $chart, ReportQueryInterface $query, $year)
     {
         $start = new Carbon('01-01-' . $year);
-        $chart->addColumn('Summary', 'string');
-        $chart->addColumn('Income', 'number');
-        $chart->addColumn('Expenses', 'number');
+        $chart->addColumn(trans('firefly.summary'), 'string');
+        $chart->addColumn(trans('firefly.income'), 'number');
+        $chart->addColumn(trans('firefly.expenses'), 'number');
 
         $pref              = Preferences::get('showSharedReports', false);
         $showSharedReports = $pref->data;
@@ -576,9 +576,9 @@ class GoogleChartController extends Controller
         }
 
 
-        $chart->addRow('Sum', $income, $expense);
+        $chart->addRow(trans('firefly.sum'), $income, $expense);
         $count = $count > 0 ? $count : 1;
-        $chart->addRow('Average', ($income / $count), ($expense / $count));
+        $chart->addRow(trans('firefly.average'), ($income / $count), ($expense / $count));
 
         $chart->generate();
 

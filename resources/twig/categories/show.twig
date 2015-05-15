@@ -6,7 +6,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-calendar fa-fw"></i>
-                Overview
+                {{ 'overview'|_ }}
             </div>
             <div class="panel-body">
                 <div id="periodOverview"></div>
@@ -17,7 +17,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-calendar-o fa-fw"></i>
-                Overview
+                {{ 'overview'|_ }}
             </div>
             <div class="panel-body">
                 <div id="componentOverview"></div>
@@ -31,7 +31,7 @@
          <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-repeat fa-fw"></i>
-                Transactions
+                {{ 'transactions'|_ }}
             </div>
             <div class="panel-body">
                 {% include 'list/journals' %}

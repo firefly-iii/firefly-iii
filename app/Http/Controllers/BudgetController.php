@@ -29,7 +29,7 @@ class BudgetController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('title', 'Budgets');
+        View::share('title', trans('firefly.budgets'));
         View::share('mainTitleIcon', 'fa-tasks');
         View::share('hideBudgets', true);
     }

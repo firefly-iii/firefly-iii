@@ -15,7 +15,7 @@
                         <div class="pull-right">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                                    Actions
+                                    {{ 'actions'|_ }}
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu pull-right" role="menu">
@@ -46,14 +46,14 @@
     <div class="col-lg-612 col-md-12 col-sm-12 col-xs-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <i class="fa fa-repeat fa-fw"></i> Transactions
+                <i class="fa fa-repeat fa-fw"></i> {{ 'transactions'|_ }}
                 <!-- here is the edit menu when there is no meta-data -->
                 {% if not (tag.latitude and tag.longitude and tag.zoomLevel) %}
                     <!-- ACTIONS MENU -->
                     <div class="pull-right">
                         <div class="btn-group">
                             <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                                Actions
+                                {{ 'actions'|_ }}
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu pull-right" role="menu">

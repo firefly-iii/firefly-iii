@@ -68,13 +68,14 @@ class ReportHelper implements ReportHelperInterface
      */
     public function listOfMonths(Carbon $date)
     {
+
         $start  = clone $date;
         $end    = Carbon::now();
         $months = [];
         while ($start <= $end) {
             $year            = $start->year;
             $months[$year][] = [
-                'formatted' => $start->format('F Y'),
+                'formatted' => $start->formatLocalized('%B %Y'),
                 'month'     => $start->month,
                 'year'      => $year,
             ];

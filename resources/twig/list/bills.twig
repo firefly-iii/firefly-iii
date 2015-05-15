@@ -2,14 +2,14 @@
     <thead>
     <tr>
         <th data-defaultsort="disabled">&nbsp;</th>
-        <th>Name</th>
-        <th>Matches on</th>
-        <th colspan="2">Matching amount</th>
-        <th>Last seen match</th>
-        <th>Next expected match</th>
-        <th>Is active</th>
-        <th>Will be automatched</th>
-        <th>Repeats every</th>
+        <th>{{ trans('list.name') }}</th>
+        <th>{{ trans('list.matchesOn') }}</th>
+        <th colspan="2">{{ trans('list.matchingAmount') }}</th>
+        <th>{{ trans('list.lastMatch') }}</th>
+        <th>{{ trans('list.expectedMatch') }}</th>
+        <th>{{ trans('list.active') }}</th>
+        <th>{{ trans('list.automatch') }}</th>
+        <th>{{ trans('list.repeat_freq') }}</th>
         <th data-defaultsort="disabled">&nbsp;</th>
     </tr></thead>
     <tbody>
@@ -37,21 +37,21 @@
         </td>
             {% if entry.lastFoundMatch %}
             <td data-value="{{ entry.lastFoundMatch.format('U') }}">
-                {{entry.lastFoundMatch.format('j F Y')}}
+                {{entry.lastFoundMatch.formatLocalized(monthAndDayFormat)}}
             </td>
             {% else %}
             <td data-value="0">
-                <em>Unknown</em>
+                <em>{{ 'unknown'|_ }}</em>
             </td>
             {% endif %}
 
             {% if entry.nextExpectedMatch%}
             <td data-value="{{entry.nextExpectedMatch.format('U')}}">
-                {{entry.nextExpectedMatch.format('j F Y')}}
+                {{entry.nextExpectedMatch.formatLocalized(monthAndDayFormat)}}
             </td>
             {% else %}
             <td data-value="0">
-                <em>Unknown</em>
+                <em>{{ 'unknown'|_ }}</em>
             </td>
             {% endif %}
 
@@ -70,7 +70,7 @@
              {% endif %}
          </td>
         <td data-value="{{ entry.repeat_freq }}{{ entry.skip }}">
-            {{ entry.repeat_freq }}
+            {{ entry.repeat_freq|_ }}
              {% if entry.skip > 0 %}
                 skips over {{entry.skip}}
              {% endif %}

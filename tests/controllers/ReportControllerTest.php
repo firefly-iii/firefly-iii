@@ -65,6 +65,12 @@ class ReportControllerTest extends TestCase
         $query->shouldReceive('balancedTransactionsSum')->withAnyArgs()->andReturn(100);
         $helper->shouldReceive('getBudgetsForMonth')->withAnyArgs()->andReturn($budgets);
 
+        // language preference:
+        $language = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $language->data = 'en';
+        $language->save();
+        Preferences::shouldReceive('get')->withAnyArgs()->andReturn($language);
+
 
         $this->call('GET', '/reports/budget/2015/1');
         $this->assertResponseOk();
@@ -202,6 +208,12 @@ class ReportControllerTest extends TestCase
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
         Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
         Amount::shouldReceive('format')->andReturn('X');
+
+        // language preference:
+        $language = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $language->data = 'en';
+        $language->save();
+        Preferences::shouldReceive('get')->withAnyArgs()->andReturn($language);
 
         $this->call('GET', '/reports/2015/1');
         $this->assertResponseOk();
