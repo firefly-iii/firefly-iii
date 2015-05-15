@@ -88,6 +88,13 @@ return [
 
     'reportForYear'            => 'Yearly report for :year',
     'reportForYearShared'      => 'Yearly report for :year (including shared accounts)',
+    'incomeVsExpenses'         => 'Income vs. expenses',
+    'accountBalances'          => 'Account balances',
+    'balanceStartOfYear'       => 'Balance at start of year',
+    'balanceEndOfYear'         => 'Balance at end of year',
+    'difference'               => 'Difference',
+    'in'                       => 'In',
+    'out'                      => 'Out',
 
     // charts:
     'dayOfMonth'               => 'Day of the month',

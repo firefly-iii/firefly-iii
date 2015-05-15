@@ -227,6 +227,7 @@ class ReportQuery implements ReportQueryInterface
                 $object->name = intval($object->account_encrypted) == 1 ? Crypt::decrypt($object->name) : $object->name;
             }
         );
+        $data->sortByDesc('queryAmount');
 
         return $data;
     }

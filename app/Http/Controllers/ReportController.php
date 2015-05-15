@@ -30,6 +30,7 @@ class ReportController extends Controller
      */
     public function __construct(ReportHelperInterface $helper, ReportQueryInterface $query)
     {
+        parent::__construct();
         $this->query  = $query;
         $this->helper = $helper;
 
@@ -246,7 +247,7 @@ class ReportController extends Controller
         return view(
             'reports.month',
             compact(
-                'income', 'expenses', 'budgets', 'accounts', 'categories','shared',
+                'income', 'expenses', 'budgets', 'accounts', 'categories', 'shared',
                 'date', 'subTitle', 'displaySum', 'subTitleIcon'
             )
         );
@@ -259,25 +260,76 @@ class ReportController extends Controller
      */
     public function year($year, $shared = false)
     {
-
-        $subTitle        = trans('firefly.reportForYear',['year' => $year]);
+        $date         = new Carbon('01-01-' . $year);
+        $end          = clone $date;
+        $subTitle     = trans('firefly.reportForYear', ['year' => $year]);
+        $subTitleIcon = 'fa-bar-chart';
+        $totalExpense = 0;
+        $totalIncome  = 0;
 
         if ($shared == 'shared') {
-            $shared = true;
-            $subTitle        = trans('firefly.reportForYearShared',['year' => $year]);
+            $shared   = true;
+            $subTitle = trans('firefly.reportForYearShared', ['year' => $year]);
         }
-        $date = new Carbon('01-01-' . $year);
-        $end  = clone $date;
         $end->endOfYear();
 
-        $subTitleIcon    = 'fa-bar-chart';
-        $mainTitleIcon   = 'fa-line-chart';
-        $balances        = $this->helper->yearBalanceReport($date, $shared);
-        $groupedIncomes  = $this->query->journalsByRevenueAccount($date, $end, $shared);
-        $groupedExpenses = $this->query->journalsByExpenseAccount($date, $end, $shared);
+        /**
+         * ALL ACCOUNTS
+         * Summarized as well.
+         */
+        $accounts     = $this->query->getAllAccounts($date, $end, $shared);
+        $accountsSums = ['start' => 0, 'end' => 0, 'diff' => 0];
+        // summarize:
+        foreach ($accounts as $account) {
+            $accountsSums['start'] += $account->startBalance;
+            $accountsSums['end'] += $account->endBalance;
+            $accountsSums['diff'] += ($account->endBalance - $account->startBalance);
+        }
+
+
+        /**
+         * ALL INCOMES.
+         * Grouped, sorted and summarized.
+         */
+        $set = $this->query->incomeInPeriod($date, $end, $shared);
+        // group, sort and sum:
+        $incomes = [];
+        foreach ($set as $entry) {
+            $id = $entry->account_id;
+            $totalIncome += floatval($entry->queryAmount);
+            if (isset($incomes[$id])) {
+                $incomes[$id]['amount'] += floatval($entry->queryAmount);
+                $incomes[$id]['count']++;
+            } else {
+                $incomes[$id] = [
+                    'amount' => floatval($entry->queryAmount),
+                    'name'   => $entry->name,
+                    'count'  => 1,
+                ];
+            }
+        }
+        unset($set, $id);
+
+        /**
+         * GET ALL EXPENSES
+         * Summarized.
+         */
+        $expenses = $this->query->journalsByExpenseAccount($date, $end, $shared);
+        foreach ($expenses as $expense) {
+            $totalExpense += floatval($expense->queryAmount);
+        }
 
         return view(
-            'reports.year', compact('date','shared', 'groupedIncomes', 'groupedExpenses', 'year', 'balances', 'subTitle', 'subTitleIcon', 'mainTitleIcon')
+            'reports.year',
+            compact(
+                'date', // the date for this report.
+                'shared', // is a shared report?
+                'totalExpense', 'totalIncome', // total income and expense.
+                'accounts', // all accounts
+                'accountsSums', // sums for all accounts
+                'incomes', 'expenses', // expenses and incomes.
+                'subTitle', 'subTitleIcon' // subtitle and subtitle icon.
+            )
         );
     }
 

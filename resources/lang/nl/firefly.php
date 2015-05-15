@@ -88,6 +88,13 @@ return [
 
     'reportForYear'            => 'Jaaroverzicht :year',
     'reportForYearShared'      => 'Jaaroverzicht :year (inclusief gedeelde rekeningen)',
+    'incomeVsExpenses'         => 'Inkomsten tegenover uitgaven',
+    'accountBalances'          => 'Rekeningsaldi',
+    'balanceStartOfYear'       => 'Saldo aan het begin van het jaar',
+    'balanceEndOfYear'         => 'Saldo aan het einde van het jaar',
+    'difference'               => 'Verschil',
+    'in'                       => 'In',
+    'out'                      => 'Uit',
 
     // charts:
     'dayOfMonth'               => 'Dag vd maand',
