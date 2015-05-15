@@ -321,23 +321,28 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
-    'reports.year', function (Generator $breadcrumbs, Carbon $date) {
+    'reports.year', function (Generator $breadcrumbs, Carbon $date, $shared) {
     $breadcrumbs->parent('reports.index');
-    $breadcrumbs->push(trans('breadcrumbs.yearly_report', ['date' => $date->year]), route('reports.year', $date->year));
+    if ($shared) {
+        $title = trans('breadcrumbs.yearly_report_shared', ['date' => $date->year]);
+    } else {
+        $title = trans('breadcrumbs.yearly_report', ['date' => $date->year]);
+    }
+    $breadcrumbs->push($title, route('reports.year', $date->year));
 }
 );
 
 Breadcrumbs::register(
-    'reports.month', function (Generator $breadcrumbs, Carbon $date) {
-    $breadcrumbs->parent('reports.year', $date);
-    $breadcrumbs->push(trans('breadcrumbs.monthly_report', ['date' => $date->format('F Y')]), route('reports.month', [$date->year, $date->month]));
-}
-);
+    'reports.month', function (Generator $breadcrumbs, Carbon $date, $shared) {
+    $breadcrumbs->parent('reports.year', $date, $shared);
 
-Breadcrumbs::register(
-    'reports.budget', function (Generator $breadcrumbs, Carbon $date) {
-    $breadcrumbs->parent('reports.index');
-    $breadcrumbs->push(trans('breadcrumbs.budget_report', ['date' => $date->format('F Y')]), route('reports.budget', [$date->year, $date->month]));
+    if ($shared) {
+        $title = trans('breadcrumbs.monthly_report_shared', ['date' => $date->year]);
+    } else {
+        $title = trans('breadcrumbs.monthly_report', ['date' => $date->year]);
+    }
+
+    $breadcrumbs->push($title, route('reports.month', [$date->year, $date->month]));
 }
 );
 
@@ -345,7 +350,7 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'search', function (Generator $breadcrumbs, $query) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push(trans('breadcrumbs.searchResult',['query' => e($query)]), route('search'));
+    $breadcrumbs->push(trans('breadcrumbs.searchResult', ['query' => e($query)]), route('search'));
 }
 );
 
@@ -353,13 +358,13 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'transactions.index', function (Generator $breadcrumbs, $what) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push(trans('breadcrumbs.'.$what.'_list'), route('transactions.index', $what));
+    $breadcrumbs->push(trans('breadcrumbs.' . $what . '_list'), route('transactions.index', $what));
 }
 );
 Breadcrumbs::register(
     'transactions.create', function (Generator $breadcrumbs, $what) {
     $breadcrumbs->parent('transactions.index', $what);
-    $breadcrumbs->push(trans('breadcrumbs.create_'.e($what)), route('transactions.create', $what));
+    $breadcrumbs->push(trans('breadcrumbs.create_' . e($what)), route('transactions.create', $what));
 }
 );
 

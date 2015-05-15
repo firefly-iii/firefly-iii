@@ -86,6 +86,9 @@ return [
     'half-year'                => 'Elk half jaar',
     'yearly'                   => 'Jaarlijks',
 
+    'reportForYear'            => 'Jaaroverzicht :year',
+    'reportForYearShared'      => 'Jaaroverzicht :year (inclusief gedeelde rekeningen)',
+
     // charts:
     'dayOfMonth'               => 'Dag vd maand',
     'month'                    => 'Maand',

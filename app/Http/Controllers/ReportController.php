@@ -33,7 +33,7 @@ class ReportController extends Controller
         $this->query  = $query;
         $this->helper = $helper;
 
-        View::share('title', 'Reports');
+        View::share('title', trans('firefly.reports'));
         View::share('mainTitleIcon', 'fa-line-chart');
 
     }
@@ -246,7 +246,7 @@ class ReportController extends Controller
         return view(
             'reports.month',
             compact(
-                'income', 'expenses', 'budgets', 'accounts', 'categories',
+                'income', 'expenses', 'budgets', 'accounts', 'categories','shared',
                 'date', 'subTitle', 'displaySum', 'subTitleIcon'
             )
         );
@@ -259,14 +259,17 @@ class ReportController extends Controller
      */
     public function year($year, $shared = false)
     {
+
+        $subTitle        = trans('firefly.reportForYear',['year' => $year]);
+
         if ($shared == 'shared') {
             $shared = true;
+            $subTitle        = trans('firefly.reportForYearShared',['year' => $year]);
         }
         $date = new Carbon('01-01-' . $year);
         $end  = clone $date;
         $end->endOfYear();
-        $title           = 'Reports';
-        $subTitle        = $year;
+
         $subTitleIcon    = 'fa-bar-chart';
         $mainTitleIcon   = 'fa-line-chart';
         $balances        = $this->helper->yearBalanceReport($date, $shared);
@@ -274,7 +277,7 @@ class ReportController extends Controller
         $groupedExpenses = $this->query->journalsByExpenseAccount($date, $end, $shared);
 
         return view(
-            'reports.year', compact('date', 'groupedIncomes', 'groupedExpenses', 'year', 'balances', 'title', 'subTitle', 'subTitleIcon', 'mainTitleIcon')
+            'reports.year', compact('date','shared', 'groupedIncomes', 'groupedExpenses', 'year', 'balances', 'subTitle', 'subTitleIcon', 'mainTitleIcon')
         );
     }
 

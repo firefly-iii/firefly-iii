@@ -1,6 +1,6 @@
 {% extends "./layout/default.twig" %}
 {% block content %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, date) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, date, shared) }}
 
 <div class="row">
     <div class="col-lg-5 col-md-5 col-sm-12">

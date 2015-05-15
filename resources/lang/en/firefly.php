@@ -86,6 +86,9 @@ return [
     'half-year'                => 'Every six months',
     'yearly'                   => 'Yearly',
 
+    'reportForYear'            => 'Yearly report for :year',
+    'reportForYearShared'      => 'Yearly report for :year (including shared accounts)',
+
     // charts:
     'dayOfMonth'               => 'Day of the month',
     'month'                    => 'Month',

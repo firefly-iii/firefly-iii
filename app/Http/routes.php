@@ -281,10 +281,10 @@ Route::group(
     Route::get('/chart/home/bills', ['uses' => 'GoogleChartController@billsOverview']);
     Route::get('/chart/account/{account}/{view?}', ['uses' => 'GoogleChartController@accountBalanceChart']);
     Route::get('/chart/budget/{budget}/spending/{year?}', ['uses' => 'GoogleChartController@budgetsAndSpending']);
-    Route::get('/chart/budgets/spending/{year?}', ['uses' => 'GoogleChartController@allBudgetsAndSpending'])->where(['year' => '[0-9]+']);
+    Route::get('/chart/budgets/spending/{year}/{shared?}', ['uses' => 'GoogleChartController@allBudgetsAndSpending'])->where(['year' => '[0-9]{4}','shared' => 'shared']);
     Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'GoogleChartController@budgetLimitSpending']);
-    Route::get('/chart/reports/income-expenses/{year}', ['uses' => 'GoogleChartController@yearInExp']);
-    Route::get('/chart/reports/income-expenses-sum/{year}', ['uses' => 'GoogleChartController@yearInExpSum']);
+    Route::get('/chart/reports/income-expenses/{year}/{shared?}', ['uses' => 'GoogleChartController@yearInExp'])->where(['year' => '[0-9]{4}','shared'=> 'shared']);
+    Route::get('/chart/reports/income-expenses-sum/{year}/{shared?}', ['uses' => 'GoogleChartController@yearInExpSum'])->where(['year' => '[0-9]{4}','shared'=> 'shared']);
     Route::get('/chart/bills/{bill}', ['uses' => 'GoogleChartController@billOverview']);
     Route::get('/chart/piggy-history/{piggyBank}', ['uses' => 'GoogleChartController@piggyBankHistory']);
     Route::get('/chart/category/{category}/period', ['uses' => 'GoogleChartController@categoryPeriodChart']);

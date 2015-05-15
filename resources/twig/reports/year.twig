@@ -1,6 +1,6 @@
 {% extends "./layout/default.twig" %}
 {% block content %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, date) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, date, shared) }}
 
 <div class="row">
  <div class="col-lg-10 col-md-8 col-sm-12">
@@ -170,6 +170,7 @@
 
 <script type="text/javascript">
     var year = '{{year}}';
+    var shared = {% if shared %}'/shared'{% else %}''{% endif %};
 </script>
 
 <script type="text/javascript" src="js/reports.js"></script>

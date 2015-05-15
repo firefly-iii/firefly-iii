@@ -43,7 +43,7 @@ class GoogleChartController extends Controller
     public function accountBalanceChart(GChart $chart, Account $account)
     {
         $chart->addColumn(trans('firefly.dayOfMonth'), 'date');
-        $chart->addColumn(trans('firefly.balanceFor',['name' => $account->name]), 'number');
+        $chart->addColumn(trans('firefly.balanceFor', ['name' => $account->name]), 'number');
         $chart->addCertainty(1);
 
         $start   = Session::get('start', Carbon::now()->startOfMonth());
@@ -81,7 +81,7 @@ class GoogleChartController extends Controller
         $index = 1;
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $chart->addColumn(trans('firefly.balanceFor',['name' => $account->name]), 'number');
+            $chart->addColumn(trans('firefly.balanceFor', ['name' => $account->name]), 'number');
             $chart->addCertainty($index);
             $index++;
         }
@@ -111,7 +111,7 @@ class GoogleChartController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function allBudgetsAndSpending(GChart $chart, BudgetRepositoryInterface $repository, $year)
+    public function allBudgetsAndSpending(GChart $chart, BudgetRepositoryInterface $repository, $year, $shared = false)
     {
         $budgets = $repository->getBudgets();
         $chart->addColumn(trans('firefly.month'), 'date');
@@ -506,14 +506,16 @@ class GoogleChartController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function yearInExp(GChart $chart, ReportQueryInterface $query, $year)
+    public function yearInExp(GChart $chart, ReportQueryInterface $query, $year, $shared = false)
     {
         $start = new Carbon('01-01-' . $year);
         $chart->addColumn(trans('firefly.month'), 'date');
         $chart->addColumn(trans('firefly.income'), 'number');
         $chart->addColumn(trans('firefly.expenses'), 'number');
 
-        $includeShared = Preferences::get('includeShared', false)->data;
+        if ($shared == 'shared') {
+            $shared = true;
+        }
 
         // get report query interface.
 
@@ -523,8 +525,8 @@ class GoogleChartController extends Controller
             $currentEnd = clone $start;
             $currentEnd->endOfMonth();
             // total income && total expenses:
-            $incomeSum  = floatval($query->incomeInPeriod($start, $currentEnd, $includeShared)->sum('queryAmount'));
-            $expenseSum = floatval($query->journalsByExpenseAccount($start, $currentEnd, $includeShared)->sum('queryAmount'));
+            $incomeSum  = floatval($query->incomeInPeriod($start, $currentEnd, $shared)->sum('queryAmount'));
+            $expenseSum = floatval($query->journalsByExpenseAccount($start, $currentEnd, $shared)->sum('queryAmount'));
 
             $chart->addRow(clone $start, $incomeSum, $expenseSum);
             $start->addMonth();
@@ -544,14 +546,16 @@ class GoogleChartController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function yearInExpSum(GChart $chart, ReportQueryInterface $query, $year)
+    public function yearInExpSum(GChart $chart, ReportQueryInterface $query, $year, $shared = false)
     {
         $start = new Carbon('01-01-' . $year);
         $chart->addColumn(trans('firefly.summary'), 'string');
         $chart->addColumn(trans('firefly.income'), 'number');
         $chart->addColumn(trans('firefly.expenses'), 'number');
 
-        $includeShared = Preferences::get('includeShared', false)->data;
+        if ($shared == 'shared') {
+            $shared = true;
+        }
 
         $income  = 0;
         $expense = 0;
@@ -563,9 +567,9 @@ class GoogleChartController extends Controller
             $currentEnd = clone $start;
             $currentEnd->endOfMonth();
             // total income:
-            $incomeSum = floatval($query->incomeInPeriod($start, $currentEnd, $includeShared)->sum('queryAmount'));
+            $incomeSum = floatval($query->incomeInPeriod($start, $currentEnd, $shared)->sum('queryAmount'));
             // total expenses:
-            $expenseSum = floatval($query->journalsByExpenseAccount($start, $currentEnd, $includeShared)->sum('queryAmount'));
+            $expenseSum = floatval($query->journalsByExpenseAccount($start, $currentEnd, $shared)->sum('queryAmount'));
 
             $income += $incomeSum;
             $expense += $expenseSum;
