@@ -126,7 +126,7 @@
                     {% endfor %}
                     <tr>
                         <td><em>{{ 'sum'|_ }}</em></td>
-                        <td>{{ sum|formatAmount }}</td>
+                        <td><span class="text-danger">{{ (sum * -1)|formatAmountPlain }}</span></td>
                     </tr>
                 </table>
             </div>
