@@ -313,7 +313,7 @@ class GoogleChartControllerTest extends TestCase
         $repository = $this->mock('FireflyIII\Helpers\Report\ReportQueryInterface');
 
         // expect!
-        $repository->shouldReceive('incomeByPeriod')->andReturn($journals);
+        $repository->shouldReceive('incomeInPeriod')->andReturn($journals);
         $repository->shouldReceive('journalsByExpenseAccount')->andReturn($journals);
         Preferences::shouldReceive('get')->withArgs(['showSharedReports', false])->once()->andReturn($preference);
 
@@ -342,7 +342,7 @@ class GoogleChartControllerTest extends TestCase
         $repository = $this->mock('FireflyIII\Helpers\Report\ReportQueryInterface');
 
         // expect!
-        $repository->shouldReceive('incomeByPeriod')->andReturn($journals);
+        $repository->shouldReceive('incomeInPeriod')->andReturn($journals);
         $repository->shouldReceive('journalsByExpenseAccount')->andReturn($journals);
         Preferences::shouldReceive('get')->withArgs(['showSharedReports', false])->once()->andReturn($preference);
 

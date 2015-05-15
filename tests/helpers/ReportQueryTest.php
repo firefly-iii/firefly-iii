@@ -61,7 +61,7 @@ class ReportQueryTest extends TestCase
         $this->markTestIncomplete();
     }
 
-    public function testIncomeByPeriod()
+    public function testIncomeInPeriod()
     {
         $this->markTestIncomplete();
     }

@@ -97,7 +97,7 @@ class JsonControllerTest extends TestCase
         $this->be($user);
 
         $repository = $this->mock('FireflyIII\Helpers\Report\ReportQueryInterface');
-        $repository->shouldReceive('incomeByPeriod')->andReturn(new Collection);
+        $repository->shouldReceive('incomeInPeriod')->andReturn(new Collection);
         Amount::shouldReceive('format')->andReturn('xx');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
 
@@ -184,8 +184,8 @@ class JsonControllerTest extends TestCase
         $user = FactoryMuffin::create('FireflyIII\User');
         $this->be($user);
 
-        Preferences::shouldReceive('get')->withArgs(['showSharedReports', false])->andReturn($pref);
-        Preferences::shouldReceive('set')->withArgs(['showSharedReports', true]);
+        Preferences::shouldReceive('get')->withArgs(['includeShared', false])->andReturn($pref);
+        Preferences::shouldReceive('set')->withArgs(['includeShared', true]);
 
         // language preference:
         $language = FactoryMuffin::create('FireflyIII\Models\Preference');
