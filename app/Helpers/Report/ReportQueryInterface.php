@@ -15,15 +15,6 @@ interface ReportQueryInterface
 {
 
     /**
-     * This query retrieves a list of accounts that are active and not shared.
-     *
-     * @param bool $showSharedReports
-     *
-     * @return Collection
-     */
-    public function accountList($showSharedReports = false);
-
-    /**
      * This method will get a list of all expenses in a certain time period that have no budget
      * and are balanced by a transfer to make up for it.
      *
@@ -52,11 +43,11 @@ interface ReportQueryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
-     * @param bool   $showSharedReports
+     * @param bool   $includeShared
      *
      * @return Collection
      */
-    public function getAllAccounts(Carbon $start, Carbon $end, $showSharedReports = false);
+    public function getAllAccounts(Carbon $start, Carbon $end, $includeShared = false);
 
     /**
      * Grabs a summary of all expenses grouped by budget, related to the account.
@@ -88,22 +79,23 @@ interface ReportQueryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
-     * @param bool   $showSharedReports
+     * @param bool   $includeShared
      *
      * @return Collection
+     *
      */
-    public function incomeByPeriod(Carbon $start, Carbon $end, $showSharedReports = false);
+    public function incomeInPeriod(Carbon $start, Carbon $end, $includeShared = false);
 
     /**
      * Gets a list of expenses grouped by the budget they were filed under.
      *
      * @param Carbon $start
      * @param Carbon $end
-     * @param bool   $showSharedReports
+     * @param bool   $includeShared
      *
      * @return Collection
      */
-    public function journalsByBudget(Carbon $start, Carbon $end, $showSharedReports = false);
+    public function journalsByBudget(Carbon $start, Carbon $end, $includeShared = false);
 
     /**
      * Gets a list of categories and the expenses therein, grouped by the relevant category.
@@ -111,11 +103,11 @@ interface ReportQueryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
-     * @param bool   $showSharedReports
+     * @param bool   $includeShared
      *
      * @return Collection
      */
-    public function journalsByCategory(Carbon $start, Carbon $end, $showSharedReports = false);
+    public function journalsByCategory(Carbon $start, Carbon $end, $includeShared = false);
 
     /**
      * Gets a list of expense accounts and the expenses therein, grouped by that expense account.
@@ -125,22 +117,23 @@ interface ReportQueryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
-     * @param bool   $showSharedReports
+     * @param bool   $includeShared
      *
      * @return Collection
+     *
      */
-    public function journalsByExpenseAccount(Carbon $start, Carbon $end, $showSharedReports = false);
+    public function journalsByExpenseAccount(Carbon $start, Carbon $end, $includeShared = false);
 
     /**
      * This method returns all deposits into asset accounts, grouped by the revenue account,
      *
      * @param Carbon $start
      * @param Carbon $end
-     * @param bool   $showSharedReports
+     * @param bool   $includeShared
      *
      * @return Collection
      */
-    public function journalsByRevenueAccount(Carbon $start, Carbon $end, $showSharedReports = false);
+    public function journalsByRevenueAccount(Carbon $start, Carbon $end, $includeShared = false);
 
     /**
      * With an equally misleading name, this query returns are transfers to shared accounts. These are considered

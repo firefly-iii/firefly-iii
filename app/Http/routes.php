@@ -357,7 +357,6 @@ Route::group(
     Route::get('/reports', ['uses' => 'ReportController@index', 'as' => 'reports.index']);
     Route::get('/reports/{year}', ['uses' => 'ReportController@year', 'as' => 'reports.year']);
     Route::get('/reports/{year}/{month}', ['uses' => 'ReportController@month', 'as' => 'reports.month']);
-    Route::get('/reports/budget/{year}/{month}', ['uses' => 'ReportController@budget', 'as' => 'reports.budget']);
 
     // pop ups for budget report:
     Route::get('/reports/modal/{account}/{year}/{month}/no-budget', ['uses' => 'ReportController@modalNoBudget', 'as' => 'reports.no-budget']);

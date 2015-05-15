@@ -128,7 +128,7 @@ class JsonController extends Controller
     {
         $start  = Session::get('start', Carbon::now()->startOfMonth());
         $end    = Session::get('end', Carbon::now()->endOfMonth());
-        $amount = $reportQuery->incomeByPeriod($start, $end, true)->sum('queryAmount');
+        $amount = $reportQuery->incomeInPeriod($start, $end, true)->sum('queryAmount');
 
         return Response::json(['box' => 'in', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount]);
     }
@@ -208,9 +208,9 @@ class JsonController extends Controller
     public function setSharedReports()
     {
         /** @var Preference $pref */
-        $pref = Preferences::get('showSharedReports', false);
+        $pref = Preferences::get('includeShared', false);
         $new  = !$pref->data;
-        Preferences::set('showSharedReports', $new);
+        Preferences::set('includeShared', $new);
 
 
         return Response::json(['value' => $new]);
@@ -221,7 +221,7 @@ class JsonController extends Controller
      */
     public function showSharedReports()
     {
-        $pref = Preferences::get('showSharedReports', false);
+        $pref = Preferences::get('includeShared', false);
 
         return Response::json(['value' => $pref->data]);
     }

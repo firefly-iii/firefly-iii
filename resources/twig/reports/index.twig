@@ -11,57 +11,21 @@
     </div>
 </div>
 <div class="row">
- <div class="col-lg-4 col-md-4 col-sm-4">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <i class="fa fa-calendar fa-fw"></i>
-            Yearly reports
-        </div>
-        <div class="panel-body">
-            <ul>
-                {% for year in years %}
-                <li><a href="{{route('reports.year',year)}}">{{ year }}</a></li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
- </div>
-
-    <div class="col-lg-4 col-md-4 col-sm-4">
+    <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-calendar fa-fw"></i>
-                Monthly reports
+                Reports
             </div>
             <div class="panel-body">
 
-                    {% for year, entries in months %}
-                        <h5>{{ year }}</h5>
-                        <ul>
-                            {% for month in entries %}
-                                <li><a href="{{route('reports.month',[month.year, month.month])}}">{{ month.formatted}}</a></li>
-                            {% endfor %}
-                        </ul>
-                {% endfor %}
-
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-4 col-md-4 col-sm-4">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-calendar fa-fw"></i>
-                Budget reports
-            </div>
-            <div class="panel-body">
                 {% for year, entries in months %}
-                <h5>{{ year }}</h5>
-                <ul>
+                <h4><a href="{{route('reports.year',year)}}">{{ year }}</a></h4>
+                    <ul class="list-inline">
                     {% for month in entries %}
-                            <li><a href="{{route('reports.budget',[month.year,month.month])}}">{{ month.formatted}}</a></li>
+                        <li><a href="{{route('reports.month',[month.year, month.month])}}">{{ month.formatted}}</a></li>
                     {% endfor %}
-                </ul>
+                    </ul>
                 {% endfor %}
             </div>
         </div>

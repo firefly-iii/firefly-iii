@@ -39,74 +39,6 @@ class ReportController extends Controller
     }
 
     /**
-     * @param string $year
-     * @param string $month
-     *
-     * @return \Illuminate\View\View
-     */
-    public function budget($year = '2014', $month = '1')
-    {
-        $date         = new Carbon($year . '-' . $month . '-01');
-        $subTitle     = 'Budget report for ' . $date->format('F Y');
-        $subTitleIcon = 'fa-calendar';
-        $start        = clone $date;
-
-
-        $start->startOfMonth();
-        $end = clone $date;
-        $end->endOfMonth();
-
-        // should show shared reports?
-        /** @var Preference $pref */
-        $pref              = Preferences::get('showSharedReports', false);
-        $showSharedReports = $pref->data;
-        $accountAmounts    = []; // array with sums of spent amounts on each account.
-        $accounts          = $this->query->getAllAccounts($start, $end, $showSharedReports); // all accounts and some data.
-
-        foreach ($accounts as $account) {
-
-            $budgets                      = $this->query->getBudgetSummary($account, $start, $end);// get budget summary for this account:
-            $balancedAmount               = $this->query->balancedTransactionsSum($account, $start, $end);
-            $accountAmounts[$account->id] = $balancedAmount;
-            // balance out the transactions (see transaction groups & tags) ^^
-
-            // array with budget information for each account:
-            $array = [];
-            // should always hide account
-            $hide = true;
-            // loop all budgets
-            /** @var \FireflyIII\Models\Budget $budget */
-            foreach ($budgets as $budget) {
-                $id         = intval($budget->id);
-                $data       = $budget->toArray();
-                $array[$id] = $data;
-
-                // no longer hide account if any budget has money in it.
-                if (floatval($data['queryAmount']) != 0) {
-                    $hide = false;
-                }
-                $accountAmounts[$account->id] += $data['queryAmount'];
-            }
-            $account->hide              = $hide;
-            $account->budgetInformation = $array;
-            $account->balancedAmount    = $balancedAmount;
-
-        }
-
-        /**
-         * Start getBudgetsForMonth DONE
-         */
-        $budgets = $this->helper->getBudgetsForMonth($date, $showSharedReports);
-
-        /**
-         * End getBudgetsForMonth DONE
-         */
-
-        return view('reports.budget', compact('subTitle', 'accountAmounts', 'year', 'month', 'subTitleIcon', 'date', 'accounts', 'budgets'));
-
-    }
-
-    /**
      * @return View
      * @internal param ReportHelperInterface $helper
      *
@@ -115,11 +47,10 @@ class ReportController extends Controller
     {
         $start         = Session::get('first');
         $months        = $this->helper->listOfMonths($start);
-        $years         = $this->helper->listOfYears($start);
         $title         = 'Reports';
         $mainTitleIcon = 'fa-line-chart';
 
-        return view('reports.index', compact('years', 'months', 'title', 'mainTitleIcon'));
+        return view('reports.index', compact('months', 'title', 'mainTitleIcon'));
     }
 
     /**
@@ -199,48 +130,67 @@ class ReportController extends Controller
      */
     public function month($year = '2014', $month = '1')
     {
-        $date         = new Carbon($year . '-' . $month . '-01');
-        $subTitle     = 'Report for ' . $date->format('F Y');
-        $subTitleIcon = 'fa-calendar';
-        $displaySum   = true; // to show sums in report.
-        /** @var Preference $pref */
-        $pref              = Preferences::get('showSharedReports', false);
-        $showSharedReports = $pref->data;
+        $date          = new Carbon($year . '-' . $month . '-01');
+        $subTitle      = 'Report for ' . $date->format('F Y');
+        $subTitleIcon  = 'fa-calendar';
+        $displaySum    = true; // to show sums in report.
+        $end           = clone $date;
+        $start         = clone $date;
+        $includeShared = Preferences::get('includeShared', false)->data;
 
-
-        /**
-         *
-         * get income for month (date)
-         *
-         */
-
-        $start = clone $date;
+        // set start and end.
         $start->startOfMonth();
-        $end = clone $date;
         $end->endOfMonth();
 
-        /**
-         * Start getIncomeForMonth DONE
-         */
-        $income = $this->query->incomeByPeriod($start, $end, $showSharedReports);
-        /**
-         * End getIncomeForMonth DONE
-         */
-        /**
-         * Start getExpenseGroupedForMonth DONE
-         */
-        $set = $this->query->journalsByExpenseAccount($start, $end, $showSharedReports);
+        // get all income and expenses. it's OK.
+        $income      = $this->query->incomeInPeriod($start, $end, $includeShared);
+        $expensesSet = $this->query->journalsByExpenseAccount($start, $end, $includeShared);
 
-        $expenses = Steam::makeArray($set);
-        $expenses = Steam::sortArray($expenses);
-        $expenses = Steam::limitArray($expenses, 10);
         /**
-         * End getExpenseGroupedForMonth DONE
+         * INCLUDE ORIGINAL BUDGET REPORT HERE:
          */
+        // should show shared reports?
+        /** @var Preference $pref */
+        $accountAmounts = []; // array with sums of spent amounts on each account.
+        $accounts       = $this->query->getAllAccounts($start, $end, $includeShared); // all accounts and some data.
+
+        foreach ($accounts as $account) {
+
+            $budgets                      = $this->query->getBudgetSummary($account, $start, $end);// get budget summary for this account:
+            $balancedAmount               = $this->query->balancedTransactionsSum($account, $start, $end);
+            $accountAmounts[$account->id] = $balancedAmount;
+            // balance out the transactions (see transaction groups & tags) ^^
+
+            // array with budget information for each account:
+            $array = [];
+            // should always hide account
+            $hide = true;
+            // loop all budgets
+            /** @var \FireflyIII\Models\Budget $budget */
+            foreach ($budgets as $budget) {
+                $id         = intval($budget->id);
+                $data       = $budget->toArray();
+                $array[$id] = $data;
+
+                // no longer hide account if any budget has money in it.
+                if (floatval($data['queryAmount']) != 0) {
+                    $hide = false;
+                }
+                $accountAmounts[$account->id] += $data['queryAmount'];
+            }
+            $account->hide              = $hide;
+            $account->budgetInformation = $array;
+            $account->balancedAmount    = $balancedAmount;
+
+        }
+        /**
+         * END ORIGINAL BUDGET REPORT
+         */
+
         /**
          * Start getBudgetsForMonth DONE
          */
-        $budgets = $this->helper->getBudgetsForMonth($date, $showSharedReports);
+        $budgets = $this->helper->getBudgetsForMonth($date, $includeShared);
 
         /**
          * End getBudgetsForMonth DONE
@@ -254,7 +204,7 @@ class ReportController extends Controller
 
 
         // all transfers
-        if ($showSharedReports === false) {
+        if ($includeShared === false) {
             $result    = $this->query->sharedExpensesByCategory($start, $end);
             $transfers = Steam::makeArray($result);
             $merged    = Steam::mergeArrays($categories, $transfers);
@@ -268,31 +218,16 @@ class ReportController extends Controller
 
         // limit to $limit:
         $categories = Steam::limitArray($sorted, 10);
+
         /**
          * End getCategoriesForMonth DONE
          */
-        /**
-         * Start getAccountsForMonth
-         */
-        $list     = $this->query->accountList($showSharedReports);
-        $accounts = [];
-        /** @var Account $account */
-        foreach ($list as $account) {
-            $id = intval($account->id);
-            /** @noinspection PhpParamsInspection */
-            $accounts[$id] = [
-                'name'         => $account->name,
-                'startBalance' => Steam::balance($account, $start),
-                'endBalance'   => Steam::balance($account, $end)
-            ];
 
-            $accounts[$id]['difference'] = $accounts[$id]['endBalance'] - $accounts[$id]['startBalance'];
-        }
 
-        /**
-         * End getAccountsForMonth
-         */
-
+        // clean up and sort expenses:
+        $expenses = Steam::makeArray($expensesSet);
+        $expenses = Steam::sortArray($expenses);
+        $expenses = Steam::limitArray($expenses, 10);
 
         return view(
             'reports.month',
@@ -311,8 +246,7 @@ class ReportController extends Controller
     public function year($year)
     {
         /** @var Preference $pref */
-        $pref              = Preferences::get('showSharedReports', false);
-        $showSharedReports = $pref->data;
+        $includeShared = Preferences::get('includeShared', false)->data;
         $date              = new Carbon('01-01-' . $year);
         $end               = clone $date;
         $end->endOfYear();
@@ -320,9 +254,9 @@ class ReportController extends Controller
         $subTitle        = $year;
         $subTitleIcon    = 'fa-bar-chart';
         $mainTitleIcon   = 'fa-line-chart';
-        $balances        = $this->helper->yearBalanceReport($date, $showSharedReports);
-        $groupedIncomes  = $this->query->journalsByRevenueAccount($date, $end, $showSharedReports);
-        $groupedExpenses = $this->query->journalsByExpenseAccount($date, $end, $showSharedReports);
+        $balances        = $this->helper->yearBalanceReport($date, $includeShared);
+        $groupedIncomes  = $this->query->journalsByRevenueAccount($date, $end, $includeShared);
+        $groupedExpenses = $this->query->journalsByExpenseAccount($date, $end, $includeShared);
 
         return view(
             'reports.year', compact('date', 'groupedIncomes', 'groupedExpenses', 'year', 'balances', 'title', 'subTitle', 'subTitleIcon', 'mainTitleIcon')

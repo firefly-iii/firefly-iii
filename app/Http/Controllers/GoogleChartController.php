@@ -513,8 +513,7 @@ class GoogleChartController extends Controller
         $chart->addColumn(trans('firefly.income'), 'number');
         $chart->addColumn(trans('firefly.expenses'), 'number');
 
-        $pref              = Preferences::get('showSharedReports', false);
-        $showSharedReports = $pref->data;
+        $includeShared = Preferences::get('includeShared', false)->data;
 
         // get report query interface.
 
@@ -524,8 +523,8 @@ class GoogleChartController extends Controller
             $currentEnd = clone $start;
             $currentEnd->endOfMonth();
             // total income && total expenses:
-            $incomeSum  = floatval($query->incomeByPeriod($start, $currentEnd, $showSharedReports)->sum('queryAmount'));
-            $expenseSum = floatval($query->journalsByExpenseAccount($start, $currentEnd, $showSharedReports)->sum('queryAmount'));
+            $incomeSum  = floatval($query->incomeInPeriod($start, $currentEnd, $includeShared)->sum('queryAmount'));
+            $expenseSum = floatval($query->journalsByExpenseAccount($start, $currentEnd, $includeShared)->sum('queryAmount'));
 
             $chart->addRow(clone $start, $incomeSum, $expenseSum);
             $start->addMonth();
@@ -552,8 +551,7 @@ class GoogleChartController extends Controller
         $chart->addColumn(trans('firefly.income'), 'number');
         $chart->addColumn(trans('firefly.expenses'), 'number');
 
-        $pref              = Preferences::get('showSharedReports', false);
-        $showSharedReports = $pref->data;
+        $includeShared = Preferences::get('includeShared', false)->data;
 
         $income  = 0;
         $expense = 0;
@@ -565,9 +563,9 @@ class GoogleChartController extends Controller
             $currentEnd = clone $start;
             $currentEnd->endOfMonth();
             // total income:
-            $incomeSum = floatval($query->incomeByPeriod($start, $currentEnd, $showSharedReports)->sum('queryAmount'));
+            $incomeSum = floatval($query->incomeInPeriod($start, $currentEnd, $includeShared)->sum('queryAmount'));
             // total expenses:
-            $expenseSum = floatval($query->journalsByExpenseAccount($start, $currentEnd, $showSharedReports)->sum('queryAmount'));
+            $expenseSum = floatval($query->journalsByExpenseAccount($start, $currentEnd, $includeShared)->sum('queryAmount'));
 
             $income += $incomeSum;
             $expense += $expenseSum;

@@ -36,31 +36,6 @@ class ReportQueryTest extends TestCase
         parent::tearDown();
     }
 
-
-    public function testAccountList()
-    {
-        $user = FactoryMuffin::create('FireflyIII\User');
-        $this->be($user);
-
-        // account types:
-        FactoryMuffin::create('FireflyIII\Models\AccountType');
-        FactoryMuffin::create('FireflyIII\Models\AccountType');
-        $type = FactoryMuffin::create('FireflyIII\Models\AccountType');
-
-        // create four accounts:
-        for ($i = 0; $i < 4; $i++) {
-            $account          = FactoryMuffin::create('FireflyIII\Models\Account');
-            $account->user_id = $user->id;
-            $account->active  = 1;
-            $account->account_type_id = $type->id;
-            $account->save();
-        }
-
-        $set = $this->object->accountList();
-        $this->assertCount(4, $set);
-
-    }
-
     public function testBalancedTransactionsList()
     {
         $this->markTestIncomplete();

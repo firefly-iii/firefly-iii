@@ -22,11 +22,11 @@ class ReportHelper implements ReportHelperInterface
      * This method gets some kind of list for a monthly overview.
      *
      * @param Carbon $date
-     * @param bool   $showSharedReports
+     * @param bool   $includeShared
      *
      * @return Collection
      */
-    public function getBudgetsForMonth(Carbon $date, $showSharedReports = false)
+    public function getBudgetsForMonth(Carbon $date, $includeShared = false)
     {
         /** @var \FireflyIII\Helpers\Report\ReportQueryInterface $query */
         $query = App::make('FireflyIII\Helpers\Report\ReportQueryInterface');
@@ -44,7 +44,7 @@ class ReportHelper implements ReportHelperInterface
                    ->get(['budgets.*', 'budget_limits.amount as queryAmount']);
 
         $budgets                   = Steam::makeArray($set);
-        $amountSet                 = $query->journalsByBudget($start, $end, $showSharedReports);
+        $amountSet                 = $query->journalsByBudget($start, $end, $includeShared);
         $amounts                   = Steam::makeArray($amountSet);
         $budgets                   = Steam::mergeArrays($budgets, $amounts);
         $budgets[0]['spent']       = isset($budgets[0]['spent']) ? $budgets[0]['spent'] : 0.0;
@@ -53,7 +53,7 @@ class ReportHelper implements ReportHelperInterface
 
         // find transactions to shared asset accounts, which are without a budget by default:
         // which is only relevant when shared asset accounts are hidden.
-        if ($showSharedReports === false) {
+        if ($includeShared === false) {
             $transfers = $query->sharedExpenses($start, $end)->sum('queryAmount');
             $budgets[0]['spent'] += floatval($transfers) * -1;
         }
@@ -87,37 +87,16 @@ class ReportHelper implements ReportHelperInterface
 
     /**
      * @param Carbon $date
+     * @param bool   $includeShared
      *
      * @return array
      */
-    public function listOfYears(Carbon $date)
-    {
-        $start = clone $date;
-        $end   = Carbon::now();
-        $years = [];
-        while ($start <= $end) {
-            $years[] = $start->year;
-            $start->addYear();
-        }
-        $years[] = Carbon::now()->year;
-        // force the current year.
-        $years = array_unique($years);
-
-        return $years;
-    }
-
-    /**
-     * @param Carbon $date
-     * @param bool   $showSharedReports
-     *
-     * @return array
-     */
-    public function yearBalanceReport(Carbon $date, $showSharedReports = false)
+    public function yearBalanceReport(Carbon $date, $includeShared = false)
     {
         $start          = clone $date;
         $end            = clone $date;
         $sharedAccounts = [];
-        if ($showSharedReports === false) {
+        if ($includeShared === false) {
             $sharedCollection = Auth::user()->accounts()
                                     ->leftJoin('account_meta', 'account_meta.account_id', '=', 'accounts.id')
                                     ->where('account_meta.name', '=', 'accountRole')

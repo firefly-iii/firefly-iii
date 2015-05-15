@@ -17,10 +17,11 @@ interface ReportHelperInterface
      * This method gets some kind of list for a monthly overview.
      *
      * @param Carbon $date
+     * @param bool   $includeShared
      *
      * @return Collection
      */
-    public function getBudgetsForMonth(Carbon $date);
+    public function getBudgetsForMonth(Carbon $date, $includeShared = false);
 
     /**
      * @param Carbon $date
@@ -31,16 +32,9 @@ interface ReportHelperInterface
 
     /**
      * @param Carbon $date
+     * @param bool   $includeShared
      *
      * @return array
      */
-    public function listOfYears(Carbon $date);
-
-    /**
-     * @param Carbon $date
-     * @param bool   $showSharedReports
-     *
-     * @return array
-     */
-    public function yearBalanceReport(Carbon $date, $showSharedReports = false);
+    public function yearBalanceReport(Carbon $date, $includeShared = false);
 }

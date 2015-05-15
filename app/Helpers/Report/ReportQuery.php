@@ -23,38 +23,6 @@ class ReportQuery implements ReportQueryInterface
 {
 
     /**
-     * This query retrieves a list of accounts that are active and not shared.
-     *
-     * @param bool $showSharedReports
-     *
-     * @return Collection
-     */
-    public function accountList($showSharedReports = false)
-    {
-        $query = Auth::user()->accounts();
-        if ($showSharedReports === false) {
-
-            $query->leftJoin(
-                'account_meta', function (JoinClause $join) {
-                $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', "accountRole");
-            }
-            )->where(
-                function (Builder $query) {
-                    $query->where('account_meta.data', '!=', '"sharedAsset"');
-                    $query->orWhereNull('account_meta.data');
-                }
-            );
-
-        }
-        $query->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-              ->whereIn('account_types.type', ['Default account', 'Cash account', 'Asset account'])
-              ->where('active', 1)
-              ->orderBy('accounts.name', 'ASC');
-
-        return $query->get(['accounts.*']);
-    }
-
-    /**
      * This method will get a list of all expenses in a certain time period that have no budget
      * and are balanced by a transfer to make up for it.
      *
@@ -123,15 +91,15 @@ class ReportQuery implements ReportQueryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
-     * @param bool   $showSharedReports
+     * @param bool   $includeShared
      *
      * @return Collection
      */
-    public function getAllAccounts(Carbon $start, Carbon $end, $showSharedReports = false)
+    public function getAllAccounts(Carbon $start, Carbon $end, $includeShared = false)
     {
         $query = Auth::user()->accounts()->orderBy('accounts.name', 'ASC')
                      ->accountTypeIn(['Default account', 'Asset account', 'Cash account']);
-        if ($showSharedReports === false) {
+        if ($includeShared === false) {
             $query->leftJoin(
                 'account_meta', function (JoinClause $join) {
                 $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
@@ -208,14 +176,14 @@ class ReportQuery implements ReportQueryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
-     * @param bool   $showSharedReports
+     * @param bool   $includeShared
      *
      * @return Collection
      */
-    public function incomeByPeriod(Carbon $start, Carbon $end, $showSharedReports = false)
+    public function incomeInPeriod(Carbon $start, Carbon $end, $includeShared = false)
     {
         $query = $this->queryJournalsWithTransactions($start, $end);
-        if ($showSharedReports === false) {
+        if ($includeShared === false) {
             // only get deposits not to a shared account
             // and transfers to a shared account.
             $query->where(
@@ -268,11 +236,11 @@ class ReportQuery implements ReportQueryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
-     * @param bool   $showSharedReports
+     * @param bool   $includeShared
      *
      * @return Collection
      */
-    public function journalsByBudget(Carbon $start, Carbon $end, $showSharedReports = false)
+    public function journalsByBudget(Carbon $start, Carbon $end, $includeShared = false)
     {
         $query = Auth::user()->transactionjournals()
                      ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
@@ -283,7 +251,7 @@ class ReportQuery implements ReportQueryInterface
                      }
                      )
                      ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id');
-        if ($showSharedReports === false) {
+        if ($includeShared === false) {
 
             $query->leftJoin(
                 'account_meta', function (JoinClause $join) {
@@ -307,11 +275,11 @@ class ReportQuery implements ReportQueryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
-     * @param bool   $showSharedReports
+     * @param bool   $includeShared
      *
      * @return Collection
      */
-    public function journalsByCategory(Carbon $start, Carbon $end, $showSharedReports = false)
+    public function journalsByCategory(Carbon $start, Carbon $end, $includeShared = false)
     {
         $query = Auth::user()->transactionjournals()
                      ->leftJoin(
@@ -324,7 +292,7 @@ class ReportQuery implements ReportQueryInterface
                      }
                      )
                      ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id');
-        if ($showSharedReports === false) {
+        if ($includeShared === false) {
             $query->leftJoin(
                 'account_meta', function (JoinClause $join) {
                 $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
@@ -358,14 +326,14 @@ class ReportQuery implements ReportQueryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
-     * @param bool   $showSharedReports
+     * @param bool   $includeShared
      *
      * @return Collection
      */
-    public function journalsByExpenseAccount(Carbon $start, Carbon $end, $showSharedReports = false)
+    public function journalsByExpenseAccount(Carbon $start, Carbon $end, $includeShared = false)
     {
         $query = $this->queryJournalsWithTransactions($start, $end);
-        if ($showSharedReports === false) {
+        if ($includeShared === false) {
             // get all withdrawals not from a shared accounts
             // and all transfers to a shared account
             $query->where(
@@ -410,14 +378,14 @@ class ReportQuery implements ReportQueryInterface
      *
      * @param Carbon $start
      * @param Carbon $end
-     * @param bool   $showSharedReports
+     * @param bool   $includeShared
      *
      * @return Collection
      */
-    public function journalsByRevenueAccount(Carbon $start, Carbon $end, $showSharedReports = false)
+    public function journalsByRevenueAccount(Carbon $start, Carbon $end, $includeShared = false)
     {
         $query = $this->queryJournalsWithTransactions($start, $end);
-        if ($showSharedReports === false) {
+        if ($includeShared === false) {
 
             // show queries where transfer type is deposit, and its not to a shared account
             // or where its a transfer and its from a shared account (both count as incomes)

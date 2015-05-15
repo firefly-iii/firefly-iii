@@ -118,15 +118,6 @@ class ReportHelperTest extends TestCase
 
     }
 
-    public function testListOfYears()
-    {
-
-        $date   = new Carbon('2015-01-01');
-        $now    = new Carbon;
-        $diff   = $now->diffInYears($date) + 1; // the year itself.
-        $result = $this->object->listOfYears($date);
-        $this->assertCount($diff, $result);
-    }
 
     public function testYearBalanceReport()
     {

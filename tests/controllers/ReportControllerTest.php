@@ -36,47 +36,6 @@ class ReportControllerTest extends TestCase
         parent::tearDown();
     }
 
-    public function testBudget()
-    {
-        $user                    = FactoryMuffin::create('FireflyIII\User');
-        $showSharedReports       = FactoryMuffin::create('FireflyIII\Models\Preference');
-        $currency                = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
-        $account                 = FactoryMuffin::create('FireflyIII\Models\Account');
-        $budget                  = FactoryMuffin::create('FireflyIII\Models\Budget');
-        $budget->queryAmount     = 100;
-        $accounts                = new Collection([$account]);
-        $budgets                 = new Collection([$budget]);
-        $showSharedReports->data = false;
-        $this->be($user);
-        $showSharedReports->save();
-
-        // mock stuff
-        $query  = $this->mock('FireflyIII\Helpers\Report\ReportQueryInterface');
-        $helper = $this->mock('FireflyIII\Helpers\Report\ReportHelperInterface');
-
-        // fake it!
-        Preferences::shouldReceive('get')->withArgs(['showSharedReports', false])->andReturn($showSharedReports);
-        Amount::shouldReceive('getDefaultCurrency')->once()->andReturn($currency);
-        Amount::shouldReceive('getAllCurrencies')->once()->andReturn([$currency]);
-        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
-        Amount::shouldReceive('format')->andReturn('X');
-        $query->shouldReceive('getAllAccounts')->withAnyArgs()->andReturn($accounts);
-        $query->shouldReceive('getBudgetSummary')->withAnyArgs()->andReturn($budgets);
-        $query->shouldReceive('balancedTransactionsSum')->withAnyArgs()->andReturn(100);
-        $helper->shouldReceive('getBudgetsForMonth')->withAnyArgs()->andReturn($budgets);
-
-        // language preference:
-        $language = FactoryMuffin::create('FireflyIII\Models\Preference');
-        $language->data = 'en';
-        $language->save();
-        Preferences::shouldReceive('get')->withAnyArgs()->andReturn($language);
-
-
-        $this->call('GET', '/reports/budget/2015/1');
-        $this->assertResponseOk();
-
-    }
-
     public function testIndex()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -141,82 +100,6 @@ class ReportControllerTest extends TestCase
         $this->call('GET', '/reports/modal/' . $account->id . '/2015/1/no-budget');
         $this->assertResponseOk();
 
-    }
-
-    public function testMonth()
-    {
-        $user     = FactoryMuffin::create('FireflyIII\User');
-        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
-        $journal  = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-        $budget   = FactoryMuffin::create('FireflyIII\Models\Budget');
-        $account  = FactoryMuffin::create('FireflyIII\Models\Account');
-        $journals = new Collection([$journal]);
-        $budgets  = new Collection([$budget]);
-        $accounts = new Collection([$account]);
-        $this->be($user);
-
-        $helper = $this->mock('FireflyIII\Helpers\Report\ReportHelperInterface');
-        $query  = $this->mock('FireflyIII\Helpers\Report\ReportQueryInterface');
-
-        $query->shouldReceive('incomeByPeriod')->withAnyArgs()->andReturn([]);
-        $query->shouldReceive('journalsByExpenseAccount')->withAnyArgs()->andReturn($journals);
-        $helper->shouldReceive('getBudgetsForMonth')->withAnyArgs()->andReturn($budgets);
-        $query->shouldReceive('journalsByCategory')->withAnyArgs()->andReturn($journals);
-        $query->shouldReceive('sharedExpensesByCategory')->withAnyArgs()->andReturn($journals);
-        $query->shouldReceive('accountList')->withAnyArgs()->andReturn($accounts);
-
-        // mock stuff!
-        Amount::shouldReceive('getDefaultCurrency')->once()->andReturn($currency);
-        Amount::shouldReceive('getAllCurrencies')->once()->andReturn([$currency]);
-        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
-        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
-        Amount::shouldReceive('format')->andReturn('X');
-
-        $this->call('GET', '/reports/2015/1');
-        $this->assertResponseOk();
-    }
-
-    public function testMonthWithShared()
-    {
-        $user                    = FactoryMuffin::create('FireflyIII\User');
-        $currency                = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
-        $journal                 = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-        $budget                  = FactoryMuffin::create('FireflyIII\Models\Budget');
-        $account                 = FactoryMuffin::create('FireflyIII\Models\Account');
-        $showSharedReports       = FactoryMuffin::create('FireflyIII\Models\Preference');
-        $showSharedReports->data = true;
-
-        $journals = new Collection([$journal]);
-        $budgets  = new Collection([$budget]);
-        $accounts = new Collection([$account]);
-        $this->be($user);
-
-        $helper = $this->mock('FireflyIII\Helpers\Report\ReportHelperInterface');
-        $query  = $this->mock('FireflyIII\Helpers\Report\ReportQueryInterface');
-
-        $query->shouldReceive('incomeByPeriod')->withAnyArgs()->andReturn([]);
-        $query->shouldReceive('journalsByExpenseAccount')->withAnyArgs()->andReturn($journals);
-        $helper->shouldReceive('getBudgetsForMonth')->withAnyArgs()->andReturn($budgets);
-        $query->shouldReceive('journalsByCategory')->withAnyArgs()->andReturn($journals);
-        $query->shouldReceive('sharedExpensesByCategory')->withAnyArgs()->andReturn($journals);
-        $query->shouldReceive('accountList')->withAnyArgs()->andReturn($accounts);
-
-        // mock stuff!
-        Preferences::shouldReceive('get')->withArgs(['showSharedReports', false])->andReturn($showSharedReports);
-        Amount::shouldReceive('getDefaultCurrency')->once()->andReturn($currency);
-        Amount::shouldReceive('getAllCurrencies')->once()->andReturn([$currency]);
-        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
-        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
-        Amount::shouldReceive('format')->andReturn('X');
-
-        // language preference:
-        $language = FactoryMuffin::create('FireflyIII\Models\Preference');
-        $language->data = 'en';
-        $language->save();
-        Preferences::shouldReceive('get')->withAnyArgs()->andReturn($language);
-
-        $this->call('GET', '/reports/2015/1');
-        $this->assertResponseOk();
     }
 
     public function testYear()
