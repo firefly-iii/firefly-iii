@@ -306,10 +306,7 @@ Route::group(
     Route::get('/json/box/out', ['uses' => 'JsonController@boxOut', 'as' => 'json.box.out']);
     Route::get('/json/box/bills-unpaid', ['uses' => 'JsonController@boxBillsUnpaid', 'as' => 'json.box.paid']);
     Route::get('/json/box/bills-paid', ['uses' => 'JsonController@boxBillsPaid', 'as' => 'json.box.unpaid']);
-    Route::get('/json/show-shared-reports', 'JsonController@showSharedReports');
     Route::get('/json/transaction-journals/{what}', 'JsonController@transactionJournals');
-    Route::get('/json/show-shared-reports/set', 'JsonController@setSharedReports');
-
 
     /**
      * Piggy Bank Controller
@@ -355,18 +352,14 @@ Route::group(
      * Report Controller
      */
     Route::get('/reports', ['uses' => 'ReportController@index', 'as' => 'reports.index']);
-    Route::get('/reports/{year}', ['uses' => 'ReportController@year', 'as' => 'reports.year']);
-    Route::get('/reports/{year}/{month}', ['uses' => 'ReportController@month', 'as' => 'reports.month']);
+    //Route::get('/reports/{year}', ['uses' => 'ReportController@year', 'as' => 'reports.year'])->where(['year' => '[0-9]{4}']);
+    Route::get('/reports/{year}/{shared?}', ['uses' => 'ReportController@year', 'as' => 'reports.year'])->where(['year' => '[0-9]{4}','shared'=> 'shared']);
+    Route::get('/reports/{year}/{month}/{shared?}', ['uses' => 'ReportController@month', 'as' => 'reports.month'])->where(['year' => '[0-9]{4}','month' => '[0-9]{1,2}','shared' => 'shared']);
 
     // pop ups for budget report:
     Route::get('/reports/modal/{account}/{year}/{month}/no-budget', ['uses' => 'ReportController@modalNoBudget', 'as' => 'reports.no-budget']);
-    Route::get(
-        '/reports/modal/{account}/{year}/{month}/balanced-transfers',
-        ['uses' => 'ReportController@modalBalancedTransfers', 'as' => 'reports.balanced-transfers']
-    );
-    Route::get(
-        '/reports/modal/{account}/{year}/{month}/left-unbalanced', ['uses' => 'ReportController@modalLeftUnbalanced', 'as' => 'reports.left-unbalanced']
-    );
+    Route::get('/reports/modal/{account}/{year}/{month}/balanced-transfers', ['uses' => 'ReportController@modalBalancedTransfers', 'as' => 'reports.balanced-transfers']);
+    Route::get('/reports/modal/{account}/{year}/{month}/left-unbalanced', ['uses' => 'ReportController@modalLeftUnbalanced', 'as' => 'reports.left-unbalanced']);
 
     /**
      * Search Controller

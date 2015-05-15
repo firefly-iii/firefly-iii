@@ -203,30 +203,6 @@ class JsonController extends Controller
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function setSharedReports()
-    {
-        /** @var Preference $pref */
-        $pref = Preferences::get('includeShared', false);
-        $new  = !$pref->data;
-        Preferences::set('includeShared', $new);
-
-
-        return Response::json(['value' => $new]);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function showSharedReports()
-    {
-        $pref = Preferences::get('includeShared', false);
-
-        return Response::json(['value' => $pref->data]);
-    }
-
-    /**
      * Returns a JSON list of all beneficiaries.
      *
      * @param TagRepositoryInterface $tagRepository

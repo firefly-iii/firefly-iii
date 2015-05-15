@@ -6,7 +6,6 @@ use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionJournal;
-use Preferences;
 use Session;
 use Steam;
 use View;
@@ -128,23 +127,25 @@ class ReportController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function month($year = '2014', $month = '1')
+    public function month($year = '2014', $month = '1', $shared = false)
     {
-        $date          = new Carbon($year . '-' . $month . '-01');
-        $subTitle      = 'Report for ' . $date->format('F Y');
-        $subTitleIcon  = 'fa-calendar';
-        $displaySum    = true; // to show sums in report.
-        $end           = clone $date;
-        $start         = clone $date;
-        $includeShared = Preferences::get('includeShared', false)->data;
+        $date         = new Carbon($year . '-' . $month . '-01');
+        $subTitle     = 'Report for ' . $date->format('F Y');
+        $subTitleIcon = 'fa-calendar';
+        $displaySum   = true; // to show sums in report.
+        $end          = clone $date;
+        $start        = clone $date;
+        if ($shared == 'shared') {
+            $shared = true;
+        }
 
         // set start and end.
         $start->startOfMonth();
         $end->endOfMonth();
 
         // get all income and expenses. it's OK.
-        $income      = $this->query->incomeInPeriod($start, $end, $includeShared);
-        $expensesSet = $this->query->journalsByExpenseAccount($start, $end, $includeShared);
+        $income      = $this->query->incomeInPeriod($start, $end, $shared);
+        $expensesSet = $this->query->journalsByExpenseAccount($start, $end, $shared);
 
         /**
          * INCLUDE ORIGINAL BUDGET REPORT HERE:
@@ -152,7 +153,7 @@ class ReportController extends Controller
         // should show shared reports?
         /** @var Preference $pref */
         $accountAmounts = []; // array with sums of spent amounts on each account.
-        $accounts       = $this->query->getAllAccounts($start, $end, $includeShared); // all accounts and some data.
+        $accounts       = $this->query->getAllAccounts($start, $end, $shared); // all accounts and some data.
 
         foreach ($accounts as $account) {
 
@@ -190,7 +191,7 @@ class ReportController extends Controller
         /**
          * Start getBudgetsForMonth DONE
          */
-        $budgets = $this->helper->getBudgetsForMonth($date, $includeShared);
+        $budgets = $this->helper->getBudgetsForMonth($date, $shared);
 
         /**
          * End getBudgetsForMonth DONE
@@ -204,7 +205,7 @@ class ReportController extends Controller
 
 
         // all transfers
-        if ($includeShared === false) {
+        if ($shared === false) {
             $result    = $this->query->sharedExpensesByCategory($start, $end);
             $transfers = Steam::makeArray($result);
             $merged    = Steam::mergeArrays($categories, $transfers);
@@ -243,20 +244,21 @@ class ReportController extends Controller
      *
      * @return $this
      */
-    public function year($year)
+    public function year($year, $shared = false)
     {
-        /** @var Preference $pref */
-        $includeShared = Preferences::get('includeShared', false)->data;
-        $date              = new Carbon('01-01-' . $year);
-        $end               = clone $date;
+        if ($shared == 'shared') {
+            $shared = true;
+        }
+        $date = new Carbon('01-01-' . $year);
+        $end  = clone $date;
         $end->endOfYear();
         $title           = 'Reports';
         $subTitle        = $year;
         $subTitleIcon    = 'fa-bar-chart';
         $mainTitleIcon   = 'fa-line-chart';
-        $balances        = $this->helper->yearBalanceReport($date, $includeShared);
-        $groupedIncomes  = $this->query->journalsByRevenueAccount($date, $end, $includeShared);
-        $groupedExpenses = $this->query->journalsByExpenseAccount($date, $end, $includeShared);
+        $balances        = $this->helper->yearBalanceReport($date, $shared);
+        $groupedIncomes  = $this->query->journalsByRevenueAccount($date, $end, $shared);
+        $groupedExpenses = $this->query->journalsByExpenseAccount($date, $end, $shared);
 
         return view(
             'reports.year', compact('date', 'groupedIncomes', 'groupedExpenses', 'year', 'balances', 'title', 'subTitle', 'subTitleIcon', 'mainTitleIcon')

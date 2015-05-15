@@ -176,49 +176,6 @@ class JsonControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
-    public function testSetSharedReports()
-    {
-        $pref       = FactoryMuffin::create('FireflyIII\Models\Preference');
-        $pref->data = false;
-        $pref->save();
-        $user = FactoryMuffin::create('FireflyIII\User');
-        $this->be($user);
-
-        Preferences::shouldReceive('get')->withArgs(['includeShared', false])->andReturn($pref);
-        Preferences::shouldReceive('set')->withArgs(['includeShared', true]);
-
-        // language preference:
-        $language = FactoryMuffin::create('FireflyIII\Models\Preference');
-        $language->data = 'en';
-        $language->save();
-        Preferences::shouldReceive('get')->withAnyArgs()->andReturn($language);
-
-        $this->call('GET', '/json/show-shared-reports/set');
-        $this->assertResponseOk();
-    }
-
-
-    public function testShowSharedReports()
-    {
-        $pref       = FactoryMuffin::create('FireflyIII\Models\Preference');
-        $pref->data = false;
-        $pref->save();
-        $user = FactoryMuffin::create('FireflyIII\User');
-        $this->be($user);
-
-        Preferences::shouldReceive('get')->withArgs(['showSharedReports', false])->andReturn($pref);
-
-        // language preference:
-        $language = FactoryMuffin::create('FireflyIII\Models\Preference');
-        $language->data = 'en';
-        $language->save();
-        Preferences::shouldReceive('get')->withAnyArgs()->andReturn($language);
-
-
-        $this->call('GET', '/json/show-shared-reports');
-        $this->assertResponseOk();
-    }
-
     public function testTransactionJournals()
     {
         $journal    = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
