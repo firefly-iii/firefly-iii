@@ -125,16 +125,21 @@
                 </div>
                 <table class="table">
                     {% set sum =0 %}
-                    {% for expense in expenses %}
+                    {% for row in expenses %}
                         {% if loop.index > expenseTopLength %}
                             <tr class="collapse out expenseCollapsed">
                         {% else %}
                             <tr>
                         {% endif %}
-                            <td><a href="{{ route('accounts.show',expense.id) }}">{{ expense.name }}</a></td>
-                            <td><span class="text-danger">{{ expense.queryAmount|formatAmountPlain }}</span></td>
+                            <td>
+                                <a href="{{ route('accounts.show',row.id) }}">{{ row.name }}</a>
+                                {% if row.count > 1 %}
+                                    <br /><small>{{ row.count }} {{ 'transactions'|_|lower }}</small>
+                                {% endif %}
+                            </td>
+                            <td><span class="text-danger">{{ (row.amount*-1)|formatAmountPlain }}</span></td>
                         </tr>
-                        {% set sum = sum + (expense.queryAmount * -1) %}
+                        {% set sum = sum + row.amount %}
                     {% endfor %}
                     {% if expenses|length > expenseTopLength %}
                         <tr>

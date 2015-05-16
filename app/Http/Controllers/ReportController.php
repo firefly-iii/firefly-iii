@@ -266,8 +266,8 @@ class ReportController extends Controller
         $subTitleIcon     = 'fa-bar-chart';
         $totalExpense     = 0;
         $totalIncome      = 0;
-        $incomeTopLength  = 5;
-        $expenseTopLength = 10;
+        $incomeTopLength  = 8;
+        $expenseTopLength = 8;
 
         if ($shared == 'shared') {
             $shared   = true;
@@ -327,10 +327,35 @@ class ReportController extends Controller
          * GET ALL EXPENSES
          * Summarized.
          */
-        $expenses = $this->query->journalsByExpenseAccount($date, $end, $shared);
-        foreach ($expenses as $expense) {
-            $totalExpense += floatval($expense->queryAmount);
+        $set = $this->query->expenseInPeriod($date, $end, $shared);
+        // group, sort and sum:
+        $expenses = [];
+        foreach ($set as $entry) {
+            $id = $entry->account_id;
+            $totalExpense += floatval($entry->queryAmount);
+            if (isset($expenses[$id])) {
+                $expenses[$id]['amount'] += floatval($entry->queryAmount);
+                $expenses[$id]['count']++;
+            } else {
+                $expenses[$id] = [
+                    'amount' => floatval($entry->queryAmount),
+                    'name'   => $entry->name,
+                    'count'  => 1,
+                    'id'     => $id,
+                ];
+            }
         }
+        // sort with callback:
+        uasort(
+            $expenses, function ($a, $b) {
+            if ($a['amount'] == $b['amount']) {
+                return 0;
+            }
+
+            return ($a['amount'] < $b['amount']) ? -1 : 1;
+        }
+        );
+        unset($set, $id);
 
         return view(
             'reports.year',
