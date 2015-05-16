@@ -1,72 +1,47 @@
 <?php
 
 namespace FireflyIII\Helpers\Collection;
-use Illuminate\Support\Collection;
+
+use FireflyIII\Models\Budget as BudgetModel;
+use FireflyIII\Models\LimitRepetition;
 
 /**
- * Class Budget
+ * Class BudgetLine
  *
  * @package FireflyIII\Helpers\Collection
  */
-class Budget
+class BudgetLine
 {
-    /** @var  Collection */
-    protected $budgetLines;
+
+    /** @var  BudgetModel */
+    protected $budget;
+
+    /** @var  LimitRepetition */
+    protected $repetition;
+
     /** @var float */
-    protected $budgeted = 0;
+    protected $budgeted  = 0;
     /** @var float */
-    protected $left = 0;
+    protected $left      = 0;
     /** @var float */
     protected $overspent = 0;
     /** @var float */
-    protected $spent = 0;
+    protected $spent     = 0;
 
     /**
-     *
+     * @return BudgetModel
      */
-    public function __construct()
+    public function getBudget()
     {
-        $this->budgetLines = new Collection;
+        return $this->budget;
     }
 
     /**
-     * @param BudgetLine $budgetLine
+     * @param BudgetModel $budget
      */
-    public function addBudgetLine(BudgetLine $budgetLine)
+    public function setBudget($budget)
     {
-        $this->budgetLines->push($budgetLine);
-    }
-
-    /**
-     * @param float $add
-     */
-    public function addBudgeted($add)
-    {
-        $this->budgeted += floatval($add);
-    }
-
-    /**
-     * @param float $add
-     */
-    public function addLeft($add)
-    {
-        $this->left += floatval($add);
-    }
-
-    /**
-     * @param float $add
-     */
-    public function addOverspent($add)
-    {
-        $this->overspent += floatval($add);
-    }
-
-    /**
-     * @param float $add
-     */
-    public function addSpent($add)
-    {
-        $this->spent += floatval($add);
+        $this->budget = $budget;
     }
 
     /**
@@ -134,12 +109,22 @@ class Budget
     }
 
     /**
-     * @return \Illuminate\Support\Collection
+     * @return LimitRepetition
      */
-    public function getBudgetLines()
+    public function getRepetition()
     {
-        return $this->budgetLines;
+        return $this->repetition;
     }
+
+    /**
+     * @param LimitRepetition $repetition
+     */
+    public function setRepetition($repetition)
+    {
+        $this->repetition = $repetition;
+    }
+
+
 
 
 

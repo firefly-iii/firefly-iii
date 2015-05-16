@@ -32,67 +32,8 @@
     </div>
 <div class="row">
     <div class="col-lg-8 col-md-8 col-sm-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-tasks fa-fw"></i>
-                {{ 'budgets'|_ }}
-            </div>
-                <table class="table table-bordered">
-                    <tr>
-                        <th>{{ 'budget'|_ }}</th>
-                        <th>{{ 'date'|_ }}</th>
-                        <th>{{ 'budgeted'|_ }}</th>
-                        <th>{{ 'spent'|_ }}</th>
-                        <th>{{ 'left'|_ }}</th>
-                        <th>{{ 'overspent'|_ }}</th>
-                    </tr>
-                    {% for data in budgets %}
-                        <tr>
-                            <td>
-                                {% if data[0] %}
-                                    <a href="{{route('budgets.show',data[0].id)}}">{{ data[0].name }}</a>
-                                {% else %}
-                                    <em>{{ 'noBudget'|_ }}</em>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if data[1] %}
-                                    {{ data[1].startdate.formatLocalized(monthAndDayFormat) }}
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if data[1] %}
-                                    {{ data[1].amount|formatAmount }}
-                                {% else %}
-                                    {{ 0|formatAmount }}
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if data[3] != 0 %}
-                                    {{ data[3]|formatAmount }}
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if data[2] != 0 %}
-                                    {{ data[2]|formatAmount }}
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if data[4] != 0 %}
-                                    <span class="text-danger">{{ data[4]|formatAmountPlain }}</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    <tr>
-                        <td colspan="2"><em>{{ 'sum'|_ }}</em></td>
-                        <td>{{  budgetSums.budgeted|formatAmount  }}</td>
-                        <td>{{  budgetSums.spent|formatAmount  }}</td>
-                        <td>{{  budgetSums.left|formatAmount  }}</td>
-                        <td><span class="text-danger">{{  budgetSums.overspent|formatAmountPlain  }}</span></td>
-                    </tr>
-                </table>
-        </div>
+        <!-- budgets -->
+        {% include 'partials/reports/budgets.twig' %}
     </div>
     <div class="col-lg-4 col-md-4 col-sm-12">
         <div class="panel panel-default">

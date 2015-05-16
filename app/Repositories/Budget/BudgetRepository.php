@@ -99,8 +99,6 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function getBudgets()
     {
         $budgets = Auth::user()->budgets()->get();
-        $budgets->sortBy('name');
-
         return $budgets;
     }
 

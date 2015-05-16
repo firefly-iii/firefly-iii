@@ -2,13 +2,16 @@
 
 namespace FireflyIII\Helpers\Report;
 
+use App;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collection\Account as AccountCollection;
 use FireflyIII\Helpers\Collection\Budget as BudgetCollection;
+use FireflyIII\Helpers\Collection\BudgetLine;
 use FireflyIII\Helpers\Collection\Category as CategoryCollection;
 use FireflyIII\Helpers\Collection\Expense;
 use FireflyIII\Helpers\Collection\Income;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\LimitRepetition;
 
 /**
  * Class ReportHelper
@@ -75,7 +78,60 @@ class ReportHelper implements ReportHelperInterface
      */
     public function getBudgetReport(Carbon $start, Carbon $end, $shared)
     {
-        return null;
+        $object = new BudgetCollection;
+        /** @var \FireflyIII\Repositories\Budget\BudgetRepositoryInterface $repository */
+        $repository = App::make('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $set        = $repository->getBudgets();
+
+        foreach ($set as $budget) {
+
+            $repetitions = $repository->getBudgetLimitRepetitions($budget, $start, $end);
+
+            // no repetition(s) for this budget:
+            if ($repetitions->count() == 0) {
+                $spent      = $repository->spentInPeriod($budget, $start, $end, $shared);
+                $budgetLine = new BudgetLine;
+                $budgetLine->setBudget($budget);
+                $budgetLine->setOverspent($spent);
+                $object->addOverspent($spent);
+                $object->addBudgetLine($budgetLine);
+                continue;
+            }
+
+            // one or more repetitions for budget:
+            /** @var LimitRepetition $repetition */
+            foreach ($repetitions as $repetition) {
+                $budgetLine = new BudgetLine;
+                $budgetLine->setBudget($budget);
+                $budgetLine->setRepetition($repetition);
+                $expenses  = $repository->spentInPeriod($budget, $repetition->startdate, $repetition->enddate, $shared);
+                $left      = $expenses < floatval($repetition->amount) ? floatval($repetition->amount) - $expenses : 0;
+                $spent     = $expenses > floatval($repetition->amount) ? 0 : $expenses;
+                $overspent = $expenses > floatval($repetition->amount) ? $expenses - floatval($repetition->amount) : 0;
+
+                $budgetLine->setLeft($left);
+                $budgetLine->setSpent($spent);
+                $budgetLine->setOverspent($overspent);
+                $budgetLine->setBudgeted($repetition->amount);
+
+                $object->addBudgeted($repetition->amount);
+                $object->addSpent($spent);
+                $object->addLeft($left);
+                $object->addOverspent($overspent);
+                $object->addBudgetLine($budgetLine);
+
+            }
+
+        }
+
+        // stuff outside of budgets:
+        $noBudget   = $repository->getWithoutBudgetSum($start, $end);
+        $budgetLine = new BudgetLine;
+        $budgetLine->setOverspent($noBudget);
+        $object->addOverspent($noBudget);
+        $object->addBudgetLine($budgetLine);
+
+        return $object;
     }
 
     /**
