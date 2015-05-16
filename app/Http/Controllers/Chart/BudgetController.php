@@ -20,65 +20,6 @@ use Session;
 class BudgetController extends Controller
 {
     /**
-     * Shows a budget list with spent/left/overspent.
-     *
-     * @param GChart                    $chart
-     * @param BudgetRepositoryInterface $repository
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function frontpage(GChart $chart, BudgetRepositoryInterface $repository)
-    {
-        $chart->addColumn(trans('firefly.budget'), 'string');
-        $chart->addColumn(trans('firefly.left'), 'number');
-        $chart->addColumn(trans('firefly.spent'), 'number');
-        $chart->addColumn(trans('firefly.overspent'), 'number');
-
-        $budgets    = $repository->getBudgets();
-        $start      = Session::get('start', Carbon::now()->startOfMonth());
-        $end        = Session::get('end', Carbon::now()->endOfMonth());
-        $allEntries = new Collection;
-
-        foreach ($budgets as $budget) {
-            $repetitions = $repository->getBudgetLimitRepetitions($budget, $start, $end);
-            if ($repetitions->count() == 0) {
-                $expenses = $repository->sumBudgetExpensesInPeriod($budget, $start, $end);
-                $allEntries->push([$budget->name, 0, 0, $expenses]);
-                continue;
-            }
-            /** @var LimitRepetition $repetition */
-            foreach ($repetitions as $repetition) {
-                $expenses  = $repository->sumBudgetExpensesInPeriod($budget, $repetition->startdate, $repetition->enddate);
-                $left      = $expenses < floatval($repetition->amount) ? floatval($repetition->amount) - $expenses : 0;
-                $spent     = $expenses > floatval($repetition->amount) ? 0 : $expenses;
-                $overspent = $expenses > floatval($repetition->amount) ? $expenses - floatval($repetition->amount) : 0;
-                $allEntries->push(
-                    [$budget->name . ' (' . $repetition->startdate->formatLocalized($this->monthAndDayFormat) . ')',
-                     $left,
-                     $spent,
-                     $overspent
-                    ]
-                );
-            }
-        }
-
-        $noBudgetExpenses = $repository->getWithoutBudgetSum($start, $end);
-        $allEntries->push([trans('firefly.noBudget'), 0, 0, $noBudgetExpenses]);
-
-        foreach ($allEntries as $entry) {
-            if ($entry[1] != 0 || $entry[2] != 0 || $entry[3] != 0) {
-                $chart->addRow($entry[0], $entry[1], $entry[2], $entry[3]);
-            }
-        }
-
-        $chart->generate();
-
-        return Response::json($chart->getData());
-
-    }
-
-
-    /**
      * Shows the amount left in a specific budget limit.
      *
      * @param GChart                    $chart
@@ -108,6 +49,64 @@ class BudgetController extends Controller
             $chart->addRow(clone $start, $amount);
             $start->addDay();
         }
+        $chart->generate();
+
+        return Response::json($chart->getData());
+
+    }
+
+    /**
+     * Shows a budget list with spent/left/overspent.
+     *
+     * @param GChart                    $chart
+     * @param BudgetRepositoryInterface $repository
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function frontpage(GChart $chart, BudgetRepositoryInterface $repository)
+    {
+        $chart->addColumn(trans('firefly.budget'), 'string');
+        $chart->addColumn(trans('firefly.left'), 'number');
+        $chart->addColumn(trans('firefly.spent'), 'number');
+        $chart->addColumn(trans('firefly.overspent'), 'number');
+
+        $budgets    = $repository->getBudgets();
+        $start      = Session::get('start', Carbon::now()->startOfMonth());
+        $end        = Session::get('end', Carbon::now()->endOfMonth());
+        $allEntries = new Collection;
+
+        foreach ($budgets as $budget) {
+            $repetitions = $repository->getBudgetLimitRepetitions($budget, $start, $end);
+            if ($repetitions->count() == 0) {
+                $expenses = $repository->spentInPeriod($budget, $start, $end, true);
+                $allEntries->push([$budget->name, 0, 0, $expenses]);
+                continue;
+            }
+            /** @var LimitRepetition $repetition */
+            foreach ($repetitions as $repetition) {
+                $expenses  = $repository->spentInPeriod($budget, $repetition->startdate, $repetition->enddate, true);
+                $left      = $expenses < floatval($repetition->amount) ? floatval($repetition->amount) - $expenses : 0;
+                $spent     = $expenses > floatval($repetition->amount) ? 0 : $expenses;
+                $overspent = $expenses > floatval($repetition->amount) ? $expenses - floatval($repetition->amount) : 0;
+                $allEntries->push(
+                    [$budget->name . ' (' . $repetition->startdate->formatLocalized($this->monthAndDayFormat) . ')',
+                     $left,
+                     $spent,
+                     $overspent
+                    ]
+                );
+            }
+        }
+
+        $noBudgetExpenses = $repository->getWithoutBudgetSum($start, $end);
+        $allEntries->push([trans('firefly.noBudget'), 0, 0, $noBudgetExpenses]);
+
+        foreach ($allEntries as $entry) {
+            if ($entry[1] != 0 || $entry[2] != 0 || $entry[3] != 0) {
+                $chart->addRow($entry[0], $entry[1], $entry[2], $entry[3]);
+            }
+        }
+
         $chart->generate();
 
         return Response::json($chart->getData());

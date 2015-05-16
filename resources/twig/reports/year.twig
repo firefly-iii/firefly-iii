@@ -1,6 +1,6 @@
 {% extends "./layout/default.twig" %}
 {% block content %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, date, shared) }}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, start, shared) }}
 
     <div class="row">
         <div class="col-lg-10 col-md-8 col-sm-12">
@@ -41,7 +41,7 @@
                         <th>{{ 'balanceStartOfYear'|_ }}</th>
                         <th>{{ 'difference'|_ }}</th>
                     </tr>
-                    {% for account in accounts %}
+                    {% for account in accounts.getAccounts %}
                         <tr>
                             <td>
                                 <a href="{{ route('accounts.show',account.id) }}" title="{{ account.name }}">{{ account.name }}</a>
@@ -53,9 +53,9 @@
                     {% endfor %}
                     <tr>
                         <td><em>Sum of sums</em></td>
-                        <td>{{ accountsSums.start|formatAmount }}</td>
-                        <td>{{ accountsSums.end|formatAmount }}</td>
-                        <td>{{ accountsSums.diff|formatAmount }}</td>
+                        <td>{{ accounts.getStart|formatAmount }}</td>
+                        <td>{{ accounts.getEnd|formatAmount }}</td>
+                        <td>{{ accounts.getDifference|formatAmount }}</td>
                     </tr>
                 </table>
             </div>
@@ -88,22 +88,22 @@
                     {{ 'income'|_ }} ({{ trans('firefly.topX',{number: incomeTopLength}) }})
                 </div>
                 <table class="table">
-                    {% for id,row in incomes %}
+                    {% for income in incomes.getIncomes %}
                     {% if loop.index > incomeTopLength %}
                         <tr class="collapse out incomesCollapsed">
                     {% else %}
                         <tr>
                     {% endif %}
                             <td>
-                                <a href="{{ route('accounts.show',id) }}" title="{{ row.name }}">{{ row.name }}</a>
-                                {% if row.count > 1 %}
-                                    <br /><small>{{ row.count }} {{ 'transactions'|_|lower }}</small>
+                                <a href="{{ route('accounts.show',income.id) }}" title="{{ income.name }}">{{ income.name }}</a>
+                                {% if income.count > 1 %}
+                                    <br /><small>{{ income.count }} {{ 'transactions'|_|lower }}</small>
                                 {% endif %}
                             </td>
-                            <td>{{ row.amount|formatAmount }}</td>
+                            <td>{{ income.amount|formatAmount }}</td>
                         </tr>
                     {% endfor %}
-                    {% if incomes|length > incomeTopLength %}
+                    {% if incomes.getIncomes|length > incomeTopLength %}
                     <tr>
                         <td colspan="2" class="active">
                             <a href="#" id="showIncomes">{{ trans('firefly.showTheRest',{number:incomeTopLength}) }}</a>
@@ -112,7 +112,7 @@
                     {% endif %}
                     <tr>
                         <td><em>{{ 'sum'|_ }}</em></td>
-                        <td>{{ totalIncome|formatAmount }}</td>
+                        <td>{{ incomes.getTotal|formatAmount }}</td>
                     </tr>
                 </table>
             </div>
@@ -124,24 +124,22 @@
                     {{ 'expenses'|_ }} ({{ trans('firefly.topX',{number: expenseTopLength}) }})
                 </div>
                 <table class="table">
-                    {% set sum =0 %}
-                    {% for row in expenses %}
+                    {% for expense in expenses.getExpenses %}
                         {% if loop.index > expenseTopLength %}
                             <tr class="collapse out expenseCollapsed">
                         {% else %}
                             <tr>
                         {% endif %}
                             <td>
-                                <a href="{{ route('accounts.show',row.id) }}">{{ row.name }}</a>
-                                {% if row.count > 1 %}
-                                    <br /><small>{{ row.count }} {{ 'transactions'|_|lower }}</small>
+                                <a href="{{ route('accounts.show',expense.id) }}">{{ expense.name }}</a>
+                                {% if expense.count > 1 %}
+                                    <br /><small>{{ expense.count }} {{ 'transactions'|_|lower }}</small>
                                 {% endif %}
                             </td>
-                            <td><span class="text-danger">{{ (row.amount*-1)|formatAmountPlain }}</span></td>
+                            <td><span class="text-danger">{{ (expense.amount*-1)|formatAmountPlain }}</span></td>
                         </tr>
-                        {% set sum = sum + row.amount %}
                     {% endfor %}
-                    {% if expenses|length > expenseTopLength %}
+                    {% if expenses.getExpenses|length > expenseTopLength %}
                         <tr>
                             <td colspan="2" class="active">
                                 <a href="#" id="showExpenses">{{ trans('firefly.showTheRest',{number:incomeTopLength}) }}</a>
@@ -150,7 +148,7 @@
                     {% endif %}
                     <tr>
                         <td><em>{{ 'sum'|_ }}</em></td>
-                        <td><span class="text-danger">{{ (sum * -1)|formatAmountPlain }}</span></td>
+                        <td><span class="text-danger">{{ (expenses.getTotal * -1)|formatAmountPlain }}</span></td>
                     </tr>
                 </table>
             </div>
@@ -191,7 +189,7 @@
     <script type="text/javascript" src="js/gcharts.js"></script>
 
     <script type="text/javascript">
-        var year = '{{date.year}}';
+        var year = '{{start.year}}';
         var shared = {% if shared %}'/shared'{% else %}''{% endif %};
         var incomeTopLength = {{ incomeTopLength }};
         var expenseTopLength = {{ expenseTopLength }};

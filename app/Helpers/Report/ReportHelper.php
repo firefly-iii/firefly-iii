@@ -2,13 +2,11 @@
 
 namespace FireflyIII\Helpers\Report;
 
-use App;
-use Auth;
 use Carbon\Carbon;
+use FireflyIII\Helpers\Collection\Account as AccountCollection;
+use FireflyIII\Helpers\Collection\Expense;
+use FireflyIII\Helpers\Collection\Income;
 use FireflyIII\Models\Account;
-use Illuminate\Database\Query\JoinClause;
-use Illuminate\Support\Collection;
-use Steam;
 
 /**
  * Class ReportHelper
@@ -18,47 +16,94 @@ use Steam;
 class ReportHelper implements ReportHelperInterface
 {
 
+    /** @var ReportQueryInterface */
+    protected $query;
+
     /**
-     * This method gets some kind of list for a monthly overview.
+     * @param ReportHelperInterface $helper
+     */
+    public function __construct(ReportQueryInterface $query)
+    {
+        $this->query = $query;
+
+    }
+
+
+    /**
+     * This method generates a full report for the given period on all
+     * the users asset and cash accounts.
      *
      * @param Carbon $date
-     * @param bool   $includeShared
+     * @param Carbon $end
+     * @param        $shared
      *
-     * @return Collection
+     * @return Account
      */
-    public function getBudgetsForMonth(Carbon $date, $includeShared = false)
+    public function getAccountReport(Carbon $date, Carbon $end, $shared)
     {
-        /** @var \FireflyIII\Helpers\Report\ReportQueryInterface $query */
-        $query = App::make('FireflyIII\Helpers\Report\ReportQueryInterface');
 
-        $start = clone $date;
-        $start->startOfMonth();
-        $end = clone $date;
-        $end->endOfMonth();
-        $set = Auth::user()->budgets()->orderBy('budgets.name', 'ASC')
-                   ->leftJoin(
-                       'budget_limits', function (JoinClause $join) use ($date) {
-                       $join->on('budget_limits.budget_id', '=', 'budgets.id')->where('budget_limits.startdate', '=', $date->format('Y-m-d'));
-                   }
-                   )
-                   ->get(['budgets.*', 'budget_limits.amount as queryAmount']);
 
-        $budgets                   = Steam::makeArray($set);
-        $amountSet                 = $query->journalsByBudget($start, $end, $includeShared);
-        $amounts                   = Steam::makeArray($amountSet);
-        $budgets                   = Steam::mergeArrays($budgets, $amounts);
-        $budgets[0]['spent']       = isset($budgets[0]['spent']) ? $budgets[0]['spent'] : 0.0;
-        $budgets[0]['queryAmount'] = isset($budgets[0]['queryAmount']) ? $budgets[0]['queryAmount'] : 0.0;
-        $budgets[0]['name']        = 'No budget';
+        $accounts = $this->query->getAllAccounts($date, $end, $shared);
+        $start    = 0;
+        $end      = 0;
+        $diff     = 0;
 
-        // find transactions to shared asset accounts, which are without a budget by default:
-        // which is only relevant when shared asset accounts are hidden.
-        if ($includeShared === false) {
-            $transfers = $query->sharedExpenses($start, $end)->sum('queryAmount');
-            $budgets[0]['spent'] += floatval($transfers) * -1;
+        // summarize:
+        foreach ($accounts as $account) {
+            $start += $account->startBalance;
+            $end += $account->endBalance;
+            $diff += ($account->endBalance - $account->startBalance);
         }
 
-        return $budgets;
+        $object = new AccountCollection;
+        $object->setStart($start);
+        $object->setEnd($end);
+        $object->setDifference($diff);
+        $object->setAccounts($accounts);
+
+        return $object;
+    }
+
+    /**
+     * Get a full report on the users expenses during the period.
+     *
+     * @param Carbon  $start
+     * @param Carbon  $end
+     * @param boolean $shared
+     *
+     * @return Expense
+     */
+    public function getExpenseReport($start, $end, $shared)
+    {
+        $object = new Expense;
+        $set    = $this->query->expenseInPeriod($start, $end, $shared);
+        foreach ($set as $entry) {
+            $object->addToTotal($entry->queryAmount);
+            $object->addOrCreateExpense($entry);
+        }
+
+        return $object;
+    }
+
+    /**
+     * Get a full report on the users incomes during the period.
+     *
+     * @param Carbon  $start
+     * @param Carbon  $end
+     * @param boolean $shared
+     *
+     * @return Income
+     */
+    public function getIncomeReport($start, $end, $shared)
+    {
+        $object = new Income;
+        $set    = $this->query->incomeInPeriod($start, $end, $shared);
+        foreach ($set as $entry) {
+            $object->addToTotal($entry->queryAmount);
+            $object->addOrCreateIncome($entry);
+        }
+
+        return $object;
     }
 
     /**
@@ -84,5 +129,4 @@ class ReportHelper implements ReportHelperInterface
 
         return $months;
     }
-
 }
