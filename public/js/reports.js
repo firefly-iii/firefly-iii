@@ -4,10 +4,11 @@ if (typeof(google) != 'undefined') {
 
 
 function drawChart() {
-    googleColumnChart('report/chart/in-out/' + year + shared, 'income-expenses-chart');
-    googleColumnChart('report/chart/in-out-sum/' + year + shared, 'income-expenses-sum-chart')
+    googleColumnChart('chart/report/in-out/' + year + shared, 'income-expenses-chart');
+    googleColumnChart('chart/report/in-out-sum/' + year + shared, 'income-expenses-sum-chart');
 
-    googleStackedColumnChart('report/chart/budgets/' + year + shared, 'budgets');
+    googleStackedColumnChart('chart/budget/year/' + year + shared, 'budgets');
+    googleStackedColumnChart('chart/category/year/' + year + shared, 'categories');
 }
 
 $(function () {
