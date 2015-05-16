@@ -26,6 +26,44 @@ class CategoryController extends Controller
 
 
     /**
+     * Show an overview for a category for all time, per month/week/year.
+     *
+     * @param GChart                      $chart
+     * @param CategoryRepositoryInterface $repository
+     * @param Category                    $category
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function all(GChart $chart, CategoryRepositoryInterface $repository, Category $category)
+    {
+        // oldest transaction in category:
+        $start = $repository->getFirstActivityDate($category);
+        $range = Preferences::get('viewRange', '1M')->data;
+        // jump to start of week / month / year / etc
+        $start = Navigation::startOfPeriod($start, $range);
+
+        $chart->addColumn(trans('firefly.period'), 'date');
+        $chart->addColumn(trans('firefly.spent'), 'number');
+
+
+        $end = new Carbon;
+        while ($start <= $end) {
+
+            $currentEnd = Navigation::endOfPeriod($start, $range);
+            $spent      = $repository->spentInPeriod($category, $start, $currentEnd);
+            $chart->addRow(clone $start, $spent);
+
+            $start = Navigation::addPeriod($start, $range, 0);
+        }
+
+        $chart->generate();
+
+        return Response::json($chart->getData());
+
+
+    }
+
+    /**
      * Show this month's category overview.
      *
      * @param GChart                      $chart
@@ -74,44 +112,6 @@ class CategoryController extends Controller
             $spent = $repository->spentOnDaySum($category, $start);
             $chart->addRow(clone $start, $spent);
             $start->addDay();
-        }
-
-        $chart->generate();
-
-        return Response::json($chart->getData());
-
-
-    }
-
-    /**
-     * Show an overview for a category for all time, per month/week/year.
-     *
-     * @param GChart                      $chart
-     * @param CategoryRepositoryInterface $repository
-     * @param Category                    $category
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function all(GChart $chart, CategoryRepositoryInterface $repository, Category $category)
-    {
-        // oldest transaction in category:
-        $start = $repository->getFirstActivityDate($category);
-
-        $range = Preferences::get('viewRange', '1M')->data;
-        // jump to start of week / month / year / etc
-        $start = Navigation::startOfPeriod($start, $range);
-
-        $chart->addColumn(trans('firefly.period'), 'date');
-        $chart->addColumn(trans('firefly.spent'), 'number');
-
-        $end = new Carbon;
-        while ($start <= $end) {
-
-            $currentEnd = Navigation::endOfPeriod($start, $range);
-            $spent      = $repository->spentInPeriod($category, $start, $currentEnd);
-            $chart->addRow(clone $start, $spent);
-
-            $start = Navigation::addPeriod($start, $range, 0);
         }
 
         $chart->generate();

@@ -172,12 +172,34 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function spentInPeriod(Category $category, Carbon $start, Carbon $end, $shared = false)
     {
-        if($shared === false) {
-            // do something else, SEE budgets.
-            $sum = floatval($category->transactionjournals()->before($end)->after($start)->lessThan(0)->sum('amount')) * -1;
+        if ($shared === true) {
+            // shared is true.
+            // always ignore transfers between accounts!
+            $sum = floatval(
+                       $category->transactionjournals()
+                                ->transactionTypes(['Withdrawal', 'Deposit'])
+                                ->before($end)->after($start)->lessThan(0)->sum('amount')
+                   ) * -1;
+
         } else {
-            $sum = floatval($category->transactionjournals()->before($end)->after($start)->lessThan(0)->sum('amount')) * -1;
+            // do something else, SEE budgets.
+            // get all journals in this month where the asset account is NOT shared.
+            $sum = $category->transactionjournals()
+                            ->before($end)
+                            ->after($start)
+                            ->transactionTypes(['Withdrawal', 'Deposit'])
+                            ->lessThan(0)
+                            ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                            ->leftJoin(
+                                'account_meta', function (JoinClause $join) {
+                                $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
+                            }
+                            )
+                            ->where('account_meta.data', '!=', '"sharedAsset"')
+                            ->sum('amount');
+            $sum = floatval($sum) * -1;
         }
+
         return $sum;
     }
 
