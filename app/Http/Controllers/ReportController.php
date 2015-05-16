@@ -22,17 +22,13 @@ class ReportController extends Controller
 
     /** @var ReportHelperInterface */
     protected $helper;
-    /** @var ReportQueryInterface */
-    protected $query;
 
     /**
      * @param ReportHelperInterface $helper
-     * @param ReportQueryInterface  $query
      */
-    public function __construct(ReportHelperInterface $helper, ReportQueryInterface $query)
+    public function __construct(ReportHelperInterface $helper)
     {
         parent::__construct();
-        $this->query  = $query;
         $this->helper = $helper;
 
         View::share('title', trans('firefly.reports'));

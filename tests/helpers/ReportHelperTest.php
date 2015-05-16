@@ -25,7 +25,8 @@ class ReportHelperTest extends TestCase
     {
         parent::setUp();
         FactoryMuffin::create('FireflyIII\User');
-        $this->object = new ReportHelper;
+        $query = new \FireflyIII\Helpers\Report\ReportQuery();
+        $this->object = new ReportHelper($query);
     }
 
     /**
@@ -35,72 +36,6 @@ class ReportHelperTest extends TestCase
     public function tearDown()
     {
         parent::tearDown();
-    }
-
-    /**
-     * @covers FireflyIII\Helpers\Report\ReportHelper::getBudgetsForMonth
-     */
-    public function testGetBudgetsForMonthWithShared()
-    {
-        $date    = new Carbon('2015-01-01');
-        $user    = FactoryMuffin::create('FireflyIII\User');
-        $budgets = [];
-
-        // three budget limits starting on the $date:
-        for ($i = 0; $i < 3; $i++) {
-            $budget                 = FactoryMuffin::create('FireflyIII\Models\Budget');
-            $budgetLimit            = FactoryMuffin::create('FireflyIII\Models\BudgetLimit');
-            $budgetLimit->startdate = $date;
-            $budget->user_id        = $user->id;
-            $budget->save();
-            $budgetLimit->save();
-            $budgets[] = $budget;
-        }
-
-        $this->be($user);
-
-        $result = $this->object->getBudgetsForMonth($date, true);
-
-        // assert each budget is in the array:
-        foreach ($budgets as $budget) {
-            $id = $budget->id;
-            $this->assertEquals($budget->name, $result[$id]['name']);
-        }
-        $this->assertEquals(0, $result[0]['queryAmount']);
-        $this->assertEquals('No budget', $result[0]['name']);
-    }
-
-    /**
-     * @covers FireflyIII\Helpers\Report\ReportHelper::getBudgetsForMonth
-     */
-    public function testGetBudgetsForMonthWithoutShared()
-    {
-        $date    = new Carbon('2015-01-01');
-        $user    = FactoryMuffin::create('FireflyIII\User');
-        $budgets = [];
-
-        // three budget limits starting on the $date:
-        for ($i = 0; $i < 3; $i++) {
-            $budget                 = FactoryMuffin::create('FireflyIII\Models\Budget');
-            $budgetLimit            = FactoryMuffin::create('FireflyIII\Models\BudgetLimit');
-            $budgetLimit->startdate = $date;
-            $budget->user_id        = $user->id;
-            $budget->save();
-            $budgetLimit->save();
-            $budgets[] = $budget;
-        }
-
-        $this->be($user);
-
-        $result = $this->object->getBudgetsForMonth($date, false);
-
-        // assert each budget is in the array:
-        foreach ($budgets as $budget) {
-            $id = $budget->id;
-            $this->assertEquals($budget->name, $result[$id]['name']);
-        }
-        $this->assertEquals(0, $result[0]['queryAmount']);
-        $this->assertEquals('No budget', $result[0]['name']);
     }
 
     public function testListOfMonths()
