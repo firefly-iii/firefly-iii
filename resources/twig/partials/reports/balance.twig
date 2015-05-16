@@ -15,6 +15,24 @@
             </th>
         </tr>
 
+        <!-- make rows -->
+        {% for balanceLine in balance.getBalanceLines %}
+            <tr>
+                <td>{{ balanceLine.getBudget.name }}</td>
+                <td>{{ balanceLine.getBudgetAmount|formatAmount }}</td>
+                {% for balanceEntry in balanceLine.getBalanceEntries %}
+                <td class="text-danger">
+                    {% if balanceEntry.getSpent != 0  %}
+                        {{ (balanceEntry.getSpent*-1)|formatAmountPlain }}
+                    {% endif %}
+                </td>
+                {% endfor %}
+                <td>
+                    {{ balanceLine.left|formatAmount }}
+                </td>
+            </tr>
+        {% endfor %}
+
     </table>
 
     <!--

@@ -4,6 +4,7 @@ namespace FireflyIII\Helpers\Report;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Budget;
 use Illuminate\Support\Collection;
 
 /**
@@ -122,6 +123,17 @@ interface ReportQueryInterface
      * @return Collection
      */
     public function journalsByCategory(Carbon $start, Carbon $end, $includeShared = false);
+
+    /**
+     * @param Account $account
+     * @param Budget  $budget
+     * @param Carbon  $start
+     * @param Carbon  $end
+     * @param bool    $shared
+     *
+     * @return float
+     */
+    public function spentInBudget(Account $account, Budget $budget, Carbon $start, Carbon $end, $shared = false); // I think shared is irrelevant.
 
 
     /**

@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Crypt;
 use DB;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Budget;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -522,36 +523,28 @@ class ReportQuery implements ReportQueryInterface
     }
 
     /**
-     *
-     * This query will get all transaction journals and budget information for a specified account
-     * in a certain date range, where the transaction journal does not have a budget.
-     * There is no get() specified, this is up to the method itself.
-     *
      * @param Account $account
+     * @param Budget  $budget
      * @param Carbon  $start
      * @param Carbon  $end
+     * @param bool    $shared
      *
-     * @return Builder
+     * @return float
      */
-    protected function queryJournalsNoBudget(Account $account, Carbon $start, Carbon $end)
+    public function spentInBudget(Account $account, Budget $budget, Carbon $start, Carbon $end, $shared = false)
     {
-        return TransactionJournal::
-        leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
-                                 ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                 ->leftJoin(
-                                     'transactions', function (JoinClause $join) {
-                                     $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
-                                 }
-                                 )
-                                 ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                                 ->before($end)
-                                 ->after($start)
-                                 ->where('accounts.id', $account->id)
-                                 ->where('transaction_journals.user_id', Auth::user()->id)
-                                 ->where('transaction_types.type', 'Withdrawal')
-                                 ->groupBy('budgets.id')
-                                 ->orderBy('budgets.name', 'ASC');
+
+        return floatval(
+            Auth::user()->transactionjournals()
+                ->leftJoin('transactions' , 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                ->where('transactions.amount', '<', 0)
+                ->where('transactions.account_id', $account->id)
+                ->before($end)
+                ->after($start)
+                ->where('budget_transaction_journal.budget_id', $budget->id)
+                ->sum('transactions.amount')
+        );
     }
 
     /**
@@ -591,4 +584,36 @@ class ReportQuery implements ReportQueryInterface
         return $query;
     }
 
+    /**
+     *
+     * This query will get all transaction journals and budget information for a specified account
+     * in a certain date range, where the transaction journal does not have a budget.
+     * There is no get() specified, this is up to the method itself.
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return Builder
+     */
+    protected function queryJournalsNoBudget(Account $account, Carbon $start, Carbon $end)
+    {
+        return TransactionJournal::
+        leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
+                                 ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                                 ->leftJoin(
+                                     'transactions', function (JoinClause $join) {
+                                     $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '<', 0);
+                                 }
+                                 )
+                                 ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                                 ->before($end)
+                                 ->after($start)
+                                 ->where('accounts.id', $account->id)
+                                 ->where('transaction_journals.user_id', Auth::user()->id)
+                                 ->where('transaction_types.type', 'Withdrawal')
+                                 ->groupBy('budgets.id')
+                                 ->orderBy('budgets.name', 'ASC');
+    }
 }

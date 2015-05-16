@@ -49,5 +49,15 @@ class Balance
         $this->balanceHeader = $balanceHeader;
     }
 
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function getBalanceLines()
+    {
+        return $this->balanceLines;
+    }
+
+
+
 
 }

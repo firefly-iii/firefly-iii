@@ -109,20 +109,33 @@ class ReportHelper implements ReportHelperInterface
             $header->addAccount($account);
         }
 
+        /** @var BudgetModel $budget */
         foreach ($budgets as $budget) {
             $line = new BalanceLine;
             $line->setBudget($budget);
+
+            // get budget amount for current period:
+            $rep = $budget->limitrepetitions()->where('budget_limits.startdate',$start->format('Y-m-d 00:00:00'))->first();
+            if($rep) {
+                $line->setBudgetAmount($rep->amount);
+            }
 
             // loop accounts:
             foreach ($accounts as $account) {
                 $balanceEntry = new BalanceEntry;
                 $balanceEntry->setAccount($account);
-                $balanceEntry->setSpent(rand(1, 100));
+
+                // get spent:
+                $spent = $this->query->spentInBudget($account, $budget, $start, $end, $shared); // I think shared is irrelevant.
+
+                $balanceEntry->setSpent($spent);
                 $line->addBalanceEntry($balanceEntry);
             }
             // add line to balance:
             $balance->addBalanceLine($line);
         }
+
+        // then a new line for without budget.
 
         $balance->setBalanceHeader($header);
 
