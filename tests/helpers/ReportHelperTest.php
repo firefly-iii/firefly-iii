@@ -39,8 +39,6 @@ class ReportHelperTest extends TestCase
 
     /**
      * @covers FireflyIII\Helpers\Report\ReportHelper::getBudgetsForMonth
-     * @covers FireflyIII\Helpers\Report\ReportQuery::journalsByBudget
-     * @covers FireflyIII\Helpers\Report\ReportQuery::sharedExpenses
      */
     public function testGetBudgetsForMonthWithShared()
     {
@@ -74,7 +72,6 @@ class ReportHelperTest extends TestCase
 
     /**
      * @covers FireflyIII\Helpers\Report\ReportHelper::getBudgetsForMonth
-     * @covers FireflyIII\Helpers\Report\ReportQuery::journalsByBudget
      */
     public function testGetBudgetsForMonthWithoutShared()
     {

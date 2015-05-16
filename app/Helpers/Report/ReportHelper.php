@@ -115,8 +115,8 @@ class ReportHelper implements ReportHelperInterface
             $line->setBudget($budget);
 
             // get budget amount for current period:
-            $rep = $budget->limitrepetitions()->where('budget_limits.startdate',$start->format('Y-m-d 00:00:00'))->first();
-            if($rep) {
+            $rep = $repository->getCurrentRepetition($budget, $start);
+            if ($rep) {
                 $line->setBudgetAmount($rep->amount);
             }
 
