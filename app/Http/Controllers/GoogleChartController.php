@@ -35,12 +35,14 @@ class GoogleChartController extends Controller
 
 
     /**
+     * Shows an account's balance for a single month.
+     *
      * @param GChart  $chart
      * @param Account $account
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function accountBalanceChart(GChart $chart, Account $account)
+    public function accountBalance(GChart $chart, Account $account)
     {
         $chart->addColumn(trans('firefly.dayOfMonth'), 'date');
         $chart->addColumn(trans('firefly.balanceFor', ['name' => $account->name]), 'number');

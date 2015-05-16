@@ -39,7 +39,7 @@ class GoogleChartControllerTest extends TestCase
 
     }
 
-    public function testAccountBalanceChart()
+    public function testAccountBalance()
     {
         $account = FactoryMuffin::create('FireflyIII\Models\Account');
         $this->be($account->user);

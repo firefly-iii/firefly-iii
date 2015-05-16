@@ -275,11 +275,14 @@ Route::group(
     /**
      * Google Chart Controller
      */
+    Route::get('/chart/account/{account}', ['uses' => 'GoogleChartController@accountBalance']);
+
+
     Route::get('/chart/home/account', ['uses' => 'GoogleChartController@allAccountsBalanceChart']);
     Route::get('/chart/home/budgets', ['uses' => 'GoogleChartController@allBudgetsHomeChart']);
     Route::get('/chart/home/categories', ['uses' => 'GoogleChartController@allCategoriesHomeChart']);
     Route::get('/chart/home/bills', ['uses' => 'GoogleChartController@billsOverview']);
-    Route::get('/chart/account/{account}/{view?}', ['uses' => 'GoogleChartController@accountBalanceChart']);
+
     Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'GoogleChartController@budgetLimitSpending']);
     Route::get('/chart/reports/income-expenses/{year}/{shared?}', ['uses' => 'GoogleChartController@yearInExp'])->where(['year' => '[0-9]{4}','shared'=> 'shared']);
     Route::get('/chart/reports/income-expenses-sum/{year}/{shared?}', ['uses' => 'GoogleChartController@yearInExpSum'])->where(['year' => '[0-9]{4}','shared'=> 'shared']);
