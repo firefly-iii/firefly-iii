@@ -138,7 +138,6 @@ class ReportQuery implements ReportQueryInterface
     }
 
 
-
     /**
      * This method returns all "income" journals in a certain period, which are both transfers from a shared account
      * and "ordinary" deposits. The query used is almost equal to ReportQueryInterface::journalsByRevenueAccount but it does
@@ -201,7 +200,6 @@ class ReportQuery implements ReportQueryInterface
 
         return $data;
     }
-
 
 
     /**
@@ -273,13 +271,38 @@ class ReportQuery implements ReportQueryInterface
 
         return floatval(
             Auth::user()->transactionjournals()
-                ->leftJoin('transactions' , 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                 ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                ->transactionTypes(['Withdrawal'])
                 ->where('transactions.amount', '<', 0)
                 ->where('transactions.account_id', $account->id)
                 ->before($end)
                 ->after($start)
                 ->where('budget_transaction_journal.budget_id', $budget->id)
+                ->sum('transactions.amount')
+        );
+    }
+
+    /**
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     * @param bool    $shared
+     *
+     * @return float
+     */
+    public function spentNoBudget(Account $account, Carbon $start, Carbon $end, $shared = false)
+    {
+        return floatval(
+            Auth::user()->transactionjournals()
+                ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                ->where('transactions.amount', '<', 0)
+                ->transactionTypes(['Withdrawal'])
+                ->where('transactions.account_id', $account->id)
+                ->before($end)
+                ->after($start)
+                ->whereNull('budget_transaction_journal.budget_id')
                 ->sum('transactions.amount')
         );
     }

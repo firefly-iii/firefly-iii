@@ -136,6 +136,15 @@ class ReportHelper implements ReportHelperInterface
         }
 
         // then a new line for without budget.
+        $empty = new BalanceLine;
+        foreach ($accounts as $account) {
+            $spent        = $this->query->spentNoBudget($account, $start, $end);
+            $balanceEntry = new BalanceEntry;
+            $balanceEntry->setAccount($account);
+            $balanceEntry->setSpent($spent);
+            $empty->addBalanceEntry($balanceEntry);
+        }
+        $balance->addBalanceLine($empty);
 
         $balance->setBalanceHeader($header);
 

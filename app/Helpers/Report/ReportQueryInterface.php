@@ -65,7 +65,17 @@ interface ReportQueryInterface
      *
      * @return float
      */
-    public function spentInBudget(Account $account, Budget $budget, Carbon $start, Carbon $end, $shared = false); // I think shared is irrelevant.
+    public function spentInBudget(Account $account, Budget $budget, Carbon $start, Carbon $end, $shared = false);
+
+    /**
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     * @param bool    $shared
+     *
+     * @return float
+     */
+    public function spentNoBudget(Account $account, Carbon $start, Carbon $end, $shared = false);
 
 
     /**

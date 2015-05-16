@@ -18,7 +18,13 @@
         <!-- make rows -->
         {% for balanceLine in balance.getBalanceLines %}
             <tr>
-                <td>{{ balanceLine.getBudget.name }}</td>
+                <td>
+                    {% if balanceLine.getBudget %}
+                        <a href="{{ route('budgets.show',balanceLine.getBudget.id) }}">{{ balanceLine.getBudget.name }}</a>
+                    {% else %}
+                        {{ 'noBudget'|_ }}
+                    {% endif %}
+                </td>
                 <td>{{ balanceLine.getBudgetAmount|formatAmount }}</td>
                 {% for balanceEntry in balanceLine.getBalanceEntries %}
                 <td class="text-danger">
