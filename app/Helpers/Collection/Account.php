@@ -5,6 +5,7 @@ namespace FireflyIII\Helpers\Collection;
 use Illuminate\Support\Collection;
 
 /**
+ * @codeCoverageIgnore
  * Class Account
  *
  * @package FireflyIII\Helpers\Collection

@@ -7,6 +7,8 @@ use Illuminate\Support\Collection;
 use stdClass;
 
 /**
+ * @codeCoverageIgnore
+ * 
  * Class Income
  *
  * @package FireflyIII\Helpers\Collection

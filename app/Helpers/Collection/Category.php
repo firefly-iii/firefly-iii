@@ -13,6 +13,8 @@ use Illuminate\Support\Collection;
 
 
 /**
+ * @codeCoverageIgnore
+ *
  * Class Category
  *
  * @package FireflyIII\Helpers\Collection

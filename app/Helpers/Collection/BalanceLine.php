@@ -6,6 +6,8 @@ use FireflyIII\Models\Budget as BudgetModel;
 use Illuminate\Support\Collection;
 
 /**
+ * @codeCoverageIgnore
+ *
  * Class BalanceLine
  *
  * @package FireflyIII\Helpers\Collection

@@ -6,6 +6,8 @@ use FireflyIII\Models\Budget as BudgetModel;
 use FireflyIII\Models\LimitRepetition;
 
 /**
+ * @codeCoverageIgnore
+ *
  * Class BudgetLine
  *
  * @package FireflyIII\Helpers\Collection

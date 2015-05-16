@@ -5,6 +5,8 @@ namespace FireflyIII\Helpers\Collection;
 use FireflyIII\Models\Account as AccountModel;
 
 /**
+ * @codeCoverageIgnore
+ *
  * Class BalanceEntry
  *
  * @package FireflyIII\Helpers\Collection
