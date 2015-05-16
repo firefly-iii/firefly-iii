@@ -3,7 +3,7 @@ $(function () {
     $('.removeMoney').on('click', removeMoney);
 
     if (typeof(googleLineChart) === 'function' && typeof(piggyBankID) !== 'undefined') {
-        googleLineChart('chart/piggy-history/' + piggyBankID, 'piggy-bank-history');
+        googleLineChart('chart/piggyBank/' + piggyBankID, 'piggy-bank-history');
     }
 
     $('#sortable tbody').sortable(

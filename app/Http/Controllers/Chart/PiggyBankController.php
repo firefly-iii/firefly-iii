@@ -36,7 +36,7 @@ class PiggyBankController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function piggyBankHistory(GChart $chart, PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
+    public function history(GChart $chart, PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
         $chart->addColumn(trans('firefly.date'), 'date');
         $chart->addColumn(trans('firefly.balance'), 'number');

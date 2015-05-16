@@ -273,27 +273,39 @@ Route::group(
 
 
     /**
-     * Google Chart Controller
+     * ALL CHART Controllers
      */
-    Route::get('/chart/account/{account}', ['uses' => 'GoogleChartController@accountBalance']);
+    // accounts:
+    Route::get('/chart/account/frontpage', ['uses' => 'Chart\AccountController@frontpage']);
+    Route::get('/chart/account/{account}', ['uses' => 'Chart\AccountController@single']);
+
+    // bills:
+    Route::get('/chart/bill/frontpage', ['uses' => 'Chart\BillController@frontpage']);
+    Route::get('/chart/bill/{bill}', ['uses' => 'Chart\BillController@single']);
+
+    // budgets:
+    Route::get('/chart/budget/frontpage', ['uses' => 'Chart\BudgetController@frontpage']);
+    Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'Chart\BudgetController@budgetLimit']);
+
+    // categories:
+    Route::get('/chart/category/frontpage', ['uses' => 'Chart\CategoryController@frontpage']);
+    Route::get('/chart/category/{category}/month', ['uses' => 'Chart\CategoryController@month']); // should be period.
+    Route::get('/chart/category/{category}/all', ['uses' => 'Chart\CategoryController@all']);
+
+    // piggy banks:
+    Route::get('/chart/piggyBank/{piggyBank}', ['uses' => 'Chart\PiggyBankController@history']);
 
 
-    Route::get('/chart/home/account', ['uses' => 'GoogleChartController@allAccountsBalanceChart']);
-    Route::get('/chart/home/budgets', ['uses' => 'GoogleChartController@allBudgetsHomeChart']);
-    Route::get('/chart/home/categories', ['uses' => 'GoogleChartController@allCategoriesHomeChart']);
-    Route::get('/chart/home/bills', ['uses' => 'GoogleChartController@billsOverview']);
 
-    Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'GoogleChartController@budgetLimitSpending']);
     Route::get('/chart/reports/income-expenses/{year}/{shared?}', ['uses' => 'GoogleChartController@yearInExp'])->where(
         ['year' => '[0-9]{4}', 'shared' => 'shared']
     );
     Route::get('/chart/reports/income-expenses-sum/{year}/{shared?}', ['uses' => 'GoogleChartController@yearInExpSum'])->where(
         ['year' => '[0-9]{4}', 'shared' => 'shared']
     );
-    Route::get('/chart/bills/{bill}', ['uses' => 'GoogleChartController@billOverview']);
-    Route::get('/chart/piggy-history/{piggyBank}', ['uses' => 'GoogleChartController@piggyBankHistory']);
-    Route::get('/chart/category/{category}/period', ['uses' => 'GoogleChartController@categoryPeriodChart']);
-    Route::get('/chart/category/{category}/overview', ['uses' => 'GoogleChartController@categoryOverviewChart']);
+
+
+
 
     /**
      * Help Controller

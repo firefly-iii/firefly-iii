@@ -31,7 +31,7 @@ class BillController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function bill(GChart $chart, BillRepositoryInterface $repository, Bill $bill)
+    public function single(GChart $chart, BillRepositoryInterface $repository, Bill $bill)
     {
 
         $chart->addColumn(trans('firefly.date'), 'date');
@@ -62,7 +62,7 @@ class BillController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function bills(GChart $chart, BillRepositoryInterface $repository, AccountRepositoryInterface $accounts)
+    public function frontpage(GChart $chart, BillRepositoryInterface $repository, AccountRepositoryInterface $accounts)
     {
         $chart->addColumn(trans('firefly.name'), 'string');
         $chart->addColumn(trans('firefly.amount'), 'number');

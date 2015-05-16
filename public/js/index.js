@@ -2,11 +2,12 @@ google.setOnLoadCallback(drawChart);
 
 
 function drawChart() {
-    googleLineChart('chart/home/account', 'accounts-chart');
-    //googleColumnChart('chart/home/budgets', 'budgets-chart');
-    googleStackedColumnChart('chart/home/budgets', 'budgets-chart');
-    googleColumnChart('chart/home/categories', 'categories-chart');
-    googlePieChart('chart/home/bills', 'bills-chart');
+    googleLineChart('chart/account/frontpage', 'accounts-chart');
+    googlePieChart('chart/bill/frontpage', 'bills-chart');
+    googleStackedColumnChart('chart/budget/frontpage', 'budgets-chart');
+    googleColumnChart('chart/category/frontpage', 'categories-chart');
+
+
     getBoxAmounts();
 }
 

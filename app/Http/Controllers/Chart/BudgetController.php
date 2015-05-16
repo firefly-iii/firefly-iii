@@ -27,7 +27,7 @@ class BudgetController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function home(GChart $chart, BudgetRepositoryInterface $repository)
+    public function frontpage(GChart $chart, BudgetRepositoryInterface $repository)
     {
         $chart->addColumn(trans('firefly.budget'), 'string');
         $chart->addColumn(trans('firefly.left'), 'number');

@@ -4,6 +4,7 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 
 use Carbon\Carbon;
+use Crypt;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\LimitRepetition;
@@ -14,7 +15,6 @@ use Navigation;
 use Preferences;
 use Response;
 use Session;
-use Crypt;
 
 /**
  * Class CategoryController
@@ -33,7 +33,7 @@ class CategoryController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function home(GChart $chart, CategoryRepositoryInterface $repository)
+    public function frontpage(GChart $chart, CategoryRepositoryInterface $repository)
     {
         $chart->addColumn(trans('firefly.category'), 'string');
         $chart->addColumn(trans('firefly.spent'), 'number');
@@ -56,7 +56,35 @@ class CategoryController extends Controller
     }
 
     /**
-     * Show an overview for a category.
+     * @param GChart                      $chart
+     * @param CategoryRepositoryInterface $repository
+     * @param Category                    $category
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function month(GChart $chart, CategoryRepositoryInterface $repository, Category $category)
+    {
+        $start = clone Session::get('start', Carbon::now()->startOfMonth());
+        $end   = Session::get('end', Carbon::now()->endOfMonth());
+
+        $chart->addColumn(trans('firefly.period'), 'date');
+        $chart->addColumn(trans('firefly.spent'), 'number');
+
+        while ($start <= $end) {
+            $spent = $repository->spentOnDaySum($category, $start);
+            $chart->addRow(clone $start, $spent);
+            $start->addDay();
+        }
+
+        $chart->generate();
+
+        return Response::json($chart->getData());
+
+
+    }
+
+    /**
+     * Show an overview for a category for all time, per month/week/year.
      *
      * @param GChart                      $chart
      * @param CategoryRepositoryInterface $repository
@@ -64,7 +92,7 @@ class CategoryController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function overview(GChart $chart, CategoryRepositoryInterface $repository, Category $category)
+    public function all(GChart $chart, CategoryRepositoryInterface $repository, Category $category)
     {
         // oldest transaction in category:
         $start = $repository->getFirstActivityDate($category);
@@ -79,11 +107,11 @@ class CategoryController extends Controller
         $end = new Carbon;
         while ($start <= $end) {
 
-            $currentEnd = Navigation::endOfPeriod($start, $range->data);
+            $currentEnd = Navigation::endOfPeriod($start, $range);
             $spent      = $repository->spentInPeriod($category, $start, $currentEnd);
             $chart->addRow(clone $start, $spent);
 
-            $start = Navigation::addPeriod($start, $range->data, 0);
+            $start = Navigation::addPeriod($start, $range, 0);
         }
 
         $chart->generate();
@@ -92,35 +120,6 @@ class CategoryController extends Controller
 
 
     }
-
-
-    /**
-     * @param GChart                      $chart
-     * @param CategoryRepositoryInterface $repository
-     * @param Category                    $category
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function period(GChart $chart, CategoryRepositoryInterface $repository, Category $category)
-    {
-        $start = clone Session::get('start', Carbon::now()->startOfMonth());
-        $chart->addColumn(trans('firefly.period'), 'date');
-        $chart->addColumn(trans('firefly.spent'), 'number');
-
-        $end = Session::get('end', Carbon::now()->endOfMonth());
-        while ($start <= $end) {
-            $spent = $repository->spentOnDaySum($category, $start);
-            $chart->addRow(clone $start, $spent);
-            $start->addDay();
-        }
-
-        $chart->generate();
-
-        return Response::json($chart->getData());
-
-
-    }
-
 
     /**
      * @param GChart                      $chart
