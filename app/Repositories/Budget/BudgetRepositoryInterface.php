@@ -125,10 +125,11 @@ interface BudgetRepositoryInterface
     /**
      * @param Budget $budget
      * @param Carbon $date
+     * @param boolean $shared
      *
      * @return float
      */
-    public function spentInMonth(Budget $budget, Carbon $date);
+    public function spentInMonth(Budget $budget, Carbon $date, $shared);
 
     /**
      * @param array $data

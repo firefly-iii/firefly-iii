@@ -126,7 +126,7 @@ class GoogleChartController extends Controller
         while ($start <= $end) {
             $row = [clone $start];
             foreach ($budgets as $budget) {
-                $spent = $repository->spentInMonth($budget, $start);
+                $spent = $repository->spentInMonth($budget, $start, $shared);
                 $row[] = $spent;
             }
             $chart->addRowArray($row);
