@@ -260,12 +260,14 @@ class ReportController extends Controller
      */
     public function year($year, $shared = false)
     {
-        $date         = new Carbon('01-01-' . $year);
-        $end          = clone $date;
-        $subTitle     = trans('firefly.reportForYear', ['year' => $year]);
-        $subTitleIcon = 'fa-bar-chart';
-        $totalExpense = 0;
-        $totalIncome  = 0;
+        $date             = new Carbon('01-01-' . $year);
+        $end              = clone $date;
+        $subTitle         = trans('firefly.reportForYear', ['year' => $year]);
+        $subTitleIcon     = 'fa-bar-chart';
+        $totalExpense     = 0;
+        $totalIncome      = 0;
+        $incomeTopLength  = 5;
+        $expenseTopLength = 10;
 
         if ($shared == 'shared') {
             $shared   = true;
@@ -305,9 +307,20 @@ class ReportController extends Controller
                     'amount' => floatval($entry->queryAmount),
                     'name'   => $entry->name,
                     'count'  => 1,
+                    'id'     => $id,
                 ];
             }
         }
+        // sort with callback:
+        uasort(
+            $incomes, function ($a, $b) {
+            if ($a['amount'] == $b['amount']) {
+                return 0;
+            }
+
+            return ($a['amount'] < $b['amount']) ? 1 : -1;
+        }
+        );
         unset($set, $id);
 
         /**
@@ -328,7 +341,9 @@ class ReportController extends Controller
                 'accounts', // all accounts
                 'accountsSums', // sums for all accounts
                 'incomes', 'expenses', // expenses and incomes.
-                'subTitle', 'subTitleIcon' // subtitle and subtitle icon.
+                'subTitle', 'subTitleIcon', // subtitle and subtitle icon.
+                'incomeTopLength', // length of income top X
+                'expenseTopLength' // length of expense top X.
             )
         );
     }

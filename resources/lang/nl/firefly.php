@@ -95,6 +95,9 @@ return [
     'difference'               => 'Verschil',
     'in'                       => 'In',
     'out'                      => 'Uit',
+    'topX'                     => 'top :number',
+    'showTheRest'              => 'Laat alles zien',
+    'hideTheRest'              => 'Laat alleen de top :number zien',
 
     // charts:
     'dayOfMonth'               => 'Dag vd maand',

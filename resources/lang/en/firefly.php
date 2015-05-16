@@ -95,6 +95,9 @@ return [
     'difference'               => 'Difference',
     'in'                       => 'In',
     'out'                      => 'Out',
+    'topX'                     => 'top :number',
+    'showTheRest'              => 'Show everything',
+    'hideTheRest'              => 'Show only the top :number',
 
     // charts:
     'dayOfMonth'               => 'Day of the month',

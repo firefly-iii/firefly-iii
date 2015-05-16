@@ -62,11 +62,9 @@
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-fw fa-exchange" title="Transfer"></i>
+                    <i class="fa fa-fw fa-exchange"></i>
                     {{ 'incomeVsExpenses'|_ }}
                 </div>
-
-
                 <table class="table table-bordered table-striped">
                     <tr>
                         <td>{{ 'in'|_ }}</td>
@@ -87,11 +85,15 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-long-arrow-right fa-fw"></i>
-                    {{ 'income'|_ }}
+                    {{ 'income'|_ }} ({{ trans('firefly.topX',{number: incomeTopLength}) }})
                 </div>
                 <table class="table">
                     {% for id,row in incomes %}
+                    {% if loop.index > incomeTopLength %}
+                        <tr class="collapse out incomesCollapsed">
+                    {% else %}
                         <tr>
+                    {% endif %}
                             <td>
                                 <a href="{{ route('accounts.show',id) }}" title="{{ row.name }}">{{ row.name }}</a>
                                 {% if row.count > 1 %}
@@ -101,7 +103,13 @@
                             <td>{{ row.amount|formatAmount }}</td>
                         </tr>
                     {% endfor %}
-
+                    {% if incomes|length > incomeTopLength %}
+                    <tr>
+                        <td colspan="2" class="active">
+                            <a href="#" id="showIncomes">{{ trans('firefly.showTheRest',{number:incomeTopLength}) }}</a>
+                        </td>
+                    </tr>
+                    {% endif %}
                     <tr>
                         <td><em>{{ 'sum'|_ }}</em></td>
                         <td>{{ totalIncome|formatAmount }}</td>
@@ -113,22 +121,46 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-long-arrow-left fa-fw"></i>
-                    {{ 'expenses'|_ }}
+                    {{ 'expenses'|_ }} ({{ trans('firefly.topX',{number: expenseTopLength}) }})
                 </div>
                 <table class="table">
                     {% set sum =0 %}
                     {% for expense in expenses %}
-                        <tr>
+                        {% if loop.index > expenseTopLength %}
+                            <tr class="collapse out expenseCollapsed">
+                        {% else %}
+                            <tr>
+                        {% endif %}
                             <td><a href="{{ route('accounts.show',expense.id) }}">{{ expense.name }}</a></td>
                             <td><span class="text-danger">{{ expense.queryAmount|formatAmountPlain }}</span></td>
                         </tr>
                         {% set sum = sum + (expense.queryAmount * -1) %}
                     {% endfor %}
+                    {% if expenses|length > expenseTopLength %}
+                        <tr>
+                            <td colspan="2" class="active">
+                                <a href="#" id="showExpenses">{{ trans('firefly.showTheRest',{number:incomeTopLength}) }}</a>
+                            </td>
+                        </tr>
+                    {% endif %}
                     <tr>
                         <td><em>{{ 'sum'|_ }}</em></td>
                         <td><span class="text-danger">{{ (sum * -1)|formatAmountPlain }}</span></td>
                     </tr>
                 </table>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-tasks fa-fw"></i>
+                    {{ 'categories'|_ }}
+                </div>
+                <div class="panel-body">
+                    <div id="categories">(to do)</div>
+                </div>
             </div>
         </div>
     </div>
@@ -155,8 +187,15 @@
 
     <script type="text/javascript">
         var year = '{{date.year}}';
-        var shared = {% if shared %}'/shared'
-        {% else %}''{% endif %};
+        var shared = {% if shared %}'/shared'{% else %}''{% endif %};
+        var incomeTopLength = {{ incomeTopLength }};
+        var expenseTopLength = {{ expenseTopLength }};
+        var incomeRestShow = false; // starts hidden.
+        var expenseRestShow = false; // starts hidden.
+        var showTheRest = '{{ trans('firefly.showTheRest',{number:incomeTopLength}) }}';
+        var hideTheRest = '{{ trans('firefly.hideTheRest',{number:incomeTopLength}) }}';
+        var showTheRestExpense = '{{ trans('firefly.showTheRest',{number:expenseTopLength}) }}';
+        var hideTheRestExpense = '{{ trans('firefly.hideTheRest',{number:expenseTopLength}) }}';
     </script>
 
     <script type="text/javascript" src="js/reports.js"></script>
