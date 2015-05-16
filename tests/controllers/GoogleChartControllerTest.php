@@ -69,22 +69,6 @@ class GoogleChartControllerTest extends TestCase
 
     }
 
-    public function testAllBudgetsAndSpending()
-    {
-        $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
-        $this->be($budget->user);
-        $collection = new Collection;
-        $collection->push($budget);
-
-        // mock stuff:
-        $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-        $repository->shouldReceive('getBudgets')->andReturn($collection);
-        $repository->shouldReceive('spentInMonth')->andReturn(rand(1, 100));
-
-        $this->call('GET', '/chart/budgets/spending/2015');
-        $this->assertResponseOk();
-    }
-
     public function testAllBudgetsHomeChart()
     {
 
@@ -215,36 +199,6 @@ class GoogleChartControllerTest extends TestCase
 
     }
 
-    public function testBudgetsAndSpending()
-    {
-        $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
-        $this->be($budget->user);
-
-        $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-        $repository->shouldReceive('spentInMonth')->andReturn(100);
-        $repository->shouldReceive('getLimitAmountOnDate')->andReturn(100);
-        $repository->shouldReceive('getFirstBudgetLimitDate')->andReturn(Carbon::now()->startOfMonth());
-        $repository->shouldReceive('getLastBudgetLimitDate')->andReturn(Carbon::now()->endOfYear());
-
-        // /chart/budget/{budget}/spending/{year?}
-        $this->call('GET', '/chart/budget/' . $budget->id . '/spending/0');
-        $this->assertResponseOk();
-    }
-
-    public function testBudgetsAndSpendingWithYear()
-    {
-        $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
-        $this->be($budget->user);
-
-        $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-        $repository->shouldReceive('spentInMonth')->andReturn(100);
-        $repository->shouldReceive('getLimitAmountOnDate')->andReturn(100);
-
-        // /chart/budget/{budget}/spending/{year?}
-        $this->call('GET', '/chart/budget/' . $budget->id . '/spending/2015');
-        $this->assertResponseOk();
-    }
-
     public function testCategoryOverviewChart()
     {
         $category = FactoryMuffin::create('FireflyIII\Models\Category');
@@ -297,63 +251,6 @@ class GoogleChartControllerTest extends TestCase
 
         $this->call('GET', '/chart/piggy-history/' . $piggyBank->id);
         $this->assertResponseOk();
-    }
-
-    public function testYearInExp()
-    {
-        $user       = FactoryMuffin::create('FireflyIII\User');
-        $preference = FactoryMuffin::create('FireflyIII\Models\Preference');
-        $journal1   = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-        $journal2   = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-        $journals   = new Collection([$journal1, $journal2]);
-        $this->be($user);
-
-
-        // mock!
-        $repository = $this->mock('FireflyIII\Helpers\Report\ReportQueryInterface');
-
-        // expect!
-        $repository->shouldReceive('incomeInPeriod')->andReturn($journals);
-        $repository->shouldReceive('journalsByExpenseAccount')->andReturn($journals);
-        Preferences::shouldReceive('get')->withArgs(['showSharedReports', false])->once()->andReturn($preference);
-
-        // language preference:
-        $language = FactoryMuffin::create('FireflyIII\Models\Preference');
-        $language->data = 'en';
-        $language->save();
-        Preferences::shouldReceive('get')->withAnyArgs()->andReturn($language);
-
-
-        $this->call('GET', '/chart/reports/income-expenses/2015/shared');
-        $this->assertResponseOk();
-    }
-
-    public function testYearInExpSum()
-    {
-        $user       = FactoryMuffin::create('FireflyIII\User');
-        $preference = FactoryMuffin::create('FireflyIII\Models\Preference');
-        $journal1   = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-        $journal2   = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-        $journals   = new Collection([$journal1, $journal2]);
-        $this->be($user);
-
-
-        // mock!
-        $repository = $this->mock('FireflyIII\Helpers\Report\ReportQueryInterface');
-
-        // expect!
-        $repository->shouldReceive('incomeInPeriod')->andReturn($journals);
-        $repository->shouldReceive('journalsByExpenseAccount')->andReturn($journals);
-        Preferences::shouldReceive('get')->withArgs(['showSharedReports', false])->once()->andReturn($preference);
-
-        // language preference:
-        $language = FactoryMuffin::create('FireflyIII\Models\Preference');
-        $language->data = 'en';
-        $language->save();
-        Preferences::shouldReceive('get')->withAnyArgs()->andReturn($language);
-
-
-        $this->call('GET', '/chart/reports/income-expenses-sum/2015/shared');
     }
 
 }
