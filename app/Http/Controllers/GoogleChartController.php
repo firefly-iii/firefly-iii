@@ -359,7 +359,7 @@ class GoogleChartController extends Controller
         while ($start <= $end) {
 
             $currentEnd = Navigation::endOfPeriod($start, $range->data);
-            $spent      = $repository->spentInPeriodSum($category, $start, $currentEnd);
+            $spent      = $repository->spentInPeriod($category, $start, $currentEnd);
             $chart->addRow(clone $start, $spent);
 
             $start = Navigation::addPeriod($start, $range->data, 0);

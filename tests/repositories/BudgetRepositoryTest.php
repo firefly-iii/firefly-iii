@@ -292,11 +292,11 @@ class BudgetRepositoryTest extends TestCase
     /**
      * @covers FireflyIII\Repositories\Budget\BudgetRepository::spentInMonth
      */
-    public function testSpentInMonth()
+    public function testSpentInPeriod()
     {
         $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
 
-        $amount = $this->object->spentInMonth($budget, new Carbon);
+        $amount = $this->object->spentInPeriod($budget, new Carbon, new Carbon);
         $this->assertEquals(0, $amount);
     }
 

@@ -5,6 +5,7 @@ namespace FireflyIII\Http\Controllers;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Grumpydictator\Gchart\GChart;
 use Response;
 
@@ -52,11 +53,35 @@ class ReportChartController extends Controller
         return Response::json($chart->getData());
     }
 
-    public function yearCategories(GChart $chart, $year, $shared = false)
+    public function yearCategories(GChart $chart, CategoryRepositoryInterface $repository, $year, $shared = false)
     {
         $start  = new Carbon($year . '-01-01');
         $end    = new Carbon($year . '-12-31');
         $shared = $shared == 'shared' ? true : false;
+        $categories = $repository->getCategories();
+
+        // add columns:
+        $chart->addColumn(trans('firefly.month'), 'date');
+        foreach ($categories as $category) {
+            $chart->addColumn($category->name, 'number');
+        }
+
+        while ($start < $end) {
+            // month is the current end of the period:
+            $month = clone $start;
+            $month->endOfMonth();
+            // make a row:
+            $row = [clone $start];
+
+            // each budget, fill the row:
+            foreach ($categories as $category) {
+                $spent = $repository->spentInPeriod($category, $start, $month, $shared);
+                $row[] = $spent;
+            }
+            $chart->addRowArray($row);
+
+            $start->addMonth();
+        }
 
         $chart->generate();
 

@@ -170,9 +170,15 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @return float
      */
-    public function spentInPeriodSum(Category $category, Carbon $start, Carbon $end)
+    public function spentInPeriod(Category $category, Carbon $start, Carbon $end, $shared = false)
     {
-        return floatval($category->transactionjournals()->before($end)->after($start)->lessThan(0)->sum('amount')) * -1;
+        if($shared === false) {
+            // do something else, SEE budgets.
+            $sum = floatval($category->transactionjournals()->before($end)->after($start)->lessThan(0)->sum('amount')) * -1;
+        } else {
+            $sum = floatval($category->transactionjournals()->before($end)->after($start)->lessThan(0)->sum('amount')) * -1;
+        }
+        return $sum;
     }
 
     /**

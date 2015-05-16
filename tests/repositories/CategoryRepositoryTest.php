@@ -189,12 +189,12 @@ class CategoryRepositoryTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Repositories\Category\CategoryRepository::spentInPeriodSum
+     * @covers FireflyIII\Repositories\Category\CategoryRepository::spentInPeriod
      */
     public function testSpentInPeriodSum()
     {
         $category = FactoryMuffin::create('FireflyIII\Models\Category');
-        $sum      = $this->object->spentInPeriodSum($category, new Carbon, new Carbon);
+        $sum      = $this->object->spentInPeriod($category, new Carbon, new Carbon);
 
         $this->assertEquals(0, $sum);
 

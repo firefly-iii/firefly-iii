@@ -77,7 +77,7 @@ interface CategoryRepositoryInterface
      *
      * @return float
      */
-    public function spentInPeriodSum(Category $category, Carbon $start, Carbon $end);
+    public function spentInPeriod(Category $category, Carbon $start, Carbon $end, $shared = false);
 
     /**
      * @param Category $category

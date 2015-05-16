@@ -212,7 +212,7 @@ class GoogleChartControllerTest extends TestCase
         // mock!
         $repository = $this->mock('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
         $repository->shouldReceive('getFirstActivityDate')->andReturn($start);
-        $repository->shouldReceive('spentInPeriodSum')->andReturn(rand(1, 100));
+        $repository->shouldReceive('spentInPeriod')->andReturn(rand(1, 100));
         Preferences::shouldReceive('get')->andReturn($pref);
 
         Navigation::shouldReceive('startOfPeriod')->andReturn($start);
