@@ -1,92 +1,22 @@
 <?php
 
-namespace FireflyIII\Http\Controllers;
+namespace FireflyIII\Http\Controllers\Chart;
+
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Http\Controllers\Controller;
 use Grumpydictator\Gchart\GChart;
 use Response;
 
 /**
- * Class ReportChartController
+ * Class ReportController
  *
- * @package FireflyIII\Http\Controllers
+ * @package FireflyIII\Http\Controllers\Chart
  */
-class ReportChartController extends Controller
+class ReportController extends Controller
 {
 
-
-    public function yearBudgets(GChart $chart, BudgetRepositoryInterface $repository, $year, $shared = false)
-    {
-        $start   = new Carbon($year . '-01-01');
-        $end     = new Carbon($year . '-12-31');
-        $shared  = $shared == 'shared' ? true : false;
-        $budgets = $repository->getBudgets();
-
-        // add columns:
-        $chart->addColumn(trans('firefly.month'), 'date');
-        foreach ($budgets as $budget) {
-            $chart->addColumn($budget->name, 'number');
-        }
-
-        while ($start < $end) {
-            // month is the current end of the period:
-            $month = clone $start;
-            $month->endOfMonth();
-            // make a row:
-            $row = [clone $start];
-
-            // each budget, fill the row:
-            foreach ($budgets as $budget) {
-                $spent = $repository->spentInPeriod($budget, $start, $month, $shared);
-                $row[] = $spent;
-            }
-            $chart->addRowArray($row);
-
-            $start->addMonth();
-        }
-
-        $chart->generate();
-
-        return Response::json($chart->getData());
-    }
-
-    public function yearCategories(GChart $chart, CategoryRepositoryInterface $repository, $year, $shared = false)
-    {
-        $start  = new Carbon($year . '-01-01');
-        $end    = new Carbon($year . '-12-31');
-        $shared = $shared == 'shared' ? true : false;
-        $categories = $repository->getCategories();
-
-        // add columns:
-        $chart->addColumn(trans('firefly.month'), 'date');
-        foreach ($categories as $category) {
-            $chart->addColumn($category->name, 'number');
-        }
-
-        while ($start < $end) {
-            // month is the current end of the period:
-            $month = clone $start;
-            $month->endOfMonth();
-            // make a row:
-            $row = [clone $start];
-
-            // each budget, fill the row:
-            foreach ($categories as $category) {
-                $spent = $repository->spentInPeriod($category, $start, $month, $shared);
-                $row[] = $spent;
-            }
-            $chart->addRowArray($row);
-
-            $start->addMonth();
-        }
-
-        $chart->generate();
-
-        return Response::json($chart->getData());
-    }
 
     /**
      * Summarizes all income and expenses, per month, for a given year.

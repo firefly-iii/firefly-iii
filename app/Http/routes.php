@@ -188,7 +188,7 @@ Route::get('/register', ['uses' => 'Auth\AuthController@getRegister', 'as' => 'r
 
 Route::controllers(
     [
-        'auth'     => 'Auth\AuthController',
+        'auth' => 'Auth\AuthController',
         'password' => 'Auth\PasswordController',
     ]
 );
@@ -284,8 +284,12 @@ Route::group(
     Route::get('/chart/home/bills', ['uses' => 'GoogleChartController@billsOverview']);
 
     Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'GoogleChartController@budgetLimitSpending']);
-    Route::get('/chart/reports/income-expenses/{year}/{shared?}', ['uses' => 'GoogleChartController@yearInExp'])->where(['year' => '[0-9]{4}','shared'=> 'shared']);
-    Route::get('/chart/reports/income-expenses-sum/{year}/{shared?}', ['uses' => 'GoogleChartController@yearInExpSum'])->where(['year' => '[0-9]{4}','shared'=> 'shared']);
+    Route::get('/chart/reports/income-expenses/{year}/{shared?}', ['uses' => 'GoogleChartController@yearInExp'])->where(
+        ['year' => '[0-9]{4}', 'shared' => 'shared']
+    );
+    Route::get('/chart/reports/income-expenses-sum/{year}/{shared?}', ['uses' => 'GoogleChartController@yearInExpSum'])->where(
+        ['year' => '[0-9]{4}', 'shared' => 'shared']
+    );
     Route::get('/chart/bills/{bill}', ['uses' => 'GoogleChartController@billOverview']);
     Route::get('/chart/piggy-history/{piggyBank}', ['uses' => 'GoogleChartController@piggyBankHistory']);
     Route::get('/chart/category/{category}/period', ['uses' => 'GoogleChartController@categoryPeriodChart']);
@@ -354,22 +358,33 @@ Route::group(
      */
     Route::get('/reports', ['uses' => 'ReportController@index', 'as' => 'reports.index']);
     //Route::get('/reports/{year}', ['uses' => 'ReportController@year', 'as' => 'reports.year'])->where(['year' => '[0-9]{4}']);
-    Route::get('/reports/{year}/{shared?}', ['uses' => 'ReportController@year', 'as' => 'reports.year'])->where(['year' => '[0-9]{4}','shared'=> 'shared']);
-    Route::get('/reports/{year}/{month}/{shared?}', ['uses' => 'ReportController@month', 'as' => 'reports.month'])->where(['year' => '[0-9]{4}','month' => '[0-9]{1,2}','shared' => 'shared']);
+    Route::get('/reports/{year}/{shared?}', ['uses' => 'ReportController@year', 'as' => 'reports.year'])->where(['year' => '[0-9]{4}', 'shared' => 'shared']);
+    Route::get('/reports/{year}/{month}/{shared?}', ['uses' => 'ReportController@month', 'as' => 'reports.month'])->where(
+        ['year' => '[0-9]{4}', 'month' => '[0-9]{1,2}', 'shared' => 'shared']
+    );
 
     // pop ups for budget report:
     Route::get('/reports/modal/{account}/{year}/{month}/no-budget', ['uses' => 'ReportController@modalNoBudget', 'as' => 'reports.no-budget']);
-    Route::get('/reports/modal/{account}/{year}/{month}/balanced-transfers', ['uses' => 'ReportController@modalBalancedTransfers', 'as' => 'reports.balanced-transfers']);
-    Route::get('/reports/modal/{account}/{year}/{month}/left-unbalanced', ['uses' => 'ReportController@modalLeftUnbalanced', 'as' => 'reports.left-unbalanced']);
+    Route::get(
+        '/reports/modal/{account}/{year}/{month}/balanced-transfers',
+        ['uses' => 'ReportController@modalBalancedTransfers', 'as' => 'reports.balanced-transfers']
+    );
+    Route::get(
+        '/reports/modal/{account}/{year}/{month}/left-unbalanced', ['uses' => 'ReportController@modalLeftUnbalanced', 'as' => 'reports.left-unbalanced']
+    );
 
     /**
      * Report Chart Controller:
      */
-    Route::get('/report/chart/in-out/{year}/{shared?}', ['uses' => 'ReportChartController@yearInOut'])->where(['year' => '[0-9]{4}','shared'=> 'shared']);
-    Route::get('/report/chart/in-out-sum/{year}/{shared?}', ['uses' => 'ReportChartController@yearInOutSummarized'])->where(['year' => '[0-9]{4}','shared'=> 'shared']);
+    Route::get('/report/chart/in-out/{year}/{shared?}', ['uses' => 'ReportChartController@yearInOut'])->where(['year' => '[0-9]{4}', 'shared' => 'shared']);
+    Route::get('/report/chart/in-out-sum/{year}/{shared?}', ['uses' => 'ReportChartController@yearInOutSummarized'])->where(
+        ['year' => '[0-9]{4}', 'shared' => 'shared']
+    );
 
-    Route::get('/report/chart/budgets/{year}/{shared?}', ['uses' => 'ReportChartController@yearBudgets'])->where(['year' => '[0-9]{4}','shared'=> 'shared']);
-    Route::get('/report/chart/categories/{year}/{shared?}', ['uses' => 'ReportChartController@yearCategories'])->where(['year' => '[0-9]{4}','shared'=> 'shared']);
+    Route::get('/report/chart/budgets/{year}/{shared?}', ['uses' => 'ReportChartController@yearBudgets'])->where(['year' => '[0-9]{4}', 'shared' => 'shared']);
+    Route::get('/report/chart/categories/{year}/{shared?}', ['uses' => 'ReportChartController@yearCategories'])->where(
+        ['year' => '[0-9]{4}', 'shared' => 'shared']
+    );
 
     /**
      * Search Controller

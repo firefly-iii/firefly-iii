@@ -49,7 +49,7 @@ class TransactionController extends Controller
         $piggies[0] = trans('form.noPiggybank');
         $preFilled  = Session::has('preFilled') ? Session::get('preFilled') : [];
         $respondTo  = ['account_id', 'account_from_id'];
-        $subTitle   = trans('form.add_new_'.$what);
+        $subTitle   = trans('form.add_new_' . $what);
 
         foreach ($respondTo as $r) {
             if (!is_null(Input::get($r))) {

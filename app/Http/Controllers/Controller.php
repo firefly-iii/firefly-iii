@@ -20,7 +20,7 @@ abstract class Controller extends BaseController
 
     /** @var string */
     protected $monthAndDayFormat;
-    /** @var string  */
+    /** @var string */
     protected $monthFormat;
 
     /**

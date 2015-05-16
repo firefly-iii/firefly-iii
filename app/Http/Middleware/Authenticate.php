@@ -2,11 +2,12 @@
 
 use App;
 use Closure;
+use Config;
 use FireflyIII\Models\Preference;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Preferences;
-use Config;
+
 /**
  * Class Authenticate
  *
@@ -55,7 +56,7 @@ class Authenticate
         $pref = Preferences::get('language', 'en');
         App::setLocale($pref->data);
 
-        setlocale(LC_TIME, Config::get('firefly.locales.'.$pref->data));
+        setlocale(LC_TIME, Config::get('firefly.locales.' . $pref->data));
 
         return $next($request);
     }
