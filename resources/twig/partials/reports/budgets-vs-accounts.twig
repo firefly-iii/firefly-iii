@@ -1,0 +1,122 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="fa fa-sort-amount-asc fa-fw"></i>
+        {{ 'budgets'|_ }} ({{ 'splitByAccount'|_|lower }})
+    </div>
+    <table class="table table-bordered table-striped">
+        <!-- build balance report header -->
+        <tr>
+            <th colspan="2">{{ 'budgets'|_ }}</th>
+            {% for account in balance.getBalanceHeader.getAccounts %}
+                <th><a href="{{route('accounts.show',account.id)}}">{{ account.name }}</a></th>
+            {% endfor %}
+            <th colspan="2">
+                {{ 'leftInBudget'|_ }}
+            </th>
+        </tr>
+
+    </table>
+
+    <!--
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th colspan="2">{{ 'budgets'|_ }}</th>
+            {% for account in accounts %}
+                <th><a href="{{route('accounts.show',account.id)}}">{{ account.name }}</a></th>
+            {% endfor %}
+            <th colspan="2">
+                {{ 'leftInBudget'|_ }}
+            </th>
+        </tr>
+        {% for data in budgets %}
+            {% if data[0] %}
+                <tr>
+                    <td>{{ data[0].name }}</td>
+                    <td>
+                        {% if data[1] %}
+                            {{  data[1].amount|formatAmount  }}
+                        {% else %}
+                            {{ 0|formatAmount }}
+                        {% endif %}
+                    </td>
+                    {% set spent = 0 %}
+                    {% for account in accounts %}
+                        {% if account.budgetInformation[id] %}
+                            <td>
+                                {% if id == 0 %}
+                                    <a href="{{route('reports.no-budget',[account, year, month])}}" class="openModal">
+                                        {{  account.budgetInformation[id].queryAmount|formatAmount  }}
+                                    </a>
+                                {% else %}
+                                    {{  account.budgetInformation[id].queryAmount|formatAmount  }}
+                                {% endif %}
+                            </td>
+                            {% set spent = spent + account.budgetInformation[id].queryAmount %}
+                        {% else %}
+                            <td>{{  0|formatAmount  }}</td>
+                        {% endif %}
+                    {% endfor %}
+                    <td>
+                        {% if data[1] %}
+                            {{  (data[1].amount - data[3])|formatAmount  }}
+                        {% else %}
+                            {{  (0 - data[3])|formatAmount  }}
+                        {% endif %}
+                    </td>
+                    <td>{{ data[2]|formatAmount }}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+        <tr>
+            <td colspan="2">{{ 'balancedByTransfersAndTags'|_ }}</td>
+            {% for account in accounts %}
+                {% if not account.hide %}
+                    <td>
+                        <a href="{{route('reports.balanced-transfers',[account, year, month])}}" class="openModal">{{  account.balancedAmount|formatAmount  }}</a>
+                    </td>
+                {% endif %}
+            {% endfor %}
+            <td colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="2">{{ 'leftUnbalanced'|_ }}</td>
+            {% for account in accounts %}
+
+                {% if not account.hide %}
+                    {% if account.budgetInformation[0] %}
+                        <td>
+                            {% if account.budgetInformation[0].queryAmount + account.balancedAmount != 0.0 %}
+                                <a href="{{route('reports.left-unbalanced',[account, year, month])}}" class="openModal">{{  (account.budgetInformation[0].queryAmount + account.balancedAmount)|formatAmount  }}</a>
+                            {% else %}
+                                {{  (account.budgetInformation[0].queryAmount + account.balancedAmount)|formatAmount  }}
+                            {% endif %}
+                        </td>
+                    {% else %}
+                        <td>{{  0|formatAmount  }}</td>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            <td colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="2"><em>{{ 'sum'|_ }}</em></td>
+            {% for account in accounts %}
+                {% if not account.hide %}
+                    <td>{{  accountAmounts[account.id]|formatAmount  }}</td>
+                {% endif %}
+            {% endfor %}
+            <td colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="2">{{ 'expectedBalance'|_ }}</td>
+            {% for account in accounts %}
+                {% if not account.hide %}
+                    <td>{{  (account.startBalance + accountAmounts[account.id])|formatAmount  }}</td>
+                {% endif %}
+            {% endfor %}
+            <td colspan="2">&nbsp;</td>
+        </tr>
+
+    </table>
+    -->
+</div>

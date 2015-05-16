@@ -103,6 +103,7 @@ return [
     'leftUnbalanced'             => 'Left unbalanced',
     'expectedBalance'            => 'Expected balance',
     'outsideOfBudgets'           => 'Outside of budgets',
+    'leftInBudget'               => 'Left in budget',
 
     'difference'                 => 'Difference',
     'in'                         => 'In',

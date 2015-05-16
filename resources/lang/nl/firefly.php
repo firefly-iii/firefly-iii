@@ -103,6 +103,7 @@ return [
     'leftUnbalanced'             => 'Ongecorrigeerd',
     'expectedBalance'            => 'Verwacht saldo',
     'outsideOfBudgets'           => 'Buiten budgetten',
+    'leftInBudget'               => 'Over van budget',
 
     'difference'                 => 'Verschil',
     'in'                         => 'In',

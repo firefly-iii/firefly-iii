@@ -87,6 +87,70 @@ class ReportQuery implements ReportQueryInterface
     }
 
     /**
+     * This method returns all "expense" journals in a certain period, which are both transfers to a shared account
+     * and "ordinary" withdrawals. The query used is almost equal to ReportQueryInterface::journalsByRevenueAccount but it does
+     * not group and returns different fields.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param bool   $includeShared
+     *
+     * @return Collection
+     *
+     */
+    public function expenseInPeriod(Carbon $start, Carbon $end, $includeShared = false)
+    {
+        $query = $this->queryJournalsWithTransactions($start, $end);
+        if ($includeShared === false) {
+            // only get withdrawals not from a shared account
+            // and transfers from a shared account.
+            $query->where(
+                function (Builder $query) {
+                    $query->where(
+                        function (Builder $q) {
+                            $q->where('transaction_types.type', 'Withdrawal');
+                            $q->where('acm_from.data', '!=', '"sharedAsset"');
+                        }
+                    );
+                    $query->orWhere(
+                        function (Builder $q) {
+                            $q->where('transaction_types.type', 'Transfer');
+                            $q->where('acm_to.data', '=', '"sharedAsset"');
+                        }
+                    );
+                }
+            );
+        } else {
+            // any withdrawal is fine.
+            $query->where('transaction_types.type', 'Withdrawal');
+        }
+        $query->groupBy('transaction_journals.id')->orderBy('transaction_journals.date');
+
+        // get everything, decrypt and return
+        $data = $query->get(
+            ['transaction_journals.id',
+             'transaction_journals.description',
+             'transaction_journals.encrypted',
+             'transaction_types.type',
+             DB::Raw('SUM(`t_from`.`amount`) as `queryAmount`'),
+             'transaction_journals.date',
+             't_to.account_id as account_id',
+             'ac_to.name as name',
+             'ac_to.encrypted as account_encrypted'
+            ]
+        );
+
+        $data->each(
+            function (Model $object) {
+                $object->name = intval($object->account_encrypted) == 1 ? Crypt::decrypt($object->name) : $object->name;
+            }
+        );
+        $data->sortByDesc('queryAmount');
+
+        return $data;
+    }
+
+    /**
      * Get a users accounts combined with various meta-data related to the start and end date.
      *
      * @param Carbon $start
@@ -219,69 +283,6 @@ class ReportQuery implements ReportQueryInterface
              't_from.account_id as account_id',
              'ac_from.name as name',
              'ac_from.encrypted as account_encrypted'
-            ]
-        );
-
-        $data->each(
-            function (Model $object) {
-                $object->name = intval($object->account_encrypted) == 1 ? Crypt::decrypt($object->name) : $object->name;
-            }
-        );
-        $data->sortByDesc('queryAmount');
-
-        return $data;
-    }
-
-    /**
-     * This method returns all "expense" journals in a certain period, which are both transfers to a shared account
-     * and "ordinary" withdrawals. The query used is almost equal to ReportQueryInterface::journalsByRevenueAccount but it does
-     * not group and returns different fields.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param bool   $includeShared
-     *
-     * @return Collection
-     *
-     */
-    public function expenseInPeriod(Carbon $start, Carbon $end, $includeShared = false) {
-        $query = $this->queryJournalsWithTransactions($start, $end);
-        if ($includeShared === false) {
-            // only get withdrawals not from a shared account
-            // and transfers from a shared account.
-            $query->where(
-                function (Builder $query) {
-                    $query->where(
-                        function (Builder $q) {
-                            $q->where('transaction_types.type', 'Withdrawal');
-                            $q->where('acm_from.data', '!=', '"sharedAsset"');
-                        }
-                    );
-                    $query->orWhere(
-                        function (Builder $q) {
-                            $q->where('transaction_types.type', 'Transfer');
-                            $q->where('acm_to.data', '=', '"sharedAsset"');
-                        }
-                    );
-                }
-            );
-        } else {
-            // any withdrawal is fine.
-            $query->where('transaction_types.type', 'Withdrawal');
-        }
-        $query->groupBy('transaction_journals.id')->orderBy('transaction_journals.date');
-
-        // get everything, decrypt and return
-        $data = $query->get(
-            ['transaction_journals.id',
-             'transaction_journals.description',
-             'transaction_journals.encrypted',
-             'transaction_types.type',
-             DB::Raw('SUM(`t_from`.`amount`) as `queryAmount`'),
-             'transaction_journals.date',
-             't_to.account_id as account_id',
-             'ac_to.name as name',
-             'ac_to.encrypted as account_encrypted'
             ]
         );
 

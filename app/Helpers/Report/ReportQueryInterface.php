@@ -123,6 +123,7 @@ interface ReportQueryInterface
      */
     public function journalsByCategory(Carbon $start, Carbon $end, $includeShared = false);
 
+
     /**
      * Gets a list of expense accounts and the expenses therein, grouped by that expense account.
      * This result excludes transfers to shared accounts which are expenses, technically.

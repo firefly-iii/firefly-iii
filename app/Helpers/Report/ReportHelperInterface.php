@@ -4,10 +4,11 @@ namespace FireflyIII\Helpers\Report;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collection\Account;
-use FireflyIII\Helpers\Collection\Expense;
-use FireflyIII\Helpers\Collection\Income;
+use FireflyIII\Helpers\Collection\Balance;
 use FireflyIII\Helpers\Collection\Budget as BudgetCollection;
 use FireflyIII\Helpers\Collection\Category as CategoryCollection;
+use FireflyIII\Helpers\Collection\Expense;
+use FireflyIII\Helpers\Collection\Income;
 
 /**
  * Interface ReportHelperInterface
@@ -28,6 +29,15 @@ interface ReportHelperInterface
      * @return Account
      */
     public function getAccountReport(Carbon $date, Carbon $end, $shared);
+
+    /**
+     * @param Carbon  $start
+     * @param Carbon  $end
+     * @param boolean $shared
+     *
+     * @return Balance
+     */
+    public function getBalanceReport(Carbon $start, Carbon $end, $shared);
 
     /**
      * @param Carbon  $start

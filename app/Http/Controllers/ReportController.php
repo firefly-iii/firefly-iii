@@ -160,6 +160,7 @@ class ReportController extends Controller
         $expenses   = $this->helper->getExpenseReport($start, $end, $shared);
         $budgets    = $this->helper->getBudgetReport($start, $end, $shared);
         $categories = $this->helper->getCategoryReport($start, $end, $shared);
+        $balance    = $this->helper->getBalanceReport($start, $end, $shared);
 
         //        /**
         //         * DO BUDGETS.
@@ -234,7 +235,7 @@ class ReportController extends Controller
                 'accounts',
                 'incomes', 'incomeTopLength',
                 'expenses', 'expenseTopLength',
-                'budgets',
+                'budgets','balance',
                 'categories'
             )
         );

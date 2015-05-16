@@ -5,12 +5,17 @@ namespace FireflyIII\Helpers\Report;
 use App;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collection\Account as AccountCollection;
+use FireflyIII\Helpers\Collection\Balance;
+use FireflyIII\Helpers\Collection\BalanceEntry;
+use FireflyIII\Helpers\Collection\BalanceHeader;
+use FireflyIII\Helpers\Collection\BalanceLine;
 use FireflyIII\Helpers\Collection\Budget as BudgetCollection;
 use FireflyIII\Helpers\Collection\BudgetLine;
 use FireflyIII\Helpers\Collection\Category as CategoryCollection;
 use FireflyIII\Helpers\Collection\Expense;
 use FireflyIII\Helpers\Collection\Income;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Budget as BudgetModel;
 use FireflyIII\Models\LimitRepetition;
 
 /**
@@ -67,6 +72,61 @@ class ReportHelper implements ReportHelperInterface
         $object->setAccounts($accounts);
 
         return $object;
+    }
+
+    /**
+     *
+     * The balance report contains a Balance object which in turn contains:
+     *
+     * A BalanceHeader object which contains all relevant user asset accounts for the report.
+     *
+     * A number of BalanceLine objects, which hold:
+     * - A budget
+     * - A number of BalanceEntry objects.
+     *
+     * The BalanceEntry object holds:
+     *   - The same budget (again)
+     *   - A user asset account as mentioned in the BalanceHeader
+     *   - The amount of money spent on the budget by the user asset account
+     *
+     * @param Carbon  $start
+     * @param Carbon  $end
+     * @param boolean $shared
+     *
+     * @return Balance
+     */
+    public function getBalanceReport(Carbon $start, Carbon $end, $shared)
+    {
+        $repository = App::make('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $balance    = new Balance;
+
+        // build a balance header:
+        $header = new BalanceHeader;
+
+        $accounts = $this->query->getAllAccounts($start, $end, $shared);
+        $budgets  = $repository->getBudgets();
+        foreach ($accounts as $account) {
+            $header->addAccount($account);
+        }
+
+        foreach ($budgets as $budget) {
+            $line = new BalanceLine;
+            $line->setBudget($budget);
+
+            // loop accounts:
+            foreach ($accounts as $account) {
+                $balanceEntry = new BalanceEntry;
+                $balanceEntry->setAccount($account);
+                $balanceEntry->setSpent(rand(1, 100));
+                $line->addBalanceEntry($balanceEntry);
+            }
+            // add line to balance:
+            $balance->addBalanceLine($line);
+        }
+
+        $balance->setBalanceHeader($header);
+
+        return $balance;
     }
 
     /**
@@ -143,7 +203,23 @@ class ReportHelper implements ReportHelperInterface
      */
     public function getCategoryReport(Carbon $start, Carbon $end, $shared)
     {
-        return null;
+        $object = new CategoryCollection;
+
+
+        /**
+         * GET CATEGORIES:
+         */
+        /** @var \FireflyIII\Repositories\Category\CategoryRepositoryInterface $repository */
+        $repository = App::make('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
+        $set        = $repository->getCategories();
+        foreach ($set as $category) {
+            $spent           = $repository->spentInPeriod($category, $start, $end, $shared);
+            $category->spent = $spent;
+            $object->addCategory($category);
+            $object->addTotal($spent);
+        }
+
+        return $object;
     }
 
     /**
