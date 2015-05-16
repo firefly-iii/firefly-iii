@@ -177,7 +177,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             // always ignore transfers between accounts!
             $sum = floatval(
                        $category->transactionjournals()
-                                ->transactionTypes(['Withdrawal', 'Deposit'])
+                                ->transactionTypes(['Withdrawal'])
                                 ->before($end)->after($start)->lessThan(0)->sum('amount')
                    ) * -1;
 
@@ -187,7 +187,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             $sum = $category->transactionjournals()
                             ->before($end)
                             ->after($start)
-                            ->transactionTypes(['Withdrawal', 'Deposit'])
+                            ->transactionTypes(['Withdrawal'])
                             ->lessThan(0)
                             ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                             ->leftJoin(

@@ -122,6 +122,8 @@ class CategoryController extends Controller
     }
 
     /**
+     * This chart will only show expenses.
+     *
      * @param GChart                      $chart
      * @param CategoryRepositoryInterface $repository
      * @param                             $year
