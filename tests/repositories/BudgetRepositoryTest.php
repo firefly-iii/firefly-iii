@@ -290,7 +290,7 @@ class BudgetRepositoryTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Repositories\Budget\BudgetRepository::spentInMonth
+     * @covers FireflyIII\Repositories\Budget\BudgetRepository::spentInPeriod
      */
     public function testSpentInPeriod()
     {
