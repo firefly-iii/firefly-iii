@@ -139,17 +139,6 @@ interface ReportQueryInterface
     public function journalsByExpenseAccount(Carbon $start, Carbon $end, $includeShared = false);
 
     /**
-     * This method returns all deposits into asset accounts, grouped by the revenue account,
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param bool   $includeShared
-     *
-     * @return Collection
-     */
-    public function journalsByRevenueAccount(Carbon $start, Carbon $end, $includeShared = false);
-
-    /**
      * With an equally misleading name, this query returns are transfers to shared accounts. These are considered
      * expenses.
      *

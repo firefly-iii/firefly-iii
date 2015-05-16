@@ -30,11 +30,4 @@ interface ReportHelperInterface
      */
     public function listOfMonths(Carbon $date);
 
-    /**
-     * @param Carbon $date
-     * @param bool   $includeShared
-     *
-     * @return array
-     */
-    public function yearBalanceReport(Carbon $date, $includeShared = false);
 }

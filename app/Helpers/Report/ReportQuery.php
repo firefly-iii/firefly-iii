@@ -438,58 +438,6 @@ class ReportQuery implements ReportQueryInterface
     }
 
     /**
-     * This method returns all deposits into asset accounts, grouped by the revenue account,
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param bool   $includeShared
-     *
-     * @return Collection
-     */
-    public function journalsByRevenueAccount(Carbon $start, Carbon $end, $includeShared = false)
-    {
-        $query = $this->queryJournalsWithTransactions($start, $end);
-        if ($includeShared === false) {
-
-            // show queries where transfer type is deposit, and its not to a shared account
-            // or where its a transfer and its from a shared account (both count as incomes)
-            $query->where(
-                function (Builder $query) {
-                    $query->where(
-                        function (Builder $q) {
-                            $q->where('transaction_types.type', 'Deposit');
-                            $q->where('acm_to.data', '!=', '"sharedAsset"');
-                        }
-                    );
-                    $query->orWhere(
-                        function (Builder $q) {
-                            $q->where('transaction_types.type', 'Transfer');
-                            $q->where('acm_from.data', '=', '"sharedAsset"');
-                        }
-                    );
-                }
-            );
-        } else {
-            // any deposit goes:
-            $query->where('transaction_types.type', 'Deposit');
-        }
-
-        $query->groupBy('t_from.account_id')->orderBy('queryAmount');
-
-        $data = $query->get(
-            ['t_from.account_id as account_id', 'ac_from.name as name', 'ac_from.encrypted as encrypted', DB::Raw('SUM(t_from.amount) as `queryAmount`')]
-        );
-        // decrypt
-        $data->each(
-            function (Model $object) {
-                $object->name = intval($object->encrypted) == 1 ? Crypt::decrypt($object->name) : $object->name;
-            }
-        );
-
-        return $data;
-    }
-
-    /**
      * With an equally misleading name, this query returns are transfers to shared accounts. These are considered
      * expenses.
      *
