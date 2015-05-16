@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use FireflyIII\Helpers\Collection\Account;
 use FireflyIII\Helpers\Collection\Expense;
 use FireflyIII\Helpers\Collection\Income;
+use FireflyIII\Helpers\Collection\Budget as BudgetCollection;
+use FireflyIII\Helpers\Collection\Category as CategoryCollection;
 
 /**
  * Interface ReportHelperInterface
@@ -26,6 +28,24 @@ interface ReportHelperInterface
      * @return Account
      */
     public function getAccountReport(Carbon $date, Carbon $end, $shared);
+
+    /**
+     * @param Carbon  $start
+     * @param Carbon  $end
+     * @param boolean $shared
+     *
+     * @return BudgetCollection
+     */
+    public function getBudgetReport(Carbon $start, Carbon $end, $shared);
+
+    /**
+     * @param Carbon  $start
+     * @param Carbon  $end
+     * @param boolean $shared
+     *
+     * @return CategoryCollection
+     */
+    public function getCategoryReport(Carbon $start, Carbon $end, $shared);
 
     /**
      * Get a full report on the users expenses during the period.

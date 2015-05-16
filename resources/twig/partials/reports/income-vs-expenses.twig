@@ -1,0 +1,20 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="fa fa-fw fa-exchange"></i>
+        {{ 'incomeVsExpenses'|_ }}
+    </div>
+    <table class="table table-bordered table-striped">
+        <tr>
+            <td>{{ 'in'|_ }}</td>
+            <td>{{ incomes.getTotal|formatAmount }}</td>
+        </tr>
+        <tr>
+            <td>{{ 'out'|_ }}</td>
+            <td><span class="text-danger">{{ expenses.getTotal|formatAmountPlain }}</span></td>
+        </tr>
+        <tr>
+            <td>{{ 'difference'|_ }}</td>
+            <td>{{ (incomes.getTotal - expenses.getTotal)|formatAmount }}</td>
+        </tr>
+    </table>
+</div>

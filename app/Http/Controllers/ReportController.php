@@ -1,6 +1,5 @@
 <?php namespace FireflyIII\Http\Controllers;
 
-use App;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
@@ -10,7 +9,6 @@ use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use Illuminate\Support\Collection;
 use Session;
 use View;
 
@@ -148,8 +146,6 @@ class ReportController extends Controller
         $subTitle         = trans('firefly.reportForMonth', ['date' => $start->formatLocalized($this->monthFormat)]);
         $subTitleIcon     = 'fa-calendar';
         $end              = clone $start;
-        $totalExpense     = 0;
-        $totalIncome      = 0;
         $incomeTopLength  = 8;
         $expenseTopLength = 8;
         if ($shared == 'shared') {
@@ -159,152 +155,87 @@ class ReportController extends Controller
 
         $end->endOfMonth();
 
-        // all accounts:
-        $accounts = $this->helper->getAccountReport($start, $end, $shared);
+        $accounts   = $this->helper->getAccountReport($start, $end, $shared);
+        $incomes    = $this->helper->getIncomeReport($start, $end, $shared);
+        $expenses   = $this->helper->getExpenseReport($start, $end, $shared);
+        $budgets    = $this->helper->getBudgetReport($start, $end, $shared);
+        $categories = $this->helper->getCategoryReport($start, $end, $shared);
 
-        /**
-         * ALL INCOMES.
-         * Grouped, sorted and summarized.
-         */
-        $set = $this->query->incomeInPeriod($start, $end, $shared);
-        // group, sort and sum:
-        $incomes = [];
-        foreach ($set as $entry) {
-            $id = $entry->account_id;
-            $totalIncome += floatval($entry->queryAmount);
-            if (isset($incomes[$id])) {
-                $incomes[$id]['amount'] += floatval($entry->queryAmount);
-                $incomes[$id]['count']++;
-            } else {
-                $incomes[$id] = [
-                    'amount' => floatval($entry->queryAmount),
-                    'name'   => $entry->name,
-                    'count'  => 1,
-                    'id'     => $id,
-                ];
-            }
-        }
-        // sort with callback:
-        uasort(
-            $incomes, function ($a, $b) {
-            if ($a['amount'] == $b['amount']) {
-                return 0;
-            }
+        //        /**
+        //         * DO BUDGETS.
+        //         */
+        //        /** @var \FireflyIII\Repositories\Budget\BudgetRepositoryInterface $repository */
+        //        $repository = App::make('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        //        $set        = $repository->getBudgets();
+        //        $budgets    = new Collection;
+        //        $budgetSums = ['budgeted' => 0, 'spent' => 0, 'left' => 0, 'overspent' => 0];
+        //        /** @var Budget $budget */
+        //        foreach ($set as $budget) {
+        //            $repetitions = $repository->getBudgetLimitRepetitions($budget, $start, $end);
+        //            if ($repetitions->count() == 0) {
+        //                $exp = $repository->spentInPeriod($budget, $start, $end, $shared);
+        //                $budgets->push([$budget, null, 0, 0, $exp]);
+        //                $budgetSums['overspent'] += $exp;
+        //                continue;
+        //            }
+        //            /** @var LimitRepetition $repetition */
+        //            foreach ($repetitions as $repetition) {
+        //                $exp       = $repository->spentInPeriod($budget, $repetition->startdate, $repetition->enddate, $shared);
+        //                $left      = $exp < floatval($repetition->amount) ? floatval($repetition->amount) - $exp : 0;
+        //                $spent     = $exp > floatval($repetition->amount) ? 0 : $exp;
+        //                $overspent = $exp > floatval($repetition->amount) ? $exp - floatval($repetition->amount) : 0;
+        //
+        //                $budgetSums['budgeted'] += floatval($repetition->amount);
+        //                $budgetSums['spent'] += $spent;
+        //                $budgetSums['left'] += $left;
+        //                $budgetSums['overspent'] += $overspent;
+        //
+        //                $budgets->push([$budget, $repetition, $left, $spent, $overspent]);
+        //            }
+        //        }
+        //
+        //        $noBudgetExpenses = $repository->getWithoutBudgetSum($start, $end);
+        //        $budgets->push([null, null, 0, 0, $noBudgetExpenses]);
+        //        $budgetSums['overspent'] += $noBudgetExpenses;
+        //        unset($noBudgetExpenses, $repository, $set, $repetition, $repetitions, $exp);
 
-            return ($a['amount'] < $b['amount']) ? 1 : -1;
-        }
-        );
-        unset($set, $id);
-
-        /**
-         * GET ALL EXPENSES
-         * Summarized.
-         */
-        $set = $this->query->expenseInPeriod($start, $end, $shared);
-        // group, sort and sum:
-        $expenses = [];
-        foreach ($set as $entry) {
-            $id = $entry->account_id;
-            $totalExpense += floatval($entry->queryAmount);
-            if (isset($expenses[$id])) {
-                $expenses[$id]['amount'] += floatval($entry->queryAmount);
-                $expenses[$id]['count']++;
-            } else {
-                $expenses[$id] = [
-                    'amount' => floatval($entry->queryAmount),
-                    'name'   => $entry->name,
-                    'count'  => 1,
-                    'id'     => $id,
-                ];
-            }
-        }
-        // sort with callback:
-        uasort(
-            $expenses, function ($a, $b) {
-            if ($a['amount'] == $b['amount']) {
-                return 0;
-            }
-
-            return ($a['amount'] < $b['amount']) ? -1 : 1;
-        }
-        );
-        unset($set, $id);
-
-        /**
-         * DO BUDGETS.
-         */
-        /** @var \FireflyIII\Repositories\Budget\BudgetRepositoryInterface $repository */
-        $repository = App::make('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-        $set        = $repository->getBudgets();
-        $budgets    = new Collection;
-        $budgetSums = ['budgeted' => 0, 'spent' => 0, 'left' => 0, 'overspent' => 0];
-        /** @var Budget $budget */
-        foreach ($set as $budget) {
-            $repetitions = $repository->getBudgetLimitRepetitions($budget, $start, $end);
-            if ($repetitions->count() == 0) {
-                $exp = $repository->spentInPeriod($budget, $start, $end, $shared);
-                $budgets->push([$budget, null, 0, 0, $exp]);
-                $budgetSums['overspent'] += $exp;
-                continue;
-            }
-            /** @var LimitRepetition $repetition */
-            foreach ($repetitions as $repetition) {
-                $exp       = $repository->spentInPeriod($budget, $repetition->startdate, $repetition->enddate, $shared);
-                $left      = $exp < floatval($repetition->amount) ? floatval($repetition->amount) - $exp : 0;
-                $spent     = $exp > floatval($repetition->amount) ? 0 : $exp;
-                $overspent = $exp > floatval($repetition->amount) ? $exp - floatval($repetition->amount) : 0;
-
-                $budgetSums['budgeted'] += floatval($repetition->amount);
-                $budgetSums['spent'] += $spent;
-                $budgetSums['left'] += $left;
-                $budgetSums['overspent'] += $overspent;
-
-                $budgets->push([$budget, $repetition, $left, $spent, $overspent]);
-            }
-        }
-
-        $noBudgetExpenses = $repository->getWithoutBudgetSum($start, $end);
-        $budgets->push([null, null, 0, 0, $noBudgetExpenses]);
-        $budgetSums['overspent'] += $noBudgetExpenses;
-        unset($noBudgetExpenses, $repository, $set, $repetition, $repetitions, $exp);
-
-        /**
-         * GET CATEGORIES:
-         */
-        /** @var \FireflyIII\Repositories\Category\CategoryRepositoryInterface $repository */
-        $repository  = App::make('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
-        $set         = $repository->getCategories();
-        $categories  = [];
-        $categorySum = 0;
-        foreach ($set as $category) {
-            $spent        = $repository->spentInPeriod($category, $start, $end, $shared);
-            $categories[] = [$category, $spent];
-            $categorySum += $spent;
-        }
-        // no category:
-
-        // sort with callback:
-        uasort(
-            $categories, function ($a, $b) {
-            if ($a[1] == $b[1]) {
-                return 0;
-            }
-
-            return ($a[1] < $b[1]) ? 1 : -1;
-        }
-        );
-        unset($set, $repository, $spent);
+        //        /**
+        //         * GET CATEGORIES:
+        //         */
+        //        /** @var \FireflyIII\Repositories\Category\CategoryRepositoryInterface $repository */
+        //        $repository  = App::make('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
+        //        $set         = $repository->getCategories();
+        //        $categories  = [];
+        //        $categorySum = 0;
+        //        foreach ($set as $category) {
+        //            $spent        = $repository->spentInPeriod($category, $start, $end, $shared);
+        //            $categories[] = [$category, $spent];
+        //            $categorySum += $spent;
+        //        }
+        //        // no category:
+        //
+        //        // sort with callback:
+        //        uasort(
+        //            $categories, function ($a, $b) {
+        //            if ($a[1] == $b[1]) {
+        //                return 0;
+        //            }
+        //
+        //            return ($a[1] < $b[1]) ? 1 : -1;
+        //        }
+        //        );
+        //        unset($set, $repository, $spent);
 
         return view(
             'reports.month',
             compact(
                 'start', 'shared',
                 'subTitle', 'subTitleIcon',
-                'accounts', 'accountsSums',
-                'incomes', 'totalIncome', 'incomeTopLength',
-                'expenses', 'totalExpense', 'expenseTopLength',
-                'budgets', 'budgetSums',
-                'categories', 'categorySum'
+                'accounts',
+                'incomes', 'incomeTopLength',
+                'expenses', 'expenseTopLength',
+                'budgets',
+                'categories'
             )
         );
 

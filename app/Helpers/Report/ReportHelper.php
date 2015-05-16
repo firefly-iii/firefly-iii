@@ -4,6 +4,8 @@ namespace FireflyIII\Helpers\Report;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collection\Account as AccountCollection;
+use FireflyIII\Helpers\Collection\Budget as BudgetCollection;
+use FireflyIII\Helpers\Collection\Category as CategoryCollection;
 use FireflyIII\Helpers\Collection\Expense;
 use FireflyIII\Helpers\Collection\Income;
 use FireflyIII\Models\Account;
@@ -62,6 +64,30 @@ class ReportHelper implements ReportHelperInterface
         $object->setAccounts($accounts);
 
         return $object;
+    }
+
+    /**
+     * @param Carbon  $start
+     * @param Carbon  $end
+     * @param boolean $shared
+     *
+     * @return BudgetCollection
+     */
+    public function getBudgetReport(Carbon $start, Carbon $end, $shared)
+    {
+        return null;
+    }
+
+    /**
+     * @param Carbon  $start
+     * @param Carbon  $end
+     * @param boolean $shared
+     *
+     * @return CategoryCollection
+     */
+    public function getCategoryReport(Carbon $start, Carbon $end, $shared)
+    {
+        return null;
     }
 
     /**
