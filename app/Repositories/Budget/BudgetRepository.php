@@ -257,26 +257,22 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
-     * @param Budget  $budget
-     * @param Carbon  $date
-     * @param boolean $shared
+     * @param Budget $budget
+     * @param Carbon $date
+     * @param bool   $shared
      *
      * @return float
      */
-    public function spentInMonth(Budget $budget, Carbon $date, $shared = true)
+    public function spentInPeriod(Budget $budget, Carbon $start, Carbon $end, $shared = true)
     {
-        $end = clone $date;
-        $date->startOfMonth();
-        $end->endOfMonth();
-
         if ($shared === true) {
             // get everything:
-            $sum = floatval($budget->transactionjournals()->before($end)->after($date)->lessThan(0)->sum('amount')) * -1;
+            $sum = floatval($budget->transactionjournals()->before($end)->after($start)->lessThan(0)->sum('amount')) * -1;
         } else {
             // get all journals in this month where the asset account is NOT shared.
             $sum = $budget->transactionjournals()
                           ->before($end)
-                          ->after($date)
+                          ->after($start)
                           ->lessThan(0)
                           ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                           ->leftJoin(

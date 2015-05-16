@@ -107,41 +107,6 @@ class GoogleChartController extends Controller
     /**
      * @param GChart                    $chart
      * @param BudgetRepositoryInterface $repository
-     * @param                           $year
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function allBudgetsAndSpending(GChart $chart, BudgetRepositoryInterface $repository, $year, $shared = false)
-    {
-        $budgets = $repository->getBudgets();
-        $chart->addColumn(trans('firefly.month'), 'date');
-        foreach ($budgets as $budget) {
-            $chart->addColumn($budget->name, 'number');
-        }
-
-        $start = Carbon::createFromDate(intval($year), 1, 1);
-        $end   = clone $start;
-        $end->endOfYear();
-
-        while ($start <= $end) {
-            $row = [clone $start];
-            foreach ($budgets as $budget) {
-                $spent = $repository->spentInMonth($budget, $start, $shared);
-                $row[] = $spent;
-            }
-            $chart->addRowArray($row);
-            $start->addMonth();
-        }
-
-        $chart->generate();
-
-        return Response::json($chart->getData());
-
-    }
-
-    /**
-     * @param GChart                    $chart
-     * @param BudgetRepositoryInterface $repository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -371,43 +336,6 @@ class GoogleChartController extends Controller
     }
 
     /**
-     * @param GChart                    $chart
-     * @param BudgetRepositoryInterface $repository
-     * @param Budget                    $budget
-     * @param int                       $year
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function budgetsAndSpending(GChart $chart, BudgetRepositoryInterface $repository, Budget $budget, $year = 0)
-    {
-        $chart->addColumn(trans('firefly.month'), 'date');
-        $chart->addColumn(trans('firefly.budgeted'), 'number');
-        $chart->addColumn(trans('firefly.spent'), 'number');
-
-        if ($year == 0) {
-            $start = $repository->getFirstBudgetLimitDate($budget);
-            $end   = $repository->getLastBudgetLimitDate($budget);
-        } else {
-            $start = Carbon::createFromDate(intval($year), 1, 1);
-            $end   = clone $start;
-            $end->endOfYear();
-        }
-
-        while ($start <= $end) {
-            $spent    = $repository->spentInMonth($budget, $start);
-            $budgeted = $repository->getLimitAmountOnDate($budget, $start);
-            $chart->addRow(clone $start, $budgeted, $spent);
-            $start->addMonth();
-        }
-
-        $chart->generate();
-
-        return Response::json($chart->getData());
-
-
-    }
-
-    /**
      * @param GChart                      $chart
      * @param CategoryRepositoryInterface $repository
      * @param Category                    $category
@@ -498,95 +426,4 @@ class GoogleChartController extends Controller
         return Response::json($chart->getData());
 
     }
-
-    /**
-     * @param GChart               $chart
-     * @param ReportQueryInterface $query
-     * @param                      $year
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function yearInExp(GChart $chart, ReportQueryInterface $query, $year, $shared = false)
-    {
-        $start = new Carbon('01-01-' . $year);
-        $chart->addColumn(trans('firefly.month'), 'date');
-        $chart->addColumn(trans('firefly.income'), 'number');
-        $chart->addColumn(trans('firefly.expenses'), 'number');
-
-        if ($shared == 'shared') {
-            $shared = true;
-        }
-
-        // get report query interface.
-
-        $end = clone $start;
-        $end->endOfYear();
-        while ($start < $end) {
-            $currentEnd = clone $start;
-            $currentEnd->endOfMonth();
-            // total income && total expenses:
-            $incomeSum  = floatval($query->incomeInPeriod($start, $currentEnd, $shared)->sum('queryAmount'));
-            $expenseSum = floatval($query->journalsByExpenseAccount($start, $currentEnd, $shared)->sum('queryAmount'));
-
-            $chart->addRow(clone $start, $incomeSum, $expenseSum);
-            $start->addMonth();
-        }
-
-
-        $chart->generate();
-
-        return Response::json($chart->getData());
-
-    }
-
-    /**
-     * @param GChart               $chart
-     * @param ReportQueryInterface $query
-     * @param                      $year
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function yearInExpSum(GChart $chart, ReportQueryInterface $query, $year, $shared = false)
-    {
-        $start = new Carbon('01-01-' . $year);
-        $chart->addColumn(trans('firefly.summary'), 'string');
-        $chart->addColumn(trans('firefly.income'), 'number');
-        $chart->addColumn(trans('firefly.expenses'), 'number');
-
-        if ($shared == 'shared') {
-            $shared = true;
-        }
-
-        $income  = 0;
-        $expense = 0;
-        $count   = 0;
-
-        $end = clone $start;
-        $end->endOfYear();
-        while ($start < $end) {
-            $currentEnd = clone $start;
-            $currentEnd->endOfMonth();
-            // total income:
-            $incomeSum = floatval($query->incomeInPeriod($start, $currentEnd, $shared)->sum('queryAmount'));
-            // total expenses:
-            $expenseSum = floatval($query->journalsByExpenseAccount($start, $currentEnd, $shared)->sum('queryAmount'));
-
-            $income += $incomeSum;
-            $expense += $expenseSum;
-            $count++;
-            $start->addMonth();
-        }
-
-
-        $chart->addRow(trans('firefly.sum'), $income, $expense);
-        $count = $count > 0 ? $count : 1;
-        $chart->addRow(trans('firefly.average'), ($income / $count), ($expense / $count));
-
-        $chart->generate();
-
-        return Response::json($chart->getData());
-
-    }
-
-
 }
