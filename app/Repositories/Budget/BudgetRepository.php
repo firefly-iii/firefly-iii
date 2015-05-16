@@ -8,6 +8,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Input;
@@ -262,10 +263,9 @@ class BudgetRepository implements BudgetRepositoryInterface
      *
      * @return float
      */
-    public function spentInMonth(Budget $budget, Carbon $date, $shared)
+    public function spentInMonth(Budget $budget, Carbon $date, $shared = true)
     {
         $end = clone $date;
-        $sum = 0;
         $date->startOfMonth();
         $end->endOfMonth();
 
@@ -274,7 +274,19 @@ class BudgetRepository implements BudgetRepositoryInterface
             $sum = floatval($budget->transactionjournals()->before($end)->after($date)->lessThan(0)->sum('amount')) * -1;
         } else {
             // get all journals in this month where the asset account is NOT shared.
-            $sum = rand(1, 100);
+            $sum = $budget->transactionjournals()
+                          ->before($end)
+                          ->after($date)
+                          ->lessThan(0)
+                          ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                          ->leftJoin(
+                              'account_meta', function (JoinClause $join) {
+                              $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
+                          }
+                          )
+                          ->where('account_meta.data', '!=', '"sharedAsset"')
+                          ->sum('amount');
+            $sum = floatval($sum) * -1;
         }
 
         return $sum;

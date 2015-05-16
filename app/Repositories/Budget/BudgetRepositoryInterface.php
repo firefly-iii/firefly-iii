@@ -129,7 +129,7 @@ interface BudgetRepositoryInterface
      *
      * @return float
      */
-    public function spentInMonth(Budget $budget, Carbon $date, $shared);
+    public function spentInMonth(Budget $budget, Carbon $date, $shared = true);
 
     /**
      * @param array $data
