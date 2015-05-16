@@ -192,18 +192,19 @@ class ReportControllerTest extends TestCase
         $query  = $this->mock('FireflyIII\Helpers\Report\ReportQueryInterface');
 
 
-        $helper->shouldReceive('yearBalanceReport')->withAnyArgs()->andReturn([]);
-        $query->shouldReceive('getAllAccounts')->withAnyArgs()->andReturn(new Collection([$account]));
+        $helper->shouldReceive('yearBalanceReport')->once()->withAnyArgs()->andReturn([]);
+        $query->shouldReceive('getAllAccounts')->once()->withAnyArgs()->andReturn(new Collection([$account]));
 
-        $query->shouldReceive('incomeInPeriod')->withAnyArgs()->andReturn(new Collection([$journal, $journal]));
-        $query->shouldReceive('journalsByRevenueAccount')->withAnyArgs()->andReturn($journals);
-        $query->shouldReceive('journalsByExpenseAccount')->withAnyArgs()->andReturn($journals);
+        $query->shouldReceive('incomeInPeriod')->once()->withAnyArgs()->andReturn(new Collection([$journal, $journal]));
+        $query->shouldReceive('expenseInPeriod')->once()->withAnyArgs()->andReturn(new Collection([$journal, $journal]));
+        $query->shouldReceive('journalsByRevenueAccount')->once()->withAnyArgs()->andReturn($journals);
+        $query->shouldReceive('journalsByExpenseAccount')->once()->withAnyArgs()->andReturn($journals);
 
         // mock stuff!
         Amount::shouldReceive('getDefaultCurrency')->once()->andReturn($currency);
         Amount::shouldReceive('getAllCurrencies')->once()->andReturn([$currency]);
-        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
-        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
+        Amount::shouldReceive('getCurrencyCode')->once()->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->once()->andReturn('X');
         Amount::shouldReceive('format')->andReturn('X');
 
         $this->call('GET', '/reports/2015/shared');
