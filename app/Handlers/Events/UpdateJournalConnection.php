@@ -2,6 +2,7 @@
 
 use FireflyIII\Events\JournalSaved;
 use FireflyIII\Models\PiggyBankEvent;
+use FireflyIII\Models\PiggyBankRepetition;
 
 /**
  * Class UpdateJournalConnection
@@ -39,7 +40,11 @@ class UpdateJournalConnection
             return;
         }
         $piggyBank  = $event->piggyBank()->first();
-        $repetition = $piggyBank->piggyBankRepetitions()->relevantOnDate($journal->date)->first();
+        $repetition = null;
+        if ($piggyBank) {
+            /** @var PiggyBankRepetition $repetition */
+            $repetition = $piggyBank->piggyBankRepetitions()->relevantOnDate($journal->date)->first();
+        }
 
         if (is_null($repetition)) {
             return;
