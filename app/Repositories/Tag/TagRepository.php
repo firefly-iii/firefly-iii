@@ -4,6 +4,8 @@ namespace FireflyIII\Repositories\Tag;
 
 
 use Auth;
+use Carbon\Carbon;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -16,6 +18,7 @@ use Illuminate\Support\Collection;
  */
 class TagRepository implements TagRepositoryInterface
 {
+
 
     /**
      * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's five.
@@ -53,6 +56,38 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
+     * This method scans the transaction journals from or to the given asset account
+     * and checks if these are part of a balancing act. If so, it will sum up the amounts
+     * transferred into the balancing act (if any) and return this amount.
+     *
+     * This method effectively tells you the amount of money that has been balanced out
+     * correctly in the given period for the given account.
+     *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return float
+     */
+    public function coveredByBalancingActs(Account $account, Carbon $start, Carbon $end)
+    {
+        // the quickest way to do this is by scanning all balancingAct tags
+        // because there will be less of them any way.
+        $tags   = Auth::user()->tags()->where('tagMode', 'balancingAct')->get();
+        $amount = 0;
+
+        /** @var Tag $tag */
+        foreach ($tags as $tag) {
+            $transfer = $tag->transactionjournals()->after($start)->before($end)->toAccountIs($account)->transactionTypes(['Transfer'])->first();
+            if ($transfer) {
+                $amount += $transfer->amount;
+            }
+        }
+
+        return $amount;
+    }
+
+    /**
      * @param Tag $tag
      *
      * @return boolean
@@ -63,6 +98,7 @@ class TagRepository implements TagRepositoryInterface
 
         return true;
     }
+    // @codeCoverageIgnoreEnd
 
     /**
      * @return Collection
@@ -79,7 +115,6 @@ class TagRepository implements TagRepositoryInterface
 
         return $tags;
     }
-    // @codeCoverageIgnoreEnd
 
     /**
      * @param array $data
@@ -223,6 +258,7 @@ class TagRepository implements TagRepositoryInterface
 
             return true;
         }
+
         return false;
     }
 }

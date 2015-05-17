@@ -98,8 +98,9 @@ class ReportHelper implements ReportHelperInterface
      */
     public function getBalanceReport(Carbon $start, Carbon $end, $shared)
     {
-        $repository = App::make('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
-        $balance    = new Balance;
+        $repository    = App::make('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $tagRepository = App::make('FireflyIII\Repositories\Tag\TagRepositoryInterface');
+        $balance       = new Balance;
 
         // build a balance header:
         $header = new BalanceHeader;
@@ -117,9 +118,7 @@ class ReportHelper implements ReportHelperInterface
 
             // get budget amount for current period:
             $rep = $repository->getCurrentRepetition($budget, $start);
-            if ($rep) {
-                $line->setBudgetAmount($rep->amount);
-            }
+            $line->setRepetition($rep);
 
             // loop accounts:
             foreach ($accounts as $account) {
@@ -127,7 +126,7 @@ class ReportHelper implements ReportHelperInterface
                 $balanceEntry->setAccount($account);
 
                 // get spent:
-                $spent = $this->query->spentInBudget($account, $budget, $start, $end, $shared); // I think shared is irrelevant.
+                $spent = $this->query->spentInBudget($account, $budget, $start, $end); // I think shared is irrelevant.
 
                 $balanceEntry->setSpent($spent);
                 $line->addBalanceEntry($balanceEntry);
@@ -137,15 +136,42 @@ class ReportHelper implements ReportHelperInterface
         }
 
         // then a new line for without budget.
+        // and one for the tags:
         $empty = new BalanceLine;
+        $tags = new BalanceLine;
+        $diffLine = new BalanceLine;
+
+        $tags->setRole(BalanceLine::ROLE_TAGROLE);
+        $diffLine->setRole(BalanceLine::ROLE_DIFFROLE);
+
         foreach ($accounts as $account) {
             $spent        = $this->query->spentNoBudget($account, $start, $end);
-            $balanceEntry = new BalanceEntry;
-            $balanceEntry->setAccount($account);
-            $balanceEntry->setSpent($spent);
-            $empty->addBalanceEntry($balanceEntry);
+            $left = $tagRepository->coveredByBalancingActs($account, $start, $end);
+            $diff = $spent + $left;
+
+            // budget
+            $budgetEntry = new BalanceEntry;
+            $budgetEntry->setAccount($account);
+            $budgetEntry->setSpent($spent);
+            $empty->addBalanceEntry($budgetEntry);
+
+            // balanced by tags
+            $tagEntry = new BalanceEntry;
+            $tagEntry->setAccount($account);
+            $tagEntry->setLeft($left);
+            $tags->addBalanceEntry($tagEntry);
+
+            // difference:
+            $diffEntry = new BalanceEntry;
+            $diffEntry->setAccount($account);
+            $diffEntry->setSpent($diff);
+            $diffLine->addBalanceEntry($diffEntry);
+
         }
+
         $balance->addBalanceLine($empty);
+        $balance->addBalanceLine($tags);
+        $balance->addBalanceLine($diffLine);
 
         $balance->setBalanceHeader($header);
 

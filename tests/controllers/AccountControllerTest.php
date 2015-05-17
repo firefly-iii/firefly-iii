@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
 /**
+ * @SuppressWarnings(PHPMD.TooManyMethods)
  * Class AccountControllerTest
  */
 class AccountControllerTest extends TestCase
@@ -118,8 +119,8 @@ class AccountControllerTest extends TestCase
         $repository->shouldReceive('openingBalanceTransaction')->andReturn($openingBalance);
 
         // create a transaction that will be returned for the opening balance transaction:
-        $openingBalanceTransaction = FactoryMuffin::create('FireflyIII\Models\Transaction');
-        $repository->shouldReceive('getFirstTransaction')->andReturn($openingBalanceTransaction);
+        $opening = FactoryMuffin::create('FireflyIII\Models\Transaction');
+        $repository->shouldReceive('getFirstTransaction')->andReturn($opening);
 
         // CURRENCY:
         $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');

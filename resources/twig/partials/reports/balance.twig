@@ -10,31 +10,44 @@
             {% for account in balance.getBalanceHeader.getAccounts %}
                 <th><a href="{{route('accounts.show',account.id)}}">{{ account.name }}</a></th>
             {% endfor %}
-            <th colspan="2">
+            <th>
                 {{ 'leftInBudget'|_ }}
             </th>
+            <th>{{ 'sum'|_ }}</th>
         </tr>
 
         <!-- make rows -->
         {% for balanceLine in balance.getBalanceLines %}
             <tr>
+
+                {% if balanceLine.getBudget %}
                 <td>
-                    {% if balanceLine.getBudget %}
-                        <a href="{{ route('budgets.show',balanceLine.getBudget.id) }}">{{ balanceLine.getBudget.name }}</a>
-                    {% else %}
-                        {{ 'noBudget'|_ }}
-                    {% endif %}
+                    <a href="{{ route('budgets.show',balanceLine.getBudget.id) }}">{{ balanceLine.getTitle }}</a>
                 </td>
-                <td>{{ balanceLine.getBudgetAmount|formatAmount }}</td>
+                <td>{{ balanceLine.getRepetition.amount|formatAmount }}</td>
+                {% else %}
+                    <td colspan="2">{{ balanceLine.getTitle }}</td>
+                {% endif %}
+
                 {% for balanceEntry in balanceLine.getBalanceEntries %}
-                <td class="text-danger">
+                <td>
                     {% if balanceEntry.getSpent != 0  %}
-                        {{ (balanceEntry.getSpent*-1)|formatAmountPlain }}
+                        <span class="text-danger">{{ (balanceEntry.getSpent*-1)|formatAmountPlain }}</span>
+                    {% endif %}
+                    {% if balanceEntry.getLeft != 0 %}
+                        <span class="text-success">{{ (balanceEntry.getLeft)|formatAmountPlain }}</span>
                     {% endif %}
                 </td>
                 {% endfor %}
                 <td>
-                    {{ balanceLine.left|formatAmount }}
+                    {% if balanceLine.leftOfRepetition != 0 %}
+                        {{ balanceLine.leftOfRepetition|formatAmount }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if balanceLine.sumOfLeft != 0 %}
+                        {{ balanceLine.sumOfLeft|formatAmount }}
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}

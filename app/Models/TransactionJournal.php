@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\JoinClause;
 use Watson\Validating\ValidatingTrait;
 
 /**
@@ -74,7 +75,7 @@ class TransactionJournal extends Model
     }
 
     /**
-     * @return Account|mixed
+     * @return Account
      */
     public function getAssetAccountAttribute()
     {
@@ -93,8 +94,9 @@ class TransactionJournal extends Model
 
         }
 
-        return $this->transactions()->first();
+        return $this->transactions()->first()->account;
     }
+
 
     /**
      * @codeCoverageIgnore
@@ -209,6 +211,24 @@ class TransactionJournal extends Model
     public function scopeOnDate(EloquentBuilder $query, Carbon $date)
     {
         return $query->where('date', '=', $date->format('Y-m-d'));
+    }
+
+    /**
+     * Returns the account to which the money was moved.
+     *
+     * @codeCoverageIgnore
+     *
+     * @param EloquentBuilder $query
+     * @param Account         $account
+     */
+    public function scopeToAccountIs(EloquentBuilder $query, Account $account)
+    {
+        $query->leftJoin(
+            'transactions', function (JoinClause $join) {
+            $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '>', 0);
+        }
+        );
+        $query->where('transactions.account_id', $account->id);
     }
 
     /**

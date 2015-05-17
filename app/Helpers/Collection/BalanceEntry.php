@@ -21,6 +21,9 @@ class BalanceEntry
     /** @var float */
     protected $spent = 0.0;
 
+    /** @var float  */
+    protected $left = 0.0;
+
 
     /**
      * @return AccountModel
@@ -53,6 +56,24 @@ class BalanceEntry
     {
         $this->spent = $spent;
     }
+
+    /**
+     * @return float
+     */
+    public function getLeft()
+    {
+        return $this->left;
+    }
+
+    /**
+     * @param float $left
+     */
+    public function setLeft($left)
+    {
+        $this->left = $left;
+    }
+
+
 
 
 }

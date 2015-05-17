@@ -61,11 +61,10 @@ interface ReportQueryInterface
      * @param Budget  $budget
      * @param Carbon  $start
      * @param Carbon  $end
-     * @param bool    $shared
      *
      * @return float
      */
-    public function spentInBudget(Account $account, Budget $budget, Carbon $start, Carbon $end, $shared = false);
+    public function spentInBudget(Account $account, Budget $budget, Carbon $start, Carbon $end);
 
     /**
      * @param Account $account
