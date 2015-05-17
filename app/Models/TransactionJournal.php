@@ -64,14 +64,43 @@ class TransactionJournal extends Model
      */
     public function getAmountAttribute()
     {
+        $amount = 0;
         /** @var Transaction $t */
         foreach ($this->transactions as $t) {
             if ($t->amount > 0) {
-                return floatval($t->amount);
+                $amount = floatval($t->amount);
             }
         }
 
-        return 0;
+        /*
+         * If the journal has tags, it gets complicated.
+         */
+        if ($this->tags->count() == 0) {
+            return $amount;
+        }
+        // if journal is part of advancePayment AND journal is a withdrawal,
+        // then journal is being repaid by other journals, so the actual amount will lower:
+        /** @var Tag $tag */
+        $tag = $this->tags()->where('tagMode', 'advancePayment')->first();
+        if ($tag && $this->transactionType->type == 'Withdrawal') {
+            // loop other deposits, remove from our amount.
+            $others = $tag->transactionJournals()->transactionTypes(['Deposit'])->get();
+            foreach ($others as $other) {
+                $amount -= $other->amount;
+            }
+            return $amount;
+        }
+
+        return $amount;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function tags()
+    {
+        return $this->belongsToMany('FireflyIII\Models\Tag');
     }
 
     /**
@@ -96,7 +125,6 @@ class TransactionJournal extends Model
 
         return $this->transactions()->first()->account;
     }
-
 
     /**
      * @codeCoverageIgnore
@@ -273,15 +301,6 @@ class TransactionJournal extends Model
     {
         $this->attributes['description'] = Crypt::encrypt($value);
         $this->attributes['encrypted']   = true;
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function tags()
-    {
-        return $this->belongsToMany('FireflyIII\Models\Tag');
     }
 
     /**

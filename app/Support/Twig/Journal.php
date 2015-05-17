@@ -78,16 +78,36 @@ class Journal extends Twig_Extension
             if ($journal->tags->count() == 0) {
                 return App::make('amount')->formatJournal($journal);
             }
+
+
             foreach ($journal->tags as $tag) {
                 if ($tag->tagMode == 'balancingAct') {
                     // return tag formatted for a "balancing act", even if other
                     // tags are present.
                     $amount = App::make('amount')->formatJournal($journal, false);
-
                     return '<a href="' . route('tags.show', $tag->id) . '" class="label label-success" title="' . $amount
-                           . '"><i class="fa fa-fw fa-refresh"></i> ' . $tag->tag . '</span>';
+                           . '"><i class="fa fa-fw fa-refresh"></i> ' . $tag->tag . '</a>';
                 }
-                if($tag->tagMode == 'nothing') {
+
+                /*
+                 * AdvancePayment with a deposit will show the tag instead of the amount:
+                 */
+                if ($tag->tagMode == 'advancePayment' && $journal->transactionType->type == 'Deposit') {
+                    $amount = App::make('amount')->formatJournal($journal, false);
+                    return '<a href="' . route('tags.show', $tag->id) . '" class="label label-success" title="' . $amount
+                           . '"><i class="fa fa-fw fa-refresh"></i> ' . $tag->tag . '</a>';
+                }
+                /*
+                 * AdvancePayment with a withdrawal will show the amount with a link to
+                 * the tag. The TransactionJournal should properly calculate the amount.
+                 */
+                if ($tag->tagMode == 'advancePayment' && $journal->transactionType->type == 'Withdrawal') {
+                    $amount = App::make('amount')->formatJournal($journal);
+                    return '<a href="' . route('tags.show', $tag->id) . '">' . $amount . '</a>';
+                }
+
+
+                if ($tag->tagMode == 'nothing') {
                     // return the amount:
                     return App::make('amount')->formatJournal($journal);
                 }
