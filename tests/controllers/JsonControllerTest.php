@@ -40,8 +40,8 @@ class JsonControllerTest extends TestCase
     public function testBoxBillsPaid()
     {
         $bill       = FactoryMuffin::create('FireflyIII\Models\Bill');
-        $cc         = FactoryMuffin::create('FireflyIII\Models\Account');
-        $ccs        = new Collection([$cc]);
+        $creditCard = FactoryMuffin::create('FireflyIII\Models\Account');
+        $ccs        = new Collection([$creditCard]);
         $collection = new Collection([$bill]);
         $ranges     = [['start' => new Carbon, 'end' => new Carbon]];
         $this->be($bill->user);
@@ -69,8 +69,8 @@ class JsonControllerTest extends TestCase
     public function testBoxBillsUnpaid()
     {
         $bill       = FactoryMuffin::create('FireflyIII\Models\Bill');
-        $cc         = FactoryMuffin::create('FireflyIII\Models\Account');
-        $ccs        = new Collection([$cc]);
+        $creditCard         = FactoryMuffin::create('FireflyIII\Models\Account');
+        $ccs        = new Collection([$creditCard]);
         $collection = new Collection([$bill]);
         $ranges     = [['start' => new Carbon, 'end' => new Carbon]];
         $this->be($bill->user);
@@ -133,24 +133,6 @@ class JsonControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
-    public function testTags()
-    {
-        $user = FactoryMuffin::create('FireflyIII\User');
-        $this->be($user);
-        $tag = FactoryMuffin::create('FireflyIII\Models\Tag');
-        $tag->user()->associate($user);
-
-        $tag->save();
-        $this->be($tag->user);
-        $tags = new Collection([$tag]);
-
-        $repository = $this->mock('FireflyIII\Repositories\Tag\TagRepositoryInterface');
-        $repository->shouldReceive('get')->andReturn($tags);
-
-        $this->call('GET', '/json/tags');
-        $this->assertResponseOk();
-    }
-
     public function testExpenseAccounts()
     {
         $account = FactoryMuffin::create('FireflyIII\Models\Account');
@@ -174,6 +156,24 @@ class JsonControllerTest extends TestCase
         $repository->shouldReceive('getAccounts')->with(['Revenue account'])->andReturn($accounts);
 
         $this->call('GET', '/json/revenue-accounts');
+        $this->assertResponseOk();
+    }
+
+    public function testTags()
+    {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+        $tag = FactoryMuffin::create('FireflyIII\Models\Tag');
+        $tag->user()->associate($user);
+
+        $tag->save();
+        $this->be($tag->user);
+        $tags = new Collection([$tag]);
+
+        $repository = $this->mock('FireflyIII\Repositories\Tag\TagRepositoryInterface');
+        $repository->shouldReceive('get')->andReturn($tags);
+
+        $this->call('GET', '/json/tags');
         $this->assertResponseOk();
     }
 

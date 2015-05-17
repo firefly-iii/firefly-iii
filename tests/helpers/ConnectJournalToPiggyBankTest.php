@@ -30,6 +30,9 @@ class ConnectJournalToPiggyBankTest extends TestCase
         parent::tearDown();
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     public function testNoRepetition()
     {
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
@@ -97,6 +100,9 @@ class ConnectJournalToPiggyBankTest extends TestCase
         $this->assertFalse($result);
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     public function testWithRepetition()
     {
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
@@ -154,6 +160,9 @@ class ConnectJournalToPiggyBankTest extends TestCase
         $this->assertCount(1, $piggyBank->piggyBankEvents()->get());
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     public function testWithRepetitionReversed()
     {
         FactoryMuffin::create('FireflyIII\Models\TransactionType');

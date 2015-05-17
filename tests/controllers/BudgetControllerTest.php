@@ -5,6 +5,7 @@ use Illuminate\Support\Collection;
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
 /**
+ * @SuppressWarnings(PHPMD.TooManyMethods)
  * Class BudgetControllerTest
  */
 class BudgetControllerTest extends TestCase

@@ -69,7 +69,7 @@ class ReportControllerTest extends TestCase
     public function testMonth()
     {
         $user                 = FactoryMuffin::create('FireflyIII\User');
-        $account              = FactoryMuffin::create('FireflyIII\Models\Account');
+        FactoryMuffin::create('FireflyIII\Models\Account');
         $budget1              = FactoryMuffin::create('FireflyIII\Models\Budget');
         $budget1->queryAmount = 12;
         $budget2              = FactoryMuffin::create('FireflyIII\Models\Budget');
@@ -95,7 +95,7 @@ class ReportControllerTest extends TestCase
     public function testMonthShared()
     {
         $user                 = FactoryMuffin::create('FireflyIII\User');
-        $account              = FactoryMuffin::create('FireflyIII\Models\Account');
+        FactoryMuffin::create('FireflyIII\Models\Account');
         $budget1              = FactoryMuffin::create('FireflyIII\Models\Budget');
         $budget1->queryAmount = 12;
         $budget2              = FactoryMuffin::create('FireflyIII\Models\Budget');
@@ -132,7 +132,7 @@ class ReportControllerTest extends TestCase
                 'data'       => 'sharedAsset'
             ]
         );
-        $journals = new Collection([$journal]);
+        new Collection([$journal]);
 
         $this->be($user);
 

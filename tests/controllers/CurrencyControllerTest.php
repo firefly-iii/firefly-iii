@@ -3,6 +3,7 @@ use Illuminate\Support\Collection;
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
 /**
+ * @SuppressWarnings(PHPMD.TooManyMethods)
  * Class CurrencyControllerTest
  */
 class CurrencyControllerTest extends TestCase

@@ -7,6 +7,7 @@ use FireflyIII\Models\Transaction;
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
 /**
+ * @SuppressWarnings(PHPMD.TooManyMethods)
  * Class ReportQueryTest
  */
 class ReportQueryTest extends TestCase

@@ -2,6 +2,7 @@
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
 /**
+ * @SuppressWarnings(PHPMD.TooManyMethods)
  * Class TagControllerTest
  */
 class TagControllerTest extends TestCase
