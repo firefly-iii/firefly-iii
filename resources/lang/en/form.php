@@ -34,6 +34,7 @@ return [
     'cancel'                      => 'Cancel',
     'targetdate'                  => 'Target date',
     'remind_me'                   => 'Remind me',
+    'tag'                         => 'Tag',
     'reminder'                    => 'Remind me every',
 
     'store_new_withdrawal'        => 'Store new withdrawal',

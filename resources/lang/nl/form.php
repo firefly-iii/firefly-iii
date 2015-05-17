@@ -34,6 +34,7 @@ return [
     'cancel'                      => 'Annuleren',
     'targetdate'                  => 'Doeldatum',
     'remind_me'                   => 'Help me herinneren',
+    'tag'                         => 'Tag',
     'reminder'                    => 'Herinner me elke',
 
     'store_new_withdrawal'        => 'Nieuwe uitgave opslaan',
