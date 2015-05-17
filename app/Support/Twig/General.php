@@ -21,6 +21,7 @@ class General extends Twig_Extension
 
 
     /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @return array
      */
     public function getFilters()

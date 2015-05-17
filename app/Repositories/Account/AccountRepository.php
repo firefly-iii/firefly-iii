@@ -308,12 +308,14 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @param Account $account
+     * @param Carbon $date
      *
      * @return float
      */
-    public function leftOnAccount(Account $account)
+    public function leftOnAccount(Account $account, Carbon $date)
     {
-        $balance = Steam::balance($account, null, true);
+
+        $balance = Steam::balance($account, $date, true);
         /** @var PiggyBank $p */
         foreach ($account->piggybanks()->get() as $p) {
             $balance -= $p->currentRelevantRep()->currentamount;

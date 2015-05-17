@@ -23,12 +23,9 @@ class Steam
      *
      * @return float
      */
-    public function balance(Account $account, Carbon $date = null, $ignoreVirtualBalance = false)
+    public function balance(Account $account, Carbon $date, $ignoreVirtualBalance = false)
     {
-        $date = is_null($date) ? Carbon::now() : $date;
-
         // find the first known transaction on this account:
-        //
         $firstDateObject = $account
             ->transactions()
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
@@ -36,12 +33,6 @@ class Steam
 
         $firstDate = is_null($firstDateObject) ? clone $date : new Carbon($firstDateObject->date);
         $date      = $date < $firstDate ? $firstDate : $date;
-
-        /**
-         *select * from transactions
-         * left join transaction_journals ON transaction_journals.id = transactions.transaction_journal_id
-         * order by date ASC
-         */
 
         $balance = floatval(
             $account->transactions()->leftJoin(

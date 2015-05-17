@@ -18,6 +18,7 @@ class Journal extends Twig_Extension
 {
 
     /**
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @return array
      */
     public function getFilters()
@@ -27,20 +28,25 @@ class Journal extends Twig_Extension
         $filters[] = new Twig_SimpleFilter(
             'typeIcon', function (TransactionJournal $journal) {
             $type = $journal->transactionType->type;
-            if ($type == 'Withdrawal') {
-                return '<span class="glyphicon glyphicon-arrow-left" title="Withdrawal"></span>';
-            }
-            if ($type == 'Deposit') {
-                return '<span class="glyphicon glyphicon-arrow-right" title="Deposit"></span>';
-            }
-            if ($type == 'Transfer') {
-                return '<i class="fa fa-fw fa-exchange" title="Transfer"></i>';
-            }
-            if ($type == 'Opening balance') {
-                return '<span class="glyphicon glyphicon-ban-circle" title="Opening balance"></span>';
+
+            switch ($type) {
+                case 'Withdrawal':
+                    return '<span class="glyphicon glyphicon-arrow-left" title="' . trans('firefly.withdrawal') . '"></span>';
+                    break;
+                case 'Deposit':
+                    return '<span class="glyphicon glyphicon-arrow-right" title="' . trans('firefly.deposit') . '"></span>';
+                    break;
+                case 'Transfer':
+                    return '<i class="fa fa-fw fa-exchange" title="' . trans('firefly.transfer') . '"></i>';
+                    break;
+                case 'Opening balance':
+                    return '<span class="glyphicon glyphicon-ban-circle" title="' . trans('firefly.openingBalance') . '"></span>';
+                    break;
+                default:
+                    return '';
+                    break;
             }
 
-            return '';
 
         }, ['is_safe' => ['html']]
         );
@@ -49,6 +55,8 @@ class Journal extends Twig_Extension
     }
 
     /**
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      * @return array
      */
     public function getFunctions()

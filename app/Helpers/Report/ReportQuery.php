@@ -202,60 +202,6 @@ class ReportQuery implements ReportQueryInterface
     }
 
 
-    /**
-     * Gets a list of expense accounts and the expenses therein, grouped by that expense account.
-     * This result excludes transfers to shared accounts which are expenses, technically.
-     *
-     * So now it will include them!
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param bool   $includeShared
-     *
-     * @return Collection
-     */
-    public function journalsByExpenseAccount(Carbon $start, Carbon $end, $includeShared = false)
-    {
-        $query = $this->queryJournalsWithTransactions($start, $end);
-        if ($includeShared === false) {
-            // get all withdrawals not from a shared accounts
-            // and all transfers to a shared account
-            $query->where(
-                function (Builder $query) {
-                    $query->where(
-                        function (Builder $q) {
-                            $q->where('transaction_types.type', 'Withdrawal');
-                            $q->where('acm_from.data', '!=', '"sharedAsset"');
-                        }
-                    );
-                    $query->orWhere(
-                        function (Builder $q) {
-                            $q->where('transaction_types.type', 'Transfer');
-                            $q->where('acm_to.data', '=', '"sharedAsset"');
-                        }
-                    );
-                }
-            );
-        } else {
-            // any withdrawal goes:
-            $query->where('transaction_types.type', 'Withdrawal');
-        }
-        $query->before($end)->after($start)
-              ->where('transaction_journals.user_id', Auth::user()->id)
-              ->groupBy('t_to.account_id')
-              ->orderBy('queryAmount', 'DESC');
-
-        $data = $query->get(['t_to.account_id as id', 'ac_to.name as name', 'ac_to.encrypted', DB::Raw('SUM(t_to.amount) as `queryAmount`')]);
-
-        // decrypt
-        $data->each(
-            function (Model $object) {
-                $object->name = intval($object->encrypted) == 1 ? Crypt::decrypt($object->name) : $object->name;
-            }
-        );
-
-        return $data;
-    }
 
     /**
      * @param Account $account

@@ -28,21 +28,11 @@ class Navigation
         $add  = ($skip + 1);
 
         $functionMap = [
-            '1D'        => 'addDays',
-            'daily'     => 'addDays',
-            '1W'        => 'addWeeks',
-            'weekly'    => 'addWeeks',
-            'week'      => 'addWeeks',
-            '1M'        => 'addMonths',
-            'month'     => 'addMonths',
-            'monthly'   => 'addMonths',
-            '3M'        => 'addMonths',
-            'quarter'   => 'addMonths',
-            'quarterly' => 'addMonths',
-            '6M'        => 'addMonths',
-            'half-year' => 'addMonths',
-            'year'      => 'addYears',
-            'yearly'    => 'addYears',
+            '1D'      => 'addDays', 'daily' => 'addDays',
+            '1W'      => 'addWeeks', 'weekly' => 'addWeeks', 'week' => 'addWeeks',
+            '1M'      => 'addMonths', 'month' => 'addMonths', 'monthly' => 'addMonths', '3M' => 'addMonths',
+            'quarter' => 'addMonths', 'quarterly' => 'addMonths', '6M' => 'addMonths', 'half-year' => 'addMonths',
+            'year'    => 'addYears', 'yearly' => 'addYears',
         ];
         $modifierMap = [
             'quarter'   => 3,

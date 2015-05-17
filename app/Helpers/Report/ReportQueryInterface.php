@@ -78,19 +78,4 @@ interface ReportQueryInterface
     public function spentNoBudget(Account $account, Carbon $start, Carbon $end, $shared = false);
 
 
-    /**
-     * Gets a list of expense accounts and the expenses therein, grouped by that expense account.
-     * This result excludes transfers to shared accounts which are expenses, technically.
-     *
-     * So now it will include them!
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param bool   $includeShared
-     *
-     * @return Collection
-     *
-     */
-    public function journalsByExpenseAccount(Carbon $start, Carbon $end, $includeShared = false);
-
 }

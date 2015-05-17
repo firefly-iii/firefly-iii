@@ -59,7 +59,7 @@ class JsonController extends Controller
         // if the balance is not zero, the monthly payment is still underway.
         /** @var Account $creditCard */
         foreach ($creditCards as $creditCard) {
-            $balance = Steam::balance($creditCard, null, true);
+            $balance = Steam::balance($creditCard, $end, true);
             if ($balance == 0) {
                 // find a transfer TO the credit card which should account for
                 // anything paid. If not, the CC is not yet used.
@@ -99,7 +99,7 @@ class JsonController extends Controller
 
         $creditCards = $accountRepository->getCreditCards();
         foreach ($creditCards as $creditCard) {
-            $balance = Steam::balance($creditCard, null, true);
+            $balance = Steam::balance($creditCard, $end, true);
             $date    = new Carbon($creditCard->getMeta('ccMonthlyPaymentDate'));
             if ($balance < 0) {
                 // unpaid! create a fake bill that matches the amount.

@@ -96,7 +96,7 @@ class BillController extends Controller
 
         $creditCards = $accounts->getCreditCards();
         foreach ($creditCards as $creditCard) {
-            $balance = Steam::balance($creditCard, null, true);
+            $balance = Steam::balance($creditCard, $end, true);
             $date    = new Carbon($creditCard->getMeta('ccMonthlyPaymentDate'));
             if ($balance < 0) {
                 // unpaid! create a fake bill that matches the amount.
