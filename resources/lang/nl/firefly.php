@@ -97,13 +97,14 @@ return [
     'balanceStartOfMonth'        => 'Saldo aan het einde van de maand',
     'balanceEndOfMonth'          => 'Saldo aan het einde van de maand',
 
-    'balanceStart'        => 'Saldo aan het einde van de periode',
-    'balanceEnd'          => 'Saldo aan het einde van de periode',
+    'balanceStart'               => 'Saldo aan het einde van de periode',
+    'balanceEnd'                 => 'Saldo aan het einde van de periode',
 
     'account'                    => 'Rekening',
 
     'splitByAccount'             => 'Per betaalrekening',
     'balancedByTransfersAndTags' => 'Gecorrigeerd met overschrijvingen en tags',
+    'coveredWithTags'            => 'Covered with tags',
     'leftUnbalanced'             => 'Ongecorrigeerd',
     'expectedBalance'            => 'Verwacht saldo',
     'outsideOfBudgets'           => 'Buiten budgetten',
