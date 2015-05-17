@@ -101,6 +101,9 @@ return [
     'balanceStart'               => 'Saldo aan het einde van de periode',
     'balanceEnd'                 => 'Saldo aan het einde van de periode',
 
+    'reportsOwnAccounts'          => 'Overzichten voor je eigen betaalrekeningen',
+    'reportsOwnAccountsAndShared' => 'Overzichten voor je eigen betaalrekeningen en gedeelde rekeningen',
+
     'account'                    => 'Rekening',
 
     'splitByAccount'             => 'Per betaalrekening',
