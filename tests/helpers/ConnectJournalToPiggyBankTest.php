@@ -30,17 +30,6 @@ class ConnectJournalToPiggyBankTest extends TestCase
         parent::tearDown();
     }
 
-
-    public function testEmptyPiggyBankId()
-    {
-        $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-        $event   = new JournalCreated($journal, 0);
-        $class   = new ConnectJournalToPiggyBank();
-        $result  = $class->handle($event);
-
-        $this->assertFalse($result);
-    }
-
     public function testNoRepetition()
     {
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
@@ -222,48 +211,4 @@ class ConnectJournalToPiggyBankTest extends TestCase
         $this->assertCount(1, $piggyBank->piggyBankEvents()->get());
     }
 
-    public function testZeroAmount()
-    {
-        FactoryMuffin::create('FireflyIII\Models\TransactionType');
-        FactoryMuffin::create('FireflyIII\Models\TransactionType');
-
-        $user = FactoryMuffin::create('FireflyIII\User');
-        $this->be($user);
-
-        $journal               = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-        $piggyBank             = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
-        $account1              = FactoryMuffin::create('FireflyIII\Models\Account');
-        $account2              = FactoryMuffin::create('FireflyIII\Models\Account');
-        $account1->user_id     = $user->id;
-        $account2->user_id     = $user->id;
-        $piggyBank->account_id = $account1->id;
-        $account1->save();
-        $account2->save();
-        $piggyBank->save();
-
-        Transaction::create(
-            [
-                'account_id'             => $account1->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => 0
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $account2->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => 0
-            ]
-        );
-
-        // two transactions:
-
-
-        $event  = new JournalCreated($journal, $piggyBank->id);
-        $class  = new ConnectJournalToPiggyBank();
-        $result = $class->handle($event);
-
-
-        $this->assertFalse($result);
-    }
 }

@@ -53,6 +53,7 @@ class JsonControllerTest extends TestCase
         $bills->shouldReceive('getActiveBills')->andReturn($collection);
         $bills->shouldReceive('getRanges')->andReturn($ranges);
         $bills->shouldReceive('getJournalsInRange')->andReturn(new Collection);
+        $bills->shouldReceive('billPaymentsInRange')->andReturn(12);
         $accounts->shouldReceive('getCreditCards')->andReturn($ccs);
         $accounts->shouldReceive('getTransfersInRange')->andReturn(new Collection);
         Amount::shouldReceive('format')->andReturn('xx');
@@ -111,7 +112,7 @@ class JsonControllerTest extends TestCase
         $this->be($user);
 
         $repository = $this->mock('FireflyIII\Helpers\Report\ReportQueryInterface');
-        $repository->shouldReceive('journalsByExpenseAccount')->andReturn(new Collection);
+        $repository->shouldReceive('expenseInPeriod')->andReturn(new Collection);
         Amount::shouldReceive('format')->andReturn('xx');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
 

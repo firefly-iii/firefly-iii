@@ -35,49 +35,6 @@ class PiggyBankRepositoryTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Repositories\PiggyBank\PiggyBankRepository::calculateParts
-     */
-    public function testCalculateParts()
-    {
-        /** @var PiggyBankRepetition $repetition */
-        $repetition             = FactoryMuffin::create('FireflyIII\Models\PiggyBankRepetition');
-        $repetition->startdate  = new Carbon('2014-01-01');
-        $repetition->targetdate = new Carbon('2014-12-31');
-        $repetition->save();
-
-        $parts = $this->object->calculateParts($repetition);
-
-        $this->assertCount(1, $parts);
-
-
-    }
-
-    /**
-     * @covers FireflyIII\Repositories\PiggyBank\PiggyBankRepository::calculateParts
-     */
-    public function testCalculatePartsWithReminder()
-    {
-        /** @var PiggyBankRepetition $repetition */
-        $repetition = FactoryMuffin::create('FireflyIII\Models\PiggyBankRepetition');
-        /** @var PiggyBank $piggyBank */
-        $piggyBank                 = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
-        $piggyBank->startdate      = new Carbon('2014-01-01');
-        $piggyBank->targetdate     = new Carbon('2014-12-31');
-        $piggyBank->remind_me      = 1;
-        $piggyBank->reminder       = 'monthly';
-        $repetition->startdate     = new Carbon('2014-01-01');
-        $repetition->targetdate    = new Carbon('2014-12-31');
-        $repetition->piggy_bank_id = $piggyBank->id;
-        $repetition->save();
-        $piggyBank->save();
-
-        $parts = $this->object->calculateParts($repetition);
-        $this->assertCount(12, $parts);
-
-
-    }
-
-    /**
      * @covers FireflyIII\Repositories\PiggyBank\PiggyBankRepository::createEvent
      */
     public function testCreateEvent()
@@ -88,23 +45,6 @@ class PiggyBankRepositoryTest extends TestCase
         $this->assertCount(1, $piggyBank->piggybankevents()->get());
     }
 
-    /**
-     * @covers FireflyIII\Repositories\PiggyBank\PiggyBankRepository::createPiggyBankPart
-     */
-    public function testCreatePiggyBankPart()
-    {
-        $repetition = FactoryMuffin::create('FireflyIII\Models\PiggyBankRepetition');
-        $data       = [
-            'repetition'       => $repetition,
-            'amountPerBar'     => 100,
-            'currentAmount'    => 100,
-            'cumulativeAmount' => 100,
-            'startDate'        => new Carbon,
-            'targetDate'       => new Carbon,
-        ];
-        $part       = $this->object->createPiggyBankPart($data);
-        $this->assertEquals($data['amountPerBar'], $part->getAmountPerBar());
-    }
 
     /**
      * @covers FireflyIII\Repositories\PiggyBank\PiggyBankRepository::destroy

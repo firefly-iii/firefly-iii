@@ -537,7 +537,7 @@ class AccountRepositoryTest extends TestCase
         $this->be($piggyBank->account->user);
 
 
-        $result = $this->object->leftOnAccount($piggyBank->account);
+        $result = $this->object->leftOnAccount($piggyBank->account, new Carbon);
 
         $this->assertEquals($piggyBankRepetition->currentamount * -1, $result);
 
