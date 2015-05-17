@@ -75,6 +75,8 @@ interface CategoryRepositoryInterface
      * @param \Carbon\Carbon $start
      * @param \Carbon\Carbon $end
      *
+     * @param bool           $shared
+     *
      * @return float
      */
     public function spentInPeriod(Category $category, Carbon $start, Carbon $end, $shared = false);

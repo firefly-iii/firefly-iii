@@ -168,6 +168,8 @@ class CategoryRepository implements CategoryRepositoryInterface
      * @param Carbon   $start
      * @param Carbon   $end
      *
+     * @param bool     $shared
+     *
      * @return float
      */
     public function spentInPeriod(Category $category, Carbon $start, Carbon $end, $shared = false)

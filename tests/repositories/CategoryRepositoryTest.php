@@ -46,7 +46,6 @@ class CategoryRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Category\CategoryRepository::destroy
-     * @todo   Implement testDestroy().
      */
     public function testDestroy()
     {

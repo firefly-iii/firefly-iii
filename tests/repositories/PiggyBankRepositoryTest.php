@@ -132,7 +132,6 @@ class PiggyBankRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\PiggyBank\PiggyBankRepository::getEvents
-     * @todo   Implement testGetEvents().
      */
     public function testGetEvents()
     {
@@ -185,7 +184,6 @@ class PiggyBankRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\PiggyBank\PiggyBankRepository::store
-     * @todo   Implement testStore().
      */
     public function testStore()
     {
@@ -208,7 +206,6 @@ class PiggyBankRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\PiggyBank\PiggyBankRepository::update
-     * @todo   Implement testUpdate().
      */
     public function testUpdate()
     {

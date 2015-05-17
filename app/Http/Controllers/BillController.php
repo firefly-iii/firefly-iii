@@ -34,50 +34,6 @@ class BillController extends Controller
     }
 
     /**
-     * @param AccountRepositoryInterface $repository
-     * @param Bill                       $bill
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function add(AccountRepositoryInterface $repository, Bill $bill)
-    {
-        $matches     = explode(',', $bill->match);
-        $description = [];
-        $expense     = null;
-
-        // get users expense accounts:
-        $accounts = $repository->getAccounts(Config::get('firefly.accountTypesByIdentifier.expense'));
-
-        foreach ($matches as $match) {
-            $match = strtolower($match);
-            // find expense account for each word if not found already:
-            if (is_null($expense)) {
-                /** @var Account $account */
-                foreach ($accounts as $account) {
-                    $name = strtolower($account->name);
-                    if (!(strpos($name, $match) === false)) {
-                        $expense = $account;
-                        break;
-                    }
-                }
-
-
-            }
-            if (is_null($expense)) {
-                $description[] = $match;
-            }
-        }
-        $parameters = [
-            'description'     => ucfirst(join(' ', $description)),
-            'expense_account' => is_null($expense) ? '' : $expense->name,
-            'amount'          => round(($bill->amount_min + $bill->amount_max), 2),
-        ];
-        Session::put('preFilled', $parameters);
-
-        return Redirect::to(route('transactions.create', 'withdrawal'));
-    }
-
-    /**
      * @return $this
      */
     public function create()

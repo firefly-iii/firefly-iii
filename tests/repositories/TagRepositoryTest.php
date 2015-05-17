@@ -330,7 +330,6 @@ class TagRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Tag\TagRepository::get
-     * @todo   Implement testGet().
      */
     public function testGet()
     {

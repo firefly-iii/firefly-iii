@@ -30,7 +30,9 @@ class ReportHelper implements ReportHelperInterface
     protected $query;
 
     /**
-     * @param ReportHelperInterface $helper
+     * @param ReportQueryInterface $query
+     *
+     * @internal param ReportHelperInterface $helper
      */
     public function __construct(ReportQueryInterface $query)
     {

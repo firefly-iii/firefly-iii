@@ -21,7 +21,7 @@ class BalanceLine
     /** @var BudgetModel */
     protected $budget;
 
-    /** @var float  */
+    /** @var float */
     protected $budgetAmount = 0.0;
 
     /**
@@ -38,22 +38,6 @@ class BalanceLine
     public function addBalanceEntry(BalanceEntry $balanceEntry)
     {
         $this->balanceEntries->push($balanceEntry);
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getBalanceEntries()
-    {
-        return $this->balanceEntries;
-    }
-
-    /**
-     * @param Collection $balanceEntries
-     */
-    public function setBalanceEntries($balanceEntries)
-    {
-        $this->balanceEntries = $balanceEntries;
     }
 
     /**
@@ -75,6 +59,20 @@ class BalanceLine
     /**
      * @return float
      */
+    public function left()
+    {
+        $start = $this->getBudgetAmount();
+        /** @var BalanceEntry $balanceEntry */
+        foreach ($this->getBalanceEntries() as $balanceEntry) {
+            $start += $balanceEntry->getSpent();
+        }
+
+        return $start;
+    }
+
+    /**
+     * @return float
+     */
     public function getBudgetAmount()
     {
         return $this->budgetAmount;
@@ -89,17 +87,20 @@ class BalanceLine
     }
 
     /**
-     * @return float
+     * @return Collection
      */
-    public function left() {
-        $start = $this->getBudgetAmount();
-        /** @var BalanceEntry $balanceEntry */
-        foreach($this->getBalanceEntries() as $balanceEntry) {
-            $start += $balanceEntry->getSpent();
-        }
-        return $start;
+    public function getBalanceEntries()
+    {
+        return $this->balanceEntries;
     }
 
+    /**
+     * @param Collection $balanceEntries
+     */
+    public function setBalanceEntries($balanceEntries)
+    {
+        $this->balanceEntries = $balanceEntries;
+    }
 
 
 }

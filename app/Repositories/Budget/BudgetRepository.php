@@ -256,10 +256,12 @@ class BudgetRepository implements BudgetRepositoryInterface
 
     /**
      * @param Budget $budget
-     * @param Carbon $date
+     * @param Carbon $start
+     * @param Carbon $end
      * @param bool   $shared
      *
      * @return float
+     * @internal param Carbon $date
      */
     public function spentInPeriod(Budget $budget, Carbon $start, Carbon $end, $shared = true)
     {

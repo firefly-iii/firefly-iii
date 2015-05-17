@@ -38,7 +38,7 @@ class JsonController extends Controller
         $end    = Session::get('end', Carbon::now()->endOfMonth());
         $amount = 0;
 
-        // these two functions are the same as the chart TODO
+        // these two functions are the same as the chart
         $bills = $repository->getActiveBills();
 
         /** @var Bill $bill */
@@ -141,7 +141,7 @@ class JsonController extends Controller
     {
         $start  = Session::get('start', Carbon::now()->startOfMonth());
         $end    = Session::get('end', Carbon::now()->endOfMonth());
-        $amount = $reportQuery->journalsByExpenseAccount($start, $end, true)->sum('queryAmount');
+        $amount = $reportQuery->expenseInPeriod($start, $end, true)->sum('queryAmount') * -1;
 
         return Response::json(['box' => 'out', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount]);
     }

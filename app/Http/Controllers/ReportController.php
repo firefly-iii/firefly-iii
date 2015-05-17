@@ -2,7 +2,6 @@
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
-use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
@@ -37,9 +36,10 @@ class ReportController extends Controller
     }
 
     /**
+     * @param AccountRepositoryInterface $repository
+     *
      * @return View
      * @internal param ReportHelperInterface $helper
-     *
      */
     public function index(AccountRepositoryInterface $repository)
     {
@@ -64,6 +64,8 @@ class ReportController extends Controller
     /**
      * @param string $year
      * @param string $month
+     *
+     * @param bool   $shared
      *
      * @return \Illuminate\View\View
      */
@@ -98,7 +100,7 @@ class ReportController extends Controller
                 'accounts',
                 'incomes', 'incomeTopLength',
                 'expenses', 'expenseTopLength',
-                'budgets','balance',
+                'budgets', 'balance',
                 'categories'
             )
         );
@@ -106,7 +108,9 @@ class ReportController extends Controller
     }
 
     /**
-     * @param $year
+     * @param      $year
+     *
+     * @param bool $shared
      *
      * @return $this
      */

@@ -126,7 +126,6 @@ class BillRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Bill\BillRepository::getJournalsInRange
-     * @todo   Implement testGetJournalsInRange().
      */
     public function testGetJournalsInRange()
     {
@@ -144,7 +143,6 @@ class BillRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Bill\BillRepository::getPossiblyRelatedJournals
-     * @todo   Implement testGetPossiblyRelatedJournals().
      */
     public function testGetPossiblyRelatedJournals()
     {
@@ -439,7 +437,6 @@ class BillRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Bill\BillRepository::update
-     * @todo   Implement testUpdate().
      */
     public function testUpdate()
     {

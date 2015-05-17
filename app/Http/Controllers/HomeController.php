@@ -63,13 +63,11 @@ class HomeController extends Controller
         $savings           = $repository->getSavingsAccounts();
         $piggyBankAccounts = $repository->getPiggyBankAccounts();
 
-
         $savingsTotal = 0;
         foreach ($savings as $savingAccount) {
             $savingsTotal += Steam::balance($savingAccount, $end);
         }
 
-        // check if all books are correct.
         $sum = $repository->sumOfEverything();
         if ($sum != 0) {
             Session::flash(

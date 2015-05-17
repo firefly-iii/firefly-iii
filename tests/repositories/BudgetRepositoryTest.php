@@ -58,7 +58,6 @@ class BudgetRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Budget\BudgetRepository::destroy
-     * @todo   Implement testDestroy().
      */
     public function testDestroy()
     {
@@ -71,7 +70,6 @@ class BudgetRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Budget\BudgetRepository::expensesOnDay
-     * @todo   Implement testExpensesOnDay().
      */
     public function testExpensesOnDay()
     {

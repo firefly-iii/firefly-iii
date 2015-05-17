@@ -223,7 +223,6 @@ Route::group(
     Route::get('/bills/rescan/{bill}', ['uses' => 'BillController@rescan', 'as' => 'bills.rescan']); # rescan for matching.
     Route::get('/bills/create', ['uses' => 'BillController@create', 'as' => 'bills.create']);
     Route::get('/bills/edit/{bill}', ['uses' => 'BillController@edit', 'as' => 'bills.edit']);
-    Route::get('/bills/add/{bill}', ['uses' => 'BillController@add', 'as' => 'bills.add']);
     Route::get('/bills/delete/{bill}', ['uses' => 'BillController@delete', 'as' => 'bills.delete']);
     Route::get('/bills/show/{bill}', ['uses' => 'BillController@show', 'as' => 'bills.show']);
     Route::post('/bills/store', ['uses' => 'BillController@store', 'as' => 'bills.store']);

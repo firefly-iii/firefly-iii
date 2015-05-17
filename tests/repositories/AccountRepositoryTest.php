@@ -41,7 +41,6 @@ class AccountRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Account\AccountRepository::countAccounts
-     * @todo   Implement testCountAccounts().
      */
     public function testCountAccounts()
     {
@@ -83,7 +82,6 @@ class AccountRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Account\AccountRepository::getCreditCards
-     * @todo   Implement testGetCreditCards().
      */
     public function testGetCreditCards()
     {
@@ -459,7 +457,6 @@ class AccountRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Account\AccountRepository::getTransfersInRange
-     * @todo   Implement testGetTransfersInRange().
      */
     public function testGetTransfersInRange()
     {
