@@ -96,6 +96,10 @@ return [
     'balanceEndOfYear'           => 'Balance at end of year',
     'balanceStartOfMonth'        => 'Balance at end of month',
     'balanceEndOfMonth'          => 'Balance at end of month',
+
+    'balanceStart'               => 'Balance at end of period',
+    'balanceEnd'                 => 'Balance at end of period',
+
     'account'                    => 'Account',
 
     'splitByAccount'             => 'Split by account',

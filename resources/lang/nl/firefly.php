@@ -96,6 +96,10 @@ return [
     'balanceEndOfYear'           => 'Saldo aan het einde van het jaar',
     'balanceStartOfMonth'        => 'Saldo aan het einde van de maand',
     'balanceEndOfMonth'          => 'Saldo aan het einde van de maand',
+
+    'balanceStart'        => 'Saldo aan het einde van de periode',
+    'balanceEnd'          => 'Saldo aan het einde van de periode',
+
     'account'                    => 'Rekening',
 
     'splitByAccount'             => 'Per betaalrekening',
