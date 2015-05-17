@@ -8,7 +8,7 @@ use stdClass;
 
 /**
  * @codeCoverageIgnore
- * 
+ *
  * Class Income
  *
  * @package FireflyIII\Helpers\Collection
