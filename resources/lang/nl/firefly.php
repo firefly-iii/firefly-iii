@@ -111,6 +111,8 @@ return [
     'outsideOfBudgets'           => 'Buiten budgetten',
     'leftInBudget'               => 'Over van budget',
 
+    'sumOfSums'                  => 'Alles bij elkaar',
+
     'difference'                 => 'Verschil',
     'in'                         => 'In',
     'out'                        => 'Uit',

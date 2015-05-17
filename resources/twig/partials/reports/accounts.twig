@@ -21,7 +21,7 @@
             </tr>
         {% endfor %}
         <tr>
-            <td><em>Sum of sums</em></td>
+            <td><em>{{ 'sumOfSums'|_ }}</em></td>
             <td>{{ accounts.getStart|formatAmount }}</td>
             <td>{{ accounts.getEnd|formatAmount }}</td>
             <td>{{ accounts.getDifference|formatAmount }}</td>

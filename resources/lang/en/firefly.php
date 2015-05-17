@@ -110,6 +110,9 @@ return [
     'outsideOfBudgets'           => 'Outside of budgets',
     'leftInBudget'               => 'Left in budget',
 
+    'sumOfSums'                  => 'Sum of sums',
+
+
     'difference'                 => 'Difference',
     'in'                         => 'In',
     'out'                        => 'Out',
