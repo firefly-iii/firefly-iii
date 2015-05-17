@@ -3,10 +3,12 @@
 namespace FireflyIII\Support\Twig;
 
 use App;
+use Carbon\Carbon;
 use Config;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use Route;
+use Session;
 use Twig_Extension;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
@@ -57,8 +59,9 @@ class General extends Twig_Extension
             if (is_null($account)) {
                 return 'NULL';
             }
+            $date = Session::get('end', Carbon::now()->endOfMonth());
 
-            return App::make('steam')->balance($account);
+            return App::make('steam')->balance($account, $date);
         }
         );
 

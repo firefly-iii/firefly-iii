@@ -43,14 +43,9 @@ class JsonController extends Controller
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
-            $ranges = $repository->getRanges($bill, $start, $end);
-
-            foreach ($ranges as $range) {
-                // paid a bill in this range?
-                $amount += $repository->getJournalsInRange($bill, $range['start'], $range['end'])->sum('amount');
-            }
+            $amount += $repository->billPaymentsInRange($bill, $start, $end);
         }
-        unset($ranges, $bill, $range, $bills);
+        unset($bill, $bills);
 
         /**
          * Find credit card accounts and possibly unpaid credit card bills.

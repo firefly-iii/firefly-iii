@@ -16,6 +16,17 @@ interface BillRepositoryInterface
 {
 
     /**
+     * Returns the sum of all payments connected to this bill between the dates.
+     *
+     * @param Bill   $bill
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return float
+     */
+    public function billPaymentsInRange(Bill $bill, Carbon $start, Carbon $end);
+
+    /**
      * Create a fake bill to help the chart controller.
      *
      * @param string $description

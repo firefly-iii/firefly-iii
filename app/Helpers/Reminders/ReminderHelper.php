@@ -64,6 +64,28 @@ class ReminderHelper implements ReminderHelperInterface
     }
 
     /**
+     * Create all reminders for a piggy bank for a given date.
+     *
+     * @param PiggyBank $piggyBank
+     *
+     * @return mixed
+     */
+    public function createReminders(PiggyBank $piggyBank, Carbon $date)
+    {
+        $ranges = $this->getReminderRanges($piggyBank);
+
+        foreach ($ranges as $range) {
+            if ($date < $range['end'] && $date > $range['start']) {
+                // create a reminder here!
+                $this->createReminder($piggyBank, $range['start'], $range['end']);
+                // stop looping, we're done.
+                break;
+            }
+
+        }
+    }
+
+    /**
      * This routine will return an array consisting of two dates which indicate the start
      * and end date for each reminder that this piggy bank will have, if the piggy bank has
      * any reminders. For example:

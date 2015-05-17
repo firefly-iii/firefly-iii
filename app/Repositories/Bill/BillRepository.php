@@ -23,6 +23,27 @@ use Navigation;
 class BillRepository implements BillRepositoryInterface
 {
     /**
+     * Returns the sum of all payments connected to this bill between the dates.
+     *
+     * @param Bill   $bill
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return float
+     */
+    public function billPaymentsInRange(Bill $bill, Carbon $start, Carbon $end)
+    {
+        $amount   = 0;
+        $journals = $bill->transactionjournals()->before($end)->after($start)->get();
+        /** @var TransactionJournal $journal */
+        foreach ($journals as $journal) {
+            $amount += $journal->amount;
+        }
+
+        return $amount;
+    }
+
+    /**
      * Create a fake bill to help the chart controller.
      *
      * @param string $description

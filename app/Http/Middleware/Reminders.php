@@ -49,32 +49,18 @@ class Reminders
         if ($this->auth->check() && !$request->isXmlHttpRequest()) {
             // do reminders stuff.
             $piggyBanks = $this->auth->user()->piggyBanks()->where('remind_me', 1)->get();
-            $today      = new Carbon;
             /** @var \FireflyIII\Helpers\Reminders\ReminderHelperInterface $helper */
             $helper = App::make('FireflyIII\Helpers\Reminders\ReminderHelperInterface');
 
             /** @var PiggyBank $piggyBank */
             foreach ($piggyBanks as $piggyBank) {
-                $ranges = $helper->getReminderRanges($piggyBank);
-
-                foreach ($ranges as $range) {
-                    if ($today < $range['end'] && $today > $range['start']) {
-                        // create a reminder here!
-                        $helper->createReminder($piggyBank, $range['start'], $range['end']);
-                        // stop looping, we're done.
-                        break;
-                    }
-
-                }
+                $helper->createReminders($piggyBank, new Carbon);
             }
             // delete invalid reminders
-            $set = $this->auth->user()->reminders()->leftJoin('piggy_banks', 'piggy_banks.id', '=', 'remindersable_id')->whereNull('piggy_banks.id')->get(
-                ['reminders.id']
-            );
-            foreach ($set as $reminder) {
-                $reminder->delete();
-            }
-
+            Reminder::whereUserId($this->auth->user()->id)
+                ->leftJoin('piggy_banks', 'piggy_banks.id', '=', 'remindersable_id')
+                ->whereNull('piggy_banks.id')
+                ->delete();
 
             // get and list active reminders:
             $reminders = $this->auth->user()->reminders()->today()->get();
