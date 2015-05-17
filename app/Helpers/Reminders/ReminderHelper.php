@@ -68,6 +68,8 @@ class ReminderHelper implements ReminderHelperInterface
      *
      * @param PiggyBank $piggyBank
      *
+     * @param Carbon    $date
+     *
      * @return mixed
      */
     public function createReminders(PiggyBank $piggyBank, Carbon $date)

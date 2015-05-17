@@ -18,6 +18,8 @@ class TagRepository implements TagRepositoryInterface
 {
 
     /**
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's five.
+     *
      * @param TransactionJournal $journal
      * @param Tag                $tag
      *

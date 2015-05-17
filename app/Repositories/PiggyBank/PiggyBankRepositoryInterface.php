@@ -15,18 +15,6 @@ interface PiggyBankRepositoryInterface
 {
 
     /**
-     *
-     * Based on the piggy bank, the reminder-setting and
-     * other variables this method tries to divide the piggy bank into equal parts. Each is
-     * accommodated by a reminder (if everything goes to plan).
-     *
-     * @param PiggyBankRepetition $repetition
-     *
-     * @return Collection
-     */
-    public function calculateParts(PiggyBankRepetition $repetition);
-
-    /**
      * @return Collection
      */
     public function getPiggyBanks();
@@ -37,13 +25,6 @@ interface PiggyBankRepositoryInterface
      * @return Collection
      */
     public function getEvents(PiggyBank $piggyBank);
-
-    /**
-     * @param array $data
-     *
-     * @return PiggyBankPart
-     */
-    public function createPiggyBankPart(array $data);
 
     /**
      * @param PiggyBank $piggyBank

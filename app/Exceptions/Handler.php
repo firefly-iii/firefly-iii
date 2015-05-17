@@ -27,6 +27,7 @@ class Handler extends ExceptionHandler
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Exception               $e
+     * @SuppressWarnings(PHPMD.ShortVariable)
      *
      * @return \Illuminate\Http\Response
      */

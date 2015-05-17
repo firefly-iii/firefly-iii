@@ -26,6 +26,8 @@ class Kernel extends ConsoleKernel
      *
      * @param  \Illuminate\Console\Scheduling\Schedule $schedule
      *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @return void
      */
     protected function schedule(Schedule $schedule)

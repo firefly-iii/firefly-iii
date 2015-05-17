@@ -29,10 +29,11 @@ class FireflyValidator extends Validator
      * @param array               $rules
      * @param array               $messages
      * @param array               $customAttributes
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(TranslatorInterface $translator, array $data, array $rules, array $messages = [], array $customAttributes = [])
     {
-        parent::__construct($translator, $data, $rules, $messages);
+        parent::__construct($translator, $data, $rules, $messages, $customAttributes);
     }
 
     /**
