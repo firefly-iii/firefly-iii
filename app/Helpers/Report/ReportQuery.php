@@ -40,18 +40,16 @@ class ReportQuery implements ReportQueryInterface
     {
         $query = $this->queryJournalsWithTransactions($start, $end);
         if ($includeShared === false) {
-            // only get withdrawals not from a shared account
-            // and transfers from a shared account.
             $query->where(
                 function (Builder $query) {
                     $query->where(
-                        function (Builder $q) {
+                        function (Builder $q) { // only get withdrawals not from a shared account
                             $q->where('transaction_types.type', 'Withdrawal');
                             $q->where('acm_from.data', '!=', '"sharedAsset"');
                         }
                     );
                     $query->orWhere(
-                        function (Builder $q) {
+                        function (Builder $q) { // and transfers from a shared account.
                             $q->where('transaction_types.type', 'Transfer');
                             $q->where('acm_to.data', '=', '"sharedAsset"');
                         }
@@ -59,24 +57,14 @@ class ReportQuery implements ReportQueryInterface
                 }
             );
         } else {
-            // any withdrawal is fine.
-            $query->where('transaction_types.type', 'Withdrawal');
+            $query->where('transaction_types.type', 'Withdrawal'); // any withdrawal is fine.
         }
         $query->groupBy('transaction_journals.id')->orderBy('transaction_journals.date');
 
         // get everything, decrypt and return
-        $data = $query->get(
-            ['transaction_journals.id',
-             'transaction_journals.description',
-             'transaction_journals.encrypted',
-             'transaction_types.type',
+        $data = $query->get(['transaction_journals.id', 'transaction_journals.description', 'transaction_journals.encrypted', 'transaction_types.type',
              DB::Raw('SUM(`t_from`.`amount`) as `queryAmount`'),
-             'transaction_journals.date',
-             't_to.account_id as account_id',
-             'ac_to.name as name',
-             'ac_to.encrypted as account_encrypted'
-            ]
-        );
+             'transaction_journals.date', 't_to.account_id as account_id', 'ac_to.name as name', 'ac_to.encrypted as account_encrypted']);
 
         $data->each(
             function (Model $object) {

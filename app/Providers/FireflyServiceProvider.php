@@ -46,6 +46,9 @@ class FireflyServiceProvider extends ServiceProvider
         Twig::addExtension(new Translation);
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     public function register()
     {
 

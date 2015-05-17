@@ -34,19 +34,19 @@ class Expense
     public function addOrCreateExpense(TransactionJournal $entry)
     {
 
-        $id = $entry->account_id;
-        if (!$this->expenses->has($id)) {
+        $accountId = $entry->account_id;
+        if (!$this->expenses->has($accountId)) {
             $newObject         = new stdClass;
             $newObject->amount = floatval($entry->queryAmount);
             $newObject->name   = $entry->name;
             $newObject->count  = 1;
-            $newObject->id     = $id;
-            $this->expenses->put($id, $newObject);
+            $newObject->id     = $accountId;
+            $this->expenses->put($accountId, $newObject);
         } else {
-            $existing = $this->expenses->get($id);
+            $existing = $this->expenses->get($accountId);
             $existing->amount += floatval($entry->queryAmount);
             $existing->count++;
-            $this->expenses->put($id, $existing);
+            $this->expenses->put($accountId, $existing);
         }
     }
 

@@ -65,21 +65,11 @@ class Navigation
         $currentEnd = clone $theCurrentEnd;
 
         $functionMap = [
-            '1D'        => 'addDay',
-            'daily'     => 'addDay',
-            '1W'        => 'addWeek',
-            'week'      => 'addWeek',
-            'weekly'    => 'addWeek',
-            '1M'        => 'addMonth',
-            'month'     => 'addMonth',
-            'monthly'   => 'addMonth',
-            '3M'        => 'addMonths',
-            'quarter'   => 'addMonths',
-            'quarterly' => 'addMonths',
-            '6M'        => 'addMonths',
-            'half-year' => 'addMonths',
-            'year'      => 'addYear',
-            'yearly'    => 'addYear',
+            '1D'   => 'addDay', 'daily' => 'addDay',
+            '1W'   => 'addWeek', 'week' => 'addWeek', 'weekly' => 'addWeek',
+            '1M'   => 'addMonth', 'month' => 'addMonth', 'monthly' => 'addMonth',
+            '3M'   => 'addMonths', 'quarter' => 'addMonths', 'quarterly' => 'addMonths', '6M' => 'addMonths', 'half-year' => 'addMonths',
+            'year' => 'addYear', 'yearly' => 'addYear',
         ];
         $modifierMap = [
             'quarter'   => 3,

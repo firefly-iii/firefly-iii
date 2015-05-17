@@ -50,12 +50,11 @@ class JournalFormRequest extends Request
     /**
      * @return array
      * @throws Exception
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function rules()
     {
-        // can we switch on the "what"?
-        $what = Input::get('what');
-
+        $what  = Input::get('what');
         $rules = [
             'description'        => 'required|min:1,max:255',
             'what'               => 'required|in:withdrawal,deposit,transfer',
@@ -74,8 +73,6 @@ class JournalFormRequest extends Request
                 if (intval(Input::get('budget_id')) != 0) {
                     $rules['budget_id'] = 'exists:budgets,id|belongsToUser:budgets';
                 }
-
-
                 break;
             case 'deposit':
                 $rules['category']        = 'between:1,255';
@@ -93,7 +90,5 @@ class JournalFormRequest extends Request
         }
 
         return $rules;
-
-
     }
 }

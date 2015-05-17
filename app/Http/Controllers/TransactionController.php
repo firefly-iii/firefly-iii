@@ -52,9 +52,7 @@ class TransactionController extends Controller
         $subTitle   = trans('form.add_new_' . $what);
 
         foreach ($respondTo as $r) {
-            if (!is_null(Input::get($r))) {
-                $preFilled[$r] = Input::get($r);
-            }
+            $preFilled[$r] = Input::get($r);
         }
         Session::put('preFilled', $preFilled);
 
@@ -269,7 +267,9 @@ class TransactionController extends Controller
         // rescan journal, UpdateJournalConnection
         event(new JournalSaved($journal));
         // ConnectJournalToPiggyBank
-        event(new JournalCreated($journal, intval($request->get('piggy_bank_id'))));
+        if ($journal->transactionType->type == 'Transfer' && intval($request->get('piggy_bank_id')) > 0) {
+            event(new JournalCreated($journal, intval($request->get('piggy_bank_id'))));
+        }
 
         $repository->deactivateReminder($request->get('reminder_id'));
 

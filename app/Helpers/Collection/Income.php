@@ -35,19 +35,19 @@ class Income
     public function addOrCreateIncome(TransactionJournal $entry)
     {
 
-        $id = $entry->account_id;
-        if (!$this->incomes->has($id)) {
+        $accountId = $entry->account_id;
+        if (!$this->incomes->has($accountId)) {
             $newObject         = new stdClass;
             $newObject->amount = floatval($entry->queryAmount);
             $newObject->name   = $entry->name;
             $newObject->count  = 1;
-            $newObject->id     = $id;
-            $this->incomes->put($id, $newObject);
+            $newObject->id     = $accountId;
+            $this->incomes->put($accountId, $newObject);
         } else {
-            $existing = $this->incomes->get($id);
+            $existing = $this->incomes->get($accountId);
             $existing->amount += floatval($entry->queryAmount);
             $existing->count++;
-            $this->incomes->put($id, $existing);
+            $this->incomes->put($accountId, $existing);
         }
     }
 
