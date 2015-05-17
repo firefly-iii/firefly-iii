@@ -37,31 +37,6 @@ class BillControllerTest extends TestCase
 
     }
 
-    public function testAdd()
-    {
-        // create a bill:
-        $bill = FactoryMuffin::create('FireflyIII\Models\Bill');
-        $this->be($bill->user);
-
-        // create an expense account:
-        $expense = FactoryMuffin::create('FireflyIII\Models\Account');
-        // fix the name of the expense account to match one of the words
-        // in the bill:
-        $words         = explode(',', $bill->match);
-        $word          = $words[1];
-        $expense->name = $word;
-        $expense->save();
-
-        // mock repository:
-        $repository = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
-        $repository->shouldReceive('getAccounts')->andReturn([$expense]);
-
-        // go!
-        $this->call('GET', '/bills/add/' . $bill->id);
-        $this->assertSessionHas('preFilled');
-        $this->assertRedirectedToRoute('transactions.create', ['withdrawal']);
-    }
-
     public function testCreate()
     {
         // go!

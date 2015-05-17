@@ -57,10 +57,13 @@ class Reminders
                 $helper->createReminders($piggyBank, new Carbon);
             }
             // delete invalid reminders
-            Reminder::whereUserId($this->auth->user()->id)
-                ->leftJoin('piggy_banks', 'piggy_banks.id', '=', 'remindersable_id')
-                ->whereNull('piggy_banks.id')
-                ->delete();
+            // this is a construction SQLITE cannot handle :(
+            if (env('DB_CONNECTION') != 'sqlite') {
+                Reminder::whereUserId($this->auth->user()->id)
+                        ->leftJoin('piggy_banks', 'piggy_banks.id', '=', 'remindersable_id')
+                        ->whereNull('piggy_banks.id')
+                        ->delete();
+            }
 
             // get and list active reminders:
             $reminders = $this->auth->user()->reminders()->today()->get();
