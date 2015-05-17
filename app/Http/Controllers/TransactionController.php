@@ -117,10 +117,11 @@ class TransactionController extends Controller
         $what         = strtolower($journal->transactiontype->type);
         $accounts     = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
         $budgets      = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
-        $budgets[0]   = '(no budget)';
+        $budgets[0]   = trans('form.noBudget');
         $transactions = $journal->transactions()->orderBy('amount', 'DESC')->get();
         $piggies      = ExpandedForm::makeSelectList(Auth::user()->piggyBanks()->get());
-        $piggies[0]   = '(no piggy bank)';
+        $piggies[0]   = trans('form.noPiggybank');
+        $subTitle     = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
         $preFilled    = [
             'date'          => $journal->date->format('Y-m-d'),
             'category'      => '',
@@ -247,7 +248,7 @@ class TransactionController extends Controller
                 $t->after  = $t->before + $t->amount;
             }
         );
-        $subTitle = e($journal->transactiontype->type) . ' "' . e($journal->description) . '"';
+        $subTitle = trans('firefly.' . $journal->transactiontype->type) . ' "' . e($journal->description) . '"';
 
         return view('transactions.show', compact('journal', 'subTitle'));
     }

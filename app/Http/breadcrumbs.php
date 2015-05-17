@@ -371,7 +371,7 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'transactions.edit', function (Generator $breadcrumbs, TransactionJournal $journal) {
     $breadcrumbs->parent('transactions.show', $journal);
-    $breadcrumbs->push(trans('breadcrumbs.edit_journal', ['description' => e($journal->description)]), route('transactions.edit', $journal->id));
+    $breadcrumbs->push(trans('breadcrumbs.edit_journal', ['description' => $journal->description]), route('transactions.edit', $journal->id));
 }
 );
 Breadcrumbs::register(
@@ -385,7 +385,7 @@ Breadcrumbs::register(
     'transactions.show', function (Generator $breadcrumbs, TransactionJournal $journal) {
 
     $breadcrumbs->parent('transactions.index', strtolower($journal->transactionType->type));
-    $breadcrumbs->push(e($journal->description), route('transactions.show', $journal->id));
+    $breadcrumbs->push($journal->description, route('transactions.show', $journal->id));
 
 }
 );
