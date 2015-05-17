@@ -7,6 +7,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Grumpydictator\Gchart\GChart;
+use Illuminate\Support\Collection;
 use Preferences;
 use Response;
 use Session;
@@ -19,6 +20,60 @@ use Steam;
  */
 class AccountController extends Controller
 {
+    /**
+     * Shows the balances for all the user's accounts.
+     *
+     * @param GChart                     $chart
+     * @param AccountRepositoryInterface $repository
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function all(GChart $chart, AccountRepositoryInterface $repository, $year, $month, $shared = false)
+    {
+        $start = new Carbon($year . '-' . $month . '-01');
+        $end   = clone $start;
+        $end->endOfMonth();
+        $chart->addColumn(trans('firefly.dayOfMonth'), 'date');
+
+        /** @var Collection $accounts */
+        $accounts = $repository->getAccounts(['Default account', 'Asset account']);
+        if ($shared === false) {
+            // remove the shared accounts from the collection:
+            /** @var Account $account */
+            foreach ($accounts as $index => $account) {
+                if ($account->getMeta('accountRole') == 'sharedAsset') {
+                    $accounts->forget($index);
+                }
+            }
+        }
+
+
+        $index = 1;
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $chart->addColumn(trans('firefly.balanceFor', ['name' => $account->name]), 'number');
+            $chart->addCertainty($index);
+            $index++;
+        }
+        $current = clone $start;
+        $current->subDay();
+        $today = Carbon::now();
+        while ($end >= $current) {
+            $row     = [clone $current];
+            $certain = $current < $today;
+            foreach ($accounts as $account) {
+                $row[] = Steam::balance($account, $current);
+                $row[] = $certain;
+            }
+            $chart->addRowArray($row);
+            $current->addDay();
+        }
+        $chart->generate();
+
+        return Response::json($chart->getData());
+
+    }
+
     /**
      * Shows the balances for all the user's frontpage accounts.
      *

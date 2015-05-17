@@ -9,6 +9,8 @@ function drawChart() {
 
     googleStackedColumnChart('chart/budget/year/' + year + shared, 'budgets');
     googleStackedColumnChart('chart/category/year/' + year + shared, 'categories');
+
+    googleLineChart('/chart/account/month/' + year + '/' + month + shared, 'account-balances-chart');
 }
 
 $(function () {
@@ -39,7 +41,7 @@ function openModal(e) {
 
 function showIncomes() {
     "use strict";
-    if(incomeRestShow) {
+    if (incomeRestShow) {
         // hide everything, make button say "show"
         $('#showIncomes').text(showTheRest);
         $('.incomesCollapsed').removeClass('in').addClass('out');
@@ -59,7 +61,7 @@ function showIncomes() {
 }
 
 function showExpenses() {
-    if(expenseRestShow) {
+    if (expenseRestShow) {
         // hide everything, make button say "show"
         $('#showExpenses').text(showTheRestExpense);
         $('.expenseCollapsed').removeClass('in').addClass('out');
