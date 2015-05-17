@@ -9,12 +9,15 @@ use FireflyIII\Helpers\Collection\Balance;
 use FireflyIII\Helpers\Collection\BalanceEntry;
 use FireflyIII\Helpers\Collection\BalanceHeader;
 use FireflyIII\Helpers\Collection\BalanceLine;
+use FireflyIII\Helpers\Collection\Bill as BillCollection;
+use FireflyIII\Helpers\Collection\BillLine;
 use FireflyIII\Helpers\Collection\Budget as BudgetCollection;
 use FireflyIII\Helpers\Collection\BudgetLine;
 use FireflyIII\Helpers\Collection\Category as CategoryCollection;
 use FireflyIII\Helpers\Collection\Expense;
 use FireflyIII\Helpers\Collection\Income;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget as BudgetModel;
 use FireflyIII\Models\LimitRepetition;
 
@@ -137,17 +140,17 @@ class ReportHelper implements ReportHelperInterface
 
         // then a new line for without budget.
         // and one for the tags:
-        $empty = new BalanceLine;
-        $tags = new BalanceLine;
+        $empty    = new BalanceLine;
+        $tags     = new BalanceLine;
         $diffLine = new BalanceLine;
 
         $tags->setRole(BalanceLine::ROLE_TAGROLE);
         $diffLine->setRole(BalanceLine::ROLE_DIFFROLE);
 
         foreach ($accounts as $account) {
-            $spent        = $this->query->spentNoBudget($account, $start, $end);
-            $left = $tagRepository->coveredByBalancingActs($account, $start, $end);
-            $diff = $spent + $left;
+            $spent = $this->query->spentNoBudget($account, $start, $end);
+            $left  = $tagRepository->coveredByBalancingActs($account, $start, $end);
+            $diff  = $spent + $left;
 
             // budget
             $budgetEntry = new BalanceEntry;
@@ -176,6 +179,52 @@ class ReportHelper implements ReportHelperInterface
         $balance->setBalanceHeader($header);
 
         return $balance;
+    }
+
+    /**
+     * This method generates a full report for the given period on all
+     * the users bills and their payments.
+     *
+     * @param Carbon  $start
+     * @param Carbon  $end
+     * @param boolean $shared
+     *
+     * @return BillCollection
+     */
+    public function getBillReport(Carbon $start, Carbon $end, $shared)
+    {
+        /** @var \FireflyIII\Repositories\Bill\BillRepositoryInterface $repository */
+        $repository = App::make('FireflyIII\Repositories\Bill\BillRepositoryInterface');
+        $bills      = $repository->getBills();
+        $collection = new BillCollection;
+
+        /** @var Bill $bill */
+        foreach ($bills as $bill) {
+            $billLine = new BillLine;
+            $billLine->setBill($bill);
+            $billLine->setActive(intval($bill->active) == 1);
+            $billLine->setMin(floatval($bill->amount_min));
+            $billLine->setMax(floatval($bill->amount_max));
+
+            // is hit in period?
+            $set = $repository->getJournalsInRange($bill, $start, $end);
+            if ($set->count() == 0) {
+                $billLine->setHit(false);
+            } else {
+                $billLine->setHit(true);
+                $amount = 0;
+                foreach ($set as $entry) {
+                    $amount += $entry->amount;
+                }
+                $billLine->setAmount($amount);
+            }
+
+            $collection->addBill($billLine);
+
+        }
+
+        return $collection;
+
     }
 
     /**

@@ -36,6 +36,7 @@ return [
     'remind_me'                   => 'Help me herinneren',
     'tag'                         => 'Tag',
     'reminder'                    => 'Herinner me elke',
+    'under'                       => 'Onder',
 
     'store_new_withdrawal'        => 'Nieuwe uitgave opslaan',
     'store_new_deposit'           => 'Nieuwe inkomsten opslaan',

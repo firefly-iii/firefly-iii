@@ -112,6 +112,8 @@ return [
     'leftInBudget'               => 'Over van budget',
 
     'sumOfSums'                  => 'Alles bij elkaar',
+    'notCharged'                 => '(Nog) niet betaald',
+    'inactive'                   => 'Niet actief',
 
     'difference'                 => 'Verschil',
     'in'                         => 'In',

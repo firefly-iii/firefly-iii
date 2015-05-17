@@ -36,6 +36,7 @@ return [
     'remind_me'                   => 'Remind me',
     'tag'                         => 'Tag',
     'reminder'                    => 'Remind me every',
+    'under'                       => 'Under',
 
     'store_new_withdrawal'        => 'Store new withdrawal',
     'store_new_deposit'           => 'Store new deposit',

@@ -111,7 +111,8 @@ return [
     'leftInBudget'               => 'Left in budget',
 
     'sumOfSums'                  => 'Sum of sums',
-
+    'notCharged'                 => 'Not charged (yet)',
+    'inactive' => 'Inactive',
 
     'difference'                 => 'Difference',
     'in'                         => 'In',

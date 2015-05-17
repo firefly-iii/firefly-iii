@@ -31,6 +31,18 @@ interface ReportHelperInterface
     public function getAccountReport(Carbon $date, Carbon $end, $shared);
 
     /**
+     * This method generates a full report for the given period on all
+     * the users bills and their payments.
+     *
+     * @param Carbon  $start
+     * @param Carbon  $end
+     * @param boolean $shared
+     *
+     * @return Account
+     */
+    public function getBillReport(Carbon $start, Carbon $end, $shared);
+
+    /**
      * @param Carbon  $start
      * @param Carbon  $end
      * @param boolean $shared
