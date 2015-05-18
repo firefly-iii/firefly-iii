@@ -14,7 +14,7 @@
         </tr>
         <tr>
             <td>{{ 'difference'|_ }}</td>
-            <td>{{ (incomes.getTotal - expenses.getTotal)|formatAmount }}</td>
+            <td>{{ (incomes.getTotal + expenses.getTotal)|formatAmount }}</td>
         </tr>
     </table>
 </div>
