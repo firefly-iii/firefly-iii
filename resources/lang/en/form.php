@@ -26,6 +26,7 @@ return [
     'returnHereUpdateExplanation' => 'After updating, return here.',
     'description'                 => 'Description',
     'expense_account'             => 'Expense account',
+    'revenue_account'             => 'Revenue account',
     'amount'                      => 'Amount',
     'date'                        => 'Date',
     'category'                    => 'Category',

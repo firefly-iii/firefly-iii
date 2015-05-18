@@ -26,6 +26,7 @@ return [
     'returnHereUpdateExplanation' => 'Terug naar deze pagina na het wijzigen.',
     'description'                 => 'Omschrijving',
     'expense_account'             => 'Crediteur',
+    'revenue_account'             => 'Debiteur',
     'amount'                      => 'Bedrag',
     'date'                        => 'Datum',
     'category'                    => 'Categorie',
