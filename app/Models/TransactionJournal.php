@@ -62,6 +62,22 @@ class TransactionJournal extends Model
     /**
      * @return float
      */
+    public function getActualAmountAttribute()
+    {
+        $amount = 0;
+        /** @var Transaction $t */
+        foreach ($this->transactions as $t) {
+            if ($t->amount > 0) {
+                $amount = floatval($t->amount);
+            }
+        }
+
+        return $amount;
+    }
+
+    /**
+     * @return float
+     */
     public function getAmountAttribute()
     {
         $amount = 0;
@@ -88,6 +104,7 @@ class TransactionJournal extends Model
             foreach ($others as $other) {
                 $amount -= $other->amount;
             }
+
             return $amount;
         }
 

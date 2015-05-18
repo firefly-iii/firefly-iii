@@ -57,7 +57,7 @@
                     {% if not hideTags %}
                         {{ relevantTags(journal)|raw }}
                     {% else %}
-                        {{ journal|formatJournal }}
+                        {{ journal.actualAmount|formatAmount }}
                     {% endif %}
                 </td>
                 <td>
