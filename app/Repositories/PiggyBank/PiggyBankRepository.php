@@ -19,57 +19,6 @@ use Navigation;
 class PiggyBankRepository implements PiggyBankRepositoryInterface
 {
 
-
-    /**
-     *
-     * Based on the piggy bank, the reminder-setting and
-     * other variables this method tries to divide the piggy bank into equal parts. Each is
-     * accommodated by a reminder (if everything goes to plan).
-     *
-     * @param PiggyBankRepetition $repetition
-     *
-     * @return Collection
-     */
-    public function calculateParts(PiggyBankRepetition $repetition)
-    {
-        /** @var PiggyBank $piggyBank */
-        $piggyBank    = $repetition->piggyBank()->first();
-        $bars         = new Collection;
-        $currentStart = clone $repetition->startdate;
-
-        if (is_null($piggyBank->reminder)) {
-            $entry = ['repetition'    => $repetition, 'amountPerBar' => floatval($piggyBank->targetamount),
-                      'currentAmount' => floatval($repetition->currentamount), 'cumulativeAmount' => floatval($piggyBank->targetamount),
-                      'startDate'     => clone $repetition->startdate, 'targetDate' => clone $repetition->targetdate];
-            $bars->push($this->createPiggyBankPart($entry));
-
-            return $bars;
-        }
-
-        while ($currentStart < $repetition->targetdate) {
-            $currentTarget = Navigation::endOfX($currentStart, $piggyBank->reminder, $repetition->targetdate);
-            $entry         = ['repetition'       => $repetition, 'amountPerBar' => null, 'currentAmount' => floatval($repetition->currentamount),
-                              'cumulativeAmount' => null, 'startDate' => $currentStart, 'targetDate' => $currentTarget];
-            $bars->push($this->createPiggyBankPart($entry));
-            $currentStart = clone $currentTarget;
-            $currentStart->addDay();
-
-        }
-        $amountPerBar = floatval($piggyBank->targetamount) / $bars->count();
-        $cumulative   = $amountPerBar;
-        /** @var PiggyBankPart $bar */
-        foreach ($bars as $index => $bar) {
-            $bar->setAmountPerBar($amountPerBar);
-            $bar->setCumulativeAmount($cumulative);
-            if ($bars->count() - 1 == $index) {
-                $bar->setCumulativeAmount($piggyBank->targetamount);
-            }
-            $cumulative += $amountPerBar;
-        }
-
-        return $bars;
-    }
-
     /**
      * @param PiggyBank $piggyBank
      * @param           $amount
@@ -81,24 +30,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         PiggyBankEvent::create(['date' => Carbon::now(), 'amount' => $amount, 'piggy_bank_id' => $piggyBank->id]);
 
         return true;
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return PiggyBankPart
-     */
-    public function createPiggyBankPart(array $data)
-    {
-        $part = new PiggyBankPart;
-        $part->setRepetition($data['repetition']);
-        $part->setAmountPerBar($data['amountPerBar']);
-        $part->setCurrentamount($data['currentAmount']);
-        $part->setCumulativeAmount($data['cumulativeAmount']);
-        $part->setStartdate($data['startDate']);
-        $part->setTargetdate($data['targetDate']);
-
-        return $part;
     }
 
     /**
@@ -151,8 +82,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     {
         // split query to make it work in sqlite:
         $set = PiggyBank::
-                 leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.id')
-                 ->where('accounts.user_id', Auth::user()->id)->get(['piggy_banks.*']);
+        leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.id')
+                        ->where('accounts.user_id', Auth::user()->id)->get(['piggy_banks.*']);
         foreach ($set as $e) {
             $e->order = 0;
             $e->save();
@@ -198,7 +129,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      * @param array     $data
      *
      * @return PiggyBank
-     * @internal param PiggyBank $account
      */
     public function update(PiggyBank $piggyBank, array $data)
     {

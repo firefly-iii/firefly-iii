@@ -3,14 +3,14 @@
         {% if showPiggyBank %}
             <th>Piggy bank</th>
         {% endif %}
-        <th>Date</th>
-        <th>Amount</th>
+        <th>{{ trans('list.date') }}</th>
+        <th>{{ trans('list.amount') }}</th>
     </tr>
     {% for event in events %}
     <tr>
         {% if showPiggyBank %}
         <td>
-            <a href="{{ route('piggyBanks.show',event.piggyBank_id) }}">{{ event.piggyBank.name }}</a>
+            <a href="{{ route('piggy-banks.show',event.piggyBank_id) }}">{{ event.piggyBank.name }}</a>
         </td>
         {% endif %}
         <td>

@@ -1,243 +1,59 @@
 {% extends "./layout/default.twig" %}
 {% block content %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, date) }}
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <p>
-            <a href="#" class="btn btn-default" id="includeShared" style="display:none;">
-                <i class="state-icon glyphicon glyphicon-unchecked"></i> Include shared asset accounts</a>
-        </p>
-    </div>
-</div>
-<div class="row">
-    <div class="col-lg-5 col-md-5 col-sm-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-long-arrow-right fa-fw"></i>
-                Income
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, start, shared) }}
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-line-chart"></i>
+                    {{ 'accountBalances'|_ }}
+                </div>
+                <div class="panel-body">
+                    <div id="account-balances-chart"></div>
+                </div>
             </div>
-                <table class="table table-bordered">
-                    {% set sum = 0 %}
-                    {% for entry in income %}
-                        {% set sum = sum + entry.queryAmount %}
-                        <tr>
-                            <td>
-                                <a href="{{ route('transactions.show',entry.id) }}" title="{{ entry.description }}">{{ entry.description }}</a>
-                            </td>
-                            <td>
-                                {% if entry.type == 'Withdrawal' %}
-                                    <span class="text-danger">{{entry.queryAmount|formatAmountPlain}}</span>
-                                {% endif %}
-                                {% if entry.type == 'Deposit' %}
-                                    <span class="text-success">{{entry.queryAmount|formatAmountPlain}}</span>
-                                {% endif %}
-                                {% if entry.type == 'Transfer' %}
-                                    <span class="text-info">{{entry.queryAmount|formatAmountPlain}}</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {{entry.date.format('j F Y')}}
-                            </td>
-                            <td>
-                                <a href="{{route('accounts.show',entry.account_id)}}">{{ entry.name }}</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    {% if displaySum %}
-                        <tr>
-                            <td><em>Sum</em></td>
-                            <td colspan="3">{{  sum|formatAmount  }}</td>
-                        </tr>
-                    {% endif %}
-                </table>
         </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            {% include 'partials/reports/accounts.twig' %}
+            {% include 'partials/reports/income-vs-expenses.twig' %}
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            <!-- income -->
+            {% include 'partials/reports/income.twig' %}
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            <!-- expenses -->
+            {% include 'partials/reports/expenses.twig' %}
+        </div>
+    </div>
+<div class="row">
+    <div class="col-lg-8 col-md-8 col-sm-12">
+        <!-- budgets -->
+        {% include 'partials/reports/budgets.twig' %}
     </div>
     <div class="col-lg-4 col-md-4 col-sm-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-long-arrow-left fa-fw"></i>
-                Expenses (top 10)
-            </div>
-            <table class="table table-bordered">
-                {% set sum = 0 %}
+        <!-- categories -->
+        {% include 'partials/reports/categories.twig' %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
 
-                {% for id,expense in expenses %}
-                    {% set sum = sum + expense.queryAmount %}
-                    <tr>
-                        {% if id > 0 %}
-                            <td><a href="{{route('accounts.show',id)}}">{{ expense.name }}</a></td>
-                        {% else %}
-                            <td><em>{{ expense.name }}</em></td>
-                        {% endif %}
-                        <td><span class="text-danger">{{  expense.queryAmount|formatAmountPlain  }}</span></td>
-                    </tr>
-                {% endfor %}
-                <tr>
-                    <td><em>Sum</em></td>
-                    <td><span class="text-danger">{{  sum|formatAmountPlain  }}</span></td>
-                </tr>
-            </table>
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-4 col-sm-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-exchange fa-fw"></i>
-                Sums
-            </div>
-            {% set totalIn = 0 %}
-            {% for entry in income %}
-                {% set totalIn = totalIn + entry.queryAmount %}
-            {% endfor %}
-            <table class="table table-bordered">
-                <tr>
-                    <td>In</td>
-                    <td>{{  totalIn|formatAmount  }}</td>
-                </tr>
-                <tr>
-                    <td>Out</td>
-                    <td><span class="text-danger">{{  sum|formatAmountPlain  }}</span></td>
-                </tr>
-                <tr>
-                    <td>Difference</td>
-                    <td>{{  (totalIn - sum)|formatAmount  }}</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-lg-6 col-md-6 col-sm-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-tasks fa-fw"></i>
-                Budgets
-            </div>
-                <table class="table table-bordered">
-                    <tr>
-                        <th>Budget</th>
-                        <th>Envelope</th>
-                        <th>Spent</th>
-                        <th>Left</th>
-                    </tr>
-                    {% set sumSpent = 0 %}
-                    {% set sumEnvelope = 0 %}
-                    {% set sumLeft = 0 %}
-                    {% for id,budget in budgets %}
-                        {% set sumSpent = sumSpent + budget.spent %}
-                        {% set sumEnvelope = sumEnvelope + budget.queryAmount %}
-                        {% set sumLeft = sumLeft + budget.queryAmount + budget.spent %}
-                        <!-- only display when relevant: -->
-                        {% if budget.queryAmount != 0 or budget.spent != 0 %}
-                            <tr>
-                                <td>
-                                    {% if id > 0  %}
-                                        <a href="{{route('budgets.show',id)}}">{{ budget.name }}</a>
-                                    {% else %}
-                                        <em>{{ budget.name }}</em>
-                                    {% endif %}
-                                </td>
-                                <td>{{  budget.queryAmount|formatAmount  }}</td>
-                                <td><span class="text-danger">{{  (budget.spent*-1)|formatAmountPlain  }}</span></td>
-                                <td>{{  (budget.queryAmount + budget.spent)|formatAmount  }}</td>
-                            </tr>
-                    {% endif %}
-                    {% endfor %}
-                    <tr>
-                        <td><em>Sum</em></td>
-                        <td>{{  sumEnvelope|formatAmount  }}</td>
-                        <td>{{  sumSpent|formatAmount  }}</td>
-                        <td>{{  sumLeft|formatAmount  }}</td>
-                    </tr>
-                </table>
-        </div>
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-bar-chart fa-fw"></i>
-                Categories
-            </div>
-            <table class="table table-bordered">
-                <tr>
-                    <th>Category</th>
-                    <th>Spent</th>
-                </tr>
-                {% set sum = 0 %}
-                {% for id,category in categories %}
-                    {% set sum = sum + category.queryAmount %}
-                    <tr>
-                        <td>
-                            {% if id > 0  %}
-                                <a href="{{route('categories.show',id)}}">{{ category.name }}</a>
-                            {% else %}
-                                <em>{{ category.name }}</em>
-                            {% endif %}
-                        </td>
-                        <td><span class="text-danger">{{  (category.queryAmount * -1)|formatAmountPlain  }}</span></td>
-                    </tr>
-                {% endfor %}
-                <tr>
-                    <td><em>Sum</em></td>
-                    <td><span class="text-danger">{{  (sum * -1)|formatAmountPlain  }}</span></td>
-                </tr>
-            </table>
-        </div>
     </div>
 </div>
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-credit-card fa-fw"></i>
-                Accounts
-            </div>
-            <table class="table table-bordered">
-                {% set sumStart = 0 %}
-                {% set sumEnd = 0 %}
-                {% set sumDiff = 0 %}
-            {% for id,account in accounts %}
+        {% include 'partials/reports/balance.twig' %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        {% include 'partials/reports/bills.twig' %}
 
-                {% set sumStart = sumStart + account.startBalance %}
-                {% set sumEnd = sumEnd + account.endBalance %}
-                {% set sumDiff = sumDiff + account.difference %}
-                <tr>
-                    <td><a href="{{route('accounts.show',id)}}">{{ account.name }}</a></td>
-                    <td>{{  account.startBalance|formatAmount  }}</td>
-                    <td>{{  account.endBalance|formatAmount  }}</td>
-                    <td>{{  account.difference|formatAmount  }}</td>
-                </tr>
-            {% endfor %}
-                <tr>
-                    <td><em>Sum</em></td>
-                    <td>{{  sumStart|formatAmount  }}</td>
-                    <td>{{  sumEnd|formatAmount  }}</td>
-                    <td>{{  sumDiff|formatAmount  }}</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-sort-amount-asc fa-fw"></i>
-                Piggy banks
-            </div>
-            <div class="panel-body">Body</div>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-calendar-o fa-fw"></i>
-                Bills
-            </div>
-            <div class="panel-body">Body</div>
-        </div>
     </div>
 </div>
 <div class="row">
@@ -245,7 +61,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-fw fa-folder-o"></i>
-                Outside of budgets
+                {{ 'outsideOfBudgets'|_ }}
             </div>
             <div class="panel-body">Body</div>
         </div>
@@ -253,5 +69,24 @@
 </div>
 {% endblock %}
 {% block scripts %}
+
+    <!-- load the libraries and scripts necessary for Google Charts: -->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="js/gcharts.options.js"></script>
+    <script type="text/javascript" src="js/gcharts.js"></script>
+
+    <script type="text/javascript">
+        var year = {{ start.year }};
+        var month = {{ start.month }};
+        var shared = {% if shared %}'/shared'{% else %}''{% endif %};
+        var incomeTopLength = {{ incomeTopLength }};
+        var expenseTopLength = {{ expenseTopLength }};
+        var incomeRestShow = false; // starts hidden.
+        var expenseRestShow = false; // starts hidden.
+        var showTheRest = '{{ trans('firefly.showTheRest',{number:incomeTopLength}) }}';
+        var hideTheRest = '{{ trans('firefly.hideTheRest',{number:incomeTopLength}) }}';
+        var showTheRestExpense = '{{ trans('firefly.showTheRest',{number:expenseTopLength}) }}';
+        var hideTheRestExpense = '{{ trans('firefly.hideTheRest',{number:expenseTopLength}) }}';
+    </script>
     <script type="text/javascript" src="js/reports.js"></script>
 {% endblock %}

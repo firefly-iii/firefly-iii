@@ -30,7 +30,7 @@ class TransactionController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('title', 'Transactions');
+        View::share('title', trans('firefly.transactions'));
         View::share('mainTitleIcon', 'fa-repeat');
     }
 
@@ -44,17 +44,15 @@ class TransactionController extends Controller
     {
         $accounts   = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
         $budgets    = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
-        $budgets[0] = '(no budget)';
+        $budgets[0] = trans('form.noBudget');
         $piggies    = ExpandedForm::makeSelectList(Auth::user()->piggyBanks()->get());
-        $piggies[0] = '(no piggy bank)';
+        $piggies[0] = trans('form.noPiggybank');
         $preFilled  = Session::has('preFilled') ? Session::get('preFilled') : [];
         $respondTo  = ['account_id', 'account_from_id'];
-        $subTitle   = 'Add a new ' . e($what);
+        $subTitle   = trans('form.add_new_' . $what);
 
         foreach ($respondTo as $r) {
-            if (!is_null(Input::get($r))) {
-                $preFilled[$r] = Input::get($r);
-            }
+            $preFilled[$r] = Input::get($r);
         }
         Session::put('preFilled', $preFilled);
 
@@ -119,10 +117,11 @@ class TransactionController extends Controller
         $what         = strtolower($journal->transactiontype->type);
         $accounts     = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
         $budgets      = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
-        $budgets[0]   = '(no budget)';
+        $budgets[0]   = trans('form.noBudget');
         $transactions = $journal->transactions()->orderBy('amount', 'DESC')->get();
         $piggies      = ExpandedForm::makeSelectList(Auth::user()->piggyBanks()->get());
-        $piggies[0]   = '(no piggy bank)';
+        $piggies[0]   = trans('form.noPiggybank');
+        $subTitle     = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
         $preFilled    = [
             'date'          => $journal->date->format('Y-m-d'),
             'category'      => '',
@@ -182,19 +181,19 @@ class TransactionController extends Controller
             case 'expenses':
             case 'withdrawal':
                 $subTitleIcon = 'fa-long-arrow-left';
-                $subTitle     = 'Expenses';
+                $subTitle     = trans('firefly.expenses');
                 $types        = ['Withdrawal'];
                 break;
             case 'revenue':
             case 'deposit':
                 $subTitleIcon = 'fa-long-arrow-right';
-                $subTitle     = 'Revenue, income and deposits';
+                $subTitle     = trans('firefly.income');
                 $types        = ['Deposit'];
                 break;
             case 'transfer':
             case 'transfers':
                 $subTitleIcon = 'fa-exchange';
-                $subTitle     = 'Transfers';
+                $subTitle     = trans('firefly.transfers');
                 $types        = ['Transfer'];
                 break;
         }
@@ -249,7 +248,7 @@ class TransactionController extends Controller
                 $t->after  = $t->before + $t->amount;
             }
         );
-        $subTitle = e($journal->transactiontype->type) . ' "' . e($journal->description) . '"';
+        $subTitle = trans('firefly.' . $journal->transactiontype->type) . ' "' . e($journal->description) . '"';
 
         return view('transactions.show', compact('journal', 'subTitle'));
     }
@@ -269,7 +268,9 @@ class TransactionController extends Controller
         // rescan journal, UpdateJournalConnection
         event(new JournalSaved($journal));
         // ConnectJournalToPiggyBank
-        event(new JournalCreated($journal, intval($request->get('piggy_bank_id'))));
+        if ($journal->transactionType->type == 'Transfer' && intval($request->get('piggy_bank_id')) > 0) {
+            event(new JournalCreated($journal, intval($request->get('piggy_bank_id'))));
+        }
 
         $repository->deactivateReminder($request->get('reminder_id'));
 

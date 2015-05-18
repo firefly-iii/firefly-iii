@@ -1,20 +1,26 @@
 if (typeof(google) != 'undefined') {
     google.setOnLoadCallback(drawChart);
-
 }
 
 
 function drawChart() {
-    googleColumnChart('chart/reports/income-expenses/' + year, 'income-expenses-chart');
-    googleColumnChart('chart/reports/income-expenses-sum/' + year, 'income-expenses-sum-chart')
+    googleColumnChart('chart/report/in-out/' + year + shared, 'income-expenses-chart');
+    googleColumnChart('chart/report/in-out-sum/' + year + shared, 'income-expenses-sum-chart');
 
-    googleStackedColumnChart('chart/budgets/spending/' + year, 'budgets');
+    googleStackedColumnChart('chart/budget/year/' + year + shared, 'budgets');
+    googleStackedColumnChart('chart/category/year/' + year + shared, 'categories');
+
+    googleLineChart('/chart/account/month/' + year + '/' + month + shared, 'account-balances-chart');
 }
 
 $(function () {
     $('.openModal').on('click', openModal);
-    includeSharedToggle();
-    $('#includeShared').click(includeSharedSet);
+
+
+    // click open the top X income list:
+    $('#showIncomes').click(showIncomes);
+    // click open the top X expense list:
+    $('#showExpenses').click(showExpenses);
 });
 
 function openModal(e) {
@@ -32,31 +38,44 @@ function openModal(e) {
     return false;
 }
 
-function includeSharedToggle() {
-    // get setting from JSON.
-    $.getJSON('json/show-shared-reports').success(function (data) {
-        console.log('GO');
-        if (data.value == true) {
-            // show shared data, update button:
-            //<i class="state-icon glyphicon glyphicon-check"></i>
-            $('#includeShared').empty().addClass('btn-info').append($('<i>').addClass('state-icon glyphicon glyphicon-check')).append(' Include shared asset accounts').show();
-            console.log('true');
-        } else {
-            $('#includeShared').empty().removeClass('btn-info').append($('<i>').addClass('state-icon glyphicon glyphicon-unchecked')).append(' Include shared asset accounts').show();
-            console.log('false');
-        }
-    }).fail(function () {
-        console.log('fail');
-    });
+
+function showIncomes() {
+    "use strict";
+    if (incomeRestShow) {
+        // hide everything, make button say "show"
+        $('#showIncomes').text(showTheRest);
+        $('.incomesCollapsed').removeClass('in').addClass('out');
+
+        // toggle:
+        incomeRestShow = false;
+    } else {
+        // show everything, make button say "hide".
+        $('#showIncomes').text(hideTheRest);
+        $('.incomesCollapsed').removeClass('out').addClass('in');
+
+        // toggle:
+        incomeRestShow = true;
+    }
+
+    return false;
 }
 
-function includeSharedSet() {
-    // get setting from JSON.
-    $.getJSON('json/show-shared-reports/set').success(function (data) {
-        console.log('Value is now: ' + data.value);
-        includeSharedToggle();
-    }).fail(function () {
-        console.log('fail');
-    });
+function showExpenses() {
+    if (expenseRestShow) {
+        // hide everything, make button say "show"
+        $('#showExpenses').text(showTheRestExpense);
+        $('.expenseCollapsed').removeClass('in').addClass('out');
+
+        // toggle:
+        expenseRestShow = false;
+    } else {
+        // show everything, make button say "hide".
+        $('#showExpenses').text(hideTheRestExpense);
+        $('.expenseCollapsed').removeClass('out').addClass('in');
+
+        // toggle:
+        expenseRestShow = true;
+    }
+
     return false;
 }

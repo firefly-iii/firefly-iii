@@ -71,7 +71,7 @@ class CurrencyRepositoryTest extends TestCase
      */
     public function testGetCurrencyByPreferenceNull()
     {
-        $first            = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
+        FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
         $preference       = FactoryMuffin::create('FireflyIII\Models\Preference');
         $preference->data = 'ABC';
         $preference->save();

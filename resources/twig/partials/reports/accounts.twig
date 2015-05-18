@@ -1,0 +1,30 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="fa fa-credit-card fa-fw"></i>
+        {{ 'accountBalances'|_ }}
+    </div>
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th>{{ 'name'|_ }}</th>
+            <th>{{ 'balanceStart'|_ }}</th>
+            <th>{{ 'balanceStart'|_ }}</th>
+            <th>{{ 'difference'|_ }}</th>
+        </tr>
+        {% for account in accounts.getAccounts %}
+            <tr>
+                <td>
+                    <a href="{{ route('accounts.show',account.id) }}" title="{{ account.name }}">{{ account.name }}</a>
+                </td>
+                <td>{{ account.startBalance|formatAmount }}</td>
+                <td>{{ account.endBalance|formatAmount }}</td>
+                <td>{{ (account.endBalance - account.startBalance)|formatAmount }}</td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td><em>{{ 'sumOfSums'|_ }}</em></td>
+            <td>{{ accounts.getStart|formatAmount }}</td>
+            <td>{{ accounts.getEnd|formatAmount }}</td>
+            <td>{{ accounts.getDifference|formatAmount }}</td>
+        </tr>
+    </table>
+</div>

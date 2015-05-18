@@ -1,5 +1,5 @@
 # Firefly III
-#### v3.4.0.6
+#### v3.4.0.7
 
 [![Build Status](https://travis-ci.org/JC5/firefly-iii.svg?branch=develop)](https://travis-ci.org/JC5/firefly-iii)
 [![Project Status](http://stillmaintained.com/JC5/firefly-iii.png?a=b)](http://stillmaintained.com/JC5/firefly-iii)
@@ -34,20 +34,11 @@ and the philosophy behind it.
 
 It's III, or 3, because [version 2](https://github.com/JC5/Firefly) and version 1 (not online) preceded it. It has been growing steadily ever since.
 
-## Running and installing
-
-If you're still interested please read [the installation guide](https://github.com/JC5/firefly-iii/wiki/Installation), 
-[the upgrade guide](https://github.com/JC5/firefly-iii/wiki/Upgrade-instructions) (if applicable) 
-and the **[first use guide](https://github.com/JC5/firefly-iii/wiki/First-use)**.
- 
-If you want to try out Firefly III, you can do so on [this dedicated website](https://geld.nder.be/). 
-This site always runs the latest version of Firefly III. If you want to use it, please read the [privacy considerations](https://github.com/JC5/firefly-iii/wiki/Privacy-on-demo-site) for this demo-site.
-
 ## Current features
 
 - [A double-entry bookkeeping system](https://en.wikipedia.org/wiki/Double-entry_bookkeeping_system);
 - You can store, edit and remove [withdrawals, deposits and transfers](https://en.wikipedia.org/wiki/Financial_transaction). This allows you full financial management;
-- You can manage different types of accounts
+- You can manage different types of accounts;
   - [Asset](https://en.wikipedia.org/wiki/Asset) accounts
   - Shared [asset accounts](https://en.wikipedia.org/wiki/Asset) ([household accounts](https://en.wikipedia.org/wiki/Household))
   - Saving accounts
@@ -65,8 +56,8 @@ Everything is organised:
 - Clear views that should show you how you're doing;
 - Easy navigation through your records;
 - Browse back and forth to see previous months or even years;
-- Lots of charts because we all love them.
-- Financial reporting showing you how well you are doing;
+- Lots of charts because we all love them;
+- Financial reporting showing you how well you are doing.
 
 ## Screenshots
 
@@ -85,6 +76,16 @@ _Please note that everything in these screenshots is fictional and may not be re
 ![Bills](https://i.nder.be/h58kh00p)
 
 ![Piggy banks](https://i.nder.be/hkud0h53)
+
+## Running and installing
+
+If you're still interested please read [the installation guide](https://github.com/JC5/firefly-iii/wiki/Installation), 
+[the upgrade guide](https://github.com/JC5/firefly-iii/wiki/Upgrade-instructions) (if applicable) 
+and the **[first use guide](https://github.com/JC5/firefly-iii/wiki/First-use)**.
+ 
+If you want to try out Firefly III, you can do so on [this dedicated website](https://geld.nder.be/). 
+This site always runs the latest version of Firefly III. If you want to use it, please read the [privacy considerations](https://github.com/JC5/firefly-iii/wiki/Privacy-on-demo-site) for this demo-site.
+
 
 ## Current state
 

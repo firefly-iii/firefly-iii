@@ -10,9 +10,9 @@ use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
 use FireflyIII\Support\Twig\Budget;
 use FireflyIII\Support\Twig\General;
-use FireflyIII\Support\Twig\Translation;
 use FireflyIII\Support\Twig\Journal;
 use FireflyIII\Support\Twig\PiggyBank;
+use FireflyIII\Support\Twig\Translation;
 use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Support\ServiceProvider;
 use Twig;
@@ -46,6 +46,9 @@ class FireflyServiceProvider extends ServiceProvider
         Twig::addExtension(new Translation);
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     public function register()
     {
 

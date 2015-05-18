@@ -2,14 +2,14 @@
     <thead>
     <tr>
         <th data-defaultsort="disabled">&nbsp;</th>
-        <th>Name</th>
+        <th>{{ trans('list.name') }}</th>
         {% if what == 'asset' %}
-        <th>Role</th>
+        <th>{{ trans('list.role') }}</th>
         {% endif %}
-        <th>Current balance</th>
-        <th>Active</th>
-        <th>Last activity</th>
-        <th>Balance difference between {{ Session.get('start').format('jS F Y') }} and {{ Session.get('end').format('jS F Y') }}</th>
+        <th>{{ trans('list.currentBalance') }}</th>
+        <th>{{ trans('list.active') }}</th>
+        <th>{{ trans('list.lastActivity') }}</th>
+        <th>{{ trans('list.balanceDiff', {'start' : Session.get('start').formatLocalized(monthAndDayFormat),'end' : Session.get('end').formatLocalized(monthAndDayFormat)}) }}</th>
     </tr>
     </thead>
     <tbody>
@@ -41,7 +41,7 @@
             </td>
             {% if account.lastActivityDate %}
                 <td data-value="{{ account.lastActivityDate.format('U') }} ">
-                    {{ account.lastActivityDate.format('j F Y') }}
+                    {{ account.lastActivityDate.formatLocalized(monthAndDayFormat) }}
                 </td>
             {% else %}
                 <td data-value="0">

@@ -1,185 +1,92 @@
 {% extends "./layout/default.twig" %}
 {% block content %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, date) }}
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <p>
-            <a href="#" class="btn btn-default" id="includeShared" style="display:none;">
-                <i class="state-icon glyphicon glyphicon-unchecked"></i>
-                Include shared asset accounts</a>
-        </p>
-    </div>
-</div>
-<div class="row">
- <div class="col-lg-10 col-md-8 col-sm-12">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <i class="fa fa-line-chart"></i>
-            Income vs. expenses
-        </div>
-        <div class="panel-body">
-            <div id="income-expenses-chart"></div>
-        </div>
-    </div>
- </div>
- <div class="col-lg-2 col-md-4 col-sm-12">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <i class="fa fa-calendar"></i>
-            Income vs. expenses
-        </div>
-        <div class="panel-body">
-            <div id="income-expenses-sum-chart"></div>
-        </div>
-    </div>
- </div>
-</div>
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, start, shared) }}
 
-<div class="row">
-    <div class="col-lg-6 col-md-6 col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-credit-card fa-fw"></i>
-                Account balance
+    <div class="row">
+        <div class="col-lg-10 col-md-8 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-line-chart"></i>
+                    {{ 'incomeVsExpenses'|_ }}
+                </div>
+                <div class="panel-body">
+                    <div id="income-expenses-chart"></div>
+                </div>
             </div>
-            <table class="table table-bordered table-striped">
-                <tr>
-                    <th>Name</th>
-                    <th>Balance at start of year</th>
-                    <th>Balance at end of year</th>
-                    <th>Difference</th>
-                </tr>
-                {% set start = 0 %}
-                {% set end = 0 %}
-                {% set diff = 0 %}
-                {% for balance in balances %}
-                    {% set start = start + balance.start %}
-                    {% set end = end + balance.end %}
-                    {% set diff = diff + (balance.end - balance.start) %}
-                    {% if not balance.hide %}
-                        <tr>
-                            <td>
-                                <a href="{{ route('accounts.show', balance.account.id) }}">{{  balance.account.name  }}</a>
-                                {% if balance.shared %}
-                                    <small><em>shared</em></small>
-                                {% endif %}
-                            </td>
-                            <td>{{ balance.start|formatAmount }}</td>
-                            <td>{{ balance.end|formatAmount }}</td>
-                            <td>{{ (balance.end - balance.start)|formatAmount }}</td>
-                        </tr>
-                        {% endif %}
-                {% endfor %}
-                <tr>
-                    <td><em>Sum of sums</em></td>
-                    <td>{{ start|formatAmount }}</td>
-                    <td>{{ end|formatAmount }}</td>
-                    <td>{{ diff|formatAmount }}</td>
-                </tr>
-            </table>
         </div>
+        <div class="col-lg-2 col-md-4 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-calendar"></i>
+                    {{ 'incomeVsExpenses'|_ }}
+                </div>
+                <div class="panel-body">
+                    <div id="income-expenses-sum-chart"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-fw fa-exchange" title="Transfer"></i>
-                Income vs. expense
-            </div>
-            {% set incomeSum = 0 %}
-            {% set expenseSum = 0 %}
-            {% for income in groupedIncomes %}
-                {% set incomeSum = incomeSum + (income.queryAmount*-1) %}
-            {% endfor %}
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            {% include 'partials/reports/accounts.twig' %}
+            {% include 'partials/reports/income-vs-expenses.twig' %}
 
-            {% for expense in groupedExpenses %}
-                {% set expenseSum = expenseSum + expense.queryAmount %}
-            {% endfor %}
-
-                <table class="table table-bordered table-striped">
-                    <tr>
-                        <td>In</td>
-                        <td>{{ incomeSum|formatAmount }}</td>
-                    </tr>
-                    <tr>
-                        <td>Out</td>
-                        <td><span class="text-danger">{{ expenseSum|formatAmountPlain }}</span></td>
-                    </tr>
-                    <tr>
-                        <td>Difference</td>
-                        <td>{{ (incomeSum - expenseSum)|formatAmount }}</td>
-                    </tr>
-                </table>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            {% include 'partials/reports/income.twig' %}
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            {% include 'partials/reports/expenses.twig' %}
         </div>
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-3">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-long-arrow-right fa-fw"></i>
-                Income
-            </div>
-            <table class="table">
-                {% set sum = 0 %}
-                {% for income in groupedIncomes %}
-                    {% set sum = sum + (income.queryAmount * -1) %}
-                    <tr>
-                        <td><a href="{{route('accounts.show',income.account_id)}}">{{ income.name }}</a></td>
-                        <td>{{ (income.queryAmount * -1)|formatAmount }}</td>
-                    </tr>
-                {% endfor %}
-                <tr>
-                    <td><em>Sum</em></td>
-                    <td>{{ sum|formatAmount }}</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-3 col-sm-3">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-long-arrow-left fa-fw"></i>
-                Expenses
-            </div>
-            <table class="table">
-                {% set sum =0  %}
-                {% for expense in groupedExpenses %}
-                <tr>
-                    <td><a href="{{route('accounts.show',expense.id)}}">{{ expense.name }}</a></td>
-                    <td><span class="text-danger">{{ expense.queryAmount|formatAmountPlain }}</span></td>
-                </tr>
-                    {% set sum = sum + (expense.queryAmount * -1) %}
-                {% endfor %}
-                <tr>
-                    <td><em>Sum</em></td>
-                    <td>{{ sum|formatAmount }}</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-tasks fa-fw"></i>
-                Budgets
-            </div>
-            <div class="panel-body">
-                <div id="budgets"></div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-tasks fa-fw"></i>
+                    {{ 'categories'|_ }}
+                </div>
+                <div class="panel-body">
+                    <div id="categories"></div>
+                </div>
             </div>
         </div>
     </div>
-</div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-tasks fa-fw"></i>
+                    {{ 'budgets'|_ }}
+                </div>
+                <div class="panel-body">
+                    <div id="budgets"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
 {% block scripts %}
-<!-- load the libraries and scripts necessary for Google Charts: -->
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript" src="js/gcharts.options.js"></script>
-<script type="text/javascript" src="js/gcharts.js"></script>
+    <!-- load the libraries and scripts necessary for Google Charts: -->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="js/gcharts.options.js"></script>
+    <script type="text/javascript" src="js/gcharts.js"></script>
 
-<script type="text/javascript">
-    var year = '{{year}}';
-</script>
+    <script type="text/javascript">
+        var year = '{{start.year}}';
+        var shared = {% if shared %}'/shared'{% else %}''{% endif %};
+        var incomeTopLength = {{ incomeTopLength }};
+        var expenseTopLength = {{ expenseTopLength }};
+        var incomeRestShow = false; // starts hidden.
+        var expenseRestShow = false; // starts hidden.
+        var showTheRest = '{{ trans('firefly.showTheRest',{number:incomeTopLength}) }}';
+        var hideTheRest = '{{ trans('firefly.hideTheRest',{number:incomeTopLength}) }}';
+        var showTheRestExpense = '{{ trans('firefly.showTheRest',{number:expenseTopLength}) }}';
+        var hideTheRestExpense = '{{ trans('firefly.hideTheRest',{number:expenseTopLength}) }}';
+    </script>
 
-<script type="text/javascript" src="js/reports.js"></script>
+    <script type="text/javascript" src="js/reports.js"></script>
 
 {% endblock %}

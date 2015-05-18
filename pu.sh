@@ -11,7 +11,7 @@ fi
 
 if [ ! -z "$1" ]
 then
-    phpunit --verbose tests/repositories/$1.php
+    phpunit --verbose tests/helpers/$1.php
 fi
 
 # restore .env file

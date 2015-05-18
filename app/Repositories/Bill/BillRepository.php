@@ -23,6 +23,27 @@ use Navigation;
 class BillRepository implements BillRepositoryInterface
 {
     /**
+     * Returns the sum of all payments connected to this bill between the dates.
+     *
+     * @param Bill   $bill
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return float
+     */
+    public function billPaymentsInRange(Bill $bill, Carbon $start, Carbon $end)
+    {
+        $amount   = 0;
+        $journals = $bill->transactionjournals()->before($end)->after($start)->get();
+        /** @var TransactionJournal $journal */
+        foreach ($journals as $journal) {
+            $amount += $journal->amount;
+        }
+
+        return $amount;
+    }
+
+    /**
      * Create a fake bill to help the chart controller.
      *
      * @param string $description
@@ -251,13 +272,10 @@ class BillRepository implements BillRepositoryInterface
      */
     public function scan(Bill $bill, TransactionJournal $journal)
     {
-        /*
-         * Match words.
-         */
+        $amountMatch = false;
         $wordMatch   = false;
         $matches     = explode(',', $bill->match);
         $description = strtolower($journal->description);
-        Log::debug('Now scanning ' . $description);
 
         /*
          * Attach expense account to description for more narrow matching.
@@ -295,7 +313,6 @@ class BillRepository implements BillRepositoryInterface
          * Match amount.
          */
 
-        $amountMatch = false;
         if (count($transactions) > 1) {
 
             $amount = max(floatval($transactions[0]->amount), floatval($transactions[1]->amount));

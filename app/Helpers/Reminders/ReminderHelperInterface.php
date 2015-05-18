@@ -4,6 +4,7 @@ namespace FireflyIII\Helpers\Reminders;
 
 use Carbon\Carbon;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\Reminder;
 
 /**
@@ -49,4 +50,15 @@ interface ReminderHelperInterface
      * @return Reminder
      */
     public function createReminder(PiggyBank $piggyBank, Carbon $start, Carbon $end);
+
+    /**
+     * Create all reminders for a piggy bank for a given date.
+     *
+     * @param PiggyBank $piggyBank
+     *
+     * @param Carbon    $date
+     *
+     * @return mixed
+     */
+    public function createReminders(PiggyBank $piggyBank, Carbon $date);
 }

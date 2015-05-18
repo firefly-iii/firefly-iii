@@ -3,7 +3,12 @@
 namespace FireflyIII\Helpers\Report;
 
 use Carbon\Carbon;
-use Illuminate\Support\Collection;
+use FireflyIII\Helpers\Collection\Account;
+use FireflyIII\Helpers\Collection\Balance;
+use FireflyIII\Helpers\Collection\Budget as BudgetCollection;
+use FireflyIII\Helpers\Collection\Category as CategoryCollection;
+use FireflyIII\Helpers\Collection\Expense;
+use FireflyIII\Helpers\Collection\Income;
 
 /**
  * Interface ReportHelperInterface
@@ -14,13 +19,77 @@ interface ReportHelperInterface
 {
 
     /**
-     * This method gets some kind of list for a monthly overview.
+     * This method generates a full report for the given period on all
+     * the users asset and cash accounts.
      *
-     * @param Carbon $date
+     * @param Carbon  $date
+     * @param Carbon  $end
+     * @param boolean $shared
      *
-     * @return Collection
+     * @return Account
      */
-    public function getBudgetsForMonth(Carbon $date);
+    public function getAccountReport(Carbon $date, Carbon $end, $shared);
+
+    /**
+     * This method generates a full report for the given period on all
+     * the users bills and their payments.
+     *
+     * @param Carbon  $start
+     * @param Carbon  $end
+     * @param boolean $shared
+     *
+     * @return Account
+     */
+    public function getBillReport(Carbon $start, Carbon $end, $shared);
+
+    /**
+     * @param Carbon  $start
+     * @param Carbon  $end
+     * @param boolean $shared
+     *
+     * @return Balance
+     */
+    public function getBalanceReport(Carbon $start, Carbon $end, $shared);
+
+    /**
+     * @param Carbon  $start
+     * @param Carbon  $end
+     * @param boolean $shared
+     *
+     * @return BudgetCollection
+     */
+    public function getBudgetReport(Carbon $start, Carbon $end, $shared);
+
+    /**
+     * @param Carbon  $start
+     * @param Carbon  $end
+     * @param boolean $shared
+     *
+     * @return CategoryCollection
+     */
+    public function getCategoryReport(Carbon $start, Carbon $end, $shared);
+
+    /**
+     * Get a full report on the users expenses during the period.
+     *
+     * @param Carbon  $start
+     * @param Carbon  $end
+     * @param boolean $shared
+     *
+     * @return Expense
+     */
+    public function getExpenseReport($start, $end, $shared);
+
+    /**
+     * Get a full report on the users incomes during the period.
+     *
+     * @param Carbon  $start
+     * @param Carbon  $end
+     * @param boolean $shared
+     *
+     * @return Income
+     */
+    public function getIncomeReport($start, $end, $shared);
 
     /**
      * @param Carbon $date
@@ -29,18 +98,4 @@ interface ReportHelperInterface
      */
     public function listOfMonths(Carbon $date);
 
-    /**
-     * @param Carbon $date
-     *
-     * @return array
-     */
-    public function listOfYears(Carbon $date);
-
-    /**
-     * @param Carbon $date
-     * @param bool   $showSharedReports
-     *
-     * @return array
-     */
-    public function yearBalanceReport(Carbon $date, $showSharedReports = false);
 }

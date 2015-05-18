@@ -1,8 +1,11 @@
 <?php namespace FireflyIII\Http\Controllers;
 
+use Auth;
+use Config;
 use Illuminate\Foundation\Bus\DispatchesCommands;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Preferences;
 use View;
 
 /**
@@ -15,6 +18,11 @@ abstract class Controller extends BaseController
 
     use DispatchesCommands, ValidatesRequests;
 
+    /** @var string */
+    protected $monthAndDayFormat;
+    /** @var string */
+    protected $monthFormat;
+
     /**
      *
      */
@@ -24,5 +32,16 @@ abstract class Controller extends BaseController
         View::share('hideCategories', false);
         View::share('hideBills', false);
         View::share('hideTags', false);
+
+        if (Auth::check()) {
+            $pref                    = Preferences::get('language', 'en');
+            $lang                    = $pref->data;
+            $this->monthFormat       = Config::get('firefly.month.' . $lang);
+            $this->monthAndDayFormat = Config::get('firefly.monthAndDay.' . $lang);
+
+            View::share('monthFormat', $this->monthFormat);
+            View::share('monthAndDayFormat', $this->monthAndDayFormat);
+            View::share('language', $lang);
+        }
     }
 }

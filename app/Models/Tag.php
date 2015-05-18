@@ -29,6 +29,8 @@ class Tag extends Model
 
     /**
      * @param array $fields
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      *
      * @return Tag|null
      */
@@ -77,6 +79,7 @@ class Tag extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return string
@@ -88,6 +91,7 @@ class Tag extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return string
@@ -99,6 +103,7 @@ class Tag extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setDescriptionAttribute($value)
@@ -108,6 +113,7 @@ class Tag extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setTagAttribute($value)

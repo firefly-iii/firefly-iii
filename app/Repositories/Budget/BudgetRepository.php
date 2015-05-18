@@ -8,6 +8,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Input;
@@ -98,8 +99,6 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function getBudgets()
     {
         $budgets = Auth::user()->budgets()->get();
-        $budgets->sortBy('name');
-
         return $budgets;
     }
 
@@ -250,22 +249,40 @@ class BudgetRepository implements BudgetRepositoryInterface
                            ->before($end)
                            ->lessThan(0)
                            ->transactionTypes(['Withdrawal'])
-            ->sum('transactions.amount');
+                           ->sum('transactions.amount');
+
         return floatval($noBudgetSet) * -1;
     }
 
     /**
      * @param Budget $budget
-     * @param Carbon $date
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param bool   $shared
      *
      * @return float
      */
-    public function spentInMonth(Budget $budget, Carbon $date)
+    public function spentInPeriod(Budget $budget, Carbon $start, Carbon $end, $shared = true)
     {
-        $end = clone $date;
-        $date->startOfMonth();
-        $end->endOfMonth();
-        $sum = floatval($budget->transactionjournals()->before($end)->after($date)->lessThan(0)->sum('amount')) * -1;
+        if ($shared === true) {
+            // get everything:
+            $sum = floatval($budget->transactionjournals()->before($end)->after($start)->lessThan(0)->sum('amount')) * -1;
+        } else {
+            // get all journals in this month where the asset account is NOT shared.
+            $sum = $budget->transactionjournals()
+                          ->before($end)
+                          ->after($start)
+                          ->lessThan(0)
+                          ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
+                          ->leftJoin(
+                              'account_meta', function (JoinClause $join) {
+                              $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
+                          }
+                          )
+                          ->where('account_meta.data', '!=', '"sharedAsset"')
+                          ->sum('amount');
+            $sum = floatval($sum) * -1;
+        }
 
         return $sum;
     }

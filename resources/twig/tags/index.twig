@@ -44,13 +44,13 @@
                 <p>
                     <a href="{{route('tags.create')}}" title="New tag" class="btn btn-info"><i class="fa fa-fw fa-plus"></i> Create new tag</a>
                 </p>
-                <p>
+                <p style="line-height: 200%;">
                     {% if tags|length == 0 %}
                         <em>No tags</em>
                     {% else %}
                         {% for tag in tags %}
 
-                            <h4 style="display: inline;"><a class="label label-success" href="{{route('tags.show',tag.id)}}">
+                            <span style="display: inline;"><a style="font-size:100%;font-weight:normal;" class="label label-success" href="{{route('tags.show',tag.id)}}">
                                 {% if tag.tagMode == 'nothing' %}
                                     <i class="fa fa-fw fa-tag"></i>
                                 {% endif %}
@@ -61,7 +61,7 @@
                                     <i class="fa fa-fw fa-sort-numeric-desc"></i>
                                 {% endif %}
                                 {{tag.tag}}</a>
-                            </h4>
+                            </span>
                         {% endfor %}
                     {% endif %}
                 </p>

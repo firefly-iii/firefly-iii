@@ -40,8 +40,8 @@ class JsonControllerTest extends TestCase
     public function testBoxBillsPaid()
     {
         $bill       = FactoryMuffin::create('FireflyIII\Models\Bill');
-        $cc         = FactoryMuffin::create('FireflyIII\Models\Account');
-        $ccs        = new Collection([$cc]);
+        $creditCard = FactoryMuffin::create('FireflyIII\Models\Account');
+        $ccs        = new Collection([$creditCard]);
         $collection = new Collection([$bill]);
         $ranges     = [['start' => new Carbon, 'end' => new Carbon]];
         $this->be($bill->user);
@@ -53,6 +53,7 @@ class JsonControllerTest extends TestCase
         $bills->shouldReceive('getActiveBills')->andReturn($collection);
         $bills->shouldReceive('getRanges')->andReturn($ranges);
         $bills->shouldReceive('getJournalsInRange')->andReturn(new Collection);
+        $bills->shouldReceive('billPaymentsInRange')->andReturn(12);
         $accounts->shouldReceive('getCreditCards')->andReturn($ccs);
         $accounts->shouldReceive('getTransfersInRange')->andReturn(new Collection);
         Amount::shouldReceive('format')->andReturn('xx');
@@ -68,8 +69,8 @@ class JsonControllerTest extends TestCase
     public function testBoxBillsUnpaid()
     {
         $bill       = FactoryMuffin::create('FireflyIII\Models\Bill');
-        $cc         = FactoryMuffin::create('FireflyIII\Models\Account');
-        $ccs        = new Collection([$cc]);
+        $creditCard = FactoryMuffin::create('FireflyIII\Models\Account');
+        $ccs        = new Collection([$creditCard]);
         $collection = new Collection([$bill]);
         $ranges     = [['start' => new Carbon, 'end' => new Carbon]];
         $this->be($bill->user);
@@ -97,7 +98,7 @@ class JsonControllerTest extends TestCase
         $this->be($user);
 
         $repository = $this->mock('FireflyIII\Helpers\Report\ReportQueryInterface');
-        $repository->shouldReceive('incomeByPeriod')->andReturn(new Collection);
+        $repository->shouldReceive('incomeInPeriod')->andReturn(new Collection);
         Amount::shouldReceive('format')->andReturn('xx');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
 
@@ -111,7 +112,7 @@ class JsonControllerTest extends TestCase
         $this->be($user);
 
         $repository = $this->mock('FireflyIII\Helpers\Report\ReportQueryInterface');
-        $repository->shouldReceive('journalsByExpenseAccount')->andReturn(new Collection);
+        $repository->shouldReceive('expenseInPeriod')->andReturn(new Collection);
         Amount::shouldReceive('format')->andReturn('xx');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
 
@@ -129,24 +130,6 @@ class JsonControllerTest extends TestCase
         $repository->shouldReceive('getCategories')->andReturn($categories);
 
         $this->call('GET', '/json/categories');
-        $this->assertResponseOk();
-    }
-
-    public function testTags()
-    {
-        $user = FactoryMuffin::create('FireflyIII\User');
-        $this->be($user);
-        $tag = FactoryMuffin::create('FireflyIII\Models\Tag');
-        $tag->user()->associate($user);
-
-        $tag->save();
-        $this->be($tag->user);
-        $tags = new Collection([$tag]);
-
-        $repository = $this->mock('FireflyIII\Repositories\Tag\TagRepositoryInterface');
-        $repository->shouldReceive('get')->andReturn($tags);
-
-        $this->call('GET', '/json/tags');
         $this->assertResponseOk();
     }
 
@@ -176,34 +159,21 @@ class JsonControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
-    public function testSetSharedReports()
+    public function testTags()
     {
-        $pref       = FactoryMuffin::create('FireflyIII\Models\Preference');
-        $pref->data = false;
-        $pref->save();
         $user = FactoryMuffin::create('FireflyIII\User');
         $this->be($user);
+        $tag = FactoryMuffin::create('FireflyIII\Models\Tag');
+        $tag->user()->associate($user);
 
-        Preferences::shouldReceive('get')->withArgs(['showSharedReports', false])->andReturn($pref);
-        Preferences::shouldReceive('set')->withArgs(['showSharedReports', true]);
+        $tag->save();
+        $this->be($tag->user);
+        $tags = new Collection([$tag]);
 
-        $this->call('GET', '/json/show-shared-reports/set');
-        $this->assertResponseOk();
-    }
+        $repository = $this->mock('FireflyIII\Repositories\Tag\TagRepositoryInterface');
+        $repository->shouldReceive('get')->andReturn($tags);
 
-
-    public function testShowSharedReports()
-    {
-        $pref       = FactoryMuffin::create('FireflyIII\Models\Preference');
-        $pref->data = false;
-        $pref->save();
-        $user = FactoryMuffin::create('FireflyIII\User');
-        $this->be($user);
-
-        Preferences::shouldReceive('get')->withArgs(['showSharedReports', false])->andReturn($pref);
-
-
-        $this->call('GET', '/json/show-shared-reports');
+        $this->call('GET', '/json/tags');
         $this->assertResponseOk();
     }
 

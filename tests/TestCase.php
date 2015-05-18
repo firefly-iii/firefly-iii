@@ -39,7 +39,6 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
         FactoryMuffin::loadFactories(__DIR__ . '/factories');
 
         if (!file_exists($copy)) {
-            Log::debug('Created new database.');
             touch($original);
             Artisan::call('migrate');
 
@@ -49,12 +48,10 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
             $currency       = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
             $currency->code = 'EUR';
             $currency->save();
-            Log::debug('Created new EUR currency.');
             copy($original, $copy);
         } else {
 
             if (file_exists($copy)) {
-                Log::debug('Copied copy back over original.');
                 copy($copy, $original);
             }
         }

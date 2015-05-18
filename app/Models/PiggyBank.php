@@ -64,6 +64,7 @@ class PiggyBank extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return int
@@ -93,6 +94,7 @@ class PiggyBank extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setNameAttribute($value)
@@ -103,6 +105,7 @@ class PiggyBank extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return string

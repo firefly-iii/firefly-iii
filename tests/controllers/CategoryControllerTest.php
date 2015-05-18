@@ -6,6 +6,7 @@ use League\FactoryMuffin\Facade as FactoryMuffin;
 
 
 /**
+ * @SuppressWarnings(PHPMD.TooManyMethods)
  * Class CategoryControllerTest
  */
 class CategoryControllerTest extends TestCase

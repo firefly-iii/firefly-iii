@@ -188,7 +188,7 @@ Route::get('/register', ['uses' => 'Auth\AuthController@getRegister', 'as' => 'r
 
 Route::controllers(
     [
-        'auth'     => 'Auth\AuthController',
+        'auth' => 'Auth\AuthController',
         'password' => 'Auth\PasswordController',
     ]
 );
@@ -223,7 +223,6 @@ Route::group(
     Route::get('/bills/rescan/{bill}', ['uses' => 'BillController@rescan', 'as' => 'bills.rescan']); # rescan for matching.
     Route::get('/bills/create', ['uses' => 'BillController@create', 'as' => 'bills.create']);
     Route::get('/bills/edit/{bill}', ['uses' => 'BillController@edit', 'as' => 'bills.edit']);
-    Route::get('/bills/add/{bill}', ['uses' => 'BillController@add', 'as' => 'bills.add']);
     Route::get('/bills/delete/{bill}', ['uses' => 'BillController@delete', 'as' => 'bills.delete']);
     Route::get('/bills/show/{bill}', ['uses' => 'BillController@show', 'as' => 'bills.show']);
     Route::post('/bills/store', ['uses' => 'BillController@store', 'as' => 'bills.store']);
@@ -273,22 +272,38 @@ Route::group(
 
 
     /**
-     * Google Chart Controller
+     * ALL CHART Controllers
      */
-    Route::get('/chart/home/account', ['uses' => 'GoogleChartController@allAccountsBalanceChart']);
-    Route::get('/chart/home/budgets', ['uses' => 'GoogleChartController@allBudgetsHomeChart']);
-    Route::get('/chart/home/categories', ['uses' => 'GoogleChartController@allCategoriesHomeChart']);
-    Route::get('/chart/home/bills', ['uses' => 'GoogleChartController@billsOverview']);
-    Route::get('/chart/account/{account}/{view?}', ['uses' => 'GoogleChartController@accountBalanceChart']);
-    Route::get('/chart/budget/{budget}/spending/{year?}', ['uses' => 'GoogleChartController@budgetsAndSpending']);
-    Route::get('/chart/budgets/spending/{year?}', ['uses' => 'GoogleChartController@allBudgetsAndSpending'])->where(['year' => '[0-9]+']);
-    Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'GoogleChartController@budgetLimitSpending']);
-    Route::get('/chart/reports/income-expenses/{year}', ['uses' => 'GoogleChartController@yearInExp']);
-    Route::get('/chart/reports/income-expenses-sum/{year}', ['uses' => 'GoogleChartController@yearInExpSum']);
-    Route::get('/chart/bills/{bill}', ['uses' => 'GoogleChartController@billOverview']);
-    Route::get('/chart/piggy-history/{piggyBank}', ['uses' => 'GoogleChartController@piggyBankHistory']);
-    Route::get('/chart/category/{category}/period', ['uses' => 'GoogleChartController@categoryPeriodChart']);
-    Route::get('/chart/category/{category}/overview', ['uses' => 'GoogleChartController@categoryOverviewChart']);
+    // accounts:
+    Route::get('/chart/account/frontpage', ['uses' => 'Chart\AccountController@frontpage']);
+    Route::get('/chart/account/month/{year}/{month}/{shared?}', ['uses' => 'Chart\AccountController@all'])->where(['year' => '[0-9]{4}', 'month' => '[0-9]{1,2}', 'shared' => 'shared']);
+    Route::get('/chart/account/{account}', ['uses' => 'Chart\AccountController@single']);
+
+
+    // bills:
+    Route::get('/chart/bill/frontpage', ['uses' => 'Chart\BillController@frontpage']);
+    Route::get('/chart/bill/{bill}', ['uses' => 'Chart\BillController@single']);
+
+    // budgets:
+    Route::get('/chart/budget/frontpage', ['uses' => 'Chart\BudgetController@frontpage']);
+    Route::get('/chart/budget/year/{year}/{shared?}', ['uses' => 'Chart\BudgetController@year'])->where(['year' => '[0-9]{4}', 'shared' => 'shared']);
+    Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'Chart\BudgetController@budgetLimit']);
+
+    // categories:
+    Route::get('/chart/category/frontpage', ['uses' => 'Chart\CategoryController@frontpage']);
+    Route::get('/chart/category/year/{year}/{shared?}', ['uses' => 'Chart\CategoryController@year'])->where(['year' => '[0-9]{4}', 'shared' => 'shared']);
+    Route::get('/chart/category/{category}/month', ['uses' => 'Chart\CategoryController@month']); // should be period.
+    Route::get('/chart/category/{category}/all', ['uses' => 'Chart\CategoryController@all']);
+
+    // piggy banks:
+    Route::get('/chart/piggyBank/{piggyBank}', ['uses' => 'Chart\PiggyBankController@history']);
+
+    // reports:
+    Route::get('/chart/report/in-out/{year}/{shared?}', ['uses' => 'Chart\ReportController@yearInOut'])->where(['year' => '[0-9]{4}', 'shared' => 'shared']);
+    Route::get('/chart/report/in-out-sum/{year}/{shared?}', ['uses' => 'Chart\ReportController@yearInOutSummarized'])->where(
+        ['year' => '[0-9]{4}', 'shared' => 'shared']
+    );
+
 
     /**
      * Help Controller
@@ -306,10 +321,7 @@ Route::group(
     Route::get('/json/box/out', ['uses' => 'JsonController@boxOut', 'as' => 'json.box.out']);
     Route::get('/json/box/bills-unpaid', ['uses' => 'JsonController@boxBillsUnpaid', 'as' => 'json.box.paid']);
     Route::get('/json/box/bills-paid', ['uses' => 'JsonController@boxBillsPaid', 'as' => 'json.box.unpaid']);
-    Route::get('/json/show-shared-reports', 'JsonController@showSharedReports');
     Route::get('/json/transaction-journals/{what}', 'JsonController@transactionJournals');
-    Route::get('/json/show-shared-reports/set', 'JsonController@setSharedReports');
-
 
     /**
      * Piggy Bank Controller
@@ -355,19 +367,13 @@ Route::group(
      * Report Controller
      */
     Route::get('/reports', ['uses' => 'ReportController@index', 'as' => 'reports.index']);
-    Route::get('/reports/{year}', ['uses' => 'ReportController@year', 'as' => 'reports.year']);
-    Route::get('/reports/{year}/{month}', ['uses' => 'ReportController@month', 'as' => 'reports.month']);
-    Route::get('/reports/budget/{year}/{month}', ['uses' => 'ReportController@budget', 'as' => 'reports.budget']);
+    //Route::get('/reports/{year}', ['uses' => 'ReportController@year', 'as' => 'reports.year'])->where(['year' => '[0-9]{4}']);
+    Route::get('/reports/{year}/{shared?}', ['uses' => 'ReportController@year', 'as' => 'reports.year'])->where(['year' => '[0-9]{4}', 'shared' => 'shared']);
+    Route::get('/reports/{year}/{month}/{shared?}', ['uses' => 'ReportController@month', 'as' => 'reports.month'])->where(
+        ['year' => '[0-9]{4}', 'month' => '[0-9]{1,2}', 'shared' => 'shared']
+    );
 
     // pop ups for budget report:
-    Route::get('/reports/modal/{account}/{year}/{month}/no-budget', ['uses' => 'ReportController@modalNoBudget', 'as' => 'reports.no-budget']);
-    Route::get(
-        '/reports/modal/{account}/{year}/{month}/balanced-transfers',
-        ['uses' => 'ReportController@modalBalancedTransfers', 'as' => 'reports.balanced-transfers']
-    );
-    Route::get(
-        '/reports/modal/{account}/{year}/{month}/left-unbalanced', ['uses' => 'ReportController@modalLeftUnbalanced', 'as' => 'reports.left-unbalanced']
-    );
 
     /**
      * Search Controller

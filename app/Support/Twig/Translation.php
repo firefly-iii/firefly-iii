@@ -24,7 +24,7 @@ class Translation extends Twig_Extension
         $filters[] = new Twig_SimpleFilter(
             '_', function ($name) {
 
-            return trans('firefly.'.$name);
+            return trans('firefly.' . $name);
 
         }, ['is_safe' => ['html']]
         );

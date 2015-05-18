@@ -9,13 +9,13 @@
                     </div>
                     <div class="col-xs-9 text-right">
                         <div id="box-out" class="large"></div>
-                        <div>Money out</div>
+                        <div>{{ 'moneyOut'|_ }}</div>
                     </div>
                 </div>
             </div>
             <a href="{{route('transactions.index','withdrawal')}}">
                 <div class="panel-footer">
-                    <span class="pull-left">View Details</span>
+                    <span class="pull-left">{{ 'viewDetails'|_ }}</span>
                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                     <div class="clearfix"></div>
                 </div>
@@ -31,13 +31,13 @@
                     </div>
                     <div class="col-xs-9 text-right">
                         <div id="box-in" class="large"></div>
-                        <div>Money in</div>
+                        <div>{{ 'moneyIn'|_ }}</div>
                     </div>
                 </div>
             </div>
             <a href="{{route('transactions.index','deposit')}}">
                 <div class="panel-footer">
-                    <span class="pull-left">View Details</span>
+                    <span class="pull-left">{{ 'viewDetails'|_ }}</span>
                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                     <div class="clearfix"></div>
                 </div>
@@ -53,13 +53,13 @@
                     </div>
                     <div class="col-xs-9 text-right">
                         <div id="box-bills-unpaid" class="large"></div>
-                        <div>Bills to pay</div>
+                        <div>{{ 'billsToPay'|_ }}</div>
                     </div>
                 </div>
             </div>
             <a href="{{route('bills.index')}}">
                 <div class="panel-footer">
-                    <span class="pull-left">View Details</span>
+                    <span class="pull-left">{{ 'viewDetails'|_ }}</span>
                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                     <div class="clearfix"></div>
                 </div>
@@ -75,13 +75,13 @@
                     </div>
                     <div class="col-xs-9 text-right">
                         <div id="box-bills-paid" class="large"></div>
-                        <div>Bills paid</div>
+                        <div>{{ 'billsPaid'|_ }}</div>
                     </div>
                 </div>
             </div>
             <a href="{{route('bills.index')}}">
                 <div class="panel-footer">
-                    <span class="pull-left">View Details</span>
+                    <span class="pull-left">{{ 'viewDetails'|_ }}</span>
                     <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                     <div class="clearfix"></div>
                 </div>

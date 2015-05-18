@@ -43,6 +43,7 @@ class Range
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Closure                 $theNext
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      *
      * @return mixed
      */
@@ -63,9 +64,6 @@ class Range
                 Session::put('end', $end);
             }
             if (!Session::has('first')) {
-                /**
-                 * Get helper thing.
-                 */
                 /** @var \FireflyIII\Repositories\Journal\JournalRepositoryInterface $repository */
                 $repository = App::make('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
                 $journal    = $repository->first();
@@ -75,16 +73,12 @@ class Range
                     Session::put('first', Carbon::now()->startOfYear());
                 }
             }
-
-            // set current / next / prev month.
             $current = Carbon::now()->format('F Y');
             $next    = Carbon::now()->endOfMonth()->addDay()->format('F Y');
             $prev    = Carbon::now()->startOfMonth()->subDay()->format('F Y');
             View::share('currentMonthName', $current);
             View::share('previousMonthName', $prev);
             View::share('nextMonthName', $next);
-
-
         }
 
         return $theNext($request);

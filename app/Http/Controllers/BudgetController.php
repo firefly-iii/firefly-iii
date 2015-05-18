@@ -29,7 +29,7 @@ class BudgetController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('title', 'Budgets');
+        View::share('title', trans('firefly.budgets'));
         View::share('mainTitleIcon', 'fa-tasks');
         View::share('hideBudgets', true);
     }
@@ -137,7 +137,8 @@ class BudgetController extends Controller
         $budgets->each(
             function (Budget $budget) use ($repository) {
                 $date               = Session::get('start', Carbon::now()->startOfMonth());
-                $budget->spent      = $repository->spentInMonth($budget, $date);
+                $end                = Session::get('end', Carbon::now()->endOfMonth());
+                $budget->spent      = $repository->spentInPeriod($budget, $date, $end);
                 $budget->currentRep = $repository->getCurrentRepetition($budget, $date);
             }
         );

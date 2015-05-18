@@ -162,8 +162,6 @@ class AccountRepository implements AccountRepositoryInterface
                       ->orderBy('transaction_journals.order', 'ASC')
                       ->orderBy('transaction_journals.id', 'DESC');
 
-        $query->before(Session::get('end', Carbon::now()->endOfMonth()));
-        $query->after(Session::get('start', Carbon::now()->startOfMonth()));
         $count     = $query->count();
         $set       = $query->take(50)->offset($offset)->get(['transaction_journals.*']);
         $paginator = new LengthAwarePaginator($set, $count, 50, $page);
@@ -308,12 +306,14 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @param Account $account
+     * @param Carbon $date
      *
      * @return float
      */
-    public function leftOnAccount(Account $account)
+    public function leftOnAccount(Account $account, Carbon $date)
     {
-        $balance = Steam::balance($account, null, true);
+
+        $balance = Steam::balance($account, $date, true);
         /** @var PiggyBank $p */
         foreach ($account->piggybanks()->get() as $p) {
             $balance -= $p->currentRelevantRep()->currentamount;

@@ -3,7 +3,6 @@
 namespace FireflyIII\Http\Middleware;
 
 
-use App;
 use Closure;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
@@ -53,16 +52,15 @@ class PiggyBanks
                               ->leftJoin('piggy_bank_repetitions', 'piggy_banks.id', '=', 'piggy_bank_repetitions.piggy_bank_id')
                               ->whereNull('piggy_bank_repetitions.id')
                               ->get(['piggy_banks.id', 'piggy_banks.startdate', 'piggy_banks.targetdate']);
-            if ($set->count() > 0) {
-                /** @var PiggyBank $partialPiggy */
-                foreach ($set as $partialPiggy) {
-                    $repetition = new PiggyBankRepetition;
-                    $repetition->piggyBank()->associate($partialPiggy);
-                    $repetition->startdate     = is_null($partialPiggy->startdate) ? null : $partialPiggy->startdate;
-                    $repetition->targetdate    = is_null($partialPiggy->targetdate) ? null : $partialPiggy->targetdate;
-                    $repetition->currentamount = 0;
-                    $repetition->save();
-                }
+
+            /** @var PiggyBank $partialPiggy */
+            foreach ($set as $partialPiggy) {
+                $repetition = new PiggyBankRepetition;
+                $repetition->piggyBank()->associate($partialPiggy);
+                $repetition->startdate     = $partialPiggy->startdate;
+                $repetition->targetdate    = $partialPiggy->targetdate;
+                $repetition->currentamount = 0;
+                $repetition->save();
             }
             unset($partialPiggy, $set, $repetition);
         }

@@ -37,6 +37,7 @@ class Category extends Model
 
     /**
      * @param array $fields
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      *
      * @return Account|null
      */
@@ -79,6 +80,7 @@ class Category extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setNameAttribute($value)
@@ -89,6 +91,7 @@ class Category extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return string

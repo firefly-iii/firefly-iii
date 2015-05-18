@@ -28,21 +28,11 @@ class Navigation
         $add  = ($skip + 1);
 
         $functionMap = [
-            '1D'        => 'addDays',
-            'daily'     => 'addDays',
-            '1W'        => 'addWeeks',
-            'weekly'    => 'addWeeks',
-            'week'      => 'addWeeks',
-            '1M'        => 'addMonths',
-            'month'     => 'addMonths',
-            'monthly'   => 'addMonths',
-            '3M'        => 'addMonths',
-            'quarter'   => 'addMonths',
-            'quarterly' => 'addMonths',
-            '6M'        => 'addMonths',
-            'half-year' => 'addMonths',
-            'year'      => 'addYears',
-            'yearly'    => 'addYears',
+            '1D'      => 'addDays', 'daily' => 'addDays',
+            '1W'      => 'addWeeks', 'weekly' => 'addWeeks', 'week' => 'addWeeks',
+            '1M'      => 'addMonths', 'month' => 'addMonths', 'monthly' => 'addMonths', '3M' => 'addMonths',
+            'quarter' => 'addMonths', 'quarterly' => 'addMonths', '6M' => 'addMonths', 'half-year' => 'addMonths',
+            'year'    => 'addYears', 'yearly' => 'addYears',
         ];
         $modifierMap = [
             'quarter'   => 3,
@@ -75,21 +65,11 @@ class Navigation
         $currentEnd = clone $theCurrentEnd;
 
         $functionMap = [
-            '1D'        => 'addDay',
-            'daily'     => 'addDay',
-            '1W'        => 'addWeek',
-            'week'      => 'addWeek',
-            'weekly'    => 'addWeek',
-            '1M'        => 'addMonth',
-            'month'     => 'addMonth',
-            'monthly'   => 'addMonth',
-            '3M'        => 'addMonths',
-            'quarter'   => 'addMonths',
-            'quarterly' => 'addMonths',
-            '6M'        => 'addMonths',
-            'half-year' => 'addMonths',
-            'year'      => 'addYear',
-            'yearly'    => 'addYear',
+            '1D'   => 'addDay', 'daily' => 'addDay',
+            '1W'   => 'addWeek', 'week' => 'addWeek', 'weekly' => 'addWeek',
+            '1M'   => 'addMonth', 'month' => 'addMonth', 'monthly' => 'addMonth',
+            '3M'   => 'addMonths', 'quarter' => 'addMonths', 'quarterly' => 'addMonths', '6M' => 'addMonths', 'half-year' => 'addMonths',
+            'year' => 'addYear', 'yearly' => 'addYear',
         ];
         $modifierMap = [
             'quarter'   => 3,

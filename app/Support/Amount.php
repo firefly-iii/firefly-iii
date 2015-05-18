@@ -84,32 +84,20 @@ class Amount
      */
     public function formatJournal(TransactionJournal $journal, $coloured = true)
     {
-        $showPositive = true;
         if (is_null($journal->symbol)) {
             $symbol = $journal->transactionCurrency->symbol;
         } else {
             $symbol = $journal->symbol;
         }
-        $amount = 0;
-
-        if (is_null($journal->type)) {
-            $type = $journal->transactionType->type;
-        } else {
-            $type = $journal->type;
+        $amount = $journal->amount;
+        if ($journal->transactionType->type == 'Withdrawal') {
+            $amount = $amount * -1;
         }
-
-        if ($type == 'Withdrawal') {
-            $showPositive = false;
+        if ($journal->transactionType->type == 'Transfer' && $coloured) {
+            return '<span class="text-info">' . $this->formatWithSymbol($symbol, $amount, false) . '</span>';
         }
-
-        foreach ($journal->transactions as $t) {
-            if (floatval($t->amount) > 0 && $showPositive === true) {
-                $amount = floatval($t->amount);
-                break;
-            }
-            if (floatval($t->amount) < 0 && $showPositive === false) {
-                $amount = floatval($t->amount);
-            }
+        if ($journal->transactionType->type == 'Transfer' && !$coloured) {
+            return $this->formatWithSymbol($symbol, $amount, false);
         }
 
         return $this->formatWithSymbol($symbol, $amount, $coloured);

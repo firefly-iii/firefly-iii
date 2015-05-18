@@ -18,6 +18,7 @@ class Reminder extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return int
@@ -38,6 +39,7 @@ class Reminder extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return mixed
@@ -53,6 +55,7 @@ class Reminder extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return bool
@@ -73,6 +76,7 @@ class Reminder extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      * @param Carbon          $start
      * @param Carbon          $end
@@ -86,6 +90,7 @@ class Reminder extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      *
      * @return $this
@@ -100,6 +105,7 @@ class Reminder extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setMetadataAttribute($value)

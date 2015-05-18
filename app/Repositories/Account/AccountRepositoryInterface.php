@@ -115,10 +115,11 @@ interface AccountRepositoryInterface
 
     /**
      * @param Account $account
+     * @param Carbon $date
      *
      * @return float
      */
-    public function leftOnAccount(Account $account);
+    public function leftOnAccount(Account $account, Carbon $date);
 
     /**
      * @param Account $account

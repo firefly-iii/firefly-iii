@@ -28,7 +28,7 @@ class AccountController extends Controller
     {
         parent::__construct();
         View::share('mainTitleIcon', 'fa-credit-card');
-        View::share('title', 'Accounts');
+        View::share('title', trans('firefly.accounts'));
     }
 
     /**
@@ -137,7 +137,7 @@ class AccountController extends Controller
      */
     public function index(AccountRepositoryInterface $repository, $what)
     {
-        $subTitle     = Config::get('firefly.subTitlesByIdentifier.' . $what);
+        $subTitle     = trans('firefly.' . $what . '_accounts');
         $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
         $types        = Config::get('firefly.accountTypesByIdentifier.' . $what);
         $accounts     = $repository->getAccounts($types);

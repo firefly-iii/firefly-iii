@@ -173,7 +173,7 @@ FactoryMuffin::define(
     'FireflyIII\Models\AccountType',
     [
         'type'     => function () {
-            $types = ['Expense account', 'Revenue account', 'Asset account','Cash account'];
+            $types = ['Expense account', 'Revenue account', 'Asset account', 'Cash account'];
             $count = DB::table('account_types')->count();
             if ($count < 4) {
                 return $types[$count];

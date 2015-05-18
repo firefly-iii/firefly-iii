@@ -1,5 +1,5 @@
 var google = google || {};
-google.load('visualization', '1.1', {'packages': ['corechart', 'bar', 'line', 'sankey', 'table']});
+google.load('visualization', '1.1', {'packages': ['corechart', 'bar', 'line'],'language': language  });
 
 function googleChart(chartType, URL, container, options) {
     if ($('#' + container).length === 1) {

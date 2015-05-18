@@ -27,6 +27,7 @@ class Handler extends ExceptionHandler
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Exception               $e
+     * @SuppressWarnings(PHPMD.ShortVariable)
      *
      * @return \Illuminate\Http\Response
      */
@@ -43,6 +44,7 @@ class Handler extends ExceptionHandler
      * Report or log an exception.
      *
      * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
+     * @SuppressWarnings(PHPMD.ShortVariable)
      *
      * @param  \Exception $e
      *

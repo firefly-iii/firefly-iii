@@ -39,7 +39,7 @@ class AuthControllerTest extends TestCase
     public function testPostRegister()
     {
 
-        $data   = [
+        $data = [
             'email'                 => 'test@example.com',
             'password'              => 'onetwothree',
             'password_confirmation' => 'onetwothree',
@@ -53,7 +53,7 @@ class AuthControllerTest extends TestCase
     public function testPostRegisterFails()
     {
 
-        $data   = [
+        $data = [
             'email'                 => 'test@example.com',
             'password'              => 'onetwothree',
             'password_confirmation' => 'onetwofour',

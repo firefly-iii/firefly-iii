@@ -1,0 +1,24 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="fa fa-bar-chart fa-fw"></i>
+        {{ 'categories'|_ }}
+    </div>
+    <table class="table table-bordered">
+        <tr>
+            <th>{{ 'categories'|_ }}</th>
+            <th>{{ 'spent'|_ }}</th>
+        </tr>
+        {% for cat in categories.getCategories %}
+            <tr>
+                <td>
+                    <a href="{{ route('categories.show',cat.id) }}">{{ cat.name }}</a>
+                </td>
+                <td><span class="text-danger">{{ (cat.spent)|formatAmountPlain }}</span></td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td><em>{{ 'sum'|_ }}</em></td>
+            <td class="text-danger">{{ categories.getTotal|formatAmountPlain }}</td>
+        </tr>
+    </table>
+</div>

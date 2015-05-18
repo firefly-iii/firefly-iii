@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\JoinClause;
 use Watson\Validating\ValidatingTrait;
 
 /**
@@ -61,20 +62,66 @@ class TransactionJournal extends Model
     /**
      * @return float
      */
-    public function getAmountAttribute()
+    public function getActualAmountAttribute()
     {
+        $amount = 0;
         /** @var Transaction $t */
         foreach ($this->transactions as $t) {
             if ($t->amount > 0) {
-                return floatval($t->amount);
+                $amount = floatval($t->amount);
             }
         }
 
-        return 0;
+        return $amount;
     }
 
     /**
-     * @return Account|mixed
+     * @return float
+     */
+    public function getAmountAttribute()
+    {
+        $amount = 0;
+        /** @var Transaction $t */
+        foreach ($this->transactions as $t) {
+            if ($t->amount > 0) {
+                $amount = floatval($t->amount);
+            }
+        }
+
+        /*
+         * If the journal has tags, it gets complicated.
+         */
+        if ($this->tags->count() == 0) {
+            return $amount;
+        }
+        // if journal is part of advancePayment AND journal is a withdrawal,
+        // then journal is being repaid by other journals, so the actual amount will lower:
+        /** @var Tag $tag */
+        $tag = $this->tags()->where('tagMode', 'advancePayment')->first();
+        if ($tag && $this->transactionType->type == 'Withdrawal') {
+            // loop other deposits, remove from our amount.
+            $others = $tag->transactionJournals()->transactionTypes(['Deposit'])->get();
+            foreach ($others as $other) {
+                $amount -= $other->amount;
+            }
+
+            return $amount;
+        }
+
+        return $amount;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function tags()
+    {
+        return $this->belongsToMany('FireflyIII\Models\Tag');
+    }
+
+    /**
+     * @return Account
      */
     public function getAssetAccountAttribute()
     {
@@ -93,7 +140,7 @@ class TransactionJournal extends Model
 
         }
 
-        return $this->transactions()->first();
+        return $this->transactions()->first()->account;
     }
 
     /**
@@ -103,6 +150,28 @@ class TransactionJournal extends Model
     public function transactions()
     {
         return $this->hasMany('FireflyIII\Models\Transaction');
+    }
+
+    /**
+     * @return float
+     */
+    public function getCorrectedActualAmountAttribute()
+    {
+        $amount = 0;
+        $type   = $this->transactionType->type;
+        /** @var Transaction $t */
+        foreach ($this->transactions as $t) {
+            if ($t->amount > 0 && $type != 'Withdrawal') {
+                $amount = floatval($t->amount);
+                break;
+            }
+            if ($t->amount < 0 && $type == 'Withdrawal') {
+                $amount = floatval($t->amount);
+                break;
+            }
+        }
+
+        return $amount;
     }
 
     /**
@@ -116,6 +185,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      *
      * @return string
@@ -140,6 +210,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      * @param Account         $account
      */
@@ -154,6 +225,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      * @param Carbon          $date
      *
@@ -166,6 +238,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      * @param Carbon          $date
      *
@@ -178,6 +251,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      * @param                 $amount
      */
@@ -195,6 +269,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      * @param Carbon          $date
      *
@@ -206,7 +281,26 @@ class TransactionJournal extends Model
     }
 
     /**
+     * Returns the account to which the money was moved.
+     *
      * @codeCoverageIgnore
+     *
+     * @param EloquentBuilder $query
+     * @param Account         $account
+     */
+    public function scopeToAccountIs(EloquentBuilder $query, Account $account)
+    {
+        $query->leftJoin(
+            'transactions', function (JoinClause $join) {
+            $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '>', 0);
+        }
+        );
+        $query->where('transactions.account_id', $account->id);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     *
      * @param EloquentBuilder $query
      * @param array           $types
      */
@@ -239,21 +333,13 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     *
      * @param $value
      */
     public function setDescriptionAttribute($value)
     {
         $this->attributes['description'] = Crypt::encrypt($value);
         $this->attributes['encrypted']   = true;
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function tags()
-    {
-        return $this->belongsToMany('FireflyIII\Models\Tag');
     }
 
     /**

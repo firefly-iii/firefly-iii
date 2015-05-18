@@ -31,7 +31,7 @@ class PiggyBankController extends Controller
     public function __construct()
     {
         parent::__construct();
-        View::share('title', 'Piggy banks');
+        View::share('title', trans('firefly.piggyBanks'));
         View::share('mainTitleIcon', 'fa-sort-amount-asc');
     }
 
@@ -45,7 +45,8 @@ class PiggyBankController extends Controller
      */
     public function add(AccountRepositoryInterface $repository, PiggyBank $piggyBank)
     {
-        $leftOnAccount = $repository->leftOnAccount($piggyBank->account);
+        $date          = Session::get('end', Carbon::now()->endOfMonth());
+        $leftOnAccount = $repository->leftOnAccount($piggyBank->account, $date);
         $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount;
         $leftToSave    = $piggyBank->targetamount - $savedSoFar;
         $maxAmount     = min($leftOnAccount, $leftToSave);
@@ -157,6 +158,7 @@ class PiggyBankController extends Controller
     {
         /** @var Collection $piggyBanks */
         $piggyBanks = $piggyRepository->getPiggyBanks();
+        $end        = Session::get('end', Carbon::now()->endOfMonth());
 
         $accounts = [];
         /** @var PiggyBank $piggyBank */
@@ -172,8 +174,8 @@ class PiggyBankController extends Controller
             if (!isset($accounts[$account->id])) {
                 $accounts[$account->id] = [
                     'name'              => $account->name,
-                    'balance'           => Steam::balance($account, null, true),
-                    'leftForPiggyBanks' => $repository->leftOnAccount($account),
+                    'balance'           => Steam::balance($account, $end, true),
+                    'leftForPiggyBanks' => $repository->leftOnAccount($account, $end),
                     'sumOfSaved'        => $piggyBank->savedSoFar,
                     'sumOfTargets'      => floatval($piggyBank->targetamount),
                     'leftToSave'        => $piggyBank->leftToSave
@@ -215,7 +217,8 @@ class PiggyBankController extends Controller
     public function postAdd(PiggyBankRepositoryInterface $repository, AccountRepositoryInterface $accounts, PiggyBank $piggyBank)
     {
         $amount        = round(floatval(Input::get('amount')), 2);
-        $leftOnAccount = $accounts->leftOnAccount($piggyBank->account);
+        $date          = Session::get('end', Carbon::now()->endOfMonth());
+        $leftOnAccount = $accounts->leftOnAccount($piggyBank->account, $date);
         $savedSoFar    = $piggyBank->currentRelevantRep()->currentamount;
         $leftToSave    = $piggyBank->targetamount - $savedSoFar;
         $maxAmount     = round(min($leftOnAccount, $leftToSave), 2);

@@ -12,7 +12,6 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
-use Preferences;
 use Response;
 use Session;
 use Steam;
@@ -39,19 +38,14 @@ class JsonController extends Controller
         $end    = Session::get('end', Carbon::now()->endOfMonth());
         $amount = 0;
 
-        // these two functions are the same as the chart TODO
+        // these two functions are the same as the chart
         $bills = $repository->getActiveBills();
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
-            $ranges = $repository->getRanges($bill, $start, $end);
-
-            foreach ($ranges as $range) {
-                // paid a bill in this range?
-                $amount += $repository->getJournalsInRange($bill, $range['start'], $range['end'])->sum('amount');
-            }
+            $amount += $repository->billPaymentsInRange($bill, $start, $end);
         }
-        unset($ranges, $bill, $range, $bills);
+        unset($bill, $bills);
 
         /**
          * Find credit card accounts and possibly unpaid credit card bills.
@@ -60,7 +54,7 @@ class JsonController extends Controller
         // if the balance is not zero, the monthly payment is still underway.
         /** @var Account $creditCard */
         foreach ($creditCards as $creditCard) {
-            $balance = Steam::balance($creditCard, null, true);
+            $balance = Steam::balance($creditCard, $end, true);
             if ($balance == 0) {
                 // find a transfer TO the credit card which should account for
                 // anything paid. If not, the CC is not yet used.
@@ -100,7 +94,7 @@ class JsonController extends Controller
 
         $creditCards = $accountRepository->getCreditCards();
         foreach ($creditCards as $creditCard) {
-            $balance = Steam::balance($creditCard, null, true);
+            $balance = Steam::balance($creditCard, $end, true);
             $date    = new Carbon($creditCard->getMeta('ccMonthlyPaymentDate'));
             if ($balance < 0) {
                 // unpaid! create a fake bill that matches the amount.
@@ -128,7 +122,7 @@ class JsonController extends Controller
     {
         $start  = Session::get('start', Carbon::now()->startOfMonth());
         $end    = Session::get('end', Carbon::now()->endOfMonth());
-        $amount = $reportQuery->incomeByPeriod($start, $end, true)->sum('queryAmount');
+        $amount = $reportQuery->incomeInPeriod($start, $end, true)->sum('queryAmount');
 
         return Response::json(['box' => 'in', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount]);
     }
@@ -142,7 +136,7 @@ class JsonController extends Controller
     {
         $start  = Session::get('start', Carbon::now()->startOfMonth());
         $end    = Session::get('end', Carbon::now()->endOfMonth());
-        $amount = $reportQuery->journalsByExpenseAccount($start, $end, true)->sum('queryAmount');
+        $amount = $reportQuery->expenseInPeriod($start, $end, true)->sum('queryAmount') * -1;
 
         return Response::json(['box' => 'out', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount]);
     }
@@ -200,30 +194,6 @@ class JsonController extends Controller
 
         return Response::json($return);
 
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function setSharedReports()
-    {
-        /** @var Preference $pref */
-        $pref = Preferences::get('showSharedReports', false);
-        $new  = !$pref->data;
-        Preferences::set('showSharedReports', $new);
-
-
-        return Response::json(['value' => $new]);
-    }
-
-    /**
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function showSharedReports()
-    {
-        $pref = Preferences::get('showSharedReports', false);
-
-        return Response::json(['value' => $pref->data]);
     }
 
     /**

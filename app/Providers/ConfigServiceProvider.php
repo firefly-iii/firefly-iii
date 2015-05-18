@@ -17,6 +17,8 @@ class ConfigServiceProvider extends ServiceProvider
      * to overwrite any "vendor" or package configuration that you may want to
      * modify before the application handles the incoming request / command.
      *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      * @return void
      */
     public function register()
@@ -163,6 +165,7 @@ class ConfigServiceProvider extends ServiceProvider
                             'Session',
                             'Route',
                             'Auth',
+                            'Lang',
                             'URL',
                             'Config',
                             'ExpandedForm' => [

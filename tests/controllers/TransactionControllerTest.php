@@ -4,6 +4,7 @@ use Illuminate\Support\Collection;
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
 /**
+ * @SuppressWarnings(PHPMD.TooManyMethods)
  * Class TransactionControllerTest
  */
 class TransactionControllerTest extends TestCase
@@ -82,6 +83,9 @@ class TransactionControllerTest extends TestCase
 
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     public function testEdit()
     {
         // make complete journal:
@@ -225,6 +229,9 @@ class TransactionControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     public function testStore()
     {
         $account  = FactoryMuffin::create('FireflyIII\Models\Account');
@@ -269,6 +276,9 @@ class TransactionControllerTest extends TestCase
     }
 
 
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     public function testUpdate()
     {
         $account  = FactoryMuffin::create('FireflyIII\Models\Account');
@@ -314,6 +324,9 @@ class TransactionControllerTest extends TestCase
 
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     public function testUpdateWithRedirect()
     {
         $account  = FactoryMuffin::create('FireflyIII\Models\Account');

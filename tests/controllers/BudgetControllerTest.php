@@ -5,6 +5,7 @@ use Illuminate\Support\Collection;
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
 /**
+ * @SuppressWarnings(PHPMD.TooManyMethods)
  * Class BudgetControllerTest
  */
 class BudgetControllerTest extends TestCase
@@ -112,7 +113,7 @@ class BudgetControllerTest extends TestCase
         $repository->shouldReceive('getActiveBudgets')->once()->andReturn($collection);
         $repository->shouldReceive('getInactiveBudgets')->once()->andReturn($collection);
         $repository->shouldReceive('cleanupBudgets')->once();
-        $repository->shouldReceive('spentInMonth')->once();
+        $repository->shouldReceive('spentInPeriod')->once();
         $repository->shouldReceive('getCurrentRepetition')->once();
         Amount::shouldReceive('getCurrencySymbol')->andReturn('x');
         Amount::shouldReceive('format')->andReturn('x');
@@ -141,10 +142,18 @@ class BudgetControllerTest extends TestCase
 
     public function testPostUpdateIncome()
     {
+
+
         $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
         $this->be($budget->user);
         $date = Carbon::now()->startOfMonth()->format('FY');
         Preferences::shouldReceive('set')->once()->withArgs(['budgetIncomeTotal' . $date, 1001]);
+
+        // language preference:
+        $language       = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $language->data = 'en';
+        $language->save();
+        Preferences::shouldReceive('get')->withAnyArgs()->andReturn($language);
 
         $this->call('POST', '/budgets/income', ['_token' => 'replaceme', 'amount' => 1001]);
         $this->assertResponseStatus(302);
@@ -310,6 +319,12 @@ class BudgetControllerTest extends TestCase
         Amount::shouldReceive('format')->andReturn('xx');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
         Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
+
+        // language preference:
+        $language       = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $language->data = 'en';
+        $language->save();
+        Preferences::shouldReceive('get')->withAnyArgs()->andReturn($language);
 
 
         $this->call('GET', '/budgets/income');
