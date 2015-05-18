@@ -103,7 +103,7 @@ class HomeControllerTest extends TestCase
         $repository->shouldReceive('getFrontpageTransactions')->once()->andReturn($journals);
 
         // language preference:
-        $language = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $language       = FactoryMuffin::create('FireflyIII\Models\Preference');
         $language->data = 'en';
         $language->save();
         Preferences::shouldReceive('get')->withAnyArgs()->andReturn($language);

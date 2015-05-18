@@ -68,7 +68,7 @@ class ReportControllerTest extends TestCase
 
     public function testMonth()
     {
-        $user                 = FactoryMuffin::create('FireflyIII\User');
+        $user = FactoryMuffin::create('FireflyIII\User');
         FactoryMuffin::create('FireflyIII\Models\Account');
         $budget1              = FactoryMuffin::create('FireflyIII\Models\Budget');
         $budget1->queryAmount = 12;
@@ -86,6 +86,7 @@ class ReportControllerTest extends TestCase
         $helper->shouldReceive('getBudgetReport')->andReturn(new Collection);
         $helper->shouldReceive('getCategoryReport')->andReturn(new Collection);
         $helper->shouldReceive('getBalanceReport')->andReturn(new Collection);
+        $helper->shouldReceive('getBillReport')->andReturn(new Collection);
 
 
         $this->call('GET', '/reports/2015/1');
@@ -94,7 +95,7 @@ class ReportControllerTest extends TestCase
 
     public function testMonthShared()
     {
-        $user                 = FactoryMuffin::create('FireflyIII\User');
+        $user = FactoryMuffin::create('FireflyIII\User');
         FactoryMuffin::create('FireflyIII\Models\Account');
         $budget1              = FactoryMuffin::create('FireflyIII\Models\Budget');
         $budget1->queryAmount = 12;
@@ -112,6 +113,7 @@ class ReportControllerTest extends TestCase
         $helper->shouldReceive('getBudgetReport')->andReturn(new Collection);
         $helper->shouldReceive('getCategoryReport')->andReturn(new Collection);
         $helper->shouldReceive('getBalanceReport')->andReturn(new Collection);
+        $helper->shouldReceive('getBillReport')->andReturn(new Collection);
 
         $this->call('GET', '/reports/2015/1/shared');
         $this->assertResponseOk();

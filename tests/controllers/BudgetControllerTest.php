@@ -150,7 +150,7 @@ class BudgetControllerTest extends TestCase
         Preferences::shouldReceive('set')->once()->withArgs(['budgetIncomeTotal' . $date, 1001]);
 
         // language preference:
-        $language = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $language       = FactoryMuffin::create('FireflyIII\Models\Preference');
         $language->data = 'en';
         $language->save();
         Preferences::shouldReceive('get')->withAnyArgs()->andReturn($language);
@@ -321,7 +321,7 @@ class BudgetControllerTest extends TestCase
         Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
 
         // language preference:
-        $language = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $language       = FactoryMuffin::create('FireflyIII\Models\Preference');
         $language->data = 'en';
         $language->save();
         Preferences::shouldReceive('get')->withAnyArgs()->andReturn($language);

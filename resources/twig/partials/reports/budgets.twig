@@ -24,7 +24,7 @@
                 </td>
                 <td>
                     {% if budgetLine.getRepetition %}
-                        {{ budgetLine.getRepetition.startdate.formatLocalized(monthAndDayFormat) }}
+                        <a href="{{ route('budgets.show', [budgetLine.getBudget.id, budgetLine.getRepetition.id]) }}">{{ budgetLine.getRepetition.startdate.formatLocalized(monthAndDayFormat) }}</a>
                     {% endif %}
                 </td>
                 <td>

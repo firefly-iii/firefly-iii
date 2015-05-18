@@ -69,7 +69,7 @@ class JsonControllerTest extends TestCase
     public function testBoxBillsUnpaid()
     {
         $bill       = FactoryMuffin::create('FireflyIII\Models\Bill');
-        $creditCard         = FactoryMuffin::create('FireflyIII\Models\Account');
+        $creditCard = FactoryMuffin::create('FireflyIII\Models\Account');
         $ccs        = new Collection([$creditCard]);
         $collection = new Collection([$bill]);
         $ranges     = [['start' => new Carbon, 'end' => new Carbon]];
