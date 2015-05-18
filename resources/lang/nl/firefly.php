@@ -108,7 +108,7 @@ return [
 
     'splitByAccount'             => 'Per betaalrekening',
     'balancedByTransfersAndTags' => 'Gecorrigeerd met overschrijvingen en tags',
-    'coveredWithTags'            => 'Covered with tags',
+    'coveredWithTags'            => 'Gecorrigeerd met tags',
     'leftUnbalanced'             => 'Ongecorrigeerd',
     'expectedBalance'            => 'Verwacht saldo',
     'outsideOfBudgets'           => 'Buiten budgetten',
