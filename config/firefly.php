@@ -56,6 +56,7 @@ return [
             'asset'   => 'Asset accounts',
             'expense' => 'Expense accounts',
             'revenue' => 'Revenue accounts',
+            'cash' => 'Cash accounts',
         ],
     'subIconsByIdentifier'     =>
         [

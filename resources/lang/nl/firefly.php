@@ -14,6 +14,11 @@ return [
     'delete'                     => 'Verwijder',
     'welcomeBack'                => 'Hoe staat het er voor?',
 
+    'details_for_asset'           => 'Overzicht voor betaalrekening ":name"',
+    'details_for_expense'         => 'Overzicht voor crediteur ":name"',
+    'details_for_revenue'         => 'Overzicht voor debiteur ":name"',
+    'details_for_cash'            => 'Overzicht voor contant geldrekening ":name"',
+
     // new user:
     'welcome'                    => 'Welkom bij Firefly!',
     'createNewAsset'             => 'Maak om te beginnen een nieuwe betaalrekening. Dit is je start van je financiële beheer.',

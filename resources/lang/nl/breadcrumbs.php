@@ -5,6 +5,7 @@ return [
     'asset_accounts'        => 'Betaalrekeningen',
     'expense_accounts'      => 'Crediteuren',
     'revenue_accounts'      => 'Debiteuren',
+    'cash_accounts'         => 'Contant geldrekeningen',
 
     'new_asset_account'     => 'Nieuwe betaalrekening',
     'new_expense_account'   => 'Nieuwe crediteur',

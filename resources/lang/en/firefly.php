@@ -14,6 +14,11 @@ return [
     'delete'                      => 'Delete',
     'welcomeBack'                 => 'What\'s playing?',
 
+    'details_for_asset'           => 'Details for asset account ":name"',
+    'details_for_expense'         => 'Details for expense account ":name"',
+    'details_for_revenue'         => 'Details for revenue account ":name"',
+    'details_for_cash'            => 'Details for cash account ":name"',
+
     // new user:
     'welcome'                     => 'Welcome to Firefly!',
     'createNewAsset'              => 'Create a new asset account to get started. This will allow you to create transactions and start your financial management',

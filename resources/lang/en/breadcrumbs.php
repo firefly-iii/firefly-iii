@@ -5,6 +5,7 @@ return [
     'asset_accounts'        => 'Asset accounts',
     'expense_accounts'      => 'Expense accounts',
     'revenue_accounts'      => 'Revenue accounts',
+    'cash_accounts'         => 'Cash accounts',
 
     'new_asset_account'     => 'New asset accounts',
     'new_expense_account'   => 'New expense account',
