@@ -113,7 +113,7 @@ class BudgetControllerTest extends TestCase
         $repository->shouldReceive('getActiveBudgets')->once()->andReturn($collection);
         $repository->shouldReceive('getInactiveBudgets')->once()->andReturn($collection);
         $repository->shouldReceive('cleanupBudgets')->once();
-        $repository->shouldReceive('spentInPeriod')->once();
+        $repository->shouldReceive('spentInPeriodCorrected')->once();
         $repository->shouldReceive('getCurrentRepetition')->once();
         Amount::shouldReceive('getCurrencySymbol')->andReturn('x');
         Amount::shouldReceive('format')->andReturn('x');
