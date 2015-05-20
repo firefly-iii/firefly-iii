@@ -9,6 +9,8 @@ use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Grumpydictator\Gchart\GChart;
 use Illuminate\Support\Collection;
+use Navigation;
+use Preferences;
 use Response;
 use Session;
 
@@ -19,6 +21,38 @@ use Session;
  */
 class BudgetController extends Controller
 {
+    /**
+     * @param GChart                    $chart
+     * @param BudgetRepositoryInterface $repository
+     * @param Budget                    $budget
+     */
+    public function budget(GChart $chart, BudgetRepositoryInterface $repository, Budget $budget)
+    {
+        $chart->addColumn(trans('firefly.period'),'date');
+        $chart->addColumn(trans('firefly.spent'), 'number');
+
+
+        $first = $repository->getFirstBudgetLimitDate($budget);
+        $range = $viewRange = Preferences::get('viewRange', '1M')->data;
+        $last  = Session::get('end', new Carbon);
+        $final = clone $last;
+        $final->addYears(2);
+        $last = Navigation::endOfX($last, $range, $final);
+
+        while ($first < $last) {
+            $end = Navigation::addPeriod($first, $range, 0);
+
+            $spent = $repository->spentInPeriodCorrected($budget, $first, $end);
+            $chart->addRow($end, $spent);
+
+
+            $first = Navigation::addPeriod($first, $range, 0);
+        }
+
+        $chart->generate();
+        return Response::json($chart->getData());
+    }
+
     /**
      * Shows the amount left in a specific budget limit.
      *
@@ -44,7 +78,7 @@ class BudgetController extends Controller
             /*
              * Sum of expenses on this day:
              */
-            $sum = $repository->expensesOnDay($budget, $start);
+            $sum = $repository->expensesOnDayCorrected($budget, $start);
             $amount += $sum;
             $chart->addRow(clone $start, $amount);
             $start->addDay();
@@ -78,13 +112,13 @@ class BudgetController extends Controller
         foreach ($budgets as $budget) {
             $repetitions = $repository->getBudgetLimitRepetitions($budget, $start, $end);
             if ($repetitions->count() == 0) {
-                $expenses = $repository->spentInPeriod($budget, $start, $end, true);
+                $expenses = $repository->spentInPeriodCorrected($budget, $start, $end, true);
                 $allEntries->push([$budget->name, 0, 0, $expenses]);
                 continue;
             }
             /** @var LimitRepetition $repetition */
             foreach ($repetitions as $repetition) {
-                $expenses  = $repository->spentInPeriod($budget, $repetition->startdate, $repetition->enddate, true);
+                $expenses  = $repository->spentInPeriodCorrected($budget, $repetition->startdate, $repetition->enddate, true);
                 $left      = $expenses < floatval($repetition->amount) ? floatval($repetition->amount) - $expenses : 0;
                 $spent     = $expenses > floatval($repetition->amount) ? 0 : $expenses;
                 $overspent = $expenses > floatval($repetition->amount) ? $expenses - floatval($repetition->amount) : 0;
@@ -145,7 +179,7 @@ class BudgetController extends Controller
 
             // each budget, fill the row:
             foreach ($budgets as $budget) {
-                $spent = $repository->spentInPeriod($budget, $start, $month, $shared);
+                $spent = $repository->spentInPeriodCorrected($budget, $start, $month, $shared);
                 $row[] = $spent;
             }
             $chart->addRowArray($row);

@@ -50,7 +50,7 @@ class CategoryController extends Controller
         while ($start <= $end) {
 
             $currentEnd = Navigation::endOfPeriod($start, $range);
-            $spent      = $repository->spentInPeriod($category, $start, $currentEnd);
+            $spent      = $repository->spentInPeriodCorrected($category, $start, $currentEnd);
             $chart->addRow(clone $start, $spent);
 
             $start = Navigation::addPeriod($start, $range, 0);
@@ -109,7 +109,7 @@ class CategoryController extends Controller
         $chart->addColumn(trans('firefly.spent'), 'number');
 
         while ($start <= $end) {
-            $spent = $repository->spentOnDaySum($category, $start);
+            $spent = $repository->spentOnDaySumCorrected($category, $start);
             $chart->addRow(clone $start, $spent);
             $start->addDay();
         }
@@ -153,7 +153,7 @@ class CategoryController extends Controller
 
             // each budget, fill the row:
             foreach ($categories as $category) {
-                $spent = $repository->spentInPeriod($category, $start, $month, $shared);
+                $spent = $repository->spentInPeriodCorrected($category, $start, $month, $shared);
                 $row[] = $spent;
             }
             $chart->addRowArray($row);
