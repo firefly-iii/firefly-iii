@@ -41,6 +41,16 @@ interface CategoryRepositoryInterface
     public function getCategoriesAndExpenses($start, $end);
 
     /**
+     * Corrected for tags.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function getCategoriesAndExpensesCorrected($start, $end);
+
+    /**
      * @param Category $category
      *
      * @return Carbon

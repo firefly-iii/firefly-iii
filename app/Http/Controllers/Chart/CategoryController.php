@@ -78,13 +78,10 @@ class CategoryController extends Controller
 
         $start = Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());
-        $set   = $repository->getCategoriesAndExpenses($start, $end);
+        $set   = $repository->getCategoriesAndExpensesCorrected($start, $end);
 
         foreach ($set as $entry) {
-            $isEncrypted = intval($entry->encrypted) == 1 ? true : false;
-            $name        = strlen($entry->name) == 0 ? trans('firefly.noCategory') : $entry->name;
-            $name        = $isEncrypted ? Crypt::decrypt($name) : $name;
-            $chart->addRow($name, floatval($entry->sum));
+            $chart->addRow($entry['name'], floatval($entry['sum']));
         }
 
         $chart->generate();

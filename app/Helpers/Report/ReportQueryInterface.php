@@ -90,6 +90,18 @@ interface ReportQueryInterface
     public function spentInBudget(Account $account, Budget $budget, Carbon $start, Carbon $end);
 
     /**
+     * Covers tags as well.
+     *
+     * @param Account $account
+     * @param Budget  $budget
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return float
+     */
+    public function spentInBudgetCorrected(Account $account, Budget $budget, Carbon $start, Carbon $end);
+
+    /**
      * @param Account $account
      * @param Carbon  $start
      * @param Carbon  $end

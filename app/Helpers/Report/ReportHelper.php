@@ -129,7 +129,7 @@ class ReportHelper implements ReportHelperInterface
                 $balanceEntry->setAccount($account);
 
                 // get spent:
-                $spent = $this->query->spentInBudget($account, $budget, $start, $end); // I think shared is irrelevant.
+                $spent = $this->query->spentInBudgetCorrected($account, $budget, $start, $end); // I think shared is irrelevant.
 
                 $balanceEntry->setSpent($spent);
                 $line->addBalanceEntry($balanceEntry);

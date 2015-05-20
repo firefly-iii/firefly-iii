@@ -108,6 +108,7 @@ return [
 
     'splitByAccount'              => 'Split by account',
     'balancedByTransfersAndTags'  => 'Balanced by transfers and tags',
+    'coveredWithTags'             => 'Covered with tags',
     'leftUnbalanced'              => 'Left unbalanced',
     'expectedBalance'             => 'Expected balance',
     'outsideOfBudgets'            => 'Outside of budgets',

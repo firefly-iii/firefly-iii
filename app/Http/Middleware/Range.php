@@ -73,9 +73,9 @@ class Range
                     Session::put('first', Carbon::now()->startOfYear());
                 }
             }
-            $current = Carbon::now()->format('F Y');
-            $next    = Carbon::now()->endOfMonth()->addDay()->format('F Y');
-            $prev    = Carbon::now()->startOfMonth()->subDay()->format('F Y');
+            $current = Carbon::now()->formatLocalized('%B %Y');
+            $next    = Carbon::now()->endOfMonth()->addDay()->formatLocalized('%B %Y');
+            $prev    = Carbon::now()->startOfMonth()->subDay()->formatLocalized('%B %Y');
             View::share('currentMonthName', $current);
             View::share('previousMonthName', $prev);
             View::share('nextMonthName', $next);
