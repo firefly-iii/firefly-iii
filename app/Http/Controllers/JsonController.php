@@ -122,7 +122,12 @@ class JsonController extends Controller
     {
         $start  = Session::get('start', Carbon::now()->startOfMonth());
         $end    = Session::get('end', Carbon::now()->endOfMonth());
-        $amount = $reportQuery->incomeInPeriod($start, $end, true)->sum('queryAmount');
+        $amount = $reportQuery->incomeInPeriodCorrected($start, $end, true)->sum('amount');
+        //        $amount = 0;
+        //        foreach($set as $entry) {
+        //            //echo $entry->description.' ('.$entry->tags->count().'): ' . $entry->amount."\n";
+        //            $amount += $entry->amount;
+        //        }
 
         return Response::json(['box' => 'in', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount]);
     }
@@ -136,7 +141,7 @@ class JsonController extends Controller
     {
         $start  = Session::get('start', Carbon::now()->startOfMonth());
         $end    = Session::get('end', Carbon::now()->endOfMonth());
-        $amount = $reportQuery->expenseInPeriod($start, $end, true)->sum('queryAmount') * -1;
+        $amount = $reportQuery->expenseInPeriodCorrected($start, $end, true)->sum('amount');
 
         return Response::json(['box' => 'out', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount]);
     }

@@ -149,7 +149,7 @@ class TransactionController extends Controller
             $preFilled['piggy_bank_id'] = $journal->piggyBankEvents()->orderBy('date', 'DESC')->first()->piggy_bank_id;
         }
 
-        $preFilled['amount']          = $journal->amount;
+        $preFilled['amount']          = $journal->actualAmount;
         $preFilled['account_id']      = $journal->assetAccount->id;
         $preFilled['expense_account'] = $transactions[0]->account->name;
         $preFilled['revenue_account'] = $transactions[1]->account->name;
