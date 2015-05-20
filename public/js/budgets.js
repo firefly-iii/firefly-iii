@@ -8,7 +8,7 @@ $(function () {
 
 
     if (typeof budgetID !== 'undefined' && typeof repetitionID === 'undefined') {
-        googleColumnChart('chart/budget/' + budgetID + '/spending', 'budgetOverview');
+        googleColumnChart('chart/budget/' + budgetID, 'budgetOverview');
     }
     if (typeof budgetID !== 'undefined' && typeof repetitionID !== 'undefined') {
         googleLineChart('chart/budget/' + budgetID + '/' + repetitionID, 'budgetOverview');
