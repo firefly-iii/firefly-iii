@@ -247,7 +247,7 @@ class ReportHelper implements ReportHelperInterface
 
             // no repetition(s) for this budget:
             if ($repetitions->count() == 0) {
-                $spent      = $repository->spentInPeriod($budget, $start, $end, $shared);
+                $spent      = $repository->spentInPeriodCorrected($budget, $start, $end, $shared);
                 $budgetLine = new BudgetLine;
                 $budgetLine->setBudget($budget);
                 $budgetLine->setOverspent($spent);
@@ -262,7 +262,7 @@ class ReportHelper implements ReportHelperInterface
                 $budgetLine = new BudgetLine;
                 $budgetLine->setBudget($budget);
                 $budgetLine->setRepetition($repetition);
-                $expenses  = $repository->spentInPeriod($budget, $repetition->startdate, $repetition->enddate, $shared);
+                $expenses  = $repository->spentInPeriodCorrected($budget, $repetition->startdate, $repetition->enddate, $shared);
                 $left      = $expenses < floatval($repetition->amount) ? floatval($repetition->amount) - $expenses : 0;
                 $spent     = $expenses > floatval($repetition->amount) ? 0 : $expenses;
                 $overspent = $expenses > floatval($repetition->amount) ? $expenses - floatval($repetition->amount) : 0;
@@ -311,7 +311,7 @@ class ReportHelper implements ReportHelperInterface
         $repository = App::make('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
         $set        = $repository->getCategories();
         foreach ($set as $category) {
-            $spent           = $repository->spentInPeriod($category, $start, $end, $shared);
+            $spent           = $repository->spentInPeriodCorrected($category, $start, $end, $shared);
             $category->spent = $spent;
             $object->addCategory($category);
             $object->addTotal($spent);
