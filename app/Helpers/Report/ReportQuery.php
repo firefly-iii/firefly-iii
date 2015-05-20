@@ -113,7 +113,22 @@ class ReportQuery implements ReportQueryInterface
         $query->orderBy('transaction_journals.date');
 
         // get everything
-        $data = $query->get(['transaction_journals.*',]);
+        $data = $query->get(['transaction_journals.*', 'transaction_types.type', 'ac_from.name as name', 'ac_from.encrypted as account_encrypted']);
+
+        $data->each(
+            function (TransactionJournal $journal) {
+                if (intval($journal->account_encrypted) == 1) {
+                    $journal->name = Crypt::decrypt($journal->name);
+                }
+            }
+        );
+        $data = $data->filter(
+            function (TransactionJournal $journal) {
+                if ($journal->amount != 0) {
+                    return $journal;
+                }
+            }
+        );
 
         return $data;
     }
@@ -270,7 +285,22 @@ class ReportQuery implements ReportQueryInterface
         $query->orderBy('transaction_journals.date');
 
         // get everything
-        $data = $query->get(['transaction_journals.*',]);
+        $data = $query->get(['transaction_journals.*', 'transaction_types.type', 'ac_from.name as name', 'ac_from.encrypted as account_encrypted']);
+
+        $data->each(
+            function (TransactionJournal $journal) {
+                if (intval($journal->account_encrypted) == 1) {
+                    $journal->name = Crypt::decrypt($journal->name);
+                }
+            }
+        );
+        $data = $data->filter(
+            function (TransactionJournal $journal) {
+                if ($journal->amount != 0) {
+                    return $journal;
+                }
+            }
+        );
 
         return $data;
     }
@@ -314,16 +344,16 @@ class ReportQuery implements ReportQueryInterface
     {
 
         return floatval(
-            Auth::user()->transactionjournals()
-                ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                ->transactionTypes(['Withdrawal'])
-                ->where('transactions.account_id', $account->id)
-                ->before($end)
-                ->after($start)
-                ->where('budget_transaction_journal.budget_id', $budget->id)
-                ->get(['transaction_journals.*'])->sum('amount')
-        ) * -1;
+                   Auth::user()->transactionjournals()
+                       ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                       ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                       ->transactionTypes(['Withdrawal'])
+                       ->where('transactions.account_id', $account->id)
+                       ->before($end)
+                       ->after($start)
+                       ->where('budget_transaction_journal.budget_id', $budget->id)
+                       ->get(['transaction_journals.*'])->sum('amount')
+               ) * -1;
     }
 
     /**

@@ -332,9 +332,9 @@ class ReportHelper implements ReportHelperInterface
     public function getExpenseReport($start, $end, $shared)
     {
         $object = new Expense;
-        $set    = $this->query->expenseInPeriod($start, $end, $shared);
+        $set    = $this->query->expenseInPeriodCorrected($start, $end, $shared);
         foreach ($set as $entry) {
-            $object->addToTotal($entry->queryAmount);
+            $object->addToTotal($entry->amount);
             $object->addOrCreateExpense($entry);
         }
 
@@ -353,9 +353,9 @@ class ReportHelper implements ReportHelperInterface
     public function getIncomeReport($start, $end, $shared)
     {
         $object = new Income;
-        $set    = $this->query->incomeInPeriod($start, $end, $shared);
+        $set    = $this->query->incomeInPeriodCorrected($start, $end, $shared);
         foreach ($set as $entry) {
-            $object->addToTotal($entry->queryAmount);
+            $object->addToTotal($entry->amount);
             $object->addOrCreateIncome($entry);
         }
 

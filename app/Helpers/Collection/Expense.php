@@ -37,14 +37,14 @@ class Expense
         $accountId = $entry->account_id;
         if (!$this->expenses->has($accountId)) {
             $newObject         = new stdClass;
-            $newObject->amount = floatval($entry->queryAmount);
+            $newObject->amount = floatval($entry->amount);
             $newObject->name   = $entry->name;
             $newObject->count  = 1;
             $newObject->id     = $accountId;
             $this->expenses->put($accountId, $newObject);
         } else {
             $existing = $this->expenses->get($accountId);
-            $existing->amount += floatval($entry->queryAmount);
+            $existing->amount += floatval($entry->amount);
             $existing->count++;
             $this->expenses->put($accountId, $existing);
         }
