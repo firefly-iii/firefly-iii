@@ -417,6 +417,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function expensesOnDayCorrected(Budget $budget, Carbon $date)
     {
         $sum = floatval($budget->transactionjournals()->transactionTypes(['Withdrawal'])->onDate($date)->get(['transaction_journals.*'])->sum('amount'));
+
         return $sum * -1;
     }
 }

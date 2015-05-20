@@ -188,7 +188,7 @@ Route::get('/register', ['uses' => 'Auth\AuthController@getRegister', 'as' => 'r
 
 Route::controllers(
     [
-        'auth' => 'Auth\AuthController',
+        'auth'     => 'Auth\AuthController',
         'password' => 'Auth\PasswordController',
     ]
 );
@@ -276,7 +276,9 @@ Route::group(
      */
     // accounts:
     Route::get('/chart/account/frontpage', ['uses' => 'Chart\AccountController@frontpage']);
-    Route::get('/chart/account/month/{year}/{month}/{shared?}', ['uses' => 'Chart\AccountController@all'])->where(['year' => '[0-9]{4}', 'month' => '[0-9]{1,2}', 'shared' => 'shared']);
+    Route::get('/chart/account/month/{year}/{month}/{shared?}', ['uses' => 'Chart\AccountController@all'])->where(
+        ['year' => '[0-9]{4}', 'month' => '[0-9]{1,2}', 'shared' => 'shared']
+    );
     Route::get('/chart/account/{account}', ['uses' => 'Chart\AccountController@single']);
 
 

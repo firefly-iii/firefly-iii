@@ -43,8 +43,9 @@ class Bill
         $this->bills->sortBy(
             function (BillLine $bill) {
                 $active = intval($bill->getBill()->active) == 0 ? 1 : 0;
-                $name = $bill->getBill()->name;
-                return $active.$name;
+                $name   = $bill->getBill()->name;
+
+                return $active . $name;
             }
         );
 

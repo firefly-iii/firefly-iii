@@ -113,7 +113,9 @@ class ReportQuery implements ReportQueryInterface
         $query->orderBy('transaction_journals.date');
 
         // get everything
-        $data = $query->get(['transaction_journals.*', 'transaction_types.type', 'ac_to.name as name','ac_to.id as account_id', 'ac_to.encrypted as account_encrypted']);
+        $data = $query->get(
+            ['transaction_journals.*', 'transaction_types.type', 'ac_to.name as name', 'ac_to.id as account_id', 'ac_to.encrypted as account_encrypted']
+        );
 
         $data->each(
             function (TransactionJournal $journal) {
@@ -285,7 +287,9 @@ class ReportQuery implements ReportQueryInterface
         $query->orderBy('transaction_journals.date');
 
         // get everything
-        $data = $query->get(['transaction_journals.*', 'transaction_types.type', 'ac_from.name as name','ac_from.id as account_id', 'ac_from.encrypted as account_encrypted']);
+        $data = $query->get(
+            ['transaction_journals.*', 'transaction_types.type', 'ac_from.name as name', 'ac_from.id as account_id', 'ac_from.encrypted as account_encrypted']
+        );
 
         $data->each(
             function (TransactionJournal $journal) {

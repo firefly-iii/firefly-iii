@@ -4,7 +4,6 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 
 use Carbon\Carbon;
-use Crypt;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\LimitRepetition;
@@ -82,8 +81,8 @@ class CategoryController extends Controller
 
         foreach ($set as $entry) {
             $sum = floatval($entry['sum']);
-            if($sum != 0) {
-            $chart->addRow($entry['name'], $sum);
+            if ($sum != 0) {
+                $chart->addRow($entry['name'], $sum);
             }
         }
 

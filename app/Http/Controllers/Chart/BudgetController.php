@@ -28,7 +28,7 @@ class BudgetController extends Controller
      */
     public function budget(GChart $chart, BudgetRepositoryInterface $repository, Budget $budget)
     {
-        $chart->addColumn(trans('firefly.period'),'date');
+        $chart->addColumn(trans('firefly.period'), 'date');
         $chart->addColumn(trans('firefly.spent'), 'number');
 
 
@@ -50,6 +50,7 @@ class BudgetController extends Controller
         }
 
         $chart->generate();
+
         return Response::json($chart->getData());
     }
 

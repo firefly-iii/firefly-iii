@@ -22,13 +22,13 @@ class BudgetLine
     protected $repetition;
 
     /** @var float */
-    protected $budgeted  = 0;
+    protected $budgeted = 0;
     /** @var float */
-    protected $left      = 0;
+    protected $left = 0;
     /** @var float */
     protected $overspent = 0;
     /** @var float */
-    protected $spent     = 0;
+    protected $spent = 0;
 
     /**
      * @return BudgetModel
@@ -125,10 +125,6 @@ class BudgetLine
     {
         $this->repetition = $repetition;
     }
-
-
-
-
 
 
 }

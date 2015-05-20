@@ -115,6 +115,7 @@ interface CategoryRepositoryInterface
     /**
      *
      * Corrected for tags.
+     *
      * @param Category $category
      * @param Carbon   $date
      *

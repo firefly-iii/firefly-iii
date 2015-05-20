@@ -9,7 +9,6 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\PiggyBankRepetition;
 use Illuminate\Support\Collection;
-use Navigation;
 
 /**
  * Class PiggyBankRepository
