@@ -99,13 +99,20 @@ class TransactionJournal extends Model
         /** @var Tag $tag */
         $tag = $this->tags()->where('tagMode', 'advancePayment')->first();
         if ($tag && $this->transactionType->type == 'Withdrawal') {
+
             // loop other deposits, remove from our amount.
             $others = $tag->transactionJournals()->transactionTypes(['Deposit'])->get();
             foreach ($others as $other) {
-                $amount -= $other->amount;
+                $amount -= $other->actualAmount;
             }
 
             return $amount;
+        }
+
+        // if this journal is part of an advancePayment AND the journal is a deposit,
+        // then the journal amount is correcting a withdrawal, and the amount is zero:
+        if ($tag && $this->transactionType->type == 'Deposit') {
+            return 0;
         }
 
         return $amount;

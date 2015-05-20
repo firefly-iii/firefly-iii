@@ -39,6 +39,21 @@ class Budget extends Twig_Extension
         }
         );
 
+        $functions[] = new Twig_SimpleFunction(
+            'spentInRepetitionCorrected', function (LimitRepetition $repetition) {
+            $sum =
+                Auth::user()->transactionjournals()
+                    ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                    ->leftJoin('budget_limits', 'budget_limits.budget_id', '=', 'budget_transaction_journal.budget_id')
+                    ->leftJoin('limit_repetitions', 'limit_repetitions.budget_limit_id', '=', 'budget_limits.id')
+                ->before($repetition->enddate)
+            ->after($repetition->startdate)
+                    ->where('limit_repetitions.id', '=', $repetition->id)
+                    ->get(['transaction_journals.*'])->sum('amount');
+            return floatval($sum);
+        }
+        );
+
         return $functions;
 
     }

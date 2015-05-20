@@ -35,6 +35,16 @@ interface BudgetRepositoryInterface
     public function expensesOnDay(Budget $budget, Carbon $date);
 
     /**
+     * Takes tags into account.
+     *
+     * @param Budget $budget
+     * @param Carbon $date
+     *
+     * @return float
+     */
+    public function expensesOnDayCorrected(Budget $budget, Carbon $date);
+
+    /**
      * @return Collection
      */
     public function getActiveBudgets();
@@ -122,15 +132,29 @@ interface BudgetRepositoryInterface
      */
     public function getWithoutBudgetSum(Carbon $start, Carbon $end);
 
+
     /**
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param Budget  $budget
+     * @param Carbon  $start
+     * @param Carbon  $end
      * @param boolean $shared
      *
      * @return float
      */
     public function spentInPeriod(Budget $budget, Carbon $start, Carbon $end, $shared = true);
+
+    /**
+     *
+     * Same as ::spentInPeriod but corrects journals for their amount (tags).
+     *
+     * @param Budget  $budget
+     * @param Carbon  $start
+     * @param Carbon  $end
+     * @param boolean $shared
+     *
+     * @return float
+     */
+    public function spentInPeriodCorrected(Budget $budget, Carbon $start, Carbon $end, $shared = true);
 
     /**
      * @param array $data

@@ -82,12 +82,35 @@ interface CategoryRepositoryInterface
     public function spentInPeriod(Category $category, Carbon $start, Carbon $end, $shared = false);
 
     /**
+     * Corrected for tags.
+     *
+     * @param Category       $category
+     * @param \Carbon\Carbon $start
+     * @param \Carbon\Carbon $end
+     *
+     * @param bool           $shared
+     *
+     * @return float
+     */
+    public function spentInPeriodCorrected(Category $category, Carbon $start, Carbon $end, $shared = false);
+
+    /**
      * @param Category $category
      * @param Carbon   $date
      *
      * @return float
      */
     public function spentOnDaySum(Category $category, Carbon $date);
+
+    /**
+     *
+     * Corrected for tags.
+     * @param Category $category
+     * @param Carbon   $date
+     *
+     * @return float
+     */
+    public function spentOnDaySumCorrected(Category $category, Carbon $date);
 
     /**
      * @param array $data
