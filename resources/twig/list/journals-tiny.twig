@@ -1,6 +1,5 @@
 <div class="list-group">
     {% for journal in transactions %}
-        {% if journal.amount != 0 %}
 
     <a class="list-group-item" title="{{journal.date.format('jS M Y')}}" href="{{route('transactions.show',journal.id)}}">
 
@@ -14,6 +13,5 @@
     </span>
 
     </a>
-    {% endif %}
 {% endfor %}
 </div>

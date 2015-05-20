@@ -81,7 +81,10 @@ class CategoryController extends Controller
         $set   = $repository->getCategoriesAndExpensesCorrected($start, $end);
 
         foreach ($set as $entry) {
-            $chart->addRow($entry['name'], floatval($entry['sum']));
+            $sum = floatval($entry['sum']);
+            if($sum != 0) {
+            $chart->addRow($entry['name'], $sum);
+            }
         }
 
         $chart->generate();

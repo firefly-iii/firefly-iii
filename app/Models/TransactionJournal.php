@@ -96,12 +96,12 @@ class TransactionJournal extends Model
         }
         // if journal is part of advancePayment AND journal is a withdrawal,
         // then journal is being repaid by other journals, so the actual amount will lower:
-        /** @var Tag $tag */
-        $tag = $this->tags()->where('tagMode', 'advancePayment')->first();
-        if ($tag && $this->transactionType->type == 'Withdrawal') {
+        /** @var Tag $advancePayment */
+        $advancePayment = $this->tags()->where('tagMode', 'advancePayment')->first();
+        if ($advancePayment && $this->transactionType->type == 'Withdrawal') {
 
             // loop other deposits, remove from our amount.
-            $others = $tag->transactionJournals()->transactionTypes(['Deposit'])->get();
+            $others = $advancePayment->transactionJournals()->transactionTypes(['Deposit'])->get();
             foreach ($others as $other) {
                 $amount -= $other->actualAmount;
             }
@@ -111,8 +111,25 @@ class TransactionJournal extends Model
 
         // if this journal is part of an advancePayment AND the journal is a deposit,
         // then the journal amount is correcting a withdrawal, and the amount is zero:
-        if ($tag && $this->transactionType->type == 'Deposit') {
+        if ($advancePayment && $this->transactionType->type == 'Deposit') {
             return 0;
+        }
+
+
+        // is balancing act?
+        $balancingAct = $this->tags()->where('tagMode', 'balancingAct')->first();
+        if ($balancingAct) {
+            // this is the transfer
+
+            // this is the expense:
+            if ($this->transactionType->type == 'Withdrawal') {
+                $transfer = $balancingAct->transactionJournals()->transactionTypes(['Transfer'])->first();
+                if ($transfer) {
+                    $amount -= $transfer->actualAmount;
+
+                    return $amount;
+                }
+            }
         }
 
         return $amount;

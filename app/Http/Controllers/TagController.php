@@ -133,7 +133,7 @@ class TagController extends Controller
          * changes to an advancePayment.
          */
 
-        if ($tag->tagMode == 'balancingAct') {
+        if ($tag->tagMode == 'balancingAct' || $tag->tagMode == 'nothing') {
             foreach ($tag->transactionjournals as $journal) {
                 if ($journal->transactionType->type == 'Transfer') {
                     $allowToAdvancePayment = false;
