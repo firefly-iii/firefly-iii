@@ -16,6 +16,32 @@ interface ReportQueryInterface
 {
 
     /**
+     * This method returns all "expense" journals in a certain period, which are both transfers to a shared account
+     * and "ordinary" withdrawals. The query used is almost equal to ReportQueryInterface::journalsByRevenueAccount but it does
+     * not group and returns different fields.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param bool   $includeShared
+     *
+     * @return Collection
+     *
+     */
+    public function expenseInPeriod(Carbon $start, Carbon $end, $includeShared = false);
+
+    /**
+     * See ReportQueryInterface::incomeInPeriodCorrected
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param bool   $includeShared
+     *
+     * @return Collection
+     *
+     */
+    public function expenseInPeriodCorrected(Carbon $start, Carbon $end, $includeShared = false);
+
+    /**
      * Get a users accounts combined with various meta-data related to the start and end date.
      *
      * @param Carbon $start
@@ -25,7 +51,6 @@ interface ReportQueryInterface
      * @return Collection
      */
     public function getAllAccounts(Carbon $start, Carbon $end, $includeShared = false);
-
 
     /**
      * This method returns all "income" journals in a certain period, which are both transfers from a shared account
@@ -42,19 +67,17 @@ interface ReportQueryInterface
     public function incomeInPeriod(Carbon $start, Carbon $end, $includeShared = false);
 
     /**
-     * This method returns all "expense" journals in a certain period, which are both transfers to a shared account
-     * and "ordinary" withdrawals. The query used is almost equal to ReportQueryInterface::journalsByRevenueAccount but it does
-     * not group and returns different fields.
+     * This method works the same way as ReportQueryInterface::incomeInPeriod does, but instead of returning results
+     * will simply list the transaction journals only. This should allow any follow up counting to be accurate with
+     * regards to tags.
      *
      * @param Carbon $start
      * @param Carbon $end
      * @param bool   $includeShared
      *
      * @return Collection
-     *
      */
-    public function expenseInPeriod(Carbon $start, Carbon $end, $includeShared = false);
-
+    public function incomeInPeriodCorrected(Carbon $start, Carbon $end, $includeShared = false);
 
     /**
      * @param Account $account
