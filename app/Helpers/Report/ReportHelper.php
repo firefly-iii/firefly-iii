@@ -62,6 +62,13 @@ class ReportHelper implements ReportHelperInterface
         $end      = 0;
         $diff     = 0;
 
+        // remove cash account, if any:
+        $accounts  =$accounts->filter(function(Account $account) {
+            if($account->accountType->type != 'Cash account') {
+                return $account;
+            }
+        });
+
         // summarize:
         foreach ($accounts as $account) {
             $start += $account->startBalance;
