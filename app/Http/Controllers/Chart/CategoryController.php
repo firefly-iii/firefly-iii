@@ -79,6 +79,19 @@ class CategoryController extends Controller
         $end   = Session::get('end', Carbon::now()->endOfMonth());
         $set   = $repository->getCategoriesAndExpensesCorrected($start, $end);
 
+        // sort by callback:
+        uasort(
+            $set,
+            function ($left, $right) {
+                if ($left['sum'] == $right['sum']) {
+                    return 0;
+                }
+
+                return ($left['sum'] < $right['sum']) ? 1 : -1;
+            }
+        );
+
+
         foreach ($set as $entry) {
             $sum = floatval($entry['sum']);
             if ($sum != 0) {

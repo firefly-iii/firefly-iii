@@ -113,14 +113,14 @@ class CategoryRepository implements CategoryRepositoryInterface
         foreach ($set as $entry) {
             $categoryId = intval($entry->category_id);
             if (isset($result[$categoryId])) {
-                $result[$categoryId]['sum'] += $entry->amount;
+                $result[$categoryId]['sum'] += floatval($entry->amount);
             } else {
                 $isEncrypted         = intval($entry->category_encrypted) == 1 ? true : false;
                 $name                = strlen($entry->name) == 0 ? trans('firefly.noCategory') : $entry->name;
                 $name                = $isEncrypted ? Crypt::decrypt($name) : $name;
                 $result[$categoryId] = [
                     'name' => $name,
-                    'sum'  => $entry->amount,
+                    'sum'  => floatval($entry->amount),
                 ];
 
             }
