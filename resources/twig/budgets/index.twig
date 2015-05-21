@@ -14,7 +14,7 @@
                             <small>{{ 'budgeted'|_ }}: <span id="budgetedAmount" data-value="300"></span></small>
                         </div>
                         <div class="col-lg-6 col-md-4 col-sm-3" style="text-align:right;">
-                            <small>Available in {{ Session.get('start').formatLocalized(monthFormat) }}:
+                            <small>{{ trans('firefly.availableIn',{date : Session.get('start').formatLocalized(monthFormat) }) }}:
                                 <a href="#" class="updateIncome"><span id="totalAmount" data-value="{{ amount }}">{{ amount|formatAmount }}</span></a></small>
                         </div>
                     </div>
@@ -60,12 +60,13 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-fw fa-tags"></i>
-                    Transactions without a budget
+                    {{ 'transactionsWithoutBudget'|_ }}
                 </div>
                 <div class="panel-body">
                     <p>
-                        <a href="{{ route('budgets.noBudget') }}">Transactions without a budget in
-                            {{ Session.get('start').format('F Y') }}.</a>
+                        <a href="{{ route('budgets.noBudget') }}">
+                            {{ trans('firefly.transactionsWithoutBudgetDate', {date: Session.get('start').formatLocalized(monthFormat)}) }}
+                        </a>
                     </p>
                 </div>
             </div>
@@ -144,7 +145,7 @@
                         </p>
 
                         <p>
-                            <span id="spent-{{ budget.id }}" data-value="{{ budget.spent }}">Spent: {{ budget.spent|formatAmount }}</span>
+                            <span id="spent-{{ budget.id }}" data-value="{{ budget.spent }}">{{ 'spent'|_ }}: {{ budget.spent|formatAmount }}</span>
                         </p>
                     </div>
                 </div>
@@ -154,10 +155,10 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-fw fa-plus-circle"></i>
-                    Create budget
+                    {{ 'createBudget'|_ }}
                 </div>
                 <div class="panel-body">
-                    <a href="{{ route('budgets.create') }}" class="btn btn-success"><i class="fa fa-fw fa-plus"></i> Create new budget</a>
+                    <a href="{{ route('budgets.create') }}" class="btn btn-success"><i class="fa fa-fw fa-plus"></i> {{ 'createBudget'|_ }}</a>
                 </div>
             </div>
         </div>
@@ -166,7 +167,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <i class="fa fa-fw fa-minus-circle"></i>
-                        Inactive budgets
+                        {{ 'inactiveBudgets'|_ }}
                     </div>
                     <div class="panel-body">
                         {% for index,budget in inactive %}

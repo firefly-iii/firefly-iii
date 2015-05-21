@@ -5,7 +5,7 @@
     <div class="col-lg-12 col-md-12 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <i class="fa {{ mainTitleIcon }}"></i> Categories
+                <i class="fa {{ mainTitleIcon }}"></i> {{ 'categories'|_ }}
 
                 <!-- ACTIONS MENU -->
                 <div class="pull-right">
@@ -15,7 +15,7 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu pull-right" role="menu">
-                            <li><a href="{{ route('categories.create') }}"><i class="fa fa-plus fa-fw"></i> New category</a></li>
+                            <li><a href="{{ route('categories.create') }}"><i class="fa fa-plus fa-fw"></i> {{ 'newCategory'|_ }}</a></li>
                         </ul>
                     </div>
                 </div>
