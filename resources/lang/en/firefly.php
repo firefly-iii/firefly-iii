@@ -1,6 +1,5 @@
 <?php
 
-// general fields and things.
 return [
     'test'                          => 'You have selected English.',
     'close'                         => 'Close',
@@ -20,6 +19,14 @@ return [
     'cancel'                        => 'Cancel',
     'from'                          => 'From',
     'to'                            => 'To',
+
+    'availableIn'                   => 'Available in :date',
+    'transactionsWithoutBudget'     => 'Expenses without budget',
+    'transactionsWithoutBudgetDate' => 'Expenses without budget in :date',
+    'createBudget'                  => 'New budget',
+    'inactiveBudgets'               => 'Inactive budgets',
+    'newCategory'                   => 'New category',
+    'withoutCategory'               => 'Without a category',
 
     'details_for_asset'             => 'Details for asset account ":name"',
     'details_for_expense'           => 'Details for expense account ":name"',
@@ -41,7 +48,6 @@ return [
     'make_new_asset_account'        => 'New asset account',
     'make_new_expense_account'      => 'New expense account',
     'make_new_revenue_account'      => 'New revenue account',
-
 
     // new user:
     'welcome'                       => 'Welcome to Firefly!',

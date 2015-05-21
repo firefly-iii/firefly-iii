@@ -1,6 +1,5 @@
 <?php
 
-// general fields and things.
 return [
     'test'                          => 'Nederlands geselecteerd!',
     'close'                         => 'Sluiten',
