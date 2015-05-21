@@ -20,6 +20,10 @@ return [
     'from'                          => 'From',
     'to'                            => 'To',
 
+    'showEverything'                => 'Show everything',
+    'create_new_budget'             => 'Create a new budget',
+    'store_new_budget'              => ' Store new budget',
+
     'availableIn'                   => 'Available in :date',
     'transactionsWithoutBudget'     => 'Expenses without budget',
     'transactionsWithoutBudgetDate' => 'Expenses without budget in :date',

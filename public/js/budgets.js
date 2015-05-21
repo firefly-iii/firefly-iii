@@ -20,7 +20,7 @@ $(function () {
 function updateSingleRange(e) {
     // get some values:
     var input = $(e.target);
-    var id    = input.data('id');
+    var id = input.data('id');
     var value = parseInt(input.val());
     var spent = parseFloat($('#spent-' + id).data('value'));
 
@@ -95,7 +95,9 @@ function updateTotal() {
 }
 
 function updateIncome(e) {
-    $('#monthlyBudgetModal').empty().load('budgets/income').modal('show');
+    $('#monthlyBudgetModal').empty().load('budgets/income', function () {
+        $('#monthlyBudgetModal').modal('show');
+    });
 
     return false;
 }
@@ -112,7 +114,7 @@ function updateRanges() {
         var value = parseInt(input.val());
 
         // calculate sum:
-        sum += value
+        sum += value;
 
         // update small display:
         $('#budget-range-display-' + id).text('\u20AC ' + value.toFixed(2));

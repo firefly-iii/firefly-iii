@@ -29,29 +29,29 @@
 
          <div class="panel panel-default">
             <div class="panel-heading">
-                Transactions
+                {{ 'transactions'|_ }}
             </div>
              {% include 'list/journals.twig' %}
         </div>
     </div>
     <div class="col-lg-3 col-md-3 col-sm-5">
         {% if limits|length == 1 %}
-        <p class="small text-center"><a href="{{ route('budgets.show',budget.id) }}">Show everything</a></p>
+        <p class="small text-center"><a href="{{ route('budgets.show',budget.id) }}">{{ 'showEverything'|_ }}</a></p>
         {% endif %}
 
         {% for limit in limits %}
             {% for rep in limit.limitRepetitions %}
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <a href="{{route('budgets.show',[budget.id,rep.id])}}">{{rep.startdate.format('F Y')}}</a>
+                        <a href="{{route('budgets.show',[budget.id,rep.id])}}">{{rep.startdate.formatLocalized(monthFormat)}}</a>
                     </div>
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-6">
-                                Amount: {{ rep.amount|formatAmount  }}
+                                {{ 'amount'|_ }}: {{ rep.amount|formatAmount  }}
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6">
-                                Spent: {{ spentInRepetitionCorrected(rep)|formatAmount }}
+                                {{ 'spent'|_ }}: {{ spentInRepetitionCorrected(rep)|formatAmount }}
                             </div>
                         </div>
                         <div class="row">
@@ -79,7 +79,7 @@
         {% endfor %}
 
         {% if limits|length == 1 %}
-            <p class="small text-center"><a href="{{route('budgets.show',budget.id)}}">Show everything</a></p>
+            <p class="small text-center"><a href="{{route('budgets.show',budget.id)}}">{{ 'showEverything'|_ }}</a></p>
         {% endif %}
 
     </div>

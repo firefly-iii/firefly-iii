@@ -20,6 +20,10 @@ return [
     'from'                          => 'Van',
     'to'                            => 'Tot',
 
+    'showEverything'                => 'Laat alles zien',
+    'create_new_budget'             => 'Maak een nieuw budget',
+    'store_new_budget'              => 'Sla nieuw budget op',
+
     'availableIn'                   => 'Beschikbaar in :date',
     'transactionsWithoutBudget'     => 'Uitgaven zonder budget',
     'transactionsWithoutBudgetDate' => 'Uitgaven zonder budget in :date',

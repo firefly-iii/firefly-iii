@@ -60,7 +60,7 @@ class BudgetController extends Controller
             Session::put('budgets.create.url', URL::previous());
         }
         Session::forget('budgets.create.fromStore');
-        $subTitle = 'Create a new budget';
+        $subTitle = trans('firefly.create_new_budget');
 
         return view('budgets.create', compact('subTitle'));
     }
