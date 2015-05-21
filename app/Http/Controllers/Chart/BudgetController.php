@@ -121,7 +121,7 @@ class BudgetController extends Controller
             foreach ($repetitions as $repetition) {
                 $expenses  = $repository->spentInPeriodCorrected($budget, $repetition->startdate, $repetition->enddate, true);
                 $left      = $expenses < floatval($repetition->amount) ? floatval($repetition->amount) - $expenses : 0;
-                $spent     = $expenses > floatval($repetition->amount) ? 0 : $expenses;
+                $spent     = $expenses > floatval($repetition->amount) ? floatval($repetition->amount) : $expenses;
                 $overspent = $expenses > floatval($repetition->amount) ? $expenses - floatval($repetition->amount) : 0;
                 $allEntries->push(
                     [$budget->name . ' (' . $repetition->startdate->formatLocalized($this->monthAndDayFormat) . ')',
