@@ -7,6 +7,7 @@ use FireflyIII\Models\Bill as BillModel;
 use Illuminate\Support\Collection;
 
 /**
+ * @codeCoverageIgnore
  * Class Bill
  *
  * @package FireflyIII\Helpers\Collection

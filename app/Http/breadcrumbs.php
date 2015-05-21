@@ -50,25 +50,10 @@ Breadcrumbs::register(
 
 Breadcrumbs::register(
     'accounts.show', function (Generator $breadcrumbs, Account $account) {
-    switch ($account->accountType->type) {
-        default:
-            throw new FireflyException('Cannot handle account type "' . e($account->accountType->type) . '"');
-            break;
-        case 'Default account':
-        case 'Asset account':
-            $what = 'asset';
-            break;
-        case 'Cash account':
-            $what = 'cash';
-            break;
-        case 'Expense account':
-        case 'Beneficiary account':
-            $what = 'expense';
-            break;
-        case 'Revenue account':
-            $what = 'revenue';
-            break;
-    }
+
+    $what = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
+
+    
     $breadcrumbs->parent('accounts.index', $what);
     $breadcrumbs->push(e($account->name), route('accounts.show', $account->id));
 }
@@ -84,7 +69,9 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'accounts.edit', function (Generator $breadcrumbs, Account $account) {
     $breadcrumbs->parent('accounts.show', $account);
-    $breadcrumbs->push(trans('breadcrumbs.edit_account', ['name' => e($account->name)]), route('accounts.edit', $account->id));
+    $what = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
+
+    $breadcrumbs->push(trans('breadcrumbs.edit_'.$what.'_account', ['name' => e($account->name)]), route('accounts.edit', $account->id));
 }
 );
 

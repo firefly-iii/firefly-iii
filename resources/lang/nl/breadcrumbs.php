@@ -14,6 +14,10 @@ return [
     'delete_account'        => 'Verwijder rekening ":name"',
     'edit_account'          => 'Wijzig rekening ":name"',
 
+    'edit_asset_account'    => 'Wijzig betaalrekening ":name"',
+    'edit_expense_account'  => 'Wijzig crediteur ":name"',
+    'edit_revenue_account'  => 'Wijzig debiteur ":name"',
+
     'budgets'               => 'Budgetten',
     'newBudget'             => 'Maak een nieuw budget',
     'delete_budget'         => 'Verwijder budget ":name"',

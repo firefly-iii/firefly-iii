@@ -19,6 +19,24 @@ return [
     'details_for_revenue'         => 'Details for revenue account ":name"',
     'details_for_cash'            => 'Details for cash account ":name"',
 
+    'store_new_asset_account'     => 'Store new asset account',
+    'store_new_expense_account'   => 'Store new expense account',
+    'store_new_revenue_account'   => 'Store new revenue account',
+
+    'edit_asset_account'        => 'Edit asset account ":name"',
+    'edit_expense_account'      => 'Edit expense account ":name"',
+    'edit_revenue_account'      => 'Edit revenue account ":name"',
+
+    'update_asset_account'        => 'Update asset account',
+    'update_expense_account'      => 'Update expense account',
+    'update_revenue_account'      => 'Update revenue account',
+
+    'make_new_asset_account'      => 'New asset account',
+    'make_new_expense_account'    => 'New expense account',
+    'make_new_revenue_account'    => 'New revenue account',
+
+
+
     // new user:
     'welcome'                     => 'Welcome to Firefly!',
     'createNewAsset'              => 'Create a new asset account to get started. This will allow you to create transactions and start your financial management',

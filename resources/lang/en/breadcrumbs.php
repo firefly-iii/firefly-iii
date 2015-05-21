@@ -14,6 +14,10 @@ return [
     'delete_account'        => 'Delete account ":name"',
     'edit_account'          => 'Edit account ":name"',
 
+    'edit_asset_account'    => 'Edit asset account ":name"',
+    'edit_expense_account'  => 'Edit expense account ":name"',
+    'edit_revenue_account'  => 'Edit revenue account ":name"',
+
     'budgets'               => 'Budgets',
     'newBudget'             => 'Create a new budget',
     'delete_budget'         => 'Delete budget ":name"',
