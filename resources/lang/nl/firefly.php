@@ -14,6 +14,13 @@ return [
     'delete'                      => 'Verwijder',
     'welcomeBack'                 => 'Hoe staat het er voor?',
 
+    'everything'                  => 'Alles',
+    'customRange'                 => 'Zelf bereik kiezen',
+    'apply'                       => 'Go',
+    'cancel'                      => 'Annuleren',
+    'from'                        => 'Van',
+    'to'                          => 'Tot',
+
     'details_for_asset'           => 'Overzicht voor betaalrekening ":name"',
     'details_for_expense'         => 'Overzicht voor crediteur ":name"',
     'details_for_revenue'         => 'Overzicht voor debiteur ":name"',

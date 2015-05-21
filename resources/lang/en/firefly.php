@@ -14,6 +14,13 @@ return [
     'delete'                      => 'Delete',
     'welcomeBack'                 => 'What\'s playing?',
 
+    'everything'                  => 'Everything',
+    'customRange'                 => 'Custom range',
+    'apply'                       => 'Apply',
+    'cancel'                      => 'Cancel',
+    'from'                        => 'From',
+    'to'                          => 'To',
+
     'details_for_asset'           => 'Details for asset account ":name"',
     'details_for_expense'         => 'Details for expense account ":name"',
     'details_for_revenue'         => 'Details for revenue account ":name"',
@@ -23,9 +30,9 @@ return [
     'store_new_expense_account'   => 'Store new expense account',
     'store_new_revenue_account'   => 'Store new revenue account',
 
-    'edit_asset_account'        => 'Edit asset account ":name"',
-    'edit_expense_account'      => 'Edit expense account ":name"',
-    'edit_revenue_account'      => 'Edit revenue account ":name"',
+    'edit_asset_account'          => 'Edit asset account ":name"',
+    'edit_expense_account'        => 'Edit expense account ":name"',
+    'edit_revenue_account'        => 'Edit revenue account ":name"',
 
     'update_asset_account'        => 'Update asset account',
     'update_expense_account'      => 'Update expense account',
@@ -34,7 +41,6 @@ return [
     'make_new_asset_account'      => 'New asset account',
     'make_new_expense_account'    => 'New expense account',
     'make_new_revenue_account'    => 'New revenue account',
-
 
 
     // new user:
