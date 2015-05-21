@@ -107,7 +107,7 @@ class CategoryRepository implements CategoryRepositoryInterface
                    ->after($start)
                    ->transactionTypes(['Withdrawal'])
                    ->groupBy('categories.id')
-                   ->get(['categories.id as category_id', 'categories.encrypted', 'categories.name', 'transaction_journals.*']);
+                   ->get(['categories.id as category_id', 'categories.encrypted as category_encrypted', 'categories.name', 'transaction_journals.*']);
 
         $result = [];
         foreach ($set as $entry) {
@@ -115,7 +115,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             if (isset($result[$categoryId])) {
                 $result[$categoryId]['sum'] += $entry->amount;
             } else {
-                $isEncrypted         = intval($entry->encrypted) == 1 ? true : false;
+                $isEncrypted         = intval($entry->category_encrypted) == 1 ? true : false;
                 $name                = strlen($entry->name) == 0 ? trans('firefly.noCategory') : $entry->name;
                 $name                = $isEncrypted ? Crypt::decrypt($name) : $name;
                 $result[$categoryId] = [
