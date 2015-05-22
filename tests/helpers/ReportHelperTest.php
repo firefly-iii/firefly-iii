@@ -235,6 +235,20 @@ class ReportHelperTest extends TestCase
         $right->account_type_id = $asset->id;
         $right->save();
         $left->save();
+
+        // save meta for account:
+        AccountMeta::create([
+                                'account_id' => $left->id,
+                                'name' => 'accountRole',
+                                'data' => 'defaultAsset'
+                            ]);
+        AccountMeta::create([
+                                'account_id' => $right->id,
+                                'name' => 'accountRole',
+                                'data' => 'defaultAsset'
+                            ]);
+
+
         for ($i = 0; $i < 5; $i++) {
             $journal                      = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
             $journal->date                = $date;
@@ -281,6 +295,19 @@ class ReportHelperTest extends TestCase
         $asset                  = FactoryMuffin::create('FireflyIII\Models\AccountType');
         $left->account_type_id  = $asset->id;
         $right->account_type_id = $asset->id;
+
+        // save meta for account:
+        AccountMeta::create([
+            'account_id' => $left->id,
+            'name' => 'accountRole',
+            'data' => 'defaultAsset'
+                            ]);
+        AccountMeta::create([
+                                'account_id' => $right->id,
+                                'name' => 'accountRole',
+                                'data' => 'defaultAsset'
+                            ]);
+
         $right->save();
         $left->save();
         for ($i = 0; $i < 5; $i++) {

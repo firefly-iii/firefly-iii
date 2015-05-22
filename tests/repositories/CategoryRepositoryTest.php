@@ -79,9 +79,9 @@ class CategoryRepositoryTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Repositories\Category\CategoryRepository::getCategoriesAndExpenses
+     * @covers FireflyIII\Repositories\Category\CategoryRepository::getCategoriesAndExpensesCorrected
      */
-    public function testGetCategoriesAndExpenses()
+    public function testGetCategoriesAndExpensesCorrected()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
         $type = FactoryMuffin::create('FireflyIII\Models\TransactionType');
@@ -100,9 +100,11 @@ class CategoryRepositoryTest extends TestCase
         }
 
         $this->be($user);
-        $set = $this->object->getCategoriesAndExpenses(new Carbon('2015-02-01'), new Carbon('2015-02-28'));
+        $set = $this->object->getCategoriesAndExpensesCorrected(new Carbon('2015-02-01'), new Carbon('2015-02-28'));
         $this->assertCount(5, $set);
-        $this->assertEquals(0, $set->first()->sum);
+        reset($set);
+
+        $this->assertEquals(0, current($set)['sum']);
     }
 
     /**
@@ -189,12 +191,12 @@ class CategoryRepositoryTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Repositories\Category\CategoryRepository::spentInPeriod
+     * @covers FireflyIII\Repositories\Category\CategoryRepository::spentInPeriodCorrected
      */
-    public function testSpentInPeriodSum()
+    public function testSpentInPeriodSumCorrected()
     {
         $category = FactoryMuffin::create('FireflyIII\Models\Category');
-        $sum      = $this->object->spentInPeriod($category, new Carbon, new Carbon);
+        $sum      = $this->object->spentInPeriodCorrected($category, new Carbon, new Carbon);
 
         $this->assertEquals(0, $sum);
 
@@ -202,12 +204,12 @@ class CategoryRepositoryTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Repositories\Category\CategoryRepository::spentOnDaySum
+     * @covers FireflyIII\Repositories\Category\CategoryRepository::spentOnDaySumCorrected
      */
-    public function testSpentOnDaySum()
+    public function testSpentOnDaySumCorrected()
     {
         $category = FactoryMuffin::create('FireflyIII\Models\Category');
-        $sum      = $this->object->spentOnDaySum($category, new Carbon);
+        $sum      = $this->object->spentOnDaySumCorrected($category, new Carbon);
 
         $this->assertEquals(0, $sum);
     }
