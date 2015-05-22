@@ -37,7 +37,7 @@ class Help implements HelpInterface
      */
     public function getFromGithub($route)
     {
-        $uri     = 'https://raw.githubusercontent.com/JC5/firefly-iii-help/master/' . e($route) . '.md';
+        $uri     = 'https://raw.githubusercontent.com/JC5/firefly-iii-help/master/en/' . e($route) . '.md';
         $content = [
             'text'  => '<p>There is no help for this route!</p>',
             'title' => $route,
