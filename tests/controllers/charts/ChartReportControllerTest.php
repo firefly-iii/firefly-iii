@@ -1,5 +1,7 @@
 <?php
 
+use League\FactoryMuffin\Facade as FactoryMuffin;
+
 /**
  * Class ChartReportControllerTest
  */
@@ -25,11 +27,39 @@ class ChartReportControllerTest extends TestCase
 
     public function testYearInOut()
     {
-        $this->markTestIncomplete();
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
+        $this->call('GET', '/chart/report/in-out/2015');
+        $this->assertResponseOk();
+
+    }
+
+    public function testYearInOutShared()
+    {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
+        $this->call('GET', '/chart/report/in-out/2015/shared');
+        $this->assertResponseOk();
+
     }
 
     public function testYearInOutSummarized()
     {
-        $this->markTestIncomplete();
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
+        $this->call('GET', '/chart/report/in-out-sum/2015');
+        $this->assertResponseOk();
+    }
+
+    public function testYearInOutSummarizedShared()
+    {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
+        $this->call('GET', '/chart/report/in-out-sum/2015/shared');
+        $this->assertResponseOk();
     }
 }
