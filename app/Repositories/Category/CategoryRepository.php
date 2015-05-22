@@ -59,36 +59,6 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    public function getCategoriesAndExpenses($start, $end)
-    {
-        return TransactionJournal::
-        where('transaction_journals.user_id', Auth::user()->id)
-                                 ->leftJoin(
-                                     'transactions',
-                                     function (JoinClause $join) {
-                                         $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('amount', '>', 0);
-                                     }
-                                 )
-                                 ->leftJoin(
-                                     'category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
-                                 )
-                                 ->leftJoin('categories', 'categories.id', '=', 'category_transaction_journal.category_id')
-                                 ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                 ->before($end)
-                                 ->where('categories.user_id', Auth::user()->id)
-                                 ->after($start)
-                                 ->where('transaction_types.type', 'Withdrawal')
-                                 ->groupBy('categories.id')
-                                 ->orderBy('sum', 'DESC')
-                                 ->get(['categories.id', 'categories.encrypted', 'categories.name', DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
-    }
-
-    /**
      *
      * @param Carbon $start
      * @param Carbon $end
@@ -214,48 +184,6 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @return float
      */
-    public function spentInPeriod(Category $category, Carbon $start, Carbon $end, $shared = false)
-    {
-        if ($shared === true) {
-            // shared is true.
-            // always ignore transfers between accounts!
-            $sum = floatval(
-                       $category->transactionjournals()
-                                ->transactionTypes(['Withdrawal'])
-                                ->before($end)->after($start)->lessThan(0)->sum('amount')
-                   ) * -1;
-
-        } else {
-            // do something else, SEE budgets.
-            // get all journals in this month where the asset account is NOT shared.
-            $sum = $category->transactionjournals()
-                            ->before($end)
-                            ->after($start)
-                            ->transactionTypes(['Withdrawal'])
-                            ->lessThan(0)
-                            ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                            ->leftJoin(
-                                'account_meta', function (JoinClause $join) {
-                                $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
-                            }
-                            )
-                            ->where('account_meta.data', '!=', '"sharedAsset"')
-                            ->sum('amount');
-            $sum = floatval($sum) * -1;
-        }
-
-        return $sum;
-    }
-
-    /**
-     * @param Category $category
-     * @param Carbon   $start
-     * @param Carbon   $end
-     *
-     * @param bool     $shared
-     *
-     * @return float
-     */
     public function spentInPeriodCorrected(Category $category, Carbon $start, Carbon $end, $shared = false)
     {
         if ($shared === true) {
@@ -287,17 +215,6 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
 
         return $sum;
-    }
-
-    /**
-     * @param Category $category
-     * @param Carbon   $date
-     *
-     * @return float
-     */
-    public function spentOnDaySum(Category $category, Carbon $date)
-    {
-        return floatval($category->transactionjournals()->onDate($date)->lessThan(0)->sum('amount')) * -1;
     }
 
     /**

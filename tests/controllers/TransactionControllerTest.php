@@ -275,6 +275,65 @@ class TransactionControllerTest extends TestCase
 
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
+    public function testStoreTransfer()
+    {
+        // account types:
+        FactoryMuffin::create('FireflyIII\Models\AccountType');
+        FactoryMuffin::create('FireflyIII\Models\AccountType');
+        $asset    = FactoryMuffin::create('FireflyIII\Models\AccountType');
+        $account  = FactoryMuffin::create('FireflyIII\Models\Account');
+        $account2 = FactoryMuffin::create('FireflyIII\Models\Account');
+        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
+
+        $piggy  = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $journal  = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $this->be($account->user);
+
+        $account2->user_id         = $account->user_id;
+        $account->account_type_id  = $asset->id;
+        $account2->account_type_id = $asset->id;
+        $piggy->account_id = $account->id;
+        $account->save();
+        $account2->save();
+        $piggy->save();
+
+        $data = [
+            'reminder_id'        => '',
+            'what'               => 'transfer',
+            'description'        => 'Bla bla bla',
+            'account_from_id'    => $account->id,
+            'account_to_id'      => $account2->id,
+            'amount'             => '100',
+            'amount_currency_id' => $currency->id,
+            'date'               => '2015-05-05',
+            'budget_id'          => '0',
+            'create_another'     => '1',
+            'category'           => '',
+            'tags'               => '',
+            'piggy_bank_id'      => $piggy->id,
+            '_token'             => 'replaceMe',
+        ];
+
+        // mock!
+        $repository = $this->mock('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
+
+        // fake!
+        $repository->shouldReceive('store')->andReturn($journal);
+        $repository->shouldReceive('deactivateReminder')->andReturnNull();
+
+
+        $this->call('POST', '/transactions/store/withdrawal', $data);
+
+        //$this->assertSessionHas('errors','bla');
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+
+    }
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)

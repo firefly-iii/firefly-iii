@@ -33,6 +33,7 @@ class ReportHelper implements ReportHelperInterface
     protected $query;
 
     /**
+     * @codeCoverageIgnore
      * @param ReportQueryInterface $query
      *
      */

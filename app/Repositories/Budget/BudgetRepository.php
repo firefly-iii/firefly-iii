@@ -49,9 +49,11 @@ class BudgetRepository implements BudgetRepositoryInterface
      *
      * @return float
      */
-    public function expensesOnDay(Budget $budget, Carbon $date)
+    public function expensesOnDayCorrected(Budget $budget, Carbon $date)
     {
-        return floatval($budget->transactionjournals()->lessThan(0)->transactionTypes(['Withdrawal'])->onDate($date)->sum('amount'));
+        $sum = floatval($budget->transactionjournals()->transactionTypes(['Withdrawal'])->onDate($date)->get(['transaction_journals.*'])->sum('amount'));
+
+        return $sum * -1;
     }
 
     /**
@@ -263,39 +265,6 @@ class BudgetRepository implements BudgetRepositoryInterface
      *
      * @return float
      */
-    public function spentInPeriod(Budget $budget, Carbon $start, Carbon $end, $shared = true)
-    {
-        if ($shared === true) {
-            // get everything:
-            $sum = floatval($budget->transactionjournals()->before($end)->after($start)->lessThan(0)->sum('amount')) * -1;
-        } else {
-            // get all journals in this month where the asset account is NOT shared.
-            $sum = $budget->transactionjournals()
-                          ->before($end)
-                          ->after($start)
-                          ->lessThan(0)
-                          ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                          ->leftJoin(
-                              'account_meta', function (JoinClause $join) {
-                              $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
-                          }
-                          )
-                          ->where('account_meta.data', '!=', '"sharedAsset"')
-                          ->sum('amount');
-            $sum = floatval($sum) * -1;
-        }
-
-        return $sum;
-    }
-
-    /**
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
-     * @param bool   $shared
-     *
-     * @return float
-     */
     public function spentInPeriodCorrected(Budget $budget, Carbon $start, Carbon $end, $shared = true)
     {
         if ($shared === true) {
@@ -340,17 +309,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $newBudget;
     }
 
-    /**
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return float
-     */
-    public function sumBudgetExpensesInPeriod(Budget $budget, $start, $end)
-    {
-        return floatval($budget->transactionjournals()->before($end)->after($start)->lessThan(0)->sum('amount')) * -1;
-    }
+
 
     /**
      * @param Budget $budget
@@ -406,18 +365,5 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $limit;
 
 
-    }
-
-    /**
-     * @param Budget $budget
-     * @param Carbon $date
-     *
-     * @return float
-     */
-    public function expensesOnDayCorrected(Budget $budget, Carbon $date)
-    {
-        $sum = floatval($budget->transactionjournals()->transactionTypes(['Withdrawal'])->onDate($date)->get(['transaction_journals.*'])->sum('amount'));
-
-        return $sum * -1;
     }
 }
