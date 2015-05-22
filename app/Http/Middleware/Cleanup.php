@@ -7,6 +7,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Preference;
+use FireflyIII\Models\Reminder;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
@@ -134,7 +135,18 @@ class Cleanup
                 $entry->description = $description;
                 $entry->save();
             }
-            unset($set, $entry, $name);
+            unset($set, $entry, $description);
+
+            //encrypt reminder metadata
+            $set = Reminder::where('encrypted', 0)->take(5)->get();
+            /** @var Reminder $entry */
+            foreach ($set as $entry) {
+                $count++;
+                $metadata        = $entry->metadata;
+                $entry->metadata = $metadata;
+                $entry->save();
+            }
+            unset($set, $entry, $metadata);
 
 
             //encrypt budget limit amount
@@ -145,7 +157,7 @@ class Cleanup
 
             //encrypt preference name (add field)
             //encrypt preference data (add field)
-            //encrypt reminder metadata
+
             //encrypt transaction amount
         }
         if ($count == 0 && $run) {
