@@ -33,6 +33,7 @@ class ReportHelper implements ReportHelperInterface
     protected $query;
 
     /**
+     * @codeCoverageIgnore
      * @param ReportQueryInterface $query
      *
      */
@@ -61,6 +62,13 @@ class ReportHelper implements ReportHelperInterface
         $start    = 0;
         $end      = 0;
         $diff     = 0;
+
+        // remove cash account, if any:
+        $accounts  =$accounts->filter(function(Account $account) {
+            if($account->accountType->type != 'Cash account') {
+                return $account;
+            }
+        });
 
         // summarize:
         foreach ($accounts as $account) {
@@ -129,7 +137,7 @@ class ReportHelper implements ReportHelperInterface
                 $balanceEntry->setAccount($account);
 
                 // get spent:
-                $spent = $this->query->spentInBudget($account, $budget, $start, $end); // I think shared is irrelevant.
+                $spent = $this->query->spentInBudgetCorrected($account, $budget, $start, $end); // I think shared is irrelevant.
 
                 $balanceEntry->setSpent($spent);
                 $line->addBalanceEntry($balanceEntry);
@@ -247,7 +255,7 @@ class ReportHelper implements ReportHelperInterface
 
             // no repetition(s) for this budget:
             if ($repetitions->count() == 0) {
-                $spent      = $repository->spentInPeriod($budget, $start, $end, $shared);
+                $spent      = $repository->spentInPeriodCorrected($budget, $start, $end, $shared);
                 $budgetLine = new BudgetLine;
                 $budgetLine->setBudget($budget);
                 $budgetLine->setOverspent($spent);
@@ -262,7 +270,7 @@ class ReportHelper implements ReportHelperInterface
                 $budgetLine = new BudgetLine;
                 $budgetLine->setBudget($budget);
                 $budgetLine->setRepetition($repetition);
-                $expenses  = $repository->spentInPeriod($budget, $repetition->startdate, $repetition->enddate, $shared);
+                $expenses  = $repository->spentInPeriodCorrected($budget, $repetition->startdate, $repetition->enddate, $shared);
                 $left      = $expenses < floatval($repetition->amount) ? floatval($repetition->amount) - $expenses : 0;
                 $spent     = $expenses > floatval($repetition->amount) ? 0 : $expenses;
                 $overspent = $expenses > floatval($repetition->amount) ? $expenses - floatval($repetition->amount) : 0;
@@ -311,7 +319,7 @@ class ReportHelper implements ReportHelperInterface
         $repository = App::make('FireflyIII\Repositories\Category\CategoryRepositoryInterface');
         $set        = $repository->getCategories();
         foreach ($set as $category) {
-            $spent           = $repository->spentInPeriod($category, $start, $end, $shared);
+            $spent           = $repository->spentInPeriodCorrected($category, $start, $end, $shared);
             $category->spent = $spent;
             $object->addCategory($category);
             $object->addTotal($spent);
@@ -332,9 +340,9 @@ class ReportHelper implements ReportHelperInterface
     public function getExpenseReport($start, $end, $shared)
     {
         $object = new Expense;
-        $set    = $this->query->expenseInPeriod($start, $end, $shared);
+        $set    = $this->query->expenseInPeriodCorrected($start, $end, $shared);
         foreach ($set as $entry) {
-            $object->addToTotal($entry->queryAmount);
+            $object->addToTotal($entry->amount);
             $object->addOrCreateExpense($entry);
         }
 
@@ -353,9 +361,9 @@ class ReportHelper implements ReportHelperInterface
     public function getIncomeReport($start, $end, $shared)
     {
         $object = new Income;
-        $set    = $this->query->incomeInPeriod($start, $end, $shared);
+        $set    = $this->query->incomeInPeriodCorrected($start, $end, $shared);
         foreach ($set as $entry) {
-            $object->addToTotal($entry->queryAmount);
+            $object->addToTotal($entry->amount);
             $object->addOrCreateIncome($entry);
         }
 

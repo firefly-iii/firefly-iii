@@ -1,13 +1,12 @@
-<form style="display: inline;" id="income" action="{{route('budgets.postIncome')}}" method="POST">
-    <input type="hidden" name="_token" value="{{ csrf_token() }}"
-
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span></button>
-                <h4 class="modal-title" id="myModalLabel">Update (expected) available amount for {{Session.get('start').format('F Y')}}</h4>
-            </div>
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span></button>
+            <h4 class="modal-title" id="myModalLabel">Update (expected) available amount for {{Session.get('start').format('F Y')}}</h4>
+        </div>
+        <form style="display: inline;" id="income" action="{{route('budgets.postIncome')}}" method="POST">
             <div class="modal-body">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}"
                 <div class="input-group">
                     <div class="input-group-addon">{{ getCurrencySymbol() }}</div>
                     <input step="any" class="form-control" id="amount" value="{{ amount.data }}" autocomplete="off" name="amount" type="number">
@@ -17,6 +16,6 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close'|_ }}</button>
                 <button type="submit" class="btn btn-primary">Update</button>
             </div>
-        </div>
+        </form>
     </div>
-</form>
+</div>

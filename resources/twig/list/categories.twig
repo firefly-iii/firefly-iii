@@ -9,7 +9,7 @@
     <tbody>
     <tr>
         <td>&nbsp;</td>
-        <td><a href="{{ route('categories.noCategory') }}"><em>Without a category</em></a></td>
+        <td><a href="{{ route('categories.noCategory') }}"><em>{{ 'withoutCategory'|_ }}</em></a></td>
         <td>&nbsp;</td>
     </tr>
     {% for category in categories %}

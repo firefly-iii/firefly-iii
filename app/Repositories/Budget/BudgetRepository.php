@@ -49,9 +49,11 @@ class BudgetRepository implements BudgetRepositoryInterface
      *
      * @return float
      */
-    public function expensesOnDay(Budget $budget, Carbon $date)
+    public function expensesOnDayCorrected(Budget $budget, Carbon $date)
     {
-        return floatval($budget->transactionjournals()->lessThan(0)->transactionTypes(['Withdrawal'])->onDate($date)->sum('amount'));
+        $sum = floatval($budget->transactionjournals()->transactionTypes(['Withdrawal'])->onDate($date)->get(['transaction_journals.*'])->sum('amount'));
+
+        return $sum * -1;
     }
 
     /**
@@ -99,6 +101,7 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function getBudgets()
     {
         $budgets = Auth::user()->budgets()->get();
+
         return $budgets;
     }
 
@@ -262,11 +265,11 @@ class BudgetRepository implements BudgetRepositoryInterface
      *
      * @return float
      */
-    public function spentInPeriod(Budget $budget, Carbon $start, Carbon $end, $shared = true)
+    public function spentInPeriodCorrected(Budget $budget, Carbon $start, Carbon $end, $shared = true)
     {
         if ($shared === true) {
             // get everything:
-            $sum = floatval($budget->transactionjournals()->before($end)->after($start)->lessThan(0)->sum('amount')) * -1;
+            $sum = floatval($budget->transactionjournals()->before($end)->after($start)->lessThan(0)->get(['transaction_journals.*'])->sum('amount'));
         } else {
             // get all journals in this month where the asset account is NOT shared.
             $sum = $budget->transactionjournals()
@@ -280,8 +283,9 @@ class BudgetRepository implements BudgetRepositoryInterface
                           }
                           )
                           ->where('account_meta.data', '!=', '"sharedAsset"')
+                          ->get(['transaction_journals.*'])
                           ->sum('amount');
-            $sum = floatval($sum) * -1;
+            $sum = floatval($sum);
         }
 
         return $sum;
@@ -305,17 +309,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $newBudget;
     }
 
-    /**
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return float
-     */
-    public function sumBudgetExpensesInPeriod(Budget $budget, $start, $end)
-    {
-        return floatval($budget->transactionjournals()->before($end)->after($start)->lessThan(0)->sum('amount')) * -1;
-    }
+
 
     /**
      * @param Budget $budget

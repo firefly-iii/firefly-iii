@@ -51,7 +51,8 @@ class ExpandedForm
         if (isset($options['label'])) {
             return $options['label'];
         }
-        return trans('form.'.$name);
+
+        return trans('form.' . $name);
 
     }
 

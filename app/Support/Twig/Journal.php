@@ -85,6 +85,7 @@ class Journal extends Twig_Extension
                     // return tag formatted for a "balancing act", even if other
                     // tags are present.
                     $amount = App::make('amount')->formatJournal($journal, false);
+
                     return '<a href="' . route('tags.show', $tag->id) . '" class="label label-success" title="' . $amount
                            . '"><i class="fa fa-fw fa-refresh"></i> ' . $tag->tag . '</a>';
                 }
@@ -94,6 +95,7 @@ class Journal extends Twig_Extension
                  */
                 if ($tag->tagMode == 'advancePayment' && $journal->transactionType->type == 'Deposit') {
                     $amount = App::make('amount')->formatJournal($journal, false);
+
                     return '<a href="' . route('tags.show', $tag->id) . '" class="label label-success" title="' . $amount
                            . '"><i class="fa fa-fw fa-sort-numeric-desc"></i> ' . $tag->tag . '</a>';
                 }
@@ -103,6 +105,7 @@ class Journal extends Twig_Extension
                  */
                 if ($tag->tagMode == 'advancePayment' && $journal->transactionType->type == 'Withdrawal') {
                     $amount = App::make('amount')->formatJournal($journal);
+
                     return '<a href="' . route('tags.show', $tag->id) . '">' . $amount . '</a>';
                 }
 

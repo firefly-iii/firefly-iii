@@ -22,12 +22,8 @@ use Steam;
  */
 class ReportQuery implements ReportQueryInterface
 {
-
-
     /**
-     * This method returns all "expense" journals in a certain period, which are both transfers to a shared account
-     * and "ordinary" withdrawals. The query used is almost equal to ReportQueryInterface::journalsByRevenueAccount but it does
-     * not group and returns different fields.
+     * See ReportQueryInterface::incomeInPeriodCorrected
      *
      * @param Carbon $start
      * @param Carbon $end
@@ -36,7 +32,7 @@ class ReportQuery implements ReportQueryInterface
      * @return Collection
      *
      */
-    public function expenseInPeriod(Carbon $start, Carbon $end, $includeShared = false)
+    public function expenseInPeriodCorrected(Carbon $start, Carbon $end, $includeShared = false)
     {
         $query = $this->queryJournalsWithTransactions($start, $end);
         if ($includeShared === false) {
@@ -59,19 +55,27 @@ class ReportQuery implements ReportQueryInterface
         } else {
             $query->where('transaction_types.type', 'Withdrawal'); // any withdrawal is fine.
         }
-        $query->groupBy('transaction_journals.id')->orderBy('transaction_journals.date');
+        $query->orderBy('transaction_journals.date');
 
-        // get everything, decrypt and return
-        $data = $query->get(['transaction_journals.id', 'transaction_journals.description', 'transaction_journals.encrypted', 'transaction_types.type',
-             DB::Raw('SUM(`t_from`.`amount`) as `queryAmount`'),
-             'transaction_journals.date', 't_to.account_id as account_id', 'ac_to.name as name', 'ac_to.encrypted as account_encrypted']);
+        // get everything
+        $data = $query->get(
+            ['transaction_journals.*', 'transaction_types.type', 'ac_to.name as name', 'ac_to.id as account_id', 'ac_to.encrypted as account_encrypted']
+        );
 
         $data->each(
-            function (Model $object) {
-                $object->name = intval($object->account_encrypted) == 1 ? Crypt::decrypt($object->name) : $object->name;
+            function (TransactionJournal $journal) {
+                if (intval($journal->account_encrypted) == 1) {
+                    $journal->name = Crypt::decrypt($journal->name);
+                }
             }
         );
-        $data->sortByDesc('queryAmount');
+        $data = $data->filter(
+            function (TransactionJournal $journal) {
+                if ($journal->amount != 0) {
+                    return $journal;
+                }
+            }
+        );
 
         return $data;
     }
@@ -127,9 +131,14 @@ class ReportQuery implements ReportQueryInterface
 
 
     /**
+     * This method works the same way as ReportQueryInterface::incomeInPeriod does, but instead of returning results
+     * will simply list the transaction journals only. This should allow any follow up counting to be accurate with
+     * regards to tags.
+     *
      * This method returns all "income" journals in a certain period, which are both transfers from a shared account
      * and "ordinary" deposits. The query used is almost equal to ReportQueryInterface::journalsByRevenueAccount but it does
      * not group and returns different fields.
+
      *
      * @param Carbon $start
      * @param Carbon $end
@@ -137,7 +146,7 @@ class ReportQuery implements ReportQueryInterface
      *
      * @return Collection
      */
-    public function incomeInPeriod(Carbon $start, Carbon $end, $includeShared = false)
+    public function incomeInPeriodCorrected(Carbon $start, Carbon $end, $includeShared = false)
     {
         $query = $this->queryJournalsWithTransactions($start, $end);
         if ($includeShared === false) {
@@ -163,35 +172,34 @@ class ReportQuery implements ReportQueryInterface
             // any deposit is fine.
             $query->where('transaction_types.type', 'Deposit');
         }
-        $query->groupBy('transaction_journals.id')->orderBy('transaction_journals.date');
+        $query->orderBy('transaction_journals.date');
 
-        // get everything, decrypt and return
+        // get everything
         $data = $query->get(
-            ['transaction_journals.id',
-             'transaction_journals.description',
-             'transaction_journals.encrypted',
-             'transaction_types.type',
-             DB::Raw('SUM(`t_to`.`amount`) as `queryAmount`'),
-             'transaction_journals.date',
-             't_from.account_id as account_id',
-             'ac_from.name as name',
-             'ac_from.encrypted as account_encrypted'
-            ]
+            ['transaction_journals.*', 'transaction_types.type', 'ac_from.name as name', 'ac_from.id as account_id', 'ac_from.encrypted as account_encrypted']
         );
 
         $data->each(
-            function (Model $object) {
-                $object->name = intval($object->account_encrypted) == 1 ? Crypt::decrypt($object->name) : $object->name;
+            function (TransactionJournal $journal) {
+                if (intval($journal->account_encrypted) == 1) {
+                    $journal->name = Crypt::decrypt($journal->name);
+                }
             }
         );
-        $data->sortByDesc('queryAmount');
+        $data = $data->filter(
+            function (TransactionJournal $journal) {
+                if ($journal->amount != 0) {
+                    return $journal;
+                }
+            }
+        );
 
         return $data;
     }
 
-
-
     /**
+     * Covers tags
+     *
      * @param Account $account
      * @param Budget  $budget
      * @param Carbon  $start
@@ -199,21 +207,20 @@ class ReportQuery implements ReportQueryInterface
      *
      * @return float
      */
-    public function spentInBudget(Account $account, Budget $budget, Carbon $start, Carbon $end)
+    public function spentInBudgetCorrected(Account $account, Budget $budget, Carbon $start, Carbon $end)
     {
 
         return floatval(
-            Auth::user()->transactionjournals()
-                ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                ->transactionTypes(['Withdrawal'])
-                ->where('transactions.amount', '<', 0)
-                ->where('transactions.account_id', $account->id)
-                ->before($end)
-                ->after($start)
-                ->where('budget_transaction_journal.budget_id', $budget->id)
-                ->sum('transactions.amount')
-        );
+                   Auth::user()->transactionjournals()
+                       ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                       ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                       ->transactionTypes(['Withdrawal'])
+                       ->where('transactions.account_id', $account->id)
+                       ->before($end)
+                       ->after($start)
+                       ->where('budget_transaction_journal.budget_id', $budget->id)
+                       ->get(['transaction_journals.*'])->sum('amount')
+               ) * -1;
     }
 
     /**

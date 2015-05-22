@@ -98,7 +98,7 @@ class JsonControllerTest extends TestCase
         $this->be($user);
 
         $repository = $this->mock('FireflyIII\Helpers\Report\ReportQueryInterface');
-        $repository->shouldReceive('incomeInPeriod')->andReturn(new Collection);
+        $repository->shouldReceive('incomeInPeriodCorrected')->andReturn(new Collection);
         Amount::shouldReceive('format')->andReturn('xx');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
 
@@ -112,7 +112,7 @@ class JsonControllerTest extends TestCase
         $this->be($user);
 
         $repository = $this->mock('FireflyIII\Helpers\Report\ReportQueryInterface');
-        $repository->shouldReceive('expenseInPeriod')->andReturn(new Collection);
+        $repository->shouldReceive('expenseInPeriodCorrected')->andReturn(new Collection);
         Amount::shouldReceive('format')->andReturn('xx');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
 

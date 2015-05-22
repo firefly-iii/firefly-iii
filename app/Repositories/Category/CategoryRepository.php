@@ -4,6 +4,7 @@ namespace FireflyIII\Repositories\Category;
 
 use Auth;
 use Carbon\Carbon;
+use Crypt;
 use DB;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionJournal;
@@ -58,33 +59,44 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
+     *
      * @param Carbon $start
      * @param Carbon $end
      *
      * @return Collection
      */
-    public function getCategoriesAndExpenses($start, $end)
+    public function getCategoriesAndExpensesCorrected($start, $end)
     {
-        return TransactionJournal::
-        where('transaction_journals.user_id', Auth::user()->id)
-                                 ->leftJoin(
-                                     'transactions',
-                                     function (JoinClause $join) {
-                                         $join->on('transaction_journals.id', '=', 'transactions.transaction_journal_id')->where('amount', '>', 0);
-                                     }
-                                 )
-                                 ->leftJoin(
-                                     'category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
-                                 )
-                                 ->leftJoin('categories', 'categories.id', '=', 'category_transaction_journal.category_id')
-                                 ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                                 ->before($end)
-                                 ->where('categories.user_id', Auth::user()->id)
-                                 ->after($start)
-                                 ->where('transaction_types.type', 'Withdrawal')
-                                 ->groupBy('categories.id')
-                                 ->orderBy('sum', 'DESC')
-                                 ->get(['categories.id', 'categories.encrypted', 'categories.name', DB::Raw('SUM(`transactions`.`amount`) AS `sum`')]);
+        $set = Auth::user()->transactionjournals()
+                   ->leftJoin(
+                       'category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
+                   )
+                   ->leftJoin('categories', 'categories.id', '=', 'category_transaction_journal.category_id')
+                   ->before($end)
+                   ->where('categories.user_id', Auth::user()->id)
+                   ->after($start)
+                   ->transactionTypes(['Withdrawal'])
+                   ->groupBy('categories.id')
+                   ->get(['categories.id as category_id', 'categories.encrypted as category_encrypted', 'categories.name', 'transaction_journals.*']);
+
+        $result = [];
+        foreach ($set as $entry) {
+            $categoryId = intval($entry->category_id);
+            if (isset($result[$categoryId])) {
+                $result[$categoryId]['sum'] += floatval($entry->amount);
+            } else {
+                $isEncrypted         = intval($entry->category_encrypted) == 1 ? true : false;
+                $name                = strlen($entry->name) == 0 ? trans('firefly.noCategory') : $entry->name;
+                $name                = $isEncrypted ? Crypt::decrypt($name) : $name;
+                $result[$categoryId] = [
+                    'name' => $name,
+                    'sum'  => floatval($entry->amount),
+                ];
+
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -172,16 +184,16 @@ class CategoryRepository implements CategoryRepositoryInterface
      *
      * @return float
      */
-    public function spentInPeriod(Category $category, Carbon $start, Carbon $end, $shared = false)
+    public function spentInPeriodCorrected(Category $category, Carbon $start, Carbon $end, $shared = false)
     {
         if ($shared === true) {
             // shared is true.
             // always ignore transfers between accounts!
             $sum = floatval(
-                       $category->transactionjournals()
-                                ->transactionTypes(['Withdrawal'])
-                                ->before($end)->after($start)->lessThan(0)->sum('amount')
-                   ) * -1;
+                $category->transactionjournals()
+                         ->transactionTypes(['Withdrawal'])
+                         ->before($end)->after($start)->get(['transaction_journals.*'])->sum('amount')
+            );
 
         } else {
             // do something else, SEE budgets.
@@ -198,22 +210,24 @@ class CategoryRepository implements CategoryRepositoryInterface
                             }
                             )
                             ->where('account_meta.data', '!=', '"sharedAsset"')
-                            ->sum('amount');
-            $sum = floatval($sum) * -1;
+                            ->get(['transaction_journals.*'])->sum('amount');
+            $sum = floatval($sum);
         }
 
         return $sum;
     }
 
     /**
+     * Corrected for tags
+     *
      * @param Category $category
      * @param Carbon   $date
      *
      * @return float
      */
-    public function spentOnDaySum(Category $category, Carbon $date)
+    public function spentOnDaySumCorrected(Category $category, Carbon $date)
     {
-        return floatval($category->transactionjournals()->onDate($date)->lessThan(0)->sum('amount')) * -1;
+        return floatval($category->transactionjournals()->onDate($date)->get(['transaction_journals.*'])->sum('amount'));
     }
 
     /**

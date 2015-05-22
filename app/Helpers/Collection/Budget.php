@@ -1,6 +1,7 @@
 <?php
 
 namespace FireflyIII\Helpers\Collection;
+
 use Illuminate\Support\Collection;
 
 /**
@@ -72,6 +73,14 @@ class Budget
     }
 
     /**
+     * @return \Illuminate\Support\Collection
+     */
+    public function getBudgetLines()
+    {
+        return $this->budgetLines;
+    }
+
+    /**
      * @return float
      */
     public function getBudgeted()
@@ -134,16 +143,6 @@ class Budget
     {
         $this->spent = $spent;
     }
-
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    public function getBudgetLines()
-    {
-        return $this->budgetLines;
-    }
-
-
 
 
 }

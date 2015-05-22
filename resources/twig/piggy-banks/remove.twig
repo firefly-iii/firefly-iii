@@ -12,7 +12,7 @@
                     The maximum amount you can remove is {{ currentRelevantRepAmount(piggyBank)|formatAmount }}
                 </p>
                 <div class="input-group">
-                    <div class="input-group-addon">{{ getCurrencySymbol() }}</div>
+                    <div class="input-group-addon">{{ getCurrencySymbol()|raw }}</div>
                     <input step="any" class="form-control" id="amount" autocomplete="off" name="amount" max="{{ currentRelevantRepAmount(piggyBank)|round(2) }}" type="number">
                 </div>
             </div>

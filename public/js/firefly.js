@@ -6,7 +6,7 @@ $(function () {
     ranges[currentMonthName] = [moment().startOf('month'), moment().endOf('month')];
     ranges[previousMonthName] = [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')];
     ranges[nextMonthName] = [moment().add(1, 'month').startOf('month'), moment().add(1, 'month').endOf('month')];
-    ranges['Everything'] = [firstDate, moment()];
+    ranges[everything] = [firstDate, moment()];
 
     $('#daterange').daterangepicker(
         {
@@ -15,10 +15,19 @@ $(function () {
             //View::share('nextMonthName', $next);
 
 
-            ranges: ranges
-            ,
+            ranges: ranges,
             opens: 'left',
-
+            locale: {
+                applyLabel: applyLabel,
+                cancelLabel: cancelLabel,
+                fromLabel: fromLabel,
+                toLabel: toLabel,
+                weekLabel: 'W',
+                customRangeLabel: customRangeLabel,
+                daysOfWeek: moment.weekdaysMin(),
+                monthNames: moment.monthsShort(),
+                firstDay: moment.localeData()._week.dow
+            },
             format: 'DD-MM-YYYY',
             startDate: start,
             endDate: end

@@ -87,6 +87,27 @@ class ReminderHelperTest extends TestCase
         $this->assertEquals(0, $result->metadata->leftToSave);
     }
 
+    /**
+     *
+     */
+    public function testCreateReminders()
+    {
+        $account               = FactoryMuffin::create('FireflyIII\Models\Account');
+        $piggyBank             = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
+        $piggyBank->account_id = $account->id;
+        $piggyBank->startdate  = new Carbon('2015-01-01');
+        $piggyBank->targetdate = new Carbon('2015-12-31');
+        $piggyBank->reminder   = 'monthly';
+        $piggyBank->remind_me  = true;
+        $piggyBank->save();
+        $this->be($account->user);
+
+        $this->object->createReminders($piggyBank, new Carbon('2015-05-05'));
+
+        $this->assertCount(1, $piggyBank->reminders()->get());
+
+    }
+
     public function testGetReminderRangesNull()
     {
         $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');

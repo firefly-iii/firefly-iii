@@ -70,13 +70,13 @@ class BudgetRepositoryTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Repositories\Budget\BudgetRepository::expensesOnDay
+     * @covers FireflyIII\Repositories\Budget\BudgetRepository::expensesOnDayCorrected
      */
-    public function testExpensesOnDay()
+    public function testExpensesOnDayCorrected()
     {
         $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
 
-        $result = $this->object->expensesOnDay($budget, new Carbon);
+        $result = $this->object->expensesOnDayCorrected($budget, new Carbon);
 
         $this->assertEquals(0, $result);
     }
@@ -289,13 +289,13 @@ class BudgetRepositoryTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Repositories\Budget\BudgetRepository::spentInPeriod
+     * @covers FireflyIII\Repositories\Budget\BudgetRepository::spentInPeriodCorrected
      */
-    public function testSpentInPeriod()
+    public function testSpentInPeriodCorrected()
     {
         $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
 
-        $amount = $this->object->spentInPeriod($budget, new Carbon, new Carbon);
+        $amount = $this->object->spentInPeriodCorrected($budget, new Carbon, new Carbon);
         $this->assertEquals(0, $amount);
     }
 
@@ -314,16 +314,6 @@ class BudgetRepositoryTest extends TestCase
 
         $this->assertTrue($result instanceof Budget);
         $this->assertEquals($result->name, $data['name']);
-    }
-
-    /**
-     * @covers FireflyIII\Repositories\Budget\BudgetRepository::sumBudgetExpensesInPeriod
-     */
-    public function testSumBudgetExpensesInPeriod()
-    {
-        $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
-        $result = $this->object->sumBudgetExpensesInPeriod($budget, new Carbon, new Carbon);
-        $this->assertEquals(0, $result);
     }
 
     /**

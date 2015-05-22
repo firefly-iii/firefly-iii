@@ -188,7 +188,7 @@ Route::get('/register', ['uses' => 'Auth\AuthController@getRegister', 'as' => 'r
 
 Route::controllers(
     [
-        'auth' => 'Auth\AuthController',
+        'auth'     => 'Auth\AuthController',
         'password' => 'Auth\PasswordController',
     ]
 );
@@ -276,7 +276,9 @@ Route::group(
      */
     // accounts:
     Route::get('/chart/account/frontpage', ['uses' => 'Chart\AccountController@frontpage']);
-    Route::get('/chart/account/month/{year}/{month}/{shared?}', ['uses' => 'Chart\AccountController@all'])->where(['year' => '[0-9]{4}', 'month' => '[0-9]{1,2}', 'shared' => 'shared']);
+    Route::get('/chart/account/month/{year}/{month}/{shared?}', ['uses' => 'Chart\AccountController@all'])->where(
+        ['year' => '[0-9]{4}', 'month' => '[0-9]{1,2}', 'shared' => 'shared']
+    );
     Route::get('/chart/account/{account}', ['uses' => 'Chart\AccountController@single']);
 
 
@@ -288,6 +290,7 @@ Route::group(
     Route::get('/chart/budget/frontpage', ['uses' => 'Chart\BudgetController@frontpage']);
     Route::get('/chart/budget/year/{year}/{shared?}', ['uses' => 'Chart\BudgetController@year'])->where(['year' => '[0-9]{4}', 'shared' => 'shared']);
     Route::get('/chart/budget/{budget}/{limitrepetition}', ['uses' => 'Chart\BudgetController@budgetLimit']);
+    Route::get('/chart/budget/{budget}', ['uses' => 'Chart\BudgetController@budget']);
 
     // categories:
     Route::get('/chart/category/frontpage', ['uses' => 'Chart\CategoryController@frontpage']);

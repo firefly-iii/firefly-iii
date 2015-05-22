@@ -13,7 +13,7 @@ return [
     'openingBalance'              => 'Opening balance',
     'tagMode'                     => 'Tag mode',
     'tagPosition'                 => 'Tag location',
-    'virtualBalance'              => 'Vitual balance',
+    'virtualBalance'              => 'Virtual balance',
     'longitude_latitude'          => 'Location',
     'targetamount'                => 'Target amount',
     'accountRole'                 => 'Account role',

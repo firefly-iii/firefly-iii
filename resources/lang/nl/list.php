@@ -10,7 +10,7 @@ return [
     'lastActivity'   => 'Laatste activiteit',
     'balanceDiff'    => 'Saldoverschil tussen :start en :end',
     'matchedOn'      => 'Wordt herkend',
-    'matchesOn'   => 'Wordt herkend',
+    'matchesOn'      => 'Wordt herkend',
     'matchingAmount' => 'Bedrag',
     'lastMatch'      => 'Laatste keer gezien',
     'expectedMatch'  => 'Wordt verwacht',

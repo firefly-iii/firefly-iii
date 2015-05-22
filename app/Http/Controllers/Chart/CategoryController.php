@@ -4,7 +4,6 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 
 use Carbon\Carbon;
-use Crypt;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\LimitRepetition;
@@ -50,7 +49,7 @@ class CategoryController extends Controller
         while ($start <= $end) {
 
             $currentEnd = Navigation::endOfPeriod($start, $range);
-            $spent      = $repository->spentInPeriod($category, $start, $currentEnd);
+            $spent      = $repository->spentInPeriodCorrected($category, $start, $currentEnd);
             $chart->addRow(clone $start, $spent);
 
             $start = Navigation::addPeriod($start, $range, 0);
@@ -78,13 +77,26 @@ class CategoryController extends Controller
 
         $start = Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());
-        $set   = $repository->getCategoriesAndExpenses($start, $end);
+        $set   = $repository->getCategoriesAndExpensesCorrected($start, $end);
+
+        // sort by callback:
+        uasort(
+            $set,
+            function ($left, $right) {
+                if ($left['sum'] == $right['sum']) {
+                    return 0;
+                }
+
+                return ($left['sum'] < $right['sum']) ? 1 : -1;
+            }
+        );
+
 
         foreach ($set as $entry) {
-            $isEncrypted = intval($entry->encrypted) == 1 ? true : false;
-            $name        = strlen($entry->name) == 0 ? trans('firefly.noCategory') : $entry->name;
-            $name        = $isEncrypted ? Crypt::decrypt($name) : $name;
-            $chart->addRow($name, floatval($entry->sum));
+            $sum = floatval($entry['sum']);
+            if ($sum != 0) {
+                $chart->addRow($entry['name'], $sum);
+            }
         }
 
         $chart->generate();
@@ -109,7 +121,7 @@ class CategoryController extends Controller
         $chart->addColumn(trans('firefly.spent'), 'number');
 
         while ($start <= $end) {
-            $spent = $repository->spentOnDaySum($category, $start);
+            $spent = $repository->spentOnDaySumCorrected($category, $start);
             $chart->addRow(clone $start, $spent);
             $start->addDay();
         }
@@ -153,7 +165,7 @@ class CategoryController extends Controller
 
             // each budget, fill the row:
             foreach ($categories as $category) {
-                $spent = $repository->spentInPeriod($category, $start, $month, $shared);
+                $spent = $repository->spentInPeriodCorrected($category, $start, $month, $shared);
                 $row[] = $spent;
             }
             $chart->addRowArray($row);

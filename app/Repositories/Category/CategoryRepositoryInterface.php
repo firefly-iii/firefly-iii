@@ -33,12 +33,14 @@ interface CategoryRepositoryInterface
     public function getCategories();
 
     /**
+     * Corrected for tags.
+     *
      * @param Carbon $start
      * @param Carbon $end
      *
      * @return Collection
      */
-    public function getCategoriesAndExpenses($start, $end);
+    public function getCategoriesAndExpensesCorrected($start, $end);
 
     /**
      * @param Category $category
@@ -71,6 +73,8 @@ interface CategoryRepositoryInterface
     public function getWithoutCategory(Carbon $start, Carbon $end);
 
     /**
+     * Corrected for tags.
+     *
      * @param Category       $category
      * @param \Carbon\Carbon $start
      * @param \Carbon\Carbon $end
@@ -79,15 +83,18 @@ interface CategoryRepositoryInterface
      *
      * @return float
      */
-    public function spentInPeriod(Category $category, Carbon $start, Carbon $end, $shared = false);
+    public function spentInPeriodCorrected(Category $category, Carbon $start, Carbon $end, $shared = false);
 
     /**
+     *
+     * Corrected for tags.
+     *
      * @param Category $category
      * @param Carbon   $date
      *
      * @return float
      */
-    public function spentOnDaySum(Category $category, Carbon $date);
+    public function spentOnDaySumCorrected(Category $category, Carbon $date);
 
     /**
      * @param array $data

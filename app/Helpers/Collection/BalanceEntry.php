@@ -17,13 +17,10 @@ class BalanceEntry
 
     /** @var  AccountModel */
     protected $account;
-
+    /** @var float */
+    protected $left = 0.0;
     /** @var float */
     protected $spent = 0.0;
-
-    /** @var float  */
-    protected $left = 0.0;
-
 
     /**
      * @return AccountModel
@@ -44,22 +41,6 @@ class BalanceEntry
     /**
      * @return float
      */
-    public function getSpent()
-    {
-        return $this->spent;
-    }
-
-    /**
-     * @param float $spent
-     */
-    public function setSpent($spent)
-    {
-        $this->spent = $spent;
-    }
-
-    /**
-     * @return float
-     */
     public function getLeft()
     {
         return $this->left;
@@ -73,7 +54,21 @@ class BalanceEntry
         $this->left = $left;
     }
 
+    /**
+     * @return float
+     */
+    public function getSpent()
+    {
+        return $this->spent;
+    }
 
+    /**
+     * @param float $spent
+     */
+    public function setSpent($spent)
+    {
+        $this->spent = $spent;
+    }
 
 
 }

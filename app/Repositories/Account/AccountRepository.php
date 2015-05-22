@@ -306,7 +306,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @param Account $account
-     * @param Carbon $date
+     * @param Carbon  $date
      *
      * @return float
      */

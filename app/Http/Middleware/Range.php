@@ -55,10 +55,10 @@ class Range
             if (!Session::has('start') && !Session::has('end')) {
 
                 /** @var \FireflyIII\Models\Preference $viewRange */
-                $viewRange = Preferences::get('viewRange', '1M');
+                $viewRange = Preferences::get('viewRange', '1M')->data;
                 $start     = new Carbon;
-                $start     = Navigation::updateStartDate($viewRange->data, $start);
-                $end       = Navigation::updateEndDate($viewRange->data, $start);
+                $start     = Navigation::updateStartDate($viewRange, $start);
+                $end       = Navigation::updateEndDate($viewRange, $start);
 
                 Session::put('start', $start);
                 Session::put('end', $end);
@@ -73,9 +73,9 @@ class Range
                     Session::put('first', Carbon::now()->startOfYear());
                 }
             }
-            $current = Carbon::now()->format('F Y');
-            $next    = Carbon::now()->endOfMonth()->addDay()->format('F Y');
-            $prev    = Carbon::now()->startOfMonth()->subDay()->format('F Y');
+            $current = Carbon::now()->formatLocalized('%B %Y');
+            $next    = Carbon::now()->endOfMonth()->addDay()->formatLocalized('%B %Y');
+            $prev    = Carbon::now()->startOfMonth()->subDay()->formatLocalized('%B %Y');
             View::share('currentMonthName', $current);
             View::share('previousMonthName', $prev);
             View::share('nextMonthName', $next);

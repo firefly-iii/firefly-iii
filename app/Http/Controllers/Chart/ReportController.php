@@ -43,8 +43,8 @@ class ReportController extends Controller
             $month = clone $start;
             $month->endOfMonth();
             // total income and total expenses:
-            $incomeSum  = floatval($query->incomeInPeriod($start, $month, $shared)->sum('queryAmount'));
-            $expenseSum = floatval($query->expenseInPeriod($start, $month, $shared)->sum('queryAmount')) * -1;
+            $incomeSum  = floatval($query->incomeInPeriodCorrected($start, $month, $shared)->sum('amount'));
+            $expenseSum = floatval($query->expenseInPeriodCorrected($start, $month, $shared)->sum('amount'));
 
             $chart->addRow(clone $start, $incomeSum, $expenseSum);
             $start->addMonth();
@@ -82,8 +82,8 @@ class ReportController extends Controller
             $month = clone $start;
             $month->endOfMonth();
             // total income and total expenses:
-            $income += floatval($query->incomeInPeriod($start, $month, $shared)->sum('queryAmount'));
-            $expense += floatval($query->expenseInPeriod($start, $month, $shared)->sum('queryAmount')) * -1;
+            $income += floatval($query->incomeInPeriodCorrected($start, $month, $shared)->sum('amount'));
+            $expense += floatval($query->expenseInPeriodCorrected($start, $month, $shared)->sum('amount'));
             $count++;
             $start->addMonth();
         }

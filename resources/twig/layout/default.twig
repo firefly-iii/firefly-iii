@@ -128,13 +128,22 @@
 <script type="text/javascript">
     var start = "{{Session.get('start').format('d-m-Y')}}";
     var end = "{{Session.get('end').format('d-m-Y')}}";
-    var titleString = "{{Session.get('start').format('j M Y')}} - {{Session.get('end').format('j M Y')}}";
+    var titleString = "{{Session.get('start').formatLocalized(monthAndDayFormat)}} - {{Session.get('end').formatLocalized(monthAndDayFormat)}}";
     var dateRangeURL = "{{route('daterange')}}";
     var token = "{{csrf_token()}}";
     var firstDate = moment("{{Session.get('first').format('Y-m-d')}}");
     var currentMonthName = "{{ currentMonthName }}";
     var previousMonthName = "{{ previousMonthName }}";
     var language = "{{ language }}";
+
+    // translations:
+    var everything = '{{ 'everything'|_ }}';
+    var customRangeLabel = '{{ 'customRange'|_ }}';
+    var applyLabel = '{{ 'apply'|_ }}';
+    var cancelLabel = '{{ 'cancel'|_ }}';
+    var fromLabel = '{{ 'from'|_ }}';
+    var toLabel = '{{ 'to'|_ }}';
+
     var nextMonthName = "{{ nextMonthName }}";
     var currencyCode = '{{getCurrencyCode() }}';
     $('#daterange span').text(titleString);

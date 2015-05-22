@@ -1,6 +1,7 @@
 <?php
 
 namespace FireflyIII\Helpers\Collection;
+
 use Illuminate\Support\Collection;
 
 /**
@@ -58,8 +59,6 @@ class Balance
     {
         return $this->balanceLines;
     }
-
-
 
 
 }

@@ -5,6 +5,8 @@ namespace FireflyIII\Helpers\Collection;
 use FireflyIII\Models\Bill as BillModel;
 
 /**
+ * @codeCoverageIgnore
+ *
  * Class BillLine
  *
  * @package FireflyIII\Helpers\Collection

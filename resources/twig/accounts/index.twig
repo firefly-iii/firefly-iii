@@ -22,7 +22,7 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu pull-right" role="menu">
-                            <li><a href="{{route('accounts.create', what)}}"><i class="fa fa-plus fa-fw"></i> New {{ what }} account</a></li>
+                            <li><a href="{{route('accounts.create', what)}}"><i class="fa fa-plus fa-fw"></i> {{ ('make_new_' ~ what ~ '_account')|_ }}</a></li>
                         </ul>
                     </div>
                 </div>

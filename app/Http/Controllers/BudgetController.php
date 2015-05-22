@@ -60,7 +60,7 @@ class BudgetController extends Controller
             Session::put('budgets.create.url', URL::previous());
         }
         Session::forget('budgets.create.fromStore');
-        $subTitle = 'Create a new budget';
+        $subTitle = trans('firefly.create_new_budget');
 
         return view('budgets.create', compact('subTitle'));
     }
@@ -138,7 +138,7 @@ class BudgetController extends Controller
             function (Budget $budget) use ($repository) {
                 $date               = Session::get('start', Carbon::now()->startOfMonth());
                 $end                = Session::get('end', Carbon::now()->endOfMonth());
-                $budget->spent      = $repository->spentInPeriod($budget, $date, $end);
+                $budget->spent      = $repository->spentInPeriodCorrected($budget, $date, $end);
                 $budget->currentRep = $repository->getCurrentRepetition($budget, $date);
             }
         );

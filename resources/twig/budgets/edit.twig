@@ -1,12 +1,6 @@
 {% extends "./layout/default.twig" %}
 {% block content %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, budget) }}
-<div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-            <p class="lead">Use budgets to organize and limit your expenses.</p>
-        </div>
-    </div>
-
     {{ Form.model(budget, {'class' : 'form-horizontal','id' : 'update','url' : route('budgets.update',budget.id) } ) }}
     <input type="hidden" name="id" value="{{budget.id}}" />
     <div class="row">
