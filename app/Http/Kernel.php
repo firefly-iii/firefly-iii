@@ -37,6 +37,7 @@ class Kernel extends HttpKernel
             'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
             'guest'      => 'FireflyIII\Http\Middleware\RedirectIfAuthenticated',
             'range'      => 'FireflyIII\Http\Middleware\Range',
+            'cleanup'    => 'FireflyIII\Http\Middleware\Cleanup',
             'reminders'  => 'FireflyIII\Http\Middleware\Reminders',
             'piggybanks' => 'FireflyIII\Http\Middleware\PiggyBanks',
 
