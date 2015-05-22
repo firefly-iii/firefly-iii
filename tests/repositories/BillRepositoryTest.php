@@ -36,6 +36,22 @@ class BillRepositoryTest extends TestCase
         parent::tearDown();
     }
 
+    public function testBillPaymentsInRange()
+    {
+        $bill  = FactoryMuffin::create('FireflyIII\Models\Bill');
+        $start = Carbon::now()->startOfMonth();
+        $end   = Carbon::now()->endOfMonth();
+
+        // payment:
+        $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $journal->date = $start;
+        $journal->bill_id = $bill->id;
+        $journal->save();
+
+
+        $this->object->billPaymentsInRange($bill, $start, $end);
+    }
+
     /**
      * @covers FireflyIII\Repositories\Bill\BillRepository::createFakeBill
      */
@@ -58,8 +74,8 @@ class BillRepositoryTest extends TestCase
      */
     public function testDestroy()
     {
-        $bill = FactoryMuffin::create('FireflyIII\Models\Bill');
-        $accountId   = $bill->id;
+        $bill      = FactoryMuffin::create('FireflyIII\Models\Bill');
+        $accountId = $bill->id;
         $this->object->destroy($bill);
 
         // cannot find bill:
@@ -284,6 +300,7 @@ class BillRepositoryTest extends TestCase
     /**
      * One
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     *
      * @covers FireflyIII\Repositories\Bill\BillRepository::scan
      */
     public function testScanMatch()

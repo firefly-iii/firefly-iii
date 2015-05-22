@@ -192,7 +192,7 @@ FactoryMuffin::define(
             return RandomString::generateRandomString(3);
         },
         'symbol' => function () {
-            return RandomString::generateRandomString(1);
+            return RandomString::generateRandomString(2);
         },
         'name'   => 'word'
     ]

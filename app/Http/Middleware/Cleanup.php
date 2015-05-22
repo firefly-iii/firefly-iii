@@ -148,8 +148,8 @@ class Cleanup
             }
             unset($set, $entry, $metadata);
 
-
             //encrypt budget limit amount
+
             //encrypt limit repetition amount
             //encrypt piggy bank event amount
             //encrypt piggy bank repetition currentamount

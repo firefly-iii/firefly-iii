@@ -70,6 +70,7 @@ class ReportHelperTest extends TestCase
      * @covers FireflyIII\Helpers\Report\ReportHelper::getBalanceReport
      * @covers FireflyIII\Helpers\Report\ReportQuery::getAllAccounts
      * @covers FireflyIII\Helpers\Report\ReportQuery::spentInBudgetCorrected
+     * @covers FireflyIII\Helpers\Report\ReportQuery::spentNoBudget
      */
     public function testGetBalanceReport()
     {

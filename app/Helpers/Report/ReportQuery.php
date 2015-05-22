@@ -74,7 +74,9 @@ class ReportQuery implements ReportQueryInterface
                 if ($journal->amount != 0) {
                     return $journal;
                 }
+                // @codeCoverageIgnoreStart
             }
+        // @codeCoverageIgnoreEnd
         );
 
         return $data;
@@ -191,7 +193,9 @@ class ReportQuery implements ReportQueryInterface
                 if ($journal->amount != 0) {
                     return $journal;
                 }
+                // @codeCoverageIgnoreStart
             }
+        // @codeCoverageIgnoreEnd
         );
 
         return $data;
@@ -237,14 +241,11 @@ class ReportQuery implements ReportQueryInterface
             Auth::user()->transactionjournals()
                 ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                 ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                ->where('transactions.amount', '<', 0)
                 ->transactionTypes(['Withdrawal'])
                 ->where('transactions.account_id', $account->id)
                 ->before($end)
                 ->after($start)
-                ->whereNull('budget_transaction_journal.budget_id')
-                ->sum('transactions.amount')
-        );
+                ->whereNull('budget_transaction_journal.budget_id')->get(['transaction_journals.*'])->sum('amount'));
     }
 
     /**

@@ -99,6 +99,15 @@ class CategoryRepositoryTest extends TestCase
             $category->save();
         }
 
+        // another journal, same category:
+        $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $journal->user_id             = $user->id;
+        $journal->date                = new Carbon('2015-02-11');
+        $journal->transaction_type_id = $type->id;
+        $category->transactionjournals()->save($journal);
+        $journal->save();
+        $category->save();
+
         $this->be($user);
         $set = $this->object->getCategoriesAndExpensesCorrected(new Carbon('2015-02-01'), new Carbon('2015-02-28'));
         $this->assertCount(5, $set);
@@ -196,7 +205,20 @@ class CategoryRepositoryTest extends TestCase
     public function testSpentInPeriodSumCorrected()
     {
         $category = FactoryMuffin::create('FireflyIII\Models\Category');
-        $sum      = $this->object->spentInPeriodCorrected($category, new Carbon, new Carbon);
+        $sum      = $this->object->spentInPeriodCorrected($category, new Carbon, new Carbon, false);
+
+        $this->assertEquals(0, $sum);
+
+
+    }
+
+    /**
+     * @covers FireflyIII\Repositories\Category\CategoryRepository::spentInPeriodCorrected
+     */
+    public function testSpentInPeriodSumCorrectedShared()
+    {
+        $category = FactoryMuffin::create('FireflyIII\Models\Category');
+        $sum      = $this->object->spentInPeriodCorrected($category, new Carbon, new Carbon, true);
 
         $this->assertEquals(0, $sum);
 
