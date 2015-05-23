@@ -219,7 +219,7 @@ class Cleanup
             unset($set, $entry, $amount);
 
             // encrypt piggy bank repetition currentamount
-            $set = PiggyBankRepetition::whereNull('amount_encrypted')->take(5)->get();
+            $set = PiggyBankRepetition::whereNull('currentamount_encrypted')->take(5)->get();
             /** @var PiggyBankRepetition $entry */
             foreach ($set as $entry) {
                 $count++;
