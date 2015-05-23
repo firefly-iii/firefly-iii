@@ -32,7 +32,7 @@ use View;
 class TagController extends Controller
 {
     /**
-     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

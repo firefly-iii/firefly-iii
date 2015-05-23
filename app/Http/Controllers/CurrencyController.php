@@ -23,7 +23,7 @@ class CurrencyController extends Controller
 
 
     /**
-     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

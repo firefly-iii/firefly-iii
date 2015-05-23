@@ -24,7 +24,7 @@ abstract class Controller extends BaseController
     protected $monthFormat;
 
     /**
-     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
