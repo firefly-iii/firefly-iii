@@ -38,6 +38,9 @@ class BillControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BillController::create
+     */
     public function testCreate()
     {
         // go!
@@ -56,6 +59,9 @@ class BillControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BillController::delete
+     */
     public function testDelete()
     {
         $bill = FactoryMuffin::create('FireflyIII\Models\Bill');
@@ -65,6 +71,9 @@ class BillControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BillController::destroy
+     */
     public function testDestroy()
     {
         $bill = FactoryMuffin::create('FireflyIII\Models\Bill');
@@ -79,6 +88,9 @@ class BillControllerTest extends TestCase
         $this->assertResponseStatus(302);
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BillController::edit
+     */
     public function testEdit()
     {
         $bill = FactoryMuffin::create('FireflyIII\Models\Bill');
@@ -95,6 +107,9 @@ class BillControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BillController::index
+     */
     public function testIndex()
     {
         $bill = FactoryMuffin::create('FireflyIII\Models\Bill');
@@ -116,6 +131,9 @@ class BillControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BillController::rescan
+     */
     public function testRescan()
     {
         $bill       = FactoryMuffin::create('FireflyIII\Models\Bill');
@@ -135,6 +153,9 @@ class BillControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BillController::rescan
+     */
     public function testRescanInactive()
     {
         $bill         = FactoryMuffin::create('FireflyIII\Models\Bill');
@@ -148,6 +169,9 @@ class BillControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BillController::show
+     */
     public function testShow()
     {
         $bill       = FactoryMuffin::create('FireflyIII\Models\Bill');
@@ -170,6 +194,9 @@ class BillControllerTest extends TestCase
         $this->call('GET', '/bills/show/' . $bill->id);
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BillController::store
+     */
     public function testStore()
     {
         $bill       = FactoryMuffin::create('FireflyIII\Models\Bill');
@@ -185,6 +212,9 @@ class BillControllerTest extends TestCase
         $this->assertSessionHas('success', 'Bill "' . e($bill->name) . '" stored.');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BillController::store
+     */
     public function testStoreAndRedirect()
     {
         $bill       = FactoryMuffin::create('FireflyIII\Models\Bill');
@@ -200,6 +230,9 @@ class BillControllerTest extends TestCase
         $this->assertSessionHas('success', 'Bill "' . e($bill->name) . '" stored.');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BillController::update
+     */
     public function testUpdate()
     {
         $bill       = FactoryMuffin::create('FireflyIII\Models\Bill');
@@ -215,6 +248,9 @@ class BillControllerTest extends TestCase
         $this->assertSessionHas('success', 'Bill "' . e($bill->name) . '" updated.');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BillController::update
+     */
     public function testUpdateAndRedirect()
     {
         $bill       = FactoryMuffin::create('FireflyIII\Models\Bill');

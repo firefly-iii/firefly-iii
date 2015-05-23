@@ -37,6 +37,9 @@ class PreferencesControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\PreferencesController::index
+     */
     public function testIndex()
     {
         $user     = FactoryMuffin::create('FireflyIII\User');
@@ -69,6 +72,9 @@ class PreferencesControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\PreferencesController::postIndex
+     */
     public function testPostIndex()
     {
         $user = FactoryMuffin::create('FireflyIII\User');

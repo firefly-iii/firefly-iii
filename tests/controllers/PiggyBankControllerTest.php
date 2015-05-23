@@ -42,6 +42,9 @@ class PiggyBankControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\PiggyBankController::add
+     */
     public function testAdd()
     {
         $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
@@ -60,6 +63,9 @@ class PiggyBankControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\PiggyBankController::create
+     */
     public function testCreate()
     {
         $account    = FactoryMuffin::create('FireflyIII\Models\Account');
@@ -84,6 +90,9 @@ class PiggyBankControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\PiggyBankController::delete
+     */
     public function testDelete()
     {
         $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
@@ -95,6 +104,9 @@ class PiggyBankControllerTest extends TestCase
         $this->assertViewHas('subTitle', 'Delete "' . e($piggyBank->name) . '"');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\PiggyBankController::destroy
+     */
     public function testDestroy()
     {
         $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
@@ -110,6 +122,9 @@ class PiggyBankControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\PiggyBankController::edit
+     */
     public function testEdit()
     {
         $piggyBank             = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
@@ -137,6 +152,9 @@ class PiggyBankControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\PiggyBankController::edit
+     */
     public function testEditNullDate()
     {
         $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
@@ -164,6 +182,9 @@ class PiggyBankControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\PiggyBankController::index
+     */
     public function testIndex()
     {
         $piggyBank1             = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
@@ -194,6 +215,9 @@ class PiggyBankControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\PiggyBankController::order
+     */
     public function testOrder()
     {
         $piggyBank1 = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
@@ -214,6 +238,9 @@ class PiggyBankControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\PiggyBankController::postAdd
+     */
     public function testPostAdd()
     {
         $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
@@ -232,6 +259,9 @@ class PiggyBankControllerTest extends TestCase
         $this->assertResponseStatus(302);
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\PiggyBankController::postAdd
+     */
     public function testPostAddOverdraw()
     {
         $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
@@ -250,6 +280,9 @@ class PiggyBankControllerTest extends TestCase
         $this->assertResponseStatus(302);
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\PiggyBankController::postRemove
+     */
     public function testPostRemove()
     {
         $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
@@ -286,7 +319,9 @@ class PiggyBankControllerTest extends TestCase
         $this->assertResponseStatus(302);
     }
 
-
+    /**
+     * @covers FireflyIII\Http\Controllers\PiggyBankController::remove
+     */
     public function testRemove()
     {
         $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
@@ -300,6 +335,9 @@ class PiggyBankControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\PiggyBankController::show
+     */
     public function testShow()
     {
         $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
@@ -316,6 +354,9 @@ class PiggyBankControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\PiggyBankController::store
+     */
     public function testStore()
     {
         $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
@@ -338,6 +379,9 @@ class PiggyBankControllerTest extends TestCase
         $this->assertResponseStatus(302);
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\PiggyBankController::create
+     */
     public function testStoreCreateAnother()
     {
         $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
@@ -361,6 +405,9 @@ class PiggyBankControllerTest extends TestCase
         $this->assertResponseStatus(302);
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\PiggyBankController::update
+     */
     public function testUpdate()
     {
         $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
@@ -383,6 +430,9 @@ class PiggyBankControllerTest extends TestCase
         $this->assertResponseStatus(302);
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\PiggyBankController::update
+     */
     public function testUpdateReturnToEdit()
     {
         $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');

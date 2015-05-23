@@ -37,6 +37,9 @@ class JsonControllerTest extends TestCase
         parent::tearDown();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\JsonController::boxBillsPaid
+     */
     public function testBoxBillsPaid()
     {
         $bill       = FactoryMuffin::create('FireflyIII\Models\Bill');
@@ -66,6 +69,9 @@ class JsonControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\JsonController::boxBillsUnpaid
+     */
     public function testBoxBillsUnpaid()
     {
         $bill       = FactoryMuffin::create('FireflyIII\Models\Bill');
@@ -92,6 +98,9 @@ class JsonControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\JsonController::boxIn
+     */
     public function testBoxIn()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -106,6 +115,9 @@ class JsonControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\JsonController::boxOut
+     */
     public function testBoxOut()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -120,6 +132,9 @@ class JsonControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\JsonController::categories
+     */
     public function testCategories()
     {
         $category = FactoryMuffin::create('FireflyIII\Models\Category');
@@ -133,6 +148,9 @@ class JsonControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\JsonController::expenseAccounts
+     */
     public function testExpenseAccounts()
     {
         $account = FactoryMuffin::create('FireflyIII\Models\Account');
@@ -146,6 +164,9 @@ class JsonControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\JsonController::revenueAccounts
+     */
     public function testRevenueAccounts()
     {
         $account = FactoryMuffin::create('FireflyIII\Models\Account');
@@ -159,6 +180,9 @@ class JsonControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\JsonController::tags
+     */
     public function testTags()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -177,6 +201,9 @@ class JsonControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\JsonController::transactionJournals
+     */
     public function testTransactionJournals()
     {
         $journal    = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');

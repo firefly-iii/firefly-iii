@@ -39,7 +39,9 @@ class TransactionControllerTest extends TestCase
         parent::tearDown();
     }
 
-
+    /**
+     * @covers FireflyIII\Http\Controllers\TransactionController::create
+     */
     public function testCreate()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -57,6 +59,9 @@ class TransactionControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\TransactionController::delete
+     */
     public function testDelete()
     {
         $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
@@ -66,6 +71,9 @@ class TransactionControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\TransactionController::destroy
+     */
     public function testDestroy()
     {
         $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
@@ -84,6 +92,7 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
+     * @covers FireflyIII\Http\Controllers\TransactionController::edit
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function testEdit()
@@ -136,6 +145,9 @@ class TransactionControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\TransactionController::index
+     */
     public function testIndexRevenue()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -152,6 +164,9 @@ class TransactionControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\TransactionController::index
+     */
     public function testIndexTransfer()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -167,6 +182,9 @@ class TransactionControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\TransactionController::index
+     */
     public function testIndexWithdrawal()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -182,6 +200,9 @@ class TransactionControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\TransactionController::reorder
+     */
     public function testReorder()
     {
         $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
@@ -203,6 +224,9 @@ class TransactionControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\TransactionController::show
+     */
     public function testShow()
     {
         $journal                              = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
@@ -231,8 +255,7 @@ class TransactionControllerTest extends TestCase
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @covers FireflyIII\Models\Category::firstOrCreateEncrypted
-     * @covers FireflyIII\Models\Tag::firstOrCreateEncrypted
+     * @covers FireflyIII\Http\Controllers\TransactionController::store
      */
     public function testStore()
     {
@@ -279,8 +302,7 @@ class TransactionControllerTest extends TestCase
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @covers FireflyIII\Models\Category::firstOrCreateEncrypted
-     * @covers FireflyIII\Models\Tag::firstOrCreateEncrypted
+     * @covers FireflyIII\Http\Controllers\TransactionController::store
      */
     public function testStoreTransfer()
     {
@@ -341,8 +363,7 @@ class TransactionControllerTest extends TestCase
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @covers FireflyIII\Models\Category::firstOrCreateEncrypted
-     * @covers FireflyIII\Models\Tag::firstOrCreateEncrypted
+     * @covers FireflyIII\Http\Controllers\TransactionController::update
      */
     public function testUpdate()
     {
@@ -391,8 +412,7 @@ class TransactionControllerTest extends TestCase
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @covers FireflyIII\Models\Category::firstOrCreateEncrypted
-     * @covers FireflyIII\Models\Tag::firstOrCreateEncrypted
+     * @covers FireflyIII\Http\Controllers\TransactionController::update
      */
     public function testUpdateWithRedirect()
     {

@@ -26,6 +26,9 @@ class ChartCategoryControllerTest extends TestCase
         parent::tearDown();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\CategoryController::all
+     */
     public function testAll()
     {
 
@@ -38,6 +41,9 @@ class ChartCategoryControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\CategoryController::frontpage
+     */
     public function testFrontpage()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -62,6 +68,9 @@ class ChartCategoryControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\CategoryController::month
+     */
     public function testMonth()
     {
         $category = FactoryMuffin::create('FireflyIII\Models\Category');
@@ -71,6 +80,9 @@ class ChartCategoryControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\CategoryController::year
+     */
     public function testYear()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -89,6 +101,9 @@ class ChartCategoryControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\CategoryController::year
+     */
     public function testYearShared()
     {
         $user = FactoryMuffin::create('FireflyIII\User');

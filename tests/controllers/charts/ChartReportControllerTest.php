@@ -25,6 +25,9 @@ class ChartReportControllerTest extends TestCase
         parent::tearDown();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\ReportController::yearInOut
+     */
     public function testYearInOut()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -35,6 +38,9 @@ class ChartReportControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\ReportController::yearInOut
+     */
     public function testYearInOutShared()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -45,6 +51,9 @@ class ChartReportControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\ReportController::yearInOutSummarized
+     */
     public function testYearInOutSummarized()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -54,6 +63,9 @@ class ChartReportControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\ReportController::yearInOutSummarized
+     */
     public function testYearInOutSummarizedShared()
     {
         $user = FactoryMuffin::create('FireflyIII\User');

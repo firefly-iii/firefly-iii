@@ -36,6 +36,9 @@ class SearchControllerTest extends TestCase
         parent::tearDown();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\SearchController::search
+     */
     public function testSearch()
     {
         $user = FactoryMuffin::create('FireflyIII\User');

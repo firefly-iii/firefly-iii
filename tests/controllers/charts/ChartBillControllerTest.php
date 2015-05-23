@@ -30,6 +30,9 @@ class ChartBillControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\BillController::frontpage
+     */
     public function testFrontpage()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -63,6 +66,9 @@ class ChartBillControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\BillController::single
+     */
     public function testSingle()
     {
         $bill = FactoryMuffin::create('FireflyIII\Models\Bill');

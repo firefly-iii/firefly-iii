@@ -42,7 +42,6 @@ class ReportHelperTest extends TestCase
 
     /**
      * @covers FireflyIII\Helpers\Report\ReportHelper::getAccountReport
-     * @covers FireflyIII\Helpers\Report\ReportQuery::getAllAccounts
      */
     public function testGetAccountReport()
     {
@@ -68,9 +67,6 @@ class ReportHelperTest extends TestCase
 
     /**
      * @covers FireflyIII\Helpers\Report\ReportHelper::getBalanceReport
-     * @covers FireflyIII\Helpers\Report\ReportQuery::getAllAccounts
-     * @covers FireflyIII\Helpers\Report\ReportQuery::spentInBudgetCorrected
-     * @covers FireflyIII\Helpers\Report\ReportQuery::spentNoBudget
      */
     public function testGetBalanceReport()
     {
@@ -218,7 +214,6 @@ class ReportHelperTest extends TestCase
 
     /**
      * @covers FireflyIII\Helpers\Report\ReportHelper::getExpenseReport
-     * @covers FireflyIII\Helpers\Report\ReportQuery::expenseInPeriodCorrected
      */
     public function testGetExpenseReport()
     {
@@ -279,7 +274,6 @@ class ReportHelperTest extends TestCase
 
     /**
      * @covers FireflyIII\Helpers\Report\ReportHelper::getIncomeReport
-     * @covers FireflyIII\Helpers\Report\ReportQuery::incomeInPeriodCorrected
      */
     public function testGetIncomeReport()
     {

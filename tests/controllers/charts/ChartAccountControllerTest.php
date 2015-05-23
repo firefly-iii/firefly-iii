@@ -28,6 +28,9 @@ class ChartAccountControllerTest extends TestCase
         parent::tearDown();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\AccountController::all
+     */
     public function testAll()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -64,6 +67,9 @@ class ChartAccountControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\AccountController::all
+     */
     public function testAllShared()
     {
         $user     = FactoryMuffin::create('FireflyIII\User');
@@ -93,6 +99,9 @@ class ChartAccountControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\AccountController::frontpage
+     */
     public function testFrontpage()
     {
         $accounts = new Collection([FactoryMuffin::create('FireflyIII\Models\Account')]);
@@ -110,6 +119,9 @@ class ChartAccountControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\AccountController::single
+     */
     public function testSingle()
     {
         $account = FactoryMuffin::create('FireflyIII\Models\Account');

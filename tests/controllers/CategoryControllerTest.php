@@ -40,6 +40,9 @@ class CategoryControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\CategoryController::create
+     */
     public function testCreate()
     {
         $category = FactoryMuffin::create('FireflyIII\Models\Category');
@@ -50,6 +53,9 @@ class CategoryControllerTest extends TestCase
         $this->assertViewHas('subTitle', 'Create a new category');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\CategoryController::delete
+     */
     public function testDelete()
     {
 
@@ -61,6 +67,9 @@ class CategoryControllerTest extends TestCase
         $this->assertViewHas('subTitle', 'Delete category "' . e($category->name) . '"');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\CategoryController::destroy
+     */
     public function testDestroy()
     {
         $category = FactoryMuffin::create('FireflyIII\Models\Category');
@@ -74,6 +83,9 @@ class CategoryControllerTest extends TestCase
         $this->assertSessionHas('success', 'The  category "' . e($category->name) . '" was deleted.');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\CategoryController::edit
+     */
     public function testEdit()
     {
         $category = FactoryMuffin::create('FireflyIII\Models\Category');
@@ -84,6 +96,9 @@ class CategoryControllerTest extends TestCase
         $this->assertViewHas('subTitle', 'Edit category "' . e($category->name) . '"');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\CategoryController::index
+     */
     public function testIndex()
     {
         $collection = new Collection;
@@ -102,6 +117,9 @@ class CategoryControllerTest extends TestCase
         $this->assertViewHas('categories');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\CategoryController::noCategory
+     */
     public function testNoCategory()
     {
         $collection = new Collection;
@@ -123,6 +141,9 @@ class CategoryControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\CategoryController::show
+     */
     public function testShow()
     {
         $category   = FactoryMuffin::create('FireflyIII\Models\Category');
@@ -146,6 +167,9 @@ class CategoryControllerTest extends TestCase
     }
 
 
+    /**
+     * @covers FireflyIII\Http\Controllers\CategoryController::store
+     */
     public function testStore()
     {
         // create
@@ -165,7 +189,9 @@ class CategoryControllerTest extends TestCase
         $this->assertSessionHas('success', 'New category "' . $category->name . '" stored!');
     }
 
-    //
+    /**
+     * @covers FireflyIII\Http\Controllers\CategoryController::store
+     */
     public function testStoreAndRedirect()
     {
         // create
@@ -186,6 +212,9 @@ class CategoryControllerTest extends TestCase
         $this->assertSessionHas('success', 'New category "' . $category->name . '" stored!');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\CategoryController::update
+     */
     public function testUpdate()
     {
         // create
@@ -205,6 +234,9 @@ class CategoryControllerTest extends TestCase
         $this->assertSessionHas('success', 'Category "' . $category->name . '" updated.');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\CategoryController::update
+     */
     public function testUpdateAndRedirect()
     {
         // create

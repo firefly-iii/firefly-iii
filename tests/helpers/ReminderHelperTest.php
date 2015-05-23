@@ -38,6 +38,9 @@ class ReminderHelperTest extends TestCase
         parent::tearDown();
     }
 
+    /**
+     * @covers FireflyIII\Helpers\Reminders\ReminderHelper::createReminder
+     */
     public function testCreateReminder()
     {
         $account               = FactoryMuffin::create('FireflyIII\Models\Account');
@@ -52,6 +55,9 @@ class ReminderHelperTest extends TestCase
         $this->assertEquals($piggyBank->targetamount, $result->metadata->leftToSave);
     }
 
+    /**
+     * @covers FireflyIII\Helpers\Reminders\ReminderHelper::createReminder
+     */
     public function testCreateReminderHaveAlready()
     {
         $account                    = FactoryMuffin::create('FireflyIII\Models\Account');
@@ -72,6 +78,9 @@ class ReminderHelperTest extends TestCase
         $this->assertEquals($reminder->id, $result->id);
     }
 
+    /**
+     * @covers FireflyIII\Helpers\Reminders\ReminderHelper::createReminder
+     */
     public function testCreateReminderNoTarget()
     {
         $account               = FactoryMuffin::create('FireflyIII\Models\Account');
@@ -88,7 +97,7 @@ class ReminderHelperTest extends TestCase
     }
 
     /**
-     *
+     * @covers FireflyIII\Helpers\Reminders\ReminderHelper::createReminders
      */
     public function testCreateReminders()
     {
@@ -108,6 +117,9 @@ class ReminderHelperTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Helpers\Reminders\ReminderHelper::getReminderRanges
+     */
     public function testGetReminderRangesNull()
     {
         $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
@@ -115,6 +127,9 @@ class ReminderHelperTest extends TestCase
         $this->assertEquals([], $result);
     }
 
+    /**
+     * @covers FireflyIII\Helpers\Reminders\ReminderHelper::getReminderRanges
+     */
     public function testGetReminderRangesWithTargetDate()
     {
         /** @var \FireflyIII\Models\PiggyBank $piggyBank */
@@ -131,6 +146,9 @@ class ReminderHelperTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Helpers\Reminders\ReminderHelper::getReminderRanges
+     */
     public function testGetReminderRangesWithoutTargetDate()
     {
         /** @var \FireflyIII\Models\PiggyBank $piggyBank */
@@ -146,6 +164,9 @@ class ReminderHelperTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Helpers\Reminders\ReminderHelper::getReminderText
+     */
     public function testGetReminderTextDate()
     {
         $piggyBank                  = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
@@ -161,6 +182,9 @@ class ReminderHelperTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Helpers\Reminders\ReminderHelper::getReminderText
+     */
     public function testGetReminderTextNoPiggy()
     {
         $reminder                   = FactoryMuffin::create('FireflyIII\Models\Reminder');
@@ -169,6 +193,9 @@ class ReminderHelperTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Helpers\Reminders\ReminderHelper::getReminderText
+     */
     public function testGetReminderTextNullDate()
     {
         $piggyBank             = FactoryMuffin::create('FireflyIII\Models\PiggyBank');

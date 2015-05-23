@@ -32,6 +32,7 @@ class ConnectJournalToPiggyBankTest extends TestCase
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @covers FireflyIII\Handlers\Events\ConnectJournalToPiggyBank::handle
      */
     public function testNoRepetition()
     {
@@ -86,6 +87,9 @@ class ConnectJournalToPiggyBankTest extends TestCase
         $this->assertFalse($result);
     }
 
+    /**
+     * @covers FireflyIII\Handlers\Events\ConnectJournalToPiggyBank::handle
+     */
     public function testNoSuchPiggy()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -102,6 +106,7 @@ class ConnectJournalToPiggyBankTest extends TestCase
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @covers FireflyIII\Handlers\Events\ConnectJournalToPiggyBank::handle
      */
     public function testWithRepetition()
     {
@@ -162,6 +167,7 @@ class ConnectJournalToPiggyBankTest extends TestCase
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @covers FireflyIII\Handlers\Events\ConnectJournalToPiggyBank::handle
      */
     public function testWithRepetitionReversed()
     {

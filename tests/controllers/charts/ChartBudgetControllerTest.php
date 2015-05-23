@@ -27,6 +27,9 @@ class ChartBudgetControllerTest extends TestCase
         parent::tearDown();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\BudgetController::budget
+     */
     public function testBudget()
     {
         $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
@@ -38,6 +41,9 @@ class ChartBudgetControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\BudgetController::budgetLimit
+     */
     public function testBudgetLimit()
     {
         $user   = FactoryMuffin::create('FireflyIII\User');
@@ -68,6 +74,9 @@ class ChartBudgetControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\BudgetController::frontpage
+     */
     public function testFrontpage()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -116,6 +125,9 @@ class ChartBudgetControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\BudgetController::year
+     */
     public function testYear()
     {
         $user       = FactoryMuffin::create('FireflyIII\User');
@@ -136,6 +148,9 @@ class ChartBudgetControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\BudgetController::year
+     */
     public function testYearShared()
     {
         $user = FactoryMuffin::create('FireflyIII\User');

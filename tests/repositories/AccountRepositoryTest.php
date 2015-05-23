@@ -687,7 +687,6 @@ class AccountRepositoryTest extends TestCase
      * @covers FireflyIII\Repositories\Account\AccountRepository::storeAccount
      * @covers FireflyIII\Repositories\Account\AccountRepository::storeMetadata
      * @covers FireflyIII\Repositories\Account\AccountRepository::storeInitialBalance
-     * @covers FireflyII\Models\Account::firstOrNullEncrypted
      * @expectedException Symfony\Component\HttpKernel\Exception\HttpException
      */
     public function testStoreWithInvalidAccountData()

@@ -36,6 +36,9 @@ class ReminderControllerTest extends TestCase
         parent::tearDown();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\ReminderController::act
+     */
     public function testAct()
     {
         $reminder = FactoryMuffin::create('FireflyIII\Models\Reminder');
@@ -47,6 +50,9 @@ class ReminderControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\ReminderController::dismiss
+     */
     public function testDismiss()
     {
         $reminder = FactoryMuffin::create('FireflyIII\Models\Reminder');
@@ -57,6 +63,9 @@ class ReminderControllerTest extends TestCase
         $this->assertRedirectedTo('/');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\ReminderController::index
+     */
     public function testIndex()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -75,6 +84,9 @@ class ReminderControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\ReminderController::show
+     */
     public function testShow()
     {
         $reminder         = FactoryMuffin::create('FireflyIII\Models\Reminder');
@@ -86,6 +98,9 @@ class ReminderControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\ReminderController::show
+     */
     public function testShowDismissed()
     {
         $reminder         = FactoryMuffin::create('FireflyIII\Models\Reminder');
