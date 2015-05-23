@@ -134,7 +134,9 @@ class TestDataSeeder extends Seeder
 
         $acc_a = Account::create(['user_id' => $user->id, 'account_type_id' => $assetType->id, 'name' => 'Checking account', 'active' => 1]);
         $acc_b = Account::create(['user_id' => $user->id, 'account_type_id' => $assetType->id, 'name' => 'Savings account', 'active' => 1]);
-        $acc_c = Account::create(['user_id' => $user->id, 'account_type_id' => $assetType->id, 'name' => 'Delete me', 'active' => 1]);
+        $acc_c = Account::create(
+            ['user_id' => $user->id, 'account_type_id' => $assetType->id, 'name' => 'Delete me', 'active' => 1, 'virtual_balance' => 123.45]
+        );
 
         // create account meta:
         AccountMeta::create(['account_id' => $acc_a->id, 'name' => 'accountRole', 'data' => 'defaultAsset']);
@@ -517,27 +519,6 @@ class TestDataSeeder extends Seeder
     /**
      * @param $name
      *
-     * @return PiggyBank|null
-     */
-    protected function findPiggyBank($name)
-    {
-        // account
-        $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
-        /** @var Budget $budget */
-        foreach (PiggyBank::get() as $piggyBank) {
-            $account = $piggyBank->account()->first();
-            if ($piggyBank->name == $name && $user->id == $account->user_id) {
-                return $piggyBank;
-                break;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @param $name
-     *
      * @return Category|null
      */
     protected function findCategory($name)
@@ -678,6 +659,27 @@ class TestDataSeeder extends Seeder
                 'amount'                 => 100
             ]
         );
+    }
+
+    /**
+     * @param $name
+     *
+     * @return PiggyBank|null
+     */
+    protected function findPiggyBank($name)
+    {
+        // account
+        $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
+        /** @var Budget $budget */
+        foreach (PiggyBank::get() as $piggyBank) {
+            $account = $piggyBank->account()->first();
+            if ($piggyBank->name == $name && $user->id == $account->user_id) {
+                return $piggyBank;
+                break;
+            }
+        }
+
+        return null;
     }
 
 

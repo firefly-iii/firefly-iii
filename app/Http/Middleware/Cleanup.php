@@ -149,15 +149,12 @@ class Cleanup
             unset($set, $entry, $metadata);
 
             //encrypt budget limit amount
-
             //encrypt limit repetition amount
             //encrypt piggy bank event amount
             //encrypt piggy bank repetition currentamount
             //encrypt piggy bank targetamount
-
             //encrypt preference name (add field)
             //encrypt preference data (add field)
-
             //encrypt transaction amount
         }
         if ($count == 0 && $run) {
