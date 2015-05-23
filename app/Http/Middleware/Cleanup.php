@@ -8,6 +8,7 @@ use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Reminder;
 use FireflyIII\Models\TransactionJournal;
@@ -206,6 +207,16 @@ class Cleanup
             unset($set, $entry, $amount);
 
             //encrypt piggy bank event amount
+            $set = PiggyBankEvent::whereNull('amount_encrypted')->take(5)->get();
+            /** @var PiggyBankEvent $entry */
+            foreach ($set as $entry) {
+                $count++;
+                $amount        = $entry->amount;
+                $entry->amount = $amount;
+                $entry->save();
+            }
+            unset($set, $entry, $amount);
+            
             //encrypt piggy bank repetition currentamount
             //encrypt piggy bank targetamount
             //encrypt preference name (add field)
