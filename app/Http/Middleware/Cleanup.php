@@ -153,8 +153,30 @@ class Cleanup
             /** @var Account $entry */
             foreach ($set as $entry) {
                 $count++;
-                $amount        = $entry->amount;
+                $amount                 = $entry->amount;
                 $entry->virtual_balance = $amount;
+                $entry->save();
+            }
+            unset($set, $entry, $amount);
+
+            // encrypt bill amount_min
+            $set = Bill::whereNull('amount_min_encrypted')->take(5)->get();
+            /** @var Bill $entry */
+            foreach ($set as $entry) {
+                $count++;
+                $amount            = $entry->amount_min;
+                $entry->amount_min = $amount;
+                $entry->save();
+            }
+            unset($set, $entry, $amount);
+
+            // encrypt bill amount_max
+            $set = Bill::whereNull('amount_max_encrypted')->take(5)->get();
+            /** @var Bill $entry */
+            foreach ($set as $entry) {
+                $count++;
+                $amount            = $entry->amount_max;
+                $entry->amount_max = $amount;
                 $entry->save();
             }
             unset($set, $entry, $amount);
