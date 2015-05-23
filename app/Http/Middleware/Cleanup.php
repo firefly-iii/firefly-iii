@@ -12,6 +12,7 @@ use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Reminder;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
@@ -260,22 +261,21 @@ class Cleanup
                 $entry->save();
             }
             unset($set, $entry, $data);
-            //encrypt transaction amount
+
+            // encrypt transaction amount
+            $set = Transaction::whereNull('amount_encrypted')->take(5)->get();
+            /** @var Transaction $entry */
+            foreach ($set as $entry) {
+                $count++;
+                $amount        = $entry->amount;
+                $entry->amount = $amount;
+                $entry->save();
+            }
+            unset($set, $entry, $amount);
         }
         if ($count == 0 && $run) {
             Session::flash('warning', 'Please open the .env file and change RUNCLEANUP=true to RUNCLEANUP=false');
         }
-
-
-        //
-        //
-        //create get/set routine for budget limit amount
-        //create get/set routine for limit repetition amount
-        //create get/set routine for piggy bank event amount
-        //create get/set routine for piggy bank repetition currentamount
-        //create get/set routine for piggy bank targetamount
-        //create get/set routine for transaction amount
-
 
         return $next($request);
     }
