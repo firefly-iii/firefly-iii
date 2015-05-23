@@ -4,6 +4,7 @@ use Closure;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Preference;
@@ -181,7 +182,17 @@ class Cleanup
             }
             unset($set, $entry, $amount);
 
-            //encrypt budget limit amount
+            // encrypt budget limit amount
+            $set = BudgetLimit::whereNull('amount_encrypted')->take(5)->get();
+            /** @var BudgetLimit $entry */
+            foreach ($set as $entry) {
+                $count++;
+                $amount        = $entry->amount;
+                $entry->amount = $amount;
+                $entry->save();
+            }
+            unset($set, $entry, $amount);
+
             //encrypt limit repetition amount
             //encrypt piggy bank event amount
             //encrypt piggy bank repetition currentamount
