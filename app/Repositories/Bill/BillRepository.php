@@ -108,16 +108,10 @@ class BillRepository implements BillRepositoryInterface
     public function getJournals(Bill $bill)
     {
         return $bill->transactionjournals()->withRelevantData()
-                    ->leftJoin(
-                        'transactions', function (JoinClause $join) {
-                        $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                             ->where('transactions.amount', '>', 0);
-                    }
-                    )
                     ->orderBy('transaction_journals.date', 'DESC')
                     ->orderBy('transaction_journals.order', 'ASC')
                     ->orderBy('transaction_journals.id', 'DESC')
-                    ->get(['transaction_journals.*', 'transactions.amount']);
+                    ->get(['transaction_journals.*']);
     }
 
     /**

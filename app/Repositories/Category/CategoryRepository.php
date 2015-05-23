@@ -201,7 +201,7 @@ class CategoryRepository implements CategoryRepositoryInterface
                             ->before($end)
                             ->after($start)
                             ->transactionTypes(['Withdrawal'])
-                            ->lessThan(0)
+                            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                             ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                             ->leftJoin(
                                 'account_meta', function (JoinClause $join) {

@@ -34,11 +34,15 @@ class Steam
         $firstDate = is_null($firstDateObject) ? clone $date : new Carbon($firstDateObject->date);
         $date      = $date < $firstDate ? $firstDate : $date;
 
-        $balance = floatval(
-            $account->transactions()->leftJoin(
-                'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-            )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->sum('transactions.amount')
-        );
+
+        $set = $account->transactions()->leftJoin(
+            'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
+        )->where('transaction_journals.date', '<=', $date->format('Y-m-d'))->get(['transactions.*']);
+        $balance = 0;
+        foreach($set as $entry) {
+            $balance += $entry->amount;
+        }
+
         if (!$ignoreVirtualBalance) {
             $balance += floatval($account->virtual_balance);
         }

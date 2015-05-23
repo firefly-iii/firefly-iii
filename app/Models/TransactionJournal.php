@@ -224,6 +224,21 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @return Account
+     */
+    public function getDestinationAccountAttribute()
+    {
+        /** @var Transaction $transaction */
+        foreach ($this->transactions()->get() as $transaction) {
+            if (floatval($transaction->amount) > 0) {
+                return $transaction->account;
+            }
+        }
+
+        return $this->transactions()->first()->account;
+    }
+
+    /**
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -277,24 +292,6 @@ class TransactionJournal extends Model
      * @codeCoverageIgnore
      *
      * @param EloquentBuilder $query
-     * @param                 $amount
-     */
-    public function scopeLessThan(EloquentBuilder $query, $amount)
-    {
-        if (is_null($this->joinedTransactions)) {
-            $query->leftJoin(
-                'transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id'
-            );
-            $this->joinedTransactions = true;
-        }
-
-        $query->where('transactions.amount', '<=', $amount);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param EloquentBuilder $query
      * @param Carbon          $date
      *
      * @return mixed
@@ -302,24 +299,6 @@ class TransactionJournal extends Model
     public function scopeOnDate(EloquentBuilder $query, Carbon $date)
     {
         return $query->where('date', '=', $date->format('Y-m-d'));
-    }
-
-    /**
-     * Returns the account to which the money was moved.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param EloquentBuilder $query
-     * @param Account         $account
-     */
-    public function scopeToAccountIs(EloquentBuilder $query, Account $account)
-    {
-        $query->leftJoin(
-            'transactions', function (JoinClause $join) {
-            $join->on('transactions.transaction_journal_id', '=', 'transaction_journals.id')->where('transactions.amount', '>', 0);
-        }
-        );
-        $query->where('transactions.account_id', $account->id);
     }
 
     /**
