@@ -37,7 +37,7 @@ class SearchControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\SearchController::search
+     * @covers FireflyIII\Http\Controllers\SearchController::index
      */
     public function testSearch()
     {
