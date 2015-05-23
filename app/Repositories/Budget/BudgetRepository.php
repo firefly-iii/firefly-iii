@@ -250,9 +250,8 @@ class BudgetRepository implements BudgetRepositoryInterface
                            )
                            ->after($start)
                            ->before($end)
-                           ->lessThan(0)
                            ->transactionTypes(['Withdrawal'])
-                           ->sum('transactions.amount');
+                            ->get(['transaction_journals.*'])->sum('amount');
 
         return floatval($noBudgetSet) * -1;
     }
@@ -269,13 +268,12 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         if ($shared === true) {
             // get everything:
-            $sum = floatval($budget->transactionjournals()->before($end)->after($start)->lessThan(0)->get(['transaction_journals.*'])->sum('amount'));
+            $sum = floatval($budget->transactionjournals()->before($end)->after($start)->get(['transaction_journals.*'])->sum('amount'));
         } else {
             // get all journals in this month where the asset account is NOT shared.
             $sum = $budget->transactionjournals()
                           ->before($end)
                           ->after($start)
-                          ->lessThan(0)
                           ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                           ->leftJoin(
                               'account_meta', function (JoinClause $join) {
