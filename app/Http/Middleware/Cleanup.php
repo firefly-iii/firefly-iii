@@ -229,7 +229,17 @@ class Cleanup
             }
             unset($set, $entry, $amount);
 
-            //encrypt piggy bank targetamount
+            // encrypt piggy bank targetamount
+            $set = PiggyBank::whereNull('targetamount_encrypted')->take(5)->get();
+            /** @var PiggyBank $entry */
+            foreach ($set as $entry) {
+                $count++;
+                $amount               = $entry->targetamount;
+                $entry->targetamount = $amount;
+                $entry->save();
+            }
+            unset($set, $entry, $amount);
+
             //encrypt preference name (add field)
             //encrypt preference data (add field)
             //encrypt transaction amount
