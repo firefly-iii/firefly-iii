@@ -16,24 +16,7 @@ class Category extends Model
     use SoftDeletes;
 
     protected $fillable = ['user_id', 'name'];
-
-    /**
-     * @codeCoverageIgnore
-     * @return array
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'deleted_at'];
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function transactionjournals()
-    {
-        return $this->belongsToMany('FireflyIII\Models\TransactionJournal', 'category_transaction_journal', 'category_id');
-    }
+    protected $hidden   = ['encrypted'];
 
     /**
      * @param array $fields
@@ -71,22 +54,11 @@ class Category extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return array
      */
-    public function user()
+    public function getDates()
     {
-        return $this->belongsTo('FireflyIII\User');
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param $value
-     */
-    public function setNameAttribute($value)
-    {
-        $this->attributes['name']      = Crypt::encrypt($value);
-        $this->attributes['encrypted'] = true;
+        return ['created_at', 'updated_at', 'deleted_at'];
     }
 
     /**
@@ -104,6 +76,35 @@ class Category extends Model
         }
 
         return $value;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     *
+     * @param $value
+     */
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name']      = Crypt::encrypt($value);
+        $this->attributes['encrypted'] = true;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function transactionjournals()
+    {
+        return $this->belongsToMany('FireflyIII\Models\TransactionJournal', 'category_transaction_journal', 'category_id');
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo('FireflyIII\User');
     }
 
 }

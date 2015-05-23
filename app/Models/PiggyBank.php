@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class PiggyBank
  *
+ * @codeCoverageIgnore
+ *
  * @package FireflyIII\Models
  */
 class PiggyBank extends Model
@@ -14,10 +16,10 @@ class PiggyBank extends Model
     use SoftDeletes;
 
     protected $fillable
-        = ['name', 'account_id', 'order', 'reminder_skip', 'targetamount', 'startdate', 'targetdate', 'reminder', 'remind_me'];
+                      = ['name', 'account_id', 'order', 'reminder_skip', 'targetamount', 'startdate', 'targetdate', 'reminder', 'remind_me'];
+    protected $hidden = ['targetamount_encrypted', 'encrypted'];
 
     /**
-     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function account()
@@ -45,7 +47,6 @@ class PiggyBank extends Model
     }
 
     /**
-     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function piggyBankRepetitions()
@@ -54,7 +55,6 @@ class PiggyBank extends Model
     }
 
     /**
-     * @codeCoverageIgnore
      * @return array
      */
     public function getDates()
@@ -63,7 +63,6 @@ class PiggyBank extends Model
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param $value
      *
@@ -76,13 +75,10 @@ class PiggyBank extends Model
             return Crypt::decrypt($value);
         }
 
-        // @codeCoverageIgnoreStart
         return $value;
-        // @codeCoverageIgnoreEnd
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param $value
      *
@@ -110,7 +106,6 @@ class PiggyBank extends Model
     }
 
     /**
-     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function piggyBankEvents()
@@ -119,7 +114,6 @@ class PiggyBank extends Model
     }
 
     /**
-     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
     public function reminders()
@@ -128,7 +122,6 @@ class PiggyBank extends Model
     }
 
     /**
-     * @codeCoverageIgnore
      *
      * @param $value
      */

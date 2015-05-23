@@ -145,6 +145,7 @@ class CategoryControllerTest extends TestCase
 
     }
 
+
     public function testStore()
     {
         // create

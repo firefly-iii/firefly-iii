@@ -6,6 +6,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Input;
 use Preferences;
 use Redirect;
+use Route;
 use Session;
 use Steam;
 
@@ -85,6 +86,79 @@ class HomeController extends Controller
         }
 
         return view('index', compact('count', 'title', 'savings', 'subTitle', 'mainTitleIcon', 'transactions', 'savingsTotal', 'piggyBankAccounts'));
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    public function routes()
+    {
+        $directory = '/vagrant_data/Sites/firefly-iii-help';
+        $languages = array_keys(Config::get('firefly.lang'));
+        $routes    = [];
+        $ignored   = [
+            'debugbar.openhandler', 'debugbar.assets.css', 'debugbar.assets.js', 'register', 'routes', 'daterange',
+            'flush', 'delete-account-post', 'change-password-post', 'logout', 'login', 'tags.hideTagHelp',
+            'budgets.postIncome', 'flush'
+        ];
+
+        $ignoreMatch = ['.store', '.update', '.destroy', 'json.'];
+
+        $routeCollection = Route::getRoutes();
+        /** @var \Illuminate\Routing\Route $object */
+        foreach ($routeCollection as $object) {
+            // get name:
+            $name = $object->getName();
+            // has name and not in ignore list?
+            if (strlen($name) > 0 && !in_array($name, $ignored)) {
+
+                // not in ignoreMatch?
+                $continue = true;
+                foreach ($ignoreMatch as $ignore) {
+                    $match = strpos($name, $ignore);
+                    if (!($match === false)) {
+                        $continue = false;
+                    }
+                }
+                unset($ignore, $match);
+
+                if ($continue) {
+
+                    $routes[] = $name;
+
+                    // check all languages:
+                    foreach ($languages as $lang) {
+                        $file = $directory . '/' . $lang . '/' . $name . '.md';
+                        if (!file_exists($file)) {
+                            touch($file);
+                            echo $name . '<br />';
+                        }
+                    }
+                }
+
+
+            }
+
+        }
+
+        // loop directories with language file.
+        // tag the ones not in the list of approved routes.
+        foreach ($languages as $lang) {
+            $dir = $directory . '/' . $lang;
+            $set = scandir($dir);
+            foreach ($set as $entry) {
+                if ($entry != '.' && $entry != '..') {
+                    $name = str_replace('.md', '', $entry);
+                    if (!in_array($name, $routes)) {
+                        $file = $dir . '/' . $entry;
+                        unlink($file);
+                    }
+                }
+            }
+        }
+        echo 'Done!';
     }
 
 

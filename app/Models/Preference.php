@@ -13,6 +13,7 @@ class Preference extends Model
 {
 
     protected $fillable = ['user_id', 'data', 'name'];
+    protected $hidden   = ['data_encrypted', 'name_encrypted'];
 
     /**
      * @param $value

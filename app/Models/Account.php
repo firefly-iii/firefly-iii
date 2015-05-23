@@ -18,6 +18,7 @@ class Account extends Model
     use SoftDeletes, ValidatingTrait;
 
     protected $fillable = ['user_id', 'account_type_id', 'name', 'active', 'virtual_balance'];
+    protected $hidden   = ['virtual_balance_encrypted', 'encrypted'];
     protected $rules
                         = [
             'user_id'         => 'required|exists:users,id',
@@ -116,6 +117,7 @@ class Account extends Model
     /**
      *
      * @param $fieldName
+     * @codeCoverageIgnore
      *
      * @return string|null
      */
@@ -151,7 +153,7 @@ class Account extends Model
 
     /**
      * @param $value
-     *
+     * @codeCoverageIgnore
      * @return float|int
      */
     public function getVirtualBalanceAttribute($value)
@@ -220,6 +222,7 @@ class Account extends Model
 
     /**
      * @param $value
+     * @codeCoverageIgnore
      */
     public function setVirtualBalanceAttribute($value)
     {

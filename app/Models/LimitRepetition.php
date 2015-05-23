@@ -1,34 +1,26 @@
 <?php namespace FireflyIII\Models;
 
-use Auth;
 use Crypt;
-use DB;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class LimitRepetition
+ *
+ * @codeCoverageIgnore
  *
  * @package FireflyIII\Models
  */
 class LimitRepetition extends Model
 {
 
+    protected $hidden = ['amount_encrypted'];
+
     /**
-     * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function budgetLimit()
     {
         return $this->belongsTo('FireflyIII\Models\BudgetLimit');
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return array
-     */
-    public function getDates()
-    {
-        return ['created_at', 'updated_at', 'startdate', 'enddate'];
     }
 
     /**
@@ -45,6 +37,14 @@ class LimitRepetition extends Model
         $value = $value / 100;
 
         return $value;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDates()
+    {
+        return ['created_at', 'updated_at', 'startdate', 'enddate'];
     }
 
     /**

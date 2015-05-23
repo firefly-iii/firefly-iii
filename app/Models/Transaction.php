@@ -17,6 +17,7 @@ class Transaction extends Model
 {
 
     protected $fillable = ['account_id', 'transaction_journal_id', 'description', 'amount'];
+    protected $hidden   = ['encrypted'];
     protected $rules
                         = [
             'account_id'             => 'required|exists:accounts,id',

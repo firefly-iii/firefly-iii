@@ -15,6 +15,7 @@ class PiggyBankRepetition extends Model
 {
 
     protected $fillable = ['piggy_bank_id', 'startdate', 'targetdate', 'currentamount'];
+    protected $hidden   = ['currentamount_encrypted'];
 
     /**
      * @return array

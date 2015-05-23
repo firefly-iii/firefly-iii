@@ -70,7 +70,7 @@ class ReportHelper implements ReportHelperInterface
                 if ($account->accountType->type != 'Cash account') {
                     return $account;
                 }
-            }
+            } // @codeCoverageIgnore
         );
 
         // summarize:

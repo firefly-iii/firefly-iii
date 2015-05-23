@@ -193,6 +193,7 @@ Route::controllers(
     ]
 );
 
+Route::get('/routes', ['uses' => 'HomeController@routes', 'as' => 'routes']);
 
 /**
  * Home Controller

@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Model;
 class BudgetLimit extends Model
 {
 
+    protected $hidden = ['amount_encrypted'];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

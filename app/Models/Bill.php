@@ -4,6 +4,7 @@ use Crypt;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * @codeCoverageIgnore
  * Class Bill
  *
  * @package FireflyIII\Models
@@ -13,6 +14,8 @@ class Bill extends Model
 
     protected $fillable
         = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip', 'automatch', 'active',];
+
+    protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
 
     /**
      * @param $value
@@ -31,6 +34,7 @@ class Bill extends Model
     }
 
     /**
+     *
      * @param $value
      *
      * @return float|int
@@ -66,9 +70,7 @@ class Bill extends Model
             return Crypt::decrypt($value);
         }
 
-        // @codeCoverageIgnoreStart
         return $value;
-        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -83,9 +85,7 @@ class Bill extends Model
             return Crypt::decrypt($value);
         }
 
-        // @codeCoverageIgnoreStart
         return $value;
-        // @codeCoverageIgnoreEnd
     }
 
     /**

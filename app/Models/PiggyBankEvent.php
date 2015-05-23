@@ -7,12 +7,14 @@ use Illuminate\Database\Eloquent\Model;
  * Class PiggyBankEvent
  *
  * @codeCoverageIgnore
+ *
  * @package FireflyIII\Models
  */
 class PiggyBankEvent extends Model
 {
 
     protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'amount'];
+    protected $hidden   = ['amount_encrypted'];
 
     /**
      * @param $value

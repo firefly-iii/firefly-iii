@@ -15,7 +15,8 @@ class Budget extends Model
 
     use SoftDeletes;
 
-    protected $fillable = ['user_id', 'name'];
+    protected $fillable = ['user_id', 'name', 'active'];
+    protected $hidden   = ['encrypted'];
 
     /**
      *
@@ -46,9 +47,7 @@ class Budget extends Model
             return Crypt::decrypt($value);
         }
 
-        // @codeCoverageIgnoreStart
         return $value;
-        // @codeCoverageIgnoreEnd
     }
 
     /**

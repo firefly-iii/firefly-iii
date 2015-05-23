@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Query\JoinClause;
 use Watson\Validating\ValidatingTrait;
 
 /**
@@ -19,9 +18,9 @@ class TransactionJournal extends Model
     use SoftDeletes, ValidatingTrait;
 
     protected $fillable = ['user_id', 'transaction_type_id', 'bill_id', 'transaction_currency_id', 'description', 'completed', 'date', 'encrypted'];
-
+    protected $hidden   = ['encrypted'];
     protected $rules
-        = [
+                        = [
             'user_id'                 => 'required|exists:users,id',
             'transaction_type_id'     => 'required|exists:transaction_types,id',
             'bill_id'                 => 'exists:bills,id',

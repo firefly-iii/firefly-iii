@@ -231,6 +231,8 @@ class TransactionControllerTest extends TestCase
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @covers FireflyIII\Models\Category::firstOrCreateEncrypted
+     * @covers FireflyIII\Models\Tag::firstOrCreateEncrypted
      */
     public function testStore()
     {
@@ -254,7 +256,7 @@ class TransactionControllerTest extends TestCase
             'budget_id'          => '0',
             'create_another'     => '1',
             'category'           => '',
-            'tags'               => '',
+            'tags'               => 'fat-test',
             'piggy_bank_id'      => '0',
             '_token'             => 'replaceMe',
         ];
@@ -277,6 +279,8 @@ class TransactionControllerTest extends TestCase
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @covers FireflyIII\Models\Category::firstOrCreateEncrypted
+     * @covers FireflyIII\Models\Tag::firstOrCreateEncrypted
      */
     public function testStoreTransfer()
     {
@@ -314,7 +318,7 @@ class TransactionControllerTest extends TestCase
             'budget_id'          => '0',
             'create_another'     => '1',
             'category'           => '',
-            'tags'               => '',
+            'tags'               => 'fat-test',
             'piggy_bank_id'      => $piggy->id,
             '_token'             => 'replaceMe',
         ];
@@ -337,6 +341,8 @@ class TransactionControllerTest extends TestCase
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @covers FireflyIII\Models\Category::firstOrCreateEncrypted
+     * @covers FireflyIII\Models\Tag::firstOrCreateEncrypted
      */
     public function testUpdate()
     {
@@ -362,7 +368,7 @@ class TransactionControllerTest extends TestCase
             'date'               => '2015-05-31',
             'budget_id'          => '0',
             'category'           => 'Lunch',
-            'tags'               => '',
+            'tags'               => 'fat-test',
             'piggy_bank_id'      => '0',
         ];
 
@@ -385,6 +391,8 @@ class TransactionControllerTest extends TestCase
 
     /**
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @covers FireflyIII\Models\Category::firstOrCreateEncrypted
+     * @covers FireflyIII\Models\Tag::firstOrCreateEncrypted
      */
     public function testUpdateWithRedirect()
     {
@@ -411,7 +419,7 @@ class TransactionControllerTest extends TestCase
             'budget_id'          => '0',
             'category'           => 'Lunch',
             'return_to_edit'     => 1,
-            'tags'               => '',
+            'tags'               => 'fat-test',
             'piggy_bank_id'      => '0',
         ];
 
