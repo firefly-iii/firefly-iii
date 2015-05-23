@@ -6,6 +6,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Reminder;
@@ -193,7 +194,17 @@ class Cleanup
             }
             unset($set, $entry, $amount);
 
-            //encrypt limit repetition amount
+            // encrypt limit repetition amount
+            $set = LimitRepetition::whereNull('amount_encrypted')->take(5)->get();
+            /** @var LimitRepetition $entry */
+            foreach ($set as $entry) {
+                $count++;
+                $amount        = $entry->amount;
+                $entry->amount = $amount;
+                $entry->save();
+            }
+            unset($set, $entry, $amount);
+
             //encrypt piggy bank event amount
             //encrypt piggy bank repetition currentamount
             //encrypt piggy bank targetamount
