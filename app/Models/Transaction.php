@@ -45,8 +45,7 @@ class Transaction extends Model
         if (is_null($this->amount_encrypted)) {
             return $value;
         }
-        $value = intval(Crypt::decrypt($this->amount_encrypted));
-        $value = $value / 100;
+        $value = floatval(Crypt::decrypt($this->amount_encrypted));
 
         return $value;
     }
@@ -87,9 +86,8 @@ class Transaction extends Model
     public function setAmountAttribute($value)
     {
         // save in cents:
-        $value                                = intval($value * 100);
         $this->attributes['amount_encrypted'] = Crypt::encrypt($value);
-        $this->attributes['amount']           = ($value / 100);
+        $this->attributes['amount']           = $value;
     }
 
     /**
