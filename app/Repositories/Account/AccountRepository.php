@@ -306,7 +306,7 @@ class AccountRepository implements AccountRepositoryInterface
                 if ($journal->destination_account->id == $account->id) {
                     return $journal;
                 }
-            }
+            } // @codeCoverageIgnore
         );
 
         return $filtered;

@@ -99,14 +99,29 @@ class CategoryRepositoryTest extends TestCase
             $category->save();
         }
 
-        // another journal, same category:
-        $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-        $journal->user_id             = $user->id;
-        $journal->date                = new Carbon('2015-02-11');
-        $journal->transaction_type_id = $type->id;
-        $category->transactionjournals()->save($journal);
-        $journal->save();
-        $category->save();
+        for ($i = 0; $i < 5; $i++) {
+            $journal1 = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+            $journal2 = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+            /** @var Category $category */
+            $category                     = FactoryMuffin::create('FireflyIII\Models\Category');
+
+            $journal1->user_id             = $user->id;
+            $journal1->date                = new Carbon('2015-02-11');
+            $journal1->transaction_type_id = $type->id;
+
+            $journal2->user_id             = $user->id;
+            $journal2->date                = new Carbon('2015-02-11');
+            $journal2->transaction_type_id = $type->id;
+
+            $category->user_id            = $user->id;
+            $category->transactionjournals()->save($journal1);
+            $category->transactionjournals()->save($journal2);
+
+            $journal1->save();
+            $journal2->save();
+            $category->save();
+        }
+
 
         $this->be($user);
         $set = $this->object->getCategoriesAndExpensesCorrected(new Carbon('2015-02-01'), new Carbon('2015-02-28'));
