@@ -234,14 +234,32 @@ class Cleanup
             /** @var PiggyBank $entry */
             foreach ($set as $entry) {
                 $count++;
-                $amount               = $entry->targetamount;
+                $amount              = $entry->targetamount;
                 $entry->targetamount = $amount;
                 $entry->save();
             }
             unset($set, $entry, $amount);
 
-            //encrypt preference name (add field)
+            //encrypt preference name
+            $set = Preference::whereNull('name_encrypted')->take(5)->get();
+            /** @var Preference $entry */
+            foreach ($set as $entry) {
+                $count++;
+                $name        = $entry->name;
+                $entry->name = $name;
+                $entry->save();
+            }
+            unset($set, $entry, $name);
             //encrypt preference data (add field)
+            $set = Preference::whereNull('data_encrypted')->take(5)->get();
+            /** @var Preference $entry */
+            foreach ($set as $entry) {
+                $count++;
+                $data        = $entry->data;
+                $entry->data = $data;
+                $entry->save();
+            }
+            unset($set, $entry, $data);
             //encrypt transaction amount
         }
         if ($count == 0 && $run) {
