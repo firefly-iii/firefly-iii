@@ -154,10 +154,10 @@ class Cleanup
             foreach ($set as $entry) {
                 $count++;
                 $amount        = $entry->amount;
-                $entry->amount = $amount;
+                $entry->virtual_balance = $amount;
                 $entry->save();
             }
-            unset($set, $entry, $name);
+            unset($set, $entry, $amount);
 
             //encrypt budget limit amount
             //encrypt limit repetition amount
