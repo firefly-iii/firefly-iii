@@ -72,6 +72,7 @@ class ProfileControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\ProfileController::postChangePassword
+     * @covers FireflyIII\Http\Controllers\ProfileController::validatePassword
      */
     public function testPostChangePassword()
     {
@@ -97,6 +98,7 @@ class ProfileControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\ProfileController::postChangePassword
+     * @covers FireflyIII\Http\Controllers\ProfileController::validatePassword
      */
     public function testPostChangePasswordInvalidCurrent()
     {
@@ -122,6 +124,7 @@ class ProfileControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\ProfileController::postChangePassword
+     * @covers FireflyIII\Http\Controllers\ProfileController::validatePassword
      */
     public function testPostChangePasswordNoNewPassword()
     {
