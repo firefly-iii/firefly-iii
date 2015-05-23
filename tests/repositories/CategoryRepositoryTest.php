@@ -125,7 +125,7 @@ class CategoryRepositoryTest extends TestCase
 
         $this->be($user);
         $set = $this->object->getCategoriesAndExpensesCorrected(new Carbon('2015-02-01'), new Carbon('2015-02-28'));
-        $this->assertCount(5, $set);
+        $this->assertCount(10, $set);
         reset($set);
 
         $this->assertEquals(0, current($set)['sum']);
