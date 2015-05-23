@@ -1,7 +1,6 @@
 <?php namespace FireflyIII\Models;
 
 use Carbon\Carbon;
-use Crypt;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,6 +15,22 @@ class PiggyBankRepetition extends Model
 
     protected $fillable = ['piggy_bank_id', 'startdate', 'targetdate', 'currentamount'];
     protected $hidden   = ['currentamount_encrypted'];
+
+    /**
+     * @param $value
+     *
+     * @return float|int
+     */
+    public function getCurrentamountAttribute($value)
+    {
+        //        if (is_null($this->currentamount_encrypted)) {
+        //            return $value;
+        //        }
+        //        $value = intval(Crypt::decrypt($this->currentamount_encrypted));
+        //        $value = $value / 100;
+
+        return $value;
+    }
 
     /**
      * @return array
@@ -70,29 +85,14 @@ class PiggyBankRepetition extends Model
 
     /**
      * @param $value
-     *
-     * @return float|int
-     */
-    public function getCurrentamountAttribute($value)
-    {
-        if (is_null($this->currentamount_encrypted)) {
-            return $value;
-        }
-        $value = intval(Crypt::decrypt($this->currentamount_encrypted));
-        $value = $value / 100;
-
-        return $value;
-    }
-
-    /**
-     * @param $value
      */
     public function setCurrentamountAttribute($value)
     {
         // save in cents:
-        $value                                       = intval($value * 100);
-        $this->attributes['currentamount_encrypted'] = Crypt::encrypt($value);
-        $this->attributes['currentamount']           = ($value / 100);
+        //        $value                                       = intval($value * 100);
+        //        $this->attributes['currentamount_encrypted'] = Crypt::encrypt($value);
+        //        $this->attributes['currentamount']           = ($value / 100);
+        $this->attributes['currentamount'] = round($value, 2);
     }
 
 }

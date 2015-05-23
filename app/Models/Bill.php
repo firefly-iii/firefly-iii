@@ -24,11 +24,11 @@ class Bill extends Model
      */
     public function getAmountMaxAttribute($value)
     {
-        if (is_null($this->amount_max_encrypted)) {
-            return $value;
-        }
-        $value = intval(Crypt::decrypt($this->amount_max_encrypted));
-        $value = $value / 100;
+        //        if (is_null($this->amount_max_encrypted)) {
+        //            return $value;
+        //        }
+        //        $value = intval(Crypt::decrypt($this->amount_max_encrypted));
+        //        $value = $value / 100;
 
         return $value;
     }
@@ -41,11 +41,11 @@ class Bill extends Model
      */
     public function getAmountMinAttribute($value)
     {
-        if (is_null($this->amount_min_encrypted)) {
-            return $value;
-        }
-        $value = intval(Crypt::decrypt($this->amount_min_encrypted));
-        $value = $value / 100;
+        //        if (is_null($this->amount_min_encrypted)) {
+        //            return $value;
+        //        }
+        //        $value = intval(Crypt::decrypt($this->amount_min_encrypted));
+        //        $value = $value / 100;
 
         return $value;
     }
@@ -94,9 +94,10 @@ class Bill extends Model
     public function setAmountMaxAttribute($value)
     {
         // save in cents:
-        $value                                    = intval($value * 100);
-        $this->attributes['amount_max_encrypted'] = Crypt::encrypt($value);
-        $this->attributes['amount_max']           = ($value / 100);
+        //        $value                                    = intval($value * 100);
+        //        $this->attributes['amount_max_encrypted'] = Crypt::encrypt($value);
+        //        $this->attributes['amount_max']           = ($value / 100);
+        $this->attributes['amount_max'] = round($value, 2);
     }
 
     /**
@@ -105,9 +106,10 @@ class Bill extends Model
     public function setAmountMinAttribute($value)
     {
         // save in cents:
-        $value                                    = intval($value * 100);
-        $this->attributes['amount_min_encrypted'] = Crypt::encrypt($value);
-        $this->attributes['amount_min']           = ($value / 100);
+        //        $value                                    = intval($value * 100);
+        //        $this->attributes['amount_min_encrypted'] = Crypt::encrypt($value);
+        //        $this->attributes['amount_min']           = ($value / 100);
+        $this->attributes['amount_min'] = round($value, 2);
     }
 
     /**

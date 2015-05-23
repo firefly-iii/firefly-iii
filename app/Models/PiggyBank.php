@@ -96,11 +96,11 @@ class PiggyBank extends Model
      */
     public function getTargetamountAttribute($value)
     {
-        if (is_null($this->targetamount_encrypted)) {
-            return $value;
-        }
-        $value = intval(Crypt::decrypt($this->targetamount_encrypted));
-        $value = $value / 100;
+        //        if (is_null($this->targetamount_encrypted)) {
+        //            return $value;
+        //        }
+        //        $value = intval(Crypt::decrypt($this->targetamount_encrypted));
+        //        $value = $value / 100;
 
         return $value;
     }
@@ -137,8 +137,9 @@ class PiggyBank extends Model
     public function setTargetamountAttribute($value)
     {
         // save in cents:
-        $value                                      = intval($value * 100);
-        $this->attributes['targetamount_encrypted'] = Crypt::encrypt($value);
-        $this->attributes['targetamount']           = ($value / 100);
+        //        $value                                      = intval($value * 100);
+        //        $this->attributes['targetamount_encrypted'] = Crypt::encrypt($value);
+        //        $this->attributes['targetamount']           = ($value / 100);
+        $this->attributes['targetamount'] = round($value, 2);
     }
 }

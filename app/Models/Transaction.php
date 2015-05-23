@@ -1,7 +1,6 @@
 <?php namespace FireflyIII\Models;
 
 use Carbon\Carbon;
-use Crypt;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -43,12 +42,12 @@ class Transaction extends Model
     public function getAmountAttribute($value)
     {
         return $value;
-//        if (is_null($this->amount_encrypted)) {
-//            return $value;
-//        }
-//        $value = floatval(Crypt::decrypt($this->amount_encrypted));
-//
-//        return $value;
+        //        if (is_null($this->amount_encrypted)) {
+        //            return $value;
+        //        }
+        //        $value = floatval(Crypt::decrypt($this->amount_encrypted));
+        //
+        //        return $value;
     }
 
     /**
@@ -87,8 +86,8 @@ class Transaction extends Model
     public function setAmountAttribute($value)
     {
         // save in cents:
-        $this->attributes['amount_encrypted'] = Crypt::encrypt($value);
-        $this->attributes['amount']           = $value;
+        //        $this->attributes['amount_encrypted'] = Crypt::encrypt($value);
+        $this->attributes['amount'] = round($value, 2);
     }
 
     /**
