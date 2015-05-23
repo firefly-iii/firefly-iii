@@ -310,7 +310,6 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
 
-
     /**
      * @param Budget $budget
      * @param array  $data

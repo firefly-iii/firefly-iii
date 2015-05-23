@@ -17,16 +17,14 @@ class BudgetLine
 
     /** @var  BudgetModel */
     protected $budget;
-
-    /** @var  LimitRepetition */
-    protected $repetition;
-
     /** @var float */
     protected $budgeted = 0;
     /** @var float */
     protected $left = 0;
     /** @var float */
     protected $overspent = 0;
+    /** @var  LimitRepetition */
+    protected $repetition;
     /** @var float */
     protected $spent = 0;
 
@@ -95,22 +93,6 @@ class BudgetLine
     }
 
     /**
-     * @return float
-     */
-    public function getSpent()
-    {
-        return $this->spent;
-    }
-
-    /**
-     * @param float $spent
-     */
-    public function setSpent($spent)
-    {
-        $this->spent = $spent;
-    }
-
-    /**
      * @return LimitRepetition
      */
     public function getRepetition()
@@ -124,6 +106,22 @@ class BudgetLine
     public function setRepetition($repetition)
     {
         $this->repetition = $repetition;
+    }
+
+    /**
+     * @return float
+     */
+    public function getSpent()
+    {
+        return $this->spent;
+    }
+
+    /**
+     * @param float $spent
+     */
+    public function setSpent($spent)
+    {
+        $this->spent = $spent;
     }
 
 

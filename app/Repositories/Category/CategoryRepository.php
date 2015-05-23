@@ -5,7 +5,6 @@ namespace FireflyIII\Repositories\Category;
 use Auth;
 use Carbon\Carbon;
 use Crypt;
-use DB;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Database\Query\JoinClause;

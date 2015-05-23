@@ -34,6 +34,7 @@ class ReportHelper implements ReportHelperInterface
 
     /**
      * @codeCoverageIgnore
+     *
      * @param ReportQueryInterface $query
      *
      */
@@ -64,11 +65,13 @@ class ReportHelper implements ReportHelperInterface
         $diff     = 0;
 
         // remove cash account, if any:
-        $accounts  =$accounts->filter(function(Account $account) {
-            if($account->accountType->type != 'Cash account') {
-                return $account;
+        $accounts = $accounts->filter(
+            function (Account $account) {
+                if ($account->accountType->type != 'Cash account') {
+                    return $account;
+                }
             }
-        });
+        );
 
         // summarize:
         foreach ($accounts as $account) {
