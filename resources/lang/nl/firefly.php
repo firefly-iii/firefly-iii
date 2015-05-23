@@ -134,10 +134,10 @@ return [
     'accountBalances'               => 'Rekeningsaldi',
     'balanceStartOfYear'            => 'Saldo aan het begin van het jaar',
     'balanceEndOfYear'              => 'Saldo aan het einde van het jaar',
-    'balanceStartOfMonth'           => 'Saldo aan het einde van de maand',
+    'balanceStartOfMonth'           => 'Saldo aan het begin van de maand',
     'balanceEndOfMonth'             => 'Saldo aan het einde van de maand',
 
-    'balanceStart'                  => 'Saldo aan het einde van de periode',
+    'balanceStart'                  => 'Saldo aan het begin van de periode',
     'balanceEnd'                    => 'Saldo aan het einde van de periode',
 
     'reportsOwnAccounts'            => 'Overzichten voor je eigen betaalrekeningen',
