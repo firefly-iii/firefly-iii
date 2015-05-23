@@ -61,7 +61,7 @@ class Cleanup
         $count = 0;
 
         if ($run) {
-            //encrypt account name
+            // encrypt account name
             $set = Account::where('encrypted', 0)->take(5)->get();
             /** @var Account $entry */
             foreach ($set as $entry) {
@@ -72,7 +72,7 @@ class Cleanup
             }
             unset($set, $entry, $name);
 
-            //encrypt bill name
+            // encrypt bill name
             $set = Bill::where('name_encrypted', 0)->take(5)->get();
             /** @var Bill $entry */
             foreach ($set as $entry) {
@@ -83,7 +83,7 @@ class Cleanup
             }
             unset($set, $entry, $name);
 
-            //encrypt bill match
+            // encrypt bill match
             $set = Bill::where('match_encrypted', 0)->take(5)->get();
             /** @var Bill $entry */
             foreach ($set as $entry) {
@@ -93,7 +93,7 @@ class Cleanup
             }
             unset($set, $entry, $match);
 
-            //encrypt budget name
+            // encrypt budget name
             $set = Budget::where('encrypted', 0)->take(5)->get();
             /** @var Budget $entry */
             foreach ($set as $entry) {
@@ -104,7 +104,7 @@ class Cleanup
             }
             unset($set, $entry, $name);
 
-            //encrypt category name
+            // encrypt category name
             $set = Category::where('encrypted', 0)->take(5)->get();
             /** @var Category $entry */
             foreach ($set as $entry) {
@@ -115,7 +115,7 @@ class Cleanup
             }
             unset($set, $entry, $name);
 
-            //encrypt piggy bank name
+            // encrypt piggy bank name
             $set = PiggyBank::where('encrypted', 0)->take(5)->get();
             /** @var PiggyBank $entry */
             foreach ($set as $entry) {
@@ -126,7 +126,7 @@ class Cleanup
             }
             unset($set, $entry, $name);
 
-            //encrypt transaction journal description
+            // encrypt transaction journal description
             $set = TransactionJournal::where('encrypted', 0)->take(5)->get();
             /** @var TransactionJournal $entry */
             foreach ($set as $entry) {
@@ -137,7 +137,7 @@ class Cleanup
             }
             unset($set, $entry, $description);
 
-            //encrypt reminder metadata
+            // encrypt reminder metadata
             $set = Reminder::where('encrypted', 0)->take(5)->get();
             /** @var Reminder $entry */
             foreach ($set as $entry) {
@@ -147,6 +147,17 @@ class Cleanup
                 $entry->save();
             }
             unset($set, $entry, $metadata);
+
+            // encrypt account virtual balance amount
+            $set = Account::whereNull('virtual_balance_encrypted')->take(5)->get();
+            /** @var Account $entry */
+            foreach ($set as $entry) {
+                $count++;
+                $amount        = $entry->amount;
+                $entry->amount = $amount;
+                $entry->save();
+            }
+            unset($set, $entry, $name);
 
             //encrypt budget limit amount
             //encrypt limit repetition amount
