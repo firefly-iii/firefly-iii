@@ -274,6 +274,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             $sum = $budget->transactionjournals()
                           ->before($end)
                           ->after($start)
+                          ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                           ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                           ->leftJoin(
                               'account_meta', function (JoinClause $join) {
