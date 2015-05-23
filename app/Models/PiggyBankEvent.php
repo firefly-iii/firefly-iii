@@ -1,5 +1,6 @@
 <?php namespace FireflyIII\Models;
 
+use Crypt;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -12,6 +13,22 @@ class PiggyBankEvent extends Model
 {
 
     protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'amount'];
+
+    /**
+     * @param $value
+     *
+     * @return float|int
+     */
+    public function getAmountAttribute($value)
+    {
+        if (is_null($this->amount_encrypted)) {
+            return $value;
+        }
+        $value = intval(Crypt::decrypt($this->amount_encrypted));
+        $value = $value / 100;
+
+        return $value;
+    }
 
     /**
      * @return array
@@ -27,6 +44,17 @@ class PiggyBankEvent extends Model
     public function piggyBank()
     {
         return $this->belongsTo('FireflyIII\Models\PiggyBank');
+    }
+
+    /**
+     * @param $value
+     */
+    public function setAmountAttribute($value)
+    {
+        // save in cents:
+        $value                                = intval($value * 100);
+        $this->attributes['amount_encrypted'] = Crypt::encrypt($value);
+        $this->attributes['amount']           = ($value / 100);
     }
 
     /**

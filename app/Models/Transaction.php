@@ -1,6 +1,7 @@
 <?php namespace FireflyIII\Models;
 
 use Carbon\Carbon;
+use Crypt;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -34,6 +35,30 @@ class Transaction extends Model
     }
 
     /**
+     * @param $value
+     *
+     * @return float|int
+     */
+    public function getAmountAttribute($value)
+    {
+        if (is_null($this->amount_encrypted)) {
+            return $value;
+        }
+        $value = intval(Crypt::decrypt($this->amount_encrypted));
+        $value = $value / 100;
+
+        return $value;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDates()
+    {
+        return ['created_at', 'updated_at', 'deleted_at'];
+    }
+
+    /**
      * @param EloquentBuilder $query
      * @param Carbon          $date
      *
@@ -56,11 +81,14 @@ class Transaction extends Model
     }
 
     /**
-     * @return array
+     * @param $value
      */
-    public function getDates()
+    public function setAmountAttribute($value)
     {
-        return ['created_at', 'updated_at', 'deleted_at'];
+        // save in cents:
+        $value                                = intval($value * 100);
+        $this->attributes['amount_encrypted'] = Crypt::encrypt($value);
+        $this->attributes['amount']           = ($value / 100);
     }
 
     /**

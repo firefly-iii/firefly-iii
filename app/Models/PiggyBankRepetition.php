@@ -1,6 +1,7 @@
 <?php namespace FireflyIII\Models;
 
 use Carbon\Carbon;
+use Crypt;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -64,6 +65,33 @@ class PiggyBankRepetition extends Model
                              $q->orWhereNull('targetdate');
                          }
                      );
+    }
+
+    /**
+     * @param $value
+     *
+     * @return float|int
+     */
+    public function getCurrentamountAttribute($value)
+    {
+        if (is_null($this->currentamount_encrypted)) {
+            return $value;
+        }
+        $value = intval(Crypt::decrypt($this->currentamount_encrypted));
+        $value = $value / 100;
+
+        return $value;
+    }
+
+    /**
+     * @param $value
+     */
+    public function setCurrentamountAttribute($value)
+    {
+        // save in cents:
+        $value                                       = intval($value * 100);
+        $this->attributes['currentamount_encrypted'] = Crypt::encrypt($value);
+        $this->attributes['currentamount']           = ($value / 100);
     }
 
 }

@@ -67,11 +67,46 @@ class PiggyBank extends Model
      *
      * @param $value
      *
+     * @return string
+     */
+    public function getNameAttribute($value)
+    {
+
+        if (intval($this->encrypted) == 1) {
+            return Crypt::decrypt($value);
+        }
+
+        // @codeCoverageIgnoreStart
+        return $value;
+        // @codeCoverageIgnoreEnd
+    }
+
+    /**
+     * @codeCoverageIgnore
+     *
+     * @param $value
+     *
      * @return int
      */
     public function getRemindMeAttribute($value)
     {
         return intval($value) == 1;
+    }
+
+    /**
+     * @param $value
+     *
+     * @return float|int
+     */
+    public function getTargetamountAttribute($value)
+    {
+        if (is_null($this->targetamount_encrypted)) {
+            return $value;
+        }
+        $value = intval(Crypt::decrypt($this->targetamount_encrypted));
+        $value = $value / 100;
+
+        return $value;
     }
 
     /**
@@ -104,21 +139,13 @@ class PiggyBank extends Model
     }
 
     /**
-     * @codeCoverageIgnore
-     *
      * @param $value
-     *
-     * @return string
      */
-    public function getNameAttribute($value)
+    public function setTargetamountAttribute($value)
     {
-
-        if (intval($this->encrypted) == 1) {
-            return Crypt::decrypt($value);
-        }
-
-        // @codeCoverageIgnoreStart
-        return $value;
-        // @codeCoverageIgnoreEnd
+        // save in cents:
+        $value                                      = intval($value * 100);
+        $this->attributes['targetamount_encrypted'] = Crypt::encrypt($value);
+        $this->attributes['targetamount']           = ($value / 100);
     }
 }

@@ -96,7 +96,7 @@ class Bill extends Model
         // save in cents:
         $value                                    = intval($value * 100);
         $this->attributes['amount_max_encrypted'] = Crypt::encrypt($value);
-        $this->attributes['amount_max']           = 0;
+        $this->attributes['amount_max']           = ($value / 100);
     }
 
     /**
@@ -107,7 +107,7 @@ class Bill extends Model
         // save in cents:
         $value                                    = intval($value * 100);
         $this->attributes['amount_min_encrypted'] = Crypt::encrypt($value);
-        $this->attributes['amount_min']           = 0;
+        $this->attributes['amount_min']           = ($value / 100);
     }
 
     /**

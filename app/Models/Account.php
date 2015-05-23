@@ -145,9 +145,7 @@ class Account extends Model
             return Crypt::decrypt($value);
         }
 
-        // @codeCoverageIgnoreStart
         return $value;
-        // @codeCoverageIgnoreEnd
     }
 
 
@@ -228,7 +226,7 @@ class Account extends Model
         // save in cents:
         $value                                         = intval($value * 100);
         $this->attributes['virtual_balance_encrypted'] = Crypt::encrypt($value);
-        $this->attributes['virtual_balance']           = 0;
+        $this->attributes['virtual_balance']           = ($value / 100);
     }
 
     /**

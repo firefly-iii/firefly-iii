@@ -131,8 +131,8 @@ class ChangesForV3409 extends Migration
         // encrypt preference data (add field)
         Schema::table(
             'preferences', function (Blueprint $table) {
-            $table->smallInteger('name_encrypted', false, true)->default(0)->after('name');
-            $table->smallInteger('data_encrypted', false, true)->default(0)->after('data');
+            $table->text('name_encrypted')->nullable()->after('name');
+            $table->text('data_encrypted')->nullable()->after('data');
         }
         );
 
