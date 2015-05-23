@@ -85,7 +85,7 @@ class CategoryRepository implements CategoryRepositoryInterface
                 $result[$categoryId]['sum'] += floatval($entry->amount);
             } else {
                 $isEncrypted         = intval($entry->category_encrypted) == 1 ? true : false;
-                $name                = strlen($entry->name) == 0 ? trans('firefly.noCategory') : $entry->name;
+                $name                = strlen($entry->name) == 0 ? trans('firefly.no_category') : $entry->name;
                 $name                = $isEncrypted ? Crypt::decrypt($name) : $name;
                 $result[$categoryId] = [
                     'name' => $name,

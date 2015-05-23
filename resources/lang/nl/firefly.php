@@ -29,8 +29,6 @@ return [
     'transactionsWithoutBudgetDate' => 'Uitgaven zonder budget in :date',
     'createBudget'                  => 'Maak nieuw budget',
     'inactiveBudgets'               => 'Inactieve budgetten',
-    'newCategory'                   => 'Nieuwe categorie',
-    'withoutCategory'               => 'Zonder categorie',
 
     'details_for_asset'             => 'Overzicht voor betaalrekening ":name"',
     'details_for_expense'           => 'Overzicht voor crediteur ":name"',
@@ -52,6 +50,14 @@ return [
     'make_new_asset_account'        => 'Nieuwe betaalrekening',
     'make_new_expense_account'      => 'Nieuwe crediteur',
     'make_new_revenue_account'      => 'Nieuwe debiteur',
+
+    // categories:
+    'new_category'                  => 'Nieuwe categorie',
+    'without_category'              => 'Zonder categorie',
+    'update_category'               => 'Wijzig categorie',
+    'categories'                    => 'Categorieën',
+    'no_category'                    => '(geen categorie)',
+    'category'                      => 'Categorie',
 
     // new user:
     'welcome'                       => 'Welkom bij Firefly!',
@@ -94,7 +100,6 @@ return [
     'Expense account'               => 'Crediteur',
     'Revenue account'               => 'Debiteur',
     'budgets'                       => 'Budgetten',
-    'categories'                    => 'Categorieën',
     'tags'                          => 'Tags',
     'reports'                       => 'Overzichten',
     'transactions'                  => 'Transacties',
@@ -171,9 +176,7 @@ return [
     'spent'                         => 'Uitgegeven',
     'overspent'                     => 'Teveel uitgegeven',
     'left'                          => 'Over',
-    'noCategory'                    => '(geen categorie)',
     'noBudget'                      => '(geen budget)',
-    'category'                      => 'Categorie',
     'maxAmount'                     => 'Maximaal bedrag',
     'minAmount'                     => 'Minimaal bedrag',
     'billEntry'                     => 'Bedrag voor deze rekening',
