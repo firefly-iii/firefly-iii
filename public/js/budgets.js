@@ -110,9 +110,8 @@ function updateIncome() {
 
 function updateRanges() {
     "use strict";
-    /**
-     * Update all ranges.
-     */
+
+
     var sum = 0;
     $('input[type="range"]').each(function (i, v) {
         // get some values:
