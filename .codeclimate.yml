@@ -1,0 +1,23 @@
+# Save as .codeclimate.yml (note leading .) in project root directory
+languages:
+  JavaScript: true
+  PHP: true
+exclude_paths:
+- "public/packages/maximebf/php-debugbar/debugbar.js"
+- "public/packages/maximebf/php-debugbar/widgets.js"
+- "public/packages/maximebf/php-debugbar/openhandler.js"
+- "public/packages/maximebf/php-debugbar/widgets/sqlqueries/widget.js"
+- "public/js/bootstrap3-typeahead.min.js"
+- "public/js/bootstrap-sortable.js"
+- "public/js/bootstrap-tagsinput.min.js"
+- "public/js/bootstrap-tagsinput.min.js.map"
+- "public/js/daterangepicker.js"
+- "public/js/jquery-2.1.3.min.js"
+- "public/js/jquery-2.1.3.min.js.map"
+- "public/js/jquery-ui.min.js"
+- "public/js/metisMenu.js"
+- "public/js/moment.min.js"
+- "public/js/sb-admin-2.js"
+- "tests/*"
+- "database/*"
+- "storage/*"
