@@ -24,6 +24,7 @@ class ReportController extends Controller
 
     /**
      * @codeCoverageIgnore
+     *
      * @param ReportHelperInterface $helper
      */
     public function __construct(ReportHelperInterface $helper)

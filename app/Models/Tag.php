@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Models;
 
-use App;
 use Crypt;
 use Illuminate\Database\Eloquent\Model;
 use Watson\Validating\ValidatingTrait;

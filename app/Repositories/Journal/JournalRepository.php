@@ -82,11 +82,12 @@ class JournalRepository implements JournalRepositoryInterface
                                     ->where('transaction_journals.date', '<=', $journal->date->format('Y-m-d'))
                                     ->where('transaction_journals.order', '>=', $journal->order)
                                     ->where('transaction_journals.id', '!=', $journal->id)
-            ->get(['transactions.*']);
+                                    ->get(['transactions.*']);
         $sum = 0;
-        foreach($set as $entry) {
+        foreach ($set as $entry) {
             $sum += $entry->amount;
         }
+
         return $sum;
 
     }

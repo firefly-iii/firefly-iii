@@ -251,7 +251,7 @@ class BudgetRepository implements BudgetRepositoryInterface
                            ->after($start)
                            ->before($end)
                            ->transactionTypes(['Withdrawal'])
-                            ->get(['transaction_journals.*'])->sum('amount');
+                           ->get(['transaction_journals.*'])->sum('amount');
 
         return floatval($noBudgetSet) * -1;
     }

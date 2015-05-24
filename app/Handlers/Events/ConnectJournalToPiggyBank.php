@@ -17,6 +17,7 @@ class ConnectJournalToPiggyBank
 
     /**
      * Create the event handler.
+     *
      * @codeCoverageIgnore
      *
      */

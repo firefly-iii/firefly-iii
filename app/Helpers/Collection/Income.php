@@ -45,7 +45,7 @@ class Income
             $this->incomes->put($accountId, $newObject);
         } else {
             bcscale(2);
-            $existing = $this->incomes->get($accountId);
+            $existing         = $this->incomes->get($accountId);
             $existing->amount = bcadd($existing->amount, $entry->amount);
             $existing->count++;
             $this->incomes->put($accountId, $existing);

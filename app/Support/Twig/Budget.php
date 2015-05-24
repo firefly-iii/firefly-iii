@@ -3,7 +3,6 @@
 namespace FireflyIII\Support\Twig;
 
 use Auth;
-use DB;
 use FireflyIII\Models\LimitRepetition;
 use Twig_Extension;
 use Twig_SimpleFunction;

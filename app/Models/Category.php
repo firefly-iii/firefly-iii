@@ -1,6 +1,5 @@
 <?php namespace FireflyIII\Models;
 
-use App;
 use Crypt;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
