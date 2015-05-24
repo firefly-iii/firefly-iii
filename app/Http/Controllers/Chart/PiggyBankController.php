@@ -1,19 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 16/05/15
- * Time: 09:36
- */
 
 namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\Bill;
 use FireflyIII\Models\PiggyBank;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Grumpydictator\Gchart\GChart;
 use Illuminate\Support\Collection;

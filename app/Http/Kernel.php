@@ -39,7 +39,6 @@ class Kernel extends HttpKernel
             'range'      => 'FireflyIII\Http\Middleware\Range',
             'cleanup'    => 'FireflyIII\Http\Middleware\Cleanup',
             'reminders'  => 'FireflyIII\Http\Middleware\Reminders',
-            'piggybanks' => 'FireflyIII\Http\Middleware\PiggyBanks',
 
         ];
 

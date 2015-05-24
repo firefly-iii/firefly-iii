@@ -4,7 +4,6 @@ namespace FireflyIII\Helpers\Reminders;
 
 use Carbon\Carbon;
 use FireflyIII\Models\PiggyBank;
-use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\Reminder;
 
 /**

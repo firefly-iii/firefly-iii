@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sander
- * Date: 27/04/15
- * Time: 12:50
- */
-
 namespace FireflyIII\Http\Requests;
 
 use Auth;

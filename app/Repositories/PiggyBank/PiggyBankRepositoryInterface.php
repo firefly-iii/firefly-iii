@@ -3,7 +3,6 @@
 namespace FireflyIII\Repositories\PiggyBank;
 
 use FireflyIII\Models\PiggyBank;
-use FireflyIII\Models\PiggyBankRepetition;
 use Illuminate\Support\Collection;
 
 /**

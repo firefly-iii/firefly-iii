@@ -6,8 +6,6 @@ namespace FireflyIII\Http\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
-use FireflyIII\Models\LimitRepetition;
-use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Grumpydictator\Gchart\GChart;
 use Navigation;

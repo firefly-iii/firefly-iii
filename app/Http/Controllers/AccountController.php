@@ -39,7 +39,7 @@ class AccountController extends Controller
     public function create($what = 'asset')
     {
         $subTitleIcon = Config::get('firefly.subIconsByIdentifier.' . $what);
-        $subTitle     = 'Create a new ' . e($what) . ' account';
+        $subTitle     = trans('firefly.make_new_' . $what . '_account');
 
         // put previous url in session if not redirect from store (not "create another").
         if (Session::get('accounts.create.fromStore') !== true) {
@@ -58,7 +58,8 @@ class AccountController extends Controller
      */
     public function delete(Account $account)
     {
-        $subTitle = 'Delete ' . strtolower(e($account->accountType->type)) . ' "' . e($account->name) . '"';
+        $typeName = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
+        $subTitle = trans('firefly.delete_' . $typeName . '_account', ['name' => $account->name]);
 
         // put previous url in session
         Session::put('accounts.delete.url', URL::previous());
@@ -81,7 +82,7 @@ class AccountController extends Controller
 
         $repository->destroy($account);
 
-        Session::flash('success', 'The ' . e($typeName) . ' account "' . e($name) . '" was deleted.');
+        Session::flash('success', trans('firefly.' . $typeName . '_deleted', ['name' => $name]));
 
         return Redirect::to(Session::get('accounts.delete.url'));
     }

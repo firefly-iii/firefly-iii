@@ -33,7 +33,7 @@ class BudgetController extends Controller
 
 
         $first = $repository->getFirstBudgetLimitDate($budget);
-        $range = $viewRange = Preferences::get('viewRange', '1M')->data;
+        $range = Preferences::get('viewRange', '1M')->data;
         $last  = Session::get('end', new Carbon);
         $final = clone $last;
         $final->addYears(2);

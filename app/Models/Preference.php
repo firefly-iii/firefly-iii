@@ -58,7 +58,7 @@ class Preference extends Model
      */
     public function setDataAttribute($value)
     {
-        $this->attributes['data']           = '';//json_encode($value);
+        $this->attributes['data']           = '';
         $this->attributes['data_encrypted'] = Crypt::encrypt(json_encode($value));
     }
 

@@ -3,7 +3,6 @@
 namespace FireflyIII\Helpers\Collection;
 
 
-use FireflyIII\Models\Bill as BillModel;
 use Illuminate\Support\Collection;
 
 /**

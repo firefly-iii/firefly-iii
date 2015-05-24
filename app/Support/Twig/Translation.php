@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Support\Twig;
 
-use FireflyIII\Models\LimitRepetition;
 use Twig_Extension;
 use Twig_SimpleFilter;
 

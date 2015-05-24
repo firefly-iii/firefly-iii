@@ -18,6 +18,8 @@ exclude_paths:
 - "public/js/metisMenu.js"
 - "public/js/moment.min.js"
 - "public/js/sb-admin-2.js"
+- "public/bootstrap/*"
+- "resources/lang/*"
 - "tests/*"
 - "database/*"
 - "storage/*"
