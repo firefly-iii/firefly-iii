@@ -1,4 +1,4 @@
-if (typeof(google) != 'undefined') {
+if (typeof(google) !== 'undefined') {
     google.setOnLoadCallback(drawChart);
 }
 

@@ -1,3 +1,14 @@
+// Return a helper with preserved width of cells
+var fixHelper = function(e, tr) {
+    var $originals = tr.children();
+    var $helper = tr.clone();
+    $helper.children().each(function (index) {
+        // Set helper cell sizes to match the original sizes
+        $(this).width($originals.eq(index).width());
+    });
+    return $helper;
+};
+
 $(function () {
     $('.addMoney').on('click', addMoney);
     $('.removeMoney').on('click', removeMoney);
@@ -31,16 +42,7 @@ $(function () {
     );
 });
 
-// Return a helper with preserved width of cells
-var fixHelper = function(e, tr) {
-    var $originals = tr.children();
-    var $helper = tr.clone();
-    $helper.children().each(function (index) {
-        // Set helper cell sizes to match the original sizes
-        $(this).width($originals.eq(index).width());
-    });
-    return $helper;
-}
+
 
 function addMoney(e) {
     var pigID = parseInt($(e.target).data('id'));

@@ -1,4 +1,7 @@
+/* globals $, token, budgetID, repetitionID */
+
 $(function () {
+    "use strict";
     updateRanges();
     //$('input[type="range"]').change(updateSingleRange);
     $('input[type="range"]').on('input', updateSingleRange);
@@ -18,6 +21,7 @@ $(function () {
 
 
 function updateSingleRange(e) {
+    "use strict";
     // get some values:
     var input = $(e.target);
     var id = input.data('id');
@@ -63,6 +67,7 @@ function updateSingleRange(e) {
 }
 
 function updateTotal() {
+    "use strict";
     var sum = 0;
     $('input[type="range"]').each(function (i, v) {
         // get some values:
@@ -94,7 +99,8 @@ function updateTotal() {
 
 }
 
-function updateIncome(e) {
+function updateIncome() {
+    "use strict";
     $('#monthlyBudgetModal').empty().load('budgets/income', function () {
         $('#monthlyBudgetModal').modal('show');
     });
@@ -103,6 +109,7 @@ function updateIncome(e) {
 }
 
 function updateRanges() {
+    "use strict";
     /**
      * Update all ranges.
      */
@@ -133,8 +140,9 @@ function updateRanges() {
      * Update total sum:
      */
     var totalAmount = parseInt($('#totalAmount').data('value'));
+    var pct;
     if (sum <= totalAmount) {
-        var pct = sum / totalAmount * 100;
+        pct = sum / totalAmount * 100;
         $('#progress-bar-default').css('width', pct + '%');
         $('#progress-bar-warning').css('width', '0');
         $('#progress-bar-danger').css('width', '0');
@@ -142,7 +150,7 @@ function updateRanges() {
     } else {
         // we gaan er X overheen,
 
-        var pct = totalAmount / sum * 100;
+        pct = totalAmount / sum * 100;
         var danger = 100 - pct;
         var err = 100 - danger;
         $('#progress-bar-default').css('width', 0);

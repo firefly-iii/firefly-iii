@@ -28,7 +28,7 @@ $(document).ready(function () {
         });
     }
 
-    if ($('input[name="description"]').length > 0 && what != undefined) {
+    if ($('input[name="description"]').length > 0 && what !== undefined) {
         $.getJSON('json/transaction-journals/' + what).success(function (data) {
             $('input[name="description"]').typeahead({source: data});
         });

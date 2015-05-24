@@ -1,13 +1,16 @@
 $(function () {
+    "use strict";
     $('#help').click(showHelp);
     $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-    })
+
+        $('[data-toggle="tooltip"]').tooltip();
+    });
 });
 
 function showHelp(e) {
-    target = $(e.target);
-    route = target.data('route');
+    "use strict";
+    var target = $(e.target);
+    var route = target.data('route');
     //
     $('#helpBody').html('<i class="fa fa-refresh fa-spin"></i>');
     $('#helpTitle').html('Please hold...');

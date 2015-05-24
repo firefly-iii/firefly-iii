@@ -1,3 +1,4 @@
+/* globals google */
 google.setOnLoadCallback(drawChart);
 
 
@@ -12,13 +13,20 @@ function drawChart() {
 }
 
 function getBoxAmounts() {
+    "use strict";
     var boxes = ['in', 'out', 'bills-unpaid', 'bills-paid'];
-    for (x in boxes) {
+    for (var x in boxes) {
         var box = boxes[x];
-        $.getJSON('/json/box/' + box).success(function (data) {
-            $('#box-' + data.box).html(data.amount);
-        }).fail(function () {
-            console.log('Failed to get box!')
-        });
+        $.getJSON('/json/box/' + box).success(putData).fail(failData);
     }
+}
+
+function putData(data) {
+    "use strict";
+    $('#box-' + data.box).html(data.amount);
+}
+
+function failData() {
+    "use strict";
+    console.log('Failed to get box!');
 }

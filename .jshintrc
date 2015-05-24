@@ -1,0 +1,22 @@
+{
+  "undef": true,
+  "unused": false,
+  "strict": true,
+  "browser": true,
+  "jquery": true,
+  "devel": true,
+  "globals": [
+    "language",
+    "token",
+    "currencyCode",
+    "$",
+    "token",
+    "accountID",
+    "billID",
+    "currentMonthName",
+    "previousMonthName",
+    "nextMonthName",
+    "everything",
+    "moment"
+  ]
+}

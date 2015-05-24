@@ -1,11 +1,23 @@
-$(function () {
+/* global $ */
 
+
+// Return a helper with preserved width of cells
+var fixHelper = function (e, ui) {
+    "use strict";
+    ui.children().each(function () {
+        $(this).width($(this).width());
+    });
+    return ui;
+};
+
+$(function () {
+    "use strict";
     if (typeof(googleLineChart) === "function" && typeof accountID !== 'undefined') {
         googleLineChart('chart/account/' + accountID, 'overview-chart');
     }
 
     // sortable!
-    if (typeof $(".sortable-table tbody").sortable != "undefined") {
+    if (typeof $(".sortable-table tbody").sortable !== "undefined") {
         $(".sortable-table tbody").sortable(
             {
                 helper: fixHelper,
@@ -19,23 +31,14 @@ $(function () {
 });
 
 
-// Return a helper with preserved width of cells
-var fixHelper = function (e, ui) {
-    ui.children().each(function () {
-        $(this).width($(this).width());
-    });
-    return ui;
-};
-
 function sortStop(event, ui) {
+    "use strict";
     var current = $(ui.item);
     var thisDate = current.data('date');
     var originalBG = current.css('backgroundColor');
 
 
-    if (current.prev().data('date') != thisDate && current.next().data('date') != thisDate) {
-        //console.log('False!');
-        //console.log('[' + current.prev().data('date') + '] [' + thisDate + '] [' + current.next().data('date') + ']');
+    if (current.prev().data('date') !== thisDate && current.next().data('date') !== thisDate) {
         // animate something with color:
         current.animate({
                             backgroundColor: "#d9534f"
@@ -59,10 +62,6 @@ function sortStop(event, ui) {
 
     // do extra animation when done?
     $.post('/transaction/reorder', {items: submit, date: thisDate, _token: token});
-    console.log(submit);
-
-    //console.log('TRUE!');
-    //console.log('[' + current.prev().data('date') + '] [' + thisDate + '] [' + current.next().data('date') + ']');
 
     current.animate({
                         backgroundColor: "#5cb85c"
