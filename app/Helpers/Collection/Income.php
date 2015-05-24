@@ -38,14 +38,15 @@ class Income
         $accountId = $entry->account_id;
         if (!$this->incomes->has($accountId)) {
             $newObject         = new stdClass;
-            $newObject->amount = floatval($entry->amount);
+            $newObject->amount = strval(round($entry->amount, 2));
             $newObject->name   = $entry->name;
             $newObject->count  = 1;
             $newObject->id     = $accountId;
             $this->incomes->put($accountId, $newObject);
         } else {
+            bcscale(2);
             $existing = $this->incomes->get($accountId);
-            $existing->amount += floatval($entry->amount);
+            $existing->amount = bcadd($existing->amount, $entry->amount);
             $existing->count++;
             $this->incomes->put($accountId, $existing);
         }
@@ -56,7 +57,9 @@ class Income
      */
     public function addToTotal($add)
     {
-        $this->total += floatval($add);
+        $add = strval(round($add, 2));
+        bcscale(2);
+        $this->total = bcadd($this->total, $add);
     }
 
     /**
@@ -78,7 +81,7 @@ class Income
      */
     public function getTotal()
     {
-        return $this->total;
+        return strval(round($this->total, 2));
     }
 
 

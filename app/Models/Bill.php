@@ -18,39 +18,6 @@ class Bill extends Model
     protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
 
     /**
-     * @param $value
-     *
-     * @return float|int
-     */
-    public function getAmountMaxAttribute($value)
-    {
-        //        if (is_null($this->amount_max_encrypted)) {
-        //            return $value;
-        //        }
-        //        $value = intval(Crypt::decrypt($this->amount_max_encrypted));
-        //        $value = $value / 100;
-
-        return $value;
-    }
-
-    /**
-     *
-     * @param $value
-     *
-     * @return float|int
-     */
-    public function getAmountMinAttribute($value)
-    {
-        //        if (is_null($this->amount_min_encrypted)) {
-        //            return $value;
-        //        }
-        //        $value = intval(Crypt::decrypt($this->amount_min_encrypted));
-        //        $value = $value / 100;
-
-        return $value;
-    }
-
-    /**
      * @return array
      */
     public function getDates()
@@ -93,11 +60,7 @@ class Bill extends Model
      */
     public function setAmountMaxAttribute($value)
     {
-        // save in cents:
-        //        $value                                    = intval($value * 100);
-        //        $this->attributes['amount_max_encrypted'] = Crypt::encrypt($value);
-        //        $this->attributes['amount_max']           = ($value / 100);
-        $this->attributes['amount_max'] = round($value, 2);
+        $this->attributes['amount_max'] = strval(round($value, 2));
     }
 
     /**
@@ -105,11 +68,7 @@ class Bill extends Model
      */
     public function setAmountMinAttribute($value)
     {
-        // save in cents:
-        //        $value                                    = intval($value * 100);
-        //        $this->attributes['amount_min_encrypted'] = Crypt::encrypt($value);
-        //        $this->attributes['amount_min']           = ($value / 100);
-        $this->attributes['amount_min'] = round($value, 2);
+        $this->attributes['amount_min'] = strval(round($value, 2));
     }
 
     /**

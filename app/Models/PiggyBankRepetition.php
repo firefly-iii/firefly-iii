@@ -17,22 +17,6 @@ class PiggyBankRepetition extends Model
     protected $hidden   = ['currentamount_encrypted'];
 
     /**
-     * @param $value
-     *
-     * @return float|int
-     */
-    public function getCurrentamountAttribute($value)
-    {
-        //        if (is_null($this->currentamount_encrypted)) {
-        //            return $value;
-        //        }
-        //        $value = intval(Crypt::decrypt($this->currentamount_encrypted));
-        //        $value = $value / 100;
-
-        return $value;
-    }
-
-    /**
      * @return array
      */
     public function getDates()
@@ -88,11 +72,7 @@ class PiggyBankRepetition extends Model
      */
     public function setCurrentamountAttribute($value)
     {
-        // save in cents:
-        //        $value                                       = intval($value * 100);
-        //        $this->attributes['currentamount_encrypted'] = Crypt::encrypt($value);
-        //        $this->attributes['currentamount']           = ($value / 100);
-        $this->attributes['currentamount'] = round($value, 2);
+        $this->attributes['currentamount'] = strval(round($value, 2));
     }
 
 }

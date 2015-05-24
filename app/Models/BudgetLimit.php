@@ -22,22 +22,6 @@ class BudgetLimit extends Model
     }
 
     /**
-     * @param $value
-     *
-     * @return float|int
-     */
-    public function getAmountAttribute($value)
-    {
-        //        if (is_null($this->amount_encrypted)) {
-        //            return $value;
-        //        }
-        //        $value = intval(Crypt::decrypt($this->amount_encrypted));
-        //        $value = $value / 100;
-
-        return $value;
-    }
-
-    /**
      * @return array
      */
     public function getDates()
@@ -58,11 +42,7 @@ class BudgetLimit extends Model
      */
     public function setAmountAttribute($value)
     {
-        // save in cents:
-        //        $value                                = intval($value * 100);
-        //        $this->attributes['amount_encrypted'] = Crypt::encrypt($value);
-        //        $this->attributes['amount']           = ($value / 100);
-        $this->attributes['amount'] = round($value, 2);
+        $this->attributes['amount'] = strval(round($value, 2));
     }
 
 }

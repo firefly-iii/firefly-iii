@@ -151,24 +151,6 @@ class Account extends Model
         return $value;
     }
 
-
-    /**
-     * @param $value
-     *
-     * @codeCoverageIgnore
-     * @return float|int
-     */
-    public function getVirtualBalanceAttribute($value)
-    {
-        //        if (is_null($this->virtual_balance_encrypted)) {
-        //            return $value;
-        //        }
-        //        $value = intval(Crypt::decrypt($this->virtual_balance_encrypted));
-        //        $value = $value / 100;
-
-        return $value;
-    }
-
     /**
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -229,10 +211,7 @@ class Account extends Model
      */
     public function setVirtualBalanceAttribute($value)
     {
-        //        $value                                         = intval($value * 100);
-        //        $this->attributes['virtual_balance_encrypted'] = Crypt::encrypt($value);
-        //        $this->attributes['virtual_balance']           = ($value / 100);
-        $this->attributes['virtual_balance'] = round($value, 2);
+        $this->attributes['virtual_balance'] = strval(round($value, 2));
     }
 
     /**
