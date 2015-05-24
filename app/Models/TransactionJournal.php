@@ -59,15 +59,15 @@ class TransactionJournal extends Model
     }
 
     /**
-     * @return float
+     * @return string
      */
     public function getActualAmountAttribute()
     {
-        $amount = 0;
+        $amount = '0';
         /** @var Transaction $t */
         foreach ($this->transactions as $t) {
             if ($t->amount > 0) {
-                $amount = floatval($t->amount);
+                $amount = $t->amount;
             }
         }
 
@@ -79,11 +79,12 @@ class TransactionJournal extends Model
      */
     public function getAmountAttribute()
     {
-        $amount = 0;
+        $amount = '0';
+        bcscale(2);
         /** @var Transaction $t */
         foreach ($this->transactions as $t) {
             if ($t->amount > 0) {
-                $amount = floatval($t->amount);
+                $amount = $t->amount;
             }
         }
 
@@ -93,16 +94,16 @@ class TransactionJournal extends Model
         if ($this->tags->count() == 0) {
             return $amount;
         }
+
         // if journal is part of advancePayment AND journal is a withdrawal,
         // then journal is being repaid by other journals, so the actual amount will lower:
         /** @var Tag $advancePayment */
         $advancePayment = $this->tags()->where('tagMode', 'advancePayment')->first();
         if ($advancePayment && $this->transactionType->type == 'Withdrawal') {
-
             // loop other deposits, remove from our amount.
             $others = $advancePayment->transactionJournals()->transactionTypes(['Deposit'])->get();
             foreach ($others as $other) {
-                $amount -= $other->actualAmount;
+                $amount = bcsub($amount, $other->actualAmount);
             }
 
             return $amount;
@@ -111,25 +112,24 @@ class TransactionJournal extends Model
         // if this journal is part of an advancePayment AND the journal is a deposit,
         // then the journal amount is correcting a withdrawal, and the amount is zero:
         if ($advancePayment && $this->transactionType->type == 'Deposit') {
-            return 0;
+            return '0';
         }
 
 
         // is balancing act?
         $balancingAct = $this->tags()->where('tagMode', 'balancingAct')->first();
-        if ($balancingAct) {
-            // this is the transfer
 
+        if ($balancingAct) {
             // this is the expense:
             if ($this->transactionType->type == 'Withdrawal') {
                 $transfer = $balancingAct->transactionJournals()->transactionTypes(['Transfer'])->first();
                 if ($transfer) {
-                    $amount -= $transfer->actualAmount;
+                    $amount = bcsub($amount, $transfer->actualAmount);
 
                     return $amount;
                 }
-            }
-        }
+            } // @codeCoverageIgnore
+        } // @codeCoverageIgnore
 
         return $amount;
     }
@@ -180,16 +180,16 @@ class TransactionJournal extends Model
      */
     public function getCorrectedActualAmountAttribute()
     {
-        $amount = 0;
+        $amount = '0';
         $type   = $this->transactionType->type;
         /** @var Transaction $t */
         foreach ($this->transactions as $t) {
             if ($t->amount > 0 && $type != 'Withdrawal') {
-                $amount = floatval($t->amount);
+                $amount = $t->amount;
                 break;
             }
             if ($t->amount < 0 && $type == 'Withdrawal') {
-                $amount = floatval($t->amount);
+                $amount = $t->amount;
                 break;
             }
         }

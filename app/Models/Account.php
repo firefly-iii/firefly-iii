@@ -1,6 +1,5 @@
 <?php namespace FireflyIII\Models;
 
-use App;
 use Crypt;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
@@ -51,12 +50,6 @@ class Account extends Model
         }
         // create it!
         $account = Account::create($fields);
-        if (is_null($account->id)) {
-            // could not create account:
-            App::abort(500, 'Could not create new account with data: ' . json_encode($fields) . ' because ' . json_encode($account->getErrors()));
-
-
-        }
 
         return $account;
 

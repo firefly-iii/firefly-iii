@@ -1,5 +1,9 @@
 <?php
 
+use FireflyIII\Models\Category;
+use League\FactoryMuffin\Facade as FactoryMuffin;
+
+
 /**
  * Class CategoryModelTest
  */
@@ -40,7 +44,33 @@ class CategoryModelTest extends TestCase
      */
     public function testFirstOrCreateEncrypted()
     {
-        $this->markTestIncomplete();
+        $category = FactoryMuffin::create('FireflyIII\Models\Category');
+
+        $search = [
+            'name'    => $category->name,
+            'user_id' => $category->user_id
+        ];
+
+        $result = Category::firstOrCreateEncrypted($search);
+
+        $this->assertEquals($result->id, $category->id);
+    }
+
+    /**
+     * @covers FireflyIII\Models\Category::firstOrCreateEncrypted
+     */
+    public function testFirstOrCreateEncryptedNew()
+    {
+        $category = FactoryMuffin::create('FireflyIII\Models\Category');
+
+        $search = [
+            'name'    => 'Some category name',
+            'user_id' => $category->user_id
+        ];
+
+        $result = Category::firstOrCreateEncrypted($search);
+
+        $this->assertNotEquals($result->id, $category->id);
     }
 
 }

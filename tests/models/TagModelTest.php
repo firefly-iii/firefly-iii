@@ -1,5 +1,8 @@
 <?php
 
+use FireflyIII\Models\Tag;
+use League\FactoryMuffin\Facade as FactoryMuffin;
+
 /**
  * Class TagModelTest
  */
@@ -38,9 +41,37 @@ class TagModelTest extends TestCase
     /**
      * @covers FireflyIII\Models\Tag::firstOrCreateEncrypted
      */
+    public function testFirstOrCreateEncryptedNew()
+    {
+        $tag = FactoryMuffin::create('FireflyIII\Models\Tag');
+
+        $search = [
+            'tagMode' => 'something',
+            'tag'     => 'Something else',
+            'user_id' => $tag->user_id,
+        ];
+
+        $result = Tag::firstOrCreateEncrypted($search);
+
+        $this->assertNotEquals($tag->id, $result->id);
+    }
+
+    /**
+     * @covers FireflyIII\Models\Tag::firstOrCreateEncrypted
+     */
     public function testFirstOrCreateEncrypted()
     {
-        $this->markTestIncomplete();
+        $tag = FactoryMuffin::create('FireflyIII\Models\Tag');
+
+        $search = [
+            'tagMode' => 'something',
+            'tag'     => $tag->tag,
+            'user_id' => $tag->user_id,
+        ];
+
+        $result = Tag::firstOrCreateEncrypted($search);
+
+        $this->assertEquals($tag->id, $result->id);
     }
 
 }

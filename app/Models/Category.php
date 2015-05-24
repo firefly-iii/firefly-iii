@@ -42,11 +42,6 @@ class Category extends Model
         }
         // create it!
         $category = Category::create($fields);
-        if (is_null($category->id)) {
-            // could not create account:
-            App::abort(500, 'Could not create new category with data: ' . json_encode($fields));
-
-        }
 
         return $category;
 

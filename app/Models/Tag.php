@@ -57,12 +57,6 @@ class Tag extends Model
         $fields['tagMode']     = 'nothing';
         $fields['description'] = isset($fields['description']) && !is_null($fields['description']) ? $fields['description'] : '';
         $tag                   = Tag::create($fields);
-        if (is_null($tag->id)) {
-            // could not create account:
-            App::abort(500, 'Could not create new tag with data: ' . json_encode($fields) . ' because ' . json_encode($tag->getErrors()));
-
-
-        }
 
         return $tag;
 
