@@ -1,5 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
+use Amount;
 use Auth;
 use Carbon\Carbon;
 use FireflyIII\Http\Requests;
@@ -45,6 +46,9 @@ class BudgetController extends Controller
         $amount          = intval(Input::get('amount'));
         $date            = Session::get('start', Carbon::now()->startOfMonth());
         $limitRepetition = $repository->updateLimitAmount($budget, $date, $amount);
+        if ($amount == 0) {
+            $limitRepetition = null;
+        }
 
         return Response::json(['name' => $budget->name, 'repetition' => $limitRepetition ? $limitRepetition->id : 0]);
 
@@ -126,7 +130,9 @@ class BudgetController extends Controller
     {
         $budgets  = $repository->getActiveBudgets();
         $inactive = $repository->getInactiveBudgets();
-
+        $spent    = '0';
+        $budgeted = '0';
+        bcscale(2);
         /**
          * Do some cleanup:
          */
@@ -134,24 +140,28 @@ class BudgetController extends Controller
 
 
         // loop the budgets:
-        $budgets->each(
-            function (Budget $budget) use ($repository) {
-                $date               = Session::get('start', Carbon::now()->startOfMonth());
-                $end                = Session::get('end', Carbon::now()->endOfMonth());
-                $budget->spent      = $repository->spentInPeriodCorrected($budget, $date, $end);
-                $budget->currentRep = $repository->getCurrentRepetition($budget, $date);
+        /** @var Budget $budget */
+        foreach ($budgets as $budget) {
+            $date               = Session::get('start', Carbon::now()->startOfMonth());
+            $end                = Session::get('end', Carbon::now()->endOfMonth());
+            $budget->spent      = $repository->spentInPeriodCorrected($budget, $date, $end);
+            $budget->currentRep = $repository->getCurrentRepetition($budget, $date);
+            if ($budget->currentRep) {
+                $budgeted = bcadd($budgeted, $budget->currentRep->amount);
             }
+            $spent = bcadd($spent, $budget->spent);
+
+        }
+
+        $dateAsString      = Session::get('start', Carbon::now()->startOfMonth())->format('FY');
+        $budgetIncomeTotal = Preferences::get('budgetIncomeTotal' . $dateAsString, 1000)->data;
+        $spentPercentage   = ($spent > $budgeted) ? ceil($budgeted / $spent * 100) : ceil($spent / $budgeted * 100);
+        $budgetMaximum     = Preferences::get('budgetMaximum', 1000)->data;
+        $defaultCurrency   = Amount::getDefaultCurrency();
+
+        return view(
+            'budgets.index', compact('budgetMaximum', 'budgetIncomeTotal', 'defaultCurrency', 'inactive', 'budgets', 'spent', 'spentPercentage', 'budgeted')
         );
-
-        $dateAsString  = Session::get('start', Carbon::now()->startOfMonth())->format('FY');
-        $spent         = $budgets->sum('spent');
-        $amount        = Preferences::get('budgetIncomeTotal' . $dateAsString, 1000)->data;
-        $overspent     = $spent > $amount;
-        $spentPCT      = $overspent ? ceil($amount / $spent * 100) : ceil($spent / $amount * 100);
-        $budgetMax     = Preferences::get('budgetMaximum', 1000);
-        $budgetMaximum = $budgetMax->data;
-
-        return view('budgets.index', compact('budgetMaximum', 'inactive', 'budgets', 'spent', 'spentPCT', 'overspent', 'amount'));
     }
 
     /**
