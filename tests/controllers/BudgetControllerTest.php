@@ -122,7 +122,8 @@ class BudgetControllerTest extends TestCase
      */
     public function testIndex()
     {
-        $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
+        $budget   = FactoryMuffin::create('FireflyIII\Models\Budget');
         $this->be($budget->user);
         $collection = new Collection;
         $collection->push($budget);
@@ -136,6 +137,7 @@ class BudgetControllerTest extends TestCase
         Amount::shouldReceive('getCurrencySymbol')->andReturn('x');
         Amount::shouldReceive('format')->andReturn('x');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getDefaultCurrency')->andReturn($currency);
         $this->call('GET', '/budgets');
 
         $this->assertResponseOk();
