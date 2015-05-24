@@ -1,9 +1,11 @@
+/* globals expenseRestShow:true, incomeRestShow:true, year, shared, month, hideTheRest, showTheRest, showTheRestExpense, hideTheRestExpense, googleColumnChart, googleLineChart, googleStackedColumnChartg  */
 if (typeof(google) !== 'undefined') {
     google.setOnLoadCallback(drawChart);
 }
 
 
 function drawChart() {
+    "use strict";
     googleColumnChart('chart/report/in-out/' + year + shared, 'income-expenses-chart');
     googleColumnChart('chart/report/in-out-sum/' + year + shared, 'income-expenses-sum-chart');
 
@@ -13,15 +15,7 @@ function drawChart() {
     googleLineChart('/chart/account/month/' + year + '/' + month + shared, 'account-balances-chart');
 }
 
-$(function () {
-    $('.openModal').on('click', openModal);
 
-
-    // click open the top X income list:
-    $('#showIncomes').click(showIncomes);
-    // click open the top X expense list:
-    $('#showExpenses').click(showExpenses);
-});
 
 function openModal(e) {
     "use strict";
@@ -61,6 +55,7 @@ function showIncomes() {
 }
 
 function showExpenses() {
+    "use strict";
     if (expenseRestShow) {
         // hide everything, make button say "show"
         $('#showExpenses').text(showTheRestExpense);
@@ -79,3 +74,14 @@ function showExpenses() {
 
     return false;
 }
+
+$(function () {
+    "use strict";
+    $('.openModal').on('click', openModal);
+
+
+    // click open the top X income list:
+    $('#showIncomes').click(showIncomes);
+    // click open the top X expense list:
+    $('#showExpenses').click(showExpenses);
+});

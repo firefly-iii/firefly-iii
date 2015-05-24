@@ -1,8 +1,6 @@
+/* globals what, $ */
 $(document).ready(function () {
-    if (typeof googleTablePaged != 'undefined') {
-        googleTablePaged('table/transactions/' + what, 'transaction-table');
-    }
-
+    "use strict";
     if ($('input[name="expense_account"]').length > 0) {
         $.getJSON('json/expense-accounts').success(function (data) {
             $('input[name="expense_account"]').typeahead({source: data});

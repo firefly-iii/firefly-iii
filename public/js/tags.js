@@ -1,5 +1,6 @@
+/* globals zoomLevel, token, google, latitude, longitude */
 $(function () {
-
+    "use strict";
     /*
      Hide and show the tag index help.
      */
@@ -47,7 +48,7 @@ function clearLocation() {
 }
 
 function initialize() {
-
+    "use strict";
     /*
     Create new map:
      */
@@ -91,6 +92,7 @@ function saveZoomLevel() {
  * @param event
  */
 function placeMarker(event) {
+    "use strict";
     deleteMarkers();
     var marker = new google.maps.Marker({position: event.latLng, map: map});
     $('input[name="latitude"]').val(event.latLng.lat());
@@ -105,6 +107,7 @@ function placeMarker(event) {
  * Deletes all markers in the array by removing references to them.
  */
 function deleteMarkers() {
+    "use strict";
     for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(null);
     }

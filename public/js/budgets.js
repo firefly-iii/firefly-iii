@@ -53,7 +53,7 @@ function updateSingleRange(e) {
         // update the link if relevant:
         $('#budget-link-' + id).attr('href', 'budgets/show/' + id + '/' + data.repetition);
     });
-    if (input.attr('type') == 'number') {
+    if (input.attr('type') === 'number') {
         // update the range-input:
         $('#budget-range-' + id).val(value);
     } else {
@@ -126,13 +126,8 @@ function updateRanges() {
         // update small display:
         $('#budget-range-display-' + id).text('\u20AC ' + value.toFixed(2));
 
-        // update progress bar (if relevant)
-        var barHolder = $('#budget-progress-' + id);
-        var spent = parseFloat(barHolder.data('spent'));
-
         // send a post to Firefly to update the amount:
-        $.post('budgets/amount/' + id, {amount: value, _token: token}).success(function (data) {
-        });
+        $.post('budgets/amount/' + id, {amount: value, _token: token});
 
     });
 
