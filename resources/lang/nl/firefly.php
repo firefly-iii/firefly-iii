@@ -30,6 +30,8 @@ return [
     'createBudget'                  => 'Maak nieuw budget',
     'inactiveBudgets'               => 'Inactieve budgetten',
 
+    // accounts:
+
     'details_for_asset'             => 'Overzicht voor betaalrekening ":name"',
     'details_for_expense'           => 'Overzicht voor crediteur ":name"',
     'details_for_revenue'           => 'Overzicht voor debiteur ":name"',
@@ -42,6 +44,14 @@ return [
     'edit_asset_account'            => 'Wijzig betaalrekening ":name"',
     'edit_expense_account'          => 'Wijzig crediteur ":name"',
     'edit_revenue_account'          => 'Wijzig debiteur ":name"',
+
+    'delete_asset_account'          => 'Verwijder betaalrekening ":name"',
+    'delete_expense_account'        => 'Verwijder crediteur ":name"',
+    'delete_revenue_account'        => 'Verwijder debiteur ":name"',
+
+    'asset_deleted'                 => 'Betaalrekening ":name" is verwijderd.',
+    'expense_deleted'               => 'Crediteur ":name" is verwijderd.',
+    'revenue_deleted'               => 'Debiteur ":name" is verwijderd.',
 
     'update_asset_account'          => 'Wijzig betaalrekening',
     'update_expense_account'        => 'Wijzig crediteur',
@@ -56,7 +66,7 @@ return [
     'without_category'              => 'Zonder categorie',
     'update_category'               => 'Wijzig categorie',
     'categories'                    => 'Categorieën',
-    'no_category'                    => '(geen categorie)',
+    'no_category'                   => '(geen categorie)',
     'category'                      => 'Categorie',
 
     // new user:

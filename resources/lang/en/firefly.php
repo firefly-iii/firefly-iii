@@ -30,6 +30,8 @@ return [
     'createBudget'                  => 'New budget',
     'inactiveBudgets'               => 'Inactive budgets',
 
+    // accounts:
+
     'details_for_asset'             => 'Details for asset account ":name"',
     'details_for_expense'           => 'Details for expense account ":name"',
     'details_for_revenue'           => 'Details for revenue account ":name"',
@@ -42,6 +44,14 @@ return [
     'edit_asset_account'            => 'Edit asset account ":name"',
     'edit_expense_account'          => 'Edit expense account ":name"',
     'edit_revenue_account'          => 'Edit revenue account ":name"',
+
+    'delete_asset_account'          => 'Delete asset account ":name"',
+    'delete_expense_account'        => 'Delete expense account ":name"',
+    'delete_revenue_account'        => 'Delete revenue account ":name"',
+
+    'asset_deleted'                 => 'Successfully deleted asset account ":name"',
+    'expense_deleted'               => 'Successfully deleted expense account ":name"',
+    'revenue_deleted'               => 'Successfully deleted revenue account ":name"',
 
     'update_asset_account'          => 'Update asset account',
     'update_expense_account'        => 'Update expense account',
@@ -56,7 +66,7 @@ return [
     'without_category'              => 'Without a category',
     'update_category'               => 'Wijzig categorie',
     'categories'                    => 'Categories',
-    'no_category'                    => '(no category)',
+    'no_category'                   => '(no category)',
     'category'                      => 'Category',
 
     // new user:

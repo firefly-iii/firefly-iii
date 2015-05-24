@@ -45,7 +45,6 @@ class Steam
 
         if (!$ignoreVirtualBalance) {
             $balance = bcadd($balance, $account->virtual_balance);
-            //$balance += floatval($account->virtual_balance);
         }
 
         return round($balance, 2);
