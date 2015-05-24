@@ -22,7 +22,7 @@
 
     <!-- code coverage -->
     <logging>
-        <log type="coverage-clover" target="./storage/coverage/clover.xml" charset="UTF-8" />
+        <log type="coverage-clover" target="./build/logs/clover.xml" charset="UTF-8" />
     </logging>
 
     <php>

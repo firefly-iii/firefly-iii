@@ -127,7 +127,6 @@ class Cleanup
     protected function encryptBudgetsAndCategories()
     {
         $count = 0;
-
         // encrypt budget name
         $set = Budget::where('encrypted', 0)->take(5)->get();
         /** @var Budget $entry */
@@ -159,8 +158,6 @@ class Cleanup
     protected function encryptPiggiesAndJournals()
     {
         $count = 0;
-
-
         // encrypt piggy bank name
         $set = PiggyBank::where('encrypted', 0)->take(5)->get();
         /** @var PiggyBank $entry */
@@ -192,7 +189,6 @@ class Cleanup
     protected function encryptRemindersAndPreferences()
     {
         $count = 0;
-
         // encrypt reminder metadata
         $set = Reminder::where('encrypted', 0)->take(5)->get();
         /** @var Reminder $entry */

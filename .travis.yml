@@ -6,10 +6,6 @@ php:
   - 5.5
   - 5.6
 
-addons:
-  code_climate:
-    repo_token: 26489f9e854fcdf7e7660ba29c1455694685465b1f90329a79f7d2bf448acb61
-
 install:
   - composer update
   - php artisan env
@@ -20,3 +16,4 @@ script:
 
 after_script:
   - php vendor/bin/coveralls
+  - CODECLIMATE_REPO_TOKEN=26489f9e854fcdf7e7660ba29c1455694685465b1f90329a79f7d2bf448acb61 ./vendor/bin/test-reporter

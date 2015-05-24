@@ -1,3 +1,3 @@
 src_dir: .
-coverage_clover: storage/coverage/clover.xml
-json_path: storage/coverage/coveralls-upload.json
+coverage_clover: build/logs/clover.xml
+json_path: build/logs/coveralls-upload.json
