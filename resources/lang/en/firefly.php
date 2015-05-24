@@ -57,9 +57,9 @@ return [
     'update_expense_account'        => 'Update expense account',
     'update_revenue_account'        => 'Update revenue account',
 
-    'make_new_asset_account'        => 'New asset account',
-    'make_new_expense_account'      => 'New expense account',
-    'make_new_revenue_account'      => 'New revenue account',
+    'make_new_asset_account'        => 'Create a new asset account',
+    'make_new_expense_account'      => 'Create a new expense account',
+    'make_new_revenue_account'      => 'Create a new revenue account',
 
     // categories:
     'new_category'                  => 'New category',
