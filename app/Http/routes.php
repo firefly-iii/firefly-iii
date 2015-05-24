@@ -199,7 +199,7 @@ Route::get('/routes', ['uses' => 'HomeController@routes', 'as' => 'routes']);
  * Home Controller
  */
 Route::group(
-    ['middleware' => ['auth', 'range', 'reminders', 'piggybanks']], function () {
+    ['middleware' => ['auth', 'range', 'reminders']], function () {
     Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index', 'middleware' => 'cleanup']);
     Route::get('/home', ['uses' => 'HomeController@index', 'as' => 'home']);
     Route::post('/daterange', ['uses' => 'HomeController@dateRange', 'as' => 'daterange']);

@@ -153,94 +153,6 @@ class Cleanup
             }
             unset($set, $entry, $metadata);
 
-            // encrypt account virtual balance amount
-            $set = Account::whereNull('virtual_balance_encrypted')->take(5)->get();
-            /** @var Account $entry */
-            foreach ($set as $entry) {
-                $count++;
-                $amount                 = $entry->amount;
-                $entry->virtual_balance = $amount;
-                $entry->save();
-            }
-            unset($set, $entry, $amount);
-
-            // encrypt bill amount_min
-            $set = Bill::whereNull('amount_min_encrypted')->take(5)->get();
-            /** @var Bill $entry */
-            foreach ($set as $entry) {
-                $count++;
-                $amount            = $entry->amount_min;
-                $entry->amount_min = $amount;
-                $entry->save();
-            }
-            unset($set, $entry, $amount);
-
-            // encrypt bill amount_max
-            $set = Bill::whereNull('amount_max_encrypted')->take(5)->get();
-            /** @var Bill $entry */
-            foreach ($set as $entry) {
-                $count++;
-                $amount            = $entry->amount_max;
-                $entry->amount_max = $amount;
-                $entry->save();
-            }
-            unset($set, $entry, $amount);
-
-            // encrypt budget limit amount
-            $set = BudgetLimit::whereNull('amount_encrypted')->take(5)->get();
-            /** @var BudgetLimit $entry */
-            foreach ($set as $entry) {
-                $count++;
-                $amount        = $entry->amount;
-                $entry->amount = $amount;
-                $entry->save();
-            }
-            unset($set, $entry, $amount);
-
-            // encrypt limit repetition amount
-            $set = LimitRepetition::whereNull('amount_encrypted')->take(5)->get();
-            /** @var LimitRepetition $entry */
-            foreach ($set as $entry) {
-                $count++;
-                $amount        = $entry->amount;
-                $entry->amount = $amount;
-                $entry->save();
-            }
-            unset($set, $entry, $amount);
-
-            //encrypt piggy bank event amount
-            $set = PiggyBankEvent::whereNull('amount_encrypted')->take(5)->get();
-            /** @var PiggyBankEvent $entry */
-            foreach ($set as $entry) {
-                $count++;
-                $amount        = $entry->amount;
-                $entry->amount = $amount;
-                $entry->save();
-            }
-            unset($set, $entry, $amount);
-
-            // encrypt piggy bank repetition currentamount
-            $set = PiggyBankRepetition::whereNull('currentamount_encrypted')->take(5)->get();
-            /** @var PiggyBankRepetition $entry */
-            foreach ($set as $entry) {
-                $count++;
-                $amount               = $entry->currentamount;
-                $entry->currentamount = $amount;
-                $entry->save();
-            }
-            unset($set, $entry, $amount);
-
-            // encrypt piggy bank targetamount
-            $set = PiggyBank::whereNull('targetamount_encrypted')->take(5)->get();
-            /** @var PiggyBank $entry */
-            foreach ($set as $entry) {
-                $count++;
-                $amount              = $entry->targetamount;
-                $entry->targetamount = $amount;
-                $entry->save();
-            }
-            unset($set, $entry, $amount);
-
             //encrypt preference name
             $set = Preference::whereNull('name_encrypted')->take(5)->get();
             /** @var Preference $entry */
@@ -251,7 +163,8 @@ class Cleanup
                 $entry->save();
             }
             unset($set, $entry, $name);
-            //encrypt preference data (add field)
+
+            //encrypt preference data
             $set = Preference::whereNull('data_encrypted')->take(5)->get();
             /** @var Preference $entry */
             foreach ($set as $entry) {
@@ -262,16 +175,6 @@ class Cleanup
             }
             unset($set, $entry, $data);
 
-            // encrypt transaction amount
-            $set = Transaction::whereNull('amount_encrypted')->take(5)->get();
-            /** @var Transaction $entry */
-            foreach ($set as $entry) {
-                $count++;
-                $amount        = $entry->amount;
-                $entry->amount = $amount;
-                $entry->save();
-            }
-            unset($set, $entry, $amount);
         }
         if ($count == 0 && $run) {
             Session::flash('warning', 'Please open the .env file and change RUNCLEANUP=true to RUNCLEANUP=false');
