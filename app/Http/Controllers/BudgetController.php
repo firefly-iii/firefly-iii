@@ -155,12 +155,11 @@ class BudgetController extends Controller
 
         $dateAsString      = Session::get('start', Carbon::now()->startOfMonth())->format('FY');
         $budgetIncomeTotal = Preferences::get('budgetIncomeTotal' . $dateAsString, 1000)->data;
-        $spentPercentage   = ($spent > $budgeted) ? ceil($budgeted / $spent * 100) : ceil($spent / $budgeted * 100);
         $budgetMaximum     = Preferences::get('budgetMaximum', 1000)->data;
         $defaultCurrency   = Amount::getDefaultCurrency();
 
         return view(
-            'budgets.index', compact('budgetMaximum', 'budgetIncomeTotal', 'defaultCurrency', 'inactive', 'budgets', 'spent', 'spentPercentage', 'budgeted')
+            'budgets.index', compact('budgetMaximum', 'budgetIncomeTotal', 'defaultCurrency', 'inactive', 'budgets', 'spent', 'budgeted')
         );
     }
 

@@ -1,15 +1,20 @@
-/* globals $, budgeted, currencySymbol, overspent, budgetIncomeTotal ,budgetedMuch, budgetedPercentage, token, budgetID, repetitionID, spent, budgeted, overspent, spentPercentage */
+/* globals $, budgeted:false, currencySymbol, budgetIncomeTotal ,budgetedMuch, budgetedPercentage, token, budgetID, repetitionID, spent, budgeted*/
 
 function drawSpentBar() {
     "use strict";
 
+    var overspent = spent > budgeted;
+    var pct;
+
     if (overspent) {
         // draw overspent bar
-        $('.spentBar .progress-bar-warning').css('width', spentPercentage + '%');
-        $('.spentBar .progress-bar-danger').css('width', (100 - spentPercentage) + '%');
+        pct = (budgeted / spent) * 100;
+        $('.spentBar .progress-bar-warning').css('width', pct + '%');
+        $('.spentBar .progress-bar-danger').css('width', (100 - pct) + '%');
     } else {
         // draw normal bar:
-        $('.spentBar .progress-bar-info').css('width', spentPercentage + '%');
+        pct = (spent / budgeted) * 100;
+        $('.spentBar .progress-bar-info').css('width', pct + '%');
     }
 }
 
@@ -23,13 +28,11 @@ function drawBudgetedBar() {
     if (budgetedMuch) {
         // budgeted too much.
         pct = (budgetIncomeTotal / budgeted) * 100;
-        console.log('Budgeted TOO much. Pct is ' + pct)
         $('.budgetedBar .progress-bar-warning').css('width', pct + '%');
         $('.budgetedBar .progress-bar-danger').css('width', (100 - pct) + '%');
         $('.budgetedBar .progress-bar-info').css('width', 0);
     } else {
         pct = (budgeted / budgetIncomeTotal) * 100;
-        console.log('Not budgeted too much. Pct is ' + pct)
         $('.budgetedBar .progress-bar-warning').css('width', 0);
         $('.budgetedBar .progress-bar-danger').css('width', 0);
         $('.budgetedBar .progress-bar-info').css('width', pct + '%');
