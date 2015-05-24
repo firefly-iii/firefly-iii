@@ -37,6 +37,9 @@ class TagControllerTest extends TestCase
         parent::tearDown();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\TagController::create
+     */
     public function testCreate()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -46,6 +49,9 @@ class TagControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\TagController::delete
+     */
     public function testDelete()
     {
         $tag = FactoryMuffin::create('FireflyIII\Models\Tag');
@@ -55,6 +61,9 @@ class TagControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\TagController::destroy
+     */
     public function testDestroy()
     {
         $tag = FactoryMuffin::create('FireflyIII\Models\Tag');
@@ -66,6 +75,9 @@ class TagControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\TagController::edit
+     */
     public function testEdit()
     {
         $tag = FactoryMuffin::create('FireflyIII\Models\Tag');
@@ -75,6 +87,9 @@ class TagControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\TagController::edit
+     */
     public function testEditBalancingAct()
     {
         $tag        = FactoryMuffin::create('FireflyIII\Models\Tag');
@@ -93,6 +108,9 @@ class TagControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\TagController::edit
+     */
     public function testEditThreeExpenses()
     {
         $tag        = FactoryMuffin::create('FireflyIII\Models\Tag');
@@ -116,6 +134,9 @@ class TagControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\TagController::hideTagHelp
+     */
     public function testHideTagHelp()
     {
         $tag = FactoryMuffin::create('FireflyIII\Models\Tag');
@@ -125,6 +146,9 @@ class TagControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\TagController::index
+     */
     public function testIndex()
     {
         $tag = FactoryMuffin::create('FireflyIII\Models\Tag');
@@ -134,6 +158,9 @@ class TagControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\TagController::edit
+     */
     public function testMultipleDeposits()
     {
         $tag = FactoryMuffin::create('FireflyIII\Models\Tag');
@@ -156,6 +183,9 @@ class TagControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\TagController::show
+     */
     public function testShow()
     {
         $tag = FactoryMuffin::create('FireflyIII\Models\Tag');
@@ -165,6 +195,9 @@ class TagControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\TagController::store
+     */
     public function testStore()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -179,6 +212,9 @@ class TagControllerTest extends TestCase
         $this->assertResponseStatus(302);
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\TagController::store
+     */
     public function testStoreWithLocation()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -214,6 +250,9 @@ class TagControllerTest extends TestCase
         $this->assertResponseStatus(302);
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\TagController::update
+     */
     public function testUpdateWithLocation()
     {
         $tag = FactoryMuffin::create('FireflyIII\Models\Tag');

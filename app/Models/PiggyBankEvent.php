@@ -6,12 +6,14 @@ use Illuminate\Database\Eloquent\Model;
  * Class PiggyBankEvent
  *
  * @codeCoverageIgnore
+ *
  * @package FireflyIII\Models
  */
 class PiggyBankEvent extends Model
 {
 
     protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'amount'];
+    protected $hidden   = ['amount_encrypted'];
 
     /**
      * @return array
@@ -27,6 +29,14 @@ class PiggyBankEvent extends Model
     public function piggyBank()
     {
         return $this->belongsTo('FireflyIII\Models\PiggyBank');
+    }
+
+    /**
+     * @param $value
+     */
+    public function setAmountAttribute($value)
+    {
+        $this->attributes['amount'] = strval(round($value, 2));
     }
 
     /**

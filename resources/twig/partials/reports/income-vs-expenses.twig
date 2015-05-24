@@ -10,11 +10,11 @@
         </tr>
         <tr>
             <td>{{ 'out'|_ }}</td>
-            <td><span class="text-danger">{{ (expenses.getTotal * -1)|formatAmountPlain }}</span></td>
+            <td><span class="text-danger">{{ (expenses.getTotal)|formatAmountPlain }}</span></td>
         </tr>
         <tr>
             <td>{{ 'difference'|_ }}</td>
-            <td>{{ (incomes.getTotal + expenses.getTotal)|formatAmount }}</td>
+            <td>{{ (incomes.getTotal + (expenses.getTotal * -1))|formatAmount }}</td>
         </tr>
     </table>
 </div>

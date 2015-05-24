@@ -47,6 +47,9 @@ class AccountControllerTest extends TestCase
 
     }
 
+    /**
+     *
+     */
     public function createAccount()
     {
         if (is_null($this->account)) {
@@ -54,6 +57,9 @@ class AccountControllerTest extends TestCase
         }
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\AccountController::create
+     */
     public function testCreate()
     {
         $pref       = FactoryMuffin::create('FireflyIII\Models\Preference');
@@ -79,6 +85,9 @@ class AccountControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\AccountController::delete
+     */
     public function testDelete()
     {
 
@@ -89,6 +98,9 @@ class AccountControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\AccountController::destroy
+     */
     public function testDestroy()
     {
         // fake an account.
@@ -106,6 +118,9 @@ class AccountControllerTest extends TestCase
         $this->assertResponseStatus(302);
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\AccountController::edit
+     */
     public function testEdit()
     {
         // fake an account.
@@ -139,6 +154,9 @@ class AccountControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\AccountController::index
+     */
     public function testIndex()
     {
         // an account:
@@ -166,6 +184,9 @@ class AccountControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\AccountController::show
+     */
     public function testShow()
     {
         // an account:
@@ -181,6 +202,9 @@ class AccountControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\AccountController::store
+     */
     public function testStore()
     {
         // an account:
@@ -211,6 +235,9 @@ class AccountControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\AccountController::store
+     */
     public function testStoreAndRedirect()
     {
         // an account:
@@ -242,6 +269,9 @@ class AccountControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\AccountController::update
+     */
     public function testUpdate()
     {
 
@@ -272,6 +302,9 @@ class AccountControllerTest extends TestCase
         $this->assertSessionHas('success');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\AccountController::update
+     */
     public function testUpdateAndRedirect()
     {
 

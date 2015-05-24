@@ -26,7 +26,7 @@ class PiggyBankController extends Controller
 {
 
     /**
-     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

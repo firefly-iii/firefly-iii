@@ -37,6 +37,9 @@ class CurrencyControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\CurrencyController::create
+     */
     public function testCreate()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -49,6 +52,9 @@ class CurrencyControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\CurrencyController::defaultCurrency
+     */
     public function testDefaultCurrency()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -60,6 +66,9 @@ class CurrencyControllerTest extends TestCase
         $this->assertSessionHas('success', $currency->name . ' is now the default currency.');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\CurrencyController::delete
+     */
     public function testDelete()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -75,6 +84,9 @@ class CurrencyControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\CurrencyController::delete
+     */
     public function testDeleteUnable()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -90,6 +102,9 @@ class CurrencyControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\CurrencyController::destroy
+     */
     public function testDestroy()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -105,6 +120,9 @@ class CurrencyControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\CurrencyController::destroy
+     */
     public function testDestroyUnable()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -120,6 +138,9 @@ class CurrencyControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\CurrencyController::edit
+     */
     public function testEdit()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -134,6 +155,9 @@ class CurrencyControllerTest extends TestCase
         $this->assertViewHas('currency');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\CurrencyController::index
+     */
     public function testIndex()
     {
         $user     = FactoryMuffin::create('FireflyIII\User');
@@ -148,6 +172,9 @@ class CurrencyControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\CurrencyController::store
+     */
     public function testStore()
     {
         $user     = FactoryMuffin::create('FireflyIII\User');
@@ -166,6 +193,9 @@ class CurrencyControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\CurrencyController::store
+     */
     public function testStoreAndReturn()
     {
         $user     = FactoryMuffin::create('FireflyIII\User');
@@ -184,6 +214,9 @@ class CurrencyControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\CurrencyController::update
+     */
     public function testUpdate()
     {
         $user     = FactoryMuffin::create('FireflyIII\User');
@@ -200,6 +233,9 @@ class CurrencyControllerTest extends TestCase
         $this->assertSessionHas('success');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\CurrencyController::update
+     */
     public function testUpdateAndReturn()
     {
         $user     = FactoryMuffin::create('FireflyIII\User');

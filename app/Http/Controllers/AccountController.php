@@ -22,7 +22,7 @@ use View;
 class AccountController extends Controller
 {
     /**
-     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

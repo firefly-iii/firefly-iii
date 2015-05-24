@@ -5,7 +5,6 @@ namespace FireflyIII\Repositories\Category;
 use Auth;
 use Carbon\Carbon;
 use Crypt;
-use DB;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Database\Query\JoinClause;
@@ -86,7 +85,7 @@ class CategoryRepository implements CategoryRepositoryInterface
                 $result[$categoryId]['sum'] += floatval($entry->amount);
             } else {
                 $isEncrypted         = intval($entry->category_encrypted) == 1 ? true : false;
-                $name                = strlen($entry->name) == 0 ? trans('firefly.noCategory') : $entry->name;
+                $name                = strlen($entry->name) == 0 ? trans('firefly.no_category') : $entry->name;
                 $name                = $isEncrypted ? Crypt::decrypt($name) : $name;
                 $result[$categoryId] = [
                     'name' => $name,
@@ -202,7 +201,7 @@ class CategoryRepository implements CategoryRepositoryInterface
                             ->before($end)
                             ->after($start)
                             ->transactionTypes(['Withdrawal'])
-                            ->lessThan(0)
+                            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                             ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                             ->leftJoin(
                                 'account_meta', function (JoinClause $join) {

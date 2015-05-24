@@ -29,8 +29,6 @@ return [
     'transactionsWithoutBudgetDate' => 'Expenses without budget in :date',
     'createBudget'                  => 'New budget',
     'inactiveBudgets'               => 'Inactive budgets',
-    'newCategory'                   => 'New category',
-    'withoutCategory'               => 'Without a category',
 
     'details_for_asset'             => 'Details for asset account ":name"',
     'details_for_expense'           => 'Details for expense account ":name"',
@@ -52,6 +50,14 @@ return [
     'make_new_asset_account'        => 'New asset account',
     'make_new_expense_account'      => 'New expense account',
     'make_new_revenue_account'      => 'New revenue account',
+
+    // categories:
+    'new_category'                  => 'New category',
+    'without_category'              => 'Without a category',
+    'update_category'               => 'Wijzig categorie',
+    'categories'                    => 'Categories',
+    'no_category'                    => '(no category)',
+    'category'                      => 'Category',
 
     // new user:
     'welcome'                       => 'Welcome to Firefly!',
@@ -94,7 +100,6 @@ return [
     'Expense account'               => 'Expense account',
     'Revenue account'               => 'Revenue account',
     'budgets'                       => 'Budgets',
-    'categories'                    => 'Categories',
     'tags'                          => 'Tags',
     'reports'                       => 'Reports',
     'transactions'                  => 'Transactions',
@@ -171,9 +176,7 @@ return [
     'spent'                         => 'Spent',
     'overspent'                     => 'Overspent',
     'left'                          => 'Left',
-    'noCategory'                    => '(no category)',
     'noBudget'                      => '(no budget)',
-    'category'                      => 'Category',
     'maxAmount'                     => 'Maximum amount',
     'minAmount'                     => 'Minumum amount',
     'billEntry'                     => 'Current bill entry',

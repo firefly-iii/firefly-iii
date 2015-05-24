@@ -25,6 +25,9 @@ class ChartPiggyBankControllerTest extends TestCase
         parent::tearDown();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\PiggyBankController::history
+     */
     public function testHistory()
     {
         $piggy = FactoryMuffin::create('FireflyIII\Models\PiggyBank');

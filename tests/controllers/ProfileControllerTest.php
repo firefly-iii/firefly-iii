@@ -34,6 +34,9 @@ class ProfileControllerTest extends TestCase
         parent::tearDown();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\ProfileController::changePassword
+     */
     public function testChangePassword()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -43,6 +46,9 @@ class ProfileControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\ProfileController::deleteAccount
+     */
     public function testDeleteAccount()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -52,6 +58,9 @@ class ProfileControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\ProfileController::index
+     */
     public function testIndex()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -61,6 +70,10 @@ class ProfileControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\ProfileController::postChangePassword
+     * @covers FireflyIII\Http\Controllers\ProfileController::validatePassword
+     */
     public function testPostChangePassword()
     {
         $user           = FactoryMuffin::create('FireflyIII\User');
@@ -83,6 +96,10 @@ class ProfileControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\ProfileController::postChangePassword
+     * @covers FireflyIII\Http\Controllers\ProfileController::validatePassword
+     */
     public function testPostChangePasswordInvalidCurrent()
     {
         $user           = FactoryMuffin::create('FireflyIII\User');
@@ -105,6 +122,10 @@ class ProfileControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\ProfileController::postChangePassword
+     * @covers FireflyIII\Http\Controllers\ProfileController::validatePassword
+     */
     public function testPostChangePasswordNoNewPassword()
     {
         $user           = FactoryMuffin::create('FireflyIII\User');
@@ -128,6 +149,9 @@ class ProfileControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\ProfileController::postDeleteAccount
+     */
     public function testPostDeleteAccount()
     {
         $user           = FactoryMuffin::create('FireflyIII\User');
@@ -147,6 +171,9 @@ class ProfileControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\ProfileController::postDeleteAccount
+     */
     public function testPostDeleteAccountInvalidPassword()
     {
         $user           = FactoryMuffin::create('FireflyIII\User');

@@ -66,7 +66,7 @@ class HomeControllerTest extends TestCase
     }
 
     /**
-     *
+     * @covers FireflyIII\Http\Controllers\HomeController::flush
      */
     public function testFlush()
     {

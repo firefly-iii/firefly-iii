@@ -18,6 +18,8 @@ class ConnectJournalToPiggyBank
     /**
      * Create the event handler.
      *
+     * @codeCoverageIgnore
+     *
      */
     public function __construct()
     {

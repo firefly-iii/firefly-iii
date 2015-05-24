@@ -39,6 +39,9 @@ class BudgetControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BudgetController::amount
+     */
     public function testAmount()
     {
         $repository      = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
@@ -54,6 +57,9 @@ class BudgetControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BudgetController::create
+     */
     public function testCreate()
     {
         $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
@@ -63,6 +69,9 @@ class BudgetControllerTest extends TestCase
         $this->assertViewHas('subTitle', 'Create a new budget');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BudgetController::delete
+     */
     public function testDelete()
     {
         $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
@@ -75,6 +84,9 @@ class BudgetControllerTest extends TestCase
         $this->assertSessionHas('budgets.delete.url');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BudgetController::destroy
+     */
     public function testDestroy()
     {
         $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
@@ -89,6 +101,9 @@ class BudgetControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BudgetController::edit
+     */
     public function testEdit()
     {
         $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
@@ -102,6 +117,9 @@ class BudgetControllerTest extends TestCase
         $this->assertSessionHas('budgets.edit.url');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BudgetController::index
+     */
     public function testIndex()
     {
         $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
@@ -127,6 +145,9 @@ class BudgetControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BudgetController::noBudget
+     */
     public function testNoBudget()
     {
         $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
@@ -140,6 +161,9 @@ class BudgetControllerTest extends TestCase
         $this->assertViewHas('subTitle');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BudgetController::postUpdateIncome
+     */
     public function testPostUpdateIncome()
     {
 
@@ -160,6 +184,9 @@ class BudgetControllerTest extends TestCase
         $this->assertRedirectedToRoute('budgets.index');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BudgetController::show
+     */
     public function testShow()
     {
         $budget     = FactoryMuffin::create('FireflyIII\Models\Budget');
@@ -179,6 +206,9 @@ class BudgetControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BudgetController::show
+     */
     public function testShowInvalidRepetition()
     {
 
@@ -203,6 +233,9 @@ class BudgetControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BudgetController::store
+     */
     public function testStore()
     {
         // a budget:
@@ -228,6 +261,9 @@ class BudgetControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BudgetController::store
+     */
     public function testStoreAndRedirect()
     {
         // a budget:
@@ -254,6 +290,9 @@ class BudgetControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BudgetController::update
+     */
     public function testUpdate()
     {
 
@@ -280,6 +319,9 @@ class BudgetControllerTest extends TestCase
         $this->assertSessionHas('success');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BudgetController::update
+     */
     public function testUpdateAndRedirect()
     {
 
@@ -307,6 +349,9 @@ class BudgetControllerTest extends TestCase
         $this->assertSessionHas('success');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\BudgetController::updateIncome
+     */
     public function testUpdateIncome()
     {
 

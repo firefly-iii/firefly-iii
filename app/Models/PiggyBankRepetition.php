@@ -14,6 +14,7 @@ class PiggyBankRepetition extends Model
 {
 
     protected $fillable = ['piggy_bank_id', 'startdate', 'targetdate', 'currentamount'];
+    protected $hidden   = ['currentamount_encrypted'];
 
     /**
      * @return array
@@ -64,6 +65,14 @@ class PiggyBankRepetition extends Model
                              $q->orWhereNull('targetdate');
                          }
                      );
+    }
+
+    /**
+     * @param $value
+     */
+    public function setCurrentamountAttribute($value)
+    {
+        $this->attributes['currentamount'] = strval(round($value, 2));
     }
 
 }

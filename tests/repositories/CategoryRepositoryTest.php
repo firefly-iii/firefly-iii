@@ -99,9 +99,33 @@ class CategoryRepositoryTest extends TestCase
             $category->save();
         }
 
+        for ($i = 0; $i < 5; $i++) {
+            $journal1 = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+            $journal2 = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+            /** @var Category $category */
+            $category                     = FactoryMuffin::create('FireflyIII\Models\Category');
+
+            $journal1->user_id             = $user->id;
+            $journal1->date                = new Carbon('2015-02-11');
+            $journal1->transaction_type_id = $type->id;
+
+            $journal2->user_id             = $user->id;
+            $journal2->date                = new Carbon('2015-02-11');
+            $journal2->transaction_type_id = $type->id;
+
+            $category->user_id            = $user->id;
+            $category->transactionjournals()->save($journal1);
+            $category->transactionjournals()->save($journal2);
+
+            $journal1->save();
+            $journal2->save();
+            $category->save();
+        }
+
+
         $this->be($user);
         $set = $this->object->getCategoriesAndExpensesCorrected(new Carbon('2015-02-01'), new Carbon('2015-02-28'));
-        $this->assertCount(5, $set);
+        $this->assertCount(10, $set);
         reset($set);
 
         $this->assertEquals(0, current($set)['sum']);
@@ -196,7 +220,20 @@ class CategoryRepositoryTest extends TestCase
     public function testSpentInPeriodSumCorrected()
     {
         $category = FactoryMuffin::create('FireflyIII\Models\Category');
-        $sum      = $this->object->spentInPeriodCorrected($category, new Carbon, new Carbon);
+        $sum      = $this->object->spentInPeriodCorrected($category, new Carbon, new Carbon, false);
+
+        $this->assertEquals(0, $sum);
+
+
+    }
+
+    /**
+     * @covers FireflyIII\Repositories\Category\CategoryRepository::spentInPeriodCorrected
+     */
+    public function testSpentInPeriodSumCorrectedShared()
+    {
+        $category = FactoryMuffin::create('FireflyIII\Models\Category');
+        $sum      = $this->object->spentInPeriodCorrected($category, new Carbon, new Carbon, true);
 
         $this->assertEquals(0, $sum);
 

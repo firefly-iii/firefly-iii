@@ -30,6 +30,9 @@ class ChartBillControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\BillController::frontpage
+     */
     public function testFrontpage()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -55,7 +58,7 @@ class ChartBillControllerTest extends TestCase
         $accounts->shouldReceive('getCreditCards')->andReturn($creditCards);
         $accounts->shouldReceive('getTransfersInRange')->andReturn(new Collection);
         $repository->shouldReceive('createFakeBill')->andReturn($bills->first());
-        Steam::shouldReceive('balance')->andReturn(-10,0);
+        Steam::shouldReceive('balance')->andReturn(-10, 0);
 
 
         $this->call('GET', '/chart/bill/frontpage');
@@ -63,6 +66,9 @@ class ChartBillControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\BillController::single
+     */
     public function testSingle()
     {
         $bill = FactoryMuffin::create('FireflyIII\Models\Bill');

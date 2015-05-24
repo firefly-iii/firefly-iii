@@ -17,8 +17,8 @@ class Expense
 {
     /** @var Collection */
     protected $expenses;
-    /** @var float */
-    protected $total;
+    /** @var string */
+    protected $total = '0';
 
     /**
      *
@@ -37,14 +37,15 @@ class Expense
         $accountId = $entry->account_id;
         if (!$this->expenses->has($accountId)) {
             $newObject         = new stdClass;
-            $newObject->amount = floatval($entry->amount);
+            $newObject->amount = strval(round($entry->amount, 2));
             $newObject->name   = $entry->name;
             $newObject->count  = 1;
             $newObject->id     = $accountId;
             $this->expenses->put($accountId, $newObject);
         } else {
-            $existing = $this->expenses->get($accountId);
-            $existing->amount += floatval($entry->amount);
+            bcscale(2);
+            $existing         = $this->expenses->get($accountId);
+            $existing->amount = bcadd($existing->amount, $entry->amount);
             $existing->count++;
             $this->expenses->put($accountId, $existing);
         }
@@ -55,7 +56,9 @@ class Expense
      */
     public function addToTotal($add)
     {
-        $this->total += floatval($add);
+        $add = strval(round($add, 2));
+        bcscale(2);
+        $this->total = bcadd($this->total, $add);
     }
 
     /**
@@ -73,10 +76,10 @@ class Expense
     }
 
     /**
-     * @return float
+     * @return string
      */
     public function getTotal()
     {
-        return $this->total;
+        return strval(round($this->total, 2));
     }
 }

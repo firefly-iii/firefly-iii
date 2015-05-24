@@ -287,7 +287,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getTransfersInRange(Account $account, Carbon $start, Carbon $end)
     {
-        return TransactionJournal::whereIn(
+        $set      = TransactionJournal::whereIn(
             'id', function (Builder $q) use ($account, $start, $end) {
             $q->select('transaction_journals.id')
               ->from('transactions')
@@ -297,11 +297,19 @@ class AccountRepository implements AccountRepositoryInterface
               ->where('transaction_journals.user_id', Auth::user()->id)
               ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
               ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-              ->where('transactions.amount', '>', 0)
               ->where('transaction_types.type', 'Transfer');
 
         }
         )->get();
+        $filtered = $set->filter(
+            function (TransactionJournal $journal) use ($account) {
+                if ($journal->destination_account->id == $account->id) {
+                    return $journal;
+                }
+            } // @codeCoverageIgnore
+        );
+
+        return $filtered;
     }
 
     /**

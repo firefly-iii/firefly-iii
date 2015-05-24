@@ -24,7 +24,7 @@ class BudgetController extends Controller
 {
 
     /**
-     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

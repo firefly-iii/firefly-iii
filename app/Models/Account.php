@@ -1,6 +1,5 @@
 <?php namespace FireflyIII\Models;
 
-use App;
 use Crypt;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
@@ -18,6 +17,7 @@ class Account extends Model
     use SoftDeletes, ValidatingTrait;
 
     protected $fillable = ['user_id', 'account_type_id', 'name', 'active', 'virtual_balance'];
+    protected $hidden   = ['virtual_balance_encrypted', 'encrypted'];
     protected $rules
                         = [
             'user_id'         => 'required|exists:users,id',
@@ -50,12 +50,6 @@ class Account extends Model
         }
         // create it!
         $account = Account::create($fields);
-        if (is_null($account->id)) {
-            // could not create account:
-            App::abort(500, 'Could not create new account with data: ' . json_encode($fields) . ' because ' . json_encode($account->getErrors()));
-
-
-        }
 
         return $account;
 
@@ -117,6 +111,8 @@ class Account extends Model
      *
      * @param $fieldName
      *
+     * @codeCoverageIgnore
+     *
      * @return string|null
      */
     public function getMeta($fieldName)
@@ -145,9 +141,7 @@ class Account extends Model
             return Crypt::decrypt($value);
         }
 
-        // @codeCoverageIgnoreStart
         return $value;
-        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -201,6 +195,16 @@ class Account extends Model
     {
         $this->attributes['name']      = Crypt::encrypt($value);
         $this->attributes['encrypted'] = true;
+    }
+
+    /**
+     * @param $value
+     *
+     * @codeCoverageIgnore
+     */
+    public function setVirtualBalanceAttribute($value)
+    {
+        $this->attributes['virtual_balance'] = strval(round($value, 2));
     }
 
     /**

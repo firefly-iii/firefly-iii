@@ -146,6 +146,29 @@ class PiggyBankRepositoryTest extends TestCase
     }
 
     /**
+     * @covers FireflyIII\Repositories\PiggyBank\PiggyBankRepository::store
+     */
+    public function testStoreRedirect()
+    {
+        $account = FactoryMuffin::create('FireflyIII\Models\Account');
+
+        $data = [
+            'remind_me'      => 1,
+            'account_id'     => $account->id,
+            'name'           => 'Some piggy',
+            'targetamount'   => 100,
+            'create_another' => 1,
+            'reminder_skip'  => 0,
+            'order'          => 1,
+
+        ];
+
+        $piggyBank = $this->object->store($data);
+
+        $this->assertEquals(1, $piggyBank->id);
+    }
+
+    /**
      * @covers FireflyIII\Repositories\PiggyBank\PiggyBankRepository::update
      */
     public function testUpdate()

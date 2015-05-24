@@ -26,18 +26,24 @@ class ChartCategoryControllerTest extends TestCase
         parent::tearDown();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\CategoryController::all
+     */
     public function testAll()
     {
 
         $category = FactoryMuffin::create('FireflyIII\Models\Category');
         $this->be($category->user);
 
-        $this->call('GET', '/chart/category/'.$category->id.'/all');
+        $this->call('GET', '/chart/category/' . $category->id . '/all');
         $this->assertResponseOk();
 
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\CategoryController::frontpage
+     */
     public function testFrontpage()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -62,15 +68,21 @@ class ChartCategoryControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\CategoryController::month
+     */
     public function testMonth()
     {
         $category = FactoryMuffin::create('FireflyIII\Models\Category');
         $this->be($category->user);
 
-        $this->call('GET', '/chart/category/'.$category->id.'/month');
+        $this->call('GET', '/chart/category/' . $category->id . '/month');
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\CategoryController::year
+     */
     public function testYear()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -89,6 +101,9 @@ class ChartCategoryControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Chart\CategoryController::year
+     */
     public function testYearShared()
     {
         $user = FactoryMuffin::create('FireflyIII\User');

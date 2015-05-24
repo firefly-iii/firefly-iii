@@ -16,6 +16,7 @@ class Transaction extends Model
 {
 
     protected $fillable = ['account_id', 'transaction_journal_id', 'description', 'amount'];
+    protected $hidden   = ['encrypted'];
     protected $rules
                         = [
             'account_id'             => 'required|exists:accounts,id',
@@ -31,6 +32,24 @@ class Transaction extends Model
     public function account()
     {
         return $this->belongsTo('FireflyIII\Models\Account');
+    }
+
+    /**
+     * @param $value
+     *
+     * @return float|int
+     */
+    public function getAmountAttribute($value)
+    {
+        return $value;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDates()
+    {
+        return ['created_at', 'updated_at', 'deleted_at'];
     }
 
     /**
@@ -56,11 +75,11 @@ class Transaction extends Model
     }
 
     /**
-     * @return array
+     * @param $value
      */
-    public function getDates()
+    public function setAmountAttribute($value)
     {
-        return ['created_at', 'updated_at', 'deleted_at'];
+        $this->attributes['amount'] = strval(round($value, 2));
     }
 
     /**

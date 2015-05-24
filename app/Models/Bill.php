@@ -4,6 +4,7 @@ use Crypt;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * @codeCoverageIgnore
  * Class Bill
  *
  * @package FireflyIII\Models
@@ -13,6 +14,8 @@ class Bill extends Model
 
     protected $fillable
         = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip', 'automatch', 'active',];
+
+    protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
 
     /**
      * @return array
@@ -34,9 +37,7 @@ class Bill extends Model
             return Crypt::decrypt($value);
         }
 
-        // @codeCoverageIgnoreStart
         return $value;
-        // @codeCoverageIgnoreEnd
     }
 
     /**
@@ -51,9 +52,23 @@ class Bill extends Model
             return Crypt::decrypt($value);
         }
 
-        // @codeCoverageIgnoreStart
         return $value;
-        // @codeCoverageIgnoreEnd
+    }
+
+    /**
+     * @param $value
+     */
+    public function setAmountMaxAttribute($value)
+    {
+        $this->attributes['amount_max'] = strval(round($value, 2));
+    }
+
+    /**
+     * @param $value
+     */
+    public function setAmountMinAttribute($value)
+    {
+        $this->attributes['amount_min'] = strval(round($value, 2));
     }
 
     /**

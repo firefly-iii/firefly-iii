@@ -78,9 +78,13 @@ class TagRepository implements TagRepositoryInterface
 
         /** @var Tag $tag */
         foreach ($tags as $tag) {
-            $transfer = $tag->transactionjournals()->after($start)->before($end)->toAccountIs($account)->transactionTypes(['Transfer'])->first();
-            if ($transfer) {
-                $amount += $transfer->amount;
+            $journals = $tag->transactionjournals()->after($start)->before($end)->transactionTypes(['Transfer'])->get(['transaction_journals.*']);
+
+            /** @var TransactionJournal $journal */
+            foreach ($journals as $journal) {
+                if ($journal->destination_account->id == $account->id) {
+                    $amount += $journal->amount;
+                }
             }
         }
 

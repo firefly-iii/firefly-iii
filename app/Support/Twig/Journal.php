@@ -84,7 +84,7 @@ class Journal extends Twig_Extension
                 if ($tag->tagMode == 'balancingAct') {
                     // return tag formatted for a "balancing act", even if other
                     // tags are present.
-                    $amount = App::make('amount')->formatJournal($journal, false);
+                    $amount = App::make('amount')->format($journal->actual_amount, false);
 
                     return '<a href="' . route('tags.show', $tag->id) . '" class="label label-success" title="' . $amount
                            . '"><i class="fa fa-fw fa-refresh"></i> ' . $tag->tag . '</a>';

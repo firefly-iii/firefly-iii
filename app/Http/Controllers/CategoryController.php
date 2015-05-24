@@ -21,7 +21,7 @@ class CategoryController extends Controller
 {
 
     /**
-     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

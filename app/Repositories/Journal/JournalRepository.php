@@ -76,15 +76,20 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getAmountBefore(TransactionJournal $journal, Transaction $transaction)
     {
-        return floatval(
-            $transaction->account->transactions()->leftJoin(
-                'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
-            )
-                                 ->where('transaction_journals.date', '<=', $journal->date->format('Y-m-d'))
-                                 ->where('transaction_journals.order', '>=', $journal->order)
-                                 ->where('transaction_journals.id', '!=', $journal->id)
-                                 ->sum('transactions.amount')
-        );
+        $set = $transaction->account->transactions()->leftJoin(
+            'transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id'
+        )
+                                    ->where('transaction_journals.date', '<=', $journal->date->format('Y-m-d'))
+                                    ->where('transaction_journals.order', '>=', $journal->order)
+                                    ->where('transaction_journals.id', '!=', $journal->id)
+                                    ->get(['transactions.*']);
+        $sum = 0;
+        foreach ($set as $entry) {
+            $sum += $entry->amount;
+        }
+
+        return $sum;
+
     }
 
     /**

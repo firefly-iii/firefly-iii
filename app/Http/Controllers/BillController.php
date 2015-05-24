@@ -23,7 +23,7 @@ class BillController extends Controller
 {
 
     /**
-     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

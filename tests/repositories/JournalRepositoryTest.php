@@ -92,6 +92,8 @@ class JournalRepositoryTest extends TestCase
      */
     public function testGetAmountBefore()
     {
+
+
         $transaction = FactoryMuffin::create('FireflyIII\Models\Transaction');
         $before      = $this->object->getAmountBefore($transaction->transactionjournal, $transaction);
 
@@ -167,6 +169,8 @@ class JournalRepositoryTest extends TestCase
     /**
      * @covers FireflyIII\Repositories\Journal\JournalRepository::store
      * @covers FireflyIII\Repositories\Journal\JournalRepository::storeAccounts
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::storeWithdrawalAccounts
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::storeDepositAccounts
      */
     public function testStore()
     {
@@ -199,6 +203,8 @@ class JournalRepositoryTest extends TestCase
     /**
      * @covers FireflyIII\Repositories\Journal\JournalRepository::store
      * @covers FireflyIII\Repositories\Journal\JournalRepository::storeAccounts
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::storeWithdrawalAccounts
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::storeDepositAccounts
      */
     public function testStoreDeposit()
     {
@@ -236,6 +242,8 @@ class JournalRepositoryTest extends TestCase
     /**
      * @covers FireflyIII\Repositories\Journal\JournalRepository::store
      * @covers FireflyIII\Repositories\Journal\JournalRepository::storeAccounts
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::storeWithdrawalAccounts
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::storeDepositAccounts
      */
     public function testStoreExpenseWithCash()
     {
@@ -272,6 +280,8 @@ class JournalRepositoryTest extends TestCase
     /**
      * @covers FireflyIII\Repositories\Journal\JournalRepository::store
      * @covers FireflyIII\Repositories\Journal\JournalRepository::storeAccounts
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::storeWithdrawalAccounts
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::storeDepositAccounts
      * @expectedException Symfony\Component\HttpKernel\Exception\HttpException
      */
     public function testStoreInvalidFromAccount()
@@ -311,6 +321,8 @@ class JournalRepositoryTest extends TestCase
     /**
      * @covers FireflyIII\Repositories\Journal\JournalRepository::store
      * @covers FireflyIII\Repositories\Journal\JournalRepository::storeAccounts
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::storeWithdrawalAccounts
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::storeDepositAccounts
      * @expectedException Symfony\Component\HttpKernel\Exception\HttpException
      */
     public function testStoreInvalidToAccount()
@@ -350,6 +362,8 @@ class JournalRepositoryTest extends TestCase
     /**
      * @covers FireflyIII\Repositories\Journal\JournalRepository::store
      * @covers FireflyIII\Repositories\Journal\JournalRepository::storeAccounts
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::storeWithdrawalAccounts
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::storeDepositAccounts
      */
     public function testStoreRevenueWithCash()
     {
@@ -387,6 +401,8 @@ class JournalRepositoryTest extends TestCase
     /**
      * @covers FireflyIII\Repositories\Journal\JournalRepository::store
      * @covers FireflyIII\Repositories\Journal\JournalRepository::storeAccounts
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::storeWithdrawalAccounts
+     * @covers FireflyIII\Repositories\Journal\JournalRepository::storeDepositAccounts
      */
     public function testStoreTransfer()
     {

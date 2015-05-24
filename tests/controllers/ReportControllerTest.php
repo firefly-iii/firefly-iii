@@ -37,6 +37,9 @@ class ReportControllerTest extends TestCase
         parent::tearDown();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\ReportController::index
+     */
     public function testIndex()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -66,6 +69,9 @@ class ReportControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\ReportController::month
+     */
     public function testMonth()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -93,6 +99,9 @@ class ReportControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\ReportController::month
+     */
     public function testMonthShared()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
@@ -119,6 +128,9 @@ class ReportControllerTest extends TestCase
         $this->assertResponseOk();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\ReportController::year
+     */
     public function testYear()
     {
         $user     = FactoryMuffin::create('FireflyIII\User');

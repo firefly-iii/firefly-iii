@@ -26,6 +26,7 @@ use View;
 class TransactionController extends Controller
 {
     /**
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

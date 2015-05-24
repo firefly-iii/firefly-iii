@@ -15,14 +15,14 @@ class Budget
 {
     /** @var  Collection */
     protected $budgetLines;
-    /** @var float */
-    protected $budgeted = 0;
-    /** @var float */
-    protected $left = 0;
-    /** @var float */
-    protected $overspent = 0;
-    /** @var float */
-    protected $spent = 0;
+    /** @var string */
+    protected $budgeted = '0';
+    /** @var string */
+    protected $left = '0';
+    /** @var string */
+    protected $overspent = '0';
+    /** @var string */
+    protected $spent = '0';
 
     /**
      *
@@ -45,7 +45,9 @@ class Budget
      */
     public function addBudgeted($add)
     {
-        $this->budgeted += floatval($add);
+        $add = strval(round($add, 2));
+        bcscale(2);
+        $this->budgeted = bcadd($this->budgeted, $add);
     }
 
     /**
@@ -53,7 +55,9 @@ class Budget
      */
     public function addLeft($add)
     {
-        $this->left += floatval($add);
+        $add = strval(round($add, 2));
+        bcscale(2);
+        $this->left = bcadd($this->left, $add);
     }
 
     /**
@@ -61,7 +65,9 @@ class Budget
      */
     public function addOverspent($add)
     {
-        $this->overspent += floatval($add);
+        $add = strval(round($add, 2));
+        bcscale(2);
+        $this->overspent = bcadd($this->overspent, $add);
     }
 
     /**
@@ -69,7 +75,9 @@ class Budget
      */
     public function addSpent($add)
     {
-        $this->spent += floatval($add);
+        $add = strval(round($add, 2));
+        bcscale(2);
+        $this->spent = bcadd($this->spent, $add);
     }
 
     /**
@@ -81,7 +89,7 @@ class Budget
     }
 
     /**
-     * @return float
+     * @return string
      */
     public function getBudgeted()
     {
@@ -89,7 +97,7 @@ class Budget
     }
 
     /**
-     * @param float $budgeted
+     * @param string $budgeted
      */
     public function setBudgeted($budgeted)
     {
@@ -97,7 +105,7 @@ class Budget
     }
 
     /**
-     * @return float
+     * @return string
      */
     public function getLeft()
     {
@@ -105,7 +113,7 @@ class Budget
     }
 
     /**
-     * @param float $left
+     * @param string $left
      */
     public function setLeft($left)
     {
@@ -113,7 +121,7 @@ class Budget
     }
 
     /**
-     * @return float
+     * @return string
      */
     public function getOverspent()
     {
@@ -121,15 +129,15 @@ class Budget
     }
 
     /**
-     * @param float $overspent
+     * @param string $overspent
      */
     public function setOverspent($overspent)
     {
-        $this->overspent = $overspent;
+        $this->overspent = strval(round($overspent, 2));
     }
 
     /**
-     * @return float
+     * @return string
      */
     public function getSpent()
     {
@@ -137,11 +145,11 @@ class Budget
     }
 
     /**
-     * @param float $spent
+     * @param string $spent
      */
     public function setSpent($spent)
     {
-        $this->spent = $spent;
+        $this->spent = strval(round($spent, 2));
     }
 
 

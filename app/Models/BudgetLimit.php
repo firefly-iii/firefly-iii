@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
 class BudgetLimit extends Model
 {
 
+    protected $hidden = ['amount_encrypted'];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -33,6 +35,14 @@ class BudgetLimit extends Model
     public function limitrepetitions()
     {
         return $this->hasMany('FireflyIII\Models\LimitRepetition');
+    }
+
+    /**
+     * @param $value
+     */
+    public function setAmountAttribute($value)
+    {
+        $this->attributes['amount'] = strval(round($value, 2));
     }
 
 }

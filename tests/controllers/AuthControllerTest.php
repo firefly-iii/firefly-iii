@@ -36,6 +36,9 @@ class AuthControllerTest extends TestCase
         parent::tearDown();
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Auth\AuthController::postRegister
+     */
     public function testPostRegister()
     {
 
@@ -50,6 +53,9 @@ class AuthControllerTest extends TestCase
         $this->assertSessionHas('success');
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\Auth\AuthController::postRegister
+     */
     public function testPostRegisterFails()
     {
 

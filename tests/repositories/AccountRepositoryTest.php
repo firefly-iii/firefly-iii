@@ -611,6 +611,7 @@ class AccountRepositoryTest extends TestCase
      * @covers FireflyIII\Repositories\Account\AccountRepository::storeAccount
      * @covers FireflyIII\Repositories\Account\AccountRepository::storeMetadata
      * @covers FireflyIII\Repositories\Account\AccountRepository::storeInitialBalance
+     *
      */
     public function testStore()
     {

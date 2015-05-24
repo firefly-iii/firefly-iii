@@ -1,7 +1,6 @@
 <?php
 use Carbon\Carbon;
 use DaveJamesMiller\Breadcrumbs\Generator;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
@@ -71,7 +70,7 @@ Breadcrumbs::register(
     $breadcrumbs->parent('accounts.show', $account);
     $what = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
 
-    $breadcrumbs->push(trans('breadcrumbs.edit_'.$what.'_account', ['name' => e($account->name)]), route('accounts.edit', $account->id));
+    $breadcrumbs->push(trans('breadcrumbs.edit_' . $what . '_account', ['name' => e($account->name)]), route('accounts.edit', $account->id));
 }
 );
 

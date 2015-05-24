@@ -5,12 +5,10 @@ namespace FireflyIII\Helpers\Report;
 use Auth;
 use Carbon\Carbon;
 use Crypt;
-use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Steam;
@@ -74,7 +72,7 @@ class ReportQuery implements ReportQueryInterface
                 if ($journal->amount != 0) {
                     return $journal;
                 }
-            }
+            } // @codeCoverageIgnore
         );
 
         return $data;
@@ -138,7 +136,6 @@ class ReportQuery implements ReportQueryInterface
      * This method returns all "income" journals in a certain period, which are both transfers from a shared account
      * and "ordinary" deposits. The query used is almost equal to ReportQueryInterface::journalsByRevenueAccount but it does
      * not group and returns different fields.
-
      *
      * @param Carbon $start
      * @param Carbon $end
@@ -191,7 +188,7 @@ class ReportQuery implements ReportQueryInterface
                 if ($journal->amount != 0) {
                     return $journal;
                 }
-            }
+            } // @codeCoverageIgnore
         );
 
         return $data;
@@ -237,13 +234,11 @@ class ReportQuery implements ReportQueryInterface
             Auth::user()->transactionjournals()
                 ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                 ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                ->where('transactions.amount', '<', 0)
                 ->transactionTypes(['Withdrawal'])
                 ->where('transactions.account_id', $account->id)
                 ->before($end)
                 ->after($start)
-                ->whereNull('budget_transaction_journal.budget_id')
-                ->sum('transactions.amount')
+                ->whereNull('budget_transaction_journal.budget_id')->get(['transaction_journals.*'])->sum('amount')
         );
     }
 

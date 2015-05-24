@@ -24,8 +24,8 @@ class Category
 
     /** @var  Collection */
     protected $categories;
-    /** @var float */
-    protected $total = 0;
+    /** @var string */
+    protected $total = '0';
 
     /**
      *
@@ -50,7 +50,9 @@ class Category
      */
     public function addTotal($add)
     {
-        $this->total += floatval($add);
+        $add = strval(round($add, 2));
+        bcscale(2);
+        $this->total = bcadd($this->total, $add);
     }
 
     /**
@@ -69,11 +71,11 @@ class Category
     }
 
     /**
-     * @return float
+     * @return string
      */
     public function getTotal()
     {
-        return $this->total;
+        return strval(round($this->total, 2));
     }
 
 
