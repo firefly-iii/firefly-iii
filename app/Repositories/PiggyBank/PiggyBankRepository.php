@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
-use FireflyIII\Models\PiggyBankRepetition;
 use Illuminate\Support\Collection;
 
 /**

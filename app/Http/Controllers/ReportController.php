@@ -3,10 +3,6 @@
 use Carbon\Carbon;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Budget;
-use FireflyIII\Models\LimitRepetition;
-use FireflyIII\Models\Preference;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Session;
 use View;
