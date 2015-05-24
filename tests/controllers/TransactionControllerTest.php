@@ -257,7 +257,7 @@ class TransactionControllerTest extends TestCase
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @covers FireflyIII\Http\Controllers\TransactionController::store
      */
-    public function testStore()
+    public function testStoreCreateAnother()
     {
         $account  = FactoryMuffin::create('FireflyIII\Models\Account');
         $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
@@ -278,6 +278,52 @@ class TransactionControllerTest extends TestCase
             'date'               => '2015-05-05',
             'budget_id'          => '0',
             'create_another'     => '1',
+            'category'           => '',
+            'tags'               => 'fat-test',
+            'piggy_bank_id'      => '0',
+            '_token'             => 'replaceMe',
+        ];
+
+        // mock!
+        $repository = $this->mock('FireflyIII\Repositories\Journal\JournalRepositoryInterface');
+
+        // fake!
+        $repository->shouldReceive('store')->andReturn($journal);
+        $repository->shouldReceive('deactivateReminder')->andReturnNull();
+
+
+        $this->call('POST', '/transactions/store/withdrawal', $data);
+
+        //$this->assertSessionHas('errors','bla');
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @covers FireflyIII\Http\Controllers\TransactionController::store
+     */
+    public function testStore()
+    {
+        $account  = FactoryMuffin::create('FireflyIII\Models\Account');
+        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
+        $journal  = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $this->be($account->user);
+
+        $data = [
+            'reminder_id'        => '',
+            'what'               => 'withdrawal',
+            'description'        => 'Bla bla bla',
+            'account_id'         => $account->id,
+            'expense_account'    => 'Bla bla',
+            'amount'             => '100',
+            'amount_currency_id' => $currency->id,
+            'date'               => '2015-05-05',
+            'budget_id'          => '0',
             'category'           => '',
             'tags'               => 'fat-test',
             'piggy_bank_id'      => '0',

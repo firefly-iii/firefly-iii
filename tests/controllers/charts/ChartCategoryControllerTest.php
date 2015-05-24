@@ -35,7 +35,7 @@ class ChartCategoryControllerTest extends TestCase
         $category = FactoryMuffin::create('FireflyIII\Models\Category');
         $this->be($category->user);
 
-        $this->call('GET', '/chart/category/'.$category->id.'/all');
+        $this->call('GET', '/chart/category/' . $category->id . '/all');
         $this->assertResponseOk();
 
 
@@ -76,7 +76,7 @@ class ChartCategoryControllerTest extends TestCase
         $category = FactoryMuffin::create('FireflyIII\Models\Category');
         $this->be($category->user);
 
-        $this->call('GET', '/chart/category/'.$category->id.'/month');
+        $this->call('GET', '/chart/category/' . $category->id . '/month');
         $this->assertResponseOk();
     }
 

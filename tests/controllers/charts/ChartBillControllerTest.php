@@ -58,7 +58,7 @@ class ChartBillControllerTest extends TestCase
         $accounts->shouldReceive('getCreditCards')->andReturn($creditCards);
         $accounts->shouldReceive('getTransfersInRange')->andReturn(new Collection);
         $repository->shouldReceive('createFakeBill')->andReturn($bills->first());
-        Steam::shouldReceive('balance')->andReturn(-10,0);
+        Steam::shouldReceive('balance')->andReturn(-10, 0);
 
 
         $this->call('GET', '/chart/bill/frontpage');
