@@ -380,7 +380,7 @@ class PiggyBankControllerTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Http\Controllers\PiggyBankController::create
+     * @covers FireflyIII\Http\Controllers\PiggyBankController::store
      */
     public function testStoreCreateAnother()
     {
