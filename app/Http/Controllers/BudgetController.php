@@ -180,7 +180,10 @@ class BudgetController extends Controller
         $start    = Session::get('start', Carbon::now()->startOfMonth());
         $end      = Session::get('end', Carbon::now()->startOfMonth());
         $list     = $repository->getWithoutBudget($start, $end);
-        $subTitle = 'Transactions without a budget between ' . $start->format('jS F Y') . ' and ' . $end->format('jS F Y');
+        $subTitle = trans(
+            'firefly.without_budget_between',
+            ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
+        );
 
         return view('budgets.noBudget', compact('list', 'subTitle'));
     }
@@ -214,7 +217,10 @@ class BudgetController extends Controller
 
         $journals = $repository->getJournals($budget, $repetition);
         $limits   = !is_null($repetition->id) ? [$repetition->budgetLimit] : $repository->getBudgetLimits($budget);
-        $subTitle = !is_null($repetition->id) ? e($budget->name) . ' in ' . $repetition->startdate->format('F Y') : e($budget->name);
+        $subTitle = !is_null($repetition->id) ?
+            trans('firefly.budget_in_month', ['name' => $budget->name, 'month' => $repetition->startdate->formatLocalized($this->monthFormat)])
+             :
+            e($budget->name);
         $journals->setPath('/budgets/show/' . $budget->id);
 
         return view('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle'));

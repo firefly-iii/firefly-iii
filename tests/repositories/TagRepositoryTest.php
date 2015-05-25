@@ -143,6 +143,21 @@ class TagRepositoryTest extends TestCase
     }
 
     /**
+     * @covers FireflyIII\Repositories\Tag\TagRepository::connect
+     */
+    public function testConnectInvalidType()
+    {
+        $journal      = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $tag          = FactoryMuffin::create('FireflyIII\Models\Tag');
+        $tag->tagMode = 'Idontknow';
+        $tag->save();
+
+        $result = $this->object->connect($journal, $tag);
+        $this->assertFalse($result);
+
+    }
+
+    /**
      * Once one or more journals have been accepted by the tag, others must match the asset account
      * id. For this to work, we must also create an asset account, and a transaction.
      *

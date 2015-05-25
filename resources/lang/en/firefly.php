@@ -31,6 +31,8 @@ return [
     'transactionsWithoutBudgetDate' => 'Expenses without budget in :date',
     'createBudget'                  => 'New budget',
     'inactiveBudgets'               => 'Inactive budgets',
+    'without_budget_between'        => 'Transactions without a budget between :start and :end',
+    'budget_in_month'               => ':name in :month',
 
     // accounts:
     'details_for_asset'             => 'Details for asset account ":name"',
@@ -225,7 +227,7 @@ return [
     'update_piggy_title'            => 'Update piggy bank ":name"',
     'details'                       => 'Details',
     'events'                        => 'Events',
-    'target_amount'                  => 'Target amount',
+    'target_amount'                 => 'Target amount',
     'start_date'                    => 'Start date',
     'target_date'                   => 'Target date',
     'no_target_date'                => 'No target date',

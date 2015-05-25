@@ -31,6 +31,8 @@ return [
     'transactionsWithoutBudgetDate' => 'Uitgaven zonder budget in :date',
     'createBudget'                  => 'Maak nieuw budget',
     'inactiveBudgets'               => 'Inactieve budgetten',
+    'without_budget_between'        => 'Transacties zonder budget tussen :start en :end',
+    'budget_in_month'               => ':name in :month',
 
     // accounts:
     'details_for_asset'             => 'Overzicht voor betaalrekening ":name"',
@@ -234,7 +236,7 @@ return [
     'update_piggy_title'            => 'Wijzig spaarpotje ":name"',
     'details'                       => 'Details',
     'events'                        => 'Gebeurtenissen',
-    'target_amount'                  => 'Doelbedrag',
+    'target_amount'                 => 'Doelbedrag',
     'start_date'                    => 'Startdatum',
     'target_date'                   => 'Doeldatum',
     'no_target_date'                => 'Geen doeldatum',

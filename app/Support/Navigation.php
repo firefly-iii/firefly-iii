@@ -261,18 +261,20 @@ class Navigation
     public function periodShow(Carbon $date, $repeatFrequency)
     {
         $formatMap = [
-            'daily'   => 'j F Y',
-            'week'    => '\W\e\e\k W, Y',
-            'weekly'  => '\W\e\e\k W, Y',
-            'quarter' => 'F Y',
-            'month'   => 'F Y',
-            'monthly' => 'F Y',
-            'year'    => 'Y',
-            'yearly'  => 'Y',
+            'daily'   => '%e %B %Y',
+            'week'    => 'Week %W, %Y',
+            'weekly'  => 'Week %W, %Y',
+            'quarter' => '%B %Y',
+            'month'   => '%B %Y',
+            'monthly' => '%B %Y',
+            'year'    => '%Y',
+            'yearly'  => '%Y',
 
         ];
+
+
         if (isset($formatMap[$repeatFrequency])) {
-            return $date->format($formatMap[$repeatFrequency]);
+            return $date->formatLocalized($formatMap[$repeatFrequency]);
         }
         throw new FireflyException('No date formats for frequency "' . $repeatFrequency . '"!');
     }
