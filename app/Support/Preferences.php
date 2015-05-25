@@ -4,6 +4,7 @@ namespace FireflyIII\Support;
 
 use Auth;
 use FireflyIII\Models\Preference;
+use Log;
 
 /**
  * Class Preferences
@@ -20,13 +21,18 @@ class Preferences
      */
     public function get($name, $default = null)
     {
-        $pref = Preference::where('user_id', Auth::user()->id)->where('name', $name)->first();
-        if (is_null($pref) && is_null($default)) {
+        $preferences = Preference::where('user_id', Auth::user()->id)->get();
+
+        /** @var Preference $preference */
+        foreach ($preferences as $preference) {
+            if ($preference->name == $name) {
+                return $preference;
+            }
+        }
+        // no preference found and default is null:
+        if (is_null($default)) {
             // return NULL
             return null;
-        }
-        if (!is_null($pref)) {
-            return $pref;
         }
 
         return $this->set($name, $default);
@@ -41,12 +47,20 @@ class Preferences
      */
     public function set($name, $value)
     {
-        $pref = Preference::where('user_id', Auth::user()->id)->where('name', $name)->first();
-        if (is_null($pref)) {
-            $pref       = new Preference;
-            $pref->name = $name;
+        $preferences = Preference::where('user_id', Auth::user()->id)->get();
+        /** @var Preference $preference */
+        foreach ($preferences as $preference) {
+            if ($preference->name == $name) {
+                $preference->data = $value;
+                $preference->save();
+
+                return $preference;
+            }
         }
+        $pref       = new Preference;
+        $pref->name = $name;
         $pref->data = $value;
+
         if (!is_null(Auth::user()->id)) {
             $pref->user()->associate(Auth::user());
             $pref->save();

@@ -38,8 +38,7 @@ class PreferencesController extends Controller
         $viewRange         = $viewRangePref->data;
         $frontPageAccounts = Preferences::get('frontPageAccounts', []);
         $budgetMax         = Preferences::get('budgetMaximum', 1000);
-        $languagePref      = Preferences::get('language', 'en');
-        $language          = $languagePref->data;
+        $language          = Preferences::get('language', 'en')->data;
         $budgetMaximum     = $budgetMax->data;
 
         return view('preferences.index', compact('budgetMaximum', 'language', 'accounts', 'frontPageAccounts', 'viewRange'));
