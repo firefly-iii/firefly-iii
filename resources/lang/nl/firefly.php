@@ -89,6 +89,11 @@ return [
     'no_category'                   => '(geen categorie)',
     'category'                      => 'Categorie',
 
+    // transactions:
+    'update_withdrawal'             => 'Wijzig uitgave',
+    'update_deposit'                => 'Wijzig inkomsten',
+    'update_transfer'               => 'Wijzig overschrijving',
+
     // new user:
     'welcome'                       => 'Welkom bij Firefly!',
     'createNewAsset'                => 'Maak om te beginnen een nieuwe betaalrekening. Dit is je start van je financiële beheer.',

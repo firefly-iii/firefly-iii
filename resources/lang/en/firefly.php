@@ -80,6 +80,11 @@ return [
     'no_category'                   => '(no category)',
     'category'                      => 'Category',
 
+    // transactions:
+    'update_withdrawal'             => 'Update withdrawal',
+    'update_deposit'                => 'Update deposit',
+    'update_transfer'               => 'Update transfer',
+
     // new user:
     'welcome'                       => 'Welcome to Firefly!',
     'createNewAsset'                => 'Create a new asset account to get started. ' .
