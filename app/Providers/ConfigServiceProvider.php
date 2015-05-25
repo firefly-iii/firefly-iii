@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
  * Class ConfigServiceProvider
  *
  * @package FireflyIII\Providers
+ * @codeCoverageIgnore
+ *
  */
 class ConfigServiceProvider extends ServiceProvider
 {

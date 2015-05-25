@@ -58,7 +58,7 @@ class TagRepositoryTest extends TestCase
     public function testConnectBalancingOneDeposit()
     {
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
-        $deposit    = FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $deposit = FactoryMuffin::create('FireflyIII\Models\TransactionType');
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
 
         $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
@@ -85,7 +85,7 @@ class TagRepositoryTest extends TestCase
     {
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
-        $transfer   = FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $transfer = FactoryMuffin::create('FireflyIII\Models\TransactionType');
 
         $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
         $tag     = FactoryMuffin::create('FireflyIII\Models\Tag');
@@ -156,7 +156,7 @@ class TagRepositoryTest extends TestCase
 
         FactoryMuffin::create('FireflyIII\Models\AccountType');
         FactoryMuffin::create('FireflyIII\Models\AccountType');
-        $asset   = FactoryMuffin::create('FireflyIII\Models\AccountType');
+        $asset = FactoryMuffin::create('FireflyIII\Models\AccountType');
 
         $account = FactoryMuffin::create('FireflyIII\Models\Account');
 
@@ -203,7 +203,7 @@ class TagRepositoryTest extends TestCase
 
         FactoryMuffin::create('FireflyIII\Models\AccountType');
         FactoryMuffin::create('FireflyIII\Models\AccountType');
-        $asset   = FactoryMuffin::create('FireflyIII\Models\AccountType');
+        $asset = FactoryMuffin::create('FireflyIII\Models\AccountType');
 
         $account1 = FactoryMuffin::create('FireflyIII\Models\Account');
         $account2 = FactoryMuffin::create('FireflyIII\Models\Account');
@@ -248,7 +248,7 @@ class TagRepositoryTest extends TestCase
     {
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
-        $transfer   = FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $transfer = FactoryMuffin::create('FireflyIII\Models\TransactionType');
 
         $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
         $tag     = FactoryMuffin::create('FireflyIII\Models\Tag');

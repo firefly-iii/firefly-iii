@@ -14,24 +14,19 @@ interface PiggyBankRepositoryInterface
 {
 
     /**
-     * @return Collection
-     */
-    public function getPiggyBanks();
-
-    /**
-     * @param PiggyBank $piggyBank
-     *
-     * @return Collection
-     */
-    public function getEvents(PiggyBank $piggyBank);
-
-    /**
      * @param PiggyBank $piggyBank
      * @param           $amount
      *
      * @return bool
      */
     public function createEvent(PiggyBank $piggyBank, $amount);
+
+    /**
+     * @param PiggyBank $piggyBank
+     *
+     * @return bool
+     */
+    public function destroy(PiggyBank $piggyBank);
 
     /**
      * @param PiggyBank $piggyBank
@@ -43,9 +38,14 @@ interface PiggyBankRepositoryInterface
     /**
      * @param PiggyBank $piggyBank
      *
-     * @return bool
+     * @return Collection
      */
-    public function destroy(PiggyBank $piggyBank);
+    public function getEvents(PiggyBank $piggyBank);
+
+    /**
+     * @return Collection
+     */
+    public function getPiggyBanks();
 
     /**
      * Set all piggy banks to order 0.

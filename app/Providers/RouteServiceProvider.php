@@ -7,6 +7,7 @@ use Illuminate\Routing\Router;
  * Class RouteServiceProvider
  *
  * @package FireflyIII\Providers
+ * @codeCoverageIgnore
  */
 class RouteServiceProvider extends ServiceProvider
 {

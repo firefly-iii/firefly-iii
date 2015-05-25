@@ -103,7 +103,7 @@ class CategoryRepositoryTest extends TestCase
             $journal1 = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
             $journal2 = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
             /** @var Category $category */
-            $category                     = FactoryMuffin::create('FireflyIII\Models\Category');
+            $category = FactoryMuffin::create('FireflyIII\Models\Category');
 
             $journal1->user_id             = $user->id;
             $journal1->date                = new Carbon('2015-02-11');
@@ -113,7 +113,7 @@ class CategoryRepositoryTest extends TestCase
             $journal2->date                = new Carbon('2015-02-11');
             $journal2->transaction_type_id = $type->id;
 
-            $category->user_id            = $user->id;
+            $category->user_id = $user->id;
             $category->transactionjournals()->save($journal1);
             $category->transactionjournals()->save($journal2);
 

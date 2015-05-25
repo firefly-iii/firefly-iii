@@ -43,8 +43,8 @@ class BillRepositoryTest extends TestCase
         $end   = Carbon::now()->endOfMonth();
 
         // payment:
-        $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-        $journal->date = $start;
+        $journal          = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $journal->date    = $start;
         $journal->bill_id = $bill->id;
         $journal->save();
 

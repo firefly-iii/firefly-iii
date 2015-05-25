@@ -360,16 +360,16 @@ class TransactionControllerTest extends TestCase
         $account2 = FactoryMuffin::create('FireflyIII\Models\Account');
         $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
 
-        $piggy  = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
+        $piggy = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
-        $journal  = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
         $this->be($account->user);
 
         $account2->user_id         = $account->user_id;
         $account->account_type_id  = $asset->id;
         $account2->account_type_id = $asset->id;
-        $piggy->account_id = $account->id;
+        $piggy->account_id         = $account->id;
         $account->save();
         $account2->save();
         $piggy->save();

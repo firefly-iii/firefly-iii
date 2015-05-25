@@ -23,6 +23,7 @@ use Validator;
  * Class FireflyServiceProvider
  *
  * @package FireflyIII\Providers
+ * @codeCoverageIgnore
  */
 class FireflyServiceProvider extends ServiceProvider
 {

@@ -324,7 +324,7 @@ class TransactionJournalModelTest extends TestCase
         // make accounts
         $expense = FactoryMuffin::create('FireflyIII\Models\Account');
         FactoryMuffin::create('FireflyIII\Models\Account');
-        $asset   = FactoryMuffin::create('FireflyIII\Models\Account');
+        $asset = FactoryMuffin::create('FireflyIII\Models\Account');
 
         Transaction::create(['account_id' => $expense->id, 'transaction_journal_id' => $withdrawal->id, 'amount' => 300]);
         Transaction::create(['account_id' => $asset->id, 'transaction_journal_id' => $withdrawal->id, 'amount' => -300]);
