@@ -67,7 +67,11 @@ class AccountControllerTest extends TestCase
         $this->be($pref->user);
 
 
-        Preferences::shouldReceive('get', 'viewRange')->andReturn($pref);
+        Preferences::shouldReceive('get')->withArgs(['viewRange', '1M'])->andReturn($pref);
+
+        $language       = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $language->data = 'en';
+        Preferences::shouldReceive('get')->withArgs(['language', 'en'])->andReturn($language);
 
         // CURRENCY:
         $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');

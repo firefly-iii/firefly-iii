@@ -97,7 +97,7 @@ class BudgetControllerTest extends TestCase
         $this->call('GET', '/budgets/delete/' . $budget->id);
 
         $this->assertResponseOk();
-        $this->assertViewHas('subTitle', 'Delete budget' . e($budget->name) . '"');
+        $this->assertViewHas('subTitle', 'Delete budget "' . e($budget->name) . '"');
         $this->assertViewHas('budget');
         $this->assertSessionHas('budgets.delete.url');
     }

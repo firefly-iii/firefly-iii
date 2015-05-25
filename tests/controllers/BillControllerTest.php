@@ -67,7 +67,7 @@ class BillControllerTest extends TestCase
         $bill = FactoryMuffin::create('FireflyIII\Models\Bill');
         $this->be($bill->user);
         $this->call('GET', '/bills/delete/' . $bill->id);
-        $this->assertViewHas('subTitle', 'Delete "' . e($bill->name) . '"');
+        $this->assertViewHas('subTitle', 'Delete bill "' . e($bill->name) . '"');
         $this->assertResponseOk();
     }
 

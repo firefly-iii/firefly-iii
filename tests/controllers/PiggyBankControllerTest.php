@@ -101,7 +101,7 @@ class PiggyBankControllerTest extends TestCase
 
         $this->call('GET', '/piggy-banks/delete/' . $piggyBank->id);
         $this->assertResponseOk();
-        $this->assertViewHas('subTitle', 'Delete "' . e($piggyBank->name) . '"');
+        $this->assertViewHas('subTitle', 'Delete piggy bank "' . e($piggyBank->name) . '"');
     }
 
     /**

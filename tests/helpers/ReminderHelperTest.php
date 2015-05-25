@@ -172,6 +172,7 @@ class ReminderHelperTest extends TestCase
         $piggyBank                  = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
         $reminder                   = FactoryMuffin::create('FireflyIII\Models\Reminder');
         $piggyBank->targetdate      = new Carbon;
+        $this->be($piggyBank->account->user);
         $reminder->remindersable_id = $piggyBank->id;
 
         Amount::shouldReceive('format')->andReturn('xx');
