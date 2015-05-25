@@ -172,8 +172,5 @@ class ReminderHelper implements ReminderHelperInterface
                 'date'   => $piggyBank->targetdate->formatLocalized(Config::get('firefly.monthAndDay.' . $lang))
             ]
         );
-
-        //return 'Add ' . Amount::format($reminder->metadata->perReminder) . ' to fill this piggy bank on ' . $piggyBank->targetdate->format('jS F Y');
-
     }
 }
