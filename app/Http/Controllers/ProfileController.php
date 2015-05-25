@@ -109,6 +109,8 @@ class ProfileController extends Controller
         // DELETE!
         Auth::user()->delete();
         Session::flush();
+        Session::flash('gaEventCategory', 'user');
+        Session::flash('gaEventAction', 'delete-account');
 
         return Redirect::route('index');
     }
