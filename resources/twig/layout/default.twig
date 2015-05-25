@@ -170,7 +170,7 @@
 
     // send an event if relevant:
     {% if Session.has('gaEventCategory') and Session.has('gaEventAction') %}
-    ga('send', 'event', '{{Session.get('gaEventCategory')}}', '{{Session.get('gaEventAction')}}');
+        ga('send', 'event', '{{Session.get('gaEventCategory')}}', '{{Session.get('gaEventAction')}}');
     {% endif %}
 
 </script>

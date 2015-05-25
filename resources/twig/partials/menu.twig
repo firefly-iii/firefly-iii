@@ -171,7 +171,24 @@
                     </ul>
                     <!-- /.nav-second-level -->
                 </li>
-                <!-- profile, again-->
+                <!-- top menu again -->
+                <li class="hidden-sm hidden-md hidden-lg">
+                    <a class="{{ activeRoute('profile',null,true) }}" href="{{ route('profile') }}"><i class="fa fa-user fa-fw"></i> {{ Auth.user.email }}</a>
+                </li>
+
+                <li class="hidden-sm hidden-md hidden-lg">
+                    <a class="{{ activeRoute('preferences',null,true) }}" href="{{ route('preferences') }}"><i class="fa fa-gear fa-fw"></i> {{ 'preferences'|_ }}</a>
+                </li>
+                <li class="hidden-sm hidden-md hidden-lg">
+                    <a class="{{ activeRoute('currency') }}" href="{{ route('currency.index') }}"><i class="fa fa-usd fa-fw"></i> {{ 'currency'|_ }}</a>
+                </li>
+                <li class="hidden-sm hidden-md hidden-lg">
+                    <a class="{{ activeRoute('reminders') }}" href="{{ route('reminders.index') }}"><i class="fa fa-clock-o fa-fw"></i> {{ 'reminders'|_ }}</a>
+                </li>
+                <li class="hidden-sm hidden-md hidden-lg">
+                    <a href="{{ route('logout') }}"><i class="fa fa-sign-out fa-fw"></i> {{ 'logout'|_ }}</a>
+                </li>
+
                 <!-- reminders, again-->
             </ul>
         </div>
