@@ -46,6 +46,8 @@ class AccountController extends Controller
             Session::put('accounts.create.url', URL::previous());
         }
         Session::forget('accounts.create.fromStore');
+        Session::flash('gaEventCategory', 'accounts');
+        Session::flash('gaEventAction', 'create-' . $what);
 
         return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle'));
 
@@ -63,6 +65,8 @@ class AccountController extends Controller
 
         // put previous url in session
         Session::put('accounts.delete.url', URL::previous());
+        Session::flash('gaEventCategory', 'accounts');
+        Session::flash('gaEventAction', 'delete-' . $typeName);
 
         return view('accounts.delete', compact('account', 'subTitle'));
     }
@@ -126,6 +130,8 @@ class AccountController extends Controller
             'virtualBalance'       => floatval($account->virtual_balance)
         ];
         Session::flash('preFilled', $preFilled);
+        Session::flash('gaEventCategory', 'accounts');
+        Session::flash('gaEventAction', 'edit-' . $what);
 
         return view('accounts.edit', compact('account', 'subTitle', 'subTitleIcon', 'openingBalance', 'what'));
     }
