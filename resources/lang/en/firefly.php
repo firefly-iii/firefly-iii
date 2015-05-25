@@ -225,7 +225,7 @@ return [
     'update_piggy_title'            => 'Update piggy bank ":name"',
     'details'                       => 'Details',
     'events'                        => 'Events',
-    'targetamount'                  => 'Target amount',
+    'target_amount'                  => 'Target amount',
     'start_date'                    => 'Start date',
     'target_date'                   => 'Target date',
     'no_target_date'                => 'No target date',

@@ -234,7 +234,7 @@ return [
     'update_piggy_title'            => 'Wijzig spaarpotje ":name"',
     'details'                       => 'Details',
     'events'                        => 'Gebeurtenissen',
-    'targetamount'                  => 'Doelbedrag',
+    'target_amount'                  => 'Doelbedrag',
     'start_date'                    => 'Startdatum',
     'target_date'                   => 'Doeldatum',
     'no_target_date'                => 'Geen doeldatum',
