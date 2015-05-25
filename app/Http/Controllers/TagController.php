@@ -83,7 +83,7 @@ class TagController extends Controller
      */
     public function delete(Tag $tag)
     {
-        $subTitle = 'Delete "' . e($tag->tag) . '"';
+        $subTitle = trans('firefly.delete_tag', ['name' => $tag->tag]);
 
         // put previous url in session
         Session::put('tags.delete.url', URL::previous());

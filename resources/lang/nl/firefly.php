@@ -33,6 +33,10 @@ return [
     'inactiveBudgets'               => 'Inactieve budgetten',
     'without_budget_between'        => 'Transacties zonder budget tussen :start en :end',
     'budget_in_month'               => ':name in :month',
+    'delete_budget'                 => 'Verwijder budget ":name"',
+
+    // bills:
+    'delete_bill'                   => 'Verwijder rekening ":name"',
 
     // accounts:
     'details_for_asset'             => 'Overzicht voor betaalrekening ":name"',
@@ -88,11 +92,15 @@ return [
     'categories'                    => 'Categorieën',
     'no_category'                   => '(geen categorie)',
     'category'                      => 'Categorie',
+    'delete_category'               => 'Verwijder categorie ":name"',
 
     // transactions:
     'update_withdrawal'             => 'Wijzig uitgave',
     'update_deposit'                => 'Wijzig inkomsten',
     'update_transfer'               => 'Wijzig overschrijving',
+    'delete_withdrawal'             => 'Verwijder uitgave ":description"',
+    'delete_deposit'                => 'Verwijder inkomsten ":description"',
+    'delete_transfer'               => 'Verwijder overschrijving ":description"',
 
     // new user:
     'welcome'                       => 'Welkom bij Firefly!',
@@ -253,6 +261,9 @@ return [
     'table'                         => 'Tabel',
     'add_any_amount_to_piggy'       => 'Stop geld in dit spaarpotje om het doel van :amount te halen.',
     'add_set_amount_to_piggy'       => 'Stop voor :date :amount in dit spaarpotje om hem op tijd te vullen.',
+    'delete_piggy_bank'             => 'Verwijder spaarpotje ":name"',
 
+    // tags
+    'delete_tag'                    => 'Verwijder tag ":name"',
 
 ];

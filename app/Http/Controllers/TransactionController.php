@@ -81,7 +81,7 @@ class TransactionController extends Controller
     public function delete(TransactionJournal $journal)
     {
         $type     = strtolower($journal->transactionType->type);
-        $subTitle = 'Delete ' . e($type) . ' "' . e($journal->description) . '"';
+        $subTitle = trans('firefly.delete_' . $type, ['description' => $journal->description]);
 
         // put previous url in session
         Session::put('transactions.delete.url', URL::previous());

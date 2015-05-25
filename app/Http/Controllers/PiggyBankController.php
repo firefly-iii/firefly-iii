@@ -85,7 +85,7 @@ class PiggyBankController extends Controller
      */
     public function delete(PiggyBank $piggyBank)
     {
-        $subTitle = 'Delete "' . e($piggyBank->name) . '"';
+        $subTitle = trans('firefly.delete_piggy_bank', ['name' => $piggyBank->name]);
 
         // put previous url in session
         Session::put('piggy-banks.delete.url', URL::previous());

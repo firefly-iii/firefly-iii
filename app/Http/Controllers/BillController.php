@@ -61,7 +61,7 @@ class BillController extends Controller
         Session::put('bills.delete.url', URL::previous());
         Session::flash('gaEventCategory', 'bills');
         Session::flash('gaEventAction', 'delete');
-        $subTitle = 'Delete "' . e($bill->name) . '"';
+        $subTitle = trans('firefly.delete_bill', ['name' => $bill->name]);
 
         return view('bills.delete', compact('bill', 'subTitle'));
     }

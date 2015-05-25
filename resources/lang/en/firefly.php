@@ -33,6 +33,10 @@ return [
     'inactiveBudgets'               => 'Inactive budgets',
     'without_budget_between'        => 'Transactions without a budget between :start and :end',
     'budget_in_month'               => ':name in :month',
+    'delete_budget'                 => 'Delete budget ":name"',
+
+    // bills:
+    'delete_bill'                   => 'Delete bill ":name"',
 
     // accounts:
     'details_for_asset'             => 'Details for asset account ":name"',
@@ -79,11 +83,15 @@ return [
     'categories'                    => 'Categories',
     'no_category'                   => '(no category)',
     'category'                      => 'Category',
+    'delete_category'               => 'Delete category ":name"',
 
     // transactions:
     'update_withdrawal'             => 'Update withdrawal',
     'update_deposit'                => 'Update deposit',
     'update_transfer'               => 'Update transfer',
+    'delete_withdrawal'             => 'Delete withdrawal ":description"',
+    'delete_deposit'                => 'Delete deposit ":description"',
+    'delete_transfer'               => 'Delete transfer ":description"',
 
     // new user:
     'welcome'                       => 'Welcome to Firefly!',
@@ -245,6 +253,10 @@ return [
     'piggy_bank_not_exists'         => 'Piggy bank no longer exists.',
     'add_any_amount_to_piggy'       => 'Add money to this piggy bank to reach your target of :amount.',
     'add_set_amount_to_piggy'       => 'Add :amount to fill this piggy bank on :date',
+    'delete_piggy_bank'             => 'Delete piggy bank ":name"',
+
+    // tags
+    'delete_tag'                    => 'Delete tag ":name"',
 
 
 ];

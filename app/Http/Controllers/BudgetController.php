@@ -78,7 +78,7 @@ class BudgetController extends Controller
      */
     public function delete(Budget $budget)
     {
-        $subTitle = 'Delete budget' . e($budget->name) . '"';
+        $subTitle = trans('firefly.delete_budget', ['name' => $budget->name]);
 
         // put previous url in session
         Session::put('budgets.delete.url', URL::previous());
@@ -217,9 +217,10 @@ class BudgetController extends Controller
 
         $journals = $repository->getJournals($budget, $repetition);
         $limits   = !is_null($repetition->id) ? [$repetition->budgetLimit] : $repository->getBudgetLimits($budget);
-        $subTitle = !is_null($repetition->id) ?
+        $subTitle = !is_null($repetition->id)
+            ?
             trans('firefly.budget_in_month', ['name' => $budget->name, 'month' => $repetition->startdate->formatLocalized($this->monthFormat)])
-             :
+            :
             e($budget->name);
         $journals->setPath('/budgets/show/' . $budget->id);
 
