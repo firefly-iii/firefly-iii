@@ -251,6 +251,8 @@ return [
     'expected_amount_per_reminder'  => 'Verwacht bedrag per herinnering',
     'todo'                          => 'te doen',
     'table'                         => 'Tabel',
+    'add_any_amount_to_piggy'       => 'Stop geld in dit spaarpotje om het doel van :amount te halen.',
+    'add_set_amount_to_piggy'       => 'Stop voor :date :amount in dit spaarpotje om hem op tijd te vullen.',
 
 
 ];

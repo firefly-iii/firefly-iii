@@ -242,6 +242,9 @@ return [
     'expected_amount_per_reminder'  => 'Expected amount per reminder',
     'todo'                          => 'to do',
     'table'                         => 'Table',
+    'piggy_bank_not_exists'         => 'Piggy bank no longer exists.',
+    'add_any_amount_to_piggy'       => 'Add money to this piggy bank to reach your target of :amount.',
+    'add_set_amount_to_piggy'       => 'Add :amount to fill this piggy bank on :date',
 
 
 ];

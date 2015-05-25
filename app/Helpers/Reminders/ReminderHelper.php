@@ -5,9 +5,11 @@ namespace FireflyIII\Helpers\Reminders;
 use Amount;
 use Auth;
 use Carbon\Carbon;
+use Config;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Reminder;
 use Navigation;
+use Preferences;
 
 /**
  * Class ReminderHelper
@@ -154,14 +156,24 @@ class ReminderHelper implements ReminderHelperInterface
         $piggyBank = $reminder->remindersable;
 
         if (is_null($piggyBank)) {
-            return 'Piggy bank no longer exists.';
+            return trans('firefly.piggy_bank_not_exists');
         }
 
         if (is_null($piggyBank->targetdate)) {
-            return 'Add money to this piggy bank to reach your target of ' . Amount::format($piggyBank->targetamount);
+            return trans('firefly.add_any_amount_to_piggy', ['amount' => Amount::format($piggyBank->targetamount)]);
         }
 
-        return 'Add ' . Amount::format($reminder->metadata->perReminder) . ' to fill this piggy bank on ' . $piggyBank->targetdate->format('jS F Y');
+        $lang = Preferences::get('language', 'en')->data;
+
+        return trans(
+            'firefly.add_set_amount_to_piggy',
+            [
+                'amount' => Amount::format($reminder->metadata->perReminder),
+                'date'   => $piggyBank->targetdate->formatLocalized(Config::get('firefly.monthAndDay.' . $lang))
+            ]
+        );
+
+        //return 'Add ' . Amount::format($reminder->metadata->perReminder) . ' to fill this piggy bank on ' . $piggyBank->targetdate->format('jS F Y');
 
     }
 }
