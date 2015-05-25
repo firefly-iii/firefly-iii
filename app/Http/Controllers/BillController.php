@@ -43,6 +43,8 @@ class BillController extends Controller
             Session::put('bills.create.url', URL::previous());
         }
         Session::forget('bills.create.fromStore');
+        Session::flash('gaEventCategory', 'bills');
+        Session::flash('gaEventAction', 'create');
         $subTitle = 'Create new bill';
 
         return view('bills.create', compact('periods', 'subTitle'));
@@ -57,6 +59,8 @@ class BillController extends Controller
     {
         // put previous url in session
         Session::put('bills.delete.url', URL::previous());
+        Session::flash('gaEventCategory', 'bills');
+        Session::flash('gaEventAction', 'delete');
         $subTitle = 'Delete "' . e($bill->name) . '"';
 
         return view('bills.delete', compact('bill', 'subTitle'));
@@ -93,6 +97,8 @@ class BillController extends Controller
             Session::put('bills.edit.url', URL::previous());
         }
         Session::forget('bills.edit.fromUpdate');
+        Session::flash('gaEventCategory', 'bills');
+        Session::flash('gaEventAction', 'edit');
 
         return view('bills.edit', compact('subTitle', 'periods', 'bill'));
     }

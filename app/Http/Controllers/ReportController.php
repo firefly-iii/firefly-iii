@@ -90,6 +90,10 @@ class ReportController extends Controller
         $balance    = $this->helper->getBalanceReport($start, $end, $shared);
         $bills      = $this->helper->getBillReport($start, $end, $shared);
 
+        Session::flash('gaEventCategory', 'report');
+        Session::flash('gaEventAction', 'month');
+        Session::flash('gaEventLabel', $start->format('F Y'));
+
 
         return view(
             'reports.month',
@@ -132,6 +136,10 @@ class ReportController extends Controller
         $accounts = $this->helper->getAccountReport($start, $end, $shared);
         $incomes  = $this->helper->getIncomeReport($start, $end, $shared);
         $expenses = $this->helper->getExpenseReport($start, $end, $shared);
+
+        Session::flash('gaEventCategory', 'report');
+        Session::flash('gaEventAction', 'year');
+        Session::flash('gaEventLabel', $start->format('Y'));
 
 
         return view(

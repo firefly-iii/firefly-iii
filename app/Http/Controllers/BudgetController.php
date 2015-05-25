@@ -64,6 +64,8 @@ class BudgetController extends Controller
             Session::put('budgets.create.url', URL::previous());
         }
         Session::forget('budgets.create.fromStore');
+        Session::flash('gaEventCategory', 'budgets');
+        Session::flash('gaEventAction', 'create');
         $subTitle = trans('firefly.create_new_budget');
 
         return view('budgets.create', compact('subTitle'));
@@ -80,6 +82,8 @@ class BudgetController extends Controller
 
         // put previous url in session
         Session::put('budgets.delete.url', URL::previous());
+        Session::flash('gaEventCategory', 'budgets');
+        Session::flash('gaEventAction', 'delete');
 
         return view('budgets.delete', compact('budget', 'subTitle'));
     }
@@ -99,6 +103,7 @@ class BudgetController extends Controller
 
         Session::flash('success', 'The  budget "' . e($name) . '" was deleted.');
 
+
         return Redirect::to(Session::get('budgets.delete.url'));
     }
 
@@ -116,6 +121,8 @@ class BudgetController extends Controller
             Session::put('budgets.edit.url', URL::previous());
         }
         Session::forget('budgets.edit.fromUpdate');
+        Session::flash('gaEventCategory', 'budgets');
+        Session::flash('gaEventAction', 'edit');
 
         return view('budgets.edit', compact('budget', 'subTitle'));
 

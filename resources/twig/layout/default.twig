@@ -169,8 +169,11 @@
     ga('send', 'pageview');
 
     // send an event if relevant:
-    {% if Session.has('gaEventCategory') and Session.has('gaEventAction') %}
+    {% if Session.has('gaEventCategory') and Session.has('gaEventAction') and not Session.has('gaEventLabel') %}
         ga('send', 'event', '{{Session.get('gaEventCategory')}}', '{{Session.get('gaEventAction')}}');
+    {% endif %}
+    {% if Session.has('gaEventCategory') and Session.has('gaEventAction') and Session.has('gaEventLabel') %}
+        ga('send', 'event', '{{Session.get('gaEventCategory')}}', '{{Session.get('gaEventAction')}}','{{ Session.get('gaEventLabel') }}');
     {% endif %}
 
 </script>

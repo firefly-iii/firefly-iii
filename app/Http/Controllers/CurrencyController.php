@@ -45,6 +45,8 @@ class CurrencyController extends Controller
             Session::put('currency.create.url', URL::previous());
         }
         Session::forget('currency.create.fromStore');
+        Session::flash('gaEventCategory', 'currency');
+        Session::flash('gaEventAction', 'create');
 
         return view('currency.create', compact('subTitleIcon', 'subTitle'));
     }
@@ -84,6 +86,8 @@ class CurrencyController extends Controller
 
         // put previous url in session
         Session::put('currency.delete.url', URL::previous());
+        Session::flash('gaEventCategory', 'currency');
+        Session::flash('gaEventAction', 'delete');
 
 
         return view('currency.delete', compact('currency'));
@@ -127,6 +131,8 @@ class CurrencyController extends Controller
             Session::put('currency.edit.url', URL::previous());
         }
         Session::forget('currency.edit.fromUpdate');
+        Session::flash('gaEventCategory', 'currency');
+        Session::flash('gaEventAction', 'edit');
 
         return view('currency.edit', compact('currency', 'subTitle', 'subTitleIcon'));
 
