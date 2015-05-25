@@ -1,29 +1,31 @@
 <?php
 
 return [
+    // general stuff:
     'test'                          => 'You have selected English.',
     'close'                         => 'Close',
     'pleaseHold'                    => 'Please hold...',
-    'mandatoryFields'               => 'Mandatory fields',
-    'optionalFields'                => 'Optional fields',
-    'options'                       => 'Options',
-    'something'                     => 'Something!',
     'actions'                       => 'Actions',
     'edit'                          => 'Edit',
     'delete'                        => 'Delete',
     'welcomeBack'                   => 'What\'s playing?',
-
     'everything'                    => 'Everything',
     'customRange'                   => 'Custom range',
     'apply'                         => 'Apply',
     'cancel'                        => 'Cancel',
     'from'                          => 'From',
     'to'                            => 'To',
-
     'showEverything'                => 'Show everything',
+
+    // forms:
+    'mandatoryFields'               => 'Mandatory fields',
+    'optionalFields'                => 'Optional fields',
+    'options'                       => 'Options',
+    'something'                     => 'Something!',
+
+    // budgets:
     'create_new_budget'             => 'Create a new budget',
     'store_new_budget'              => ' Store new budget',
-
     'availableIn'                   => 'Available in :date',
     'transactionsWithoutBudget'     => 'Expenses without budget',
     'transactionsWithoutBudgetDate' => 'Expenses without budget in :date',
@@ -31,7 +33,6 @@ return [
     'inactiveBudgets'               => 'Inactive budgets',
 
     // accounts:
-
     'details_for_asset'             => 'Details for asset account ":name"',
     'details_for_expense'           => 'Details for expense account ":name"',
     'details_for_revenue'           => 'Details for revenue account ":name"',
@@ -61,6 +62,14 @@ return [
     'make_new_expense_account'      => 'Create a new expense account',
     'make_new_revenue_account'      => 'Create a new revenue account',
 
+    'asset_accounts'                => 'Asset accounts',
+    'expense_accounts'              => 'Expense accounts',
+    'revenue_accounts'              => 'Revenue accounts',
+
+    'accountExtraHelp_asset'        => '',
+    'accountExtraHelp_expense'      => '',
+    'accountExtraHelp_revenue'      => '',
+
     // categories:
     'new_category'                  => 'New category',
     'without_category'              => 'Without a category',
@@ -71,7 +80,8 @@ return [
 
     // new user:
     'welcome'                       => 'Welcome to Firefly!',
-    'createNewAsset'                => 'Create a new asset account to get started. This will allow you to create transactions and start your financial management',
+    'createNewAsset'                => 'Create a new asset account to get started. ' .
+                                       'This will allow you to create transactions and start your financial management',
     'createNewAssetButton'          => 'Create new asset account',
 
     // home page:
@@ -122,11 +132,12 @@ return [
     'createNew'                     => 'Create new',
     'withdrawal'                    => 'Withdrawal',
     'deposit'                       => 'Deposit',
+    'account'                       => 'Account',
     'transfer'                      => 'Transfer',
     'Withdrawal'                    => 'Withdrawal',
     'Deposit'                       => 'Deposit',
     'Transfer'                      => 'Transfer',
-    'bill'                          => 'Rekening',
+    'bill'                          => 'Bill',
     'yes'                           => 'Yes',
     'no'                            => 'No',
     'amount'                        => 'Amount',
@@ -141,6 +152,7 @@ return [
     'half-year'                     => 'Every six months',
     'yearly'                        => 'Yearly',
 
+    // reports:
     'reportForYear'                 => 'Yearly report for :year',
     'reportForYearShared'           => 'Yearly report for :year (including shared accounts)',
     'reportForMonth'                => 'Montly report for :year',
@@ -151,15 +163,10 @@ return [
     'balanceEndOfYear'              => 'Balance at end of year',
     'balanceStartOfMonth'           => 'Balance at end of month',
     'balanceEndOfMonth'             => 'Balance at end of month',
-
     'balanceStart'                  => 'Balance at end of period',
     'balanceEnd'                    => 'Balance at end of period',
-
     'reportsOwnAccounts'            => 'Reports for your own accounts',
     'reportsOwnAccountsAndShared'   => 'Reports for your own accounts and shared accounts',
-
-    'account'                       => 'Account',
-
     'splitByAccount'                => 'Split by account',
     'balancedByTransfersAndTags'    => 'Balanced by transfers and tags',
     'coveredWithTags'               => 'Covered with tags',
@@ -167,11 +174,9 @@ return [
     'expectedBalance'               => 'Expected balance',
     'outsideOfBudgets'              => 'Outside of budgets',
     'leftInBudget'                  => 'Left in budget',
-
     'sumOfSums'                     => 'Sum of sums',
     'notCharged'                    => 'Not charged (yet)',
     'inactive'                      => 'Inactive',
-
     'difference'                    => 'Difference',
     'in'                            => 'In',
     'out'                           => 'Out',
@@ -203,12 +208,21 @@ return [
     'average'                       => 'Average',
     'balanceFor'                    => 'Balance for :name',
 
-    'asset_accounts'                => 'Asset accounts',
-    'expense_accounts'              => 'Expense accounts',
-    'revenue_accounts'              => 'Revenue accounts',
+    // piggy banks:
+    'new_piggy_bank'                => 'Create new piggy bank',
+    'account_status'                => 'Account status',
+    'left_for_piggy_banks'          => 'Left for piggy banks',
+    'sum_of_piggy_banks'            => 'Sum of piggy banks',
+    'saved_so_far'                  => 'Saved so far',
+    'left_to_save'                  => 'Left to save',
+    'add_money_to_piggy_title'      => 'Add money to piggy bank ":name"',
+    'remove_money_from_piggy_title' => 'Remove money from piggy bank ":name"',
+    'add'                           => 'Add',
+    'remove'                        => 'Remove',
+    'max_amount_add'                => 'The maximum amount you can add is',
+    'max_amount_remove'             => 'The maximum amount you can remove is',
+    'update_piggy_button'           => 'Update piggy bank',
+    'update_piggy_title'           => 'Update piggy bank ":name"',
 
-    // some extra help:
-    'accountExtraHelp_asset'        => '',
-    'accountExtraHelp_expense'      => '',
-    'accountExtraHelp_revenue'      => '',
+
 ];

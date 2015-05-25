@@ -2,12 +2,12 @@
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span></button>
-            <h4 class="modal-title" id="myModalLabel">Add money to {{ piggyBank.name }}</h4>
+            <h4 class="modal-title" id="myModalLabel">{{ trans('firefly.add_money_to_piggy_title', {name: piggyBank.name}) }}</h4>
         </div>
         <form style="display: inline;" id="add" action="{{ route('piggy-banks.add', piggyBank.id) }}" method="POST">
             <div class="modal-body">
                 <p>
-                    The maximum amount you can add is {{ maxAmount|formatAmount }}.
+                    {{ 'max_amount_add'|_ }}: {{ maxAmount|formatAmount }}.
                 </p>
                 <div class="input-group">
                     <div class="input-group-addon">{{ getCurrencySymbol()|raw }}</div>
@@ -17,7 +17,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close'|_ }}</button>
-                <button type="submit" class="btn btn-primary">Add</button>
+                <button type="submit" class="btn btn-primary">{{ 'add'|_ }}</button>
             </div>
         </form>
     </div>

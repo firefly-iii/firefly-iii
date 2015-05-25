@@ -122,7 +122,7 @@ class PiggyBankController extends Controller
 
         $periods      = Config::get('firefly.piggy_bank_periods');
         $accounts     = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
-        $subTitle     = 'Edit piggy bank "' . e($piggyBank->name) . '"';
+        $subTitle     = trans('firefly.update_piggy_title', ['name' => $piggyBank->name]);
         $subTitleIcon = 'fa-pencil';
 
         /*
