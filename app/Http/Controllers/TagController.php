@@ -31,6 +31,9 @@ use View;
  */
 class TagController extends Controller
 {
+
+    public $tagOptions = [];
+
     /**
      * @codeCoverageIgnore
      */
@@ -40,12 +43,12 @@ class TagController extends Controller
         View::share('title', 'Tags');
         View::share('mainTitleIcon', 'fa-tags');
         View::share('hideTags', true);
-        $tagOptions = [
+        $this->tagOptions = [
             'nothing'        => 'Just a regular tag.',
             'balancingAct'   => 'The tag takes at most two transactions; an expense and a transfer. They\'ll balance each other out.',
             'advancePayment' => 'The tag accepts one expense and any number of deposits aimed to repay the original expense.',
         ];
-        View::share('tagOptions', $tagOptions);
+        View::share('tagOptions', $this->tagOptions);
     }
 
     /**
@@ -67,6 +70,8 @@ class TagController extends Controller
             Session::put('tags.create.url', URL::previous());
         }
         Session::forget('tags.create.fromStore');
+        Session::flash('gaEventCategory', 'tags');
+        Session::flash('gaEventAction', 'create');
 
         return view('tags.create', compact('subTitle', 'subTitleIcon'));
     }
@@ -78,10 +83,12 @@ class TagController extends Controller
      */
     public function delete(Tag $tag)
     {
-        $subTitle = 'Delete "' . e($tag->tag) . '"';
+        $subTitle = trans('firefly.delete_tag', ['name' => $tag->tag]);
 
         // put previous url in session
         Session::put('tags.delete.url', URL::previous());
+        Session::flash('gaEventCategory', 'tags');
+        Session::flash('gaEventAction', 'delete');
 
         return view('tags.delete', compact('tag', 'subTitle'));
     }
@@ -108,7 +115,7 @@ class TagController extends Controller
      *
      * @return View
      */
-    public function edit(Tag $tag)
+    public function edit(Tag $tag, TagRepositoryInterface $repository)
     {
         $subTitle     = 'Edit tag "' . e($tag->tag) . '"';
         $subTitleIcon = 'fa-tag';
@@ -116,67 +123,16 @@ class TagController extends Controller
         /*
          * Default tag options (again)
          */
-        $tagOptions = [
-            'nothing'        => 'Just a regular tag.',
-            'balancingAct'   => 'The tag takes at most two transactions; an expense and a transfer. They\'ll balance each other out.',
-            'advancePayment' => 'The tag accepts one expense and any number of deposits aimed to repay the original expense.',
-        ];
+        $tagOptions = $this->tagOptions;
 
         /*
          * Can this tag become another type?
          */
-        $allowToAdvancePayment = true;
-        $allowToBalancingAct   = true;
-
-        /*
-         * If this tag is a balancing act, and it contains transfers, it cannot be
-         * changes to an advancePayment.
-         */
-
-        if ($tag->tagMode == 'balancingAct' || $tag->tagMode == 'nothing') {
-            foreach ($tag->transactionjournals as $journal) {
-                if ($journal->transactionType->type == 'Transfer') {
-                    $allowToAdvancePayment = false;
-                }
-            }
-        }
-
-        /*
-         * If this tag contains more than one expenses, it cannot become an advance payment.
-         */
-        $count = 0;
-        foreach ($tag->transactionjournals as $journal) {
-            if ($journal->transactionType->type == 'Withdrawal') {
-                $count++;
-            }
-        }
-        if ($count > 1) {
-            $allowToAdvancePayment = false;
-        }
-
-        /*
-         * If has more than two transactions already, cannot become a balancing act:
-         */
-        if ($tag->transactionjournals->count() > 2) {
-            $allowToBalancingAct = false;
-        }
-
-        /*
-         * If any transaction is a deposit, cannot become a balancing act.
-         */
-        $count = 0;
-        foreach ($tag->transactionjournals as $journal) {
-            if ($journal->transactionType->type == 'Deposit') {
-                $count++;
-            }
-        }
-        if ($count > 0) {
-            $allowToBalancingAct = false;
-        }
-
+        $allowAdvance        = $repository->tagAllowAdvance($tag);
+        $allowToBalancingAct = $repository->tagAllowBalancing($tag);
 
         // edit tag options:
-        if ($allowToAdvancePayment === false) {
+        if ($allowAdvance === false) {
             unset($tagOptions['advancePayment']);
         }
         if ($allowToBalancingAct === false) {
@@ -189,6 +145,8 @@ class TagController extends Controller
             Session::put('tags.edit.url', URL::previous());
         }
         Session::forget('tags.edit.fromUpdate');
+        Session::flash('gaEventCategory', 'tags');
+        Session::flash('gaEventAction', 'edit');
 
         return view('tags.edit', compact('tag', 'subTitle', 'subTitleIcon', 'tagOptions'));
     }

@@ -62,6 +62,8 @@ class TransactionController extends Controller
             Session::put('transactions.create.url', URL::previous());
         }
         Session::forget('transactions.create.fromStore');
+        Session::flash('gaEventCategory', 'transactions');
+        Session::flash('gaEventAction', 'create-' . $what);
 
         asort($piggies);
 
@@ -79,10 +81,12 @@ class TransactionController extends Controller
     public function delete(TransactionJournal $journal)
     {
         $type     = strtolower($journal->transactionType->type);
-        $subTitle = 'Delete ' . e($type) . ' "' . e($journal->description) . '"';
+        $subTitle = trans('firefly.delete_' . $type, ['description' => $journal->description]);
 
         // put previous url in session
         Session::put('transactions.delete.url', URL::previous());
+        Session::flash('gaEventCategory', 'transactions');
+        Session::flash('gaEventAction', 'delete-' . $type);
 
         return view('transactions.delete', compact('journal', 'subTitle'));
 
@@ -158,6 +162,8 @@ class TransactionController extends Controller
         $preFilled['account_to_id']   = $transactions[0]->account->id;
 
         Session::flash('preFilled', $preFilled);
+        Session::flash('gaEventCategory', 'transactions');
+        Session::flash('gaEventAction', 'edit-' . $what);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (Session::get('transactions.edit.fromUpdate') !== true) {

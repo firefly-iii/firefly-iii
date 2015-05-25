@@ -1,5 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
+use Amount;
 use Auth;
 use Carbon\Carbon;
 use FireflyIII\Http\Requests;
@@ -45,6 +46,9 @@ class BudgetController extends Controller
         $amount          = intval(Input::get('amount'));
         $date            = Session::get('start', Carbon::now()->startOfMonth());
         $limitRepetition = $repository->updateLimitAmount($budget, $date, $amount);
+        if ($amount == 0) {
+            $limitRepetition = null;
+        }
 
         return Response::json(['name' => $budget->name, 'repetition' => $limitRepetition ? $limitRepetition->id : 0]);
 
@@ -60,6 +64,8 @@ class BudgetController extends Controller
             Session::put('budgets.create.url', URL::previous());
         }
         Session::forget('budgets.create.fromStore');
+        Session::flash('gaEventCategory', 'budgets');
+        Session::flash('gaEventAction', 'create');
         $subTitle = trans('firefly.create_new_budget');
 
         return view('budgets.create', compact('subTitle'));
@@ -72,10 +78,12 @@ class BudgetController extends Controller
      */
     public function delete(Budget $budget)
     {
-        $subTitle = 'Delete budget' . e($budget->name) . '"';
+        $subTitle = trans('firefly.delete_budget', ['name' => $budget->name]);
 
         // put previous url in session
         Session::put('budgets.delete.url', URL::previous());
+        Session::flash('gaEventCategory', 'budgets');
+        Session::flash('gaEventAction', 'delete');
 
         return view('budgets.delete', compact('budget', 'subTitle'));
     }
@@ -95,6 +103,7 @@ class BudgetController extends Controller
 
         Session::flash('success', 'The  budget "' . e($name) . '" was deleted.');
 
+
         return Redirect::to(Session::get('budgets.delete.url'));
     }
 
@@ -112,6 +121,8 @@ class BudgetController extends Controller
             Session::put('budgets.edit.url', URL::previous());
         }
         Session::forget('budgets.edit.fromUpdate');
+        Session::flash('gaEventCategory', 'budgets');
+        Session::flash('gaEventAction', 'edit');
 
         return view('budgets.edit', compact('budget', 'subTitle'));
 
@@ -126,7 +137,9 @@ class BudgetController extends Controller
     {
         $budgets  = $repository->getActiveBudgets();
         $inactive = $repository->getInactiveBudgets();
-
+        $spent    = '0';
+        $budgeted = '0';
+        bcscale(2);
         /**
          * Do some cleanup:
          */
@@ -134,24 +147,27 @@ class BudgetController extends Controller
 
 
         // loop the budgets:
-        $budgets->each(
-            function (Budget $budget) use ($repository) {
-                $date               = Session::get('start', Carbon::now()->startOfMonth());
-                $end                = Session::get('end', Carbon::now()->endOfMonth());
-                $budget->spent      = $repository->spentInPeriodCorrected($budget, $date, $end);
-                $budget->currentRep = $repository->getCurrentRepetition($budget, $date);
+        /** @var Budget $budget */
+        foreach ($budgets as $budget) {
+            $date               = Session::get('start', Carbon::now()->startOfMonth());
+            $end                = Session::get('end', Carbon::now()->endOfMonth());
+            $budget->spent      = $repository->spentInPeriodCorrected($budget, $date, $end);
+            $budget->currentRep = $repository->getCurrentRepetition($budget, $date);
+            if ($budget->currentRep) {
+                $budgeted = bcadd($budgeted, $budget->currentRep->amount);
             }
+            $spent = bcadd($spent, $budget->spent);
+
+        }
+
+        $dateAsString      = Session::get('start', Carbon::now()->startOfMonth())->format('FY');
+        $budgetIncomeTotal = Preferences::get('budgetIncomeTotal' . $dateAsString, 1000)->data;
+        $budgetMaximum     = Preferences::get('budgetMaximum', 1000)->data;
+        $defaultCurrency   = Amount::getDefaultCurrency();
+
+        return view(
+            'budgets.index', compact('budgetMaximum', 'budgetIncomeTotal', 'defaultCurrency', 'inactive', 'budgets', 'spent', 'budgeted')
         );
-
-        $dateAsString  = Session::get('start', Carbon::now()->startOfMonth())->format('FY');
-        $spent         = $budgets->sum('spent');
-        $amount        = Preferences::get('budgetIncomeTotal' . $dateAsString, 1000)->data;
-        $overspent     = $spent > $amount;
-        $spentPCT      = $overspent ? ceil($amount / $spent * 100) : ceil($spent / $amount * 100);
-        $budgetMax     = Preferences::get('budgetMaximum', 1000);
-        $budgetMaximum = $budgetMax->data;
-
-        return view('budgets.index', compact('budgetMaximum', 'inactive', 'budgets', 'spent', 'spentPCT', 'overspent', 'amount'));
     }
 
     /**
@@ -164,7 +180,10 @@ class BudgetController extends Controller
         $start    = Session::get('start', Carbon::now()->startOfMonth());
         $end      = Session::get('end', Carbon::now()->startOfMonth());
         $list     = $repository->getWithoutBudget($start, $end);
-        $subTitle = 'Transactions without a budget between ' . $start->format('jS F Y') . ' and ' . $end->format('jS F Y');
+        $subTitle = trans(
+            'firefly.without_budget_between',
+            ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
+        );
 
         return view('budgets.noBudget', compact('list', 'subTitle'));
     }
@@ -198,7 +217,11 @@ class BudgetController extends Controller
 
         $journals = $repository->getJournals($budget, $repetition);
         $limits   = !is_null($repetition->id) ? [$repetition->budgetLimit] : $repository->getBudgetLimits($budget);
-        $subTitle = !is_null($repetition->id) ? e($budget->name) . ' in ' . $repetition->startdate->format('F Y') : e($budget->name);
+        $subTitle = !is_null($repetition->id)
+            ?
+            trans('firefly.budget_in_month', ['name' => $budget->name, 'month' => $repetition->startdate->formatLocalized($this->monthFormat)])
+            :
+            e($budget->name);
         $journals->setPath('/budgets/show/' . $budget->id);
 
         return view('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle'));

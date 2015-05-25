@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
             <p>
-                <a href="{{ route('piggy-banks.create') }}" class="btn btn-success"><i class="fa fa-sort-amount-asc fa-fw"></i> Create new piggy bank</a>
+                <a href="{{ route('piggy-banks.create') }}" class="btn btn-success"><i class="fa fa-sort-amount-asc fa-fw"></i> {{ 'new_piggy_bank'|_ }}</a>
             </p>
         </div>
     </div>
@@ -22,16 +22,16 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-fw fa-money"></i> Account status
+                    <i class="fa fa-fw fa-money"></i> {{ 'account_status'|_ }}
                 </div>
                 <table class="table table-striped">
                     <tr>
-                        <th>Account</th>
-                        <th>Balance</th>
-                        <th>Left for piggy banks</th>
-                        <th>Sum of piggy banks</th>
-                        <th>Saved so far</th>
-                        <th>Left to save</th>
+                        <th>{{ 'account'|_ }}</th>
+                        <th>{{ 'balance'|_ }}</th>
+                        <th>{{ 'left_for_piggy_banks'|_ }}</th>
+                        <th>{{ 'sum_of_piggy_banks'|_ }}</th>
+                        <th>{{ 'saved_so_far'|_ }}</th>
+                        <th>{{ 'left_to_save'|_ }}</th>
                     </tr>
                     {% for id,info in accounts %}
                         <tr>

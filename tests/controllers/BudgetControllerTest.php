@@ -58,6 +58,24 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
+     * @covers FireflyIII\Http\Controllers\BudgetController::amount
+     */
+    public function testAmountZero()
+    {
+        $repository      = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $limitRepetition = FactoryMuffin::create('FireflyIII\Models\LimitRepetition');
+        $budget          = $limitRepetition->budgetlimit->budget;
+        $this->be($budget->user);
+        $today = new Carbon;
+
+        $this->session(['start' => $today]);
+        $repository->shouldReceive('updateLimitAmount')->once()->andReturn($limitRepetition);
+        $this->call('POST', '/budgets/amount/' . $budget->id, ['amount' => 0, '_token' => 'replaceme']);
+        $this->assertResponseOk();
+
+    }
+
+    /**
      * @covers FireflyIII\Http\Controllers\BudgetController::create
      */
     public function testCreate()
@@ -122,20 +140,23 @@ class BudgetControllerTest extends TestCase
      */
     public function testIndex()
     {
-        $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
+        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
+        $budget   = FactoryMuffin::create('FireflyIII\Models\Budget');
         $this->be($budget->user);
         $collection = new Collection;
         $collection->push($budget);
         $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $repetition = FactoryMuffin::create('FireflyIII\Models\LimitRepetition');
 
         $repository->shouldReceive('getActiveBudgets')->once()->andReturn($collection);
         $repository->shouldReceive('getInactiveBudgets')->once()->andReturn($collection);
         $repository->shouldReceive('cleanupBudgets')->once();
         $repository->shouldReceive('spentInPeriodCorrected')->once();
-        $repository->shouldReceive('getCurrentRepetition')->once();
+        $repository->shouldReceive('getCurrentRepetition')->once()->andReturn($repetition);
         Amount::shouldReceive('getCurrencySymbol')->andReturn('x');
         Amount::shouldReceive('format')->andReturn('x');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getDefaultCurrency')->andReturn($currency);
         $this->call('GET', '/budgets');
 
         $this->assertResponseOk();

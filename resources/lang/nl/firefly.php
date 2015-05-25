@@ -1,37 +1,44 @@
 <?php
 
 return [
+    // general stuff:
     'test'                          => 'Nederlands geselecteerd!',
     'close'                         => 'Sluiten',
     'pleaseHold'                    => 'Momentje...',
-    'mandatoryFields'               => 'Verplichte velden',
-    'optionalFields'                => 'Optionele velden',
-    'options'                       => 'Opties',
-    'something'                     => 'Iets!',
     'actions'                       => 'Acties',
     'edit'                          => 'Wijzig',
     'delete'                        => 'Verwijder',
     'welcomeBack'                   => 'Hoe staat het er voor?',
-
     'everything'                    => 'Alles',
     'customRange'                   => 'Zelf bereik kiezen',
     'apply'                         => 'Go',
     'cancel'                        => 'Annuleren',
     'from'                          => 'Van',
     'to'                            => 'Tot',
-
     'showEverything'                => 'Laat alles zien',
+
+    // forms:
+    'mandatoryFields'               => 'Verplichte velden',
+    'optionalFields'                => 'Optionele velden',
+    'options'                       => 'Opties',
+    'something'                     => 'Iets!',
+
+    // budgets:
     'create_new_budget'             => 'Maak een nieuw budget',
     'store_new_budget'              => 'Sla nieuw budget op',
-
     'availableIn'                   => 'Beschikbaar in :date',
     'transactionsWithoutBudget'     => 'Uitgaven zonder budget',
     'transactionsWithoutBudgetDate' => 'Uitgaven zonder budget in :date',
     'createBudget'                  => 'Maak nieuw budget',
     'inactiveBudgets'               => 'Inactieve budgetten',
+    'without_budget_between'        => 'Transacties zonder budget tussen :start en :end',
+    'budget_in_month'               => ':name in :month',
+    'delete_budget'                 => 'Verwijder budget ":name"',
+
+    // bills:
+    'delete_bill'                   => 'Verwijder rekening ":name"',
 
     // accounts:
-
     'details_for_asset'             => 'Overzicht voor betaalrekening ":name"',
     'details_for_expense'           => 'Overzicht voor crediteur ":name"',
     'details_for_revenue'           => 'Overzicht voor debiteur ":name"',
@@ -61,6 +68,23 @@ return [
     'make_new_expense_account'      => 'Nieuwe crediteur',
     'make_new_revenue_account'      => 'Nieuwe debiteur',
 
+    'asset_accounts'                => 'Betaalrekeningen',
+    'expense_accounts'              => 'Crediteuren',
+    'revenue_accounts'              => 'Debiteuren',
+
+    // some extra help:
+    'accountExtraHelp_asset'        => '',
+    'accountExtraHelp_expense'      =>
+        'Een crediteur is een persoon of een bedrijf waar je geld aan moet betalen. Je staat bij ze in het krijt. Een verwarrende' .
+        ' term misschien, maar zo werkt het nou eenmaal. De supermarkt, je huurbaas of de bank zijn crediteuren. Jouw ' .
+        'geld (krediet) gaat naar hen toe. De term komt uit de wereld van de boekhouding. De uitgaves die je hier ziet zijn ' .
+        'positief, want je kijkt uit hun perspectief. Zodra jij afrekent in een winkel, komt het geld er bij hen bij (positief).',
+    'accountExtraHelp_revenue'      => 'Als je geld krijgt van een bedrijf of een persoon is dat een debiteur. ' .
+                                       'Dat kan salaris zijn, of een andere betaling. ' .
+                                       ' Ze hebben een schuld (debet) aan jou. De term komt uit de wereld van de boekhouding.' .
+                                       ' De inkomsten die je hier ziet zijn negatief, want je kijkt uit hun perspectief. Zodra een debiteur geld naar jou ' .
+                                       'overmaakt gaat het er bij hen af (negatief).',
+
     // categories:
     'new_category'                  => 'Nieuwe categorie',
     'without_category'              => 'Zonder categorie',
@@ -68,11 +92,21 @@ return [
     'categories'                    => 'Categorieën',
     'no_category'                   => '(geen categorie)',
     'category'                      => 'Categorie',
+    'delete_category'               => 'Verwijder categorie ":name"',
+
+    // transactions:
+    'update_withdrawal'             => 'Wijzig uitgave',
+    'update_deposit'                => 'Wijzig inkomsten',
+    'update_transfer'               => 'Wijzig overschrijving',
+    'delete_withdrawal'             => 'Verwijder uitgave ":description"',
+    'delete_deposit'                => 'Verwijder inkomsten ":description"',
+    'delete_transfer'               => 'Verwijder overschrijving ":description"',
 
     // new user:
     'welcome'                       => 'Welkom bij Firefly!',
     'createNewAsset'                => 'Maak om te beginnen een nieuwe betaalrekening. Dit is je start van je financiële beheer.',
     'createNewAssetButton'          => 'Maak een nieuwe betaalrekening',
+
 
     // home page:
     'yourAccounts'                  => 'Je betaalrekeningen',
@@ -122,6 +156,7 @@ return [
     'createNew'                     => 'Nieuw',
     'withdrawal'                    => 'Uitgave',
     'deposit'                       => 'Inkomsten',
+    'account'                       => 'Rekening',
     'transfer'                      => 'Overschrijving',
     'Withdrawal'                    => 'Uitgave',
     'Deposit'                       => 'Inkomsten',
@@ -141,6 +176,7 @@ return [
     'half-year'                     => 'Elk half jaar',
     'yearly'                        => 'Jaarlijks',
 
+    // reports:
     'reportForYear'                 => 'Jaaroverzicht :year',
     'reportForYearShared'           => 'Jaaroverzicht :year (inclusief gedeelde rekeningen)',
     'reportForMonth'                => 'Maandoverzicht van :date',
@@ -151,15 +187,10 @@ return [
     'balanceEndOfYear'              => 'Saldo aan het einde van het jaar',
     'balanceStartOfMonth'           => 'Saldo aan het begin van de maand',
     'balanceEndOfMonth'             => 'Saldo aan het einde van de maand',
-
     'balanceStart'                  => 'Saldo aan het begin van de periode',
     'balanceEnd'                    => 'Saldo aan het einde van de periode',
-
     'reportsOwnAccounts'            => 'Overzichten voor je eigen betaalrekeningen',
     'reportsOwnAccountsAndShared'   => 'Overzichten voor je eigen betaalrekeningen en gedeelde rekeningen',
-
-    'account'                       => 'Rekening',
-
     'splitByAccount'                => 'Per betaalrekening',
     'balancedByTransfersAndTags'    => 'Gecorrigeerd met overschrijvingen en tags',
     'coveredWithTags'               => 'Gecorrigeerd met tags',
@@ -167,11 +198,9 @@ return [
     'expectedBalance'               => 'Verwacht saldo',
     'outsideOfBudgets'              => 'Buiten budgetten',
     'leftInBudget'                  => 'Over van budget',
-
     'sumOfSums'                     => 'Alles bij elkaar',
     'notCharged'                    => '(Nog) niet betaald',
     'inactive'                      => 'Niet actief',
-
     'difference'                    => 'Verschil',
     'in'                            => 'In',
     'out'                           => 'Uit',
@@ -203,20 +232,38 @@ return [
     'average'                       => 'Gemiddeld',
     'balanceFor'                    => 'Saldo op :name',
 
-    'asset_accounts'                => 'Betaalrekeningen',
-    'expense_accounts'              => 'Crediteuren',
-    'revenue_accounts'              => 'Debiteuren',
+    // piggy banks:
+    'new_piggy_bank'                => 'Nieuw spaarpotje',
+    'account_status'                => 'Rekeningoverzicht',
+    'left_for_piggy_banks'          => 'Over voor spaarpotjes',
+    'sum_of_piggy_banks'            => 'Som van spaarpotjes',
+    'saved_so_far'                  => 'Gespaard',
+    'left_to_save'                  => 'Te sparen',
+    'add_money_to_piggy_title'      => 'Stop geld in spaarpotje ":name"',
+    'remove_money_from_piggy_title' => 'Haal geld uit spaarpotje ":name"',
+    'add'                           => 'Toevoegen',
+    'remove'                        => 'Verwijderen',
+    'max_amount_add'                => 'Hooguit toe te voegen',
+    'max_amount_remove'             => 'Hooguit te verwijderen',
+    'update_piggy_button'           => 'Wijzig spaarpotje',
+    'update_piggy_title'            => 'Wijzig spaarpotje ":name"',
+    'details'                       => 'Details',
+    'events'                        => 'Gebeurtenissen',
+    'target_amount'                 => 'Doelbedrag',
+    'start_date'                    => 'Startdatum',
+    'target_date'                   => 'Doeldatum',
+    'no_target_date'                => 'Geen doeldatum',
+    'reminder'                      => 'Herinnering',
+    'no_reminder'                   => 'Geen herinnering',
+    'reminders_left'                => 'Herinneringen te gaan',
+    'expected_amount_per_reminder'  => 'Verwacht bedrag per herinnering',
+    'todo'                          => 'te doen',
+    'table'                         => 'Tabel',
+    'add_any_amount_to_piggy'       => 'Stop geld in dit spaarpotje om het doel van :amount te halen.',
+    'add_set_amount_to_piggy'       => 'Stop voor :date :amount in dit spaarpotje om hem op tijd te vullen.',
+    'delete_piggy_bank'             => 'Verwijder spaarpotje ":name"',
 
-    // some extra help:
-    'accountExtraHelp_asset'        => '',
-    'accountExtraHelp_expense'      =>
-        'Een crediteur is een persoon of een bedrijf waar je geld aan moet betalen. Je staat bij ze in het krijt. Een verwarrende' .
-        ' term misschien, maar zo werkt het nou eenmaal. De supermarkt, je huurbaas of de bank zijn crediteuren. Jouw ' .
-        'geld (krediet) gaat naar hen toe. De term komt uit de wereld van de boekhouding. De uitgaves die je hier ziet zijn ' .
-        'positief, want je kijkt uit hun perspectief. Zodra jij afrekent in een winkel, komt het geld er bij hen bij (positief).',
-    'accountExtraHelp_revenue'      => 'Als je geld krijgt van een bedrijf of een persoon is dat een debiteur. ' .
-                                       'Dat kan salaris zijn, of een andere betaling. ' .
-                                       ' Ze hebben een schuld (debet) aan jou. De term komt uit de wereld van de boekhouding.' .
-                                       ' De inkomsten die je hier ziet zijn negatief, want je kijkt uit hun perspectief. Zodra een debiteur geld naar jou ' .
-                                       'overmaakt gaat het er bij hen af (negatief).',
+    // tags
+    'delete_tag'                    => 'Verwijder tag ":name"',
+
 ];

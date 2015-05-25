@@ -1,13 +1,16 @@
+/* globals currencyCode, language, defaultPieChartOptions, defaultLineChartOptions, defaultColumnChartOptions, defaultBarChartOptions, defaultStackedColumnChartOptions, defaultComboChartOptions */
+/* exported googleLineChart, googleBarChart, googleColumnChart, googleStackedColumnChart, googleComboChart, googlePieChart */
 var google = google || {};
 google.load('visualization', '1.1', {'packages': ['corechart', 'bar', 'line'],'language': language  });
 
 function googleChart(chartType, URL, container, options) {
+    "use strict";
     if ($('#' + container).length === 1) {
         $.getJSON(URL).success(function (data) {
             /*
              Get the data from the JSON
              */
-            gdata = new google.visualization.DataTable(data);
+            var gdata = new google.visualization.DataTable(data);
 
             /*
              Format as money
@@ -67,25 +70,32 @@ function googleChart(chartType, URL, container, options) {
 
 
 function googleLineChart(URL, container, options) {
+    "use strict";
     return googleChart('line', URL, container, options);
 }
 
+
 function googleBarChart(URL, container, options) {
+    "use strict";
     return googleChart('bar', URL, container, options);
 }
 
 function googleColumnChart(URL, container, options) {
+    "use strict";
     return googleChart('column', URL, container, options);
 }
 
 function googleStackedColumnChart(URL, container, options) {
+    "use strict";
     return googleChart('stackedColumn', URL, container, options);
 }
 
 function googleComboChart(URL, container, options) {
+    "use strict";
     return googleChart('combo', URL, container, options);
 }
 
 function googlePieChart(URL, container, options) {
+    "use strict";
     return googleChart('pie', URL, container, options);
 }

@@ -40,6 +40,8 @@ class CategoryController extends Controller
             Session::put('categories.create.url', URL::previous());
         }
         Session::forget('categories.create.fromStore');
+        Session::flash('gaEventCategory', 'categories');
+        Session::flash('gaEventAction', 'create');
         $subTitle = 'Create a new category';
 
         return view('categories.create', compact('subTitle'));
@@ -52,10 +54,12 @@ class CategoryController extends Controller
      */
     public function delete(Category $category)
     {
-        $subTitle = 'Delete category "' . e($category->name) . '"';
+        $subTitle = trans('firefly.delete_category', ['name' => $category->name]);
 
         // put previous url in session
         Session::put('categories.delete.url', URL::previous());
+        Session::flash('gaEventCategory', 'categories');
+        Session::flash('gaEventAction', 'delete');
 
         return view('categories.delete', compact('category', 'subTitle'));
     }
@@ -91,6 +95,8 @@ class CategoryController extends Controller
             Session::put('categories.edit.url', URL::previous());
         }
         Session::forget('categories.edit.fromUpdate');
+        Session::flash('gaEventCategory', 'categories');
+        Session::flash('gaEventAction', 'edit');
 
         return view('categories.edit', compact('category', 'subTitle'));
 

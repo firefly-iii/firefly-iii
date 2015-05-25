@@ -1,3 +1,5 @@
+/* exported defaultLineChartOptions, defaultBarChartOptions, defaultComboChartOptions, defaultColumnChartOptions, defaultStackedColumnChartOptions, defaultPieChartOptions  */
+
 var defaultLineChartOptions = {
     curveType: 'function',
     legend: {
@@ -69,7 +71,7 @@ var defaultBarChartOptions = {
 
     legend: {
         position: 'none'
-    },
+    }
 };
 
 var defaultComboChartOptions = {
@@ -127,7 +129,7 @@ var defaultColumnChartOptions = {
     },
     legend: {
         position: 'none'
-    },
+    }
 };
 
 var defaultStackedColumnChartOptions = {

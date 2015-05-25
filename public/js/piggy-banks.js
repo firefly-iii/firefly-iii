@@ -1,4 +1,19 @@
+/* globals $, googleLineChart, token */
+
+// Return a helper with preserved width of cells
+var fixHelper = function (e, tr) {
+    "use strict";
+    var $originals = tr.children();
+    var $helper = tr.clone();
+    $helper.children().each(function (index) {
+        // Set helper cell sizes to match the original sizes
+        $(this).width($originals.eq(index).width());
+    });
+    return $helper;
+};
+
 $(function () {
+    "use strict";
     $('.addMoney').on('click', addMoney);
     $('.removeMoney').on('click', removeMoney);
 
@@ -31,18 +46,9 @@ $(function () {
     );
 });
 
-// Return a helper with preserved width of cells
-var fixHelper = function(e, tr) {
-    var $originals = tr.children();
-    var $helper = tr.clone();
-    $helper.children().each(function (index) {
-        // Set helper cell sizes to match the original sizes
-        $(this).width($originals.eq(index).width());
-    });
-    return $helper;
-}
 
 function addMoney(e) {
+    "use strict";
     var pigID = parseInt($(e.target).data('id'));
     $('#moneyManagementModal').empty().load('piggy-banks/add/' + pigID, function () {
         $('#moneyManagementModal').modal('show');
@@ -52,6 +58,7 @@ function addMoney(e) {
 }
 
 function removeMoney(e) {
+    "use strict";
     var pigID = parseInt($(e.target).data('id'));
     $('#moneyManagementModal').empty().load('piggy-banks/remove/' + pigID, function () {
         $('#moneyManagementModal').modal('show');
@@ -60,15 +67,15 @@ function removeMoney(e) {
     return false;
 }
 function stopSorting() {
+    "use strict";
     $('.loadSpin').addClass('fa fa-refresh fa-spin');
     var order = [];
-    $.each($('#sortable>tbody>tr'), function(i,v) {
+    $.each($('#sortable>tbody>tr'), function (i, v) {
         var holder = $(v);
         var id = holder.data('id');
         order.push(id);
     });
-    $.post('/piggy-banks/sort',{_token: token, order: order}).success(function(data) {
-        "use strict";
+    $.post('/piggy-banks/sort', {_token: token, order: order}).success(function () {
         $('.loadSpin').removeClass('fa fa-refresh fa-spin');
     });
 }

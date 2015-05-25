@@ -76,7 +76,7 @@ class AccountModelTest extends TestCase
             'name'            => 'Some new account',
             'account_type_id' => $account->account_type_id,
             'user_id'         => $account->user_id,
-            'active' => 1,
+            'active'          => 1,
         ];
 
         $result = Account::firstOrCreateEncrypted($search);
@@ -125,7 +125,7 @@ class AccountModelTest extends TestCase
             'name'            => 'Some new account',
             'account_type_id' => $account->account_type_id,
             'user_id'         => $account->user_id,
-            'active' => 1,
+            'active'          => 1,
         ];
 
         $result = Account::firstOrNullEncrypted($search);

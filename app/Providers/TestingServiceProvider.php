@@ -8,6 +8,7 @@ use Illuminate\Support\ServiceProvider;
 /**
  * Class TestingServiceProvider
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Providers
  */
 class TestingServiceProvider extends ServiceProvider

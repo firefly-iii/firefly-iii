@@ -233,16 +233,20 @@ class ReportHelperTest extends TestCase
         $left->save();
 
         // save meta for account:
-        AccountMeta::create([
-                                'account_id' => $left->id,
-                                'name' => 'accountRole',
-                                'data' => 'defaultAsset'
-                            ]);
-        AccountMeta::create([
-                                'account_id' => $right->id,
-                                'name' => 'accountRole',
-                                'data' => 'defaultAsset'
-                            ]);
+        AccountMeta::create(
+            [
+                'account_id' => $left->id,
+                'name'       => 'accountRole',
+                'data'       => 'defaultAsset'
+            ]
+        );
+        AccountMeta::create(
+            [
+                'account_id' => $right->id,
+                'name'       => 'accountRole',
+                'data'       => 'defaultAsset'
+            ]
+        );
 
 
         for ($i = 0; $i < 5; $i++) {
@@ -292,16 +296,20 @@ class ReportHelperTest extends TestCase
         $right->account_type_id = $asset->id;
 
         // save meta for account:
-        AccountMeta::create([
-            'account_id' => $left->id,
-            'name' => 'accountRole',
-            'data' => 'defaultAsset'
-                            ]);
-        AccountMeta::create([
-                                'account_id' => $right->id,
-                                'name' => 'accountRole',
-                                'data' => 'defaultAsset'
-                            ]);
+        AccountMeta::create(
+            [
+                'account_id' => $left->id,
+                'name'       => 'accountRole',
+                'data'       => 'defaultAsset'
+            ]
+        );
+        AccountMeta::create(
+            [
+                'account_id' => $right->id,
+                'name'       => 'accountRole',
+                'data'       => 'defaultAsset'
+            ]
+        );
 
         $right->save();
         $left->save();

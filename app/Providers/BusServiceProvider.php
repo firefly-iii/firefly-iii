@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 /**
  * Class BusServiceProvider
  *
+ * @codeCoverageIgnore
+ *
  * @package FireflyIII\Providers
  */
 class BusServiceProvider extends ServiceProvider

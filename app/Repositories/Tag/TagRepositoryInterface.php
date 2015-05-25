@@ -19,6 +19,14 @@ interface TagRepositoryInterface
 
 
     /**
+     * @param TransactionJournal $journal
+     * @param Tag                $tag
+     *
+     * @return boolean
+     */
+    public function connect(TransactionJournal $journal, Tag $tag);
+
+    /**
      * This method scans the transaction journals from or to the given asset account
      * and checks if these are part of a balancing act. If so, it will sum up the amounts
      * transferred into the balancing act (if any) and return this amount.
@@ -35,6 +43,18 @@ interface TagRepositoryInterface
     public function coveredByBalancingActs(Account $account, Carbon $start, Carbon $end);
 
     /**
+     * @param Tag $tag
+     *
+     * @return boolean
+     */
+    public function destroy(Tag $tag);
+
+    /**
+     * @return Collection
+     */
+    public function get();
+
+    /**
      * @param array $data
      *
      * @return Tag
@@ -42,9 +62,22 @@ interface TagRepositoryInterface
     public function store(array $data);
 
     /**
-     * @return Collection
+     * Can a tag become an advance payment?
+     *
+     * @param Tag $tag
+     *
+     * @return bool
      */
-    public function get();
+    public function tagAllowAdvance(Tag $tag);
+
+    /**
+     * Can a tag become a balancing act?
+     *
+     * @param Tag $tag
+     *
+     * @return bool
+     */
+    public function tagAllowBalancing(Tag $tag);
 
     /**
      * @param Tag   $tag
@@ -53,19 +86,4 @@ interface TagRepositoryInterface
      * @return Tag
      */
     public function update(Tag $tag, array $data);
-
-    /**
-     * @param Tag $tag
-     *
-     * @return boolean
-     */
-    public function destroy(Tag $tag);
-
-    /**
-     * @param TransactionJournal $journal
-     * @param Tag                $tag
-     *
-     * @return boolean
-     */
-    public function connect(TransactionJournal $journal, Tag $tag);
 }

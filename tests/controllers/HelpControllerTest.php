@@ -38,6 +38,7 @@ class HelpControllerTest extends TestCase
 
     /**
      * Everything present and accounted for, and in cache:
+     *
      * @covers FireflyIII\Http\Controllers\HelpController::show
      */
     public function testGetHelpText()
@@ -59,6 +60,7 @@ class HelpControllerTest extends TestCase
 
     /**
      * Everything present and accounted for, but not cached
+     *
      * @covers FireflyIII\Http\Controllers\HelpController::show
      */
     public function testGetHelpTextNoCache()
@@ -82,6 +84,7 @@ class HelpControllerTest extends TestCase
 
     /**
      * No such route.
+     *
      * @covers FireflyIII\Http\Controllers\HelpController::show
      */
     public function testGetHelpTextNoRoute()

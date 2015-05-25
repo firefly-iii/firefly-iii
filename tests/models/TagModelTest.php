@@ -41,24 +41,6 @@ class TagModelTest extends TestCase
     /**
      * @covers FireflyIII\Models\Tag::firstOrCreateEncrypted
      */
-    public function testFirstOrCreateEncryptedNew()
-    {
-        $tag = FactoryMuffin::create('FireflyIII\Models\Tag');
-
-        $search = [
-            'tagMode' => 'something',
-            'tag'     => 'Something else',
-            'user_id' => $tag->user_id,
-        ];
-
-        $result = Tag::firstOrCreateEncrypted($search);
-
-        $this->assertNotEquals($tag->id, $result->id);
-    }
-
-    /**
-     * @covers FireflyIII\Models\Tag::firstOrCreateEncrypted
-     */
     public function testFirstOrCreateEncrypted()
     {
         $tag = FactoryMuffin::create('FireflyIII\Models\Tag');
@@ -72,6 +54,24 @@ class TagModelTest extends TestCase
         $result = Tag::firstOrCreateEncrypted($search);
 
         $this->assertEquals($tag->id, $result->id);
+    }
+
+    /**
+     * @covers FireflyIII\Models\Tag::firstOrCreateEncrypted
+     */
+    public function testFirstOrCreateEncryptedNew()
+    {
+        $tag = FactoryMuffin::create('FireflyIII\Models\Tag');
+
+        $search = [
+            'tagMode' => 'something',
+            'tag'     => 'Something else',
+            'user_id' => $tag->user_id,
+        ];
+
+        $result = Tag::firstOrCreateEncrypted($search);
+
+        $this->assertNotEquals($tag->id, $result->id);
     }
 
 }

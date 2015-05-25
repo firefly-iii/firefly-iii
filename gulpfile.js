@@ -1,3 +1,4 @@
+/* globals require */
 var elixir = require('laravel-elixir');
 
 /*
@@ -12,5 +13,6 @@ var elixir = require('laravel-elixir');
  */
 
 elixir(function(mix) {
+    "use strict";
     mix.less('app.less');
 });

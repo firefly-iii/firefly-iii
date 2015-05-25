@@ -6,7 +6,7 @@ use Config;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Preferences;
-
+use Carbon\Carbon;
 /**
  * Class Authenticate
  *
@@ -54,6 +54,7 @@ class Authenticate
         // if logged in, set user language:
         $pref = Preferences::get('language', 'en');
         App::setLocale($pref->data);
+        Carbon::setLocale($pref->data);
 
         setlocale(LC_TIME, Config::get('firefly.locales.' . $pref->data));
 

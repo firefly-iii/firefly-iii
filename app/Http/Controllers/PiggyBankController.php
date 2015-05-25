@@ -72,6 +72,8 @@ class PiggyBankController extends Controller
             Session::put('piggy-banks.create.url', URL::previous());
         }
         Session::forget('piggy-banks.create.fromStore');
+        Session::flash('gaEventCategory', 'piggy-banks');
+        Session::flash('gaEventAction', 'create');
 
         return view('piggy-banks.create', compact('accounts', 'periods', 'subTitle', 'subTitleIcon'));
     }
@@ -83,10 +85,12 @@ class PiggyBankController extends Controller
      */
     public function delete(PiggyBank $piggyBank)
     {
-        $subTitle = 'Delete "' . e($piggyBank->name) . '"';
+        $subTitle = trans('firefly.delete_piggy_bank', ['name' => $piggyBank->name]);
 
         // put previous url in session
         Session::put('piggy-banks.delete.url', URL::previous());
+        Session::flash('gaEventCategory', 'piggy-banks');
+        Session::flash('gaEventAction', 'delete');
 
         return view('piggy-banks.delete', compact('piggyBank', 'subTitle'));
     }
@@ -118,7 +122,7 @@ class PiggyBankController extends Controller
 
         $periods      = Config::get('firefly.piggy_bank_periods');
         $accounts     = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
-        $subTitle     = 'Edit piggy bank "' . e($piggyBank->name) . '"';
+        $subTitle     = trans('firefly.update_piggy_title', ['name' => $piggyBank->name]);
         $subTitleIcon = 'fa-pencil';
 
         /*
@@ -138,6 +142,8 @@ class PiggyBankController extends Controller
                       'remind_me'    => intval($piggyBank->remind_me) == 1 && !is_null($piggyBank->reminder) ? true : false
         ];
         Session::flash('preFilled', $preFilled);
+        Session::flash('gaEventCategory', 'piggy-banks');
+        Session::flash('gaEventAction', 'edit');
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (Session::get('piggy-banks.edit.fromUpdate') !== true) {

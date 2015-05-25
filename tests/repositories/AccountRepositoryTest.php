@@ -58,8 +58,8 @@ class AccountRepositoryTest extends TestCase
     public function testDestroy()
     {
         // create account:
-        $account = FactoryMuffin::create('FireflyIII\Models\Account');
-        $accountId      = $account->id;
+        $account   = FactoryMuffin::create('FireflyIII\Models\Account');
+        $accountId = $account->id;
         $this->be($account->user);
 
 

@@ -232,15 +232,15 @@ class ExpandedForm
         $fields = ['title', 'name', 'description'];
         /** @var Eloquent $entry */
         foreach ($set as $entry) {
-            $id    = intval($entry->id);
-            $title = null;
+            $entryId = intval($entry->id);
+            $title   = null;
 
             foreach ($fields as $field) {
                 if (isset($entry->$field)) {
                     $title = $entry->$field;
                 }
             }
-            $selectList[$id] = $title;
+            $selectList[$entryId] = $title;
         }
 
         return $selectList;

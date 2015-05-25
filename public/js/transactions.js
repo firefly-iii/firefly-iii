@@ -1,8 +1,6 @@
+/* globals what, $ */
 $(document).ready(function () {
-    if (typeof googleTablePaged != 'undefined') {
-        googleTablePaged('table/transactions/' + what, 'transaction-table');
-    }
-
+    "use strict";
     if ($('input[name="expense_account"]').length > 0) {
         $.getJSON('json/expense-accounts').success(function (data) {
             $('input[name="expense_account"]').typeahead({source: data});
@@ -28,7 +26,7 @@ $(document).ready(function () {
         });
     }
 
-    if ($('input[name="description"]').length > 0 && what != undefined) {
+    if ($('input[name="description"]').length > 0 && what !== undefined) {
         $.getJSON('json/transaction-journals/' + what).success(function (data) {
             $('input[name="description"]').typeahead({source: data});
         });

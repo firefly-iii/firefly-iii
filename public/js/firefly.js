@@ -1,8 +1,9 @@
+/* globals start, end, dateRangeURL, everything, firstDate, moment, currentMonthName, $, previousMonthName, nextMonthName, applyLabel, cancelLabel, toLabel, customRangeLabel, fromLabel, */
 $(function () {
-
+    "use strict";
     $('.currencySelect').click(currencySelect);
 
-    ranges = {};
+    var ranges = {};
     ranges[currentMonthName] = [moment().startOf('month'), moment().endOf('month')];
     ranges[previousMonthName] = [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')];
     ranges[nextMonthName] = [moment().add(1, 'month').startOf('month'), moment().add(1, 'month').endOf('month')];
@@ -10,11 +11,6 @@ $(function () {
 
     $('#daterange').daterangepicker(
         {
-            //View::share('currentMonthName', $current);
-            //View::share('previousMonthName', $prev);
-            //View::share('nextMonthName', $next);
-
-
             ranges: ranges,
             opens: 'left',
             locale: {
@@ -54,6 +50,7 @@ $(function () {
 });
 
 function currencySelect(e) {
+    "use strict";
     var target = $(e.target);
     var symbol = target.data('symbol');
     var code = target.data('code');

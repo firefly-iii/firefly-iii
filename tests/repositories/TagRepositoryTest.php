@@ -58,7 +58,7 @@ class TagRepositoryTest extends TestCase
     public function testConnectBalancingOneDeposit()
     {
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
-        $deposit    = FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $deposit = FactoryMuffin::create('FireflyIII\Models\TransactionType');
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
 
         $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
@@ -85,7 +85,7 @@ class TagRepositoryTest extends TestCase
     {
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
-        $transfer   = FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $transfer = FactoryMuffin::create('FireflyIII\Models\TransactionType');
 
         $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
         $tag     = FactoryMuffin::create('FireflyIII\Models\Tag');
@@ -143,6 +143,21 @@ class TagRepositoryTest extends TestCase
     }
 
     /**
+     * @covers FireflyIII\Repositories\Tag\TagRepository::connect
+     */
+    public function testConnectInvalidType()
+    {
+        $journal      = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $tag          = FactoryMuffin::create('FireflyIII\Models\Tag');
+        $tag->tagMode = 'Idontknow';
+        $tag->save();
+
+        $result = $this->object->connect($journal, $tag);
+        $this->assertFalse($result);
+
+    }
+
+    /**
      * Once one or more journals have been accepted by the tag, others must match the asset account
      * id. For this to work, we must also create an asset account, and a transaction.
      *
@@ -156,7 +171,7 @@ class TagRepositoryTest extends TestCase
 
         FactoryMuffin::create('FireflyIII\Models\AccountType');
         FactoryMuffin::create('FireflyIII\Models\AccountType');
-        $asset   = FactoryMuffin::create('FireflyIII\Models\AccountType');
+        $asset = FactoryMuffin::create('FireflyIII\Models\AccountType');
 
         $account = FactoryMuffin::create('FireflyIII\Models\Account');
 
@@ -203,7 +218,7 @@ class TagRepositoryTest extends TestCase
 
         FactoryMuffin::create('FireflyIII\Models\AccountType');
         FactoryMuffin::create('FireflyIII\Models\AccountType');
-        $asset   = FactoryMuffin::create('FireflyIII\Models\AccountType');
+        $asset = FactoryMuffin::create('FireflyIII\Models\AccountType');
 
         $account1 = FactoryMuffin::create('FireflyIII\Models\Account');
         $account2 = FactoryMuffin::create('FireflyIII\Models\Account');
@@ -248,7 +263,7 @@ class TagRepositoryTest extends TestCase
     {
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
-        $transfer   = FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $transfer = FactoryMuffin::create('FireflyIII\Models\TransactionType');
 
         $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
         $tag     = FactoryMuffin::create('FireflyIII\Models\Tag');
