@@ -222,7 +222,19 @@ return [
     'max_amount_add'                => 'The maximum amount you can add is',
     'max_amount_remove'             => 'The maximum amount you can remove is',
     'update_piggy_button'           => 'Update piggy bank',
-    'update_piggy_title'           => 'Update piggy bank ":name"',
+    'update_piggy_title'            => 'Update piggy bank ":name"',
+    'details'                       => 'Details',
+    'events'                        => 'Events',
+    'targetamount'                  => 'Target amount',
+    'start_date'                    => 'Start date',
+    'target_date'                   => 'Target date',
+    'no_target_date'                => 'No target date',
+    'reminder'                      => 'Reminder',
+    'no_reminder'                   => 'No reminder',
+    'reminders_left'                => 'Reminders left',
+    'expected_amount_per_reminder'  => 'Expected amount per reminder',
+    'todo'                          => 'to do',
+    'table'                         => 'Table',
 
 
 ];

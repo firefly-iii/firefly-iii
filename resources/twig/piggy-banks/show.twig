@@ -5,7 +5,7 @@
     <div class="col-lg-8 col-md-8 col-sm-6">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <i class="fa fa-fw fa-clock-o"></i> Events
+                <i class="fa fa-fw fa-clock-o"></i> {{ 'events'|_ }}
             </div>
             <div class="panel-body">
                 <div id="piggy-bank-history"></div>
@@ -15,7 +15,7 @@
     <div class="col-lg-4 col-md-4 col-sm-6">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-fw fa-info-circle"></i> Details
+                    <i class="fa fa-fw fa-info-circle"></i> {{ 'details'|_ }}
 
                     <!-- ACTIONS MENU -->
                     <div class="pull-right">
@@ -34,49 +34,49 @@
                 </div>
                     <table class="table table-bordered table-striped">
                         <tr>
-                            <td>Account</td>
+                            <td>{{ 'account'|_ }}</td>
                             <td><a href="{{ route('accounts.show', piggyBank.account_id) }}">{{ piggyBank.account.name }}</a></td>
                         </tr>
                         <tr>
-                            <td>Target amount</td>
+                            <td>{{ 'target_amount'|_ }}</td>
                             <td>{{ piggyBank.targetAmount|formatAmount }}</td>
                         </tr>
                         <tr>
-                            <td>Saved so far</td>
+                            <td>{{ 'saved_so_far'|_ }}</td>
                             <td>{{ currentRelevantRepAmount(piggyBank)|formatAmount }}</td>
                         </tr>
                         <tr>
-                            <td>Left to save</td>
+                            <td>{{ 'left_to_save'|_ }}</td>
                             <td>{{ piggyBank.targetamount - currentRelevantRepAmount(piggyBank)|formatAmount }}</td>
                         </tr>
                         <tr>
-                            <td>Start date</td>
+                            <td>{{ 'start_date'|_ }}</td>
                             <td>
                                 {% if piggyBank.startdate %}
                                     {{ piggyBank.startdate.format('jS F Y')}}
                                 {% else %}
-                                    <em>No start date</em>
+                                    <em>{{ 'no_start_date'|_ }}</em>
                                 {% endif %}
                             </td>
                         </tr>
                         <tr>
-                            <td>Target date</td>
+                            <td>{{ 'target_date'|_ }}</td>
                             <td>
                                 {% if piggyBank.targetdate %}
                                     {{ piggyBank.targetdate.format('jS F Y') }}
                                 {% else %}
-                                    <em>No start date</em>
+                                    <em>{{ 'no_target_date'|_ }}</em>
                                 {% endif %}
                             </td>
                         </tr>
                         {% if piggyBank.reminder %}
                         <tr>
-                            <td>Reminder</td>
+                            <td>{{ 'reminder'|_ }}</td>
                             <td>
                                 {% if piggyBank.remind_me == 0 %}
-                                    <em>(no reminder)</em>
+                                    <em>{{ 'no_reminder'|_ }}</em>
                                 {% else %}
-                                    Every
+                                    {{ 'every'|_ }}
                                     {% if piggyBank.reminder_skip != 0 %}
                                         {{ piggyBank.reminder_skip }}
                                     {% else %}
@@ -87,18 +87,18 @@
                         </tr>
                         {% endif %}
                             <tr>
-                                <td>Reminders left</td>
-                                <td>(in progress...)</td>
+                                <td>{{ 'reminders_left'|_ }}</td>
+                                <td>{{ 'todo'|_ }}</td>
                             </tr>
                             <tr>
-                                <td>Expected amount per reminder</td>
-                                <td>(in progress...)</td>
+                                <td>{{ 'expected_amount_per_reminder'|_ }}</td>
+                                <td>{{ 'todo'|_ }}</td>
                             </tr>
                     </table>
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-fw fa-clock-o"></i> Table
+                    <i class="fa fa-fw fa-clock-o"></i> {{ 'table'|_ }}
                 </div>
                 {% include 'list/piggy-bank-events' %}
             </div>

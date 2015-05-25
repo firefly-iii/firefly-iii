@@ -231,7 +231,19 @@ return [
     'max_amount_add'                => 'Hooguit toe te voegen',
     'max_amount_remove'             => 'Hooguit te verwijderen',
     'update_piggy_button'           => 'Wijzig spaarpotje',
-    'update_piggy_title'           => 'Wijzig spaarpotje ":name"',
+    'update_piggy_title'            => 'Wijzig spaarpotje ":name"',
+    'details'                       => 'Details',
+    'events'                        => 'Gebeurtenissen',
+    'targetamount'                  => 'Doelbedrag',
+    'start_date'                    => 'Startdatum',
+    'target_date'                   => 'Doeldatum',
+    'no_target_date'                => 'Geen doeldatum',
+    'reminder'                      => 'Herinnering',
+    'no_reminder'                   => 'Geen herinnering',
+    'reminders_left'                => 'Herinneringen te gaan',
+    'expected_amount_per_reminder'  => 'Verwacht bedrag per herinnering',
+    'todo'                          => 'te doen',
+    'table'                         => 'Tabel',
 
 
 ];
