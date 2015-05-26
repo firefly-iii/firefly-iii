@@ -4,7 +4,6 @@ use Amount;
 use Carbon\Carbon;
 use Config;
 use ExpandedForm;
-use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\PiggyBankFormRequest;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;

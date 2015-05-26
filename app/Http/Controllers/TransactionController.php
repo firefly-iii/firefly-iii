@@ -5,7 +5,6 @@ use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Events\JournalCreated;
 use FireflyIII\Events\JournalSaved;
-use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\JournalFormRequest;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;

@@ -67,7 +67,7 @@ class AuthController extends Controller
      *
      * @param  Request $request
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function postRegister(Request $request)
     {
@@ -91,7 +91,7 @@ class AuthController extends Controller
 
         // send email.
         Mail::send(
-            'emails.registered', [], function (Message $message) use ($email) {
+            'emails.registered', [], function(Message $message) use ($email) {
             $message->to($email, $email)->subject('Welcome to Firefly III!');
         }
         );

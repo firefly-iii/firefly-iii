@@ -50,7 +50,7 @@ class UpdateJournalConnection
             return;
         }
         $amount = $journal->amount;
-        $diff   = $amount - $event->amount;// update current repetition
+        $diff   = $amount - $event->amount; // update current repetition
 
         $repetition->currentamount += $diff;
         $repetition->save();
