@@ -52,12 +52,12 @@ class EventServiceProvider extends ServiceProvider
         $this->registerDeleteEvents();
         $this->registerCreateEvents();
         BudgetLimit::saved(
-            function (BudgetLimit $budgetLimit) {
+            function(BudgetLimit $budgetLimit) {
 
                 $end = Navigation::addPeriod(clone $budgetLimit->startdate, $budgetLimit->repeat_freq, 0);
                 $end->subDay();
                 $set = $budgetLimit->limitrepetitions()->where('startdate', $budgetLimit->startdate->format('Y-m-d'))->where('enddate', $end->format('Y-m-d'))
-                                   ->get();
+                                    ->get();
                 if ($set->count() == 0) {
                     $repetition            = new LimitRepetition;
                     $repetition->startdate = $budgetLimit->startdate;
@@ -91,7 +91,7 @@ class EventServiceProvider extends ServiceProvider
     protected function registerDeleteEvents()
     {
         TransactionJournal::deleted(
-            function (TransactionJournal $journal) {
+            function(TransactionJournal $journal) {
 
                 /** @var Transaction $transaction */
                 foreach ($journal->transactions()->get() as $transaction) {
@@ -100,7 +100,7 @@ class EventServiceProvider extends ServiceProvider
             }
         );
         PiggyBank::deleting(
-            function (PiggyBank $piggyBank) {
+            function(PiggyBank $piggyBank) {
                 $reminders = $piggyBank->reminders()->get();
                 /** @var Reminder $reminder */
                 foreach ($reminders as $reminder) {
@@ -110,7 +110,7 @@ class EventServiceProvider extends ServiceProvider
         );
 
         Account::deleted(
-            function (Account $account) {
+            function(Account $account) {
 
                 /** @var Transaction $transaction */
                 foreach ($account->transactions()->get() as $transaction) {
@@ -131,7 +131,7 @@ class EventServiceProvider extends ServiceProvider
         // move this routine to a filter
         // in case of repeated piggy banks and/or other problems.
         PiggyBank::created(
-            function (PiggyBank $piggyBank) {
+            function(PiggyBank $piggyBank) {
                 $repetition = new PiggyBankRepetition;
                 $repetition->piggyBank()->associate($piggyBank);
                 $repetition->startdate     = is_null($piggyBank->startdate) ? null : $piggyBank->startdate;

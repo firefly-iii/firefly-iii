@@ -31,7 +31,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * @return $this
+     * @return \Illuminate\View\View
      */
     public function create()
     {
@@ -84,7 +84,7 @@ class CategoryController extends Controller
     /**
      * @param Category $category
      *
-     * @return $this
+     * @return \Illuminate\View\View
      */
     public function edit(Category $category)
     {
@@ -105,14 +105,14 @@ class CategoryController extends Controller
     /**
      * @param CategoryRepositoryInterface $repository
      *
-     * @return $this
+     * @return \Illuminate\View\View
      */
     public function index(CategoryRepositoryInterface $repository)
     {
         $categories = $repository->getCategories();
 
         $categories->each(
-            function (Category $category) use ($repository) {
+            function(Category $category) use ($repository) {
                 $category->lastActivity = $repository->getLatestActivity($category);
             }
         );
@@ -139,7 +139,7 @@ class CategoryController extends Controller
      * @param CategoryRepositoryInterface $repository
      * @param Category                    $category
      *
-     * @return View
+     * @return \Illuminate\View\View
      */
     public function show(CategoryRepositoryInterface $repository, Category $category)
     {
@@ -157,7 +157,7 @@ class CategoryController extends Controller
      * @param CategoryFormRequest         $request
      * @param CategoryRepositoryInterface $repository
      *
-     * @return mixed
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(CategoryFormRequest $request, CategoryRepositoryInterface $repository)
     {
@@ -165,7 +165,7 @@ class CategoryController extends Controller
             'name' => $request->input('name'),
             'user' => Auth::user()->id,
         ];
-        $category     = $repository->store($categoryData);
+        $category = $repository->store($categoryData);
 
         Session::flash('success', 'New category "' . $category->name . '" stored!');
 

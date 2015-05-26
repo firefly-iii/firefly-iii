@@ -115,7 +115,7 @@ class TagController extends Controller
      *
      * @param TagRepositoryInterface $repository
      *
-     * @return View
+     * @return \Illuminate\View\View
      */
     public function edit(Tag $tag, TagRepositoryInterface $repository)
     {
@@ -200,7 +200,7 @@ class TagController extends Controller
      *
      * @param TagRepositoryInterface $repository
      *
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(TagFormRequest $request, TagRepositoryInterface $repository)
     {
@@ -244,7 +244,7 @@ class TagController extends Controller
      * @param TagRepositoryInterface $repository
      * @param Tag                    $tag
      *
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(TagFormRequest $request, TagRepositoryInterface $repository, Tag $tag)
     {

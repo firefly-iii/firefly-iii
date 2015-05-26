@@ -224,7 +224,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return array
+     * @return string[]
      */
     public function getDates()
     {
@@ -313,7 +313,7 @@ class TransactionJournal extends Model
      * @param EloquentBuilder $query
      * @param Carbon          $date
      *
-     * @return mixed
+     * @return EloquentBuilder
      */
     public function scopeAfter(EloquentBuilder $query, Carbon $date)
     {
@@ -326,7 +326,7 @@ class TransactionJournal extends Model
      * @param EloquentBuilder $query
      * @param Carbon          $date
      *
-     * @return mixed
+     * @return EloquentBuilder
      */
     public function scopeBefore(EloquentBuilder $query, Carbon $date)
     {
@@ -339,7 +339,7 @@ class TransactionJournal extends Model
      * @param EloquentBuilder $query
      * @param Carbon          $date
      *
-     * @return mixed
+     * @return EloquentBuilder
      */
     public function scopeOnDate(EloquentBuilder $query, Carbon $date)
     {
@@ -373,7 +373,7 @@ class TransactionJournal extends Model
     public function scopeWithRelevantData(EloquentBuilder $query)
     {
         $query->with(
-            ['transactions' => function (HasMany $q) {
+            ['transactions' => function(HasMany $q) {
                 $q->orderBy('amount', 'ASC');
             }, 'transactiontype', 'transactioncurrency', 'budgets', 'categories', 'transactions.account.accounttype', 'bill', 'budgets', 'categories']
         );

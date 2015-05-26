@@ -77,13 +77,13 @@ class PiggyBankRepetition extends Model
                 $q->orWhereNull('startdate');
             }
         )
-                     ->where(
-                         function (EloquentBuilder $q) use ($date) {
+                        ->where(
+                            function (EloquentBuilder $q) use ($date) {
 
-                             $q->where('targetdate', '>=', $date->format('Y-m-d 00:00:00'));
-                             $q->orWhereNull('targetdate');
-                         }
-                     );
+                                $q->where('targetdate', '>=', $date->format('Y-m-d 00:00:00'));
+                                $q->orWhereNull('targetdate');
+                            }
+                        );
     }
 
     /**

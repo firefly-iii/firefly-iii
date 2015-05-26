@@ -25,7 +25,7 @@ class BillRepository implements BillRepositoryInterface
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @return float
+     * @return integer
      */
     public function billPaymentsInRange(Bill $bill, Carbon $start, Carbon $end)
     {
@@ -67,7 +67,7 @@ class BillRepository implements BillRepositoryInterface
     /**
      * @param Bill $bill
      *
-     * @return mixed
+     * @return boolean|null
      */
     public function destroy(Bill $bill)
     {
@@ -258,7 +258,7 @@ class BillRepository implements BillRepositoryInterface
      * @param Bill               $bill
      * @param TransactionJournal $journal
      *
-     * @return bool
+     * @return boolean|null
      */
     public function scan(Bill $bill, TransactionJournal $journal)
     {
@@ -331,7 +331,7 @@ class BillRepository implements BillRepositoryInterface
      * @param Bill  $bill
      * @param array $data
      *
-     * @return Bill|static
+     * @return Bill
      */
     public function update(Bill $bill, array $data)
     {
