@@ -64,6 +64,7 @@ class BalanceLine
         if ($this->getRole() == self::ROLE_DIFFROLE) {
             return trans('firefly.leftUnbalanced');
         }
+        return '';
     }
 
     /**

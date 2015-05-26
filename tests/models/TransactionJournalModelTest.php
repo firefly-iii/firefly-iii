@@ -5,6 +5,7 @@ use League\FactoryMuffin\Facade as FactoryMuffin;
 
 /**
  * Class TransactionJournalModelTest
+ * @SuppressWarnings(PHPMD.TooManyMethods)
  */
 class TransactionJournalModelTest extends TestCase
 {

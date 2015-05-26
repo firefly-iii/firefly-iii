@@ -40,6 +40,7 @@ class ReportQueryTest extends TestCase
     /**
      * @covers FireflyIII\Helpers\Report\ReportQuery::expenseInPeriodCorrected
      * @covers FireflyIII\Helpers\Report\ReportQuery::queryJournalsWithTransactions
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function testExpenseInPeriodCorrected()
     {
@@ -108,6 +109,7 @@ class ReportQueryTest extends TestCase
     /**
      * @covers FireflyIII\Helpers\Report\ReportQuery::expenseInPeriodCorrected
      * @covers FireflyIII\Helpers\Report\ReportQuery::queryJournalsWithTransactions
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function testExpenseInPeriodCorrectedShared()
     {
@@ -228,6 +230,7 @@ class ReportQueryTest extends TestCase
     /**
      * @covers FireflyIII\Helpers\Report\ReportQuery::incomeInPeriodCorrected
      * @covers FireflyIII\Helpers\Report\ReportQuery::queryJournalsWithTransactions
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function testIncomeInPeriodCorrected()
     {
@@ -295,6 +298,7 @@ class ReportQueryTest extends TestCase
     /**
      * @covers FireflyIII\Helpers\Report\ReportQuery::incomeInPeriodCorrected
      * @covers FireflyIII\Helpers\Report\ReportQuery::queryJournalsWithTransactions
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function testIncomeInPeriodCorrectedShared()
     {

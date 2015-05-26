@@ -12,6 +12,8 @@ use Watson\Validating\ValidatingTrait;
  * Class TransactionJournal
  *
  * @package FireflyIII\Models
+ *
+ * @SuppressWarnings(PHPMD.TooManyMethods)
  */
 class TransactionJournal extends Model
 {

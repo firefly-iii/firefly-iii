@@ -20,6 +20,7 @@ use View;
  * Class BudgetController
  *
  * @package FireflyIII\Http\Controllers
+ * @SuppressWarnings(PHPMD.TooManyMethods)
  */
 class BudgetController extends Controller
 {

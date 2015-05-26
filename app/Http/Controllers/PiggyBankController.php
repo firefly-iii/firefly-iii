@@ -18,6 +18,9 @@ use URL;
 use View;
 
 /**
+ *
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ *
  * Class PiggyBankController
  *
  * @package FireflyIII\Http\Controllers

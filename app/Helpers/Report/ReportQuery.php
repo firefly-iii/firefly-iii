@@ -72,7 +72,8 @@ class ReportQuery implements ReportQueryInterface
                 if ($journal->amount != 0) {
                     return $journal;
                 }
-            } // @codeCoverageIgnore
+                return null;
+            }
         );
 
         return $data;
@@ -188,7 +189,8 @@ class ReportQuery implements ReportQueryInterface
                 if ($journal->amount != 0) {
                     return $journal;
                 }
-            } // @codeCoverageIgnore
+                return null;
+            }
         );
 
         return $data;

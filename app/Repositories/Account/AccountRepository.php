@@ -25,6 +25,8 @@ use Steam;
 
 
 /**
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ *
  * Class AccountRepository
  *
  * @package FireflyIII\Repositories\Account
@@ -306,7 +308,8 @@ class AccountRepository implements AccountRepositoryInterface
                 if ($journal->destination_account->id == $account->id) {
                     return $journal;
                 }
-            } // @codeCoverageIgnore
+                return null;
+            }
         );
 
         return $filtered;
@@ -398,7 +401,6 @@ class AccountRepository implements AccountRepositoryInterface
 
         // update meta data:
         $this->updateMetadata($account, $data);
-
         $openingBalance = $this->openingBalanceTransaction($account);
 
         // if has openingbalance?
@@ -421,10 +423,8 @@ class AccountRepository implements AccountRepositoryInterface
             }
 
         } else {
-            // opening balance is zero, should we delete it?
-            if ($openingBalance) {
-                // delete existing opening balance.
-                $openingBalance->delete();
+            if ($openingBalance) { // opening balance is zero, should we delete it?
+                $openingBalance->delete();// delete existing opening balance.
             }
         }
 

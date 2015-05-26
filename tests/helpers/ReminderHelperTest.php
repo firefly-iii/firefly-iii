@@ -8,6 +8,8 @@ use League\FactoryMuffin\Facade as FactoryMuffin;
 
 /**
  * Class ReminderHelperTest
+ *
+ * @SuppressWarnings(PHPMD.TooManyMethods)
  */
 class ReminderHelperTest extends TestCase
 {

@@ -80,6 +80,7 @@ class CategoryRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Category\CategoryRepository::getCategoriesAndExpensesCorrected
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function testGetCategoriesAndExpensesCorrected()
     {

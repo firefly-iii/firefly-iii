@@ -76,6 +76,7 @@ class ChartBudgetControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\Chart\BudgetController::frontpage
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function testFrontpage()
     {

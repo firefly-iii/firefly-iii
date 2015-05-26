@@ -25,6 +25,8 @@ class BudgetController extends Controller
      * @param GChart                    $chart
      * @param BudgetRepositoryInterface $repository
      * @param Budget                    $budget
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function budget(GChart $chart, BudgetRepositoryInterface $repository, Budget $budget)
     {

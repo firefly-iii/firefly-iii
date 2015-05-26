@@ -4,7 +4,6 @@ namespace FireflyIII\Support;
 
 use Auth;
 use FireflyIII\Models\Preference;
-use Log;
 
 /**
  * Class Preferences

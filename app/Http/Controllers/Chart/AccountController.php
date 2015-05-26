@@ -26,6 +26,10 @@ class AccountController extends Controller
      * @param GChart                     $chart
      * @param AccountRepositoryInterface $repository
      *
+     * @param                            $year
+     * @param                            $month
+     * @param bool                       $shared
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function all(GChart $chart, AccountRepositoryInterface $repository, $year, $month, $shared = false)
@@ -38,7 +42,6 @@ class AccountController extends Controller
         /** @var Collection $accounts */
         $accounts = $repository->getAccounts(['Default account', 'Asset account']);
         if ($shared === false) {
-            // remove the shared accounts from the collection:
             /** @var Account $account */
             foreach ($accounts as $index => $account) {
                 if ($account->getMeta('accountRole') == 'sharedAsset') {
@@ -71,7 +74,6 @@ class AccountController extends Controller
         $chart->generate();
 
         return Response::json($chart->getData());
-
     }
 
     /**

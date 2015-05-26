@@ -3,6 +3,7 @@
 namespace FireflyIII\Support;
 
 use Amount as Amt;
+use Eloquent;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Input;
@@ -13,6 +14,8 @@ use View;
  * Class ExpandedForm
  *
  * @package FireflyIII\Support
+ *
+ * @SuppressWarnings(PHPMD.TooManyMethods)
  */
 class ExpandedForm
 {
@@ -46,7 +49,7 @@ class ExpandedForm
      *
      * @return mixed
      */
-    public function label($name, $options)
+    protected function label($name, $options)
     {
         if (isset($options['label'])) {
             return $options['label'];
@@ -63,7 +66,7 @@ class ExpandedForm
      *
      * @return array
      */
-    public function expandOptionArray($name, $label, array $options)
+    protected function expandOptionArray($name, $label, array $options)
     {
         $options['class']        = 'form-control';
         $options['id']           = 'ffInput_' . $name;
@@ -78,7 +81,7 @@ class ExpandedForm
      *
      * @return string
      */
-    public function getHolderClasses($name)
+    protected function getHolderClasses($name)
     {
         /*
        * Get errors from session:
@@ -100,7 +103,7 @@ class ExpandedForm
      *
      * @return mixed
      */
-    public function fillFieldValue($name, $value)
+    protected function fillFieldValue($name, $value)
     {
         if (Session::has('preFilled')) {
             $preFilled = Session::get('preFilled');

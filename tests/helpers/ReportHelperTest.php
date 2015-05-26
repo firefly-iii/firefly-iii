@@ -107,6 +107,7 @@ class ReportHelperTest extends TestCase
 
     /**
      * @covers FireflyIII\Helpers\Report\ReportHelper::getBillReport
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function testGetBillReport()
     {
@@ -214,6 +215,7 @@ class ReportHelperTest extends TestCase
 
     /**
      * @covers FireflyIII\Helpers\Report\ReportHelper::getExpenseReport
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function testGetExpenseReport()
     {
@@ -278,6 +280,7 @@ class ReportHelperTest extends TestCase
 
     /**
      * @covers FireflyIII\Helpers\Report\ReportHelper::getIncomeReport
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function testGetIncomeReport()
     {
