@@ -204,7 +204,6 @@ class TransactionJournal extends Model
         switch ($this->transactionType->type) {
             case 'Deposit':
                 return $this->transactions()->where('amount', '>', 0)->first()->account;
-                break;
             case 'Withdrawal':
                 return $this->transactions()->where('amount', '<', 0)->first()->account;
 
@@ -275,7 +274,6 @@ class TransactionJournal extends Model
         switch ($this->transactionType->type) {
             case 'Deposit':
                 return $this->transactions()->where('amount', '<', 0)->first()->account;
-                break;
             case 'Withdrawal':
                 return $this->transactions()->where('amount', '>', 0)->first()->account;
 

@@ -114,7 +114,7 @@ Breadcrumbs::register(
     $breadcrumbs->push(e($budget->name), route('budgets.show', $budget->id));
     if (!is_null($repetition) && !is_null($repetition->id)) {
         $breadcrumbs->push(
-            Navigation::periodShow($repetition->startdate, $repetition->budgetlimit->repeat_freq), route('budgets.show', $budget->id, $repetition->id)
+            Navigation::periodShow($repetition->startdate, $repetition->budgetLimit->repeat_freq), route('budgets.show', $budget->id, $repetition->id)
         );
     }
 }

@@ -133,6 +133,7 @@ class FireflyValidator extends Validator
         try {
             $value = Crypt::decrypt($value);
         } catch (DecryptException $e) {
+            // if it fails, probably not encrypted.
         }
 
 

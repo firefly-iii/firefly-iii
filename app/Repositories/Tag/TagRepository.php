@@ -43,13 +43,10 @@ class TagRepository implements TagRepositoryInterface
                 $journal->tags()->save($tag);
 
                 return true;
-                break;
             case 'balancingAct':
                 return $this->connectBalancingAct($journal, $tag);
-                break;
             case 'advancePayment':
                 return $this->connectAdvancePayment($journal, $tag);
-                break;
         }
 
         return false;

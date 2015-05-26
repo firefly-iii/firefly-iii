@@ -19,6 +19,7 @@ class Budget extends Twig_Extension
      */
     public function getFunctions()
     {
+        $functions = [];
         $functions[] = new Twig_SimpleFunction(
             'spentInRepetitionCorrected', function (LimitRepetition $repetition) {
             $sum

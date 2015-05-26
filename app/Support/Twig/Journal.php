@@ -32,19 +32,14 @@ class Journal extends Twig_Extension
             switch ($type) {
                 case 'Withdrawal':
                     return '<span class="glyphicon glyphicon-arrow-left" title="' . trans('firefly.withdrawal') . '"></span>';
-                    break;
                 case 'Deposit':
                     return '<span class="glyphicon glyphicon-arrow-right" title="' . trans('firefly.deposit') . '"></span>';
-                    break;
                 case 'Transfer':
                     return '<i class="fa fa-fw fa-exchange" title="' . trans('firefly.transfer') . '"></i>';
-                    break;
                 case 'Opening balance':
                     return '<span class="glyphicon glyphicon-ban-circle" title="' . trans('firefly.openingBalance') . '"></span>';
-                    break;
                 default:
                     return '';
-                    break;
             }
 
 
