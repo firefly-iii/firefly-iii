@@ -1,9 +1,7 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Cache;
-use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\CurrencyFormRequest;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Input;
@@ -156,7 +154,7 @@ class CurrencyController extends Controller
      * @param CurrencyFormRequest         $request
      * @param CurrencyRepositoryInterface $repository
      *
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(CurrencyFormRequest $request, CurrencyRepositoryInterface $repository)
     {

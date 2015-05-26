@@ -3,7 +3,6 @@
 use Auth;
 use Carbon\Carbon;
 use Config;
-use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -95,7 +94,7 @@ class AccountController extends Controller
      * @param AccountRepositoryInterface $repository
      * @param Account                    $account
      *
-     * @return View
+     * @return \Illuminate\View\View
      */
     public function edit(AccountRepositoryInterface $repository, Account $account)
     {
@@ -140,7 +139,7 @@ class AccountController extends Controller
      * @param AccountRepositoryInterface $repository
      * @param                            $what
      *
-     * @return View
+     * @return \Illuminate\View\View
      */
     public function index(AccountRepositoryInterface $repository, $what)
     {
@@ -155,7 +154,7 @@ class AccountController extends Controller
         $start = clone Session::get('start', Carbon::now()->startOfMonth());
         $start->subDay();
         $accounts->each(
-            function (Account $account) use ($start, $repository) {
+            function(Account $account) use ($start, $repository) {
                 $account->lastActivityDate = $repository->getLastActivity($account);
                 $account->startBalance     = Steam::balance($account, $start);
                 $account->endBalance       = Steam::balance($account, clone Session::get('end', Carbon::now()->endOfMonth()));
@@ -169,7 +168,7 @@ class AccountController extends Controller
      * @param AccountRepositoryInterface $repository
      * @param Account                    $account
      *
-     * @return View
+     * @return \Illuminate\View\View
      */
     public function show(AccountRepositoryInterface $repository, Account $account)
     {
@@ -204,7 +203,7 @@ class AccountController extends Controller
             'openingBalanceCurrency' => intval($request->input('balance_currency_id')),
 
         ];
-        $account     = $repository->store($accountData);
+        $account = $repository->store($accountData);
 
         Session::flash('success', 'New account "' . $account->name . '" stored!');
 
@@ -226,7 +225,7 @@ class AccountController extends Controller
      * @param AccountRepositoryInterface $repository
      * @param Account                    $account
      *
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(AccountFormRequest $request, AccountRepositoryInterface $repository, Account $account)
     {

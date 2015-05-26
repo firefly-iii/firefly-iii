@@ -67,7 +67,7 @@ class TagRepository implements TagRepositoryInterface
      * @param Carbon  $start
      * @param Carbon  $end
      *
-     * @return float
+     * @return integer
      */
     public function coveredByBalancingActs(Account $account, Carbon $start, Carbon $end)
     {

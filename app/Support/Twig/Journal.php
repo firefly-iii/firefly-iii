@@ -19,7 +19,7 @@ class Journal extends Twig_Extension
 
     /**
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @return array
+     * @return Twig_SimpleFilter[]
      */
     public function getFilters()
     {
@@ -57,7 +57,7 @@ class Journal extends Twig_Extension
     /**
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      *
-     * @return array
+     * @return Twig_SimpleFunction[]
      */
     public function getFunctions()
     {
@@ -87,7 +87,7 @@ class Journal extends Twig_Extension
                     $amount = App::make('amount')->format($journal->actual_amount, false);
 
                     return '<a href="' . route('tags.show', $tag->id) . '" class="label label-success" title="' . $amount
-                           . '"><i class="fa fa-fw fa-refresh"></i> ' . $tag->tag . '</a>';
+                            . '"><i class="fa fa-fw fa-refresh"></i> ' . $tag->tag . '</a>';
                 }
 
                 /*
@@ -97,7 +97,7 @@ class Journal extends Twig_Extension
                     $amount = App::make('amount')->formatJournal($journal, false);
 
                     return '<a href="' . route('tags.show', $tag->id) . '" class="label label-success" title="' . $amount
-                           . '"><i class="fa fa-fw fa-sort-numeric-desc"></i> ' . $tag->tag . '</a>';
+                            . '"><i class="fa fa-fw fa-sort-numeric-desc"></i> ' . $tag->tag . '</a>';
                 }
                 /*
                  * AdvancePayment with a withdrawal will show the amount with a link to

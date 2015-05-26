@@ -5,7 +5,6 @@ use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Events\JournalCreated;
 use FireflyIII\Events\JournalSaved;
-use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\JournalFormRequest;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -39,7 +38,7 @@ class TransactionController extends Controller
      * @param AccountRepositoryInterface $repository
      * @param string                     $what
      *
-     * @return View
+     * @return \Illuminate\View\View
      */
     public function create(AccountRepositoryInterface $repository, $what = 'deposit')
     {
@@ -76,7 +75,7 @@ class TransactionController extends Controller
      *
      * @param TransactionJournal $journal
      *
-     * @return $this
+     * @return \Illuminate\View\View
      */
     public function delete(TransactionJournal $journal)
     {
@@ -179,7 +178,7 @@ class TransactionController extends Controller
      * @param JournalRepositoryInterface $repository
      * @param                            $what
      *
-     * @return View
+     * @return \Illuminate\View\View
      */
     public function index(JournalRepositoryInterface $repository, $what)
     {
@@ -245,12 +244,12 @@ class TransactionController extends Controller
      * @param JournalRepositoryInterface $repository
      * @param TransactionJournal         $journal
      *
-     * @return $this
+     * @return \Illuminate\View\View
      */
     public function show(JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
         $journal->transactions->each(
-            function (Transaction $t) use ($journal, $repository) {
+            function(Transaction $t) use ($journal, $repository) {
                 $t->before = $repository->getAmountBefore($journal, $t);
                 $t->after  = $t->before + $t->amount;
             }
@@ -264,7 +263,7 @@ class TransactionController extends Controller
      * @param JournalFormRequest         $request
      * @param JournalRepositoryInterface $repository
      *
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository)
     {
@@ -301,7 +300,7 @@ class TransactionController extends Controller
      * @param JournalRepositoryInterface $repository
      * @param TransactionJournal         $journal
      *
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
     {

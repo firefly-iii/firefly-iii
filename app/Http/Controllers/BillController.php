@@ -1,10 +1,8 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Config;
-use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\BillFormRequest;
 use FireflyIII\Models\Bill;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Input;
@@ -32,7 +30,7 @@ class BillController extends Controller
     }
 
     /**
-     * @return $this
+     * @return \Illuminate\View\View
      */
     public function create()
     {
@@ -53,7 +51,7 @@ class BillController extends Controller
     /**
      * @param Bill $bill
      *
-     * @return $this
+     * @return \Illuminate\View\View
      */
     public function delete(Bill $bill)
     {
@@ -85,7 +83,7 @@ class BillController extends Controller
     /**
      * @param Bill $bill
      *
-     * @return $this
+     * @return \Illuminate\View\View
      */
     public function edit(Bill $bill)
     {
@@ -112,7 +110,7 @@ class BillController extends Controller
     {
         $bills = $repository->getBills();
         $bills->each(
-            function (Bill $bill) use ($repository) {
+            function(Bill $bill) use ($repository) {
                 $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill);
                 $bill->lastFoundMatch    = $repository->lastFoundMatch($bill);
             }
@@ -151,7 +149,7 @@ class BillController extends Controller
      * @param BillRepositoryInterface $repository
      * @param Bill                    $bill
      *
-     * @return mixed
+     * @return \Illuminate\View\View
      */
     public function show(BillRepositoryInterface $repository, Bill $bill)
     {
@@ -167,7 +165,7 @@ class BillController extends Controller
      * @param BillFormRequest         $request
      * @param BillRepositoryInterface $repository
      *
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(BillFormRequest $request, BillRepositoryInterface $repository)
     {
@@ -192,7 +190,7 @@ class BillController extends Controller
      * @param BillRepositoryInterface $repository
      * @param Bill                    $bill
      *
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(BillFormRequest $request, BillRepositoryInterface $repository, Bill $bill)
     {

@@ -4,7 +4,6 @@ use Amount;
 use Carbon\Carbon;
 use Config;
 use ExpandedForm;
-use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\PiggyBankFormRequest;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -44,7 +43,7 @@ class PiggyBankController extends Controller
      * @param AccountRepositoryInterface $repository
      * @param PiggyBank                  $piggyBank
      *
-     * @return $this
+     * @return \Illuminate\View\View
      */
     public function add(AccountRepositoryInterface $repository, PiggyBank $piggyBank)
     {
@@ -60,7 +59,7 @@ class PiggyBankController extends Controller
     /**
      * @param AccountRepositoryInterface $repository
      *
-     * @return mixed
+     * @return \Illuminate\View\View
      */
     public function create(AccountRepositoryInterface $repository)
     {
@@ -84,7 +83,7 @@ class PiggyBankController extends Controller
     /**
      * @param PiggyBank $piggyBank
      *
-     * @return $this
+     * @return \Illuminate\View\View
      */
     public function delete(PiggyBank $piggyBank)
     {
@@ -118,7 +117,7 @@ class PiggyBankController extends Controller
      * @param AccountRepositoryInterface $repository
      * @param PiggyBank                  $piggyBank
      *
-     * @return View
+     * @return \Illuminate\View\View
      */
     public function edit(AccountRepositoryInterface $repository, PiggyBank $piggyBank)
     {
@@ -138,11 +137,11 @@ class PiggyBankController extends Controller
             $targetDate = $targetDate->format('Y-m-d');
         }
         $preFilled = ['name'         => $piggyBank->name,
-                      'account_id'   => $piggyBank->account_id,
-                      'targetamount' => $piggyBank->targetamount,
-                      'targetdate'   => $targetDate,
-                      'reminder'     => $piggyBank->reminder,
-                      'remind_me'    => intval($piggyBank->remind_me) == 1 && !is_null($piggyBank->reminder) ? true : false
+                        'account_id'   => $piggyBank->account_id,
+                        'targetamount' => $piggyBank->targetamount,
+                        'targetdate'   => $targetDate,
+                        'reminder'     => $piggyBank->reminder,
+                        'remind_me'    => intval($piggyBank->remind_me) == 1 && !is_null($piggyBank->reminder) ? true : false
         ];
         Session::flash('preFilled', $preFilled);
         Session::flash('gaEventCategory', 'piggy-banks');
@@ -161,7 +160,7 @@ class PiggyBankController extends Controller
      * @param AccountRepositoryInterface   $repository
      * @param PiggyBankRepositoryInterface $piggyRepository
      *
-     * @return View
+     * @return \Illuminate\View\View
      */
     public function index(AccountRepositoryInterface $repository, PiggyBankRepositoryInterface $piggyRepository)
     {
@@ -291,7 +290,7 @@ class PiggyBankController extends Controller
      * @param PiggyBankRepositoryInterface $repository
      * @param PiggyBank                    $piggyBank
      *
-     * @return View
+     * @return \Illuminate\View\View
      */
     public function show(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
@@ -311,7 +310,7 @@ class PiggyBankController extends Controller
      * @param PiggyBankFormRequest         $request
      * @param PiggyBankRepositoryInterface $repository
      *
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(PiggyBankFormRequest $request, PiggyBankRepositoryInterface $repository)
     {
@@ -346,7 +345,7 @@ class PiggyBankController extends Controller
      * @param PiggyBankFormRequest         $request
      * @param PiggyBank                    $piggyBank
      *
-     * @return $this
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(PiggyBankRepositoryInterface $repository, PiggyBankFormRequest $request, PiggyBank $piggyBank)
     {

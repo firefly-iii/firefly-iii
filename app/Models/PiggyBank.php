@@ -49,7 +49,7 @@ class PiggyBank extends Model
     use SoftDeletes;
 
     protected $fillable
-                      = ['name', 'account_id', 'order', 'reminder_skip', 'targetamount', 'startdate', 'targetdate', 'reminder', 'remind_me'];
+                        = ['name', 'account_id', 'order', 'reminder_skip', 'targetamount', 'startdate', 'targetdate', 'reminder', 'remind_me'];
     protected $hidden = ['targetamount_encrypted', 'encrypted'];
 
     /**
@@ -88,7 +88,7 @@ class PiggyBank extends Model
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getDates()
     {
@@ -115,7 +115,7 @@ class PiggyBank extends Model
      *
      * @param $value
      *
-     * @return int
+     * @return boolean
      */
     public function getRemindMeAttribute($value)
     {
