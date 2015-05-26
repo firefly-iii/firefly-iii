@@ -146,7 +146,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param LimitRepetition $repetition
      * @param int             $take
      *
-     * @return \Illuminate\Pagination\Paginator
+     * @return LengthAwarePaginator
      */
     public function getJournals(Budget $budget, LimitRepetition $repetition = null, $take = 50)
     {

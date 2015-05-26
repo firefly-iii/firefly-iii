@@ -62,7 +62,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @return Collection
+     * @return array
      */
     public function getCategoriesAndExpensesCorrected($start, $end)
     {

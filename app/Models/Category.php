@@ -36,7 +36,7 @@ class Category extends Model
      * @param array $fields
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      *
-     * @return Account|null
+     * @return Category
      */
     public static function firstOrCreateEncrypted(array $fields)
     {
