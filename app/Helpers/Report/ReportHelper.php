@@ -53,7 +53,7 @@ class ReportHelper implements ReportHelperInterface
      * @param Carbon $end
      * @param        $shared
      *
-     * @return Account
+     * @return AccountCollection
      */
     public function getAccountReport(Carbon $date, Carbon $end, $shared)
     {

@@ -2,6 +2,7 @@
 
 namespace FireflyIII\Http\Requests;
 
+use App;
 use Auth;
 use Carbon\Carbon;
 use Exception;
@@ -85,7 +86,7 @@ class JournalFormRequest extends Request
                 $rules['category']        = 'between:1,255';
                 break;
             default:
-                throw new Exception('Cannot handle ' . $what);
+                App::abort(500, 'Cannot handle ' . $what);
                 break;
         }
 

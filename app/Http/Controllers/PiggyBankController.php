@@ -240,11 +240,6 @@ class PiggyBankController extends Controller
             // create event
             $repository->createEvent($piggyBank, $amount);
 
-            /*
-             * Create event!
-             */
-            //Event::fire('piggy_bank.addMoney', [$piggyBank, $amount]); // new and used.
-
             Session::flash('success', 'Added ' . Amount::format($amount, false) . ' to "' . e($piggyBank->name) . '".');
         } else {
             Session::flash('error', 'Could not add ' . Amount::format($amount, false) . ' to "' . e($piggyBank->name) . '".');
