@@ -80,7 +80,7 @@ class CategoryController extends Controller
         // sort by callback:
         uasort(
             $set,
-            function ($left, $right) {
+            function($left, $right) {
                 if ($left['sum'] == $right['sum']) {
                     return 0;
                 }

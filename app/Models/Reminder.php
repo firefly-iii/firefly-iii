@@ -43,7 +43,7 @@ class Reminder extends Model
 {
 
 
-    protected $fillable = ['user_id', 'startdate', 'metadata', 'enddate', 'active', 'notnow', 'remindersable_id', 'remindersable_type',];
+    protected $fillable = ['user_id', 'startdate', 'metadata', 'enddate', 'active', 'notnow', 'remindersable_id', 'remindersable_type', ];
     protected $hidden   = ['encrypted'];
 
     /**
@@ -123,7 +123,7 @@ class Reminder extends Model
         $today = new Carbon;
 
         return $query->where('startdate', '<=', $today->format('Y-m-d 00:00:00'))->where('enddate', '>=', $today->format('Y-m-d 00:00:00'))->where('active', 1)
-                     ->where('notnow', 0);
+                        ->where('notnow', 0);
     }
 
     /**

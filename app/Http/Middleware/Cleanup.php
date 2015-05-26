@@ -8,7 +8,6 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Reminder;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;

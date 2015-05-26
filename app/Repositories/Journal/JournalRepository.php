@@ -29,7 +29,7 @@ class JournalRepository implements JournalRepositoryInterface
     /**
      * @param int $reminderId
      *
-     * @return bool
+     * @return boolean|null
      */
     public function deactivateReminder($reminderId)
     {
@@ -72,7 +72,7 @@ class JournalRepository implements JournalRepositoryInterface
      * @param TransactionJournal $journal
      * @param Transaction        $transaction
      *
-     * @return float
+     * @return integer
      */
     public function getAmountBefore(TransactionJournal $journal, Transaction $transaction)
     {
@@ -240,7 +240,7 @@ class JournalRepository implements JournalRepositoryInterface
      * @param TransactionJournal $journal
      * @param array              $data
      *
-     * @return mixed
+     * @return TransactionJournal
      */
     public function update(TransactionJournal $journal, array $data)
     {
