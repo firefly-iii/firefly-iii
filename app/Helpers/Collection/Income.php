@@ -18,7 +18,7 @@ class Income
 
     /** @var Collection */
     protected $incomes;
-    /** @var float */
+    /** @var string */
     protected $total;
 
     /**
