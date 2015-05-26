@@ -10,20 +10,20 @@ use Watson\Validating\ValidatingTrait;
  * Class Tag
  *
  * @package FireflyIII\Models
- * @property integer $id 
- * @property \Carbon\Carbon $created_at 
- * @property \Carbon\Carbon $updated_at 
- * @property string $deleted_at 
- * @property integer $user_id 
- * @property string $tag 
- * @property string $tagMode 
- * @property \Carbon\Carbon $date 
- * @property string $description 
- * @property float $latitude 
- * @property float $longitude 
- * @property integer $zoomLevel 
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionjournals 
- * @property-read \FireflyIII\User $user 
+ * @property integer $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property string $deleted_at
+ * @property integer $user_id
+ * @property string $tag
+ * @property string $tagMode
+ * @property \Carbon\Carbon $date
+ * @property string $description
+ * @property float $latitude
+ * @property float $longitude
+ * @property integer $zoomLevel
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionjournals
+ * @property-read \FireflyIII\User $user
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Tag whereUpdatedAt($value)

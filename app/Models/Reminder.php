@@ -10,20 +10,20 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @codeCoverageIgnore 
  * @package FireflyIII\Models
- * @property integer $id 
- * @property \Carbon\Carbon $created_at 
- * @property \Carbon\Carbon $updated_at 
- * @property integer $user_id 
- * @property \Carbon\Carbon $startdate 
- * @property \Carbon\Carbon $enddate 
- * @property boolean $active 
- * @property boolean $notnow 
- * @property integer $remindersable_id 
- * @property string $remindersable_type 
- * @property string $metadata 
- * @property boolean $encrypted 
- * @property-read \ $remindersable 
- * @property-read \FireflyIII\User $user 
+ * @property integer $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property integer $user_id
+ * @property \Carbon\Carbon $startdate
+ * @property \Carbon\Carbon $enddate
+ * @property boolean $active
+ * @property boolean $notnow
+ * @property integer $remindersable_id
+ * @property string $remindersable_type
+ * @property string $metadata
+ * @property boolean $encrypted
+ * @property-read \ $remindersable
+ * @property-read \FireflyIII\User $user
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Reminder whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Reminder whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Reminder whereUpdatedAt($value)

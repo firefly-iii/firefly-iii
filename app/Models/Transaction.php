@@ -11,17 +11,17 @@ use Watson\Validating\ValidatingTrait;
  *
  * @codeCoverageIgnore 
  * @package FireflyIII\Models
- * @property integer $id 
- * @property \Carbon\Carbon $created_at 
- * @property \Carbon\Carbon $updated_at 
- * @property \Carbon\Carbon $deleted_at 
- * @property integer $account_id 
- * @property integer $transaction_journal_id 
- * @property string $description 
- * @property float $amount 
- * @property string $amount_encrypted 
- * @property-read \FireflyIII\Models\Account $account 
- * @property-read \FireflyIII\Models\TransactionJournal $transactionJournal 
+ * @property integer $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon $deleted_at
+ * @property integer $account_id
+ * @property integer $transaction_journal_id
+ * @property string $description
+ * @property float $amount
+ * @property string $amount_encrypted
+ * @property-read \FireflyIII\Models\Account $account
+ * @property-read \FireflyIII\Models\TransactionJournal $transactionJournal
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereUpdatedAt($value)

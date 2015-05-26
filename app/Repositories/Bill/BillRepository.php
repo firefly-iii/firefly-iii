@@ -5,13 +5,10 @@ namespace FireflyIII\Repositories\Bill;
 use Auth;
 use Carbon\Carbon;
 use DB;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
-use Log;
 use Navigation;
 
 /**
@@ -268,27 +265,8 @@ class BillRepository implements BillRepositoryInterface
         $amountMatch = false;
         $wordMatch   = false;
         $matches     = explode(',', $bill->match);
-        $description = strtolower($journal->description);
-
-        /*
-         * Attach expense account to description for more narrow matching.
-         */
-        $transactions = $journal->transactions()->get();
-
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            /** @var Account $account */
-            $account = $transaction->account()->first();
-            /** @var AccountType $type */
-            $type = $account->accountType()->first();
-            if ($type->type == 'Expense account' || $type->type == 'Beneficiary account') {
-                $description .= ' ' . strtolower($account->name);
-            }
-        }
-        Log::debug('Final description: ' . $description);
-        Log::debug('Matches searched: ' . join(':', $matches));
-
-        $count = 0;
+        $description = strtolower($journal->description) . ' ' . strtolower($journal->expense_account->name);
+        $count       = 0;
         foreach ($matches as $word) {
             if (!(strpos($description, strtolower($word)) === false)) {
                 $count++;
@@ -296,37 +274,24 @@ class BillRepository implements BillRepositoryInterface
         }
         if ($count >= count($matches)) {
             $wordMatch = true;
-            Log::debug('word match is true');
-        } else {
-            Log::debug('Count: ' . $count . ', count(matches): ' . count($matches));
         }
 
 
         /*
          * Match amount.
          */
-
-        if (count($transactions) > 1) {
-
-            $amount = max(floatval($transactions[0]->amount), floatval($transactions[1]->amount));
-            $min    = floatval($bill->amount_min);
-            $max    = floatval($bill->amount_max);
-            if ($amount >= $min && $amount <= $max) {
-                $amountMatch = true;
-                Log::debug('Amount match is true!');
-            }
+        if ($journal->amount >= $bill->amount_min && $journal->amount <= $bill->amount_max) {
+            $amountMatch = true;
         }
-
 
         /*
          * If both, update!
          */
         if ($wordMatch && $amountMatch) {
-            Log::debug('TOTAL match is true!');
             $journal->bill()->associate($bill);
             $journal->save();
         } else {
-            if ((!$wordMatch || !$amountMatch) && $bill->id == $journal->bill_id) {
+            if ($bill->id == $journal->bill_id) {
                 // if no match, but bill used to match, remove it:
                 $journal->bill_id = null;
                 $journal->save();

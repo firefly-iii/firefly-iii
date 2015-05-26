@@ -13,34 +13,34 @@ use Watson\Validating\ValidatingTrait;
  *
  * @package FireflyIII\Models
  * @SuppressWarnings (PHPMD.TooManyMethods)
- * @property integer $id 
- * @property \Carbon\Carbon $created_at 
- * @property \Carbon\Carbon $updated_at 
- * @property \Carbon\Carbon $deleted_at 
- * @property integer $user_id 
- * @property integer $transaction_type_id 
- * @property integer $bill_id 
- * @property integer $transaction_currency_id 
- * @property string $description 
- * @property boolean $completed 
- * @property \Carbon\Carbon $date 
- * @property boolean $encrypted 
- * @property integer $order 
- * @property-read \FireflyIII\Models\Bill $bill 
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Budget[] $budgets 
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[] $categories 
- * @property-read mixed $actual_amount 
- * @property-read mixed $amount 
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Tag[] $tags 
- * @property-read mixed $asset_account 
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions 
- * @property-read mixed $corrected_actual_amount 
- * @property-read mixed $destination_account 
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankEvent[] $piggyBankEvents 
- * @property-read \FireflyIII\Models\TransactionCurrency $transactionCurrency 
- * @property-read \FireflyIII\Models\TransactionType $transactionType 
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionGroup[] $transactiongroups 
- * @property-read \FireflyIII\User $user 
+ * @property integer                                                                             $id
+ * @property \Carbon\Carbon                                                                      $created_at
+ * @property \Carbon\Carbon                                                                      $updated_at
+ * @property \Carbon\Carbon                                                                      $deleted_at
+ * @property integer                                                                             $user_id
+ * @property integer                                                                             $transaction_type_id
+ * @property integer                                                                             $bill_id
+ * @property integer                                                                             $transaction_currency_id
+ * @property string                                                                              $description
+ * @property boolean                                                                             $completed
+ * @property \Carbon\Carbon                                                                      $date
+ * @property boolean                                                                             $encrypted
+ * @property integer                                                                             $order
+ * @property-read \FireflyIII\Models\Bill                                                        $bill
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Budget[]           $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[]         $categories
+ * @property-read mixed                                                                          $actual_amount
+ * @property-read mixed                                                                          $amount
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Tag[]              $tags
+ * @property-read mixed                                                                          $asset_account
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[]      $transactions
+ * @property-read mixed                                                                          $corrected_actual_amount
+ * @property-read mixed                                                                          $destination_account
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankEvent[]   $piggyBankEvents
+ * @property-read \FireflyIII\Models\TransactionCurrency                                         $transactionCurrency
+ * @property-read \FireflyIII\Models\TransactionType                                             $transactionType
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionGroup[] $transactiongroups
+ * @property-read \FireflyIII\User                                                               $user
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereUpdatedAt($value)
@@ -60,6 +60,7 @@ use Watson\Validating\ValidatingTrait;
  * @method static \FireflyIII\Models\TransactionJournal onDate($date)
  * @method static \FireflyIII\Models\TransactionJournal transactionTypes($types)
  * @method static \FireflyIII\Models\TransactionJournal withRelevantData()
+ * @property-read mixed $expense_account
  */
 class TransactionJournal extends Model
 {
@@ -196,22 +197,21 @@ class TransactionJournal extends Model
      */
     public function getAssetAccountAttribute()
     {
-        $positive = true; // the asset account is in the transaction with the positive amount.
-        if ($this->transactionType->type === 'Withdrawal') {
-            $positive = false;
-        }
-        /** @var Transaction $transaction */
-        foreach ($this->transactions()->get() as $transaction) {
-            if (floatval($transaction->amount) > 0 && $positive === true) {
-                return $transaction->account;
-            }
-            if (floatval($transaction->amount) < 0 && $positive === false) {
-                return $transaction->account;
-            }
+        // if it's a deposit, it's the one thats positive
+        // if it's a withdrawal, it's the one thats negative
+        // otherwise, it's either (return first one):
+
+        switch ($this->transactionType->type) {
+            case 'Deposit':
+                return $this->transactions()->where('amount', '>', 0)->first()->account;
+                break;
+            case 'Withdrawal':
+                return $this->transactions()->where('amount', '<', 0)->first()->account;
 
         }
 
         return $this->transactions()->first()->account;
+
     }
 
     /**
@@ -283,6 +283,28 @@ class TransactionJournal extends Model
         }
 
         return $this->transactions()->first()->account;
+    }
+
+    /**
+     * @return Account
+     */
+    public function getExpenseAccountAttribute()
+    {
+        // if it's a deposit, it's the one thats negative
+        // if it's a withdrawal, it's the one thats positive
+        // otherwise, it's either (return first one):
+
+        switch ($this->transactionType->type) {
+            case 'Deposit':
+                return $this->transactions()->where('amount', '<', 0)->first()->account;
+                break;
+            case 'Withdrawal':
+                return $this->transactions()->where('amount', '>', 0)->first()->account;
+
+        }
+
+        return $this->transactions()->first()->account;
+
     }
 
     /**
