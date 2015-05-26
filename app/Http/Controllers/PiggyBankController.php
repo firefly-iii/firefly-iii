@@ -366,7 +366,7 @@ class PiggyBankController extends Controller
         if (intval(Input::get('return_to_edit')) === 1) {
             Session::put('piggy-banks.edit.fromUpdate', true);
 
-            return Redirect::route('piggy-banks.edit', $piggyBank->id);
+            return Redirect::route('piggy-banks.edit', [$piggyBank->id]);
         }
 
 

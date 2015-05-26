@@ -286,7 +286,7 @@ class TransactionController extends Controller
             // set value so create routine will not overwrite URL:
             Session::put('transactions.create.fromStore', true);
 
-            return Redirect::route('transactions.create', $request->input('what'))->withInput();
+            return Redirect::route('transactions.create', [$request->input('what')])->withInput();
         }
 
         // redirect to previous URL.
@@ -317,7 +317,7 @@ class TransactionController extends Controller
             // set value so edit routine will not overwrite URL:
             Session::put('transactions.edit.fromUpdate', true);
 
-            return Redirect::route('transactions.edit', $journal->id)->withInput(['return_to_edit' => 1]);
+            return Redirect::route('transactions.edit', [$journal->id])->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.

@@ -277,7 +277,7 @@ class BudgetController extends Controller
             // set value so edit routine will not overwrite URL:
             Session::put('budgets.edit.fromUpdate', true);
 
-            return Redirect::route('budgets.edit', $budget->id)->withInput(['return_to_edit' => 1]);
+            return Redirect::route('budgets.edit', [$budget->id])->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.

@@ -31,7 +31,7 @@ class ReminderController extends Controller
         ];
         Session::flash('_old_input', $data);
 
-        return Redirect::route('transactions.create', 'transfer');
+        return Redirect::route('transactions.create', ['transfer']);
     }
 
     /**

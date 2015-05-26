@@ -36,14 +36,14 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'accounts.index', function(Generator $breadcrumbs, $what) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push(trans('breadcrumbs.' . strtolower(e($what)) . '_accounts'), route('accounts.index', $what));
+    $breadcrumbs->push(trans('breadcrumbs.' . strtolower(e($what)) . '_accounts'), route('accounts.index', [$what]));
 }
 );
 
 Breadcrumbs::register(
     'accounts.create', function(Generator $breadcrumbs, $what) {
     $breadcrumbs->parent('accounts.index', $what);
-    $breadcrumbs->push(trans('breadcrumbs.new_' . strtolower(e($what)) . '_account'), route('accounts.create', $what));
+    $breadcrumbs->push(trans('breadcrumbs.new_' . strtolower(e($what)) . '_account'), route('accounts.create', [$what]));
 }
 );
 
@@ -54,13 +54,13 @@ Breadcrumbs::register(
 
 
     $breadcrumbs->parent('accounts.index', $what);
-    $breadcrumbs->push(e($account->name), route('accounts.show', $account->id));
+    $breadcrumbs->push(e($account->name), route('accounts.show', [$account->id]));
 }
 );
 Breadcrumbs::register(
     'accounts.delete', function(Generator $breadcrumbs, Account $account) {
     $breadcrumbs->parent('accounts.show', $account);
-    $breadcrumbs->push(trans('breadcrumbs.delete_account', ['name' => e($account->name)]), route('accounts.delete', $account->id));
+    $breadcrumbs->push(trans('breadcrumbs.delete_account', ['name' => e($account->name)]), route('accounts.delete', [$account->id]));
 }
 );
 
@@ -70,7 +70,7 @@ Breadcrumbs::register(
     $breadcrumbs->parent('accounts.show', $account);
     $what = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
 
-    $breadcrumbs->push(trans('breadcrumbs.edit_' . $what . '_account', ['name' => e($account->name)]), route('accounts.edit', $account->id));
+    $breadcrumbs->push(trans('breadcrumbs.edit_' . $what . '_account', ['name' => e($account->name)]), route('accounts.edit', [$account->id]));
 }
 );
 
@@ -91,13 +91,13 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'budgets.edit', function(Generator $breadcrumbs, Budget $budget) {
     $breadcrumbs->parent('budgets.show', $budget);
-    $breadcrumbs->push(trans('breadcrumbs.edit_budget', ['name' => e($budget->name)]), route('budgets.edit', $budget->id));
+    $breadcrumbs->push(trans('breadcrumbs.edit_budget', ['name' => e($budget->name)]), route('budgets.edit', [$budget->id]));
 }
 );
 Breadcrumbs::register(
     'budgets.delete', function(Generator $breadcrumbs, Budget $budget) {
     $breadcrumbs->parent('budgets.show', $budget);
-    $breadcrumbs->push(trans('breadcrumbs.delete_budget', ['name' => e($budget->name)]), route('budgets.delete', $budget->id));
+    $breadcrumbs->push(trans('breadcrumbs.delete_budget', ['name' => e($budget->name)]), route('budgets.delete', [$budget->id]));
 }
 );
 
@@ -111,10 +111,10 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'budgets.show', function(Generator $breadcrumbs, Budget $budget, LimitRepetition $repetition = null) {
     $breadcrumbs->parent('budgets.index');
-    $breadcrumbs->push(e($budget->name), route('budgets.show', $budget->id));
+    $breadcrumbs->push(e($budget->name), route('budgets.show', [$budget->id]));
     if (!is_null($repetition) && !is_null($repetition->id)) {
         $breadcrumbs->push(
-            Navigation::periodShow($repetition->startdate, $repetition->budgetLimit->repeat_freq), route('budgets.show', $budget->id, $repetition->id)
+            Navigation::periodShow($repetition->startdate, $repetition->budgetLimit->repeat_freq), route('budgets.show', [$budget->id, $repetition->id])
         );
     }
 }
@@ -137,20 +137,20 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'categories.edit', function(Generator $breadcrumbs, Category $category) {
     $breadcrumbs->parent('categories.show', $category);
-    $breadcrumbs->push(trans('breadcrumbs.edit_category', ['name' => e($category->name)]), route('categories.edit', $category->id));
+    $breadcrumbs->push(trans('breadcrumbs.edit_category', ['name' => e($category->name)]), route('categories.edit', [$category->id]));
 }
 );
 Breadcrumbs::register(
     'categories.delete', function(Generator $breadcrumbs, Category $category) {
     $breadcrumbs->parent('categories.show', $category);
-    $breadcrumbs->push(trans('breadcrumbs.delete_category', ['name' => e($category->name)]), route('categories.delete', $category->id));
+    $breadcrumbs->push(trans('breadcrumbs.delete_category', ['name' => e($category->name)]), route('categories.delete', [$category->id]));
 }
 );
 
 Breadcrumbs::register(
     'categories.show', function(Generator $breadcrumbs, Category $category) {
     $breadcrumbs->parent('categories.index');
-    $breadcrumbs->push(e($category->name), route('categories.show', $category->id));
+    $breadcrumbs->push(e($category->name), route('categories.show', [$category->id]));
 
 }
 );
@@ -173,13 +173,13 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'currency.edit', function(Generator $breadcrumbs, TransactionCurrency $currency) {
     $breadcrumbs->parent('currency.index');
-    $breadcrumbs->push(trans('breadcrumbs.edit_currency', ['name' => e($currency->name)]), route('currency.edit', $currency->id));
+    $breadcrumbs->push(trans('breadcrumbs.edit_currency', ['name' => e($currency->name)]), route('currency.edit', [$currency->id]));
 }
 );
 Breadcrumbs::register(
     'currency.delete', function(Generator $breadcrumbs, TransactionCurrency $currency) {
     $breadcrumbs->parent('currency.index');
-    $breadcrumbs->push(trans('breadcrumbs.delete_currency', ['name' => e($currency->name)]), route('currency.delete', $currency->id));
+    $breadcrumbs->push(trans('breadcrumbs.delete_currency', ['name' => e($currency->name)]), route('currency.delete', [$currency->id]));
 }
 );
 
@@ -201,20 +201,20 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'piggy-banks.edit', function(Generator $breadcrumbs, PiggyBank $piggyBank) {
     $breadcrumbs->parent('piggy-banks.show', $piggyBank);
-    $breadcrumbs->push(trans('breadcrumbs.edit_piggyBank', ['name' => e($piggyBank->name)]), route('piggy-banks.edit', $piggyBank->id));
+    $breadcrumbs->push(trans('breadcrumbs.edit_piggyBank', ['name' => e($piggyBank->name)]), route('piggy-banks.edit', [$piggyBank->id]));
 }
 );
 Breadcrumbs::register(
     'piggy-banks.delete', function(Generator $breadcrumbs, PiggyBank $piggyBank) {
     $breadcrumbs->parent('piggy-banks.show', $piggyBank);
-    $breadcrumbs->push(trans('breadcrumbs.delete_piggyBank', ['name' => e($piggyBank->name)]), route('piggy-banks.delete', $piggyBank->id));
+    $breadcrumbs->push(trans('breadcrumbs.delete_piggyBank', ['name' => e($piggyBank->name)]), route('piggy-banks.delete', [$piggyBank->id]));
 }
 );
 
 Breadcrumbs::register(
     'piggy-banks.show', function(Generator $breadcrumbs, PiggyBank $piggyBank) {
     $breadcrumbs->parent('piggy-banks.index');
-    $breadcrumbs->push(e($piggyBank->name), route('piggy-banks.show', $piggyBank->id));
+    $breadcrumbs->push(e($piggyBank->name), route('piggy-banks.show', [$piggyBank->id]));
 
 }
 );
@@ -261,20 +261,20 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'bills.edit', function(Generator $breadcrumbs, Bill $bill) {
     $breadcrumbs->parent('bills.show', $bill);
-    $breadcrumbs->push(trans('breadcrumbs.edit_bill', ['name' => e($bill->name)]), route('bills.edit', $bill->id));
+    $breadcrumbs->push(trans('breadcrumbs.edit_bill', ['name' => e($bill->name)]), route('bills.edit', [$bill->id]));
 }
 );
 Breadcrumbs::register(
     'bills.delete', function(Generator $breadcrumbs, Bill $bill) {
     $breadcrumbs->parent('bills.show', $bill);
-    $breadcrumbs->push(trans('breadcrumbs.delete_bill', ['name' => e($bill->name)]), route('bills.delete', $bill->id));
+    $breadcrumbs->push(trans('breadcrumbs.delete_bill', ['name' => e($bill->name)]), route('bills.delete', [$bill->id]));
 }
 );
 
 Breadcrumbs::register(
     'bills.show', function(Generator $breadcrumbs, Bill $bill) {
     $breadcrumbs->parent('bills.index');
-    $breadcrumbs->push(e($bill->name), route('bills.show', $bill->id));
+    $breadcrumbs->push(e($bill->name), route('bills.show', [$bill->id]));
 
 }
 );
@@ -292,7 +292,7 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'reminders.show', function(Generator $breadcrumbs, Reminder $reminder) {
     $breadcrumbs->parent('reminders.index');
-    $breadcrumbs->push(trans('breadcrumbs.reminder', ['id' => e($reminder->id)]), route('reminders.show', $reminder->id));
+    $breadcrumbs->push(trans('breadcrumbs.reminder', ['id' => e($reminder->id)]), route('reminders.show', [$reminder->id]));
 
 }
 );
@@ -314,7 +314,7 @@ Breadcrumbs::register(
     } else {
         $title = trans('breadcrumbs.yearly_report', ['date' => $date->year]);
     }
-    $breadcrumbs->push($title, route('reports.year', $date->year));
+    $breadcrumbs->push($title, route('reports.year', [$date->year]));
 }
 );
 
@@ -344,26 +344,26 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'transactions.index', function(Generator $breadcrumbs, $what) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push(trans('breadcrumbs.' . $what . '_list'), route('transactions.index', $what));
+    $breadcrumbs->push(trans('breadcrumbs.' . $what . '_list'), route('transactions.index', [$what]));
 }
 );
 Breadcrumbs::register(
     'transactions.create', function(Generator $breadcrumbs, $what) {
     $breadcrumbs->parent('transactions.index', $what);
-    $breadcrumbs->push(trans('breadcrumbs.create_' . e($what)), route('transactions.create', $what));
+    $breadcrumbs->push(trans('breadcrumbs.create_' . e($what)), route('transactions.create', [$what]));
 }
 );
 
 Breadcrumbs::register(
     'transactions.edit', function(Generator $breadcrumbs, TransactionJournal $journal) {
     $breadcrumbs->parent('transactions.show', $journal);
-    $breadcrumbs->push(trans('breadcrumbs.edit_journal', ['description' => $journal->description]), route('transactions.edit', $journal->id));
+    $breadcrumbs->push(trans('breadcrumbs.edit_journal', ['description' => $journal->description]), route('transactions.edit', [$journal->id]));
 }
 );
 Breadcrumbs::register(
     'transactions.delete', function(Generator $breadcrumbs, TransactionJournal $journal) {
     $breadcrumbs->parent('transactions.show', $journal);
-    $breadcrumbs->push(trans('breadcrumbs.delete_journal', ['description' => e($journal->description)]), route('transactions.delete', $journal->id));
+    $breadcrumbs->push(trans('breadcrumbs.delete_journal', ['description' => e($journal->description)]), route('transactions.delete', [$journal->id]));
 }
 );
 
@@ -371,7 +371,7 @@ Breadcrumbs::register(
     'transactions.show', function(Generator $breadcrumbs, TransactionJournal $journal) {
 
     $breadcrumbs->parent('transactions.index', strtolower($journal->transactionType->type));
-    $breadcrumbs->push($journal->description, route('transactions.show', $journal->id));
+    $breadcrumbs->push($journal->description, route('transactions.show', [$journal->id]));
 
 }
 );
@@ -394,14 +394,14 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'tags.edit', function(Generator $breadcrumbs, Tag $tag) {
     $breadcrumbs->parent('tags.show', $tag);
-    $breadcrumbs->push(trans('breadcrumbs.edit_tag', ['tag' => e($tag->tag)]), route('tags.edit', $tag->id));
+    $breadcrumbs->push(trans('breadcrumbs.edit_tag', ['tag' => e($tag->tag)]), route('tags.edit', [$tag->id]));
 }
 );
 
 Breadcrumbs::register(
     'tags.delete', function(Generator $breadcrumbs, Tag $tag) {
     $breadcrumbs->parent('tags.show', $tag);
-    $breadcrumbs->push(trans('breadcrumbs.delete_tag', ['tag' => e($tag->tag)]), route('tags.delete', $tag->id));
+    $breadcrumbs->push(trans('breadcrumbs.delete_tag', ['tag' => e($tag->tag)]), route('tags.delete', [$tag->id]));
 }
 );
 
@@ -409,6 +409,6 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'tags.show', function(Generator $breadcrumbs, Tag $tag) {
     $breadcrumbs->parent('tags.index');
-    $breadcrumbs->push(e($tag->tag), route('tags.show', $tag->id));
+    $breadcrumbs->push(e($tag->tag), route('tags.show', [$tag->id]));
 }
 );

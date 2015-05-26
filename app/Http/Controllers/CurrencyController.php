@@ -194,7 +194,7 @@ class CurrencyController extends Controller
         if (intval(Input::get('return_to_edit')) === 1) {
             Session::put('currency.edit.fromUpdate', true);
 
-            return Redirect::route('currency.edit', $currency->id);
+            return Redirect::route('currency.edit', [$currency->id]);
         }
 
         // redirect to previous URL.

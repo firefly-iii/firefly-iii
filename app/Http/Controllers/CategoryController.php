@@ -199,7 +199,7 @@ class CategoryController extends Controller
         if (intval(Input::get('return_to_edit')) === 1) {
             Session::put('categories.edit.fromUpdate', true);
 
-            return Redirect::route('categories.edit', $category->id);
+            return Redirect::route('categories.edit', [$category->id]);
         }
 
         // redirect to previous URL.

@@ -276,7 +276,7 @@ class TagController extends Controller
             // set value so edit routine will not overwrite URL:
             Session::put('tags.edit.fromUpdate', true);
 
-            return Redirect::route('tags.edit', $tag->id)->withInput(['return_to_edit' => 1]);
+            return Redirect::route('tags.edit', [$tag->id])->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.

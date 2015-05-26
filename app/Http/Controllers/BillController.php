@@ -203,7 +203,7 @@ class BillController extends Controller
             // set value so edit routine will not overwrite URL:
             Session::put('bills.edit.fromUpdate', true);
 
-            return Redirect::route('bills.edit', $bill->id)->withInput(['return_to_edit' => 1]);
+            return Redirect::route('bills.edit', [$bill->id])->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.
