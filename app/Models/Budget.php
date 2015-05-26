@@ -7,8 +7,27 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class Budget
  *
- * @codeCoverageIgnore
+ * @codeCoverageIgnore 
  * @package FireflyIII\Models
+ * @property integer $id 
+ * @property \Carbon\Carbon $created_at 
+ * @property \Carbon\Carbon $updated_at 
+ * @property \Carbon\Carbon $deleted_at 
+ * @property string $name 
+ * @property integer $user_id 
+ * @property boolean $active 
+ * @property boolean $encrypted 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\BudgetLimit[] $budgetlimits 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionjournals 
+ * @property-read \FireflyIII\User $user 
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereActive($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Budget whereEncrypted($value)
  */
 class Budget extends Model
 {

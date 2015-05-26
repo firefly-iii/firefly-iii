@@ -5,9 +5,25 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class LimitRepetition
  *
- * @codeCoverageIgnore
- *
+ * @codeCoverageIgnore 
  * @package FireflyIII\Models
+ * @property integer $id 
+ * @property \Carbon\Carbon $created_at 
+ * @property \Carbon\Carbon $updated_at 
+ * @property integer $budget_limit_id 
+ * @property \Carbon\Carbon $startdate 
+ * @property \Carbon\Carbon $enddate 
+ * @property float $amount 
+ * @property string $amount_encrypted 
+ * @property-read \FireflyIII\Models\BudgetLimit $budgetLimit 
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereBudgetLimitId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereStartdate($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereEnddate($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereAmount($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LimitRepetition whereAmountEncrypted($value)
  */
 class LimitRepetition extends Model
 {

@@ -9,8 +9,30 @@ use Watson\Validating\ValidatingTrait;
 /**
  * Class Transaction
  *
- * @codeCoverageIgnore
+ * @codeCoverageIgnore 
  * @package FireflyIII\Models
+ * @property integer $id 
+ * @property \Carbon\Carbon $created_at 
+ * @property \Carbon\Carbon $updated_at 
+ * @property \Carbon\Carbon $deleted_at 
+ * @property integer $account_id 
+ * @property integer $transaction_journal_id 
+ * @property string $description 
+ * @property float $amount 
+ * @property string $amount_encrypted 
+ * @property-read \FireflyIII\Models\Account $account 
+ * @property-read \FireflyIII\Models\TransactionJournal $transactionJournal 
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereAccountId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereTransactionJournalId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereDescription($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereAmount($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereAmountEncrypted($value)
+ * @method static \FireflyIII\Models\Transaction after($date)
+ * @method static \FireflyIII\Models\Transaction before($date)
  */
 class Transaction extends Model
 {

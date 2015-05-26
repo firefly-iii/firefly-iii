@@ -8,9 +8,36 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class Reminder
  *
- * @codeCoverageIgnore
- *
+ * @codeCoverageIgnore 
  * @package FireflyIII\Models
+ * @property integer $id 
+ * @property \Carbon\Carbon $created_at 
+ * @property \Carbon\Carbon $updated_at 
+ * @property integer $user_id 
+ * @property \Carbon\Carbon $startdate 
+ * @property \Carbon\Carbon $enddate 
+ * @property boolean $active 
+ * @property boolean $notnow 
+ * @property integer $remindersable_id 
+ * @property string $remindersable_type 
+ * @property string $metadata 
+ * @property boolean $encrypted 
+ * @property-read \ $remindersable 
+ * @property-read \FireflyIII\User $user 
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Reminder whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Reminder whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Reminder whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Reminder whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Reminder whereStartdate($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Reminder whereEnddate($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Reminder whereActive($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Reminder whereNotnow($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Reminder whereRemindersableId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Reminder whereRemindersableType($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Reminder whereMetadata($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Reminder whereEncrypted($value)
+ * @method static \FireflyIII\Models\Reminder onDates($start, $end)
+ * @method static \FireflyIII\Models\Reminder today()
  */
 class Reminder extends Model
 {
