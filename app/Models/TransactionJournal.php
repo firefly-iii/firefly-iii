@@ -224,28 +224,6 @@ class TransactionJournal extends Model
     }
 
     /**
-     * @return float
-     */
-    public function getCorrectedActualAmountAttribute()
-    {
-        $amount = '0';
-        $type   = $this->transactionType->type;
-        /** @var Transaction $t */
-        foreach ($this->transactions as $t) {
-            if ($t->amount > 0 && $type != 'Withdrawal') {
-                $amount = $t->amount;
-                break;
-            }
-            if ($t->amount < 0 && $type == 'Withdrawal') {
-                $amount = $t->amount;
-                break;
-            }
-        }
-
-        return $amount;
-    }
-
-    /**
      * @codeCoverageIgnore
      * @return array
      */

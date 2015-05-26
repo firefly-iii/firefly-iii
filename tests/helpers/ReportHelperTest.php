@@ -122,20 +122,6 @@ class ReportHelperTest extends TestCase
 
         for ($i = 0; $i < 5; $i++) {
             $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-            Transaction::create(
-                [
-                    'account_id'             => $left->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => rand(-100, 100)
-                ]
-            );
-            Transaction::create(
-                [
-                    'account_id'             => $right->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => rand(-100, 100)
-                ]
-            );
             $journals->push($journal);
         }
 
@@ -257,25 +243,11 @@ class ReportHelperTest extends TestCase
             $journal->transaction_type_id = $type->id;
             $journal->user_id             = $user->id;
             $journal->save();
-            Transaction::create(
-                [
-                    'account_id'             => $left->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => 100
-                ]
-            );
-            Transaction::create(
-                [
-                    'account_id'             => $right->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => -100
-                ]
-            );
         }
 
         // test!
         $object = $this->object->getExpenseReport(Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth(), true);
-        $this->assertCount(1, $object->getExpenses());
+        $this->assertCount(5, $object->getExpenses());
     }
 
     /**
@@ -322,25 +294,11 @@ class ReportHelperTest extends TestCase
             $journal->transaction_type_id = $type->id;
             $journal->user_id             = $user->id;
             $journal->save();
-            Transaction::create(
-                [
-                    'account_id'             => $left->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => 100
-                ]
-            );
-            Transaction::create(
-                [
-                    'account_id'             => $right->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => -100
-                ]
-            );
         }
 
         // test!
         $object = $this->object->getIncomeReport(Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth(), true);
-        $this->assertCount(1, $object->getIncomes());
+        $this->assertCount(5, $object->getIncomes());
 
     }
 

@@ -129,7 +129,8 @@ class CategoryRepositoryTest extends TestCase
         $this->assertCount(10, $set);
         reset($set);
 
-        $this->assertEquals(0, current($set)['sum']);
+        // every journal has amount 100.
+        $this->assertEquals(100, current($set)['sum']);
     }
 
     /**

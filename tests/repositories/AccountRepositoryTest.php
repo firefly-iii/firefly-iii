@@ -2,8 +2,6 @@
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
-use FireflyIII\Models\AccountType;
-use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepository;
@@ -117,30 +115,18 @@ class AccountRepositoryTest extends TestCase
     {
         $account = FactoryMuffin::create('FireflyIII\Models\Account');
         $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $first   = $journal->transactions()->orderBy('date', 'DESC')->first();
+        $first->account_id = $account->id;
+        $first->save();
 
-        // two matching transactions:
-        $first = Transaction::create(
-            [
-                'account_id'             => $account->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => 100,
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $account->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => -100,
-            ]
-        );
 
         // login
         $this->be($account->user);
 
         $oldest = $this->object->getFirstTransaction($journal, $account);
 
-        $this->assertEquals($oldest->amount, $first->amount);
-        $this->assertEquals($oldest->id, $first->id);
+        $this->assertEquals($first->amount, $oldest->amount);
+        $this->assertEquals($first->id, $oldest->id);
 
     }
 
@@ -215,28 +201,12 @@ class AccountRepositoryTest extends TestCase
         $journal2->save();
         $journal3->save();
 
-        // transactions to match the dates (one per journal will do)
-        Transaction::create(
-            [
-                'account_id'             => $account->id,
-                'transaction_journal_id' => $journal1->id,
-                'amount'                 => 100
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $account->id,
-                'transaction_journal_id' => $journal2->id,
-                'amount'                 => 100
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $account->id,
-                'transaction_journal_id' => $journal3->id,
-                'amount'                 => 100
-            ]
-        );
+        $journal1->transactions[0]->account_id = $account->id;
+        $journal1->transactions[0]->save();
+        $journal2->transactions[0]->account_id = $account->id;
+        $journal2->transactions[0]->save();
+        $journal3->transactions[0]->account_id = $account->id;
+        $journal3->transactions[0]->save();
 
         // be user
         $this->be($journal1->user);
@@ -277,28 +247,12 @@ class AccountRepositoryTest extends TestCase
         $journal2->save();
         $journal3->save();
 
-        // transactions to match the dates (one per journal will do)
-        Transaction::create(
-            [
-                'account_id'             => $account->id,
-                'transaction_journal_id' => $journal1->id,
-                'amount'                 => 100
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $account->id,
-                'transaction_journal_id' => $journal2->id,
-                'amount'                 => 100
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $account->id,
-                'transaction_journal_id' => $journal3->id,
-                'amount'                 => 100
-            ]
-        );
+        $journal1->transactions[0]->account_id = $account->id;
+        $journal1->transactions[0]->save();
+        $journal2->transactions[0]->account_id = $account->id;
+        $journal2->transactions[0]->save();
+        $journal3->transactions[0]->account_id = $account->id;
+        $journal3->transactions[0]->save();
 
         // be user
         $this->be($journal1->user);
@@ -329,14 +283,8 @@ class AccountRepositoryTest extends TestCase
         $journal->user_id = $account->user_id;
         $journal->save();
 
-        // transaction to match the date (one will do)
-        Transaction::create(
-            [
-                'account_id'             => $account->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => 100
-            ]
-        );
+        $journal->transactions[0]->account_id = $account->id;
+        $journal->transactions[0]->save();
 
         // be user
         $this->be($journal->user);
@@ -478,28 +426,25 @@ class AccountRepositoryTest extends TestCase
         $journal2->transaction_type_id = $journal1->transaction_type_id;
         $journal3->transaction_type_id = $journal1->transaction_type_id;
 
-        // three transactions:
-        Transaction::create(
-            [
-                'account_id'             => $account->id,
-                'transaction_journal_id' => $journal1->id,
-                'amount'                 => 100
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $account->id,
-                'transaction_journal_id' => $journal2->id,
-                'amount'                 => 100
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $account->id,
-                'transaction_journal_id' => $journal3->id,
-                'amount'                 => 100
-            ]
-        );
+        // transactions are already present, update them!
+        $journal1->transactions[0]->account_id = $account->id;
+        $journal1->transactions[0]->amount     = 100;
+        $journal1->transactions[1]->account_id = $account->id;
+        $journal1->transactions[1]->amount     = 100;
+        $journal2->transactions[0]->account_id = $account->id;
+        $journal2->transactions[0]->amount     = 100;
+        $journal2->transactions[1]->account_id = $account->id;
+        $journal2->transactions[1]->amount     = 100;
+        $journal3->transactions[0]->account_id = $account->id;
+        $journal3->transactions[0]->amount     = 100;
+        $journal3->transactions[1]->account_id = $account->id;
+        $journal3->transactions[1]->amount     = 100;
+        $journal1->transactions[0]->save();
+        $journal1->transactions[1]->save();
+        $journal2->transactions[0]->save();
+        $journal2->transactions[1]->save();
+        $journal3->transactions[0]->save();
+        $journal3->transactions[1]->save();
 
         // check date:
         $start   = new Carbon('2014-01-01');
@@ -557,21 +502,6 @@ class AccountRepositoryTest extends TestCase
         $account  = FactoryMuffin::create('FireflyIII\Models\Account');
         $journal1 = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
         $journal2 = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-        // two transactions:
-        Transaction::create(
-            [
-                'account_id'             => $account->id,
-                'transaction_journal_id' => $journal1->id,
-                'amount'                 => 100
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $account->id,
-                'transaction_journal_id' => $journal2->id,
-                'amount'                 => 100
-            ]
-        );
 
         // dates
         $one = new Carbon('2013-01-15');
@@ -582,6 +512,18 @@ class AccountRepositoryTest extends TestCase
         $journal1->user_id = $account->user_id;
         $journal2->date    = $two;
         $journal2->user_id = $account->user_id;
+
+        // add account things:
+        $journal1->transactions[0]->account_id = $account->id;
+        $journal1->transactions[1]->account_id = $account->id;
+        $journal2->transactions[0]->account_id = $account->id;
+        $journal2->transactions[1]->account_id = $account->id;
+        $journal1->transactions[0]->save();
+        $journal1->transactions[1]->save();
+        $journal2->transactions[0]->save();
+        $journal2->transactions[1]->save();
+
+
         $journal1->save();
         $journal2->save();
 
