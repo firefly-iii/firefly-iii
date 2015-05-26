@@ -209,7 +209,7 @@ class BillRepository implements BillRepositoryInterface
     /**
      * @param Bill $bill
      *
-     * @return Carbon
+     * @return \Carbon\Carbon
      */
     public function nextExpectedMatch(Bill $bill)
     {

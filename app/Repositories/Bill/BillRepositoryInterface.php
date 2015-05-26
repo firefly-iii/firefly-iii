@@ -103,7 +103,7 @@ interface BillRepositoryInterface
     /**
      * @param Bill $bill
      *
-     * @return Carbon|null
+     * @return \Carbon\Carbon
      */
     public function nextExpectedMatch(Bill $bill);
 
