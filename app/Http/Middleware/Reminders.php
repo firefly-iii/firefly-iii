@@ -68,7 +68,7 @@ class Reminders
             // get and list active reminders:
             $reminders = $this->auth->user()->reminders()->today()->get();
             $reminders->each(
-                function (Reminder $reminder) use ($helper) {
+                function(Reminder $reminder) use ($helper) {
                     $reminder->description = $helper->getReminderText($reminder);
                 }
             );

@@ -63,7 +63,7 @@ class Category extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return array
+     * @return string[]
      */
     public function getDates()
     {
