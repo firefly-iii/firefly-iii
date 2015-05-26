@@ -1,4 +1,4 @@
-/* globals start, end, dateRangeURL, everything, firstDate, moment, currentMonthName, $, previousMonthName, nextMonthName, applyLabel, cancelLabel, toLabel, customRangeLabel, fromLabel, */
+/* globals token, start, end, dateRangeURL, everything, firstDate, moment, currentMonthName, $, previousMonthName, nextMonthName, applyLabel, cancelLabel, toLabel, customRangeLabel, fromLabel, */
 $(function () {
     "use strict";
     $('.currencySelect').click(currencySelect);

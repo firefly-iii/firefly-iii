@@ -1,4 +1,4 @@
-/* globals expenseRestShow:true, incomeRestShow:true, year, shared, month, hideTheRest, showTheRest, showTheRestExpense, hideTheRestExpense, googleColumnChart, googleLineChart, googleStackedColumnChartg  */
+/* globals google, expenseRestShow:true, incomeRestShow:true, year, shared, month, hideTheRest, showTheRest, showTheRestExpense, hideTheRestExpense, googleColumnChart, googleLineChart, googleStackedColumnChart  */
 if (typeof(google) !== 'undefined') {
     google.setOnLoadCallback(drawChart);
 }

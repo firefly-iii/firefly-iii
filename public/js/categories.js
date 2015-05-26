@@ -1,4 +1,4 @@
-/* globals $, categoryID */
+/* globals $, categoryID, googleColumnChart */
 $(function () {
     "use strict";
     if (typeof categoryID !== 'undefined') {

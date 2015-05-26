@@ -1,4 +1,4 @@
-/* globals $, budgeted:false, currencySymbol, budgetIncomeTotal ,budgetedMuch, budgetedPercentage, token, budgetID, repetitionID, spent, budgeted*/
+/* globals $, budgeted:true, currencySymbol, budgetIncomeTotal ,budgetedMuch, budgetedPercentage, token, budgetID, repetitionID, spent, googleLineChart */
 
 function drawSpentBar() {
     "use strict";

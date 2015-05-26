@@ -1,4 +1,4 @@
-/* global $ */
+/* global $, googleLineChart, accountID, token */
 
 
 // Return a helper with preserved width of cells
