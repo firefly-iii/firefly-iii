@@ -109,7 +109,7 @@ class AuthController extends Controller
         }
         App::abort(500, 'Not a user!');
 
-        return false;
+        return redirect('/');
     }
 
 }

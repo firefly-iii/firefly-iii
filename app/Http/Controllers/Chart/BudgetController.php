@@ -135,7 +135,7 @@ class BudgetController extends Controller
             }
         }
 
-        $noBudgetExpenses = $repository->getWithoutBudgetSum($start, $end);
+        $noBudgetExpenses = $repository->getWithoutBudgetSum($start, $end) * -1;
         $allEntries->push([trans('firefly.noBudget'), 0, 0, $noBudgetExpenses]);
 
         foreach ($allEntries as $entry) {
