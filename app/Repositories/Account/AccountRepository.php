@@ -350,7 +350,7 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @param array $data
      *
-     * @return Account;
+     * @return Account
      */
     public function store(array $data)
     {

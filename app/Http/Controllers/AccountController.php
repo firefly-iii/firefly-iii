@@ -199,7 +199,7 @@ class AccountController extends Controller
             'user'                   => Auth::user()->id,
             'accountRole'            => $request->input('accountRole'),
             'openingBalance'         => floatval($request->input('openingBalance')),
-            'openingBalanceDate'     => new Carbon($request->input('openingBalanceDate')),
+            'openingBalanceDate'     => new Carbon((string) $request->input('openingBalanceDate')),
             'openingBalanceCurrency' => intval($request->input('balance_currency_id')),
 
         ];
@@ -237,7 +237,7 @@ class AccountController extends Controller
             'accountRole'            => $request->input('accountRole'),
             'virtualBalance'         => floatval($request->input('virtualBalance')),
             'openingBalance'         => floatval($request->input('openingBalance')),
-            'openingBalanceDate'     => new Carbon($request->input('openingBalanceDate')),
+            'openingBalanceDate'     => new Carbon((string) $request->input('openingBalanceDate')),
             'openingBalanceCurrency' => intval($request->input('balance_currency_id')),
             'ccType'                 => $request->input('ccType'),
             'ccMonthlyPaymentDate'   => $request->input('ccMonthlyPaymentDate'),

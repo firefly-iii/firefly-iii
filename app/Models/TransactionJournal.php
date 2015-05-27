@@ -66,6 +66,7 @@ use Watson\Validating\ValidatingTrait;
  * @property bool joinedTransactionTypes
  * @property mixed account_id
  * @property mixed name
+ * @property mixed symbol
  */
 class TransactionJournal extends Model
 {
