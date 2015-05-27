@@ -118,7 +118,7 @@ class TransactionController extends Controller
      */
     public function edit(AccountRepositoryInterface $repository, TransactionJournal $journal)
     {
-        $what         = strtolower($journal->transactiontype->type);
+        $what         = strtolower($journal->transactionType->type);
         $accounts     = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
         $budgets      = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
         $budgets[0]   = trans('form.noBudget');
@@ -153,7 +153,7 @@ class TransactionController extends Controller
             $preFilled['piggy_bank_id'] = $journal->piggyBankEvents()->orderBy('date', 'DESC')->first()->piggy_bank_id;
         }
 
-        $preFilled['amount']          = $journal->actualAmount;
+        $preFilled['amount']          = $journal->actual_amount;
         $preFilled['account_id']      = $journal->assetAccount->id;
         $preFilled['expense_account'] = $transactions[0]->account->name;
         $preFilled['revenue_account'] = $transactions[1]->account->name;
@@ -254,7 +254,7 @@ class TransactionController extends Controller
                 $t->after  = $t->before + $t->amount;
             }
         );
-        $subTitle = trans('firefly.' . $journal->transactiontype->type) . ' "' . e($journal->description) . '"';
+        $subTitle = trans('firefly.' . $journal->transactionType->type) . ' "' . e($journal->description) . '"';
 
         return view('transactions.show', compact('journal', 'subTitle'));
     }

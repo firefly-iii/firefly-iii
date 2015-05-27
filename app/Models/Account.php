@@ -40,6 +40,11 @@ use Watson\Validating\ValidatingTrait;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereVirtualBalanceEncrypted($value)
  * @method static \FireflyIII\Models\Account accountTypeIn($types)
  * @method static \FireflyIII\Models\Account hasMetaValue($name, $value)
+ *
+ * @property boolean joinedAccountTypes
+ * @property mixed startBalance
+ * @property mixed endBalance
+ * @property mixed lastActivityDate
  */
 class Account extends Model
 {

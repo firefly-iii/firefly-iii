@@ -61,6 +61,11 @@ use Watson\Validating\ValidatingTrait;
  * @method static \FireflyIII\Models\TransactionJournal transactionTypes($types)
  * @method static \FireflyIII\Models\TransactionJournal withRelevantData()
  * @property-read mixed $expense_account
+ * @property string account_encrypted
+ * @property bool joinedTransactions
+ * @property bool joinedTransactionTypes
+ * @property mixed account_id
+ * @property mixed name
  */
 class TransactionJournal extends Model
 {
@@ -152,7 +157,7 @@ class TransactionJournal extends Model
             // loop other deposits, remove from our amount.
             $others = $advancePayment->transactionJournals()->transactionTypes(['Deposit'])->get();
             foreach ($others as $other) {
-                $amount = bcsub($amount, $other->actualAmount);
+                $amount = bcsub($amount, $other->actual_amount);
             }
 
             return $amount;
@@ -173,7 +178,7 @@ class TransactionJournal extends Model
             if ($this->transactionType->type == 'Withdrawal') {
                 $transfer = $balancingAct->transactionJournals()->transactionTypes(['Transfer'])->first();
                 if ($transfer) {
-                    $amount = bcsub($amount, $transfer->actualAmount);
+                    $amount = bcsub($amount, $transfer->actual_amount);
 
                     return $amount;
                 }
