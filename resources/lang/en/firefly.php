@@ -16,6 +16,7 @@ return [
     'from'                          => 'From',
     'to'                            => 'To',
     'showEverything'                => 'Show everything',
+    'never'                         => 'Never',
 
     // forms:
     'mandatoryFields'               => 'Mandatory fields',

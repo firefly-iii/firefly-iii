@@ -16,6 +16,7 @@ return [
     'from'                          => 'Van',
     'to'                            => 'Tot',
     'showEverything'                => 'Laat alles zien',
+    'never'                         => 'Nooit',
 
     // forms:
     'mandatoryFields'               => 'Verplichte velden',
