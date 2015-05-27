@@ -241,7 +241,7 @@ class BillRepository implements BillRepositoryInterface
                 $end          = Navigation::endOfPeriod(clone $start, $bill->repeat_freq);
                 $journalCount = $bill->transactionjournals()->before($end)->after($start)->count();
                 if ($journalCount == 0) {
-                    $finalDate = clone $start;
+                    $finalDate = new Carbon($start->format('Y-m-d'));
                     break;
                 }
             }

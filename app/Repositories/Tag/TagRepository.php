@@ -323,7 +323,7 @@ class TagRepository implements TagRepositoryInterface
         $match = true;
         /** @var TransactionJournal $check */
         foreach ($tag->transactionjournals as $check) {
-            if ($check->assetAccount->id != $journal->assetAccount->id) {
+            if ($check->asset_account->id != $journal->asset_account->id) {
                 $match = false;
             }
         }

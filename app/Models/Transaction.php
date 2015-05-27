@@ -33,6 +33,8 @@ use Watson\Validating\ValidatingTrait;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereAmountEncrypted($value)
  * @method static \FireflyIII\Models\Transaction after($date)
  * @method static \FireflyIII\Models\Transaction before($date)
+ * @property mixed before
+ * @property mixed after
  */
 class Transaction extends Model
 {

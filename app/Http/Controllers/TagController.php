@@ -164,7 +164,7 @@ class TagController extends Controller
         $state = $state == 'true' ? true : false;
         Preferences::set('hideTagHelp', $state);
 
-        return Response::json(true);
+        return Response::json([true]);
     }
 
     /**

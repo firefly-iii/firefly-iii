@@ -38,6 +38,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Reminder whereEncrypted($value)
  * @method static \FireflyIII\Models\Reminder onDates($start, $end)
  * @method static \FireflyIII\Models\Reminder today()
+ * @property string description
  */
 class Reminder extends Model
 {

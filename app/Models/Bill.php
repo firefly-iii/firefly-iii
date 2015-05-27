@@ -44,7 +44,6 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereSkip($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereNameEncrypted($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereMatchEncrypted($value)
- *
  * @property mixed nextExpectedMatch
  * @property mixed lastFoundMatch
  */

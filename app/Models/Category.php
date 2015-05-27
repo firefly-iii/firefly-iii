@@ -24,7 +24,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereName($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereEncrypted($value)
- *
  * @property mixed spent
  * @property mixed lastActivity
  */
