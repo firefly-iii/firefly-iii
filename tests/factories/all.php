@@ -30,6 +30,13 @@ if (!class_exists('RandomString')) {
 }
 
 FactoryMuffin::define(
+    'FireflyIII\Models\Role',
+    [
+        'name'            => 'word',
+    ]
+);
+
+FactoryMuffin::define(
     'FireflyIII\Models\Bill',
     [
         'user_id'         => 'factory|FireflyIII\User',

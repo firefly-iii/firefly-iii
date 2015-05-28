@@ -139,8 +139,9 @@ return [
         'TwigBridge\ServiceProvider',
 
         'DaveJamesMiller\Breadcrumbs\ServiceProvider',
-        'Barryvdh\Debugbar\ServiceProvider',
-        'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
+//        'Barryvdh\Debugbar\ServiceProvider',
+//        'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
+        'Zizaco\Entrust\EntrustServiceProvider',
 
         /*
          * Application Service Providers...
@@ -210,6 +211,7 @@ return [
         'Steam'        => 'FireflyIII\Support\Facades\Steam',
         'ExpandedForm' => 'FireflyIII\Support\Facades\ExpandedForm',
         'Twig'         => 'TwigBridge\Facade\Twig',
+        'Entrust'      => 'Zizaco\Entrust\EntrustFacade'
 
 
     ],

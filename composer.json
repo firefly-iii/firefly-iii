@@ -28,7 +28,8 @@
         "illuminate/html": "~5.0",
         "league/commonmark": "0.7.*",
         "rcrowe/twigbridge": "0.7.x@dev",
-        "twig/extensions": "~1.2"
+        "twig/extensions": "~1.2",
+        "zizaco/entrust": "dev-laravel-5"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "@stable",

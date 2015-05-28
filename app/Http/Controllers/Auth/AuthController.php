@@ -2,6 +2,7 @@
 
 use App;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Models\Role;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
@@ -103,6 +104,13 @@ class AuthController extends Controller
             Session::flash('success', 'You have registered successfully!');
             Session::flash('gaEventCategory', 'user');
             Session::flash('gaEventAction', 'new-registration');
+
+            // first user ever?
+            if (User::count() == 1) {
+                $admin = Role::where('name', 'owner')->first();
+                $this->auth->user()->attachRole($admin);
+//                $this->auth->user()->roles()->save($admin);
+            }
 
 
             return redirect($this->redirectPath());
