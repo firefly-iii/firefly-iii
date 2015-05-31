@@ -60,8 +60,8 @@ function addMoney(e) {
 function removeMoney(e) {
     "use strict";
     var pigID = parseInt($(e.target).data('id'));
-    $('#moneyManagementModal').empty().load('piggy-banks/remove/' + pigID, function () {
-        $('#moneyManagementModal').modal('show');
+    $('#defaultModal').empty().load('piggy-banks/remove/' + pigID, function () {
+        $('#defaultModal').modal('show');
     });
 
     return false;
