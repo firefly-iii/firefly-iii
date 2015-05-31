@@ -188,10 +188,10 @@ $(function () {
 //
 //}
 //
-function updateIncome() {
+function updateIncome(e) {
     "use strict";
-    $('#monthlyBudgetModal').empty().load('budgets/income', function () {
-        $('#monthlyBudgetModal').modal('show');
+    $('#defaultModal').empty().load('budgets/income', function () {
+        $('#defaultModal').modal('show');
     });
 
     return false;

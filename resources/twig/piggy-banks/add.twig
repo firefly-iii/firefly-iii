@@ -6,12 +6,12 @@
         </div>
         <form style="display: inline;" id="add" action="{{ route('piggy-banks.add', piggyBank.id) }}" method="POST">
             <div class="modal-body">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                 <p>
                     {{ 'max_amount_add'|_ }}: {{ maxAmount|formatAmount }}.
                 </p>
                 <div class="input-group">
                     <div class="input-group-addon">{{ getCurrencySymbol()|raw }}</div>
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                     <input step="any" class="form-control" id="amount" autocomplete="off" name="amount" max="{{ maxAmount|round(2) }}" type="number" />
                 </div>
             </div>

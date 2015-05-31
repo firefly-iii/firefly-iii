@@ -50,8 +50,8 @@ $(function () {
 function addMoney(e) {
     "use strict";
     var pigID = parseInt($(e.target).data('id'));
-    $('#moneyManagementModal').empty().load('piggy-banks/add/' + pigID, function () {
-        $('#moneyManagementModal').modal('show');
+    $('#defaultModal').empty().load('piggy-banks/add/' + pigID, function () {
+        $('#defaultModal').modal('show');
     });
 
     return false;

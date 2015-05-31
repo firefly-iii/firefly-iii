@@ -35,6 +35,7 @@ return [
     'without_budget_between'        => 'Transacties zonder budget tussen :start en :end',
     'budget_in_month'               => ':name in :month',
     'delete_budget'                 => 'Verwijder budget ":name"',
+    'update_amount'                 => 'Bedrag bijwerken',
 
     // bills:
     'delete_bill'                   => 'Verwijder rekening ":name"',

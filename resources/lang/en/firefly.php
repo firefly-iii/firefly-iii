@@ -35,6 +35,7 @@ return [
     'without_budget_between'        => 'Transactions without a budget between :start and :end',
     'budget_in_month'               => ':name in :month',
     'delete_budget'                 => 'Delete budget ":name"',
+    'update_amount'                 => 'Update amount',
 
     // bills:
     'delete_bill'                   => 'Delete bill ":name"',
