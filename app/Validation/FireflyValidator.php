@@ -56,13 +56,9 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param $attribute
-     * @param $value
-     * @param $parameters
-     *
      * @return bool
      */
-    public function validatePiggyBankReminder($attribute, $value, $parameters)
+    public function validatePiggyBankReminder()
     {
         $array = $this->data;
         // no reminder? dont care.
@@ -98,7 +94,6 @@ class FireflyValidator extends Validator
     public function validateUniqueAccountForUser($attribute, $value, $parameters)
     {
         $type = null;
-
 
         /**
          * Switch on different cases on which this method can respond:
