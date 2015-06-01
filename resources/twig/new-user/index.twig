@@ -1,0 +1,45 @@
+{% extends "./layout/default.twig" %}
+{% block content %}
+{{ Breadcrumbs.renderIfExists }}
+
+<div class="row">
+    <div class="col-lg-6 col-sm-8 col-xs-12">
+        <h3>{{ 'getting_started'|_ }}</h3>
+        <p>
+            {{ 'to_get_started'|_ }}
+        </p>
+        <form action="{{ route('new-user.submit') }}" method="post" id="store" class="form-horizontal">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+
+            {{ ExpandedForm.text('bank_name')}}
+            {{ ExpandedForm.balance('bank_balance')}}
+
+            <p>
+                {{ 'savings_balance_text'|_ }}
+            </p>
+
+            {{ ExpandedForm.balance('savings_balance') }}
+
+            <p>
+                {{ 'cc_balance_text'|_ }}
+
+            </p>
+
+            {{ ExpandedForm.balance('credit_card_limit') }}
+
+            <p>
+                <input type="submit" name="submit" value="{{ 'submit'|_ }}" class="bt btn-success btn-lg" />
+            </p>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}
+{% block scripts %}
+    <!-- load the libraries and scripts necessary for Google Charts: -->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="js/gcharts.options.js"></script>
+    <script type="text/javascript" src="js/gcharts.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+{% endblock %}

@@ -18,6 +18,13 @@ return [
     'showEverything'                => 'Laat alles zien',
     'never'                         => 'Nooit',
 
+    // new user:
+    'submit'                        => 'Invoeren',
+    'getting_started'               => 'Aan de start!',
+    'to_get_started'                => 'Begin met de naam van de bank waar je je betaalrekening hebt, en het saldo van die rekening.',
+    'savings_balance_text'          => 'Voer ook het saldo van je spaarrekening in, als je die hebt.',
+    'cc_balance_text'               => 'Als je een credit card hebt, vul dan hier je credit cardlimiet in.',
+
     // forms:
     'mandatoryFields'               => 'Verplichte velden',
     'optionalFields'                => 'Optionele velden',

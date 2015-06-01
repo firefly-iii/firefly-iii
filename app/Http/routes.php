@@ -15,13 +15,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 // models
 Route::bind(
     'account',
-    function($value) {
+    function ($value) {
         if (Auth::check()) {
             $object = Account::leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                                ->where('account_types.editable', 1)
-                                ->where('accounts.id', $value)
-                                ->where('user_id', Auth::user()->id)
-                                ->first(['accounts.*']);
+                             ->where('account_types.editable', 1)
+                             ->where('accounts.id', $value)
+                             ->where('user_id', Auth::user()->id)
+                             ->first(['accounts.*']);
             if ($object) {
                 return $object;
             }
@@ -31,7 +31,7 @@ Route::bind(
 );
 
 Route::bind(
-    'tj', function($value) {
+    'tj', function ($value) {
     if (Auth::check()) {
         $object = TransactionJournal::where('id', $value)->where('user_id', Auth::user()->id)->first();
         if ($object) {
@@ -44,7 +44,7 @@ Route::bind(
 );
 
 Route::bind(
-    'currency', function($value) {
+    'currency', function ($value) {
     if (Auth::check()) {
         $object = TransactionCurrency::find($value);
         if ($object) {
@@ -56,7 +56,7 @@ Route::bind(
 );
 
 Route::bind(
-    'bill', function($value) {
+    'bill', function ($value) {
     if (Auth::check()) {
         $object = Bill::where('id', $value)->where('user_id', Auth::user()->id)->first();
         if ($object) {
@@ -69,7 +69,7 @@ Route::bind(
 );
 
 Route::bind(
-    'budget', function($value) {
+    'budget', function ($value) {
     if (Auth::check()) {
         $object = Budget::where('id', $value)->where('user_id', Auth::user()->id)->first();
         if ($object) {
@@ -82,7 +82,7 @@ Route::bind(
 );
 
 Route::bind(
-    'reminder', function($value) {
+    'reminder', function ($value) {
     if (Auth::check()) {
         $object = Reminder::where('id', $value)->where('user_id', Auth::user()->id)->first();
         if ($object) {
@@ -95,13 +95,13 @@ Route::bind(
 );
 
 Route::bind(
-    'limitrepetition', function($value) {
+    'limitrepetition', function ($value) {
     if (Auth::check()) {
         $object = LimitRepetition::where('limit_repetitions.id', $value)
-                                    ->leftjoin('budget_limits', 'budget_limits.id', '=', 'limit_repetitions.budget_limit_id')
-                                    ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
-                                    ->where('budgets.user_id', Auth::user()->id)
-                                    ->first(['limit_repetitions.*']);
+                                 ->leftjoin('budget_limits', 'budget_limits.id', '=', 'limit_repetitions.budget_limit_id')
+                                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+                                 ->where('budgets.user_id', Auth::user()->id)
+                                 ->first(['limit_repetitions.*']);
         if ($object) {
             return $object;
         }
@@ -112,12 +112,12 @@ Route::bind(
 );
 
 Route::bind(
-    'piggyBank', function($value) {
+    'piggyBank', function ($value) {
     if (Auth::check()) {
         $object = PiggyBank::where('piggy_banks.id', $value)
-                            ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
-                            ->where('accounts.user_id', Auth::user()->id)
-                            ->first(['piggy_banks.*']);
+                           ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
+                           ->where('accounts.user_id', Auth::user()->id)
+                           ->first(['piggy_banks.*']);
         if ($object) {
             return $object;
         }
@@ -128,7 +128,7 @@ Route::bind(
 );
 
 Route::bind(
-    'category', function($value) {
+    'category', function ($value) {
     if (Auth::check()) {
         $object = Category::where('id', $value)->where('user_id', Auth::user()->id)->first();
         if ($object) {
@@ -142,7 +142,7 @@ Route::bind(
 
 /** @noinspection PhpUnusedParameterInspection */
 Route::bind(
-    'reminder', function($value) {
+    'reminder', function ($value) {
     if (Auth::check()) {
         /** @var \FireflyIII\Models\Reminder $object */
         $object = Reminder::find($value);
@@ -158,7 +158,7 @@ Route::bind(
 );
 
 Route::bind(
-    'tag', function($value) {
+    'tag', function ($value) {
     if (Auth::check()) {
         $object = Tag::where('id', $value)->where('user_id', Auth::user()->id)->first();
         if ($object) {
@@ -189,7 +189,7 @@ Route::get('/routes', ['uses' => 'HomeController@routes', 'as' => 'routes']);
  * Home Controller
  */
 Route::group(
-    ['middleware' => ['auth', 'range', 'reminders']], function() {
+    ['middleware' => ['auth', 'range', 'reminders']], function () {
     Route::get('/', ['uses' => 'HomeController@index', 'as' => 'index', 'middleware' => 'cleanup']);
     Route::get('/home', ['uses' => 'HomeController@index', 'as' => 'home']);
     Route::post('/daterange', ['uses' => 'HomeController@dateRange', 'as' => 'daterange']);
@@ -316,6 +316,12 @@ Route::group(
     Route::get('/json/box/bills-unpaid', ['uses' => 'JsonController@boxBillsUnpaid', 'as' => 'json.box.paid']);
     Route::get('/json/box/bills-paid', ['uses' => 'JsonController@boxBillsPaid', 'as' => 'json.box.unpaid']);
     Route::get('/json/transaction-journals/{what}', 'JsonController@transactionJournals');
+
+    /**
+     * New user Controller
+     */
+    Route::get('/new-user', ['uses' => 'NewUserController@index', 'as' => 'new-user.index']);
+    Route::post('/new-user/submit', ['uses' => 'NewUserController@submit', 'as' => 'new-user.submit']);
 
     /**
      * Piggy Bank Controller

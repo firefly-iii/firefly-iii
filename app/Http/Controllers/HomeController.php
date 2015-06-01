@@ -53,6 +53,11 @@ class HomeController extends Controller
 
         $types             = Config::get('firefly.accountTypesByIdentifier.asset');
         $count             = $repository->countAccounts($types);
+
+        if($count == 0) {
+            return Redirect::route('new-user.index');
+        }
+
         $title             = 'Firefly';
         $subTitle          = trans('firefly.welcomeBack');
         $mainTitleIcon     = 'fa-fire';

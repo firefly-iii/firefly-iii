@@ -1,5 +1,12 @@
 <?php
 return [
+
+    // new user:
+    'bank_name'                   => 'Bank name',
+    'bank_balance'                => 'Balance',
+    'savings_balance'             => 'Savings balance',
+    'credit_card_limit'           => 'Credit card limit',
+
     'name'                        => 'Name',
     'active'                      => 'Active',
     'amount_min'                  => 'Minimum amount',
