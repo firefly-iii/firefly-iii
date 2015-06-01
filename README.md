@@ -1,11 +1,10 @@
 # Firefly III
 #### 3.4.2
 
-[![Build Status](https://travis-ci.org/JC5/firefly-iii.svg?branch=develop)](https://travis-ci.org/JC5/firefly-iii)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/JC5/firefly-iii/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/JC5/firefly-iii/?branch=master)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/d44c7012-5f50-41ad-add8-8445330e4102/mini.png)](https://insight.sensiolabs.com/projects/d44c7012-5f50-41ad-add8-8445330e4102)
-[![Code Climate](https://codeclimate.com/github/JC5/firefly-iii/badges/gpa.svg)](https://codeclimate.com/github/JC5/firefly-iii)
-[![Coverage Status](https://coveralls.io/repos/JC5/firefly-iii/badge.svg?branch=master)](https://coveralls.io/r/JC5/firefly-iii?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/JC5/firefly-iii/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/JC5/firefly-iii/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/JC5/firefly-iii/badges/build.png?b=master)](https://scrutinizer-ci.com/g/JC5/firefly-iii/build-status/master)
+
 ## About
 
 "Firefly III" is a financial manager. It can help you keep track of expenses, income, budgets and everything in between. It even supports credit cards, shared 
@@ -94,6 +93,8 @@ Questions, ideas, bugs or other things to contribute? [Let me know](https://gith
 
 If you like this tool, feel free to [donate me some beer money](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=2ZMV952UUSCLU&lc=NL&item_name=Development%20of%20Firefly&currency_code=EUR&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted).
 
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/d44c7012-5f50-41ad-add8-8445330e4102/mini.png)](https://insight.sensiolabs.com/projects/d44c7012-5f50-41ad-add8-8445330e4102)
+[![Code Climate](https://codeclimate.com/github/JC5/firefly-iii/badges/gpa.svg)](https://codeclimate.com/github/JC5/firefly-iii)
 [![Project Status](http://stillmaintained.com/JC5/firefly-iii.png?a=b)](http://stillmaintained.com/JC5/firefly-iii)
 [![Latest Stable Version](https://poser.pugx.org/grumpydictator/firefly-iii/v/stable.svg)](https://packagist.org/packages/grumpydictator/firefly-iii)
 ![GA](https://ga-beacon.appspot.com/UA-58172398-6/firefly-iii/readme)
