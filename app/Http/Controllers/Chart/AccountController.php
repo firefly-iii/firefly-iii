@@ -2,16 +2,19 @@
 
 namespace FireflyIII\Http\Controllers\Chart;
 
+use Cache;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\ChartProperties;
 use Grumpydictator\Gchart\GChart;
 use Illuminate\Support\Collection;
 use Preferences;
 use Response;
 use Session;
 use Steam;
+use Auth;
 
 /**
  * Class AccountController
@@ -93,6 +96,26 @@ class AccountController extends Controller
         $end       = Session::get('end', Carbon::now()->endOfMonth());
         $accounts  = $repository->getFrontpageAccounts($frontPage);
 
+        // chart properties for cache:
+        $chartProperties = new ChartProperties();
+        $chartProperties->addProperty(Auth::user()->id);
+        $chartProperties->addProperty($frontPage);
+        $chartProperties->addProperty($start);
+        $chartProperties->addProperty($end);
+        $chartProperties->addProperty('frontpage');
+
+        /** @var Account $account */
+        foreach($accounts as $account) {
+            $chartProperties->addProperty($repository->getLastActivity($account));
+        }
+
+        $md5 = $chartProperties->md5();
+
+        if (Cache::has($md5)) {
+            return Cache::get($md5);
+        }
+
+
         $index = 1;
         /** @var Account $account */
         foreach ($accounts as $account) {
@@ -115,7 +138,10 @@ class AccountController extends Controller
         }
         $chart->generate();
 
-        return Response::json($chart->getData());
+        $data = $chart->getData();
+        Cache::forever($md5, $data);
+
+        return Response::json($data);
 
     }
 
