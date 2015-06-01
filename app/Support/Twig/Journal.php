@@ -26,25 +26,20 @@ class Journal extends Twig_Extension
         $filters = [];
 
         $filters[] = new Twig_SimpleFilter(
-            'typeIcon', function (TransactionJournal $journal) {
+            'typeIcon', function(TransactionJournal $journal) {
             $type = $journal->transactionType->type;
 
             switch ($type) {
                 case 'Withdrawal':
                     return '<span class="glyphicon glyphicon-arrow-left" title="' . trans('firefly.withdrawal') . '"></span>';
-                    break;
                 case 'Deposit':
                     return '<span class="glyphicon glyphicon-arrow-right" title="' . trans('firefly.deposit') . '"></span>';
-                    break;
                 case 'Transfer':
                     return '<i class="fa fa-fw fa-exchange" title="' . trans('firefly.transfer') . '"></i>';
-                    break;
                 case 'Opening balance':
                     return '<span class="glyphicon glyphicon-ban-circle" title="' . trans('firefly.openingBalance') . '"></span>';
-                    break;
                 default:
                     return '';
-                    break;
             }
 
 
@@ -64,7 +59,7 @@ class Journal extends Twig_Extension
         $functions = [];
 
         $functions[] = new Twig_SimpleFunction(
-            'invalidJournal', function (TransactionJournal $journal) {
+            'invalidJournal', function(TransactionJournal $journal) {
             if (!isset($journal->transactions[1]) || !isset($journal->transactions[0])) {
                 return true;
             }
@@ -74,7 +69,7 @@ class Journal extends Twig_Extension
         );
 
         $functions[] = new Twig_SimpleFunction(
-            'relevantTags', function (TransactionJournal $journal) {
+            'relevantTags', function(TransactionJournal $journal) {
             if ($journal->tags->count() == 0) {
                 return App::make('amount')->formatJournal($journal);
             }
@@ -86,8 +81,8 @@ class Journal extends Twig_Extension
                     // tags are present.
                     $amount = App::make('amount')->format($journal->actual_amount, false);
 
-                    return '<a href="' . route('tags.show', $tag->id) . '" class="label label-success" title="' . $amount
-                           . '"><i class="fa fa-fw fa-refresh"></i> ' . $tag->tag . '</a>';
+                    return '<a href="' . route('tags.show', [$tag->id]) . '" class="label label-success" title="' . $amount
+                            . '"><i class="fa fa-fw fa-refresh"></i> ' . $tag->tag . '</a>';
                 }
 
                 /*
@@ -96,8 +91,8 @@ class Journal extends Twig_Extension
                 if ($tag->tagMode == 'advancePayment' && $journal->transactionType->type == 'Deposit') {
                     $amount = App::make('amount')->formatJournal($journal, false);
 
-                    return '<a href="' . route('tags.show', $tag->id) . '" class="label label-success" title="' . $amount
-                           . '"><i class="fa fa-fw fa-sort-numeric-desc"></i> ' . $tag->tag . '</a>';
+                    return '<a href="' . route('tags.show', [$tag->id]) . '" class="label label-success" title="' . $amount
+                            . '"><i class="fa fa-fw fa-sort-numeric-desc"></i> ' . $tag->tag . '</a>';
                 }
                 /*
                  * AdvancePayment with a withdrawal will show the amount with a link to
@@ -106,7 +101,7 @@ class Journal extends Twig_Extension
                 if ($tag->tagMode == 'advancePayment' && $journal->transactionType->type == 'Withdrawal') {
                     $amount = App::make('amount')->formatJournal($journal);
 
-                    return '<a href="' . route('tags.show', $tag->id) . '">' . $amount . '</a>';
+                    return '<a href="' . route('tags.show', [$tag->id]) . '">' . $amount . '</a>';
                 }
 
 

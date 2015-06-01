@@ -5,6 +5,7 @@ use League\FactoryMuffin\Facade as FactoryMuffin;
 
 /**
  * Class TransactionJournalModelTest
+ * @SuppressWarnings(PHPMD.TooManyMethods)
  */
 class TransactionJournalModelTest extends TestCase
 {
@@ -46,13 +47,11 @@ class TransactionJournalModelTest extends TestCase
         $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
         $account = FactoryMuffin::create('FireflyIII\Models\Account');
 
-        Transaction::create(
-            [
-                'account_id'             => $account->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => 123.45
-            ]
-        );
+        $journal->transactions[0]->amount = '123.45';
+        $journal->transactions[0]->save();
+        $journal->transactions[1]->amount = '-123.45';
+        $journal->transactions[1]->save();
+
         $amount = $journal->actual_amount;
         $this->assertEquals('123.45', $amount);
     }
@@ -87,13 +86,22 @@ class TransactionJournalModelTest extends TestCase
         $revenue = FactoryMuffin::create('FireflyIII\Models\Account');
         $asset   = FactoryMuffin::create('FireflyIII\Models\Account');
 
-        // for withdrawal, asset to expense account and reversed: //89,88
-        Transaction::create(['account_id' => $asset->id, 'transaction_journal_id' => $withdrawal->id, 'amount' => -300]);
-        Transaction::create(['account_id' => $expense->id, 'transaction_journal_id' => $withdrawal->id, 'amount' => 300]);
+        // transactions are already in place, update them:
+        $withdrawal->transactions[0]->account_id = $asset->id;
+        $withdrawal->transactions[0]->amount = -300;
+        $withdrawal->transactions[0]->save();
 
-        Transaction::create(['account_id' => $revenue->id, 'transaction_journal_id' => $deposit->id, 'amount' => -89.88]);
-        Transaction::create(['account_id' => $asset->id, 'transaction_journal_id' => $deposit->id, 'amount' => 89.88]);
+        $withdrawal->transactions[1]->account_id = $expense->id;
+        $withdrawal->transactions[1]->amount = 300;
+        $withdrawal->transactions[1]->save();
 
+        $deposit->transactions[0]->account_id = $revenue->id;
+        $deposit->transactions[0]->amount = -89.88;
+        $deposit->transactions[0]->save();
+
+        $deposit->transactions[1]->account_id = $asset->id;
+        $deposit->transactions[1]->amount = 89.88;
+        $deposit->transactions[1]->save();
 
         // connect to tag:
         $tag->transactionJournals()->save($withdrawal);
@@ -137,17 +145,27 @@ class TransactionJournalModelTest extends TestCase
 
         // make accounts:
         $expense                 = FactoryMuffin::create('FireflyIII\Models\Account');
-        $asset2                  = FactoryMuffin::create('FireflyIII\Models\Account');
+        $revenue                  = FactoryMuffin::create('FireflyIII\Models\Account');
         $asset                   = FactoryMuffin::create('FireflyIII\Models\Account');
-        $asset2->account_type_id = $asset->account_type_id;
-        $asset2->save();
+        $revenue->account_type_id = $asset->account_type_id;
+        $revenue->save();
 
-        // make transactions:
-        Transaction::create(['account_id' => $asset->id, 'transaction_journal_id' => $withdrawal->id, 'amount' => -123.45]);
-        Transaction::create(['account_id' => $expense->id, 'transaction_journal_id' => $withdrawal->id, 'amount' => 123.45]);
+        // transactions are already in place, update them:
+        $withdrawal->transactions[0]->account_id = $asset->id;
+        $withdrawal->transactions[0]->amount = -123.45;
+        $withdrawal->transactions[0]->save();
 
-        Transaction::create(['account_id' => $asset2->id, 'transaction_journal_id' => $transfer->id, 'amount' => -123.45]);
-        Transaction::create(['account_id' => $asset->id, 'transaction_journal_id' => $transfer->id, 'amount' => 123.45]);
+        $withdrawal->transactions[1]->account_id = $expense->id;
+        $withdrawal->transactions[1]->amount = 123.45;
+        $withdrawal->transactions[1]->save();
+
+        $transfer->transactions[0]->account_id = $revenue->id;
+        $transfer->transactions[0]->amount = -123.45;
+        $transfer->transactions[0]->save();
+
+        $transfer->transactions[1]->account_id = $asset->id;
+        $transfer->transactions[1]->amount = 123.45;
+        $transfer->transactions[1]->save();
 
         $amount = $withdrawal->amount;
 
@@ -160,15 +178,13 @@ class TransactionJournalModelTest extends TestCase
     public function testGetAmountAttributeNoTags()
     {
         $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-        $account = FactoryMuffin::create('FireflyIII\Models\Account');
 
-        Transaction::create(
-            [
-                'account_id'             => $account->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => 123.45
-            ]
-        );
+        $journal->transactions[0]->amount = 123.45;
+        $journal->transactions[0]->save();
+
+        $journal->transactions[1]->amount = -123.45;
+        $journal->transactions[1]->save();
+
         $amount = $journal->amount;
         $this->assertEquals('123.45', $amount);
     }
@@ -194,8 +210,13 @@ class TransactionJournalModelTest extends TestCase
         $expense = FactoryMuffin::create('FireflyIII\Models\Account');
         $asset   = FactoryMuffin::create('FireflyIII\Models\Account');
 
-        Transaction::create(['account_id' => $asset->id, 'transaction_journal_id' => $withdrawal->id, 'amount' => -300]);
-        Transaction::create(['account_id' => $expense->id, 'transaction_journal_id' => $withdrawal->id, 'amount' => 300]);
+        $withdrawal->transactions[0]->amount = -300;
+        $withdrawal->transactions[0]->account_id = $asset->id;
+        $withdrawal->transactions[0]->save();
+
+        $withdrawal->transactions[1]->amount = 300;
+        $withdrawal->transactions[1]->account_id = $expense->id;
+        $withdrawal->transactions[1]->save();
 
         // connect to tag:
         $tag->transactionJournals()->save($withdrawal);
@@ -223,8 +244,15 @@ class TransactionJournalModelTest extends TestCase
         $revenue = FactoryMuffin::create('FireflyIII\Models\Account');
         $asset   = FactoryMuffin::create('FireflyIII\Models\Account');
 
-        Transaction::create(['account_id' => $asset->id, 'transaction_journal_id' => $deposit->id, 'amount' => 300]);
-        Transaction::create(['account_id' => $revenue->id, 'transaction_journal_id' => $deposit->id, 'amount' => -300]);
+        // update transactions
+        $deposit->transactions[0]->account_id = $asset->id;
+        $deposit->transactions[0]->amount = 300;
+        $deposit->transactions[0]->save();
+
+        $deposit->transactions[1]->account_id = $revenue->id;
+        $deposit->transactions[1]->amount = -300;
+        $deposit->transactions[1]->save();
+
 
         // get asset account:
         $result = $deposit->asset_account;
@@ -239,19 +267,24 @@ class TransactionJournalModelTest extends TestCase
     {
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
 
+        // make accounts
+        FactoryMuffin::create('FireflyIII\Models\Account');
+        $revenue = FactoryMuffin::create('FireflyIII\Models\Account');
+        $asset   = FactoryMuffin::create('FireflyIII\Models\Account');
+
         // make withdrawal
         $depositType                  = FactoryMuffin::create('FireflyIII\Models\TransactionType');
         $deposit                      = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
         $deposit->transaction_type_id = $depositType->id;
         $deposit->save();
 
-        // make accounts
-        FactoryMuffin::create('FireflyIII\Models\Account');
-        $revenue = FactoryMuffin::create('FireflyIII\Models\Account');
-        $asset   = FactoryMuffin::create('FireflyIII\Models\Account');
+        $deposit->transactions[0]->account_id = $asset->id;
+        $deposit->transactions[0]->amount = 300;
+        $deposit->transactions[0]->save();
 
-        Transaction::create(['account_id' => $asset->id, 'transaction_journal_id' => $deposit->id, 'amount' => -300]);
-        Transaction::create(['account_id' => $revenue->id, 'transaction_journal_id' => $deposit->id, 'amount' => -300]);
+        $deposit->transactions[1]->account_id = $revenue->id;
+        $deposit->transactions[1]->amount = -300;
+        $deposit->transactions[1]->save();
 
         // get asset account:
         $result = $deposit->asset_account;
@@ -264,75 +297,30 @@ class TransactionJournalModelTest extends TestCase
      */
     public function testGetAssetAccountAttributeWithdrawal()
     {
+        // make accounts
+        $expense = FactoryMuffin::create('FireflyIII\Models\Account');
+        $asset   = FactoryMuffin::create('FireflyIII\Models\Account');
+
         // make withdrawal
         $withdrawalType                  = FactoryMuffin::create('FireflyIII\Models\TransactionType');
         $withdrawal                      = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
         $withdrawal->transaction_type_id = $withdrawalType->id;
         $withdrawal->save();
 
-        // make accounts
-        $expense = FactoryMuffin::create('FireflyIII\Models\Account');
-        $asset   = FactoryMuffin::create('FireflyIII\Models\Account');
 
-        Transaction::create(['account_id' => $asset->id, 'transaction_journal_id' => $withdrawal->id, 'amount' => -300]);
-        Transaction::create(['account_id' => $expense->id, 'transaction_journal_id' => $withdrawal->id, 'amount' => 300]);
+
+        $withdrawal->transactions[0]->account_id = $asset->id;
+        $withdrawal->transactions[0]->amount = -300;
+        $withdrawal->transactions[0]->save();
+
+        $withdrawal->transactions[1]->account_id = $expense->id;
+        $withdrawal->transactions[1]->amount = 300;
+        $withdrawal->transactions[1]->save();
 
         // get asset account:
         $result = $withdrawal->asset_account;
 
         $this->assertEquals($asset->id, $result->id);
-    }
-
-    /**
-     * @covers FireflyIII\Models\TransactionJournal::getCorrectedActualAmountAttribute
-     */
-    public function testGetCorrectedActualAmountAttributeDeposit()
-    {
-
-        FactoryMuffin::create('FireflyIII\Models\TransactionType');
-        $depositType                  = FactoryMuffin::create('FireflyIII\Models\TransactionType');
-        $deposit                      = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-        $deposit->transaction_type_id = $depositType->id;
-        $deposit->save();
-
-        // make accounts
-        FactoryMuffin::create('FireflyIII\Models\Account');
-        $revenue = FactoryMuffin::create('FireflyIII\Models\Account');
-        $asset   = FactoryMuffin::create('FireflyIII\Models\Account');
-
-        Transaction::create(['account_id' => $asset->id, 'transaction_journal_id' => $deposit->id, 'amount' => 300]);
-        Transaction::create(['account_id' => $revenue->id, 'transaction_journal_id' => $deposit->id, 'amount' => -300]);
-
-        // get asset account:
-        $result = $deposit->corrected_actual_amount;
-
-        $this->assertEquals('300', $result);
-    }
-
-    /**
-     * @covers FireflyIII\Models\TransactionJournal::getCorrectedActualAmountAttribute
-     */
-    public function testGetCorrectedActualAmountAttributeWithdrawal()
-    {
-
-        // make withdrawal
-        $withdrawalType                  = FactoryMuffin::create('FireflyIII\Models\TransactionType');
-        $withdrawal                      = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-        $withdrawal->transaction_type_id = $withdrawalType->id;
-        $withdrawal->save();
-
-        // make accounts
-        $expense = FactoryMuffin::create('FireflyIII\Models\Account');
-        FactoryMuffin::create('FireflyIII\Models\Account');
-        $asset = FactoryMuffin::create('FireflyIII\Models\Account');
-
-        Transaction::create(['account_id' => $expense->id, 'transaction_journal_id' => $withdrawal->id, 'amount' => 300]);
-        Transaction::create(['account_id' => $asset->id, 'transaction_journal_id' => $withdrawal->id, 'amount' => -300]);
-
-        // get asset account:
-        $result = $withdrawal->corrected_actual_amount;
-
-        $this->assertEquals('-300', $result);
     }
 
     /**
@@ -351,8 +339,13 @@ class TransactionJournalModelTest extends TestCase
         $revenue = FactoryMuffin::create('FireflyIII\Models\Account');
         $asset   = FactoryMuffin::create('FireflyIII\Models\Account');
 
-        Transaction::create(['account_id' => $asset->id, 'transaction_journal_id' => $deposit->id, 'amount' => 300]);
-        Transaction::create(['account_id' => $revenue->id, 'transaction_journal_id' => $deposit->id, 'amount' => -300]);
+        $deposit->transactions[0]->account_id = $asset->id;
+        $deposit->transactions[0]->amount = 300;
+        $deposit->transactions[0]->save();
+
+        $deposit->transactions[1]->account_id = $revenue->id;
+        $deposit->transactions[1]->amount = -300;
+        $deposit->transactions[1]->save();
 
         // get asset account:
         $result = $deposit->destination_account;
@@ -376,8 +369,13 @@ class TransactionJournalModelTest extends TestCase
         $revenue = FactoryMuffin::create('FireflyIII\Models\Account');
         $asset   = FactoryMuffin::create('FireflyIII\Models\Account');
 
-        Transaction::create(['account_id' => $asset->id, 'transaction_journal_id' => $deposit->id, 'amount' => -300]);
-        Transaction::create(['account_id' => $revenue->id, 'transaction_journal_id' => $deposit->id, 'amount' => -300]);
+        $deposit->transactions[0]->account_id = $asset->id;
+        $deposit->transactions[0]->amount = -300;
+        $deposit->transactions[0]->save();
+
+        $deposit->transactions[1]->account_id = $revenue->id;
+        $deposit->transactions[1]->amount = -300;
+        $deposit->transactions[1]->save();
 
         // get asset account:
         $result = $deposit->destination_account;

@@ -4,18 +4,20 @@
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span></button>
             <h4 class="modal-title" id="myModalLabel">Update (expected) available amount for {{Session.get('start').format('F Y')}}</h4>
         </div>
+
         <form style="display: inline;" id="income" action="{{route('budgets.postIncome')}}" method="POST">
             <div class="modal-body">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}"
+                <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                 <div class="input-group">
-                    <div class="input-group-addon">{{ getCurrencySymbol() }}</div>
-                    <input step="any" class="form-control" id="amount" value="{{ amount.data }}" autocomplete="off" name="amount" type="number">
+                    <div class="input-group-addon">{{ getCurrencySymbol()|raw }}</div>
+                    <input step="any" class="form-control" id="amount" value="{{ amount.data }}" autocomplete="off" name="amount" type="number" />
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'close'|_ }}</button>
-                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="submit" class="btn btn-primary">{{ 'update_amount'|_ }}</button>
             </div>
         </form>
     </div>
 </div>
+

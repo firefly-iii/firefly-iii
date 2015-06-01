@@ -180,9 +180,14 @@ class TagRepositoryTest extends TestCase
         $journal2 = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
 
         // transactions for both:
-        Transaction::create(['account_id' => $account->id, 'transaction_journal_id' => $journal1->id, 'amount' => 100]);
-        Transaction::create(['account_id' => $account->id, 'transaction_journal_id' => $journal2->id, 'amount' => 100]);
-
+        $journal1->transactions[0]->account_id = $account->id;
+        $journal2->transactions[0]->account_id = $account->id;
+        $journal1->transactions[1]->account_id = $account->id;
+        $journal2->transactions[1]->account_id = $account->id;
+        $journal1->transactions[0]->save();
+        $journal2->transactions[0]->save();
+        $journal1->transactions[1]->save();
+        $journal2->transactions[1]->save();
 
         $tag = FactoryMuffin::create('FireflyIII\Models\Tag');
 
@@ -228,8 +233,14 @@ class TagRepositoryTest extends TestCase
         $journal2 = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
 
         // transactions for both:
-        Transaction::create(['account_id' => $account1->id, 'transaction_journal_id' => $journal1->id, 'amount' => 100]);
-        Transaction::create(['account_id' => $account2->id, 'transaction_journal_id' => $journal2->id, 'amount' => 100]);
+        $journal1->transactions[0]->account_id = $account1->id;
+        $journal2->transactions[0]->account_id = $account2->id;
+        $journal1->transactions[1]->account_id = $account1->id;
+        $journal2->transactions[1]->account_id = $account2->id;
+        $journal1->transactions[0]->save();
+        $journal2->transactions[0]->save();
+        $journal1->transactions[1]->save();
+        $journal2->transactions[1]->save();
 
 
         $tag = FactoryMuffin::create('FireflyIII\Models\Tag');

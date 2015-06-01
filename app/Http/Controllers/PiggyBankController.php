@@ -4,7 +4,6 @@ use Amount;
 use Carbon\Carbon;
 use Config;
 use ExpandedForm;
-use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\PiggyBankFormRequest;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -18,6 +17,9 @@ use URL;
 use View;
 
 /**
+ *
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ *
  * Class PiggyBankController
  *
  * @package FireflyIII\Http\Controllers
@@ -135,11 +137,11 @@ class PiggyBankController extends Controller
             $targetDate = $targetDate->format('Y-m-d');
         }
         $preFilled = ['name'         => $piggyBank->name,
-                      'account_id'   => $piggyBank->account_id,
-                      'targetamount' => $piggyBank->targetamount,
-                      'targetdate'   => $targetDate,
-                      'reminder'     => $piggyBank->reminder,
-                      'remind_me'    => intval($piggyBank->remind_me) == 1 && !is_null($piggyBank->reminder) ? true : false
+                        'account_id'   => $piggyBank->account_id,
+                        'targetamount' => $piggyBank->targetamount,
+                        'targetdate'   => $targetDate,
+                        'reminder'     => $piggyBank->reminder,
+                        'remind_me'    => intval($piggyBank->remind_me) == 1 && !is_null($piggyBank->reminder) ? true : false
         ];
         Session::flash('preFilled', $preFilled);
         Session::flash('gaEventCategory', 'piggy-banks');
@@ -236,11 +238,6 @@ class PiggyBankController extends Controller
 
             // create event
             $repository->createEvent($piggyBank, $amount);
-
-            /*
-             * Create event!
-             */
-            //Event::fire('piggy_bank.addMoney', [$piggyBank, $amount]); // new and used.
 
             Session::flash('success', 'Added ' . Amount::format($amount, false) . ' to "' . e($piggyBank->name) . '".');
         } else {
@@ -369,7 +366,7 @@ class PiggyBankController extends Controller
         if (intval(Input::get('return_to_edit')) === 1) {
             Session::put('piggy-banks.edit.fromUpdate', true);
 
-            return Redirect::route('piggy-banks.edit', $piggyBank->id);
+            return Redirect::route('piggy-banks.edit', [$piggyBank->id]);
         }
 
 

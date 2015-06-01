@@ -5,7 +5,6 @@ use Carbon\Carbon;
 use ExpandedForm;
 use FireflyIII\Events\JournalCreated;
 use FireflyIII\Events\JournalSaved;
-use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\JournalFormRequest;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -39,7 +38,7 @@ class TransactionController extends Controller
      * @param AccountRepositoryInterface $repository
      * @param string                     $what
      *
-     * @return View
+     * @return \Illuminate\View\View
      */
     public function create(AccountRepositoryInterface $repository, $what = 'deposit')
     {
@@ -76,7 +75,7 @@ class TransactionController extends Controller
      *
      * @param TransactionJournal $journal
      *
-     * @return $this
+     * @return \Illuminate\View\View
      */
     public function delete(TransactionJournal $journal)
     {
@@ -119,7 +118,7 @@ class TransactionController extends Controller
      */
     public function edit(AccountRepositoryInterface $repository, TransactionJournal $journal)
     {
-        $what         = strtolower($journal->transactiontype->type);
+        $what         = strtolower($journal->transactionType->type);
         $accounts     = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
         $budgets      = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
         $budgets[0]   = trans('form.noBudget');
@@ -154,8 +153,8 @@ class TransactionController extends Controller
             $preFilled['piggy_bank_id'] = $journal->piggyBankEvents()->orderBy('date', 'DESC')->first()->piggy_bank_id;
         }
 
-        $preFilled['amount']          = $journal->actualAmount;
-        $preFilled['account_id']      = $journal->assetAccount->id;
+        $preFilled['amount']          = $journal->actual_amount;
+        $preFilled['account_id']      = $journal->asset_account->id;
         $preFilled['expense_account'] = $transactions[0]->account->name;
         $preFilled['revenue_account'] = $transactions[1]->account->name;
         $preFilled['account_from_id'] = $transactions[1]->account->id;
@@ -179,7 +178,7 @@ class TransactionController extends Controller
      * @param JournalRepositoryInterface $repository
      * @param                            $what
      *
-     * @return View
+     * @return \Illuminate\View\View
      */
     public function index(JournalRepositoryInterface $repository, $what)
     {
@@ -237,7 +236,7 @@ class TransactionController extends Controller
             }
         }
 
-        return Response::json(true);
+        return Response::json([true]);
 
     }
 
@@ -245,17 +244,17 @@ class TransactionController extends Controller
      * @param JournalRepositoryInterface $repository
      * @param TransactionJournal         $journal
      *
-     * @return $this
+     * @return \Illuminate\View\View
      */
     public function show(JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
         $journal->transactions->each(
-            function (Transaction $t) use ($journal, $repository) {
+            function(Transaction $t) use ($journal, $repository) {
                 $t->before = $repository->getAmountBefore($journal, $t);
                 $t->after  = $t->before + $t->amount;
             }
         );
-        $subTitle = trans('firefly.' . $journal->transactiontype->type) . ' "' . e($journal->description) . '"';
+        $subTitle = trans('firefly.' . $journal->transactionType->type) . ' "' . e($journal->description) . '"';
 
         return view('transactions.show', compact('journal', 'subTitle'));
     }
@@ -264,7 +263,7 @@ class TransactionController extends Controller
      * @param JournalFormRequest         $request
      * @param JournalRepositoryInterface $repository
      *
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository)
     {
@@ -287,7 +286,7 @@ class TransactionController extends Controller
             // set value so create routine will not overwrite URL:
             Session::put('transactions.create.fromStore', true);
 
-            return Redirect::route('transactions.create', $request->input('what'))->withInput();
+            return Redirect::route('transactions.create', [$request->input('what')])->withInput();
         }
 
         // redirect to previous URL.
@@ -301,7 +300,7 @@ class TransactionController extends Controller
      * @param JournalRepositoryInterface $repository
      * @param TransactionJournal         $journal
      *
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
@@ -318,7 +317,7 @@ class TransactionController extends Controller
             // set value so edit routine will not overwrite URL:
             Session::put('transactions.edit.fromUpdate', true);
 
-            return Redirect::route('transactions.edit', $journal->id)->withInput(['return_to_edit' => 1]);
+            return Redirect::route('transactions.edit', [$journal->id])->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.

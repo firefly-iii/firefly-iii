@@ -111,9 +111,11 @@ class TagController extends Controller
     }
 
     /**
-     * @param Tag $tag
+     * @param Tag                    $tag
      *
-     * @return View
+     * @param TagRepositoryInterface $repository
+     *
+     * @return \Illuminate\View\View
      */
     public function edit(Tag $tag, TagRepositoryInterface $repository)
     {
@@ -162,7 +164,7 @@ class TagController extends Controller
         $state = $state == 'true' ? true : false;
         Preferences::set('hideTagHelp', $state);
 
-        return Response::json(true);
+        return Response::json([true]);
     }
 
     /**
@@ -198,7 +200,7 @@ class TagController extends Controller
      *
      * @param TagRepositoryInterface $repository
      *
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(TagFormRequest $request, TagRepositoryInterface $repository)
     {
@@ -242,7 +244,7 @@ class TagController extends Controller
      * @param TagRepositoryInterface $repository
      * @param Tag                    $tag
      *
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(TagFormRequest $request, TagRepositoryInterface $repository, Tag $tag)
     {
@@ -274,7 +276,7 @@ class TagController extends Controller
             // set value so edit routine will not overwrite URL:
             Session::put('tags.edit.fromUpdate', true);
 
-            return Redirect::route('tags.edit', $tag->id)->withInput(['return_to_edit' => 1]);
+            return Redirect::route('tags.edit', [$tag->id])->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.

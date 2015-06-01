@@ -3,7 +3,6 @@
 use Amount;
 use Auth;
 use Carbon\Carbon;
-use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\BudgetFormRequest;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
@@ -20,6 +19,7 @@ use View;
  * Class BudgetController
  *
  * @package FireflyIII\Http\Controllers
+ * @SuppressWarnings(PHPMD.TooManyMethods)
  */
 class BudgetController extends Controller
 {
@@ -55,7 +55,7 @@ class BudgetController extends Controller
     }
 
     /**
-     * @return $this
+     * @return \Illuminate\View\View
      */
     public function create()
     {
@@ -110,7 +110,7 @@ class BudgetController extends Controller
     /**
      * @param Budget $budget
      *
-     * @return $this
+     * @return \Illuminate\View\View
      */
     public function edit(Budget $budget)
     {
@@ -131,7 +131,7 @@ class BudgetController extends Controller
     /**
      * @param BudgetRepositoryInterface $repository
      *
-     * @return View
+     * @return \Illuminate\View\View
      */
     public function index(BudgetRepositoryInterface $repository)
     {
@@ -173,7 +173,7 @@ class BudgetController extends Controller
     /**
      * @param BudgetRepositoryInterface $repository
      *
-     * @return View
+     * @return \Illuminate\View\View
      */
     public function noBudget(BudgetRepositoryInterface $repository)
     {
@@ -205,7 +205,7 @@ class BudgetController extends Controller
      * @param Budget                    $budget
      * @param LimitRepetition           $repetition
      *
-     * @return View
+     * @return \Illuminate\View\View
      */
     public function show(BudgetRepositoryInterface $repository, Budget $budget, LimitRepetition $repetition = null)
     {
@@ -239,7 +239,7 @@ class BudgetController extends Controller
             'name' => $request->input('name'),
             'user' => Auth::user()->id,
         ];
-        $budget     = $repository->store($budgetData);
+        $budget = $repository->store($budgetData);
 
         Session::flash('success', 'New budget "' . $budget->name . '" stored!');
 
@@ -260,7 +260,7 @@ class BudgetController extends Controller
      * @param BudgetRepositoryInterface $repository
      * @param Budget                    $budget
      *
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(BudgetFormRequest $request, BudgetRepositoryInterface $repository, Budget $budget)
     {
@@ -277,7 +277,7 @@ class BudgetController extends Controller
             // set value so edit routine will not overwrite URL:
             Session::put('budgets.edit.fromUpdate', true);
 
-            return Redirect::route('budgets.edit', $budget->id)->withInput(['return_to_edit' => 1]);
+            return Redirect::route('budgets.edit', [$budget->id])->withInput(['return_to_edit' => 1]);
         }
 
         // redirect to previous URL.
@@ -286,7 +286,7 @@ class BudgetController extends Controller
     }
 
     /**
-     * @return View
+     * @return \Illuminate\View\View
      */
     public function updateIncome()
     {

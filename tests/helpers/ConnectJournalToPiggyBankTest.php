@@ -61,23 +61,6 @@ class ConnectJournalToPiggyBankTest extends TestCase
             $rep->forceDelete();
         }
 
-        Transaction::create(
-            [
-                'account_id'             => $account1->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => 100
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $account2->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => -100
-            ]
-        );
-
-        // two transactions:
-
 
         $event  = new JournalCreated($journal, $piggyBank->id);
         $class  = new ConnectJournalToPiggyBank();
@@ -141,21 +124,6 @@ class ConnectJournalToPiggyBankTest extends TestCase
             ]
         );
 
-        Transaction::create(
-            [
-                'account_id'             => $account1->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => 100
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $account2->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => -100
-            ]
-        );
-
         $event  = new JournalCreated($journal, $piggyBank->id);
         $class  = new ConnectJournalToPiggyBank();
         $result = $class->handle($event);
@@ -199,21 +167,6 @@ class ConnectJournalToPiggyBankTest extends TestCase
                 'startdate'     => $start->format('Y-m-d'),
                 'targetdate'    => $end->format('Y-m-d'),
                 'currentamount' => 0,
-            ]
-        );
-
-        Transaction::create(
-            [
-                'account_id'             => $account1->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => -100
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $account2->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => 100
             ]
         );
 

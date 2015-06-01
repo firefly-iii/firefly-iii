@@ -5,6 +5,7 @@ namespace FireflyIII\Repositories\Budget;
 use Carbon\Carbon;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 /**
@@ -89,7 +90,7 @@ interface BudgetRepositoryInterface
      * @param LimitRepetition $repetition
      * @param int             $take
      *
-     * @return \Illuminate\Pagination\Paginator
+     * @return LengthAwarePaginator
      */
     public function getJournals(Budget $budget, LimitRepetition $repetition = null, $take = 50);
 

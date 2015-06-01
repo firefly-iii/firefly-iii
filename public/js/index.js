@@ -1,4 +1,4 @@
-/* globals google */
+/* globals $, googleColumnChart, google, googleLineChart, googlePieChart, googleStackedColumnChart */
 google.setOnLoadCallback(drawChart);
 
 

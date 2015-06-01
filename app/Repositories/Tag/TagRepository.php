@@ -43,13 +43,10 @@ class TagRepository implements TagRepositoryInterface
                 $journal->tags()->save($tag);
 
                 return true;
-                break;
             case 'balancingAct':
                 return $this->connectBalancingAct($journal, $tag);
-                break;
             case 'advancePayment':
                 return $this->connectAdvancePayment($journal, $tag);
-                break;
         }
 
         return false;
@@ -67,7 +64,7 @@ class TagRepository implements TagRepositoryInterface
      * @param Carbon  $start
      * @param Carbon  $end
      *
-     * @return float
+     * @return integer
      */
     public function coveredByBalancingActs(Account $account, Carbon $start, Carbon $end)
     {
@@ -112,7 +109,7 @@ class TagRepository implements TagRepositoryInterface
         /** @var Collection $tags */
         $tags = Auth::user()->tags()->get();
         $tags->sortBy(
-            function (Tag $tag) {
+            function(Tag $tag) {
                 return $tag->tag;
             }
         );
@@ -326,7 +323,7 @@ class TagRepository implements TagRepositoryInterface
         $match = true;
         /** @var TransactionJournal $check */
         foreach ($tag->transactionjournals as $check) {
-            if ($check->assetAccount->id != $journal->assetAccount->id) {
+            if ($check->asset_account->id != $journal->asset_account->id) {
                 $match = false;
             }
         }

@@ -176,13 +176,8 @@ class BillRepositoryTest extends TestCase
             $journal          = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
             $journal->user_id = $bill1->user_id;
             $journal->save();
-            Transaction::create(
-                [
-                    'account_id'             => $account->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => rand(101, 999),
-                ]
-            );
+            $journal->transactions[0]->account_id = $account->id;
+            $journal->transactions[0]->save();
         }
         $this->be($bill1->user);
 

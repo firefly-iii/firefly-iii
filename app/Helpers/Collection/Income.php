@@ -18,7 +18,7 @@ class Income
 
     /** @var Collection */
     protected $incomes;
-    /** @var float */
+    /** @var string */
     protected $total;
 
     /**
@@ -68,7 +68,7 @@ class Income
     public function getIncomes()
     {
         $this->incomes->sortByDesc(
-            function (stdClass $object) {
+            function(stdClass $object) {
                 return $object->amount;
             }
         );
@@ -77,7 +77,7 @@ class Income
     }
 
     /**
-     * @return float
+     * @return string
      */
     public function getTotal()
     {

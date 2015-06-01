@@ -1,4 +1,6 @@
 <?php
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
 if (!class_exists('RandomString')) {
@@ -26,6 +28,13 @@ if (!class_exists('RandomString')) {
 
     }
 }
+
+FactoryMuffin::define(
+    'FireflyIII\Models\Role',
+    [
+        'name'            => 'word',
+    ]
+);
 
 FactoryMuffin::define(
     'FireflyIII\Models\Bill',
@@ -198,10 +207,15 @@ FactoryMuffin::define(
     ]
 );
 
+
 FactoryMuffin::define(
     'FireflyIII\User',
     [
-        'email'    => 'email',
+        'email'    => function () {
+            $faker = Faker\Factory::create();
+
+            return $faker->email;
+        },
         'password' => bcrypt('james'),
     ]
 );
@@ -286,5 +300,27 @@ FactoryMuffin::define(
         'date'                    => 'date',
         'encrypted'               => '1',
         'order'                   => '0',
-    ]
+    ], function (TransactionJournal $object, $saved) {
+    if ($saved) {
+        $one = FactoryMuffin::create('FireflyIII\Models\Account');
+        $two = FactoryMuffin::create('FireflyIII\Models\Account');
+
+        Transaction::create(
+            [
+                'account_id'             => $one->id,
+                'transaction_journal_id' => $object->id,
+                'amount'                 => 100
+            ]
+        );
+        Transaction::create(
+            [
+                'account_id'             => $two->id,
+                'transaction_journal_id' => $object->id,
+                'amount'                 => -100
+            ]
+        );
+
+    }
+
+}
 );

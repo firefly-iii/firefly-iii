@@ -159,6 +159,7 @@ class CategoryControllerTest extends TestCase
 
         Amount::shouldReceive('format')->andReturn('xx');
         Amount::shouldReceive('getCurrencyCode')->andReturn('xx');
+        Amount::shouldReceive('formatJournal')->andReturn('xx');
 
         $this->call('GET', '/categories/show/' . $category->id);
         $this->assertResponseOk();

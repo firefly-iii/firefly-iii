@@ -40,6 +40,7 @@ class ReportQueryTest extends TestCase
     /**
      * @covers FireflyIII\Helpers\Report\ReportQuery::expenseInPeriodCorrected
      * @covers FireflyIII\Helpers\Report\ReportQuery::queryJournalsWithTransactions
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function testExpenseInPeriodCorrected()
     {
@@ -79,21 +80,15 @@ class ReportQueryTest extends TestCase
                 ]
             );
 
-            Transaction::create(
-                [
-                    'account_id'             => $account2->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => 100
-                ]
-            );
+            // update both transactions
+            $journal->transactions[0]->account_id = $account1->id;
+            $journal->transactions[0]->amount = -100;
+            $journal->transactions[0]->save();
 
-            Transaction::create(
-                [
-                    'account_id'             => $account1->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => -100
-                ]
-            );
+            $journal->transactions[1]->account_id = $account2->id;
+            $journal->transactions[1]->amount = 100;
+            $journal->transactions[1]->save();
+
 
         }
         $this->be($user);
@@ -108,6 +103,7 @@ class ReportQueryTest extends TestCase
     /**
      * @covers FireflyIII\Helpers\Report\ReportQuery::expenseInPeriodCorrected
      * @covers FireflyIII\Helpers\Report\ReportQuery::queryJournalsWithTransactions
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function testExpenseInPeriodCorrectedShared()
     {
@@ -147,21 +143,14 @@ class ReportQueryTest extends TestCase
                 ]
             );
 
-            Transaction::create(
-                [
-                    'account_id'             => $account2->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => 100
-                ]
-            );
+            // update both transactions
+            $journal->transactions[0]->account_id = $account1->id;
+            $journal->transactions[0]->amount = -100;
+            $journal->transactions[0]->save();
 
-            Transaction::create(
-                [
-                    'account_id'             => $account1->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => -100
-                ]
-            );
+            $journal->transactions[1]->account_id = $account2->id;
+            $journal->transactions[1]->amount = 100;
+            $journal->transactions[1]->save();
 
         }
         $this->be($user);
@@ -228,6 +217,7 @@ class ReportQueryTest extends TestCase
     /**
      * @covers FireflyIII\Helpers\Report\ReportQuery::incomeInPeriodCorrected
      * @covers FireflyIII\Helpers\Report\ReportQuery::queryJournalsWithTransactions
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function testIncomeInPeriodCorrected()
     {
@@ -268,21 +258,14 @@ class ReportQueryTest extends TestCase
                 ]
             );
 
-            Transaction::create(
-                [
-                    'account_id'             => $account2->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => -100
-                ]
-            );
+            // update both transactions
+            $journal->transactions[0]->account_id = $account1->id;
+            $journal->transactions[0]->amount = 100;
+            $journal->transactions[0]->save();
 
-            Transaction::create(
-                [
-                    'account_id'             => $account1->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => 100
-                ]
-            );
+            $journal->transactions[1]->account_id = $account2->id;
+            $journal->transactions[1]->amount = -100;
+            $journal->transactions[1]->save();
 
         }
         $this->be($user);
@@ -295,6 +278,7 @@ class ReportQueryTest extends TestCase
     /**
      * @covers FireflyIII\Helpers\Report\ReportQuery::incomeInPeriodCorrected
      * @covers FireflyIII\Helpers\Report\ReportQuery::queryJournalsWithTransactions
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function testIncomeInPeriodCorrectedShared()
     {
@@ -335,21 +319,14 @@ class ReportQueryTest extends TestCase
                 ]
             );
 
-            Transaction::create(
-                [
-                    'account_id'             => $account2->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => -100
-                ]
-            );
+            // update both transactions
+            $journal->transactions[0]->account_id = $account1->id;
+            $journal->transactions[0]->amount = -100;
+            $journal->transactions[0]->save();
 
-            Transaction::create(
-                [
-                    'account_id'             => $account1->id,
-                    'transaction_journal_id' => $journal->id,
-                    'amount'                 => 100
-                ]
-            );
+            $journal->transactions[1]->account_id = $account2->id;
+            $journal->transactions[1]->amount = 100;
+            $journal->transactions[1]->save();
 
         }
         $this->be($user);

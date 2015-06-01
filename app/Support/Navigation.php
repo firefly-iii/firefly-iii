@@ -118,7 +118,7 @@ class Navigation
             'year'      => 'endOfYear',
             'yearly'    => 'endOfYear',
         ];
-        $specials    = ['mont', 'monthly'];
+        $specials = ['mont', 'monthly'];
 
         $currentEnd = clone $theCurrentEnd;
 
@@ -138,117 +138,6 @@ class Navigation
         }
 
         return $currentEnd;
-    }
-
-    /**
-     * @param        $range
-     * @param Carbon $date
-     *
-     * @return Carbon
-     * @throws FireflyException
-     */
-    public function jumpToNext($range, Carbon $date)
-    {
-        switch ($range) {
-            case '1D':
-                $date->endOfDay()->addDay();
-                break;
-            case '1W':
-                $date->endOfWeek()->addDay()->startOfWeek();
-                break;
-            case '1M':
-                $date->endOfMonth()->addDay()->startOfMonth();
-                break;
-            case '3M':
-                $date->lastOfQuarter()->addDay();
-                break;
-            case '6M':
-                if ($date->month >= 7) {
-                    $date->startOfYear()->addYear();
-                } else {
-                    $date->startOfYear()->addMonths(6);
-                }
-                break;
-            case '1Y':
-                $date->startOfYear()->addYear();
-                break;
-            default:
-                throw new FireflyException('Cannot do _next() on ' . $range);
-                break;
-        }
-
-        return $date;
-    }
-
-    /**
-     * @param        $range
-     * @param Carbon $date
-     *
-     * @return Carbon
-     * @throws FireflyException
-     */
-    public function jumpToPrevious($range, Carbon $date)
-    {
-        $functionMap = [
-            '1D' => 'Day',
-            '1W' => 'Week',
-            '1M' => 'Month',
-            '1Y' => 'Year'
-        ];
-
-        if (isset($functionMap[$range])) {
-            $startFunction = 'startOf' . $functionMap[$range];
-            $subFunction   = 'sub' . $functionMap[$range];
-            $date->$startFunction()->$subFunction();
-
-            return $date;
-        }
-        if ($range == '3M') {
-            $date->firstOfQuarter()->subMonths(3)->firstOfQuarter();
-
-            return $date;
-        }
-        if ($range == '6M') {
-            $date->startOfYear();
-            if ($date->month <= 6) {
-                $date->subMonths(6);
-            }
-
-            return $date;
-        }
-        throw new FireflyException('Cannot do _previous() on ' . $range);
-    }
-
-    /**
-     * @param        $range
-     * @param Carbon $date
-     *
-     * @return string
-     * @throws FireflyException
-     */
-    public function periodName($range, Carbon $date)
-    {
-        $formatMap = [
-            '1D' => 'jS F Y',
-            '1W' => '\w\e\ek W, Y',
-            '1M' => 'F Y',
-            '1Y' => 'Y',
-        ];
-        if (isset($formatMap[$range])) {
-            return $date->format($formatMap[$range]);
-        }
-        if ($range == '3M') {
-
-
-            return 'Q' . ceil(($date->month / 12) * 4) . ' ' . $date->year;
-        }
-        if ($range == '6M') {
-            $half     = ceil(($date->month / 12) * 2);
-            $halfName = $half == 1 ? 'first' : 'second';
-
-            return $halfName . ' half of ' . $date->year;
-        }
-        throw new FireflyException('No _periodName() for range "' . $range . '"');
     }
 
     /**
@@ -381,7 +270,7 @@ class Navigation
             '3M' => 'lastOfQuarter',
             '1Y' => 'endOfYear',
         ];
-        $end         = clone $start;
+        $end = clone $start;
 
         if (isset($functionMap[$range])) {
             $function = $functionMap[$range];

@@ -38,6 +38,8 @@ return [
     'tag'                         => 'Tag',
     'reminder'                    => 'Herinner me elke',
     'under'                       => 'Onder',
+    'symbol'                      => 'Symbool',
+    'code'                        => 'Code',
 
     'store_new_withdrawal'        => 'Nieuwe uitgave opslaan',
     'store_new_deposit'           => 'Nieuwe inkomsten opslaan',

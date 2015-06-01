@@ -1,9 +1,8 @@
 <?php namespace FireflyIII\Http\Controllers;
 
+use Auth;
 use Cache;
-use FireflyIII\Http\Requests;
 use FireflyIII\Http\Requests\CurrencyFormRequest;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Input;
@@ -109,8 +108,9 @@ class CurrencyController extends Controller
         }
 
         Session::flash('success', 'Currency "' . e($currency->name) . '" deleted');
-
-        $currency->delete();
+        if (Auth::user()->hasRole('owner')) {
+            $currency->delete();
+        }
 
         return Redirect::to(Session::get('currency.delete.url'));
     }
@@ -148,6 +148,12 @@ class CurrencyController extends Controller
         $currencies      = $repository->get();
         $defaultCurrency = $repository->getCurrencyByPreference(Preferences::get('currencyPreference', 'EUR'));
 
+
+        if (!Auth::user()->hasRole('owner')) {
+            Session::flash('warning', 'Please ask ' . env('SITE_OWNER') . ' to add, remove or edit currencies.');
+        }
+
+
         return view('currency.index', compact('currencies', 'defaultCurrency'));
     }
 
@@ -160,11 +166,11 @@ class CurrencyController extends Controller
      */
     public function store(CurrencyFormRequest $request, CurrencyRepositoryInterface $repository)
     {
-        $data     = $request->getCurrencyData();
-        $currency = $repository->store($data);
-
-
-        Session::flash('success', 'Currency "' . $currency->name . '" created');
+        $data = $request->getCurrencyData();
+        if (Auth::user()->hasRole('owner')) {
+            $currency = $repository->store($data);
+            Session::flash('success', 'Currency "' . $currency->name . '" created');
+        }
 
         if (intval(Input::get('create_another')) === 1) {
             Session::put('currency.create.fromStore', true);
@@ -187,16 +193,17 @@ class CurrencyController extends Controller
      */
     public function update(CurrencyFormRequest $request, CurrencyRepositoryInterface $repository, TransactionCurrency $currency)
     {
-        $data     = $request->getCurrencyData();
-        $currency = $repository->update($currency, $data);
-
+        $data = $request->getCurrencyData();
+        if (Auth::user()->hasRole('owner')) {
+            $currency = $repository->update($currency, $data);
+        }
         Session::flash('success', 'Currency "' . e($currency->name) . '" updated.');
 
 
         if (intval(Input::get('return_to_edit')) === 1) {
             Session::put('currency.edit.fromUpdate', true);
 
-            return Redirect::route('currency.edit', $currency->id);
+            return Redirect::route('currency.edit', [$currency->id]);
         }
 
         // redirect to previous URL.

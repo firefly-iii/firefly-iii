@@ -1,6 +1,9 @@
 <?php namespace FireflyIII\Http\Controllers\Auth;
 
+use App;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Models\Role;
+use FireflyIII\User;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
@@ -67,7 +70,7 @@ class AuthController extends Controller
      *
      * @param  Request $request
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function postRegister(Request $request)
     {
@@ -87,22 +90,34 @@ class AuthController extends Controller
         $this->auth->login($this->registrar->create($data));
 
         // get the email address
-        $email = $this->auth->user()->email;
+        if ($this->auth->user() instanceof User) {
+            $email = $this->auth->user()->email;
 
-        // send email.
-        Mail::send(
-            'emails.registered', [], function (Message $message) use ($email) {
-            $message->to($email, $email)->subject('Welcome to Firefly III!');
+            // send email.
+            Mail::send(
+                'emails.registered', [], function (Message $message) use ($email) {
+                $message->to($email, $email)->subject('Welcome to Firefly III!');
+            }
+            );
+
+            // set flash message
+            Session::flash('success', 'You have registered successfully!');
+            Session::flash('gaEventCategory', 'user');
+            Session::flash('gaEventAction', 'new-registration');
+
+            // first user ever?
+            if (User::count() == 1) {
+                $admin = Role::where('name', 'owner')->first();
+                $this->auth->user()->attachRole($admin);
+//                $this->auth->user()->roles()->save($admin);
+            }
+
+
+            return redirect($this->redirectPath());
         }
-        );
+        App::abort(500, 'Not a user!');
 
-        // set flash message
-        Session::flash('success', 'You have registered successfully!');
-        Session::flash('gaEventCategory', 'user');
-        Session::flash('gaEventAction', 'new-registration');
-
-
-        return redirect($this->redirectPath());
+        return redirect('/');
     }
 
 }

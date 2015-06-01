@@ -1,4 +1,4 @@
-/* globals zoomLevel, token, google, latitude, longitude */
+/* globals zoomLevel, token, google, latitude, longitude, doPlaceMarker */
 $(function () {
     "use strict";
     /*

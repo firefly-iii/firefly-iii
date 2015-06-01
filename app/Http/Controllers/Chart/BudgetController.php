@@ -25,6 +25,8 @@ class BudgetController extends Controller
      * @param GChart                    $chart
      * @param BudgetRepositoryInterface $repository
      * @param Budget                    $budget
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function budget(GChart $chart, BudgetRepositoryInterface $repository, Budget $budget)
     {
@@ -125,15 +127,15 @@ class BudgetController extends Controller
                 $overspent = $expenses > floatval($repetition->amount) ? $expenses - floatval($repetition->amount) : 0;
                 $allEntries->push(
                     [$budget->name . ' (' . $repetition->startdate->formatLocalized($this->monthAndDayFormat) . ')',
-                     $left,
-                     $spent,
-                     $overspent
+                        $left,
+                        $spent,
+                        $overspent
                     ]
                 );
             }
         }
 
-        $noBudgetExpenses = $repository->getWithoutBudgetSum($start, $end);
+        $noBudgetExpenses = $repository->getWithoutBudgetSum($start, $end) * -1;
         $allEntries->push([trans('firefly.noBudget'), 0, 0, $noBudgetExpenses]);
 
         foreach ($allEntries as $entry) {

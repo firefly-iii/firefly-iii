@@ -69,7 +69,7 @@ class AccountModelTest extends TestCase
     {
         // create account:
         $account = FactoryMuffin::create('FireflyIII\Models\Account');
-        $user    = FactoryMuffin::create('FireflyIII\User');
+        FactoryMuffin::create('FireflyIII\User');
 
         // search for account with the same properties:
         $search = [
@@ -118,7 +118,7 @@ class AccountModelTest extends TestCase
     {
         // create account:
         $account = FactoryMuffin::create('FireflyIII\Models\Account');
-        $user    = FactoryMuffin::create('FireflyIII\User');
+        FactoryMuffin::create('FireflyIII\User');
 
         // search for account with the same properties:
         $search = [

@@ -53,7 +53,7 @@ class ReportHelper implements ReportHelperInterface
      * @param Carbon $end
      * @param        $shared
      *
-     * @return Account
+     * @return AccountCollection
      */
     public function getAccountReport(Carbon $date, Carbon $end, $shared)
     {
@@ -66,11 +66,12 @@ class ReportHelper implements ReportHelperInterface
 
         // remove cash account, if any:
         $accounts = $accounts->filter(
-            function (Account $account) {
+            function(Account $account) {
                 if ($account->accountType->type != 'Cash account') {
                     return $account;
                 }
-            } // @codeCoverageIgnore
+                return null;
+            }
         );
 
         // summarize:

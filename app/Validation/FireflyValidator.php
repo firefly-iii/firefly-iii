@@ -56,13 +56,9 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param $attribute
-     * @param $value
-     * @param $parameters
-     *
      * @return bool
      */
-    public function validatePiggyBankReminder($attribute, $value, $parameters)
+    public function validatePiggyBankReminder()
     {
         $array = $this->data;
         // no reminder? dont care.
@@ -99,7 +95,6 @@ class FireflyValidator extends Validator
     {
         $type = null;
 
-
         /**
          * Switch on different cases on which this method can respond:
          */
@@ -133,6 +128,7 @@ class FireflyValidator extends Validator
         try {
             $value = Crypt::decrypt($value);
         } catch (DecryptException $e) {
+            // if it fails, probably not encrypted.
         }
 
 
@@ -167,7 +163,7 @@ class FireflyValidator extends Validator
     {
         $query = DB::table($parameters[0])->where($parameters[1], $value);
         $query->where('user_id', Auth::user()->id);
-        if (isset($paramers[2])) {
+        if (isset($parameters[2])) {
             $query->where('id', '!=', $parameters[2]);
         }
         $count = $query->count();

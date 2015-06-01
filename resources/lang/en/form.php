@@ -38,6 +38,8 @@ return [
     'tag'                         => 'Tag',
     'reminder'                    => 'Remind me every',
     'under'                       => 'Under',
+    'symbol'                      => 'Symbol',
+    'code'                        => 'Code',
 
     'store_new_withdrawal'        => 'Store new withdrawal',
     'store_new_deposit'           => 'Store new deposit',

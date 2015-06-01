@@ -7,8 +7,25 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class Category
  *
- *
  * @package FireflyIII\Models
+ * @property integer $id
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property \Carbon\Carbon $deleted_at
+ * @property string $name
+ * @property integer $user_id
+ * @property boolean $encrypted
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionjournals
+ * @property-read \FireflyIII\User $user
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereDeletedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereName($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereEncrypted($value)
+ * @property mixed spent
+ * @property mixed lastActivity
  */
 class Category extends Model
 {
@@ -21,7 +38,7 @@ class Category extends Model
      * @param array $fields
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      *
-     * @return Account|null
+     * @return Category
      */
     public static function firstOrCreateEncrypted(array $fields)
     {
@@ -48,7 +65,7 @@ class Category extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return array
+     * @return string[]
      */
     public function getDates()
     {

@@ -1,4 +1,4 @@
-/* globals $, budgeted:false, currencySymbol, budgetIncomeTotal ,budgetedMuch, budgetedPercentage, token, budgetID, repetitionID, spent, budgeted*/
+/* globals $, budgeted:true, currencySymbol, budgetIncomeTotal ,budgetedMuch, budgetedPercentage, token, budgetID, repetitionID, spent, googleLineChart */
 
 function drawSpentBar() {
     "use strict";
@@ -188,10 +188,10 @@ $(function () {
 //
 //}
 //
-function updateIncome() {
+function updateIncome(e) {
     "use strict";
-    $('#monthlyBudgetModal').empty().load('budgets/income', function () {
-        $('#monthlyBudgetModal').modal('show');
+    $('#defaultModal').empty().load('budgets/income', function () {
+        $('#defaultModal').modal('show');
     });
 
     return false;

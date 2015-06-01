@@ -108,6 +108,11 @@ class CurrencyControllerTest extends TestCase
     public function testDestroy()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
+        $role = FactoryMuffin::create('FireflyIII\Models\Role');
+        $role->name = 'owner';
+        $role->save();
+        $user->attachRole($role);
+
         $this->be($user);
         $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
 
@@ -126,6 +131,10 @@ class CurrencyControllerTest extends TestCase
     public function testDestroyUnable()
     {
         $user = FactoryMuffin::create('FireflyIII\User');
+        $role = FactoryMuffin::create('FireflyIII\Models\Role');
+        $role->name = 'owner';
+        $role->save();
+        $user->attachRole($role);
         $this->be($user);
         $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
 
@@ -178,6 +187,10 @@ class CurrencyControllerTest extends TestCase
     public function testStore()
     {
         $user     = FactoryMuffin::create('FireflyIII\User');
+        $role = FactoryMuffin::create('FireflyIII\Models\Role');
+        $role->name = 'owner';
+        $role->save();
+        $user->attachRole($role);
         $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
         $this->be($user);
 
@@ -199,6 +212,10 @@ class CurrencyControllerTest extends TestCase
     public function testStoreAndReturn()
     {
         $user     = FactoryMuffin::create('FireflyIII\User');
+        $role = FactoryMuffin::create('FireflyIII\Models\Role');
+        $role->name = 'owner';
+        $role->save();
+        $user->attachRole($role);
         $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
         $this->be($user);
 
@@ -220,6 +237,10 @@ class CurrencyControllerTest extends TestCase
     public function testUpdate()
     {
         $user     = FactoryMuffin::create('FireflyIII\User');
+        $role = FactoryMuffin::create('FireflyIII\Models\Role');
+        $role->name = 'owner';
+        $role->save();
+        $user->attachRole($role);
         $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
         $this->be($user);
 
@@ -239,6 +260,10 @@ class CurrencyControllerTest extends TestCase
     public function testUpdateAndReturn()
     {
         $user     = FactoryMuffin::create('FireflyIII\User');
+        $role = FactoryMuffin::create('FireflyIII\Models\Role');
+        $role->name = 'owner';
+        $role->save();
+        $user->attachRole($role);
         $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
         $this->be($user);
 
