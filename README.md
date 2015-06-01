@@ -1,5 +1,4 @@
-# Firefly III
-#### 3.4.2
+# Firefly III (3.4.2)
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/JC5/firefly-iii/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/JC5/firefly-iii/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/JC5/firefly-iii/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/JC5/firefly-iii/?branch=master)
