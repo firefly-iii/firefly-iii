@@ -69,6 +69,7 @@ class AccountControllerTest extends TestCase
 
         Preferences::shouldReceive('get')->withArgs(['viewRange', '1M'])->andReturn($pref);
 
+
         $language       = FactoryMuffin::create('FireflyIII\Models\Preference');
         $language->data = 'en';
         Preferences::shouldReceive('get')->withArgs(['language', 'en'])->andReturn($language);

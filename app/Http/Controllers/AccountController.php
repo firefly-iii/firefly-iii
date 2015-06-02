@@ -12,7 +12,7 @@ use Session;
 use Steam;
 use URL;
 use View;
-
+use Preferences;
 /**
  * Class AccountController
  *

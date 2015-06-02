@@ -97,6 +97,7 @@ class PreferencesControllerTest extends TestCase
         Preferences::shouldReceive('set')->once()->withArgs(['viewRange', '1M']);
         Preferences::shouldReceive('set')->once()->withArgs(['budgetMaximum', 0]);
         Preferences::shouldReceive('set')->once()->withArgs(['language', 'en']);
+        Preferences::shouldReceive('mark')->once()->andReturn(true);
 
         // language preference:
         $language       = FactoryMuffin::create('FireflyIII\Models\Preference');

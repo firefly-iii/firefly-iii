@@ -188,6 +188,7 @@ class BillControllerTest extends TestCase
         $repository->shouldReceive('nextExpectedMatch')->once()->andReturn(new Carbon);
 
         Amount::shouldReceive('format')->andReturn('XX');
+        Amount::shouldReceive('formatJournal')->andReturn('XX');
         Amount::shouldReceive('getCurrencyCode')->andReturn('XX');
 
 

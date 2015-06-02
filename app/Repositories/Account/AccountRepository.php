@@ -363,11 +363,11 @@ class AccountRepository implements AccountRepositoryInterface
         if ($data['openingBalance'] != 0) {
             $type         = $data['openingBalance'] < 0 ? 'expense' : 'revenue';
             $opposingData = [
-                'user'            => $data['user'],
-                'accountType'     => $type,
+                'user'           => $data['user'],
+                'accountType'    => $type,
                 'virtualBalance' => 0,
-                'name'            => $data['name'] . ' initial balance',
-                'active'          => false,
+                'name'           => $data['name'] . ' initial balance',
+                'active'         => false,
             ];
             $opposing     = $this->storeAccount($opposingData);
             $this->storeInitialBalance($newAccount, $opposing, $data);
@@ -414,10 +414,11 @@ class AccountRepository implements AccountRepositoryInterface
                 // create new opening balance.
                 $type         = $data['openingBalance'] < 0 ? 'expense' : 'revenue';
                 $opposingData = [
-                    'user'        => $data['user'],
-                    'accountType' => $type,
-                    'name'        => $data['name'] . ' initial balance',
-                    'active'      => false,
+                    'user'           => $data['user'],
+                    'accountType'    => $type,
+                    'name'           => $data['name'] . ' initial balance',
+                    'active'         => false,
+                    'virtualBalance' => 0,
                 ];
                 $opposing     = $this->storeAccount($opposingData);
                 $this->storeInitialBalance($account, $opposing, $data);

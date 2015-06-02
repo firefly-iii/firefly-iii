@@ -193,6 +193,7 @@ class BudgetControllerTest extends TestCase
         $this->be($budget->user);
         $date = Carbon::now()->startOfMonth()->format('FY');
         Preferences::shouldReceive('set')->once()->withArgs(['budgetIncomeTotal' . $date, 1001]);
+        Preferences::shouldReceive('mark')->once()->andReturn(true);
 
         // language preference:
         $language       = FactoryMuffin::create('FireflyIII\Models\Preference');
