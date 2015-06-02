@@ -4,7 +4,6 @@ use Auth;
 use FireflyIII\Events\JournalCreated;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 
 /**
@@ -53,17 +52,9 @@ class ConnectJournalToPiggyBank
             return false;
         }
 
-        $amount = $journal->amount;
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions()->get() as $transaction) {
-            if ($transaction->account_id == $piggyBank->account_id) {
-                if ($transaction->amount < 0) {
-                    $amount = $transaction->amount * -1;
-                }
-            }
-        }
-
-        $repetition->currentamount += $amount;
+        $amount = $journal->correct_amount;
+        bcscale(2);
+        $repetition->currentamount = bcadd($repetition->currentamount, $amount);
         $repetition->save();
 
         PiggyBankEvent::create(['piggy_bank_id' => $piggyBank->id, 'transaction_journal_id' => $journal->id, 'date' => $journal->date, 'amount' => $amount]);
