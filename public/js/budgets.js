@@ -2,43 +2,47 @@
 
 function drawSpentBar() {
     "use strict";
+    if ($('.spentBar').length > 0) {
+        var overspent = spent > budgeted;
+        var pct;
 
-    var overspent = spent > budgeted;
-    var pct;
-
-    if (overspent) {
-        // draw overspent bar
-        pct = (budgeted / spent) * 100;
-        $('.spentBar .progress-bar-warning').css('width', pct + '%');
-        $('.spentBar .progress-bar-danger').css('width', (100 - pct) + '%');
-    } else {
-        // draw normal bar:
-        pct = (spent / budgeted) * 100;
-        $('.spentBar .progress-bar-info').css('width', pct + '%');
+        if (overspent) {
+            // draw overspent bar
+            pct = (budgeted / spent) * 100;
+            $('.spentBar .progress-bar-warning').css('width', pct + '%');
+            $('.spentBar .progress-bar-danger').css('width', (100 - pct) + '%');
+        } else {
+            // draw normal bar:
+            pct = (spent / budgeted) * 100;
+            $('.spentBar .progress-bar-info').css('width', pct + '%');
+        }
     }
 }
 
 function drawBudgetedBar() {
     "use strict";
-    var budgetedMuch = budgeted > budgetIncomeTotal;
 
-    // recalculate percentage:
+    if ($('.budgetedBar').length > 0) {
+        var budgetedMuch = budgeted > budgetIncomeTotal;
 
-    var pct;
-    if (budgetedMuch) {
-        // budgeted too much.
-        pct = (budgetIncomeTotal / budgeted) * 100;
-        $('.budgetedBar .progress-bar-warning').css('width', pct + '%');
-        $('.budgetedBar .progress-bar-danger').css('width', (100 - pct) + '%');
-        $('.budgetedBar .progress-bar-info').css('width', 0);
-    } else {
-        pct = (budgeted / budgetIncomeTotal) * 100;
-        $('.budgetedBar .progress-bar-warning').css('width', 0);
-        $('.budgetedBar .progress-bar-danger').css('width', 0);
-        $('.budgetedBar .progress-bar-info').css('width', pct + '%');
+        // recalculate percentage:
+
+        var pct;
+        if (budgetedMuch) {
+            // budgeted too much.
+            pct = (budgetIncomeTotal / budgeted) * 100;
+            $('.budgetedBar .progress-bar-warning').css('width', pct + '%');
+            $('.budgetedBar .progress-bar-danger').css('width', (100 - pct) + '%');
+            $('.budgetedBar .progress-bar-info').css('width', 0);
+        } else {
+            pct = (budgeted / budgetIncomeTotal) * 100;
+            $('.budgetedBar .progress-bar-warning').css('width', 0);
+            $('.budgetedBar .progress-bar-danger').css('width', 0);
+            $('.budgetedBar .progress-bar-info').css('width', pct + '%');
+        }
+
+        $('#budgetedAmount').html(currencySymbol + ' ' + budgeted.toFixed(2));
     }
-
-    $('#budgetedAmount').html(currencySymbol + ' ' + budgeted.toFixed(2));
 }
 
 function updateBudgetedAmounts(e) {
