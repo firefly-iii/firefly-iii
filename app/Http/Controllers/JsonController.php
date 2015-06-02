@@ -1,6 +1,7 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Amount;
+use Cache;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Models\Account;
@@ -10,7 +11,9 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\Support\ChartProperties;
 use Illuminate\Support\Collection;
+use Log;
 use Response;
 use Session;
 use Steam;
@@ -33,9 +36,23 @@ class JsonController extends Controller
      */
     public function boxBillsPaid(BillRepositoryInterface $repository, AccountRepositoryInterface $accountRepository)
     {
-        $start  = Session::get('start', Carbon::now()->startOfMonth());
-        $end    = Session::get('end', Carbon::now()->endOfMonth());
+        $start = Session::get('start', Carbon::now()->startOfMonth());
+        $end   = Session::get('end', Carbon::now()->endOfMonth());
+
+        // works for json too!
+        $prop = new ChartProperties;
+        $prop->addProperty($start);
+        $prop->addProperty($end);
+        $prop->addProperty('box-bills-paid');
+        $md5 = $prop->md5();
+        if (Cache::has($md5)) {
+            Log::debug('Successfully returned cached box bills-paid [' . $md5 . ']');
+
+            return Response::json(Cache::get($md5));
+        }
+
         $amount = 0;
+
 
         // these two functions are the same as the chart
         $bills = $repository->getActiveBills();
@@ -60,8 +77,10 @@ class JsonController extends Controller
                 $amount += $accountRepository->getTransfersInRange($creditCard, $start, $end)->sum('amount');
             }
         }
+        $data = ['box' => 'bills-paid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
+        Cache::forever($md5, $data);
 
-        return Response::json(['box' => 'bills-paid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount]);
+        return Response::json($data);
     }
 
     /**
@@ -75,6 +94,19 @@ class JsonController extends Controller
         $amount = 0;
         $start  = Session::get('start', Carbon::now()->startOfMonth());
         $end    = Session::get('end', Carbon::now()->endOfMonth());
+
+        // works for json too!
+        $prop = new ChartProperties;
+        $prop->addProperty($start);
+        $prop->addProperty($end);
+        $prop->addProperty('box-bills-unpaid');
+        $md5 = $prop->md5();
+        if (Cache::has($md5)) {
+            Log::debug('Successfully returned cached box bills-unpaid [' . $md5 . ']');
+
+            return Response::json(Cache::get($md5));
+        }
+
         $bills  = $repository->getActiveBills();
         $unpaid = new Collection; // bills
 
@@ -109,7 +141,10 @@ class JsonController extends Controller
             $amount += $current;
         }
 
-        return Response::json(['box' => 'bills-unpaid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount]);
+        $data = ['box' => 'bills-unpaid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
+        Cache::forever($md5, $data);
+
+        return Response::json($data);
     }
 
     /**
@@ -119,11 +154,28 @@ class JsonController extends Controller
      */
     public function boxIn(ReportQueryInterface $reportQuery)
     {
-        $start  = Session::get('start', Carbon::now()->startOfMonth());
-        $end    = Session::get('end', Carbon::now()->endOfMonth());
+        $start = Session::get('start', Carbon::now()->startOfMonth());
+        $end   = Session::get('end', Carbon::now()->endOfMonth());
+
+        // works for json too!
+        $prop = new ChartProperties;
+        $prop->addProperty($start);
+        $prop->addProperty($end);
+        $prop->addProperty('box-in');
+        $md5 = $prop->md5();
+        if (Cache::has($md5)) {
+            Log::debug('Successfully returned cached box in [' . $md5 . ']');
+
+            return Response::json(Cache::get($md5));
+        }
+
+
         $amount = $reportQuery->incomeInPeriodCorrected($start, $end, true)->sum('amount');
 
-        return Response::json(['box' => 'in', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount]);
+        $data = ['box' => 'in', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
+        Cache::forever($md5, $data);
+
+        return Response::json($data);
     }
 
     /**
@@ -133,11 +185,28 @@ class JsonController extends Controller
      */
     public function boxOut(ReportQueryInterface $reportQuery)
     {
-        $start  = Session::get('start', Carbon::now()->startOfMonth());
-        $end    = Session::get('end', Carbon::now()->endOfMonth());
+        $start = Session::get('start', Carbon::now()->startOfMonth());
+        $end   = Session::get('end', Carbon::now()->endOfMonth());
+
+
+        // works for json too!
+        $prop = new ChartProperties;
+        $prop->addProperty($start);
+        $prop->addProperty($end);
+        $prop->addProperty('box-out');
+        $md5 = $prop->md5();
+        if (Cache::has($md5)) {
+            Log::debug('Successfully returned cached box out [' . $md5 . ']');
+
+            return Response::json(Cache::get($md5));
+        }
+
         $amount = $reportQuery->expenseInPeriodCorrected($start, $end, true)->sum('amount');
 
-        return Response::json(['box' => 'out', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount]);
+        $data = ['box' => 'out', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
+        Cache::forever($md5, $data);
+
+        return Response::json($data);
     }
 
     /**
