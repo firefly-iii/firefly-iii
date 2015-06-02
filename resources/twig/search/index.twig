@@ -7,7 +7,7 @@
     <div class="col-lg-6 col-md-12 col-sm-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <i class="fa fa-repeat"></i> Transactions ({ result.transactions|length }})
+                <i class="fa fa-repeat"></i> Transactions ({{  result.transactions|length }})
             </div>
             <div class="panel-body">
                 {% include 'list/journals-tiny' with {'transactions' : result.transactions} %}
