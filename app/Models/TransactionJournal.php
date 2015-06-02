@@ -60,13 +60,13 @@ use Watson\Validating\ValidatingTrait;
  * @method static \FireflyIII\Models\TransactionJournal onDate($date)
  * @method static \FireflyIII\Models\TransactionJournal transactionTypes($types)
  * @method static \FireflyIII\Models\TransactionJournal withRelevantData()
- * @property-read mixed $expense_account
- * @property string account_encrypted
- * @property bool joinedTransactions
- * @property bool joinedTransactionTypes
- * @property mixed account_id
- * @property mixed name
- * @property mixed symbol
+ * @property-read mixed                                                                          $expense_account
+ * @property string                                                                              account_encrypted
+ * @property bool                                                                                joinedTransactions
+ * @property bool                                                                                joinedTransactionTypes
+ * @property mixed                                                                               account_id
+ * @property mixed                                                                               name
+ * @property mixed                                                                               symbol
  */
 class TransactionJournal extends Model
 {
@@ -217,6 +217,22 @@ class TransactionJournal extends Model
 
         return $this->transactions()->first()->account;
 
+    }
+
+    /**
+     * @return string
+     */
+    public function getCorrectAmountAttribute()
+    {
+
+        switch ($this->transactionType->type) {
+            case 'Deposit':
+                return $this->transactions()->where('amount', '>', 0)->first()->amount;
+            case 'Withdrawal':
+                return $this->transactions()->where('amount', '<', 0)->first()->amount;
+        }
+
+        return '0';
     }
 
     /**
@@ -379,7 +395,7 @@ class TransactionJournal extends Model
     public function scopeWithRelevantData(EloquentBuilder $query)
     {
         $query->with(
-            ['transactions' => function(HasMany $q) {
+            ['transactions' => function (HasMany $q) {
                 $q->orderBy('amount', 'ASC');
             }, 'transactiontype', 'transactioncurrency', 'budgets', 'categories', 'transactions.account.accounttype', 'bill', 'budgets', 'categories']
         );
