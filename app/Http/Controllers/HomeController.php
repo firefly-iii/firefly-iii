@@ -46,15 +46,15 @@ class HomeController extends Controller
     /**
      * @param AccountRepositoryInterface $repository
      *
-     * @return \Illuminate\View\View
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
     public function index(AccountRepositoryInterface $repository)
     {
 
-        $types             = Config::get('firefly.accountTypesByIdentifier.asset');
-        $count             = $repository->countAccounts($types);
+        $types = Config::get('firefly.accountTypesByIdentifier.asset');
+        $count = $repository->countAccounts($types);
 
-        if($count == 0) {
+        if ($count == 0) {
             return Redirect::route('new-user.index');
         }
 
@@ -78,8 +78,8 @@ class HomeController extends Controller
         if ($sum != 0) {
             Session::flash(
                 'error', 'Your transactions are unbalanced. This means a'
-                            . ' withdrawal, deposit or transfer was not stored properly. '
-                            . 'Please check your accounts and transactions for errors.'
+                         . ' withdrawal, deposit or transfer was not stored properly. '
+                         . 'Please check your accounts and transactions for errors.'
             );
         }
 

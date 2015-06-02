@@ -2,11 +2,13 @@
 
 namespace FireflyIII\Http\Controllers\Chart;
 
+use Auth;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Support\ChartProperties;
 use Grumpydictator\Gchart\GChart;
 use Illuminate\Support\Collection;
 use Navigation;
@@ -112,6 +114,8 @@ class BudgetController extends Controller
         $end        = Session::get('end', Carbon::now()->endOfMonth());
         $allEntries = new Collection;
 
+
+        /** @var Budget $budget */
         foreach ($budgets as $budget) {
             $repetitions = $repository->getBudgetLimitRepetitions($budget, $start, $end);
             if ($repetitions->count() == 0) {

@@ -103,6 +103,7 @@ class AccountController extends Controller
         $chartProperties->addProperty($start);
         $chartProperties->addProperty($end);
         $chartProperties->addProperty('frontpage');
+        $chartProperties->addProperty('accounts');
 
         /** @var Account $account */
         foreach($accounts as $account) {
