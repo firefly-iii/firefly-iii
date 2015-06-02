@@ -7,6 +7,7 @@ use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Input;
+use Preferences;
 use Redirect;
 use Session;
 use URL;
@@ -77,6 +78,7 @@ class CategoryController extends Controller
         $repository->destroy($category);
 
         Session::flash('success', 'The  category "' . e($name) . '" was deleted.');
+        Preferences::mark();
 
         return Redirect::to(Session::get('categories.delete.url'));
     }
@@ -168,6 +170,7 @@ class CategoryController extends Controller
         $category = $repository->store($categoryData);
 
         Session::flash('success', 'New category "' . $category->name . '" stored!');
+        Preferences::mark();
 
         if (intval(Input::get('create_another')) === 1) {
             Session::put('categories.create.fromStore', true);
@@ -195,6 +198,7 @@ class CategoryController extends Controller
         $repository->update($category, $categoryData);
 
         Session::flash('success', 'Category "' . $category->name . '" updated.');
+        Preferences::mark();
 
         if (intval(Input::get('return_to_edit')) === 1) {
             Session::put('categories.edit.fromUpdate', true);

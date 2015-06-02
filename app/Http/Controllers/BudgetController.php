@@ -49,6 +49,7 @@ class BudgetController extends Controller
         if ($amount == 0) {
             $limitRepetition = null;
         }
+        Preferences::mark();
 
         return Response::json(['name' => $budget->name, 'repetition' => $limitRepetition ? $limitRepetition->id : 0]);
 
@@ -102,6 +103,7 @@ class BudgetController extends Controller
 
 
         Session::flash('success', 'The  budget "' . e($name) . '" was deleted.');
+        Preferences::mark();
 
 
         return Redirect::to(Session::get('budgets.delete.url'));
@@ -196,6 +198,7 @@ class BudgetController extends Controller
 
         $date = Session::get('start', Carbon::now()->startOfMonth())->format('FY');
         Preferences::set('budgetIncomeTotal' . $date, intval(Input::get('amount')));
+        Preferences::mark();
 
         return Redirect::route('budgets.index');
     }
@@ -242,6 +245,7 @@ class BudgetController extends Controller
         $budget = $repository->store($budgetData);
 
         Session::flash('success', 'New budget "' . $budget->name . '" stored!');
+        Preferences::mark();
 
         if (intval(Input::get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
@@ -272,6 +276,7 @@ class BudgetController extends Controller
         $repository->update($budget, $budgetData);
 
         Session::flash('success', 'Budget "' . $budget->name . '" updated.');
+        Preferences::mark();
 
         if (intval(Input::get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:

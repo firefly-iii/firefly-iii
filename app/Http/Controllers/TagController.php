@@ -106,6 +106,7 @@ class TagController extends Controller
         $repository->destroy($tag);
 
         Session::flash('success', 'Tag "' . e($tagName) . '" was deleted.');
+        Preferences::mark();
 
         return Redirect::to(route('tags.index'));
     }
@@ -226,6 +227,7 @@ class TagController extends Controller
         $repository->store($data);
 
         Session::flash('success', 'The tag has been created!');
+        Preferences::mark();
 
         if (intval(Input::get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
@@ -271,6 +273,7 @@ class TagController extends Controller
         $repository->update($tag, $data);
 
         Session::flash('success', 'Tag "' . e($data['tag']) . '" updated.');
+        Preferences::mark();
 
         if (intval(Input::get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:

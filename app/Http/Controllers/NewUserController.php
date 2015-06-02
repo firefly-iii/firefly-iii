@@ -6,6 +6,7 @@ use Config;
 use FireflyIII\Http\Requests\NewUserFormRequest;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use Preferences;
 use Redirect;
 use Session;
 use View;
@@ -113,6 +114,7 @@ class NewUserController extends Controller
 
         }
         Session::flash('success', 'New account(s) created!');
+        Preferences::mark();
 
         return Redirect::route('home');
     }

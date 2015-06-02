@@ -11,6 +11,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Input;
+use Preferences;
 use Redirect;
 use Response;
 use Session;
@@ -103,6 +104,8 @@ class TransactionController extends Controller
         Session::flash('success', 'Transaction "' . e($transactionJournal->description) . '" destroyed.');
 
         $repository->delete($transactionJournal);
+
+        Preferences::mark();
 
         // redirect to previous URL:
         return Redirect::to(Session::get('transactions.delete.url'));
@@ -235,6 +238,7 @@ class TransactionController extends Controller
                 }
             }
         }
+        Preferences::mark();
 
         return Response::json([true]);
 
@@ -281,6 +285,7 @@ class TransactionController extends Controller
         $repository->deactivateReminder($request->get('reminder_id'));
 
         Session::flash('success', 'New transaction "' . $journal->description . '" stored!');
+        Preferences::mark();
 
         if (intval(Input::get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
@@ -312,6 +317,7 @@ class TransactionController extends Controller
         // update, get events by date and sort DESC
 
         Session::flash('success', 'Transaction "' . e($journalData['description']) . '" updated.');
+        Preferences::mark();
 
         if (intval(Input::get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:

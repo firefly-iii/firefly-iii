@@ -86,6 +86,7 @@ class AccountController extends Controller
         $repository->destroy($account);
 
         Session::flash('success', trans('firefly.' . $typeName . '_deleted', ['name' => $name]));
+        Preferences::mark();
 
         return Redirect::to(Session::get('accounts.delete.url'));
     }
@@ -206,6 +207,7 @@ class AccountController extends Controller
         $account = $repository->store($accountData);
 
         Session::flash('success', 'New account "' . $account->name . '" stored!');
+        Preferences::mark();
 
         if (intval(Input::get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
@@ -246,6 +248,7 @@ class AccountController extends Controller
         $repository->update($account, $accountData);
 
         Session::flash('success', 'Account "' . $account->name . '" updated.');
+        Preferences::mark();
 
         if (intval(Input::get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:

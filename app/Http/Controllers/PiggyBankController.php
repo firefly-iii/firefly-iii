@@ -10,6 +10,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Support\Collection;
 use Input;
+use Preferences;
 use Redirect;
 use Session;
 use Steam;
@@ -108,6 +109,7 @@ class PiggyBankController extends Controller
 
 
         Session::flash('success', 'Piggy bank "' . e($piggyBank->name) . '" deleted.');
+        Preferences::mark();
         $repository->destroy($piggyBank);
 
         return Redirect::to(Session::get('piggy-banks.delete.url'));
@@ -208,6 +210,7 @@ class PiggyBankController extends Controller
         // set all users piggy banks to zero:
         $repository->reset();
 
+
         if (is_array($data)) {
             foreach ($data as $order => $id) {
                 $repository->setOrder(intval($id), (intval($order) + 1));
@@ -240,6 +243,7 @@ class PiggyBankController extends Controller
             $repository->createEvent($piggyBank, $amount);
 
             Session::flash('success', 'Added ' . Amount::format($amount, false) . ' to "' . e($piggyBank->name) . '".');
+            Preferences::mark();
         } else {
             Session::flash('error', 'Could not add ' . Amount::format($amount, false) . ' to "' . e($piggyBank->name) . '".');
         }
@@ -268,6 +272,7 @@ class PiggyBankController extends Controller
             $repository->createEvent($piggyBank, $amount * -1);
 
             Session::flash('success', 'Removed ' . Amount::format($amount, false) . ' from "' . e($piggyBank->name) . '".');
+            Preferences::mark();
         } else {
             Session::flash('error', 'Could not remove ' . Amount::format($amount, false) . ' from "' . e($piggyBank->name) . '".');
         }
@@ -328,6 +333,7 @@ class PiggyBankController extends Controller
         $piggyBank = $repository->store($piggyBankData);
 
         Session::flash('success', 'Stored piggy bank "' . e($piggyBank->name) . '".');
+        Preferences::mark();
 
         if (intval(Input::get('create_another')) === 1) {
             Session::put('piggy-banks.create.fromStore', true);
@@ -362,6 +368,7 @@ class PiggyBankController extends Controller
         $piggyBank = $repository->update($piggyBank, $piggyBankData);
 
         Session::flash('success', 'Updated piggy bank "' . e($piggyBank->name) . '".');
+        Preferences::mark();
 
         if (intval(Input::get('return_to_edit')) === 1) {
             Session::put('piggy-banks.edit.fromUpdate', true);

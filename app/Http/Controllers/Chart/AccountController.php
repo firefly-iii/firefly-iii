@@ -2,6 +2,7 @@
 
 namespace FireflyIII\Http\Controllers\Chart;
 
+use Auth;
 use Cache;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
@@ -10,11 +11,11 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\ChartProperties;
 use Grumpydictator\Gchart\GChart;
 use Illuminate\Support\Collection;
+use Log;
 use Preferences;
 use Response;
 use Session;
 use Steam;
-use Auth;
 
 /**
  * Class AccountController
@@ -40,6 +41,23 @@ class AccountController extends Controller
         $start = new Carbon($year . '-' . $month . '-01');
         $end   = clone $start;
         $end->endOfMonth();
+
+        // chart properties for cache:
+        $chartProperties = new ChartProperties();
+        $chartProperties->addProperty($start);
+        $chartProperties->addProperty($end);
+        $chartProperties->addProperty('all');
+        $chartProperties->addProperty('accounts');
+        $md5 = $chartProperties->md5();
+
+
+        if (Cache::has($md5)) {
+            Log::debug('Successfully returned cached chart [' . $md5 . '].');
+
+            return Response::json(Cache::get($md5));
+        }
+
+
         $chart->addColumn(trans('firefly.dayOfMonth'), 'date');
 
         /** @var Collection $accounts */
@@ -76,7 +94,10 @@ class AccountController extends Controller
         }
         $chart->generate();
 
-        return Response::json($chart->getData());
+        $data = $chart->getData();
+        Cache::forever($md5, $data);
+
+        return Response::json($data);
     }
 
     /**
@@ -98,22 +119,17 @@ class AccountController extends Controller
 
         // chart properties for cache:
         $chartProperties = new ChartProperties();
-        $chartProperties->addProperty(Auth::user()->id);
-        $chartProperties->addProperty($frontPage);
         $chartProperties->addProperty($start);
         $chartProperties->addProperty($end);
         $chartProperties->addProperty('frontpage');
         $chartProperties->addProperty('accounts');
-
-        /** @var Account $account */
-        foreach($accounts as $account) {
-            $chartProperties->addProperty($repository->getLastActivity($account));
-        }
-
         $md5 = $chartProperties->md5();
 
+
         if (Cache::has($md5)) {
-            return Cache::get($md5);
+            Log::debug('Successfully returned cached chart [' . $md5 . '].');
+
+            return Response::json(Cache::get($md5));
         }
 
 
@@ -165,6 +181,24 @@ class AccountController extends Controller
         $current = clone $start;
         $today   = new Carbon;
 
+        // chart properties for cache:
+        $chartProperties = new ChartProperties();
+        $chartProperties->addProperty($start);
+        $chartProperties->addProperty($end);
+        $chartProperties->addProperty('frontpage');
+        $chartProperties->addProperty('single');
+        $chartProperties->addProperty($account->id);
+        $md5 = $chartProperties->md5();
+
+
+        if (Cache::has($md5)) {
+            Log::debug('Successfully returned cached chart [' . $md5 . '].');
+
+            return Response::json(Cache::get($md5));
+        }
+
+
+
         while ($end >= $current) {
             $certain = $current < $today;
             $chart->addRow(clone $current, Steam::balance($account, $current), $certain);
@@ -174,6 +208,9 @@ class AccountController extends Controller
 
         $chart->generate();
 
-        return Response::json($chart->getData());
+        $data = $chart->getData();
+        Cache::forever($md5, $data);
+
+        return Response::json($data);
     }
 }

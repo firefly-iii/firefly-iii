@@ -77,6 +77,7 @@ class PreferencesController extends Controller
 
 
         Session::flash('success', 'Preferences saved!');
+        Preferences::mark();
 
         return Redirect::route('preferences');
     }

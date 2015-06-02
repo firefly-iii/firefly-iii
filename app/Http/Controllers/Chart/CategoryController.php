@@ -3,11 +3,14 @@
 namespace FireflyIII\Http\Controllers\Chart;
 
 
+use Cache;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Support\ChartProperties;
 use Grumpydictator\Gchart\GChart;
+use Log;
 use Navigation;
 use Preferences;
 use Response;
@@ -75,6 +78,22 @@ class CategoryController extends Controller
 
         $start = Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());
+
+        // chart properties for cache:
+        $chartProperties = new ChartProperties;
+        $chartProperties->addProperty($start);
+        $chartProperties->addProperty($end);
+        $chartProperties->addProperty('category');
+        $chartProperties->addProperty('frontpage');
+        $md5 = $chartProperties->md5();
+
+
+        if (Cache::has($md5)) {
+            Log::debug('Successfully returned cached chart [' . $md5 . '].');
+
+            return Response::json(Cache::get($md5));
+        }
+
         $set   = $repository->getCategoriesAndExpensesCorrected($start, $end);
 
         // sort by callback:
@@ -99,7 +118,10 @@ class CategoryController extends Controller
 
         $chart->generate();
 
-        return Response::json($chart->getData());
+        $data = $chart->getData();
+        Cache::forever($md5, $data);
+
+        return Response::json($data);
 
     }
 

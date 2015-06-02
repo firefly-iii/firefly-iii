@@ -8,12 +8,14 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Support\ChartProperties;
 use Grumpydictator\Gchart\GChart;
 use Illuminate\Support\Collection;
 use Response;
 use Session;
 use Steam;
-
+use Cache;
+use Log;
 /**
  * Class BillController
  *
@@ -38,6 +40,18 @@ class BillController extends Controller
         $chart->addColumn(trans('firefly.minAmount'), 'number');
         $chart->addColumn(trans('firefly.billEntry'), 'number');
 
+        $chartProperties = new ChartProperties;
+        $chartProperties->addProperty('single');
+        $chartProperties->addProperty('bill');
+        $chartProperties->addProperty($bill->id);
+        $md5 = $chartProperties->md5();
+
+        if (Cache::has($md5)) {
+            Log::debug('Successfully returned cached chart [' . $md5 . '].');
+
+            return Response::json(Cache::get($md5));
+        }
+
         // get first transaction or today for start:
         $results = $repository->getJournals($bill);
         /** @var TransactionJournal $result */
@@ -47,8 +61,10 @@ class BillController extends Controller
 
         $chart->generate();
 
-        return Response::json($chart->getData());
+        $data = $chart->getData();
+        Cache::forever($md5, $data);
 
+        return Response::json($data);
     }
 
     /**
@@ -68,6 +84,22 @@ class BillController extends Controller
 
         $start  = Session::get('start', Carbon::now()->startOfMonth());
         $end    = Session::get('end', Carbon::now()->endOfMonth());
+
+
+        // chart properties for cache:
+        $chartProperties = new ChartProperties();
+        $chartProperties->addProperty($start);
+        $chartProperties->addProperty($end);
+        $chartProperties->addProperty('bills');
+        $chartProperties->addProperty('frontpage');
+        $md5 = $chartProperties->md5();
+
+        if (Cache::has($md5)) {
+            Log::debug('Successfully returned cached chart [' . $md5 . '].');
+
+            return Response::json(Cache::get($md5));
+        }
+
         $bills  = $repository->getActiveBills();
         $paid   = new Collection; // journals.
         $unpaid = new Collection; // bills
@@ -133,8 +165,12 @@ class BillController extends Controller
 
         $chart->addRow(trans('firefly.unpaid') . ': ' . join(', ', $unpaidDescriptions), $unpaidAmount);
         $chart->addRow(trans('firefly.paid') . ': ' . join(', ', $paidDescriptions), $paidAmount);
+
         $chart->generate();
 
-        return Response::json($chart->getData());
+        $data = $chart->getData();
+        Cache::forever($md5, $data);
+
+        return Response::json($data);
     }
 }
