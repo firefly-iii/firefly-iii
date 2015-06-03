@@ -84,6 +84,15 @@ class Amount
      */
     public function formatJournal(TransactionJournal $journal, $coloured = true)
     {
+        $cache = new CacheProperties;
+        $cache->addProperty($journal->id);
+        $cache->addProperty('formatJournal');
+
+        if ($cache->has()) {
+            return $cache->get();
+        }
+
+
         if (is_null($journal->symbol)) {
             $symbol = $journal->transactionCurrency->symbol;
         } else {
@@ -94,13 +103,22 @@ class Amount
             $amount = $amount * -1;
         }
         if ($journal->transactionType->type == 'Transfer' && $coloured) {
-            return '<span class="text-info">' . $this->formatWithSymbol($symbol, $amount, false) . '</span>';
+            $txt = '<span class="text-info">' . $this->formatWithSymbol($symbol, $amount, false) . '</span>';
+            $cache->store($txt);
+
+            return $txt;
         }
         if ($journal->transactionType->type == 'Transfer' && !$coloured) {
-            return $this->formatWithSymbol($symbol, $amount, false);
+            $txt = $this->formatWithSymbol($symbol, $amount, false);
+            $cache->store($txt);
+
+            return $txt;
         }
 
-        return $this->formatWithSymbol($symbol, $amount, $coloured);
+        $txt = $this->formatWithSymbol($symbol, $amount, $coloured);
+        $cache->store($txt);
+
+        return $txt;
     }
 
     /**

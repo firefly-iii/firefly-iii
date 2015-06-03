@@ -30,13 +30,10 @@ class Preferences
      */
     public function get($name, $default = null)
     {
-        $preferences = Preference::where('user_id', Auth::user()->id)->get();
+        $preference = Preference::where('user_id', Auth::user()->id)->where('name', $name)->first(['id','name','data_encrypted']);
 
-        /** @var Preference $preference */
-        foreach ($preferences as $preference) {
-            if ($preference->name == $name) {
-                return $preference;
-            }
+        if ($preference) {
+            return $preference;
         }
         // no preference found and default is null:
         if (is_null($default)) {
@@ -56,24 +53,17 @@ class Preferences
      */
     public function set($name, $value)
     {
-        $preferences = Preference::where('user_id', Auth::user()->id)->get();
-        /** @var Preference $preference */
-        foreach ($preferences as $preference) {
-            if ($preference->name == $name) {
-                $preference->data = $value;
-                $preference->save();
-
-                return $preference;
-            }
-        }
-        $pref       = new Preference;
-        $pref->name = $name;
-        $pref->data = $value;
-
-        if (!is_null(Auth::user()->id)) {
+        $pref = Preference::where('user_id', Auth::user()->id)->where('name', $name)->first(['id','name','data_encrypted']);
+        if ($pref) {
+            $pref->data = $value;
+        } else {
+            $pref       = new Preference;
+            $pref->name = $name;
+            $pref->data = $value;
             $pref->user()->associate(Auth::user());
-            $pref->save();
+
         }
+        $pref->save();
 
         return $pref;
 

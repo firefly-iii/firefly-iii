@@ -67,6 +67,7 @@ class HomeController extends Controller
         $frontPage     = Preferences::get('frontPageAccounts', []);
         $start         = Session::get('start', Carbon::now()->startOfMonth());
         $end           = Session::get('end', Carbon::now()->endOfMonth());
+
         $accounts      = $repository->getFrontpageAccounts($frontPage);
         $savings       = $repository->getSavingsAccounts();
 
@@ -79,6 +80,7 @@ class HomeController extends Controller
         }
 
         $sum = $repository->sumOfEverything();
+
         if ($sum != 0) {
             Session::flash(
                 'error', 'Your transactions are unbalanced. This means a'
@@ -89,6 +91,7 @@ class HomeController extends Controller
 
         foreach ($accounts as $account) {
             $set = $repository->getFrontpageTransactions($account, $start, $end);
+
             if (count($set) > 0) {
                 $transactions[] = [$set, $account];
             }

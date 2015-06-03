@@ -57,35 +57,11 @@ class Preference extends Model
 
     /**
      * @param $value
-     *
-     * @return float|int
-     */
-    public function getNameAttribute($value)
-    {
-        if (is_null($this->name_encrypted)) {
-            return $value;
-        }
-        $value = Crypt::decrypt($this->name_encrypted);
-
-        return $value;
-    }
-
-    /**
-     * @param $value
      */
     public function setDataAttribute($value)
     {
         $this->attributes['data']           = '';
         $this->attributes['data_encrypted'] = Crypt::encrypt(json_encode($value));
-    }
-
-    /**
-     * @param $value
-     */
-    public function setNameAttribute($value)
-    {
-        $this->attributes['name_encrypted'] = Crypt::encrypt($value);
-        $this->attributes['name']           = $value;
     }
 
     /**
