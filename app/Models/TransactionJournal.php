@@ -68,6 +68,7 @@ use Watson\Validating\ValidatingTrait;
  * @property mixed                                                                               account_id
  * @property mixed                                                                               name
  * @property mixed                                                                               symbol
+ * @property-read mixed $correct_amount 
  */
 class TransactionJournal extends Model
 {

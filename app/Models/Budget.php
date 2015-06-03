@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class Budget
  *
- * @codeCoverageIgnore
+ * @codeCoverageIgnore 
  * @package FireflyIII\Models
  * @property integer                                                                               $id
  * @property \Carbon\Carbon                                                                        $created_at

@@ -47,7 +47,6 @@ use Watson\Validating\ValidatingTrait;
  * @property mixed                                                                          piggyBalance
  * @property mixed                                                                          difference
  * @propery mixed percentage
- *
  */
 class Account extends Model
 {
