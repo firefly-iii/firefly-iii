@@ -5,18 +5,18 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class BudgetLimit
  *
- * @codeCoverageIgnore 
+ * @codeCoverageIgnore
  * @package FireflyIII\Models
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $budget_id
- * @property \Carbon\Carbon $startdate
- * @property float $amount
- * @property string $amount_encrypted
- * @property boolean $repeats
- * @property string $repeat_freq
- * @property-read \FireflyIII\Models\Budget $budget
+ * @property integer                                                                            $id
+ * @property \Carbon\Carbon                                                                     $created_at
+ * @property \Carbon\Carbon                                                                     $updated_at
+ * @property integer                                                                            $budget_id
+ * @property \Carbon\Carbon                                                                     $startdate
+ * @property float                                                                              $amount
+ * @property string                                                                             $amount_encrypted
+ * @property boolean                                                                            $repeats
+ * @property string                                                                             $repeat_freq
+ * @property-read \FireflyIII\Models\Budget                                                     $budget
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\LimitRepetition[] $limitrepetitions
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\BudgetLimit whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\BudgetLimit whereCreatedAt($value)

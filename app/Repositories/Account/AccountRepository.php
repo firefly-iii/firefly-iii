@@ -4,7 +4,6 @@ namespace FireflyIII\Repositories\Account;
 
 use App;
 use Auth;
-use Cache;
 use Carbon\Carbon;
 use Config;
 use DB;
@@ -117,7 +116,6 @@ class AccountRepository implements AccountRepositoryInterface
         if ($cache->has()) {
             return $cache->get();
         }
-        $md5 = $cache->getMd5();
 
 
         if ($preference->data == []) {
@@ -126,7 +124,7 @@ class AccountRepository implements AccountRepositoryInterface
             $accounts = Auth::user()->accounts()->whereIn('id', $preference->data)->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
         }
 
-        Cache::forever($md5, $accounts);
+        $cache->store($accounts);
 
         return $accounts;
     }
@@ -144,14 +142,13 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getFrontpageTransactions(Account $account, Carbon $start, Carbon $end)
     {
-        $prop = new CacheProperties();
-        $prop->addProperty($account->id);
-        $prop->addProperty($start);
-        $prop->addProperty($end);
-        if ($prop->has()) {
-            return $prop->get();
+        $cache = new CacheProperties();
+        $cache->addProperty($account->id);
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        if ($cache->has()) {
+            return $cache->get();
         }
-        $md5 = $prop->getMd5();
 
         $set = Auth::user()
                    ->transactionjournals()
@@ -166,7 +163,7 @@ class AccountRepository implements AccountRepositoryInterface
                    ->orderBy('transaction_journals.id', 'DESC')
                    ->take(10)
                    ->get(['transaction_journals.*', 'transaction_currencies.symbol', 'transaction_types.type']);
-        Cache::forever($md5, $set);
+        $cache->store($set);
 
         return $set;
     }
@@ -238,7 +235,6 @@ class AccountRepository implements AccountRepositoryInterface
         if ($cache->has()) {
             return $cache->get();
         }
-        $md5 = $cache->getMd5();
 
         $ids = array_unique($ids);
         if (count($ids) > 0) {
@@ -264,7 +260,7 @@ class AccountRepository implements AccountRepositoryInterface
             }
         );
 
-        Cache::forever($md5, $accounts);
+        $cache->store($accounts);
 
         return $accounts;
 

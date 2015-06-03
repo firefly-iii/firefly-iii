@@ -14,8 +14,7 @@ use Illuminate\Support\Collection;
 use Response;
 use Session;
 use Steam;
-use Cache;
-use Log;
+
 /**
  * Class BillController
  *
@@ -40,14 +39,13 @@ class BillController extends Controller
         $chart->addColumn(trans('firefly.minAmount'), 'number');
         $chart->addColumn(trans('firefly.billEntry'), 'number');
 
-        $chartProperties = new CacheProperties;
-        $chartProperties->addProperty('single');
-        $chartProperties->addProperty('bill');
-        $chartProperties->addProperty($bill->id);
-        if ($chartProperties->has()) {
-            return Response::json($chartProperties->get());
+        $cache = new CacheProperties;
+        $cache->addProperty('single');
+        $cache->addProperty('bill');
+        $cache->addProperty($bill->id);
+        if ($cache->has()) {
+            return Response::json($cache->get());
         }
-        $md5 = $chartProperties->getMd5();
 
         // get first transaction or today for start:
         $results = $repository->getJournals($bill);
@@ -59,7 +57,7 @@ class BillController extends Controller
         $chart->generate();
 
         $data = $chart->getData();
-        Cache::forever($md5, $data);
+        $cache->store($data);
 
         return Response::json($data);
     }
@@ -79,20 +77,19 @@ class BillController extends Controller
         $chart->addColumn(trans('firefly.name'), 'string');
         $chart->addColumn(trans('firefly.amount'), 'number');
 
-        $start  = Session::get('start', Carbon::now()->startOfMonth());
-        $end    = Session::get('end', Carbon::now()->endOfMonth());
+        $start = Session::get('start', Carbon::now()->startOfMonth());
+        $end   = Session::get('end', Carbon::now()->endOfMonth());
 
 
         // chart properties for cache:
-        $chartProperties = new CacheProperties();
-        $chartProperties->addProperty($start);
-        $chartProperties->addProperty($end);
-        $chartProperties->addProperty('bills');
-        $chartProperties->addProperty('frontpage');
-        if ($chartProperties->has()) {
-            return Response::json($chartProperties->get());
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('bills');
+        $cache->addProperty('frontpage');
+        if ($cache->has()) {
+            return Response::json($cache->get());
         }
-        $md5 = $chartProperties->getMd5();
 
         $bills  = $repository->getActiveBills();
         $paid   = new Collection; // journals.
@@ -163,7 +160,7 @@ class BillController extends Controller
         $chart->generate();
 
         $data = $chart->getData();
-        Cache::forever($md5, $data);
+        $cache->store($data);
 
         return Response::json($data);
     }

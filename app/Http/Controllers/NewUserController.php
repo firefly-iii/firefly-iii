@@ -107,7 +107,7 @@ class NewUserController extends Controller
             AccountMeta::create(
                 [
                     'name'       => 'ccMonthlyPaymentDate',
-                    'data'       => Carbon::now()->year.'-01-01',
+                    'data'       => Carbon::now()->year . '-01-01',
                     'account_id' => $creditCard->id,
                 ]
             );

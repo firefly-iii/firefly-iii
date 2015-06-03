@@ -4,7 +4,6 @@ namespace FireflyIII\Support\Twig;
 
 
 use App;
-use Cache;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\CacheProperties;
 use Twig_Extension;
@@ -30,13 +29,12 @@ class Journal extends Twig_Extension
         $filters[] = new Twig_SimpleFilter(
             'typeIcon', function (TransactionJournal $journal) {
 
-            $prop = new CacheProperties();
-            $prop->addProperty($journal->id);
-            $prop->addProperty('typeIcon');
-            if ($prop->has()) {
-                return $prop->get();
+            $cache = new CacheProperties();
+            $cache->addProperty($journal->id);
+            $cache->addProperty('typeIcon');
+            if ($cache->has()) {
+                return $cache->get();
             }
-            $md5 = $prop->getMd5();
 
             $type = $journal->transactionType->type;
 
@@ -57,7 +55,7 @@ class Journal extends Twig_Extension
                     $txt = '';
                     break;
             }
-            Cache::forever($md5, $txt);
+            $cache->store($txt);
 
             return $txt;
 

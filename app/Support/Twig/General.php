@@ -31,31 +31,31 @@ class General extends Twig_Extension
         $filters = [];
 
         $filters[] = new Twig_SimpleFilter(
-            'formatAmount', function($string) {
+            'formatAmount', function ($string) {
             return App::make('amount')->format($string);
         }, ['is_safe' => ['html']]
         );
 
         $filters[] = new Twig_SimpleFilter(
-            'formatTransaction', function(Transaction $transaction) {
+            'formatTransaction', function (Transaction $transaction) {
             return App::make('amount')->formatTransaction($transaction);
         }, ['is_safe' => ['html']]
         );
 
         $filters[] = new Twig_SimpleFilter(
-            'formatAmountPlain', function($string) {
+            'formatAmountPlain', function ($string) {
             return App::make('amount')->format($string, false);
         }, ['is_safe' => ['html']]
         );
 
         $filters[] = new Twig_SimpleFilter(
-            'formatJournal', function($journal) {
+            'formatJournal', function ($journal) {
             return App::make('amount')->formatJournal($journal);
         }, ['is_safe' => ['html']]
         );
 
         $filters[] = new Twig_SimpleFilter(
-            'balance', function(Account $account = null) {
+            'balance', function (Account $account = null) {
             if (is_null($account)) {
                 return 'NULL';
             }
@@ -67,7 +67,7 @@ class General extends Twig_Extension
 
         // should be a function but OK
         $filters[] = new Twig_SimpleFilter(
-            'getAccountRole', function($name) {
+            'getAccountRole', function ($name) {
             return Config::get('firefly.accountRoles.' . $name);
         }
         );
@@ -83,32 +83,32 @@ class General extends Twig_Extension
         $functions = [];
 
         $functions[] = new Twig_SimpleFunction(
-            'getCurrencyCode', function() {
+            'getCurrencyCode', function () {
             return App::make('amount')->getCurrencyCode();
         }
         );
 
         $functions[] = new Twig_SimpleFunction(
-            'getCurrencySymbol', function() {
+            'getCurrencySymbol', function () {
             return App::make('amount')->getCurrencySymbol();
         }
         );
 
         $functions[] = new Twig_SimpleFunction(
-            'phpdate', function($str) {
+            'phpdate', function ($str) {
             return date($str);
         }
         );
 
 
         $functions[] = new Twig_SimpleFunction(
-            'env', function($name, $default) {
+            'env', function ($name, $default) {
             return env($name, $default);
         }
         );
 
         $functions[] = new Twig_SimpleFunction(
-            'activeRoute', function($context) {
+            'activeRoute', function ($context) {
             $args       = func_get_args();
             $route      = $args[1];
             $what       = isset($args[2]) ? $args[2] : false;

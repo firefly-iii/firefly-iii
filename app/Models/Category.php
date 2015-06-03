@@ -8,15 +8,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Class Category
  *
  * @package FireflyIII\Models
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property \Carbon\Carbon $deleted_at
- * @property string $name
- * @property integer $user_id
- * @property boolean $encrypted
+ * @property integer                                                                               $id
+ * @property \Carbon\Carbon                                                                        $created_at
+ * @property \Carbon\Carbon                                                                        $updated_at
+ * @property \Carbon\Carbon                                                                        $deleted_at
+ * @property string                                                                                $name
+ * @property integer                                                                               $user_id
+ * @property boolean                                                                               $encrypted
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionjournals
- * @property-read \FireflyIII\User $user
+ * @property-read \FireflyIII\User                                                                 $user
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereUpdatedAt($value)
@@ -24,8 +24,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereName($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereUserId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category whereEncrypted($value)
- * @property mixed spent
- * @property mixed lastActivity
+ * @property mixed                                                                                 spent
+ * @property mixed                                                                                 lastActivity
  */
 class Category extends Model
 {

@@ -8,21 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class Reminder
  *
- * @codeCoverageIgnore 
+ * @codeCoverageIgnore
  * @package FireflyIII\Models
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $user_id
- * @property \Carbon\Carbon $startdate
- * @property \Carbon\Carbon $enddate
- * @property boolean $active
- * @property boolean $notnow
- * @property integer $remindersable_id
- * @property string $remindersable_type
- * @property string $metadata
- * @property boolean $encrypted
- * @property-read \ $remindersable
+ * @property integer               $id
+ * @property \Carbon\Carbon        $created_at
+ * @property \Carbon\Carbon        $updated_at
+ * @property integer               $user_id
+ * @property \Carbon\Carbon        $startdate
+ * @property \Carbon\Carbon        $enddate
+ * @property boolean               $active
+ * @property boolean               $notnow
+ * @property integer               $remindersable_id
+ * @property string                $remindersable_type
+ * @property string                $metadata
+ * @property boolean               $encrypted
+ * @property-read \                $remindersable
  * @property-read \FireflyIII\User $user
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Reminder whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Reminder whereCreatedAt($value)
@@ -38,13 +38,13 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Reminder whereEncrypted($value)
  * @method static \FireflyIII\Models\Reminder onDates($start, $end)
  * @method static \FireflyIII\Models\Reminder today()
- * @property string description
+ * @property string                description
  */
 class Reminder extends Model
 {
 
 
-    protected $fillable = ['user_id', 'startdate', 'metadata', 'enddate', 'active', 'notnow', 'remindersable_id', 'remindersable_type', ];
+    protected $fillable = ['user_id', 'startdate', 'metadata', 'enddate', 'active', 'notnow', 'remindersable_id', 'remindersable_type',];
     protected $hidden   = ['encrypted'];
 
     /**
@@ -124,7 +124,7 @@ class Reminder extends Model
         $today = new Carbon;
 
         return $query->where('startdate', '<=', $today->format('Y-m-d 00:00:00'))->where('enddate', '>=', $today->format('Y-m-d 00:00:00'))->where('active', 1)
-                        ->where('notnow', 0);
+                     ->where('notnow', 0);
     }
 
     /**

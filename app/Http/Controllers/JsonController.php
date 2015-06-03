@@ -1,7 +1,6 @@
 <?php namespace FireflyIII\Http\Controllers;
 
 use Amount;
-use Cache;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Report\ReportQueryInterface;
 use FireflyIII\Models\Account;
@@ -39,14 +38,13 @@ class JsonController extends Controller
         $end   = Session::get('end', Carbon::now()->endOfMonth());
 
         // works for json too!
-        $prop = new CacheProperties;
-        $prop->addProperty($start);
-        $prop->addProperty($end);
-        $prop->addProperty('box-bills-paid');
-        if ($prop->has()) {
-            return Response::json($prop->get());
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('box-bills-paid');
+        if ($cache->has()) {
+            return Response::json($cache->get());
         }
-        $md5 = $prop->getMd5();
 
         $amount = 0;
 
@@ -75,7 +73,8 @@ class JsonController extends Controller
             }
         }
         $data = ['box' => 'bills-paid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
-        Cache::forever($md5, $data);
+        $cache->store($data);
+
 
         return Response::json($data);
     }
@@ -93,14 +92,13 @@ class JsonController extends Controller
         $end    = Session::get('end', Carbon::now()->endOfMonth());
 
         // works for json too!
-        $prop = new CacheProperties;
-        $prop->addProperty($start);
-        $prop->addProperty($end);
-        $prop->addProperty('box-bills-unpaid');
-        if ($prop->has()) {
-            return Response::json($prop->get());
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('box-bills-unpaid');
+        if ($cache->has()) {
+            return Response::json($cache->get());
         }
-        $md5 = $prop->getMd5();
 
         $bills  = $repository->getActiveBills();
         $unpaid = new Collection; // bills
@@ -137,7 +135,7 @@ class JsonController extends Controller
         }
 
         $data = ['box' => 'bills-unpaid', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
-        Cache::forever($md5, $data);
+        $cache->store($data);
 
         return Response::json($data);
     }
@@ -153,19 +151,18 @@ class JsonController extends Controller
         $end   = Session::get('end', Carbon::now()->endOfMonth());
 
         // works for json too!
-        $prop = new CacheProperties;
-        $prop->addProperty($start);
-        $prop->addProperty($end);
-        $prop->addProperty('box-in');
-        if ($prop->has()) {
-            return Response::json($prop->get());
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('box-in');
+        if ($cache->has()) {
+            return Response::json($cache->get());
         }
-        $md5 = $prop->getMd5();
 
         $amount = $reportQuery->incomeInPeriodCorrected($start, $end, true)->sum('amount');
 
         $data = ['box' => 'in', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
-        Cache::forever($md5, $data);
+        $cache->store($data);
 
         return Response::json($data);
     }
@@ -182,19 +179,18 @@ class JsonController extends Controller
 
 
         // works for json too!
-        $prop = new CacheProperties;
-        $prop->addProperty($start);
-        $prop->addProperty($end);
-        $prop->addProperty('box-out');
-        if ($prop->has()) {
-            return Response::json($prop->get());
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('box-out');
+        if ($cache->has()) {
+            return Response::json($cache->get());
         }
-        $md5 = $prop->getMd5();
 
         $amount = $reportQuery->expenseInPeriodCorrected($start, $end, true)->sum('amount');
 
         $data = ['box' => 'out', 'amount' => Amount::format($amount, false), 'amount_raw' => $amount];
-        Cache::forever($md5, $data);
+        $cache->store($data);
 
         return Response::json($data);
     }

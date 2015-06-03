@@ -99,4 +99,12 @@ class CacheProperties
 
         $this->md5 = md5($this->md5);
     }
+
+    /**
+     * @param $data
+     */
+    public function store($data)
+    {
+        Cache::forever($this->md5, $data);
+    }
 }

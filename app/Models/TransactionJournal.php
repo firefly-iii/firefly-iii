@@ -1,6 +1,5 @@
 <?php namespace FireflyIII\Models;
 
-use Cache;
 use Carbon\Carbon;
 use Crypt;
 use FireflyIII\Support\CacheProperties;
@@ -136,13 +135,12 @@ class TransactionJournal extends Model
      */
     public function getAmountAttribute()
     {
-        $prop = new CacheProperties();
-        $prop->addProperty($this->id);
-        $prop->addProperty('amount');
-        if ($prop->has()) {
-            return $prop->get();
+        $cache = new CacheProperties();
+        $cache->addProperty($this->id);
+        $cache->addProperty('amount');
+        if ($cache->has()) {
+            return $cache->get();
         }
-        $md5 = $prop->getMd5();
 
 
         $amount = '0';
@@ -158,7 +156,7 @@ class TransactionJournal extends Model
          * If the journal has tags, it gets complicated.
          */
         if ($this->tags->count() == 0) {
-            Cache::forever($md5, $amount);
+            $cache->store($amount);
 
             return $amount;
         }
@@ -173,7 +171,7 @@ class TransactionJournal extends Model
             foreach ($others as $other) {
                 $amount = bcsub($amount, $other->actual_amount);
             }
-            Cache::forever($md5, $amount);
+            $cache->store($amount);
 
             return $amount;
         }
@@ -181,7 +179,7 @@ class TransactionJournal extends Model
         // if this journal is part of an advancePayment AND the journal is a deposit,
         // then the journal amount is correcting a withdrawal, and the amount is zero:
         if ($advancePayment && $this->transactionType->type == 'Deposit') {
-            Cache::forever($md5, '0');
+            $cache->store('0');
 
             return '0';
         }
@@ -196,14 +194,14 @@ class TransactionJournal extends Model
                 $transfer = $balancingAct->transactionJournals()->transactionTypes(['Transfer'])->first();
                 if ($transfer) {
                     $amount = bcsub($amount, $transfer->actual_amount);
-                    Cache::forever($md5, $amount);
+                    $cache->store($amount);
 
                     return $amount;
                 }
             } // @codeCoverageIgnore
         } // @codeCoverageIgnore
 
-        Cache::forever($md5, $amount);
+        $cache->store($amount);
 
         return $amount;
     }

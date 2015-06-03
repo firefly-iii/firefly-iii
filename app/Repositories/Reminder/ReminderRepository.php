@@ -36,14 +36,14 @@ class ReminderRepository implements ReminderRepositoryInterface
         $today = new Carbon;
         // active reminders:
         $active = Auth::user()->reminders()
-                        ->where('notnow', 0)
-                        ->where('active', 1)
-                        ->where('startdate', '<=', $today->format('Y-m-d 00:00:00'))
-                        ->where('enddate', '>=', $today->format('Y-m-d 00:00:00'))
-                        ->get();
+                      ->where('notnow', 0)
+                      ->where('active', 1)
+                      ->where('startdate', '<=', $today->format('Y-m-d 00:00:00'))
+                      ->where('enddate', '>=', $today->format('Y-m-d 00:00:00'))
+                      ->get();
 
         $active->each(
-            function(Reminder $reminder) {
+            function (Reminder $reminder) {
                 $reminder->description = $this->helper->getReminderText($reminder);
             }
         );
@@ -58,11 +58,11 @@ class ReminderRepository implements ReminderRepositoryInterface
     public function getDismissedReminders()
     {
         $dismissed = Auth::user()->reminders()
-                            ->where('notnow', 1)
-                            ->get();
+                         ->where('notnow', 1)
+                         ->get();
 
         $dismissed->each(
-            function(Reminder $reminder) {
+            function (Reminder $reminder) {
                 $reminder->description = $this->helper->getReminderText($reminder);
             }
         );
@@ -77,18 +77,18 @@ class ReminderRepository implements ReminderRepositoryInterface
     {
 
         $expired = Auth::user()->reminders()
-                        ->where('notnow', 0)
-                        ->where('active', 1)
-                        ->where(
-                            function (Builder $q) {
-                                $today = new Carbon;
-                                $q->where('startdate', '>', $today->format('Y-m-d 00:00:00'));
-                                $q->orWhere('enddate', '<', $today->format('Y-m-d 00:00:00'));
-                            }
-                        )->get();
+                       ->where('notnow', 0)
+                       ->where('active', 1)
+                       ->where(
+                           function (Builder $q) {
+                               $today = new Carbon;
+                               $q->where('startdate', '>', $today->format('Y-m-d 00:00:00'));
+                               $q->orWhere('enddate', '<', $today->format('Y-m-d 00:00:00'));
+                           }
+                       )->get();
 
         $expired->each(
-            function(Reminder $reminder) {
+            function (Reminder $reminder) {
                 $reminder->description = $this->helper->getReminderText($reminder);
             }
         );
@@ -106,7 +106,7 @@ class ReminderRepository implements ReminderRepositoryInterface
                         ->get();
 
         $inactive->each(
-            function(Reminder $reminder) {
+            function (Reminder $reminder) {
                 $reminder->description = $this->helper->getReminderText($reminder);
             }
         );

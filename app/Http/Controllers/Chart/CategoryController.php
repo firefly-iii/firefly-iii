@@ -3,14 +3,12 @@
 namespace FireflyIII\Http\Controllers\Chart;
 
 
-use Cache;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Grumpydictator\Gchart\GChart;
-use Log;
 use Navigation;
 use Preferences;
 use Response;
@@ -80,22 +78,21 @@ class CategoryController extends Controller
         $end   = Session::get('end', Carbon::now()->endOfMonth());
 
         // chart properties for cache:
-        $chartProperties = new CacheProperties;
-        $chartProperties->addProperty($start);
-        $chartProperties->addProperty($end);
-        $chartProperties->addProperty('category');
-        $chartProperties->addProperty('frontpage');
-        if ($chartProperties->has()) {
-            return Response::json($chartProperties->get());
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('category');
+        $cache->addProperty('frontpage');
+        if ($cache->has()) {
+            return Response::json($cache->get());
         }
-        $md5 = $chartProperties->getMd5();
 
-        $set   = $repository->getCategoriesAndExpensesCorrected($start, $end);
+        $set = $repository->getCategoriesAndExpensesCorrected($start, $end);
 
         // sort by callback:
         uasort(
             $set,
-            function($left, $right) {
+            function ($left, $right) {
                 if ($left['sum'] == $right['sum']) {
                     return 0;
                 }
@@ -115,7 +112,7 @@ class CategoryController extends Controller
         $chart->generate();
 
         $data = $chart->getData();
-        Cache::forever($md5, $data);
+        $cache->store($data);
 
         return Response::json($data);
 

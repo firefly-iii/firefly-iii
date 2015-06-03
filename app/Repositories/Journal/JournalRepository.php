@@ -111,7 +111,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getJournalsOfTypes(array $types, $offset, $page)
     {
-        $set = Auth::user()->transactionJournals()->transactionTypes($types)->withRelevantData()->take(50)->offset($offset)
+        $set      = Auth::user()->transactionJournals()->transactionTypes($types)->withRelevantData()->take(50)->offset($offset)
                         ->orderBy('date', 'DESC')
                         ->orderBy('order', 'ASC')
                         ->orderBy('id', 'DESC')

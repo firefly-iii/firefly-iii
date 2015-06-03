@@ -2,8 +2,6 @@
 
 namespace FireflyIII\Http\Controllers\Chart;
 
-use Auth;
-use Cache;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
@@ -11,7 +9,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Grumpydictator\Gchart\GChart;
 use Illuminate\Support\Collection;
-use Log;
 use Preferences;
 use Response;
 use Session;
@@ -43,15 +40,14 @@ class AccountController extends Controller
         $end->endOfMonth();
 
         // chart properties for cache:
-        $chartProperties = new CacheProperties();
-        $chartProperties->addProperty($start);
-        $chartProperties->addProperty($end);
-        $chartProperties->addProperty('all');
-        $chartProperties->addProperty('accounts');
-        if ($chartProperties->has()) {
-            return Response::json($chartProperties->get());
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('all');
+        $cache->addProperty('accounts');
+        if ($cache->has()) {
+            return Response::json($cache->get());
         }
-        $md5 = $chartProperties->getMd5();
 
 
         $chart->addColumn(trans('firefly.dayOfMonth'), 'date');
@@ -91,7 +87,7 @@ class AccountController extends Controller
         $chart->generate();
 
         $data = $chart->getData();
-        Cache::forever($md5, $data);
+        $cache->store($data);
 
         return Response::json($data);
     }
@@ -114,15 +110,14 @@ class AccountController extends Controller
         $accounts  = $repository->getFrontpageAccounts($frontPage);
 
         // chart properties for cache:
-        $chartProperties = new CacheProperties();
-        $chartProperties->addProperty($start);
-        $chartProperties->addProperty($end);
-        $chartProperties->addProperty('frontpage');
-        $chartProperties->addProperty('accounts');
-        if ($chartProperties->has()) {
-            return Response::json($chartProperties->get());
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('frontpage');
+        $cache->addProperty('accounts');
+        if ($cache->has()) {
+            return Response::json($cache->get());
         }
-        $md5 = $chartProperties->getMd5();
 
 
         $index = 1;
@@ -148,7 +143,7 @@ class AccountController extends Controller
         $chart->generate();
 
         $data = $chart->getData();
-        Cache::forever($md5, $data);
+        $cache->store($data);
 
         return Response::json($data);
 
@@ -174,18 +169,15 @@ class AccountController extends Controller
         $today   = new Carbon;
 
         // chart properties for cache:
-        $chartProperties = new CacheProperties();
-        $chartProperties->addProperty($start);
-        $chartProperties->addProperty($end);
-        $chartProperties->addProperty('frontpage');
-        $chartProperties->addProperty('single');
-        $chartProperties->addProperty($account->id);
-        if ($chartProperties->has()) {
-            return Response::json($chartProperties->get());
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('frontpage');
+        $cache->addProperty('single');
+        $cache->addProperty($account->id);
+        if ($cache->has()) {
+            return Response::json($cache->get());
         }
-        $md5 = $chartProperties->getMd5();
-
-
 
         while ($end >= $current) {
             $certain = $current < $today;
@@ -197,7 +189,7 @@ class AccountController extends Controller
         $chart->generate();
 
         $data = $chart->getData();
-        Cache::forever($md5, $data);
+        $cache->store($data);
 
         return Response::json($data);
     }

@@ -253,7 +253,7 @@ class TransactionController extends Controller
     public function show(JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
         $journal->transactions->each(
-            function(Transaction $t) use ($journal, $repository) {
+            function (Transaction $t) use ($journal, $repository) {
                 $t->before = $repository->getAmountBefore($journal, $t);
                 $t->after  = $t->before + $t->amount;
             }

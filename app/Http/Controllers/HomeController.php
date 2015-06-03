@@ -2,7 +2,6 @@
 
 use Carbon\Carbon;
 use Config;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Input;
 use Preferences;
@@ -61,18 +60,17 @@ class HomeController extends Controller
             return Redirect::route('new-user.index');
         }
 
-        $title             = 'Firefly';
-        $subTitle          = trans('firefly.welcomeBack');
-        $mainTitleIcon     = 'fa-fire';
-        $transactions      = [];
-        $frontPage         = Preferences::get('frontPageAccounts', []);
-        $start             = Session::get('start', Carbon::now()->startOfMonth());
-        $end               = Session::get('end', Carbon::now()->endOfMonth());
-        $accounts          = $repository->getFrontpageAccounts($frontPage);
-        $savings           = $repository->getSavingsAccounts();
+        $title         = 'Firefly';
+        $subTitle      = trans('firefly.welcomeBack');
+        $mainTitleIcon = 'fa-fire';
+        $transactions  = [];
+        $frontPage     = Preferences::get('frontPageAccounts', []);
+        $start         = Session::get('start', Carbon::now()->startOfMonth());
+        $end           = Session::get('end', Carbon::now()->endOfMonth());
+        $accounts      = $repository->getFrontpageAccounts($frontPage);
+        $savings       = $repository->getSavingsAccounts();
 
         $piggyBankAccounts = $repository->getPiggyBankAccounts();
-
 
 
         $savingsTotal = 0;
@@ -95,6 +93,7 @@ class HomeController extends Controller
                 $transactions[] = [$set, $account];
             }
         }
+
         return view('index', compact('count', 'title', 'savings', 'subTitle', 'mainTitleIcon', 'transactions', 'savingsTotal', 'piggyBankAccounts'));
     }
 

@@ -4,6 +4,7 @@ namespace FireflyIII\Support;
 
 use Auth;
 use FireflyIII\Models\Preference;
+
 /**
  * Class Preferences
  *
@@ -19,14 +20,6 @@ class Preferences
         $preference = $this->get('lastActivity', microtime())->data;
 
         return md5($preference);
-    }
-
-    /**
-     * @return bool
-     */
-    public function mark() {
-        $this->set('lastActivity',microtime());
-        return true;
     }
 
     /**
@@ -84,5 +77,15 @@ class Preferences
 
         return $pref;
 
+    }
+
+    /**
+     * @return bool
+     */
+    public function mark()
+    {
+        $this->set('lastActivity', microtime());
+
+        return true;
     }
 }

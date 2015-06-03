@@ -7,26 +7,26 @@ use Illuminate\Database\Eloquent\Model;
  * FireflyIII\Models\Bill
  *
  * @codeCoverageIgnore Class Bill
- * @package FireflyIII\Models
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $user_id
- * @property string $name
- * @property string $match
- * @property float $amount_min
- * @property string $amount_min_encrypted
- * @property float $amount_max
- * @property string $amount_max_encrypted
- * @property \Carbon\Carbon $date
- * @property boolean $active
- * @property boolean $automatch
- * @property string $repeat_freq
- * @property integer $skip
- * @property boolean $name_encrypted
- * @property boolean $match_encrypted
+ * @package            FireflyIII\Models
+ * @property integer                                                                               $id
+ * @property \Carbon\Carbon                                                                        $created_at
+ * @property \Carbon\Carbon                                                                        $updated_at
+ * @property integer                                                                               $user_id
+ * @property string                                                                                $name
+ * @property string                                                                                $match
+ * @property float                                                                                 $amount_min
+ * @property string                                                                                $amount_min_encrypted
+ * @property float                                                                                 $amount_max
+ * @property string                                                                                $amount_max_encrypted
+ * @property \Carbon\Carbon                                                                        $date
+ * @property boolean                                                                               $active
+ * @property boolean                                                                               $automatch
+ * @property string                                                                                $repeat_freq
+ * @property integer                                                                               $skip
+ * @property boolean                                                                               $name_encrypted
+ * @property boolean                                                                               $match_encrypted
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionjournals
- * @property-read \FireflyIII\User $user
+ * @property-read \FireflyIII\User                                                                 $user
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereUpdatedAt($value)
@@ -44,14 +44,14 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereSkip($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereNameEncrypted($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill whereMatchEncrypted($value)
- * @property mixed nextExpectedMatch
- * @property mixed lastFoundMatch
+ * @property mixed                                                                                 nextExpectedMatch
+ * @property mixed                                                                                 lastFoundMatch
  */
 class Bill extends Model
 {
 
     protected $fillable
-        = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip', 'automatch', 'active', ];
+        = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip', 'automatch', 'active',];
 
     protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
 

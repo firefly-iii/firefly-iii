@@ -3,7 +3,6 @@
 namespace FireflyIII\Http\Middleware;
 
 use App;
-use Cache;
 use Carbon\Carbon;
 use Closure;
 use FireflyIII\Models\PiggyBank;
@@ -54,17 +53,15 @@ class Reminders
             // do reminders stuff.
 
             // abuse CacheProperties to find out if we need to do this:
-            $properties = new CacheProperties;
+            $cache = new CacheProperties;
 
-            $properties->addProperty('reminders');
-            if ($properties->has()) {
-                $reminders = $properties->get();
+            $cache->addProperty('reminders');
+            if ($cache->has()) {
+                $reminders = $cache->get();
                 View::share('reminders', $reminders);
 
                 return $next($request);
             }
-            $md5 = $properties->getMd5();
-
 
             $piggyBanks = $this->auth->user()->piggyBanks()->where('remind_me', 1)->get();
 
@@ -89,7 +86,7 @@ class Reminders
                     $reminder->description = $helper->getReminderText($reminder);
                 }
             );
-            Cache::forever($md5, $reminders);
+            $cache->store($reminders);
             View::share('reminders', $reminders);
         }
 

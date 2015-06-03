@@ -7,16 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class PiggyBankRepetition
  *
- * @codeCoverageIgnore 
+ * @codeCoverageIgnore
  * @package FireflyIII\Models
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $piggy_bank_id
- * @property \Carbon\Carbon $startdate
- * @property \Carbon\Carbon $targetdate
- * @property float $currentamount
- * @property string $currentamount_encrypted
+ * @property integer                           $id
+ * @property \Carbon\Carbon                    $created_at
+ * @property \Carbon\Carbon                    $updated_at
+ * @property integer                           $piggy_bank_id
+ * @property \Carbon\Carbon                    $startdate
+ * @property \Carbon\Carbon                    $targetdate
+ * @property float                             $currentamount
+ * @property string                            $currentamount_encrypted
  * @property-read \FireflyIII\Models\PiggyBank $piggyBank
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankRepetition whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBankRepetition whereCreatedAt($value)
@@ -77,13 +77,13 @@ class PiggyBankRepetition extends Model
                 $q->orWhereNull('startdate');
             }
         )
-                        ->where(
-                            function (EloquentBuilder $q) use ($date) {
+                     ->where(
+                         function (EloquentBuilder $q) use ($date) {
 
-                                $q->where('targetdate', '>=', $date->format('Y-m-d 00:00:00'));
-                                $q->orWhereNull('targetdate');
-                            }
-                        );
+                             $q->where('targetdate', '>=', $date->format('Y-m-d 00:00:00'));
+                             $q->orWhereNull('targetdate');
+                         }
+                     );
     }
 
     /**

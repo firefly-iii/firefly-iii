@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Support;
 
-use Cache;
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
 
@@ -25,15 +24,14 @@ class Steam
     {
 
         // abuse chart properties:
-        $properties = new CacheProperties;
-        $properties->addProperty($account->id);
-        $properties->addProperty('balance');
-        $properties->addProperty($date);
-        $properties->addProperty($ignoreVirtualBalance);
-        if ($properties->has()) {
-            return $properties->get();
+        $cache = new CacheProperties;
+        $cache->addProperty($account->id);
+        $cache->addProperty('balance');
+        $cache->addProperty($date);
+        $cache->addProperty($ignoreVirtualBalance);
+        if ($cache->has()) {
+            return $cache->get();
         }
-        $md5 = $properties->getMd5();
 
 
         // find the first known transaction on this account:
@@ -57,7 +55,7 @@ class Steam
         if (!$ignoreVirtualBalance) {
             $balance = bcadd($balance, $account->virtual_balance);
         }
-        Cache::forever($md5, round($balance, 2));
+        $cache->store(round($balance, 2));
 
         return round($balance, 2);
     }

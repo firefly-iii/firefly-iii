@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class TransactionType
  *
- * @codeCoverageIgnore 
+ * @codeCoverageIgnore
  * @package FireflyIII\Models
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property \Carbon\Carbon $deleted_at
- * @property string $type
+ * @property integer                                                                               $id
+ * @property \Carbon\Carbon                                                                        $created_at
+ * @property \Carbon\Carbon                                                                        $updated_at
+ * @property \Carbon\Carbon                                                                        $deleted_at
+ * @property string                                                                                $type
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionType whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionType whereCreatedAt($value)

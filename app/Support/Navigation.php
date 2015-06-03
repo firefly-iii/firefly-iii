@@ -118,7 +118,7 @@ class Navigation
             'year'      => 'endOfYear',
             'yearly'    => 'endOfYear',
         ];
-        $specials = ['mont', 'monthly'];
+        $specials    = ['mont', 'monthly'];
 
         $currentEnd = clone $theCurrentEnd;
 
@@ -270,7 +270,7 @@ class Navigation
             '3M' => 'lastOfQuarter',
             '1Y' => 'endOfYear',
         ];
-        $end = clone $start;
+        $end         = clone $start;
 
         if (isset($functionMap[$range])) {
             $function = $functionMap[$range];

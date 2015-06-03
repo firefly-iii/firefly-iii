@@ -2,7 +2,6 @@
 
 namespace FireflyIII\Http\Controllers\Chart;
 
-use Cache;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
@@ -11,7 +10,6 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Grumpydictator\Gchart\GChart;
 use Illuminate\Support\Collection;
-use Log;
 use Navigation;
 use Preferences;
 use Response;
@@ -45,15 +43,14 @@ class BudgetController extends Controller
         $last = Navigation::endOfX($last, $range, $final);
 
         // chart properties for cache:
-        $chartProperties = new CacheProperties();
-        $chartProperties->addProperty($first);
-        $chartProperties->addProperty($last);
-        $chartProperties->addProperty('budget');
-        $chartProperties->addProperty('budget');
-        if ($chartProperties->has()) {
-            return Response::json($chartProperties->get());
+        $cache = new CacheProperties();
+        $cache->addProperty($first);
+        $cache->addProperty($last);
+        $cache->addProperty('budget');
+        $cache->addProperty('budget');
+        if ($cache->has()) {
+            return Response::json($cache->get());
         }
-        $md5 = $chartProperties->getMd5();
 
 
         while ($first < $last) {
@@ -69,7 +66,7 @@ class BudgetController extends Controller
         $chart->generate();
 
         $data = $chart->getData();
-        Cache::forever($md5, $data);
+        $cache->store($data);
 
         return Response::json($data);
     }
@@ -90,17 +87,16 @@ class BudgetController extends Controller
         $end   = $repetition->enddate;
 
         // chart properties for cache:
-        $chartProperties = new CacheProperties();
-        $chartProperties->addProperty($start);
-        $chartProperties->addProperty($end);
-        $chartProperties->addProperty('budget');
-        $chartProperties->addProperty('limit');
-        $chartProperties->addProperty($budget->id);
-        $chartProperties->addProperty($repetition->id);
-        if ($chartProperties->has()) {
-            return Response::json($chartProperties->get());
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('budget');
+        $cache->addProperty('limit');
+        $cache->addProperty($budget->id);
+        $cache->addProperty($repetition->id);
+        if ($cache->has()) {
+            return Response::json($cache->get());
         }
-        $md5 = $chartProperties->getMd5();
 
         $chart->addColumn(trans('firefly.day'), 'date');
         $chart->addColumn(trans('firefly.left'), 'number');
@@ -120,7 +116,7 @@ class BudgetController extends Controller
         $chart->generate();
 
         $data = $chart->getData();
-        Cache::forever($md5, $data);
+        $cache->store($data);
 
         return Response::json($data);
 
@@ -147,15 +143,14 @@ class BudgetController extends Controller
         $allEntries = new Collection;
 
         // chart properties for cache:
-        $chartProperties = new CacheProperties();
-        $chartProperties->addProperty($start);
-        $chartProperties->addProperty($end);
-        $chartProperties->addProperty('budget');
-        $chartProperties->addProperty('all');
-        if ($chartProperties->has()) {
-            return Response::json($chartProperties->get());
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('budget');
+        $cache->addProperty('all');
+        if ($cache->has()) {
+            return Response::json($cache->get());
         }
-        $md5 = $chartProperties->getMd5();
 
 
         /** @var Budget $budget */
@@ -194,7 +189,7 @@ class BudgetController extends Controller
         $chart->generate();
 
         $data = $chart->getData();
-        Cache::forever($md5, $data);
+        $cache->store($data);
 
         return Response::json($data);
 
@@ -218,15 +213,14 @@ class BudgetController extends Controller
         $budgets = $repository->getBudgets();
 
         // chart properties for cache:
-        $chartProperties = new CacheProperties();
-        $chartProperties->addProperty($start);
-        $chartProperties->addProperty($end);
-        $chartProperties->addProperty('budget');
-        $chartProperties->addProperty('year');
-        if ($chartProperties->has()) {
-            return Response::json($chartProperties->get());
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('budget');
+        $cache->addProperty('year');
+        if ($cache->has()) {
+            return Response::json($cache->get());
         }
-        $md5 = $chartProperties->getMd5();
 
         // add columns:
         $chart->addColumn(trans('firefly.month'), 'date');
@@ -254,7 +248,7 @@ class BudgetController extends Controller
         $chart->generate();
 
         $data = $chart->getData();
-        Cache::forever($md5, $data);
+        $cache->store($data);
 
         return Response::json($data);
     }
