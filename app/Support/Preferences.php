@@ -3,6 +3,7 @@
 namespace FireflyIII\Support;
 
 use Auth;
+use Cache;
 use FireflyIII\Models\Preference;
 
 /**
@@ -30,9 +31,17 @@ class Preferences
      */
     public function get($name, $default = null)
     {
-        $preference = Preference::where('user_id', Auth::user()->id)->where('name', $name)->first(['id','name','data_encrypted']);
+        $fullName = 'preference' . Auth::user()->id . $name;
+        if (Cache::has($fullName)) {
+            return Cache::get($fullName);
+        }
+
+
+        $preference = Preference::where('user_id', Auth::user()->id)->where('name', $name)->first(['id', 'name', 'data_encrypted']);
 
         if ($preference) {
+            Cache::forever($fullName, $preference);
+
             return $preference;
         }
         // no preference found and default is null:
@@ -53,7 +62,9 @@ class Preferences
      */
     public function set($name, $value)
     {
-        $pref = Preference::where('user_id', Auth::user()->id)->where('name', $name)->first(['id','name','data_encrypted']);
+        $fullName = 'preference' . Auth::user()->id . $name;
+        Cache::forget($fullName);
+        $pref = Preference::where('user_id', Auth::user()->id)->where('name', $name)->first(['id', 'name', 'data_encrypted']);
         if ($pref) {
             $pref->data = $value;
         } else {
@@ -64,6 +75,8 @@ class Preferences
 
         }
         $pref->save();
+
+        Cache::forever($fullName, $pref);
 
         return $pref;
 
