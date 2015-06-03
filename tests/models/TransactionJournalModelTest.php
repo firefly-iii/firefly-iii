@@ -62,6 +62,8 @@ class TransactionJournalModelTest extends TestCase
      */
     public function testGetAmountAttributeAdvancePayment()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
         // make types:
         $withdrawalType = FactoryMuffin::create('FireflyIII\Models\TransactionType');
         $depositType    = FactoryMuffin::create('FireflyIII\Models\TransactionType');
@@ -120,6 +122,9 @@ class TransactionJournalModelTest extends TestCase
      */
     public function testGetAmountAttributeBalancingAct()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
         // make types:
         $withdrawalType = FactoryMuffin::create('FireflyIII\Models\TransactionType');
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
@@ -177,6 +182,8 @@ class TransactionJournalModelTest extends TestCase
      */
     public function testGetAmountAttributeNoTags()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
         $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
 
         $journal->transactions[0]->amount = 123.45;
@@ -194,6 +201,9 @@ class TransactionJournalModelTest extends TestCase
      */
     public function testGetAmountAttributeTag()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
         // has a normal tag, but nothing special.
         // make tag
         $tag          = FactoryMuffin::create('FireflyIII\Models\Tag');

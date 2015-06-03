@@ -114,10 +114,10 @@ class AccountRepository implements AccountRepositoryInterface
         $cache = new CacheProperties();
         $cache->addProperty($preference->data);
         $cache->addProperty('frontPageaccounts');
-        $md5 = $cache->md5();
-        if (Cache::has($md5)) {
-            return Cache::get($md5);
+        if ($cache->has()) {
+            return $cache->get();
         }
+        $md5 = $cache->getMd5();
 
 
         if ($preference->data == []) {
@@ -148,10 +148,10 @@ class AccountRepository implements AccountRepositoryInterface
         $prop->addProperty($account->id);
         $prop->addProperty($start);
         $prop->addProperty($end);
-        $md5 = $prop->md5();
-        if(Cache::has($md5)) {
-            return Cache::get($md5);
+        if ($prop->has()) {
+            return $prop->get();
         }
+        $md5 = $prop->getMd5();
 
         $set = Auth::user()
                    ->transactionjournals()
@@ -167,6 +167,7 @@ class AccountRepository implements AccountRepositoryInterface
                    ->take(10)
                    ->get(['transaction_journals.*', 'transaction_currencies.symbol', 'transaction_types.type']);
         Cache::forever($md5, $set);
+
         return $set;
     }
 
@@ -234,10 +235,10 @@ class AccountRepository implements AccountRepositoryInterface
         $cache = new CacheProperties;
         $cache->addProperty($ids);
         $cache->addProperty('piggyAccounts');
-        $md5 = $cache->md5();
-        if (Cache::has($md5)) {
-            return Cache::get($md5);
+        if ($cache->has()) {
+            return $cache->get();
         }
+        $md5 = $cache->getMd5();
 
         $ids = array_unique($ids);
         if (count($ids) > 0) {

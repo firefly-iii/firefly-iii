@@ -446,6 +446,9 @@ class JournalRepositoryTest extends TestCase
      */
     public function testUpdate()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
         for ($i = 0; $i < 4; $i++) {
             FactoryMuffin::create('FireflyIII\Models\AccountType');
         }
@@ -504,6 +507,9 @@ class JournalRepositoryTest extends TestCase
      */
     public function testUpdateNoTags()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
         for ($i = 0; $i < 4; $i++) {
             FactoryMuffin::create('FireflyIII\Models\AccountType');
         }

@@ -139,10 +139,10 @@ class TransactionJournal extends Model
         $prop = new CacheProperties();
         $prop->addProperty($this->id);
         $prop->addProperty('amount');
-        $md5 = $prop->md5();
-        if (Cache::has($md5)) {
-            return Cache::get($md5);
+        if ($prop->has()) {
+            return $prop->get();
         }
+        $md5 = $prop->getMd5();
 
 
         $amount = '0';

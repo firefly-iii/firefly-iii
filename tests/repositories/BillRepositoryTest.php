@@ -38,6 +38,9 @@ class BillRepositoryTest extends TestCase
 
     public function testBillPaymentsInRange()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
         $bill  = FactoryMuffin::create('FireflyIII\Models\Bill');
         $start = Carbon::now()->startOfMonth();
         $end   = Carbon::now()->endOfMonth();

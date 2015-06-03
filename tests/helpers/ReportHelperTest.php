@@ -111,6 +111,9 @@ class ReportHelperTest extends TestCase
      */
     public function testGetBillReport()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
         // factory!
         $set      = new Collection;
         $journals = new Collection;

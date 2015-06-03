@@ -57,14 +57,13 @@ class Reminders
             $properties = new CacheProperties;
 
             $properties->addProperty('reminders');
-            $md5 = $properties->md5();
-
-            if (Cache::has($md5)) {
-                $reminders = Cache::get($md5);
+            if ($properties->has()) {
+                $reminders = $properties->get();
                 View::share('reminders', $reminders);
 
                 return $next($request);
             }
+            $md5 = $properties->getMd5();
 
 
             $piggyBanks = $this->auth->user()->piggyBanks()->where('remind_me', 1)->get();

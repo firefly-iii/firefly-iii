@@ -48,14 +48,10 @@ class AccountController extends Controller
         $chartProperties->addProperty($end);
         $chartProperties->addProperty('all');
         $chartProperties->addProperty('accounts');
-        $md5 = $chartProperties->md5();
-
-
-        if (Cache::has($md5)) {
-            Log::debug('Successfully returned cached chart [' . $md5 . '].');
-
-            return Response::json(Cache::get($md5));
+        if ($chartProperties->has()) {
+            return Response::json($chartProperties->get());
         }
+        $md5 = $chartProperties->getMd5();
 
 
         $chart->addColumn(trans('firefly.dayOfMonth'), 'date');
@@ -123,14 +119,10 @@ class AccountController extends Controller
         $chartProperties->addProperty($end);
         $chartProperties->addProperty('frontpage');
         $chartProperties->addProperty('accounts');
-        $md5 = $chartProperties->md5();
-
-
-        if (Cache::has($md5)) {
-            Log::debug('Successfully returned cached chart [' . $md5 . '].');
-
-            return Response::json(Cache::get($md5));
+        if ($chartProperties->has()) {
+            return Response::json($chartProperties->get());
         }
+        $md5 = $chartProperties->getMd5();
 
 
         $index = 1;
@@ -188,14 +180,10 @@ class AccountController extends Controller
         $chartProperties->addProperty('frontpage');
         $chartProperties->addProperty('single');
         $chartProperties->addProperty($account->id);
-        $md5 = $chartProperties->md5();
-
-
-        if (Cache::has($md5)) {
-            Log::debug('Successfully returned cached chart [' . $md5 . '].');
-
-            return Response::json(Cache::get($md5));
+        if ($chartProperties->has()) {
+            return Response::json($chartProperties->get());
         }
+        $md5 = $chartProperties->getMd5();
 
 
 

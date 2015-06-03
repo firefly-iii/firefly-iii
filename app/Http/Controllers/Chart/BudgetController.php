@@ -50,13 +50,10 @@ class BudgetController extends Controller
         $chartProperties->addProperty($last);
         $chartProperties->addProperty('budget');
         $chartProperties->addProperty('budget');
-        $md5 = $chartProperties->md5();
-
-        if (Cache::has($md5)) {
-            Log::debug('Successfully returned cached chart [' . $md5 . '].');
-
-            return Response::json(Cache::get($md5));
+        if ($chartProperties->has()) {
+            return Response::json($chartProperties->get());
         }
+        $md5 = $chartProperties->getMd5();
 
 
         while ($first < $last) {
@@ -100,13 +97,10 @@ class BudgetController extends Controller
         $chartProperties->addProperty('limit');
         $chartProperties->addProperty($budget->id);
         $chartProperties->addProperty($repetition->id);
-        $md5 = $chartProperties->md5();
-
-        if (Cache::has($md5)) {
-            Log::debug('Successfully returned cached chart [' . $md5 . '].');
-
-            return Response::json(Cache::get($md5));
+        if ($chartProperties->has()) {
+            return Response::json($chartProperties->get());
         }
+        $md5 = $chartProperties->getMd5();
 
         $chart->addColumn(trans('firefly.day'), 'date');
         $chart->addColumn(trans('firefly.left'), 'number');
@@ -158,13 +152,10 @@ class BudgetController extends Controller
         $chartProperties->addProperty($end);
         $chartProperties->addProperty('budget');
         $chartProperties->addProperty('all');
-        $md5 = $chartProperties->md5();
-
-        if (Cache::has($md5)) {
-            Log::debug('Successfully returned cached chart [' . $md5 . '].');
-
-            return Response::json(Cache::get($md5));
+        if ($chartProperties->has()) {
+            return Response::json($chartProperties->get());
         }
+        $md5 = $chartProperties->getMd5();
 
 
         /** @var Budget $budget */
@@ -232,14 +223,10 @@ class BudgetController extends Controller
         $chartProperties->addProperty($end);
         $chartProperties->addProperty('budget');
         $chartProperties->addProperty('year');
-        $md5 = $chartProperties->md5();
-
-
-        if (Cache::has($md5)) {
-            Log::debug('Successfully returned cached chart [' . $md5 . '].');
-
-            return Response::json(Cache::get($md5));
+        if ($chartProperties->has()) {
+            return Response::json($chartProperties->get());
         }
+        $md5 = $chartProperties->getMd5();
 
         // add columns:
         $chart->addColumn(trans('firefly.month'), 'date');

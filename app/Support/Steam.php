@@ -30,10 +30,10 @@ class Steam
         $properties->addProperty('balance');
         $properties->addProperty($date);
         $properties->addProperty($ignoreVirtualBalance);
-        $md5 = $properties->md5();
-        if (Cache::has($md5)) {
-            return Cache::get($md5);
+        if ($properties->has()) {
+            return $properties->get();
         }
+        $md5 = $properties->getMd5();
 
 
         // find the first known transaction on this account:

@@ -41,16 +41,6 @@ class HomeController extends Controller
     {
         Session::clear();
 
-        // encrypt transaction journal description
-        $set = TransactionJournal::where('encrypted', 0)->take(100)->get();
-        /** @var TransactionJournal $entry */
-        foreach ($set as $entry) {
-            $description        = $entry->description;
-            $entry->description = $description;
-            $entry->save();
-        }
-        unset($set, $entry, $description);
-
         return Redirect::route('index');
     }
 

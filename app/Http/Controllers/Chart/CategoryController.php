@@ -85,14 +85,10 @@ class CategoryController extends Controller
         $chartProperties->addProperty($end);
         $chartProperties->addProperty('category');
         $chartProperties->addProperty('frontpage');
-        $md5 = $chartProperties->md5();
-
-
-        if (Cache::has($md5)) {
-            Log::debug('Successfully returned cached chart [' . $md5 . '].');
-
-            return Response::json(Cache::get($md5));
+        if ($chartProperties->has()) {
+            return Response::json($chartProperties->get());
         }
+        $md5 = $chartProperties->getMd5();
 
         $set   = $repository->getCategoriesAndExpensesCorrected($start, $end);
 

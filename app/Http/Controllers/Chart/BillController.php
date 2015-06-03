@@ -44,13 +44,10 @@ class BillController extends Controller
         $chartProperties->addProperty('single');
         $chartProperties->addProperty('bill');
         $chartProperties->addProperty($bill->id);
-        $md5 = $chartProperties->md5();
-
-        if (Cache::has($md5)) {
-            Log::debug('Successfully returned cached chart [' . $md5 . '].');
-
-            return Response::json(Cache::get($md5));
+        if ($chartProperties->has()) {
+            return Response::json($chartProperties->get());
         }
+        $md5 = $chartProperties->getMd5();
 
         // get first transaction or today for start:
         $results = $repository->getJournals($bill);
@@ -92,13 +89,10 @@ class BillController extends Controller
         $chartProperties->addProperty($end);
         $chartProperties->addProperty('bills');
         $chartProperties->addProperty('frontpage');
-        $md5 = $chartProperties->md5();
-
-        if (Cache::has($md5)) {
-            Log::debug('Successfully returned cached chart [' . $md5 . '].');
-
-            return Response::json(Cache::get($md5));
+        if ($chartProperties->has()) {
+            return Response::json($chartProperties->get());
         }
+        $md5 = $chartProperties->getMd5();
 
         $bills  = $repository->getActiveBills();
         $paid   = new Collection; // journals.

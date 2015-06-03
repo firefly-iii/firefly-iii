@@ -13,7 +13,6 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
-use Log;
 use Response;
 use Session;
 use Steam;
@@ -44,12 +43,10 @@ class JsonController extends Controller
         $prop->addProperty($start);
         $prop->addProperty($end);
         $prop->addProperty('box-bills-paid');
-        $md5 = $prop->md5();
-        if (Cache::has($md5)) {
-            Log::debug('Successfully returned cached box bills-paid [' . $md5 . ']');
-
-            return Response::json(Cache::get($md5));
+        if ($prop->has()) {
+            return Response::json($prop->get());
         }
+        $md5 = $prop->getMd5();
 
         $amount = 0;
 
@@ -100,12 +97,10 @@ class JsonController extends Controller
         $prop->addProperty($start);
         $prop->addProperty($end);
         $prop->addProperty('box-bills-unpaid');
-        $md5 = $prop->md5();
-        if (Cache::has($md5)) {
-            Log::debug('Successfully returned cached box bills-unpaid [' . $md5 . ']');
-
-            return Response::json(Cache::get($md5));
+        if ($prop->has()) {
+            return Response::json($prop->get());
         }
+        $md5 = $prop->getMd5();
 
         $bills  = $repository->getActiveBills();
         $unpaid = new Collection; // bills
@@ -162,13 +157,10 @@ class JsonController extends Controller
         $prop->addProperty($start);
         $prop->addProperty($end);
         $prop->addProperty('box-in');
-        $md5 = $prop->md5();
-        if (Cache::has($md5)) {
-            Log::debug('Successfully returned cached box in [' . $md5 . ']');
-
-            return Response::json(Cache::get($md5));
+        if ($prop->has()) {
+            return Response::json($prop->get());
         }
-
+        $md5 = $prop->getMd5();
 
         $amount = $reportQuery->incomeInPeriodCorrected($start, $end, true)->sum('amount');
 
@@ -194,12 +186,10 @@ class JsonController extends Controller
         $prop->addProperty($start);
         $prop->addProperty($end);
         $prop->addProperty('box-out');
-        $md5 = $prop->md5();
-        if (Cache::has($md5)) {
-            Log::debug('Successfully returned cached box out [' . $md5 . ']');
-
-            return Response::json(Cache::get($md5));
+        if ($prop->has()) {
+            return Response::json($prop->get());
         }
+        $md5 = $prop->getMd5();
 
         $amount = $reportQuery->expenseInPeriodCorrected($start, $end, true)->sum('amount');
 

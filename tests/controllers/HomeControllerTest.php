@@ -108,6 +108,10 @@ class HomeControllerTest extends TestCase
         $language->save();
         Preferences::shouldReceive('get')->withAnyArgs()->andReturn($language);
 
+        $lastActivity       = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $lastActivity->data = microtime();
+        Preferences::shouldReceive('lastActivity')->andReturn($lastActivity);
+
 
         Amount::shouldReceive('getCurrencyCode')->andReturn('EUR');
         Amount::shouldReceive('format')->andReturn('xxx');

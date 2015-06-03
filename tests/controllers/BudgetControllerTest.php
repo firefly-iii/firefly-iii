@@ -194,6 +194,9 @@ class BudgetControllerTest extends TestCase
         $date = Carbon::now()->startOfMonth()->format('FY');
         Preferences::shouldReceive('set')->once()->withArgs(['budgetIncomeTotal' . $date, 1001]);
         Preferences::shouldReceive('mark')->once()->andReturn(true);
+        $lastActivity       = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $lastActivity->data = microtime();
+        Preferences::shouldReceive('lastActivity')->andReturn($lastActivity);
 
         // language preference:
         $language       = FactoryMuffin::create('FireflyIII\Models\Preference');
@@ -386,6 +389,9 @@ class BudgetControllerTest extends TestCase
         Amount::shouldReceive('format')->andReturn('xx');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
         Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
+        $lastActivity       = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $lastActivity->data = microtime();
+        Preferences::shouldReceive('lastActivity')->andReturn($lastActivity);
 
         // language preference:
         $language       = FactoryMuffin::create('FireflyIII\Models\Preference');
