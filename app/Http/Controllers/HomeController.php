@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use Config;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Input;
 use Preferences;
@@ -39,6 +40,16 @@ class HomeController extends Controller
     public function flush()
     {
         Session::clear();
+
+        // encrypt transaction journal description
+        $set = TransactionJournal::where('encrypted', 0)->take(100)->get();
+        /** @var TransactionJournal $entry */
+        foreach ($set as $entry) {
+            $description        = $entry->description;
+            $entry->description = $description;
+            $entry->save();
+        }
+        unset($set, $entry, $description);
 
         return Redirect::route('index');
     }

@@ -115,7 +115,7 @@ return [
          */
         'Illuminate\Foundation\Providers\ArtisanServiceProvider',
         'Illuminate\Auth\AuthServiceProvider',
-        'Illuminate\Bus\BusServiceProvider',
+        //'Illuminate\Bus\BusServiceProvider',
         'Illuminate\Cache\CacheServiceProvider',
         'Illuminate\Foundation\Providers\ConsoleSupportServiceProvider',
         'Illuminate\Routing\ControllerServiceProvider',
@@ -139,16 +139,16 @@ return [
         'TwigBridge\ServiceProvider',
 
         'DaveJamesMiller\Breadcrumbs\ServiceProvider',
-//        'Barryvdh\Debugbar\ServiceProvider',
-//        'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
+        //'Barryvdh\Debugbar\ServiceProvider',
+        //'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
         'Zizaco\Entrust\EntrustServiceProvider',
 
         /*
          * Application Service Providers...
          */
         'FireflyIII\Providers\AppServiceProvider',
-        'FireflyIII\Providers\BusServiceProvider',
-        'FireflyIII\Providers\ConfigServiceProvider',
+        //'FireflyIII\Providers\BusServiceProvider',
+        //'FireflyIII\Providers\ConfigServiceProvider',
         'FireflyIII\Providers\EventServiceProvider',
         'FireflyIII\Providers\RouteServiceProvider',
         'FireflyIII\Providers\FireflyServiceProvider',
