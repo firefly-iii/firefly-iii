@@ -8,7 +8,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\Support\ChartProperties;
+use FireflyIII\Support\CacheProperties;
 use Grumpydictator\Gchart\GChart;
 use Illuminate\Support\Collection;
 use Response;
@@ -40,7 +40,7 @@ class BillController extends Controller
         $chart->addColumn(trans('firefly.minAmount'), 'number');
         $chart->addColumn(trans('firefly.billEntry'), 'number');
 
-        $chartProperties = new ChartProperties;
+        $chartProperties = new CacheProperties;
         $chartProperties->addProperty('single');
         $chartProperties->addProperty('bill');
         $chartProperties->addProperty($bill->id);
@@ -87,7 +87,7 @@ class BillController extends Controller
 
 
         // chart properties for cache:
-        $chartProperties = new ChartProperties();
+        $chartProperties = new CacheProperties();
         $chartProperties->addProperty($start);
         $chartProperties->addProperty($end);
         $chartProperties->addProperty('bills');

@@ -2,10 +2,9 @@
 
 namespace FireflyIII\Support;
 
+use Cache;
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\PiggyBank;
-use FireflyIII\Models\PiggyBankRepetition;
 
 /**
  * Class Steam
@@ -24,6 +23,19 @@ class Steam
      */
     public function balance(Account $account, Carbon $date, $ignoreVirtualBalance = false)
     {
+
+        // abuse chart properties:
+        $properties = new CacheProperties;
+        $properties->addProperty($account->id);
+        $properties->addProperty('balance');
+        $properties->addProperty($date);
+        $properties->addProperty($ignoreVirtualBalance);
+        $md5 = $properties->md5();
+        if (Cache::has($md5)) {
+            return Cache::get($md5);
+        }
+
+
         // find the first known transaction on this account:
         $firstDateObject = $account
             ->transactions()
@@ -45,6 +57,7 @@ class Steam
         if (!$ignoreVirtualBalance) {
             $balance = bcadd($balance, $account->virtual_balance);
         }
+        Cache::forever($md5, round($balance, 2));
 
         return round($balance, 2);
     }

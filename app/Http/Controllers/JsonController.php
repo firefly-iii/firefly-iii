@@ -11,7 +11,7 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use FireflyIII\Support\ChartProperties;
+use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Log;
 use Response;
@@ -40,7 +40,7 @@ class JsonController extends Controller
         $end   = Session::get('end', Carbon::now()->endOfMonth());
 
         // works for json too!
-        $prop = new ChartProperties;
+        $prop = new CacheProperties;
         $prop->addProperty($start);
         $prop->addProperty($end);
         $prop->addProperty('box-bills-paid');
@@ -96,7 +96,7 @@ class JsonController extends Controller
         $end    = Session::get('end', Carbon::now()->endOfMonth());
 
         // works for json too!
-        $prop = new ChartProperties;
+        $prop = new CacheProperties;
         $prop->addProperty($start);
         $prop->addProperty($end);
         $prop->addProperty('box-bills-unpaid');
@@ -158,7 +158,7 @@ class JsonController extends Controller
         $end   = Session::get('end', Carbon::now()->endOfMonth());
 
         // works for json too!
-        $prop = new ChartProperties;
+        $prop = new CacheProperties;
         $prop->addProperty($start);
         $prop->addProperty($end);
         $prop->addProperty('box-in');
@@ -190,7 +190,7 @@ class JsonController extends Controller
 
 
         // works for json too!
-        $prop = new ChartProperties;
+        $prop = new CacheProperties;
         $prop->addProperty($start);
         $prop->addProperty($end);
         $prop->addProperty('box-out');

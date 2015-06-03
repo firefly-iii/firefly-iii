@@ -4,7 +4,6 @@ namespace FireflyIII\Support;
 
 use Auth;
 use FireflyIII\Models\Preference;
-use Log;
 /**
  * Class Preferences
  *
@@ -26,7 +25,6 @@ class Preferences
      * @return bool
      */
     public function mark() {
-        Log::debug('MARK!');
         $this->set('lastActivity',microtime());
         return true;
     }

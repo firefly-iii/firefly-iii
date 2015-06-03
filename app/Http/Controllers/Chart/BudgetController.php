@@ -8,7 +8,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Support\ChartProperties;
+use FireflyIII\Support\CacheProperties;
 use Grumpydictator\Gchart\GChart;
 use Illuminate\Support\Collection;
 use Log;
@@ -45,7 +45,7 @@ class BudgetController extends Controller
         $last = Navigation::endOfX($last, $range, $final);
 
         // chart properties for cache:
-        $chartProperties = new ChartProperties();
+        $chartProperties = new CacheProperties();
         $chartProperties->addProperty($first);
         $chartProperties->addProperty($last);
         $chartProperties->addProperty('budget');
@@ -93,7 +93,7 @@ class BudgetController extends Controller
         $end   = $repetition->enddate;
 
         // chart properties for cache:
-        $chartProperties = new ChartProperties();
+        $chartProperties = new CacheProperties();
         $chartProperties->addProperty($start);
         $chartProperties->addProperty($end);
         $chartProperties->addProperty('budget');
@@ -153,7 +153,7 @@ class BudgetController extends Controller
         $allEntries = new Collection;
 
         // chart properties for cache:
-        $chartProperties = new ChartProperties();
+        $chartProperties = new CacheProperties();
         $chartProperties->addProperty($start);
         $chartProperties->addProperty($end);
         $chartProperties->addProperty('budget');
@@ -227,7 +227,7 @@ class BudgetController extends Controller
         $budgets = $repository->getBudgets();
 
         // chart properties for cache:
-        $chartProperties = new ChartProperties();
+        $chartProperties = new CacheProperties();
         $chartProperties->addProperty($start);
         $chartProperties->addProperty($end);
         $chartProperties->addProperty('budget');

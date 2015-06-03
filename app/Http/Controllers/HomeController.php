@@ -62,8 +62,10 @@ class HomeController extends Controller
     public function index(AccountRepositoryInterface $repository)
     {
 
+
         $types = Config::get('firefly.accountTypesByIdentifier.asset');
         $count = $repository->countAccounts($types);
+
 
         if ($count == 0) {
             return Redirect::route('new-user.index');
@@ -78,7 +80,10 @@ class HomeController extends Controller
         $end               = Session::get('end', Carbon::now()->endOfMonth());
         $accounts          = $repository->getFrontpageAccounts($frontPage);
         $savings           = $repository->getSavingsAccounts();
+
         $piggyBankAccounts = $repository->getPiggyBankAccounts();
+
+
 
         $savingsTotal = 0;
         foreach ($savings as $savingAccount) {
@@ -100,7 +105,6 @@ class HomeController extends Controller
                 $transactions[] = [$set, $account];
             }
         }
-
         return view('index', compact('count', 'title', 'savings', 'subTitle', 'mainTitleIcon', 'transactions', 'savingsTotal', 'piggyBankAccounts'));
     }
 

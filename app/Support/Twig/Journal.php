@@ -4,7 +4,9 @@ namespace FireflyIII\Support\Twig;
 
 
 use App;
+use Cache;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Support\CacheProperties;
 use Twig_Extension;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
@@ -26,21 +28,38 @@ class Journal extends Twig_Extension
         $filters = [];
 
         $filters[] = new Twig_SimpleFilter(
-            'typeIcon', function(TransactionJournal $journal) {
+            'typeIcon', function (TransactionJournal $journal) {
+
+            $prop = new CacheProperties();
+            $prop->addProperty($journal->id);
+            $prop->addProperty('typeIcon');
+            $md5 = $prop->md5();
+            if (Cache::has($md5)) {
+                return Cache::get($md5);
+            }
+
             $type = $journal->transactionType->type;
 
             switch ($type) {
                 case 'Withdrawal':
-                    return '<span class="glyphicon glyphicon-arrow-left" title="' . trans('firefly.withdrawal') . '"></span>';
+                    $txt = '<span class="glyphicon glyphicon-arrow-left" title="' . trans('firefly.withdrawal') . '"></span>';
+                    break;
                 case 'Deposit':
-                    return '<span class="glyphicon glyphicon-arrow-right" title="' . trans('firefly.deposit') . '"></span>';
+                    $txt = '<span class="glyphicon glyphicon-arrow-right" title="' . trans('firefly.deposit') . '"></span>';
+                    break;
                 case 'Transfer':
-                    return '<i class="fa fa-fw fa-exchange" title="' . trans('firefly.transfer') . '"></i>';
+                    $txt = '<i class="fa fa-fw fa-exchange" title="' . trans('firefly.transfer') . '"></i>';
+                    break;
                 case 'Opening balance':
-                    return '<span class="glyphicon glyphicon-ban-circle" title="' . trans('firefly.openingBalance') . '"></span>';
+                    $txt = '<span class="glyphicon glyphicon-ban-circle" title="' . trans('firefly.openingBalance') . '"></span>';
+                    break;
                 default:
-                    return '';
+                    $txt = '';
+                    break;
             }
+            Cache::forever($md5, $txt);
+
+            return $txt;
 
 
         }, ['is_safe' => ['html']]
@@ -59,7 +78,7 @@ class Journal extends Twig_Extension
         $functions = [];
 
         $functions[] = new Twig_SimpleFunction(
-            'invalidJournal', function(TransactionJournal $journal) {
+            'invalidJournal', function (TransactionJournal $journal) {
             if (!isset($journal->transactions[1]) || !isset($journal->transactions[0])) {
                 return true;
             }
@@ -69,7 +88,7 @@ class Journal extends Twig_Extension
         );
 
         $functions[] = new Twig_SimpleFunction(
-            'relevantTags', function(TransactionJournal $journal) {
+            'relevantTags', function (TransactionJournal $journal) {
             if ($journal->tags->count() == 0) {
                 return App::make('amount')->formatJournal($journal);
             }
@@ -82,7 +101,7 @@ class Journal extends Twig_Extension
                     $amount = App::make('amount')->format($journal->actual_amount, false);
 
                     return '<a href="' . route('tags.show', [$tag->id]) . '" class="label label-success" title="' . $amount
-                            . '"><i class="fa fa-fw fa-refresh"></i> ' . $tag->tag . '</a>';
+                           . '"><i class="fa fa-fw fa-refresh"></i> ' . $tag->tag . '</a>';
                 }
 
                 /*
@@ -92,7 +111,7 @@ class Journal extends Twig_Extension
                     $amount = App::make('amount')->formatJournal($journal, false);
 
                     return '<a href="' . route('tags.show', [$tag->id]) . '" class="label label-success" title="' . $amount
-                            . '"><i class="fa fa-fw fa-sort-numeric-desc"></i> ' . $tag->tag . '</a>';
+                           . '"><i class="fa fa-fw fa-sort-numeric-desc"></i> ' . $tag->tag . '</a>';
                 }
                 /*
                  * AdvancePayment with a withdrawal will show the amount with a link to

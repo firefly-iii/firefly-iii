@@ -10,11 +10,11 @@ use Illuminate\Support\Collection;
 use Preferences as Prefs;
 
 /**
- * Class ChartProperties
+ * Class CacheProperties
  *
  * @package FireflyIII\Support
  */
-class ChartProperties
+class CacheProperties
 {
 
     /** @var Collection */
@@ -56,6 +56,12 @@ class ChartProperties
                 $string .= $property->toRfc3339String();
                 continue;
             }
+
+            if (is_array($property)) {
+                $string .= print_r($property, true);
+                continue;
+            }
+
             if (is_object($property)) {
                 $string .= $property->__toString();
             }

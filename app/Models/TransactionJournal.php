@@ -1,7 +1,9 @@
 <?php namespace FireflyIII\Models;
 
+use Cache;
 use Carbon\Carbon;
 use Crypt;
+use FireflyIII\Support\CacheProperties;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -134,6 +136,15 @@ class TransactionJournal extends Model
      */
     public function getAmountAttribute()
     {
+        $prop = new CacheProperties();
+        $prop->addProperty($this->id);
+        $prop->addProperty('amount');
+        $md5 = $prop->md5();
+        if (Cache::has($md5)) {
+            return Cache::get($md5);
+        }
+
+
         $amount = '0';
         bcscale(2);
         /** @var Transaction $t */
@@ -147,6 +158,8 @@ class TransactionJournal extends Model
          * If the journal has tags, it gets complicated.
          */
         if ($this->tags->count() == 0) {
+            Cache::forever($md5, $amount);
+
             return $amount;
         }
 
@@ -160,6 +173,7 @@ class TransactionJournal extends Model
             foreach ($others as $other) {
                 $amount = bcsub($amount, $other->actual_amount);
             }
+            Cache::forever($md5, $amount);
 
             return $amount;
         }
@@ -167,6 +181,8 @@ class TransactionJournal extends Model
         // if this journal is part of an advancePayment AND the journal is a deposit,
         // then the journal amount is correcting a withdrawal, and the amount is zero:
         if ($advancePayment && $this->transactionType->type == 'Deposit') {
+            Cache::forever($md5, '0');
+
             return '0';
         }
 
@@ -180,11 +196,14 @@ class TransactionJournal extends Model
                 $transfer = $balancingAct->transactionJournals()->transactionTypes(['Transfer'])->first();
                 if ($transfer) {
                     $amount = bcsub($amount, $transfer->actual_amount);
+                    Cache::forever($md5, $amount);
 
                     return $amount;
                 }
             } // @codeCoverageIgnore
         } // @codeCoverageIgnore
+
+        Cache::forever($md5, $amount);
 
         return $amount;
     }
@@ -220,6 +239,15 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transactions()
+    {
+        return $this->hasMany('FireflyIII\Models\Transaction');
+    }
+
+    /**
      * @return string
      */
     public function getCorrectAmountAttribute()
@@ -233,15 +261,6 @@ class TransactionJournal extends Model
         }
 
         return '0';
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function transactions()
-    {
-        return $this->hasMany('FireflyIII\Models\Transaction');
     }
 
     /**

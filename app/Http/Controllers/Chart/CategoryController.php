@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\Support\ChartProperties;
+use FireflyIII\Support\CacheProperties;
 use Grumpydictator\Gchart\GChart;
 use Log;
 use Navigation;
@@ -80,7 +80,7 @@ class CategoryController extends Controller
         $end   = Session::get('end', Carbon::now()->endOfMonth());
 
         // chart properties for cache:
-        $chartProperties = new ChartProperties;
+        $chartProperties = new CacheProperties;
         $chartProperties->addProperty($start);
         $chartProperties->addProperty($end);
         $chartProperties->addProperty('category');

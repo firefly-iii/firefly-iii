@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Support\ChartProperties;
+use FireflyIII\Support\CacheProperties;
 use Grumpydictator\Gchart\GChart;
 use Illuminate\Support\Collection;
 use Log;
@@ -43,7 +43,7 @@ class AccountController extends Controller
         $end->endOfMonth();
 
         // chart properties for cache:
-        $chartProperties = new ChartProperties();
+        $chartProperties = new CacheProperties();
         $chartProperties->addProperty($start);
         $chartProperties->addProperty($end);
         $chartProperties->addProperty('all');
@@ -118,7 +118,7 @@ class AccountController extends Controller
         $accounts  = $repository->getFrontpageAccounts($frontPage);
 
         // chart properties for cache:
-        $chartProperties = new ChartProperties();
+        $chartProperties = new CacheProperties();
         $chartProperties->addProperty($start);
         $chartProperties->addProperty($end);
         $chartProperties->addProperty('frontpage');
@@ -182,7 +182,7 @@ class AccountController extends Controller
         $today   = new Carbon;
 
         // chart properties for cache:
-        $chartProperties = new ChartProperties();
+        $chartProperties = new CacheProperties();
         $chartProperties->addProperty($start);
         $chartProperties->addProperty($end);
         $chartProperties->addProperty('frontpage');

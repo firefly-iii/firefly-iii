@@ -4,6 +4,7 @@ namespace FireflyIII\Repositories\Account;
 
 use App;
 use Auth;
+use Cache;
 use Carbon\Carbon;
 use Config;
 use DB;
@@ -15,6 +16,7 @@ use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Support\CacheProperties;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -109,11 +111,22 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getFrontpageAccounts(Preference $preference)
     {
+        $cache = new CacheProperties();
+        $cache->addProperty($preference->data);
+        $cache->addProperty('frontPageaccounts');
+        $md5 = $cache->md5();
+        if (Cache::has($md5)) {
+            return Cache::get($md5);
+        }
+
+
         if ($preference->data == []) {
             $accounts = Auth::user()->accounts()->accountTypeIn(['Default account', 'Asset account'])->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
         } else {
             $accounts = Auth::user()->accounts()->whereIn('id', $preference->data)->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
         }
+
+        Cache::forever($md5, $accounts);
 
         return $accounts;
     }
@@ -131,7 +144,16 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getFrontpageTransactions(Account $account, Carbon $start, Carbon $end)
     {
-        return Auth::user()
+        $prop = new CacheProperties();
+        $prop->addProperty($account->id);
+        $prop->addProperty($start);
+        $prop->addProperty($end);
+        $md5 = $prop->md5();
+        if(Cache::has($md5)) {
+            return Cache::get($md5);
+        }
+
+        $set = Auth::user()
                    ->transactionjournals()
                    ->with(['transactions'])
                    ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
@@ -144,6 +166,8 @@ class AccountRepository implements AccountRepositoryInterface
                    ->orderBy('transaction_journals.id', 'DESC')
                    ->take(10)
                    ->get(['transaction_journals.*', 'transaction_currencies.symbol', 'transaction_types.type']);
+        Cache::forever($md5, $set);
+        return $set;
     }
 
     /**
@@ -207,6 +231,14 @@ class AccountRepository implements AccountRepositoryInterface
             $ids[] = intval($id->account_id);
         }
 
+        $cache = new CacheProperties;
+        $cache->addProperty($ids);
+        $cache->addProperty('piggyAccounts');
+        $md5 = $cache->md5();
+        if (Cache::has($md5)) {
+            return Cache::get($md5);
+        }
+
         $ids = array_unique($ids);
         if (count($ids) > 0) {
             $accounts = Auth::user()->accounts()->whereIn('id', $ids)->get();
@@ -230,6 +262,8 @@ class AccountRepository implements AccountRepositoryInterface
 
             }
         );
+
+        Cache::forever($md5, $accounts);
 
         return $accounts;
 
