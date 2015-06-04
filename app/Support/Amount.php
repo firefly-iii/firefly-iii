@@ -89,7 +89,7 @@ class Amount
         $cache->addProperty('formatJournal');
 
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
 

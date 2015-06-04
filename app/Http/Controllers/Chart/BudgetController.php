@@ -49,7 +49,7 @@ class BudgetController extends Controller
         $cache->addProperty('budget');
         $cache->addProperty('budget');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
 
@@ -95,7 +95,7 @@ class BudgetController extends Controller
         $cache->addProperty($budget->id);
         $cache->addProperty($repetition->id);
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $chart->addColumn(trans('firefly.day'), 'date');
@@ -149,7 +149,7 @@ class BudgetController extends Controller
         $cache->addProperty('budget');
         $cache->addProperty('all');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
 
@@ -219,7 +219,7 @@ class BudgetController extends Controller
         $cache->addProperty('budget');
         $cache->addProperty('year');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         // add columns:

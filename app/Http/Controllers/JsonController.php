@@ -43,7 +43,7 @@ class JsonController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('box-bills-paid');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $amount = 0;
@@ -97,7 +97,7 @@ class JsonController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('box-bills-unpaid');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $bills  = $repository->getActiveBills();
@@ -156,7 +156,7 @@ class JsonController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('box-in');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $amount = $reportQuery->incomeInPeriodCorrected($start, $end, true)->sum('amount');
@@ -184,7 +184,7 @@ class JsonController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('box-out');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $amount = $reportQuery->expenseInPeriodCorrected($start, $end, true)->sum('amount');

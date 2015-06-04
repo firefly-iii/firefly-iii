@@ -122,4 +122,32 @@ class HomeControllerTest extends TestCase
 
     }
 
+    /**
+     * @covers FireflyIII\Http\Controllers\HomeController::index
+     */
+    public function testIndexEmpty()
+    {
+        $user       = FactoryMuffin::create('FireflyIII\User');
+        $repository = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
+
+        $this->be($user);
+
+        // mock ALL THE THINGS!
+        $repository->shouldReceive('countAccounts')->once()->andReturn(0);
+
+        // language preference:
+        $language       = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $language->data = 'en';
+        $language->save();
+        Preferences::shouldReceive('get')->withAnyArgs()->andReturn($language);
+
+        $lastActivity       = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $lastActivity->data = microtime();
+        Preferences::shouldReceive('lastActivity')->andReturn($lastActivity);
+
+        $this->call('GET', '/');
+        $this->assertResponseStatus(302);
+        $this->assertRedirectedToRoute('new-user.index');
+    }
+
 }

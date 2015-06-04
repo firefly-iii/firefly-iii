@@ -114,7 +114,7 @@ class AccountRepository implements AccountRepositoryInterface
         $cache->addProperty($preference->data);
         $cache->addProperty('frontPageaccounts');
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
 
@@ -147,7 +147,7 @@ class AccountRepository implements AccountRepositoryInterface
         $cache->addProperty($start);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         $set = Auth::user()
@@ -233,7 +233,7 @@ class AccountRepository implements AccountRepositoryInterface
         $cache->addProperty($ids);
         $cache->addProperty('piggyAccounts');
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         $ids = array_unique($ids);

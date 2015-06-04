@@ -30,7 +30,7 @@ class Steam
         $cache->addProperty($date);
         $cache->addProperty($ignoreVirtualBalance);
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
 

@@ -33,7 +33,7 @@ class Journal extends Twig_Extension
             $cache->addProperty($journal->id);
             $cache->addProperty('typeIcon');
             if ($cache->has()) {
-                return $cache->get();
+                return $cache->get(); // @codeCoverageIgnore
             }
 
             $type = $journal->transactionType->type;

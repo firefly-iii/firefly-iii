@@ -116,6 +116,6 @@ class NewUserController extends Controller
         Session::flash('success', 'New account(s) created!');
         Preferences::mark();
 
-        return Redirect::route('home');
+        return Redirect::route('index');
     }
 }

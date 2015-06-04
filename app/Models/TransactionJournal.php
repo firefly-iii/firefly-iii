@@ -140,7 +140,7 @@ class TransactionJournal extends Model
         $cache->addProperty($this->id);
         $cache->addProperty('amount');
         if ($cache->has()) {
-            return $cache->get();
+            return $cache->get(); // @codeCoverageIgnore
         }
 
 

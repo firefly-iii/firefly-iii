@@ -46,7 +46,7 @@ class AccountController extends Controller
         $cache->addProperty('all');
         $cache->addProperty('accounts');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
 
@@ -116,7 +116,7 @@ class AccountController extends Controller
         $cache->addProperty('frontpage');
         $cache->addProperty('accounts');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
 
@@ -176,7 +176,7 @@ class AccountController extends Controller
         $cache->addProperty('single');
         $cache->addProperty($account->id);
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         while ($end >= $current) {

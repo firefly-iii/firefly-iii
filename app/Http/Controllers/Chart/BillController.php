@@ -44,7 +44,7 @@ class BillController extends Controller
         $cache->addProperty('bill');
         $cache->addProperty($bill->id);
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         // get first transaction or today for start:
@@ -88,7 +88,7 @@ class BillController extends Controller
         $cache->addProperty('bills');
         $cache->addProperty('frontpage');
         if ($cache->has()) {
-            return Response::json($cache->get());
+            return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $bills  = $repository->getActiveBills();
