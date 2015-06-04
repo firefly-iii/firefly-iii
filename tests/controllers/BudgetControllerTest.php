@@ -259,6 +259,29 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
+     * @covers FireflyIII\Http\Controllers\BudgetController::show
+     */
+    public function testShowRepetition()
+    {
+        $repetition = FactoryMuffin::create('FireflyIII\Models\LimitRepetition');
+        $budget     = $repetition->budgetLimit->budget;
+        $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $this->be($budget->user);
+
+        $paginator = new LengthAwarePaginator(new Collection, 0, 20, 1);
+
+        Amount::shouldReceive('getCurrencyCode')->andReturn('x');
+        Amount::shouldReceive('format')->andReturn('x');
+        $repository->shouldReceive('getJournals')->andReturn($paginator);
+        $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection);
+
+
+        $this->call('GET', '/budgets/show/' . $budget->id . '/' . $repetition->id);
+        $this->assertResponseOk();
+
+    }
+
+    /**
      * @covers FireflyIII\Http\Controllers\BudgetController::store
      */
     public function testStore()

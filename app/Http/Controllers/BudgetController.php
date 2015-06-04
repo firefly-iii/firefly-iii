@@ -219,12 +219,15 @@ class BudgetController extends Controller
         }
 
         $journals = $repository->getJournals($budget, $repetition);
-        $limits   = !is_null($repetition->id) ? [$repetition->budgetLimit] : $repository->getBudgetLimits($budget);
-        $subTitle = !is_null($repetition->id)
-            ?
-            trans('firefly.budget_in_month', ['name' => $budget->name, 'month' => $repetition->startdate->formatLocalized($this->monthFormat)])
-            :
-            e($budget->name);
+
+        if (is_null($repetition->id)) {
+            $limits   = $repository->getBudgetLimits($budget);
+            $subTitle = e($budget->name);
+        } else {
+            $limits   = [$repetition->budgetLimit];
+            $subTitle = trans('firefly.budget_in_month', ['name' => $budget->name, 'month' => $repetition->startdate->formatLocalized($this->monthFormat)]);
+        }
+
         $journals->setPath('/budgets/show/' . $budget->id);
 
         return view('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle'));

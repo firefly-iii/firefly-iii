@@ -4,8 +4,6 @@ use Carbon\Carbon;
 use FireflyIII\Helpers\Collection\Account as AccountCollection;
 use FireflyIII\Helpers\Report\ReportHelper;
 use FireflyIII\Models\AccountMeta;
-use FireflyIII\Models\PiggyBankRepetition;
-use FireflyIII\Models\Transaction;
 use Illuminate\Support\Collection;
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
@@ -48,13 +46,21 @@ class ReportHelperTest extends TestCase
         FactoryMuffin::create('FireflyIII\Models\AccountType');
         FactoryMuffin::create('FireflyIII\Models\AccountType');
         $asset = FactoryMuffin::create('FireflyIII\Models\AccountType');
+        $cash  = FactoryMuffin::create('FireflyIII\Models\AccountType');
         $user  = FactoryMuffin::create('FireflyIII\User');
         for ($i = 0; $i < 5; $i++) {
             $account                  = FactoryMuffin::create('FireflyIII\Models\Account');
             $account->user_id         = $user->id;
             $account->account_type_id = $asset->id;
             $account->save();
+
         }
+
+        $cashAccount                  = FactoryMuffin::create('FireflyIII\Models\Account');
+        $cashAccount->user_id         = $user->id;
+        $cashAccount->account_type_id = $cash->id;
+        $cashAccount->save();
+
         $this->be($user);
         /** @var AccountCollection $object */
         $object = $this->object->getAccountReport(Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth(), false);
