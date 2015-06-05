@@ -9,9 +9,8 @@ use Crypt;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use Illuminate\Contracts\Encryption\DecryptException;
+use FireflyIII\User;
 use Illuminate\Validation\Validator;
-use Log;
 use Navigation;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -93,54 +92,129 @@ class FireflyValidator extends Validator
      */
     public function validateUniqueAccountForUser($attribute, $value, $parameters)
     {
-        $type = null;
-
-        /**
-         * Switch on different cases on which this method can respond:
-         */
-        $hasWhat          = isset($this->data['what']);
-        $hasAccountTypeId = isset($this->data['account_type_id']) && isset($this->data['name']);
-        $hasAccountId     = isset($this->data['id']);
-        $ignoreId         = 0;
-
-
-        if ($hasWhat) {
-            $search = Config::get('firefly.accountTypeByIdentifier.' . $this->data['what']);
-            $type   = AccountType::whereType($search)->first();
-            // this field can be used to find the exact type, and continue.
+        // because a user does not have to be logged in (tests and what-not).
+        if (!Auth::check()) {
+            return $this->validateAccountAnonymously();
         }
 
-        if ($hasAccountTypeId) {
+        if (isset($this->data['what'])) {
+            return $this->validateByAccountTypeString($value, $parameters);
+        }
+
+        if (isset($this->data['account_type_id'])) {
+            return $this->validateByAccountTypeId($value, $parameters);
+        }
+
+
+        var_dump($attribute);
+        var_dump($value);
+        var_dump($parameters);
+        var_dump($this->data);
+
+        exit;
+
+
+        // try to determin type of account:
+        if (!empty($this->data['what'])) {
+            $search = Config::get('firefly.accountTypeByIdentifier.' . $this->data['what']);
+            $type   = AccountType::whereType($search)->first();
+        } else {
             $type = AccountType::find($this->data['account_type_id']);
         }
 
-        if ($hasAccountId) {
-            /** @var Account $account */
-            $account  = Account::find($this->data['id']);
-            $ignoreId = intval($this->data['id']);
-            $type     = AccountType::find($account->account_type_id);
-            unset($account);
+        // ignore itself, if parameter is given:
+        if (isset($parameters[0])) {
+            $ignoreId = $parameters[0];
+        } else {
+            $ignoreId = 0;
         }
 
-        /**
-         * Try to decrypt data just in case:
-         */
-        try {
-            $value = Crypt::decrypt($value);
-        } catch (DecryptException $e) {
-            // if it fails, probably not encrypted.
+        // reset to basic check, see what happens:
+        $userId   = Auth::user()->id;
+        $ignoreId = intval($this->data['id']);
+
+        $set = Account::where('account_type_id', $type->id)->where('id', '!=', $ignoreId)->where('user_id', $userId)->get();
+        /** @var Account $entry */
+        foreach ($set as $entry) {
+            if ($entry->name == $value) {
+                return false;
+            }
         }
 
+        return true;
 
-        if (is_null($type)) {
-            Log::error('Could not determine type of account to validate.');
+    }
 
+    /**
+     * @return bool
+     */
+    protected function validateAccountAnonymously()
+    {
+        if (!isset($this->data['user_id'])) {
             return false;
         }
 
-        // get all accounts with this type, and find the name.
-        $userId = Auth::check() ? Auth::user()->id : 0;
-        $set    = Account::where('account_type_id', $type->id)->where('id', '!=', $ignoreId)->where('user_id', $userId)->get();
+        $user  = User::find($this->data['user_id']);
+        $type  = AccountType::find($this->data['account_type_id'])->first();
+        $value = $this->data['name'];
+
+        // decrypt if necessary
+        if (intval($this->data['encrypted']) === 1) {
+            $value = Crypt::decrypt($this->data['name']);
+        }
+
+
+        $set = $user->accounts()->where('account_type_id', $type->id)->get();
+        /** @var Account $entry */
+        foreach ($set as $entry) {
+            if ($entry->name == $value) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $value
+     * @param $parameters
+     *
+     * @return bool
+     */
+    protected function validateByAccountTypeString($value, $parameters)
+    {
+        $search = Config::get('firefly.accountTypeByIdentifier.' . $this->data['what']);
+        $type   = AccountType::whereType($search)->first();
+        $ignore = isset($parameters[0]) ? intval($parameters[0]) : 0;
+
+        $set = Auth::user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
+        /** @var Account $entry */
+        foreach ($set as $entry) {
+            if ($entry->name == $value) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $value
+     * @param $parameters
+     *
+     * @return bool
+     */
+    protected function validateByAccountTypeId($value, $parameters)
+    {
+        $type   = AccountType::find($this->data['account_type_id'])->first();
+        $ignore = isset($parameters[0]) ? intval($parameters[0]) : 0;
+
+        // if is encrypted, decrypt:
+        if (intval($this->data['encrypted']) === 1) {
+            $value = Crypt::decrypt($value);
+        }
+
+        $set = Auth::user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->name == $value) {

@@ -21,6 +21,7 @@ class AccountControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
+
         $this->createAccount();
     }
 
@@ -49,8 +50,12 @@ class AccountControllerTest extends TestCase
      */
     public function createAccount()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
         if (is_null($this->account)) {
-            $this->account = FactoryMuffin::create('FireflyIII\Models\Account');
+            $this->account          = FactoryMuffin::create('FireflyIII\Models\Account');
+            $this->account->user_id = $user->id;
+            $this->account->save();
         }
     }
 

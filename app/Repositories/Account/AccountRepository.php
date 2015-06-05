@@ -65,7 +65,7 @@ class AccountRepository implements AccountRepositoryInterface
     public function getAccounts(array $types)
     {
         $result = Auth::user()->accounts()->with(
-            ['accountmeta' => function(HasMany $query) {
+            ['accountmeta' => function (HasMany $query) {
                 $query->where('name', 'accountRole');
             }]
         )->accountTypeIn($types)->orderBy('accounts.name', 'ASC')->get(['accounts.*'])->sortBy('name');
@@ -80,15 +80,15 @@ class AccountRepository implements AccountRepositoryInterface
     public function getCreditCards()
     {
         return Auth::user()->accounts()
-                    ->hasMetaValue('accountRole', 'ccAsset')
-                    ->hasMetaValue('ccType', 'monthlyFull')
-                    ->get(
-                        [
-                            'accounts.*',
-                            'ccType.data as ccType',
-                            'accountRole.data as accountRole'
-                        ]
-                    );
+                   ->hasMetaValue('accountRole', 'ccAsset')
+                   ->hasMetaValue('ccType', 'monthlyFull')
+                   ->get(
+                       [
+                           'accounts.*',
+                           'ccType.data as ccType',
+                           'accountRole.data as accountRole'
+                       ]
+                   );
     }
 
     /**
@@ -151,18 +151,18 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         $set = Auth::user()
-                    ->transactionjournals()
-                    ->with(['transactions'])
-                    ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                    ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')->where('accounts.id', $account->id)
-                    ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transaction_journals.transaction_currency_id')
-                    ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                    ->before($end)
-                    ->after($start)
-                    ->orderBy('transaction_journals.date', 'DESC')
-                    ->orderBy('transaction_journals.id', 'DESC')
-                    ->take(10)
-                    ->get(['transaction_journals.*', 'transaction_currencies.symbol', 'transaction_types.type']);
+                   ->transactionjournals()
+                   ->with(['transactions'])
+                   ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                   ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')->where('accounts.id', $account->id)
+                   ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transaction_journals.transaction_currency_id')
+                   ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                   ->before($end)
+                   ->after($start)
+                   ->orderBy('transaction_journals.date', 'DESC')
+                   ->orderBy('transaction_journals.id', 'DESC')
+                   ->take(10)
+                   ->get(['transaction_journals.*', 'transaction_currencies.symbol', 'transaction_types.type']);
         $cache->store($set);
 
         return $set;
@@ -178,13 +178,13 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $offset = ($page - 1) * 50;
         $query  = Auth::user()
-                        ->transactionJournals()
-                        ->withRelevantData()
-                        ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                        ->where('transactions.account_id', $account->id)
-                        ->orderBy('transaction_journals.date', 'DESC')
-                        ->orderBy('transaction_journals.order', 'ASC')
-                        ->orderBy('transaction_journals.id', 'DESC');
+                      ->transactionJournals()
+                      ->withRelevantData()
+                      ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                      ->where('transactions.account_id', $account->id)
+                      ->orderBy('transaction_journals.date', 'DESC')
+                      ->orderBy('transaction_journals.order', 'ASC')
+                      ->orderBy('transaction_journals.id', 'DESC');
 
         $count     = $query->count();
         $set       = $query->take(50)->offset($offset)->get(['transaction_journals.*']);
@@ -242,7 +242,7 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         $accounts->each(
-            function(Account $account) use ($start, $end) {
+            function (Account $account) use ($start, $end) {
                 $account->startBalance = Steam::balance($account, $start, true);
                 $account->endBalance   = Steam::balance($account, $end, true);
                 $account->piggyBalance = 0;
@@ -282,7 +282,7 @@ class AccountRepository implements AccountRepositoryInterface
         $end      = clone Session::get('end', new Carbon);
 
         $accounts->each(
-            function(Account $account) use ($start, $end) {
+            function (Account $account) use ($start, $end) {
                 $account->startBalance = Steam::balance($account, $start);
                 $account->endBalance   = Steam::balance($account, $end);
 
@@ -320,22 +320,22 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function getTransfersInRange(Account $account, Carbon $start, Carbon $end)
     {
-        $set = TransactionJournal::whereIn(
-            'id', function(Builder $q) use ($account, $start, $end) {
+        $set      = TransactionJournal::whereIn(
+            'id', function (Builder $q) use ($account, $start, $end) {
             $q->select('transaction_journals.id')
-                ->from('transactions')
-                ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-                ->where('transactions.account_id', $account->id)
-                ->where('transaction_journals.user_id', Auth::user()->id)
-                ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
-                ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
-                ->where('transaction_types.type', 'Transfer');
+              ->from('transactions')
+              ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+              ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+              ->where('transactions.account_id', $account->id)
+              ->where('transaction_journals.user_id', Auth::user()->id)
+              ->where('transaction_journals.date', '>=', $start->format('Y-m-d'))
+              ->where('transaction_journals.date', '<=', $end->format('Y-m-d'))
+              ->where('transaction_types.type', 'Transfer');
 
         }
         )->get();
         $filtered = $set->filter(
-            function(TransactionJournal $journal) use ($account) {
+            function (TransactionJournal $journal) use ($account) {
                 if ($journal->destination_account->id == $account->id) {
                     return $journal;
                 }
@@ -374,10 +374,10 @@ class AccountRepository implements AccountRepositoryInterface
     public function openingBalanceTransaction(Account $account)
     {
         return TransactionJournal
-                                    ::orderBy('transaction_journals.date', 'ASC')
-                                    ->accountIs($account)
-                                    ->orderBy('created_at', 'ASC')
-                                    ->first(['transaction_journals.*']);
+            ::orderBy('transaction_journals.date', 'ASC')
+            ->accountIs($account)
+            ->orderBy('created_at', 'ASC')
+            ->first(['transaction_journals.*']);
     }
 
     /**
@@ -401,7 +401,7 @@ class AccountRepository implements AccountRepositoryInterface
                 'name'           => $data['name'] . ' initial balance',
                 'active'         => false,
             ];
-            $opposing = $this->storeAccount($opposingData);
+            $opposing     = $this->storeAccount($opposingData);
             $this->storeInitialBalance($newAccount, $opposing, $data);
 
         }
@@ -452,7 +452,7 @@ class AccountRepository implements AccountRepositoryInterface
                     'active'         => false,
                     'virtualBalance' => 0,
                 ];
-                $opposing = $this->storeAccount($opposingData);
+                $opposing     = $this->storeAccount($opposingData);
                 $this->storeInitialBalance($account, $opposing, $data);
             }
 
@@ -486,7 +486,7 @@ class AccountRepository implements AccountRepositoryInterface
 
         if (!$newAccount->isValid()) {
             // does the account already exist?
-            $searchData = [
+            $searchData      = [
                 'user_id'         => $data['user'],
                 'account_type_id' => $accountType->id,
                 'virtual_balance' => $data['virtualBalance'],

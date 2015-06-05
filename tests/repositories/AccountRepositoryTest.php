@@ -603,6 +603,8 @@ class AccountRepositoryTest extends TestCase
     }
 
     /**
+     * This function should give a big fat error, but it doesnt.
+     *
      * @covers FireflyIII\Repositories\Account\AccountRepository::store
      * @covers FireflyIII\Repositories\Account\AccountRepository::storeAccount
      * @covers FireflyIII\Repositories\Account\AccountRepository::storeMetadata
@@ -610,12 +612,12 @@ class AccountRepositoryTest extends TestCase
      */
     public function testStoreWithExistingAccount()
     {
-        $account = FactoryMuffin::create('FireflyIII\Models\Account');
-        FactoryMuffin::create('FireflyIII\Models\AccountType');
-        FactoryMuffin::create('FireflyIII\Models\AccountType');
-        FactoryMuffin::create('FireflyIII\Models\TransactionType');
-        FactoryMuffin::create('FireflyIII\Models\TransactionType');
-        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $account = FactoryMuffin::create('FireflyIII\Models\Account'); // expense
+        FactoryMuffin::create('FireflyIII\Models\AccountType'); // revenue
+        FactoryMuffin::create('FireflyIII\Models\AccountType'); // asset
+        FactoryMuffin::create('FireflyIII\Models\TransactionType'); // withdrawal
+        FactoryMuffin::create('FireflyIII\Models\TransactionType'); // deposit
+        FactoryMuffin::create('FireflyIII\Models\TransactionType'); // transfer
         $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
         $this->be($account->user);
 
@@ -631,7 +633,6 @@ class AccountRepositoryTest extends TestCase
             'openingBalanceCurrency' => $currency->id,
             'openingBalanceDate'     => '2015-01-01',
         ];
-
 
         $newAccount = $this->object->store($data);
 
