@@ -4,7 +4,6 @@ namespace FireflyIII\Repositories\Shared;
 
 use Carbon\Carbon;
 use Illuminate\Database\Query\JoinClause;
-use stdClass;
 
 /**
  * Class ComponentRepository
@@ -16,15 +15,15 @@ class ComponentRepository
 
 
     /**
-     * @param stdClass   $object
-     * @param Carbon   $start
-     * @param Carbon   $end
+     * @param        $object
+     * @param Carbon $start
+     * @param Carbon $end
      *
-     * @param bool     $shared
+     * @param bool   $shared
      *
      * @return string
      */
-    protected function spentInPeriod(stdClass $object, Carbon $start, Carbon $end, $shared = false)
+    protected function spentInPeriod($object, Carbon $start, Carbon $end, $shared = false)
     {
         if ($shared === true) {
             // shared is true.

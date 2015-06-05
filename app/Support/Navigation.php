@@ -41,6 +41,7 @@ class Navigation
             '6M'        => 6,
             'half-year' => 6,
         ];
+        $specialMap  = ['1M', 'month', 'monthly'];
         if (!isset($functionMap[$repeatFreq])) {
             throw new FireflyException('Cannot do addPeriod for $repeat_freq "' . $repeatFreq . '"');
         }
@@ -118,7 +119,7 @@ class Navigation
             'year'      => 'endOfYear',
             'yearly'    => 'endOfYear',
         ];
-        $specials = ['mont', 'monthly'];
+        $specials    = ['mont', 'monthly'];
 
         $currentEnd = clone $theCurrentEnd;
 
@@ -270,7 +271,7 @@ class Navigation
             '3M' => 'lastOfQuarter',
             '1Y' => 'endOfYear',
         ];
-        $end = clone $start;
+        $end         = clone $start;
 
         if (isset($functionMap[$range])) {
             $function = $functionMap[$range];

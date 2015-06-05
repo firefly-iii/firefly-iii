@@ -55,17 +55,25 @@ class BudgetController extends Controller
 
         while ($first < $last) {
             $end = Navigation::addPeriod($first, $range, 0);
+            $end->subDay();
+
+            // start date for chart.
+            $chartDate = clone $end;
+            $chartDate->startOfMonth();
 
             $spent = $repository->spentInPeriodCorrected($budget, $first, $end);
-            $chart->addRow($end, $spent);
-
+            $chart->addRow($chartDate, $spent);
 
             $first = Navigation::addPeriod($first, $range, 0);
+
+
         }
 
         $chart->generate();
 
         $data = $chart->getData();
+
+
         $cache->store($data);
 
         return Response::json($data);
@@ -242,7 +250,7 @@ class BudgetController extends Controller
             }
             $chart->addRowArray($row);
 
-            $start->addMonth();
+            $start->endOfMonth()->addDay();
         }
 
         $chart->generate();
