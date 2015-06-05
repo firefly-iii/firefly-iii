@@ -33,7 +33,7 @@ class AccountMeta extends Model
             'name'       => 'required|between:1,100',
             'data'       => 'required'
         ];
-    protected $table    = 'account_meta';
+    protected $table = 'account_meta';
 
     /**
      *

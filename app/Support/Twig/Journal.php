@@ -27,7 +27,7 @@ class Journal extends Twig_Extension
         $filters = [];
 
         $filters[] = new Twig_SimpleFilter(
-            'typeIcon', function (TransactionJournal $journal) {
+            'typeIcon', function(TransactionJournal $journal) {
 
             $cache = new CacheProperties();
             $cache->addProperty($journal->id);
@@ -76,7 +76,7 @@ class Journal extends Twig_Extension
         $functions = [];
 
         $functions[] = new Twig_SimpleFunction(
-            'invalidJournal', function (TransactionJournal $journal) {
+            'invalidJournal', function(TransactionJournal $journal) {
             if (!isset($journal->transactions[1]) || !isset($journal->transactions[0])) {
                 return true;
             }
@@ -86,7 +86,7 @@ class Journal extends Twig_Extension
         );
 
         $functions[] = new Twig_SimpleFunction(
-            'relevantTags', function (TransactionJournal $journal) {
+            'relevantTags', function(TransactionJournal $journal) {
             if ($journal->tags->count() == 0) {
                 return App::make('amount')->formatJournal($journal);
             }
@@ -99,7 +99,7 @@ class Journal extends Twig_Extension
                     $amount = App::make('amount')->format($journal->actual_amount, false);
 
                     return '<a href="' . route('tags.show', [$tag->id]) . '" class="label label-success" title="' . $amount
-                           . '"><i class="fa fa-fw fa-refresh"></i> ' . $tag->tag . '</a>';
+                            . '"><i class="fa fa-fw fa-refresh"></i> ' . $tag->tag . '</a>';
                 }
 
                 /*
@@ -109,7 +109,7 @@ class Journal extends Twig_Extension
                     $amount = App::make('amount')->formatJournal($journal, false);
 
                     return '<a href="' . route('tags.show', [$tag->id]) . '" class="label label-success" title="' . $amount
-                           . '"><i class="fa fa-fw fa-sort-numeric-desc"></i> ' . $tag->tag . '</a>';
+                            . '"><i class="fa fa-fw fa-sort-numeric-desc"></i> ' . $tag->tag . '</a>';
                 }
                 /*
                  * AdvancePayment with a withdrawal will show the amount with a link to

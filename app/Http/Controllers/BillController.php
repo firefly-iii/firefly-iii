@@ -112,7 +112,7 @@ class BillController extends Controller
     {
         $bills = $repository->getBills();
         $bills->each(
-            function (Bill $bill) use ($repository) {
+            function(Bill $bill) use ($repository) {
                 $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill);
                 $bill->lastFoundMatch    = $repository->lastFoundMatch($bill);
             }

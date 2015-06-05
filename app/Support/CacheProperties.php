@@ -94,7 +94,7 @@ class CacheProperties
             if (is_array($property)) {
                 $this->md5 .= print_r($property, true);
             }
-            $this->md5 .= (string)$property;
+            $this->md5 .= (string) $property;
         }
 
         $this->md5 = md5($this->md5);

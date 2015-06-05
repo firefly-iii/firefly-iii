@@ -30,7 +30,7 @@ class FireflyServiceProvider extends ServiceProvider
     public function boot()
     {
         Validator::resolver(
-            function ($translator, $data, $rules, $messages) {
+            function($translator, $data, $rules, $messages) {
                 return new FireflyValidator($translator, $data, $rules, $messages);
             }
         );
@@ -55,28 +55,28 @@ class FireflyServiceProvider extends ServiceProvider
 
 
         $this->app->bind(
-            'preferences', function () {
+            'preferences', function() {
             return new Preferences;
         }
         );
         $this->app->bind(
-            'navigation', function () {
+            'navigation', function() {
             return new Navigation;
         }
         );
         $this->app->bind(
-            'amount', function () {
+            'amount', function() {
             return new Amount;
         }
         );
 
         $this->app->bind(
-            'steam', function () {
+            'steam', function() {
             return new Steam;
         }
         );
         $this->app->bind(
-            'expandedform', function () {
+            'expandedform', function() {
             return new ExpandedForm;
         }
         );

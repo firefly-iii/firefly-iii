@@ -49,7 +49,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
         /** @var Collection $set */
         $set = Auth::user()->categories()->orderBy('name', 'ASC')->get();
         $set->sortBy(
-            function (Category $category) {
+            function(Category $category) {
                 return $category->name;
             }
         );
@@ -67,15 +67,15 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
     public function getCategoriesAndExpensesCorrected($start, $end)
     {
         $set = Auth::user()->transactionjournals()
-                   ->leftJoin(
-                       'category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
-                   )
-                   ->leftJoin('categories', 'categories.id', '=', 'category_transaction_journal.category_id')
-                   ->before($end)
-                   ->where('categories.user_id', Auth::user()->id)
-                   ->after($start)
-                   ->transactionTypes(['Withdrawal'])
-                   ->get(['categories.id as category_id', 'categories.encrypted as category_encrypted', 'categories.name', 'transaction_journals.*']);
+                    ->leftJoin(
+                        'category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id'
+                    )
+                    ->leftJoin('categories', 'categories.id', '=', 'category_transaction_journal.category_id')
+                    ->before($end)
+                    ->where('categories.user_id', Auth::user()->id)
+                    ->after($start)
+                    ->transactionTypes(['Withdrawal'])
+                    ->get(['categories.id as category_id', 'categories.encrypted as category_encrypted', 'categories.name', 'transaction_journals.*']);
 
         $result = [];
         foreach ($set as $entry) {
@@ -143,10 +143,10 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
     public function getLatestActivity(Category $category)
     {
         $latest = $category->transactionjournals()
-                           ->orderBy('transaction_journals.date', 'DESC')
-                           ->orderBy('transaction_journals.order', 'ASC')
-                           ->orderBy('transaction_journals.id', 'DESC')
-                           ->first();
+                            ->orderBy('transaction_journals.date', 'DESC')
+                            ->orderBy('transaction_journals.order', 'ASC')
+                            ->orderBy('transaction_journals.id', 'DESC')
+                            ->first();
         if ($latest) {
             return $latest->date;
         }
@@ -163,15 +163,15 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
     public function getWithoutCategory(Carbon $start, Carbon $end)
     {
         return Auth::user()
-                   ->transactionjournals()
-                   ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                   ->whereNull('category_transaction_journal.id')
-                   ->before($end)
-                   ->after($start)
-                   ->orderBy('transaction_journals.date', 'DESC')
-                   ->orderBy('transaction_journals.order', 'ASC')
-                   ->orderBy('transaction_journals.id', 'DESC')
-                   ->get(['transaction_journals.*']);
+                    ->transactionjournals()
+                    ->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                    ->whereNull('category_transaction_journal.id')
+                    ->before($end)
+                    ->after($start)
+                    ->orderBy('transaction_journals.date', 'DESC')
+                    ->orderBy('transaction_journals.order', 'ASC')
+                    ->orderBy('transaction_journals.id', 'DESC')
+                    ->get(['transaction_journals.*']);
     }
 
     /**
