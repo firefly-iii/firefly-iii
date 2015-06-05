@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use Crypt;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionJournal;
-use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use FireflyIII\Repositories\Shared\ComponentRepository;
 /**

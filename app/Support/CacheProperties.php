@@ -75,26 +75,18 @@ class CacheProperties
         foreach ($this->properties as $property) {
 
             if ($property instanceof Collection || $property instanceof EloquentCollection) {
-                $this->md5 .= print_r($property->toArray(), true);
+                $this->md5 .= json_encode($property->toArray());
                 continue;
             }
             if ($property instanceof Carbon) {
                 $this->md5 .= $property->toRfc3339String();
                 continue;
             }
-
-            if (is_array($property)) {
-                $this->md5 .= print_r($property, true);
-                continue;
-            }
-
             if (is_object($property)) {
                 $this->md5 .= $property->__toString();
             }
-            if (is_array($property)) {
-                $this->md5 .= print_r($property, true);
-            }
-            $this->md5 .= (string) $property;
+
+            $this->md5 .= json_encode($property);
         }
 
         $this->md5 = md5($this->md5);

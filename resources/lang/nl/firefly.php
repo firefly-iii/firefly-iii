@@ -45,7 +45,7 @@ return [
     'update_amount'                 => 'Bedrag bijwerken',
 
     // bills:
-    'delete_bill'                   => 'Verwijder rekening ":name"',
+    'delete_bill'                   => 'Verwijder contract ":name"',
 
     // accounts:
     'details_for_asset'             => 'Overzicht voor betaalrekening ":name"',
@@ -128,8 +128,8 @@ return [
     'newTransfer'                   => 'Nieuwe overschrijving',
     'moneyIn'                       => 'Inkomsten',
     'moneyOut'                      => 'Uitgaven',
-    'billsToPay'                    => 'Openstaande rekeningen',
-    'billsPaid'                     => 'Betaalde rekeningen',
+    'billsToPay'                    => 'Openstaande contracten',
+    'billsPaid'                     => 'Betaalde contracten',
     'viewDetails'                   => 'Meer info',
     'divided'                       => 'verdeeld',
     'toDivide'                      => 'te verdelen',
@@ -161,7 +161,7 @@ return [
     'transfers'                     => 'Overschrijvingen',
     'moneyManagement'               => 'Geldbeheer',
     'piggyBanks'                    => 'Spaarpotjes',
-    'bills'                         => 'Rekeningen',
+    'bills'                         => 'Contracten',
     'createNew'                     => 'Nieuw',
     'withdrawal'                    => 'Uitgave',
     'deposit'                       => 'Inkomsten',
@@ -170,7 +170,7 @@ return [
     'Withdrawal'                    => 'Uitgave',
     'Deposit'                       => 'Inkomsten',
     'Transfer'                      => 'Overschrijving',
-    'bill'                          => 'Rekening',
+    'bill'                          => 'Contracten',
     'yes'                           => 'Ja',
     'no'                            => 'Nee',
     'amount'                        => 'Bedrag',
@@ -227,7 +227,7 @@ return [
     'noBudget'                      => '(geen budget)',
     'maxAmount'                     => 'Maximaal bedrag',
     'minAmount'                     => 'Minimaal bedrag',
-    'billEntry'                     => 'Bedrag voor deze rekening',
+    'billEntry'                     => 'Bedrag voor dit contract',
     'name'                          => 'Naam',
     'date'                          => 'Datum',
     'paid'                          => 'Betaald',
