@@ -120,12 +120,7 @@ class FireflyValidator extends Validator
 
         $user  = User::find($this->data['user_id']);
         $type  = AccountType::find($this->data['account_type_id'])->first();
-        $value = $this->data['name'];
-
-        // decrypt if necessary
-        if (intval($this->data['encrypted']) === 1) {
-            $value = Crypt::decrypt($this->data['name']);
-        }
+        $value = $this->tryDecrypt($this->data['name']);
 
 
         $set = $user->accounts()->where('account_type_id', $type->id)->get();
@@ -137,6 +132,22 @@ class FireflyValidator extends Validator
         }
 
         return true;
+    }
+
+    /**
+     * @param $value
+     *
+     * @return mixed
+     */
+    protected function tryDecrypt($value)
+    {
+        try {
+            $value = Crypt::decrypt($value);
+        } catch (DecryptException $e) {
+            // do not care.
+        }
+
+        return $value;
     }
 
     /**
@@ -172,11 +183,7 @@ class FireflyValidator extends Validator
     {
         $type   = AccountType::find($this->data['account_type_id'])->first();
         $ignore = isset($parameters[0]) ? intval($parameters[0]) : 0;
-
-        // if is encrypted, decrypt:
-        if (intval($this->data['encrypted']) === 1) {
-            $value = Crypt::decrypt($value);
-        }
+        $value  = $this->tryDecrypt($value);
 
         $set = Auth::user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
         /** @var Account $entry */
@@ -228,13 +235,7 @@ class FireflyValidator extends Validator
      */
     public function validateUniqueObjectForUser($attribute, $value, $parameters)
     {
-        // try to decrypt value. if it fails, not a problem:
-        try {
-            $value = Crypt::decrypt($value);
-        } catch (DecryptException $e) {
-            // do not care.
-        }
-
+        $value = $this->tryDecrypt($value);
         // exclude?
         $table   = $parameters[0];
         $field   = $parameters[1];
@@ -244,13 +245,7 @@ class FireflyValidator extends Validator
         $set = DB::table($table)->where('user_id', Auth::user()->id)->where('id', '!=', $exclude)->get([$field]);
 
         foreach ($set as $entry) {
-            $fieldValue = $entry->$field;
-            // try to decrypt:
-            try {
-                $fieldValue = Crypt::decrypt($entry->$field);
-            } catch (DecryptException $e) {
-                // dont care
-            }
+            $fieldValue = $this->tryDecrypt($entry->$field);
 
             if ($fieldValue === $value) {
                 return false;
@@ -279,9 +274,8 @@ class FireflyValidator extends Validator
         $set = $query->get(['piggy_banks.*']);
 
         foreach ($set as $entry) {
-            $isEncrypted = intval($entry->encrypted) == 1 ? true : false;
-            $checkValue  = $isEncrypted ? Crypt::decrypt($entry->name) : $entry->name;
-            if ($checkValue == $value) {
+            $fieldValue  = $this->tryDecrypt($entry->name);
+            if ($fieldValue == $value) {
                 return false;
             }
         }
