@@ -50,7 +50,7 @@ class PiggyBank extends Model
     use SoftDeletes;
 
     protected $fillable
-                      = ['name', 'account_id', 'order', 'reminder_skip', 'targetamount', 'startdate', 'targetdate', 'reminder', 'remind_me'];
+                        = ['name', 'account_id', 'order', 'reminder_skip', 'targetamount', 'startdate', 'targetdate', 'reminder', 'remind_me'];
     protected $hidden = ['targetamount_encrypted', 'encrypted'];
 
     /**

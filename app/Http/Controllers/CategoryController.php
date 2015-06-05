@@ -114,7 +114,7 @@ class CategoryController extends Controller
         $categories = $repository->getCategories();
 
         $categories->each(
-            function (Category $category) use ($repository) {
+            function(Category $category) use ($repository) {
                 $category->lastActivity = $repository->getLatestActivity($category);
             }
         );
@@ -167,7 +167,7 @@ class CategoryController extends Controller
             'name' => $request->input('name'),
             'user' => Auth::user()->id,
         ];
-        $category     = $repository->store($categoryData);
+        $category = $repository->store($categoryData);
 
         Session::flash('success', 'New category "' . $category->name . '" stored!');
         Preferences::mark();

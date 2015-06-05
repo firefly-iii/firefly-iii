@@ -68,7 +68,7 @@ class Income
     public function getIncomes()
     {
         $this->incomes->sortByDesc(
-            function (stdClass $object) {
+            function(stdClass $object) {
                 return $object->amount;
             }
         );
