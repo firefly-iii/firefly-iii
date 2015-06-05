@@ -290,6 +290,7 @@ class BudgetRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Budget\BudgetRepository::spentInPeriodCorrected
+     * @covers FireflyIII\Repositories\Shared\ComponentRepository::spentInPeriod
      */
     public function testSpentInPeriodCorrected()
     {
@@ -301,6 +302,7 @@ class BudgetRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Budget\BudgetRepository::spentInPeriodCorrected
+     * @covers FireflyIII\Repositories\Shared\ComponentRepository::spentInPeriod
      */
     public function testSpentInPeriodCorrectedShared()
     {

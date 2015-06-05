@@ -134,7 +134,7 @@ interface BudgetRepositoryInterface
      * @param Carbon  $end
      * @param boolean $shared
      *
-     * @return float
+     * @return string
      */
     public function spentInPeriodCorrected(Budget $budget, Carbon $start, Carbon $end, $shared = true);
 

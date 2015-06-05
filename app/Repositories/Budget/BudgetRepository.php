@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
+use FireflyIII\Repositories\Shared\ComponentRepository;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -18,7 +19,7 @@ use Input;
  *
  * @package FireflyIII\Repositories\Budget
  */
-class BudgetRepository implements BudgetRepositoryInterface
+class BudgetRepository extends ComponentRepository implements BudgetRepositoryInterface
 {
 
     /**
@@ -262,32 +263,11 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Carbon $end
      * @param bool   $shared
      *
-     * @return float
+     * @return string
      */
     public function spentInPeriodCorrected(Budget $budget, Carbon $start, Carbon $end, $shared = true)
     {
-        if ($shared === true) {
-            // get everything:
-            $sum = floatval($budget->transactionjournals()->before($end)->after($start)->get(['transaction_journals.*'])->sum('amount'));
-        } else {
-            // get all journals in this month where the asset account is NOT shared.
-            $sum = $budget->transactionjournals()
-                          ->before($end)
-                          ->after($start)
-                          ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                          ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                          ->leftJoin(
-                              'account_meta', function (JoinClause $join) {
-                              $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
-                          }
-                          )
-                          ->where('account_meta.data', '!=', '"sharedAsset"')
-                          ->get(['transaction_journals.*'])
-                          ->sum('amount');
-            $sum = floatval($sum);
-        }
-
-        return $sum;
+        return $this->spentInPeriod($budget, $start, $end, $shared);
     }
 
     /**

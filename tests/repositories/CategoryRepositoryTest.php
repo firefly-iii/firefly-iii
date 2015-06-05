@@ -208,6 +208,7 @@ class CategoryRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Category\CategoryRepository::spentInPeriodCorrected
+     * @covers FireflyIII\Repositories\Shared\ComponentRepository::spentInPeriod
      */
     public function testSpentInPeriodSumCorrected()
     {
@@ -221,6 +222,7 @@ class CategoryRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Category\CategoryRepository::spentInPeriodCorrected
+     * @covers FireflyIII\Repositories\Shared\ComponentRepository::spentInPeriod
      */
     public function testSpentInPeriodSumCorrectedShared()
     {
