@@ -3,6 +3,7 @@
 namespace FireflyIII\Repositories\Shared;
 
 use Carbon\Carbon;
+use FireflyIII\Support\CacheProperties;
 use Illuminate\Database\Query\JoinClause;
 
 /**
@@ -25,6 +26,21 @@ class ComponentRepository
      */
     protected function spentInPeriod($object, Carbon $start, Carbon $end, $shared = false)
     {
+        // we must cache this.
+
+        $cache = new CacheProperties;
+        $cache->addProperty($object->id);
+        $cache->addProperty(get_class($object));
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($shared);
+        $cache->addProperty('spentInPeriod');
+
+        if($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
+
         if ($shared === true) {
             // shared is true.
             // always ignore transfers between accounts!
@@ -50,6 +66,8 @@ class ComponentRepository
                           ->where('account_meta.data', '!=', '"sharedAsset"')
                           ->get(['transaction_journals.*'])->sum('amount');
         }
+
+        $cache->store($sum);
 
         return $sum;
     }

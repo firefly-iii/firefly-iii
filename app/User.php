@@ -33,7 +33,7 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User wherePassword($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereReset($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\User whereRememberToken($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\Config::get('entrust.role')[] $roles 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Config::get('entrust.role')[] $roles
  */
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {

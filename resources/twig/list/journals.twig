@@ -64,17 +64,17 @@
                     {{journal.date.formatLocalized(monthAndDayFormat)}}
                 </td>
                 <td class="hidden-xs">
-                    {% if journal.transactions[0].account.accountType.type == 'Cash account' %}
+                    {% if journal.source_account.accountType.type == 'Cash account' %}
                         <span class="text-success">(cash)</span>
                     {% else %}
-                        <a href="{{route('accounts.show',journal.transactions[0].account_id)}}">{{journal.transactions[0].account.name}}</a>
+                        <a href="{{route('accounts.show',journal.source_account.id)}}">{{journal.source_account.name}}</a>
                     {% endif %}
                 </td>
                 <td class="hidden-xs">
-                    {% if journal.transactions[1].account.accountType.type == 'Cash account' %}
+                    {% if journal.destination_account.accountType.type == 'Cash account' %}
                         <span class="text-success">(cash)</span>
                     {% else %}
-                        <a href="{{route('accounts.show',journal.transactions[1].account_id)}}">{{journal.transactions[1].account.name}}</a>
+                        <a href="{{route('accounts.show',journal.destination_account.id)}}">{{journal.destination_account.name}}</a>
                     {% endif %}
                 </td>
 

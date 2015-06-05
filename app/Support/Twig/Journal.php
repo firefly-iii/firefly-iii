@@ -87,8 +87,18 @@ class Journal extends Twig_Extension
 
         $functions[] = new Twig_SimpleFunction(
             'relevantTags', function(TransactionJournal $journal) {
+            $cache = new CacheProperties;
+            $cache->addProperty('relevantTags');
+            $cache->addProperty($journal->id);
+
+            if($cache->has()) {
+                return $cache->get(); // @codeCoverageIgnore
+            }
+
             if ($journal->tags->count() == 0) {
-                return App::make('amount')->formatJournal($journal);
+                $string = App::make('amount')->formatJournal($journal);
+                $cache->store($string);
+                return $string;
             }
 
 
@@ -97,9 +107,10 @@ class Journal extends Twig_Extension
                     // return tag formatted for a "balancing act", even if other
                     // tags are present.
                     $amount = App::make('amount')->format($journal->actual_amount, false);
-
-                    return '<a href="' . route('tags.show', [$tag->id]) . '" class="label label-success" title="' . $amount
+                    $string =  '<a href="' . route('tags.show', [$tag->id]) . '" class="label label-success" title="' . $amount
                             . '"><i class="fa fa-fw fa-refresh"></i> ' . $tag->tag . '</a>';
+                    $cache->store($string);
+                    return $string;
                 }
 
                 /*
@@ -107,9 +118,10 @@ class Journal extends Twig_Extension
                  */
                 if ($tag->tagMode == 'advancePayment' && $journal->transactionType->type == 'Deposit') {
                     $amount = App::make('amount')->formatJournal($journal, false);
-
-                    return '<a href="' . route('tags.show', [$tag->id]) . '" class="label label-success" title="' . $amount
+                    $string = '<a href="' . route('tags.show', [$tag->id]) . '" class="label label-success" title="' . $amount
                             . '"><i class="fa fa-fw fa-sort-numeric-desc"></i> ' . $tag->tag . '</a>';
+                    $cache->store($string);
+                    return $string;
                 }
                 /*
                  * AdvancePayment with a withdrawal will show the amount with a link to
@@ -118,13 +130,17 @@ class Journal extends Twig_Extension
                 if ($tag->tagMode == 'advancePayment' && $journal->transactionType->type == 'Withdrawal') {
                     $amount = App::make('amount')->formatJournal($journal);
 
-                    return '<a href="' . route('tags.show', [$tag->id]) . '">' . $amount . '</a>';
+                    $string = '<a href="' . route('tags.show', [$tag->id]) . '">' . $amount . '</a>';
+                    $cache->store($string);
+                    return $string;
                 }
 
 
                 if ($tag->tagMode == 'nothing') {
                     // return the amount:
-                    return App::make('amount')->formatJournal($journal);
+                    $string = App::make('amount')->formatJournal($journal);
+                    $cache->store($string);
+                    return $string;
                 }
             }
 

@@ -68,9 +68,10 @@ use Watson\Validating\ValidatingTrait;
  * @property mixed                                                                               account_id
  * @property mixed                                                                               name
  * @property mixed                                                                               symbol
- * @property-read mixed $correct_amount
+ * @property-read mixed                                                                          $correct_amount
  * @method static \FireflyIII\Models\TransactionJournal orderBy
  * @method static \FireflyIII\Models\TransactionJournal|null first
+ * @property-read mixed $source_account 
  */
 class TransactionJournal extends Model
 {
@@ -294,14 +295,17 @@ class TransactionJournal extends Model
      */
     public function getDestinationAccountAttribute()
     {
-        /** @var Transaction $transaction */
-        foreach ($this->transactions()->get() as $transaction) {
-            if (floatval($transaction->amount) > 0) {
-                return $transaction->account;
-            }
-        }
+        $cache = new CacheProperties;
+        $cache->addProperty($this->id);
+        $cache->addProperty('destinationAccount');
 
-        return $this->transactions()->first()->account;
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+        $account = $this->transactions()->where('amount', '>', 0)->first()->account;
+        $cache->store($account);
+
+        return $account;
     }
 
     /**
@@ -323,6 +327,23 @@ class TransactionJournal extends Model
 
         return $this->transactions()->first()->account;
 
+    }
+
+    /**
+     * @return Account
+     */
+    public function getSourceAccountAttribute()
+    {
+        $cache = new CacheProperties;
+        $cache->addProperty($this->id);
+        $cache->addProperty('destinationAccount');
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+        $account = $this->transactions()->where('amount', '<', 0)->first()->account;
+        $cache->store($account);
+
+        return $account;
     }
 
     /**
@@ -415,7 +436,7 @@ class TransactionJournal extends Model
     public function scopeWithRelevantData(EloquentBuilder $query)
     {
         $query->with(
-            ['transactions' => function(HasMany $q) {
+            ['transactions' => function (HasMany $q) {
                 $q->orderBy('amount', 'ASC');
             }, 'transactiontype', 'transactioncurrency', 'budgets', 'categories', 'transactions.account.accounttype', 'bill', 'budgets', 'categories']
         );
