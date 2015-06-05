@@ -1,6 +1,6 @@
 <?php
+use Carbon\Carbon;
 use FireflyIII\Models\Tag;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Tag\TagRepository;
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
@@ -54,6 +54,7 @@ class TagRepositoryTest extends TestCase
      * A deposit cannot be connected to a balancing act.
      *
      * @covers FireflyIII\Repositories\Tag\TagRepository::connect
+     * @covers FireflyIII\Repositories\Tag\TagRepository::connectBalancingAct
      */
     public function testConnectBalancingOneDeposit()
     {
@@ -80,6 +81,7 @@ class TagRepositoryTest extends TestCase
      * other transfers already connected.
      *
      * @covers FireflyIII\Repositories\Tag\TagRepository::connect
+     * @covers FireflyIII\Repositories\Tag\TagRepository::connectBalancingAct
      */
     public function testConnectBalancingOneTransfer()
     {
@@ -106,6 +108,7 @@ class TagRepositoryTest extends TestCase
      * not other withdrawals already connected.
      *
      * @covers FireflyIII\Repositories\Tag\TagRepository::connect
+     * @covers FireflyIII\Repositories\Tag\TagRepository::connectBalancingAct
      */
     public function testConnectBalancingOneWithdrawal()
     {
@@ -128,6 +131,8 @@ class TagRepositoryTest extends TestCase
     }
 
     /**
+     * Default connection between a journal and a tag.
+     *
      * @covers FireflyIII\Repositories\Tag\TagRepository::connect
      */
     public function testConnectDefault()
@@ -143,6 +148,8 @@ class TagRepositoryTest extends TestCase
     }
 
     /**
+     * Fallback for connect then the tag mode is unknown
+     *
      * @covers FireflyIII\Repositories\Tag\TagRepository::connect
      */
     public function testConnectInvalidType()
@@ -161,7 +168,11 @@ class TagRepositoryTest extends TestCase
      * Once one or more journals have been accepted by the tag, others must match the asset account
      * id. For this to work, we must also create an asset account, and a transaction.
      *
+     * This covers an advance payment
+     *
      * @covers FireflyIII\Repositories\Tag\TagRepository::connect
+     * @covers FireflyIII\Repositories\Tag\TagRepository::connectAdvancePayment
+     * @covers FireflyIII\Repositories\Tag\TagRepository::matchAll
      */
     public function testConnectPaymentMultipleMatch()
     {
@@ -212,8 +223,12 @@ class TagRepositoryTest extends TestCase
      * Once one or more journals have been accepted by the tag, others must match the asset account
      * id. For this to work, we must also create an asset account, and a transaction.
      *
+     * This covers the advance payment
+     *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @covers FireflyIII\Repositories\Tag\TagRepository::connect
+     * @covers FireflyIII\Repositories\Tag\TagRepository::connectAdvancePayment
+     * @covers FireflyIII\Repositories\Tag\TagRepository::matchAll
      */
     public function testConnectPaymentNoMatch()
     {
@@ -266,9 +281,11 @@ class TagRepositoryTest extends TestCase
     }
 
     /**
-     * An advance payment accepts no transfers
+     * An advance payment accepts no transfers.
      *
      * @covers FireflyIII\Repositories\Tag\TagRepository::connect
+     * @covers FireflyIII\Repositories\Tag\TagRepository::connectAdvancePayment
+     * @covers FireflyIII\Repositories\Tag\TagRepository::matchAll
      */
     public function testConnectPaymentOneTransfer()
     {
@@ -294,6 +311,8 @@ class TagRepositoryTest extends TestCase
      * An advance payment accepts only one withdrawal, not two.
      *
      * @covers FireflyIII\Repositories\Tag\TagRepository::connect
+     * @covers FireflyIII\Repositories\Tag\TagRepository::connectAdvancePayment
+     * @covers FireflyIII\Repositories\Tag\TagRepository::matchAll
      */
     public function testConnectPaymentOneWithdrawal()
     {
@@ -319,6 +338,8 @@ class TagRepositoryTest extends TestCase
      * An advance payment accepts only one withdrawal, not two.
      *
      * @covers FireflyIII\Repositories\Tag\TagRepository::connect
+     * @covers FireflyIII\Repositories\Tag\TagRepository::connectAdvancePayment
+     * @covers FireflyIII\Repositories\Tag\TagRepository::matchAll
      */
     public function testConnectPaymentTwoWithdrawals()
     {
@@ -342,6 +363,68 @@ class TagRepositoryTest extends TestCase
         $result = $this->object->connect($journal, $tag);
         $this->assertFalse($result);
 
+    }
+
+    /**
+     * @covers FireflyIII\Repositories\Tag\TagRepository::coveredByBalancingActs
+     */
+    public function testCoveredByBalancingActs()
+    {
+        // create a user:
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
+        // create transaction and account types:
+        FactoryMuffin::create('FireflyIII\Models\TransactionType'); // withdrawal
+        FactoryMuffin::create('FireflyIII\Models\TransactionType'); // deposit
+        $transfer = FactoryMuffin::create('FireflyIII\Models\TransactionType'); // transfer
+        FactoryMuffin::create('FireflyIII\Models\AccountType'); // expense
+        FactoryMuffin::create('FireflyIII\Models\AccountType'); // revenue
+        $asset = FactoryMuffin::create('FireflyIII\Models\AccountType'); // asset
+
+        // create two accounts:
+        $fromAccount                  = FactoryMuffin::create('FireflyIII\Models\Account'); // asset
+        $toAccount                    = FactoryMuffin::create('FireflyIII\Models\Account'); // asset
+        $fromAccount->account_type_id = $asset->id;
+        $toAccount->account_type_id   = $asset->id;
+        $fromAccount->save();
+        $toAccount->save();
+
+
+        // create a tag
+        $tag          = FactoryMuffin::create('FireflyIII\Models\Tag');
+        $tag->tagMode = 'balancingAct';
+        $tag->user_id = $user->id;
+        $tag->save();
+
+        // date
+        $today = new Carbon('2014-01-12');
+        $start = new Carbon('2014-01-01');
+        $end   = new Carbon('2014-01-31');
+
+        // store five journals
+        for ($i = 0; $i < 5; $i++) {
+            $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal'); // deposit!
+            // set date:
+            $journal->date                = $today;
+            $journal->user_id             = $user->id;
+            $journal->transaction_type_id = $transfer->id;
+            $journal->tags()->save($tag);
+            $journal->save();
+
+            // update accounts:
+            $journal->transactions[0]->account_id = $fromAccount->id;
+            $journal->transactions[0]->amount     = '-100';
+            $journal->transactions[0]->save();
+            $journal->transactions[1]->account_id = $toAccount->id;
+            $journal->transactions[1]->amount     = '100';
+            $journal->transactions[1]->save();
+
+        }
+
+        $amount = $this->object->coveredByBalancingActs($toAccount, $start, $end);
+        // five transactions, 100 each.
+        $this->assertEquals('500', $amount);
     }
 
     /**

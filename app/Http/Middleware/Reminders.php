@@ -8,6 +8,7 @@ use Closure;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Reminder;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\User;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use View;
@@ -49,7 +50,8 @@ class Reminders
     {
 
 
-        if ($this->auth->check() && !$request->isXmlHttpRequest()) {
+        $user = $this->auth->user();
+        if ($this->auth->check() && !$request->isXmlHttpRequest() && $user instanceof User) {
             // do reminders stuff.
 
             // abuse CacheProperties to find out if we need to do this:
@@ -63,7 +65,7 @@ class Reminders
                 return $next($request);
             }
 
-            $piggyBanks = $this->auth->user()->piggyBanks()->where('remind_me', 1)->get();
+            $piggyBanks = $user->piggyBanks()->where('remind_me', 1)->get();
 
             /** @var \FireflyIII\Helpers\Reminders\ReminderHelperInterface $helper */
             $helper = App::make('FireflyIII\Helpers\Reminders\ReminderHelperInterface');
@@ -75,12 +77,11 @@ class Reminders
             // delete invalid reminders
             // this is a construction SQLITE cannot handle :(
             if (env('DB_CONNECTION') != 'sqlite') {
-                Reminder::whereUserId($this->auth->user()->id)->leftJoin('piggy_banks', 'piggy_banks.id', '=', 'remindersable_id')
-                        ->whereNull('piggy_banks.id')->delete();
+                Reminder::whereUserId($user->id)->leftJoin('piggy_banks', 'piggy_banks.id', '=', 'remindersable_id')->whereNull('piggy_banks.id')->delete();
             }
 
             // get and list active reminders:
-            $reminders = $this->auth->user()->reminders()->today()->get();
+            $reminders = $user->reminders()->today()->get();
             $reminders->each(
                 function (Reminder $reminder) use ($helper) {
                     $reminder->description = $helper->getReminderText($reminder);

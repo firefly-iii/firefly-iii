@@ -9,7 +9,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use Illuminate\Support\Collection;
 
 /**
  * Class TagRepository
@@ -64,14 +63,15 @@ class TagRepository implements TagRepositoryInterface
      * @param Carbon  $start
      * @param Carbon  $end
      *
-     * @return integer
+     * @return string
      */
     public function coveredByBalancingActs(Account $account, Carbon $start, Carbon $end)
     {
         // the quickest way to do this is by scanning all balancingAct tags
         // because there will be less of them any way.
         $tags   = Auth::user()->tags()->where('tagMode', 'balancingAct')->get();
-        $amount = 0;
+        $amount = '0';
+        bcscale(2);
 
         /** @var Tag $tag */
         foreach ($tags as $tag) {
@@ -80,7 +80,7 @@ class TagRepository implements TagRepositoryInterface
             /** @var TransactionJournal $journal */
             foreach ($journals as $journal) {
                 if ($journal->destination_account->id == $account->id) {
-                    $amount += $journal->amount;
+                    $amount = bcadd($amount, $journal->amount);
                 }
             }
         }
