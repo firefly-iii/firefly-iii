@@ -10,6 +10,7 @@ use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\User;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Validation\Validator;
 use Navigation;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -105,44 +106,7 @@ class FireflyValidator extends Validator
             return $this->validateByAccountTypeId($value, $parameters);
         }
 
-
-        var_dump($attribute);
-        var_dump($value);
-        var_dump($parameters);
-        var_dump($this->data);
-
-        exit;
-
-
-        // try to determin type of account:
-        if (!empty($this->data['what'])) {
-            $search = Config::get('firefly.accountTypeByIdentifier.' . $this->data['what']);
-            $type   = AccountType::whereType($search)->first();
-        } else {
-            $type = AccountType::find($this->data['account_type_id']);
-        }
-
-        // ignore itself, if parameter is given:
-        if (isset($parameters[0])) {
-            $ignoreId = $parameters[0];
-        } else {
-            $ignoreId = 0;
-        }
-
-        // reset to basic check, see what happens:
-        $userId   = Auth::user()->id;
-        $ignoreId = intval($this->data['id']);
-
-        $set = Account::where('account_type_id', $type->id)->where('id', '!=', $ignoreId)->where('user_id', $userId)->get();
-        /** @var Account $entry */
-        foreach ($set as $entry) {
-            if ($entry->name == $value) {
-                return false;
-            }
-        }
-
-        return true;
-
+        return false;
     }
 
     /**
@@ -254,8 +218,7 @@ class FireflyValidator extends Validator
      *
      * parameter 0: the table
      * parameter 1: the field
-     * parameter 2: the encrypted / not encrypted boolean. Defaults to "encrypted".
-     * parameter 3: an id to ignore (when editing)
+     * parameter 2: an id to ignore (when editing)
      *
      * @param $attribute
      * @param $value
@@ -265,37 +228,31 @@ class FireflyValidator extends Validator
      */
     public function validateUniqueObjectForUser($attribute, $value, $parameters)
     {
-        $table           = $parameters[0];
-        $field           = $parameters[1];
-        $encrypted       = isset($parameters[2]) ? $parameters[2] : 'encrypted';
-        $exclude         = isset($parameters[3]) ? $parameters[3] : null;
-        $alwaysEncrypted = false;
-        if ($encrypted == 'TRUE') {
-            $alwaysEncrypted = true;
+        // try to decrypt value. if it fails, not a problem:
+        try {
+            $value = Crypt::decrypt($value);
+        } catch (DecryptException $e) {
+            // do not care.
         }
 
-        if (is_null(Auth::user())) {
-            // user is not logged in.. weird.
-            return true;
-        } else {
-            $query = DB::table($table)->where('user_id', Auth::user()->id);
-        }
+        // exclude?
+        $table   = $parameters[0];
+        $field   = $parameters[1];
+        $exclude = isset($parameters[3]) ? intval($parameters[3]) : 0;
 
+        // get entries from table
+        $set = DB::table($table)->where('user_id', Auth::user()->id)->where('id', '!=', $exclude)->get([$field]);
 
-        if (!is_null($exclude)) {
-            $query->where('id', '!=', $exclude);
-        }
-
-
-        $set = $query->get();
         foreach ($set as $entry) {
-            if (!$alwaysEncrypted) {
-                $isEncrypted = intval($entry->$encrypted) == 1 ? true : false;
-            } else {
-                $isEncrypted = true;
+            $fieldValue = $entry->$field;
+            // try to decrypt:
+            try {
+                $fieldValue = Crypt::decrypt($entry->$field);
+            } catch (DecryptException $e) {
+                // dont care
             }
-            $checkValue = $isEncrypted ? Crypt::decrypt($entry->$field) : $entry->$field;
-            if ($checkValue == $value) {
+
+            if ($fieldValue === $value) {
                 return false;
             }
         }

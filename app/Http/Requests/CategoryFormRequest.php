@@ -29,9 +29,9 @@ class CategoryFormRequest extends Request
     public function rules()
     {
 
-        $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name,encrypted';
+        $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name';
         if (Category::find(Input::get('id'))) {
-            $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name,encrypted,' . intval(Input::get('id'));
+            $nameRule = 'required|between:1,100|uniqueObjectForUser:categories,name,' . intval(Input::get('id'));
         }
 
         return [

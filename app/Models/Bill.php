@@ -55,6 +55,8 @@ class Bill extends Model
 
     protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
 
+
+
     /**
      * @return array
      */
