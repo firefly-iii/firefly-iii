@@ -198,17 +198,11 @@ class TagRepository implements TagRepositoryInterface
         /*
          * If any transaction is a deposit, cannot become a balancing act.
          */
-        $count = 0;
         foreach ($tag->transactionjournals as $journal) {
             if ($journal->transactionType->type == 'Deposit') {
-                $count++;
+                return false;
             }
         }
-        if ($count > 0) {
-            return false;
-        }
-
-
         return true;
     }
 
@@ -294,7 +288,6 @@ class TagRepository implements TagRepositoryInterface
         // tag is attached just like that:
         if ($withdrawals < 1 && $deposits < 1) {
             $journal->tags()->save($tag);
-
             return true;
         }
 
@@ -308,7 +301,8 @@ class TagRepository implements TagRepositoryInterface
             return $this->matchAll($journal, $tag);
         }
 
-        return false;
+        // this statement is unreachable.
+        return false; // @codeCoverageIgnore
 
     }
 
