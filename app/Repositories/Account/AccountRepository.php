@@ -373,8 +373,9 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function openingBalanceTransaction(Account $account)
     {
-        return TransactionJournal::accountIs($account)
-                                 ->orderBy('transaction_journals.date', 'ASC')
+        return TransactionJournal
+                                 ::orderBy('transaction_journals.date', 'ASC')
+                                 ->accountIs($account)
                                  ->orderBy('created_at', 'ASC')
                                  ->first(['transaction_journals.*']);
     }

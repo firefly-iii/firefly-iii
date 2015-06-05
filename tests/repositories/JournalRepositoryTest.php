@@ -1,4 +1,5 @@
 <?php
+use Carbon\Carbon;
 use FireflyIII\Models\Reminder;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -92,12 +93,40 @@ class JournalRepositoryTest extends TestCase
      */
     public function testGetAmountBefore()
     {
+        // create some accounts:
+        $expense = FactoryMuffin::create('FireflyIII\Models\Account'); // expense
+        FactoryMuffin::create('FireflyIII\Models\Account'); // revenue
+        $asset = FactoryMuffin::create('FireflyIII\Models\Account'); // asset
+
+        // transaction type
+        $withdrawal = FactoryMuffin::create('FireflyIII\Models\TransactionType'); // withdrawal
+
+        // create five journals with incrementing dates:
+        $today = new Carbon('2015-01-01');
+        for($i=0;$i<5;$i++) {
+            // create journal:
+            $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+            $journal->transaction_type_id = $withdrawal;
+            $journal->date = $today;
+            $journal->save();
+
+            // update transactions:
+            $journal->transactions[0]->amount = -100;
+            $journal->transactions[0]->account_id = $asset->id;
+            $journal->transactions[0]->save();
+
+            $journal->transactions[1]->amount = 100;
+            $journal->transactions[1]->account_id = $expense->id;
+            $journal->transactions[1]->save();
+
+            // connect to expense
+            $today->addDay();
+        }
 
 
-        $transaction = FactoryMuffin::create('FireflyIII\Models\Transaction');
-        $before      = $this->object->getAmountBefore($transaction->transactionjournal, $transaction);
-
-        $this->assertEquals(0, $before);
+        $before  = $this->object->getAmountBefore($journal, $journal->transactions[1]);
+        // five transactions, we check the last one, so amount should be 400.
+        $this->assertEquals(400, $before);
     }
 
     /**

@@ -68,7 +68,9 @@ use Watson\Validating\ValidatingTrait;
  * @property mixed                                                                               account_id
  * @property mixed                                                                               name
  * @property mixed                                                                               symbol
- * @property-read mixed $correct_amount 
+ * @property-read mixed $correct_amount
+ * @method static \FireflyIII\Models\TransactionJournal orderBy
+ * @method static \FireflyIII\Models\TransactionJournal|null first
  */
 class TransactionJournal extends Model
 {

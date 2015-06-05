@@ -23,7 +23,7 @@ class NewUserController extends Controller
     /**
      * @param AccountRepositoryInterface $repository
      *
-     * @return \Illuminate\View\View
+     * @@return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
     public function index(AccountRepositoryInterface $repository)
     {
@@ -45,6 +45,8 @@ class NewUserController extends Controller
     /**
      * @param NewUserFormRequest         $request
      * @param AccountRepositoryInterface $repository
+     *
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function submit(NewUserFormRequest $request, AccountRepositoryInterface $repository)
     {
@@ -97,20 +99,8 @@ class NewUserController extends Controller
             $creditCard    = $repository->store($creditAccount);
 
             // store meta for CC:
-            AccountMeta::create(
-                [
-                    'name'       => 'ccType',
-                    'data'       => 'monthlyFull',
-                    'account_id' => $creditCard->id,
-                ]
-            );
-            AccountMeta::create(
-                [
-                    'name'       => 'ccMonthlyPaymentDate',
-                    'data'       => Carbon::now()->year . '-01-01',
-                    'account_id' => $creditCard->id,
-                ]
-            );
+            AccountMeta::create(['name' => 'ccType', 'data' => 'monthlyFull', 'account_id' => $creditCard->id,]);
+            AccountMeta::create(['name' => 'ccMonthlyPaymentDate', 'data' => Carbon::now()->year . '-01-01', 'account_id' => $creditCard->id,]);
 
         }
         Session::flash('success', 'New account(s) created!');

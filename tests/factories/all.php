@@ -9,6 +9,9 @@ if (!class_exists('RandomString')) {
      */
     class RandomString
     {
+        public static $count = 0;
+        public static $set   = [];
+
         /**
          * @param int $length
          *
@@ -18,10 +21,21 @@ if (!class_exists('RandomString')) {
         {
             $characters       = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
             $charactersLength = strlen($characters);
-            $randomString     = '';
+
+
+            $randomString = '';
             for ($i = 0; $i < $length; $i++) {
                 $randomString .= $characters[rand(0, $charactersLength - 1)];
             }
+
+            while (in_array($randomString, self::$set)) {
+                // create another if its in the current $set:
+                $randomString = '';
+                for ($i = 0; $i < $length; $i++) {
+                    $randomString .= $characters[rand(0, $charactersLength - 1)];
+                }
+            }
+            self::$set[] = $randomString;
 
             return $randomString;
         }
@@ -32,7 +46,7 @@ if (!class_exists('RandomString')) {
 FactoryMuffin::define(
     'FireflyIII\Models\Role',
     [
-        'name'            => 'word',
+        'name' => 'word',
     ]
 );
 
@@ -201,7 +215,7 @@ FactoryMuffin::define(
             return RandomString::generateRandomString(3);
         },
         'symbol' => function () {
-            return RandomString::generateRandomString(2);
+            return RandomString::generateRandomString(8);
         },
         'name'   => 'word'
     ]

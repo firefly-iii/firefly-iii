@@ -46,7 +46,7 @@ use Watson\Validating\ValidatingTrait;
  * @property mixed                                                                          lastActivityDate
  * @property mixed                                                                          piggyBalance
  * @property mixed                                                                          difference
- * @propery mixed percentage
+ * @property mixed percentage
  */
 class Account extends Model
 {

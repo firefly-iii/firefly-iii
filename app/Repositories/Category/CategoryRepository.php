@@ -75,14 +75,14 @@ class CategoryRepository implements CategoryRepositoryInterface
                    ->where('categories.user_id', Auth::user()->id)
                    ->after($start)
                    ->transactionTypes(['Withdrawal'])
-                   ->groupBy('categories.id')
                    ->get(['categories.id as category_id', 'categories.encrypted as category_encrypted', 'categories.name', 'transaction_journals.*']);
 
         $result = [];
         foreach ($set as $entry) {
             $categoryId = intval($entry->category_id);
             if (isset($result[$categoryId])) {
-                $result[$categoryId]['sum'] += floatval($entry->amount);
+                bcscale(2);
+                $result[$categoryId]['sum'] = bcadd($result[$categoryId]['sum'], $entry->amount);
             } else {
                 $isEncrypted         = intval($entry->category_encrypted) == 1 ? true : false;
                 $name                = strlen($entry->name) == 0 ? trans('firefly.no_category') : $entry->name;
