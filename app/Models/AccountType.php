@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class AccountType
  *
- * @codeCoverageIgnore 
+ * @codeCoverageIgnore
  * @package FireflyIII\Models
  * @property integer                                                                    $id
  * @property \Carbon\Carbon                                                             $created_at

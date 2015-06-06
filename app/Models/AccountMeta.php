@@ -6,7 +6,7 @@ use Watson\Validating\ValidatingTrait;
 /**
  * Class AccountMeta
  *
- * @codeCoverageIgnore 
+ * @codeCoverageIgnore
  * @package FireflyIII\Models
  * @property integer                         $id
  * @property \Carbon\Carbon                  $created_at
@@ -33,7 +33,7 @@ class AccountMeta extends Model
             'name'       => 'required|between:1,100',
             'data'       => 'required'
         ];
-    protected $table = 'account_meta';
+    protected $table    = 'account_meta';
 
     /**
      *

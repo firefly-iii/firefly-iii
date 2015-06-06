@@ -22,7 +22,7 @@ class PiggyBank extends Twig_Extension
         $functions = [];
 
         $functions[] = new Twig_SimpleFunction(
-            'currentRelevantRepAmount', function(PB $piggyBank) {
+            'currentRelevantRepAmount', function (PB $piggyBank) {
             return $piggyBank->currentRelevantRep()->currentamount;
         }
         );

@@ -67,8 +67,8 @@ class HomeController extends Controller
         $start         = Session::get('start', Carbon::now()->startOfMonth());
         $end           = Session::get('end', Carbon::now()->endOfMonth());
 
-        $accounts      = $repository->getFrontpageAccounts($frontPage);
-        $savings       = $repository->getSavingsAccounts();
+        $accounts = $repository->getFrontpageAccounts($frontPage);
+        $savings  = $repository->getSavingsAccounts();
 
         $piggyBankAccounts = $repository->getPiggyBankAccounts();
 
@@ -83,8 +83,8 @@ class HomeController extends Controller
         if ($sum != 0) {
             Session::flash(
                 'error', 'Your transactions are unbalanced. This means a'
-                            . ' withdrawal, deposit or transfer was not stored properly. '
-                            . 'Please check your accounts and transactions for errors.'
+                         . ' withdrawal, deposit or transfer was not stored properly. '
+                         . 'Please check your accounts and transactions for errors.'
             );
         }
 

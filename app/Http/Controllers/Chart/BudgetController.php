@@ -177,9 +177,9 @@ class BudgetController extends Controller
                 $overspent = $expenses > floatval($repetition->amount) ? $expenses - floatval($repetition->amount) : 0;
                 $allEntries->push(
                     [$budget->name . ' (' . $repetition->startdate->formatLocalized($this->monthAndDayFormat) . ')',
-                        $left,
-                        $spent,
-                        $overspent
+                     $left,
+                     $spent,
+                     $overspent
                     ]
                 );
             }

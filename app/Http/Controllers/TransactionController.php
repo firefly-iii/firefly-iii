@@ -80,15 +80,15 @@ class TransactionController extends Controller
      */
     public function delete(TransactionJournal $journal)
     {
-        $type     = strtolower($journal->transactionType->type);
-        $subTitle = trans('firefly.delete_' . $type, ['description' => $journal->description]);
+        $what     = strtolower($journal->transactionType->type);
+        $subTitle = trans('firefly.delete_' . $what, ['description' => $journal->description]);
 
         // put previous url in session
         Session::put('transactions.delete.url', URL::previous());
         Session::flash('gaEventCategory', 'transactions');
-        Session::flash('gaEventAction', 'delete-' . $type);
+        Session::flash('gaEventAction', 'delete-' . $what);
 
-        return view('transactions.delete', compact('journal', 'subTitle'));
+        return view('transactions.delete', compact('journal', 'subTitle','what'));
 
 
     }
@@ -253,14 +253,15 @@ class TransactionController extends Controller
     public function show(JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
         $journal->transactions->each(
-            function(Transaction $t) use ($journal, $repository) {
+            function (Transaction $t) use ($journal, $repository) {
                 $t->before = $repository->getAmountBefore($journal, $t);
                 $t->after  = $t->before + $t->amount;
             }
         );
+        $what     = strtolower($journal->transactionType->type);
         $subTitle = trans('firefly.' . $journal->transactionType->type) . ' "' . e($journal->description) . '"';
 
-        return view('transactions.show', compact('journal', 'subTitle'));
+        return view('transactions.show', compact('journal', 'subTitle','what'));
     }
 
     /**

@@ -274,7 +274,7 @@ class FireflyValidator extends Validator
         $set = $query->get(['piggy_banks.*']);
 
         foreach ($set as $entry) {
-            $fieldValue  = $this->tryDecrypt($entry->name);
+            $fieldValue = $this->tryDecrypt($entry->name);
             if ($fieldValue == $value) {
                 return false;
             }

@@ -139,11 +139,11 @@ class PiggyBankController extends Controller
             $targetDate = $targetDate->format('Y-m-d');
         }
         $preFilled = ['name'         => $piggyBank->name,
-                        'account_id'   => $piggyBank->account_id,
-                        'targetamount' => $piggyBank->targetamount,
-                        'targetdate'   => $targetDate,
-                        'reminder'     => $piggyBank->reminder,
-                        'remind_me'    => intval($piggyBank->remind_me) == 1 && !is_null($piggyBank->reminder) ? true : false
+                      'account_id'   => $piggyBank->account_id,
+                      'targetamount' => $piggyBank->targetamount,
+                      'targetdate'   => $targetDate,
+                      'reminder'     => $piggyBank->reminder,
+                      'remind_me'    => intval($piggyBank->remind_me) == 1 && !is_null($piggyBank->reminder) ? true : false
         ];
         Session::flash('preFilled', $preFilled);
         Session::flash('gaEventCategory', 'piggy-banks');

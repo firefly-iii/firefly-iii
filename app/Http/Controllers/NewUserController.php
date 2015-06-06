@@ -96,11 +96,11 @@ class NewUserController extends Controller
                 'openingBalanceDate'     => null,
                 'openingBalanceCurrency' => intval($request->input('balance_currency_id')),
             ];
-            $creditCard = $repository->store($creditAccount);
+            $creditCard    = $repository->store($creditAccount);
 
             // store meta for CC:
-            AccountMeta::create(['name' => 'ccType', 'data' => 'monthlyFull', 'account_id' => $creditCard->id, ]);
-            AccountMeta::create(['name' => 'ccMonthlyPaymentDate', 'data' => Carbon::now()->year . '-01-01', 'account_id' => $creditCard->id, ]);
+            AccountMeta::create(['name' => 'ccType', 'data' => 'monthlyFull', 'account_id' => $creditCard->id,]);
+            AccountMeta::create(['name' => 'ccMonthlyPaymentDate', 'data' => Carbon::now()->year . '-01-01', 'account_id' => $creditCard->id,]);
 
         }
         Session::flash('success', 'New account(s) created!');

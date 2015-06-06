@@ -110,7 +110,7 @@ class TagRepository implements TagRepositoryInterface
         /** @var Collection $tags */
         $tags = Auth::user()->tags()->get();
         $tags->sortBy(
-            function(Tag $tag) {
+            function (Tag $tag) {
                 return $tag->tag;
             }
         );
@@ -204,6 +204,7 @@ class TagRepository implements TagRepositoryInterface
                 return false;
             }
         }
+
         return true;
     }
 
@@ -289,6 +290,7 @@ class TagRepository implements TagRepositoryInterface
         // tag is attached just like that:
         if ($withdrawals < 1 && $deposits < 1) {
             $journal->tags()->save($tag);
+
             return true;
         }
 

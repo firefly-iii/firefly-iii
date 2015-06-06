@@ -36,7 +36,7 @@ class ComponentRepository
         $cache->addProperty($shared);
         $cache->addProperty('spentInPeriod');
 
-        if($cache->has()) {
+        if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
 

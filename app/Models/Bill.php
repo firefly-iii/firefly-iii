@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
  * FireflyIII\Models\Bill
  *
  * @codeCoverageIgnore Class Bill
- * @package FireflyIII\Models
+ * @package            FireflyIII\Models
  * @property integer                                                                               $id
  * @property \Carbon\Carbon                                                                        $created_at
  * @property \Carbon\Carbon                                                                        $updated_at
@@ -51,10 +51,9 @@ class Bill extends Model
 {
 
     protected $fillable
-        = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip', 'automatch', 'active', ];
+        = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip', 'automatch', 'active',];
 
     protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
-
 
 
     /**

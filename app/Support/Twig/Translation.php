@@ -21,7 +21,7 @@ class Translation extends Twig_Extension
         $filters = [];
 
         $filters[] = new Twig_SimpleFilter(
-            '_', function($name) {
+            '_', function ($name) {
 
             return trans('firefly.' . $name);
 

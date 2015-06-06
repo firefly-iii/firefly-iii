@@ -67,7 +67,7 @@ class Expense
     public function getExpenses()
     {
         $this->expenses->sortByDesc(
-            function(stdClass $object) {
+            function (stdClass $object) {
                 return $object->amount;
             }
         );

@@ -46,7 +46,7 @@ use Watson\Validating\ValidatingTrait;
  * @property mixed                                                                          lastActivityDate
  * @property mixed                                                                          piggyBalance
  * @property mixed                                                                          difference
- * @property mixed percentage
+ * @property mixed                                                                          percentage
  */
 class Account extends Model
 {
@@ -215,7 +215,7 @@ class Account extends Model
     {
         $joinName = str_replace('.', '_', $name);
         $query->leftJoin(
-            'account_meta as ' . $joinName, function(JoinClause $join) use ($joinName, $name) {
+            'account_meta as ' . $joinName, function (JoinClause $join) use ($joinName, $name) {
             $join->on($joinName . '.account_id', '=', 'accounts.id')->where($joinName . '.name', '=', $name);
         }
         );

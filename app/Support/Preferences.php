@@ -25,7 +25,7 @@ class Preferences
 
     /**
      * @param      string $name
-     * @param string $default
+     * @param string      $default
      *
      * @return null|\FireflyIII\Models\Preference
      */
@@ -54,7 +54,7 @@ class Preferences
     }
 
     /**
-     * @param $name
+     * @param        $name
      * @param string $value
      *
      * @return Preference

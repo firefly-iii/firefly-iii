@@ -245,7 +245,7 @@ class BudgetController extends Controller
             'name' => $request->input('name'),
             'user' => Auth::user()->id,
         ];
-        $budget = $repository->store($budgetData);
+        $budget     = $repository->store($budgetData);
 
         Session::flash('success', 'New budget "' . $budget->name . '" stored!');
         Preferences::mark();

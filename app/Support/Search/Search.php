@@ -25,7 +25,7 @@ class Search implements SearchInterface
     public function searchAccounts(array $words)
     {
         return Auth::user()->accounts()->with('accounttype')->where(
-            function(EloquentBuilder $q) use ($words) {
+            function (EloquentBuilder $q) use ($words) {
                 foreach ($words as $word) {
                     $q->orWhere('name', 'LIKE', '%' . e($word) . '%');
                 }
@@ -43,7 +43,7 @@ class Search implements SearchInterface
         /** @var Collection $set */
         $set    = Auth::user()->budgets()->get();
         $newSet = $set->filter(
-            function(Budget $b) use ($words) {
+            function (Budget $b) use ($words) {
                 $found = 0;
                 foreach ($words as $word) {
                     if (!(strpos(strtolower($b->name), strtolower($word)) === false)) {
@@ -68,7 +68,7 @@ class Search implements SearchInterface
         /** @var Collection $set */
         $set    = Auth::user()->categories()->get();
         $newSet = $set->filter(
-            function(Category $c) use ($words) {
+            function (Category $c) use ($words) {
                 $found = 0;
                 foreach ($words as $word) {
                     if (!(strpos(strtolower($c->name), strtolower($word)) === false)) {
@@ -103,7 +103,7 @@ class Search implements SearchInterface
     {
         // decrypted transaction journals:
         $decrypted = Auth::user()->transactionjournals()->withRelevantData()->where('encrypted', 0)->where(
-            function(EloquentBuilder $q) use ($words) {
+            function (EloquentBuilder $q) use ($words) {
                 foreach ($words as $word) {
                     $q->orWhere('description', 'LIKE', '%' . e($word) . '%');
                 }
@@ -113,7 +113,7 @@ class Search implements SearchInterface
         // encrypted
         $all      = Auth::user()->transactionjournals()->withRelevantData()->where('encrypted', 1)->get();
         $set      = $all->filter(
-            function(TransactionJournal $journal) use ($words) {
+            function (TransactionJournal $journal) use ($words) {
                 foreach ($words as $word) {
                     $haystack = strtolower($journal->description);
                     $word     = strtolower($word);
@@ -129,7 +129,7 @@ class Search implements SearchInterface
         $filtered = $set->merge($decrypted);
 
         $filtered->sortBy(
-            function(TransactionJournal $journal) {
+            function (TransactionJournal $journal) {
                 return intval($journal->date->format('U'));
             }
         );

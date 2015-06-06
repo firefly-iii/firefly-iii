@@ -8,10 +8,10 @@ use Zizaco\Entrust\EntrustPermission;
  * Class Permission
  *
  * @package FireflyIII\Models
- * @property integer $id
- * @property string $name
- * @property string $display_name
- * @property string $description
+ * @property integer        $id
+ * @property string         $name
+ * @property string         $display_name
+ * @property string         $description
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\Config::get('entrust.role')[] $roles

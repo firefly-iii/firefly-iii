@@ -41,7 +41,7 @@ class Navigation
             '6M'        => 6,
             'half-year' => 6,
         ];
-        $specialMap  = ['1M', 'month', 'monthly'];
+
         if (!isset($functionMap[$repeatFreq])) {
             throw new FireflyException('Cannot do addPeriod for $repeat_freq "' . $repeatFreq . '"');
         }
