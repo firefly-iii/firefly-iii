@@ -264,8 +264,11 @@ class AmountSupportTest extends TestCase
      */
     public function testGetCurrencySymbol()
     {
+        // will the the euro:
+        $eur = TransactionCurrency::whereCode('EUR')->first();
+
         $result = $this->object->getCurrencySymbol();
-        $this->assertEquals('Xi', $result);
+        $this->assertEquals($eur->symbol, $result);
     }
 
     /**
@@ -273,8 +276,11 @@ class AmountSupportTest extends TestCase
      */
     public function testGetDefaultCurrency()
     {
-        $result = $this->object->getCurrencySymbol();
-        $this->assertEquals('Xi', $result);
+        // will the the euro:
+        $eur = TransactionCurrency::whereCode('EUR')->first();
+
+        $result = $this->object->getDefaultCurrency();
+        $this->assertEquals($eur->id, $result->id);
     }
 
 
