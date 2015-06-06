@@ -19,15 +19,45 @@ class Journal extends Twig_Extension
 {
 
     /**
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @return array
      */
     public function getFilters()
     {
-        $filters = [];
+        $filters = [$this->typeIcon()];
 
-        $filters[] = new Twig_SimpleFilter(
-            'typeIcon', function(TransactionJournal $journal) {
+        return $filters;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFunctions()
+    {
+        $functions = [
+            $this->invalidJournal(),
+            $this->relevantTags()
+        ];
+
+        return $functions;
+    }
+
+    /**
+     * Returns the name of the extension.
+     *
+     * @return string The extension name
+     */
+    public function getName()
+    {
+        return 'FireflyIII\Support\Twig\Journals';
+    }
+
+    /**
+     * @return Twig_SimpleFilter
+     */
+    protected function typeIcon()
+    {
+        return new Twig_SimpleFilter(
+            'typeIcon', function (TransactionJournal $journal) {
 
             $cache = new CacheProperties();
             $cache->addProperty($journal->id);
@@ -62,21 +92,15 @@ class Journal extends Twig_Extension
 
         }, ['is_safe' => ['html']]
         );
-
-        return $filters;
     }
 
     /**
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     *
-     * @return array
+     * @return Twig_SimpleFunction
      */
-    public function getFunctions()
+    protected function invalidJournal()
     {
-        $functions = [];
-
-        $functions[] = new Twig_SimpleFunction(
-            'invalidJournal', function(TransactionJournal $journal) {
+        return new Twig_SimpleFunction(
+            'invalidJournal', function (TransactionJournal $journal) {
             if (!isset($journal->transactions[1]) || !isset($journal->transactions[0])) {
                 return true;
             }
@@ -84,20 +108,27 @@ class Journal extends Twig_Extension
             return false;
         }
         );
+    }
 
-        $functions[] = new Twig_SimpleFunction(
-            'relevantTags', function(TransactionJournal $journal) {
+    /**
+     * @return Twig_SimpleFunction
+     */
+    protected function relevantTags()
+    {
+        return new Twig_SimpleFunction(
+            'relevantTags', function (TransactionJournal $journal) {
             $cache = new CacheProperties;
             $cache->addProperty('relevantTags');
             $cache->addProperty($journal->id);
 
-            if($cache->has()) {
+            if ($cache->has()) {
                 return $cache->get(); // @codeCoverageIgnore
             }
 
             if ($journal->tags->count() == 0) {
                 $string = App::make('amount')->formatJournal($journal);
                 $cache->store($string);
+
                 return $string;
             }
 
@@ -107,9 +138,10 @@ class Journal extends Twig_Extension
                     // return tag formatted for a "balancing act", even if other
                     // tags are present.
                     $amount = App::make('amount')->format($journal->actual_amount, false);
-                    $string =  '<a href="' . route('tags.show', [$tag->id]) . '" class="label label-success" title="' . $amount
-                            . '"><i class="fa fa-fw fa-refresh"></i> ' . $tag->tag . '</a>';
+                    $string = '<a href="' . route('tags.show', [$tag->id]) . '" class="label label-success" title="' . $amount
+                              . '"><i class="fa fa-fw fa-refresh"></i> ' . $tag->tag . '</a>';
                     $cache->store($string);
+
                     return $string;
                 }
 
@@ -119,8 +151,9 @@ class Journal extends Twig_Extension
                 if ($tag->tagMode == 'advancePayment' && $journal->transactionType->type == 'Deposit') {
                     $amount = App::make('amount')->formatJournal($journal, false);
                     $string = '<a href="' . route('tags.show', [$tag->id]) . '" class="label label-success" title="' . $amount
-                            . '"><i class="fa fa-fw fa-sort-numeric-desc"></i> ' . $tag->tag . '</a>';
+                              . '"><i class="fa fa-fw fa-sort-numeric-desc"></i> ' . $tag->tag . '</a>';
                     $cache->store($string);
+
                     return $string;
                 }
                 /*
@@ -132,6 +165,7 @@ class Journal extends Twig_Extension
 
                     $string = '<a href="' . route('tags.show', [$tag->id]) . '">' . $amount . '</a>';
                     $cache->store($string);
+
                     return $string;
                 }
 
@@ -140,6 +174,7 @@ class Journal extends Twig_Extension
                     // return the amount:
                     $string = App::make('amount')->formatJournal($journal);
                     $cache->store($string);
+
                     return $string;
                 }
             }
@@ -148,17 +183,5 @@ class Journal extends Twig_Extension
             return 'TODO: ' . $journal->amount;
         }
         );
-
-        return $functions;
-    }
-
-    /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
-    public function getName()
-    {
-        return 'FireflyIII\Support\Twig\Journals';
     }
 }

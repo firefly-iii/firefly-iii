@@ -28,34 +28,95 @@ class General extends Twig_Extension
      */
     public function getFilters()
     {
-        $filters = [];
+        return [
+            $this->formatAmount(),
+            $this->formatTransaction(),
+            $this->formatAmountPlain(),
+            $this->formatJournal(),
+            $this->balance(),
+            $this->getAccountRole()
+        ];
 
-        $filters[] = new Twig_SimpleFilter(
-            'formatAmount', function($string) {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFunctions()
+    {
+        return [
+            $this->getCurrencyCode(),
+            $this->getCurrencySymbol(),
+            $this->phpdate(),
+            $this->env(),
+            $this->activeRoute()
+        ];
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getName()
+    {
+        return 'FireflyIII\Support\Twig\General';
+    }
+
+    /**
+     * @return Twig_SimpleFilter
+     */
+    protected function formatAmount()
+    {
+        return new Twig_SimpleFilter(
+            'formatAmount', function ($string) {
             return App::make('amount')->format($string);
         }, ['is_safe' => ['html']]
         );
+    }
 
-        $filters[] = new Twig_SimpleFilter(
-            'formatTransaction', function(Transaction $transaction) {
+    /**
+     * @return Twig_SimpleFilter
+     */
+    protected function formatTransaction()
+    {
+        return new Twig_SimpleFilter(
+            'formatTransaction', function (Transaction $transaction) {
             return App::make('amount')->formatTransaction($transaction);
         }, ['is_safe' => ['html']]
         );
+    }
 
-        $filters[] = new Twig_SimpleFilter(
-            'formatAmountPlain', function($string) {
+    /**
+     * @return Twig_SimpleFilter
+     */
+    protected function formatAmountPlain()
+    {
+        return new Twig_SimpleFilter(
+            'formatAmountPlain', function ($string) {
             return App::make('amount')->format($string, false);
         }, ['is_safe' => ['html']]
         );
+    }
 
-        $filters[] = new Twig_SimpleFilter(
-            'formatJournal', function($journal) {
+    /**
+     * @return Twig_SimpleFilter
+     */
+    protected function formatJournal()
+    {
+        return new Twig_SimpleFilter(
+            'formatJournal', function ($journal) {
             return App::make('amount')->formatJournal($journal);
         }, ['is_safe' => ['html']]
         );
+    }
 
-        $filters[] = new Twig_SimpleFilter(
-            'balance', function(Account $account = null) {
+    /**
+     * @return Twig_SimpleFilter
+     */
+    protected function balance()
+    {
+        return new Twig_SimpleFilter(
+            'balance', function (Account $account = null) {
             if (is_null($account)) {
                 return 'NULL';
             }
@@ -64,51 +125,75 @@ class General extends Twig_Extension
             return App::make('steam')->balance($account, $date);
         }
         );
-
-        // should be a function but OK
-        $filters[] = new Twig_SimpleFilter(
-            'getAccountRole', function($name) {
-            return Config::get('firefly.accountRoles.' . $name);
-        }
-        );
-
-        return $filters;
     }
 
     /**
-     * {@inheritDoc}
+     * @return Twig_SimpleFilter
      */
-    public function getFunctions()
+    protected function getAccountRole()
     {
-        $functions = [];
+        return new Twig_SimpleFilter(
+            'getAccountRole', function ($name) {
+            return Config::get('firefly.accountRoles.' . $name);
+        }
+        );
+    }
 
-        $functions[] = new Twig_SimpleFunction(
-            'getCurrencyCode', function() {
+    /**
+     * @return Twig_SimpleFunction
+     */
+    protected function getCurrencyCode()
+    {
+        return new Twig_SimpleFunction(
+            'getCurrencyCode', function () {
             return App::make('amount')->getCurrencyCode();
         }
         );
+    }
 
-        $functions[] = new Twig_SimpleFunction(
-            'getCurrencySymbol', function() {
+    /**
+     * @return Twig_SimpleFunction
+     */
+    protected function getCurrencySymbol()
+    {
+        return new Twig_SimpleFunction(
+            'getCurrencySymbol', function () {
             return App::make('amount')->getCurrencySymbol();
         }
         );
+    }
 
-        $functions[] = new Twig_SimpleFunction(
-            'phpdate', function($str) {
+    /**
+     * @return Twig_SimpleFunction
+     */
+    protected function phpdate()
+    {
+        return new Twig_SimpleFunction(
+            'phpdate', function ($str) {
             return date($str);
         }
         );
+    }
 
-
-        $functions[] = new Twig_SimpleFunction(
-            'env', function($name, $default) {
+    /**
+     * @return Twig_SimpleFunction
+     */
+    protected function env()
+    {
+        return new Twig_SimpleFunction(
+            'env', function ($name, $default) {
             return env($name, $default);
         }
         );
+    }
 
-        $functions[] = new Twig_SimpleFunction(
-            'activeRoute', function($context) {
+    /**
+     * @return Twig_SimpleFunction
+     */
+    protected function activeRoute()
+    {
+        return new Twig_SimpleFunction(
+            'activeRoute', function ($context) {
             $args       = func_get_args();
             $route      = $args[1];
             $what       = isset($args[2]) ? $args[2] : false;
@@ -133,18 +218,6 @@ class General extends Twig_Extension
             return 'not-xxx-at-all';
         }, ['needs_context' => true]
         );
-
-        return $functions;
-
-
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getName()
-    {
-        return 'FireflyIII\Support\Twig\General';
     }
 
 }
