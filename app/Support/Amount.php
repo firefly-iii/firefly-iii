@@ -36,7 +36,7 @@ class Amount
     public function getCurrencySymbol()
     {
         if (defined('FFCURRENCYSYMBOL')) {
-            return FFCURRENCYSYMBOL;
+            return FFCURRENCYSYMBOL; // @codeCoverageIgnore
         }
 
         $currencyPreference = Prefs::get('currencyPreference', 'EUR');
@@ -149,7 +149,7 @@ class Amount
     public function getCurrencyCode()
     {
         if (defined('FFCURRENCYCODE')) {
-            return FFCURRENCYCODE;
+            return FFCURRENCYCODE; // @codeCoverageIgnore
         }
 
 

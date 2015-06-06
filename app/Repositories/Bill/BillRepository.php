@@ -265,7 +265,7 @@ class BillRepository implements BillRepositoryInterface
         $amountMatch = false;
         $wordMatch   = false;
         $matches     = explode(',', $bill->match);
-        $description = strtolower($journal->description) . ' ' . strtolower($journal->expense_account->name);
+        $description = strtolower($journal->description) . ' ' . strtolower($journal->destination_account->name);
         $count       = 0;
         foreach ($matches as $word) {
             if (!(strpos($description, strtolower($word)) === false)) {

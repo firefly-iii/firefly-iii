@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Log;
 use Watson\Validating\ValidatingTrait;
 
 /**
@@ -71,7 +72,7 @@ use Watson\Validating\ValidatingTrait;
  * @property-read mixed                                                                          $correct_amount
  * @method static \FireflyIII\Models\TransactionJournal orderBy
  * @method static \FireflyIII\Models\TransactionJournal|null first
- * @property-read mixed $source_account 
+ * @property-read mixed                                                                          $source_account
  */
 class TransactionJournal extends Model
 {
@@ -220,36 +221,6 @@ class TransactionJournal extends Model
     }
 
     /**
-     * @return Account
-     */
-    public function getAssetAccountAttribute()
-    {
-        // if it's a deposit, it's the one thats positive
-        // if it's a withdrawal, it's the one thats negative
-        // otherwise, it's either (return first one):
-
-        switch ($this->transactionType->type) {
-            case 'Deposit':
-                return $this->transactions()->where('amount', '>', 0)->first()->account;
-            case 'Withdrawal':
-                return $this->transactions()->where('amount', '<', 0)->first()->account;
-
-        }
-
-        return $this->transactions()->first()->account;
-
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function transactions()
-    {
-        return $this->hasMany('FireflyIII\Models\Transaction');
-    }
-
-    /**
      * @return string
      */
     public function getCorrectAmountAttribute()
@@ -263,6 +234,15 @@ class TransactionJournal extends Model
         }
 
         return '0';
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transactions()
+    {
+        return $this->hasMany('FireflyIII\Models\Transaction');
     }
 
     /**
@@ -311,27 +291,6 @@ class TransactionJournal extends Model
     /**
      * @return Account
      */
-    public function getExpenseAccountAttribute()
-    {
-        // if it's a deposit, it's the one thats negative
-        // if it's a withdrawal, it's the one thats positive
-        // otherwise, it's either (return first one):
-
-        switch ($this->transactionType->type) {
-            case 'Deposit':
-                return $this->transactions()->where('amount', '<', 0)->first()->account;
-            case 'Withdrawal':
-                return $this->transactions()->where('amount', '>', 0)->first()->account;
-
-        }
-
-        return $this->transactions()->first()->account;
-
-    }
-
-    /**
-     * @return Account
-     */
     public function getSourceAccountAttribute()
     {
         $cache = new CacheProperties;
@@ -341,6 +300,7 @@ class TransactionJournal extends Model
             return $cache->get(); // @codeCoverageIgnore
         }
         $account = $this->transactions()->where('amount', '<', 0)->first()->account;
+
         $cache->store($account);
 
         return $account;

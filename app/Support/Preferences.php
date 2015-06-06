@@ -36,7 +36,6 @@ class Preferences
             return Cache::get($fullName);
         }
 
-
         $preference = Preference::where('user_id', Auth::user()->id)->where('name', $name)->first(['id', 'name', 'data_encrypted']);
 
         if ($preference) {

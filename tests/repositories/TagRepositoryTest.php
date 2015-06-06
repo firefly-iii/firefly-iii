@@ -176,6 +176,9 @@ class TagRepositoryTest extends TestCase
      */
     public function testConnectPaymentMultipleMatch()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
         $withdrawal = FactoryMuffin::create('FireflyIII\Models\TransactionType');
         $deposit    = FactoryMuffin::create('FireflyIII\Models\TransactionType');
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
@@ -232,6 +235,9 @@ class TagRepositoryTest extends TestCase
      */
     public function testConnectPaymentNoMatch()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
         $withdrawal = FactoryMuffin::create('FireflyIII\Models\TransactionType');
         $deposit    = FactoryMuffin::create('FireflyIII\Models\TransactionType');
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
@@ -289,6 +295,9 @@ class TagRepositoryTest extends TestCase
      */
     public function testConnectPaymentOneTransfer()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
         $transfer = FactoryMuffin::create('FireflyIII\Models\TransactionType');
@@ -316,6 +325,9 @@ class TagRepositoryTest extends TestCase
      */
     public function testConnectPaymentOneWithdrawal()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
         $withdrawal = FactoryMuffin::create('FireflyIII\Models\TransactionType');
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
@@ -343,6 +355,9 @@ class TagRepositoryTest extends TestCase
      */
     public function testConnectPaymentTwoWithdrawals()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
         $withdrawal = FactoryMuffin::create('FireflyIII\Models\TransactionType');
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
@@ -375,6 +390,9 @@ class TagRepositoryTest extends TestCase
      */
     public function testConnectPaymentTwoWithdrawalsSameAccounts()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
         $withdrawal = FactoryMuffin::create('FireflyIII\Models\TransactionType');
         FactoryMuffin::create('FireflyIII\Models\TransactionType');
         FactoryMuffin::create('FireflyIII\Models\TransactionType');

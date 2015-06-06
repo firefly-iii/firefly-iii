@@ -54,19 +54,13 @@ class JournalRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Journal\JournalRepository::delete
+     * @covers FireflyIII\Providers\EventServiceProvider::boot
+     * @covers FireflyIII\Providers\EventServiceProvider::registerDeleteEvents
      */
     public function testDelete()
     {
         $journal     = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-        $account     = FactoryMuffin::create('FireflyIII\Models\Account');
-        $transaction = Transaction::create(
-            [
-                'account_id'             => $account->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => 100,
-            ]
-        );
-
+        $transaction = $journal->transactions[0];
         $this->object->delete($journal);
 
         $this->assertEquals(0, TransactionJournal::where('id', $journal->id)->whereNull('deleted_at')->count());

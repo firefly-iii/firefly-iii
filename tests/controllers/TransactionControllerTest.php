@@ -97,6 +97,8 @@ class TransactionControllerTest extends TestCase
      */
     public function testEdit()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
         // make complete journal:
         $accountType  = FactoryMuffin::create('FireflyIII\Models\AccountType');
         $journal      = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');

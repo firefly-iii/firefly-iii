@@ -53,11 +53,14 @@ class EventServiceProvider extends ServiceProvider
         $this->registerCreateEvents();
         BudgetLimit::saved(
             function(BudgetLimit $budgetLimit) {
+                Log::debug('Saved!');
 
                 $end = Navigation::addPeriod(clone $budgetLimit->startdate, $budgetLimit->repeat_freq, 0);
                 $end->subDay();
-                $set = $budgetLimit->limitrepetitions()->where('startdate', $budgetLimit->startdate->format('Y-m-d'))->where('enddate', $end->format('Y-m-d'))
-                                    ->get();
+                $set = $budgetLimit->limitrepetitions()
+                    ->where('startdate', $budgetLimit->startdate->format('Y-m-d 00:00:00'))
+                    ->where('enddate', $end->format('Y-m-d 00:00:00'))
+                    ->get();
                 if ($set->count() == 0) {
                     $repetition            = new LimitRepetition;
                     $repetition->startdate = $budgetLimit->startdate;
@@ -68,8 +71,7 @@ class EventServiceProvider extends ServiceProvider
                     try {
                         $repetition->save();
                     } catch (QueryException $e) {
-                        Log::error('Trying to save new LimitRepetition failed!');
-                        Log::error($e->getMessage());
+                        Log::error('Trying to save new LimitRepetition failed: '.$e->getMessage()); // @codeCoverageIgnore
                     }
                 } else {
                     if ($set->count() == 1) {

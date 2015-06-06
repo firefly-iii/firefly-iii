@@ -212,6 +212,8 @@ class CategoryRepositoryTest extends TestCase
      */
     public function testSpentInPeriodSumCorrected()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
         $category = FactoryMuffin::create('FireflyIII\Models\Category');
         $sum      = $this->object->spentInPeriodCorrected($category, new Carbon, new Carbon, false);
 
@@ -226,6 +228,8 @@ class CategoryRepositoryTest extends TestCase
      */
     public function testSpentInPeriodSumCorrectedShared()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
         $category = FactoryMuffin::create('FireflyIII\Models\Category');
         $sum      = $this->object->spentInPeriodCorrected($category, new Carbon, new Carbon, true);
 

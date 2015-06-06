@@ -51,11 +51,21 @@ class AccountRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Account\AccountRepository::destroy
+     * @covers FireflyIII\Providers\EventServiceProvider::boot
+     * @covers FireflyIII\Providers\EventServiceProvider::registerDeleteEvents
      */
     public function testDestroy()
     {
         // create account:
-        $account   = FactoryMuffin::create('FireflyIII\Models\Account');
+        $account = FactoryMuffin::create('FireflyIII\Models\Account');
+
+        // create some transactions and attach them to the account:
+        for ($i = 0; $i < 5; $i++) {
+            $transaction             = FactoryMuffin::create('FireflyIII\Models\Transaction');
+            $transaction->account_id = $account->id;
+            $transaction->save();
+        }
+
         $accountId = $account->id;
         $this->be($account->user);
 
@@ -462,7 +472,7 @@ class AccountRepositoryTest extends TestCase
                 /*
                  * Transfers can go either way (see the amount)
                  */
-                if($i < 4) {
+                if ($i < 4) {
                     $amount = 100;
                 } else {
                     $amount = -100;

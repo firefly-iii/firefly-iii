@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
 use Preferences as Prefs;
+use Log;
 
 /**
  * Class CacheProperties
@@ -62,6 +63,9 @@ class CacheProperties
      */
     public function has()
     {
+        if(getenv('APP_ENV') == 'testing') {
+            return false;
+        }
         $this->md5();
 
         return Cache::has($this->md5);

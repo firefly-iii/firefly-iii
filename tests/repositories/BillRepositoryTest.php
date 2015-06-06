@@ -303,6 +303,8 @@ class BillRepositoryTest extends TestCase
      */
     public function testScanMatch()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
         $bill              = FactoryMuffin::create('FireflyIII\Models\Bill');
         $bill->date        = new Carbon('2012-01-07');
         $bill->repeat_freq = 'monthly';
@@ -318,24 +320,6 @@ class BillRepositoryTest extends TestCase
         $journal->description = 'jemoeder';
         $journal->user_id     = $bill->user_id;
         $journal->save();
-
-        // two transactions:
-        $account1 = FactoryMuffin::create('FireflyIII\Models\Account');
-        $account2 = FactoryMuffin::create('FireflyIII\Models\Account');
-        Transaction::create(
-            [
-                'account_id'             => $account1->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => 100,
-            ]
-        );
-        Transaction::create(
-            [
-                'account_id'             => $account2->id,
-                'transaction_journal_id' => $journal->id,
-                'amount'                 => 100,
-            ]
-        );
 
         $this->object->scan($bill, $journal);
         $newJournal = TransactionJournal::find($journal->id);
