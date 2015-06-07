@@ -300,6 +300,8 @@ class BillRepositoryTest extends TestCase
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      *
      * @covers FireflyIII\Repositories\Bill\BillRepository::scan
+     * @covers FireflyIII\Repositories\Bill\BillRepository::doWordMatch
+     * @covers FireflyIII\Repositories\Bill\BillRepository::doAmountMatch
      */
     public function testScanMatch()
     {
@@ -329,6 +331,8 @@ class BillRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Bill\BillRepository::scan
+     * @covers FireflyIII\Repositories\Bill\BillRepository::doWordMatch
+     * @covers FireflyIII\Repositories\Bill\BillRepository::doAmountMatch
      */
     public function testScanNoMatch()
     {
@@ -370,6 +374,8 @@ class BillRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Bill\BillRepository::scan
+     * @covers FireflyIII\Repositories\Bill\BillRepository::doWordMatch
+     * @covers FireflyIII\Repositories\Bill\BillRepository::doAmountMatch
      */
     public function testScanNoMatchButAttached()
     {

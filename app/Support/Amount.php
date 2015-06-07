@@ -163,7 +163,7 @@ class Amount
             return $currency->code;
         }
 
-        return 'EUR';
+        return 'EUR'; // @codeCoverageIgnore
     }
 
     /**

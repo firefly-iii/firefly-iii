@@ -13,6 +13,7 @@ use Preferences as Prefs;
 /**
  * Class CacheProperties
  *
+ * @codeCoverageIgnore
  * @package FireflyIII\Support
  */
 class CacheProperties

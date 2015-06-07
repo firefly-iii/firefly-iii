@@ -37,6 +37,17 @@ class AmountSupportTest extends TestCase
     }
 
     /**
+     * @covers FireflyIII\Support\Amount::format
+     * @covers FireflyIII\Support\Amount::getCurrencySymbol
+     */
+    public function testFormat()
+    {
+        $amount = '123';
+        $result = $this->object->format($amount, true);
+        $this->assertTrue(str_contains($result, $amount));
+    }
+
+    /**
      * @covers FireflyIII\Support\Amount::formatJournal
      */
     public function testFormatJournalColouredTransfer()

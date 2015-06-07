@@ -57,6 +57,8 @@ class TransactionJournalModelTest extends TestCase
 
     /**
      * @covers FireflyIII\Models\TransactionJournal::getAmountAttribute
+     * @covers FireflyIII\Models\TransactionJournal::amountByTag
+     * @covers FireflyIII\Models\TransactionJournal::amountByTags
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function testGetAmountAttributeAdvancePayment()
@@ -115,8 +117,11 @@ class TransactionJournalModelTest extends TestCase
 
     }
 
+
     /**
      * @covers FireflyIII\Models\TransactionJournal::getAmountAttribute
+     * @covers FireflyIII\Models\TransactionJournal::amountByTag
+     * @covers FireflyIII\Models\TransactionJournal::amountByTags
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function testGetAmountAttributeBalancingAct()
@@ -178,6 +183,8 @@ class TransactionJournalModelTest extends TestCase
 
     /**
      * @covers FireflyIII\Models\TransactionJournal::getAmountAttribute
+     * @covers FireflyIII\Models\TransactionJournal::amountByTag
+     * @covers FireflyIII\Models\TransactionJournal::amountByTags
      */
     public function testGetAmountAttributeNoTags()
     {
@@ -197,6 +204,8 @@ class TransactionJournalModelTest extends TestCase
 
     /**
      * @covers FireflyIII\Models\TransactionJournal::getAmountAttribute
+     * @covers FireflyIII\Models\TransactionJournal::amountByTag
+     * @covers FireflyIII\Models\TransactionJournal::amountByTags
      */
     public function testGetAmountAttributeTag()
     {
@@ -229,6 +238,51 @@ class TransactionJournalModelTest extends TestCase
 
         // connect to tag:
         $tag->transactionJournals()->save($withdrawal);
+
+        $this->assertEquals('300', $withdrawal->amount);
+
+
+    }
+
+    /**
+     * @covers FireflyIII\Models\TransactionJournal::getAmountAttribute
+     * @covers FireflyIII\Models\TransactionJournal::amountByTag
+     * @covers FireflyIII\Models\TransactionJournal::amountByTags
+     */
+    public function testGetAmountAttributeTags()
+    {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
+        // has two normal tags:
+        $tag          = FactoryMuffin::create('FireflyIII\Models\Tag');
+        $tag->tagMode = 'nothing';
+        $tag->save();
+        $tag2          = FactoryMuffin::create('FireflyIII\Models\Tag');
+        $tag2->tagMode = 'nothing';
+        $tag2->save();
+
+        // make withdrawal
+        $withdrawalType                  = FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $withdrawal                      = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $withdrawal->transaction_type_id = $withdrawalType->id;
+        $withdrawal->save();
+
+        // make accounts
+        $expense = FactoryMuffin::create('FireflyIII\Models\Account');
+        $asset   = FactoryMuffin::create('FireflyIII\Models\Account');
+
+        $withdrawal->transactions[0]->amount     = -300;
+        $withdrawal->transactions[0]->account_id = $asset->id;
+        $withdrawal->transactions[0]->save();
+
+        $withdrawal->transactions[1]->amount     = 300;
+        $withdrawal->transactions[1]->account_id = $expense->id;
+        $withdrawal->transactions[1]->save();
+
+        // connect to tag:
+        $tag->transactionJournals()->save($withdrawal);
+        $tag2->transactionJournals()->save($withdrawal);
 
         $this->assertEquals('300', $withdrawal->amount);
 
@@ -365,7 +419,7 @@ class TransactionJournalModelTest extends TestCase
     }
 
     /**
-     * @covers FireflyIII\Models\TransactionJournal::getDestinationAccountAttribute
+     * @covers FireflyIII\Models\TransactionJournal::getSourceAccountAttribute
      */
     public function testGetSourceAccountAttribute()
     {
