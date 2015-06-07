@@ -233,6 +233,7 @@ return [
     'balanceFor'                    => 'Balance for :name',
 
     // piggy banks:
+    'piggy_bank'                    => 'Piggy bank',
     'new_piggy_bank'                => 'Create new piggy bank',
     'account_status'                => 'Account status',
     'left_for_piggy_banks'          => 'Left for piggy banks',

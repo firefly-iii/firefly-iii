@@ -25,6 +25,8 @@ class AmountSupportTest extends TestCase
         $this->object = new Amount;
         $user         = FactoryMuffin::create('FireflyIII\User');
         $this->be($user);
+
+
     }
 
     /**

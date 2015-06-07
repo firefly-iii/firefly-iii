@@ -7,6 +7,7 @@ use Eloquent;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Input;
+use RuntimeException;
 use Session;
 use View;
 
@@ -109,9 +110,16 @@ class ExpandedForm
             $preFilled = Session::get('preFilled');
             $value     = isset($preFilled[$name]) && is_null($value) ? $preFilled[$name] : $value;
         }
-        if (!is_null(Input::old($name))) {
-            $value = Input::old($name);
+        // @codeCoverageIgnoreStart
+        try {
+            if (!is_null(Input::old($name))) {
+                $value = Input::old($name);
+            }
+        } catch (RuntimeException $e) {
+            // don't care about session errors.
         }
+
+        // @codeCoverageIgnoreEnd
 
         return $value;
     }
@@ -251,30 +259,11 @@ class ExpandedForm
 
     /**
      * @param       $name
-     * @param null  $value
-     * @param array $options
-     *
-     * @return string
-     */
-    public function month($name, $value = null, array $options = [])
-    {
-        $label   = $this->label($name, $options);
-        $options = $this->expandOptionArray($name, $label, $options);
-        $classes = $this->getHolderClasses($name);
-        $value   = $this->fillFieldValue($name, $value);
-        $html    = View::make('form.month', compact('classes', 'name', 'label', 'value', 'options'))->render();
-
-        return $html;
-    }
-
-    /**
-     * @param       $name
      * @param array $list
      * @param null  $selected
      * @param array $options
      *
      * @return string
-     * @internal param null $value
      */
     public function multiRadio($name, array $list = [], $selected = null, array $options = [])
     {
@@ -297,7 +286,16 @@ class ExpandedForm
      */
     public function optionsList($type, $name)
     {
-        $previousValue = Input::old('post_submit_action');
+        $previousValue = null;
+
+        // @codeCoverageIgnoreStart
+        try {
+            $previousValue = Input::old('post_submit_action');
+        } catch (RuntimeException $e) {
+            // don't care
+        }
+        // @codeCoverageIgnoreEnd
+
         $previousValue = is_null($previousValue) ? 'store' : $previousValue;
         $html          = View::make('form.options', compact('type', 'name', 'previousValue'))->render();
 

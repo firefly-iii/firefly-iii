@@ -170,7 +170,7 @@ return [
     'Withdrawal'                    => 'Uitgave',
     'Deposit'                       => 'Inkomsten',
     'Transfer'                      => 'Overschrijving',
-    'bill'                          => 'Contracten',
+    'bill'                          => 'Contract',
     'yes'                           => 'Ja',
     'no'                            => 'Nee',
     'amount'                        => 'Bedrag',
@@ -242,6 +242,7 @@ return [
     'balanceFor'                    => 'Saldo op :name',
 
     // piggy banks:
+    'piggy_bank'                    => 'Spaarpotje',
     'new_piggy_bank'                => 'Nieuw spaarpotje',
     'account_status'                => 'Rekeningoverzicht',
     'left_for_piggy_banks'          => 'Over voor spaarpotjes',

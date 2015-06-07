@@ -35,15 +35,8 @@ class Amount
      */
     public function getCurrencySymbol()
     {
-        if (defined('FFCURRENCYSYMBOL')) {
-            return FFCURRENCYSYMBOL; // @codeCoverageIgnore
-        }
-
         $currencyPreference = Prefs::get('currencyPreference', 'EUR');
         $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
-
-        define('FFCURRENCYSYMBOL', $currency->symbol);
-
         return $currency->symbol;
     }
 
@@ -148,17 +141,11 @@ class Amount
      */
     public function getCurrencyCode()
     {
-        if (defined('FFCURRENCYCODE')) {
-            return FFCURRENCYCODE; // @codeCoverageIgnore
-        }
-
 
         $currencyPreference = Prefs::get('currencyPreference', 'EUR');
 
         $currency = TransactionCurrency::whereCode($currencyPreference->data)->first();
         if ($currency) {
-
-            define('FFCURRENCYCODE', $currency->code);
 
             return $currency->code;
         }
