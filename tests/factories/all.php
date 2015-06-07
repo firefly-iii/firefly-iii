@@ -226,9 +226,12 @@ FactoryMuffin::define(
     'FireflyIII\User',
     [
         'email'    => function () {
-            $faker = Faker\Factory::create();
+            $first  = RandomString::generateRandomString(20);
+            $second = RandomString::generateRandomString(20);
+            $domain = RandomString::generateRandomString(30);
+            $email  = $first . '.' . $second . '@' . $domain . '.com';
 
-            return $faker->email;
+            return $email;
         },
         'password' => bcrypt('james'),
     ]
