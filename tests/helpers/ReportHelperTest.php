@@ -200,7 +200,7 @@ class ReportHelperTest extends TestCase
 
         // fake!
         $repository->shouldReceive('getCategories')->andReturn($set);
-        $repository->shouldReceive('spentInPeriodCorrected')->andReturn(rand(0, 100));
+        $repository->shouldReceive('spentInPeriodCorrected')->andReturn(rand(1, 100));
 
         // test!
         $object = $this->object->getCategoryReport(Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth(), false);
