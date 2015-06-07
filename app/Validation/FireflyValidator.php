@@ -239,7 +239,7 @@ class FireflyValidator extends Validator
         // exclude?
         $table   = $parameters[0];
         $field   = $parameters[1];
-        $exclude = isset($parameters[3]) ? intval($parameters[3]) : 0;
+        $exclude = isset($parameters[2]) ? intval($parameters[2]) : 0;
 
         // get entries from table
         $set = DB::table($table)->where('user_id', Auth::user()->id)->where('id', '!=', $exclude)->get([$field]);

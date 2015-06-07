@@ -44,7 +44,7 @@ class Tag extends Model
     protected $fillable = ['user_id', 'tag', 'date', 'description', 'longitude', 'latitude', 'zoomLevel', 'tagMode'];
     protected $rules
                         = [
-            'tag'         => 'required|min:1|uniqueObjectForUser:tags,tag',
+            'tag'         => 'required|min:1',
             'description' => 'min:1',
             'date'        => 'date',
             'latitude'    => 'numeric|min:-90|max:90',

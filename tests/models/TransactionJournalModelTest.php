@@ -329,7 +329,7 @@ class TransactionJournalModelTest extends TestCase
         // get asset account:
         $result = $journal->correct_amount;
 
-        $this->assertEquals('0', $result);
+        $this->assertEquals('300', $result);
     }
 
     /**

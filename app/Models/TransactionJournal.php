@@ -146,7 +146,6 @@ class TransactionJournal extends Model
             return $cache->get(); // @codeCoverageIgnore
         }
 
-
         $amount = '0';
         bcscale(2);
         /** @var Transaction $t */
@@ -155,59 +154,61 @@ class TransactionJournal extends Model
                 $amount = $t->amount;
             }
         }
+        $count = $this->tags->count();
 
-        /*
-         * If the journal has tags, it gets complicated.
-         */
-        if ($this->tags->count() == 0) {
-            $cache->store($amount);
-
-            return $amount;
+        if ($count === 1) {
+            // get amount for single tag:
+            $amount = $this->amountByTag($this->tags()->first(), $amount);
         }
 
-        // if journal is part of advancePayment AND journal is a withdrawal,
-        // then journal is being repaid by other journals, so the actual amount will lower:
-        /** @var Tag $advancePayment */
-        $advancePayment = $this->tags()->where('tagMode', 'advancePayment')->first();
-        if ($advancePayment && $this->transactionType->type == 'Withdrawal') {
-            // loop other deposits, remove from our amount.
-            $others = $advancePayment->transactionJournals()->transactionTypes(['Deposit'])->get();
-            foreach ($others as $other) {
-                $amount = bcsub($amount, $other->actual_amount);
-            }
-            $cache->store($amount);
+        if ($count > 1) {
+            // get amount for either tag.
+            $amount = $this->amountByTags($amount);
 
-            return $amount;
         }
-
-        // if this journal is part of an advancePayment AND the journal is a deposit,
-        // then the journal amount is correcting a withdrawal, and the amount is zero:
-        if ($advancePayment && $this->transactionType->type == 'Deposit') {
-            $cache->store('0');
-
-            return '0';
-        }
-
-
-        // is balancing act?
-        $balancingAct = $this->tags()->where('tagMode', 'balancingAct')->first();
-
-        if ($balancingAct) {
-            // this is the expense:
-            if ($this->transactionType->type == 'Withdrawal') {
-                $transfer = $balancingAct->transactionJournals()->transactionTypes(['Transfer'])->first();
-                if ($transfer) {
-                    $amount = bcsub($amount, $transfer->actual_amount);
-                    $cache->store($amount);
-
-                    return $amount;
-                }
-            } // @codeCoverageIgnore
-        } // @codeCoverageIgnore
-
         $cache->store($amount);
 
         return $amount;
+
+    }
+
+    /**
+     * Assuming the journal has only one tag. Parameter amount is used as fallback.
+     *
+     * @param Tag    $tag
+     * @param string $amount
+     *
+     * @return string
+     */
+    protected function amountByTag(Tag $tag, $amount)
+    {
+        if ($tag->tagMode == 'advancePayment') {
+            if ($this->transactionType->type == 'Withdrawal') {
+                $others = $tag->transactionJournals()->transactionTypes(['Deposit'])->get();
+                foreach ($others as $other) {
+                    $amount = bcsub($amount, $other->actual_amount);
+                }
+
+                return $amount;
+            }
+            if ($this->transactionType->type == 'Deposit') {
+                return '0';
+            }
+        }
+
+        if ($tag->tagMode == 'balancingAct') {
+            if ($this->transactionType->type == 'Withdrawal') {
+                $transfer = $tag->transactionJournals()->transactionTypes(['Transfer'])->first();
+                if ($transfer) {
+                    $amount = bcsub($amount, $transfer->actual_amount);
+
+                    return $amount;
+                }
+            }
+        }
+
+        return $amount;
+
     }
 
     /**
@@ -217,6 +218,26 @@ class TransactionJournal extends Model
     public function tags()
     {
         return $this->belongsToMany('FireflyIII\Models\Tag');
+    }
+
+    /**
+     * @param string $amount
+     *
+     * @return string
+     */
+    public function amountByTags($amount)
+    {
+        $firstBalancingAct = $this->tags()->where('tagMode', 'balancingAct')->first();
+        if ($firstBalancingAct) {
+            return $this->amountByTag($firstBalancingAct, $amount);
+        }
+
+        $firstAdvancePayment = $this->tags()->where('tagMode', 'advancePayment')->first();
+        if ($firstAdvancePayment) {
+            return $this->amountByTag($firstAdvancePayment, $amount);
+        }
+
+        return $amount;
     }
 
     /**
@@ -232,7 +253,7 @@ class TransactionJournal extends Model
                 return $this->transactions()->where('amount', '<', 0)->first()->amount;
         }
 
-        return '0';
+        return $this->transactions()->where('amount', '>', 0)->first()->amount;
     }
 
     /**

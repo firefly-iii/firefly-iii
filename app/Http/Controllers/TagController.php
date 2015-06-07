@@ -270,6 +270,7 @@ class TagController extends Controller
             'tagMode'     => $request->get('tagMode'),
         ];
 
+
         $repository->update($tag, $data);
 
         Session::flash('success', 'Tag "' . e($data['tag']) . '" updated.');
