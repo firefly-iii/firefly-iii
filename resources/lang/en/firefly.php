@@ -149,7 +149,7 @@ return [
     'transactions'                  => 'Transactions',
     'expenses'                      => 'Expenses',
     'income'                        => 'Revenue / income',
-    'transfers'                     => 'Transfer',
+    'transfers'                     => 'Transfers',
     'moneyManagement'               => 'Money management',
     'piggyBanks'                    => 'Piggy banks',
     'bills'                         => 'Bills',
