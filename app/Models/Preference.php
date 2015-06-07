@@ -6,16 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class Preference
  *
- * @codeCoverageIgnore 
+ * @codeCoverageIgnore
  * @package FireflyIII\Models
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property integer $user_id
- * @property string $name
- * @property string $name_encrypted
- * @property string $data
- * @property string $data_encrypted
+ * @property integer               $id
+ * @property \Carbon\Carbon        $created_at
+ * @property \Carbon\Carbon        $updated_at
+ * @property integer               $user_id
+ * @property string                $name
+ * @property string                $name_encrypted
+ * @property string                $data
+ * @property string                $data_encrypted
  * @property-read \FireflyIII\User $user
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Preference whereCreatedAt($value)
@@ -57,35 +57,11 @@ class Preference extends Model
 
     /**
      * @param $value
-     *
-     * @return float|int
-     */
-    public function getNameAttribute($value)
-    {
-        if (is_null($this->name_encrypted)) {
-            return $value;
-        }
-        $value = Crypt::decrypt($this->name_encrypted);
-
-        return $value;
-    }
-
-    /**
-     * @param $value
      */
     public function setDataAttribute($value)
     {
         $this->attributes['data']           = '';
         $this->attributes['data_encrypted'] = Crypt::encrypt(json_encode($value));
-    }
-
-    /**
-     * @param $value
-     */
-    public function setNameAttribute($value)
-    {
-        $this->attributes['name_encrypted'] = Crypt::encrypt($value);
-        $this->attributes['name']           = $value;
     }
 
     /**

@@ -11,6 +11,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Input;
+use Preferences;
 use Redirect;
 use Response;
 use Session;
@@ -79,15 +80,15 @@ class TransactionController extends Controller
      */
     public function delete(TransactionJournal $journal)
     {
-        $type     = strtolower($journal->transactionType->type);
-        $subTitle = trans('firefly.delete_' . $type, ['description' => $journal->description]);
+        $what     = strtolower($journal->transactionType->type);
+        $subTitle = trans('firefly.delete_' . $what, ['description' => $journal->description]);
 
         // put previous url in session
         Session::put('transactions.delete.url', URL::previous());
         Session::flash('gaEventCategory', 'transactions');
-        Session::flash('gaEventAction', 'delete-' . $type);
+        Session::flash('gaEventAction', 'delete-' . $what);
 
-        return view('transactions.delete', compact('journal', 'subTitle'));
+        return view('transactions.delete', compact('journal', 'subTitle','what'));
 
 
     }
@@ -103,6 +104,8 @@ class TransactionController extends Controller
         Session::flash('success', 'Transaction "' . e($transactionJournal->description) . '" destroyed.');
 
         $repository->delete($transactionJournal);
+
+        Preferences::mark();
 
         // redirect to previous URL:
         return Redirect::to(Session::get('transactions.delete.url'));
@@ -154,7 +157,7 @@ class TransactionController extends Controller
         }
 
         $preFilled['amount']          = $journal->actual_amount;
-        $preFilled['account_id']      = $journal->asset_account->id;
+        $preFilled['account_id']      = $journal->destination_account->id;
         $preFilled['expense_account'] = $transactions[0]->account->name;
         $preFilled['revenue_account'] = $transactions[1]->account->name;
         $preFilled['account_from_id'] = $transactions[1]->account->id;
@@ -235,6 +238,7 @@ class TransactionController extends Controller
                 }
             }
         }
+        Preferences::mark();
 
         return Response::json([true]);
 
@@ -249,14 +253,15 @@ class TransactionController extends Controller
     public function show(JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
         $journal->transactions->each(
-            function(Transaction $t) use ($journal, $repository) {
+            function (Transaction $t) use ($journal, $repository) {
                 $t->before = $repository->getAmountBefore($journal, $t);
                 $t->after  = $t->before + $t->amount;
             }
         );
+        $what     = strtolower($journal->transactionType->type);
         $subTitle = trans('firefly.' . $journal->transactionType->type) . ' "' . e($journal->description) . '"';
 
-        return view('transactions.show', compact('journal', 'subTitle'));
+        return view('transactions.show', compact('journal', 'subTitle','what'));
     }
 
     /**
@@ -281,6 +286,7 @@ class TransactionController extends Controller
         $repository->deactivateReminder($request->get('reminder_id'));
 
         Session::flash('success', 'New transaction "' . $journal->description . '" stored!');
+        Preferences::mark();
 
         if (intval(Input::get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
@@ -312,6 +318,7 @@ class TransactionController extends Controller
         // update, get events by date and sort DESC
 
         Session::flash('success', 'Transaction "' . e($journalData['description']) . '" updated.');
+        Preferences::mark();
 
         if (intval(Input::get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:

@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use Crypt;
+use FireflyIII\Support\CacheProperties;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -60,13 +61,17 @@ use Watson\Validating\ValidatingTrait;
  * @method static \FireflyIII\Models\TransactionJournal onDate($date)
  * @method static \FireflyIII\Models\TransactionJournal transactionTypes($types)
  * @method static \FireflyIII\Models\TransactionJournal withRelevantData()
- * @property-read mixed $expense_account
- * @property string account_encrypted
- * @property bool joinedTransactions
- * @property bool joinedTransactionTypes
- * @property mixed account_id
- * @property mixed name
- * @property mixed symbol
+ * @property-read mixed                                                                          $expense_account
+ * @property string                                                                              account_encrypted
+ * @property bool                                                                                joinedTransactions
+ * @property bool                                                                                joinedTransactionTypes
+ * @property mixed                                                                               account_id
+ * @property mixed                                                                               name
+ * @property mixed                                                                               symbol
+ * @property-read mixed                                                                          $correct_amount
+ * @method static \FireflyIII\Models\TransactionJournal orderBy
+ * @method static \FireflyIII\Models\TransactionJournal|null first
+ * @property-read mixed                                                                          $source_account
  */
 class TransactionJournal extends Model
 {
@@ -134,6 +139,13 @@ class TransactionJournal extends Model
      */
     public function getAmountAttribute()
     {
+        $cache = new CacheProperties();
+        $cache->addProperty($this->id);
+        $cache->addProperty('amount');
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
         $amount = '0';
         bcscale(2);
         /** @var Transaction $t */
@@ -142,51 +154,61 @@ class TransactionJournal extends Model
                 $amount = $t->amount;
             }
         }
+        $count = $this->tags->count();
 
-        /*
-         * If the journal has tags, it gets complicated.
-         */
-        if ($this->tags->count() == 0) {
-            return $amount;
+        if ($count === 1) {
+            // get amount for single tag:
+            $amount = $this->amountByTag($this->tags()->first(), $amount);
         }
 
-        // if journal is part of advancePayment AND journal is a withdrawal,
-        // then journal is being repaid by other journals, so the actual amount will lower:
-        /** @var Tag $advancePayment */
-        $advancePayment = $this->tags()->where('tagMode', 'advancePayment')->first();
-        if ($advancePayment && $this->transactionType->type == 'Withdrawal') {
-            // loop other deposits, remove from our amount.
-            $others = $advancePayment->transactionJournals()->transactionTypes(['Deposit'])->get();
-            foreach ($others as $other) {
-                $amount = bcsub($amount, $other->actual_amount);
-            }
+        if ($count > 1) {
+            // get amount for either tag.
+            $amount = $this->amountByTags($amount);
 
-            return $amount;
         }
+        $cache->store($amount);
 
-        // if this journal is part of an advancePayment AND the journal is a deposit,
-        // then the journal amount is correcting a withdrawal, and the amount is zero:
-        if ($advancePayment && $this->transactionType->type == 'Deposit') {
-            return '0';
-        }
+        return $amount;
 
+    }
 
-        // is balancing act?
-        $balancingAct = $this->tags()->where('tagMode', 'balancingAct')->first();
-
-        if ($balancingAct) {
-            // this is the expense:
+    /**
+     * Assuming the journal has only one tag. Parameter amount is used as fallback.
+     *
+     * @param Tag    $tag
+     * @param string $amount
+     *
+     * @return string
+     */
+    protected function amountByTag(Tag $tag, $amount)
+    {
+        if ($tag->tagMode == 'advancePayment') {
             if ($this->transactionType->type == 'Withdrawal') {
-                $transfer = $balancingAct->transactionJournals()->transactionTypes(['Transfer'])->first();
+                $others = $tag->transactionJournals()->transactionTypes(['Deposit'])->get();
+                foreach ($others as $other) {
+                    $amount = bcsub($amount, $other->actual_amount);
+                }
+
+                return $amount;
+            }
+            if ($this->transactionType->type == 'Deposit') {
+                return '0';
+            }
+        }
+
+        if ($tag->tagMode == 'balancingAct') {
+            if ($this->transactionType->type == 'Withdrawal') {
+                $transfer = $tag->transactionJournals()->transactionTypes(['Transfer'])->first();
                 if ($transfer) {
                     $amount = bcsub($amount, $transfer->actual_amount);
 
                     return $amount;
                 }
-            } // @codeCoverageIgnore
-        } // @codeCoverageIgnore
+            }
+        }
 
         return $amount;
+
     }
 
     /**
@@ -199,24 +221,39 @@ class TransactionJournal extends Model
     }
 
     /**
-     * @return Account
+     * @param string $amount
+     *
+     * @return string
      */
-    public function getAssetAccountAttribute()
+    public function amountByTags($amount)
     {
-        // if it's a deposit, it's the one thats positive
-        // if it's a withdrawal, it's the one thats negative
-        // otherwise, it's either (return first one):
+        $firstBalancingAct = $this->tags()->where('tagMode', 'balancingAct')->first();
+        if ($firstBalancingAct) {
+            return $this->amountByTag($firstBalancingAct, $amount);
+        }
+
+        $firstAdvancePayment = $this->tags()->where('tagMode', 'advancePayment')->first();
+        if ($firstAdvancePayment) {
+            return $this->amountByTag($firstAdvancePayment, $amount);
+        }
+
+        return $amount;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCorrectAmountAttribute()
+    {
 
         switch ($this->transactionType->type) {
             case 'Deposit':
-                return $this->transactions()->where('amount', '>', 0)->first()->account;
+                return $this->transactions()->where('amount', '>', 0)->first()->amount;
             case 'Withdrawal':
-                return $this->transactions()->where('amount', '<', 0)->first()->account;
-
+                return $this->transactions()->where('amount', '<', 0)->first()->amount;
         }
 
-        return $this->transactions()->first()->account;
-
+        return $this->transactions()->where('amount', '>', 0)->first()->amount;
     }
 
     /**
@@ -258,35 +295,35 @@ class TransactionJournal extends Model
      */
     public function getDestinationAccountAttribute()
     {
-        /** @var Transaction $transaction */
-        foreach ($this->transactions()->get() as $transaction) {
-            if (floatval($transaction->amount) > 0) {
-                return $transaction->account;
-            }
-        }
+        $cache = new CacheProperties;
+        $cache->addProperty($this->id);
+        $cache->addProperty('destinationAccount');
 
-        return $this->transactions()->first()->account;
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+        $account = $this->transactions()->where('amount', '>', 0)->first()->account;
+        $cache->store($account);
+
+        return $account;
     }
 
     /**
      * @return Account
      */
-    public function getExpenseAccountAttribute()
+    public function getSourceAccountAttribute()
     {
-        // if it's a deposit, it's the one thats negative
-        // if it's a withdrawal, it's the one thats positive
-        // otherwise, it's either (return first one):
-
-        switch ($this->transactionType->type) {
-            case 'Deposit':
-                return $this->transactions()->where('amount', '<', 0)->first()->account;
-            case 'Withdrawal':
-                return $this->transactions()->where('amount', '>', 0)->first()->account;
-
+        $cache = new CacheProperties;
+        $cache->addProperty($this->id);
+        $cache->addProperty('destinationAccount');
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
         }
+        $account = $this->transactions()->where('amount', '<', 0)->first()->account;
 
-        return $this->transactions()->first()->account;
+        $cache->store($account);
 
+        return $account;
     }
 
     /**
@@ -379,7 +416,7 @@ class TransactionJournal extends Model
     public function scopeWithRelevantData(EloquentBuilder $query)
     {
         $query->with(
-            ['transactions' => function(HasMany $q) {
+            ['transactions' => function (HasMany $q) {
                 $q->orderBy('amount', 'ASC');
             }, 'transactiontype', 'transactioncurrency', 'budgets', 'categories', 'transactions.account.accounttype', 'bill', 'budgets', 'categories']
         );

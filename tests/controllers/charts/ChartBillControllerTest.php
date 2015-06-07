@@ -60,6 +60,14 @@ class ChartBillControllerTest extends TestCase
         $repository->shouldReceive('createFakeBill')->andReturn($bills->first());
         Steam::shouldReceive('balance')->andReturn(-10, 0);
 
+        $lastActivity       = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $lastActivity->data = microtime();
+        Preferences::shouldReceive('lastActivity')->andReturn($lastActivity);
+
+        $language       = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $language->data = 'en';
+        Preferences::shouldReceive('get')->withArgs(['language', 'en'])->andReturn($language);
+
 
         $this->call('GET', '/chart/bill/frontpage');
         $this->assertResponseOk();

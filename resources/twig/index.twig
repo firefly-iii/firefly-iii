@@ -2,25 +2,7 @@
 {% block content %}
 {{ Breadcrumbs.renderIfExists }}
 
-{% if count == 0 %}
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <p class="lead">{{ 'welcome'|_ }}</p>
-
-        <p>
-            {{ 'createNewAsset'|_ }}
-
-        </p>
-    </div>
-</div>
-<div class="row">
-    <div class="col-lg-6 col-md-6 col-sm-12">
-        <h2><a href="{{route('accounts.create','asset')}}">{{ 'createNewAssetButton'|_ }}</a></h2>
-    </div>
-{% else %}
-    <!-- Language test: {{ 'test'|_ }} -->
-    <!-- fancy new boxes -->
-    {% include 'partials/boxes.twig' %}
+{% include 'partials/boxes.twig' %}
 
 <div class="row">
     <div class="col-lg-8 col-md-12 col-sm-12">
@@ -199,8 +181,6 @@
         {% endfor %}
     </div>
 </div>
-
-{% endif %}
 
 
 {% endblock %}

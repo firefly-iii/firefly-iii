@@ -59,6 +59,7 @@ class CurrencyController extends Controller
     {
 
         Preferences::set('currencyPreference', $currency->code);
+        Preferences::mark();
 
         Session::flash('success', $currency->name . ' is now the default currency.');
         Cache::forget('FFCURRENCYSYMBOL');
@@ -170,6 +171,7 @@ class CurrencyController extends Controller
         if (Auth::user()->hasRole('owner')) {
             $currency = $repository->store($data);
             Session::flash('success', 'Currency "' . $currency->name . '" created');
+
         }
 
         if (intval(Input::get('create_another')) === 1) {
@@ -198,6 +200,7 @@ class CurrencyController extends Controller
             $currency = $repository->update($currency, $data);
         }
         Session::flash('success', 'Currency "' . e($currency->name) . '" updated.');
+        Preferences::mark();
 
 
         if (intval(Input::get('return_to_edit')) === 1) {

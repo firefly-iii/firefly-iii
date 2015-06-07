@@ -38,7 +38,7 @@ interface TagRepositoryInterface
      * @param Carbon  $start
      * @param Carbon  $end
      *
-     * @return float
+     * @return string
      */
     public function coveredByBalancingActs(Account $account, Carbon $start, Carbon $end);
 

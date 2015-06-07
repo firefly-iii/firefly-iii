@@ -248,6 +248,24 @@ class TagControllerTest extends TestCase
 
         $this->call('POST', '/tags/update/' . $tag->id, $data);
         $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
+    }
+
+    public function testUpdateNoNameChange()
+    {
+        $tag = FactoryMuffin::create('FireflyIII\Models\Tag');
+        $this->be($tag->user);
+
+        $data = [
+            '_token'  => 'replaceMe',
+            'tag'     => $tag->tag,
+            'tagMode' => 'nothing',
+            'id'      => $tag->id,
+        ];
+
+        $this->call('POST', '/tags/update/' . $tag->id, $data);
+        $this->assertResponseStatus(302);
+        $this->assertSessionHas('success');
     }
 
     /**

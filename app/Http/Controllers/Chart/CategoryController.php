@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Support\CacheProperties;
 use Grumpydictator\Gchart\GChart;
 use Navigation;
 use Preferences;
@@ -75,12 +76,23 @@ class CategoryController extends Controller
 
         $start = Session::get('start', Carbon::now()->startOfMonth());
         $end   = Session::get('end', Carbon::now()->endOfMonth());
-        $set   = $repository->getCategoriesAndExpensesCorrected($start, $end);
+
+        // chart properties for cache:
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('category');
+        $cache->addProperty('frontpage');
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+
+        $set = $repository->getCategoriesAndExpensesCorrected($start, $end);
 
         // sort by callback:
         uasort(
             $set,
-            function($left, $right) {
+            function ($left, $right) {
                 if ($left['sum'] == $right['sum']) {
                     return 0;
                 }
@@ -99,7 +111,10 @@ class CategoryController extends Controller
 
         $chart->generate();
 
-        return Response::json($chart->getData());
+        $data = $chart->getData();
+        $cache->store($data);
+
+        return Response::json($data);
 
     }
 

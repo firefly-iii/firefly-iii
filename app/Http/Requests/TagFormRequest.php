@@ -28,10 +28,10 @@ class TagFormRequest extends Request
     public function rules()
     {
         $idRule  = '';
-        $tagRule = 'required|min:1|uniqueObjectForUser:tags,tag,TRUE';
+        $tagRule = 'required|min:1|uniqueObjectForUser:tags,tag';
         if (Tag::find(Input::get('id'))) {
             $idRule  = 'belongsToUser:tags';
-            $tagRule = 'required|min:1|uniqueObjectForUser:tags,tag,TRUE,' . Input::get('id');
+            $tagRule = 'required|min:1|uniqueObjectForUser:tags,tag,' . Input::get('id');
         }
 
         return [

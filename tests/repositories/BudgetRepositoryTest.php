@@ -38,6 +38,7 @@ class BudgetRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Budget\BudgetRepository::cleanupBudgets
+     * @covers FireflyIII\Providers\EventServiceProvider::boot
      */
     public function testCleanupBudgets()
     {
@@ -155,6 +156,8 @@ class BudgetRepositoryTest extends TestCase
      */
     public function testGetCurrentRepetition()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
         /** @var Budget $budget */
         $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
         $rep    = $this->object->getCurrentRepetition($budget, new Carbon);
@@ -210,6 +213,9 @@ class BudgetRepositoryTest extends TestCase
      */
     public function testGetJournals()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
         $repetition = FactoryMuffin::create('FireflyIII\Models\LimitRepetition');
 
         $set = $this->object->getJournals($repetition->budgetlimit->budget, $repetition);
@@ -290,9 +296,13 @@ class BudgetRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Budget\BudgetRepository::spentInPeriodCorrected
+     * @covers FireflyIII\Repositories\Shared\ComponentRepository::spentInPeriod
      */
     public function testSpentInPeriodCorrected()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
         $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
 
         $amount = $this->object->spentInPeriodCorrected($budget, new Carbon, new Carbon, false);
@@ -301,9 +311,13 @@ class BudgetRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Budget\BudgetRepository::spentInPeriodCorrected
+     * @covers FireflyIII\Repositories\Shared\ComponentRepository::spentInPeriod
      */
     public function testSpentInPeriodCorrectedShared()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
         $budget = FactoryMuffin::create('FireflyIII\Models\Budget');
 
         $amount = $this->object->spentInPeriodCorrected($budget, new Carbon, new Carbon, true);

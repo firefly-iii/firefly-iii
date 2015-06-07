@@ -80,14 +80,21 @@ class ReportQueryTest extends TestCase
                 ]
             );
 
+            $amount = 100;
+            if($i == 8) {
+                $amount = 0; // at least one "empty" journal.
+            }
+
             // update both transactions
             $journal->transactions[0]->account_id = $account1->id;
-            $journal->transactions[0]->amount = -100;
+            $journal->transactions[0]->amount = $amount * -1;
             $journal->transactions[0]->save();
 
             $journal->transactions[1]->account_id = $account2->id;
-            $journal->transactions[1]->amount = 100;
+            $journal->transactions[1]->amount = $amount;
             $journal->transactions[1]->save();
+
+
 
 
         }
@@ -97,7 +104,7 @@ class ReportQueryTest extends TestCase
         $set = $this->object->expenseInPeriodCorrected($start, $end, false);
 
 
-        $this->assertCount(10, $set);
+        $this->assertCount(9, $set);
     }
 
     /**
@@ -143,13 +150,18 @@ class ReportQueryTest extends TestCase
                 ]
             );
 
+            $amount = 100;
+            if($i == 8) {
+                $amount = 0; // at least one "empty" journal.
+            }
+
             // update both transactions
             $journal->transactions[0]->account_id = $account1->id;
-            $journal->transactions[0]->amount = -100;
+            $journal->transactions[0]->amount = $amount * -1;
             $journal->transactions[0]->save();
 
             $journal->transactions[1]->account_id = $account2->id;
-            $journal->transactions[1]->amount = 100;
+            $journal->transactions[1]->amount = $amount;
             $journal->transactions[1]->save();
 
         }
@@ -157,7 +169,7 @@ class ReportQueryTest extends TestCase
 
         $set = $this->object->expenseInPeriodCorrected($start, $end, true);
 
-        $this->assertCount(10, $set);
+        $this->assertCount(9, $set);
     }
 
     /**
@@ -258,13 +270,18 @@ class ReportQueryTest extends TestCase
                 ]
             );
 
+            $amount = 100;
+            if($i == 8) {
+                $amount = 0; // at least one "empty" journal.
+            }
+
             // update both transactions
             $journal->transactions[0]->account_id = $account1->id;
-            $journal->transactions[0]->amount = 100;
+            $journal->transactions[0]->amount = $amount;
             $journal->transactions[0]->save();
 
             $journal->transactions[1]->account_id = $account2->id;
-            $journal->transactions[1]->amount = -100;
+            $journal->transactions[1]->amount = $amount * -1;
             $journal->transactions[1]->save();
 
         }
@@ -272,7 +289,7 @@ class ReportQueryTest extends TestCase
 
         $set = $this->object->incomeInPeriodCorrected($start, $end, false);
 
-        $this->assertCount(10, $set);
+        $this->assertCount(9, $set);
     }
 
     /**
@@ -319,13 +336,18 @@ class ReportQueryTest extends TestCase
                 ]
             );
 
+            $amount = 100;
+            if($i == 8) {
+                $amount = 0; // at least one "empty" journal.
+            }
+
             // update both transactions
             $journal->transactions[0]->account_id = $account1->id;
-            $journal->transactions[0]->amount = -100;
+            $journal->transactions[0]->amount = $amount * -1;
             $journal->transactions[0]->save();
 
             $journal->transactions[1]->account_id = $account2->id;
-            $journal->transactions[1]->amount = 100;
+            $journal->transactions[1]->amount = $amount;
             $journal->transactions[1]->save();
 
         }
@@ -333,7 +355,7 @@ class ReportQueryTest extends TestCase
 
         $set = $this->object->incomeInPeriodCorrected($start, $end, true);
 
-        $this->assertCount(10, $set);
+        $this->assertCount(9, $set);
     }
 
     /**

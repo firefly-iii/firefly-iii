@@ -141,18 +141,9 @@ class ReportController extends Controller
         Session::flash('gaEventAction', 'year');
         Session::flash('gaEventLabel', $start->format('Y'));
 
-
         return view(
             'reports.year',
-            compact(
-                'start', // the date for this report.
-                'shared', // is a shared report?
-                'accounts', // all accounts
-                'incomes', 'expenses', // expenses and incomes.
-                'subTitle', 'subTitleIcon', // subtitle and subtitle icon.
-                'incomeTopLength', // length of income top X
-                'expenseTopLength' // length of expense top X.
-            )
+            compact('start', 'shared', 'accounts', 'incomes', 'expenses', 'subTitle', 'subTitleIcon', 'incomeTopLength', 'expenseTopLength')
         );
     }
 

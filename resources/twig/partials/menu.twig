@@ -89,83 +89,83 @@
                     <!-- /input-group -->
                 </li>
                 <li>
-                    <a class="{{ activeRoute('index',null,true) }}" href="{{ route('index') }}"><i class="fa fa-dashboard fa-fw"></i> {{ 'dashboard'|_ }}</a>
+                    <a class="{{ activeRouteStrict('index') }}" href="{{ route('index') }}"><i class="fa fa-dashboard fa-fw"></i> {{ 'dashboard'|_ }}</a>
                 </li>
-                <li class="{{ activeRoute('accounts.index') }}">
+                <li class="{{ activeRoutePartial('accounts') }}">
                     <a href="#"><i class="fa fa-credit-card fa-fw"></i> {{ 'accounts'|_ }} <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a class="{{ activeRoute('accounts.index', 'asset') }}" href="{{ route('accounts.index','asset') }}">
+                            <a class="{{ activeRoutePartialWhat('accounts', 'asset') }}" href="{{ route('accounts.index','asset') }}">
                                 <i class="fa fa-money fa-fw"></i> {{ 'assetAccounts'|_ }}</a>
                         </li>
                         <li>
-                            <a class="{{ activeRoute('accounts.index', 'expense') }}" href="{{ route('accounts.index','expense') }}">
+                            <a class="{{ activeRoutePartialWhat('accounts', 'expense') }}" href="{{ route('accounts.index','expense') }}">
                                 <i class="fa fa-shopping-cart fa-fw"></i> {{ 'expenseAccounts'|_ }}</a>
                         </li>
                         <li>
-                            <a class="{{ activeRoute('accounts.index', 'revenue') }}" href="{{ route('accounts.index','revenue') }}">
+                            <a class="{{ activeRoutePartialWhat('accounts', 'revenue') }}" href="{{ route('accounts.index','revenue') }}">
                                 <i class="fa fa-download fa-fw"></i> {{ 'revenueAccounts'|_ }}</a>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->
                 </li>
                 <li>
-                    <a class="{{ activeRoute('budgets') }}" href="{{ route('budgets.index') }}"><i class="fa fa-tasks fa-fw"></i> {{ 'budgets'|_ }}</a>
+                    <a class="{{ activeRoutePartial('budgets') }}" href="{{ route('budgets.index') }}"><i class="fa fa-tasks fa-fw"></i> {{ 'budgets'|_ }}</a>
                 </li>
                 <li>
-                    <a class="{{ activeRoute('categories') }}" href="{{ route('categories.index') }}"><i class="fa fa-bar-chart fa-fw"></i> {{ 'categories'|_ }}</a>
+                    <a class="{{ activeRoutePartial('categories') }}" href="{{ route('categories.index') }}"><i class="fa fa-bar-chart fa-fw"></i> {{ 'categories'|_ }}</a>
                 </li>
                 <li>
-                    <a class="{{ activeRoute('tags') }}" href="{{ route('tags.index') }}"><i class="fa fa-tags fa-fw"></i> {{ 'tags'|_ }}</a>
+                    <a class="{{ activeRoutePartial('tags') }}" href="{{ route('tags.index') }}"><i class="fa fa-tags fa-fw"></i> {{ 'tags'|_ }}</a>
                 </li>
                 <li>
-                    <a class="{{ activeRoute('reports') }}" href="{{ route('reports.index') }}"><i class="fa fa-line-chart fa-fw"></i> {{ 'reports'|_ }}</a>
+                    <a class="{{ activeRoutePartial('reports') }}" href="{{ route('reports.index') }}"><i class="fa fa-line-chart fa-fw"></i> {{ 'reports'|_ }}</a>
                 </li>
-                <li class="{{ activeRoute('transactions') }}">
+                <li class="{{ activeRoutePartial('transactions') }}">
                     <a href="#"><i class="fa fa-repeat fa-fw"></i> {{ 'transactions'|_ }}<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a class="{{ activeRoute('transactions.index','withdrawal') }}" href="{{ route('transactions.index','withdrawal') }}">
+                            <a class="{{ activeRoutePartialWhat('transactions','withdrawal') }}" href="{{ route('transactions.index','withdrawal') }}">
                                 <i class="fa fa-long-arrow-left fa-fw"></i> {{ 'expenses'|_ }}</a>
                         </li>
                         <li>
-                            <a class="{{ activeRoute('transactions.index','deposit') }}" href="{{ route('transactions.index','deposit') }}"><i
+                            <a class="{{ activeRoutePartialWhat('transactions','deposit') }}" href="{{ route('transactions.index','deposit') }}"><i
                                         class="fa fa-long-arrow-right fa-fw"></i> {{ 'income'|_ }}</a>
                         </li>
                         <li>
-                            <a class="{{ activeRoute('transactions.index','transfers') }}" href="{{ route('transactions.index','transfers') }}">
+                            <a class="{{ activeRoutePartialWhat('transactions','transfers') }}" href="{{ route('transactions.index','transfers') }}">
                                 <i class="fa fa-fw fa-exchange"></i> {{ 'transfers'|_ }}</a>
                         </li>
                     </ul>
 
                 </li>
-                <li class="{{ activeRoute('piggy-banks') }}">
+                <li class="{{ activeRoutePartial('bills') }} {{ activeRoutePartial('piggy-banks') }}">
                     <a href="#"><i class="fa fa-euro fa-fw"></i> {{ 'moneyManagement'|_ }}<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a class="{{ activeRoute('piggy-banks') }}" href="{{ route('piggy-banks.index') }}">
+                            <a class="{{ activeRoutePartial('piggy-banks') }}" href="{{ route('piggy-banks.index') }}">
                                 <i class="fa fa-sort-amount-asc fa-fw"></i> {{ 'piggyBanks'|_ }}</a>
                         </li>
                         <li>
-                            <a class="{{ activeRoute('bills') }}" href="{{ route('bills.index') }}">
+                            <a class="{{ activeRoutePartial('bills') }}" href="{{ route('bills.index') }}">
                                 <i class="fa fa-calendar-o fa-fw"></i> {{ 'bills'|_ }}</a>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->
                 </li>
-                <li class="{{ activeRoute('transactions.create') }}">
+                <li class="{{ activeRouteStrict('transactions.create') }}">
                     <a href="#"><i class="fa fa-plus fa-fw"></i> {{ 'createNew'|_ }} <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a class="{{ activeRoute('transactions.create','withdrawal') }}" href="{{ route('transactions.create','withdrawal') }}">
+                            <a class="{{ activeRoutePartialWhat('transactions.create','withdrawal') }}" href="{{ route('transactions.create','withdrawal') }}">
                                 <i class="fa fa-long-arrow-left fa-fw"></i> {{ 'withdrawal'|_ }}</a>
                         </li>
                         <li>
-                            <a class="{{ activeRoute('transactions.create','deposit') }}" href="{{ route('transactions.create','deposit') }}">
+                            <a class="{{ activeRoutePartialWhat('transactions.create','deposit') }}" href="{{ route('transactions.create','deposit') }}">
                                 <i class="fa fa-long-arrow-right fa-fw"></i> {{ 'deposit'|_ }}</a>
                         </li>
                         <li>
-                            <a class="{{ activeRoute('transactions.create','transfer') }}" href="{{ route('transactions.create','transfer') }}">
+                            <a class="{{ activeRoutePartialWhat('transactions.create','transfer') }}" href="{{ route('transactions.create','transfer') }}">
                                 <i class="fa fa-fw fa-exchange"></i> {{ 'transfer'|_ }}</a>
                         </li>
                     </ul>
@@ -173,17 +173,17 @@
                 </li>
                 <!-- top menu again -->
                 <li class="hidden-sm hidden-md hidden-lg">
-                    <a class="{{ activeRoute('profile',null,true) }}" href="{{ route('profile') }}"><i class="fa fa-user fa-fw"></i> {{ Auth.user.email }}</a>
+                    <a class="{{ activeRouteStrict('profile') }}" href="{{ route('profile') }}"><i class="fa fa-user fa-fw"></i> {{ Auth.user.email }}</a>
                 </li>
 
                 <li class="hidden-sm hidden-md hidden-lg">
-                    <a class="{{ activeRoute('preferences',null,true) }}" href="{{ route('preferences') }}"><i class="fa fa-gear fa-fw"></i> {{ 'preferences'|_ }}</a>
+                    <a class="{{ activeRouteStrict('preferences') }}" href="{{ route('preferences') }}"><i class="fa fa-gear fa-fw"></i> {{ 'preferences'|_ }}</a>
                 </li>
                 <li class="hidden-sm hidden-md hidden-lg">
-                    <a class="{{ activeRoute('currency') }}" href="{{ route('currency.index') }}"><i class="fa fa-usd fa-fw"></i> {{ 'currency'|_ }}</a>
+                    <a class="{{ activeRoutePartial('currency') }}" href="{{ route('currency.index') }}"><i class="fa fa-usd fa-fw"></i> {{ 'currency'|_ }}</a>
                 </li>
                 <li class="hidden-sm hidden-md hidden-lg">
-                    <a class="{{ activeRoute('reminders') }}" href="{{ route('reminders.index') }}"><i class="fa fa-clock-o fa-fw"></i> {{ 'reminders'|_ }}</a>
+                    <a class="{{ activeRoutePartial('reminders') }}" href="{{ route('reminders.index') }}"><i class="fa fa-clock-o fa-fw"></i> {{ 'reminders'|_ }}</a>
                 </li>
                 <li class="hidden-sm hidden-md hidden-lg">
                     <a href="{{ route('logout') }}"><i class="fa fa-sign-out fa-fw"></i> {{ 'logout'|_ }}</a>

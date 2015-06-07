@@ -1,9 +1,6 @@
 <?php
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Preference;
-use FireflyIII\Models\TransactionCurrency;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use League\FactoryMuffin\Facade as FactoryMuffin;
@@ -24,6 +21,7 @@ class AccountControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
+
         $this->createAccount();
     }
 
@@ -52,8 +50,12 @@ class AccountControllerTest extends TestCase
      */
     public function createAccount()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
         if (is_null($this->account)) {
-            $this->account = FactoryMuffin::create('FireflyIII\Models\Account');
+            $this->account          = FactoryMuffin::create('FireflyIII\Models\Account');
+            $this->account->user_id = $user->id;
+            $this->account->save();
         }
     }
 
@@ -69,6 +71,7 @@ class AccountControllerTest extends TestCase
 
         Preferences::shouldReceive('get')->withArgs(['viewRange', '1M'])->andReturn($pref);
 
+
         $language       = FactoryMuffin::create('FireflyIII\Models\Preference');
         $language->data = 'en';
         Preferences::shouldReceive('get')->withArgs(['language', 'en'])->andReturn($language);
@@ -78,6 +81,9 @@ class AccountControllerTest extends TestCase
         Amount::shouldReceive('getDefaultCurrency')->once()->andReturn($currency);
         Amount::shouldReceive('getAllCurrencies')->once()->andReturn([$currency]);
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        $lastActivity       = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $lastActivity->data = microtime();
+        Preferences::shouldReceive('lastActivity')->andReturn($lastActivity);
 
         $this->call('GET', '/accounts/create/asset');
         $this->assertResponseOk();

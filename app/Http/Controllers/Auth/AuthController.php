@@ -109,7 +109,6 @@ class AuthController extends Controller
             if (User::count() == 1) {
                 $admin = Role::where('name', 'owner')->first();
                 $this->auth->user()->attachRole($admin);
-//                $this->auth->user()->roles()->save($admin);
             }
 
 

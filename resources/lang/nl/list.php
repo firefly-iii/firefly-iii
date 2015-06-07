@@ -23,7 +23,7 @@ return [
     'to'             => 'Naar',
     'budget'         => 'Budget',
     'category'       => 'Categorie',
-    'bill'           => 'Rekening',
+    'bill'           => 'Contract',
     'withdrawal'     => 'Uitgave',
     'deposit'        => 'Inkomsten',
     'transfer'       => 'Overschrijving',

@@ -7,27 +7,27 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class PiggyBank
  *
- * @codeCoverageIgnore 
+ * @codeCoverageIgnore
  * @package FireflyIII\Models
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property \Carbon\Carbon $deleted_at
- * @property integer $account_id
- * @property string $name
- * @property float $targetamount
- * @property string $targetamount_encrypted
- * @property \Carbon\Carbon $startdate
- * @property \Carbon\Carbon $targetdate
- * @property string $reminder
- * @property integer $reminder_skip
- * @property boolean $remind_me
- * @property integer $order
- * @property boolean $encrypted
- * @property-read \FireflyIII\Models\Account $account
+ * @property integer                                                                                $id
+ * @property \Carbon\Carbon                                                                         $created_at
+ * @property \Carbon\Carbon                                                                         $updated_at
+ * @property \Carbon\Carbon                                                                         $deleted_at
+ * @property integer                                                                                $account_id
+ * @property string                                                                                 $name
+ * @property float                                                                                  $targetamount
+ * @property string                                                                                 $targetamount_encrypted
+ * @property \Carbon\Carbon                                                                         $startdate
+ * @property \Carbon\Carbon                                                                         $targetdate
+ * @property string                                                                                 $reminder
+ * @property integer                                                                                $reminder_skip
+ * @property boolean                                                                                $remind_me
+ * @property integer                                                                                $order
+ * @property boolean                                                                                $encrypted
+ * @property-read \FireflyIII\Models\Account                                                        $account
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankRepetition[] $piggyBankRepetitions
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankEvent[] $piggyBankEvents
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Reminder[] $reminders
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankEvent[]      $piggyBankEvents
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Reminder[]            $reminders
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereUpdatedAt($value)
@@ -43,14 +43,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereRemindMe($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereOrder($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank whereEncrypted($value)
- * @property PiggyBankRepetition currentRep
+ * @property PiggyBankRepetition                                                                    currentRep
  */
 class PiggyBank extends Model
 {
     use SoftDeletes;
 
     protected $fillable
-                        = ['name', 'account_id', 'order', 'reminder_skip', 'targetamount', 'startdate', 'targetdate', 'reminder', 'remind_me'];
+                      = ['name', 'account_id', 'order', 'reminder_skip', 'targetamount', 'startdate', 'targetdate', 'reminder', 'remind_me'];
     protected $hidden = ['targetamount_encrypted', 'encrypted'];
 
     /**

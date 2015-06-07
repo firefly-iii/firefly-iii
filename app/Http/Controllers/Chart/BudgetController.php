@@ -7,6 +7,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Support\CacheProperties;
 use Grumpydictator\Gchart\GChart;
 use Illuminate\Support\Collection;
 use Navigation;
@@ -41,19 +42,41 @@ class BudgetController extends Controller
         $final->addYears(2);
         $last = Navigation::endOfX($last, $range, $final);
 
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($first);
+        $cache->addProperty($last);
+        $cache->addProperty('budget');
+        $cache->addProperty('budget');
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+
+
         while ($first < $last) {
             $end = Navigation::addPeriod($first, $range, 0);
+            $end->subDay();
+
+            // start date for chart.
+            $chartDate = clone $end;
+            $chartDate->startOfMonth();
 
             $spent = $repository->spentInPeriodCorrected($budget, $first, $end);
-            $chart->addRow($end, $spent);
-
+            $chart->addRow($chartDate, $spent);
 
             $first = Navigation::addPeriod($first, $range, 0);
+
+
         }
 
         $chart->generate();
 
-        return Response::json($chart->getData());
+        $data = $chart->getData();
+
+
+        $cache->store($data);
+
+        return Response::json($data);
     }
 
     /**
@@ -70,6 +93,18 @@ class BudgetController extends Controller
     {
         $start = clone $repetition->startdate;
         $end   = $repetition->enddate;
+
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('budget');
+        $cache->addProperty('limit');
+        $cache->addProperty($budget->id);
+        $cache->addProperty($repetition->id);
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
 
         $chart->addColumn(trans('firefly.day'), 'date');
         $chart->addColumn(trans('firefly.left'), 'number');
@@ -88,7 +123,10 @@ class BudgetController extends Controller
         }
         $chart->generate();
 
-        return Response::json($chart->getData());
+        $data = $chart->getData();
+        $cache->store($data);
+
+        return Response::json($data);
 
     }
 
@@ -112,6 +150,18 @@ class BudgetController extends Controller
         $end        = Session::get('end', Carbon::now()->endOfMonth());
         $allEntries = new Collection;
 
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('budget');
+        $cache->addProperty('all');
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+
+
+        /** @var Budget $budget */
         foreach ($budgets as $budget) {
             $repetitions = $repository->getBudgetLimitRepetitions($budget, $start, $end);
             if ($repetitions->count() == 0) {
@@ -127,9 +177,9 @@ class BudgetController extends Controller
                 $overspent = $expenses > floatval($repetition->amount) ? $expenses - floatval($repetition->amount) : 0;
                 $allEntries->push(
                     [$budget->name . ' (' . $repetition->startdate->formatLocalized($this->monthAndDayFormat) . ')',
-                        $left,
-                        $spent,
-                        $overspent
+                     $left,
+                     $spent,
+                     $overspent
                     ]
                 );
             }
@@ -146,7 +196,10 @@ class BudgetController extends Controller
 
         $chart->generate();
 
-        return Response::json($chart->getData());
+        $data = $chart->getData();
+        $cache->store($data);
+
+        return Response::json($data);
 
     }
 
@@ -166,6 +219,16 @@ class BudgetController extends Controller
         $end     = new Carbon($year . '-12-31');
         $shared  = $shared == 'shared' ? true : false;
         $budgets = $repository->getBudgets();
+
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('budget');
+        $cache->addProperty('year');
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
 
         // add columns:
         $chart->addColumn(trans('firefly.month'), 'date');
@@ -187,11 +250,14 @@ class BudgetController extends Controller
             }
             $chart->addRowArray($row);
 
-            $start->addMonth();
+            $start->endOfMonth()->addDay();
         }
 
         $chart->generate();
 
-        return Response::json($chart->getData());
+        $data = $chart->getData();
+        $cache->store($data);
+
+        return Response::json($data);
     }
 }

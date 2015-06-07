@@ -18,6 +18,13 @@ return [
     'showEverything'                => 'Laat alles zien',
     'never'                         => 'Nooit',
 
+    // new user:
+    'submit'                        => 'Invoeren',
+    'getting_started'               => 'Aan de start!',
+    'to_get_started'                => 'Begin met de naam van de bank waar je je betaalrekening hebt, en het saldo van die rekening.',
+    'savings_balance_text'          => 'Voer ook het saldo van je spaarrekening in, als je die hebt.',
+    'cc_balance_text'               => 'Als je een credit card hebt, vul dan hier je credit cardlimiet in.',
+
     // forms:
     'mandatoryFields'               => 'Verplichte velden',
     'optionalFields'                => 'Optionele velden',
@@ -38,7 +45,7 @@ return [
     'update_amount'                 => 'Bedrag bijwerken',
 
     // bills:
-    'delete_bill'                   => 'Verwijder rekening ":name"',
+    'delete_bill'                   => 'Verwijder contract ":name"',
 
     // accounts:
     'details_for_asset'             => 'Overzicht voor betaalrekening ":name"',
@@ -121,8 +128,8 @@ return [
     'newTransfer'                   => 'Nieuwe overschrijving',
     'moneyIn'                       => 'Inkomsten',
     'moneyOut'                      => 'Uitgaven',
-    'billsToPay'                    => 'Openstaande rekeningen',
-    'billsPaid'                     => 'Betaalde rekeningen',
+    'billsToPay'                    => 'Openstaande contracten',
+    'billsPaid'                     => 'Betaalde contracten',
     'viewDetails'                   => 'Meer info',
     'divided'                       => 'verdeeld',
     'toDivide'                      => 'te verdelen',
@@ -154,7 +161,7 @@ return [
     'transfers'                     => 'Overschrijvingen',
     'moneyManagement'               => 'Geldbeheer',
     'piggyBanks'                    => 'Spaarpotjes',
-    'bills'                         => 'Rekeningen',
+    'bills'                         => 'Contracten',
     'createNew'                     => 'Nieuw',
     'withdrawal'                    => 'Uitgave',
     'deposit'                       => 'Inkomsten',
@@ -163,7 +170,7 @@ return [
     'Withdrawal'                    => 'Uitgave',
     'Deposit'                       => 'Inkomsten',
     'Transfer'                      => 'Overschrijving',
-    'bill'                          => 'Rekening',
+    'bill'                          => 'Contract',
     'yes'                           => 'Ja',
     'no'                            => 'Nee',
     'amount'                        => 'Bedrag',
@@ -220,7 +227,7 @@ return [
     'noBudget'                      => '(geen budget)',
     'maxAmount'                     => 'Maximaal bedrag',
     'minAmount'                     => 'Minimaal bedrag',
-    'billEntry'                     => 'Bedrag voor deze rekening',
+    'billEntry'                     => 'Bedrag voor dit contract',
     'name'                          => 'Naam',
     'date'                          => 'Datum',
     'paid'                          => 'Betaald',
@@ -235,6 +242,7 @@ return [
     'balanceFor'                    => 'Saldo op :name',
 
     // piggy banks:
+    'piggy_bank'                    => 'Spaarpotje',
     'new_piggy_bank'                => 'Nieuw spaarpotje',
     'account_status'                => 'Rekeningoverzicht',
     'left_for_piggy_banks'          => 'Over voor spaarpotjes',

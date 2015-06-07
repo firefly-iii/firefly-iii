@@ -49,6 +49,7 @@ class BudgetController extends Controller
         if ($amount == 0) {
             $limitRepetition = null;
         }
+        Preferences::mark();
 
         return Response::json(['name' => $budget->name, 'repetition' => $limitRepetition ? $limitRepetition->id : 0]);
 
@@ -102,6 +103,7 @@ class BudgetController extends Controller
 
 
         Session::flash('success', 'The  budget "' . e($name) . '" was deleted.');
+        Preferences::mark();
 
 
         return Redirect::to(Session::get('budgets.delete.url'));
@@ -196,6 +198,7 @@ class BudgetController extends Controller
 
         $date = Session::get('start', Carbon::now()->startOfMonth())->format('FY');
         Preferences::set('budgetIncomeTotal' . $date, intval(Input::get('amount')));
+        Preferences::mark();
 
         return Redirect::route('budgets.index');
     }
@@ -216,12 +219,15 @@ class BudgetController extends Controller
         }
 
         $journals = $repository->getJournals($budget, $repetition);
-        $limits   = !is_null($repetition->id) ? [$repetition->budgetLimit] : $repository->getBudgetLimits($budget);
-        $subTitle = !is_null($repetition->id)
-            ?
-            trans('firefly.budget_in_month', ['name' => $budget->name, 'month' => $repetition->startdate->formatLocalized($this->monthFormat)])
-            :
-            e($budget->name);
+
+        if (is_null($repetition->id)) {
+            $limits   = $repository->getBudgetLimits($budget);
+            $subTitle = e($budget->name);
+        } else {
+            $limits   = [$repetition->budgetLimit];
+            $subTitle = trans('firefly.budget_in_month', ['name' => $budget->name, 'month' => $repetition->startdate->formatLocalized($this->monthFormat)]);
+        }
+
         $journals->setPath('/budgets/show/' . $budget->id);
 
         return view('budgets.show', compact('limits', 'budget', 'repetition', 'journals', 'subTitle'));
@@ -239,9 +245,10 @@ class BudgetController extends Controller
             'name' => $request->input('name'),
             'user' => Auth::user()->id,
         ];
-        $budget = $repository->store($budgetData);
+        $budget     = $repository->store($budgetData);
 
         Session::flash('success', 'New budget "' . $budget->name . '" stored!');
+        Preferences::mark();
 
         if (intval(Input::get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
@@ -272,6 +279,7 @@ class BudgetController extends Controller
         $repository->update($budget, $budgetData);
 
         Session::flash('success', 'Budget "' . $budget->name . '" updated.');
+        Preferences::mark();
 
         if (intval(Input::get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:

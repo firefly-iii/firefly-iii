@@ -262,27 +262,10 @@ class BillRepository implements BillRepositoryInterface
      */
     public function scan(Bill $bill, TransactionJournal $journal)
     {
-        $amountMatch = false;
-        $wordMatch   = false;
         $matches     = explode(',', $bill->match);
-        $description = strtolower($journal->description) . ' ' . strtolower($journal->expense_account->name);
-        $count       = 0;
-        foreach ($matches as $word) {
-            if (!(strpos($description, strtolower($word)) === false)) {
-                $count++;
-            }
-        }
-        if ($count >= count($matches)) {
-            $wordMatch = true;
-        }
-
-
-        /*
-         * Match amount.
-         */
-        if ($journal->amount >= $bill->amount_min && $journal->amount <= $bill->amount_max) {
-            $amountMatch = true;
-        }
+        $description = strtolower($journal->description) . ' ' . strtolower($journal->destination_account->name);
+        $wordMatch   = $this->doWordMatch($matches, $description);
+        $amountMatch = $this->doAmountMatch($journal->amount, $bill->amount_min, $bill->amount_max);
 
         /*
          * If both, update!
@@ -290,13 +273,17 @@ class BillRepository implements BillRepositoryInterface
         if ($wordMatch && $amountMatch) {
             $journal->bill()->associate($bill);
             $journal->save();
-        } else {
-            if ($bill->id == $journal->bill_id) {
-                // if no match, but bill used to match, remove it:
-                $journal->bill_id = null;
-                $journal->save();
-            }
+
+            return true;
         }
+        if ($bill->id == $journal->bill_id) {
+            // if no match, but bill used to match, remove it:
+            $journal->bill_id = null;
+            $journal->save();
+
+            return true;
+        }
+
     }
 
     /**
@@ -349,5 +336,43 @@ class BillRepository implements BillRepositoryInterface
         $bill->save();
 
         return $bill;
+    }
+
+    /**
+     * @param array $matches
+     * @param       $description
+     *
+     * @return bool
+     */
+    protected function doWordMatch(array $matches, $description)
+    {
+        $wordMatch = false;
+        $count     = 0;
+        foreach ($matches as $word) {
+            if (!(strpos($description, strtolower($word)) === false)) {
+                $count++;
+            }
+        }
+        if ($count >= count($matches)) {
+            $wordMatch = true;
+        }
+
+        return $wordMatch;
+    }
+
+    /**
+     * @param float $amount
+     * @param float $min
+     * @param float $max
+     *
+     * @return bool
+     */
+    protected function doAmountMatch($amount, $min, $max)
+    {
+        if ($amount >= $min && $amount <= $max) {
+            return true;
+        }
+
+        return false;
     }
 }

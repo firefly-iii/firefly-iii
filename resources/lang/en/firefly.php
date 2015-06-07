@@ -18,6 +18,13 @@ return [
     'showEverything'                => 'Show everything',
     'never'                         => 'Never',
 
+    // new user:
+    'submit'                        => 'Submit',
+    'getting_started'               => 'Getting started',
+    'to_get_started'                => 'To get started with Firefly, please enter your current bank\'s name, and the balance of your checking account:',
+    'savings_balance_text'          => 'If you have a savings account, please enter the current balance of your savings account:',
+    'cc_balance_text'               => 'If you have a credit card, please enter your credit card\'s limit.',
+
     // forms:
     'mandatoryFields'               => 'Mandatory fields',
     'optionalFields'                => 'Optional fields',
@@ -142,7 +149,7 @@ return [
     'transactions'                  => 'Transactions',
     'expenses'                      => 'Expenses',
     'income'                        => 'Revenue / income',
-    'transfers'                     => 'Transfer',
+    'transfers'                     => 'Transfers',
     'moneyManagement'               => 'Money management',
     'piggyBanks'                    => 'Piggy banks',
     'bills'                         => 'Bills',
@@ -226,6 +233,7 @@ return [
     'balanceFor'                    => 'Balance for :name',
 
     // piggy banks:
+    'piggy_bank'                    => 'Piggy bank',
     'new_piggy_bank'                => 'Create new piggy bank',
     'account_status'                => 'Account status',
     'left_for_piggy_banks'          => 'Left for piggy banks',

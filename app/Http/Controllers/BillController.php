@@ -6,6 +6,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Input;
+use Preferences;
 use Redirect;
 use Session;
 use URL;
@@ -75,6 +76,7 @@ class BillController extends Controller
         $repository->destroy($bill);
 
         Session::flash('success', 'The bill was deleted.');
+        Preferences::mark();
 
         return Redirect::to(Session::get('bills.delete.url'));
 
@@ -110,7 +112,7 @@ class BillController extends Controller
     {
         $bills = $repository->getBills();
         $bills->each(
-            function(Bill $bill) use ($repository) {
+            function (Bill $bill) use ($repository) {
                 $bill->nextExpectedMatch = $repository->nextExpectedMatch($bill);
                 $bill->lastFoundMatch    = $repository->lastFoundMatch($bill);
             }
@@ -141,6 +143,7 @@ class BillController extends Controller
 
 
         Session::flash('success', 'Rescanned everything.');
+        Preferences::mark();
 
         return Redirect::to(URL::previous());
     }
@@ -172,6 +175,7 @@ class BillController extends Controller
         $billData = $request->getBillData();
         $bill     = $repository->store($billData);
         Session::flash('success', 'Bill "' . e($bill->name) . '" stored.');
+        Preferences::mark();
 
         if (intval(Input::get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
@@ -198,6 +202,7 @@ class BillController extends Controller
         $bill     = $repository->update($bill, $billData);
 
         Session::flash('success', 'Bill "' . e($bill->name) . '" updated.');
+        Preferences::mark();
 
         if (intval(Input::get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:

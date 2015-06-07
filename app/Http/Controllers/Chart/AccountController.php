@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\CacheProperties;
 use Grumpydictator\Gchart\GChart;
 use Illuminate\Support\Collection;
 use Preferences;
@@ -37,6 +38,18 @@ class AccountController extends Controller
         $start = new Carbon($year . '-' . $month . '-01');
         $end   = clone $start;
         $end->endOfMonth();
+
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('all');
+        $cache->addProperty('accounts');
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+
+
         $chart->addColumn(trans('firefly.dayOfMonth'), 'date');
 
         /** @var Collection $accounts */
@@ -50,6 +63,7 @@ class AccountController extends Controller
             }
         }
 
+        //
 
         $index = 1;
         /** @var Account $account */
@@ -73,7 +87,10 @@ class AccountController extends Controller
         }
         $chart->generate();
 
-        return Response::json($chart->getData());
+        $data = $chart->getData();
+        $cache->store($data);
+
+        return Response::json($data);
     }
 
     /**
@@ -93,6 +110,17 @@ class AccountController extends Controller
         $end       = Session::get('end', Carbon::now()->endOfMonth());
         $accounts  = $repository->getFrontpageAccounts($frontPage);
 
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('frontpage');
+        $cache->addProperty('accounts');
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+
+
         $index = 1;
         /** @var Account $account */
         foreach ($accounts as $account) {
@@ -115,7 +143,10 @@ class AccountController extends Controller
         }
         $chart->generate();
 
-        return Response::json($chart->getData());
+        $data = $chart->getData();
+        $cache->store($data);
+
+        return Response::json($data);
 
     }
 
@@ -138,6 +169,17 @@ class AccountController extends Controller
         $current = clone $start;
         $today   = new Carbon;
 
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('frontpage');
+        $cache->addProperty('single');
+        $cache->addProperty($account->id);
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+
         while ($end >= $current) {
             $certain = $current < $today;
             $chart->addRow(clone $current, Steam::balance($account, $current), $certain);
@@ -147,6 +189,9 @@ class AccountController extends Controller
 
         $chart->generate();
 
-        return Response::json($chart->getData());
+        $data = $chart->getData();
+        $cache->store($data);
+
+        return Response::json($data);
     }
 }

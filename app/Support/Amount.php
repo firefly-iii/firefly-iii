@@ -35,15 +35,8 @@ class Amount
      */
     public function getCurrencySymbol()
     {
-        if (defined('FFCURRENCYSYMBOL')) {
-            return FFCURRENCYSYMBOL;
-        }
-
         $currencyPreference = Prefs::get('currencyPreference', 'EUR');
         $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
-
-        define('FFCURRENCYSYMBOL', $currency->symbol);
-
         return $currency->symbol;
     }
 
@@ -84,6 +77,15 @@ class Amount
      */
     public function formatJournal(TransactionJournal $journal, $coloured = true)
     {
+        $cache = new CacheProperties;
+        $cache->addProperty($journal->id);
+        $cache->addProperty('formatJournal');
+
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
+
         if (is_null($journal->symbol)) {
             $symbol = $journal->transactionCurrency->symbol;
         } else {
@@ -94,13 +96,22 @@ class Amount
             $amount = $amount * -1;
         }
         if ($journal->transactionType->type == 'Transfer' && $coloured) {
-            return '<span class="text-info">' . $this->formatWithSymbol($symbol, $amount, false) . '</span>';
+            $txt = '<span class="text-info">' . $this->formatWithSymbol($symbol, $amount, false) . '</span>';
+            $cache->store($txt);
+
+            return $txt;
         }
         if ($journal->transactionType->type == 'Transfer' && !$coloured) {
-            return $this->formatWithSymbol($symbol, $amount, false);
+            $txt = $this->formatWithSymbol($symbol, $amount, false);
+            $cache->store($txt);
+
+            return $txt;
         }
 
-        return $this->formatWithSymbol($symbol, $amount, $coloured);
+        $txt = $this->formatWithSymbol($symbol, $amount, $coloured);
+        $cache->store($txt);
+
+        return $txt;
     }
 
     /**
@@ -130,22 +141,16 @@ class Amount
      */
     public function getCurrencyCode()
     {
-        if (defined('FFCURRENCYCODE')) {
-            return FFCURRENCYCODE;
-        }
-
 
         $currencyPreference = Prefs::get('currencyPreference', 'EUR');
 
         $currency = TransactionCurrency::whereCode($currencyPreference->data)->first();
         if ($currency) {
 
-            define('FFCURRENCYCODE', $currency->code);
-
             return $currency->code;
         }
 
-        return 'EUR';
+        return 'EUR'; // @codeCoverageIgnore
     }
 
     /**

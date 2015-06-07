@@ -84,53 +84,43 @@ class CategoryRepositoryTest extends TestCase
      */
     public function testGetCategoriesAndExpensesCorrected()
     {
-        $user = FactoryMuffin::create('FireflyIII\User');
-        $type = FactoryMuffin::create('FireflyIII\Models\TransactionType');
-        // some journals and categories:
-        for ($i = 0; $i < 5; $i++) {
-            $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $user     = FactoryMuffin::create('FireflyIII\User');
+        $type     = FactoryMuffin::create('FireflyIII\Models\TransactionType'); // withdrawal
+        $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency'); // something
+
+        // some dates:
+        $start   = new Carbon('2014-01-01');
+        $end     = new Carbon('2014-01-31');
+        $inRange = new Carbon('2014-01-12');
+
+        // generate three categories
+        // with ten journals each:
+        for ($i = 0; $i < 3; $i++) {
+            // category:
             /** @var Category $category */
-            $category                     = FactoryMuffin::create('FireflyIII\Models\Category');
-            $journal->user_id             = $user->id;
-            $journal->date                = new Carbon('2015-02-11');
-            $journal->transaction_type_id = $type->id;
-            $category->user_id            = $user->id;
-            $category->transactionjournals()->save($journal);
-            $journal->save();
-            $category->save();
-        }
-
-        for ($i = 0; $i < 5; $i++) {
-            $journal1 = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-            $journal2 = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-            /** @var Category $category */
-            $category = FactoryMuffin::create('FireflyIII\Models\Category');
-
-            $journal1->user_id             = $user->id;
-            $journal1->date                = new Carbon('2015-02-11');
-            $journal1->transaction_type_id = $type->id;
-
-            $journal2->user_id             = $user->id;
-            $journal2->date                = new Carbon('2015-02-11');
-            $journal2->transaction_type_id = $type->id;
-
+            $category          = FactoryMuffin::create('FireflyIII\Models\Category');
             $category->user_id = $user->id;
-            $category->transactionjournals()->save($journal1);
-            $category->transactionjournals()->save($journal2);
-
-            $journal1->save();
-            $journal2->save();
             $category->save();
-        }
 
+            for ($j = 0; $j < 10; $j++) {
+                $journal                          = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+                $journal->user_id                 = $user->id;
+                $journal->transaction_currency_id = $currency->id;
+                $journal->transaction_type_id     = $type->id; // make it a withdrawal
+                $journal->date                    = $inRange;
+                $journal->save();
+                // connect to category:
+                $category->transactionjournals()->save($journal);
+            }
+        }
 
         $this->be($user);
-        $set = $this->object->getCategoriesAndExpensesCorrected(new Carbon('2015-02-01'), new Carbon('2015-02-28'));
-        $this->assertCount(10, $set);
+        $set = $this->object->getCategoriesAndExpensesCorrected($start, $end);
+        $this->assertCount(3, $set);
         reset($set);
 
-        // every journal has amount 100.
-        $this->assertEquals(100, current($set)['sum']);
+        // 10 journals of 100 each = 1000.
+        $this->assertEquals('1000', current($set)['sum']);
     }
 
     /**
@@ -218,9 +208,12 @@ class CategoryRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Category\CategoryRepository::spentInPeriodCorrected
+     * @covers FireflyIII\Repositories\Shared\ComponentRepository::spentInPeriod
      */
     public function testSpentInPeriodSumCorrected()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
         $category = FactoryMuffin::create('FireflyIII\Models\Category');
         $sum      = $this->object->spentInPeriodCorrected($category, new Carbon, new Carbon, false);
 
@@ -231,9 +224,12 @@ class CategoryRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Category\CategoryRepository::spentInPeriodCorrected
+     * @covers FireflyIII\Repositories\Shared\ComponentRepository::spentInPeriod
      */
     public function testSpentInPeriodSumCorrectedShared()
     {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
         $category = FactoryMuffin::create('FireflyIII\Models\Category');
         $sum      = $this->object->spentInPeriodCorrected($category, new Carbon, new Carbon, true);
 

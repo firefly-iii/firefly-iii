@@ -29,9 +29,9 @@ class BudgetFormRequest extends Request
     public function rules()
     {
 
-        $nameRule = 'required|between:1,100|uniqueObjectForUser:budgets,name,encrypted';
+        $nameRule = 'required|between:1,100|uniqueObjectForUser:budgets,name';
         if (Budget::find(Input::get('id'))) {
-            $nameRule = 'required|between:1,100|uniqueObjectForUser:budgets,name,encrypted,' . intval(Input::get('id'));
+            $nameRule = 'required|between:1,100|uniqueObjectForUser:budgets,' . intval(Input::get('id'));
         }
 
         return [

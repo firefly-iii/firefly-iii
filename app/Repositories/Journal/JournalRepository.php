@@ -48,11 +48,6 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function delete(TransactionJournal $journal)
     {
-        // delete transactions first:
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions()->get() as $transaction) {
-            $transaction->delete();
-        }
         $journal->delete();
 
         return true;
@@ -111,7 +106,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getJournalsOfTypes(array $types, $offset, $page)
     {
-        $set = Auth::user()->transactionJournals()->transactionTypes($types)->withRelevantData()->take(50)->offset($offset)
+        $set      = Auth::user()->transactionJournals()->transactionTypes($types)->withRelevantData()->take(50)->offset($offset)
                         ->orderBy('date', 'DESC')
                         ->orderBy('order', 'ASC')
                         ->orderBy('id', 'DESC')

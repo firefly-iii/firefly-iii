@@ -1,7 +1,7 @@
 <?php
 use Carbon\Carbon;
 use FireflyIII\Models\PiggyBank;
-use FireflyIII\Models\PiggyBankRepetition;
+use FireflyIII\Models\Reminder;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepository;
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
@@ -49,14 +49,23 @@ class PiggyBankRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\PiggyBank\PiggyBankRepository::destroy
+     * @covers FireflyIII\Providers\EventServiceProvider::boot
+     * @covers FireflyIII\Providers\EventServiceProvider::registerDeleteEvents
      */
     public function testDestroy()
     {
         $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
+        $reminder  = FactoryMuffin::create('FireflyIII\Models\Reminder');
+
+        // attach reminders to the piggy bank:
+        $reminder->remindersable_id   = $piggyBank->id;
+        $reminder->remindersable_type = 'FireflyIII\Models\PiggyBank';
+        $reminder->save();
 
         $this->object->destroy($piggyBank);
 
         $this->assertCount(0, PiggyBank::where('id', $piggyBank->id)->whereNull('deleted_at')->get());
+        $this->assertCount(0, Reminder::where('id', $reminder->id)->whereNull('deleted_at')->get());
 
     }
 
@@ -125,6 +134,8 @@ class PiggyBankRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\PiggyBank\PiggyBankRepository::store
+     * @covers FireflyIII\Providers\EventServiceProvider::boot
+     * @covers FireflyIII\Providers\EventServiceProvider::registerCreateEvents
      */
     public function testStore()
     {
@@ -147,6 +158,8 @@ class PiggyBankRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\PiggyBank\PiggyBankRepository::store
+     * @covers FireflyIII\Providers\EventServiceProvider::boot
+     * @covers FireflyIII\Providers\EventServiceProvider::registerCreateEvents
      */
     public function testStoreRedirect()
     {

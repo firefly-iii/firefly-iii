@@ -64,14 +64,15 @@ class TagRepository implements TagRepositoryInterface
      * @param Carbon  $start
      * @param Carbon  $end
      *
-     * @return integer
+     * @return string
      */
     public function coveredByBalancingActs(Account $account, Carbon $start, Carbon $end)
     {
         // the quickest way to do this is by scanning all balancingAct tags
         // because there will be less of them any way.
         $tags   = Auth::user()->tags()->where('tagMode', 'balancingAct')->get();
-        $amount = 0;
+        $amount = '0';
+        bcscale(2);
 
         /** @var Tag $tag */
         foreach ($tags as $tag) {
@@ -80,7 +81,7 @@ class TagRepository implements TagRepositoryInterface
             /** @var TransactionJournal $journal */
             foreach ($journals as $journal) {
                 if ($journal->destination_account->id == $account->id) {
-                    $amount += $journal->amount;
+                    $amount = bcadd($amount, $journal->amount);
                 }
             }
         }
@@ -109,7 +110,7 @@ class TagRepository implements TagRepositoryInterface
         /** @var Collection $tags */
         $tags = Auth::user()->tags()->get();
         $tags->sortBy(
-            function(Tag $tag) {
+            function (Tag $tag) {
                 return $tag->tag;
             }
         );
@@ -198,16 +199,11 @@ class TagRepository implements TagRepositoryInterface
         /*
          * If any transaction is a deposit, cannot become a balancing act.
          */
-        $count = 0;
         foreach ($tag->transactionjournals as $journal) {
             if ($journal->transactionType->type == 'Deposit') {
-                $count++;
+                return false;
             }
         }
-        if ($count > 0) {
-            return false;
-        }
-
 
         return true;
     }
@@ -308,7 +304,8 @@ class TagRepository implements TagRepositoryInterface
             return $this->matchAll($journal, $tag);
         }
 
-        return false;
+        // this statement is unreachable.
+        return false; // @codeCoverageIgnore
 
     }
 
@@ -323,7 +320,7 @@ class TagRepository implements TagRepositoryInterface
         $match = true;
         /** @var TransactionJournal $check */
         foreach ($tag->transactionjournals as $check) {
-            if ($check->asset_account->id != $journal->asset_account->id) {
+            if ($check->source_account->id != $journal->source_account->id) {
                 $match = false;
             }
         }

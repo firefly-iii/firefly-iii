@@ -193,6 +193,10 @@ class BudgetControllerTest extends TestCase
         $this->be($budget->user);
         $date = Carbon::now()->startOfMonth()->format('FY');
         Preferences::shouldReceive('set')->once()->withArgs(['budgetIncomeTotal' . $date, 1001]);
+        Preferences::shouldReceive('mark')->once()->andReturn(true);
+        $lastActivity       = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $lastActivity->data = microtime();
+        Preferences::shouldReceive('lastActivity')->andReturn($lastActivity);
 
         // language preference:
         $language       = FactoryMuffin::create('FireflyIII\Models\Preference');
@@ -251,6 +255,29 @@ class BudgetControllerTest extends TestCase
         $this->call('GET', '/budgets/show/' . $otherBudget->id . '/' . $repetition->id);
         $this->assertResponseOk();
         $this->assertViewHas('message', 'Invalid selection.');
+
+    }
+
+    /**
+     * @covers FireflyIII\Http\Controllers\BudgetController::show
+     */
+    public function testShowRepetition()
+    {
+        $repetition = FactoryMuffin::create('FireflyIII\Models\LimitRepetition');
+        $budget     = $repetition->budgetLimit->budget;
+        $repository = $this->mock('FireflyIII\Repositories\Budget\BudgetRepositoryInterface');
+        $this->be($budget->user);
+
+        $paginator = new LengthAwarePaginator(new Collection, 0, 20, 1);
+
+        Amount::shouldReceive('getCurrencyCode')->andReturn('x');
+        Amount::shouldReceive('format')->andReturn('x');
+        $repository->shouldReceive('getJournals')->andReturn($paginator);
+        $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection);
+
+
+        $this->call('GET', '/budgets/show/' . $budget->id . '/' . $repetition->id);
+        $this->assertResponseOk();
 
     }
 
@@ -385,6 +412,9 @@ class BudgetControllerTest extends TestCase
         Amount::shouldReceive('format')->andReturn('xx');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
         Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
+        $lastActivity       = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $lastActivity->data = microtime();
+        Preferences::shouldReceive('lastActivity')->andReturn($lastActivity);
 
         // language preference:
         $language       = FactoryMuffin::create('FireflyIII\Models\Preference');

@@ -9,18 +9,18 @@ use Watson\Validating\ValidatingTrait;
 /**
  * Class Transaction
  *
- * @codeCoverageIgnore 
+ * @codeCoverageIgnore
  * @package FireflyIII\Models
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property \Carbon\Carbon $deleted_at
- * @property integer $account_id
- * @property integer $transaction_journal_id
- * @property string $description
- * @property float $amount
- * @property string $amount_encrypted
- * @property-read \FireflyIII\Models\Account $account
+ * @property integer                                    $id
+ * @property \Carbon\Carbon                             $created_at
+ * @property \Carbon\Carbon                             $updated_at
+ * @property \Carbon\Carbon                             $deleted_at
+ * @property integer                                    $account_id
+ * @property integer                                    $transaction_journal_id
+ * @property string                                     $description
+ * @property float                                      $amount
+ * @property string                                     $amount_encrypted
+ * @property-read \FireflyIII\Models\Account            $account
  * @property-read \FireflyIII\Models\TransactionJournal $transactionJournal
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereCreatedAt($value)
@@ -33,8 +33,8 @@ use Watson\Validating\ValidatingTrait;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction whereAmountEncrypted($value)
  * @method static \FireflyIII\Models\Transaction after($date)
  * @method static \FireflyIII\Models\Transaction before($date)
- * @property mixed before
- * @property mixed after
+ * @property mixed                                      before
+ * @property mixed                                      after
  */
 class Transaction extends Model
 {

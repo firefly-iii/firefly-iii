@@ -48,8 +48,8 @@ class BillFormRequest extends Request
      */
     public function rules()
     {
-        $nameRule  = 'required|between:1,255|uniqueObjectForUser:bills,name,name_encrypted';
-        $matchRule = 'required|between:1,255|uniqueObjectForUser:bills,match,match_encrypted';
+        $nameRule  = 'required|between:1,255|uniqueObjectForUser:bills,name';
+        $matchRule = 'required|between:1,255|uniqueObjectForUser:bills,match';
         if (intval(Input::get('id')) > 0) {
             $nameRule .= ',' . intval(Input::get('id'));
             $matchRule .= ',' . intval(Input::get('id'));

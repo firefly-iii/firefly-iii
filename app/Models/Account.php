@@ -11,22 +11,22 @@ use Watson\Validating\ValidatingTrait;
  * Class Account
  *
  * @package FireflyIII\Models
- * @property integer $id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property \Carbon\Carbon $deleted_at
- * @property integer $user_id
- * @property integer $account_type_id
- * @property string $name
- * @property boolean $active
- * @property boolean $encrypted
- * @property float $virtual_balance
- * @property string $virtual_balance_encrypted
+ * @property integer                                                                        $id
+ * @property \Carbon\Carbon                                                                 $created_at
+ * @property \Carbon\Carbon                                                                 $updated_at
+ * @property \Carbon\Carbon                                                                 $deleted_at
+ * @property integer                                                                        $user_id
+ * @property integer                                                                        $account_type_id
+ * @property string                                                                         $name
+ * @property boolean                                                                        $active
+ * @property boolean                                                                        $encrypted
+ * @property float                                                                          $virtual_balance
+ * @property string                                                                         $virtual_balance_encrypted
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\AccountMeta[] $accountMeta
- * @property-read \FireflyIII\Models\AccountType $accountType
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[] $piggyBanks
+ * @property-read \FireflyIII\Models\AccountType                                            $accountType
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[]   $piggyBanks
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
- * @property-read \FireflyIII\User $user
+ * @property-read \FireflyIII\User                                                          $user
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereUpdatedAt($value)
@@ -40,14 +40,13 @@ use Watson\Validating\ValidatingTrait;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account whereVirtualBalanceEncrypted($value)
  * @method static \FireflyIII\Models\Account accountTypeIn($types)
  * @method static \FireflyIII\Models\Account hasMetaValue($name, $value)
- * @property boolean joinedAccountTypes
- * @property mixed startBalance
- * @property mixed endBalance
- * @property mixed lastActivityDate
- * @property mixed piggyBalance
- * @property mixed difference
- * @propery mixed percentage
- *
+ * @property boolean                                                                        joinedAccountTypes
+ * @property mixed                                                                          startBalance
+ * @property mixed                                                                          endBalance
+ * @property mixed                                                                          lastActivityDate
+ * @property mixed                                                                          piggyBalance
+ * @property mixed                                                                          difference
+ * @property mixed                                                                          percentage
  */
 class Account extends Model
 {
@@ -216,7 +215,7 @@ class Account extends Model
     {
         $joinName = str_replace('.', '_', $name);
         $query->leftJoin(
-            'account_meta as ' . $joinName, function(JoinClause $join) use ($joinName, $name) {
+            'account_meta as ' . $joinName, function (JoinClause $join) use ($joinName, $name) {
             $join->on($joinName . '.account_id', '=', 'accounts.id')->where($joinName . '.name', '=', $name);
         }
         );

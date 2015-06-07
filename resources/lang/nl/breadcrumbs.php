@@ -45,10 +45,10 @@ return [
     'changePassword'        => 'Verander je wachtwoord',
 
     // bills
-    'bills'                 => 'Rekeningen',
-    'newBill'               => 'Nieuwe rekening',
-    'edit_bill'             => 'Wijzig rekening ":name"',
-    'delete_bill'           => 'Verwijder rekening ":name"',
+    'bills'                 => 'Contracten',
+    'newBill'               => 'Nieuw contract',
+    'edit_bill'             => 'Wijzig contract ":name"',
+    'delete_bill'           => 'Verwijder contract ":name"',
 
     // reminders
     'reminders'             => 'Herinneringen',

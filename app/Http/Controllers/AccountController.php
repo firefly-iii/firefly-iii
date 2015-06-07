@@ -7,6 +7,7 @@ use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Input;
+use Preferences;
 use Redirect;
 use Session;
 use Steam;
@@ -86,6 +87,7 @@ class AccountController extends Controller
         $repository->destroy($account);
 
         Session::flash('success', trans('firefly.' . $typeName . '_deleted', ['name' => $name]));
+        Preferences::mark();
 
         return Redirect::to(Session::get('accounts.delete.url'));
     }
@@ -154,7 +156,7 @@ class AccountController extends Controller
         $start = clone Session::get('start', Carbon::now()->startOfMonth());
         $start->subDay();
         $accounts->each(
-            function(Account $account) use ($start, $repository) {
+            function (Account $account) use ($start, $repository) {
                 $account->lastActivityDate = $repository->getLastActivity($account);
                 $account->startBalance     = Steam::balance($account, $start);
                 $account->endBalance       = Steam::balance($account, clone Session::get('end', Carbon::now()->endOfMonth()));
@@ -199,13 +201,14 @@ class AccountController extends Controller
             'user'                   => Auth::user()->id,
             'accountRole'            => $request->input('accountRole'),
             'openingBalance'         => floatval($request->input('openingBalance')),
-            'openingBalanceDate'     => new Carbon((string) $request->input('openingBalanceDate')),
+            'openingBalanceDate'     => new Carbon((string)$request->input('openingBalanceDate')),
             'openingBalanceCurrency' => intval($request->input('balance_currency_id')),
 
         ];
-        $account = $repository->store($accountData);
+        $account     = $repository->store($accountData);
 
         Session::flash('success', 'New account "' . $account->name . '" stored!');
+        Preferences::mark();
 
         if (intval(Input::get('create_another')) === 1) {
             // set value so create routine will not overwrite URL:
@@ -237,7 +240,7 @@ class AccountController extends Controller
             'accountRole'            => $request->input('accountRole'),
             'virtualBalance'         => floatval($request->input('virtualBalance')),
             'openingBalance'         => floatval($request->input('openingBalance')),
-            'openingBalanceDate'     => new Carbon((string) $request->input('openingBalanceDate')),
+            'openingBalanceDate'     => new Carbon((string)$request->input('openingBalanceDate')),
             'openingBalanceCurrency' => intval($request->input('balance_currency_id')),
             'ccType'                 => $request->input('ccType'),
             'ccMonthlyPaymentDate'   => $request->input('ccMonthlyPaymentDate'),
@@ -246,6 +249,7 @@ class AccountController extends Controller
         $repository->update($account, $accountData);
 
         Session::flash('success', 'Account "' . $account->name . '" updated.');
+        Preferences::mark();
 
         if (intval(Input::get('return_to_edit')) === 1) {
             // set value so edit routine will not overwrite URL:

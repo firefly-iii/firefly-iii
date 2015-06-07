@@ -3,7 +3,6 @@ use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\Preference;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepository;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\FactoryMuffin\Facade as FactoryMuffin;
@@ -52,11 +51,21 @@ class AccountRepositoryTest extends TestCase
 
     /**
      * @covers FireflyIII\Repositories\Account\AccountRepository::destroy
+     * @covers FireflyIII\Providers\EventServiceProvider::boot
+     * @covers FireflyIII\Providers\EventServiceProvider::registerDeleteEvents
      */
     public function testDestroy()
     {
         // create account:
-        $account   = FactoryMuffin::create('FireflyIII\Models\Account');
+        $account = FactoryMuffin::create('FireflyIII\Models\Account');
+
+        // create some transactions and attach them to the account:
+        for ($i = 0; $i < 5; $i++) {
+            $transaction             = FactoryMuffin::create('FireflyIII\Models\Transaction');
+            $transaction->account_id = $account->id;
+            $transaction->save();
+        }
+
         $accountId = $account->id;
         $this->be($account->user);
 
@@ -113,9 +122,9 @@ class AccountRepositoryTest extends TestCase
      */
     public function testGetFirstTransaction()
     {
-        $account = FactoryMuffin::create('FireflyIII\Models\Account');
-        $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-        $first   = $journal->transactions()->orderBy('date', 'DESC')->first();
+        $account           = FactoryMuffin::create('FireflyIII\Models\Account');
+        $journal           = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $first             = $journal->transactions()->orderBy('date', 'DESC')->first();
         $first->account_id = $account->id;
         $first->save();
 
@@ -414,63 +423,80 @@ class AccountRepositoryTest extends TestCase
     public function testGetTransfersInRange()
     {
         FactoryMuffin::create('FireflyIII\Models\Account');
-
-
-        // three transfers, two out of range:
-        FactoryMuffin::create('FireflyIII\Models\TransactionType');
-        FactoryMuffin::create('FireflyIII\Models\TransactionType');
-        $journal1                      = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-        $journal2                      = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-        $journal3                      = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-        $account                       = FactoryMuffin::create('FireflyIII\Models\Account');
-        $journal2->transaction_type_id = $journal1->transaction_type_id;
-        $journal3->transaction_type_id = $journal1->transaction_type_id;
-
-        // transactions are already present, update them!
-        $journal1->transactions[0]->account_id = $account->id;
-        $journal1->transactions[0]->amount     = 100;
-        $journal1->transactions[1]->account_id = $account->id;
-        $journal1->transactions[1]->amount     = 100;
-        $journal2->transactions[0]->account_id = $account->id;
-        $journal2->transactions[0]->amount     = 100;
-        $journal2->transactions[1]->account_id = $account->id;
-        $journal2->transactions[1]->amount     = 100;
-        $journal3->transactions[0]->account_id = $account->id;
-        $journal3->transactions[0]->amount     = 100;
-        $journal3->transactions[1]->account_id = $account->id;
-        $journal3->transactions[1]->amount     = 100;
-        $journal1->transactions[0]->save();
-        $journal1->transactions[1]->save();
-        $journal2->transactions[0]->save();
-        $journal2->transactions[1]->save();
-        $journal3->transactions[0]->save();
-        $journal3->transactions[1]->save();
-
-        // check date:
+        FactoryMuffin::create('FireflyIII\Models\TransactionType'); // withdrawal
+        FactoryMuffin::create('FireflyIII\Models\TransactionType'); // deposit
+        FactoryMuffin::create('FireflyIII\Models\AccountType'); // expense
+        FactoryMuffin::create('FireflyIII\Models\AccountType'); // revenue
+        $asset     = FactoryMuffin::create('FireflyIII\Models\AccountType'); // asset
+        $transfer  = FactoryMuffin::create('FireflyIII\Models\TransactionType'); // transfer
+        $user      = FactoryMuffin::create('FireflyIII\User'); // user!
+        $accounts  = [];
+        $opposings = []; // opposing accounts.
+        $journals  = [];
+        // dates
         $start   = new Carbon('2014-01-01');
         $end     = new Carbon('2014-01-31');
         $inRange = new Carbon('2014-01-15');
         $before  = new Carbon('2013-01-15');
-        $after   = new Carbon('2015-01-15');
 
-        // journal 1 will match:
-        $journal1->date    = $inRange;
-        $journal1->user_id = $account->user_id;
-        $journal2->date    = $before;
-        $journal2->user_id = $account->user_id;
-        $journal3->date    = $after;
-        $journal3->user_id = $account->user_id;
-        $journal1->save();
-        $journal2->save();
-        $journal3->save();
-        $this->be($account->user);
+        // create two accounts:
+        for ($i = 0; $i < 2; $i++) {
+            $account                  = FactoryMuffin::create('FireflyIII\Models\Account');
+            $account->account_type_id = $asset->id;
+            $account->user_id         = $user->id;
+            $account->save();
+            $accounts[] = $account;
 
-        $set = $this->object->getTransfersInRange($account, $start, $end);
+            $opposing                  = FactoryMuffin::create('FireflyIII\Models\Account');
+            $opposing->account_type_id = $asset->id;
+            $opposing->user_id         = $user->id;
+            $opposing->save();
+            $opposings[] = $opposing;
+        }
+
+        // for each account, create ten journals
+        foreach ($accounts as $index => $account) {
+            for ($i = 0; $i < 10; $i++) {
+                $journal                      = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+                $journal->user_id             = $user->id;
+                $journal->transaction_type_id = $transfer->id;
+                $journal->save();
+
+                // if $i < 6, transfer is in range:
+                if ($i < 6) {
+                    $journal->date = $inRange;
+                } else {
+                    $journal->date = $before;
+                }
+
+                /*
+                 * Transfers can go either way (see the amount)
+                 */
+                if ($i < 4) {
+                    $amount = 100;
+                } else {
+                    $amount = -100;
+                }
 
 
-        $this->assertEquals(1, $set->count());
+                $journal->transactions[0]->account_id = $account->id;
+                $journal->transactions[0]->amount     = $amount;
+                $journal->transactions[1]->account_id = $opposings[$index]->id;
+                $journal->transactions[1]->amount     = $amount * -1;
+                $journal->transactions[0]->save();
+                $journal->transactions[1]->save();
+                // save journal:
+                $journal->save();
+                $journals[] = $journal;
+            }
+        }
+        $this->be($user);
+
+        $set = $this->object->getTransfersInRange($accounts[0], $start, $end);
+
+        $this->assertEquals(4, $set->count());
         $this->assertEquals(100, $set->first()->amount);
-        $this->assertEquals($journal1->description, $set->first()->description);
+        $this->assertEquals($journals[0]->description, $set->first()->description);
 
     }
 
@@ -587,6 +613,8 @@ class AccountRepositoryTest extends TestCase
     }
 
     /**
+     * This function should give a big fat error, but it doesnt.
+     *
      * @covers FireflyIII\Repositories\Account\AccountRepository::store
      * @covers FireflyIII\Repositories\Account\AccountRepository::storeAccount
      * @covers FireflyIII\Repositories\Account\AccountRepository::storeMetadata
@@ -594,12 +622,12 @@ class AccountRepositoryTest extends TestCase
      */
     public function testStoreWithExistingAccount()
     {
-        $account = FactoryMuffin::create('FireflyIII\Models\Account');
-        FactoryMuffin::create('FireflyIII\Models\AccountType');
-        FactoryMuffin::create('FireflyIII\Models\AccountType');
-        FactoryMuffin::create('FireflyIII\Models\TransactionType');
-        FactoryMuffin::create('FireflyIII\Models\TransactionType');
-        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $account = FactoryMuffin::create('FireflyIII\Models\Account'); // expense
+        FactoryMuffin::create('FireflyIII\Models\AccountType'); // revenue
+        FactoryMuffin::create('FireflyIII\Models\AccountType'); // asset
+        FactoryMuffin::create('FireflyIII\Models\TransactionType'); // withdrawal
+        FactoryMuffin::create('FireflyIII\Models\TransactionType'); // deposit
+        FactoryMuffin::create('FireflyIII\Models\TransactionType'); // transfer
         $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
         $this->be($account->user);
 
@@ -615,7 +643,6 @@ class AccountRepositoryTest extends TestCase
             'openingBalanceCurrency' => $currency->id,
             'openingBalanceDate'     => '2015-01-01',
         ];
-
 
         $newAccount = $this->object->store($data);
 

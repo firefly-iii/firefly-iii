@@ -8,6 +8,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Support\CacheProperties;
 use Grumpydictator\Gchart\GChart;
 use Illuminate\Support\Collection;
 use Response;
@@ -38,6 +39,14 @@ class BillController extends Controller
         $chart->addColumn(trans('firefly.minAmount'), 'number');
         $chart->addColumn(trans('firefly.billEntry'), 'number');
 
+        $cache = new CacheProperties;
+        $cache->addProperty('single');
+        $cache->addProperty('bill');
+        $cache->addProperty($bill->id);
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+
         // get first transaction or today for start:
         $results = $repository->getJournals($bill);
         /** @var TransactionJournal $result */
@@ -47,8 +56,10 @@ class BillController extends Controller
 
         $chart->generate();
 
-        return Response::json($chart->getData());
+        $data = $chart->getData();
+        $cache->store($data);
 
+        return Response::json($data);
     }
 
     /**
@@ -66,8 +77,20 @@ class BillController extends Controller
         $chart->addColumn(trans('firefly.name'), 'string');
         $chart->addColumn(trans('firefly.amount'), 'number');
 
-        $start  = Session::get('start', Carbon::now()->startOfMonth());
-        $end    = Session::get('end', Carbon::now()->endOfMonth());
+        $start = Session::get('start', Carbon::now()->startOfMonth());
+        $end   = Session::get('end', Carbon::now()->endOfMonth());
+
+
+        // chart properties for cache:
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('bills');
+        $cache->addProperty('frontpage');
+        if ($cache->has()) {
+            return Response::json($cache->get()); // @codeCoverageIgnore
+        }
+
         $bills  = $repository->getActiveBills();
         $paid   = new Collection; // journals.
         $unpaid = new Collection; // bills
@@ -133,8 +156,12 @@ class BillController extends Controller
 
         $chart->addRow(trans('firefly.unpaid') . ': ' . join(', ', $unpaidDescriptions), $unpaidAmount);
         $chart->addRow(trans('firefly.paid') . ': ' . join(', ', $paidDescriptions), $paidAmount);
+
         $chart->generate();
 
-        return Response::json($chart->getData());
+        $data = $chart->getData();
+        $cache->store($data);
+
+        return Response::json($data);
     }
 }

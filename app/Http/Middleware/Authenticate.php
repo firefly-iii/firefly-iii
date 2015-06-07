@@ -1,12 +1,13 @@
 <?php namespace FireflyIII\Http\Middleware;
 
 use App;
+use Carbon\Carbon;
 use Closure;
 use Config;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Http\Request;
 use Preferences;
-use Carbon\Carbon;
+
 /**
  * Class Authenticate
  *

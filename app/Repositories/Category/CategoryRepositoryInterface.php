@@ -81,7 +81,7 @@ interface CategoryRepositoryInterface
      *
      * @param bool           $shared
      *
-     * @return float
+     * @return string
      */
     public function spentInPeriodCorrected(Category $category, Carbon $start, Carbon $end, $shared = false);
 

@@ -62,6 +62,10 @@ class PreferencesControllerTest extends TestCase
         Amount::shouldReceive('getAllCurrencies')->andReturn(new Collection);
         Amount::shouldReceive('getDefaultCurrency')->andReturn($currency);
 
+        $lastActivity       = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $lastActivity->data = microtime();
+        Preferences::shouldReceive('lastActivity')->andReturn($lastActivity);
+
         // language preference:
         $language       = FactoryMuffin::create('FireflyIII\Models\Preference');
         $language->data = 'en';
@@ -97,12 +101,17 @@ class PreferencesControllerTest extends TestCase
         Preferences::shouldReceive('set')->once()->withArgs(['viewRange', '1M']);
         Preferences::shouldReceive('set')->once()->withArgs(['budgetMaximum', 0]);
         Preferences::shouldReceive('set')->once()->withArgs(['language', 'en']);
+        Preferences::shouldReceive('mark')->once()->andReturn(true);
 
         // language preference:
         $language       = FactoryMuffin::create('FireflyIII\Models\Preference');
         $language->data = 'en';
         $language->save();
         Preferences::shouldReceive('get')->withAnyArgs()->andReturn($language);
+
+        $lastActivity       = FactoryMuffin::create('FireflyIII\Models\Preference');
+        $lastActivity->data = microtime();
+        Preferences::shouldReceive('lastActivity')->andReturn($lastActivity);
 
 
         $this->call('POST', '/preferences', $data);

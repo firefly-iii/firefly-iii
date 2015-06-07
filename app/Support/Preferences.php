@@ -3,6 +3,7 @@
 namespace FireflyIII\Support;
 
 use Auth;
+use Cache;
 use FireflyIII\Models\Preference;
 
 /**
@@ -13,20 +14,34 @@ use FireflyIII\Models\Preference;
 class Preferences
 {
     /**
-     * @param      $name
-     * @param null $default
+     * @return string
+     */
+    public function lastActivity()
+    {
+        $preference = $this->get('lastActivity', microtime())->data;
+
+        return md5($preference);
+    }
+
+    /**
+     * @param      string $name
+     * @param string      $default
      *
      * @return null|\FireflyIII\Models\Preference
      */
     public function get($name, $default = null)
     {
-        $preferences = Preference::where('user_id', Auth::user()->id)->get();
+        $fullName = 'preference' . Auth::user()->id . $name;
+        if (Cache::has($fullName)) {
+            return Cache::get($fullName);
+        }
 
-        /** @var Preference $preference */
-        foreach ($preferences as $preference) {
-            if ($preference->name == $name) {
-                return $preference;
-            }
+        $preference = Preference::where('user_id', Auth::user()->id)->where('name', $name)->first(['id', 'name', 'data_encrypted']);
+
+        if ($preference) {
+            Cache::forever($fullName, $preference);
+
+            return $preference;
         }
         // no preference found and default is null:
         if (is_null($default)) {
@@ -39,33 +54,40 @@ class Preferences
     }
 
     /**
-     * @param $name
-     * @param $value
+     * @param        $name
+     * @param string $value
      *
      * @return Preference
      */
     public function set($name, $value)
     {
-        $preferences = Preference::where('user_id', Auth::user()->id)->get();
-        /** @var Preference $preference */
-        foreach ($preferences as $preference) {
-            if ($preference->name == $name) {
-                $preference->data = $value;
-                $preference->save();
-
-                return $preference;
-            }
-        }
-        $pref       = new Preference;
-        $pref->name = $name;
-        $pref->data = $value;
-
-        if (!is_null(Auth::user()->id)) {
+        $fullName = 'preference' . Auth::user()->id . $name;
+        Cache::forget($fullName);
+        $pref = Preference::where('user_id', Auth::user()->id)->where('name', $name)->first(['id', 'name', 'data_encrypted']);
+        if ($pref) {
+            $pref->data = $value;
+        } else {
+            $pref       = new Preference;
+            $pref->name = $name;
+            $pref->data = $value;
             $pref->user()->associate(Auth::user());
-            $pref->save();
+
         }
+        $pref->save();
+
+        Cache::forever($fullName, $pref);
 
         return $pref;
 
+    }
+
+    /**
+     * @return bool
+     */
+    public function mark()
+    {
+        $this->set('lastActivity', microtime());
+
+        return true;
     }
 }
