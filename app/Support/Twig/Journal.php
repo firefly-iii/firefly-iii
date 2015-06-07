@@ -4,6 +4,7 @@ namespace FireflyIII\Support\Twig;
 
 
 use App;
+use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\CacheProperties;
 use Twig_Extension;
@@ -124,64 +125,115 @@ class Journal extends Twig_Extension
             if ($cache->has()) {
                 return $cache->get(); // @codeCoverageIgnore
             }
+            $count  = $journal->tags->count();
+            $string = '';
 
-            if ($journal->tags->count() == 0) {
-                $string = App::make('amount')->formatJournal($journal);
-                $cache->store($string);
-
-                return $string;
+            if ($count === 0) {
+                $string = $this->relevantTagsNoTags($journal);
             }
 
-
-            foreach ($journal->tags as $tag) {
-                if ($tag->tagMode == 'balancingAct') {
-                    // return tag formatted for a "balancing act", even if other
-                    // tags are present.
-                    $amount = App::make('amount')->format($journal->actual_amount, false);
-                    $string = '<a href="' . route('tags.show', [$tag->id]) . '" class="label label-success" title="' . $amount
-                              . '"><i class="fa fa-fw fa-refresh"></i> ' . $tag->tag . '</a>';
-                    $cache->store($string);
-
-                    return $string;
-                }
-
-                /*
-                 * AdvancePayment with a deposit will show the tag instead of the amount:
-                 */
-                if ($tag->tagMode == 'advancePayment' && $journal->transactionType->type == 'Deposit') {
-                    $amount = App::make('amount')->formatJournal($journal, false);
-                    $string = '<a href="' . route('tags.show', [$tag->id]) . '" class="label label-success" title="' . $amount
-                              . '"><i class="fa fa-fw fa-sort-numeric-desc"></i> ' . $tag->tag . '</a>';
-                    $cache->store($string);
-
-                    return $string;
-                }
-                /*
-                 * AdvancePayment with a withdrawal will show the amount with a link to
-                 * the tag. The TransactionJournal should properly calculate the amount.
-                 */
-                if ($tag->tagMode == 'advancePayment' && $journal->transactionType->type == 'Withdrawal') {
-                    $amount = App::make('amount')->formatJournal($journal);
-
-                    $string = '<a href="' . route('tags.show', [$tag->id]) . '">' . $amount . '</a>';
-                    $cache->store($string);
-
-                    return $string;
-                }
-
-
-                if ($tag->tagMode == 'nothing') {
-                    // return the amount:
-                    $string = App::make('amount')->formatJournal($journal);
-                    $cache->store($string);
-
-                    return $string;
-                }
+            if ($count === 1) {
+                $string = $this->relevantTagsSingle($journal);
             }
 
+            if ($count > 1) {
+                $string = $this->relevantTagsMulti($journal);
+            }
 
-            return 'TODO: ' . $journal->amount;
+            $cache->store($string);
+
+            return $string;
         }
         );
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return string
+     */
+    protected function relevantTagsNoTags(TransactionJournal $journal)
+    {
+        return App::make('amount')->formatJournal($journal);
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return string
+     */
+    protected function relevantTagsSingle(TransactionJournal $journal)
+    {
+        $tag = $journal->tags()->first();
+
+        return $this->formatJournalByTag($journal, $tag);
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param Tag                $tag
+     *
+     * @return string
+     */
+    protected function formatJournalByTag(TransactionJournal $journal, Tag $tag)
+    {
+        if ($tag->tagMode == 'balancingAct') {
+            // return tag formatted for a "balancing act", even if other
+            // tags are present.
+            $amount = App::make('amount')->format($journal->actual_amount, false);
+            $string = '<a href="' . route('tags.show', [$tag->id]) . '" class="label label-success" title="' . $amount
+                      . '"><i class="fa fa-fw fa-refresh"></i> ' . $tag->tag . '</a>';
+
+            return $string;
+        }
+
+        if ($tag->tagMode == 'advancePayment' && $journal->transactionType->type == 'Deposit') {
+            $amount = App::make('amount')->formatJournal($journal, false);
+            $string = '<a href="' . route('tags.show', [$tag->id]) . '" class="label label-success" title="' . $amount
+                      . '"><i class="fa fa-fw fa-sort-numeric-desc"></i> ' . $tag->tag . '</a>';
+
+            return $string;
+        }
+        /*
+         * AdvancePayment with a withdrawal will show the amount with a link to
+         * the tag. The TransactionJournal should properly calculate the amount.
+         */
+        if ($tag->tagMode == 'advancePayment' && $journal->transactionType->type == 'Withdrawal') {
+            $amount = App::make('amount')->formatJournal($journal);
+
+            $string = '<a href="' . route('tags.show', [$tag->id]) . '">' . $amount . '</a>';
+
+            return $string;
+        }
+
+
+        return $this->relevantTagsNoTags($journal);
+    }
+
+    /**
+     * If a transaction journal has multiple tags, we'll have to gamble. FF3
+     * does not yet block adding multiple 'special' tags so we must wing it.
+     *
+     * We grab the first special tag (for advancePayment and for balancingAct
+     * and try to format those. If they're not present (it's all normal tags),
+     * we can format like any other journal.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return string
+     */
+    protected function relevantTagsMulti(TransactionJournal $journal)
+    {
+        $firstBalancingAct = $journal->tags()->where('tagMode', 'balancingAct')->first();
+        if ($firstBalancingAct) {
+            return $this->formatJournalByTag($journal, $firstBalancingAct);
+        }
+
+        $firstAdvancePayment = $journal->tags()->where('tagMode', 'advancePayment')->first();
+        if ($firstAdvancePayment) {
+            return $this->formatJournalByTag($journal, $firstAdvancePayment);
+        }
+
+        return $this->relevantTagsNoTags($journal);
     }
 }
