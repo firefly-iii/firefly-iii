@@ -320,13 +320,18 @@ class TagRepository implements TagRepositoryInterface
         $match = true;
         /** @var TransactionJournal $check */
         foreach ($tag->transactionjournals as $check) {
-            if ($check->source_account->id != $journal->source_account->id) {
+            // $checkAccount is the source_account for a withdrawal
+            // $checkAccount is the destination_account for a deposit
+            if ($check->transactionType->type == 'Withdrawal' && $check->source_account->id != $journal->destination_account->id) {
                 $match = false;
             }
+            if ($check->transactionType->type == 'Deposit' && $check->destination_account->id != $journal->destination_account->id) {
+                $match = false;
+            }
+
         }
         if ($match) {
             $journal->tags()->save($tag);
-
             return true;
         }
 
