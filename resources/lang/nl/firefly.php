@@ -18,6 +18,16 @@ return [
     'showEverything'                => 'Laat alles zien',
     'never'                         => 'Nooit',
 
+    // create new stuff:
+    'create_new_withdrawal'         => 'Nieuwe uitgave',
+    'create_new_deposit'            => 'Nieuwe inkomsten',
+    'create_new_transfer'           => 'Nieuwe overschrijving',
+    'create_new_asset'              => 'Nieuwe betaalrekening',
+    'create_new_expense'            => 'Nieuwe crediteur',
+    'create_new_revenue'            => 'Nieuwe debiteur',
+    'create_new_piggy_bank'         => 'Nieuw spaarpotje',
+    'create_new_bill'               => 'Nieuw contract',
+
     // new user:
     'submit'                        => 'Invoeren',
     'getting_started'               => 'Aan de start!',

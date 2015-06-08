@@ -18,6 +18,16 @@ return [
     'showEverything'                => 'Show everything',
     'never'                         => 'Never',
 
+    // create new stuff:
+    'create_new_withdrawal'         => 'Create new withdrawal',
+    'create_new_deposit'            => 'Create new deposit',
+    'create_new_transfer'           => 'Create new transfer',
+    'create_new_asset'              => 'Create new asset account',
+    'create_new_expense'            => 'Create new expense account',
+    'create_new_revenue'            => 'Create new revenue account',
+    'create_new_piggy_bank'         => 'Create new piggy bank',
+    'create_new_bill'               => 'Create new bill',
+
     // new user:
     'submit'                        => 'Submit',
     'getting_started'               => 'Getting started',
