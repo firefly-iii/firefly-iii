@@ -315,7 +315,7 @@ class TransactionJournal extends Model
     {
         $cache = new CacheProperties;
         $cache->addProperty($this->id);
-        $cache->addProperty('destinationAccount');
+        $cache->addProperty('sourceAccount');
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
