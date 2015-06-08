@@ -92,11 +92,11 @@ class AuthController extends Controller
         // get the email address
         if ($this->auth->user() instanceof User) {
             $email = $this->auth->user()->email;
-
+            $address = route('index');
             // send email.
             Mail::send(
-                ['emails.registered-html','emails.registered'], [], function (Message $message) use ($email) {
-                $message->to($email, $email)->subject('Welcome to Firefly III!');
+                ['emails.registered-html', 'emails.registered'], ['address' => $address], function (Message $message) use ($email) {
+                $message->to($email, $email)->subject('Welcome to Firefly III! ');
             }
             );
 
