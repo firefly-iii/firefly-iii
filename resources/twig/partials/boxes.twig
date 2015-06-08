@@ -1,92 +1,95 @@
 <!-- /.row -->
-<div class="row">
-    <div class="hidden-xs col-lg-3 col-md-6">
-        <div class="panel panel-red">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <i class="fa fa-upload fa-3x"></i>
-                    </div>
-                    <div class="col-xs-9 text-right">
-                        <div id="box-out" class="large"></div>
-                        <div>{{ 'moneyOut'|_ }}</div>
+
+<div class="row row-eq-height">
+    <!-- Left -->
+    <div class="col-lg-8 col-md-6 hidden-sm hidden-xs">
+        <div class="row">
+            <div class="col-lg-6 col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <i class="fa fa-upload fa-fw"></i> {{ 'moneyOut'|_ }} <a class="pull-right" href="{{route('transactions.index','withdrawal')}}"><span id="box-out"></span></a>
                     </div>
                 </div>
             </div>
-            <a href="{{route('transactions.index','withdrawal')}}">
-                <div class="panel-footer">
-                    <span class="pull-left">{{ 'viewDetails'|_ }}</span>
-                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                    <div class="clearfix"></div>
+            <div class="col-lg-6 col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                    <i class="fa fa-download faw-fw"></i> {{ 'moneyIn'|_ }} <a class="pull-right" href="{{route('transactions.index','deposit')}}"><span id="box-in"></span></a>
                 </div>
-            </a>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="hidden-xs col-lg-3 col-md-6">
-        <div class="panel panel-green">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <i class="fa fa-download fa-3x"></i>
-                    </div>
-                    <div class="col-xs-9 text-right">
-                        <div id="box-in" class="large"></div>
-                        <div>{{ 'moneyIn'|_ }}</div>
-                    </div>
+        <div class="row">
+            <div class="col-lg-6 col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                    <i class="fa fa-calendar fa-fw"></i> {{ 'billsToPay'|_ }} <a class="pull-right" href="{{route('bills.index')}}"><span id="box-bills-unpaid"></span></a>
+                </div>
                 </div>
             </div>
-            <a href="{{route('transactions.index','deposit')}}">
-                <div class="panel-footer">
-                    <span class="pull-left">{{ 'viewDetails'|_ }}</span>
-                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                    <div class="clearfix"></div>
+            <div class="col-lg-6 col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                    <i class="fa fa-line-chart fa-fw"></i> {{ 'billsPaid'|_ }} <a class="pull-right" href="{{route('bills.index')}}"><span id="box-bills-paid"></span></a>
                 </div>
-            </a>
+                </div>
+            </div>
         </div>
+
     </div>
-    <div class="hidden-xs col-lg-3 col-md-6">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <i class="fa fa-calendar fa-3x"></i>
-                    </div>
-                    <div class="col-xs-9 text-right">
-                        <div id="box-bills-unpaid" class="large"></div>
-                        <div>{{ 'billsToPay'|_ }}</div>
+    <!-- Right -->
+    <div class="col-lg-4 col-md-6 hidden-sm hidden-xs">
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+
+                        <ul class="nav nav-pills">
+                            <li role="presentation" class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false" style="padding-top:0;padding-bottom:0;padding-left:0;">
+                                    <i class="fa fa-plus"></i> {{ 'createNew'|_ }} ... <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{{ route('transactions.create','withdrawal') }}"><i class="fa fa-long-arrow-left fa-fw"></i> {{ 'create_new_withdrawal'|_ }}</a></li>
+                                    <li><a href="{{ route('transactions.create','deposit') }}"><i class="fa fa-long-arrow-right fa-fw"></i> {{ 'create_new_deposit'|_ }}</a></li>
+                                    <li><a href="{{ route('transactions.create','transfer') }}"><i class="fa fa-exchange fa-fw"></i> {{ 'create_new_transfer'|_ }}</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="{{ route('accounts.create','asset') }}"><i class="fa fa-money fa-fw"></i> {{ 'create_new_asset'|_ }}</a></li>
+                                    <li><a href="{{ route('accounts.create','expense') }}"><i class="fa fa-shopping-cart fa-fw"></i> {{ 'create_new_expense'|_ }}</a></li>
+                                    <li><a href="{{ route('accounts.create','revenue') }}"><i class="fa fa-download fa-fw"></i> {{ 'create_new_revenue'|_ }}</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="{{ route('piggy-banks.create') }}"><i class="fa fa-sort-amount-asc fa-fw"></i> {{ 'create_new_piggy_bank'|_ }}</a></li>
+                                    <li><a href="{{ route('bills.create') }}"><i class="fa fa-calendar-o fa-fw"></i> {{ 'create_new_bill'|_ }}</a></li>
+                                </ul>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
-            <a href="{{route('bills.index')}}">
-                <div class="panel-footer">
-                    <span class="pull-left">{{ 'viewDetails'|_ }}</span>
-                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                    <div class="clearfix"></div>
-                </div>
-            </a>
-        </div>
-    </div>
-    <div class="hidden-xs col-lg-3 col-md-6">
-        <div class="panel panel-green">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <i class="fa fa-line-chart fa-3x"></i>
-                    </div>
-                    <div class="col-xs-9 text-right">
-                        <div id="box-bills-paid" class="large"></div>
-                        <div>{{ 'billsPaid'|_ }}</div>
+            <div class="col-lg-12 col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">&nbsp;
                     </div>
                 </div>
             </div>
-            <a href="{{route('bills.index')}}">
-                <div class="panel-footer">
-                    <span class="pull-left">{{ 'viewDetails'|_ }}</span>
-                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                    <div class="clearfix"></div>
-                </div>
-            </a>
         </div>
     </div>
 </div>
-<!-- /.row -->
+
+
+<div class="row hidden-xs hidden-sm">
+
+
+</div>
+
+
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 visible-xs visible-sm hidden-md hidden-lg">
+        <p>
+            Nieuwe transacties
+        </p>
+        <p>
+            Nieuwe andere dingen
+        </p>
+    </div>
+</div>
