@@ -48,21 +48,6 @@
             </li>
         {% endif %}
 
-        <!-- menu -->
-        <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
-            </a>
-            <ul class="dropdown-menu dropdown-user">
-                <li><a href="{{ route('profile') }}"><i class="fa fa-user fa-fw"></i> {{ Auth.user.email }}</a></li>
-                <li><a href="{{ route('preferences') }}"><i class="fa fa-gear fa-fw"></i> {{ 'preferences'|_ }}</a></li>
-                <li><a href="{{ route('currency.index') }}"><i class="fa fa-usd fa-fw"></i> {{ 'currency'|_ }}</a></li>
-                <li><a href="{{ route('reminders.index') }}"><i class="fa fa-clock-o fa-fw"></i> {{ 'reminders'|_ }}</a></li>
-                <li class="divider"></li>
-                <li><a href="{{ route('logout') }}"><i class="fa fa-sign-out fa-fw"></i> {{ 'logout'|_ }}</a></li>
-            </ul>
-            <!-- /.dropdown-user -->
-        </li>
 
 
         <!-- /.dropdown -->
@@ -83,6 +68,23 @@
                 <li><a href="{{ route('piggy-banks.create') }}"><i class="fa fa-sort-amount-asc fa-fw"></i> {{ 'create_new_piggy_bank'|_ }}</a></li>
                 <li><a href="{{ route('bills.create') }}"><i class="fa fa-calendar-o fa-fw"></i> {{ 'create_new_bill'|_ }}</a></li>
             </ul>
+        </li>
+
+
+        <!-- menu -->
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-user">
+                <li><a href="{{ route('profile') }}"><i class="fa fa-user fa-fw"></i> {{ Auth.user.email }}</a></li>
+                <li><a href="{{ route('preferences') }}"><i class="fa fa-gear fa-fw"></i> {{ 'preferences'|_ }}</a></li>
+                <li><a href="{{ route('currency.index') }}"><i class="fa fa-usd fa-fw"></i> {{ 'currency'|_ }}</a></li>
+                <li><a href="{{ route('reminders.index') }}"><i class="fa fa-clock-o fa-fw"></i> {{ 'reminders'|_ }}</a></li>
+                <li class="divider"></li>
+                <li><a href="{{ route('logout') }}"><i class="fa fa-sign-out fa-fw"></i> {{ 'logout'|_ }}</a></li>
+            </ul>
+            <!-- /.dropdown-user -->
         </li>
 
     </ul>
