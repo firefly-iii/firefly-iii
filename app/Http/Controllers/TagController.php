@@ -56,7 +56,7 @@ class TagController extends Controller
      */
     public function create()
     {
-        $subTitle     = 'New tag';
+        $subTitle     = trans('firefly.new_tag');
         $subTitleIcon = 'fa-tag';
 
         $preFilled = [
@@ -120,7 +120,7 @@ class TagController extends Controller
      */
     public function edit(Tag $tag, TagRepositoryInterface $repository)
     {
-        $subTitle     = 'Edit tag "' . e($tag->tag) . '"';
+        $subTitle     = trans('firefly.edit_tag', ['tag' => $tag->tag]);
         $subTitleIcon = 'fa-tag';
 
         /*

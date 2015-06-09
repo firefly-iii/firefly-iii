@@ -17,6 +17,7 @@ return [
     'to'                            => 'Tot',
     'showEverything'                => 'Laat alles zien',
     'never'                         => 'Nooit',
+    'search_results_for'            => 'Zoekresultaten voor ":query"',
 
     // create new stuff:
     'create_new_withdrawal'         => 'Nieuwe uitgave',
@@ -27,6 +28,10 @@ return [
     'create_new_revenue'            => 'Nieuwe debiteur',
     'create_new_piggy_bank'         => 'Nieuw spaarpotje',
     'create_new_bill'               => 'Nieuw contract',
+
+    // currencies:
+    'create_currency'               => 'Maak nieuwe munteenheid',
+    'edit_currency'                 => 'Wijzig munteenheid ":name"',
 
     // new user:
     'submit'                        => 'Invoeren',
@@ -52,10 +57,12 @@ return [
     'without_budget_between'        => 'Transacties zonder budget tussen :start en :end',
     'budget_in_month'               => ':name in :month',
     'delete_budget'                 => 'Verwijder budget ":name"',
+    'edit_budget'                   => 'Wijzig budget ":name"',
     'update_amount'                 => 'Bedrag bijwerken',
 
     // bills:
     'delete_bill'                   => 'Verwijder contract ":name"',
+    'edit_bill'                     => 'Wijzig contract ":name"',
 
     // accounts:
     'details_for_asset'             => 'Overzicht voor betaalrekening ":name"',
@@ -106,6 +113,7 @@ return [
 
     // categories:
     'new_category'                  => 'Nieuwe categorie',
+    'create_new_category'           => 'Nieuwe categorie',
     'without_category'              => 'Zonder categorie',
     'update_category'               => 'Wijzig categorie',
     'categories'                    => 'Categorieën',
@@ -254,6 +262,7 @@ return [
     // piggy banks:
     'piggy_bank'                    => 'Spaarpotje',
     'new_piggy_bank'                => 'Nieuw spaarpotje',
+    'create_new_piggybank'          => 'Nieuw spaarpotje',
     'account_status'                => 'Rekeningoverzicht',
     'left_for_piggy_banks'          => 'Over voor spaarpotjes',
     'sum_of_piggy_banks'            => 'Som van spaarpotjes',
@@ -279,11 +288,18 @@ return [
     'expected_amount_per_reminder'  => 'Verwacht bedrag per herinnering',
     'todo'                          => 'te doen',
     'table'                         => 'Tabel',
+    'piggy_bank_not_exists'         => 'Dit spaarpotje bestaat niet meer.',
     'add_any_amount_to_piggy'       => 'Stop geld in dit spaarpotje om het doel van :amount te halen.',
     'add_set_amount_to_piggy'       => 'Stop voor :date :amount in dit spaarpotje om hem op tijd te vullen.',
     'delete_piggy_bank'             => 'Verwijder spaarpotje ":name"',
 
     // tags
     'delete_tag'                    => 'Verwijder tag ":name"',
+    'new_tag'                       => 'Maak nieuwe tag',
+    'edit_tag'                      => 'Wijzig tag ":tag"',
+
+    // reminders
+    'reminder_for_piggy'            => 'Herinnering voor spaarpotje ":name"',
+    'dismissed_reminder_for_piggy'  => 'Genegeerde herinnering voor spaarpotje ":name"',
 
 ];

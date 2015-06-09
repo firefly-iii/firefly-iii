@@ -35,7 +35,9 @@ class BillController extends Controller
      */
     public function create()
     {
-        $periods = Config::get('firefly.periods_to_text');
+        $periods  = Config::get('firefly.periods_to_text');
+        $subTitle = trans('firefly.create_new_bill');
+
 
         // put previous url in session if not redirect from store (not "create another").
         if (Session::get('bills.create.fromStore') !== true) {
@@ -44,7 +46,6 @@ class BillController extends Controller
         Session::forget('bills.create.fromStore');
         Session::flash('gaEventCategory', 'bills');
         Session::flash('gaEventAction', 'create');
-        $subTitle = 'Create new bill';
 
         return view('bills.create', compact('periods', 'subTitle'));
     }
@@ -90,7 +91,7 @@ class BillController extends Controller
     public function edit(Bill $bill)
     {
         $periods  = Config::get('firefly.periods_to_text');
-        $subTitle = 'Edit "' . e($bill->name) . '"';
+        $subTitle = trans('firefly.edit_bill', ['name' => $bill->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (Session::get('bills.edit.fromUpdate') !== true) {

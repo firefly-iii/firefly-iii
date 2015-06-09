@@ -26,7 +26,7 @@ class SearchController extends Controller
         if (!is_null(Input::get('q')) && strlen(Input::get('q')) > 0) {
             $rawQuery = trim(Input::get('q'));
             $words    = explode(' ', $rawQuery);
-            $subTitle = 'Results for "' . e($rawQuery) . '"';
+            $subTitle = trans('firefly.search_results_for', ['query' => $rawQuery]);
 
             $transactions = $searcher->searchTransactions($words);
             $accounts     = $searcher->searchAccounts($words);

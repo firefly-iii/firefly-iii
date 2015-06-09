@@ -17,6 +17,7 @@ return [
     'to'                            => 'To',
     'showEverything'                => 'Show everything',
     'never'                         => 'Never',
+    'search_results_for'            => 'Search results for ":query"',
 
     // create new stuff:
     'create_new_withdrawal'         => 'Create new withdrawal',
@@ -27,6 +28,10 @@ return [
     'create_new_revenue'            => 'Create new revenue account',
     'create_new_piggy_bank'         => 'Create new piggy bank',
     'create_new_bill'               => 'Create new bill',
+
+    // currencies:
+    'create_currency'               => 'Create new currency',
+    'edit_currency'                 => 'Edit currency ":name"',
 
     // new user:
     'submit'                        => 'Submit',
@@ -52,10 +57,12 @@ return [
     'without_budget_between'        => 'Transactions without a budget between :start and :end',
     'budget_in_month'               => ':name in :month',
     'delete_budget'                 => 'Delete budget ":name"',
+    'edit_budget'                   => 'Edit budget ":name"',
     'update_amount'                 => 'Update amount',
 
     // bills:
     'delete_bill'                   => 'Delete bill ":name"',
+    'edit_bill'                     => 'Delete bill ":name"',
 
     // accounts:
     'details_for_asset'             => 'Details for asset account ":name"',
@@ -97,6 +104,7 @@ return [
 
     // categories:
     'new_category'                  => 'New category',
+    'create_new_category'           => 'New category',
     'without_category'              => 'Without a category',
     'update_category'               => 'Wijzig categorie',
     'categories'                    => 'Categories',
@@ -245,6 +253,7 @@ return [
     // piggy banks:
     'piggy_bank'                    => 'Piggy bank',
     'new_piggy_bank'                => 'Create new piggy bank',
+    'create_new_piggybank'          => 'Create new piggy bank',
     'account_status'                => 'Account status',
     'left_for_piggy_banks'          => 'Left for piggy banks',
     'sum_of_piggy_banks'            => 'Sum of piggy banks',
@@ -277,6 +286,12 @@ return [
 
     // tags
     'delete_tag'                    => 'Delete tag ":name"',
+    'new_tag'                       => 'Make new tag',
+    'edit_tag'                      => 'Edit tag ":tag"',
+
+    // reminders
+    'reminder_for_piggy'            => 'Reminder for piggy bank ":name"',
+    'dismissed_reminder_for_piggy'  => 'Dismissed reminder for piggy bank ":name"',
 
 
 ];
