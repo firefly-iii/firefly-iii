@@ -3,33 +3,16 @@ return [
     'home'                  => 'Home',
 
     // accounts
-    'asset_accounts'        => 'Betaalrekeningen',
-    'expense_accounts'      => 'Crediteuren',
-    'revenue_accounts'      => 'Debiteuren',
     'cash_accounts'         => 'Contant geldrekeningen',
     'new_asset_account'     => 'Nieuwe betaalrekening',
     'new_expense_account'   => 'Nieuwe crediteur',
     'new_revenue_account'   => 'Nieuwe debiteur',
-    'delete_account'        => 'Verwijder rekening ":name"',
     'edit_account'          => 'Wijzig rekening ":name"',
-    'edit_asset_account'    => 'Wijzig betaalrekening ":name"',
-    'edit_expense_account'  => 'Wijzig crediteur ":name"',
-    'edit_revenue_account'  => 'Wijzig debiteur ":name"',
-
-    // budgets
-    'budgets'               => 'Budgetten',
-    'newBudget'             => 'Maak een nieuw budget',
-    'delete_budget'         => 'Verwijder budget ":name"',
-    'edit_budget'           => 'Wijzig budget ":name"',
 
     // categories
-    'categories'            => 'Categorieën',
     'newCategory'           => 'Maak een nieuw categorie',
-    'delete_category'       => 'Verwijder categorie ":name"',
-    'edit_category'         => 'Wijzig categorie ":name"',
 
     // currencies
-    'currencies'            => 'Munteenheden',
     'edit_currency'         => 'Wijzig munteenheid ":name"',
     'delete_currency'       => 'Verwijder munteenheid ":name"',
 

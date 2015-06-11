@@ -36,7 +36,7 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'accounts.index', function (Generator $breadcrumbs, $what) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push(trans('breadcrumbs.' . strtolower(e($what)) . '_accounts'), route('accounts.index', [$what]));
+    $breadcrumbs->push(trans('firefly.' . strtolower(e($what)) . '_accounts'), route('accounts.index', [$what]));
 }
 );
 
@@ -60,7 +60,7 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'accounts.delete', function (Generator $breadcrumbs, Account $account) {
     $breadcrumbs->parent('accounts.show', $account);
-    $breadcrumbs->push(trans('breadcrumbs.delete_account', ['name' => e($account->name)]), route('accounts.delete', [$account->id]));
+    $breadcrumbs->push(trans('firefly.delete_account', ['name' => e($account->name)]), route('accounts.delete', [$account->id]));
 }
 );
 
@@ -70,7 +70,7 @@ Breadcrumbs::register(
     $breadcrumbs->parent('accounts.show', $account);
     $what = Config::get('firefly.shortNamesByFullName.' . $account->accountType->type);
 
-    $breadcrumbs->push(trans('breadcrumbs.edit_' . $what . '_account', ['name' => e($account->name)]), route('accounts.edit', [$account->id]));
+    $breadcrumbs->push(trans('firefly.edit_' . $what . '_account', ['name' => e($account->name)]), route('accounts.edit', [$account->id]));
 }
 );
 
@@ -78,26 +78,26 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'budgets.index', function (Generator $breadcrumbs) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push(trans('breadcrumbs.budgets'), route('budgets.index'));
+    $breadcrumbs->push(trans('firefly.budgets'), route('budgets.index'));
 }
 );
 Breadcrumbs::register(
     'budgets.create', function (Generator $breadcrumbs) {
     $breadcrumbs->parent('budgets.index');
-    $breadcrumbs->push(trans('breadcrumbs.newBudget'), route('budgets.create'));
+    $breadcrumbs->push(trans('firefly.create_new_budget'), route('budgets.create'));
 }
 );
 
 Breadcrumbs::register(
     'budgets.edit', function (Generator $breadcrumbs, Budget $budget) {
     $breadcrumbs->parent('budgets.show', $budget);
-    $breadcrumbs->push(trans('breadcrumbs.edit_budget', ['name' => e($budget->name)]), route('budgets.edit', [$budget->id]));
+    $breadcrumbs->push(trans('firefly.edit_budget', ['name' => e($budget->name)]), route('budgets.edit', [$budget->id]));
 }
 );
 Breadcrumbs::register(
     'budgets.delete', function (Generator $breadcrumbs, Budget $budget) {
     $breadcrumbs->parent('budgets.show', $budget);
-    $breadcrumbs->push(trans('breadcrumbs.delete_budget', ['name' => e($budget->name)]), route('budgets.delete', [$budget->id]));
+    $breadcrumbs->push(trans('firefly.delete_budget', ['name' => e($budget->name)]), route('budgets.delete', [$budget->id]));
 }
 );
 
@@ -124,7 +124,7 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'categories.index', function (Generator $breadcrumbs) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push(trans('breadcrumbs.categories'), route('categories.index'));
+    $breadcrumbs->push(trans('firefly.categories'), route('categories.index'));
 }
 );
 Breadcrumbs::register(
@@ -137,13 +137,13 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'categories.edit', function (Generator $breadcrumbs, Category $category) {
     $breadcrumbs->parent('categories.show', $category);
-    $breadcrumbs->push(trans('breadcrumbs.edit_category', ['name' => e($category->name)]), route('categories.edit', [$category->id]));
+    $breadcrumbs->push(trans('firefly.edit_category', ['name' => e($category->name)]), route('categories.edit', [$category->id]));
 }
 );
 Breadcrumbs::register(
     'categories.delete', function (Generator $breadcrumbs, Category $category) {
     $breadcrumbs->parent('categories.show', $category);
-    $breadcrumbs->push(trans('breadcrumbs.delete_category', ['name' => e($category->name)]), route('categories.delete', [$category->id]));
+    $breadcrumbs->push(trans('firefly.delete_category', ['name' => e($category->name)]), route('categories.delete', [$category->id]));
 }
 );
 
@@ -166,7 +166,7 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'currency.index', function (Generator $breadcrumbs) {
     $breadcrumbs->parent('home');
-    $breadcrumbs->push(trans('breadcrumbs.currencies'), route('currency.index'));
+    $breadcrumbs->push(trans('firefly.currencies'), route('currency.index'));
 }
 );
 
