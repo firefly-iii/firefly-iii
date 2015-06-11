@@ -103,7 +103,7 @@ class BillControllerTest extends TestCase
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
 
         $this->call('GET', '/bills/edit/' . $bill->id);
-        $this->assertViewHas('subTitle', 'Edit "' . e($bill->name) . '"');
+        $this->assertViewHas('subTitle', 'Edit bill "' . e($bill->name) . '"');
         $this->assertResponseOk();
     }
 

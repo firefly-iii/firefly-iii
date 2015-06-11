@@ -30,7 +30,7 @@ return [
     'create_new_bill'               => 'Create new bill',
 
     // currencies:
-    'create_currency'               => 'Create new currency',
+    'create_currency'               => 'Create a new currency',
     'edit_currency'                 => 'Edit currency ":name"',
 
     // new user:
@@ -62,7 +62,7 @@ return [
 
     // bills:
     'delete_bill'                   => 'Delete bill ":name"',
-    'edit_bill'                     => 'Delete bill ":name"',
+    'edit_bill'                     => 'Edit bill ":name"',
 
     // accounts:
     'details_for_asset'             => 'Details for asset account ":name"',
@@ -104,7 +104,7 @@ return [
 
     // categories:
     'new_category'                  => 'New category',
-    'create_new_category'           => 'New category',
+    'create_new_category'           => 'Create a new category',
     'without_category'              => 'Without a category',
     'update_category'               => 'Wijzig categorie',
     'categories'                    => 'Categories',
