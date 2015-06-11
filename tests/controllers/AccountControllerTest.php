@@ -78,8 +78,8 @@ class AccountControllerTest extends TestCase
 
         // CURRENCY:
         $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
-        Amount::shouldReceive('getDefaultCurrency')->once()->andReturn($currency);
-        Amount::shouldReceive('getAllCurrencies')->once()->andReturn([$currency]);
+        Amount::shouldReceive('getDefaultCurrency')->andReturn($currency);
+        Amount::shouldReceive('getAllCurrencies')->andReturn([$currency]);
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
         $lastActivity       = FactoryMuffin::create('FireflyIII\Models\Preference');
         $lastActivity->data = microtime();
@@ -149,8 +149,8 @@ class AccountControllerTest extends TestCase
 
         // CURRENCY:
         $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
-        Amount::shouldReceive('getDefaultCurrency')->once()->andReturn($currency);
-        Amount::shouldReceive('getAllCurrencies')->once()->andReturn([$currency]);
+        Amount::shouldReceive('getDefaultCurrency')->andReturn($currency);
+        Amount::shouldReceive('getAllCurrencies')->andReturn([$currency]);
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
 
         // get edit page:

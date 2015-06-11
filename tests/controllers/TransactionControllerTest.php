@@ -244,8 +244,8 @@ class TransactionControllerTest extends TestCase
 
         // fake!
         $repository->shouldReceive('getAmountBefore')->withAnyArgs()->andReturn(5);
-        Amount::shouldReceive('getDefaultCurrency')->once()->andReturn($currency);
-        Amount::shouldReceive('getAllCurrencies')->once()->andReturn([$currency]);
+        Amount::shouldReceive('getDefaultCurrency')->andReturn($currency);
+        Amount::shouldReceive('getAllCurrencies')->andReturn([$currency]);
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
         Amount::shouldReceive('formatTransaction')->andReturn('X');
         Amount::shouldReceive('format')->andReturn('X');
