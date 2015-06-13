@@ -269,7 +269,6 @@ class PiggyBankControllerTest extends TestCase
 
         // mock!
         $accounts   = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
-        $piggyBanks = $this->mock('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
         $accounts->shouldReceive('leftOnAccount')->andReturn(20);
 
         Amount::shouldReceive('format')->andReturn('something');
@@ -307,7 +306,6 @@ class PiggyBankControllerTest extends TestCase
 
         // mock!
         $accounts   = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
-        $piggyBanks = $this->mock('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
         $accounts->shouldReceive('leftOnAccount')->andReturn(20);
 
         Amount::shouldReceive('format')->andReturn('something');

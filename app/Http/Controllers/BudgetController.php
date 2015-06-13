@@ -116,7 +116,7 @@ class BudgetController extends Controller
      */
     public function edit(Budget $budget)
     {
-        $subTitle = trans('firefly.edit_budget',['name' => $budget->name]);
+        $subTitle = trans('firefly.edit_budget', ['name' => $budget->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (Session::get('budgets.edit.fromUpdate') !== true) {

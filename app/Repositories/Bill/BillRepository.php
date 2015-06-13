@@ -284,6 +284,8 @@ class BillRepository implements BillRepositoryInterface
             return true;
         }
 
+        return false;
+
     }
 
     /**

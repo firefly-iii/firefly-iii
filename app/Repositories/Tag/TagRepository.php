@@ -332,6 +332,7 @@ class TagRepository implements TagRepositoryInterface
         }
         if ($match) {
             $journal->tags()->save($tag);
+
             return true;
         }
 

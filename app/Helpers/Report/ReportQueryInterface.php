@@ -73,7 +73,7 @@ interface ReportQueryInterface
      * @param Carbon  $end
      * @param bool    $shared
      *
-     * @return float
+     * @return string
      */
     public function spentNoBudget(Account $account, Carbon $start, Carbon $end, $shared = false);
 

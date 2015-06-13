@@ -88,7 +88,7 @@ class TransactionController extends Controller
         Session::flash('gaEventCategory', 'transactions');
         Session::flash('gaEventAction', 'delete-' . $what);
 
-        return view('transactions.delete', compact('journal', 'subTitle','what'));
+        return view('transactions.delete', compact('journal', 'subTitle', 'what'));
 
 
     }
@@ -261,7 +261,7 @@ class TransactionController extends Controller
         $what     = strtolower($journal->transactionType->type);
         $subTitle = trans('firefly.' . $journal->transactionType->type) . ' "' . e($journal->description) . '"';
 
-        return view('transactions.show', compact('journal', 'subTitle','what'));
+        return view('transactions.show', compact('journal', 'subTitle', 'what'));
     }
 
     /**

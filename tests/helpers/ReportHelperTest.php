@@ -123,8 +123,8 @@ class ReportHelperTest extends TestCase
         // factory!
         $set      = new Collection;
         $journals = new Collection;
-        $left     = FactoryMuffin::create('FireflyIII\Models\Account');
-        $right    = FactoryMuffin::create('FireflyIII\Models\Account');
+        FactoryMuffin::create('FireflyIII\Models\Account');
+        FactoryMuffin::create('FireflyIII\Models\Account');
         for ($i = 0; $i < 5; $i++) {
             $set->push(FactoryMuffin::create('FireflyIII\Models\Bill'));
         }

@@ -163,7 +163,8 @@ class ReportHelper implements ReportHelperInterface
         foreach ($accounts as $account) {
             $spent = $this->query->spentNoBudget($account, $start, $end);
             $left  = $tagRepository->coveredByBalancingActs($account, $start, $end);
-            $diff  = $spent + $left;
+            bcscale(2);
+            $diff = bcadd($spent, $left);
 
             // budget
             $budgetEntry = new BalanceEntry;

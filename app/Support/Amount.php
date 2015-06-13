@@ -37,6 +37,7 @@ class Amount
     {
         $currencyPreference = Prefs::get('currencyPreference', 'EUR');
         $currency           = TransactionCurrency::whereCode($currencyPreference->data)->first();
+
         return $currency->symbol;
     }
 
