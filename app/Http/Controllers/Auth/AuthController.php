@@ -108,9 +108,11 @@ class AuthController extends Controller
 
             return redirect($this->redirectPath());
         }
+        // @codeCoverageIgnoreStart
         App::abort(500, 'Not a user!');
 
         return redirect('/');
+        // @codeCoverageIgnoreEnd
     }
 
     /**
