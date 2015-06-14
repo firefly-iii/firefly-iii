@@ -99,7 +99,6 @@ class ReportQuery implements ReportQueryInterface
                 $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
             }
             )
-                  ->orderBy('accounts.name', 'ASC')
                   ->where(
                       function (Builder $query) {
 
