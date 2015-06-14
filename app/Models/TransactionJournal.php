@@ -72,15 +72,19 @@ use Watson\Validating\ValidatingTrait;
  * @method static \FireflyIII\Models\TransactionJournal orderBy
  * @method static \FireflyIII\Models\TransactionJournal|null first
  * @property-read mixed                                                                          $source_account
+ * @property integer                                                                             $tag_count
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal whereTagCount($value)
  */
 class TransactionJournal extends Model
 {
     use SoftDeletes, ValidatingTrait;
 
-    protected $fillable = ['user_id', 'transaction_type_id', 'bill_id', 'transaction_currency_id', 'description', 'completed', 'date', 'encrypted'];
-    protected $hidden   = ['encrypted'];
+
+    protected $fillable
+                      = ['user_id', 'transaction_type_id', 'bill_id', 'transaction_currency_id', 'description', 'completed', 'date', 'encrypted', 'tag_count'];
+    protected $hidden = ['encrypted'];
     protected $rules
-                        = [
+                      = [
             'user_id'                 => 'required|exists:users,id',
             'transaction_type_id'     => 'required|exists:transaction_types,id',
             'bill_id'                 => 'exists:bills,id',
@@ -154,7 +158,7 @@ class TransactionJournal extends Model
                 $amount = $t->amount;
             }
         }
-        $count = $this->tags->count();
+        $count = $this->tags()->count();
 
         if ($count === 1) {
             // get amount for single tag:
@@ -212,15 +216,6 @@ class TransactionJournal extends Model
     }
 
     /**
-     * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function tags()
-    {
-        return $this->belongsToMany('FireflyIII\Models\Tag');
-    }
-
-    /**
      * @param string $amount
      *
      * @return string
@@ -272,6 +267,29 @@ class TransactionJournal extends Model
     public function getDates()
     {
         return ['created_at', 'updated_at', 'date', 'deleted_at'];
+    }
+
+    /**
+     * Save the model to the database.
+     *
+     * @param  array $options
+     *
+     * @return bool
+     */
+    public function save(array $options = [])
+    {
+        $count           = $this->tags()->count();
+        $this->tag_count = $count;
+        parent::save($options);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function tags()
+    {
+        return $this->belongsToMany('FireflyIII\Models\Tag');
     }
 
     /**
@@ -418,7 +436,7 @@ class TransactionJournal extends Model
         $query->with(
             ['transactions' => function (HasMany $q) {
                 $q->orderBy('amount', 'ASC');
-            }, 'transactiontype', 'transactioncurrency', 'budgets', 'categories', 'transactions.account.accounttype', 'bill', 'budgets', 'categories']
+            }, 'transactionType', 'transactionCurrency', 'budgets', 'categories', 'transactions.account.accounttype', 'bill']
         );
     }
 
