@@ -158,14 +158,13 @@ class TransactionJournal extends Model
                 $amount = $t->amount;
             }
         }
-        $count = $this->tags()->count();
 
-        if ($count === 1) {
+        if ($this->tag_count === 1) {
             // get amount for single tag:
             $amount = $this->amountByTag($this->tags()->first(), $amount);
         }
 
-        if ($count > 1) {
+        if ($this->tag_count > 1) {
             // get amount for either tag.
             $amount = $this->amountByTags($amount);
 
