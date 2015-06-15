@@ -109,6 +109,9 @@ class TransactionJournalModelTest extends TestCase
         $tag->transactionJournals()->save($withdrawal);
         $tag->transactionJournals()->save($deposit);
 
+        $withdrawal->save();
+        $deposit->save();
+
         // amount should be 210.12:
         $this->assertEquals('210.12', $withdrawal->amount);
         $this->assertEquals('0', $deposit->amount);
@@ -175,7 +178,10 @@ class TransactionJournalModelTest extends TestCase
         $transfer->transactions[1]->amount     = 123.45;
         $transfer->transactions[1]->save();
 
+        $withdrawal->save();
         $amount = $withdrawal->amount;
+
+
 
         $this->assertEquals('0', $amount);
     }

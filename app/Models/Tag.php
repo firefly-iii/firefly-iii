@@ -110,7 +110,7 @@ class Tag extends Model
             $journal->tag_count = $count;
             $journal->save();
         }
-        parent::save($options);
+        return parent::save($options);
     }
 
     /**

@@ -215,6 +215,15 @@ class TransactionJournal extends Model
     }
 
     /**
+     * @codeCoverageIgnore
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function tags()
+    {
+        return $this->belongsToMany('FireflyIII\Models\Tag');
+    }
+
+    /**
      * @param string $amount
      *
      * @return string
@@ -279,16 +288,8 @@ class TransactionJournal extends Model
     {
         $count           = $this->tags()->count();
         $this->tag_count = $count;
-        parent::save($options);
-    }
 
-    /**
-     * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function tags()
-    {
-        return $this->belongsToMany('FireflyIII\Models\Tag');
+        return parent::save($options);
     }
 
     /**
