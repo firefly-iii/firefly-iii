@@ -163,7 +163,7 @@ class BalanceLine
         bcscale(2);
         /** @var BalanceEntry $balanceEntry */
         foreach ($this->getBalanceEntries() as $balanceEntry) {
-            $sum = bcsub($sum, $balanceEntry->getLeft());
+            $sum = bcadd($sum, $balanceEntry->getLeft());
         }
 
         return $sum;
