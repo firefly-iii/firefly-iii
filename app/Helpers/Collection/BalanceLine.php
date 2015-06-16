@@ -159,10 +159,11 @@ class BalanceLine
      */
     public function sumOfLeft()
     {
-        $sum = 0.0;
+        $sum = '0';
+        bcscale(2);
         /** @var BalanceEntry $balanceEntry */
         foreach ($this->getBalanceEntries() as $balanceEntry) {
-            $sum += $balanceEntry->getLeft();
+            $sum = bcsub($sum, $balanceEntry->getLeft());
         }
 
         return $sum;
