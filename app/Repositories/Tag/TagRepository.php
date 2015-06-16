@@ -41,6 +41,7 @@ class TagRepository implements TagRepositoryInterface
         switch ($tag->tagMode) {
             case 'nothing':
                 $journal->tags()->save($tag);
+                $journal->save();
 
                 return true;
             case 'balancingAct':
@@ -248,12 +249,14 @@ class TagRepository implements TagRepositoryInterface
         // only if this is the only withdrawal.
         if ($journal->transaction_type_id == $withdrawal->id && $withdrawals < 1) {
             $journal->tags()->save($tag);
+            $journal->save();
 
             return true;
         }
         // and only if this is the only transfer
         if ($journal->transaction_type_id == $transfer->id && $transfers < 1) {
             $journal->tags()->save($tag);
+            $journal->save();
 
             return true;
         }
@@ -290,6 +293,7 @@ class TagRepository implements TagRepositoryInterface
         // tag is attached just like that:
         if ($withdrawals < 1 && $deposits < 1) {
             $journal->tags()->save($tag);
+            $journal->save();
 
             return true;
         }
@@ -332,6 +336,7 @@ class TagRepository implements TagRepositoryInterface
         }
         if ($match) {
             $journal->tags()->save($tag);
+            $journal->save();
 
             return true;
         }
