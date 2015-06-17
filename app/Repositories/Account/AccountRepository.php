@@ -68,7 +68,7 @@ class AccountRepository implements AccountRepositoryInterface
             ['accountmeta' => function (HasMany $query) {
                 $query->where('name', 'accountRole');
             }]
-        )->accountTypeIn($types)->orderBy('accounts.name', 'ASC')->get(['accounts.*'])->sortBy('name');
+        )->accountTypeIn($types)->orderBy('accounts.name', 'ASC')->get(['accounts.*']);
 
         return $result;
     }
