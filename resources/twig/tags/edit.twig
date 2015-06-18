@@ -25,7 +25,7 @@
                 <i class="fa fa-smile-o"></i> {{ 'optionalFields'|_ }}
             </div>
             <div class="panel-body">
-                    {{ ExpandedForm.date('date') }}
+                    {{ ExpandedForm.date('date', tag.date.format('Y-m-d')) }}
                     {{ ExpandedForm.textarea('description') }}
                     {{ ExpandedForm.location('tagPosition') }}
             </div>
