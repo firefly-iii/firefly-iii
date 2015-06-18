@@ -286,6 +286,11 @@ return [
     'delete_tag'                    => 'Delete tag ":name"',
     'new_tag'                       => 'Make new tag',
     'edit_tag'                      => 'Edit tag ":tag"',
+    'no_year'                       => 'No year set',
+    'no_month'                      => 'No month set',
+    'tag_title_nothing'             => 'Default tags',
+    'tag_title_balancingAct'        => 'Balancing act tags',
+    'tag_title_advancePayment'      => 'Advance payment tags',
 
     // reminders
     'reminder_for_piggy'            => 'Reminder for piggy bank ":name"',

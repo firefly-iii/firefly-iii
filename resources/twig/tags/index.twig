@@ -41,6 +41,49 @@
                         {% endif %}
                     </a>
                 </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    {% for type in types %}
+    <div class="col-lg-4">
+        <div class="panel panel-default">
+            <div class="panel-heading"><i class="fa fa-fw fa-tag"></i> {{ ('tag_title_'~type)|_ }}</div>
+            <div class="panel-body">
+                {% for year,months in collection[type] %}
+                    <h4>{{ year }}</h4>
+
+                    {% for month,tags in months %}
+                        <h5>{{ month }}</h5>
+                        <p style="line-height: 200%;">
+                            {% for tag in tags %}
+                                <span style="display: inline;"><a style="font-size:100%;font-weight:normal;" class="label label-success" href="{{route('tags.show',tag.id)}}">
+                                    {% if tag.tagMode == 'nothing' %}
+                                        <i class="fa fa-fw fa-tag"></i>
+                                    {% endif %}
+                                    {% if tag.tagMode == 'balancingAct' %}
+                                        <i class="fa fa-fw fa-refresh"></i>
+                                    {% endif %}
+                                    {% if tag.tagMode == 'advancePayment' %}
+                                        <i class="fa fa-fw fa-sort-numeric-desc"></i>
+                                    {% endif %}
+                                    {{tag.tag}}</a>
+                                </span>
+                            {% endfor %}
+                        </p>
+                    {% endfor %}
+                {% endfor %}
+
+
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+
                 <p>
                     <a href="{{route('tags.create')}}" title="New tag" class="btn btn-info"><i class="fa fa-fw fa-plus"></i> Create new tag</a>
                 </p>

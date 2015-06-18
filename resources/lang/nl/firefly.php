@@ -295,6 +295,11 @@ return [
     'delete_tag'                    => 'Verwijder tag ":name"',
     'new_tag'                       => 'Maak nieuwe tag',
     'edit_tag'                      => 'Wijzig tag ":tag"',
+    'no_year'                       => 'Zonder jaar',
+    'no_maand'                      => 'Zonder jaar',
+    'tag_title_nothing'             => 'Standaard tags',
+    'tag_title_balancingAct'        => 'Balancing act tags',
+    'tag_title_advancePayment'      => 'Advance payment tags',
 
     // reminders
     'reminder_for_piggy'            => 'Herinnering voor spaarpotje ":name"',
