@@ -26,7 +26,7 @@ To get to know Firefly, and to see if it fits you, check out these resources:
 and the philosophy behind it.
 
 
-#### About the name (if you care)
+#### About the name (should you care)
 
 It's III, or 3, because [version 2](https://github.com/JC5/Firefly) and version 1 (not online) preceded it. It has been growing steadily ever since.
 
