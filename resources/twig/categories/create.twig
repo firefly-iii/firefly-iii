@@ -1,6 +1,10 @@
 {% extends "./layout/default.twig" %}
-{% block content %}
+
+{% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
+{% endblock %}
+
+{% block content %}
     {{ Form.open({'class' : 'form-horizontal','id' : 'store','url' : route('categories.store')}) }}
 
 <div class="row">

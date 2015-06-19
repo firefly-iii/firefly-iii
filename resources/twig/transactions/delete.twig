@@ -1,6 +1,10 @@
 {% extends "./layout/default.twig" %}
-{% block content %}
+
+{% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, journal) }}
+{% endblock %}
+
+{% block content %}
     {{ Form.open({'class' : 'form-horizontal','id' : 'destroy','url' : route('transactions.destroy',journal.id)}) }}
 
 <div class="row">

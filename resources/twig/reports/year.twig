@@ -1,6 +1,10 @@
 {% extends "./layout/default.twig" %}
-{% block content %}
+
+{% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, start, shared) }}
+{% endblock %}
+
+{% block content %}
 
     <div class="row">
         <div class="col-lg-10 col-md-8 col-sm-12">

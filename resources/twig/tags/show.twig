@@ -1,6 +1,10 @@
 {% extends "./layout/default.twig" %}
-{% block content %}
+
+{% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, tag) }}
+{% endblock %}
+
+{% block content %}
     <!-- show this block only when the tag has some meta-data -->
     {% if tag.latitude and tag.longitude and tag.zoomLevel %}
         <div class="row">

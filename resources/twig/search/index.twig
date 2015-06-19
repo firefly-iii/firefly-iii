@@ -1,6 +1,10 @@
 {% extends "./layout/default.twig" %}
-{% block content %}
+
+{% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, query) }}
+{% endblock %}
+
+{% block content %}
 {% if query %}
 <div class="row">
     {% if result.transactions|length > 0 %}

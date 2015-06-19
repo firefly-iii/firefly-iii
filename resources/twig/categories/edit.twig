@@ -1,6 +1,10 @@
 {% extends "./layout/default.twig" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, category) }}
+{% endblock %}
+
 {% block content %}
-{{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, category) }}
 {{ Form.model(category, {'class' : 'form-horizontal','id' : 'update','url' : route('categories.update',category.id)})  }}
 <input type="hidden" name="id" value="{{ category.id }}" />
 <div class="row">

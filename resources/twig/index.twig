@@ -1,46 +1,51 @@
 {% extends "./layout/default.twig" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists }}
+{% endblock %}
 {% block content %}
-{{ Breadcrumbs.renderIfExists }}
+
 
 {% include 'partials/boxes.twig' %}
 
 <div class="row">
     <div class="col-lg-8 col-md-12 col-sm-12">
         <!-- ACCOUNTS -->
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-credit-card fa-fw"></i> <a href="#">{{ 'yourAccounts'|_ }}</a>
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-credit-card fa-fw"></i> <a href="#">{{ 'yourAccounts'|_ }}</a></h3>
             </div>
-            <div class="panel-body">
+            <div class="box-body">
                 <div id="accounts-chart"></div>
             </div>
         </div>
+
         <!-- BUDGETS -->
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="box">
+            <div class="box-header with-border">
                 <i class="fa fa-tasks fa-fw"></i> <a href="{{route('budgets.index')}}">{{ 'budgetsAndSpending'|_ }}</a>
             </div>
-            <div class="panel-body">
+            <div class="box-body">
                 <div id="budgets-chart"></div>
             </div>
         </div>
         <!-- CATEGORIES -->
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="box">
+            <div class="box-header with-border">
                 <i class="fa fa-bar-chart fa-fw"></i> <a href="{{route('categories.index')}}">{{ 'categories'|_ }}</a>
             </div>
-            <div class="panel-body">
+            <div class="box-body">
                 <div id="categories-chart"></div>
             </div>
         </div>
 
         <!-- SAVINGS -->
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="box">
+            <div class="box-header with-border">
                 <i class="fa fa-line-chart"></i> {{ 'savings'|_ }}
                 <span class="pull-right">{{ savingsTotal|formatAmount }}</span>
             </div>
-            <div class="panel-body">
+            <div class="box-body">
                 {% if savings|length == 0 %}
                     <p class="small"><em>{{ 'markAsSavingsToContinue'|_ }}</em></p>
                 {% else %}
@@ -94,11 +99,11 @@
         </div>
 
         <!-- PIGGY BANKS -->
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="box">
+            <div class="box-header with-border">
                 <i class="fa fa-sort-amount-asc fa-fw"></i> {{ 'piggyBanks'|_ }}
             </div>
-            <div class="panel-body">
+            <div class="box-body">
                 {% if piggyBankAccounts|length  == 0%}
                     <p class="small"><em>{{ 'createPiggyToContinue'|_ }}</em></p>
                 {% else %}
@@ -138,19 +143,19 @@
     <div class="col-lg-4 col-md-6 col-sm-12">
 
         <!-- REMINDERS -->
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="box">
+            <div class="box-header with-border">
                 <i class="fa fa-calendar-o"></i> <a href="{{route('bills.index')}}">{{ 'bills'|_ }}</a>
             </div>
-            <div class="panel-body">
+            <div class="box-body">
                 <div id="bills-chart"></div>
             </div>
         </div>
 
         <!-- TRANSACTIONS -->
         {% for data in transactions %}
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="box">
+            <div class="box-header with-border">
                 <i class="fa fa-money fa-fw"></i>
                 <a href="{{route('accounts.show',data[1].id)}}">{{data[1].name}}</a> ({{ (data[1]|balance)|formatAmount }})
 
@@ -173,10 +178,7 @@
 
 
             </div>
-            <div class="panel-body">
-
                 {% include 'list/journals-tiny.twig' with {'transactions': data[0],'account': data[1]} %}
-            </div>
         </div>
         {% endfor %}
     </div>

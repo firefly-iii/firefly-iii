@@ -1,6 +1,11 @@
 {% extends "./layout/default.twig" %}
-{% block content %}
+
+{% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, bill) }}
+{% endblock %}
+
+{% block content %}
+
     {{ Form.model(bill, {'class' : 'form-horizontal','id' : 'update','url' : route('bills.update', bill.id)}) }}
 
 <input type="hidden" name="id" value="{{bill.id}}" />

@@ -1,6 +1,10 @@
 {% extends "./layout/default.twig" %}
-{% block content %}
+
+{% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, piggyBank) }}
+{% endblock %}
+
+{% block content %}
     {{ Form.model(piggyBank, {'class' : 'form-horizontal','id' : 'update','url' : route('piggy-banks.update',piggyBank.id)}) }}
 
     <input type="hidden" name="repeats" value="0" />

@@ -1,6 +1,11 @@
 {% extends "./layout/default.twig" %}
-{% block content %}
+
+{% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, bill) }}
+{% endblock %}
+
+{% block content %}
+
 <div class="row">
     <div class="col-lg-6 col-sm-12 col-md-12">
         <div class="panel panel-default">

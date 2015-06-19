@@ -1,6 +1,10 @@
 {% extends "./layout/default.twig" %}
-{% block content %}
+
+{% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, budget) }}
+{% endblock %}
+
+{% block content %}
     {{ Form.open({'class' : 'form-horizontal','id' : 'destroy','url' : route('budgets.destroy',budget.id) })  }}
         <div class="row">
     <div class="col-lg-6 col-lg-offset-3 col-md-12 col-sm-12">

@@ -1,6 +1,9 @@
 {% extends "./layout/default.twig" %}
-{% block content %}
+{% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, what)  }}
+{% endblock %}
+{% block content %}
+
     <form action="{{ route('accounts.store') }}" method="post" id="store" class="form-horizontal">
         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
         <input type="hidden" name="what" value="{{ what }}" />

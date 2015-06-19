@@ -1,6 +1,10 @@
 {% extends "./layout/default.twig" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute().getName(), account) }}
+{% endblock %}
+
 {% block content %}
-{{  Breadcrumbs.renderIfExists(Route.getCurrentRoute().getName(), account)  }}
 {{ Form.model(account, {'class' : 'form-horizontal','id' : 'update','url' : route('accounts.update',account.id) } ) }}
 
 <input type="hidden" name="id" value="{{account.id}}" />

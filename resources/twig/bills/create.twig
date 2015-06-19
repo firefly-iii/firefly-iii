@@ -1,6 +1,11 @@
 {% extends "./layout/default.twig" %}
-{% block content %}
+
+{% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, piggyBank) }}
+{% endblock %}
+
+{% block content %}
+
     {{ Form.open({'class' : 'form-horizontal','id' : 'store','url' : route('bills.store')}) }}
 
 <div class="row">

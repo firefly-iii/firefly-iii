@@ -1,6 +1,10 @@
 {% extends "./layout/default.twig" %}
-{% block content %}
+
+{% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, what) }}
+{% endblock %}
+
+{% block content %}
     {{ Form.open({'class' : 'form-horizontal','id' : 'store','url' : route('transactions.store',what)}) }}
     <input type="hidden" name="reminder_id" value="{{ Input.get('reminder_id') }}" />
     <input type="hidden" name="what" value="{{ what }}" />

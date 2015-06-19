@@ -1,42 +1,50 @@
-<!-- /.row -->
+<!-- Info boxes -->
+<div class="row">
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-aqua"><i class="ion ion-ios-gear-outline"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">{{ 'moneyOut'|_ }}</span>
+                <span class="info-box-number" id="box-out"></span>
+            </div><!-- /.info-box-content -->
+        </div><!-- /.info-box -->
+    </div><!-- /.col -->
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-red"><i class="fa fa-google-plus"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">{{ 'moneyIn'|_ }}</span>
+                <span class="info-box-number" id="box-in"></span>
+            </div><!-- /.info-box-content -->
+        </div><!-- /.info-box -->
+    </div><!-- /.col -->
+
+    <!-- fix for small devices only -->
+    <div class="clearfix visible-sm-block"></div>
+
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-green"><i class="ion ion-ios-cart-outline"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">{{ 'billsToPay'|_ }}</span>
+                <span class="info-box-number" id="box-bills-unpaid"></span>
+            </div><!-- /.info-box-content -->
+        </div><!-- /.info-box -->
+    </div><!-- /.col -->
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-yellow"><i class="ion ion-ios-people-outline"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">{{ 'billsPaid'|_ }}</span>
+                <span class="info-box-number" id="box-bills-paid"></span>
+            </div><!-- /.info-box-content -->
+        </div><!-- /.info-box -->
+    </div><!-- /.col -->
+</div><!-- /.row -->
+
+
 
 <div class="row row-eq-height">
-    <!-- Left -->
-    <div class="col-lg-8 col-md-6 hidden-sm hidden-xs">
-        <div class="row">
-            <div class="col-lg-6 col-md-6">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <i class="fa fa-upload fa-fw"></i> {{ 'moneyOut'|_ }} <a class="pull-right" href="{{route('transactions.index','withdrawal')}}"><span id="box-out"></span></a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                    <i class="fa fa-download faw-fw"></i> {{ 'moneyIn'|_ }} <a class="pull-right" href="{{route('transactions.index','deposit')}}"><span id="box-in"></span></a>
-                </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-6 col-md-6">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                    <i class="fa fa-calendar fa-fw"></i> {{ 'billsToPay'|_ }} <a class="pull-right" href="{{route('bills.index')}}"><span id="box-bills-unpaid"></span></a>
-                </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                    <i class="fa fa-line-chart fa-fw"></i> {{ 'billsPaid'|_ }} <a class="pull-right" href="{{route('bills.index')}}"><span id="box-bills-paid"></span></a>
-                </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
     <!-- Right -->
     <div class="col-lg-4 col-md-6 hidden-sm hidden-xs">
         <div class="row">
