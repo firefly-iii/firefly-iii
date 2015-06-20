@@ -10,7 +10,7 @@
     <div class="col-lg-6 col-md-6 col-sm-12">
         <div class="box box-primary">
             <div class="box-header with-border">
-                <i class="fa fa-exclamation"></i> {{ 'mandatoryFields'|_ }}
+                <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
             </div>
             <div class="box-body">
                 {{ ExpandedForm.text('name') }}
@@ -21,7 +21,7 @@
             <!-- panel for options -->
             <div class="box">
                 <div class="box-header with-border">
-                    <i class="fa fa-bolt"></i> {{ 'options'|_ }}
+                    <h3 class="box-title">{{ 'options'|_ }}</h3>
                 </div>
                 <div class="box-body">
                     {{ ExpandedForm.optionsList('create','budget')  }}
@@ -35,7 +35,7 @@
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <p>
             <button type="submit" class="btn btn-lg btn-success">
-                <i class="fa fa-plus-circle"></i> {{ 'store_new_budget'|_ }}
+                <h3 class="box-title">{{ 'store_new_budget'|_ }}</h3>
             </button>
         </p>
     </div>

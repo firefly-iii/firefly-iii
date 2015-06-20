@@ -9,7 +9,7 @@
     <div class="col-lg-9 col-md-9 col-sm-7">
         <div class="box">
             <div class="box-header with-border">
-                {{ 'overview'|_ }}
+                <h3 class="box-title">{{ 'overview'|_ }}</h3>
 
 
                 <!-- ACTIONS MENU -->
@@ -33,7 +33,7 @@
 
          <div class="box">
             <div class="box-header with-border">
-                {{ 'transactions'|_ }}
+                <h3 class="box-title">{{ 'transactions'|_ }}</h3>
             </div>
              {% include 'list/journals.twig' %}
         </div>
@@ -47,7 +47,7 @@
             {% for rep in limit.limitRepetitions %}
                 <div class="box">
                     <div class="box-header with-border">
-                        <a href="{{route('budgets.show',[budget.id,rep.id])}}">{{rep.startdate.formatLocalized(monthFormat)}}</a>
+                        <h3 class="box-title"><a href="{{route('budgets.show',[budget.id,rep.id])}}">{{rep.startdate.formatLocalized(monthFormat)}}</a></h3>
                     </div>
                     <div class="box-body">
                         <div class="row">

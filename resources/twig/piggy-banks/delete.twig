@@ -8,7 +8,7 @@
     {{ Form.open({'class' : 'form-horizontal','id' : 'destroy','url' : route('piggy-banks.destroy',piggyBank.id)})  }}
         <div class="row">
     <div class="col-lg-6 col-lg-offset-3 col-md-12 col-sm-12">
-        <div class="panel panel-red">
+        <div class="box box-danger">
             <div class="box-header with-border">
                 <i class="fa fa-exclamation-circle"></i>
                 {{ trans('form.delete_piggyBank', {'name': piggyBank.name}) }}

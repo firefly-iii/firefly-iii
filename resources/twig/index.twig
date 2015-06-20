@@ -135,12 +135,12 @@
                             <div class="col-lg-8 col-md-8 col-sm-6 col-xs-4">
 
                                 <div class="progress">
-                                    <div class="progress-bar progress-bar-info progress-bar-striped" style="width: {{100 - account.percentage}}%">
+                                    <div class="progress-bar progress-bar-info progress-bar" style="width: {{100 - account.percentage}}%">
                                         {% if account.percentage <= 50 %}
                                             {{account.piggyBalance|formatAmountPlain}} {{ 'divided'|_}}
                                         {% endif %}
                                     </div>
-                                    <div class="progress-bar progress-bar-success progress-bar-striped" style="width: {{account.percentage}}%">
+                                    <div class="progress-bar progress-bar-success progress-bar" style="width: {{account.percentage}}%">
                                         {% if account.percentage > 50 %}
                                             {{account.difference|formatAmountPlain}} {{ 'toDivide'|_}}
                                         {% endif %}
