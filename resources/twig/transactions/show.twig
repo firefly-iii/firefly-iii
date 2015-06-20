@@ -9,10 +9,10 @@
     <div class="col-lg-6 col-md-6 col-sm-12">
         <div class="box">
             <div class="box-header with-border">
-                <i class="fa fa-info-circle fa-fw"></i>
-                Metadata
+                <h3 class="box-title">Metadata</h3>
             </div>
-                <table class="table table-striped table-bordered">
+            <div class="box-body table-responsive no-padding">
+                <table class="table table-hover sortable">
                     <tr>
                         <td>{{ trans('list.date') }}</td>
                         <td>{{ journal.date.formatLocalized(monthAndDayFormat) }}</td>
@@ -66,6 +66,13 @@
                         </tr>
                     {% endif %}
                 </table>
+            </div>
+            <div class="box-footer">
+                <div class="pull-right">
+                    <a class="btn btn-default" href="{{route('transactions.edit',journal.id)}}">{{ 'edit'|_ }}</a>
+                    <a href="{{route('transactions.delete',journal.id)}}" class="btn btn-danger">{{ 'delete'|_ }}</a>
+                </div>
+            </div>
         </div>
         <!-- events, if present -->
         {% if journal.piggyBankEvents|length > 0 %}
@@ -84,25 +91,17 @@
     {% for t in journal.transactions %}
         <div class="box">
             <div class="box-header with-border">
-                {% if t.account.accounttype.type == 'Asset account' %}
-                    <i class="fa fa-money fa-fw"></i>
-                {% endif %}
-                {% if t.account.accounttype.type == 'Default account' %}
-                    <i class="fa fa-money fa-fw"></i>
-                {% endif %}
-                {% if t.account.accounttype.type == 'Expense account' %}
-                    <i class="fa fa-shopping-cart fa-fw"></i>
-                {% endif %}
-                {% if t.account.accounttype.type == 'Beneficiary account' %}
-                    <i class="fa fa-shopping-cart fa-fw"></i>
-                {% endif %}
-
-                {% if t.account.accounttype.type == 'Revenue account' %}
-                    <i class="fa fa-download fa-fw"></i>
-                {% endif %}
-                <a href="{{route('accounts.show',t.account.id)}}">{{ t.account.name }}</a> <small>({{ t.account.accounttype.type|_ }})</small>
+                <h3 class="box-title">{{ t.account.name }}</h3>
             </div>
-                <table class="table table-striped table-bordered">
+                <table class="table table-hover sortable">
+                    <tr>
+                        <td>{{ 'account'|_ }}</td>
+                        <td><a href="{{route('accounts.show',t.account.id)}}">{{ t.account.name }}</a></td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'account_type'|_ }}</td>
+                        <td>{{ t.account.accounttype.type|_ }}</td>
+                    </tr>
                     <tr>
                         <td>{{ 'amount'|_ }}</td>
                         <td>{{ t|formatTransaction }}</td>
@@ -120,14 +119,6 @@
                 </table>
         </div>
     {% endfor %}
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-lg-6 col-md-6 col-sm-12">
-        <div class="btn-group">
-        <a class="btn btn-default" href="{{route('transactions.edit',journal.id)}}"><i class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a> <a href="{{route('transactions.delete',journal.id)}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> {{ 'delete'|_ }}</a>
-        </div>
     </div>
 </div>
 

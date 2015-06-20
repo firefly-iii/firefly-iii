@@ -72,6 +72,7 @@
                     <!-- RELATE THIS TRANSFER TO A PIGGY BANK -->
                     {{ ExpandedForm.select('piggy_bank_id',piggies) }}
                 </div>
+
             </div>
 
             <!-- panel for options -->
@@ -82,19 +83,15 @@
                 <div class="box-body">
                     {{ ExpandedForm.optionsList('create','transaction') }}
                 </div>
+                <div class="box-footer">
+                    <button type="submit" id="transaction-btn" class="btn btn-success pull-right">
+                        {{ trans('form.store_new_'~what) }}
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <p>
-                <button type="submit" id="transaction-btn" class="btn btn-lg btn-success">
-                    <i class="fa fa-plus-circle"></i> {{ trans('form.store_new_'~what) }}
-                </button>
-            </p>
-        </div>
-    </div>
-</form>
+    {{ Form.close|raw }}
 
 {% endblock %}
 {% block scripts %}
