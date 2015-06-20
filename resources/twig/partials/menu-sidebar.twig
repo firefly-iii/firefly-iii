@@ -52,12 +52,15 @@
         </a>
     </li>
 
+    <!-- reports -->
     <li class="{{ activeRoutePartial('reports') }}">
         <a href="{{ route('reports.index') }}">
             <i class="fa fa-line-chart fa-fw"></i>
             <span>{{ 'reports'|_ }}</span>
         </a>
     </li>
+
+    <!-- transactions -->
     <li class="{{ activeRoutePartial('transactions') }} treeview">
         <a href="#">
             <i class="fa fa-repeat fa-fw"></i>
@@ -82,6 +85,7 @@
         </ul>
 
     </li>
+    <!-- money management -->
     <li class="{{ activeRoutePartial('bills') }} {{ activeRoutePartial('piggy-banks') }} treeview">
             <a href="#">
                 <i class="fa fa-euro fa-fw"></i>
@@ -98,22 +102,42 @@
                     <i class="fa fa-calendar-o fa-fw"></i> {{ 'bills'|_ }}</a>
             </li>
         </ul>
-    </li>
-    <li class="hidden-sm hidden-md hidden-lg">
-        <a class="{{ activeRouteStrict('profile') }}" href="{{ route('profile') }}"><i class="fa fa-user fa-fw"></i> {{ Auth.user.email }}</a>
+
     </li>
 
-    <li class="hidden-sm hidden-md hidden-lg">
-        <a class="{{ activeRouteStrict('preferences') }}" href="{{ route('preferences') }}"><i class="fa fa-gear fa-fw"></i> {{ 'preferences'|_ }}</a>
+    <!-- options and preferences -->
+    <li class="{{ activeRoutePartial('profile') }} {{ activeRoutePartial('preferences') }} {{ activeRoutePartial('currency') }} treeview">
+        <a href="#">
+            <i class="fa fa-gears fa-fw"></i>
+            <span>{{ 'options'|_ }}</span>
+            <i class="fa fa-angle-left pull-right"></i>
+        </a>
+
+        <ul class="treeview-menu">
+            <li class="{{ activeRoutePartial('profile') }}">
+                <a class="{{ activeRouteStrict('profile') }}" href="{{ route('profile') }}"><i class="fa fa-user fa-fw"></i> Profile</a>
+            </li>
+            <li class="{{ activeRoutePartial('preferences') }}">
+                <a class="{{ activeRouteStrict('preferences') }}" href="{{ route('preferences') }}"><i class="fa fa-gear fa-fw"></i> {{ 'preferences'|_ }}</a>
+            </li>
+            <li class="{{ activeRoutePartial('currency') }}">
+                <a class="{{ activeRoutePartial('currency') }}" href="{{ route('currency.index') }}"><i class="fa fa-usd fa-fw"></i> {{ 'currencies'|_ }}</a>
+            </li>
+        </ul>
+
+
     </li>
-    <li class="hidden-sm hidden-md hidden-lg">
-        <a class="{{ activeRoutePartial('currency') }}" href="{{ route('currency.index') }}"><i class="fa fa-usd fa-fw"></i> {{ 'currency'|_ }}</a>
-    </li>
-    <li class="hidden-sm hidden-md hidden-lg">
-        <a class="{{ activeRoutePartial('reminders') }}" href="{{ route('reminders.index') }}"><i class="fa fa-clock-o fa-fw"></i> {{ 'reminders'|_ }}</a>
-    </li>
-    <li class="hidden-sm hidden-md hidden-lg">
-        <a href="{{ route('logout') }}"><i class="fa fa-sign-out fa-fw"></i> {{ 'logout'|_ }}</a>
+
+
+    <!-- other options -->
+
+
+
+    <li>
+        <a href="{{ route('logout') }}">
+            <i class="fa fa-sign-out fa-fw"></i>
+            <span>{{ 'logout'|_ }}</span>
+        </a>
     </li>
 
     <!-- reminders, again-->
