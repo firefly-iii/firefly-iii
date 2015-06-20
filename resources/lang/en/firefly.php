@@ -101,6 +101,7 @@ return [
     'accountExtraHelp_asset'        => '',
     'accountExtraHelp_expense'      => '',
     'accountExtraHelp_revenue'      => '',
+    'account_type'                  => 'Account type',
 
     // categories:
     'new_category'                  => 'New category',
