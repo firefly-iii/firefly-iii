@@ -110,6 +110,7 @@ class Tag extends Model
             $journal->tag_count = $count;
             $journal->save();
         }
+
         return parent::save($options);
     }
 
@@ -131,6 +132,10 @@ class Tag extends Model
      */
     public function getDescriptionAttribute($value)
     {
+        if (is_null($value)) {
+            return $value;
+        }
+
         return Crypt::decrypt($value);
     }
 
