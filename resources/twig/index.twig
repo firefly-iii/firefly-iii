@@ -72,12 +72,12 @@
                                 {% if account.difference < 0 %}
                                     <!-- green (100-pct), then red (pct) -->
                                     <div class="progress">
-                                        <div class="progress-bar progress-bar-success progress-bar-striped" style="width: {{ 100 - account.percentage }}%">
+                                        <div class="progress-bar progress-bar-success" style="width: {{ 100 - account.percentage }}%">
                                             {% if account.percentage <= 50 %}
                                                 {{account.difference|formatAmountPlain}}
                                             {% endif %}
                                         </div>
-                                        <div class="progress-bar progress-bar-danger progress-bar-striped" style="width: {{ account.percentage }}%">
+                                        <div class="progress-bar progress-bar-danger" style="width: {{ account.percentage }}%">
                                             {% if account.percentage > 50 %}
                                                 {{account.difference|formatAmountPlain}}
                                             {% endif %}
@@ -86,13 +86,13 @@
                                     {% else %}
                                     <!-- green (pct), then blue (100-pct) -->
                                     <div class="progress">
-                                        <div class="progress-bar progress-bar-success progress-bar-striped" style="width: {{account.percentage}}%">
+                                        <div class="progress-bar progress-bar-success" style="width: {{account.percentage}}%">
                                             {% if account.percentage <= 50 %}
                                                 {{account.difference|formatAmountPlain}}
                                                 {{account.difference|formatAmountPlain}}
                                             {% endif %}
                                         </div>
-                                        <div class="progress-bar progress-bar-info progress-bar-striped" style="width: {{100 - account.percentage}}%">
+                                        <div class="progress-bar progress-bar-info" style="width: {{100 - account.percentage}}%">
                                             {% if account.percentage > 50 %}
                                                 {{account.difference|formatAmountPlain}}
                                             {% endif %}
@@ -177,7 +177,7 @@
         {% for data in transactions %}
         <div class="box">
             <div class="box-header with-border">
-                <h3 class="box-title">{{data[1].name}} ({{ (data[1]|balance)|formatAmount }})</h3>
+                <h3 class="box-title">{{data[1].name}}</h3>
 
                 <!-- ACTIONS MENU -->
                 <div class="box-tools pull-right">
@@ -195,7 +195,7 @@
 
 
             </div>
-            <div class="box-body">
+            <div class="box-body no-padding">
                 {% include 'list/journals-tiny.twig' with {'transactions': data[0],'account': data[1]} %}
             </div>
             <div class="box-footer clearfix">

@@ -218,9 +218,7 @@ class TagRepositoryTest extends TestCase
 
         $journal1->tags()->save($tag);
 
-        echo "\nMark 1 start.\n";
         $result = $this->object->connect($journal2, $tag);
-        echo "\nMark 2 end.\n";
 
         $this->assertTrue($result);
 

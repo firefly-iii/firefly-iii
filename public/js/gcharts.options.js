@@ -1,4 +1,4 @@
-/* exported defaultLineChartOptions, defaultBarChartOptions, defaultComboChartOptions, defaultColumnChartOptions, defaultStackedColumnChartOptions, defaultPieChartOptions  */
+/* exported defaultLineChartOptions, defaultAreaChartOptions, defaultBarChartOptions, defaultComboChartOptions, defaultColumnChartOptions, defaultStackedColumnChartOptions, defaultPieChartOptions  */
 
 var defaultLineChartOptions = {
     curveType: 'function',
@@ -15,6 +15,43 @@ var defaultLineChartOptions = {
     },
     height: 400,
     colors: ["#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043", "#9e9d24", "#5c6bc0", "#f06292", "#00796b", "#c2185b"],
+    hAxis: {
+        textStyle: {
+            color: '#838383',
+        },
+        baselineColor: '#aaaaaa',
+        gridlines: {
+            color: 'transparent'
+        }
+    },
+    fontName: 'Roboto',
+    fontSize: 11,
+    vAxis: {
+        textStyle: {
+            color: '#838383',
+        },
+        baselineColor: '#aaaaaa',
+        format: '\u20AC #'
+    }
+
+
+};
+
+var defaultAreaChartOptions = {
+    curveType: 'function',
+    legend: {
+        position: 'none'
+    },
+    interpolateNulls: true,
+    lineWidth: 1,
+    chartArea: {
+        left: 50,
+        top: 10,
+        width: '85%',
+        height: '80%'
+    },
+    height: 400,
+    colors: ["#357ca5", "#008d4c", "#db8b0b", "#ca195a", "#555299", "#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043", "#9e9d24", "#5c6bc0", "#f06292", "#00796b", "#c2185b"],
     hAxis: {
         textStyle: {
             color: '#838383',
@@ -119,7 +156,7 @@ var defaultColumnChartOptions = {
         baselineColor: '#aaaaaa'
 
     },
-    colors: ["#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043", "#9e9d24", "#5c6bc0", "#f06292", "#00796b", "#c2185b"],
+    colors: ["#357ca5", "#008d4c", "#db8b0b", "#ca195a", "#555299", "#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043", "#9e9d24", "#5c6bc0", "#f06292", "#00796b", "#c2185b"],
     vAxis: {
         textStyle: {
             color: '#838383',
@@ -146,7 +183,7 @@ var defaultStackedColumnChartOptions = {
     fontName: 'Roboto',
     fontSize: 11,
     isStacked: true,
-    colors: ["#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043", "#9e9d24", "#5c6bc0", "#f06292", "#00796b", "#c2185b"],
+    colors: ["#357ca5", "#008d4c", "#db8b0b", "#ca195a", "#555299", "#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043", "#9e9d24", "#5c6bc0", "#f06292", "#00796b", "#c2185b"],
     hAxis: {
         textStyle: {
             color: '#838383',
@@ -176,6 +213,6 @@ var defaultPieChartOptions = {
     legend: {
         position: 'none'
     },
-    colors: ["#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043", "#9e9d24", "#5c6bc0", "#f06292", "#00796b", "#c2185b"]
+    colors: ["#357ca5", "#008d4c", "#db8b0b", "#ca195a", "#555299", "#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043", "#9e9d24", "#5c6bc0", "#f06292", "#00796b", "#c2185b"],
 };
 

@@ -87,35 +87,11 @@
 
 </div>
 
+    <p>
+        <a href="{{route('tags.create')}}" title="New tag" class="btn btn-info"><i class="fa fa-fw fa-plus"></i> Create new tag</a>
+    </p>
 
-                <p>
-                    <a href="{{route('tags.create')}}" title="New tag" class="btn btn-info"><i class="fa fa-fw fa-plus"></i> Create new tag</a>
-                </p>
-                <p style="line-height: 200%;">
-                    {% if tags|length == 0 %}
-                        <em>No tags</em>
-                    {% else %}
-                        {% for tag in tags %}
 
-                            <span style="display: inline;"><a style="font-size:100%;font-weight:normal;" class="label label-success" href="{{route('tags.show',tag.id)}}">
-                                {% if tag.tagMode == 'nothing' %}
-                                    <i class="fa fa-fw fa-tag"></i>
-                                {% endif %}
-                                {% if tag.tagMode == 'balancingAct' %}
-                                        <i class="fa fa-fw fa-refresh"></i>
-                                {% endif %}
-                                {% if tag.tagMode == 'advancePayment' %}
-                                    <i class="fa fa-fw fa-sort-numeric-desc"></i>
-                                {% endif %}
-                                {{tag.tag}}</a>
-                            </span>
-                        {% endfor %}
-                    {% endif %}
-                </p>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}
 {% block scripts %}
 <script type="text/javascript" src="js/tags.js"></script>

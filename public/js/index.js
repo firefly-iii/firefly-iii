@@ -4,7 +4,7 @@ google.setOnLoadCallback(drawChart);
 
 function drawChart() {
     "use strict";
-    googleLineChart('chart/account/frontpage', 'accounts-chart');
+    googleAreaChart('chart/account/frontpage', 'accounts-chart');
     googlePieChart('chart/bill/frontpage', 'bills-chart');
     googleStackedColumnChart('chart/budget/frontpage', 'budgets-chart');
     googleColumnChart('chart/category/frontpage', 'categories-chart');
