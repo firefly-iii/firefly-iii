@@ -9,8 +9,8 @@
     {% if tag.latitude and tag.longitude and tag.zoomLevel %}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="box">
+                    <div class="box-header with-border">
                         <i class="fa fa-fw {{subTitleIcon}} fa-fw"></i> {{ tag.tag }}
                         {% if tag.date %}
                             on {{tag.date.format('jS F Y')}}
@@ -29,7 +29,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="panel-body">
+                    <div class="box-body">
                         {% if tag.description %}
                             <p class="text-info">
                                 {{tag.description}}
@@ -48,8 +48,8 @@
     <!-- if no such thing, show another block maybe? -->
 <div class="row">
     <div class="col-lg-612 col-md-12 col-sm-12 col-xs-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="box">
+            <div class="box-header with-border">
                 <i class="fa fa-repeat fa-fw"></i> {{ 'transactions'|_ }}
                 <!-- here is the edit menu when there is no meta-data -->
                 {% if not (tag.latitude and tag.longitude and tag.zoomLevel) %}

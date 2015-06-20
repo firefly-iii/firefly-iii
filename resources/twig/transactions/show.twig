@@ -7,8 +7,8 @@
 {% block content %}
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="box">
+            <div class="box-header with-border">
                 <i class="fa fa-info-circle fa-fw"></i>
                 Metadata
             </div>
@@ -69,11 +69,11 @@
         </div>
         <!-- events, if present -->
         {% if journal.piggyBankEvents|length > 0 %}
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="box">
+                <div class="box-header with-border">
                     {{ 'piggyBanks'|_ }}
                 </div>
-                <div class="panel-body">
+                <div class="box-body">
                     {% include 'list/piggy-bank-events' with {'events': journal.piggyBankEvents, 'showPiggyBank':true} %}
                 </div>
             </div>
@@ -82,8 +82,8 @@
     <div class="col-lg-6 col-md-6 col-sm-12">
 
     {% for t in journal.transactions %}
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="box">
+            <div class="box-header with-border">
                 {% if t.account.accounttype.type == 'Asset account' %}
                     <i class="fa fa-money fa-fw"></i>
                 {% endif %}

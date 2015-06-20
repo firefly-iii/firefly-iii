@@ -7,8 +7,8 @@
 {% block content %}
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="box">
+            <div class="box-header with-border">
                 <a href="{{route('reminders.show',reminder.id)}}">
                 {% if reminder.notnow %}
                     Dismissed reminder
@@ -18,7 +18,7 @@
                 for piggy bank "{{reminder.remindersable.name}}"
                 </a>
             </div>
-            <div class="panel-body">
+            <div class="box-body">
                 <p>
                     Active between {{reminder.startdate.format('jS F Y')}}
                     and {{reminder.enddate.format('jS F Y')}}.

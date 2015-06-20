@@ -10,11 +10,11 @@
 
 <div class="row">
     <div class="col-lg-6 col-md-12 col-sm-6">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
+        <div class="box box-primary">
+            <div class="box-header with-border">
                 <i class="fa fa-exclamation-circle"></i> {{ 'mandatoryFields'|_ }}
             </div>
-            <div class="panel-body">
+            <div class="box-body">
                 {{ ExpandedForm.text('name') }}
                 {{ ExpandedForm.tags('match') }}
                 {{ ExpandedForm.amount('amount_min') }}
@@ -26,11 +26,11 @@
 
     </div>
     <div class="col-lg-6 col-md-12 col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="box">
+            <div class="box-header with-border">
                 <i class="fa fa-smile-o"></i> {{ 'optionalFields'|_ }}
             </div>
-            <div class="panel-body">
+            <div class="box-body">
                 {{ ExpandedForm.integer('skip',0) }}
                 {{ ExpandedForm.checkbox('automatch',1,true) }}
                 {{ ExpandedForm.checkbox('active',1,true) }}
@@ -38,11 +38,11 @@
         </div>
 
         <!-- panel for options -->
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="box">
+            <div class="box-header with-border">
                 <i class="fa fa-bolt"></i> {{ 'options'|_ }}
             </div>
-            <div class="panel-body">
+            <div class="box-body">
             {{ ExpandedForm.optionsList('create','bill') }}
         </div>
     </div>

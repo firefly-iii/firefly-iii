@@ -9,11 +9,11 @@
 
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-6">
-        <div class="panel panel-default">
-          <div class="panel-heading">
+        <div class="box">
+          <div class="box-header with-border">
                 <i class="fa fa-credit-card fa-fw"></i> Home screen accounts
             </div>
-            <div class="panel-body">
+            <div class="box-body">
                 <p class="text-info">Which accounts should be displayed on the home page?</p>
                 {% for account in accounts %}
                     <div class="form-group">
@@ -32,11 +32,11 @@
                 {% endfor %}
             </div>
         </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="box">
+            <div class="box-header with-border">
                 <i class="fa fa-credit-card fa-fw"></i> Budget settings
             </div>
-            <div class="panel-body">
+            <div class="box-body">
                 <p class="text-info">
                     What's the maximum amount of money a budget envelope may contain?
                 </p>
@@ -46,11 +46,11 @@
 
     </div>
     <div class="col-lg-6 col-md-6 col-sm-6">
-        <div class="panel panel-default">
-          <div class="panel-heading">
+        <div class="box">
+          <div class="box-header with-border">
                 <i class="fa fa-clock-o fa-fw"></i> View range
             </div>
-            <div class="panel-body">
+            <div class="box-body">
                 <p class="text-info">Some charts are automatically grouped in periods. What period would you prefer?</p>
                 <div class="radio">
                     <label>
@@ -90,11 +90,11 @@
         </div>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="box">
+            <div class="box-header with-border">
                 <i class="fa fa-flag fa-fw"></i> Languages
             </div>
-            <div class="panel-body">
+            <div class="box-body">
                 {% for key, lang in Config.get('firefly.lang') %}
                     <div class="radio">
                         <label>

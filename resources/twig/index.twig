@@ -11,9 +11,12 @@
 <div class="row">
     <div class="col-lg-8 col-md-12 col-sm-12">
         <!-- ACCOUNTS -->
-        <div class="box">
+        <div class="box box-primary">
             <div class="box-header with-border">
-                <h3 class="box-title"><i class="fa fa-credit-card fa-fw"></i> <a href="#">{{ 'yourAccounts'|_ }}</a></h3>
+                <h3 class="box-title">{{ 'yourAccounts'|_ }}</h3>
+                <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                </div>
             </div>
             <div class="box-body">
                 <div id="accounts-chart"></div>
@@ -23,7 +26,10 @@
         <!-- BUDGETS -->
         <div class="box">
             <div class="box-header with-border">
-                <i class="fa fa-tasks fa-fw"></i> <a href="{{route('budgets.index')}}">{{ 'budgetsAndSpending'|_ }}</a>
+                <h3 class="box-title">{{ 'budgetsAndSpending'|_ }}</h3>
+                <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                </div>
             </div>
             <div class="box-body">
                 <div id="budgets-chart"></div>
@@ -32,7 +38,10 @@
         <!-- CATEGORIES -->
         <div class="box">
             <div class="box-header with-border">
-                <i class="fa fa-bar-chart fa-fw"></i> <a href="{{route('categories.index')}}">{{ 'categories'|_ }}</a>
+                <h3 class="box-title">{{ 'categories'|_ }}</h3>
+                <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                </div>
             </div>
             <div class="box-body">
                 <div id="categories-chart"></div>
@@ -42,8 +51,10 @@
         <!-- SAVINGS -->
         <div class="box">
             <div class="box-header with-border">
-                <i class="fa fa-line-chart"></i> {{ 'savings'|_ }}
-                <span class="pull-right">{{ savingsTotal|formatAmount }}</span>
+                <h3 class="box-title">{{ 'savings'|_ }}</h3>
+                <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                </div>
             </div>
             <div class="box-body">
                 {% if savings|length == 0 %}
@@ -96,12 +107,18 @@
                     {% endfor %}
                 {% endif %}
             </div>
+            <div class="box-footer clearfix">
+                <span class="pull-right">{{ 'sum'|_ }}: {{ savingsTotal|formatAmount }}</span>
+            </div>
         </div>
 
         <!-- PIGGY BANKS -->
         <div class="box">
             <div class="box-header with-border">
-                <i class="fa fa-sort-amount-asc fa-fw"></i> {{ 'piggyBanks'|_ }}
+                <h3 class="box-title">{{ 'piggyBanks'|_ }}</h3>
+                <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                </div>
             </div>
             <div class="box-body">
                 {% if piggyBankAccounts|length  == 0%}
@@ -142,10 +159,14 @@
     </div>
     <div class="col-lg-4 col-md-6 col-sm-12">
 
-        <!-- REMINDERS -->
+        <!-- BILLS -->
         <div class="box">
             <div class="box-header with-border">
-                <i class="fa fa-calendar-o"></i> <a href="{{route('bills.index')}}">{{ 'bills'|_ }}</a>
+                <h3 class="box-title">{{ 'bills'|_ }}</h3>
+                <!-- ACTIONS MENU -->
+                <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                </div>
             </div>
             <div class="box-body">
                 <div id="bills-chart"></div>
@@ -156,18 +177,14 @@
         {% for data in transactions %}
         <div class="box">
             <div class="box-header with-border">
-                <i class="fa fa-money fa-fw"></i>
-                <a href="{{route('accounts.show',data[1].id)}}">{{data[1].name}}</a> ({{ (data[1]|balance)|formatAmount }})
-
+                <h3 class="box-title">{{data[1].name}} ({{ (data[1]|balance)|formatAmount }})</h3>
 
                 <!-- ACTIONS MENU -->
-                <div class="pull-right">
+                <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                            {{ 'actions'|_ }}
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu pull-right" role="menu">
+                        <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                        <ul class="dropdown-menu" role="menu">
                             <li><a href="{{route('transactions.create','withdrawal')}}?account_id={{data[1].id}}"><i class="fa fa-long-arrow-left fa-fw"></i> {{ 'newWithdrawal'|_ }}</a></li>
                             <li><a href="{{route('transactions.create','deposit')}}?account_id={{data[1].id}}"><i class="fa fa-long-arrow-right fa-fw"></i> {{ 'newDeposit'|_ }}</a></li>
                             <li><a href="{{route('transactions.create','transfer')}}?account_from_id={{data[1].id}}"><i class="fa fa-fw fa-exchange"></i> {{ 'newTransfer'|_ }}</a></li>
@@ -178,7 +195,12 @@
 
 
             </div>
+            <div class="box-body">
                 {% include 'list/journals-tiny.twig' with {'transactions': data[0],'account': data[1]} %}
+            </div>
+            <div class="box-footer clearfix">
+                <a class="btn btn-sm btn-default btn-flat pull-right" href="{{route('accounts.show',data[1].id)}}">{{ (data[1]|balance)|formatAmountPlain }}</a>
+            </div>
         </div>
         {% endfor %}
     </div>

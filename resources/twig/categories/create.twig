@@ -9,11 +9,11 @@
 
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-12">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
+        <div class="box box-primary">
+            <div class="box-header with-border">
                 <i class="fa fa-exclamation"></i> {{ 'mandatoryFields'|_ }}
             </div>
-            <div class="panel-body">
+            <div class="box-body">
                 {{ ExpandedForm.text('name') }}
             </div>
         </div>
@@ -22,11 +22,11 @@
     <div class="col-lg-6 col-md-6 col-sm-12">
 
         <!-- panel for options -->
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="box">
+            <div class="box-header with-border">
                 <i class="fa fa-bolt"></i> {{ 'options'|_ }}
             </div>
-            <div class="panel-body">
+            <div class="box-body">
                 {{ ExpandedForm.optionsList('create','category')  }}
             </div>
         </div>

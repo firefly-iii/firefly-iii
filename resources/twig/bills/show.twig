@@ -8,8 +8,8 @@
 
 <div class="row">
     <div class="col-lg-6 col-sm-12 col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="box">
+            <div class="box-header with-border">
                 <i class="fa fa-rotate-right"></i> {{ bill.name }}
 
                 {% if bill.active %}
@@ -38,7 +38,7 @@
                 </div>
 
             </div>
-            <div class="panel-body">
+            <div class="box-body">
                 <table class="table">
                     <tr>
                         <td colspan="2">
@@ -65,11 +65,11 @@
         </div>
     </div>
     <div class="col-lg-6 col-sm-12 col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="box">
+            <div class="box-header with-border">
                 More
             </div>
-            <div class="panel-body">
+            <div class="box-body">
                 <p>
                     <a href="{{route('bills.rescan',bill.id)}}" class="btn btn-default">Rescan old transactions</a>
                 </p>
@@ -80,11 +80,11 @@
 
 <div class="row">
     <div class="col-lg-12 col-sm-12 col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="box">
+            <div class="box-header with-border">
                 Chart
             </div>
-            <div class="panel-body">
+            <div class="box-body">
                 <div id="bill-overview"></div>
             </div>
         </div>
@@ -93,11 +93,11 @@
 
 <div class="row">
     <div class="col-lg-12 col-sm-12 col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="box">
+            <div class="box-header with-border">
                 Connected transaction journals
             </div>
-            <div class="panel-body">
+            <div class="box-body">
                 {% include 'list/journals' %}
             </div>
         </div>

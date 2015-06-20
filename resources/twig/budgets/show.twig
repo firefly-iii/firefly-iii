@@ -7,8 +7,8 @@
 {% block content %}
 <div class="row">
     <div class="col-lg-9 col-md-9 col-sm-7">
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="box">
+            <div class="box-header with-border">
                 {{ 'overview'|_ }}
 
 
@@ -26,13 +26,13 @@
                     </div>
                 </div>
             </div>
-            <div class="panel-body">
+            <div class="box-body">
                 <div id="budgetOverview"></div>
             </div>
         </div>
 
-         <div class="panel panel-default">
-            <div class="panel-heading">
+         <div class="box">
+            <div class="box-header with-border">
                 {{ 'transactions'|_ }}
             </div>
              {% include 'list/journals.twig' %}
@@ -45,11 +45,11 @@
 
         {% for limit in limits %}
             {% for rep in limit.limitRepetitions %}
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="box">
+                    <div class="box-header with-border">
                         <a href="{{route('budgets.show',[budget.id,rep.id])}}">{{rep.startdate.formatLocalized(monthFormat)}}</a>
                     </div>
-                    <div class="panel-body">
+                    <div class="box-body">
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 {{ 'amount'|_ }}: {{ rep.amount|formatAmount  }}

@@ -7,18 +7,18 @@
 {% block content %}
 <div class="row">
     <div class="col-lg-8 col-md-8 col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="box">
+            <div class="box-header with-border">
                 <i class="fa fa-fw fa-clock-o"></i> {{ 'events'|_ }}
             </div>
-            <div class="panel-body">
+            <div class="box-body">
                 <div id="piggy-bank-history"></div>
             </div>
         </div>
     </div>
     <div class="col-lg-4 col-md-4 col-sm-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="box">
+                <div class="box-header with-border">
                     <i class="fa fa-fw fa-info-circle"></i> {{ 'details'|_ }}
 
                     <!-- ACTIONS MENU -->
@@ -100,8 +100,8 @@
                             </tr>
                     </table>
             </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="box">
+                <div class="box-header with-border">
                     <i class="fa fa-fw fa-clock-o"></i> {{ 'table'|_ }}
                 </div>
                 {% include 'list/piggy-bank-events' %}

@@ -7,11 +7,11 @@
 {% block content %}
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="box">
+            <div class="box-header with-border">
                 {{ subTitle }}
             </div>
-            <div class="panel-body">
+            <div class="box-body">
                 {% include 'list/journals.twig' with {'journals': list} %}
             </div>
         </div>
