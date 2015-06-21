@@ -86,7 +86,9 @@
                     </div>
                 </div>
             </div>
-            {% include 'list/journals.twig' with {'journals': tag.transactionjournals} %}
+            <div class="box-body table-responsive no-padding">
+                {% include 'list/journals.twig' with {'journals': tag.transactionjournals} %}
+            </div>
         </div>
     </div>
 </div>

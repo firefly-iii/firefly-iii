@@ -1,41 +1,7 @@
 {% extends "./layout/default.twig" %}
 
-{% block breadcrumbs %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
-{% endblock %}
-
-{% block content %}
-
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <h3>Active reminders</h3>
-    </div>
-</div>
-
-    {% include 'list/reminders.twig' with {'reminders': active} %}
-
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <h3>Dismissed reminders</h3>
-    </div>
-</div>
-
-    {% include 'list/reminders.twig' with {'reminders': dismissed} %}
-
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <h3>Expired reminders</h3>
-    </div>
-</div>
-
-    {% include 'list/reminders.twig' with {'reminders': expired} %}
-
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <h3>Inactive reminders</h3>
-    </div>
-</div>
-
-    {% include 'list/reminders.twig' with {'reminders': inactive} %}
+<p>
+    No longer used.
+</p>
 
 {% endblock %}

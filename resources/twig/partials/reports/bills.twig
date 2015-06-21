@@ -1,10 +1,10 @@
 <div class="box">
     <div class="box-header with-border">
-        <i class="fa fa-calendar-o fa-fw"></i>
-        {{ 'bills'|_ }}
+        <h3 class="box-title">{{ 'bills'|_ }}</h3>
     </div>
-    <table class="table table-bordered table-striped sortable">
-        <thead>
+    <div class="box-body table-responsive no-padding">
+        <table class="table table-hover sortable">
+            <thead>
             <tr>
                 <th>{{ trans('form.name') }}</th>
                 <th>{{ trans('form.amount_min') }}</th>
@@ -12,14 +12,14 @@
                 <th>{{ trans('form.amount') }}</th>
                 <th>{{ trans('form.under') }}</th>
             </tr>
-        </thead>
-        <tbody>
-        {% for line in bills.getBills %}
-            {% if not line.isActive %}
-                <tr class="text-muted">
-            {% else %}
-                <tr>
-            {% endif %}
+            </thead>
+            <tbody>
+            {% for line in bills.getBills %}
+                {% if not line.isActive %}
+                    <tr class="text-muted">
+                {% else %}
+                    <tr>
+                {% endif %}
                 <td data-value="{{ line.getBill.name }}">
                     <a href="{{ route('bills.show',line.getBill.id) }}">{{ line.getBill.name }}</a>
                     {% if not line.isActive %}
@@ -36,16 +36,17 @@
                 {% endif %}
                 {% if not line.isActive %}
                     <td data-value="-1">&nbsp;</td>
-                    {% endif %}
+                {% endif %}
                 <td data-value="{{ (line.getMax - line.getAmount) }}">
                     {% if line.isActive %}
-                    {{ (line.getMax - line.getAmount)|formatAmount }}
+                        {{ (line.getMax - line.getAmount)|formatAmount }}
                     {% endif %}
                 </td>
 
-            </tr>
+                </tr>
 
-        {% endfor %}
-        </tbody>
-    </table>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>

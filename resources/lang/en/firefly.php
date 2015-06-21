@@ -196,8 +196,8 @@ return [
     // reports:
     'reportForYear'                 => 'Yearly report for :year',
     'reportForYearShared'           => 'Yearly report for :year (including shared accounts)',
-    'reportForMonth'                => 'Montly report for :year',
-    'reportForMonthShared'          => 'Montly report for :year (including shared accounts)',
+    'reportForMonth'                => 'Montly report for :month',
+    'reportForMonthShared'          => 'Montly report for :month (including shared accounts)',
     'incomeVsExpenses'              => 'Income vs. expenses',
     'accountBalances'               => 'Account balances',
     'balanceStartOfYear'            => 'Balance at start of year',

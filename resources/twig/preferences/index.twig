@@ -11,7 +11,7 @@
     <div class="col-lg-6 col-md-6 col-sm-6">
         <div class="box">
           <div class="box-header with-border">
-                <i class="fa fa-credit-card fa-fw"></i> Home screen accounts
+                <h3 class="box-title">Home screen accounts</h3>
             </div>
             <div class="box-body">
                 <p class="text-info">Which accounts should be displayed on the home page?</p>
@@ -34,7 +34,7 @@
         </div>
         <div class="box">
             <div class="box-header with-border">
-                <i class="fa fa-credit-card fa-fw"></i> Budget settings
+                <h3 class="box-title">Budget settings</h3>
             </div>
             <div class="box-body">
                 <p class="text-info">
@@ -48,7 +48,7 @@
     <div class="col-lg-6 col-md-6 col-sm-6">
         <div class="box">
           <div class="box-header with-border">
-                <i class="fa fa-clock-o fa-fw"></i> View range
+                <h3 class="box-title">View range</h3>
             </div>
             <div class="box-body">
                 <p class="text-info">Some charts are automatically grouped in periods. What period would you prefer?</p>
@@ -92,9 +92,10 @@
     <div class="col-lg-6 col-md-6 col-sm-6">
         <div class="box">
             <div class="box-header with-border">
-                <i class="fa fa-flag fa-fw"></i> Languages
+                <h3 class="box-title">Languages</h3>
             </div>
             <div class="box-body">
+                <p class="text-info">Firefly III supports several languages. Which one do you prefer?</p>
                 {% for key, lang in Config.get('firefly.lang') %}
                     <div class="radio">
                         <label>

@@ -350,8 +350,8 @@ Route::group(
      * Profile Controller
      */
     Route::get('/profile', ['uses' => 'ProfileController@index', 'as' => 'profile']);
-    Route::get('/profile/change-password', ['uses' => 'ProfileController@changePassword', 'as' => 'change-password']);
-    Route::get('/profile/delete-account', ['uses' => 'ProfileController@deleteAccount', 'as' => 'delete-account']);
+    Route::get('/profile/change-password', ['uses' => 'ProfileController@changePassword', 'as' => 'profile.change-password']);
+    Route::get('/profile/delete-account', ['uses' => 'ProfileController@deleteAccount', 'as' => 'profile.delete-account']);
     Route::post('/profile/delete-account', ['uses' => 'ProfileController@postDeleteAccount', 'as' => 'delete-account-post']);
     Route::post('/profile/change-password', ['uses' => 'ProfileController@postChangePassword', 'as' => 'change-password-post']);
 
