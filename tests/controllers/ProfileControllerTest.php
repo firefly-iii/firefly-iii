@@ -103,8 +103,6 @@ class ProfileControllerTest extends TestCase
     public function testPostChangePasswordInvalidCurrent()
     {
         $user           = FactoryMuffin::create('FireflyIII\User');
-        $user->password = bcrypt('current');
-        $user->save();
         $this->be($user);
 
         $post = [
@@ -116,7 +114,7 @@ class ProfileControllerTest extends TestCase
 
         $this->call('POST', '/profile/change-password', $post);
 
-        $this->assertRedirectedToRoute('change-password');
+        $this->assertRedirectedToRoute('profile.change-password');
         $this->assertSessionHas('error', 'Invalid current password!');
         $this->assertResponseStatus(302);
 
@@ -144,7 +142,7 @@ class ProfileControllerTest extends TestCase
 
         $this->assertSessionHas('error', 'The idea is to change your password.');
         $this->assertResponseStatus(302);
-        $this->assertRedirectedToRoute('change-password');
+        $this->assertRedirectedToRoute('profile.change-password');
 
 
     }
@@ -188,7 +186,7 @@ class ProfileControllerTest extends TestCase
 
         $this->call('POST', '/profile/delete-account', $post);
 
-        $this->assertRedirectedToRoute('delete-account');
+        $this->assertRedirectedToRoute('profile.delete-account');
         $this->assertSessionHas('error', 'Invalid password!');
         $this->assertResponseStatus(302);
 
