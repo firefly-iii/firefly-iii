@@ -106,11 +106,12 @@
         <section class="content-header">
             {% include('partials/page-header.twig') %}
             {% block breadcrumbs %}{% endblock %}
+
         </section>
 
         <!-- Main content -->
         <section class="content">
-
+            {% include('partials/flashes.twig') %}
 
             <!-- actual content -->
             {% block content %}{% endblock %}

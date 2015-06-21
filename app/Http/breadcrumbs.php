@@ -171,6 +171,13 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
+    'currency.create', function (Generator $breadcrumbs) {
+    $breadcrumbs->parent('currency.index');
+    $breadcrumbs->push(trans('firefly.create_currency'), route('currency.create'));
+}
+);
+
+Breadcrumbs::register(
     'currency.edit', function (Generator $breadcrumbs, TransactionCurrency $currency) {
     $breadcrumbs->parent('currency.index');
     $breadcrumbs->push(trans('breadcrumbs.edit_currency', ['name' => e($currency->name)]), route('currency.edit', [$currency->id]));

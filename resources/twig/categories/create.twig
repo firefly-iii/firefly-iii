@@ -7,43 +7,37 @@
 {% block content %}
     {{ Form.open({'class' : 'form-horizontal','id' : 'store','url' : route('categories.store')}) }}
 
-<div class="row">
-    <div class="col-lg-6 col-md-6 col-sm-12">
-        <div class="box box-primary">
-            <div class="box-header with-border">
-                <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
-            </div>
-            <div class="box-body">
-                {{ ExpandedForm.text('name') }}
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-6 col-md-6 col-sm-12">
-
-        <!-- panel for options -->
-        <div class="box">
-            <div class="box-header with-border">
-                <h3 class="box-title">{{ 'options'|_ }}</h3>
-            </div>
-            <div class="box-body">
-                {{ ExpandedForm.optionsList('create','category')  }}
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.text('name') }}
+                </div>
             </div>
         </div>
 
-    </div>
-</div>
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <p>
-            <button type="submit" class="btn btn-lg btn-success">
-                <i class="fa fa-plus-circle"></i> Store new category
-            </button>
-        </p>
-    </div>
-</div>
+        <div class="col-lg-6 col-md-6 col-sm-12">
 
-</form>
+            <!-- panel for options -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'options'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.optionsList('create','category') }}
+                </div>
+            <div class="box-footer">
+                <button type="submit" class="btn pull-right btn-success">
+                    Store new category
+                </button>
+            </div>
+        </div>
+    </div>
+    </div>
 
+    {{ Form.close|raw }}
 {% endblock %}
 
