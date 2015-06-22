@@ -6,30 +6,30 @@
 
 {% block content %}
     {{ Form.open({'class' : 'form-horizontal','id' : 'destroy','url' : route('tags.destroy',tag.id)}) }}
-<div class="row">
-    <div class="col-lg-6 col-lg-offset-3 col-md-6 col-sm-12">
-        <div class="box box-danger">
-            <div class="box-header with-border">
-                <h3 class="box-title">Delete tag "{{ tag.tag }}"</h3>
-            </div>
-            <div class="box-body">
-                <p>
-                Are you sure that you want to delete tag "{{ tag.tag }}"?
-                </p>
-                {% if tag.transactionjournals|length > 0 %}
-                    <p class="text-info">
-                        Tag "{{ tag.tag }}" still has {{ tag.transactionjournals|length }} transaction(s) connected
-                        to it. These will <strong>not</strong> be removed but will lose their connection to this tag.
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3 col-md-6 col-sm-12">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Delete tag "{{ tag.tag }}"</h3>
+                </div>
+                <div class="box-body">
+                    <p>
+                        Are you sure that you want to delete tag "{{ tag.tag }}"?
                     </p>
-                {% endif %}
-            </div>
-            <div class="box-footer">
+                    {% if tag.transactionjournals|length > 0 %}
+                        <p class="text-info">
+                            Tag "{{ tag.tag }}" still has {{ tag.transactionjournals|length }} transaction(s) connected
+                            to it. These will <strong>not</strong> be removed but will lose their connection to this tag.
+                        </p>
+                    {% endif %}
+                </div>
+                <div class="box-footer">
                     <button type="submit" class="btn btn-danger pull-right">Delete permanently</button>
-                    <a href="{{ URL.previous() }}" class="btn-default btn">Cancel</a >
+                    <a href="{{ URL.previous() }}" class="btn-default btn">Cancel</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-</form>
+    {{ Form.close|raw }}
 {% endblock %}

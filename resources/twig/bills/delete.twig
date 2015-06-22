@@ -7,31 +7,33 @@
 {% block content %}
 
     {{ Form.open({'class' : 'form-horizontal','id' : 'destroy','url' : route('bills.destroy',bill.id)}) }}
-<div class="row">
-    <div class="col-lg-6 col-lg-offset-3 col-md-12 col-sm-12">
-        <div class="box box-danger">
-            <div class="box-header with-border">
-                <h3 class="box-title">{{ trans('form.delete_bill', {'name': bill.name}) }}</h3>
-            </div>
-            <div class="box-body">
-                <p class="text-danger">
-                    {{ trans('form.permDeleteWarning') }}
-                </p>
-                <p>
-                    {{ trans('form.bill_areYouSure', {'name': bill.name}) }}
-                </p>
-                <p>
-                    <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn btn-danger" />
-                    <a href="{{ URL.previous() }}" class="btn-default btn">{{ trans('form.cancel') }}</a >
-                </p>
-                <p class="small">
-                {% if bill.transactionjournals|length > 0 %}
-                    {{ Lang.choice('form.bill_keep_transactions', bill.transactionjournals|length,{count: bill.transactionjournals|length}) }}
-                {% endif %}
-                </p>
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3 col-md-12 col-sm-12">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ trans('form.delete_bill', {'name': bill.name}) }}</h3>
+                </div>
+                <div class="box-body">
+                    <p class="text-danger">
+                        {{ trans('form.permDeleteWarning') }}
+                    </p>
+
+                    <p>
+                        {{ trans('form.bill_areYouSure', {'name': bill.name}) }}
+                    </p>
+
+                    <p>
+                        {% if bill.transactionjournals|length > 0 %}
+                            {{ Lang.choice('form.bill_keep_transactions', bill.transactionjournals|length,{count: bill.transactionjournals|length}) }}
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="box-footer">
+                    <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn btn-danger pull-right"/>
+                    <a href="{{ URL.previous() }}" class="btn-default btn">{{ trans('form.cancel') }}</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
-</form>
+    {{ Form.close|raw }}
 {% endblock %}

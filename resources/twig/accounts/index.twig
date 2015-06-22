@@ -20,13 +20,11 @@
                 <h3 class="box-title">{{ subTitle}}</h3>
 
                 <!-- ACTIONS MENU -->
-                <div class="pull-right">
+                <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                            {{ 'actions'|_ }}
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu pull-right" role="menu">
+                        <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                        <ul class="dropdown-menu" role="menu">
                             <li><a href="{{route('accounts.create', what)}}"><i class="fa fa-plus fa-fw"></i> {{ ('make_new_' ~ what ~ '_account')|_ }}</a></li>
                         </ul>
                     </div>

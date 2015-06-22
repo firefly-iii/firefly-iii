@@ -7,122 +7,123 @@
 {% block content %}
     {{ Form.open({'class' : 'form-horizontal','id' : 'preferences'}) }}
 
-<div class="row">
-    <div class="col-lg-6 col-md-6 col-sm-6">
-        <div class="box">
-          <div class="box-header with-border">
-                <h3 class="box-title">Home screen accounts</h3>
-            </div>
-            <div class="box-body">
-                <p class="text-info">Which accounts should be displayed on the home page?</p>
-                {% for account in accounts %}
-                    <div class="form-group">
-                        <div class="col-sm-10">
-                            <div class="checkbox">
-                                <label>
-                                    {%  if account.id in frontPageAccounts.data or frontPageAccounts.data|length == 0 %}
-                                        <input type="checkbox" name="frontPageAccounts[]" value="{{ account.id }}" checked> {{ account.name }}
-                                    {% else %}
-                                    <input type="checkbox" name="frontPageAccounts[]" value="{{ account.id }}"> {{ account.name }}
-                                    {% endif %}
-                                </label>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Home screen accounts</h3>
+                </div>
+                <div class="box-body">
+                    <p class="text-info">Which accounts should be displayed on the home page?</p>
+                    {% for account in accounts %}
+                        <div class="form-group">
+                            <div class="col-sm-10">
+                                <div class="checkbox">
+                                    <label>
+                                        {% if account.id in frontPageAccounts.data or frontPageAccounts.data|length == 0 %}
+                                            <input type="checkbox" name="frontPageAccounts[]" value="{{ account.id }}" checked> {{ account.name }}
+                                        {% else %}
+                                            <input type="checkbox" name="frontPageAccounts[]" value="{{ account.id }}"> {{ account.name }}
+                                        {% endif %}
+                                    </label>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Budget settings</h3>
+                </div>
+                <div class="box-body">
+                    <p class="text-info">
+                        What's the maximum amount of money a budget envelope may contain?
+                    </p>
+                    {{ ExpandedForm.amount('budgetMaximum',budgetMaximum,{'label' : 'Budget maximum'}) }}
+                </div>
+            </div>
+
         </div>
-        <div class="box">
-            <div class="box-header with-border">
-                <h3 class="box-title">Budget settings</h3>
-            </div>
-            <div class="box-body">
-                <p class="text-info">
-                    What's the maximum amount of money a budget envelope may contain?
-                </p>
-                {{ ExpandedForm.amount('budgetMaximum',budgetMaximum,{'label' : 'Budget maximum'}) }}
-            </div>
-        </div>
-
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-6">
-        <div class="box">
-          <div class="box-header with-border">
-                <h3 class="box-title">View range</h3>
-            </div>
-            <div class="box-body">
-                <p class="text-info">Some charts are automatically grouped in periods. What period would you prefer?</p>
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="viewRange" value="1D" {% if viewRange == '1D' %} checked {% endif %}>
-                        One day
-                    </label>
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">View range</h3>
                 </div>
+                <div class="box-body">
+                    <p class="text-info">Some charts are automatically grouped in periods. What period would you prefer?</p>
 
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="viewRange" value="1W" {% if viewRange == '1W' %} checked {% endif %}>
-                        One week
-                    </label>
-                </div>
-
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="viewRange" value="1M" {% if viewRange == '1M' %} checked {% endif %}>
-                        One month
-                    </label>
-                </div>
-
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="viewRange" value="3M" {% if viewRange == '3M' %} checked {% endif %}>
-                        Three months
-                    </label>
-                </div>
-
-                <div class="radio">
-                    <label>
-                        <input type="radio" name="viewRange" value="6M" {% if viewRange == '6M' %} checked {% endif %}>
-                        Six months
-                    </label>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-6">
-        <div class="box">
-            <div class="box-header with-border">
-                <h3 class="box-title">Languages</h3>
-            </div>
-            <div class="box-body">
-                <p class="text-info">Firefly III supports several languages. Which one do you prefer?</p>
-                {% for key, lang in Config.get('firefly.lang') %}
                     <div class="radio">
                         <label>
-                            <input type="radio" name="language" value="{{ key }}"
-                                    {% if language == key %}
-                                    checked
-                                    {% endif %}
-                                    />
-                            {{ lang }}
+                            <input type="radio" name="viewRange" value="1D" {% if viewRange == '1D' %} checked {% endif %}>
+                            One day
                         </label>
                     </div>
-                {% endfor %}
 
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="viewRange" value="1W" {% if viewRange == '1W' %} checked {% endif %}>
+                            One week
+                        </label>
+                    </div>
+
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="viewRange" value="1M" {% if viewRange == '1M' %} checked {% endif %}>
+                            One month
+                        </label>
+                    </div>
+
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="viewRange" value="3M" {% if viewRange == '3M' %} checked {% endif %}>
+                            Three months
+                        </label>
+                    </div>
+
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="viewRange" value="6M" {% if viewRange == '6M' %} checked {% endif %}>
+                            Six months
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Languages</h3>
+                </div>
+                <div class="box-body">
+                    <p class="text-info">Firefly III supports several languages. Which one do you prefer?</p>
+                    {% for key, lang in Config.get('firefly.lang') %}
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="language" value="{{ key }}"
+                                        {% if language == key %}
+                                            checked
+                                        {% endif %}
+                                        />
+                                {{ lang }}
+                            </label>
+                        </div>
+                    {% endfor %}
+
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        <div class="form-group">
-            <div class="col-sm-12">
-                <button type="submit" class="btn btn-success btn-lg">Save settings</button>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <button type="submit" class="btn btn-success btn-lg">Save settings</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- form close -->
-</form>
+    <!-- form close -->
+    {{ Form.close|raw }}
 {% endblock %}
