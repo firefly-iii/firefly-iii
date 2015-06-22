@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'version' => '3.3.3',
     'index_periods'            => ['1D', '1W', '1M', '3M', '6M', '1Y', 'custom'],
     'budget_periods'           => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
     'piggy_bank_periods'       => [

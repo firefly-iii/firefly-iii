@@ -88,9 +88,10 @@ class CurrencyController extends Controller
         Session::put('currency.delete.url', URL::previous());
         Session::flash('gaEventCategory', 'currency');
         Session::flash('gaEventAction', 'delete');
+        $subTitle = trans('form.delete_currency', ['name' => $currency->name]);
 
 
-        return view('currency.delete', compact('currency'));
+        return view('currency.delete', compact('currency', 'subTitle'));
     }
 
     /**

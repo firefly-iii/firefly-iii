@@ -70,14 +70,14 @@ class ReportController extends Controller
     public function month($year = '2014', $month = '1', $shared = false)
     {
         $start            = new Carbon($year . '-' . $month . '-01');
-        $subTitle         = trans('firefly.reportForMonth', ['date' => $start->formatLocalized($this->monthFormat)]);
+        $subTitle         = trans('firefly.reportForMonth', ['month' => $start->formatLocalized($this->monthFormat)]);
         $subTitleIcon     = 'fa-calendar';
         $end              = clone $start;
         $incomeTopLength  = 8;
         $expenseTopLength = 8;
         if ($shared == 'shared') {
             $shared   = true;
-            $subTitle = trans('firefly.reportForMonthShared', ['date' => $start->formatLocalized($this->monthFormat)]);
+            $subTitle = trans('firefly.reportForMonthShared', ['month' => $start->formatLocalized($this->monthFormat)]);
         }
 
         $end->endOfMonth();

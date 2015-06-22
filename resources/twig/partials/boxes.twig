@@ -1,115 +1,51 @@
-<!-- /.row -->
+<!-- Info boxes -->
+<div class="row hidden-sm hidden-xs">
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-red">
+                <i class="fa fa-upload fa-fw"></i>
+            </span>
+            <div class="info-box-content">
+                <span class="info-box-text">{{ 'moneyOut'|_ }}</span>
+                <span class="info-box-number" id="box-out"></span>
+            </div><!-- /.info-box-content -->
+        </div><!-- /.info-box -->
+    </div><!-- /.col -->
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-green">
+                <i class="fa fa-download faw-fw"></i>
+            </span>
+            <div class="info-box-content">
+                <span class="info-box-text">{{ 'moneyIn'|_ }}</span>
+                <span class="info-box-number" id="box-in"></span>
+            </div><!-- /.info-box-content -->
+        </div><!-- /.info-box -->
+    </div><!-- /.col -->
 
-<div class="row row-eq-height">
-    <!-- Left -->
-    <div class="col-lg-8 col-md-6 hidden-sm hidden-xs">
-        <div class="row">
-            <div class="col-lg-6 col-md-6">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <i class="fa fa-upload fa-fw"></i> {{ 'moneyOut'|_ }} <a class="pull-right" href="{{route('transactions.index','withdrawal')}}"><span id="box-out"></span></a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                    <i class="fa fa-download faw-fw"></i> {{ 'moneyIn'|_ }} <a class="pull-right" href="{{route('transactions.index','deposit')}}"><span id="box-in"></span></a>
-                </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-6 col-md-6">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                    <i class="fa fa-calendar fa-fw"></i> {{ 'billsToPay'|_ }} <a class="pull-right" href="{{route('bills.index')}}"><span id="box-bills-unpaid"></span></a>
-                </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                    <i class="fa fa-line-chart fa-fw"></i> {{ 'billsPaid'|_ }} <a class="pull-right" href="{{route('bills.index')}}"><span id="box-bills-paid"></span></a>
-                </div>
-                </div>
-            </div>
-        </div>
+    <!-- fix for small devices only -->
+    <div class="clearfix visible-sm-block"></div>
 
-    </div>
-    <!-- Right -->
-    <div class="col-lg-4 col-md-6 hidden-sm hidden-xs">
-        <div class="row">
-            <div class="col-lg-12 col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-body" style="padding-top:5px;padding-bottom:5px;padding-left:5px;">
-
-                        <ul class="nav nav-pills">
-                            <li role="presentation" class="dropdown">
-                                <a class="dropdown-toggle" data-toggle="dropdown" href="#"
-                                   role="button" aria-expanded="false" style="padding-top:10px;padding-bottom:10px;padding-left:10px;">
-                                    <i class="fa fa-plus"></i> {{ 'createNew'|_ }} ... <span class="caret"></span>
-                                </a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ route('transactions.create','withdrawal') }}"><i class="fa fa-long-arrow-left fa-fw"></i> {{ 'create_new_withdrawal'|_ }}</a></li>
-                                    <li><a href="{{ route('transactions.create','deposit') }}"><i class="fa fa-long-arrow-right fa-fw"></i> {{ 'create_new_deposit'|_ }}</a></li>
-                                    <li><a href="{{ route('transactions.create','transfer') }}"><i class="fa fa-exchange fa-fw"></i> {{ 'create_new_transfer'|_ }}</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="{{ route('accounts.create','asset') }}"><i class="fa fa-money fa-fw"></i> {{ 'create_new_asset'|_ }}</a></li>
-                                    <li><a href="{{ route('accounts.create','expense') }}"><i class="fa fa-shopping-cart fa-fw"></i> {{ 'create_new_expense'|_ }}</a></li>
-                                    <li><a href="{{ route('accounts.create','revenue') }}"><i class="fa fa-download fa-fw"></i> {{ 'create_new_revenue'|_ }}</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="{{ route('piggy-banks.create') }}"><i class="fa fa-sort-amount-asc fa-fw"></i> {{ 'create_new_piggy_bank'|_ }}</a></li>
-                                    <li><a href="{{ route('bills.create') }}"><i class="fa fa-calendar-o fa-fw"></i> {{ 'create_new_bill'|_ }}</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-12 col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-body">&nbsp;
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div class="row hidden-xs hidden-sm">
-
-
-</div>
-
-
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 visible-xs visible-sm hidden-md hidden-lg">
-        <div class="panel panel-default">
-            <div class="panel-body" style="padding-top:5px;padding-bottom:5px;padding-left:5px;">
-
-                <ul class="nav nav-pills">
-                    <li role="presentation" class="dropdown" style="width:100%;">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#"
-                           role="button" aria-expanded="false" style="padding-top:10px;padding-bottom:10px;padding-left:10px;">
-                            <i class="fa fa-plus"></i> {{ 'createNew'|_ }} ... <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="{{ route('transactions.create','withdrawal') }}"><i class="fa fa-long-arrow-left fa-fw"></i> {{ 'create_new_withdrawal'|_ }}</a></li>
-                            <li><a href="{{ route('transactions.create','deposit') }}"><i class="fa fa-long-arrow-right fa-fw"></i> {{ 'create_new_deposit'|_ }}</a></li>
-                            <li><a href="{{ route('transactions.create','transfer') }}"><i class="fa fa-exchange fa-fw"></i> {{ 'create_new_transfer'|_ }}</a></li>
-                            <li class="divider"></li>
-                            <li><a href="{{ route('accounts.create','asset') }}"><i class="fa fa-money fa-fw"></i> {{ 'create_new_asset'|_ }}</a></li>
-                            <li><a href="{{ route('accounts.create','expense') }}"><i class="fa fa-shopping-cart fa-fw"></i> {{ 'create_new_expense'|_ }}</a></li>
-                            <li><a href="{{ route('accounts.create','revenue') }}"><i class="fa fa-download fa-fw"></i> {{ 'create_new_revenue'|_ }}</a></li>
-                            <li class="divider"></li>
-                            <li><a href="{{ route('piggy-banks.create') }}"><i class="fa fa-sort-amount-asc fa-fw"></i> {{ 'create_new_piggy_bank'|_ }}</a></li>
-                            <li><a href="{{ route('bills.create') }}"><i class="fa fa-calendar-o fa-fw"></i> {{ 'create_new_bill'|_ }}</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-blue">
+                <i class="fa fa-calendar fa-fw"></i>
+            </span>
+            <div class="info-box-content">
+                <span class="info-box-text">{{ 'billsToPay'|_ }}</span>
+                <span class="info-box-number" id="box-bills-unpaid"></span>
+            </div><!-- /.info-box-content -->
+        </div><!-- /.info-box -->
+    </div><!-- /.col -->
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-aqua">
+                <i class="fa fa-line-chart fa-fw"></i>
+            </span>
+            <div class="info-box-content">
+                <span class="info-box-text">{{ 'billsPaid'|_ }}</span>
+                <span class="info-box-number" id="box-bills-paid"></span>
+            </div><!-- /.info-box-content -->
+        </div><!-- /.info-box -->
+    </div><!-- /.col -->
+</div><!-- /.row -->

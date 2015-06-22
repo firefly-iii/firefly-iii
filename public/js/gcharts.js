@@ -1,4 +1,4 @@
-/* globals currencyCode, language, defaultPieChartOptions, defaultLineChartOptions, defaultColumnChartOptions, defaultBarChartOptions, defaultStackedColumnChartOptions, defaultComboChartOptions */
+/* globals currencyCode,defaultAreaChartOptions , language, defaultPieChartOptions, defaultLineChartOptions, defaultColumnChartOptions, defaultBarChartOptions, defaultStackedColumnChartOptions, defaultComboChartOptions */
 /* exported googleLineChart, googleBarChart, googleColumnChart, googleStackedColumnChart, googleComboChart, googlePieChart */
 var google = google || {};
 google.load('visualization', '1.1', {'packages': ['corechart', 'bar', 'line'],'language': language  });
@@ -33,6 +33,11 @@ function googleChart(chartType, URL, container, options) {
                 chart = new google.visualization.LineChart(document.getElementById(container));
                 options = options || defaultLineChartOptions;
             }
+            if(chartType === 'area') {
+                chart = new google.visualization.AreaChart(document.getElementById(container));
+                options = options || defaultAreaChartOptions;
+            }
+
             if (chartType === 'column') {
                 chart = new google.visualization.ColumnChart(document.getElementById(container));
                 options = options || defaultColumnChartOptions;
@@ -72,6 +77,11 @@ function googleChart(chartType, URL, container, options) {
 function googleLineChart(URL, container, options) {
     "use strict";
     return googleChart('line', URL, container, options);
+}
+
+function googleAreaChart(URL, container, options) {
+    "use strict";
+    return googleChart('area', URL, container, options);
 }
 
 

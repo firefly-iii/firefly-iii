@@ -1,113 +1,118 @@
 {% extends "./layout/default.twig" %}
-{% block content %}
+
+{% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, bill) }}
-<div class="row">
-    <div class="col-lg-6 col-sm-12 col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-rotate-right"></i> {{ bill.name }}
+{% endblock %}
 
-                {% if bill.active %}
-                    <i class="fa fa-check fa-fw" title="Active"></i>
-                {% else %}
-                    <i class="fa fa-times fa-fw" title="Inactive"></i>
-                {% endif %}
+{% block content %}
 
-                {% if bill.automatch %}
-                    <i class="fa fa-check fa-fw" title="Automatically matched by Firefly"></i>
-                {% else %}
-                    <i class="fa fa-times fa-fw" title="Not automatically matched by Firefly"></i>
-                {% endif %}
+    <div class="row">
+        <div class="col-lg-6 col-sm-12 col-md-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ bill.name }}</h3>
 
-                <div class="pull-right">
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                            {{ 'actions'|_ }}
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu pull-right" role="menu">
-                            <li><a href="{{route('bills.edit',bill.id)}}"><i class="fa fa-fw fa-pencil"></i> edit</a></li>
-                            <li><a href="{{route('bills.delete',bill.id)}}"><i class="fa fa-fw fa-trash-o"></i> delete</a></li>
-                        </ul>
+                    {% if bill.active %}
+                        <i class="fa fa-check fa-fw" title="Active"></i>
+                    {% else %}
+                        <i class="fa fa-times fa-fw" title="Inactive"></i>
+                    {% endif %}
+
+                    {% if bill.automatch %}
+                        <i class="fa fa-check fa-fw" title="Automatically matched by Firefly"></i>
+                    {% else %}
+                        <i class="fa fa-times fa-fw" title="Not automatically matched by Firefly"></i>
+                    {% endif %}
+
+                    <!-- ACTIONS MENU -->
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        <div class="btn-group">
+                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{ route('bills.edit',bill.id) }}"><i class="fa fa-fw fa-pencil"></i> edit</a></li>
+                                <li><a href="{{ route('bills.delete',bill.id) }}"><i class="fa fa-fw fa-trash-o"></i> delete</a></li>
+                            </ul>
+                        </div>
                     </div>
+
                 </div>
-
-            </div>
-            <div class="panel-body">
-                <table class="table">
-                    <tr>
-                        <td colspan="2">
-                        Matching on
-                            {% for word in bill.match|split(',') %}
-                                <span class="label label-info">{{ word }}</span>
-                            {% endfor %}
-                            between {{ bill.amount_min|formatAmount }} and {{ bill.amount_max|formatAmount }}.
-                            Repeats {{ bill.repeat_freq }}.</td>
-
-                    </tr>
-                    <tr>
-                        <td>Next expected match</td>
-                        <td>
-                            {% if bill.nextExpectedMatch %}
-                                {{bill.nextExpectedMatch.formatLocalized(monthAndDayFormat)}}
-                            {% else %}
-                                <em>{{ 'unknown'|_ }}</em>
-                            {% endif %}
+                <div class="box-body">
+                    <table class="table">
+                        <tr>
+                            <td colspan="2">
+                                Matching on
+                                {% for word in bill.match|split(',') %}
+                                    <span class="label label-info">{{ word }}</span>
+                                {% endfor %}
+                                between {{ bill.amount_min|formatAmount }} and {{ bill.amount_max|formatAmount }}.
+                                Repeats {{ bill.repeat_freq }}.
                             </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-6 col-sm-12 col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                More
-            </div>
-            <div class="panel-body">
-                <p>
-                    <a href="{{route('bills.rescan',bill.id)}}" class="btn btn-default">Rescan old transactions</a>
-                </p>
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="row">
-    <div class="col-lg-12 col-sm-12 col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                Chart
+                        </tr>
+                        <tr>
+                            <td>Next expected match</td>
+                            <td>
+                                {% if bill.nextExpectedMatch %}
+                                    {{ bill.nextExpectedMatch.formatLocalized(monthAndDayFormat) }}
+                                {% else %}
+                                    <em>{{ 'unknown'|_ }}</em>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
-            <div class="panel-body">
-                <div id="bill-overview"></div>
+        </div>
+        <div class="col-lg-6 col-sm-12 col-md-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">More</h3>
+                </div>
+                <div class="box-body">
+                    <p>
+                        <a href="{{ route('bills.rescan',bill.id) }}" class="btn btn-default">Rescan old transactions</a>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="col-lg-12 col-sm-12 col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                Connected transaction journals
-            </div>
-            <div class="panel-body">
-                {% include 'list/journals' %}
+    <div class="row">
+        <div class="col-lg-12 col-sm-12 col-md-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Chart</h3>
+                </div>
+                <div class="box-body">
+                    <div id="bill-overview"></div>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <div class="row">
+        <div class="col-lg-12 col-sm-12 col-md-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Connected transaction journals</h3>
+                </div>
+                <div class="box-body table-responsive no-padding">
+                    {% include 'list/journals' %}
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
 
 {% block scripts %}
-<script type="text/javascript">
-    var billID = {{ bill.id }};
-</script>
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript" src="js/gcharts.options.js"></script>
-<script type="text/javascript" src="js/gcharts.js"></script>
+    <script type="text/javascript">
+        var billID = {{ bill.id }};
+    </script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="js/gcharts.options.js"></script>
+    <script type="text/javascript" src="js/gcharts.js"></script>
 
-<script type="text/javascript" src="js/bills.js"></script>
+    <script type="text/javascript" src="js/bills.js"></script>
 {% endblock %}

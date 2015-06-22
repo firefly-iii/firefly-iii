@@ -1,35 +1,37 @@
 {% extends "./layout/default.twig" %}
-{% block content %}
-{{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, category) }}
-{{ Form.open({'class' : 'form-horizontal','id' : 'destroy','url' : route('categories.destroy',category.id)}) }}
-<div class="row">
-    <div class="col-lg-6 col-lg-offset-3 col-md-12 col-sm-12">
-        <div class="panel panel-red">
-            <div class="panel-heading">
-                <i class="fa fa-exclamation-circle"></i>
-                {{ trans('form.delete_category', {'name': category.name}) }}
-            </div>
-            <div class="panel-body">
-                <p class="text-danger">
-                    {{ trans('form.permDeleteWarning') }}
-                </p>
-                <p>
-                    {{ trans('form.category_areYouSure', {'name': category.name}) }}
-                </p>
 
-                <p>
-                    <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn btn-danger" />
-                    <a href="{{ URL.previous() }}" class="btn-default btn">{{ trans('form.cancel') }}</a >
-                </p>
-                <p class="small">
-                {% if category.transactionjournals|length > 0 %}
-                    {{ Lang.choice('form.category_keep_transactions', category.transactionjournals|length, {count: category.transactionjournals|length}) }}
-                {% endif %}
-                </p>
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, category) }}
+{% endblock %}
+
+{% block content %}
+    {{ Form.open({'class' : 'form-horizontal','id' : 'destroy','url' : route('categories.destroy',category.id)}) }}
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3 col-md-12 col-sm-12">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ trans('form.delete_category', {'name': category.name}) }}</h3>
+                </div>
+                <div class="box-body">
+                    <p class="text-danger">
+                        {{ trans('form.permDeleteWarning') }}
+                    </p>
+                    <p>
+                        {{ trans('form.category_areYouSure', {'name': category.name}) }}
+                    </p>
+                    <p>
+                        {% if category.transactionjournals|length > 0 %}
+                            {{ Lang.choice('form.category_keep_transactions', category.transactionjournals|length, {count: category.transactionjournals|length}) }}
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="box-footer">
+                    <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn btn-danger pull-right"/>
+                    <a href="{{ URL.previous() }}" class="btn-default btn">{{ trans('form.cancel') }}</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-</form>
+    {{ Form.close|raw }}
 {% endblock %}

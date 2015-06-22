@@ -1,13 +1,19 @@
 {% extends "./layout/default.twig" %}
-{% block content %}
+
+{% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, what) }}
+{% endblock %}
+
+{% block content %}
 <div class="row">
     <div class="col-lg-12 col-sm-12 col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa {{ subTitleIcon }}"></i> {{ subTitle }}
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">{{ subTitle }}</h3>
             </div>
-            {% include 'list.journals' %}
+            <div class="box-body table-responsive no-padding">
+                {% include 'list.journals' %}
+            </div>
         </div>
     </div>
 </div>

@@ -1,71 +1,71 @@
 {% extends "./layout/default.twig" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute().getName(), account) }}
+{% endblock %}
+
 {% block content %}
-{{  Breadcrumbs.renderIfExists(Route.getCurrentRoute().getName(), account)  }}
-{{ Form.model(account, {'class' : 'form-horizontal','id' : 'update','url' : route('accounts.update',account.id) } ) }}
+    {{ Form.model(account, {'class' : 'form-horizontal','id' : 'update','url' : route('accounts.update',account.id) } ) }}
 
-<input type="hidden" name="id" value="{{account.id}}" />
+    <input type="hidden" name="id" value="{{ account.id }}"/>
 
-<div class="row">
-    <div class="col-lg-6 col-md-6 col-sm-12">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <i class="fa {{ subTitleIcon }}"></i> {{ 'mandatoryFields'|_ }}
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.text('name') }}
+                </div>
             </div>
-            <div class="panel-body">
-                {{  ExpandedForm.text('name')  }}
+
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {% if account.accounttype.type == 'Default account' or account.accounttype.type == 'Asset account' %}
+                        {{ ExpandedForm.balance('openingBalance',null, {'currency' : openingBalance ? openingBalance.transactionCurrency : null}) }}
+                        {{ ExpandedForm.date('openingBalanceDate') }}
+                        {{ ExpandedForm.select('accountRole',Config.get('firefly.accountRoles')) }}
+                        {{ ExpandedForm.balance('virtualBalance',null) }}
+
+                    {% endif %}
+                    {{ ExpandedForm.checkbox('active','1') }}
+                </div>
+            </div>
+
+            <!-- panel for credit card options -->
+            {% if Session.get('preFilled').accountRole == 'ccAsset' %}
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Credit card options</h3>
+                    </div>
+                    <div class="box-body">
+                        {{ ExpandedForm.select('ccType',Config.get('firefly.ccTypes')) }}
+                        {{ ExpandedForm.date('ccMonthlyPaymentDate',null,{'helpText' : 'Select any year and any month, it will be ignored anway. Only the day of the month is relevant.'}) }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- panel for options  -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'options'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.optionsList('update','account') }}
+                </div>
+                <div class="box-footer">
+                    <button type="submit" class="btn pull-right btn-success">
+                        {{ ('update_' ~ what ~ '_account')|_ }}
+                    </button>
+                </div>
             </div>
         </div>
-
     </div>
-    <div class="col-lg-6 col-md-6 col-sm-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-smile-o"></i> {{ 'optionalFields'|_ }}
-            </div>
-            <div class="panel-body">
-                {% if account.accounttype.type == 'Default account' or account.accounttype.type == 'Asset account' %}
-                    {{  ExpandedForm.balance('openingBalance',null, {'currency' : openingBalance ? openingBalance.transactionCurrency : null})  }}
-                    {{  ExpandedForm.date('openingBalanceDate')  }}
-                    {{  ExpandedForm.select('accountRole',Config.get('firefly.accountRoles'))  }}
-                    {{  ExpandedForm.balance('virtualBalance',null)  }}
-
-                {% endif %}
-                {{  ExpandedForm.checkbox('active','1')  }}
-            </div>
-        </div>
-
-        <!-- panel for credit card options -->
-        {% if Session.get('preFilled').accountRole == 'ccAsset' %}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-credit-card"></i> Credit card options
-            </div>
-            <div class="panel-body">
-                {{  ExpandedForm.select('ccType',Config.get('firefly.ccTypes'))  }}
-                {{  ExpandedForm.date('ccMonthlyPaymentDate',null,{'helpText' : 'Select any year and any month, it will be ignored anway. Only the day of the month is relevant.'})  }}
-            </div>
-        </div>
-        {% endif %}
-
-        <!-- panel for options  -->
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-bolt"></i> {{ 'options'|_ }}
-            </div>
-            <div class="panel-body">
-                {{  ExpandedForm.optionsList('update','account')  }}
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <p>
-            <button type="submit" class="btn btn-lg btn-success">
-                {{ ('update_' ~ what ~ '_account')|_ }}
-            </button>
-        </p>
-    </div>
-</div>
-</form>
+    {{ Form.close|raw }}
 {% endblock %}

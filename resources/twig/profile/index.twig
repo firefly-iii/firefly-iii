@@ -1,16 +1,20 @@
 {% extends "./layout/default.twig" %}
-{% block content %}
+
+{% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
+{% endblock %}
+
+{% block content %}
 <div class="row">
-    <div class="col-lg-6 col-md-12 col-sm-12">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                Options
+    <div class="col-lg-6 col-lg-offset-3 col-md-6 col-sm-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Options</h3>
             </div>
-            <div class="panel-body">
+            <div class="box-body">
                 <ul>
-                    <li><a href="{{route('change-password')}}">Change your password</a></li>
-                    <li><a class="text-danger" href="{{route('delete-account')}}">Delete account</a></li>
+                    <li><a href="{{route('profile.change-password')}}">Change your password</a></li>
+                    <li><a class="text-danger" href="{{route('profile.delete-account')}}">Delete account</a></li>
                 </ul>
             </div>
         </div>

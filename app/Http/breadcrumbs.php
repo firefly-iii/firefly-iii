@@ -171,6 +171,13 @@ Breadcrumbs::register(
 );
 
 Breadcrumbs::register(
+    'currency.create', function (Generator $breadcrumbs) {
+    $breadcrumbs->parent('currency.index');
+    $breadcrumbs->push(trans('firefly.create_currency'), route('currency.create'));
+}
+);
+
+Breadcrumbs::register(
     'currency.edit', function (Generator $breadcrumbs, TransactionCurrency $currency) {
     $breadcrumbs->parent('currency.index');
     $breadcrumbs->push(trans('breadcrumbs.edit_currency', ['name' => e($currency->name)]), route('currency.edit', [$currency->id]));
@@ -321,11 +328,13 @@ Breadcrumbs::register(
 Breadcrumbs::register(
     'reports.month', function (Generator $breadcrumbs, Carbon $date, $shared) {
     $breadcrumbs->parent('reports.year', $date, $shared);
+    $language = Preferences::get('language', 'en')->data;
+    $format   = Config::get('firefly.month.' . $language);
 
     if ($shared) {
-        $title = trans('breadcrumbs.monthly_report_shared', ['date' => $date->year]);
+        $title = trans('breadcrumbs.monthly_report_shared', ['date' => $date->formatLocalized($format)]);
     } else {
-        $title = trans('breadcrumbs.monthly_report', ['date' => $date->year]);
+        $title = trans('breadcrumbs.monthly_report', ['date' => $date->formatLocalized($format)]);
     }
 
     $breadcrumbs->push($title, route('reports.month', [$date->year, $date->month]));

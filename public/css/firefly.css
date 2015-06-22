@@ -8,12 +8,6 @@
 }
 #map-canvas {
     height: 100%;
-    margin: 0px;
-    padding: 0px
+    margin: 0;
+    padding: 0;
 }
-.medium {
-    font-size: 16px;
-}
-
-a.panel-link {color:#fff;text-decoration: none;}
-a.panel-link:hover {color:#fff;text-decoration: none;}

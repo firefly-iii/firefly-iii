@@ -1,45 +1,45 @@
 {% extends "./layout/default.twig" %}
-{% block content %}
+
+{% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, currency) }}
+{% endblock %}
+
+{% block content %}
     {{ Form.model(currency, {'class' : 'form-horizontal','id' : 'update','url' : route('currency.update',currency.id)}) }}
 
-<input type="hidden" name="id" value="{{currency.id}}" />
-<div class="row">
-    <div class="col-lg-6 col-md-6 col-sm-12">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <i class="fa {{ subTitleIcon }}"></i> {{ 'mandatoryFields'|_ }}
-            </div>
-            <div class="panel-body">
-                {{ ExpandedForm.text('name',null,{'maxlength' : 48}) }}
-                {{ ExpandedForm.text('symbol',null,{'maxlength' : 8}) }}
-                {{ ExpandedForm.text('code',null,{'maxlength' : 3}) }}
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-6 col-md-6 col-sm-12">
-
-        <!-- panel for options -->
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-bolt"></i> {{ 'options'|_ }}
-            </div>
-            <div class="panel-body">
-                {{ ExpandedForm.optionsList('update','currency') }}
+    <input type="hidden" name="id" value="{{ currency.id }}"/>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.text('name',null,{'maxlength' : 48}) }}
+                    {{ ExpandedForm.text('symbol',null,{'maxlength' : 8}) }}
+                    {{ ExpandedForm.text('code',null,{'maxlength' : 3}) }}
+                </div>
             </div>
         </div>
 
+        <div class="col-lg-6 col-md-6 col-sm-12">
+
+            <!-- panel for options -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'options'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.optionsList('update','currency') }}
+                </div>
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-success pull-right">
+                        Update currency
+                    </button>
+                </div>
+            </div>
+
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <p>
-            <button type="submit" class="btn btn-lg btn-success">
-                <i class="fa fa-plus-circle"></i> Update currency
-            </button>
-        </p>
-    </div>
-</div>
-</form>
+    {{ Form.close|raw }}
 {% endblock %}

@@ -53,7 +53,7 @@ function updateLayout() {
     $('#subTitle').text(title[what]);
     $('.breadcrumb .active').text(breadcrumbs[what]);
     $('.breadcrumb li:nth-child(2)').html('<a href="' + middleCrumbUrl[what] + '">' + middleCrumbName[what] + '</a>');
-    $('#transaction-btn').html('<i class="fa fa-plus-circle"></i> ' + button[what]);
+    $('#transaction-btn').text(button[what]);
 }
 
 function updateForm() {

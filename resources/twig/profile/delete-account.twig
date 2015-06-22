@@ -1,49 +1,55 @@
 {% extends "./layout/default.twig" %}
-{% block content %}
+
+{% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
-<div class="row">
-    <div class="col-lg-6 col-md-12 col-sm-12">
-        <div class="panel panel-red">
-            <div class="panel-heading">
-                Delete your account
-            </div>
-            <div class="panel-body">
+{% endblock %}
 
-                <p class="text-danger">
-                    Deleting your account will also delete any accounts, transactions, <em>anything</em>
-                    you might have saved into Firefly III. It'll be GONE.
-                </p>
-                <p class="text-danger">
-                    Enter your password to continue.
-                </p>
+{% block content %}
+    {{ Form.open({'class' : 'form-horizontal','id' : 'change-password'}) }}
 
-                {% if errors|length > 0 %}
-                    <ul>
+    <div class="row">
+        <div class="col-lg-6 col-md-12 col-sm-12">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Delete your account</h3>
+                </div>
+                <div class="box-body">
+
+                    <p class="text-danger">
+                        Deleting your account will also delete any accounts, transactions, <em>anything</em>
+                        you might have saved into Firefly III. It'll be GONE.
+                    </p>
+
+                    <p class="text-danger">
+                        Enter your password to continue.
+                    </p>
+
+                    {% if errors|length > 0 %}
                         <ul>
-                            {% for error in errors.all %}
-                                <li class="text-danger">{{ error }}</li>
-                            {% endfor %}
+                            <ul>
+                                {% for error in errors.all %}
+                                    <li class="text-danger">{{ error }}</li>
+                                {% endfor %}
+                            </ul>
                         </ul>
-                    </ul>
 
-                {% endif %}
+                    {% endif %}
 
-                {{ Form.open({'class' : 'form-horizontal','id' : 'change-password'}) }}
                     <div class="form-group">
                         <label for="password" class="col-sm-4 control-label">Password</label>
+
                         <div class="col-sm-8">
                             <input type="password" class="form-control" id="password" placeholder="Password" name="password">
                         </div>
                     </div>
-
-                    <div class="form-group">
-                        <div class="col-sm-offset-4 col-sm-10">
-                            <button type="submit" onclick="confirm('Are you sure? You cannot undo this.')" class="btn btn-danger">DELETE your account</button>
-                        </div>
-                    </div>
-                </form>
+                </div>
+                <div class="box-footer">
+                    <button type="submit" onclick="confirm('Are you sure? You cannot undo this.')" class="btn btn-danger pull-right">DELETE your account
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+    {{ Form.close|raw }}
+
 {% endblock %}

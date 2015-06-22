@@ -97,6 +97,7 @@ return [
     'asset_accounts'                => 'Betaalrekeningen',
     'expense_accounts'              => 'Crediteuren',
     'revenue_accounts'              => 'Debiteuren',
+    'account_type'                  => 'Account type',
 
     // some extra help:
     'accountExtraHelp_asset'        => '',
