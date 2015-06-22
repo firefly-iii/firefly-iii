@@ -1,6 +1,11 @@
 {% extends "./layout/default.twig" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, what)  }}
+{% endblock %}
+
 {% block content %}
-{{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, what)  }}
+
 <div class="row">
     <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
         <p>
@@ -10,18 +15,16 @@
 </div>
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa {{ subTitleIcon }}"></i> {{ subTitle}}
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">{{ subTitle}}</h3>
 
                 <!-- ACTIONS MENU -->
-                <div class="pull-right">
+                <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                            {{ 'actions'|_ }}
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu pull-right" role="menu">
+                        <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                        <ul class="dropdown-menu" role="menu">
                             <li><a href="{{route('accounts.create', what)}}"><i class="fa fa-plus fa-fw"></i> {{ ('make_new_' ~ what ~ '_account')|_ }}</a></li>
                         </ul>
                     </div>
@@ -29,7 +32,9 @@
 
 
             </div>
-            {% include 'list/accounts.twig' %}
+            <div class="box-body table-responsive no-padding">
+                {% include 'list/accounts.twig' %}
+            </div>
         </div>
     </div>
 </div>

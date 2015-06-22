@@ -56,7 +56,7 @@ class TagController extends Controller
      */
     public function create()
     {
-        $subTitle     = 'New tag';
+        $subTitle     = trans('firefly.new_tag');
         $subTitleIcon = 'fa-tag';
 
         $preFilled = [
@@ -120,7 +120,7 @@ class TagController extends Controller
      */
     public function edit(Tag $tag, TagRepositoryInterface $repository)
     {
-        $subTitle     = 'Edit tag "' . e($tag->tag) . '"';
+        $subTitle     = trans('firefly.edit_tag', ['tag' => $tag->tag]);
         $subTitleIcon = 'fa-tag';
 
         /*
@@ -178,9 +178,24 @@ class TagController extends Controller
         $title          = 'Tags';
         $mainTitleIcon  = 'fa-tags';
         $helpHidden     = $helpHiddenPref->data;
-        $tags           = Auth::user()->tags()->get();
 
-        return view('tags.index', compact('title', 'mainTitleIcon', 'helpHidden', 'tags'));
+        // group years.
+        $types = ['nothing','balancingAct', 'advancePayment'];
+
+        // loop each types and get the tags, group them by year.
+        $collection = [];
+        foreach ($types as $type) {
+            $tags = Auth::user()->tags()->where('tagMode', $type)->orderBy('date','ASC')->get();
+            /** @var Tag $tag */
+            foreach ($tags as $tag) {
+                $year                               = is_null($tag->date) ? trans('firefly.no_year') : $tag->date->year;
+                $month                              = is_null($tag->date) ? trans('firefly.no_month') : $tag->date->formatLocalized($this->monthFormat);
+                $collection[$type][$year][$month][] = $tag;
+            }
+        }
+
+
+        return view('tags.index', compact('title', 'mainTitleIcon','types', 'helpHidden', 'collection'));
     }
 
     /**
@@ -193,7 +208,7 @@ class TagController extends Controller
         $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
 
-        return view('tags.show', compact('tag', 'subTitle', 'subTitleIcon'));
+        return view('tags.show', compact('tag', 'subTitle','types', 'subTitleIcon'));
     }
 
     /**

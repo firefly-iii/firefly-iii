@@ -43,7 +43,7 @@ class CategoryController extends Controller
         Session::forget('categories.create.fromStore');
         Session::flash('gaEventCategory', 'categories');
         Session::flash('gaEventAction', 'create');
-        $subTitle = 'Create a new category';
+        $subTitle = trans('firefly.create_new_category');
 
         return view('categories.create', compact('subTitle'));
     }
@@ -90,7 +90,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        $subTitle = 'Edit category "' . e($category->name) . '"';
+        $subTitle = trans('firefly.edit_category', ['name' => $category->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (Session::get('categories.edit.fromUpdate') !== true) {
@@ -132,7 +132,10 @@ class CategoryController extends Controller
         $start    = Session::get('start', Carbon::now()->startOfMonth());
         $end      = Session::get('end', Carbon::now()->startOfMonth());
         $list     = $repository->getWithoutCategory($start, $end);
-        $subTitle = 'Transactions without a category between ' . $start->format('jS F Y') . ' and ' . $end->format('jS F Y');
+        $subTitle = trans(
+            'firefly.without_category_between',
+            ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
+        );
 
         return view('categories.noCategory', compact('list', 'subTitle'));
     }

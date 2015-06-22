@@ -17,6 +17,21 @@ return [
     'to'                            => 'To',
     'showEverything'                => 'Show everything',
     'never'                         => 'Never',
+    'search_results_for'            => 'Search results for ":query"',
+
+    // create new stuff:
+    'create_new_withdrawal'         => 'Create new withdrawal',
+    'create_new_deposit'            => 'Create new deposit',
+    'create_new_transfer'           => 'Create new transfer',
+    'create_new_asset'              => 'Create new asset account',
+    'create_new_expense'            => 'Create new expense account',
+    'create_new_revenue'            => 'Create new revenue account',
+    'create_new_piggy_bank'         => 'Create new piggy bank',
+    'create_new_bill'               => 'Create new bill',
+
+    // currencies:
+    'create_currency'               => 'Create a new currency',
+    'edit_currency'                 => 'Edit currency ":name"',
 
     // new user:
     'submit'                        => 'Submit',
@@ -42,10 +57,12 @@ return [
     'without_budget_between'        => 'Transactions without a budget between :start and :end',
     'budget_in_month'               => ':name in :month',
     'delete_budget'                 => 'Delete budget ":name"',
+    'edit_budget'                   => 'Edit budget ":name"',
     'update_amount'                 => 'Update amount',
 
     // bills:
     'delete_bill'                   => 'Delete bill ":name"',
+    'edit_bill'                     => 'Edit bill ":name"',
 
     // accounts:
     'details_for_asset'             => 'Details for asset account ":name"',
@@ -84,12 +101,15 @@ return [
     'accountExtraHelp_asset'        => '',
     'accountExtraHelp_expense'      => '',
     'accountExtraHelp_revenue'      => '',
+    'account_type'                  => 'Account type',
 
     // categories:
     'new_category'                  => 'New category',
+    'create_new_category'           => 'Create a new category',
     'without_category'              => 'Without a category',
     'update_category'               => 'Wijzig categorie',
     'categories'                    => 'Categories',
+    'edit_category'                 => 'Edit category ":name"',
     'no_category'                   => '(no category)',
     'category'                      => 'Category',
     'delete_category'               => 'Delete category ":name"',
@@ -136,9 +156,6 @@ return [
     'dashboard'                     => 'Dashboard',
     'currencies'                    => 'Currencies',
     'accounts'                      => 'Accounts',
-    'assetAccounts'                 => 'Asset accounts',
-    'expenseAccounts'               => 'Expense accounts',
-    'revenueAccounts'               => 'Revenue accounts',
     'Asset account'                 => 'Asset account',
     'Default account'               => 'Asset account',
     'Expense account'               => 'Expense account',
@@ -179,15 +196,15 @@ return [
     // reports:
     'reportForYear'                 => 'Yearly report for :year',
     'reportForYearShared'           => 'Yearly report for :year (including shared accounts)',
-    'reportForMonth'                => 'Montly report for :year',
-    'reportForMonthShared'          => 'Montly report for :year (including shared accounts)',
+    'reportForMonth'                => 'Montly report for :month',
+    'reportForMonthShared'          => 'Montly report for :month (including shared accounts)',
     'incomeVsExpenses'              => 'Income vs. expenses',
     'accountBalances'               => 'Account balances',
     'balanceStartOfYear'            => 'Balance at start of year',
     'balanceEndOfYear'              => 'Balance at end of year',
-    'balanceStartOfMonth'           => 'Balance at end of month',
+    'balanceStartOfMonth'           => 'Balance at start of month',
     'balanceEndOfMonth'             => 'Balance at end of month',
-    'balanceStart'                  => 'Balance at end of period',
+    'balanceStart'                  => 'Balance at start of period',
     'balanceEnd'                    => 'Balance at end of period',
     'reportsOwnAccounts'            => 'Reports for your own accounts',
     'reportsOwnAccountsAndShared'   => 'Reports for your own accounts and shared accounts',
@@ -235,6 +252,7 @@ return [
     // piggy banks:
     'piggy_bank'                    => 'Piggy bank',
     'new_piggy_bank'                => 'Create new piggy bank',
+    'create_new_piggybank'          => 'Create new piggy bank',
     'account_status'                => 'Account status',
     'left_for_piggy_banks'          => 'Left for piggy banks',
     'sum_of_piggy_banks'            => 'Sum of piggy banks',
@@ -267,6 +285,17 @@ return [
 
     // tags
     'delete_tag'                    => 'Delete tag ":name"',
+    'new_tag'                       => 'Make new tag',
+    'edit_tag'                      => 'Edit tag ":tag"',
+    'no_year'                       => 'No year set',
+    'no_month'                      => 'No month set',
+    'tag_title_nothing'             => 'Default tags',
+    'tag_title_balancingAct'        => 'Balancing act tags',
+    'tag_title_advancePayment'      => 'Advance payment tags',
+
+    // reminders
+    'reminder_for_piggy'            => 'Reminder for piggy bank ":name"',
+    'dismissed_reminder_for_piggy'  => 'Dismissed reminder for piggy bank ":name"',
 
 
 ];

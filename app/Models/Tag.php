@@ -97,6 +97,33 @@ class Tag extends Model
     }
 
     /**
+     * Save the model to the database.
+     *
+     * @param  array $options
+     *
+     * @return bool
+     */
+    public function save(array $options = [])
+    {
+        foreach ($this->transactionjournals()->get() as $journal) {
+            $count              = $journal->tags()->count();
+            $journal->tag_count = $count;
+            $journal->save();
+        }
+
+        return parent::save($options);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function transactionjournals()
+    {
+        return $this->belongsToMany('FireflyIII\Models\TransactionJournal');
+    }
+
+    /**
      * @codeCoverageIgnore
      *
      * @param $value
@@ -105,6 +132,10 @@ class Tag extends Model
      */
     public function getDescriptionAttribute($value)
     {
+        if (is_null($value)) {
+            return $value;
+        }
+
         return Crypt::decrypt($value);
     }
 
@@ -138,15 +169,6 @@ class Tag extends Model
     public function setTagAttribute($value)
     {
         $this->attributes['tag'] = Crypt::encrypt($value);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function transactionjournals()
-    {
-        return $this->belongsToMany('FireflyIII\Models\TransactionJournal');
     }
 
     /**

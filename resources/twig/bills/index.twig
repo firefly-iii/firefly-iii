@@ -1,32 +1,36 @@
 {% extends "./layout/default.twig" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
+{% endblock %}
+
 {% block content %}
-    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, piggyBank) }}
     <div class="row">
         <div class="col-lg-12 col-sm-12 col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa {{ mainTitleIcon }}"></i> {{ title }}
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ title }}</h3>
 
-                <!-- ACTIONS MENU -->
-                <div class="pull-right">
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                            {{ 'actions'|_ }}
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu pull-right" role="menu">
-                            <li><a href="{{route('bills.create')}}"><i class="fa fa-plus fa-fw"></i> New bill</a></li>
-                        </ul>
+                    <!-- ACTIONS MENU -->
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        <div class="btn-group">
+                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{ route('bills.create') }}"><i class="fa fa-plus fa-fw"></i> New bill</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
+                <div class="box-body table-responsive no-padding">
                 {% include 'list/bills.twig' %}
+                </div>
             </div>
         </div>
     </div>
 {% endblock %}
 {% block styles %}
-    <link rel="stylesheet" href="css/bootstrap-sortable.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="css/bootstrap-sortable.css" type="text/css" media="all"/>
 {% endblock %}
 
 {% block scripts %}

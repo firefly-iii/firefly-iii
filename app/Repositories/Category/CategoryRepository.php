@@ -48,7 +48,7 @@ class CategoryRepository extends ComponentRepository implements CategoryReposito
     {
         /** @var Collection $set */
         $set = Auth::user()->categories()->orderBy('name', 'ASC')->get();
-        $set->sortBy(
+        $set = $set->sortBy(
             function (Category $category) {
                 return $category->name;
             }

@@ -1,92 +1,51 @@
-<!-- /.row -->
-<div class="row">
-    <div class="hidden-xs col-lg-3 col-md-6">
-        <div class="panel panel-red">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <i class="fa fa-upload fa-3x"></i>
-                    </div>
-                    <div class="col-xs-9 text-right">
-                        <div id="box-out" class="large"></div>
-                        <div>{{ 'moneyOut'|_ }}</div>
-                    </div>
-                </div>
-            </div>
-            <a href="{{route('transactions.index','withdrawal')}}">
-                <div class="panel-footer">
-                    <span class="pull-left">{{ 'viewDetails'|_ }}</span>
-                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                    <div class="clearfix"></div>
-                </div>
-            </a>
-        </div>
-    </div>
-    <div class="hidden-xs col-lg-3 col-md-6">
-        <div class="panel panel-green">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <i class="fa fa-download fa-3x"></i>
-                    </div>
-                    <div class="col-xs-9 text-right">
-                        <div id="box-in" class="large"></div>
-                        <div>{{ 'moneyIn'|_ }}</div>
-                    </div>
-                </div>
-            </div>
-            <a href="{{route('transactions.index','deposit')}}">
-                <div class="panel-footer">
-                    <span class="pull-left">{{ 'viewDetails'|_ }}</span>
-                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                    <div class="clearfix"></div>
-                </div>
-            </a>
-        </div>
-    </div>
-    <div class="hidden-xs col-lg-3 col-md-6">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <i class="fa fa-calendar fa-3x"></i>
-                    </div>
-                    <div class="col-xs-9 text-right">
-                        <div id="box-bills-unpaid" class="large"></div>
-                        <div>{{ 'billsToPay'|_ }}</div>
-                    </div>
-                </div>
-            </div>
-            <a href="{{route('bills.index')}}">
-                <div class="panel-footer">
-                    <span class="pull-left">{{ 'viewDetails'|_ }}</span>
-                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                    <div class="clearfix"></div>
-                </div>
-            </a>
-        </div>
-    </div>
-    <div class="hidden-xs col-lg-3 col-md-6">
-        <div class="panel panel-green">
-            <div class="panel-heading">
-                <div class="row">
-                    <div class="col-xs-3">
-                        <i class="fa fa-line-chart fa-3x"></i>
-                    </div>
-                    <div class="col-xs-9 text-right">
-                        <div id="box-bills-paid" class="large"></div>
-                        <div>{{ 'billsPaid'|_ }}</div>
-                    </div>
-                </div>
-            </div>
-            <a href="{{route('bills.index')}}">
-                <div class="panel-footer">
-                    <span class="pull-left">{{ 'viewDetails'|_ }}</span>
-                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                    <div class="clearfix"></div>
-                </div>
-            </a>
-        </div>
-    </div>
-</div>
-<!-- /.row -->
+<!-- Info boxes -->
+<div class="row hidden-sm hidden-xs">
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-red">
+                <i class="fa fa-upload fa-fw"></i>
+            </span>
+            <div class="info-box-content">
+                <span class="info-box-text">{{ 'moneyOut'|_ }}</span>
+                <span class="info-box-number" id="box-out"></span>
+            </div><!-- /.info-box-content -->
+        </div><!-- /.info-box -->
+    </div><!-- /.col -->
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-green">
+                <i class="fa fa-download faw-fw"></i>
+            </span>
+            <div class="info-box-content">
+                <span class="info-box-text">{{ 'moneyIn'|_ }}</span>
+                <span class="info-box-number" id="box-in"></span>
+            </div><!-- /.info-box-content -->
+        </div><!-- /.info-box -->
+    </div><!-- /.col -->
+
+    <!-- fix for small devices only -->
+    <div class="clearfix visible-sm-block"></div>
+
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-blue">
+                <i class="fa fa-calendar fa-fw"></i>
+            </span>
+            <div class="info-box-content">
+                <span class="info-box-text">{{ 'billsToPay'|_ }}</span>
+                <span class="info-box-number" id="box-bills-unpaid"></span>
+            </div><!-- /.info-box-content -->
+        </div><!-- /.info-box -->
+    </div><!-- /.col -->
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-aqua">
+                <i class="fa fa-line-chart fa-fw"></i>
+            </span>
+            <div class="info-box-content">
+                <span class="info-box-text">{{ 'billsPaid'|_ }}</span>
+                <span class="info-box-number" id="box-bills-paid"></span>
+            </div><!-- /.info-box-content -->
+        </div><!-- /.info-box -->
+    </div><!-- /.col -->
+</div><!-- /.row -->

@@ -88,7 +88,7 @@ class TransactionController extends Controller
         Session::flash('gaEventCategory', 'transactions');
         Session::flash('gaEventAction', 'delete-' . $what);
 
-        return view('transactions.delete', compact('journal', 'subTitle','what'));
+        return view('transactions.delete', compact('journal', 'subTitle', 'what'));
 
 
     }
@@ -121,15 +121,14 @@ class TransactionController extends Controller
      */
     public function edit(AccountRepositoryInterface $repository, TransactionJournal $journal)
     {
-        $what         = strtolower($journal->transactionType->type);
-        $accounts     = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
-        $budgets      = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
-        $budgets[0]   = trans('form.noBudget');
-        $transactions = $journal->transactions()->orderBy('amount', 'DESC')->get();
-        $piggies      = ExpandedForm::makeSelectList(Auth::user()->piggyBanks()->get());
-        $piggies[0]   = trans('form.noPiggybank');
-        $subTitle     = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
-        $preFilled    = [
+        $what       = strtolower($journal->transactionType->type);
+        $accounts   = ExpandedForm::makeSelectList($repository->getAccounts(['Default account', 'Asset account']));
+        $budgets    = ExpandedForm::makeSelectList(Auth::user()->budgets()->get());
+        $budgets[0] = trans('form.noBudget');
+        $piggies    = ExpandedForm::makeSelectList(Auth::user()->piggyBanks()->get());
+        $piggies[0] = trans('form.noPiggybank');
+        $subTitle   = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
+        $preFilled  = [
             'date'          => $journal->date->format('Y-m-d'),
             'category'      => '',
             'budget_id'     => 0,
@@ -156,12 +155,26 @@ class TransactionController extends Controller
             $preFilled['piggy_bank_id'] = $journal->piggyBankEvents()->orderBy('date', 'DESC')->first()->piggy_bank_id;
         }
 
-        $preFilled['amount']          = $journal->actual_amount;
-        $preFilled['account_id']      = $journal->destination_account->id;
-        $preFilled['expense_account'] = $transactions[0]->account->name;
-        $preFilled['revenue_account'] = $transactions[1]->account->name;
-        $preFilled['account_from_id'] = $transactions[1]->account->id;
-        $preFilled['account_to_id']   = $transactions[0]->account->id;
+        $preFilled['amount'] = $journal->actual_amount;
+
+        if ($journal->transactionType->type == 'Withdrawal') {
+            $preFilled['account_id']      = $journal->source_account->id;
+            $preFilled['expense_account'] = $journal->destination_account->name;
+        } else {
+            $preFilled['account_id']      = $journal->destination_account->id;
+            $preFilled['revenue_account'] = $journal->source_account->name;
+        }
+
+        if ($journal->destination_account->accountType->type == 'Cash account') {
+            $preFilled['expense_account'] = '';
+        }
+        if ($journal->source_account->accountType->type == 'Cash account') {
+            $preFilled['revenue_account'] = '';
+        }
+
+
+        $preFilled['account_from_id'] = $journal->source_account->id;
+        $preFilled['account_to_id']   = $journal->destination_account->id;
 
         Session::flash('preFilled', $preFilled);
         Session::flash('gaEventCategory', 'transactions');
@@ -261,7 +274,7 @@ class TransactionController extends Controller
         $what     = strtolower($journal->transactionType->type);
         $subTitle = trans('firefly.' . $journal->transactionType->type) . ' "' . e($journal->description) . '"';
 
-        return view('transactions.show', compact('journal', 'subTitle','what'));
+        return view('transactions.show', compact('journal', 'subTitle', 'what'));
     }
 
     /**

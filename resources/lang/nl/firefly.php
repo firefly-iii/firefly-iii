@@ -17,6 +17,21 @@ return [
     'to'                            => 'Tot',
     'showEverything'                => 'Laat alles zien',
     'never'                         => 'Nooit',
+    'search_results_for'            => 'Zoekresultaten voor ":query"',
+
+    // create new stuff:
+    'create_new_withdrawal'         => 'Nieuwe uitgave',
+    'create_new_deposit'            => 'Nieuwe inkomsten',
+    'create_new_transfer'           => 'Nieuwe overschrijving',
+    'create_new_asset'              => 'Nieuwe betaalrekening',
+    'create_new_expense'            => 'Nieuwe crediteur',
+    'create_new_revenue'            => 'Nieuwe debiteur',
+    'create_new_piggy_bank'         => 'Nieuw spaarpotje',
+    'create_new_bill'               => 'Nieuw contract',
+
+    // currencies:
+    'create_currency'               => 'Maak nieuwe munteenheid',
+    'edit_currency'                 => 'Wijzig munteenheid ":name"',
 
     // new user:
     'submit'                        => 'Invoeren',
@@ -42,10 +57,12 @@ return [
     'without_budget_between'        => 'Transacties zonder budget tussen :start en :end',
     'budget_in_month'               => ':name in :month',
     'delete_budget'                 => 'Verwijder budget ":name"',
+    'edit_budget'                   => 'Wijzig budget ":name"',
     'update_amount'                 => 'Bedrag bijwerken',
 
     // bills:
     'delete_bill'                   => 'Verwijder contract ":name"',
+    'edit_bill'                     => 'Wijzig contract ":name"',
 
     // accounts:
     'details_for_asset'             => 'Overzicht voor betaalrekening ":name"',
@@ -80,6 +97,7 @@ return [
     'asset_accounts'                => 'Betaalrekeningen',
     'expense_accounts'              => 'Crediteuren',
     'revenue_accounts'              => 'Debiteuren',
+    'account_type'                  => 'Account type',
 
     // some extra help:
     'accountExtraHelp_asset'        => '',
@@ -96,8 +114,10 @@ return [
 
     // categories:
     'new_category'                  => 'Nieuwe categorie',
+    'create_new_category'           => 'Nieuwe categorie',
     'without_category'              => 'Zonder categorie',
     'update_category'               => 'Wijzig categorie',
+    'edit_category'                 => 'Wijzig categorie ":name"',
     'categories'                    => 'Categorieën',
     'no_category'                   => '(geen categorie)',
     'category'                      => 'Categorie',
@@ -145,9 +165,6 @@ return [
     'dashboard'                     => 'Dashboard',
     'currencies'                    => 'Munteenheden',
     'accounts'                      => 'Rekeningen',
-    'assetAccounts'                 => 'Betaalrekeningen',
-    'expenseAccounts'               => 'Crediteuren',
-    'revenueAccounts'               => 'Debiteuren',
     'Asset account'                 => 'Betaalrekening',
     'Default account'               => 'Betaalrekening',
     'Expense account'               => 'Crediteur',
@@ -244,6 +261,7 @@ return [
     // piggy banks:
     'piggy_bank'                    => 'Spaarpotje',
     'new_piggy_bank'                => 'Nieuw spaarpotje',
+    'create_new_piggybank'          => 'Nieuw spaarpotje',
     'account_status'                => 'Rekeningoverzicht',
     'left_for_piggy_banks'          => 'Over voor spaarpotjes',
     'sum_of_piggy_banks'            => 'Som van spaarpotjes',
@@ -269,11 +287,23 @@ return [
     'expected_amount_per_reminder'  => 'Verwacht bedrag per herinnering',
     'todo'                          => 'te doen',
     'table'                         => 'Tabel',
+    'piggy_bank_not_exists'         => 'Dit spaarpotje bestaat niet meer.',
     'add_any_amount_to_piggy'       => 'Stop geld in dit spaarpotje om het doel van :amount te halen.',
     'add_set_amount_to_piggy'       => 'Stop voor :date :amount in dit spaarpotje om hem op tijd te vullen.',
     'delete_piggy_bank'             => 'Verwijder spaarpotje ":name"',
 
     // tags
     'delete_tag'                    => 'Verwijder tag ":name"',
+    'new_tag'                       => 'Maak nieuwe tag',
+    'edit_tag'                      => 'Wijzig tag ":tag"',
+    'no_year'                       => 'Zonder jaar',
+    'no_maand'                      => 'Zonder jaar',
+    'tag_title_nothing'             => 'Standaard tags',
+    'tag_title_balancingAct'        => 'Balancing act tags',
+    'tag_title_advancePayment'      => 'Advance payment tags',
+
+    // reminders
+    'reminder_for_piggy'            => 'Herinnering voor spaarpotje ":name"',
+    'dismissed_reminder_for_piggy'  => 'Genegeerde herinnering voor spaarpotje ":name"',
 
 ];

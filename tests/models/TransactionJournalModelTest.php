@@ -44,7 +44,6 @@ class TransactionJournalModelTest extends TestCase
     public function testGetActualAmountAttribute()
     {
         $journal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
-        $account = FactoryMuffin::create('FireflyIII\Models\Account');
 
         $journal->transactions[0]->amount = '123.45';
         $journal->transactions[0]->save();
@@ -109,6 +108,9 @@ class TransactionJournalModelTest extends TestCase
         // connect to tag:
         $tag->transactionJournals()->save($withdrawal);
         $tag->transactionJournals()->save($deposit);
+
+        $withdrawal->save();
+        $deposit->save();
 
         // amount should be 210.12:
         $this->assertEquals('210.12', $withdrawal->amount);
@@ -176,7 +178,10 @@ class TransactionJournalModelTest extends TestCase
         $transfer->transactions[1]->amount     = 123.45;
         $transfer->transactions[1]->save();
 
+        $withdrawal->save();
         $amount = $withdrawal->amount;
+
+
 
         $this->assertEquals('0', $amount);
     }
@@ -245,6 +250,8 @@ class TransactionJournalModelTest extends TestCase
     }
 
     /**
+     * Multiple tags, withdrawal.
+     *
      * @covers FireflyIII\Models\TransactionJournal::getAmountAttribute
      * @covers FireflyIII\Models\TransactionJournal::amountByTag
      * @covers FireflyIII\Models\TransactionJournal::amountByTags
@@ -265,6 +272,151 @@ class TransactionJournalModelTest extends TestCase
         // make withdrawal
         $withdrawalType                  = FactoryMuffin::create('FireflyIII\Models\TransactionType');
         $withdrawal                      = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $withdrawal->transaction_type_id = $withdrawalType->id;
+        $withdrawal->save();
+
+        // make accounts
+        $expense = FactoryMuffin::create('FireflyIII\Models\Account');
+        $asset   = FactoryMuffin::create('FireflyIII\Models\Account');
+
+        $withdrawal->transactions[0]->amount     = -300;
+        $withdrawal->transactions[0]->account_id = $asset->id;
+        $withdrawal->transactions[0]->save();
+
+        $withdrawal->transactions[1]->amount     = 300;
+        $withdrawal->transactions[1]->account_id = $expense->id;
+        $withdrawal->transactions[1]->save();
+
+        // connect to tag:
+        $tag->transactionJournals()->save($withdrawal);
+        $tag2->transactionJournals()->save($withdrawal);
+
+        $this->assertEquals('300', $withdrawal->amount);
+
+
+    }
+
+    /**
+     * Multiple tags, transfer, and one is a balancing act
+     *
+     * @covers FireflyIII\Models\TransactionJournal::getAmountAttribute
+     * @covers FireflyIII\Models\TransactionJournal::amountByTag
+     * @covers FireflyIII\Models\TransactionJournal::amountByTags
+     */
+    public function testGetAmountAttributeTagsTransfer()
+    {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
+        // has two normal tags:
+        $tag          = FactoryMuffin::create('FireflyIII\Models\Tag');
+        $tag->tagMode = 'balancingAct';
+        $tag->save();
+        $tag2          = FactoryMuffin::create('FireflyIII\Models\Tag');
+        $tag2->tagMode = 'nothing';
+        $tag2->save();
+
+        // make withdrawal
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $transferType                  = FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $transfer                      = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $transfer->transaction_type_id = $transferType->id;
+        $transfer->save();
+
+        // make accounts
+        $expense = FactoryMuffin::create('FireflyIII\Models\Account');
+        $asset   = FactoryMuffin::create('FireflyIII\Models\Account');
+
+        $transfer->transactions[0]->amount     = -300;
+        $transfer->transactions[0]->account_id = $asset->id;
+        $transfer->transactions[0]->save();
+
+        $transfer->transactions[1]->amount     = 300;
+        $transfer->transactions[1]->account_id = $expense->id;
+        $transfer->transactions[1]->save();
+
+        // connect to tag:
+        $tag->transactionJournals()->save($transfer);
+        $tag2->transactionJournals()->save($transfer);
+
+        $this->assertEquals('300', $transfer->amount);
+
+
+    }
+
+    /**
+     * Multiple tags, transfer, and one is a advance payment.
+     *
+     * @covers FireflyIII\Models\TransactionJournal::getAmountAttribute
+     * @covers FireflyIII\Models\TransactionJournal::amountByTag
+     * @covers FireflyIII\Models\TransactionJournal::amountByTags
+     */
+    public function testGetAmountAttributeTagsTransferAdvance()
+    {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
+        // has two normal tags:
+        $tag          = FactoryMuffin::create('FireflyIII\Models\Tag');
+        $tag->tagMode = 'advancePayment';
+        $tag->save();
+        $tag2          = FactoryMuffin::create('FireflyIII\Models\Tag');
+        $tag2->tagMode = 'nothing';
+        $tag2->save();
+
+        // make withdrawal
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $transferType                  = FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $transfer                      = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
+        $transfer->transaction_type_id = $transferType->id;
+        $transfer->save();
+
+        // make accounts
+        $expense = FactoryMuffin::create('FireflyIII\Models\Account');
+        $asset   = FactoryMuffin::create('FireflyIII\Models\Account');
+
+        $transfer->transactions[0]->amount     = -300;
+        $transfer->transactions[0]->account_id = $asset->id;
+        $transfer->transactions[0]->save();
+
+        $transfer->transactions[1]->amount     = 300;
+        $transfer->transactions[1]->account_id = $expense->id;
+        $transfer->transactions[1]->save();
+
+        // connect to tag:
+        $tag->transactionJournals()->save($transfer);
+        $tag2->transactionJournals()->save($transfer);
+
+        $this->assertEquals('300', $transfer->amount);
+
+
+    }
+
+    /**
+     * Multiple tags, withdrawal, and one is a balancingAct.
+     *
+     * @covers FireflyIII\Models\TransactionJournal::getAmountAttribute
+     * @covers FireflyIII\Models\TransactionJournal::amountByTag
+     * @covers FireflyIII\Models\TransactionJournal::amountByTags
+     */
+    public function testGetAmountAttributeTagsWithdrawalAdvance()
+    {
+        $user = FactoryMuffin::create('FireflyIII\User');
+        $this->be($user);
+
+        // has two normal tags:
+        $tag          = FactoryMuffin::create('FireflyIII\Models\Tag');
+        $tag->tagMode = 'balancingAct';
+        $tag->save();
+        $tag2          = FactoryMuffin::create('FireflyIII\Models\Tag');
+        $tag2->tagMode = 'nothing';
+        $tag2->save();
+
+        // make withdrawal
+        $withdrawalType = FactoryMuffin::create('FireflyIII\Models\TransactionType');
+        $withdrawal = FactoryMuffin::create('FireflyIII\Models\TransactionJournal');
         $withdrawal->transaction_type_id = $withdrawalType->id;
         $withdrawal->save();
 

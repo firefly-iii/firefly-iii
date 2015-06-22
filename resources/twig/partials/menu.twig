@@ -10,9 +10,8 @@
         </button>
         <a class="navbar-brand" href="{{ route('index') }}">Firefly</a>
     </div>
+
     <!-- /.navbar-header -->
-
-
     <ul class="nav navbar-top-links navbar-right hidden-xs">
 
         <!-- reminders -->
@@ -49,6 +48,29 @@
             </li>
         {% endif %}
 
+
+
+        <!-- /.dropdown -->
+        <!-- new stuff create button -->
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="fa fa-plus-circle fa-fw"></i>  <i class="fa fa-caret-down"></i>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="{{ route('transactions.create','withdrawal') }}"><i class="fa fa-long-arrow-left fa-fw"></i> {{ 'create_new_withdrawal'|_ }}</a></li>
+                <li><a href="{{ route('transactions.create','deposit') }}"><i class="fa fa-long-arrow-right fa-fw"></i> {{ 'create_new_deposit'|_ }}</a></li>
+                <li><a href="{{ route('transactions.create','transfer') }}"><i class="fa fa-exchange fa-fw"></i> {{ 'create_new_transfer'|_ }}</a></li>
+                <li class="divider"></li>
+                <li><a href="{{ route('accounts.create','asset') }}"><i class="fa fa-money fa-fw"></i> {{ 'create_new_asset'|_ }}</a></li>
+                <li><a href="{{ route('accounts.create','expense') }}"><i class="fa fa-shopping-cart fa-fw"></i> {{ 'create_new_expense'|_ }}</a></li>
+                <li><a href="{{ route('accounts.create','revenue') }}"><i class="fa fa-download fa-fw"></i> {{ 'create_new_revenue'|_ }}</a></li>
+                <li class="divider"></li>
+                <li><a href="{{ route('piggy-banks.create') }}"><i class="fa fa-sort-amount-asc fa-fw"></i> {{ 'create_new_piggy_bank'|_ }}</a></li>
+                <li><a href="{{ route('bills.create') }}"><i class="fa fa-calendar-o fa-fw"></i> {{ 'create_new_bill'|_ }}</a></li>
+            </ul>
+        </li>
+
+
         <!-- menu -->
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -65,11 +87,11 @@
             <!-- /.dropdown-user -->
         </li>
 
-
-        <!-- /.dropdown -->
-
     </ul>
+    <!-- date -->
     <p class="navbar-text navbar-right hidden-xs" id="daterange"><span>&nbsp;</span> <b class="caret"></b></p>
+
+    <!-- new stuff -->
 
 
     <!-- /.navbar-top-links -->
@@ -96,15 +118,15 @@
                     <ul class="nav nav-second-level">
                         <li>
                             <a class="{{ activeRoutePartialWhat('accounts', 'asset') }}" href="{{ route('accounts.index','asset') }}">
-                                <i class="fa fa-money fa-fw"></i> {{ 'assetAccounts'|_ }}</a>
+                                <i class="fa fa-money fa-fw"></i> {{ 'asset_accounts'|_ }}</a>
                         </li>
                         <li>
                             <a class="{{ activeRoutePartialWhat('accounts', 'expense') }}" href="{{ route('accounts.index','expense') }}">
-                                <i class="fa fa-shopping-cart fa-fw"></i> {{ 'expenseAccounts'|_ }}</a>
+                                <i class="fa fa-shopping-cart fa-fw"></i> {{ 'expense_accounts'|_ }}</a>
                         </li>
                         <li>
                             <a class="{{ activeRoutePartialWhat('accounts', 'revenue') }}" href="{{ route('accounts.index','revenue') }}">
-                                <i class="fa fa-download fa-fw"></i> {{ 'revenueAccounts'|_ }}</a>
+                                <i class="fa fa-download fa-fw"></i> {{ 'revenue_accounts'|_ }}</a>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->
@@ -153,24 +175,22 @@
                     </ul>
                     <!-- /.nav-second-level -->
                 </li>
-                <li class="{{ activeRouteStrict('transactions.create') }}">
+                <!--
+                <li>
                     <a href="#"><i class="fa fa-plus fa-fw"></i> {{ 'createNew'|_ }} <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a class="{{ activeRoutePartialWhat('transactions.create','withdrawal') }}" href="{{ route('transactions.create','withdrawal') }}">
-                                <i class="fa fa-long-arrow-left fa-fw"></i> {{ 'withdrawal'|_ }}</a>
+                            <a href="{{ route('transactions.create','withdrawal') }}"><i class="fa fa-long-arrow-left fa-fw"></i> {{ 'withdrawal'|_ }}</a>
                         </li>
                         <li>
-                            <a class="{{ activeRoutePartialWhat('transactions.create','deposit') }}" href="{{ route('transactions.create','deposit') }}">
-                                <i class="fa fa-long-arrow-right fa-fw"></i> {{ 'deposit'|_ }}</a>
+                            <a href="{{ route('transactions.create','deposit') }}"><i class="fa fa-long-arrow-right fa-fw"></i> {{ 'deposit'|_ }}</a>
                         </li>
                         <li>
-                            <a class="{{ activeRoutePartialWhat('transactions.create','transfer') }}" href="{{ route('transactions.create','transfer') }}">
-                                <i class="fa fa-fw fa-exchange"></i> {{ 'transfer'|_ }}</a>
+                            <a href="{{ route('transactions.create','transfer') }}"><i class="fa fa-fw fa-exchange"></i> {{ 'transfer'|_ }}</a>
                         </li>
                     </ul>
-                    <!-- /.nav-second-level -->
                 </li>
+                -->
                 <!-- top menu again -->
                 <li class="hidden-sm hidden-md hidden-lg">
                     <a class="{{ activeRouteStrict('profile') }}" href="{{ route('profile') }}"><i class="fa fa-user fa-fw"></i> {{ Auth.user.email }}</a>

@@ -13,7 +13,7 @@ class AuthControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        FactoryMuffin::create('FireflyIII\User');
+        //FactoryMuffin::create('FireflyIII\User');
     }
 
     /**
@@ -38,6 +38,8 @@ class AuthControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\Auth\AuthController::postRegister
+     * @covers FireflyIII\Http\Controllers\Auth\AuthController::validator
+     * @covers FireflyIII\Http\Controllers\Auth\AuthController::create
      */
     public function testPostRegister()
     {
@@ -55,6 +57,8 @@ class AuthControllerTest extends TestCase
 
     /**
      * @covers FireflyIII\Http\Controllers\Auth\AuthController::postRegister
+     * @covers FireflyIII\Http\Controllers\Auth\AuthController::validator
+     * @covers FireflyIII\Http\Controllers\Auth\AuthController::create
      */
     public function testPostRegisterFails()
     {

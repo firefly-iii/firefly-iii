@@ -1,20 +1,21 @@
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <i class="fa fa-fw fa-exchange"></i>
-        {{ 'incomeVsExpenses'|_ }}
+<div class="box">
+    <div class="box-header with-border">
+        <h3 class="box-title">{{ 'incomeVsExpenses'|_ }}</h3>
     </div>
-    <table class="table table-bordered table-striped">
-        <tr>
-            <td>{{ 'in'|_ }}</td>
-            <td>{{ incomes.getTotal|formatAmount }}</td>
-        </tr>
-        <tr>
-            <td>{{ 'out'|_ }}</td>
-            <td><span class="text-danger">{{ (expenses.getTotal)|formatAmountPlain }}</span></td>
-        </tr>
-        <tr>
-            <td>{{ 'difference'|_ }}</td>
-            <td>{{ (incomes.getTotal + (expenses.getTotal * -1))|formatAmount }}</td>
-        </tr>
-    </table>
+    <div class="box-body table-responsive no-padding">
+        <table class="table table-hover">
+            <tr>
+                <td>{{ 'in'|_ }}</td>
+                <td>{{ incomes.getTotal|formatAmount }}</td>
+            </tr>
+            <tr>
+                <td>{{ 'out'|_ }}</td>
+                <td><span class="text-danger">{{ (expenses.getTotal)|formatAmountPlain }}</span></td>
+            </tr>
+            <tr>
+                <td>{{ 'difference'|_ }}</td>
+                <td>{{ (incomes.getTotal + (expenses.getTotal * -1))|formatAmount }}</td>
+            </tr>
+        </table>
+    </div>
 </div>

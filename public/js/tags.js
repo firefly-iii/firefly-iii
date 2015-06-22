@@ -1,20 +1,6 @@
 /* globals zoomLevel, token, google, latitude, longitude, doPlaceMarker */
 $(function () {
     "use strict";
-    /*
-     Hide and show the tag index help.
-     */
-    $('#tagHelp').on('show.bs.collapse', function () {
-        // set hideTagHelp = false
-        $.post('/tags/hideTagHelp/false', {_token: token});
-        $('#tagHelpButton').text('Hide help');
-
-    }).on('hide.bs.collapse', function () {
-        // set hideTagHelp = true
-        $.post('/tags/hideTagHelp/true', {_token: token});
-        $('#tagHelpButton').text('Show help');
-
-    });
 
     $('#clearLocation').click(clearLocation);
 

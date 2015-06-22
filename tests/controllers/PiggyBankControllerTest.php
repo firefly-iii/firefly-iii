@@ -269,9 +269,7 @@ class PiggyBankControllerTest extends TestCase
 
         // mock!
         $accounts   = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
-        $piggyBanks = $this->mock('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
         $accounts->shouldReceive('leftOnAccount')->andReturn(20);
-        $piggyBanks->shouldReceive('createEvent')->once();
 
         Amount::shouldReceive('format')->andReturn('something');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
@@ -308,9 +306,7 @@ class PiggyBankControllerTest extends TestCase
 
         // mock!
         $accounts   = $this->mock('FireflyIII\Repositories\Account\AccountRepositoryInterface');
-        $piggyBanks = $this->mock('FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface');
         $accounts->shouldReceive('leftOnAccount')->andReturn(20);
-        $piggyBanks->shouldReceive('createEvent')->once();
 
         Amount::shouldReceive('format')->andReturn('something');
         Amount::shouldReceive('getCurrencySymbol')->andReturn('something');

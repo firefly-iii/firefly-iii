@@ -40,7 +40,7 @@ class Bill
      */
     public function getBills()
     {
-        $this->bills->sortBy(
+        $set = $this->bills->sortBy(
             function (BillLine $bill) {
                 $active = intval($bill->getBill()->active) == 0 ? 1 : 0;
                 $name   = $bill->getBill()->name;
@@ -50,7 +50,7 @@ class Bill
         );
 
 
-        return $this->bills;
+        return $set;
     }
 
 }

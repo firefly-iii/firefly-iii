@@ -1,4 +1,4 @@
-# Firefly III (v3.4.4.2)
+# Firefly III (v3.4.5)
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/JC5/firefly-iii/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/JC5/firefly-iii/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/JC5/firefly-iii/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/JC5/firefly-iii/?branch=master)
@@ -26,7 +26,7 @@ To get to know Firefly, and to see if it fits you, check out these resources:
 and the philosophy behind it.
 
 
-#### About the name (if you care)
+#### About the name (should you care)
 
 It's III, or 3, because [version 2](https://github.com/JC5/Firefly) and version 1 (not online) preceded it. It has been growing steadily ever since.
 

@@ -1,58 +1,48 @@
 {% extends "./layout/guest.twig" %}
 
 {% block content %}
-	<div class="row">
-		<div class="col-md-4 col-md-offset-4">
-            <div class="login-panel panel panel-default">
-				<div class="panel-heading">
-                    <h3 class="panel-title">Firefly III &mdash; Register</h3>
+
+    {% if errors|length > 0 %}
+        <div class="alert alert-danger">
+            <strong>Whoops!</strong> There were some problems with your input.<br><br>
+            <ul>
+                {% for error in errors.all %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+
+
+    <div class="register-box-body">
+        <p class="login-box-msg">Register a new account</p>
+
+        <form role="form" id="register" method="POST" action="/auth/register">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+            <div class="form-group has-feedback">
+                <input type="email" name="email" class="form-control" placeholder="Email"/>
+                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input type="password" class="form-control" placeholder="Password" name="password"/>
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input type="password" class="form-control" placeholder="Retype password" name="password_confirmation"/>
+                <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <button type="submit" class="btn btn-primary pull-right btn-flat">Register</button>
                 </div>
-				<div class="panel-body">
-					<p>
-						Registering an account on Firefly requires an e-mail address.
-					</p>
-                    {% if errors|length > 0 %}
-						<div class="alert alert-danger">
-							<strong>Whoops!</strong> There were some problems with your input.<br><br>
-							<ul>
-                                {% for error in errors.all %}
-									<li>{{  error }}</li>
-								{% endfor %}
-							</ul>
-						</div>
-					{% endif %}
+                <!-- /.col -->
+            </div>
+        </form>
 
-					<form role="form" id="register" method="POST" action="/auth/register">
-						<input type="hidden" name="_token" value="{{ csrf_token() }}">
+        <a href="/auth/login">I want to login</a><br>
+        <a href="/password/email">I forgot my password</a>
+    </div><!-- /.form-box -->
 
-						<div class="form-group">
-							<label class="control-label">E-Mail</label>
-							<input type="email" class="form-control" placeholder="E-Mail" name="email" value="{{ old.email }}">
-						</div>
-
-						<div class="form-group">
-							<label class="control-label">Password</label>
-							<input type="password" placeholder="Password" class="form-control" name="password">
-						</div>
-
-						<div class="form-group">
-							<label class="control-label">Confirm Password</label>
-							<input type="password" placeholder="Confirm Password" class="form-control" name="password_confirmation">
-						</div>
-
-                        <p>
-                            <button type="submit" class="btn btn-lg btn-success btn-block">Register</button>
-                        </p>
-
-
-                        <div class="btn-group btn-group-justified btn-group-sm">
-                            <a href="/auth/login" class="btn btn-default">Login</a>
-                            <a href="/password/email" class="btn btn-default">Forgot your password?</a>
-                        </div>
-
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
 {% endblock %}

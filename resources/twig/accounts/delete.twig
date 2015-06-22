@@ -1,37 +1,44 @@
 {% extends "./layout/default.twig" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute().getName(), account) }}
+{% endblock %}
+
 {% block content %}
-{{ Breadcrumbs.renderIfExists(Route.getCurrentRoute().getName(), account) }}
-{{ Form.open({'class' : 'form-horizontal','id' : 'destroy','url' : route('accounts.destroy',account.id)}) }}
-<div class="row">
-    <div class="col-lg-6 col-lg-offset-3 col-md-12 col-sm-12">
-        <div class="panel panel-red">
-            <div class="panel-heading">
-                <i class="fa fa-exclamation-circle"></i>
-                {{ trans('form.delete_account', {'name': account.name}) }}
-            </div>
-            <div class="panel-body">
-                <p class="text-danger">
-                    {{ trans('form.permDeleteWarning') }}
-                </p>
-                <p>
-                    {{ trans('form.account_areYouSure', {'name': account.name}) }}
-                </p>
-                <p>
-                    <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn btn-danger" />
-                    <a href="{{URL.previous()}}" class="btn-default btn">{{ trans('form.cancel') }}</a >
-                </p>
-                <p class="small">
-                {% if account.transactions|length > 0 %}
-                    {{ Lang.choice('form.also_delete_transactions', account.transactions|length, {count: account.transactions|length}) }}
-                {% endif %}<br />
-                {% if account.piggyBanks|length > 0 %}
-                    {{ Lang.choice('form.also_delete_piggyBanks', account.piggyBanks|length, {count: account.piggyBanks|length}) }}
-                {% endif %}
-                </p>
+
+    {{ Form.open({'class' : 'form-horizontal','id' : 'destroy','url' : route('accounts.destroy',account.id)}) }}
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3 col-md-12 col-sm-12">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ trans('form.delete_account', {'name': account.name}) }}</h3>
+                </div>
+                <div class="box-body">
+                    <p class="text-danger">
+                        {{ trans('form.permDeleteWarning') }}
+                    </p>
+
+                    <p>
+                        {{ trans('form.account_areYouSure', {'name': account.name}) }}
+                    </p>
+
+                    <p>
+                        {% if account.transactions|length > 0 %}
+                            {{ Lang.choice('form.also_delete_transactions', account.transactions|length, {count: account.transactions|length}) }}
+                        {% endif %}<br/>
+                        {% if account.piggyBanks|length > 0 %}
+                            {{ Lang.choice('form.also_delete_piggyBanks', account.piggyBanks|length, {count: account.piggyBanks|length}) }}
+                        {% endif %}
+                    </p>
+
+                </div>
+                <div class="box-footer">
+                    <input type="submit" name="submit" value="{{ trans('form.deletePermanently') }}" class="btn pull-right btn-danger"/>
+                    <a href="{{ URL.previous() }}" class="btn-default btn">{{ trans('form.cancel') }}</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-</form>
+    {{ Form.close|raw }}
 {% endblock %}

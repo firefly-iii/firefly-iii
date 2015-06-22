@@ -1,38 +1,40 @@
 {% extends "./layout/default.twig" %}
-{% block content %}
+
+{% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, piggyBank) }}
-<div class="row">
-    <div class="col-lg-8 col-md-8 col-sm-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-fw fa-clock-o"></i> {{ 'events'|_ }}
-            </div>
-            <div class="panel-body">
-                <div id="piggy-bank-history"></div>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-8 col-md-8 col-sm-6">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'events'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <div id="piggy-bank-history"></div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-lg-4 col-md-4 col-sm-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-fw fa-info-circle"></i> {{ 'details'|_ }}
+        <div class="col-lg-4 col-md-4 col-sm-6">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'details'|_ }}</h3>
 
                     <!-- ACTIONS MENU -->
-                    <div class="pull-right">
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                                {{ 'actions'|_ }}
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu pull-right" role="menu">
+                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                            <ul class="dropdown-menu" role="menu">
                                 <li><a href="{{ route('piggy-banks.edit', piggyBank.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a></li>
                                 <li><a href="{{ route('piggy-banks.delete', piggyBank.id) }}"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}</a></li>
                             </ul>
                         </div>
                     </div>
-
                 </div>
-                    <table class="table table-bordered table-striped">
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
                         <tr>
                             <td>{{ 'account'|_ }}</td>
                             <td><a href="{{ route('accounts.show', piggyBank.account_id) }}">{{ piggyBank.account.name }}</a></td>
@@ -53,7 +55,7 @@
                             <td>{{ 'start_date'|_ }}</td>
                             <td>
                                 {% if piggyBank.startdate %}
-                                    {{ piggyBank.startdate.format('jS F Y')}}
+                                    {{ piggyBank.startdate.format('jS F Y') }}
                                 {% else %}
                                     <em>{{ 'no_start_date'|_ }}</em>
                                 {% endif %}
@@ -70,51 +72,46 @@
                             </td>
                         </tr>
                         {% if piggyBank.reminder %}
-                        <tr>
-                            <td>{{ 'reminder'|_ }}</td>
-                            <td>
-                                {% if piggyBank.remind_me == 0 %}
-                                    <em>{{ 'no_reminder'|_ }}</em>
-                                {% else %}
-                                    {{ 'every'|_ }}
-                                    {% if piggyBank.reminder_skip != 0 %}
-                                        {{ piggyBank.reminder_skip }}
+                            <tr>
+                                <td>{{ 'reminder'|_ }}</td>
+                                <td>
+                                    {% if piggyBank.remind_me == 0 %}
+                                        <em>{{ 'no_reminder'|_ }}</em>
                                     {% else %}
-                                        {{ piggyBank.reminder }}(s)
+                                        {{ 'every'|_ }}
+                                        {% if piggyBank.reminder_skip != 0 %}
+                                            {{ piggyBank.reminder_skip }}
+                                        {% else %}
+                                            {{ piggyBank.reminder }}(s)
+                                        {% endif %}
                                     {% endif %}
-                                {% endif %}
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
                         {% endif %}
-                            <tr>
-                                <td>{{ 'reminders_left'|_ }}</td>
-                                <td>{{ 'todo'|_ }}</td>
-                            </tr>
-                            <tr>
-                                <td>{{ 'expected_amount_per_reminder'|_ }}</td>
-                                <td>{{ 'todo'|_ }}</td>
-                            </tr>
                     </table>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-fw fa-clock-o"></i> {{ 'table'|_ }}
                 </div>
-                {% include 'list/piggy-bank-events' %}
             </div>
-    </div>
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'table'|_ }}</h3>
+                </div>
+                <div class="box-body table-responsive no-padding">
+                    {% include 'list/piggy-bank-events' %}
+                </div>
+            </div>
+        </div>
 
-</div>
+    </div>
 {% endblock %}
 
 {% block scripts %}
-<script type="text/javascript">
-    var piggyBankID = {{ piggyBank.id }};
-</script>
+    <script type="text/javascript">
+        var piggyBankID = {{ piggyBank.id }};
+    </script>
 
-<!-- load the libraries and scripts necessary for Google Charts: -->
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript" src="js/gcharts.options.js"></script>
-<script type="text/javascript" src="js/gcharts.js"></script>
-<script type="text/javascript" src="js/piggy-banks.js"></script>
+    <!-- load the libraries and scripts necessary for Google Charts: -->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="js/gcharts.options.js"></script>
+    <script type="text/javascript" src="js/gcharts.js"></script>
+    <script type="text/javascript" src="js/piggy-banks.js"></script>
 {% endblock %}

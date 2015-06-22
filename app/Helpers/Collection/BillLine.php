@@ -16,19 +16,19 @@ class BillLine
 
     /** @var  bool */
     protected $active;
-    /** @var  float */
+    /** @var  string */
     protected $amount;
     /** @var  BillModel */
     protected $bill;
     /** @var  bool */
     protected $hit;
-    /** @var  float */
+    /** @var  string */
     protected $max;
-    /** @var  float */
+    /** @var  string */
     protected $min;
 
     /**
-     * @return float
+     * @return string
      */
     public function getAmount()
     {
@@ -36,7 +36,7 @@ class BillLine
     }
 
     /**
-     * @param float $amount
+     * @param string $amount
      */
     public function setAmount($amount)
     {
@@ -60,7 +60,7 @@ class BillLine
     }
 
     /**
-     * @return float
+     * @return string
      */
     public function getMax()
     {
@@ -68,7 +68,7 @@ class BillLine
     }
 
     /**
-     * @param float $max
+     * @param string $max
      */
     public function setMax($max)
     {
@@ -76,7 +76,7 @@ class BillLine
     }
 
     /**
-     * @return float
+     * @return string
      */
     public function getMin()
     {
@@ -84,7 +84,7 @@ class BillLine
     }
 
     /**
-     * @param float $min
+     * @param string $min
      */
     public function setMin($min)
     {

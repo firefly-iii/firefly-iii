@@ -163,7 +163,8 @@ class ReportHelper implements ReportHelperInterface
         foreach ($accounts as $account) {
             $spent = $this->query->spentNoBudget($account, $start, $end);
             $left  = $tagRepository->coveredByBalancingActs($account, $start, $end);
-            $diff  = $spent + $left;
+            bcscale(2);
+            $diff = bcsub($spent, $left);
 
             // budget
             $budgetEntry = new BalanceEntry;
@@ -216,18 +217,19 @@ class ReportHelper implements ReportHelperInterface
             $billLine = new BillLine;
             $billLine->setBill($bill);
             $billLine->setActive(intval($bill->active) == 1);
-            $billLine->setMin(floatval($bill->amount_min));
-            $billLine->setMax(floatval($bill->amount_max));
+            $billLine->setMin($bill->amount_min);
+            $billLine->setMax($bill->amount_max);
 
             // is hit in period?
+            bcscale(2);
             $set = $repository->getJournalsInRange($bill, $start, $end);
             if ($set->count() == 0) {
                 $billLine->setHit(false);
             } else {
                 $billLine->setHit(true);
-                $amount = 0;
+                $amount = '0';
                 foreach ($set as $entry) {
-                    $amount += $entry->amount;
+                    $amount = bcadd($amount, $entry->amount);
                 }
                 $billLine->setAmount($amount);
             }

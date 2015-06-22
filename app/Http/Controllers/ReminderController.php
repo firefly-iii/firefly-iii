@@ -76,15 +76,13 @@ class ReminderController extends Controller
      */
     public function show(Reminder $reminder)
     {
-        $title         = 'Reminder';
+        $title         = trans('firefly.reminder');
         $mainTitleIcon = 'fa-clock-o';
         if ($reminder->notnow === true) {
-            $subTitle = 'Dismissed reminder';
+            $subTitle = trans('firefly.dismissed_reminder_for_piggy', ['name' => $reminder->remindersable->name]);
         } else {
-            $subTitle = 'Reminder';
+            $subTitle = trans('firefly.reminder_for_piggy', ['name' => $reminder->remindersable->name]);
         }
-        $subTitle .= ' for piggy bank "' . $reminder->remindersable->name . '"';
-
 
         return view('reminders.show', compact('reminder', 'title', 'subTitle', 'mainTitleIcon'));
 

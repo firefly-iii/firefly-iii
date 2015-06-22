@@ -20,7 +20,7 @@
 
     },
     "require": {
-        "laravel/framework": "5.0.*",
+        "laravel/framework": "5.1.*",
         "davejamesmiller/laravel-breadcrumbs": "~3.0",
         "grumpydictator/gchart": "~1",
         "watson/validating": "~1.0",

@@ -1,18 +1,22 @@
 {% extends "./layout/default.twig" %}
-{% block content %}
+
+{% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName, journal) }}
+{% endblock %}
+
+{% block content %}
     {{ Form.open({'class' : 'form-horizontal','id' : 'update','url' : route('transactions.update',journal.id)}) }}
 
-<input type="hidden" name="id" value="{{journal.id}}" />
-<input type="hidden" name="what" value="{{what}}" />
+    <input type="hidden" name="id" value="{{ journal.id }}"/>
+    <input type="hidden" name="what" value="{{ what }}"/>
 
-<div class="row">
-    <div class="col-lg-6 col-md-12 col-sm-12">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <i class="fa fa-exclamation-circle"></i> {{ 'mandatoryFields'|_ }}
+    <div class="row">
+        <div class="col-lg-6 col-md-12 col-sm-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
                 </div>
-                <div class="panel-body">
+                <div class="box-body">
                     <!-- ALWAYS AVAILABLE -->
                     {{ ExpandedForm.text('description',journal.description) }}
 
@@ -42,67 +46,63 @@
 
                     <!-- ALWAYS SHOW DATE -->
                     {{ ExpandedForm.date('date',data['date']) }}
+                </div>
             </div>
-        </div> <!-- close panel -->
+            <!-- close panel -->
 
-    </div>
-    <div class="col-lg-6 col-md-12 col-sm-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-smile-o"></i> {{ 'optionalFields'|_ }}
+        </div>
+        <div class="col-lg-6 col-md-12 col-sm-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    <!-- BUDGET ONLY WHEN CREATING A WITHDRAWAL -->
+                    {% if what == 'withdrawal' %}
+                        {{ ExpandedForm.select('budget_id',budgets,data['budget_id']) }}
+                    {% endif %}
+
+                    <!-- CATEGORY ALWAYS -->
+                    {{ ExpandedForm.text('category',data['category']) }}
+
+                    <!-- TAGS -->
+                    {{ ExpandedForm.text('tags') }}
+
+                    <!-- RELATE THIS TRANSFER TO A PIGGY BANK -->
+                    {% if what == 'withdrawal' and piggies|length > 0 %}
+                        {{ ExpandedForm.select('piggy_bank_id',piggies,data['piggy_bank_id']) }}
+                    {% endif %}
+
+                </div>
             </div>
-            <div class="panel-body">
-                <!-- BUDGET ONLY WHEN CREATING A WITHDRAWAL -->
-                {% if what == 'withdrawal' %}
-                    {{ ExpandedForm.select('budget_id',budgets,data['budget_id']) }}
-                {% endif %}
-
-                <!-- CATEGORY ALWAYS -->
-                {{ ExpandedForm.text('category',data['category']) }}
-
-                <!-- TAGS -->
-                {{ ExpandedForm.text('tags') }}
-
-                <!-- RELATE THIS TRANSFER TO A PIGGY BANK -->
-                {% if what == 'withdrawal' and piggies|length > 0 %}
-                    {{ ExpandedForm.select('piggy_bank_id',piggies,data['piggy_bank_id']) }}
-                {% endif %}
-
-                    </div>
-            </div><!-- end of panel for options-->
+            <!-- end of panel for options-->
 
             <!-- panel for options -->
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-bolt"></i> {{ 'options'|_ }}
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'options'|_ }}</h3>
                 </div>
-                <div class="panel-body">
+                <div class="box-body">
                     {{ ExpandedForm.optionsList('update','transaction') }}
                 </div>
-            </div>
+                <div class="box-footer">
+                    <button type="submit" class="pull-right btn btn-success">{{ ('update_' ~ what)|_ }}</button>
+                </div>
             </div>
         </div>
-
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <p>
-            <button type="submit" class="btn btn-lg btn-success">
-                <i class="fa fa-pencil"></i> {{ ('update_' ~ what)|_ }}
-            </button>
-        </p>
     </div>
-</div>
-</form>
+
+    {{ Form.close|raw }}
 
 
 {% endblock %}
 {% block scripts %}
-<script type="text/javascript">
-    var what = "{{what}}";
-</script>
-<script type="text/javascript" src="js/bootstrap3-typeahead.min.js"></script>
-<script type="text/javascript" src="js/bootstrap-tagsinput.min.js"></script>
-<script type="text/javascript" src="js/transactions.js"></script>
+    <script type="text/javascript">
+        var what = "{{what}}";
+    </script>
+    <script type="text/javascript" src="js/bootstrap3-typeahead.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap-tagsinput.min.js"></script>
+    <script type="text/javascript" src="js/transactions.js"></script>
 {% endblock %}
 {% block styles %}
     <link href="css/bootstrap-tagsinput.css" type="text/css" rel="stylesheet" media="all">

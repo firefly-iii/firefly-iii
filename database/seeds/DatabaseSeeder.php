@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call('TransactionTypeSeeder');
         $this->call('PermissionSeeder');
 
-        if (App::environment() == 'testing' || App::environment() == 'homestead' || gethostname() == 'vagrant-firefly-iii') {
+        if (App::environment() == 'testing' || App::environment() == 'homestead' || gethostname() == 'lightning') {
             $this->call('TestDataSeeder');
         }
     }

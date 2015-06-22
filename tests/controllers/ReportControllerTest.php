@@ -158,10 +158,10 @@ class ReportControllerTest extends TestCase
         $helper->shouldReceive('getExpenseReport')->once()->withAnyArgs()->andReturn([]);
 
         // mock stuff!
-        Amount::shouldReceive('getDefaultCurrency')->once()->andReturn($currency);
-        Amount::shouldReceive('getAllCurrencies')->once()->andReturn([$currency]);
-        Amount::shouldReceive('getCurrencyCode')->once()->andReturn('X');
-        Amount::shouldReceive('getCurrencySymbol')->once()->andReturn('X');
+        Amount::shouldReceive('getDefaultCurrency')->andReturn($currency);
+        Amount::shouldReceive('getAllCurrencies')->andReturn([$currency]);
+        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
         Amount::shouldReceive('format')->andReturn('X');
 
         $this->call('GET', '/reports/2015/shared');

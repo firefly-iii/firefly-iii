@@ -9,6 +9,7 @@ use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
+use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
@@ -91,6 +92,7 @@ class TestDataSeeder extends Seeder
         $this->createBills();
         $this->createExpenseAccounts();
         $this->createRevenueAccounts();
+        $this->createTags();
 
         $current = clone $this->_yearAgoStartOfMonth;
         while ($current <= $this->_startOfMonth) {
@@ -435,6 +437,20 @@ class TestDataSeeder extends Seeder
     }
 
     /**
+     *
+     */
+    public function createTags()
+    {
+        $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
+
+        Tag::create(
+            ['tag' => 'TagOne', 'tagMode' => 'nothing', 'user_id' => $user->id]);
+
+        Tag::create(['tag' => 'TagTwo', 'tagMode' => 'nothing', 'user_id' => $user->id]);
+        Tag::create(['tag' => 'TagThree', 'tagMode' => 'nothing', 'user_id' => $user->id]);
+    }
+
+    /**
      * @param Carbon $date
      */
     public function createMonthlyExpenses(Carbon $date)
@@ -448,6 +464,8 @@ class TestDataSeeder extends Seeder
         $phone      = $this->findAccount('Phone agency');
         $employer   = $this->findAccount('Employer');
         $bills      = $this->findBudget('Bills');
+        $tagOne     = $this->findTag('TagOne');
+        $tagTwo     = $this->findTag('TagTwo');
         $house      = $this->findCategory('House');
         $withdrawal = TransactionType::whereType('Withdrawal')->first();
         $deposit    = TransactionType::whereType('Deposit')->first();
@@ -469,16 +487,22 @@ class TestDataSeeder extends Seeder
             ['from' => $checking, 'to' => $television, 'amount' => 50, 'transactionType' => $withdrawal, 'description' => 'TV for ' . $formatted,
              'date' => $cur, 'transactionCurrency' => $euro, 'budget' => $bills, 'category' => $house,]
         );
-        $this->createJournal(
+        $jrnl = $this->createJournal(
             ['from' => $checking, 'to' => $phone, 'amount' => 50, 'transactionType' => $withdrawal, 'description' => 'Phone bill for ' . $formatted,
              'date' => $cur, 'transactionCurrency' => $euro, 'budget' => $bills, 'category' => $house,]
         );
 
+        $jrnl->tags()->save($tagOne);
+
+
         // two transactions. One without a budget, one without a category.
-        $this->createJournal(
+        $jrnl = $this->createJournal(
             ['from'        => $checking, 'to' => $phone, 'amount' => 10, 'transactionType' => $withdrawal,
              'description' => 'Extra charges on phone bill for ' . $formatted, 'date' => $cur, 'transactionCurrency' => $euro, 'category' => $house]
         );
+
+        $jrnl->tags()->save($tagTwo);
+
         $this->createJournal(
             ['from'        => $checking, 'to' => $television, 'amount' => 5, 'transactionType' => $withdrawal,
              'description' => 'Extra charges on TV bill for ' . $formatted, 'date' => $cur, 'transactionCurrency' => $euro, 'budget' => $bills]
@@ -515,6 +539,27 @@ class TestDataSeeder extends Seeder
 
         return null;
     }
+
+    /**
+     * @param $tag
+     *
+     * @return Tag|null
+     */
+    protected function findTag($tagName)
+    {
+        // account
+        $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
+        /** @var Tag $tag */
+        foreach (Tag::get() as $tag) {
+            if ($tag->tag == $tagName && $user->id == $tag->user_id) {
+                return $tag;
+                break;
+            }
+        }
+
+        return null;
+    }
+
 
     /**
      * @param $name

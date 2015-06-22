@@ -63,7 +63,6 @@ class BudgetRepository extends ComponentRepository implements BudgetRepositoryIn
     public function getActiveBudgets()
     {
         $budgets = Auth::user()->budgets()->where('active', 1)->get();
-        $budgets->sortBy('name');
 
         return $budgets;
     }

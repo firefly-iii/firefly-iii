@@ -1,17 +1,17 @@
 <?php namespace FireflyIII\Http\Controllers\Auth;
 
 use App;
+use Auth;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Role;
 use FireflyIII\User;
-use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Message;
 use Mail;
 use Session;
 use Twig;
+use Validator;
 
 /**
  * Class AuthController
@@ -39,17 +39,11 @@ class AuthController extends Controller
     /**
      * Create a new authentication controller instance.
      *
-     * @param  \Illuminate\Contracts\Auth\Guard     $auth
-     * @param  \Illuminate\Contracts\Auth\Registrar $registrar
-     *
      * @codeCoverageIgnore
      *
      */
-    public function __construct(Guard $auth, Registrar $registrar)
+    public function __construct()
     {
-        $this->auth      = $auth;
-        $this->registrar = $registrar;
-
         $this->middleware('guest', ['except' => 'getLogout']);
     }
 
@@ -74,7 +68,7 @@ class AuthController extends Controller
      */
     public function postRegister(Request $request)
     {
-        $validator = $this->registrar->validator($request->all());
+        $validator = $this->validator($request->all());
 
         if ($validator->fails()) {
             $this->throwValidationException(
@@ -87,16 +81,16 @@ class AuthController extends Controller
         $data             = $request->all();
         $data['password'] = bcrypt($data['password']);
 
-        $this->auth->login($this->registrar->create($data));
+        Auth::login($this->create($data));
 
         // get the email address
-        if ($this->auth->user() instanceof User) {
-            $email = $this->auth->user()->email;
-
+        if (Auth::user() instanceof User) {
+            $email   = Auth::user()->email;
+            $address = route('index');
             // send email.
             Mail::send(
-                'emails.registered', [], function (Message $message) use ($email) {
-                $message->to($email, $email)->subject('Welcome to Firefly III!');
+                ['emails.registered-html', 'emails.registered'], ['address' => $address], function (Message $message) use ($email) {
+                $message->to($email, $email)->subject('Welcome to Firefly III! ');
             }
             );
 
@@ -108,15 +102,50 @@ class AuthController extends Controller
             // first user ever?
             if (User::count() == 1) {
                 $admin = Role::where('name', 'owner')->first();
-                $this->auth->user()->attachRole($admin);
+                Auth::user()->attachRole($admin);
             }
 
 
             return redirect($this->redirectPath());
         }
+        // @codeCoverageIgnoreStart
         App::abort(500, 'Not a user!');
 
         return redirect('/');
+        // @codeCoverageIgnoreEnd
     }
 
+    /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array $data
+     *
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function validator(array $data)
+    {
+        return Validator::make(
+            $data, [
+                     'email'    => 'required|email|max:255|unique:users',
+                     'password' => 'required|confirmed|min:6',
+                 ]
+        );
+    }
+
+    /**
+     * Create a new user instance after a valid registration.
+     *
+     * @param  array $data
+     *
+     * @return User
+     */
+    public function create(array $data)
+    {
+        return User::create(
+            [
+                'email'    => $data['email'],
+                'password' => $data['password'],
+            ]
+        );
+    }
 }

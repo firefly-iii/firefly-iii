@@ -49,8 +49,8 @@ class BillControllerTest extends TestCase
 
         // CURRENCY:
         $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
-        Amount::shouldReceive('getDefaultCurrency')->once()->andReturn($currency);
-        Amount::shouldReceive('getAllCurrencies')->once()->andReturn([$currency]);
+        Amount::shouldReceive('getDefaultCurrency')->andReturn($currency);
+        Amount::shouldReceive('getAllCurrencies')->andReturn([$currency]);
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
 
         $this->call('GET', '/bills/create');
@@ -98,12 +98,12 @@ class BillControllerTest extends TestCase
 
         // CURRENCY:
         $currency = FactoryMuffin::create('FireflyIII\Models\TransactionCurrency');
-        Amount::shouldReceive('getDefaultCurrency')->once()->andReturn($currency);
-        Amount::shouldReceive('getAllCurrencies')->once()->andReturn([$currency]);
+        Amount::shouldReceive('getDefaultCurrency')->andReturn($currency);
+        Amount::shouldReceive('getAllCurrencies')->andReturn([$currency]);
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
 
         $this->call('GET', '/bills/edit/' . $bill->id);
-        $this->assertViewHas('subTitle', 'Edit "' . e($bill->name) . '"');
+        $this->assertViewHas('subTitle', 'Edit bill "' . e($bill->name) . '"');
         $this->assertResponseOk();
     }
 

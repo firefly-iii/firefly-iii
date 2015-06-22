@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use Config;
+use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Input;
 use Preferences;
@@ -37,6 +38,20 @@ class HomeController extends Controller
      */
     public function flush()
     {
+        // get all tags.
+        // update all counts:
+        $tags = Tag::get();
+
+        /** @var Tag $tag */
+        foreach ($tags as $tag) {
+            foreach ($tag->transactionjournals()->get() as $journal) {
+                $count              = $journal->tags()->count();
+                $journal->tag_count = $count;
+                $journal->save();
+            }
+        }
+
+
         Session::clear();
 
         return Redirect::route('index');
@@ -49,8 +64,6 @@ class HomeController extends Controller
      */
     public function index(AccountRepositoryInterface $repository)
     {
-
-
         $types = Config::get('firefly.accountTypesByIdentifier.asset');
         $count = $repository->countAccounts($types);
 

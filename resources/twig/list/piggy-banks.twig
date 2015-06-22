@@ -1,56 +1,59 @@
-<table class="table table-striped" id="sortable">
+<table class="table table-hover" id="sortable">
     <tbody>
     {% for piggyBank in piggyBanks %}
-    <tr data-id="{{ piggyBank.id }}">
-        <td style="width:60px;">
-            <i class="fa fa-fw fa-bars handle"></i>
-            <i class="loadSpin"></i>
-        </td>
-        <td style="width:100px;">
-            <div class="btn-group btn-group-xs">
-                <a href="{{ route('piggy-banks.edit', piggyBank.id)}}" class="btn btn-default btn-xs"><i class="fa fa-pencil fa-fw"></i></a>
-                <a href="{{ route('piggy-banks.delete', piggyBank.id)}}" class="btn btn-danger btn-xs"><i class="fa fa-trash fa-fw"></i></a>
-            </div>
-        </td>
-        <td>
-            <a href="{{ route('piggy-banks.show', piggyBank.id) }}" title="{{ piggyBank.order }}">{{ piggyBank.name }}</a>
-        </td>
-        <td>
-            <span title="Saved so far">{{piggyBank.savedSoFar|formatAmountPlain }}</span>
-        </td>
-        <td style="text-align:right;width:40px;">
-            {% if piggyBank.savedSoFar > 0 %}
-                <a href="{{route('piggy-banks.removeMoney', piggyBank.id)}}" class="btn btn-default btn-xs removeMoney" data-id="{{ piggyBank.id }}"><span data-id="{{ piggyBank.id }}" class="glyphicon glyphicon-minus"></span></a>
-            {% endif %}
-        </td>
-
-        <td>
-            <div class="progress progress-striped" style="margin-bottom:0;">
-                <div
-                    {% if piggyBank.percentage == 100 %}
-                        class="progress-bar progress-bar-success"
-                    {% else %}
-                        class="progress-bar progress-bar-info"
-                    {% endif %}
-                    role="progressbar" aria-valuenow="{{ piggyBank.percentage }}" aria-valuemin="0" aria-valuemax="100" style="min-width: 40px;width: {{ piggyBank.percentage }}%;">
-                    {{ piggyBank.percentage }}%
+        <tr data-id="{{ piggyBank.id }}">
+            <td style="width:60px;">
+                <i class="fa fa-fw fa-bars handle"></i>
+                <i class="loadSpin"></i>
+            </td>
+            <td style="width:100px;">
+                <div class="btn-group btn-group-xs">
+                    <a href="{{ route('piggy-banks.edit', piggyBank.id) }}" class="btn btn-default btn-xs"><i class="fa fa-pencil fa-fw"></i></a>
+                    <a href="{{ route('piggy-banks.delete', piggyBank.id) }}" class="btn btn-danger btn-xs"><i class="fa fa-trash fa-fw"></i></a>
                 </div>
-            </div>
-        </td>
+            </td>
+            <td>
+                <a href="{{ route('piggy-banks.show', piggyBank.id) }}" title="{{ piggyBank.order }}">{{ piggyBank.name }}</a>
+            </td>
+            <td>
+                <span title="Saved so far">{{ piggyBank.savedSoFar|formatAmountPlain }}</span>
+            </td>
+            <td style="text-align:right;width:40px;">
+                {% if piggyBank.savedSoFar > 0 %}
+                    <a href="{{ route('piggy-banks.removeMoney', piggyBank.id) }}" class="btn btn-default btn-xs removeMoney" data-id="{{ piggyBank.id }}"><span
+                                data-id="{{ piggyBank.id }}" class="glyphicon glyphicon-minus"></span></a>
+                {% endif %}
+            </td>
+
+            <td>
+                <div class="progress progress" style="margin-bottom:0;">
+                    <div
+                            {% if piggyBank.percentage == 100 %}
+                                class="progress-bar progress-bar-success"
+                            {% else %}
+                                class="progress-bar progress-bar-info"
+                            {% endif %}
+                            role="progressbar" aria-valuenow="{{ piggyBank.percentage }}" aria-valuemin="0" aria-valuemax="100"
+                            style="min-width: 40px;width: {{ piggyBank.percentage }}%;">
+                        {{ piggyBank.percentage }}%
+                    </div>
+                </div>
+            </td>
 
 
-        <td style="width:40px;">
-            {% if piggyBank.leftToSave > 0 %}
-                <a href="{{ route('piggy-banks.addMoney', piggyBank.id) }}" class="btn btn-default btn-xs addMoney" data-id="{{ piggyBank.id }}"><span data-id="{{ piggyBank.id }}" class="glyphicon glyphicon-plus"></span></a>
-            {% endif %}
-        </td>
-        <td style="width:200px;">
-            <span title="Target amount">{{ piggyBank.targetamount|formatAmount }}</span>
-            {% if piggyBank.leftToSave > 0 %}
-                <span title="Left to save">({{ piggyBank.leftToSave|formatAmount }})</span>
-            {% endif %}
-        </td>
-    </tr>
-{% endfor %}
+            <td style="width:40px;">
+                {% if piggyBank.leftToSave > 0 %}
+                    <a href="{{ route('piggy-banks.addMoney', piggyBank.id) }}" class="btn btn-default btn-xs addMoney" data-id="{{ piggyBank.id }}"><span
+                                data-id="{{ piggyBank.id }}" class="glyphicon glyphicon-plus"></span></a>
+                {% endif %}
+            </td>
+            <td style="width:200px;">
+                <span title="Target amount">{{ piggyBank.targetamount|formatAmount }}</span>
+                {% if piggyBank.leftToSave > 0 %}
+                    <span title="Left to save">({{ piggyBank.leftToSave|formatAmount }})</span>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
     </tbody>
 </table>

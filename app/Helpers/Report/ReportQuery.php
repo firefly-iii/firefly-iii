@@ -99,7 +99,6 @@ class ReportQuery implements ReportQueryInterface
                 $join->on('account_meta.account_id', '=', 'accounts.id')->where('account_meta.name', '=', 'accountRole');
             }
             )
-                  ->orderBy('accounts.name', 'ASC')
                   ->where(
                       function (Builder $query) {
 
@@ -230,11 +229,11 @@ class ReportQuery implements ReportQueryInterface
      * @param Carbon  $end
      * @param bool    $shared
      *
-     * @return float
+     * @return string
      */
     public function spentNoBudget(Account $account, Carbon $start, Carbon $end, $shared = false)
     {
-        return floatval(
+        return
             Auth::user()->transactionjournals()
                 ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                 ->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
@@ -242,8 +241,7 @@ class ReportQuery implements ReportQueryInterface
                 ->where('transactions.account_id', $account->id)
                 ->before($end)
                 ->after($start)
-                ->whereNull('budget_transaction_journal.budget_id')->get(['transaction_journals.*'])->sum('amount')
-        );
+                ->whereNull('budget_transaction_journal.budget_id')->get(['transaction_journals.*'])->sum('amount');
     }
 
     /**

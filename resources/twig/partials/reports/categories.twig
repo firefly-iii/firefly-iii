@@ -1,24 +1,31 @@
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <i class="fa fa-bar-chart fa-fw"></i>
-        {{ 'categories'|_ }}
+<div class="box">
+    <div class="box-header with-border">
+        <h3 class="box-title">{{ 'categories'|_ }}</h3>
     </div>
-    <table class="table table-bordered">
-        <tr>
-            <th>{{ 'categories'|_ }}</th>
-            <th>{{ 'spent'|_ }}</th>
-        </tr>
-        {% for cat in categories.getCategories %}
+    <div class="box-body table-responsive no-padding">
+        <table class="table table-hover">
+            <thead>
             <tr>
-                <td>
-                    <a href="{{ route('categories.show',cat.id) }}">{{ cat.name }}</a>
-                </td>
-                <td><span class="text-danger">{{ (cat.spent)|formatAmountPlain }}</span></td>
+                <th>{{ 'categories'|_ }}</th>
+                <th>{{ 'spent'|_ }}</th>
             </tr>
-        {% endfor %}
-        <tr>
-            <td><em>{{ 'sum'|_ }}</em></td>
-            <td class="text-danger">{{ categories.getTotal|formatAmountPlain }}</td>
-        </tr>
-    </table>
+            </thead>
+            <tbody>
+            {% for cat in categories.getCategories %}
+                <tr>
+                    <td>
+                        <a href="{{ route('categories.show',cat.id) }}">{{ cat.name }}</a>
+                    </td>
+                    <td><span class="text-danger">{{ (cat.spent)|formatAmountPlain }}</span></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+            <tr>
+                <td><em>{{ 'sum'|_ }}</em></td>
+                <td class="text-danger">{{ categories.getTotal|formatAmountPlain }}</td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
 </div>

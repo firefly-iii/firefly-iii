@@ -37,7 +37,7 @@ class CurrencyController extends Controller
     public function create()
     {
         $subTitleIcon = 'fa-plus';
-        $subTitle     = 'Create a new currency';
+        $subTitle     = trans('firefly.create_currency');
 
         // put previous url in session if not redirect from store (not "create another").
         if (Session::get('currency.create.fromStore') !== true) {
@@ -88,9 +88,10 @@ class CurrencyController extends Controller
         Session::put('currency.delete.url', URL::previous());
         Session::flash('gaEventCategory', 'currency');
         Session::flash('gaEventAction', 'delete');
+        $subTitle = trans('form.delete_currency', ['name' => $currency->name]);
 
 
-        return view('currency.delete', compact('currency'));
+        return view('currency.delete', compact('currency', 'subTitle'));
     }
 
     /**
@@ -124,7 +125,7 @@ class CurrencyController extends Controller
     public function edit(TransactionCurrency $currency)
     {
         $subTitleIcon     = 'fa-pencil';
-        $subTitle         = 'Edit currency "' . e($currency->name) . '"';
+        $subTitle         = trans('firefly.edit_currency', ['name' => $currency->name]);
         $currency->symbol = htmlentities($currency->symbol);
 
         // put previous url in session if not redirect from store (not "return_to_edit").

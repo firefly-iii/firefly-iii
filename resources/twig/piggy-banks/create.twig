@@ -1,56 +1,54 @@
 {% extends "./layout/default.twig" %}
-{% block content %}
+
+{% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
+{% endblock %}
+
+{% block content %}
     {{ Form.open({'class' : 'form-horizontal','id' : 'store','url' : route('piggy-banks.store')}) }}
-    <input type="hidden" name="repeats" value="0" />
+    <input type="hidden" name="repeats" value="0"/>
 
-<div class="row">
-    <div class="col-lg-6 col-md-12 col-sm-6">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <i class="fa fa-fw fa-exclamation"></i> {{ 'mandatoryFields'|_ }}
-            </div>
-            <div class="panel-body">
+    <div class="row">
+        <div class="col-lg-6 col-md-12 col-sm-6">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
+                </div>
+                <div class="box-body">
 
-                {{ ExpandedForm.text('name') }}
-                {{ ExpandedForm.select('account_id',accounts,null,{'label' : 'saveOnAccount'|_}) }}
-                {{ ExpandedForm.amount('targetamount') }}
+                    {{ ExpandedForm.text('name') }}
+                    {{ ExpandedForm.select('account_id',accounts,null,{'label' : 'saveOnAccount'|_}) }}
+                    {{ ExpandedForm.amount('targetamount') }}
 
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-lg-6 col-md-12 col-sm-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-smile-o"></i> {{ 'optionalFields'|_ }}
+        <div class="col-lg-6 col-md-12 col-sm-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.date('targetdate') }}
+                </div>
             </div>
-            <div class="panel-body">
-                {{ ExpandedForm.date('targetdate') }}
-                {{ ExpandedForm.checkbox('remind_me','1',false) }}
-                {{ ExpandedForm.select('reminder',periods,'month') }}
-            </div>
-        </div>
 
-        <!-- panel for options -->
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-bolt"></i> {{ 'options'|_ }}
+            <!-- panel for options -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'options'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.optionsList('create','piggy bank') }}
+                </div>
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-success pull-right">
+                        Store new piggy bank
+                    </button>
+                </div>
             </div>
-            <div class="panel-body">
-                {{ ExpandedForm.optionsList('create','piggy bank') }}
-            </div>
-        </div>
 
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <p>
-            <button type="submit" class="btn btn-lg btn-success">
-                <i class="fa fa-plus-circle"></i> Store new piggy bank
-            </button>
-        </p>
-    </div>
-</div>
-</form>
+    {{ Form.close|raw }}
 {% endblock %}

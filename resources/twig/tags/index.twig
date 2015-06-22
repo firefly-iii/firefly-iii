@@ -1,74 +1,92 @@
 {% extends "./layout/default.twig" %}
-{% block content %}
+
+{% block breadcrumbs %}
     {{ Breadcrumbs.renderIfExists(Route.getCurrentRoute.getName) }}
+{% endblock %}
+
+{% block content %}
 <div class="row">
     <div class="col-lg-12">
-        <div class="panel panel-default">
-            <div class="panel-heading"><i class="fa fa-fw fa-tags"></i> Tags</div>
-            <div class="panel-body">
-                <div id="tagHelp" class="collapse
-                {% if not helpHidden %}
-                in
-                {% endif %}
-                ">
-                    <p>
-                        Usually tags are singular words, designed to quickly band items together
-                        using things like <span class="label label-info">expensive</span>,
-                        <span class="label label-info">bill</span> or
-                        <span class="label label-info">for-party</span>. In Firefly III, tags can have more properties
-                        such as a date, description and location. This allows you to join transactions together in a more meaningful
-                        way. For example, you could make a tag called <span class="label label-success">Christmas dinner with friends</span>
-                        and add information about the restaurant. Such tags are "singular", you would only use them for a single occasion,
-                        perhaps with multiple transactions.
-                    </p>
-                    <p>
-                        Tags group transactions together, which makes it possible to store reimbursements
-                        (in case you front money for others) and other "balancing acts" where expenses
-                        are summed up (the payments on your new TV) or where expenses and deposits
-                        are cancelling each other out (buying something with saved money). It's all up to you.
-                        Using tags the old-fashioned way is of course always possible.
-                    </p>
-                    <p>
-                        Create a tag to get started or enter tags when creating new transactions.
-                    </p>
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Tags</h3>
+                <!-- ACTIONS MENU -->
+                <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                 </div>
+            </div>
+            <div class="box-body">
                 <p>
-                    <a data-toggle="collapse" id="tagHelpButton" href="#tagHelp" aria-expanded="false" aria-controls="tagHelp">
-                        {% if not helpHidden %}
-                            Hide help
-                        {% else %}
-                            Show help
-                        {% endif %}
-                    </a>
+                    Usually tags are singular words, designed to quickly band items together
+                    using things like <span class="label label-info">expensive</span>,
+                    <span class="label label-info">bill</span> or
+                    <span class="label label-info">for-party</span>. In Firefly III, tags can have more properties
+                    such as a date, description and location. This allows you to join transactions together in a more meaningful
+                    way. For example, you could make a tag called <span class="label label-success">Christmas dinner with friends</span>
+                    and add information about the restaurant. Such tags are "singular", you would only use them for a single occasion,
+                    perhaps with multiple transactions.
                 </p>
                 <p>
-                    <a href="{{route('tags.create')}}" title="New tag" class="btn btn-info"><i class="fa fa-fw fa-plus"></i> Create new tag</a>
+                    Tags group transactions together, which makes it possible to store reimbursements
+                    (in case you front money for others) and other "balancing acts" where expenses
+                    are summed up (the payments on your new TV) or where expenses and deposits
+                    are cancelling each other out (buying something with saved money). It's all up to you.
+                    Using tags the old-fashioned way is of course always possible.
                 </p>
-                <p style="line-height: 200%;">
-                    {% if tags|length == 0 %}
-                        <em>No tags</em>
-                    {% else %}
-                        {% for tag in tags %}
-
-                            <span style="display: inline;"><a style="font-size:100%;font-weight:normal;" class="label label-success" href="{{route('tags.show',tag.id)}}">
-                                {% if tag.tagMode == 'nothing' %}
-                                    <i class="fa fa-fw fa-tag"></i>
-                                {% endif %}
-                                {% if tag.tagMode == 'balancingAct' %}
-                                        <i class="fa fa-fw fa-refresh"></i>
-                                {% endif %}
-                                {% if tag.tagMode == 'advancePayment' %}
-                                    <i class="fa fa-fw fa-sort-numeric-desc"></i>
-                                {% endif %}
-                                {{tag.tag}}</a>
-                            </span>
-                        {% endfor %}
-                    {% endif %}
+                <p>
+                    Create a tag to get started or enter tags when creating new transactions.
                 </p>
+            </div>
+            <div class="box-footer">
+                <a href="{{route('tags.create')}}" title="New tag" class="btn btn-info pull-right">Create new tag</a>
             </div>
         </div>
     </div>
 </div>
+<div class="row">
+    {% for type in types %}
+    <div class="col-lg-4">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">{{ ('tag_title_'~type)|_ }}</h3>
+                <!-- ACTIONS MENU -->
+                <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                {% for year,months in collection[type] %}
+                    <h4>{{ year }}</h4>
+
+                    {% for month,tags in months %}
+                        <h5>{{ month }}</h5>
+                        <p style="line-height: 200%;">
+                            {% for tag in tags %}
+                                <span style="display: inline;"><a style="font-size:100%;font-weight:normal;" class="label label-success" href="{{route('tags.show',tag.id)}}">
+                                    {% if tag.tagMode == 'nothing' %}
+                                        <i class="fa fa-fw fa-tag"></i>
+                                    {% endif %}
+                                    {% if tag.tagMode == 'balancingAct' %}
+                                        <i class="fa fa-fw fa-refresh"></i>
+                                    {% endif %}
+                                    {% if tag.tagMode == 'advancePayment' %}
+                                        <i class="fa fa-fw fa-sort-numeric-desc"></i>
+                                    {% endif %}
+                                    {{tag.tag}}</a>
+                                </span>
+                            {% endfor %}
+                        </p>
+                    {% endfor %}
+                {% endfor %}
+
+
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+
 {% endblock %}
 {% block scripts %}
 <script type="text/javascript" src="js/tags.js"></script>
