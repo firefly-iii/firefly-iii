@@ -1,7 +1,6 @@
 <?php
 use Carbon\Carbon;
 use FireflyIII\Models\PiggyBank;
-use FireflyIII\Models\Reminder;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepository;
 use League\FactoryMuffin\Facade as FactoryMuffin;
 
@@ -55,17 +54,10 @@ class PiggyBankRepositoryTest extends TestCase
     public function testDestroy()
     {
         $piggyBank = FactoryMuffin::create('FireflyIII\Models\PiggyBank');
-        $reminder  = FactoryMuffin::create('FireflyIII\Models\Reminder');
-
-        // attach reminders to the piggy bank:
-        $reminder->remindersable_id   = $piggyBank->id;
-        $reminder->remindersable_type = 'FireflyIII\Models\PiggyBank';
-        $reminder->save();
 
         $this->object->destroy($piggyBank);
 
         $this->assertCount(0, PiggyBank::where('id', $piggyBank->id)->whereNull('deleted_at')->get());
-        $this->assertCount(0, Reminder::where('id', $reminder->id)->whereNull('deleted_at')->get());
 
     }
 
@@ -142,11 +134,9 @@ class PiggyBankRepositoryTest extends TestCase
         $account = FactoryMuffin::create('FireflyIII\Models\Account');
 
         $data = [
-            'remind_me'     => 1,
             'account_id'    => $account->id,
             'name'          => 'Some piggy',
             'targetamount'  => 100,
-            'reminder_skip' => 0,
             'order'         => 1,
 
         ];
@@ -166,12 +156,10 @@ class PiggyBankRepositoryTest extends TestCase
         $account = FactoryMuffin::create('FireflyIII\Models\Account');
 
         $data = [
-            'remind_me'      => 1,
             'account_id'     => $account->id,
             'name'           => 'Some piggy',
             'targetamount'   => 100,
             'create_another' => 1,
-            'reminder_skip'  => 0,
             'order'          => 1,
 
         ];
@@ -193,9 +181,7 @@ class PiggyBankRepositoryTest extends TestCase
             'account_id'   => $piggyBank->account_id,
             'targetamount' => 101,
             'targetdate'   => new Carbon,
-            'reminder'     => null,
             'startdate'    => new Carbon,
-            'remind_me'    => '1'
         ];
 
         $new = $this->object->update($piggyBank, $data);

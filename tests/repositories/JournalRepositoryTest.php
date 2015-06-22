@@ -1,6 +1,5 @@
 <?php
 use Carbon\Carbon;
-use FireflyIII\Models\Reminder;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepository;
@@ -35,21 +34,6 @@ class JournalRepositoryTest extends TestCase
     public function tearDown()
     {
         parent::tearDown();
-    }
-
-    /**
-     * @covers FireflyIII\Repositories\Journal\JournalRepository::deactivateReminder
-     */
-    public function testDeactivateReminder()
-    {
-        $reminder         = FactoryMuffin::create('FireflyIII\Models\Reminder');
-        $reminder->active = 1;
-        $reminder->save();
-        $this->be($reminder->user);
-
-        $this->object->deactivateReminder($reminder->id);
-
-        $this->assertEquals(1, Reminder::where('id', $reminder->id)->where('active', 0)->count());
     }
 
     /**

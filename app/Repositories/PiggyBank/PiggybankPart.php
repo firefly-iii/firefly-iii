@@ -4,7 +4,6 @@ namespace FireflyIII\Repositories\PiggyBank;
 
 use Carbon\Carbon;
 use FireflyIII\Models\PiggyBankRepetition;
-use FireflyIII\Models\Reminder;
 
 /**
  * Class PiggyBankPart
@@ -20,8 +19,6 @@ class PiggyBankPart
     public $cumulativeAmount;
     /** @var  float */
     public $currentamount;
-    /** @var  Reminder */
-    public $reminder;
 
     /** @var  PiggyBankRepetition */
     public $repetition;
@@ -31,28 +28,6 @@ class PiggyBankPart
 
     /** @var  Carbon */
     public $targetdate;
-
-    /**
-     * @return Reminder
-     */
-    public function getReminder()
-    {
-        if (is_null($this->reminder)) {
-            $this->reminder = $this->repetition->piggyBank->reminders()->where('startdate', $this->getStartdate()->format('Y-m-d'))->where(
-                'enddate', $this->getTargetdate()->format('Y-m-d')
-            )->first();
-        }
-
-        return $this->reminder;
-    }
-
-    /**
-     * @param Reminder $reminder
-     */
-    public function setReminder($reminder)
-    {
-        $this->reminder = $reminder;
-    }
 
     /**
      * @return Carbon
@@ -100,14 +75,6 @@ class PiggyBankPart
     public function setRepetition($repetition)
     {
         $this->repetition = $repetition;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasReminder()
-    {
-        return !is_null($this->reminder);
     }
 
     /**

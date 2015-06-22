@@ -88,7 +88,6 @@ class TestDataSeeder extends Seeder
         $this->createBudgets();
         $this->createCategories();
         $this->createPiggyBanks();
-        $this->createReminders();
         $this->createBills();
         $this->createExpenseAccounts();
         $this->createRevenueAccounts();
@@ -264,9 +263,6 @@ class TestDataSeeder extends Seeder
                 'targetamount'  => 2000,
                 'startdate'     => $this->som,
                 'targetdate'    => null,
-                'reminder'      => null,
-                'reminder_skip' => 0,
-                'remind_me'     => 0,
                 'order'         => 0,
             ]
         );
@@ -281,9 +277,6 @@ class TestDataSeeder extends Seeder
                 'targetamount'  => 2000,
                 'startdate'     => $this->som,
                 'targetdate'    => $end,
-                'reminder'      => null,
-                'reminder_skip' => 0,
-                'remind_me'     => 0,
                 'order'         => 0,
             ]
         );
@@ -292,7 +285,6 @@ class TestDataSeeder extends Seeder
 
         /*
          * New: create no less than eight piggy banks that
-         * create all sorts of reminders
          */
         $list     = ['week', 'quarter', 'month', 'year'];
         $nextYear = clone $this->_startOfMonth;
@@ -306,9 +298,6 @@ class TestDataSeeder extends Seeder
                     'targetamount'  => 1000,
                     'startdate'     => $this->som,
                     'targetdate'    => $nextYear,
-                    'reminder'      => $entry,
-                    'reminder_skip' => 0,
-                    'remind_me'     => 1,
                     'order'         => 0,
                 ]
             );
@@ -319,9 +308,6 @@ class TestDataSeeder extends Seeder
                     'targetamount'  => 1000,
                     'startdate'     => $this->som,
                     'targetdate'    => null,
-                    'reminder'      => $entry,
-                    'reminder_skip' => 0,
-                    'remind_me'     => 1,
                     'order'         => 0,
                 ]
             );
@@ -346,14 +332,6 @@ class TestDataSeeder extends Seeder
         }
 
         return null;
-    }
-
-    /**
-     *
-     */
-    public function createReminders()
-    {
-
     }
 
     /**

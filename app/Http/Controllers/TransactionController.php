@@ -296,8 +296,6 @@ class TransactionController extends Controller
             event(new JournalCreated($journal, intval($request->get('piggy_bank_id'))));
         }
 
-        $repository->deactivateReminder($request->get('reminder_id'));
-
         Session::flash('success', 'New transaction "' . $journal->description . '" stored!');
         Preferences::mark();
 

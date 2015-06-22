@@ -363,7 +363,6 @@ class PiggyBankControllerTest extends TestCase
             'account_id'   => $piggyBank->account_id,
             'targetamount' => 100,
             'targetdate'   => '',
-            'reminder'     => 'month',
             '_token'       => 'replaceMe'
         ];
 
@@ -388,7 +387,6 @@ class PiggyBankControllerTest extends TestCase
             'account_id'     => $piggyBank->account_id,
             'targetamount'   => 100,
             'targetdate'     => '',
-            'reminder'       => 'month',
             'create_another' => 1,
             '_token'         => 'replaceMe'
         ];
@@ -414,7 +412,6 @@ class PiggyBankControllerTest extends TestCase
             'account_id'   => $piggyBank->account_id,
             'targetamount' => 200,
             'targetdate'   => '',
-            'reminder'     => 'month',
             '_token'       => 'replaceMe'
         ];
 
@@ -440,7 +437,6 @@ class PiggyBankControllerTest extends TestCase
             'targetamount'   => 200,
             'targetdate'     => '',
             'return_to_edit' => 1,
-            'reminder'       => 'month',
             '_token'         => 'replaceMe'
         ];
 

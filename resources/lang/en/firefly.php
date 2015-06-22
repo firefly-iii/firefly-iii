@@ -147,8 +147,6 @@ return [
 
     // menu and titles, should be recycled as often as possible:
     'toggleNavigation'              => 'Toggle navigation',
-    'seeAllReminders'               => 'See all reminders',
-    'reminders'                     => 'Reminders',
     'currency'                      => 'Currency',
     'preferences'                   => 'Preferences',
     'logout'                        => 'Logout',
@@ -272,10 +270,6 @@ return [
     'start_date'                    => 'Start date',
     'target_date'                   => 'Target date',
     'no_target_date'                => 'No target date',
-    'reminder'                      => 'Reminder',
-    'no_reminder'                   => 'No reminder',
-    'reminders_left'                => 'Reminders left',
-    'expected_amount_per_reminder'  => 'Expected amount per reminder',
     'todo'                          => 'to do',
     'table'                         => 'Table',
     'piggy_bank_not_exists'         => 'Piggy bank no longer exists.',
@@ -292,10 +286,6 @@ return [
     'tag_title_nothing'             => 'Default tags',
     'tag_title_balancingAct'        => 'Balancing act tags',
     'tag_title_advancePayment'      => 'Advance payment tags',
-
-    // reminders
-    'reminder_for_piggy'            => 'Reminder for piggy bank ":name"',
-    'dismissed_reminder_for_piggy'  => 'Dismissed reminder for piggy bank ":name"',
 
 
 ];

@@ -6,7 +6,6 @@
 
 {% block content %}
     {{ Form.open({'class' : 'form-horizontal','id' : 'store','url' : route('transactions.store',what)}) }}
-    <input type="hidden" name="reminder_id" value="{{ Input.get('reminder_id') }}" />
     <input type="hidden" name="what" value="{{ what }}" />
     <div class="row">
         <div class="col-lg-6 col-md-12 col-sm-12">

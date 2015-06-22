@@ -156,8 +156,6 @@ return [
 
     // menu and titles, should be recycled as often as possible:
     'toggleNavigation'              => 'Navigatie aan of uit',
-    'seeAllReminders'               => 'Bekijk alle herinneringen',
-    'reminders'                     => 'Herinneringen',
     'currency'                      => 'Munteenheden',
     'preferences'                   => 'Voorkeuren',
     'logout'                        => 'Uitloggen',
@@ -281,10 +279,6 @@ return [
     'start_date'                    => 'Startdatum',
     'target_date'                   => 'Doeldatum',
     'no_target_date'                => 'Geen doeldatum',
-    'reminder'                      => 'Herinnering',
-    'no_reminder'                   => 'Geen herinnering',
-    'reminders_left'                => 'Herinneringen te gaan',
-    'expected_amount_per_reminder'  => 'Verwacht bedrag per herinnering',
     'todo'                          => 'te doen',
     'table'                         => 'Tabel',
     'piggy_bank_not_exists'         => 'Dit spaarpotje bestaat niet meer.',
@@ -301,9 +295,5 @@ return [
     'tag_title_nothing'             => 'Standaard tags',
     'tag_title_balancingAct'        => 'Balancing act tags',
     'tag_title_advancePayment'      => 'Advance payment tags',
-
-    // reminders
-    'reminder_for_piggy'            => 'Herinnering voor spaarpotje ":name"',
-    'dismissed_reminder_for_piggy'  => 'Genegeerde herinnering voor spaarpotje ":name"',
 
 ];

@@ -33,10 +33,6 @@ return [
     'edit_bill'             => 'Edit bill ":name"',
     'delete_bill'           => 'Delete bill ":name"',
 
-    // reminders
-    'reminders'             => 'Reminders',
-    'reminder'              => 'Reminder #:id',
-
     // reports
     'reports'               => 'Reports',
     'monthly_report'        => 'Montly report for :date',

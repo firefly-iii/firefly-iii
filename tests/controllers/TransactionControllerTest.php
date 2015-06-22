@@ -270,7 +270,6 @@ class TransactionControllerTest extends TestCase
         $this->be($account->user);
 
         $data = [
-            'reminder_id'        => '',
             'what'               => 'withdrawal',
             'description'        => 'Bla bla bla',
             'account_id'         => $account->id,
@@ -291,7 +290,6 @@ class TransactionControllerTest extends TestCase
 
         // fake!
         $repository->shouldReceive('store')->andReturn($journal);
-        $repository->shouldReceive('deactivateReminder')->andReturnNull();
 
 
         $this->call('POST', '/transactions/store/withdrawal', $data);
@@ -317,7 +315,6 @@ class TransactionControllerTest extends TestCase
         $this->be($account->user);
 
         $data = [
-            'reminder_id'        => '',
             'what'               => 'withdrawal',
             'description'        => 'Bla bla bla',
             'account_id'         => $account->id,
@@ -337,7 +334,6 @@ class TransactionControllerTest extends TestCase
 
         // fake!
         $repository->shouldReceive('store')->andReturn($journal);
-        $repository->shouldReceive('deactivateReminder')->andReturnNull();
 
 
         $this->call('POST', '/transactions/store/withdrawal', $data);
@@ -377,7 +373,6 @@ class TransactionControllerTest extends TestCase
         $piggy->save();
 
         $data = [
-            'reminder_id'        => '',
             'what'               => 'transfer',
             'description'        => 'Bla bla bla',
             'account_from_id'    => $account->id,
@@ -398,7 +393,6 @@ class TransactionControllerTest extends TestCase
 
         // fake!
         $repository->shouldReceive('store')->andReturn($journal);
-        $repository->shouldReceive('deactivateReminder')->andReturnNull();
 
 
         $this->call('POST', '/transactions/store/withdrawal', $data);

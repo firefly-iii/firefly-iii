@@ -5,7 +5,6 @@ use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankRepetition;
-use FireflyIII\Models\Reminder;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Facades\Navigation;
@@ -98,15 +97,6 @@ class EventServiceProvider extends ServiceProvider
                 /** @var Transaction $transaction */
                 foreach ($journal->transactions()->get() as $transaction) {
                     $transaction->delete();
-                }
-            }
-        );
-        PiggyBank::deleting(
-            function (PiggyBank $piggyBank) {
-                $reminders = $piggyBank->reminders()->get();
-                /** @var Reminder $reminder */
-                foreach ($reminders as $reminder) {
-                    $reminder->delete();
                 }
             }
         );

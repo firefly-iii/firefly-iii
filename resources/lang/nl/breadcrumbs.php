@@ -33,10 +33,6 @@ return [
     'edit_bill'             => 'Wijzig contract ":name"',
     'delete_bill'           => 'Verwijder contract ":name"',
 
-    // reminders
-    'reminders'             => 'Herinneringen',
-    'reminder'              => 'Herinnering #:id',
-
     // reports
     'reports'               => 'Overzichten',
     'monthly_report'        => 'Maandoverzicht :date',

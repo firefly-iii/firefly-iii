@@ -27,21 +27,6 @@ class JournalRepository implements JournalRepositoryInterface
 {
 
     /**
-     * @param int $reminderId
-     *
-     * @return boolean|null
-     */
-    public function deactivateReminder($reminderId)
-    {
-        $reminder = Auth::user()->reminders()->find($reminderId);
-        if ($reminder) {
-            $reminder->active = 0;
-            $reminder->save();
-        }
-
-    }
-
-    /**
      * @param TransactionJournal $journal
      *
      * @return bool

@@ -71,23 +71,6 @@
                                 {% endif %}
                             </td>
                         </tr>
-                        {% if piggyBank.reminder %}
-                            <tr>
-                                <td>{{ 'reminder'|_ }}</td>
-                                <td>
-                                    {% if piggyBank.remind_me == 0 %}
-                                        <em>{{ 'no_reminder'|_ }}</em>
-                                    {% else %}
-                                        {{ 'every'|_ }}
-                                        {% if piggyBank.reminder_skip != 0 %}
-                                            {{ piggyBank.reminder_skip }}
-                                        {% else %}
-                                            {{ piggyBank.reminder }}(s)
-                                        {% endif %}
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endif %}
                     </table>
                 </div>
             </div>

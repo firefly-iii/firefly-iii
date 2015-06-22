@@ -13,43 +13,6 @@
 
     <!-- /.navbar-header -->
     <ul class="nav navbar-top-links navbar-right hidden-xs">
-
-        <!-- reminders -->
-        {% if reminders|length > 0 %}
-            <li class="dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
-                    <i class="fa fa-envelope fa-fw"></i> <i class="fa fa-caret-down"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-messages">
-                    {% for reminder in reminders %}
-                    <li>
-                        <a href="{{ route('reminders.show',reminder.id) }}">
-                            <div>
-                                <strong>
-                                    {{ reminder.remindersable.name }}
-                                </strong>
-                                    <span class="pull-right text-muted">
-                                        <em>{{ reminder.startdate.diffForHumans }}</em>
-                                    </span>
-                            </div>
-                            <div>{{ reminder.description|raw }}</div>
-                        </a>
-                    </li>
-                    <li class="divider"></li>
-                    {% endfor %}
-                    <li>
-                        <a class="text-center" href="{{ route('reminders.index') }}">
-                            <strong>{{ 'seeAllReminders'|_ }}</strong>
-                            <i class="fa fa-angle-right"></i>
-                        </a>
-                    </li>
-                </ul>
-                <!-- /.dropdown-messages -->
-            </li>
-        {% endif %}
-
-
-
         <!-- /.dropdown -->
         <!-- new stuff create button -->
         <li class="dropdown">
@@ -80,7 +43,6 @@
                 <li><a href="{{ route('profile') }}"><i class="fa fa-user fa-fw"></i> {{ Auth.user.email }}</a></li>
                 <li><a href="{{ route('preferences') }}"><i class="fa fa-gear fa-fw"></i> {{ 'preferences'|_ }}</a></li>
                 <li><a href="{{ route('currency.index') }}"><i class="fa fa-usd fa-fw"></i> {{ 'currency'|_ }}</a></li>
-                <li><a href="{{ route('reminders.index') }}"><i class="fa fa-clock-o fa-fw"></i> {{ 'reminders'|_ }}</a></li>
                 <li class="divider"></li>
                 <li><a href="{{ route('logout') }}"><i class="fa fa-sign-out fa-fw"></i> {{ 'logout'|_ }}</a></li>
             </ul>
@@ -203,13 +165,9 @@
                     <a class="{{ activeRoutePartial('currency') }}" href="{{ route('currency.index') }}"><i class="fa fa-usd fa-fw"></i> {{ 'currency'|_ }}</a>
                 </li>
                 <li class="hidden-sm hidden-md hidden-lg">
-                    <a class="{{ activeRoutePartial('reminders') }}" href="{{ route('reminders.index') }}"><i class="fa fa-clock-o fa-fw"></i> {{ 'reminders'|_ }}</a>
-                </li>
-                <li class="hidden-sm hidden-md hidden-lg">
                     <a href="{{ route('logout') }}"><i class="fa fa-sign-out fa-fw"></i> {{ 'logout'|_ }}</a>
                 </li>
 
-                <!-- reminders, again-->
             </ul>
         </div>
         <!-- /.sidebar-collapse -->

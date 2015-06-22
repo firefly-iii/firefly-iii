@@ -87,7 +87,7 @@ var defaultBarChartOptions = {
     },
     fontName: 'Roboto',
     fontSize: 11,
-    colors: ["#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043", "#9e9d24", "#5c6bc0", "#f06292", "#00796b", "#c2185b"],
+    colors: ["#357ca5", "#008d4c", "#db8b0b", "#ca195a", "#555299", "#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043", "#9e9d24", "#5c6bc0", "#f06292", "#00796b", "#c2185b"],
     vAxis: {
         textStyle: {
             color: '#838383'
@@ -124,6 +124,7 @@ var defaultComboChartOptions = {
         format: '\u20AC #'
     },
     fontName: 'Roboto',
+    colors: ["#357ca5", "#008d4c", "#db8b0b", "#ca195a", "#555299", "#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043", "#9e9d24", "#5c6bc0", "#f06292", "#00796b", "#c2185b"],
     fontSize: 11,
     legend: {
         position: 'none'
