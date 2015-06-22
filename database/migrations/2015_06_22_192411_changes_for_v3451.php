@@ -35,8 +35,8 @@ class ChangesForV3451 extends Migration
 
         Schema::table(
             'piggy_banks', function (Blueprint $table) {
-            $table->smallInteger('reminder_skip')->unsigned();
-            $table->boolean('remind_me');
+            //$table->smallInteger('reminder_skip')->unsigned();
+            //$table->boolean('remind_me');
             $table->enum('reminder', ['day', 'week', 'quarter', 'month', 'year'])->nullable();
         }
         );
@@ -52,8 +52,8 @@ class ChangesForV3451 extends Migration
     {
         Schema::table(
             'piggy_banks', function (Blueprint $table) {
-            $table->dropColumn('reminder_skip');
-            $table->dropColumn('remind_me');
+            //$table->dropColumn('reminder_skip');
+            //$table->dropColumn('remind_me');
             $table->dropColumn('reminder');
         }
         );
