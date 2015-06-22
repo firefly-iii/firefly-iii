@@ -57,7 +57,7 @@ class ChangesForV3310 extends Migration
             $table->decimal('longitude', 18, 12)->nullable();
             $table->smallInteger('zoomLevel', false, true)->nullable();
 
-            // connect reminders to users
+            // connect tags to users
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         }
         );
