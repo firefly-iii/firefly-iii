@@ -90,7 +90,7 @@ var defaultBarChartOptions = {
     colors: ["#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043", "#9e9d24", "#5c6bc0", "#f06292", "#00796b", "#c2185b"],
     vAxis: {
         textStyle: {
-            color: '#838383',
+            color: '#838383'
         },
         textPosition: 'in',
         gridlines: {
@@ -148,7 +148,7 @@ var defaultColumnChartOptions = {
     fontSize: 11,
     hAxis: {
         textStyle: {
-            color: '#838383',
+            color: '#838383'
         },
         gridlines: {
             color: 'transparent'
@@ -159,7 +159,7 @@ var defaultColumnChartOptions = {
     colors: ["#357ca5", "#008d4c", "#db8b0b", "#ca195a", "#555299", "#4285f4", "#db4437", "#f4b400", "#0f9d58", "#ab47bc", "#00acc1", "#ff7043", "#9e9d24", "#5c6bc0", "#f06292", "#00796b", "#c2185b"],
     vAxis: {
         textStyle: {
-            color: '#838383',
+            color: '#838383'
         },
         baselineColor: '#aaaaaa',
         format: '\u20AC #'

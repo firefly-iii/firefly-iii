@@ -5,44 +5,38 @@
 {% endblock %}
 
 {% block content %}
-{{ Form.model(category, {'class' : 'form-horizontal','id' : 'update','url' : route('categories.update',category.id)})  }}
-<input type="hidden" name="id" value="{{ category.id }}" />
-<div class="row">
-    <div class="col-lg-6 col-md-6 col-sm-12">
-        <div class="box box-primary">
-            <div class="box-header with-border">
-                <i class="fa fa-exclamation"></i> {{ 'mandatoryFields'|_ }}
+    {{ Form.model(category, {'class' : 'form-horizontal','id' : 'update','url' : route('categories.update',category.id)}) }}
+    <input type="hidden" name="id" value="{{ category.id }}"/>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.text('name') }}
+                </div>
             </div>
-            <div class="box-body">
-                {{ ExpandedForm.text('name') }}
+
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12">
+
+
+            <!-- panel for options -->
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'options'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.optionsList('update','category') }}
+                </div>
+                <div class="box-footer">
+                    <button type="submit" class="btn pull-right btn-success">
+                        {{ 'update_category'|_ }}
+                    </button>
+                </div>
             </div>
         </div>
-
     </div>
-    <div class="col-lg-6 col-md-6 col-sm-12">
-
-
-        <!-- panel for options -->
-        <div class="box">
-            <div class="box-header with-border">
-                <i class="fa fa-bolt"></i> {{ 'options'|_ }}
-            </div>
-            <div class="box-body">
-                {{ ExpandedForm.optionsList('update','category') }}
-            </div>
-        </div>
-
-    </div>
-</div>
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-        <p>
-            <button type="submit" class="btn btn-lg btn-success">
-                {{ 'update_category'|_ }}
-            </button>
-        </p>
-    </div>
-</div>
-
-</form>
+    {{ Form.close|raw }}
 {% endblock %}

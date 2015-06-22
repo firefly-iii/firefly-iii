@@ -10,6 +10,12 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ Session.get('start').formatLocalized(monthFormat) }}</h3>
+
+                    <!-- ACTIONS MENU -->
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+
                 </div>
                 <div class="box-body">
                     <div class="row">
@@ -18,16 +24,21 @@
                         </div>
                         <div class="col-lg-6 col-md-4 col-sm-3" style="text-align:right;">
                             <small>{{ trans('firefly.availableIn',{date : Session.get('start').formatLocalized(monthFormat) }) }}:
-                                <a href="#" class="updateIncome"><span id="budgetIncomeTotal" data-value="{{ budgetIncomeTotal }}">{{ budgetIncomeTotal|formatAmount }}</span></a></small>
+                                <a href="#" class="updateIncome"><span id="budgetIncomeTotal"
+                                                                       data-value="{{ budgetIncomeTotal }}">{{ budgetIncomeTotal|formatAmount }}</span></a>
+                            </small>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
-                            <div class="progress progress-striped budgetedBar">
-                                <div class="progress-bar progress-bar-danger" id="progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0;"></div>
-                                <div class="progress-bar progress-bar-warning" id="progress-bar-warning" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: 0;"></div>
-                                <div class="progress-bar progress-bar-info" id="progress-bar-default" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0;"></div>
+                            <div class="progress budgetedBar">
+                                <div class="progress-bar progress-bar-danger" id="progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                                     aria-valuemax="100" style="width: 0;"></div>
+                                <div class="progress-bar progress-bar-warning" id="progress-bar-warning" role="progressbar" aria-valuenow="10" aria-valuemin="0"
+                                     aria-valuemax="100" style="width: 0;"></div>
+                                <div class="progress-bar progress-bar-info" id="progress-bar-default" role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                                     aria-valuemax="100" style="width: 0;"></div>
                             </div>
                         </div>
                     </div>
@@ -38,10 +49,13 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
-                            <div class="progress progress-striped spentBar">
-                                    <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0;"></div>
-                                    <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0;"></div>
-                                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0;"></div>
+                            <div class="progress spentBar">
+                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                                     style="width: 0;"></div>
+                                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                                     style="width: 0;"></div>
+                                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                                     style="width: 0;"></div>
                             </div>
                         </div>
                     </div>
@@ -54,6 +68,11 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transactionsWithoutBudget'|_ }}</h3>
+
+                    <!-- ACTIONS MENU -->
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
                 </div>
                 <div class="box-body">
                     <p>
@@ -64,7 +83,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <div class="row">
@@ -73,57 +91,64 @@
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">
-                        <!-- link in header -->
-                        {% if budget.currentRep %}
-                            <a href="{{ route('budgets.show', [budget.id, budget.currentRep.id]) }}" class="budget-link" data-id="{{ budget.id }}">{{ budget.name }}</a>
-                        {% else %}
-                            <a href="{{ route('budgets.show',budget.id) }}" class="budget-link" data-id="{{ budget.id }}">{{ budget.name }}</a>
-                        {% endif %}
+                            <!-- link in header -->
+                            {% if budget.currentRep %}
+                                <a href="{{ route('budgets.show', [budget.id, budget.currentRep.id]) }}" class="budget-link"
+                                   data-id="{{ budget.id }}">{{ budget.name }}</a>
+                            {% else %}
+                                <a href="{{ route('budgets.show',budget.id) }}" class="budget-link" data-id="{{ budget.id }}">{{ budget.name }}</a>
+                            {% endif %}
                         </h3>
 
-
                         <!-- ACTIONS MENU -->
-                        <div class="pull-right">
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             <div class="btn-group">
-                                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                                    {{ 'actions'|_ }}
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu pull-right" role="menu">
+                                <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                                <ul class="dropdown-menu" role="menu">
                                     <li><a href="{{ route('budgets.edit',budget.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a></li>
                                     <li><a href="{{ route('budgets.delete',budget.id) }}"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}</a></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
-                    <table class="table">
-                        <tr>
-                            <td style="width:40%;">{{ 'budgeted'|_ }}</td>
-                            <td>
-                                <div class="form-group" style="margin-bottom:0;">
-                                    <div class="input-group">
-                                        <div class="input-group-addon">{{ defaultCurrency.symbol|raw }}</div>
-                                        <input type="hidden" name="balance_currency_id" value="1" />
-                                        <input class="form-control budgetAmount" data-original="{{ budget.currentRep.amount|number_format(0,'','') }}" data-id="{{ budget.id }}" value="{{ budget.currentRep.amount|number_format(0,'','') }}" autocomplete="off" step="1" min="0" max="{{ budgetMaximum }}" name="amount" type="number">
+                    <div class="box-body">
+                        <table class="table">
+                            <tr>
+                                <td style="width:40%;">{{ 'budgeted'|_ }}</td>
+                                <td>
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <div class="input-group">
+                                            <div class="input-group-addon">{{ defaultCurrency.symbol|raw }}</div>
+                                            <input type="hidden" name="balance_currency_id" value="1"/>
+                                            <input class="form-control budgetAmount" data-original="{{ budget.currentRep.amount|number_format(0,'','') }}"
+                                                   data-id="{{ budget.id }}" value="{{ budget.currentRep.amount|number_format(0,'','') }}" autocomplete="off"
+                                                   step="1" min="0" max="{{ budgetMaximum }}" name="amount" type="number">
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="width:50%;">{{ 'spent'|_ }}</td>
-                            <td>{{ budget.spent|formatAmount }}</td>
-                        </tr>
-                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:50%;">{{ 'spent'|_ }}</td>
+                                <td>{{ budget.spent|formatAmount }}</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
-        </div>
+            </div>
         {% endfor %}
         <div class="col-lg-3 col-sm-4 col-md-6">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'createBudget'|_ }}</h3>
+
+                    <!-- ACTIONS MENU -->
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
                 </div>
                 <div class="box-body">
-                    <a href="{{ route('budgets.create') }}" class="btn btn-success"><i class="fa fa-fw fa-plus"></i> {{ 'createBudget'|_ }}</a>
+                    <a href="{{ route('budgets.create') }}" class="btn btn-success pull-right">{{ 'createBudget'|_ }}</a>
                 </div>
             </div>
         </div>
@@ -132,6 +157,10 @@
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'inactiveBudgets'|_ }}</h3>
+                        <!-- ACTIONS MENU -->
+                        <div class="box-tools pull-right">
+                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        </div>
                     </div>
                     <div class="box-body">
                         {% for index,budget in inactive %}

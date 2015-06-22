@@ -6,7 +6,7 @@
 
 {% block content %}
     {{ Form.model(budget, {'class' : 'form-horizontal','id' : 'update','url' : route('budgets.update',budget.id) } ) }}
-    <input type="hidden" name="id" value="{{budget.id}}" />
+    <input type="hidden" name="id" value="{{ budget.id }}"/>
     <div class="row">
         <div class="col-lg-6 col-md-12 col-sm-6">
             <div class="box box-primary">
@@ -27,21 +27,15 @@
                     <h3 class="box-title">{{ 'options'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    {{ ExpandedForm.optionsList('update','budget')  }}
+                    {{ ExpandedForm.optionsList('update','budget') }}
+                </div>
+                <div class="box-footer">
+                    <button type="submit" class="btn pull-right btn-success">Update budget</button>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <p>
-                <button type="submit" class="btn btn-lg btn-success">
-                    <i class="fa fa-pencil"></i> Update budget
-                </button>
-            </p>
-        </div>
-    </div>
-    </form>
 
+    {{ Form.close|raw }}
 
 {% endblock %}
