@@ -263,6 +263,8 @@ class TestDataSeeder extends Seeder
                 'targetamount'  => 2000,
                 'startdate'     => $this->som,
                 'targetdate'    => null,
+                'reminder_skip' => 0,
+                'remind_me'     => 0,
                 'order'         => 0,
             ]
         );
@@ -277,6 +279,8 @@ class TestDataSeeder extends Seeder
                 'targetamount'  => 2000,
                 'startdate'     => $this->som,
                 'targetdate'    => $end,
+                'reminder_skip' => 0,
+                'remind_me'     => 0,
                 'order'         => 0,
             ]
         );
@@ -298,6 +302,8 @@ class TestDataSeeder extends Seeder
                     'targetamount'  => 1000,
                     'startdate'     => $this->som,
                     'targetdate'    => $nextYear,
+                    'reminder_skip' => 0,
+                    'remind_me'     => 0,
                     'order'         => 0,
                 ]
             );
@@ -308,6 +314,8 @@ class TestDataSeeder extends Seeder
                     'targetamount'  => 1000,
                     'startdate'     => $this->som,
                     'targetdate'    => null,
+                    'reminder_skip' => 0,
+                    'remind_me'     => 0,
                     'order'         => 0,
                 ]
             );
@@ -422,7 +430,8 @@ class TestDataSeeder extends Seeder
         $user = User::whereEmail('thegrumpydictator@gmail.com')->first();
 
         Tag::create(
-            ['tag' => 'TagOne', 'tagMode' => 'nothing', 'user_id' => $user->id]);
+            ['tag' => 'TagOne', 'tagMode' => 'nothing', 'user_id' => $user->id]
+        );
 
         Tag::create(['tag' => 'TagTwo', 'tagMode' => 'nothing', 'user_id' => $user->id]);
         Tag::create(['tag' => 'TagThree', 'tagMode' => 'nothing', 'user_id' => $user->id]);
