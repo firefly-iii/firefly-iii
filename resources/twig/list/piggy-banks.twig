@@ -20,8 +20,8 @@
             </td>
             <td style="text-align:right;width:40px;">
                 {% if piggyBank.savedSoFar > 0 %}
-                    <a href="{{ route('piggy-banks.removeMoney', piggyBank.id) }}" class="btn btn-default btn-xs removeMoney" data-id="{{ piggyBank.id }}"><span
-                                data-id="{{ piggyBank.id }}" class="glyphicon glyphicon-minus"></span></a>
+                    <a href="{{ route('piggy-banks.removeMoney', piggyBank.id) }}" class="btn btn-default btn-xs removeMoney" data-id="{{ piggyBank.id }}">
+                        <i data-id="{{ piggyBank.id }}" class="fa fa-minus"></i></a>
                 {% endif %}
             </td>
 
@@ -43,8 +43,8 @@
 
             <td style="width:40px;">
                 {% if piggyBank.leftToSave > 0 %}
-                    <a href="{{ route('piggy-banks.addMoney', piggyBank.id) }}" class="btn btn-default btn-xs addMoney" data-id="{{ piggyBank.id }}"><span
-                                data-id="{{ piggyBank.id }}" class="glyphicon glyphicon-plus"></span></a>
+                    <a href="{{ route('piggy-banks.addMoney', piggyBank.id) }}" class="btn btn-default btn-xs addMoney" data-id="{{ piggyBank.id }}">
+                        <i data-id="{{ piggyBank.id }}" class="fa fa-plus"></i></a>
                 {% endif %}
             </td>
             <td style="width:200px;">
