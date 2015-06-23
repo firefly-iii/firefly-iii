@@ -226,6 +226,17 @@ class ChangesForV336 extends Migration
         }
         );
 
+        /**
+         * REMINDERS
+         */
+        Schema::table(
+            'reminders', function (Blueprint $table) {
+            $table->smallInteger('encrypted', false, true)->default(0);
+
+
+        }
+        );
+
     }
 
 }
