@@ -59,19 +59,19 @@ Everything is organised:
 
 _Please note that everything in these screenshots is fictional and may not be realistic._
 
-![Index](https://i.nder.be/c09vfw90)
+![Index](https://i.nder.be/gdryw73q)
 
-![Accounts](https://i.nder.be/hkn0vhcg)
+![Accounts](https://i.nder.be/hmpkq8q0)
 
-![Budgets](https://i.nder.be/h2snx2mw)
+![Budgets](https://i.nder.be/cbq2n5g9)
 
-![Reports 1](https://i.nder.be/c9f8zy5c)
+![Reports 1](https://i.nder.be/cmwvqrds)
 
-![Reports 2](https://i.nder.be/ghvs5png)
+![Reports 2](https://i.nder.be/cv4dqbp4)
 
-![Bills](https://i.nder.be/h58kh00p)
+![Bills](https://i.nder.be/gmkxqdw7)
 
-![Piggy banks](https://i.nder.be/hkud0h53)
+![Piggy banks](https://i.nder.be/cc5u6h3b)
 
 ## Running and installing
 
