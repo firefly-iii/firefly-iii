@@ -237,6 +237,8 @@ FactoryMuffin::define(
         },
         'startdate'     => 'date',
         'targetdate'    => 'date',
+        'remind_me'     => false,
+        'reminder_skip' => 0,
         'order'         => 0,
     ]
 );

@@ -138,6 +138,8 @@ class PiggyBankRepositoryTest extends TestCase
             'name'          => 'Some piggy',
             'targetamount'  => 100,
             'order'         => 1,
+            'remind_me'     => false,
+            'reminder_skip' => 0,
 
         ];
 
@@ -161,6 +163,8 @@ class PiggyBankRepositoryTest extends TestCase
             'targetamount'   => 100,
             'create_another' => 1,
             'order'          => 1,
+            'remind_me'     => false,
+            'reminder_skip' => 0,
 
         ];
 

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class PiggyBank
  *
- * @codeCoverageIgnore 
+ * @codeCoverageIgnore
  * @package FireflyIII\Models
  * @property integer                                                                                $id
  * @property \Carbon\Carbon                                                                         $created_at
@@ -43,7 +43,7 @@ class PiggyBank extends Model
     use SoftDeletes;
 
     protected $fillable
-                      = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'targetdate'];
+                      = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'targetdate', 'remind_me', 'reminder_skip'];
     protected $hidden = ['targetamount_encrypted', 'encrypted'];
 
     /**

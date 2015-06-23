@@ -297,7 +297,7 @@ class PiggyBankController extends Controller
      */
     public function show(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank)
     {
-        $events = $repository->getEvents($piggyBank);
+        $events   = $repository->getEvents($piggyBank);
         $subTitle = e($piggyBank->name);
 
         return view('piggy-banks.show', compact('piggyBank', 'events', 'subTitle'));
@@ -314,11 +314,13 @@ class PiggyBankController extends Controller
     {
 
         $piggyBankData = [
-            'name'         => $request->get('name'),
-            'startdate'    => new Carbon,
-            'account_id'   => intval($request->get('account_id')),
-            'targetamount' => floatval($request->get('targetamount')),
-            'targetdate'   => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
+            'name'          => $request->get('name'),
+            'startdate'     => new Carbon,
+            'account_id'    => intval($request->get('account_id')),
+            'targetamount'  => floatval($request->get('targetamount')),
+            'remind_me'     => false,
+            'reminder_skip' => 0,
+            'targetdate'    => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
         ];
 
         $piggyBank = $repository->store($piggyBankData);
@@ -347,11 +349,13 @@ class PiggyBankController extends Controller
     public function update(PiggyBankRepositoryInterface $repository, PiggyBankFormRequest $request, PiggyBank $piggyBank)
     {
         $piggyBankData = [
-            'name'         => $request->get('name'),
-            'startdate'    => is_null($piggyBank->startdate) ? $piggyBank->created_at : $piggyBank->startdate,
-            'account_id'   => intval($request->get('account_id')),
-            'targetamount' => floatval($request->get('targetamount')),
-            'targetdate'   => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
+            'name'          => $request->get('name'),
+            'startdate'     => is_null($piggyBank->startdate) ? $piggyBank->created_at : $piggyBank->startdate,
+            'account_id'    => intval($request->get('account_id')),
+            'targetamount'  => floatval($request->get('targetamount')),
+            'remind_me'     => false,
+            'reminder_skip' => 0,
+            'targetdate'    => strlen($request->get('targetdate')) > 0 ? new Carbon($request->get('targetdate')) : null,
         ];
 
         $piggyBank = $repository->update($piggyBank, $piggyBankData);

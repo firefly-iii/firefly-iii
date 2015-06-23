@@ -116,7 +116,10 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function store(array $data)
     {
-        $piggyBank         = PiggyBank::create($data);
+        $data['remind_me']     = false;
+        $data['reminder_skip'] = 0;
+
+        $piggyBank             = PiggyBank::create($data);
 
         return $piggyBank;
     }
