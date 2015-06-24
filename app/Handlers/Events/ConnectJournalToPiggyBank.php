@@ -51,9 +51,15 @@ class ConnectJournalToPiggyBank
         if (is_null($repetition)) {
             return false;
         }
-
-        $amount = $journal->correct_amount;
         bcscale(2);
+
+        $amount = $journal->actual_amount;
+        // if piggy account matches source account, the amount is positive
+        if ($piggyBank->account_id == $journal->source_account->id) {
+            $amount = $amount * -1;
+        }
+
+
         $repetition->currentamount = bcadd($repetition->currentamount, $amount);
         $repetition->save();
 
