@@ -4,12 +4,12 @@
         <th data-defaultsort="disabled">&nbsp;</th>
         <th>{{ trans('list.name') }}</th>
         {% if what == 'asset' %}
-        <th>{{ trans('list.role') }}</th>
+        <th class="hidden-sm hidden-xs">{{ trans('list.role') }}</th>
         {% endif %}
         <th>{{ trans('list.currentBalance') }}</th>
-        <th>{{ trans('list.active') }}</th>
-        <th>{{ trans('list.lastActivity') }}</th>
-        <th>{{ trans('list.balanceDiff', {'start' : Session.get('start').formatLocalized(monthAndDayFormat),'end' : Session.get('end').formatLocalized(monthAndDayFormat)}) }}</th>
+        <th class="hidden-sm hidden-xs">{{ trans('list.active') }}</th>
+        <th class="hidden-sm hidden-xs">{{ trans('list.lastActivity') }}</th>
+        <th class="hidden-sm hidden-xs">{{ trans('list.balanceDiff', {'start' : Session.get('start').formatLocalized(monthAndDayFormat),'end' : Session.get('end').formatLocalized(monthAndDayFormat)}) }}</th>
     </tr>
     </thead>
     <tbody>
@@ -23,7 +23,7 @@
             </td>
             <td><a href="{{route('accounts.show',account.id)}}">{{ account.name }}</a></td>
             {% if what == "asset" %}
-                <td>
+                <td class="hidden-sm hidden-xs">
                     {% for entry in account.accountmeta %}
                         {% if entry.name == 'accountRole' %}
                             {{ entry.data|getAccountRole }}
@@ -32,7 +32,7 @@
                 </td>
             {% endif %}
             <td data-value="{{ account|balance }}">{{ account|balance|formatAmount }}</td>
-            <td data-value="{{account.active}}">
+            <td class="hidden-sm hidden-xs" data-value="{{account.active}}">
                 {% if account.active %}
                     <i class="fa fa-fw fa-check"></i>
                 {% else %}
@@ -40,15 +40,15 @@
                 {% endif %}
             </td>
             {% if account.lastActivityDate %}
-                <td data-value="{{ account.lastActivityDate.format('U') }} ">
+                <td class="hidden-sm hidden-xs" data-value="{{ account.lastActivityDate.format('U') }} ">
                     {{ account.lastActivityDate.formatLocalized(monthAndDayFormat) }}
                 </td>
             {% else %}
-                <td data-value="0">
+                <td class="hidden-sm hidden-xs" data-value="0">
                     <em>Never</em>
                 </td>
             {% endif %}
-            <td data-value="{{account.endBalance - account.startBalance}}">
+            <td class="hidden-sm hidden-xs" data-value="{{account.endBalance - account.startBalance}}">
                 {{ (account.endBalance - account.startBalance)|formatAmount }}
             </td>
 

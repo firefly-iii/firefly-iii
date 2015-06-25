@@ -3,14 +3,14 @@
         <tr>
             <th data-defaultsort="disabled">&nbsp;</th>
             <th>{{ trans('list.name') }}</th>
-            <th>{{ trans('list.lastActivity') }}</th>
+            <th class="hidden-sm hidden-xs">{{ trans('list.lastActivity') }}</th>
         </tr>
     </thead>
     <tbody>
     <tr>
         <td>&nbsp;</td>
         <td><a href="{{ route('categories.noCategory') }}"><em>{{ 'without_category'|_ }}</em></a></td>
-        <td>&nbsp;</td>
+        <td class="hidden-sm hidden-xs">&nbsp;</td>
     </tr>
     {% for category in categories %}
     <tr>
@@ -24,11 +24,11 @@
             <a href="{{ route('categories.show', category.id) }}" title="{{ category.name }}">{{ category.name }}</a>
         </td>
         {% if category.lastActivity %}
-            <td data-value="{{ category.lastActivity.format('U') }}">
+            <td class="hidden-sm hidden-xs" data-value="{{ category.lastActivity.format('U') }}">
                 {{category.lastActivity.formatLocalized(monthAndDayFormat) }}
             </td>
         {% else %}
-            <td data-value="0">
+            <td class="hidden-sm hidden-xs" data-value="0">
                 <em>{{ 'never'|_ }}</em>
             </td>
         {% endif %}

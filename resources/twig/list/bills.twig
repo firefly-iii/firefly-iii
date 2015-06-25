@@ -3,13 +3,13 @@
     <tr>
         <th data-defaultsort="disabled">&nbsp;</th>
         <th>{{ trans('list.name') }}</th>
-        <th>{{ trans('list.matchesOn') }}</th>
+        <th class="hidden-sm hidden-xs">{{ trans('list.matchesOn') }}</th>
         <th colspan="2">{{ trans('list.matchingAmount') }}</th>
-        <th>{{ trans('list.lastMatch') }}</th>
-        <th>{{ trans('list.expectedMatch') }}</th>
-        <th>{{ trans('list.active') }}</th>
-        <th>{{ trans('list.automatch') }}</th>
-        <th>{{ trans('list.repeat_freq') }}</th>
+        <th class="hidden-sm hidden-xs">{{ trans('list.lastMatch') }}</th>
+        <th class="hidden-sm hidden-xs">{{ trans('list.expectedMatch') }}</th>
+        <th class="hidden-sm hidden-xs">{{ trans('list.active') }}</th>
+        <th class="hidden-sm hidden-xs">{{ trans('list.automatch') }}</th>
+        <th class="hidden-sm hidden-xs">{{ trans('list.repeat_freq') }}</th>
     </tr></thead>
     <tbody>
     {% for entry in bills %}
@@ -23,7 +23,7 @@
         <td>
             <a href="{{route('bills.show',entry.id)}}" title="{{ entry.name }}">{{ entry.name }}</a>
         </td>
-        <td data-value="{{ entry.match }}">
+        <td class="hidden-sm hidden-xs" data-value="{{ entry.match }}">
             {% for match in entry.match|split(',') %}
             <span class="label label-info">{{ match }}</span>
             {% endfor %}
@@ -35,40 +35,40 @@
             {{  entry.amount_max|formatAmount  }}
         </td>
             {% if entry.lastFoundMatch %}
-            <td data-value="{{ entry.lastFoundMatch.format('U') }}">
+            <td class="hidden-sm hidden-xs" data-value="{{ entry.lastFoundMatch.format('U') }}">
                 {{entry.lastFoundMatch.formatLocalized(monthAndDayFormat)}}
             </td>
             {% else %}
-            <td data-value="0">
+            <td class="hidden-sm hidden-xs" data-value="0">
                 <em>{{ 'unknown'|_ }}</em>
             </td>
             {% endif %}
 
             {% if entry.nextExpectedMatch%}
-            <td data-value="{{entry.nextExpectedMatch.format('U')}}">
+            <td class="hidden-sm hidden-xs" data-value="{{entry.nextExpectedMatch.format('U')}}">
                 {{entry.nextExpectedMatch.formatLocalized(monthAndDayFormat)}}
             </td>
             {% else %}
-            <td data-value="0">
+            <td class="hidden-sm hidden-xs" data-value="0">
                 <em>{{ 'unknown'|_ }}</em>
             </td>
             {% endif %}
 
-        <td data-value="{{ entry.active }}">
+        <td class="hidden-sm hidden-xs" data-value="{{ entry.active }}">
             {% if entry.active %}
                 <i class="fa fa-fw fa-check"></i>
             {% else %}
                 <i class="fa fa-fw fa-ban"></i>
             {% endif %}
         </td>
-        <td data-value="{{ entry.automatch }}">
+        <td class="hidden-sm hidden-xs" data-value="{{ entry.automatch }}">
             {% if entry.automatch %}
                  <i class="fa fa-fw fa-check"></i>
             {% else %}
                  <i class="fa fa-fw fa-ban"></i>
              {% endif %}
          </td>
-        <td data-value="{{ entry.repeat_freq }}{{ entry.skip }}">
+        <td class="hidden-sm hidden-xs" data-value="{{ entry.repeat_freq }}{{ entry.skip }}">
             {{ entry.repeat_freq|_ }}
              {% if entry.skip > 0 %}
                 skips over {{entry.skip}}

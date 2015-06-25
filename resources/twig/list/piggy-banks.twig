@@ -2,11 +2,11 @@
     <tbody>
     {% for piggyBank in piggyBanks %}
         <tr data-id="{{ piggyBank.id }}">
-            <td style="width:60px;">
+            <td style="width:60px;" class="hidden-sm hidden-xs">
                 <i class="fa fa-fw fa-bars handle"></i>
                 <i class="loadSpin"></i>
             </td>
-            <td style="width:100px;">
+            <td style="width:100px;" class="hidden-sm hidden-xs">
                 <div class="btn-group btn-group-xs">
                     <a href="{{ route('piggy-banks.edit', piggyBank.id) }}" class="btn btn-default btn-xs"><i class="fa fa-pencil fa-fw"></i></a>
                     <a href="{{ route('piggy-banks.delete', piggyBank.id) }}" class="btn btn-danger btn-xs"><i class="fa fa-trash fa-fw"></i></a>
@@ -18,14 +18,14 @@
             <td>
                 <span title="Saved so far">{{ piggyBank.savedSoFar|formatAmountPlain }}</span>
             </td>
-            <td style="text-align:right;width:40px;">
+            <td class="hidden-sm hidden-xs" style="text-align:right;width:40px;">
                 {% if piggyBank.savedSoFar > 0 %}
                     <a href="{{ route('piggy-banks.removeMoney', piggyBank.id) }}" class="btn btn-default btn-xs removeMoney" data-id="{{ piggyBank.id }}">
                         <i data-id="{{ piggyBank.id }}" class="fa fa-minus"></i></a>
                 {% endif %}
             </td>
 
-            <td>
+            <td class="hidden-sm hidden-xs">
                 <div class="progress progress" style="margin-bottom:0;">
                     <div
                             {% if piggyBank.percentage == 100 %}
@@ -41,13 +41,13 @@
             </td>
 
 
-            <td style="width:40px;">
+            <td class="hidden-sm hidden-xs" style="width:40px;">
                 {% if piggyBank.leftToSave > 0 %}
                     <a href="{{ route('piggy-banks.addMoney', piggyBank.id) }}" class="btn btn-default btn-xs addMoney" data-id="{{ piggyBank.id }}">
                         <i data-id="{{ piggyBank.id }}" class="fa fa-plus"></i></a>
                 {% endif %}
             </td>
-            <td style="width:200px;">
+            <td class="hidden-sm hidden-xs" style="width:200px;">
                 <span title="Target amount">{{ piggyBank.targetamount|formatAmount }}</span>
                 {% if piggyBank.leftToSave > 0 %}
                     <span title="Left to save">({{ piggyBank.leftToSave|formatAmount }})</span>

@@ -31,22 +31,22 @@
                         <thead>
                         <tr>
                             <th>{{ 'account'|_ }}</th>
-                            <th>{{ 'balance'|_ }}</th>
+                            <th class="hidden-sm hidden-xs">{{ 'balance'|_ }}</th>
                             <th>{{ 'left_for_piggy_banks'|_ }}</th>
-                            <th>{{ 'sum_of_piggy_banks'|_ }}</th>
-                            <th>{{ 'saved_so_far'|_ }}</th>
-                            <th>{{ 'left_to_save'|_ }}</th>
+                            <th class="hidden-sm hidden-xs">{{ 'sum_of_piggy_banks'|_ }}</th>
+                            <th class="hidden-sm hidden-xs">{{ 'saved_so_far'|_ }}</th>
+                            <th class="hidden-sm hidden-xs">{{ 'left_to_save'|_ }}</th>
                         </tr>
                         </thead>
                         <tbody>
                         {% for id,info in accounts %}
                             <tr>
                                 <td><a href="{{ route('accounts.show',id) }}">{{ info.name }}</a></td>
-                                <td>{{ info.balance|formatAmount }}</td>
+                                <td class="hidden-sm hidden-xs">{{ info.balance|formatAmount }}</td>
                                 <td>{{ info.leftForPiggyBanks|formatAmount }}</td>
-                                <td>{{ info.sumOfTargets|formatAmount }}</td>
-                                <td>{{ info.sumOfSaved|formatAmount }}</td>
-                                <td>{{ info.leftToSave|formatAmount }}</td>
+                                <td class="hidden-sm hidden-xs">{{ info.sumOfTargets|formatAmount }}</td>
+                                <td class="hidden-sm hidden-xs">{{ info.sumOfSaved|formatAmount }}</td>
+                                <td class="hidden-sm hidden-xs">{{ info.leftToSave|formatAmount }}</td>
                             </tr>
                         {% endfor %}
                         </tbody>

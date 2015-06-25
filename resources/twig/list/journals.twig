@@ -5,7 +5,7 @@
         <th class="hidden-xs" colspan="2">&nbsp;</th>
         <th>{{ trans('list.description') }}</th>
         <th>{{ trans('list.amount') }}</th>
-        <th>{{ trans('list.date') }}</th>
+        <th class="hidden-sm hidden-xs">{{ trans('list.date') }}</th>
         <th class="hidden-xs">{{ trans('list.from') }}</th>
         <th class="hidden-xs">{{ trans('list.to') }}</th>
         <!-- Hide budgets? -->
@@ -60,7 +60,7 @@
                         {{ journal.correct_amount|formatAmount }}
                     {% endif %}
                 </td>
-                <td>
+                <td class="hidden-sm hidden-xs">
                     {{journal.date.formatLocalized(monthAndDayFormat)}}
                 </td>
                 <td class="hidden-xs">
