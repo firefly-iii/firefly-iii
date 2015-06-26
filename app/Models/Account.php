@@ -181,6 +181,20 @@ class Account extends Model
     }
 
     /**
+     *
+     * @return string
+     */
+    public function getNameForEditformAttribute()
+    {
+        $name = $this->name;
+        if ($this->accountType->type == 'Cash account') {
+            $name = '';
+        }
+
+        return $name;
+    }
+
+    /**
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
