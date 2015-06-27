@@ -90,8 +90,8 @@ class AccountController extends Controller
     public function frontpage(AccountRepositoryInterface $repository)
     {
         $frontPage = Preferences::get('frontPageAccounts', []);
-        $start     = Session::get('start', Carbon::now()->startOfMonth());
-        $end       = Session::get('end', Carbon::now()->endOfMonth());
+        $start     = clone Session::get('start', Carbon::now()->startOfMonth());
+        $end       = clone Session::get('end', Carbon::now()->endOfMonth());
         $accounts  = $repository->getFrontpageAccounts($frontPage);
 
         // chart properties for cache:
@@ -101,7 +101,7 @@ class AccountController extends Controller
         $cache->addProperty('frontpage');
         $cache->addProperty('accounts');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            //return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $data = $this->generator->frontpage($accounts, $start, $end);
