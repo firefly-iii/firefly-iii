@@ -8,12 +8,10 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
-use Grumpydictator\Gchart\GChart;
 use Illuminate\Support\Collection;
 use Preferences;
 use Response;
 use Session;
-use Steam;
 
 /**
  * Class AccountController
@@ -124,8 +122,8 @@ class AccountController extends Controller
     {
 
 
-        $start   = Session::get('start', Carbon::now()->startOfMonth());
-        $end     = Session::get('end', Carbon::now()->endOfMonth());
+        $start = Session::get('start', Carbon::now()->startOfMonth());
+        $end   = Session::get('end', Carbon::now()->endOfMonth());
 
         // chart properties for cache:
         $cache = new CacheProperties();

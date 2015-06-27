@@ -1,9 +1,10 @@
 <?php
 
 namespace FireflyIII\Generator\Chart\Account;
+
+use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use Illuminate\Support\Collection;
-use Carbon\Carbon;
 
 /**
  * Interface AccountChartGenerator
