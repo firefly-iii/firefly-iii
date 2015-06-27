@@ -45,7 +45,7 @@
                         <div id="budgets-chart"></div>
                     {% endif %}
                     {% if Config.get('firefly.chart') == 'chartjs' %}
-                        <canvas id="accounts-chart" style="width:100%;height:400px;"></canvas>
+                        <canvas id="budgets-chart" style="width:100%;height:400px;"></canvas>
                     {% endif %}
                 </div>
             </div>
@@ -59,7 +59,12 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <div id="categories-chart"></div>
+                    {% if Config.get('firefly.chart') == 'google' %}
+                        <div id="categories-chart"></div>
+                    {% endif %}
+                    {% if Config.get('firefly.chart') == 'chartjs' %}
+                        <canvas id="categories-chart" style="width:100%;height:400px;"></canvas>
+                    {% endif %}
                 </div>
             </div>
 

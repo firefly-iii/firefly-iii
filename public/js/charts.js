@@ -3,6 +3,18 @@
 /*
  Make some colours:
  */
+/*
+#555299
+#4285f4
+#db4437
+#f4b400
+#0f9d58
+#ab47bc
+#00acc1
+#ff7043
+#9e9d24
+#5c6bc0", "#f06292", "#00796b", "#c2185b"],
+ */
 var colourSet = [
     [53, 124, 165],
     [0, 141, 76],
@@ -35,8 +47,23 @@ var defaultAreaOptions = {
     multiTooltipTemplate: "<%=datasetLabel%>: <%= '" + currencyCode + " ' + Number(value).toFixed(2).replace('.', ',') %>"
 };
 
-var defaultLineOptions = defaultAreaOptions;
-defaultLineOptions.datasetFill = false;
+var defaultLineOptions = {
+    scaleShowGridLines: false,
+    pointDotRadius: 2,
+    datasetStrokeWidth: 1,
+    pointHitDetectionRadius: 5,
+    datasetFill: false,
+    scaleFontSize: 10,
+    responsive: true,
+    scaleLabel:           "<%= '" + currencyCode + " ' + Number(value).toFixed(2).replace('.', ',') %>",
+    tooltipFillColor: "rgba(0,0,0,0.5)",
+    multiTooltipTemplate: "<%=datasetLabel%>: <%= '" + currencyCode + " ' + Number(value).toFixed(2).replace('.', ',') %>"
+};
+
+var defaultColumnOptions = {
+    multiTooltipTemplate: "<%=datasetLabel%>: <%= '" + currencyCode + " ' + Number(value).toFixed(2).replace('.', ',') %>"
+
+};
 
 /**
  * Function to draw a line chart:
@@ -116,8 +143,9 @@ function areaChart(URL, container, options) {
  */
 function columnChart(URL, container, options) {
     "use strict";
-
+    options = options || defaultColumnOptions;
     $.getJSON(URL).success(function (data) {
+
         var ctx = document.getElementById(container).getContext("2d");
         var newData = {};
         newData.datasets = [];
@@ -133,7 +161,8 @@ function columnChart(URL, container, options) {
             dataset.pointHighlightStroke = strokePointHighColors[i];
             newData.datasets.push(dataset);
         }
-        new Chart(ctx).Column(newData, options);
+        console.log(newData);
+        new Chart(ctx).Bar(newData, options);
 
     }).fail(function () {
         $('#' + container).addClass('google-chart-error');

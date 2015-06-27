@@ -149,7 +149,7 @@ class BudgetController extends Controller
         $cache->addProperty('budget');
         $cache->addProperty('all');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            //return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         bcscale(2);
@@ -159,7 +159,7 @@ class BudgetController extends Controller
             $repetitions = $repository->getBudgetLimitRepetitions($budget, $start, $end);
             if ($repetitions->count() == 0) {
                 $expenses = $repository->spentInPeriodCorrected($budget, $start, $end, true);
-                $allEntries->push([$budget->name, 0, 0, $expenses]);
+                $allEntries->push([$budget->name, 0, 0, $expenses, 0, 0]);
                 continue;
             }
             /** @var LimitRepetition $repetition */
@@ -171,18 +171,19 @@ class BudgetController extends Controller
                 $left      = max(bcsub($repetition->amount, $expenses), 0); // limited at zero.
                 $overspent = max(bcsub($expenses, $repetition->amount), 0); // limited at zero.
                 $date      = $repetition->startdate->formatLocalized($this->monthAndDayFormat);
-                $name      = $budget->name . ' (' . $date . ')';
+                //$name      = $budget->name . ' (' . $date . ')';
+                $name = $budget->name;
 
                 // $spent is maxed to the repetition amount:
                 $spent = $expenses > $repetition->amount ? $repetition->amount : $expenses;
 
 
-                $allEntries->push([$name, $left, $spent, $overspent]);
+                $allEntries->push([$name, $left, $spent, $overspent, $repetition->amount, $expenses]);
             }
         }
 
         $noBudgetExpenses = $repository->getWithoutBudgetSum($start, $end) * -1;
-        $allEntries->push([trans('firefly.noBudget'), 0, 0, $noBudgetExpenses]);
+        $allEntries->push([trans('firefly.noBudget'), 0, 0, $noBudgetExpenses, 0, 0]);
 
         $data = $this->generator->frontpage($allEntries);
         $cache->store($data);
