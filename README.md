@@ -82,11 +82,25 @@ and the **[first use guide](https://github.com/JC5/firefly-iii/wiki/First-use)**
 If you want to try out Firefly III, you can do so on [this dedicated website](https://geld.nder.be/). 
 This site always runs the latest version of Firefly III. If you want to use it, please read the [privacy considerations](https://github.com/JC5/firefly-iii/wiki/Privacy-on-demo-site) for this demo-site.
 
+## Credits
+
+Firefly III uses the following libraries and tools:
+
+* The AdminLTE template by [Almsaseed Studio](https://almsaeedstudio.com/)
+* The [Google charts](https://developers.google.com/chart/) library.
+* [Bootstrap](http://getbootstrap.com/)
+* [Laravel](http://laravel.com/)
+* [Twig](http://twig.sensiolabs.org/)
+* For development, some of the excellent tools made by [Barry van den Heuvel](https://github.com/barryvdh)
+* [Bootstrap sortable](https://github.com/drvic10k/bootstrap-sortable) by [Matúš Brliť](https://github.com/drvic10k).
+* [Date range picker](https://github.com/dangrossman/bootstrap-daterangepicker/) by [Dan Grossman](https://github.com/dangrossman)
+* The [real favicon generator](http://realfavicongenerator.net/)
+* Various other open source components (see [composer.json](https://github.com/JC5/firefly-iii/blob/master/composer.json))
+
 
 ## Current state
 
-Firefly III is pretty much all grown up. Full test coverage (nerd alert!) is coming. One of the things on the todo-list
-is adding translations.
+Firefly III is pretty much all grown up. Full test coverage (nerd alert!) is coming. Translations are a work in progress.
 
 Questions, ideas, bugs or other things to contribute? [Let me know](https://github.com/JC5/firefly-iii/issues/new)!
 
