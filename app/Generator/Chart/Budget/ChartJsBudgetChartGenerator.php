@@ -80,27 +80,28 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
         $left      = [];
         $spent     = [];
         $overspent = [];
-        $amount    = [];
-        $expenses  = [];
         foreach ($entries as $entry) {
             if ($entry[1] != 0 || $entry[2] != 0 || $entry[3] != 0) {
                 $left[]      = round($entry[1], 2);
                 $spent[]     = round($entry[2], 2);
                 $overspent[] = round($entry[3], 2);
-                $amount[]    = round($entry[4], 2);
-                $expenses[]  = round($entry[5], 2);
-                //$data['count']++;
             }
         }
 
         $data['datasets'][] = [
-            'label' => 'Amount',
-            'data'  => $amount,
+            'label' => trans('firefly.left'),
+            'data'  => $left,
         ];
         $data['datasets'][] = [
-            'label' => 'Spent',
-            'data'  => $expenses,
+            'label' => trans('firefly.spent'),
+            'data'  => $spent,
         ];
+        $data['datasets'][] = [
+            'label' => trans('firefly.overspent'),
+            'data'  => $overspent,
+        ];
+
+        $data['count'] = count($data['datasets']);
 
         return $data;
     }
@@ -140,23 +141,5 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
         }
 
         return $data;
-
-
-        $chart = new GChart;
-        // add columns:
-        $chart->addColumn(trans('firefly.month'), 'date');
-        foreach ($budgets as $budget) {
-            $chart->addColumn($budget->name, 'number');
-        }
-
-        /** @var array $entry */
-        foreach ($entries as $entry) {
-
-            $chart->addRowArray($entry);
-        }
-
-        $chart->generate();
-
-        return $chart->getData();
     }
 }

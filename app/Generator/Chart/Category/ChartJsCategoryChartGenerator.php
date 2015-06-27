@@ -31,7 +31,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
             'labels'   => [],
             'datasets' => [
                 [
-                    'label' => 'Spent',
+                    'label' => trans('firefly.spent'),
                     'data'  => []
                 ]
             ],
@@ -57,7 +57,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
             'labels'   => [],
             'datasets' => [
                 [
-                    'label' => 'Spent',
+                    'label' => trans('firefly.spent'),
                     'data'  => []
                 ]
             ],

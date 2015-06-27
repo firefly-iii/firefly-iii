@@ -56,10 +56,25 @@ var defaultAreaOptions = {
     datasetFill: true,
     scaleFontSize: 10,
     responsive: true,
-    scaleLabel:           "<%= '" + currencyCode + " ' + Number(value).toFixed(2).replace('.', ',') %>",
+    scaleLabel:           "<%= '" + currencySymbol + " ' + Number(value).toFixed(2).replace('.', ',') %>",
     tooltipFillColor: "rgba(0,0,0,0.5)",
-    multiTooltipTemplate: "<%=datasetLabel%>: <%= '" + currencyCode + " ' + Number(value).toFixed(2).replace('.', ',') %>"
+    multiTooltipTemplate: "<%=datasetLabel%>: <%= '" + currencySymbol + " ' + Number(value).toFixed(2).replace('.', ',') %>"
 };
+
+
+var defaultPieOptions = {
+    scaleShowGridLines: false,
+    pointDotRadius: 2,
+    datasetStrokeWidth: 1,
+    pointHitDetectionRadius: 5,
+    datasetFill: false,
+    scaleFontSize: 10,
+    responsive: true,
+    tooltipFillColor: "rgba(0,0,0,0.5)",
+    tooltipTemplate: "<%if (label){%><%=label%>: <%}%>" + currencySymbol + " <%= value %>",
+
+};
+
 
 var defaultLineOptions = {
     scaleShowGridLines: false,
@@ -69,13 +84,35 @@ var defaultLineOptions = {
     datasetFill: false,
     scaleFontSize: 10,
     responsive: true,
-    scaleLabel:           "<%= '" + currencyCode + " ' + Number(value).toFixed(2).replace('.', ',') %>",
+    scaleLabel:           "<%= '" + currencySymbol + " ' + Number(value).toFixed(2).replace('.', ',') %>",
     tooltipFillColor: "rgba(0,0,0,0.5)",
-    multiTooltipTemplate: "<%=datasetLabel%>: <%= '" + currencyCode + " ' + Number(value).toFixed(2).replace('.', ',') %>"
+    multiTooltipTemplate: "<%=datasetLabel%>: <%= '" + currencySymbol + " ' + Number(value).toFixed(2).replace('.', ',') %>"
 };
 
 var defaultColumnOptions = {
-    multiTooltipTemplate: "<%=datasetLabel%>: <%= '" + currencyCode + " ' + Number(value).toFixed(2).replace('.', ',') %>"
+    scaleShowGridLines: false,
+    pointDotRadius: 2,
+    barStrokeWidth: 1,
+    pointHitDetectionRadius: 5,
+    datasetFill: false,
+    scaleFontSize: 10,
+    responsive: true,
+    scaleLabel:      "<%= '" + currencySymbol + " ' + Number(value).toFixed(2).replace('.', ',') %>",
+    tooltipFillColor: "rgba(0,0,0,0.5)",
+    tooltipTemplate: "<%if (label){%><%=label%>: <%}%>" + currencySymbol + " <%= value %>",
+};
+
+var defaultStackedColumnOptions = {
+    scaleShowGridLines: false,
+    pointDotRadius: 2,
+    barStrokeWidth: 1,
+    pointHitDetectionRadius: 5,
+    datasetFill: false,
+    scaleFontSize: 10,
+    responsive: true,
+    scaleLabel:           "<%= '" + currencySymbol + " ' + Number(value).toFixed(2).replace('.', ',') %>",
+    tooltipFillColor: "rgba(0,0,0,0.5)",
+    multiTooltipTemplate: currencySymbol + " <%= Number(value).toFixed(2).replace('.', ',') %>"
 
 };
 
@@ -105,7 +142,7 @@ function lineChart(URL, container, options) {
             dataset.pointHighlightStroke = strokePointHighColors[i];
             newData.datasets.push(dataset);
         }
-        var myAreaChart = new Chart(ctx).Line(newData, options);
+        new Chart(ctx).Line(newData, options);
 
     }).fail(function () {
         $('#' + container).addClass('google-chart-error');
@@ -158,6 +195,7 @@ function areaChart(URL, container, options) {
 function columnChart(URL, container, options) {
     "use strict";
     options = options || defaultColumnOptions;
+
     $.getJSON(URL).success(function (data) {
 
         var ctx = document.getElementById(container).getContext("2d");
@@ -167,7 +205,6 @@ function columnChart(URL, container, options) {
         for (var i = 0; i < data.count; i++) {
             newData.labels = data.labels;
             var dataset = data.datasets[i];
-            console.log('Now at index ' + i + ' (count is ' + fillColors.length + ')');
             dataset.fillColor = fillColors[i];
             dataset.strokeColor = strokePointHighColors[i];
             dataset.pointColor = strokePointHighColors[i];
@@ -176,7 +213,6 @@ function columnChart(URL, container, options) {
             dataset.pointHighlightStroke = strokePointHighColors[i];
             newData.datasets.push(dataset);
         }
-        console.log(newData);
         new Chart(ctx).Bar(newData, options);
 
     }).fail(function () {
@@ -193,21 +229,17 @@ function columnChart(URL, container, options) {
  */
 function stackedColumnChart(URL, container, options) {
     "use strict";
+    options = options || defaultStackedColumnOptions;
+
     $.getJSON(URL).success(function (data) {
 
         var ctx = document.getElementById(container).getContext("2d");
         var newData = {};
         newData.datasets = [];
-        console.log('----');
-        console.log('URL: ' + URL);
-        console.log('Total datasets: ' + data.datasets.length);
-        console.log('data.count: ' + data.count);
-        console.log('----');
 
         for (var i = 0; i < data.count; i++) {
             newData.labels = data.labels;
             var dataset = data.datasets[i];
-            console.log('Now at index ' + i + ' (count is ' + fillColors.length + ')');
             dataset.fillColor = fillColors[i];
             dataset.strokeColor = strokePointHighColors[i];
             dataset.pointColor = strokePointHighColors[i];
@@ -216,13 +248,12 @@ function stackedColumnChart(URL, container, options) {
             dataset.pointHighlightStroke = strokePointHighColors[i];
             newData.datasets.push(dataset);
         }
-        console.log(newData);
         new Chart(ctx).StackedBar(newData, options);
 
     }).fail(function () {
         $('#' + container).addClass('google-chart-error');
     });
-    console.log('URL for column chart : ' + URL);
+    console.log('URL for stacked column chart : ' + URL);
 }
 
 /**
@@ -245,7 +276,7 @@ function comboChart(URL, container, options) {
 function pieChart(URL, container, options) {
     "use strict";
 
-    options = options || defaultColumnOptions;
+    options = options || defaultPieOptions;
     $.getJSON(URL).success(function (data) {
 
         var ctx = document.getElementById(container).getContext("2d");
@@ -256,5 +287,6 @@ function pieChart(URL, container, options) {
     });
 
 
-    console.log('no impl for pieChart');
+    console.log('URL for pie chart : ' + URL);
+
 }
