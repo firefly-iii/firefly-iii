@@ -107,8 +107,8 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind('FireflyIII\Generator\Chart\PiggyBank\PiggyBankChartGenerator', 'FireflyIII\Generator\Chart\PiggyBank\GooglePiggyBankChartGenerator');
         //$this->app->bind('FireflyIII\Generator\Chart\PiggyBank\PiggyBankChartGenerator', 'FireflyIII\Generator\Chart\PiggyBank\GooglePiggyBankChartGenerator');
 
-        $this->app->bind('FireflyIII\Generator\Chart\Report\ReportChartGenerator', 'FireflyIII\Generator\Chart\Report\GoogleReportChartGenerator');
         //$this->app->bind('FireflyIII\Generator\Chart\Report\ReportChartGenerator', 'FireflyIII\Generator\Chart\Report\GoogleReportChartGenerator');
+        $this->app->bind('FireflyIII\Generator\Chart\Report\ReportChartGenerator', 'FireflyIII\Generator\Chart\Report\ChartJsReportChartGenerator');
 
 
         $this->app->bind('FireflyIII\Helpers\Help\HelpInterface', 'FireflyIII\Helpers\Help\Help');

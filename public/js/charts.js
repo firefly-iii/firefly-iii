@@ -4,22 +4,36 @@
  Make some colours:
  */
 /*
-#555299
-#4285f4
-#db4437
-#f4b400
-#0f9d58
-#ab47bc
-#00acc1
-#ff7043
-#9e9d24
-#5c6bc0", "#f06292", "#00796b", "#c2185b"],
+ #555299
+ #4285f4
+ #
+ #
+ #
+ #
+ #
+ #
+ #
+ #", "#", "#", "#"],
  */
 var colourSet = [
     [53, 124, 165],
     [0, 141, 76],
     [219, 139, 11],
-    [202, 25, 90]
+    [202, 25, 90],
+    [85, 82, 153],
+    [66, 133, 244],
+    [219, 68, 55],
+    [244, 180, 0],
+    [15, 157, 88],
+    [171, 71, 188],
+    [0, 172, 193],
+    [255, 112, 67],
+    [158, 157, 36],
+    [92, 107, 192],
+    [240, 98, 146],
+    [0, 121, 107],
+    [194, 24, 91],
+
 ];
 
 var fillColors = [];
@@ -153,6 +167,7 @@ function columnChart(URL, container, options) {
         for (var i = 0; i < data.count; i++) {
             newData.labels = data.labels;
             var dataset = data.datasets[i];
+            console.log('Now at index ' + i + ' (count is ' + fillColors.length + ')');
             dataset.fillColor = fillColors[i];
             dataset.strokeColor = strokePointHighColors[i];
             dataset.pointColor = strokePointHighColors[i];
@@ -178,7 +193,36 @@ function columnChart(URL, container, options) {
  */
 function stackedColumnChart(URL, container, options) {
     "use strict";
-    columnChart(URL, container, options);
+    $.getJSON(URL).success(function (data) {
+
+        var ctx = document.getElementById(container).getContext("2d");
+        var newData = {};
+        newData.datasets = [];
+        console.log('----');
+        console.log('URL: ' + URL);
+        console.log('Total datasets: ' + data.datasets.length);
+        console.log('data.count: ' + data.count);
+        console.log('----');
+
+        for (var i = 0; i < data.count; i++) {
+            newData.labels = data.labels;
+            var dataset = data.datasets[i];
+            console.log('Now at index ' + i + ' (count is ' + fillColors.length + ')');
+            dataset.fillColor = fillColors[i];
+            dataset.strokeColor = strokePointHighColors[i];
+            dataset.pointColor = strokePointHighColors[i];
+            dataset.pointStrokeColor = "#fff";
+            dataset.pointHighlightFill = "#fff";
+            dataset.pointHighlightStroke = strokePointHighColors[i];
+            newData.datasets.push(dataset);
+        }
+        console.log(newData);
+        new Chart(ctx).StackedBar(newData, options);
+
+    }).fail(function () {
+        $('#' + container).addClass('google-chart-error');
+    });
+    console.log('URL for column chart : ' + URL);
 }
 
 /**

@@ -101,7 +101,6 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
         ];
 
         $current = clone $start;
-        $today   = new Carbon;
 
         while ($end >= $current) {
             $data['labels'][]              = $current->formatLocalized($format);

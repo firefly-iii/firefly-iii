@@ -60,7 +60,7 @@ class BudgetController extends Controller
         $cache->addProperty($last);
         $cache->addProperty('budget');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            //return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $entries = new Collection;
@@ -105,7 +105,7 @@ class BudgetController extends Controller
         $cache->addProperty($budget->id);
         $cache->addProperty($repetition->id);
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            //return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $entries = new Collection;
@@ -215,7 +215,7 @@ class BudgetController extends Controller
         $cache->addProperty('budget');
         $cache->addProperty('year');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            //return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $entries = new Collection;

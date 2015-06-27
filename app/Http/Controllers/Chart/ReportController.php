@@ -55,7 +55,7 @@ class ReportController extends Controller
         $cache->addProperty($year);
         $cache->addProperty($shared);
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            //return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $entries = new Collection;
@@ -95,7 +95,7 @@ class ReportController extends Controller
         $cache->addProperty($year);
         $cache->addProperty($shared);
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            //return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $start   = new Carbon($year . '-01-01');

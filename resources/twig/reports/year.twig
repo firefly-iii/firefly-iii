@@ -13,7 +13,12 @@
                     <h3 class="box-title">{{ 'incomeVsExpenses'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <div id="income-expenses-chart"></div>
+                    {% if Config.get('firefly.chart') == 'google' %}
+                        <div id="income-expenses-chart"></div>
+                    {% endif %}
+                    {% if Config.get('firefly.chart') == 'chartjs' %}
+                        <canvas id="income-expenses-chart" style="width:100%;height:400px;"></canvas>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -23,7 +28,12 @@
                     <h3 class="box-title">{{ 'incomeVsExpenses'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <div id="income-expenses-sum-chart"></div>
+                    {% if Config.get('firefly.chart') == 'google' %}
+                        <div id="income-expenses-sum-chart"></div>
+                    {% endif %}
+                    {% if Config.get('firefly.chart') == 'chartjs' %}
+                        <canvas id="income-expenses-sum-chart" style="width:300px;height:400px;"></canvas>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -49,7 +59,12 @@
                     <h3 class="box-title">{{ 'categories'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <div id="categories"></div>
+                    {% if Config.get('firefly.chart') == 'google' %}
+                        <div id="categories"></div>
+                    {% endif %}
+                    {% if Config.get('firefly.chart') == 'chartjs' %}
+                        <canvas id="categories" style="width:100%;height:400px;"></canvas>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -61,7 +76,12 @@
                     <h3 class="box-title">{{ 'budgets'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <div id="budgets"></div>
+                    {% if Config.get('firefly.chart') == 'google' %}
+                        <div id="budgets"></div>
+                    {% endif %}
+                    {% if Config.get('firefly.chart') == 'chartjs' %}
+                        <canvas id="budgets" style="width:100%;height:400px;"></canvas>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -76,12 +96,15 @@
     {% endif %}
     {% if Config.get('firefly.chart') == 'chartjs' %}
         <script type="text/javascript" src="js/Chart.min.js"></script>
+        <script type="text/javascript" src="js/Chart.StackedBar.js"></script>
         <script type="text/javascript" src="js/charts.js"></script>
+
     {% endif %}
 
     <script type="text/javascript">
         var year = '{{start.year}}';
-        var shared = {% if shared %}'/shared'{% else %}''{% endif %};
+        var shared = {% if shared %}'/shared'
+        {% else %}''{% endif %};
         var incomeTopLength = {{ incomeTopLength }};
         var expenseTopLength = {{ expenseTopLength }};
         var incomeRestShow = false; // starts hidden.

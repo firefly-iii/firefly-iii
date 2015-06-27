@@ -62,7 +62,7 @@ class CategoryController extends Controller
         $cache->addProperty('all');
         $cache->addProperty('categories');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            //return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         while ($start <= $end) {
@@ -184,7 +184,7 @@ class CategoryController extends Controller
         $cache->addProperty('category');
         $cache->addProperty('year');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            //return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $shared     = $shared == 'shared' ? true : false;

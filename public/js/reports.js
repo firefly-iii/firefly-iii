@@ -12,13 +12,17 @@ $(function () {
 
 function drawChart() {
     "use strict";
-    columnChart('chart/report/in-out/' + year + shared, 'income-expenses-chart');
-    columnChart('chart/report/in-out-sum/' + year + shared, 'income-expenses-sum-chart');
-
-    stackedColumnChart('chart/budget/year/' + year + shared, 'budgets');
-    stackedColumnChart('chart/category/year/' + year + shared, 'categories');
-
-    lineChart('/chart/account/month/' + year + '/' + month + shared, 'account-balances-chart');
+    if (typeof columnChart !== undefined) {
+        columnChart('chart/report/in-out/' + year + shared, 'income-expenses-chart');
+        columnChart('chart/report/in-out-sum/' + year + shared, 'income-expenses-sum-chart');
+    }
+    if (typeof stackedColumnChart !== undefined) {
+        stackedColumnChart('chart/budget/year/' + year + shared, 'budgets');
+        stackedColumnChart('chart/category/year/' + year + shared, 'categories');
+    }
+    if (typeof lineChart !== undefined && typeof month !== 'undefined') {
+        lineChart('/chart/account/month/' + year + '/' + month + shared, 'account-balances-chart');
+    }
 }
 
 
