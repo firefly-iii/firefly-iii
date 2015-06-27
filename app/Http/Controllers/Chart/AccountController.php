@@ -133,7 +133,7 @@ class AccountController extends Controller
         $cache->addProperty('single');
         $cache->addProperty($account->id);
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            //return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $data = $this->generator->single($account, $start, $end);

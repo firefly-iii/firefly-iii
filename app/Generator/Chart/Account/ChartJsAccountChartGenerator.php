@@ -85,7 +85,30 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
      */
     public function single(Account $account, Carbon $start, Carbon $end)
     {
-        // TODO: Implement single() method.
-        //throw new NotImplementedException;
+        // language:
+        $language = Preferences::get('language', 'en')->data;
+        $format   = Config::get('firefly.monthAndDay.' . $language);
+
+        $data = [
+            'count'    => 1,
+            'labels'   => [],
+            'datasets' => [
+                [
+                    'label' => $account->name,
+                    'data'  => []
+                ]
+            ],
+        ];
+
+        $current = clone $start;
+        $today   = new Carbon;
+
+        while ($end >= $current) {
+            $data['labels'][]              = $current->formatLocalized($format);
+            $data['datasets'][0]['data'][] = Steam::balance($account, $current);
+            $current->addDay();
+        }
+
+        return $data;
     }
 }
