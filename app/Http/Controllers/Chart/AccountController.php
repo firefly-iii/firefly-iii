@@ -2,6 +2,7 @@
 
 namespace FireflyIII\Http\Controllers\Chart;
 
+use App;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
@@ -21,10 +22,24 @@ use Steam;
  */
 class AccountController extends Controller
 {
+
+    /** @var  \FireflyIII\Generator\Chart\Account\AccountChartGenerator */
+    protected $generator;
+
+    /**
+     *
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        // create chart generator:
+        $generator = App::make('FireflyIII\Generator\Chart\Account\AccountChartGenerator');
+    }
+
+
     /**
      * Shows the balances for all the user's accounts.
      *
-     * @param GChart                     $chart
      * @param AccountRepositoryInterface $repository
      *
      * @param                            $year
@@ -33,7 +48,7 @@ class AccountController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function all(GChart $chart, AccountRepositoryInterface $repository, $year, $month, $shared = false)
+    public function all(AccountRepositoryInterface $repository, $year, $month, $shared = false)
     {
         $start = new Carbon($year . '-' . $month . '-01');
         $end   = clone $start;
@@ -49,9 +64,6 @@ class AccountController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-
-        $chart->addColumn(trans('firefly.dayOfMonth'), 'date');
-
         /** @var Collection $accounts */
         $accounts = $repository->getAccounts(['Default account', 'Asset account']);
         if ($shared === false) {
@@ -63,31 +75,8 @@ class AccountController extends Controller
             }
         }
 
-        //
-
-        $index = 1;
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $chart->addColumn(trans('firefly.balanceFor', ['name' => $account->name]), 'number');
-            $chart->addCertainty($index);
-            $index++;
-        }
-        $current = clone $start;
-        $current->subDay();
-        $today = Carbon::now();
-        while ($end >= $current) {
-            $row     = [clone $current];
-            $certain = $current < $today;
-            foreach ($accounts as $account) {
-                $row[] = Steam::balance($account, $current);
-                $row[] = $certain;
-            }
-            $chart->addRowArray($row);
-            $current->addDay();
-        }
-        $chart->generate();
-
-        $data = $chart->getData();
+        // make chart:
+        $data = $this->generator->all($accounts, $start, $end);
         $cache->store($data);
 
         return Response::json($data);
