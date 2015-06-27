@@ -33,7 +33,7 @@ class AccountController extends Controller
     {
         parent::__construct();
         // create chart generator:
-        $generator = App::make('FireflyIII\Generator\Chart\Account\AccountChartGenerator');
+        $this->generator = App::make('FireflyIII\Generator\Chart\Account\AccountChartGenerator');
     }
 
 
@@ -85,15 +85,12 @@ class AccountController extends Controller
     /**
      * Shows the balances for all the user's frontpage accounts.
      *
-     * @param GChart                     $chart
      * @param AccountRepositoryInterface $repository
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function frontpage(GChart $chart, AccountRepositoryInterface $repository)
+    public function frontpage(AccountRepositoryInterface $repository)
     {
-        $chart->addColumn(trans('firefly.dayOfMonth'), 'date');
-
         $frontPage = Preferences::get('frontPageAccounts', []);
         $start     = Session::get('start', Carbon::now()->startOfMonth());
         $end       = Session::get('end', Carbon::now()->endOfMonth());
@@ -109,30 +106,7 @@ class AccountController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-
-        $index = 1;
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $chart->addColumn(trans('firefly.balanceFor', ['name' => $account->name]), 'number');
-            $chart->addCertainty($index);
-            $index++;
-        }
-        $current = clone $start;
-        $current->subDay();
-        $today = Carbon::now();
-        while ($end >= $current) {
-            $row     = [clone $current];
-            $certain = $current < $today;
-            foreach ($accounts as $account) {
-                $row[] = Steam::balance($account, $current);
-                $row[] = $certain;
-            }
-            $chart->addRowArray($row);
-            $current->addDay();
-        }
-        $chart->generate();
-
-        $data = $chart->getData();
+        $data = $this->generator->frontpage($accounts, $start, $end);
         $cache->store($data);
 
         return Response::json($data);
@@ -142,21 +116,16 @@ class AccountController extends Controller
     /**
      * Shows an account's balance for a single month.
      *
-     * @param GChart  $chart
      * @param Account $account
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function single(GChart $chart, Account $account)
+    public function single(Account $account)
     {
-        $chart->addColumn(trans('firefly.dayOfMonth'), 'date');
-        $chart->addColumn(trans('firefly.balanceFor', ['name' => $account->name]), 'number');
-        $chart->addCertainty(1);
+
 
         $start   = Session::get('start', Carbon::now()->startOfMonth());
         $end     = Session::get('end', Carbon::now()->endOfMonth());
-        $current = clone $start;
-        $today   = new Carbon;
 
         // chart properties for cache:
         $cache = new CacheProperties();
@@ -169,16 +138,7 @@ class AccountController extends Controller
             return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
-        while ($end >= $current) {
-            $certain = $current < $today;
-            $chart->addRow(clone $current, Steam::balance($account, $current), $certain);
-            $current->addDay();
-        }
-
-
-        $chart->generate();
-
-        $data = $chart->getData();
+        $data = $this->generator->single($account, $start, $end);
         $cache->store($data);
 
         return Response::json($data);
