@@ -1,7 +1,13 @@
 /* globals google, expenseRestShow:true, incomeRestShow:true, year, shared, month, hideTheRest, showTheRest, showTheRestExpense, hideTheRestExpense, columnChart, lineChart, stackedColumnChart */
-if (typeof(google) !== 'undefined') {
-    google.setOnLoadCallback(drawChart);
-}
+
+$(function () {
+    "use strict";
+    if (typeof(google) !== 'undefined') {
+        google.setOnLoadCallback(drawChart);
+    } else {
+        drawChart();
+    }
+});
 
 
 function drawChart() {
@@ -14,7 +20,6 @@ function drawChart() {
 
     lineChart('/chart/account/month/' + year + '/' + month + shared, 'account-balances-chart');
 }
-
 
 
 function openModal(e) {

@@ -13,7 +13,12 @@
                     <h3 class="box-title">{{ 'accountBalances'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <div id="account-balances-chart"></div>
+                    {% if Config.get('firefly.chart') == 'google' %}
+                        <div id="account-balances-chart"></div>
+                    {% endif %}
+                    {% if Config.get('firefly.chart') == 'chartjs' %}
+                        <canvas id="account-balances-chart" style="width:100%;height:400px;"></canvas>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -71,6 +76,10 @@
     {% if Config.get('firefly.chart') == 'google' %}
         <script type="text/javascript" src="https://www.google.com/jsapi"></script>
         <script type="text/javascript" src="js/gcharts.js"></script>
+    {% endif %}
+    {% if Config.get('firefly.chart') == 'chartjs' %}
+        <script type="text/javascript" src="js/Chart.min.js"></script>
+        <script type="text/javascript" src="js/charts.js"></script>
     {% endif %}
 
     <script type="text/javascript">
