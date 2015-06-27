@@ -101,7 +101,7 @@ class CategoryController extends Controller
         $cache->addProperty('category');
         $cache->addProperty('frontpage');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            //return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $array = $repository->getCategoriesAndExpensesCorrected($start, $end);

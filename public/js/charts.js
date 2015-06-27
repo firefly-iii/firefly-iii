@@ -178,7 +178,7 @@ function columnChart(URL, container, options) {
  */
 function stackedColumnChart(URL, container, options) {
     "use strict";
-    console.log('no impl for stackedColumnChart');
+    columnChart(URL, container, options);
 }
 
 /**
@@ -200,5 +200,17 @@ function comboChart(URL, container, options) {
  */
 function pieChart(URL, container, options) {
     "use strict";
+
+    options = options || defaultColumnOptions;
+    $.getJSON(URL).success(function (data) {
+
+        var ctx = document.getElementById(container).getContext("2d");
+        new Chart(ctx).Pie(data, options);
+
+    }).fail(function () {
+        $('#' + container).addClass('google-chart-error');
+    });
+
+
     console.log('no impl for pieChart');
 }

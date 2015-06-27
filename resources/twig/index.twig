@@ -193,7 +193,12 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <div id="bills-chart"></div>
+                    {% if Config.get('firefly.chart') == 'google' %}
+                        <div id="bills-chart"></div>
+                    {% endif %}
+                    {% if Config.get('firefly.chart') == 'chartjs' %}
+                        <canvas id="bills-chart" style="width:100%;height:250px;"></canvas>
+                    {% endif %}
                 </div>
             </div>
 

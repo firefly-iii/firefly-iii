@@ -95,14 +95,14 @@ class FireflyServiceProvider extends ServiceProvider
         //$this->app->bind('FireflyIII\Generator\Chart\Account\AccountChartGenerator', 'FireflyIII\Generator\Chart\Account\GoogleAccountChartGenerator');
         $this->app->bind('FireflyIII\Generator\Chart\Account\AccountChartGenerator', 'FireflyIII\Generator\Chart\Account\ChartJsAccountChartGenerator');
 
-        $this->app->bind('FireflyIII\Generator\Chart\Bill\BillChartGenerator', 'FireflyIII\Generator\Chart\Bill\GoogleBillChartGenerator');
         //$this->app->bind('FireflyIII\Generator\Chart\Bill\BillChartGenerator', 'FireflyIII\Generator\Chart\Bill\GoogleBillChartGenerator');
+        $this->app->bind('FireflyIII\Generator\Chart\Bill\BillChartGenerator', 'FireflyIII\Generator\Chart\Bill\ChartJsBillChartGenerator');
 
         //$this->app->bind('FireflyIII\Generator\Chart\Budget\BudgetChartGenerator', 'FireflyIII\Generator\Chart\Budget\GoogleBudgetChartGenerator');
         $this->app->bind('FireflyIII\Generator\Chart\Budget\BudgetChartGenerator', 'FireflyIII\Generator\Chart\Budget\ChartJsBudgetChartGenerator');
 
-        $this->app->bind('FireflyIII\Generator\Chart\Category\CategoryChartGenerator', 'FireflyIII\Generator\Chart\Category\GoogleCategoryChartGenerator');
         //$this->app->bind('FireflyIII\Generator\Chart\Category\CategoryChartGenerator', 'FireflyIII\Generator\Chart\Category\GoogleCategoryChartGenerator');
+        $this->app->bind('FireflyIII\Generator\Chart\Category\CategoryChartGenerator', 'FireflyIII\Generator\Chart\Category\ChartJsCategoryChartGenerator');
 
         $this->app->bind('FireflyIII\Generator\Chart\PiggyBank\PiggyBankChartGenerator', 'FireflyIII\Generator\Chart\PiggyBank\GooglePiggyBankChartGenerator');
         //$this->app->bind('FireflyIII\Generator\Chart\PiggyBank\PiggyBankChartGenerator', 'FireflyIII\Generator\Chart\PiggyBank\GooglePiggyBankChartGenerator');

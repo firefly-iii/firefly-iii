@@ -15,7 +15,7 @@ function drawChart() {
     "use strict";
     areaChart('chart/account/frontpage', 'accounts-chart');
     pieChart('chart/bill/frontpage', 'bills-chart');
-    columnChart('chart/budget/frontpage', 'budgets-chart');
+    stackedColumnChart('chart/budget/frontpage', 'budgets-chart');
     columnChart('chart/category/frontpage', 'categories-chart');
 
 
