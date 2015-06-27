@@ -97,6 +97,8 @@ class GoogleCategoryChartGenerator implements CategoryChartGenerator
         foreach ($entries as $entry) {
             $chart->addRowArray($entry);
         }
+        $chart->generate();
+        return $chart->getData();
 
     }
 }
