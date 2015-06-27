@@ -1,6 +1,15 @@
 /* globals $, columnChart, google, lineChart, pieChart, stackedColumnChart, areaChart */
-google.setOnLoadCallback(drawChart);
 
+$(function () {
+    "use strict";
+    if (typeof google !== 'undefined') {
+        // do google charts:
+        google.setOnLoadCallback(drawChart);
+    } else {
+        // do chart JS stuff.
+        drawChart();
+    }
+});
 
 function drawChart() {
     "use strict";
