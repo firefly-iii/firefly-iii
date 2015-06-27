@@ -33,13 +33,9 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
             ],
         ];
 
-        // language:
-        $language = Preferences::get('language', 'en')->data;
-        $format   = Config::get('firefly.month.' . $language);
-
         /** @var array $entry */
         foreach ($entries as $entry) {
-            $data['labels'][]              = $entry[0]->formatLocalized($format);
+            $data['labels'][]              = trans('firefly.spent');
             $data['datasets'][0]['data'][] = $entry[1];
 
         }
