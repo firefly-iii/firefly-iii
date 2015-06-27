@@ -1,4 +1,4 @@
-/* globals $, budgeted:true, currencySymbol, budgetIncomeTotal ,budgetedMuch, budgetedPercentage, token, budgetID, repetitionID, spent, googleLineChart */
+/* globals $, budgeted:true, currencySymbol, budgetIncomeTotal, columnChart,  budgetedMuch, budgetedPercentage, token, budgetID, repetitionID, spent, lineChart */
 
 function drawSpentBar() {
     "use strict";
@@ -104,10 +104,10 @@ $(function () {
      Draw the charts, if necessary:
      */
     if (typeof budgetID !== 'undefined' && typeof repetitionID === 'undefined') {
-        googleColumnChart('chart/budget/' + budgetID, 'budgetOverview');
+        columnChart('chart/budget/' + budgetID, 'budgetOverview');
     }
     if (typeof budgetID !== 'undefined' && typeof repetitionID !== 'undefined') {
-        googleLineChart('chart/budget/' + budgetID + '/' + repetitionID, 'budgetOverview');
+        lineChart('chart/budget/' + budgetID + '/' + repetitionID, 'budgetOverview');
     }
 
 });

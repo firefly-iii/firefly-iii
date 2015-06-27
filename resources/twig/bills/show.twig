@@ -110,9 +110,10 @@
     <script type="text/javascript">
         var billID = {{ bill.id }};
     </script>
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript" src="js/gcharts.options.js"></script>
-    <script type="text/javascript" src="js/gcharts.js"></script>
+    {% if Config.get('firefly.chart') == 'google' %}
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript" src="js/gcharts.js"></script>
+    {% endif %}
 
     <script type="text/javascript" src="js/bills.js"></script>
 {% endblock %}

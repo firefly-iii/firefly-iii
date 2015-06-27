@@ -1,9 +1,9 @@
-/* globals $, categoryID, googleColumnChart */
+/* globals $, categoryID, columnChart */
 $(function () {
     "use strict";
     if (typeof categoryID !== 'undefined') {
-        googleColumnChart('chart/category/' + categoryID + '/all', 'all');
-        googleColumnChart('chart/category/' + categoryID + '/month', 'month');
+        columnChart('chart/category/' + categoryID + '/all', 'all');
+        columnChart('chart/category/' + categoryID + '/month', 'month');
     }
 
 

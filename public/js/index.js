@@ -1,13 +1,13 @@
-/* globals $, googleColumnChart, google, googleLineChart, googlePieChart, googleStackedColumnChart */
+/* globals $, columnChart, google, lineChart, pieChart, stackedColumnChart, areaChart */
 google.setOnLoadCallback(drawChart);
 
 
 function drawChart() {
     "use strict";
-    googleAreaChart('chart/account/frontpage', 'accounts-chart');
-    googlePieChart('chart/bill/frontpage', 'bills-chart');
-    googleStackedColumnChart('chart/budget/frontpage', 'budgets-chart');
-    googleColumnChart('chart/category/frontpage', 'categories-chart');
+    areaChart('chart/account/frontpage', 'accounts-chart');
+    pieChart('chart/bill/frontpage', 'bills-chart');
+    stackedColumnChart('chart/budget/frontpage', 'budgets-chart');
+    columnChart('chart/category/frontpage', 'categories-chart');
 
 
     getBoxAmounts();

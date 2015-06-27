@@ -1,4 +1,4 @@
-/* globals google, expenseRestShow:true, incomeRestShow:true, year, shared, month, hideTheRest, showTheRest, showTheRestExpense, hideTheRestExpense, googleColumnChart, googleLineChart, googleStackedColumnChart  */
+/* globals google, expenseRestShow:true, incomeRestShow:true, year, shared, month, hideTheRest, showTheRest, showTheRestExpense, hideTheRestExpense, columnChart, lineChart, stackedColumnChart */
 if (typeof(google) !== 'undefined') {
     google.setOnLoadCallback(drawChart);
 }
@@ -6,13 +6,13 @@ if (typeof(google) !== 'undefined') {
 
 function drawChart() {
     "use strict";
-    googleColumnChart('chart/report/in-out/' + year + shared, 'income-expenses-chart');
-    googleColumnChart('chart/report/in-out-sum/' + year + shared, 'income-expenses-sum-chart');
+    columnChart('chart/report/in-out/' + year + shared, 'income-expenses-chart');
+    columnChart('chart/report/in-out-sum/' + year + shared, 'income-expenses-sum-chart');
 
-    googleStackedColumnChart('chart/budget/year/' + year + shared, 'budgets');
-    googleStackedColumnChart('chart/category/year/' + year + shared, 'categories');
+    stackedColumnChart('chart/budget/year/' + year + shared, 'budgets');
+    stackedColumnChart('chart/category/year/' + year + shared, 'categories');
 
-    googleLineChart('/chart/account/month/' + year + '/' + month + shared, 'account-balances-chart');
+    lineChart('/chart/account/month/' + year + '/' + month + shared, 'account-balances-chart');
 }
 
 

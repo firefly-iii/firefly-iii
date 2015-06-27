@@ -53,9 +53,10 @@
         var accountID = {{ account.id }};
     </script>
     <!-- load the libraries and scripts necessary for Google Charts: -->
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript" src="js/gcharts.options.js"></script>
-    <script type="text/javascript" src="js/gcharts.js"></script>
+    {% if Config.get('firefly.chart') == 'google' %}
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+        <script type="text/javascript" src="js/gcharts.js"></script>
+    {% endif %}
     <script src="js/jquery-ui.min.js" type="text/javascript"></script>
     <script src="js/accounts.js" type="text/javascript"></script>
 
