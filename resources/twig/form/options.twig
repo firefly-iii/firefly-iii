@@ -3,6 +3,7 @@
         <label for="{{ name }}_return_to_form" class="col-sm-4 control-label">
             {{ trans('form.returnHere') }}
         </label>
+
         <div class="col-sm-8">
             <div class="radio">
                 <label>
@@ -20,6 +21,7 @@
         <label for="{{ name }}_return_to_edit" class="col-sm-4 control-label">
             {{ trans('form.returnHere') }}
         </label>
+
         <div class="col-sm-8">
             <div class="radio"><label>
                     {{ Form.checkbox(name ~ '_return_to_edit', '1', Input.old('return_to_edit') == '1', {'id': name ~ '_return_to_edit'}) }}

@@ -142,7 +142,7 @@ class Navigation
     }
 
     /**
-     * @param Carbon         $date
+     * @param \Carbon\Carbon $date
      * @param                $repeatFrequency
      *
      * @return string

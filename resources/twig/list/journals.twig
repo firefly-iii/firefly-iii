@@ -33,17 +33,17 @@
                 </td>
                 <td>&nbsp;</td>
                 <td>{{ journal.description }}</td>
-                <td colspan="7"><em>Invalid journal: Found {{journal.transactions|length }} transaction(s)</em></td>
+                <td colspan="7"><em>Invalid journal: Found {{ journal.transactions|length }} transaction(s)</em></td>
             </tr>
         {% else %}
-            <tr class="drag" data-date="{{journal.date.format('Y-m-d')}}" data-id="{{journal.id}}">
+            <tr class="drag" data-date="{{ journal.date.format('Y-m-d') }}" data-id="{{ journal.id }}">
                 <td class="hidden-xs">
                     <div class="btn-group btn-group-xs">
                         {% if sorting %}
                             <a href="#" class="handle btn btn-default btn-xs"><i class="fa fa-fw fa-arrows-v"></i></a>
                         {% endif %}
-                        <a href="{{ route('transactions.edit',journal.id)}}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
-                        <a href="{{ route('transactions.delete',journal.id)}}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
+                        <a href="{{ route('transactions.edit',journal.id) }}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
+                        <a href="{{ route('transactions.delete',journal.id) }}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
                     </div>
                 </td>
 
@@ -51,7 +51,7 @@
                     {{ journal|typeIcon }}
                 </td>
                 <td>
-                    <a href="{{route('transactions.show',journal.id)}}" title="{{journal.description}}">{{journal.description}}</a>
+                    <a href="{{ route('transactions.show',journal.id) }}" title="{{ journal.description }}">{{ journal.description }}</a>
                 </td>
                 <td>
                     {% if not hideTags %}
@@ -61,20 +61,20 @@
                     {% endif %}
                 </td>
                 <td class="hidden-sm hidden-xs">
-                    {{journal.date.formatLocalized(monthAndDayFormat)}}
+                    {{ journal.date.formatLocalized(monthAndDayFormat) }}
                 </td>
                 <td class="hidden-xs">
                     {% if journal.source_account.accountType.type == 'Cash account' %}
                         <span class="text-success">(cash)</span>
                     {% else %}
-                        <a href="{{route('accounts.show',journal.source_account.id)}}">{{journal.source_account.name}}</a>
+                        <a href="{{ route('accounts.show',journal.source_account.id) }}">{{ journal.source_account.name }}</a>
                     {% endif %}
                 </td>
                 <td class="hidden-xs">
                     {% if journal.destination_account.accountType.type == 'Cash account' %}
                         <span class="text-success">(cash)</span>
                     {% else %}
-                        <a href="{{route('accounts.show',journal.destination_account.id)}}">{{journal.destination_account.name}}</a>
+                        <a href="{{ route('accounts.show',journal.destination_account.id) }}">{{ journal.destination_account.name }}</a>
                     {% endif %}
                 </td>
 
@@ -82,7 +82,7 @@
                 {% if not hideBudgets %}
                     <td class="hidden-xs">
                         {% if journal.budgets[0] %}
-                            <a href="{{route('budgets.show',journal.budgets[0].id)}}">{{journal.budgets[0].name}}</a>
+                            <a href="{{ route('budgets.show',journal.budgets[0].id) }}">{{ journal.budgets[0].name }}</a>
                         {% endif %}
                     </td>
                 {% endif %}
@@ -91,7 +91,7 @@
                 {% if not hideCategories %}
                     <td class="hidden-xs">
                         {% if journal.categories[0] %}
-                            <a href="{{route('categories.show',journal.categories[0].id)}}">{{journal.categories[0].name}}</a>
+                            <a href="{{ route('categories.show',journal.categories[0].id) }}">{{ journal.categories[0].name }}</a>
                         {% endif %}
                     </td>
                 {% endif %}
@@ -100,7 +100,7 @@
                 {% if not hideBills %}
                     <td class="hidden-xs">
                         {% if journal.bill %}
-                            <a href="{{ route('bills.show',journal.bill_id) }}">{{journal.bill.name}}</a>
+                            <a href="{{ route('bills.show',journal.bill_id) }}">{{ journal.bill.name }}</a>
                         {% endif %}
                     </td>
                 {% endif %}

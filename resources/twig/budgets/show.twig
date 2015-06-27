@@ -5,107 +5,111 @@
 {% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-lg-9 col-md-9 col-sm-7">
-        <div class="box">
-            <div class="box-header with-border">
-                <h3 class="box-title">{{ 'overview'|_ }}</h3>
+    <div class="row">
+        <div class="col-lg-9 col-md-9 col-sm-7">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'overview'|_ }}</h3>
 
 
-                <!-- ACTIONS MENU -->
-                <div class="pull-right">
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                            {{ 'actions'|_ }}
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu pull-right" role="menu">
-                            <li><a href="{{ route('budgets.edit',budget.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a></li>
-                            <li><a href="{{ route('budgets.delete',budget.id) }}"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="box-body">
-                <div id="budgetOverview"></div>
-            </div>
-        </div>
-
-         <div class="box">
-            <div class="box-header with-border">
-                <h3 class="box-title">{{ 'transactions'|_ }}</h3>
-            </div>
-             {% include 'list/journals.twig' %}
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-3 col-sm-5">
-        {% if limits|length == 1 %}
-        <p class="small text-center"><a href="{{ route('budgets.show',budget.id) }}">{{ 'showEverything'|_ }}</a></p>
-        {% endif %}
-
-        {% for limit in limits %}
-            {% for rep in limit.limitRepetitions %}
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title"><a href="{{route('budgets.show',[budget.id,rep.id])}}">{{rep.startdate.formatLocalized(monthFormat)}}</a></h3>
-                    </div>
-                    <div class="box-body">
-                        <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                {{ 'amount'|_ }}: {{ rep.amount|formatAmount  }}
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                {{ 'spent'|_ }}: {{ spentInRepetitionCorrected(rep)|formatAmount }}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12">
-                                {% set overspent = spentInRepetitionCorrected(rep) > rep.amount %}
-                                {% if overspent %}
-                                    {% set spent = spentInRepetitionCorrected(rep) %}
-                                    {% set pct = (spent != 0 ? (rep.amount / spent)*100 : 0) %}
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{pct|round}}" aria-valuemin="0" aria-valuemax="100" style="width: {{pct|round}}%;"></div>
-                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{(100-pct)|round}}" aria-valuemin="0" aria-valuemax="100" style="width: {{(100-pct)|round}}%;"></div>
-                                    </div>
-                                {% else %}
-                                    {% set amount = rep.amount %}
-                                    {% set pct = (amount != 0 ? (spentInRepetitionCorrected(rep) / amount)*100 : 0) %}
-                                    <div class="progress progress-striped">
-                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{pct|round}}" aria-valuemin="0" aria-valuemax="100" style="width: {{pct|round}}%;"></div>
-                                    </div>
-                                {% endif %}
-                            </div>
+                    <!-- ACTIONS MENU -->
+                    <div class="pull-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                {{ 'actions'|_ }}
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li><a href="{{ route('budgets.edit',budget.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a></li>
+                                <li><a href="{{ route('budgets.delete',budget.id) }}"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}</a></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
+                <div class="box-body">
+                    <div id="budgetOverview"></div>
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'transactions'|_ }}</h3>
+                </div>
+                {% include 'list/journals.twig' %}
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-5">
+            {% if limits|length == 1 %}
+                <p class="small text-center"><a href="{{ route('budgets.show',budget.id) }}">{{ 'showEverything'|_ }}</a></p>
+            {% endif %}
+
+            {% for limit in limits %}
+                {% for rep in limit.limitRepetitions %}
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title"><a href="{{ route('budgets.show',[budget.id,rep.id]) }}">{{ rep.startdate.formatLocalized(monthFormat) }}</a>
+                            </h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    {{ 'amount'|_ }}: {{ rep.amount|formatAmount }}
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    {{ 'spent'|_ }}: {{ spentInRepetitionCorrected(rep)|formatAmount }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    {% set overspent = spentInRepetitionCorrected(rep) > rep.amount %}
+                                    {% if overspent %}
+                                        {% set spent = spentInRepetitionCorrected(rep) %}
+                                        {% set pct = (spent != 0 ? (rep.amount / spent)*100 : 0) %}
+                                        <div class="progress progress-striped">
+                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ pct|round }}" aria-valuemin="0"
+                                                 aria-valuemax="100" style="width: {{ pct|round }}%;"></div>
+                                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ (100-pct)|round }}"
+                                                 aria-valuemin="0" aria-valuemax="100" style="width: {{ (100-pct)|round }}%;"></div>
+                                        </div>
+                                    {% else %}
+                                        {% set amount = rep.amount %}
+                                        {% set pct = (amount != 0 ? (spentInRepetitionCorrected(rep) / amount)*100 : 0) %}
+                                        <div class="progress progress-striped">
+                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{ pct|round }}" aria-valuemin="0"
+                                                 aria-valuemax="100" style="width: {{ pct|round }}%;"></div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
 
-        {% if limits|length == 1 %}
-            <p class="small text-center"><a href="{{route('budgets.show',budget.id)}}">{{ 'showEverything'|_ }}</a></p>
-        {% endif %}
+            {% if limits|length == 1 %}
+                <p class="small text-center"><a href="{{ route('budgets.show',budget.id) }}">{{ 'showEverything'|_ }}</a></p>
+            {% endif %}
 
+        </div>
     </div>
-</div>
 
 {% endblock %}
 {% block scripts %}
-<script type="text/javascript">
-    var budgetID = {{budget.id}};
-    {% if repetition.id %}
+    <script type="text/javascript">
+        var budgetID = {{budget.id}};
+        {% if repetition.id %}
         var repetitionID = {{repetition.id}};
         var year = {{repetition.startdate.format('Y')}};
-    {% else %}
+        {% else %}
         var year = {{Session.get('start').format('Y')}};
-    {% endif %}
+        {% endif %}
 
-</script>
+    </script>
 
-<!-- load the libraries and scripts necessary for Google Charts: -->
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript" src="js/gcharts.options.js"></script>
-<script type="text/javascript" src="js/gcharts.js"></script>
-<script type="text/javascript" src="js/budgets.js"></script>
+    <!-- load the libraries and scripts necessary for Google Charts: -->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="js/gcharts.options.js"></script>
+    <script type="text/javascript" src="js/gcharts.js"></script>
+    <script type="text/javascript" src="js/budgets.js"></script>
 
 {% endblock %}

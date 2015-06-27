@@ -1,5 +1,6 @@
-<div class="{{ classes }}" id="{{ name}}_holder">
+<div class="{{ classes }}" id="{{ name }}_holder">
     <label for="{{ options.id }}" class="col-sm-4 control-label">{{ label }}</label>
+
     <div class="col-sm-8">
         <div class="input-group">
             <div class="input-group-btn">
@@ -8,16 +9,17 @@
                 </button>
                 <ul class="dropdown-menu" role="menu">
                     {% for currency in currencies %}
-                        <li><a href="#" class="currencySelect" data-id="{{ currency.id }}" data-field="amount" data-currency="{{ currency.code }}" data-symbol="{{ currency.symbol|raw }}">{{ currency.name }}</a></li>
+                        <li><a href="#" class="currencySelect" data-id="{{ currency.id }}" data-field="amount" data-currency="{{ currency.code }}"
+                               data-symbol="{{ currency.symbol|raw }}">{{ currency.name }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
-            {{ Form.input('number', name, value, options)  }}
+            {{ Form.input('number', name, value, options) }}
 
 
         </div>
 
         {% include 'form/feedback.twig' %}
     </div>
-    <input type="hidden" name="amount_currency_id" value="{{ defaultCurrency.id }}" />
+    <input type="hidden" name="amount_currency_id" value="{{ defaultCurrency.id }}"/>
 </div>

@@ -225,6 +225,7 @@ class AccountRepository implements AccountRepositoryInterface
         $accountIds = DB::table('piggy_banks')->distinct()->get(['piggy_banks.account_id']);
         $accounts   = new Collection;
 
+        /** @var PiggyBank $id */
         foreach ($accountIds as $id) {
             $ids[] = intval($id->account_id);
         }

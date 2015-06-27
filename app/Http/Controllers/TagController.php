@@ -180,12 +180,12 @@ class TagController extends Controller
         $helpHidden     = $helpHiddenPref->data;
 
         // group years.
-        $types = ['nothing','balancingAct', 'advancePayment'];
+        $types = ['nothing', 'balancingAct', 'advancePayment'];
 
         // loop each types and get the tags, group them by year.
         $collection = [];
         foreach ($types as $type) {
-            $tags = Auth::user()->tags()->where('tagMode', $type)->orderBy('date','ASC')->get();
+            $tags = Auth::user()->tags()->where('tagMode', $type)->orderBy('date', 'ASC')->get();
             /** @var Tag $tag */
             foreach ($tags as $tag) {
                 $year                               = is_null($tag->date) ? trans('firefly.no_year') : $tag->date->year;
@@ -195,7 +195,7 @@ class TagController extends Controller
         }
 
 
-        return view('tags.index', compact('title', 'mainTitleIcon','types', 'helpHidden', 'collection'));
+        return view('tags.index', compact('title', 'mainTitleIcon', 'types', 'helpHidden', 'collection'));
     }
 
     /**
@@ -208,7 +208,7 @@ class TagController extends Controller
         $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
 
-        return view('tags.show', compact('tag', 'subTitle','types', 'subTitleIcon'));
+        return view('tags.show', compact('tag', 'subTitle', 'subTitleIcon'));
     }
 
     /**

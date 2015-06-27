@@ -7,27 +7,28 @@
         <th>{{ trans('list.amount') }}</th>
     </tr>
     {% for event in events %}
-    <tr>
-        {% if showPiggyBank %}
-        <td>
-            <a href="{{ route('piggy-banks.show',event.piggyBank_id) }}">{{ event.piggyBank.name }}</a>
-        </td>
-        {% endif %}
-        <td>
-            {% if event.transaction_journal_id %}
-                <a href="{{ route('transactions.show',event.transaction_journal_id) }}" title="{{ event.transactionJournal.description }}">{{ event.date.format('j F Y') }}</a>
-            {% else %}
-                {{ event.date.format('j F Y') }}
+        <tr>
+            {% if showPiggyBank %}
+                <td>
+                    <a href="{{ route('piggy-banks.show',event.piggyBank_id) }}">{{ event.piggyBank.name }}</a>
+                </td>
             {% endif %}
+            <td>
+                {% if event.transaction_journal_id %}
+                    <a href="{{ route('transactions.show',event.transaction_journal_id) }}"
+                       title="{{ event.transactionJournal.description }}">{{ event.date.format('j F Y') }}</a>
+                {% else %}
+                    {{ event.date.format('j F Y') }}
+                {% endif %}
             </td>
 
-        <td>
-            {% if event.amount < 0 %}
-                <span class="text-danger">Removed {{ event.amount*-1|formatAmountPlain }}</span>
-            {% else %}
-                <span class="text-success">Added {{ event.amount|formatAmountPlain }}</span>
-            {% endif %}
+            <td>
+                {% if event.amount < 0 %}
+                    <span class="text-danger">Removed {{ event.amount*-1|formatAmountPlain }}</span>
+                {% else %}
+                    <span class="text-success">Added {{ event.amount|formatAmountPlain }}</span>
+                {% endif %}
             </td>
-    </tr>
+        </tr>
     {% endfor %}
 </table>

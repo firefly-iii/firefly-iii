@@ -52,8 +52,6 @@ class EventServiceProvider extends ServiceProvider
         $this->registerCreateEvents();
         BudgetLimit::saved(
             function (BudgetLimit $budgetLimit) {
-                Log::debug('Saved!');
-
                 $end = Navigation::addPeriod(clone $budgetLimit->startdate, $budgetLimit->repeat_freq, 0);
                 $end->subDay();
                 $set = $budgetLimit->limitrepetitions()

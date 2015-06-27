@@ -5,109 +5,109 @@
 {% endblock %}
 
 {% block content %}
-{% if query %}
-<div class="row">
-    {% if result.transactions|length > 0 %}
-    <div class="col-lg-6 col-md-12 col-sm-12">
-        <div class="box">
-            <div class="box-header with-border">
-                <h3 class="box-title">Transactions</h3>
-            </div>
-            <div class="box-body no-padding">
-                {% include 'list/journals-tiny' with {'transactions' : result.transactions} %}
-            </div>
-            <div class="box-footer">
-                <span class="pull-right">Results: {{  result.transactions|length }}</span>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-    {% if result.categories|length > 0 %}
-    <div class="col-lg-6 col-md-12 col-sm-12">
-        <div class="box">
-            <div class="box-header with-border">
-                <h3 class="box-title">Categories</h3>
-            </div>
-            <div class="box-body no-padding">
-                <div class="list-group">
-                    {% for category in result.categories %}
-                        <a class="list-group-item" title="{{category.name}}" href="{{route('categories.show',category.id)}}">
-                            {{ category.name }}
-                        </a>
-                    {% endfor %}
+    {% if query %}
+        <div class="row">
+            {% if result.transactions|length > 0 %}
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Transactions</h3>
+                        </div>
+                        <div class="box-body no-padding">
+                            {% include 'list/journals-tiny' with {'transactions' : result.transactions} %}
+                        </div>
+                        <div class="box-footer">
+                            <span class="pull-right">Results: {{ result.transactions|length }}</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="box-footer">
-                <span class="pull-right">Results: {{ result['categories']|length }}</span>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-    {% if result.tags|length > 0 %}
-    <div class="col-lg-6 col-md-12 col-sm-12">
-        <div class="box">
-            <div class="box-header with-border">
-                <h3 class="box-title">Tags</h3>
-            </div>
-            <div class="box-body no-padding">
-                <p>Bla bla</p>
-            </div>
-            <div class="box-footer">
-                <span class="pull-right">Results: {{result['tags']|length}}</span>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-    {% if result.accounts|length > 0 %}
-    <div class="col-lg-6 col-md-12 col-sm-12">
-        <div class="box">
-            <div class="box-header with-border">
-                <h3 class="box-title">Accounts</h3>
-            </div>
-            <div class="box-body no-padding">
-                <div class="list-group">
-                    {% for account in result.accounts %}
-                        <a class="list-group-item" title="{{account.name}}" href="{{route('accounts.show',account.id)}}">
-                            {{ account.name }}
-                        </a>
-                    {% endfor %}
+            {% endif %}
+            {% if result.categories|length > 0 %}
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Categories</h3>
+                        </div>
+                        <div class="box-body no-padding">
+                            <div class="list-group">
+                                {% for category in result.categories %}
+                                    <a class="list-group-item" title="{{ category.name }}" href="{{ route('categories.show',category.id) }}">
+                                        {{ category.name }}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <span class="pull-right">Results: {{ result['categories']|length }}</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="box-footer">
-                <span class="pull-right">Results: {{result['accounts'].count()}}</span>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-    {% if result.budgets|length > 0 %}
-    <div class="col-lg-6 col-md-12 col-sm-12">
-        <div class="box">
-            <div class="box-header with-border">
-                <h3 class="box-title">Budgets</h3>
-            </div>
-            <div class="box-body">
-                <div class="list-group">
-                    {% for budget in result.budgets %}
-                        <a class="list-group-item" title="{{budget.name}}" href="{{route('budgets.show',budget.id)}}">
-                            {{ budget.name }}
-                        </a>
-                    {% endfor %}
+            {% endif %}
+            {% if result.tags|length > 0 %}
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Tags</h3>
+                        </div>
+                        <div class="box-body no-padding">
+                            <p>Bla bla</p>
+                        </div>
+                        <div class="box-footer">
+                            <span class="pull-right">Results: {{ result['tags']|length }}</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="box-footer">
-                <span class="pull-right">Results: {{result['budgets'].count()}}</span>
-            </div>
+            {% endif %}
+            {% if result.accounts|length > 0 %}
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Accounts</h3>
+                        </div>
+                        <div class="box-body no-padding">
+                            <div class="list-group">
+                                {% for account in result.accounts %}
+                                    <a class="list-group-item" title="{{ account.name }}" href="{{ route('accounts.show',account.id) }}">
+                                        {{ account.name }}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <span class="pull-right">Results: {{ result['accounts'].count() }}</span>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if result.budgets|length > 0 %}
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Budgets</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="list-group">
+                                {% for budget in result.budgets %}
+                                    <a class="list-group-item" title="{{ budget.name }}" href="{{ route('budgets.show',budget.id) }}">
+                                        {{ budget.name }}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <span class="pull-right">Results: {{ result['budgets'].count() }}</span>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         </div>
-    </div>
     {% endif %}
-</div>
-{% endif %}
 
 
 
 {% endblock %}
 {% block scripts %}
-<script type="text/javascript">
-    var query = '{{ query }}';
-</script>
+    <script type="text/javascript">
+        var query = '{{ query }}';
+    </script>
 {% endblock %}

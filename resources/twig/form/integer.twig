@@ -1,9 +1,10 @@
-<div class="{{ classes }}" id="{{ name}}_holder">
+<div class="{{ classes }}" id="{{ name }}_holder">
     <label for="{{ options.id }}" class="col-sm-4 control-label">{{ label }}</label>
+
     <div class="col-sm-8">
         <div class="input-group">
             {{ Form.input('number', name, value, options) }}
-            {% include 'form/feedback.twig'  %}
+            {% include 'form/feedback.twig' %}
         </div>
     </div>
 </div>

@@ -76,7 +76,8 @@
 
     <script type="text/javascript">
         var year = '{{start.year}}';
-        var shared = {% if shared %}'/shared'{% else %}''{% endif %};
+        var shared = {% if shared %}'/shared'
+        {% else %}''{% endif %};
         var incomeTopLength = {{ incomeTopLength }};
         var expenseTopLength = {{ expenseTopLength }};
         var incomeRestShow = false; // starts hidden.

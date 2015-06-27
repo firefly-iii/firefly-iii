@@ -3,16 +3,15 @@
 namespace FireflyIII\Validation;
 
 use Auth;
-use Carbon\Carbon;
 use Config;
 use Crypt;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\PiggyBank;
 use FireflyIII\User;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Validation\Validator;
-use Navigation;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -244,6 +243,7 @@ class FireflyValidator extends Validator
         }
         $set = $query->get(['piggy_banks.*']);
 
+        /** @var PiggyBank $entry */
         foreach ($set as $entry) {
             $fieldValue = $this->tryDecrypt($entry->name);
             if ($fieldValue == $value) {

@@ -33,35 +33,35 @@
             {% include 'partials/reports/expenses.twig' %}
         </div>
     </div>
-<div class="row">
-    <div class="col-lg-8 col-md-8 col-sm-12">
-        <!-- budgets -->
-        {% include 'partials/reports/budgets.twig' %}
+    <div class="row">
+        <div class="col-lg-8 col-md-8 col-sm-12">
+            <!-- budgets -->
+            {% include 'partials/reports/budgets.twig' %}
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <!-- categories -->
+            {% include 'partials/reports/categories.twig' %}
+        </div>
     </div>
-    <div class="col-lg-4 col-md-4 col-sm-12">
-        <!-- categories -->
-        {% include 'partials/reports/categories.twig' %}
-    </div>
-</div>
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
 
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        {% include 'partials/reports/balance.twig' %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            {% include 'partials/reports/balance.twig' %}
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-lg-12 col-md-12 col-sm-12">
-        {% include 'partials/reports/bills.twig' %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            {% include 'partials/reports/bills.twig' %}
 
+        </div>
     </div>
-</div>
 {% endblock %}
 {% block styles %}
-    <link rel="stylesheet" href="css/bootstrap-sortable.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="css/bootstrap-sortable.css" type="text/css" media="all"/>
 {% endblock %}
 {% block scripts %}
 
@@ -75,7 +75,8 @@
     <script type="text/javascript">
         var year = {{ start.year }};
         var month = {{ start.month }};
-        var shared = {% if shared %}'/shared'{% else %}''{% endif %};
+        var shared = {% if shared %}'/shared'
+        {% else %}''{% endif %};
         var incomeTopLength = {{ incomeTopLength }};
         var expenseTopLength = {{ expenseTopLength }};
         var incomeRestShow = false; // starts hidden.

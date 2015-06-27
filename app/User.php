@@ -9,6 +9,7 @@ use Zizaco\Entrust\Traits\EntrustUserTrait;
 
 /**
  * Class User
+ *
  * @codeCoverageIgnore
  *
  * @package FireflyIII

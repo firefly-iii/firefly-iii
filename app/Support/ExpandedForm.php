@@ -40,7 +40,7 @@ class ExpandedForm
         $currencies      = Amt::getAllCurrencies();
         unset($options['currency']);
         unset($options['placeholder']);
-        $html            = View::make('form.amount', compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
+        $html = View::make('form.amount', compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
 
@@ -144,7 +144,7 @@ class ExpandedForm
         $currencies      = Amt::getAllCurrencies();
         unset($options['currency']);
         unset($options['placeholder']);
-        $html            = View::make('form.balance', compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
+        $html = View::make('form.balance', compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
     }
@@ -186,7 +186,7 @@ class ExpandedForm
         $classes = $this->getHolderClasses($name);
         $value   = $this->fillFieldValue($name, $value);
         unset($options['placeholder']);
-        $html    = View::make('form.date', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        $html = View::make('form.date', compact('classes', 'name', 'label', 'value', 'options'))->render();
 
         return $html;
     }
@@ -323,7 +323,7 @@ class ExpandedForm
         $selected = $this->fillFieldValue($name, $selected);
         unset($options['autocomplete']);
         unset($options['placeholder']);
-        $html     = View::make('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
+        $html = View::make('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
 
         return $html;
     }

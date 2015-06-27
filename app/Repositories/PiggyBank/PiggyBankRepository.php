@@ -119,7 +119,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         $data['remind_me']     = false;
         $data['reminder_skip'] = 0;
 
-        $piggyBank             = PiggyBank::create($data);
+        $piggyBank = PiggyBank::create($data);
 
         return $piggyBank;
     }

@@ -30,6 +30,22 @@ class PiggyBankPart
     public $targetdate;
 
     /**
+     * @return PiggyBankRepetition
+     */
+    public function getRepetition()
+    {
+        return $this->repetition;
+    }
+
+    /**
+     * @param PiggyBankRepetition $repetition
+     */
+    public function setRepetition($repetition)
+    {
+        $this->repetition = $repetition;
+    }
+
+    /**
      * @return Carbon
      */
     public function getStartdate()
@@ -59,22 +75,6 @@ class PiggyBankPart
     public function setTargetdate($targetdate)
     {
         $this->targetdate = $targetdate;
-    }
-
-    /**
-     * @return PiggyBankRepetition
-     */
-    public function getRepetition()
-    {
-        return $this->repetition;
-    }
-
-    /**
-     * @param PiggyBankRepetition $repetition
-     */
-    public function setRepetition($repetition)
-    {
-        $this->repetition = $repetition;
     }
 
     /**

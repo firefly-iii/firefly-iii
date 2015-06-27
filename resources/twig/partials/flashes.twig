@@ -1,27 +1,27 @@
 {% if Session.has('success') %}
-<div class="alert alert-success alert-dismissible" role="alert">
-    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span></button>
-    <strong>Success!</strong> {{Session.get('success')}}
-</div>
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span></button>
+        <strong>Success!</strong> {{ Session.get('success') }}
+    </div>
 {% endif %}
 
 {% if Session.has('info') %}
-<div class="alert alert-info alert-dismissible" role="alert">
-    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span></button>
-    <strong>Info:</strong> {{Session.get('info')}}
-</div>
+    <div class="alert alert-info alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span></button>
+        <strong>Info:</strong> {{ Session.get('info') }}
+    </div>
 {% endif %}
 
 {% if Session.has('warning') %}
-<div class="alert alert-warning alert-dismissible" role="alert">
-    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span></button>
-    <strong>Warning!</strong> {{Session.get('warning')}}
-</div>
+    <div class="alert alert-warning alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span></button>
+        <strong>Warning!</strong> {{ Session.get('warning') }}
+    </div>
 {% endif %}
 
 {% if Session.has('error') %}
-<div class="alert alert-danger alert-dismissible" role="alert">
-    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span></button>
-    <strong>Error!</strong> {{Session.get('error')}}
-</div>
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">{{ 'close'|_ }}</span></button>
+        <strong>Error!</strong> {{ Session.get('error') }}
+    </div>
 {% endif %}
