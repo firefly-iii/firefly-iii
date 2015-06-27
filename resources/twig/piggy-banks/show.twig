@@ -12,7 +12,12 @@
                     <h3 class="box-title">{{ 'events'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    <div id="piggy-bank-history"></div>
+                    {% if Config.get('firefly.chart') == 'google' %}
+                        <div id="piggy-bank-history"></div>
+                    {% endif %}
+                    {% if Config.get('firefly.chart') == 'chartjs' %}
+                        <canvas id="piggy-bank-history" style="width:100%;height:400px;"></canvas>
+                    {% endif %}
                 </div>
             </div>
         </div>
