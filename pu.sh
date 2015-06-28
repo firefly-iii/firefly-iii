@@ -10,7 +10,7 @@ then
 fi
 
 # directories to look in:
-dirs=("controllers" "database" "factories" "helpers" "models" "middleware" "repositories" "support")
+dirs=("controllers" "database" "factories" "generators" "helpers" "models" "middleware" "repositories" "support")
 
 if [ ! -z "$1" ]
 then
