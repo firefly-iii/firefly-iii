@@ -204,10 +204,10 @@ class General extends Twig_Extension
             $route = $args[0]; // name of the route.
 
             if (Route::getCurrentRoute()->getName() == $route) {
-                return 'active because-route-matches-strict';
+                return 'active';
             }
 
-            return 'not-xxx-at-all';
+            return '';
         }
         );
     }
@@ -225,10 +225,10 @@ class General extends Twig_Extension
             $args  = func_get_args();
             $route = $args[0]; // name of the route.
             if (!(strpos(Route::getCurrentRoute()->getName(), $route) === false)) {
-                return 'active because-route-matches-non-strict';
+                return 'active';
             }
 
-            return 'not-xxx-at-all';
+            return '';
         }
         );
     }
@@ -249,10 +249,10 @@ class General extends Twig_Extension
             $activeWhat = isset($context['what']) ? $context['what'] : false;
 
             if ($what == $activeWhat && !(strpos(Route::getCurrentRoute()->getName(), $route) === false)) {
-                return 'active because-route-matches-non-strict-what';
+                return 'active';
             }
 
-            return 'not-xxx-at-all';
+            return '';
         }, ['needs_context' => true]
         );
     }
