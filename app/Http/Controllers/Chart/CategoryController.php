@@ -26,7 +26,7 @@ class CategoryController extends Controller
     protected $generator;
 
     /**
-     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

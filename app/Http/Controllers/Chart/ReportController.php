@@ -23,7 +23,7 @@ class ReportController extends Controller
     protected $generator;
 
     /**
-     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
