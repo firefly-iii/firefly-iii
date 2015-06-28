@@ -55,8 +55,8 @@ var defaultAreaOptions = {
     pointHitDetectionRadius: 5,
     datasetFill: true,
     scaleFontSize: 10,
-    responsive: true,
-    scaleLabel:           "<%= '" + currencySymbol + " ' + Number(value).toFixed(2).replace('.', ',') %>",
+    responsive: false,
+    scaleLabel: " <%= '" + currencySymbol + " ' + Number(value).toFixed(0).replace('.', ',') %>",
     tooltipFillColor: "rgba(0,0,0,0.5)",
     multiTooltipTemplate: "<%=datasetLabel%>: <%= '" + currencySymbol + " ' + Number(value).toFixed(2).replace('.', ',') %>"
 };
@@ -69,7 +69,7 @@ var defaultPieOptions = {
     pointHitDetectionRadius: 5,
     datasetFill: false,
     scaleFontSize: 10,
-    responsive: true,
+    responsive: false,
     tooltipFillColor: "rgba(0,0,0,0.5)",
     tooltipTemplate: "<%if (label){%><%=label%>: <%}%>" + currencySymbol + " <%= value %>",
 
@@ -83,8 +83,8 @@ var defaultLineOptions = {
     pointHitDetectionRadius: 5,
     datasetFill: false,
     scaleFontSize: 10,
-    responsive: true,
-    scaleLabel:      "<%= '" + currencySymbol + " ' + Number(value).toFixed(2).replace('.', ',') %>",
+    responsive: false,
+    scaleLabel:      "<%= '" + currencySymbol + " ' + Number(value).toFixed(0).replace('.', ',') %>",
     tooltipFillColor: "rgba(0,0,0,0.5)",
     tooltipTemplate: "<%if (label){%><%=label%>: <%}%>" + currencySymbol + " <%= value %>",
 };
@@ -96,8 +96,8 @@ var defaultColumnOptions = {
     pointHitDetectionRadius: 5,
     datasetFill: false,
     scaleFontSize: 10,
-    responsive: true,
-    scaleLabel:           "<%= '" + currencySymbol + " ' + Number(value).toFixed(2).replace('.', ',') %>",
+    responsive: false,
+    scaleLabel:           "<%= '" + currencySymbol + " ' + Number(value).toFixed(0).replace('.', ',') %>",
     tooltipFillColor: "rgba(0,0,0,0.5)",
     tooltipTemplate:      "<%if (label){%><%=label%>: <%}%>" + currencySymbol + " <%= value %>",
     multiTooltipTemplate: "<%=datasetLabel%>: " + currencySymbol + " <%= Number(value).toFixed(2).replace('.', ',') %>"
@@ -110,8 +110,8 @@ var defaultStackedColumnOptions = {
     pointHitDetectionRadius: 5,
     datasetFill: false,
     scaleFontSize: 10,
-    responsive: true,
-    scaleLabel:           "<%= '" + currencySymbol + " ' + Number(value).toFixed(2).replace('.', ',') %>",
+    responsive: false,
+    scaleLabel:           "<%= '" + currencySymbol + " ' + Number(value).toFixed(0).replace('.', ',') %>",
     tooltipFillColor: "rgba(0,0,0,0.5)",
     multiTooltipTemplate: "<%=datasetLabel%>: " + currencySymbol + " <%= Number(value).toFixed(2).replace('.', ',') %>"
 
