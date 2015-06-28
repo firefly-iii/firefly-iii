@@ -23,6 +23,7 @@ return [
     "unique_for_user"        => "There already is an entry with this :attribute.",
     "before"                 => "The :attribute must be a date before :date.",
     'unique_object_for_user' => 'This name is already in use',
+    'unique_account_for_user' => 'This account name is already in use',
     "between"                => [
         "numeric" => "The :attribute must be between :min and :max.",
         "file"    => "The :attribute must be between :min and :max kilobytes.",

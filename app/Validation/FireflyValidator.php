@@ -75,6 +75,10 @@ class FireflyValidator extends Validator
         if (isset($this->data['account_type_id'])) {
             return $this->validateByAccountTypeId($value, $parameters);
         }
+        if(isset($this->data['id'])) {
+            return $this->validateByAccountId($value, $parameters);
+        }
+
 
         return false;
     }
@@ -153,6 +157,33 @@ class FireflyValidator extends Validator
     {
         $type   = AccountType::find($this->data['account_type_id'])->first();
         $ignore = isset($parameters[0]) ? intval($parameters[0]) : 0;
+        $value  = $this->tryDecrypt($value);
+
+        $set = Auth::user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
+        /** @var Account $entry */
+        foreach ($set as $entry) {
+            if ($entry->name == $value) {
+                return false;
+            }
+        }
+
+        return true;
+
+    }
+
+    /**
+     * @param $value
+     * @param $parameters
+     *
+     * @return bool
+     */
+    protected function validateByAccountId($value, $parameters)
+    {
+        /** @var Account $existingAccount */
+        $existingAccount = Account::find($this->data['id']);
+
+        $type   = $existingAccount->accountType;
+        $ignore = $existingAccount->id;
         $value  = $this->tryDecrypt($value);
 
         $set = Auth::user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
