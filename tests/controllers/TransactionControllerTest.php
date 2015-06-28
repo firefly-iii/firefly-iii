@@ -339,6 +339,7 @@ class TransactionControllerTest extends TestCase
         Amount::shouldReceive('getDefaultCurrency')->andReturn($currency);
         Amount::shouldReceive('getAllCurrencies')->andReturn([$currency]);
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
         Amount::shouldReceive('formatTransaction')->andReturn('X');
         Amount::shouldReceive('format')->andReturn('X');
 

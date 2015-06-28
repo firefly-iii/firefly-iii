@@ -58,6 +58,7 @@ class PiggyBankControllerTest extends TestCase
         Amount::shouldReceive('format')->andReturn('XXxx');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
         Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
 
         $this->call('GET', '/piggy-banks/add/' . $piggyBank->id);
         $this->assertResponseOk();
@@ -208,6 +209,7 @@ class PiggyBankControllerTest extends TestCase
         $accounts->shouldReceive('leftOnAccount')->andReturn(12);
         Amount::shouldReceive('format')->andReturn('123');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
 
 
         $this->call('GET', '/piggy-banks');
@@ -254,6 +256,7 @@ class PiggyBankControllerTest extends TestCase
 
         Amount::shouldReceive('format')->andReturn('something');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
 
         $this->call('POST', '/piggy-banks/add/' . $piggyBank->id, ['_token' => 'replaceMe']);
         $this->assertResponseStatus(302);
@@ -273,6 +276,7 @@ class PiggyBankControllerTest extends TestCase
 
         Amount::shouldReceive('format')->andReturn('something');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
 
         $this->call('POST', '/piggy-banks/add/' . $piggyBank->id, ['_token' => 'replaceMe', 'amount' => '10000']);
         $this->assertResponseStatus(302);

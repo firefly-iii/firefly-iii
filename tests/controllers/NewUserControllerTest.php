@@ -47,6 +47,8 @@ class NewUserControllerTest extends TestCase
         $lastActivity       = FactoryMuffin::create('FireflyIII\Models\Preference');
         $lastActivity->data = microtime();
         Preferences::shouldReceive('lastActivity')->andReturn($lastActivity);
+        Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
 
         $this->call('GET', '/new-user');
         $this->assertResponseStatus(200);

@@ -119,6 +119,7 @@ class HomeControllerTest extends TestCase
 
 
         Amount::shouldReceive('getCurrencyCode')->andReturn('EUR');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
         Amount::shouldReceive('format')->andReturn('xxx');
         Amount::shouldReceive('formatJournal')->with($journal)->andReturn('xxx');
 

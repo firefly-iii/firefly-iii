@@ -61,6 +61,7 @@ class JsonControllerTest extends TestCase
         $accounts->shouldReceive('getTransfersInRange')->andReturn(new Collection);
         Amount::shouldReceive('format')->andReturn('xx');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
         Steam::shouldReceive('balance')->andReturn(0);
 
 
@@ -92,6 +93,7 @@ class JsonControllerTest extends TestCase
         $accounts->shouldReceive('getCreditCards')->andReturn($ccs);
         Amount::shouldReceive('format')->andReturn('xx');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
         Steam::shouldReceive('balance')->andReturn(-1);
 
         $this->call('GET', '/json/box/bills-unpaid');
@@ -110,6 +112,7 @@ class JsonControllerTest extends TestCase
         $repository->shouldReceive('incomeInPeriodCorrected')->andReturn(new Collection);
         Amount::shouldReceive('format')->andReturn('xx');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
 
         $this->call('GET', '/json/box/in');
         $this->assertResponseOk();
@@ -127,6 +130,7 @@ class JsonControllerTest extends TestCase
         $repository->shouldReceive('expenseInPeriodCorrected')->andReturn(new Collection);
         Amount::shouldReceive('format')->andReturn('xx');
         Amount::shouldReceive('getCurrencyCode')->andReturn('X');
+        Amount::shouldReceive('getCurrencySymbol')->andReturn('X');
 
         $this->call('GET', '/json/box/out');
         $this->assertResponseOk();
