@@ -71,8 +71,8 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
                 $current->addDay();
             }
             $data['datasets'][] = $set;
-            $data['count']++;
         }
+        $data['count'] = count($data['datasets']);
 
         return $data;
     }
