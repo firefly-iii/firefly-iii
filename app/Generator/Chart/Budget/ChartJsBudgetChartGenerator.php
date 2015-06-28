@@ -65,11 +65,6 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
             'labels'   => [],
             'datasets' => [],
         ];
-        foreach ($entries as $entry) {
-            if ($entry[1] != 0 || $entry[2] != 0 || $entry[3] != 0) {
-                $data['labels'][] = $entry[0];
-            }
-        }
         // dataset: left
         // dataset: spent
         // dataset: overspent
@@ -78,9 +73,10 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
         $overspent = [];
         foreach ($entries as $entry) {
             if ($entry[1] != 0 || $entry[2] != 0 || $entry[3] != 0) {
-                $left[]      = round($entry[1], 2);
-                $spent[]     = round($entry[2], 2);
-                $overspent[] = round($entry[3], 2);
+                $data['labels'][] = $entry[0];
+                $left[]           = round($entry[1], 2);
+                $spent[]          = round($entry[2], 2);
+                $overspent[]      = round($entry[3], 2);
             }
         }
 

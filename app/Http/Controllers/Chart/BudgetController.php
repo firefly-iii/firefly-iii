@@ -9,7 +9,6 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\LimitRepetition;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
-use Grumpydictator\Gchart\GChart;
 use Illuminate\Support\Collection;
 use Navigation;
 use Preferences;
@@ -84,7 +83,6 @@ class BudgetController extends Controller
     /**
      * Shows the amount left in a specific budget limit.
      *
-     * @param GChart                    $chart
      * @param BudgetRepositoryInterface $repository
      * @param Budget                    $budget
      * @param LimitRepetition           $repetition
@@ -170,9 +168,7 @@ class BudgetController extends Controller
 
                 $left      = max(bcsub($repetition->amount, $expenses), 0); // limited at zero.
                 $overspent = max(bcsub($expenses, $repetition->amount), 0); // limited at zero.
-                $date      = $repetition->startdate->formatLocalized($this->monthAndDayFormat);
-                //$name      = $budget->name . ' (' . $date . ')';
-                $name = $budget->name;
+                $name      = $budget->name;
 
                 // $spent is maxed to the repetition amount:
                 $spent = $expenses > $repetition->amount ? $repetition->amount : $expenses;
