@@ -57,7 +57,7 @@ class BillController extends Controller
         $cache->addProperty('bills');
         $cache->addProperty('frontpage');
         if ($cache->has()) {
-            return Response::json($cache->get()); // @codeCoverageIgnore
+            // return Response::json($cache->get()); // @codeCoverageIgnore
         }
 
         $bills  = $repository->getActiveBills();

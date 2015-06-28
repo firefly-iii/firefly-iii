@@ -8,9 +8,11 @@
 
 namespace FireflyIII\Generator\Chart\Bill;
 
+use Config;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
+use Preferences;
 
 /**
  * Class ChartJsBillChartGenerator
@@ -79,5 +81,45 @@ class ChartJsBillChartGenerator implements BillChartGenerator
      */
     public function single(Bill $bill, Collection $entries)
     {
+        // language:
+        $language = Preferences::get('language', 'en')->data;
+        $format   = Config::get('firefly.month.' . $language);
+
+        $data = [
+            'count'    => 3,
+            'labels'   => [],
+            'datasets' => [],
+        ];
+
+        // dataset: max amount
+        // dataset: min amount
+        // dataset: actual amount
+
+        $minAmount    = [];
+        $maxAmount    = [];
+        $actualAmount = [];
+        foreach ($entries as $entry) {
+            $data['labels'][] = $entry->date->formatLocalized($format);
+            $minAmount[]      = round($bill->amount_min, 2);
+            $maxAmount[]      = round($bill->amount_max, 2);
+            $actualAmount[]   = round($entry->amount, 2);
+        }
+
+        $data['datasets'][] = [
+            'label' => trans('firefly.minAmount'),
+            'data'  => $minAmount,
+        ];
+        $data['datasets'][] = [
+            'label' => trans('firefly.billEntry'),
+            'data'  => $actualAmount,
+        ];
+        $data['datasets'][] = [
+            'label' => trans('firefly.maxAmount'),
+            'data'  => $maxAmount,
+        ];
+
+        $data['count'] = count($data['datasets']);
+
+        return $data;
     }
 }

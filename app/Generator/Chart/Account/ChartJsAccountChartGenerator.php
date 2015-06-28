@@ -19,6 +19,7 @@ class ChartJsAccountChartGenerator implements AccountChartGenerator
 
 
     /**
+     * @codeCoverageIgnore
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end

@@ -84,7 +84,7 @@ var defaultLineOptions = {
     datasetFill: false,
     scaleFontSize: 10,
     responsive: true,
-    scaleLabel:           "<%= '" + currencySymbol + " ' + Number(value).toFixed(2).replace('.', ',') %>",
+    scaleLabel:      "<%= '" + currencySymbol + " ' + Number(value).toFixed(2).replace('.', ',') %>",
     tooltipFillColor: "rgba(0,0,0,0.5)",
     tooltipTemplate: "<%if (label){%><%=label%>: <%}%>" + currencySymbol + " <%= value %>",
 };
@@ -97,10 +97,10 @@ var defaultColumnOptions = {
     datasetFill: false,
     scaleFontSize: 10,
     responsive: true,
-    scaleLabel:      "<%= '" + currencySymbol + " ' + Number(value).toFixed(2).replace('.', ',') %>",
+    scaleLabel:           "<%= '" + currencySymbol + " ' + Number(value).toFixed(2).replace('.', ',') %>",
     tooltipFillColor: "rgba(0,0,0,0.5)",
-    tooltipTemplate: "<%if (label){%><%=label%>: <%}%>" + currencySymbol + " <%= value %>",
-    multiTooltipTemplate: "<%=datasetLabel%>: "+currencySymbol+" <%= Number(value).toFixed(2).replace('.', ',') %>"
+    tooltipTemplate:      "<%if (label){%><%=label%>: <%}%>" + currencySymbol + " <%= value %>",
+    multiTooltipTemplate: "<%=datasetLabel%>: " + currencySymbol + " <%= Number(value).toFixed(2).replace('.', ',') %>"
 };
 
 var defaultStackedColumnOptions = {
@@ -113,7 +113,7 @@ var defaultStackedColumnOptions = {
     responsive: true,
     scaleLabel:           "<%= '" + currencySymbol + " ' + Number(value).toFixed(2).replace('.', ',') %>",
     tooltipFillColor: "rgba(0,0,0,0.5)",
-    multiTooltipTemplate: "<%=datasetLabel%>: "+currencySymbol+" <%= Number(value).toFixed(2).replace('.', ',') %>"
+    multiTooltipTemplate: "<%=datasetLabel%>: " + currencySymbol + " <%= Number(value).toFixed(2).replace('.', ',') %>"
 
 };
 
@@ -265,7 +265,8 @@ function stackedColumnChart(URL, container, options) {
  */
 function comboChart(URL, container, options) {
     "use strict";
-    console.log('no impl for comboChart');
+    columnChart(URL, container, options);
+
 }
 
 /**

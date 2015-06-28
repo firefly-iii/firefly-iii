@@ -44,6 +44,7 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
     }
 
     /**
+     * @codeCoverageIgnore
      * @param Collection $entries
      *
      * @return array
