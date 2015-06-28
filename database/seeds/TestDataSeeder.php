@@ -528,9 +528,10 @@ class TestDataSeeder extends Seeder
     }
 
     /**
-     * @param $tag
+     * @param $tagName
      *
      * @return Tag|null
+     * @internal param $tag
      */
     protected function findTag($tagName)
     {

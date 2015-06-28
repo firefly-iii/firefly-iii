@@ -81,6 +81,7 @@ class GoogleCategoryChartGenerator implements CategoryChartGenerator
     }
 
     /**
+     * @param Collection $categories
      * @param Collection $entries
      *
      * @return array
