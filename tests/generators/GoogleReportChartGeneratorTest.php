@@ -1,10 +1,15 @@
 <?php
+use Carbon\Carbon;
+use FireflyIII\Generator\Chart\Report\GoogleReportChartGenerator;
+use Illuminate\Support\Collection;
 
 /**
  * Class GoogleReportChartGeneratorTest
  */
 class GoogleReportChartGeneratorTest extends TestCase
 {
+    /** @var GoogleReportChartGenerator */
+    protected $object;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -13,6 +18,8 @@ class GoogleReportChartGeneratorTest extends TestCase
     public function setUp()
     {
         parent::setUp();
+
+        $this->object = new GoogleReportChartGenerator;
 
     }
 
@@ -31,7 +38,18 @@ class GoogleReportChartGeneratorTest extends TestCase
      */
     public function testYearInOut()
     {
-        $this->markTestIncomplete();
+        // make set:
+        $collection = new Collection;
+        for ($i = 0; $i < 5; $i++) {
+            $collection->push([new Carbon, 200, 100]);
+        }
+
+        $data = $this->object->yearInOut($collection);
+
+        $this->assertCount(5, $data['rows']);
+
+        $this->assertEquals(200, $data['rows'][0]['c'][1]['v']);
+        $this->assertEquals(100, $data['rows'][0]['c'][2]['v']);
     }
 
     /**
@@ -39,6 +57,13 @@ class GoogleReportChartGeneratorTest extends TestCase
      */
     public function testYearInOutSummarized()
     {
-        $this->markTestIncomplete();
+        // make set:
+        $income  = 2400;
+        $expense = 1200;
+
+        $data = $this->object->yearInOutSummarized($income, $expense, 12);
+
+        $this->assertEquals(200, $data['rows'][1]['c'][1]['v']);
+        $this->assertEquals(100, $data['rows'][1]['c'][2]['v']);
     }
 }

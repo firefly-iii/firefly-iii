@@ -1,10 +1,18 @@
 <?php
+use Carbon\Carbon;
+use FireflyIII\Generator\Chart\Category\GoogleCategoryChartGenerator;
+use Illuminate\Support\Collection;
+use League\FactoryMuffin\Facade as FactoryMuffin;
 
 /**
  * Class GoogleCategoryChartGeneratorTest
  */
 class GoogleCategoryChartGeneratorTest extends TestCase
 {
+
+
+    /** @var GoogleCategoryChartGenerator */
+    protected $object;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -13,6 +21,8 @@ class GoogleCategoryChartGeneratorTest extends TestCase
     public function setUp()
     {
         parent::setUp();
+
+        $this->object = new GoogleCategoryChartGenerator();
 
     }
 
@@ -32,7 +42,17 @@ class GoogleCategoryChartGeneratorTest extends TestCase
      */
     public function testAll()
     {
-        $this->markTestIncomplete();
+        // make a collection of stuff:
+        $collection = new Collection;
+        for ($i = 0; $i < 5; $i++) {
+            $collection->push([new Carbon, 100]);
+        }
+
+        $data = $this->object->all($collection);
+
+        $this->assertCount(5, $data['rows']);
+        $this->assertCount(2, $data['cols']);
+        $this->assertEquals(100, $data['rows'][0]['c'][1]['v']);
     }
 
     /**
@@ -40,7 +60,19 @@ class GoogleCategoryChartGeneratorTest extends TestCase
      */
     public function testFrontpage()
     {
-        $this->markTestIncomplete();
+        // make a collection of stuff:
+        $collection = new Collection;
+        for ($i = 0; $i < 5; $i++) {
+            $collection->push(['name' => 'Something', 'sum' => 100]);
+        }
+
+        $data = $this->object->frontpage($collection);
+
+        $this->assertCount(5, $data['rows']);
+        $this->assertCount(2, $data['cols']);
+        $this->assertEquals('Something', $data['rows'][0]['c'][0]['v']);
+        $this->assertEquals(100, $data['rows'][0]['c'][1]['v']);
+
     }
 
     /**
@@ -48,7 +80,17 @@ class GoogleCategoryChartGeneratorTest extends TestCase
      */
     public function testMonth()
     {
-        $this->markTestIncomplete();
+        // make a collection of stuff:
+        $collection = new Collection;
+        for ($i = 0; $i < 5; $i++) {
+            $collection->push([new Carbon, 100]);
+        }
+
+        $data = $this->object->month($collection);
+
+        $this->assertCount(5, $data['rows']);
+        $this->assertCount(2, $data['cols']);
+        $this->assertEquals(100, $data['rows'][0]['c'][1]['v']);
     }
 
     /**
@@ -56,6 +98,19 @@ class GoogleCategoryChartGeneratorTest extends TestCase
      */
     public function testYear()
     {
-        $this->markTestIncomplete();
+        // make a collection of stuff:
+        $collection = new Collection;
+        $categories = new Collection;
+        for ($i = 0; $i < 5; $i++) {
+            $categories->push(FactoryMuffin::create('FireflyIII\Models\Category'));
+            $collection->push([new Carbon, 100, 100, 100]);
+        }
+
+        $data = $this->object->year($categories, $collection);
+
+        $this->assertCount(5, $data['rows']);
+        $this->assertEquals($categories->first()->name, $data['cols'][1]['label']);
+        $this->assertEquals(100, $data['rows'][0]['c'][1]['v']);
+
     }
 }

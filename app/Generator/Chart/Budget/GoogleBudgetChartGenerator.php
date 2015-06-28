@@ -36,23 +36,14 @@ class GoogleBudgetChartGenerator implements BudgetChartGenerator
     }
 
     /**
+     * @codeCoverageIgnore
      * @param Collection $entries
      *
      * @return array
      */
     public function budgetLimit(Collection $entries)
     {
-        $chart = new GChart;
-        $chart->addColumn(trans('firefly.day'), 'date');
-        $chart->addColumn(trans('firefly.left'), 'number');
-
-        foreach ($entries as $entry) {
-
-            $chart->addRow($entry[0], $entry[1]);
-        }
-        $chart->generate();
-
-        return $chart->getData();
+        return $this->budget($entries);
     }
 
     /**
