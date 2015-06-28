@@ -45,6 +45,7 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
 
     /**
      * @codeCoverageIgnore
+     *
      * @param Collection $entries
      *
      * @return array
@@ -62,7 +63,7 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
     public function frontpage(Collection $entries)
     {
         $data = [
-            'count'    => 2,
+            'count'    => 0,
             'labels'   => [],
             'datasets' => [],
         ];
@@ -119,7 +120,6 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
 
         foreach ($budgets as $budget) {
             $data['labels'][] = $budget->name;
-            $data['count']++;
         }
         /** @var array $entry */
         foreach ($entries as $entry) {
@@ -132,6 +132,7 @@ class ChartJsBudgetChartGenerator implements BudgetChartGenerator
             $data['datasets'][] = $array;
 
         }
+        $data['count'] = count($data['datasets']);
 
         return $data;
     }

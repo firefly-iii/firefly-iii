@@ -10,7 +10,7 @@ use League\FactoryMuffin\Facade as FactoryMuffin;
 class ChartJsBillChartGeneratorTest extends TestCase
 {
 
-    /** @var \FireflyIII\Generator\Chart\Bill\ChartJsBillChartGenerator */
+    /** @var ChartJsBillChartGenerator */
     protected $object;
 
     /**

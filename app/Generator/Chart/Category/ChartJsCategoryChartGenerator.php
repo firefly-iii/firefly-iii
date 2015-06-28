@@ -69,6 +69,7 @@ class ChartJsCategoryChartGenerator implements CategoryChartGenerator
     }
 
     /**
+     * @codeCoverageIgnore
      * @param Collection $entries
      *
      * @return array
