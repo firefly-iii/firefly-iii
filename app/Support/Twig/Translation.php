@@ -7,7 +7,7 @@ use Twig_SimpleFilter;
 
 /**
  * @codeCoverageIgnore
- * 
+ *
  * Class Budget
  *
  * @package FireflyIII\Support\Twig
