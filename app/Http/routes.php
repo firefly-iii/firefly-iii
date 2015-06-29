@@ -163,6 +163,7 @@ Route::group(
     Route::get('/home', ['uses' => 'HomeController@index', 'as' => 'home']);
     Route::post('/daterange', ['uses' => 'HomeController@dateRange', 'as' => 'daterange']);
     Route::get('/flush', ['uses' => 'HomeController@flush', 'as' => 'flush']);
+    Route::get('/routes', ['uses' => 'HomeController@routes']);
     /**
      * Account Controller
      */

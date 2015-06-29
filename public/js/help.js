@@ -3,7 +3,7 @@ $(function () {
     $('#help').click(showHelp);
     $(function () {
 
-        $('[data-toggle="tooltip"]').tooltip();
+        //$('[data-toggle="tooltip"]').tooltip();
     });
 });
 

@@ -37,10 +37,12 @@ class Help implements HelpInterface
      */
     public function getFromGithub($route)
     {
-        $uri     = 'https://raw.githubusercontent.com/JC5/firefly-iii-help/master/en/' . e($route) . '.md';
-        $content = [
+        $uri        = 'https://raw.githubusercontent.com/JC5/firefly-iii-help/master/en/' . e($route) . '.md';
+        $routeIndex = str_replace('.', '-', $route);
+        $title      = trans('help.' . $routeIndex);
+        $content    = [
             'text'  => '<p>There is no help for this route!</p>',
-            'title' => $route,
+            'title' => $title,
         ];
         try {
             $content['text'] = file_get_contents($uri);
@@ -72,6 +74,18 @@ class Help implements HelpInterface
     /**
      * @codeCoverageIgnore
      *
+     * @param $route
+     *
+     * @return bool
+     */
+    public function inCache($route)
+    {
+        return Cache::has('help.' . $route . '.title') && Cache::has('help.' . $route . '.text');
+    }
+
+    /**
+     * @codeCoverageIgnore
+     *
      * @param       $route
      * @param array $content
      *
@@ -81,17 +95,5 @@ class Help implements HelpInterface
     {
         Cache::put('help.' . $route . '.text', $content['text'], 10080); // a week.
         Cache::put('help.' . $route . '.title', $content['title'], 10080);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param $route
-     *
-     * @return bool
-     */
-    public function inCache($route)
-    {
-        return Cache::has('help.' . $route . '.title') && Cache::has('help.' . $route . '.text');
     }
 }

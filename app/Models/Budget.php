@@ -38,6 +38,36 @@ class Budget extends Model
     protected $hidden   = ['encrypted'];
 
     /**
+     * @param array $fields
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @codeCoverageIgnore
+     *
+     * @return Budget
+     */
+    public static function firstOrCreateEncrypted(array $fields)
+    {
+        // everything but the name:
+        $query = Budget::orderBy('id');
+        foreach ($fields as $name => $value) {
+            if ($name != 'name') {
+                $query->where($name, $value);
+            }
+        }
+        $set = $query->get(['budgets.*']);
+        /** @var Budget $budget */
+        foreach ($set as $budget) {
+            if ($budget->name == $fields['name']) {
+                return $budget;
+            }
+        }
+        // create it!
+        $budget = Budget::create($fields);
+
+        return $budget;
+
+    }
+
+    /**
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
