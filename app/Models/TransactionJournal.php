@@ -159,12 +159,12 @@ class TransactionJournal extends Model
             }
         }
 
-        if ($this->tag_count === 1) {
+        if (intval($this->tag_count) === 1) {
             // get amount for single tag:
             $amount = $this->amountByTag($this->tags()->first(), $amount);
         }
 
-        if ($this->tag_count > 1) {
+        if (intval($this->tag_count) > 1) {
             // get amount for either tag.
             $amount = $this->amountByTags($amount);
 
