@@ -75,8 +75,8 @@ class FireflyValidator extends Validator
         if (isset($this->data['account_type_id'])) {
             return $this->validateByAccountTypeId($value, $parameters);
         }
-        if(isset($this->data['id'])) {
-            return $this->validateByAccountId($value, $parameters);
+        if (isset($this->data['id'])) {
+            return $this->validateByAccountId($value);
         }
 
 
@@ -177,7 +177,7 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    protected function validateByAccountId($value, $parameters)
+    protected function validateByAccountId($value)
     {
         /** @var Account $existingAccount */
         $existingAccount = Account::find($this->data['id']);

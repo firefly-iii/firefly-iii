@@ -433,7 +433,6 @@ class AccountRepository implements AccountRepositoryInterface
         $account->virtual_balance = $data['virtualBalance'];
         $account->save();
 
-        // update meta data:
         $this->updateMetadata($account, $data);
         $openingBalance = $this->openingBalanceTransaction($account);
 
