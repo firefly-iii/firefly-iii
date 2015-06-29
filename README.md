@@ -1,4 +1,7 @@
-# Firefly III (v3.4.6)
+# Firefly III
+
+[![Latest Stable Version](https://poser.pugx.org/grumpydictator/firefly-iii/v/stable)](https://packagist.org/packages/grumpydictator/firefly-iii)
+[![Total Downloads](https://poser.pugx.org/grumpydictator/firefly-iii/downloads)](https://packagist.org/packages/grumpydictator/firefly-iii)
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/JC5/firefly-iii/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/JC5/firefly-iii/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/JC5/firefly-iii/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/JC5/firefly-iii/?branch=master)

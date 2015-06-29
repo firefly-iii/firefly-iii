@@ -1,6 +1,6 @@
 {
     "name": "grumpydictator/firefly-iii",
-    "description": "A web-application to manage your finances. This version will replace grumpydictator/firefly when it's finished.",
+    "description": "Firefly III: a personal finances manager.",
     "keywords": ["finance", "finances", "manager", "euro", "laravel", "money", "financials", "budgets", "transactions", "transfers", "management"],
     "license": "MIT",
     "homepage": "https://github.com/JC5/firefly-iii",
